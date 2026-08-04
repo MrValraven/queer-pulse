@@ -2,6 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getCompanyReviews } from "./companies.api";
 import { reviewDtoToReview } from "./companies.adapters";
+import { economyKeys } from "./economyKeys";
 import type { CompanyReview } from "../companies.data";
 
 export interface CompanyReviewsResult {
@@ -43,7 +44,7 @@ export function useCompanyReviews(
   const { demoMode } = useDemoMode();
 
   const query = useInfiniteQuery<ReviewsPageVM>({
-    queryKey: ["company-reviews", slug, demoMode],
+    queryKey: economyKeys.companyReviews(slug, demoMode),
     enabled: Boolean(slug) && (opts.enabled ?? true),
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {

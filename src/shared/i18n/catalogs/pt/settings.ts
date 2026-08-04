@@ -49,11 +49,13 @@ export const settings: Catalog = {
   "page.saveBar.savedToast": "Definições guardadas",
   "page.saveBar.saveErrorToast":
     "Não foi possível guardar as tuas alterações. Tenta novamente.",
+  "page.leaveConfirm":
+    "Tens alterações por guardar aqui. Queres sair sem as guardar?",
 
   // ── SettingsControls.tsx — DeleteAccountModal (primeira confirmação) ─────
   "controls.deleteModal.title": "Eliminar a tua conta?",
   "controls.deleteModal.body":
-    "A eliminação apaga permanentemente o teu perfil, mensagens, publicações nas comunidades e todos os dados associados no prazo de 30 dias. Não pode ser revertida. Recomendamos que descarregues primeiro os teus dados. De seguida, vais confirmar a tua palavra-passe e enviaremos um email para concluíres o pedido.",
+    "A eliminação apaga permanentemente o teu perfil, mensagens, publicações nas comunidades e todos os dados associados no prazo de 30 dias. Não pode ser revertida. Recomendamos que descarregues primeiro os teus dados. De seguida, vais confirmar que és tu e concluir o pedido aqui mesmo.",
   "controls.deleteModal.cancel": "Cancelar",
   "controls.deleteModal.continue": "Continuar para eliminar",
 
@@ -86,7 +88,7 @@ export const settings: Catalog = {
     "A reunir os teus dados e a preparar um ficheiro JSON. Isto costuma demorar um momento…",
   "modals.dataExport.readyTitle": "A tua exportação está <em>pronta.</em>",
   "modals.dataExport.readyBody":
-    "Preparámos os teus dados em <strong>{filename}</strong>. No produto real também te enviaríamos um link seguro por email — aqui já podes descarregá-lo.",
+    "Preparámos os teus dados em <strong>{filename}</strong>. Não enviamos nada por email — descarregas aqui mesmo, nesta página.",
   "modals.dataExport.downloadCta": "Descarregar {filename}",
 
   // ── SettingsPersonalisation.tsx — ProfileThemePane ───────────────────────
@@ -536,7 +538,7 @@ export const settings: Catalog = {
   "sessions.empty.none.desc":
     "Não há sessão iniciada em lado nenhum agora — nem mesmo neste dispositivo, o que normalmente significa que a tua sessão está prestes a ser renovada.",
   "sessions.toast.signedOut":
-    "Sessão terminada. Se não reconhecemos esse dispositivo, enviaremos um email para o endereço registado.",
+    "Sessão terminada. Se não foste tu, revê as tuas sessões ativas e termina qualquer dispositivo que não reconheças.",
   "sessions.toast.signedOutError":
     "Não conseguimos terminar essa sessão. Tenta novamente.",
   "sessions.toast.signedOutAll":
@@ -544,7 +546,7 @@ export const settings: Catalog = {
   "sessions.toast.signedOutAllError":
     "Não conseguimos terminar as outras sessões. Tenta novamente.",
   "sessions.footNote":
-    "<strong>Algo parece errado?</strong> Termina a sessão em qualquer dispositivo que não reconheças e <a>conta-nos o que aconteceu</a> — vamos ajudar-te a proteger a tua conta. Quando terminas a sessão de um dispositivo não reconhecido, enviamos um email para o endereço registado para que fique um registo à parte do que aconteceu.",
+    "<strong>Algo parece errado?</strong> Termina a sessão em qualquer dispositivo que não reconheças e <a>conta-nos o que aconteceu</a> — vamos ajudar-te a proteger a tua conta.",
 
   // ── DataExportPage.tsx — hero + toast + outro ────────────────────────────
   "dataExport.hero.eyebrow": "Os teus dados · RGPD, art.º 20",
@@ -614,7 +616,7 @@ export const settings: Catalog = {
   "dataExport.status.retry": "Pedir novamente",
   "dataExport.status.building.title": "A construir o teu arquivo",
   "dataExport.status.building.body":
-    "Estamos a reunir os teus dados e a prepará-los. Isto pode demorar um pouco — enviamos-te um email assim que estiver pronto, para poderes fechar esta página.",
+    "Estamos a reunir os teus dados e a prepará-los. Isto demora só um momento — mantém-te nesta página e o teu arquivo fica pronto para descarregares aqui mesmo.",
   "dataExport.status.download": "Descarregar {filename}",
 
   // ── DataExportSections.tsx — DataExportIncluded ──────────────────────────
@@ -846,7 +848,7 @@ export const settings: Catalog = {
   "destructiveFlow.delete.loadingText": "A agendar a eliminação da tua conta…",
   "destructiveFlow.delete.resultTitle": "Está <em>agendado.</em>",
   "destructiveFlow.delete.resultBody":
-    "A tua conta está agendada para eliminação. Verifica a tua caixa de entrada para um email de confirmação — tens <strong>30 dias</strong> para cancelar voltando a iniciar sessão. Depois disso, os teus dados são permanentemente apagados. Cuida de ti.",
+    "A tua conta está agendada para eliminação. Tens <strong>30 dias</strong> para mudar de ideias — basta voltares a iniciar sessão com a Google e paramos a eliminação. Depois disso, os teus dados são permanentemente apagados. Cuida de ti.",
 
   // ── ThemeStudio.tsx / profileTheme.data.ts — seletor de tema do perfil.
   // Os NOMES das bandeiras (FLAG_SWATCHES.label) ficam deliberadamente em
@@ -863,7 +865,7 @@ export const settings: Catalog = {
   "themeStudio.showLevelToggle": "Mostrar nível no perfil",
   "themeStudio.previewLabel": "Pré-visualização",
   "themeStudio.previewHintTop":
-    "Atualiza-se em direto à medida que escolhes um tema.",
+    "Atualiza-se em direto à medida que escolhes um tema. Guardado neste navegador como pré-visualização — ainda não aparece no teu perfil público.",
   "themeStudio.profileCardLabel": "Cartão de perfil",
   "themeStudio.directoryCardLabel": "Cartão no diretório",
   "themeStudio.directoryHint":
@@ -982,6 +984,6 @@ export const settings: Catalog = {
   "security.outro.titleTop": "A segurança é",
   "security.outro.titleEm": "trabalho de comunidade.",
   "security.outro.sub":
-    "Obrigado a todas as pessoas que ajudam a manter o QueerPulse seguro.",
+    "Obrigade a todas as pessoas que ajudam a manter o QueerPulse seguro.",
   "security.outro.cta": "Contactar a equipa de segurança",
 };

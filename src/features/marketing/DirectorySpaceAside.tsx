@@ -188,7 +188,11 @@ export function DirectorySpaceAside({
           <Button
             variant="ghost"
             className={s.ctaBtn}
-            to={place.member ? `${routes.members}/${place.member}` : routes.members}
+            to={
+              place.owner.slug
+                ? `${routes.members}/${place.owner.slug}`
+                : routes.members
+            }
           >
             {t("marketing:directory.detail.viewProfile", {
               name: place.owner.first,

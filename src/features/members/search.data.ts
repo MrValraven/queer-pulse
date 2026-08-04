@@ -22,8 +22,10 @@ import {
   FiMap,
   FiFileText,
   FiShield,
+  FiBriefcase,
+  FiTool,
 } from "react-icons/fi";
-import { routes, topicPath } from "../../app/routeMap";
+import { personaPath, routes, topicPath } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
 import { memberName } from "./data/members";
 import { TOPICS } from "../topics/topics.data";
@@ -33,6 +35,12 @@ export type ResultType =
   | "event"
   | "forum"
   | "business"
+  | "magazine"
+  | "job"
+  | "housing"
+  | "resource"
+  | "workshop"
+  | "subprofile"
   | "topic"
   | "page"
   | "board";
@@ -485,6 +493,90 @@ export const SEARCH_DATA: SearchItem[] = [
     href: routes.offer,
     kw: "music composer documentary film paid",
   },
+  {
+    t: "magazine",
+    name: "The Kitchen as Sanctuary",
+    sub: "Food, memory and queer belonging",
+    href: `${routes.article}?id=kitchen-sanctuary`,
+    kw: "magazine article food essay culture kitchen story",
+  },
+  {
+    t: "magazine",
+    name: "Notes on Chosen Family",
+    sub: "First-person · Community",
+    href: `${routes.article}?id=chosen-family`,
+    kw: "magazine article chosen family essay belonging",
+  },
+  {
+    t: "job",
+    name: "Community Manager",
+    sub: "Full-time · Lisbon",
+    href: `${routes.jobs}/community-manager`,
+    kw: "job work role hiring community manager",
+  },
+  {
+    t: "job",
+    name: "Freelance Illustrator for a queer zine",
+    sub: "Contract · Remote",
+    href: `${routes.jobs}/zine-illustrator`,
+    kw: "job work freelance illustrator zine design",
+  },
+  {
+    t: "housing",
+    name: "Sunny room in a queer flatshare",
+    sub: "Arroios · €520/mo",
+    href: `${routes.housing}/sunny-room-arroios`,
+    kw: "housing room flatshare arroios rent home",
+  },
+  {
+    t: "housing",
+    name: "Studio near Marvila, trans-friendly",
+    sub: "Marvila · €780/mo",
+    href: `${routes.housing}/studio-marvila`,
+    kw: "housing studio marvila rent home trans friendly",
+  },
+  {
+    t: "resource",
+    name: "Trans healthcare in Portugal",
+    sub: "Guide · Health & care",
+    href: `${routes.resources}/trans-healthcare`,
+    kw: "resource guide trans healthcare support health",
+  },
+  {
+    t: "resource",
+    name: "Coming out at work",
+    sub: "Guide · Rights & workplace",
+    href: `${routes.resources}/coming-out-at-work`,
+    kw: "resource guide coming out work rights workplace",
+  },
+  {
+    t: "workshop",
+    name: "Intro to Film Photography",
+    sub: "6 weeks · In person",
+    href: `${routes.skills}/film-photography`,
+    kw: "workshop skills class film photography learn course",
+  },
+  {
+    t: "workshop",
+    name: "Ceramics for Beginners",
+    sub: "4 weeks · Graça studio",
+    href: `${routes.skills}/ceramics-beginners`,
+    kw: "workshop skills class ceramics pottery learn course",
+  },
+  {
+    t: "subprofile",
+    name: "Rui builds things",
+    sub: "Persona · Software & hardware",
+    href: personaPath("rui-builds"),
+    kw: "subprofile persona developer engineer maker hardware",
+  },
+  {
+    t: "subprofile",
+    name: "Inês / studio work",
+    sub: "Persona · Design & branding",
+    href: personaPath("ines-studio"),
+    kw: "subprofile persona designer branding studio",
+  },
 ];
 
 export const TYPE_BG: Record<ResultType, string> = {
@@ -493,6 +585,12 @@ export const TYPE_BG: Record<ResultType, string> = {
   community: "rgba(232,119,90,.1)",
   forum: "rgba(122,82,184,.1)",
   business: "rgba(74,140,111,.1)",
+  magazine: "rgba(232,119,90,.1)",
+  job: "rgba(74,140,111,.1)",
+  housing: "rgba(122,82,184,.1)",
+  resource: "rgba(74,140,111,.1)",
+  workshop: "rgba(232,119,90,.1)",
+  subprofile: "rgba(122,82,184,.1)",
   board: "rgba(122,82,184,.1)",
   topic: "rgba(232,119,90,.1)",
   page: "rgba(74,140,111,.1)",
@@ -503,6 +601,12 @@ export const TYPE_ICON: Record<ResultType, IconType> = {
   community: FiUsers,
   forum: FiMessageSquare,
   business: FiShoppingBag,
+  magazine: FiBookOpen,
+  job: FiBriefcase,
+  housing: FiHome,
+  resource: FiLifeBuoy,
+  workshop: FiTool,
+  subprofile: FiLayers,
   board: FiClipboard,
   topic: FiHash,
   page: FiLayers,
@@ -516,6 +620,12 @@ export const TYPE_LABEL_KEY: Record<ResultType, string> = {
   community: "members:search.type.community",
   forum: "members:search.type.forum",
   business: "members:search.type.business",
+  magazine: "members:search.type.magazine",
+  job: "members:search.type.job",
+  housing: "members:search.type.housing",
+  resource: "members:search.type.resource",
+  workshop: "members:search.type.workshop",
+  subprofile: "members:search.type.subprofile",
   board: "members:search.type.board",
   topic: "members:search.type.topic",
   page: "members:search.type.page",
@@ -535,6 +645,12 @@ export const TABS: { id: ResultType | "all"; labelKey: string }[] = [
   { id: "event", labelKey: "members:search.type.event" },
   { id: "forum", labelKey: "members:search.type.forum" },
   { id: "business", labelKey: "members:search.type.business" },
+  { id: "magazine", labelKey: "members:search.type.magazine" },
+  { id: "job", labelKey: "members:search.type.job" },
+  { id: "housing", labelKey: "members:search.type.housing" },
+  { id: "resource", labelKey: "members:search.type.resource" },
+  { id: "workshop", labelKey: "members:search.type.workshop" },
+  { id: "subprofile", labelKey: "members:search.type.subprofile" },
   { id: "topic", labelKey: "members:search.type.topic" },
   { id: "page", labelKey: "members:search.type.page" },
 ];

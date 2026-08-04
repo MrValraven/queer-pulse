@@ -60,6 +60,7 @@ export function StudioTipModal({
         aria-modal="true"
         aria-label={t("studio:tipModal.dialogAria", { recipient })}
       >
+        <span className={styles.grabber} aria-hidden />
         <button
           type="button"
           className={styles.close}
@@ -127,6 +128,7 @@ export function StudioTipModal({
                 type="number"
                 min={1}
                 inputMode="decimal"
+                aria-label={t("studio:tipModal.customPlaceholder")}
                 placeholder={t("studio:tipModal.customPlaceholder")}
                 value={custom}
                 onChange={(e) => setCustom(e.target.value)}

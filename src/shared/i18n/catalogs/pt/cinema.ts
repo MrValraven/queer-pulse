@@ -318,7 +318,7 @@ export const cinema: Catalog = {
   "collectionsIndex.outro.cta": "Abrir uma coleção →",
   "collectionsIndex.card.curatedBy": "Com curadoria de",
   "collectionsIndex.propose.toast":
-    "Envia a tua tese de 200 palavras para curators@queerpulse.co — o conselho responde em 3 semanas.",
+    "Envia a tua tese de 200 palavras para curators@queerpulse.pt — o conselho responde em 3 semanas.",
   "collectionsIndex.propose.cta": "Propor uma coleção",
   "collectionsIndex.propose.meetCouncilCta": "Conhecer o conselho",
 
@@ -374,7 +374,7 @@ export const cinema: Catalog = {
   "filmmaker.aside.tipSub":
     "100% vai para {name} — a cooperativa não retém nada de uma gorjeta. As gorjetas ajudam a continuar a fazer trabalho.",
   "filmmaker.aside.sendCta": "Enviar {amount}",
-  "filmmaker.aside.tippedToast": "{amount} a caminho de {name} — obrigado",
+  "filmmaker.aside.tippedToast": "{amount} a caminho de {name} — obrigade",
   "filmmaker.aside.tippedNote_one":
     "<strong>{count} pessoa</strong> deu gorjeta a {name} este mês.",
   "filmmaker.aside.tippedNote_other":
@@ -477,7 +477,7 @@ export const cinema: Catalog = {
   "shorts.vote.title": "Programa o <em>próximo conjunto</em>",
   "shorts.vote.yourPickLabel": "A tua escolha",
   "shorts.vote.voteCta": "Votar",
-  "shorts.vote.countedToast": "Voto contabilizado — obrigado",
+  "shorts.vote.countedToast": "Voto contabilizado — obrigade",
   "shorts.transparency.heading": "Para onde foi o dinheiro · junho",
   "shorts.transparency.ledgerCta": "Ver o registo aberto",
   "shorts.submitCta.eyebrow": "O teu filme podia estar aqui",
@@ -842,6 +842,11 @@ export const cinema: Catalog = {
   "submit.success.body":
     "Obrigade por nos confiares o teu filme. Não-exclusivo significa que nada muda para ti noutros sítios — continua a mostrá-lo onde quiseres enquanto o vemos.",
   "submit.success.anotherCta": "Submeter outro filme",
+  "submit.comingSoon.title": "As submissões ainda",
+  "submit.comingSoon.em": "não estão abertas.",
+  "submit.comingSoon.body":
+    "O Made Here ainda não recebe filmes, por isso nada do que escreveres aqui é enviado ou guardado. Estamos a construir o processo de submissão — volta em breve e, entretanto, vê o que a cooperativa já está a exibir.",
+  "submit.comingSoon.closeLabel": "Ver o cinema",
   "submit.aside.nextHeading": "O que acontece a seguir",
   "submit.aside.accessHeading": "Norma de acessibilidade",
   "submit.aside.accessBody":
@@ -1151,6 +1156,7 @@ export const cinema: Catalog = {
   "live.error.title": "O programa não carregou",
   "live.error.description":
     "Algo correu mal ao carregar o catálogo. Tenta novamente daqui a pouco.",
+  "live.error.retry": "Tentar novamente",
   "live.pick.title": "Escolhe um filme para ver",
   "live.pick.description":
     "Escolhe um título do programa para começar a ver.",

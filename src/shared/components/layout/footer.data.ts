@@ -109,6 +109,7 @@ export const COLUMNS: FooterColumn[] = [
 export const BASE_LINKS: FooterLink[] = [
   { labelKey: "shared:footerData.base.privacy", href: routes.privacy },
   { labelKey: "shared:footerData.base.cookies", href: routes.cookies },
+  { labelKey: "shared:footerData.base.imprint", href: routes.imprint },
   { labelKey: "shared:footerData.base.guidelines", href: routes.guidelines },
   {
     labelKey: "shared:footerData.base.accessibility",

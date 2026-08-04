@@ -1,5 +1,14 @@
 /** Static roadmap content for the /about/roadmap page (mock data). */
 
+/** The most recent target-date move for a committed card — a public-safe
+ *  reason only (no who/when — those stay admin-only). Matches the backend's
+ *  `SlipDTO` in `roadmap-response.ts`. */
+export interface RoadmapSlip {
+  from: string;
+  to: string;
+  reason: string;
+}
+
 export interface ShippedItem {
   id: string;
   category: string;
@@ -7,6 +16,8 @@ export interface ShippedItem {
   description: string;
   date: string;
   requested?: boolean;
+  committed?: boolean;
+  latestSlip?: RoadmapSlip | null;
 }
 
 export interface BuildingItem {
@@ -18,6 +29,8 @@ export interface BuildingItem {
   eta: string;
   progress: number;
   requested?: boolean;
+  committed?: boolean;
+  latestSlip?: RoadmapSlip | null;
 }
 
 export interface PlannedItem {
@@ -27,7 +40,12 @@ export interface PlannedItem {
   description: string;
   votes: number;
   hot?: boolean;
+  committed?: boolean;
+  latestSlip?: RoadmapSlip | null;
 }
+
+/** "Someday" — public backlog-column items, same shape as `PlannedItem`. */
+export type BacklogItem = PlannedItem;
 
 export interface IdeaItem {
   id: string;
@@ -35,10 +53,34 @@ export interface IdeaItem {
   votes: number;
 }
 
-export const HERO_STATS: { label: string; jade?: boolean }[] = [
-  { label: "12 shipped this year", jade: true },
-  { label: "4 in progress" },
-  { label: "5 planned" },
+/** Closed set of member-facing reasons an idea isn't being built — mirrors
+ *  the backend's `RoadmapDeclineReason`. */
+export type RoadmapDeclineReason =
+  | "scope"
+  | "unsafe"
+  | "capacity"
+  | "exists"
+  | "harm";
+
+/** A dismissed idea whose decline reason is member-facing — "Not building
+ *  this, and why" on the public page. */
+export interface NotBuildingItem {
+  id: string;
+  category: string;
+  reason: RoadmapDeclineReason;
+  note: string;
+  votes: number;
+}
+
+export const HERO_STATS: {
+  label: string;
+  value?: string;
+  note?: string;
+  jade?: boolean;
+}[] = [
+  { label: "12 shipped this year", value: "12", note: "since launch", jade: true },
+  { label: "4 in progress", value: "4", note: "building now" },
+  { label: "5 planned", value: "5", note: "next up" },
 ];
 
 export const SHIPPED: ShippedItem[] = [
@@ -48,6 +90,7 @@ export const SHIPPED: ShippedItem[] = [
     name: "Gathering dashboard",
     description: "Live check-in and attendance management for hosts, including QR scanning and waitlist promotion.",
     date: "May 2026",
+    committed: true,
   },
   {
     id: "moderation-queue",
@@ -90,6 +133,12 @@ export const BUILDING: BuildingItem[] = [
     stage: "In progress",
     eta: "~Q3 2026",
     progress: 60,
+    committed: true,
+    latestSlip: {
+      from: "Q2 2026",
+      to: "Q3 2026",
+      reason: "App Store review took longer than planned — wanted a stable build before opening the beta wider.",
+    },
   },
   {
     id: "magazine-contributor-tools",
@@ -130,6 +179,7 @@ export const PLANNED: PlannedItem[] = [
     description: "A curated directory of queer-owned and affirming businesses in Lisbon and beyond.",
     votes: 142,
     hot: true,
+    committed: true,
   },
   {
     id: "anon-qa",
@@ -167,4 +217,42 @@ export const TOP_IDEAS: IdeaItem[] = [
   { id: "idea-sub-communities", text: "Sub-communities within communities", votes: 22 },
   { id: "idea-recurring-gatherings", text: "Recurring gatherings (monthly series)", votes: 18 },
   { id: "idea-ticket-splitting", text: "Shared event costs / ticket splitting", votes: 15 },
+];
+
+// "Someday" — public backlog-column items, further out than PLANNED with no
+// firm votes-driven order yet.
+export const BACKLOG: BacklogItem[] = [
+  {
+    id: "creator-tipping",
+    category: "Content",
+    name: "Creator tipping",
+    description: "Let members send small optional tips to magazine contributors and gathering hosts.",
+    votes: 19,
+  },
+  {
+    id: "multi-language-ui",
+    category: "Platform",
+    name: "Multi-language interface",
+    description: "Beyond EN/PT — community-sourced translations for the whole app, not just the marketing pages.",
+    votes: 12,
+  },
+];
+
+// "Not building this, and why" — dismissed ideas the team gave a
+// member-facing reason for declining, kept public for transparency.
+export const NOT_BUILDING: NotBuildingItem[] = [
+  {
+    id: "not-public-profiles",
+    category: "Members",
+    reason: "unsafe",
+    note: "Public profiles searchable outside the platform would undermine the safety model this community depends on.",
+    votes: 23,
+  },
+  {
+    id: "not-dating-features",
+    category: "Members",
+    reason: "scope",
+    note: "General dating features are out of scope — QueerPulse focuses on community and connection, not matchmaking.",
+    votes: 41,
+  },
 ];

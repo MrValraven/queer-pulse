@@ -34,6 +34,18 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * A runtime validator for a *successful* response body. It receives the parsed
+ * JSON (typed `unknown`) and must either return it narrowed to `T` or throw.
+ * Supplied per-call through the `api*` helpers; when a body fails validation the
+ * client raises `ApiError(422, "Malformed response …")` instead of handing a
+ * mis-shaped object back to the caller as `T` — closing the P1-12 gap where a
+ * backend field rename shipped as silent `undefined` UI with no error. Omitting
+ * it keeps the legacy `JSON.parse(text) as T` behaviour, so every existing call
+ * site is byte-for-byte unchanged and fully backward compatible.
+ */
+export type ResponseValidator<T> = (data: unknown) => T;
+
 let csrfToken: string | null = null;
 let onAuthLost: (() => void) | null = null;
 let onPlatformLocked: ((message: string | null) => void) | null = null;
@@ -189,7 +201,85 @@ export function refreshSession(): Promise<boolean> {
   return refreshOnce();
 }
 
+/**
+ * POST to an UNVERSIONED backend path — i.e. one whose controller is
+ * `@Version(VERSION_NEUTRAL)` and therefore answers at `/auth/...` rather than
+ * `/v1/auth/...`. The only mutating caller is `logout`, and it MUST be
+ * unversioned: the refresh-token cookie is scoped to `path=/auth`, so the
+ * browser attaches it only to requests under `/auth`. Hitting the versioned
+ * `/v1/auth/logout` would send no refresh cookie, so the backend's
+ * revoke-row + force-disconnect-sockets step silently no-ops. Mirrors
+ * `runRefresh`'s direct fetch: credentials included, CSRF header attached, no
+ * version prefix. Resolves true on a 2xx. Best-effort — never throws.
+ */
+export async function postUnversioned(path: string): Promise<boolean> {
+  try {
+    await ensureCsrf();
+    const res = await fetch(`${API_BASE_URL}${path}`, {
+      method: "POST",
+      credentials: "include",
+      headers: csrfToken ? { "X-CSRF-Token": csrfToken } : {},
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 const SAFE = new Set(["GET", "HEAD", "OPTIONS"]);
+
+/** Dev-only: paths already warned about, so the safety net logs once per path. */
+const suspiciousBodyWarned = new Set<string>();
+
+/**
+ * Dev-only safety net for the *un-validated* path. Almost every endpoint answers
+ * with a JSON object or array; a top-level `null` or primitive where the caller
+ * will treat it as an object is exactly the silent-`undefined`-UI shape P1-12 is
+ * about. Without a validator we can't know the caller's expected type, so this
+ * only flags the unambiguous cases, warns once per path, and NEVER throws — a
+ * cheap seam, not full coverage. An empty body (`undefined`, the legitimate
+ * "no content" case) is left alone. Stripped from prod builds by the `DEV` gate.
+ */
+function warnOnSuspiciousBody(parsed: unknown, path: string): void {
+  const isObjectOrArray = typeof parsed === "object" && parsed !== null;
+  if (parsed === undefined || isObjectOrArray) return;
+  if (suspiciousBodyWarned.has(path)) return;
+  suspiciousBodyWarned.add(path);
+  const describedType = parsed === null ? "null" : typeof parsed;
+  console.warn(
+    `[api] Response for "${path}" was ${describedType} where an object or array ` +
+      "was expected — the backend shape may have changed (P1-12). Pass a " +
+      "`validate` guard to the api* call to turn this into a hard error.",
+  );
+}
+
+/**
+ * Finalize a parsed *success* body. With a `validate` guard: run it, and on
+ * failure raise a clear `ApiError(422)` rather than leaking a mis-shaped object
+ * as `T`. Without one: fall through to the legacy cast, plus a dev-only warning
+ * for obviously-wrong bodies. Prod with no validator is the exact old behaviour.
+ */
+function finalizeBody<T>(
+  parsed: unknown,
+  path: string,
+  validate?: ResponseValidator<T>,
+): T {
+  if (validate) {
+    try {
+      return validate(parsed);
+    } catch (error) {
+      const detail =
+        error instanceof Error ? error.message : "response failed validation";
+      throw new ApiError(
+        422,
+        `Malformed response from ${path}: ${detail}`,
+        parsed,
+      );
+    }
+  }
+  if (import.meta.env.DEV) warnOnSuspiciousBody(parsed, path);
+  return parsed as T;
+}
 
 async function request<T>(
   method: string,
@@ -197,6 +287,8 @@ async function request<T>(
   body?: unknown,
   retry = true,
   timeoutMs = DEFAULT_TIMEOUT_MS,
+  validate?: ResponseValidator<T>,
+  externalSignal?: AbortSignal,
 ): Promise<T> {
   const headers: Record<string, string> = {};
   if (body !== undefined) headers["Content-Type"] = "application/json";
@@ -213,6 +305,25 @@ async function request<T>(
   // fast response never leaks a pending timeout.
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  // Forward a caller-supplied signal (react-query passes one into every
+  // `queryFn`, tied to query cancellation on unmount/query-key change/navigation)
+  // into our own controller — without this, react-query only stops WAITING on
+  // the promise, but the underlying fetch keeps running against the backend to
+  // completion and still bills its full duration. `externalAborted` records
+  // WHICH signal fired, so the catch block below can tell "the caller walked
+  // away" (propagate the abort, no error toast) apart from "the backend hung"
+  // (surface a 408, see below).
+  let externalAborted = false;
+  const onExternalAbort = () => {
+    externalAborted = true;
+    controller.abort();
+  };
+  if (externalSignal) {
+    if (externalSignal.aborted) onExternalAbort();
+    else externalSignal.addEventListener("abort", onExternalAbort);
+  }
+
   let res: Response;
   try {
     res = await fetch(`${API_BASE_URL}${API_VERSION_PREFIX}${path}`, {
@@ -223,23 +334,39 @@ async function request<T>(
       signal: controller.signal,
     });
   } catch (error) {
-    // A timeout abort becomes a distinct 408 so the react-query layer and the
-    // global error handler treat a hung backend as a genuine failure. It is kept
-    // clear of the 401-refresh and 403-CSRF retry paths below (which key off an
-    // HTTP status we never received here), so a timeout can never be misread as
-    // an auth-refresh loop or a CSRF retry. Any other throw is a real network
-    // fault (offline / DNS / CORS) and propagates unchanged.
     if (controller.signal.aborted) {
+      // The caller (react-query) walked away — propagate the original
+      // `AbortError` unchanged so react-query's own cancellation handling
+      // takes over (no error toast, no retry); this is expected, not a fault.
+      if (externalAborted) throw error;
+      // Otherwise it was OUR timeout that fired: a distinct 408 so the
+      // react-query layer and the global error handler treat a hung backend
+      // as a genuine failure. Kept clear of the 401-refresh and 403-CSRF retry
+      // paths below (which key off an HTTP status we never received here), so
+      // a timeout can never be misread as an auth-refresh loop or a CSRF retry.
       throw new ApiError(408, "Request timed out");
     }
+    // Any other throw is a real network fault (offline / DNS / CORS) and
+    // propagates unchanged.
     throw error;
   } finally {
     clearTimeout(timeout);
+    externalSignal?.removeEventListener("abort", onExternalAbort);
   }
 
   if (res.status === 401 && retry) {
     const ok = await refreshOnce();
-    if (ok) return request<T>(method, path, body, false, timeoutMs);
+    if (ok) {
+      return request<T>(
+        method,
+        path,
+        body,
+        false,
+        timeoutMs,
+        validate,
+        externalSignal,
+      );
+    }
     onAuthLost?.();
     throw new ApiError(401, "Not authenticated");
   }
@@ -267,7 +394,15 @@ async function request<T>(
     ) {
       csrfToken = null;
       await ensureCsrf();
-      return request<T>(method, path, body, false, timeoutMs);
+      return request<T>(
+        method,
+        path,
+        body,
+        false,
+        timeoutMs,
+        validate,
+        externalSignal,
+      );
     }
 
     // Platform lockdown. 503 rather than 403 precisely so it is distinguishable
@@ -289,20 +424,66 @@ async function request<T>(
   // the member has none). `res.json()` throws on empty input, so parse the text
   // ourselves and treat an empty body as "no content".
   const text = await res.text();
-  return (text ? JSON.parse(text) : undefined) as T;
+  let parsed: unknown;
+  try {
+    parsed = text ? JSON.parse(text) : undefined;
+  } catch {
+    // A 2xx whose body isn't the JSON we promised the caller (a truncated
+    // response, an HTML error page slipped past a proxy, a Content-Type lie).
+    // Surface it as a typed ApiError(422) — the same failure channel as a
+    // validator rejection below — instead of letting a raw SyntaxError escape
+    // `request()` as an unhandled non-ApiError the toast/retry layers can't read.
+    throw new ApiError(422, `Malformed JSON in response from ${path}`, text);
+  }
+  return finalizeBody<T>(parsed, path, validate);
 }
 
-// The optional trailing `timeoutMs` is a per-call override of DEFAULT_TIMEOUT_MS
-// for the rare legitimately long-running endpoint; omitting it (the norm) keeps
-// the 15s ceiling. Passing `undefined` still falls through to the default, so
-// the addition is fully backward-compatible with every existing call site.
-export const apiGet = <T>(path: string, timeoutMs?: number) =>
-  request<T>("GET", path, undefined, true, timeoutMs);
-export const apiPost = <T>(path: string, body?: unknown, timeoutMs?: number) =>
-  request<T>("POST", path, body, true, timeoutMs);
-export const apiPatch = <T>(path: string, body?: unknown, timeoutMs?: number) =>
-  request<T>("PATCH", path, body, true, timeoutMs);
-export const apiPut = <T>(path: string, body?: unknown, timeoutMs?: number) =>
-  request<T>("PUT", path, body, true, timeoutMs);
-export const apiDelete = <T>(path: string, timeoutMs?: number) =>
-  request<T>("DELETE", path, undefined, true, timeoutMs);
+// Three optional trailing params, all fully backward-compatible (every existing
+// call omits them and behaves exactly as before):
+//   • `timeoutMs` — a per-call override of DEFAULT_TIMEOUT_MS for the rare
+//     legitimately long-running endpoint; omitting it keeps the 15s ceiling.
+//   • `validate`  — a runtime guard for the success body (P1-12). When supplied
+//     it runs after JSON.parse; a body that fails it raises ApiError(422,
+//     "Malformed response …") instead of returning a mis-shaped object as `T`.
+//   • `signal`    — an `AbortSignal` to cancel the underlying fetch, not just
+//     the query-cache bookkeeping. React Query passes one into every `queryFn`
+//     via its `QueryFunctionContext` (`queryFn: ({ signal }) => apiGet(path,
+//     undefined, undefined, signal)`) that fires on unmount/query-key change/
+//     navigation — wire it through on any request a user can realistically
+//     navigate away from mid-flight (search-as-you-type, route-gated fetches).
+// Passing `undefined` for any of these still falls through to the default
+// behaviour.
+export const apiGet = <T>(
+  path: string,
+  timeoutMs?: number,
+  validate?: ResponseValidator<T>,
+  signal?: AbortSignal,
+) => request<T>("GET", path, undefined, true, timeoutMs, validate, signal);
+export const apiPost = <T>(
+  path: string,
+  body?: unknown,
+  timeoutMs?: number,
+  validate?: ResponseValidator<T>,
+  signal?: AbortSignal,
+) => request<T>("POST", path, body, true, timeoutMs, validate, signal);
+export const apiPatch = <T>(
+  path: string,
+  body?: unknown,
+  timeoutMs?: number,
+  validate?: ResponseValidator<T>,
+  signal?: AbortSignal,
+) => request<T>("PATCH", path, body, true, timeoutMs, validate, signal);
+export const apiPut = <T>(
+  path: string,
+  body?: unknown,
+  timeoutMs?: number,
+  validate?: ResponseValidator<T>,
+  signal?: AbortSignal,
+) => request<T>("PUT", path, body, true, timeoutMs, validate, signal);
+export const apiDelete = <T>(
+  path: string,
+  body?: unknown,
+  timeoutMs?: number,
+  validate?: ResponseValidator<T>,
+  signal?: AbortSignal,
+) => request<T>("DELETE", path, body, true, timeoutMs, validate, signal);

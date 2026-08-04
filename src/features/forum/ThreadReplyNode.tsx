@@ -18,6 +18,9 @@ interface ThreadReplyNodeProps {
   node: ReplyNode;
   index: number;
   replyKey: (reply: Reply) => string;
+  /** When true, replies are closed: this node renders no "Reply" action and no
+   *  inline composer (propagated to every descendant). */
+  isLocked: boolean;
   likedReplies: Record<string, boolean>;
   toggleReplyLike: (reply: Reply) => void;
   demoMode: boolean;
@@ -50,6 +53,7 @@ export function ThreadReplyNode({
   node,
   index,
   replyKey,
+  isLocked,
   likedReplies,
   toggleReplyLike,
   demoMode,
@@ -116,7 +120,7 @@ export function ThreadReplyNode({
         onDelete={onDelete}
         onRestore={onRestore}
         onHistory={onHistory}
-        onReply={onStartReply}
+        onReply={isLocked ? undefined : onStartReply}
         collapse={
           hasChildren
             ? {
@@ -128,7 +132,7 @@ export function ThreadReplyNode({
         }
       />
 
-      {isReplyTarget && (
+      {isReplyTarget && !isLocked && (
         <div className={styles.inlineCompose}>
           <ThreadComposer
             authorName={node.reply.name}
@@ -171,6 +175,7 @@ export function ThreadReplyNode({
             node={child}
             index={index}
             replyKey={replyKey}
+            isLocked={isLocked}
             likedReplies={likedReplies}
             toggleReplyLike={toggleReplyLike}
             demoMode={demoMode}

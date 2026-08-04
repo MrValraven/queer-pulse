@@ -7,6 +7,7 @@ import {
   withdrawSignup,
   type CreateOpportunityDto,
 } from "./volunteering.api";
+import { opportunityKeys } from "./opportunityKeys";
 
 /**
  * Every mutation branches on `demoMode`: in demo it's a no-op (the calling
@@ -33,7 +34,9 @@ export function useCreateOpportunity() {
       return { slug: res.slug };
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["opportunities"] });
+      void queryClient.invalidateQueries({
+        queryKey: opportunityKeys.listRoot,
+      });
     },
   });
 }
@@ -48,8 +51,12 @@ export function useCloseOpportunity(slug: string) {
       await closeOpportunity(slug);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["opportunity", slug] });
-      void queryClient.invalidateQueries({ queryKey: ["opportunities"] });
+      void queryClient.invalidateQueries({
+        queryKey: opportunityKeys.detailRoot,
+      });
+      void queryClient.invalidateQueries({
+        queryKey: opportunityKeys.listRoot,
+      });
     },
   });
 }
@@ -72,9 +79,11 @@ export function useSignup(slug: string) {
       await signUpForOpportunity(slug, vars.note);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["opportunity", slug] });
       void queryClient.invalidateQueries({
-        queryKey: ["opportunity-signups", slug],
+        queryKey: opportunityKeys.detailRoot,
+      });
+      void queryClient.invalidateQueries({
+        queryKey: opportunityKeys.signupsRoot,
       });
     },
   });
@@ -90,9 +99,11 @@ export function useWithdrawSignup(slug: string) {
       await withdrawSignup(slug);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["opportunity", slug] });
       void queryClient.invalidateQueries({
-        queryKey: ["opportunity-signups", slug],
+        queryKey: opportunityKeys.detailRoot,
+      });
+      void queryClient.invalidateQueries({
+        queryKey: opportunityKeys.signupsRoot,
       });
     },
   });

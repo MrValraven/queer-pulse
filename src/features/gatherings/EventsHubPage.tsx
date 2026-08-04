@@ -1,7 +1,12 @@
 import { useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
+import { FiCalendar } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
+import { EmptyState, PullToRefresh } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useEvents } from "./api/useEvents";
+import { eventKeys } from "./api/eventKeys";
 import { pickHighlights } from "./hub/pickHighlights";
 import { EventsHubHero } from "./hub/EventsHubHero";
 import { EventsHubTabs } from "./hub/EventsHubTabs";
@@ -26,13 +31,13 @@ type HubView = "highlights" | "browse" | "calendar";
  * not the form `setView` produces). This is also the redirect target for the
  * old `/calendar` route (`?view=calendar`) — see Task 9.
  *
- * `useEvents` (`api/useEvents.ts`) does not expose an `error`/`isError`
- * field on its `EventsResult` — only `isLoading` — so there is no distinct
- * error state to thread into the views here; each view's own
- * `isLoading`-gated empty/skeleton state is the only failure-adjacent UI
- * available today. (Noted per plan Task 8 Step 1 — not invented.)
+ * When the (live) `useEvents` fetch fails, `isError` swaps the whole board for a
+ * branded error state with a "Try again" action (audit P1-14) — an outage must
+ * not read as "nothing on in Lisbon". Demo mode never errors.
  */
 export function EventsHubPage() {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [params, setParams] = useSearchParams();
   const raw = params.get("view");
   const view: HubView =
@@ -49,12 +54,36 @@ export function EventsHubPage() {
     );
   };
   const now = useMemo(() => new Date(), []);
-  const { items, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } =
-    useEvents({ filter: "upcoming" });
+  const {
+    items,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+    refetch,
+  } = useEvents({ filter: "upcoming" });
   const lead = useMemo(
     () => pickHighlights(items, now, { count: 1 })[0] ?? null,
     [items, now],
   );
+
+  if (isError) {
+    return (
+      <PageShell>
+        <div className={styles.root}>
+          <div className="wrap">
+            <EmptyState
+              icon={<FiCalendar />}
+              title={t("common:error.title")}
+              description={t("common:error.description")}
+              action={{ label: t("common:error.retry"), onClick: refetch }}
+            />
+          </div>
+        </div>
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell>
@@ -67,19 +96,28 @@ export function EventsHubPage() {
           aria-labelledby={`events-hub-tab-${view}`}
           tabIndex={0}
         >
-          {view === "highlights" && (
-            <HighlightsView events={items} now={now} isLoading={isLoading} />
-          )}
-          {view === "browse" && (
-            <BrowseView
-              events={items}
-              isLoading={isLoading}
-              hasNextPage={hasNextPage}
-              fetchNextPage={fetchNextPage}
-              isFetchingNextPage={isFetchingNextPage}
-            />
-          )}
-          {view === "calendar" && <CalendarView events={items} now={now} />}
+          {/* `eventKeys.listRoot` (`["events"]`) is the repo's own invalidation
+              prefix for this domain — matches every `eventKeys.list(filter, mode)`
+              variant, so a pull refresh refetches whichever view is active. */}
+          <PullToRefresh
+            onRefresh={() =>
+              queryClient.invalidateQueries({ queryKey: eventKeys.listRoot })
+            }
+          >
+            {view === "highlights" && (
+              <HighlightsView events={items} now={now} isLoading={isLoading} />
+            )}
+            {view === "browse" && (
+              <BrowseView
+                events={items}
+                isLoading={isLoading}
+                hasNextPage={hasNextPage}
+                fetchNextPage={fetchNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+              />
+            )}
+            {view === "calendar" && <CalendarView events={items} now={now} />}
+          </PullToRefresh>
         </div>
       </div>
     </PageShell>

@@ -98,7 +98,8 @@ export function InvoicePreview(props: InvoicePreviewProps) {
         </div>
       </section>
 
-      <table className={styles.docTable}>
+      <div className={styles.docTableScroll}>
+        <table className={styles.docTable}>
         <thead>
           <tr>
             <th className={styles.docTh}>
@@ -131,7 +132,8 @@ export function InvoicePreview(props: InvoicePreviewProps) {
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
 
       <div className={styles.docTotals}>
         <div className={styles.docTotalRow}>

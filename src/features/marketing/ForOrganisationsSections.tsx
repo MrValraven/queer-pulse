@@ -1,8 +1,10 @@
+import { useId } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Button, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { useOrgTiers } from "./api/useOrgTiers";
 import type { OrgTier } from "./orgTiers.data";
@@ -93,7 +95,9 @@ function OrgTierCtaButton({ cta }: { cta: OrgTier["cta"] }) {
 
 export function PartnerContactForm() {
   const { t } = useTranslation();
+  const fieldId = useId();
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
   return (
     <section className={styles.ctaSection} id="start">
       <div className={styles.ctaInner}>
@@ -122,6 +126,24 @@ export function PartnerContactForm() {
             </li>
           </ul>
         </Reveal>
+        {!demoMode ? (
+          <div className={styles.partnerForm}>
+            <h3>
+              <Translation
+                i18nKey="marketing:forOrgs.form.comingSoon.title"
+                components={{ em: <em /> }}
+              />
+            </h3>
+            <p>{t("marketing:forOrgs.form.comingSoon.body")}</p>
+            <Button
+              variant="ghost-dark"
+              className={styles.formBtn}
+              href="mailto:partners@queerpulse.pt"
+            >
+              {t("marketing:forOrgs.form.comingSoon.emailCta")}
+            </Button>
+          </div>
+        ) : (
         <form
           className={styles.partnerForm}
           onSubmit={(e) => {
@@ -130,32 +152,44 @@ export function PartnerContactForm() {
           }}
         >
           <div className={styles.field}>
-            <label>{t("marketing:forOrgs.form.nameLabel")}</label>
+            <label htmlFor={`${fieldId}-name`}>
+              {t("marketing:forOrgs.form.nameLabel")}
+            </label>
             <input
+              id={`${fieldId}-name`}
               type="text"
               placeholder={t("marketing:forOrgs.form.namePlaceholder")}
               required
             />
           </div>
           <div className={styles.field}>
-            <label>{t("marketing:forOrgs.form.orgLabel")}</label>
+            <label htmlFor={`${fieldId}-org`}>
+              {t("marketing:forOrgs.form.orgLabel")}
+            </label>
             <input
+              id={`${fieldId}-org`}
               type="text"
               placeholder={t("marketing:forOrgs.form.orgPlaceholder")}
               required
             />
           </div>
           <div className={styles.field}>
-            <label>{t("marketing:forOrgs.form.emailLabel")}</label>
+            <label htmlFor={`${fieldId}-email`}>
+              {t("marketing:forOrgs.form.emailLabel")}
+            </label>
             <input
+              id={`${fieldId}-email`}
               type="email"
               placeholder={t("marketing:forOrgs.form.emailPlaceholder")}
               required
             />
           </div>
           <div className={styles.field}>
-            <label>{t("marketing:forOrgs.form.interestLabel")}</label>
+            <label htmlFor={`${fieldId}-interest`}>
+              {t("marketing:forOrgs.form.interestLabel")}
+            </label>
             <select
+              id={`${fieldId}-interest`}
               defaultValue={t("marketing:forOrgs.form.interest.operational")}
             >
               <option>
@@ -167,8 +201,11 @@ export function PartnerContactForm() {
             </select>
           </div>
           <div className={styles.field}>
-            <label>{t("marketing:forOrgs.form.messageLabel")}</label>
+            <label htmlFor={`${fieldId}-message`}>
+              {t("marketing:forOrgs.form.messageLabel")}
+            </label>
             <textarea
+              id={`${fieldId}-message`}
               placeholder={t("marketing:forOrgs.form.messagePlaceholder")}
               rows={4}
             />
@@ -180,6 +217,7 @@ export function PartnerContactForm() {
             {t("marketing:forOrgs.form.small")}
           </p>
         </form>
+        )}
       </div>
     </section>
   );

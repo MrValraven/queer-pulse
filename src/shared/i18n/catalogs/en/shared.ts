@@ -97,6 +97,8 @@ export const shared: Catalog = {
   "accountMenu.items.help": "Help",
   "accountMenu.ariaLabel": "Account menu",
   "accountMenu.header.subtitle": "Profile & account",
+  "accountSheet.title": "Your account",
+  "accountSheet.viewProfile": "View profile",
   "accountMenu.staff.magazineEditor": "Magazine editor",
   "accountMenu.staff.admin": "Admin",
   "accountMenu.mod.modTools": "Mod tools",
@@ -145,6 +147,11 @@ export const shared: Catalog = {
   "adminNav.items.moderation": "Moderation",
   "adminNav.items.safeSpaces": "Safe spaces",
   "adminNav.items.listings": "Listings",
+  "adminNav.items.invites": "Invites",
+  "adminNav.items.changemakerNominations": "Nominations",
+  "adminNav.items.commissionInterests": "Commissions",
+  "adminNav.items.readingGroupProposals": "Reading groups",
+  "adminNav.items.magazineSubmissions": "Submissions",
   "adminNav.items.partnerships": "Partnerships",
   "adminNav.items.orgTiers": "Partnership tiers",
   // Reused by footer.data.ts BASE_LINKS and navMenus.ts About > Mission column.
@@ -176,6 +183,9 @@ export const shared: Catalog = {
 
   // Modal / ModalSheet
   "modal.close": "Close",
+
+  // Toast — dismiss (close) affordance on each toast
+  "toast.dismiss": "Dismiss",
 
   // SearchInput
   "searchInput.placeholder": "Search…",
@@ -353,4 +363,5 @@ export const shared: Catalog = {
   "footerData.base.guidelines": "Community guidelines",
   "footerData.base.accessibility": "Accessibility",
   "footerData.base.security": "Security",
+  "footerData.base.imprint": "Legal notice",
 };

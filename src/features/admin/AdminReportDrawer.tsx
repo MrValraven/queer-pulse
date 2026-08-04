@@ -39,6 +39,37 @@ function ReportContext({ detail }: { detail: ReportDetail }) {
         )}
       </section>
 
+      {detail.disputeReason && (
+        <section className={styles.dSec}>
+          <h3 className={styles.dSecLabel}>
+            {t("admin:moderation.reportDrawer.disputeReasonTitle")}
+          </h3>
+          <blockquote className={styles.dClaim}>{detail.disputeReason}</blockquote>
+        </section>
+      )}
+
+      {detail.listingEvidence && (
+        <section className={styles.dSec}>
+          <h3 className={styles.dSecLabel}>
+            {t("admin:moderation.reportDrawer.listingEvidenceTitle")}
+          </h3>
+          <blockquote className={styles.dClaim}>
+            {detail.listingEvidence}
+          </blockquote>
+        </section>
+      )}
+
+      {detail.contactEmail && (
+        <section className={styles.dSec}>
+          <h3 className={styles.dSecLabel}>
+            {t("admin:moderation.reportDrawer.contactEmailTitle")}
+          </h3>
+          <p className={styles.dContentAuthor}>
+            <a href={`mailto:${detail.contactEmail}`}>{detail.contactEmail}</a>
+          </p>
+        </section>
+      )}
+
       <section className={styles.dSec}>
         <h3 className={styles.dSecLabel}>
           {t("admin:moderation.reportDrawer.threadTitle")}

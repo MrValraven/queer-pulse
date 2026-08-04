@@ -114,6 +114,7 @@ export function AvatarEditor({
         ref={fileRef}
         type="file"
         accept="image/*"
+        aria-label={t("members:avatar.change")}
         hidden
         onChange={(e) => {
           const f = e.target.files?.[0];

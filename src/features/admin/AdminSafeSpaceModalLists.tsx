@@ -44,6 +44,9 @@ export function AdminSafeSpacePromiseFields({
         <div key={index} className={styles.repeatRow}>
           <input
             className={styles.textInput}
+            aria-label={t(
+              "admin:adminSafeSpaces.modal.promiseTitlePlaceholder",
+            )}
             placeholder={t(
               "admin:adminSafeSpaces.modal.promiseTitlePlaceholder",
             )}
@@ -54,6 +57,9 @@ export function AdminSafeSpacePromiseFields({
           />
           <input
             className={styles.textInput}
+            aria-label={t(
+              "admin:adminSafeSpaces.modal.promiseDescPlaceholder",
+            )}
             placeholder={t(
               "admin:adminSafeSpaces.modal.promiseDescPlaceholder",
             )}
@@ -118,6 +124,7 @@ export function AdminSafeSpaceVouchFields({
         <div key={index} className={styles.repeatRow}>
           <input
             className={styles.textInput}
+            aria-label={t("admin:adminSafeSpaces.modal.vouchNamePlaceholder")}
             placeholder={t("admin:adminSafeSpaces.modal.vouchNamePlaceholder")}
             value={vouch.name}
             onChange={(event) =>
@@ -126,6 +133,9 @@ export function AdminSafeSpaceVouchFields({
           />
           <input
             className={styles.textInput}
+            aria-label={t(
+              "admin:adminSafeSpaces.modal.vouchBylinePlaceholder",
+            )}
             placeholder={t(
               "admin:adminSafeSpaces.modal.vouchBylinePlaceholder",
             )}
@@ -137,6 +147,7 @@ export function AdminSafeSpaceVouchFields({
           <textarea
             className={styles.textarea}
             rows={2}
+            aria-label={t("admin:adminSafeSpaces.modal.vouchTextPlaceholder")}
             placeholder={t("admin:adminSafeSpaces.modal.vouchTextPlaceholder")}
             value={vouch.text}
             onChange={(event) =>
@@ -145,6 +156,7 @@ export function AdminSafeSpaceVouchFields({
           />
           <input
             className={styles.textInput}
+            aria-label={t("admin:adminSafeSpaces.modal.vouchWhenPlaceholder")}
             placeholder={t("admin:adminSafeSpaces.modal.vouchWhenPlaceholder")}
             value={vouch.when}
             onChange={(event) =>

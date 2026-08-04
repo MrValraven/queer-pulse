@@ -25,6 +25,7 @@ import {
   getAdminFlagged,
   getAdminMember,
   getAdminMembers,
+  liftUserSuspension,
   patchAdminMemberRole,
   type AdminMemberRoleDTO,
   type MemberRole,
@@ -186,6 +187,32 @@ export function useUpdateMemberRole() {
       // Demo mode holds its roster in fixtures, not the cache — invalidating
       // would refetch nothing and needlessly churn. Live mode re-reads both the
       // roster and the drawer detail off the same key prefix.
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
+    },
+  });
+}
+
+/**
+ * Lift a member's active suspension (reinstate them).
+ *
+ * Demo mode never touches the network — it resolves synthetically so the
+ * operator can walk the flow without mutating fixtures. Live mode calls
+ * `PATCH /mod/users/:userId/suspension` (liftSuspension); the backend enforces
+ * the guardrails and answers 403 with a specific reason, surfaced by the global
+ * mutation-error toast. On success live mode invalidates the shared
+ * `["admin-members"]` prefix so the drawer re-reads the member as reinstated.
+ */
+export function useLiftSuspension() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, unknown, { memberId: string }>({
+    mutationKey: ["admin-members", "lift-suspension"],
+    mutationFn: async ({ memberId }) => {
+      if (demoMode) return;
+      await liftUserSuspension(memberId);
+    },
+    onSuccess: () => {
       if (demoMode) return;
       void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
     },

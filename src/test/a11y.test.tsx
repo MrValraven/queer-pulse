@@ -31,6 +31,17 @@ const AXE_PATHS: ReadonlyArray<readonly [string, string]> = [
   ["magazine (long-form editorial markup)", routes.magazine],
   ["settings (form controls via FormField)", routes.settings],
   ["about (static prose page)", routes.about],
+  // Interactive / newest surfaces (audit item #17). Each brings distinct
+  // markup the six above don't: a two-pane conversation UI, a Q&A/voting board,
+  // a moderation data grid with bulk controls, an infinite activity feed, and a
+  // community detail page with roster/discussion tabs. A demo community slug
+  // (`queer-runners`) is used so the detail page resolves real data rather than
+  // redirecting on a not-found.
+  ["messages (conversation list + thread)", routes.messages],
+  ["forum (Q&A board with voting + tags)", routes.forum],
+  ["admin listings moderation console (data grid + bulk bar)", routes.adminListings],
+  ["feed (infinite activity stream)", routes.feed],
+  ["community detail (roster + discussion tabs)", "/community/queer-runners"],
 ];
 
 /**

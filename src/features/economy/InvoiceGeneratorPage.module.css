@@ -246,8 +246,15 @@
   margin-bottom: 2px;
 }
 
+/* Three fixed 96px numeric columns + nowrap crush the description column on a
+   phone. Let the table keep a legible min-width and scroll horizontally inside
+   this wrapper (same pattern as CompareOffersModal .scroll). */
+.docTableScroll {
+  overflow-x: auto;
+}
 .docTable {
   width: 100%;
+  min-width: 440px;
   border-collapse: collapse;
   margin: 8px 0 4px;
 }

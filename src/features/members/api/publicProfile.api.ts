@@ -1,4 +1,5 @@
 import { apiGet, apiPut } from "../../../shared/api/client";
+import type { ActivityKind } from "./members.api";
 
 /**
  * The member's public-profile preference.
@@ -25,6 +26,19 @@ export interface PublicProfileWorkDTO {
 }
 
 /**
+ * One "Recent activity" entry, as the open web sees it.
+ *
+ * No link is carried on purpose: the backend drops `toLink` for the public
+ * endpoint, so a logged-out visitor sees the fact of an action ("Posted in X"),
+ * never a map of the member's in-app URLs. `kind` only drives the icon.
+ */
+export interface PublicProfileActivityDTO {
+  kind: ActivityKind;
+  title: string;
+  sub: string | null;
+}
+
+/**
  * A member's profile as the open web sees it. Deliberately a small, flat shape:
  * only what the member published, and nothing that would leak the member surface
  * (no vouches, no connections, no posts, no email).
@@ -38,6 +52,8 @@ export interface PublicProfileDTO {
   bio: string | null;
   links: PublicProfileLinkDTO[];
   work: PublicProfileWorkDTO[];
+  /** Recent public activity ("Recent activity") — see the DTO note above. */
+  activity: PublicProfileActivityDTO[];
 }
 
 /** GET /me/public-profile */
@@ -82,5 +98,6 @@ export async function getPublicProfile(
     bio: res.bio ?? null,
     links: res.links ?? [],
     work: res.work ?? [],
+    activity: res.activity ?? [],
   };
 }

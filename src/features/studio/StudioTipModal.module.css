@@ -1,31 +1,81 @@
+/* Mobile: a bottom-anchored sheet in the thumb's reach. Becomes a centered
+   dialog from 720px up (desktop appearance unchanged). */
 .overlay {
   position: fixed;
   inset: 0;
   z-index: 200;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  padding: 24px;
+  padding: 0;
+  /* Lift the bottom-anchored sheet above the on-screen keyboard on iOS
+     (published app-wide by useVisualViewportKeyboard; 0px when no keyboard). */
+  padding-block-end: var(--keyboard-inset, 0px);
   background: rgba(var(--plum-rgb), 0.55);
   backdrop-filter: blur(4px);
   animation: fade 0.2s var(--ease);
+}
+@media (min-width: 720px) {
+  .overlay {
+    align-items: center;
+    padding: 24px;
+    padding-block-end: max(24px, var(--keyboard-inset, 0px));
+  }
 }
 
 .modal {
   position: relative;
   width: 100%;
-  max-width: 440px;
+  /* svh, not vh: vh is the large viewport and overflows under mobile chrome. */
+  max-height: 92svh;
+  overflow-y: auto;
+  /* Keep an over-scroll from chaining to the page behind the sheet. */
+  overscroll-behavior: contain;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
-  padding: 30px 28px 28px;
-  box-shadow: 0 24px 60px rgba(var(--plum-rgb), 0.22);
+  /* Sheet on mobile — round only the top corners. */
+  border-radius: 20px 20px 0 0;
+  /* Clear the iOS home indicator on the flush-to-bottom sheet. */
+  padding: 30px 28px max(28px, env(safe-area-inset-bottom));
+  box-shadow: 0 -18px 50px rgba(var(--plum-rgb), 0.22);
   animation: rise 0.24s var(--ease);
+}
+@media (min-width: 720px) {
+  .modal {
+    max-width: 440px;
+    max-height: none;
+    border-radius: 18px;
+    padding: 30px 28px 28px;
+    box-shadow: 0 24px 60px rgba(var(--plum-rgb), 0.22);
+  }
 }
 
 .modalSuccess {
   background: var(--plum);
   border-color: transparent;
+}
+
+/* Drag-affordance grabber — a visible cue the panel is a sheet. Hidden on
+   desktop where it's a centered dialog. */
+.grabber {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  width: 40px;
+  height: 5px;
+  margin: -12px auto 16px;
+  border-radius: 999px;
+  background: rgba(var(--plum-rgb), 0.18);
+  touch-action: none;
+}
+/* On the plum success panel the plum grabber would vanish — lighten it. */
+.modalSuccess .grabber {
+  background: rgba(var(--cream-rgb), 0.32);
+}
+@media (min-width: 720px) {
+  .grabber {
+    display: none;
+  }
 }
 
 .close {

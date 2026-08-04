@@ -102,6 +102,20 @@ export const communities: Catalog = {
   "detail.join.request": "Request to join",
   "detail.joined": "Joined",
   "detail.requested": "Requested",
+  "detail.save.cta": "Save",
+  "detail.save.saved": "Saved",
+  "detail.save.savedToast": "Community saved to your profile.",
+  "detail.save.removedToast": "Community removed from saved.",
+  "detail.save.saveAriaLabel": "Save {name}",
+  "detail.save.unsaveAriaLabel": "Remove {name} from saved",
+  "detail.share.cta": "Share",
+  "detail.share.ariaLabel": "Share {name}",
+  "detail.share.copiedToast": "Link copied to your clipboard.",
+  "detail.leave.confirm.title": "Leave {name}?",
+  "detail.leave.confirm.body":
+    "You'll stop seeing this community's pulse and gatherings. You can always come back — you'll just need to join again.",
+  "detail.leave.confirm.cancel": "Stay",
+  "detail.leave.confirm.confirmCta": "Leave community",
   "detail.hero.andMore": "and {count} more",
   "detail.sidebar.organiser": "Organiser",
   "detail.sidebar.messageCta": "Send a message",
@@ -146,6 +160,8 @@ export const communities: Catalog = {
   "detail.thread.editSavedToast": "Your edit is live.",
   "detail.thread.deletedToast": "Message deleted.",
   "detail.thread.restoredToast": "Message restored.",
+  "detail.thread.loadMoreRepliesCta": "Load more replies",
+  "detail.thread.loadingMoreReplies": "Loading…",
 
   // ── Discussion tab (living hub) ───────────────────────────────────────────
   "detail.discussion.searchAria": "Search discussions",
@@ -157,11 +173,17 @@ export const communities: Catalog = {
   "detail.discussion.empty.title": "Nothing matches yet",
   "detail.discussion.empty.description":
     "Try a different search, or start the discussion below.",
+  "detail.discussion.empty.searchMore":
+    "None of the loaded discussions match. Load more to search the rest.",
+  "detail.discussion.searchScopeNote":
+    "Searching only the discussions loaded so far — load more to widen it.",
   "detail.discussion.startedToast": "Discussion started.",
   "detail.discussion.loadMore": "Load more",
 
   // ── Events tab (living hub) ────────────────────────────────────────────────
   "detail.events.upcoming": "Upcoming gatherings",
+  "detail.events.noUpcoming":
+    "No gatherings on the calendar yet — check back soon.",
   "detail.events.past": "Past gatherings",
   "detail.events.recapCta": "Read recap",
   "detail.events.rsvpCta": "RSVP",
@@ -175,6 +197,10 @@ export const communities: Catalog = {
   "detail.roster.messageCta": "Message",
   "detail.roster.showingOf_one": "Showing {shown} of {count} member",
   "detail.roster.showingOf_other": "Showing {shown} of {count} members",
+  "detail.roster.searchScopeNote":
+    "Searching only the members loaded so far — load more to widen it.",
+  "detail.roster.loadMoreCta": "Load more members",
+  "detail.roster.loadingMore": "Loading…",
 
   // ── Mod tools tab (living hub) ─────────────────────────────────────────────
   "detail.modtools.joinRequests.label": "People asking to join",
@@ -214,6 +240,7 @@ export const communities: Catalog = {
   "detail.pulse.replyLabel_other": "Show {count} replies",
   "detail.pulse.replyAction": "Reply",
   "detail.pulse.replyPlaceholder": "Write a reply…",
+  "detail.pulse.imageAlt": "Image shared by {name}",
   "detail.pulse.sharedToast": "Shared with the community.",
   "detail.pulse.loadingMore": "Loading…",
   "detail.pulse.loadMoreCta": "Load more posts",
@@ -293,6 +320,8 @@ export const communities: Catalog = {
   "start.next.open": "Open the doors →",
   "start.next.fallback": "Continue →",
   "start.opening.status": "Opening the doors…",
+  "start.leaveConfirm":
+    "You have an unfinished community here. Leave without saving it?",
   "start.cancel": "Cancel",
   "start.back": "← Back",
   "start.actions.stillNeeded": "Still needed:",

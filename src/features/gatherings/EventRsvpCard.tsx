@@ -133,6 +133,7 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
               inputMode="text"
               autoComplete="name"
               autoCapitalize="words"
+              aria-label={t("gatherings:event.rsvp.namePlaceholder")}
               placeholder={t("gatherings:event.rsvp.namePlaceholder")}
               required
               aria-required="true"
@@ -147,6 +148,7 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
               autoCapitalize="none"
               autoCorrect="off"
               spellCheck={false}
+              aria-label={t("gatherings:event.rsvp.emailPlaceholder")}
               placeholder={t("gatherings:event.rsvp.emailPlaceholder")}
               required
               aria-required="true"
@@ -159,6 +161,7 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
                 type="text"
                 inputMode="text"
                 autoComplete="off"
+                aria-label={t("gatherings:event.rsvp.dietaryPlaceholder")}
                 placeholder={t("gatherings:event.rsvp.dietaryPlaceholder")}
               />
             )}

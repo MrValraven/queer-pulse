@@ -169,6 +169,7 @@ export function SubmitPartnerFields({ form }: { form: SubmitPartnerForm }) {
         tabIndex={-1}
         autoComplete="off"
         aria-hidden
+        aria-label={t("marketing:submitPartner.fields.website.label")}
         value={state.handle}
         onChange={(event) => set("handle", event.target.value)}
       />

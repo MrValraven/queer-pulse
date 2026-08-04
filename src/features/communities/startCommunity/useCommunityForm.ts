@@ -183,8 +183,24 @@ export function useCommunityForm(initial?: CommunityDraft) {
 
   const canAdvance = useStepGate(missing);
 
+  // Has the founder entered anything worth warning them about losing? The seeded
+  // defaults (locked owner steward, default features/rules/tint) don't count — an
+  // untouched wizard never prompts on exit; a name, purpose, invite, or any added
+  // steward does.
+  const dirty =
+    draft.name.trim().length > 0 ||
+    draft.purpose.trim().length > 0 ||
+    Boolean(draft.type) ||
+    draft.whoFor.trim().length > 0 ||
+    Boolean(draft.accessTier) ||
+    draft.tagline.trim().length > 0 ||
+    draft.handle.trim().length > 0 ||
+    draft.stewards.length > 1 ||
+    draft.invites.length > 0;
+
   return {
     draft,
+    dirty,
     set,
     reset,
     addSteward,

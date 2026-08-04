@@ -22,6 +22,8 @@ export interface ConnectionsContextValue extends ConnectionsState {
   withdraw: (slug: string) => void;
   /** Send a connection request. No-op if already connected or already sent. */
   sendRequest: (slug: string) => void;
+  /** Restore a previously-captured snapshot (rollback after a failed action). */
+  restore: (state: ConnectionsState) => void;
 }
 
 /** Internal: the context value plus the hydration setter. Most callers consume

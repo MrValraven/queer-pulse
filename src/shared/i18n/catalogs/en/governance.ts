@@ -190,4 +190,8 @@ export const governance: Catalog = {
   "sections.raise.submitCta": "Submit →",
   "sections.raise.submittedToast":
     "Submitted — we'll be in touch within 48 hours",
+  // Live mode: there's no backend to receive a concern yet, so we don't claim
+  // to have received one (demo keeps the simulated confirmation above).
+  "sections.raise.comingSoonToast":
+    "Concern intake isn't live yet — this form isn't connected.",
 };

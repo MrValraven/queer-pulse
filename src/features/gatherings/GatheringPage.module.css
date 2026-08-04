@@ -303,6 +303,11 @@
 }
 
 @media (max-width: 860px) {
+  .page {
+    /* The floating nav band is ~80px (--nav-top + --nav-height); 148px left a
+       big dead zone above the fold on phones. Clear the nav + a little air. */
+    padding-top: 96px;
+  }
   .grid {
     grid-template-columns: 1fr;
   }

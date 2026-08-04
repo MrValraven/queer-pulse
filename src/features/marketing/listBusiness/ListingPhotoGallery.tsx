@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { type ImageSlotTint } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { type PhotoKey } from "./listBusiness.data";
@@ -55,6 +56,7 @@ export function ListingPhotoGallery({
   uploadPhoto: (file: File) => Promise<{ key: string; previewUrl: string }>;
 }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   const { draft, photoPreviews, setPhoto, setPhotoPreview, setAlt } = form;
 
   return (
@@ -81,18 +83,42 @@ export function ListingPhotoGallery({
         ))}
       </div>
       <div className={styles.altList}>
-        {GALLERY.map((slot) => (
-          <div key={slot.key} className={styles.altRow}>
-            <span className={styles.altK}>{t(ALT_LABEL_KEYS[slot.key])}</span>
-            <input
-              type="text"
-              maxLength={100}
-              placeholder={t("marketing:listBusiness.step4.altPlaceholder")}
-              value={draft.alt[slot.key]}
-              onChange={(event) => setAlt(slot.key, event.target.value)}
-            />
-          </div>
-        ))}
+        {GALLERY.map((slot) => {
+          const hasPhoto = Boolean(
+            photoPreviews[slot.key] || draft.photos[slot.key],
+          );
+          // A photo with no alt text is inaccessible in the directory, so alt
+          // becomes required the moment a slot is filled (item #8). Empty slots
+          // never nag.
+          const needsAlt = hasPhoto && !draft.alt[slot.key].trim();
+          return (
+            <div key={slot.key} className={styles.altRow}>
+              <label className={styles.altK} htmlFor={`${fieldId}-${slot.key}`}>
+                {t(ALT_LABEL_KEYS[slot.key])}
+                {hasPhoto && (
+                  <span className={styles.altReq} aria-hidden>
+                    {" *"}
+                  </span>
+                )}
+              </label>
+              <input
+                id={`${fieldId}-${slot.key}`}
+                type="text"
+                maxLength={100}
+                required={hasPhoto}
+                aria-required={hasPhoto}
+                aria-invalid={needsAlt}
+                placeholder={t(
+                  hasPhoto
+                    ? "marketing:listBusiness.step4.altPlaceholderRequired"
+                    : "marketing:listBusiness.step4.altPlaceholder",
+                )}
+                value={draft.alt[slot.key]}
+                onChange={(event) => setAlt(slot.key, event.target.value)}
+              />
+            </div>
+          );
+        })}
       </div>
     </>
   );

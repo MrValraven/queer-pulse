@@ -119,6 +119,31 @@
   min-width: 0;
 }
 
+/* ---- Resume-draft banner ---- */
+.resumeBanner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: rgba(var(--plum-rgb), 0.05);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+.resumeText {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-70);
+  min-width: 0;
+}
+.resumeActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 /* ---- Story-details card ---- */
 .metaCard {
   background: var(--paper);
@@ -297,7 +322,7 @@
 .headlineInput::placeholder,
 .deckInput::placeholder,
 .bodyInput::placeholder {
-  color: rgba(var(--ink-rgb), 0.22);
+  color: var(--ink-40);
 }
 .headlineInput:focus-visible,
 .deckInput:focus-visible,

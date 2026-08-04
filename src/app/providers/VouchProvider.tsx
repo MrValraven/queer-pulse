@@ -1,28 +1,15 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { VouchMemberModal } from "../../features/members/VouchMemberModal";
 import { useAuth } from "./authContext";
 import { useVouchMutations } from "../../features/members/api/useVouchMutations";
+import { useScopedLocalStorage } from "./useScopedLocalStorage";
+import { useStorageScope } from "./useStorageScope";
 import { VouchContext, type VouchStore } from "./useVouch";
 
 const STORAGE_KEY = "qp.vouches.v1";
 
-function readInitial(): string[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    const parsed: unknown = raw ? JSON.parse(raw) : null;
-    return Array.isArray(parsed)
-      ? parsed.filter((x): x is string => typeof x === "string")
-      : [];
-  } catch {
-    return [];
-  }
-}
+const isSlugList = (value: unknown): value is string[] =>
+  Array.isArray(value) && value.every((item) => typeof item === "string");
 
 /**
  * App-wide store of which members the current user has publicly vouched for,
@@ -43,16 +30,17 @@ function readInitial(): string[] {
  *   opener has to render the modal itself. It does not move.
  */
 export function VouchProvider({ children }: { children: ReactNode }) {
-  const [vouched, setVouched] = useState<string[]>(readInitial);
+  // Per-user bucket — a shared device must never surface one member's vouches to
+  // the next (see `useStorageScope`/`useScopedLocalStorage`). `setVouched` keeps
+  // the same `Dispatch<SetStateAction<string[]>>` shape the mutations expect.
+  const scopeId = useStorageScope();
+  const [vouched, setVouched] = useScopedLocalStorage<string[]>(
+    STORAGE_KEY,
+    scopeId,
+    [],
+    isSlugList,
+  );
   const [openSlug, setOpenSlug] = useState<string | null>(null);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(vouched));
-    } catch {
-      /* storage unavailable — keep in-memory only */
-    }
-  }, [vouched]);
 
   const { refresh } = useAuth();
 

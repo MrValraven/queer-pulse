@@ -167,6 +167,7 @@ export function GlossaryPage() {
               <input
                 type="text"
                 placeholder={copy.searchPlaceholder}
+                aria-label={t("resources:queer101.glossary.searchPlaceholder")}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />

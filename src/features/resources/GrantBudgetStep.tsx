@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { FiX } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -19,6 +20,7 @@ export function BudgetStep({
   updateRow: (id: number, field: "item" | "amount", val: string) => void;
 }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   return (
     <>
       <div className={styles.stepTitle}>
@@ -38,6 +40,7 @@ export function BudgetStep({
               placeholder={t(
                 "resources:microGrants.apply.budget.itemPlaceholder",
               )}
+              aria-label={t("resources:microGrants.apply.budget.itemPlaceholder")}
               value={r.item}
               onChange={(e) => updateRow(r.id, "item", e.target.value)}
             />
@@ -45,6 +48,7 @@ export function BudgetStep({
               className={styles.input}
               type="number"
               placeholder="€"
+              aria-label={t("gatherings:checkout.payment.multibancoAmountLabel")}
               min={0}
               max={2000}
               value={r.amount}
@@ -78,10 +82,11 @@ export function BudgetStep({
       <div className={styles.hint}>
         {t("resources:microGrants.apply.budget.hint")}
       </div>
-      <label className={styles.label}>
+      <label className={styles.label} htmlFor={`${fieldId}-other`}>
         {t("resources:microGrants.apply.budget.otherContributionsLabel")}
       </label>
       <input
+        id={`${fieldId}-other`}
         className={styles.input}
         type="text"
         placeholder={t(

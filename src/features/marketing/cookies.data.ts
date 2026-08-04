@@ -52,6 +52,10 @@ export const COOKIE_CATEGORIES: CookieCategory[] = [
   {
     id: "functional",
     titleKey: "marketing:cookies.functional.title",
+    // Preference storage (theme/language/notification prefs) is strictly
+    // necessary to honour a member's own choices — the consent gate treats it
+    // as always-on, so it is shown that way rather than as a fake toggle.
+    required: true,
     bodyKey: "marketing:cookies.functional.body",
     cookies: [
       {

@@ -71,6 +71,7 @@ function edgeTip(
   return {
     kind: "edge",
     label,
+    edgeKind: e.kind,
     relationship: relationshipLabel(t, e.relationship) ?? undefined,
     reason: e.reason ?? undefined,
     date: fmt.date(monthDate(e.date), MONTH_YEAR),

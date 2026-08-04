@@ -49,10 +49,15 @@ describe("ProfileCommunitiesSection", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("renders a prompt for self when empty", () => {
+  it("renders a prompt for self when empty", async () => {
     mockFeaturedCommunities = [];
     renderSection({ isSelf: true });
-    expect(screen.getByText("Feature your communities")).toBeInTheDocument();
+    // The `members` namespace loads lazily (catalogs/index.ts), so the empty
+    // prompt's title resolves after the post-commit fetch — await it rather
+    // than reading the raw key.
+    expect(
+      await screen.findByText("Feature your communities"),
+    ).toBeInTheDocument();
   });
 
   it("renders cards for an owner previewing (resolves from draft, public presentation)", () => {

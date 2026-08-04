@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
+import { FiBriefcase } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import {
   Button,
+  EmptyState,
   FadeIn,
   Outro,
   Reveal,
@@ -11,6 +13,7 @@ import {
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useConnect } from "../../app/providers/useConnect";
 import { routes } from "../../app/routeMap";
 import {
@@ -115,8 +118,10 @@ const HEALTHCARE: Right[] = [
 ];
 
 /**
- * Mock lawyer directory. In live mode this is a fetched, vetted directory —
- * name/spec/tags/loc are content, left in English per the scope rule.
+ * Mock lawyer directory — demo-only. There is NO lawyer-directory backend yet,
+ * so live mode must not render these fabricated, "consultation-bookable"
+ * profiles; it shows an honest coming-soon instead (see the `#lawyers` section).
+ * Names/spec/tags/loc are content, left in English per the scope rule.
  */
 const LAWYERS = [
   {
@@ -218,6 +223,7 @@ function RightsSection({
 
 export function LegalPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { openConnect } = useConnect();
   const loading = useSimulatedLoad();
   const pageTitle = t("resources:legal.meta.title");
@@ -310,6 +316,17 @@ export function LegalPage() {
           <Reveal as="p" className={styles.leadP}>
             {t("resources:legal.lawyers.lead")}
           </Reveal>
+          {!demoMode ? (
+            <EmptyState
+              icon={<FiBriefcase />}
+              title={t("resources:legal.lawyers.live.title")}
+              description={t("resources:legal.lawyers.live.body")}
+              action={{
+                label: t("resources:legal.lawyers.live.cta"),
+                to: routes.report,
+              }}
+            />
+          ) : (
           <div className={styles.grid} aria-busy={loading}>
             {loading
               ? Array.from({ length: LAWYERS.length }).map((_, i) => (
@@ -352,6 +369,7 @@ export function LegalPage() {
                   </FadeIn>
                 ))}
           </div>
+          )}
         </div>
       </section>
 

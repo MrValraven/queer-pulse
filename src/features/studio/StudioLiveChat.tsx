@@ -81,7 +81,10 @@ export function StudioLiveChat({ onTip }: { onTip: () => void }) {
       </div>
       <div className={s.chatFoot}>
         <div className={s.chatInput}>
-          <input placeholder={t("studio:liveChat.inputPlaceholder")} />
+          <input
+            aria-label={t("studio:liveChat.inputPlaceholder")}
+            placeholder={t("studio:liveChat.inputPlaceholder")}
+          />
           <button
             type="button"
             title={t("studio:liveChat.sendAria")}

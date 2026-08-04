@@ -5,6 +5,7 @@ import {
   type CreateLandlordBody,
   type LandlordDetailDTO,
 } from "./landlord.api";
+import { economyKeys } from "./economyKeys";
 
 /** POST /landlords. Demo fakes a short "sending…" beat with no network; live
  * creates the landlord (→ review) and invalidates the board list. */
@@ -23,7 +24,9 @@ export function useSuggestLandlord() {
     },
     onSuccess: () => {
       if (!demoMode) {
-        void queryClient.invalidateQueries({ queryKey: ["landlords"] });
+        void queryClient.invalidateQueries({
+          queryKey: economyKeys.landlordsRoot,
+        });
       }
     },
   });

@@ -100,6 +100,11 @@ export const system: Catalog = {
     "Your account is <em>suspended</em> for {days} days.",
   "accountSuspended.lead":
     "A moderator reviewed a report and decided your recent message in <b>{channel}</b> crossed §02·02 of the Code of Conduct (<em>repeated misgendering</em>). This is a <b>temporary suspension at rung 3</b> of the moderation ladder.",
+  // Live-mode lead (real suspended member) — the specifics live in the reason
+  // block below, sourced from the moderator's note, so this stays general.
+  "accountSuspended.leadLive":
+    "Your account is paused while a moderation decision stands. Here's what happened — and how to respond.",
+  "accountSuspended.reason.title": "Why your account was paused",
   "accountSuspended.details.action": "Action",
   "accountSuspended.details.actionValue": "{days}-day suspension",
   "accountSuspended.details.started": "Started",
@@ -195,9 +200,12 @@ export const system: Catalog = {
   "inviteState.notFound.heading": "We couldn't <em>place this link.</em>",
   "inviteState.notFound.lead":
     "This invite link doesn't match anything on our side. It may have been mistyped or cut short when it was shared. Ask for a fresh one and we'll get you in.",
+  "inviteState.inviterInactive.eyebrow": "Inviter no longer active",
+  "inviteState.inviterInactive.heading": "The person who invited you has <em>moved on.</em>",
+  "inviteState.inviterInactive.lead":
+    "Whoever sent this invite is no longer active on QueerPulse, so their link can't bring you in. Nothing you did — ask another member you know for a fresh invite, or request one and we'll take it from there.",
   "inviteState.details.expiredOn": "Expired",
   "inviteState.details.vouchedBy": "Vouched by",
-  "inviteState.actions.resend": "Ask {name} to re-send →",
   "inviteState.actions.requestNew": "Request a fresh invite",
   "inviteState.actions.signIn": "Sign in",
   "inviteState.actions.contact": "Talk to the team",
@@ -264,15 +272,17 @@ export const system: Catalog = {
     "Built by humans in Lisbon, who'd rather we ship slowly than break crisis support.",
 
   // ── OfflinePage.tsx ───────────────────────────────────────────────────────
-  "offline.eyebrow": "No connection · cached version",
+  "offline.eyebrow": "No connection",
   "offline.h1": "You're <em>offline.</em>",
   "offline.lead":
-    "No signal, or our servers can't be reached. <b>Don't worry</b> — your gathering RSVPs, your saved safe-spaces map, and your QR ticket are still here on this device.",
-  "offline.cachedTitle": "Available offline · cached on your device",
-  "offline.cached.ticket.label": "Your QR ticket — Open clinic night",
-  "offline.cached.ticket.sub": "{date} · Café Beirão · cached 3h ago",
-  "offline.cached.map.label": "Safe-spaces map · Lisbon",
-  "offline.cached.map.sub": "42 venues · updated {when}",
+    "No signal, or we can't reach our servers right now. <b>Pages you've already opened</b> on this device may still load — try one below.",
+  "offline.tryTitle": "Try a page you've opened before",
+  "offline.links.feed.label": "Community feed",
+  "offline.links.feed.sub": "The latest from your community",
+  "offline.links.events.label": "Events",
+  "offline.links.events.sub": "What's happening and your RSVPs",
+  "offline.links.messages.label": "Messages",
+  "offline.links.messages.sub": "Your recent conversations",
   "offline.status": "Listening for signal",
   "offline.retryCta": "Try again",
   "offline.retryingCta": "Still offline",
@@ -298,7 +308,7 @@ export const system: Catalog = {
   "pendingReview.timeline.step4.title":
     "Invitation sent · activates within 14 days",
   "pendingReview.timeline.step4.desc":
-    "You'll get an email with a single-use link",
+    "You'll get a single-use link to activate your account",
   "pendingReview.actions.magazineCta": "Read the magazine →",
   "pendingReview.actions.vouchCta": "Ask a member to vouch",
   "pendingReview.actions.updateInterestsCta": "Update my interests",

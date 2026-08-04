@@ -3,23 +3,27 @@ import { Modal, FormField, Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { describeError } from "../../shared/api/errorMessage";
-import { useAskListingQuestion } from "./api/useAskListingQuestion";
+import type { useAskListingQuestion } from "./api/useAskListingQuestion";
 import type { ListingQueueRow } from "./api/adminListings.api";
 
 const MAX_LENGTH = 2000;
 
 export function AskQuestionModal({
   row,
+  askQuestion,
   onClose,
   onAsked,
 }: {
   row: ListingQueueRow;
+  /** The shared moderation mutation (see `useListingModeration`), so this
+   *  modal's in-flight submit is part of the row/drawer's unified
+   *  `isPending`, not a second untracked mutation instance. */
+  askQuestion: ReturnType<typeof useAskListingQuestion>;
   onClose: () => void;
   onAsked: (ref: string) => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const askQuestion = useAskListingQuestion();
   const [body, setBody] = useState("");
   const [error, setError] = useState<string | null>(null);
   const trimmed = body.trim();

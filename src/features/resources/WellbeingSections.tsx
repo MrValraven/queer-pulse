@@ -1,9 +1,11 @@
+import { FiHeart } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { Button, Reveal } from "../../shared/components/ui";
+import { Button, EmptyState, Reveal } from "../../shared/components/ui";
 import { useConnect } from "../../app/providers/useConnect";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { useTherapists } from "./api/useTherapists";
 import { THERAPISTS, CRISIS, HARM } from "./wellbeing.data";
 import styles from "./resources.module.css";
 
@@ -11,6 +13,11 @@ import styles from "./resources.module.css";
 export function TherapistsSection() {
   const { openConnect } = useConnect();
   const { t } = useTranslation();
+  // Live mode has no therapist backend, so the mock directory (named personas +
+  // a working "Request intro" CTA) is fabricated. Never surface bookable fake
+  // therapists against the real API; show an honest coming-soon instead. Demo
+  // mode keeps the `THERAPISTS` mock.
+  const { comingSoon } = useTherapists();
   return (
     <section
       className={`${styles.section} ${styles.sectionPaper}`}
@@ -29,6 +36,17 @@ export function TherapistsSection() {
             components={{ a: <Link to={routes.contact} /> }}
           />
         </Reveal>
+        {comingSoon ? (
+          <EmptyState
+            icon={<FiHeart />}
+            title={t("resources:therapistProfilePage.live.title")}
+            description={t("resources:therapistProfilePage.live.body")}
+            action={{
+              label: t("resources:therapistProfilePage.live.cta"),
+              to: routes.mentalHealth,
+            }}
+          />
+        ) : (
         <div className={styles.grid}>
           {THERAPISTS.map((therapist, index) => (
             <Reveal
@@ -80,6 +98,7 @@ export function TherapistsSection() {
             </div>
           </Reveal>
         </div>
+        )}
       </div>
     </section>
   );

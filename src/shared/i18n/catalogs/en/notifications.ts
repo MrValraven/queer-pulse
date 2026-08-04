@@ -154,6 +154,20 @@ export const notifications: Catalog = {
   "type.roadmap_status.text": "There's an update on an idea you shared.",
   "type.roadmap_status.meta": "Roadmap update",
 
+  // Moderation outcome — headline per action; the moderator's member-facing note
+  // ("the reason the member reads") rides in as {note}. Tapping opens the appeal
+  // page. The flat keys are the fallback for an unrecognised action.
+  "type.moderation_outcome.text": "There's a decision from the moderation team.",
+  "type.moderation_outcome.meta": "{note}",
+  "type.moderation_outcome.warn.text":
+    "You've received a warning from the moderation team.",
+  "type.moderation_outcome.warn.meta": "{note}",
+  "type.moderation_outcome.suspend.text": "Your account has been suspended.",
+  "type.moderation_outcome.suspend.meta": "{note}",
+  "type.moderation_outcome.ban.text":
+    "Your account has been permanently suspended.",
+  "type.moderation_outcome.ban.meta": "{note}",
+
   "type.unknown.text": "You have a new notification.",
   "type.unknown.meta": "Notification",
 

@@ -9,7 +9,7 @@ import {
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileData } from "../../app/providers/useProfile";
 import { initialsFromName } from "../../shared/lib/initials";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { personaShareUrlForOwner } from "./personaLinks.data";
@@ -40,6 +40,8 @@ function toPublicView(
     ownerName: undefined,
     viewerEndorsed: false,
     viewerFollowing: false,
+    // The signed-in owner is trivially a member of their own persona.
+    viewerIsMember: true,
   };
 }
 
@@ -57,7 +59,7 @@ export function MySubprofileRow({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   const [shareCardOpen, setShareCardOpen] = useState(false);
   const status = STATUS_BADGE[subprofile.status];
   const link = LINK_BADGE[subprofile.linkVisibility];

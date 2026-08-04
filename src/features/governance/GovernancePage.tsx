@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { PageShell } from "../../shared/components/layout";
-import { Reveal, SubpageIndex } from "../../shared/components/ui";
+import { FeatureHelp, Reveal, SubpageIndex } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
@@ -66,7 +66,8 @@ export function GovernancePage() {
             <Translation
               i18nKey="governance:page.hero.title"
               components={{ em: <em /> }}
-            />
+            />{" "}
+            <FeatureHelp id="governance.hub" />
           </Reveal>
           <Reveal as="p" delay={120}>
             {t("governance:page.hero.lead")}

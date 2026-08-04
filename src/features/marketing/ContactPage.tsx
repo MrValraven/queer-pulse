@@ -5,6 +5,7 @@ import { PageShell } from "../../shared/components/layout";
 import { Button, FormField, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import s from "./ContactPage.module.css";
@@ -48,6 +49,7 @@ const ROUTES: {
 
 export function ContactPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", topic: "", message: "" });
   const valid =
@@ -97,7 +99,23 @@ export function ContactPage() {
           </Reveal>
 
           <Reveal className={s.form} delay={90}>
-            {sent ? (
+            {!demoMode ? (
+              <div className={s.sent}>
+                <div className={s.tyIcon}>
+                  <FiMail size={26} color="var(--jade)" aria-hidden />
+                </div>
+                <h2>
+                  <Translation
+                    i18nKey="marketing:contact.comingSoon.title"
+                    components={{ em: <em /> }}
+                  />
+                </h2>
+                <p>{t("marketing:contact.comingSoon.body")}</p>
+                <Button variant="ghost" href="mailto:hello@queerpulse.pt">
+                  {t("marketing:contact.comingSoon.emailCta")}
+                </Button>
+              </div>
+            ) : sent ? (
               <div className={s.sent}>
                 <div className={s.tyIcon}>
                   <svg viewBox="0 0 24 24" fill="none">

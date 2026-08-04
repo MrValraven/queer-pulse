@@ -6,6 +6,7 @@ import { authorHref } from "./forumAuthor.helpers";
 import { ModeratorByline } from "./ThreadReplies";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { FeatureHelp } from "../../shared/components/ui";
 import { PostActionsMenu } from "./PostActionsMenu";
 import styles from "./ThreadPage.module.css";
 
@@ -15,8 +16,7 @@ export function ThreadOpCard({
   body,
   editedAt,
   deleted,
-  liked,
-  setLiked,
+  onVote,
   bookmarked,
   setBookmarked,
   onReport,
@@ -34,8 +34,10 @@ export function ThreadOpCard({
   body: string[];
   editedAt: string | null;
   deleted: boolean;
-  liked: boolean;
-  setLiked: (fn: (v: boolean) => boolean) => void;
+  /** Cast/retract the viewer's vote on the opening post. Pressed-state and the
+   *  count are read straight off the thread view-model (`myVote`/`upvotes`),
+   *  which the vote mutation patches in place — no local like state. */
+  onVote: () => void;
   bookmarked: boolean;
   setBookmarked: (fn: (v: boolean) => boolean) => void;
   onReport: () => void;
@@ -52,6 +54,7 @@ export function ThreadOpCard({
   const fmt = useFormat();
   const catMeta = CATS.find((c) => c.id === thread.category);
   const catColor = CAT_STYLE[thread.category]?.color ?? "var(--plum)";
+  const voted = !!thread.myVote;
 
   return (
     <div className={styles.opCard}>
@@ -125,7 +128,9 @@ export function ThreadOpCard({
           />
         </div>
       </div>
-      <h1 className={styles.opTitle}>{title}</h1>
+      <h1 className={styles.opTitle}>
+        {title} <FeatureHelp id="forum.thread" />
+      </h1>
       <div className={styles.opBody}>
         {deleted ? (
           <p className={styles.tombstone}>
@@ -154,19 +159,25 @@ export function ThreadOpCard({
         <div className={styles.opFooter}>
           <button
             type="button"
-            className={[styles.reaction, liked && styles.reactionOn]
+            aria-pressed={voted}
+            aria-label={
+              voted
+                ? t("forum:threadOp.unvoteAria")
+                : t("forum:threadOp.voteAria")
+            }
+            className={[styles.reaction, voted && styles.reactionOn]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => setLiked((v) => !v)}
+            onClick={onVote}
           >
-            <svg viewBox="0 0 14 14">
+            <svg viewBox="0 0 14 14" aria-hidden="true">
               <path
                 d="M7 12s-7-4.5-7-8a4 4 0 0 1 7-2.7A4 4 0 0 1 14 4c0 3.5-7 8-7 8z"
                 fill="currentColor"
                 stroke="none"
               />
             </svg>
-            {thread.upvotes + (liked ? 1 : 0)}
+            {thread.upvotes}
           </button>
           <button
             type="button"

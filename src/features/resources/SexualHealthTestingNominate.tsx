@@ -43,6 +43,7 @@ export function TestingNominate() {
             placeholder={t(
               "resources:sexualHealth.testing.nominate.placeholder",
             )}
+            aria-label={t("resources:sexualHealth.testing.nominate.placeholder")}
           />
           <div style={{ marginTop: 12 }}>
             <Button

@@ -1,4 +1,10 @@
-import { communityPath, businessPath, thread } from "../../../app/routeMap";
+import {
+  communityPath,
+  businessPath,
+  personaPath,
+  routes,
+  thread,
+} from "../../../app/routeMap";
 import { gatheringPath } from "../../gatherings/data";
 import type { SearchItem } from "../search.data";
 import type { SearchResultDTO, LiveResultType } from "./search.api";
@@ -15,6 +21,20 @@ const hrefFor = (result: SearchResultDTO): string => {
       return thread(result.slug);
     case "business":
       return businessPath(result.slug);
+    case "magazine":
+      // The article page reads its identifier from the `id` query param.
+      return `${routes.article}?id=${result.slug}`;
+    case "job":
+      return `${routes.jobs}/${result.slug}`;
+    case "housing":
+      return `${routes.housing}/${result.slug}`;
+    case "resource":
+      return `${routes.resources}/${result.slug}`;
+    case "workshop":
+      return `${routes.skills}/${result.slug}`;
+    case "subprofile":
+      // A subprofile hit's slug IS its public handle (/p/:handle).
+      return personaPath(result.slug);
   }
 };
 

@@ -150,6 +150,57 @@ export default defineConfig([
       //    breakdown. With the tail this small, promoting these rules to
       //    "error" (blocking new a11y debt) is now realistic.
       ...jsxA11yWarnings,
+      // --- Forms accessibility gate (WCAG 1.3.1 / 4.1.2) -------------------
+      // The forms sweep drove every visible `<label>` to an associated control
+      // (htmlFor+id, wrapping, or a converted div→label), and every otherwise
+      // label-less input/select/textarea to an `aria-label`. `label-has-
+      // associated-control` (which DOES resolve htmlFor→id) is now at zero, so
+      // it graduates from "warn" to "error": a new visible label that isn't
+      // wired to a control now blocks CI. This is the anti-regression gate for
+      // the forms work — a developer who adds a `<label>` must associate it.
+      "jsx-a11y/label-has-associated-control": "error",
+      // Complementary control-side check, at "warn". IMPORTANT: this rule cannot
+      // resolve a `<label htmlFor="x">` + `<input id="x">` pairing across
+      // elements — it only sees self-labelling (aria-label / title / nested
+      // text). With `input`/`textarea` un-ignored it reports ~550 false
+      // positives on inputs that ARE correctly labelled via htmlFor. So we keep
+      // the plugin's default `ignoreElements` (input, textarea, audio, canvas,
+      // embed, video, tr): the label-side gate above covers those, while this
+      // catches the OTHER controls — icon-only `<button>`/`<a>` with no text —
+      // going forward. Do not un-ignore input/textarea here.
+      //
+      // NOTE: the ignore list must be passed EXPLICITLY. The rule's own schema
+      // default for `ignoreElements` is `[]`, not the list the *recommended*
+      // config ships — so configuring this as a bare `"warn"` would silently
+      // un-ignore input/textarea and re-introduce the ~550 htmlFor/id false
+      // positives described above. The options below are the recommended set.
+      "jsx-a11y/control-has-associated-label": [
+        "warn",
+        {
+          ignoreElements: [
+            "audio",
+            "canvas",
+            "embed",
+            "input",
+            "textarea",
+            "tr",
+            "video",
+          ],
+          ignoreRoles: [
+            "grid",
+            "listbox",
+            "menu",
+            "menubar",
+            "radiogroup",
+            "row",
+            "tablist",
+            "toolbar",
+            "tree",
+            "treegrid",
+          ],
+          includeRoles: ["alert", "dialog"],
+        },
+      ],
       // --- Type-aware rules (from recommendedTypeChecked) ------------------
       // The two promise-safety rules are the reason type-aware linting was
       // turned on. Both have been driven to zero and are hard errors: a

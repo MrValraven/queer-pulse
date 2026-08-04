@@ -41,10 +41,13 @@ const base: PlatformSettingChangeDTO = {
 };
 
 describe("AdminSettingsHistory", () => {
-  it("shows the empty state when there are no rows", () => {
+  // The `admin:` namespace loads as its own async chunk, so a translated
+  // string is only on screen one render after mount — await it via findBy
+  // rather than querying synchronously (which catches the raw key).
+  it("shows the empty state when there are no rows", async () => {
     changes = [];
     renderHistory();
-    expect(screen.getByText("No changes yet.")).toBeInTheDocument();
+    expect(await screen.findByText("No changes yet.")).toBeInTheDocument();
   });
 
   // `data` is undefined while loading and after a failure just as it is for a
@@ -57,33 +60,33 @@ describe("AdminSettingsHistory", () => {
     expect(screen.queryByText("No changes yet.")).not.toBeInTheDocument();
   });
 
-  it("says the load failed rather than 'No changes yet.' on error", () => {
+  it("says the load failed rather than 'No changes yet.' on error", async () => {
     changes = undefined;
     isError = true;
     renderHistory();
-    expect(screen.queryByText("No changes yet.")).not.toBeInTheDocument();
     expect(
-      screen.getByText("Couldn’t load recent changes."),
+      await screen.findByText("Couldn’t load recent changes."),
     ).toBeInTheDocument();
+    expect(screen.queryByText("No changes yet.")).not.toBeInTheDocument();
   });
 
-  it("renders the deleted-admin label rather than a blank when actorId is null", () => {
+  it("renders the deleted-admin label rather than a blank when actorId is null", async () => {
     changes = [{ ...base, actorId: null }];
     renderHistory();
-    expect(screen.getByText("by a deleted admin")).toBeInTheDocument();
+    expect(await screen.findByText("by a deleted admin")).toBeInTheDocument();
   });
 
-  it("renders boolean strings as on/off rather than the raw \"true\"/\"false\"", () => {
+  it("renders boolean strings as on/off rather than the raw \"true\"/\"false\"", async () => {
     changes = [{ ...base, oldValue: "true", newValue: "false" }];
     renderHistory();
     expect(
-      screen.getByText("Registration: on → off"),
+      await screen.findByText("Registration: on → off"),
     ).toBeInTheDocument();
     expect(screen.queryByText(/\btrue\b/)).not.toBeInTheDocument();
     expect(screen.queryByText(/\bfalse\b/)).not.toBeInTheDocument();
   });
 
-  it("renders a null newValue as \"cleared\" rather than the literal null", () => {
+  it("renders a null newValue as \"cleared\" rather than the literal null", async () => {
     changes = [
       {
         ...base,
@@ -94,7 +97,7 @@ describe("AdminSettingsHistory", () => {
     ];
     renderHistory();
     expect(
-      screen.getByText("Maintenance message: Back soon. → cleared"),
+      await screen.findByText("Maintenance message: Back soon. → cleared"),
     ).toBeInTheDocument();
     expect(screen.queryByText(/\bnull\b/)).not.toBeInTheDocument();
   });

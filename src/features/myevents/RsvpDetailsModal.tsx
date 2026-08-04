@@ -77,6 +77,7 @@ export function RsvpDetailsModal() {
               <input
                 type="text"
                 placeholder={t("myevents:rsvpModal.guestNamePlaceholder")}
+                aria-label={t("myevents:rsvpModal.guestNamePlaceholder")}
               />
             </div>
           </div>

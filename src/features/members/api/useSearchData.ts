@@ -42,8 +42,11 @@ export function useSearchData(query: string): SearchDataResult {
   const searchQuery = useQuery({
     queryKey: ["search", demoMode, debounced],
     enabled: !demoMode && !checking && loggedIn && debounced.length >= 1,
-    queryFn: async () => {
-      const response = await searchApi(debounced);
+    // Forward react-query's own cancellation signal into the fetch — a fast
+    // retype (new `debounced` → new queryKey) cancels the previous
+    // keystroke's request at the network layer, not just in the query cache.
+    queryFn: async ({ signal }) => {
+      const response = await searchApi(debounced, undefined, signal);
       return response.results.map(resultToSearchItem);
     },
   });

@@ -211,14 +211,20 @@ export function buildLocalBusinessSchema(
       Sat: "Saturday",
       Sun: "Sunday",
     };
-    const spec = Object.entries(place.hours)
-      .filter(([, day]) => day?.open && day.from && day.to)
-      .map(([id, day]) => ({
-        "@type": "OpeningHoursSpecification" as const,
-        dayOfWeek: DAY_OF_WEEK[id] ?? id,
-        opens: day.from,
-        closes: day.to,
-      }));
+    // One OpeningHoursSpecification per open interval, so a lunch-break split
+    // (two intervals) emits two rows — the shape schema.org expects.
+    const spec = Object.entries(place.hours).flatMap(([id, day]) =>
+      day?.open
+        ? day.intervals
+            .filter((interval) => interval.from && interval.to)
+            .map((interval) => ({
+              "@type": "OpeningHoursSpecification" as const,
+              dayOfWeek: DAY_OF_WEEK[id] ?? id,
+              opens: interval.from,
+              closes: interval.to,
+            }))
+        : [],
+    );
     if (spec.length > 0) schema.openingHoursSpecification = spec;
   }
 

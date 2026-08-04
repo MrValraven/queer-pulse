@@ -64,6 +64,7 @@ export function PostJobSkills({ form }: { form: PostJobForm }) {
             setHl(-1);
           }}
           onKeyDown={onKey}
+          aria-label={t("economy:postJob.skills.placeholder")}
           placeholder={t("economy:postJob.skills.placeholder")}
         />
         <button

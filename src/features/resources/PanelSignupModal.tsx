@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Button, Sending } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ResourceModal, PlumSuccess } from "./ResourceModal";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { ResourceModal, PlumSuccess, PlumComingSoon } from "./ResourceModal";
 import styles from "./ResourceModal.module.css";
 
 export function PanelSignupModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  const fieldId = useId();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [why, setWhy] = useState("");
@@ -20,6 +23,25 @@ export function PanelSignupModal({ onClose }: { onClose: () => void }) {
     setPhase("loading");
     setTimeout(() => setPhase("done"), 1100);
   };
+
+  // LIVE: no panel-signup endpoint exists — show an honest coming-soon panel
+  // instead of a mock form that fakes a "you're on the list" success.
+  if (!demoMode) {
+    return (
+      <ResourceModal title="" onClose={onClose}>
+        <PlumComingSoon
+          title={
+            <Translation
+              i18nKey="resources:microGrants.panel.comingSoon.title"
+              components={{ em: <em /> }}
+            />
+          }
+          sub={t("resources:microGrants.panel.comingSoon.sub")}
+          onClose={onClose}
+        />
+      </ResourceModal>
+    );
+  }
 
   return (
     <ResourceModal
@@ -46,10 +68,11 @@ export function PanelSignupModal({ onClose }: { onClose: () => void }) {
               {t("resources:microGrants.panel.intro")}
             </p>
 
-            <span className={styles.label}>
+            <label className={styles.label} htmlFor={`${fieldId}-name`}>
               {t("resources:microGrants.panel.nameLabel")}
-            </span>
+            </label>
             <input
+              id={`${fieldId}-name`}
               className={styles.input}
               autoComplete="name"
               value={name}
@@ -57,10 +80,11 @@ export function PanelSignupModal({ onClose }: { onClose: () => void }) {
               placeholder={t("resources:microGrants.panel.namePlaceholder")}
             />
 
-            <span className={styles.label}>
+            <label className={styles.label} htmlFor={`${fieldId}-email`}>
               {t("resources:microGrants.panel.emailLabel")}
-            </span>
+            </label>
             <input
+              id={`${fieldId}-email`}
               className={styles.input}
               type="email"
               autoComplete="email"
@@ -69,10 +93,11 @@ export function PanelSignupModal({ onClose }: { onClose: () => void }) {
               placeholder={t("resources:microGrants.panel.emailPlaceholder")}
             />
 
-            <span className={styles.label}>
+            <label className={styles.label} htmlFor={`${fieldId}-why`}>
               {t("resources:microGrants.panel.whyLabel")}
-            </span>
+            </label>
             <textarea
+              id={`${fieldId}-why`}
               className={styles.textarea}
               value={why}
               onChange={(e) => setWhy(e.target.value)}

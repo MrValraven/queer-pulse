@@ -11,6 +11,7 @@ export { Reveal } from "./Reveal";
 export { FadeIn } from "./FadeIn";
 export { Outro } from "./Outro";
 export { Tooltip } from "./Tooltip";
+export { FeatureHelp } from "./FeatureHelp";
 
 // Composition-level primitives (extracted from per-feature duplicates)
 export { FormField } from "./FormField";
@@ -18,6 +19,11 @@ export { Modal, ModalSheet } from "./Modal";
 export { SuccessPanel } from "./SuccessPanel";
 export { Spinner, Sending } from "./Spinner";
 export { FilterChips, ChipSelect, type ChipOption } from "./ChipSelect";
+export {
+  RadioCardGroup,
+  type RadioCardOption,
+  type RadioCardGroupProps,
+} from "./RadioCardGroup";
 export { useChipSet } from "./useChipSet";
 export { SearchInput } from "./SearchInput";
 export { Tabs, type Tab } from "./Tabs";
@@ -44,3 +50,11 @@ export {
   type StepperSize,
   type StepperMarker,
 } from "./Stepper";
+export { PullToRefresh } from "./PullToRefresh";
+export {
+  usePullToRefresh,
+  resolvePull,
+  type UsePullToRefreshOptions,
+  type UsePullToRefreshResult,
+  type PullToRefreshBind,
+} from "./usePullToRefresh";

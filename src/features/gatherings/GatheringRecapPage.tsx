@@ -90,7 +90,7 @@ export function GatheringRecapPage() {
   }
 
   return (
-    <AppShell unreadCount={3}>
+    <AppShell>
       <div className={styles.hero}>
         <div className="wrap">
           <div className={styles.eyebrow}>{t("gatherings:recap.eyebrow")}</div>
@@ -139,6 +139,7 @@ export function GatheringRecapPage() {
         type="file"
         accept="image/*"
         hidden
+        aria-label={t("gatherings:recap.submitYoursCta")}
         onChange={(e) => {
           void handleFile(e.target.files?.[0]);
           e.target.value = "";

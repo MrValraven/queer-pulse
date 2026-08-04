@@ -1,0 +1,114 @@
+/* ── Listing queue header: search + sort + status chips ──────────────────── */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 4px 0 4px;
+}
+
+.controlsRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.search {
+  flex: 1 1 260px;
+  min-width: 0;
+  max-width: 420px;
+}
+
+.sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: none;
+}
+.sortLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.sortSelect {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 999px;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: border-color 0.18s var(--ease);
+}
+@media (hover: hover) {
+  .sortSelect:hover {
+    border-color: var(--line-strong);
+  }
+}
+[data-theme="dark"] .sortSelect {
+  border-color: rgba(var(--cream-rgb), 0.14);
+}
+/* Touch: lift the native select to the ≥44px target minimum while the
+   resting control stays visually compact. */
+@media (pointer: coarse) {
+  .sortSelect {
+    min-height: 44px;
+  }
+}
+
+/* Status filter chips — deliberately separated pill buttons (own border per
+   chip), not the connected `SegmentedControl` tray the view switch uses one
+   level up, so the two controls read as distinct kinds of choice. */
+.statusChips {
+  display: inline-flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.statusChip {
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  background: var(--paper);
+  color: var(--ink-60);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.16s var(--ease),
+    color 0.16s var(--ease),
+    background 0.16s var(--ease);
+}
+@media (hover: hover) {
+  .statusChip:hover {
+    border-color: rgba(var(--line-rgb), 0.3);
+    color: var(--text-strong);
+  }
+}
+.statusChipOn {
+  border-color: var(--line-strong);
+  color: var(--text-strong);
+  background: rgba(var(--plum-rgb), 0.06);
+}
+@media (hover: hover) {
+  .statusChipOn:hover {
+    border-color: var(--line-strong);
+  }
+}
+/* Touch: keep the resting pill compact but guarantee a ≥44px tap strip. */
+@media (pointer: coarse) {
+  .statusChip {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sortSelect,
+  .statusChip {
+    transition: none;
+  }
+}

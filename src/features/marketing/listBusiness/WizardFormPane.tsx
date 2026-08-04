@@ -47,7 +47,12 @@ export function WizardFormPane({
     <div className={styles.page}>
       <div className={styles.grid}>
         <div>
-          <WizardChrome step={step} savedAt={savedAt} isEdit={isEdit} />
+          <WizardChrome
+            step={step}
+            savedAt={savedAt}
+            isEdit={isEdit}
+            onJump={goToStep}
+          />
           {/* Keyed by step so the pane remounts on navigation, replaying
               the staggered entrance of each .stepBody child. */}
           <div key={step} className={styles.pane}>

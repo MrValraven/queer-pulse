@@ -1,0 +1,53 @@
+/* Header + form treatment for the "Report / dispute this listing" sheet.
+ * Mirrors the shared ModalSheet header idiom (eyebrow → serif title with a
+ * coral <em> → muted sub) used by the therapist vouch modal and the economy
+ * report flows; the fields themselves are styled by <FormField>. */
+.eyebrow {
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.title {
+  margin-bottom: 8px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.sub {
+  margin-bottom: 18px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+
+.counter {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ink-40);
+}
+
+.note {
+  margin-top: 14px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-40);
+}
+
+.foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}

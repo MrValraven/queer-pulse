@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { FiX } from "react-icons/fi";
 import { Avatar } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { activeLocale } from "../../shared/i18n/locale";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SeenByEntry } from "./groupReceipts";
 import styles from "./NewMessageModal.module.css";
@@ -11,7 +12,7 @@ function readTime(iso: string | undefined): string {
   if (!iso) return "";
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+  return date.toLocaleTimeString(activeLocale(), { hour: "numeric", minute: "2-digit" });
 }
 
 interface GroupSeenBySheetProps {

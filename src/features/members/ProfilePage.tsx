@@ -9,6 +9,7 @@ import { useProfile } from "../../app/providers/useProfile";
 import { useAuth } from "../../app/providers/authContext";
 import { useSocial } from "../../app/providers/useSocial";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useMediaQuery } from "../../shared/hooks";
 import { currentUserSlug } from "./data/memberProfiles";
 import { useMemberProfile } from "./api/useMemberProfile";
 import { ProfileHero, ProfileContent } from "./ProfileSections";
@@ -18,6 +19,7 @@ import { PlacesSection } from "./PlacesSection";
 import { EditableProfileHero } from "./EditableProfileHero";
 import { ProfileEditBar } from "./ProfileEditBar";
 import { useProfileEditGuard } from "./useProfileEditGuard";
+import { MobileProfileView } from "./MobileProfileView";
 import {
   ProfileLoadingState,
   ProfileErrorState,
@@ -74,6 +76,10 @@ export function ProfilePage() {
   const selfView = isSelf && !previewing;
 
   useProfileEditGuard({ isEditing, isDirty, cancelEditing });
+  // Hooks must run unconditionally on every render, so this is read here —
+  // above the early-return guards below — even though it's only consumed
+  // after them.
+  const isMobile = useMediaQuery("(max-width: 640px)");
 
   if (isSelf && isProfileLoading) return <ProfileLoadingState />;
   if (isSelf && isProfileError) {
@@ -91,6 +97,11 @@ export function ProfilePage() {
   // profile is non-null here by the invariant above; assert to satisfy ProfileHero/ProfileContent.
   const resolvedProfile = profile!;
 
+  // Mobile Instagram-style layout for the VIEW state only — editing keeps the
+  // existing inline editor (which is already responsive) regardless of width.
+  const useMobileLayout = isMobile && !(selfView && isEditing);
+  const ownerSlug = isSelf ? (selfSlug ?? "") : (slug ?? "");
+
   return (
     <PageShell>
       <div className={`${styles.backBar} wrap`}>
@@ -99,13 +110,14 @@ export function ProfilePage() {
         </Link>
       </div>
 
-      {selfView && isEditing ? (
-        <EditableProfileHero focusLinks={focusLinks} />
-      ) : (
-        <ProfileHero
+      {useMobileLayout ? (
+        <MobileProfileView
           profile={resolvedProfile}
-          self={isSelf}
-          asVisitor={isSelf && previewing}
+          isSelf={isSelf}
+          selfView={selfView}
+          previewing={previewing}
+          otherMember={isSelf ? null : otherMember}
+          ownerSlug={ownerSlug}
           onEdit={() => enterEdit(false)}
           onEditLinks={() => enterEdit(true)}
           onPreview={() => {
@@ -113,45 +125,60 @@ export function ProfilePage() {
             window.scrollTo({ top: 0 });
           }}
         />
+      ) : (
+        <>
+          {selfView && isEditing ? (
+            <EditableProfileHero focusLinks={focusLinks} />
+          ) : (
+            <ProfileHero
+              profile={resolvedProfile}
+              self={isSelf}
+              asVisitor={isSelf && previewing}
+              onEdit={() => enterEdit(false)}
+              onEditLinks={() => enterEdit(true)}
+              onPreview={() => {
+                setPreviewing(true);
+                window.scrollTo({ top: 0 });
+              }}
+            />
+          )}
+
+          {/* "Also as…" — the owner's linked + published personas, surfaced right
+              after the hero as the second thing on the profile. Public viewers see
+              only linked personas (the hook enforces this); self view adds a manage
+              link and a create prompt when empty. Preview counts as a public view. */}
+          <ProfileSubprofilesSection ownerSlug={ownerSlug} isSelf={selfView} />
+
+          <ProfileContent
+            profile={resolvedProfile}
+            isSelf={selfView}
+            edit={
+              selfView && isEditing
+                ? {
+                    work: draft.work,
+                    skills: draft.skills,
+                    groups: draft.groups,
+                    board: draft.board,
+                    update: (patch) => updateDraft(patch),
+                  }
+                : undefined
+            }
+          />
+
+          <ProfileCommunitiesSection
+            isSelf={isSelf}
+            previewing={previewing}
+            otherMember={isSelf ? null : otherMember}
+            firstName={resolvedProfile.first}
+          />
+
+          <PlacesSection
+            memberSlug={ownerSlug}
+            isSelf={selfView}
+            firstName={resolvedProfile.first}
+          />
+        </>
       )}
-
-      {/* "Also as…" — the owner's linked + published personas, surfaced right
-          after the hero as the second thing on the profile. Public viewers see
-          only linked personas (the hook enforces this); self view adds a manage
-          link and a create prompt when empty. Preview counts as a public view. */}
-      <ProfileSubprofilesSection
-        ownerSlug={isSelf ? (selfSlug ?? "") : (slug ?? "")}
-        isSelf={selfView}
-      />
-
-      <ProfileContent
-        profile={resolvedProfile}
-        isSelf={selfView}
-        edit={
-          selfView && isEditing
-            ? {
-                work: draft.work,
-                skills: draft.skills,
-                groups: draft.groups,
-                board: draft.board,
-                update: (patch) => updateDraft(patch),
-              }
-            : undefined
-        }
-      />
-
-      <ProfileCommunitiesSection
-        isSelf={isSelf}
-        previewing={previewing}
-        otherMember={isSelf ? null : otherMember}
-        firstName={resolvedProfile.first}
-      />
-
-      <PlacesSection
-        memberSlug={isSelf ? (selfSlug ?? "") : (slug ?? "")}
-        isSelf={selfView}
-        firstName={resolvedProfile.first}
-      />
 
       {selfView && <ProfileEditBar />}
 

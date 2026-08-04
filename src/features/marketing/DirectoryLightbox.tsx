@@ -130,12 +130,16 @@ export function DirectoryLightbox({
       {/* Full-bleed dialog: click-to-dismiss can't live on the dialog itself,
           so a real button behind the content carries the affordance. Hidden
           from AT since the topbar close button already exposes it, and kept
-          out of the Tab trap above via its tabIndex={-1}. */}
+          out of the Tab trap above via its tabIndex={-1}. `tabIndex={-1}`
+          only drops it from the Tab order, not from click-focus, so we also
+          preventDefault the mousedown: focus must never land on this
+          aria-hidden node (browsers block aria-hidden on a focused element). */}
       <button
         type="button"
         aria-hidden="true"
         tabIndex={-1}
         className={styles.lightboxBackdrop}
+        onMouseDown={(event) => event.preventDefault()}
         onClick={onClose}
       />
       <div className={styles.lightboxTopbar}>

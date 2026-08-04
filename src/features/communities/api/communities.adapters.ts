@@ -207,6 +207,7 @@ export function postDtoToPost(dto: CommunityPostDTO, slug: string): Post {
     pinned: dto.pinned,
     reactions: dto.reactions.map(summaryToReaction),
     replies: dto.replies.map(replyDtoToPostReply),
+    replyCount: dto.replyCount,
     time: relTime(dto.createdAt),
     createdAt: dto.createdAt,
     communitySlug: slug,
@@ -276,6 +277,14 @@ function postReplyToThreadReply(reply: PostReply): Reply {
   };
 }
 
+/** GET .../posts/:id/replies item ("load more replies") → the Thread widget's
+ *  `Reply` view-model — the same two-step DTO→PostReply→Reply mapping
+ *  `postToThread` already applies to the embedded preview, so a loaded-more
+ *  reply renders identically to one that arrived in the post's own payload. */
+export function replyDtoToThreadReply(dto: CommunityReplyDTO): Reply {
+  return postReplyToThreadReply(replyDtoToPostReply(dto));
+}
+
 /** A community `Post` → the Discussion widget's `Thread` view-model. Heading is
  *  the first body line; `votes` is the Heart-reaction count (the discussion
  *  upvote arrow maps to a Heart toggle). */
@@ -290,7 +299,7 @@ export function postToThread(post: Post): Thread {
     title: headingFromBody(post.body),
     author: post.author,
     time: post.time,
-    replyCount: post.replies.length,
+    replyCount: post.replyCount ?? post.replies.length,
     post: post.body,
     replies: post.replies.map(postReplyToThreadReply),
     editedAt: post.editedAt,

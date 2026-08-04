@@ -3,7 +3,6 @@ import {
   FiBookOpen,
   FiCalendar,
   FiHome,
-  FiMail,
   FiMapPin,
   FiUsers,
 } from "react-icons/fi";
@@ -29,7 +28,8 @@ export interface BottomTab {
  * residence is an editorial decision, not a filter. Everything else stays
  * reachable through the "More" tab, which opens the same drawer NAV_MENUS feeds.
  *
- * MEMBER_TABS holds four links; BottomTabBar renders "More" as the fifth slot.
+ * MEMBER_TABS holds three links; BottomTabBar renders "More" and "You" (the
+ * avatar button) as the last two slots.
  * PUBLIC_TABS deliberately holds only three: signing in is the app bar's job
  * (Navbar renders it in the installed-mode strip), and duplicating it at the
  * bottom gave a logged-out visitor two sign-in affordances on one screen.
@@ -48,13 +48,6 @@ export const MEMBER_TABS: BottomTab[] = [
     href: routes.events,
     icon: FiCalendar,
     matchPrefixes: [routes.events, routes.calendar, routes.gatherings],
-  },
-  {
-    key: "messages",
-    labelKey: "nav:messages",
-    href: routes.messages,
-    icon: FiMail,
-    matchPrefixes: [routes.messages],
   },
   {
     key: "members",

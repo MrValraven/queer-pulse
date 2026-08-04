@@ -1,13 +1,15 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { SubmitStoryMeta } from "./SubmitStoryMeta";
 import { SubmitStoryWriter } from "./SubmitStoryWriter";
 import { SubmitStoryCover } from "./SubmitStoryCover";
 import { INITIAL_DRAFT, type DraftForm } from "./submitStory.data";
+import { useStoryDraft } from "./useStoryDraft";
 import { createStorySubmission } from "./api/magazine.api";
 import { MY_SUBMISSIONS_QUERY_KEY } from "./api/useMySubmissions";
 import styles from "./SubmitStoryPage.module.css";
@@ -25,9 +27,14 @@ export function SubmitStoryEditor({
   const queryClient = useQueryClient();
   const [form, setForm] = useState<DraftForm>(INITIAL_DRAFT);
   const [coverName, setCoverName] = useState<string | null>(null);
-  const [saveState, setSaveState] = useState<"saved" | "unsaved">("saved");
   const [submitting, setSubmitting] = useState(false);
-  const firstRun = useRef(true);
+  // Real, guarded localStorage persistence (mirrors the listing wizard): the
+  // draft actually survives navigation, and `saveState` reflects the write.
+  const { saved, savedAt, saveState, saveNow, clearDraft } = useStoryDraft(
+    form,
+    coverName,
+  );
+  const [showResumeBanner, setShowResumeBanner] = useState(Boolean(saved));
 
   const set = (patch: Partial<DraftForm>) =>
     setForm((f) => ({ ...f, ...patch }));
@@ -40,20 +47,24 @@ export function SubmitStoryEditor({
     return { words: w, readTime: Math.max(1, Math.ceil(w / 200)) };
   }, [form.headline, form.body]);
 
-  // Simulated autosave: mark unsaved on edit, settle to saved after a beat.
-  useEffect(() => {
-    if (firstRun.current) {
-      firstRun.current = false;
-      return;
+  const resumeDraft = () => {
+    if (saved) {
+      setForm(saved.form);
+      setCoverName(saved.coverName);
     }
-    setSaveState("unsaved");
-    const t = setTimeout(() => setSaveState("saved"), 1500);
-    return () => clearTimeout(t);
-  }, [form, coverName]);
+    setShowResumeBanner(false);
+  };
+  const discardDraft = () => {
+    clearDraft();
+    setShowResumeBanner(false);
+  };
 
   function saveDraft() {
-    setSaveState("saved");
-    showToast(t("magazine:submitStory.editor.draftSaved"), "success");
+    if (saveNow()) {
+      showToast(t("magazine:submitStory.editor.draftSaved"), "success");
+    } else {
+      showToast(t("magazine:submitStory.editor.draftSaveError"), "error");
+    }
   }
 
   async function submit() {
@@ -96,6 +107,9 @@ export function SubmitStoryEditor({
       setSubmitting(false);
     }
 
+    // The story is now with editors (or, in demo, "sent") — the local draft has
+    // served its purpose, so clear the persisted slot to avoid a stale resume.
+    clearDraft();
     onSubmit(form.headline.trim());
   }
 
@@ -107,6 +121,24 @@ export function SubmitStoryEditor({
 
   return (
     <Reveal className={styles.editor} delay={120}>
+      {showResumeBanner && saved && (
+        <div className={styles.resumeBanner}>
+          <p className={styles.resumeText}>
+            <Translation
+              i18nKey="magazine:submitStory.resume.text"
+              components={{ b: <b /> }}
+            />
+          </p>
+          <div className={styles.resumeActions}>
+            <Button variant="ghost" onClick={discardDraft}>
+              {t("magazine:submitStory.resume.startFresh")}
+            </Button>
+            <Button variant="primary" onClick={resumeDraft}>
+              {t("magazine:submitStory.resume.resume")}
+            </Button>
+          </div>
+        </div>
+      )}
       <SubmitStoryMeta values={form} set={set} statusPill={statusPill} />
       <SubmitStoryWriter
         values={form}
@@ -114,6 +146,7 @@ export function SubmitStoryEditor({
         wordCount={words}
         readTime={readTime}
         saveState={saveState}
+        hasSavedDraft={savedAt !== null}
       />
       <SubmitStoryCover onChange={setCoverName} />
 

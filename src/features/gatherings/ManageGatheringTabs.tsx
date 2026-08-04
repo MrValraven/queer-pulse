@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiSend } from "react-icons/fi";
 import { Button, EmptyState, Tabs } from "../../shared/components/ui";
@@ -21,7 +21,7 @@ import {
   GATHERING_TITLE,
 } from "./manageGathering.data";
 import { useAttendees } from "./api/useAttendees";
-import { attendeeMeta } from "./api/events.adapters";
+import { AttendeeSection } from "./ManageGatheringAttendees";
 import styles from "./ManageGatheringPage.module.css";
 
 interface GatheringDetail {
@@ -168,14 +168,27 @@ function AttendeesTab({ slug }: { slug: string }) {
   const fmt = useFormat();
   const { showToast } = useToast();
   const [inviteOpen, setInviteOpen] = useState(false);
-  const { data } = useAttendees(slug);
+  const [loadingMoreGoing, setLoadingMoreGoing] = useState(false);
+  const [loadingMoreWaitlist, setLoadingMoreWaitlist] = useState(false);
+  const { data, loadMoreGoing, loadMoreWaitlist } = useAttendees(slug);
   const going = data?.going ?? [];
   const waitlist = data?.waitlist ?? [];
   const goingCount = data?.goingCount ?? going.length;
   const waitlistCount = data?.waitlistCount ?? waitlist.length;
   const capacity = data?.capacity ?? 20;
   const pct = capacity ? Math.round((goingCount / capacity) * 100) : 0;
-  const overflow = goingCount - going.length;
+  const hasMoreGoing = data?.hasMoreGoing ?? false;
+  const hasMoreWaitlist = data?.hasMoreWaitlist ?? false;
+  const onLoadMoreGoing = async () => {
+    setLoadingMoreGoing(true);
+    await loadMoreGoing();
+    setLoadingMoreGoing(false);
+  };
+  const onLoadMoreWaitlist = async () => {
+    setLoadingMoreWaitlist(true);
+    await loadMoreWaitlist();
+    setLoadingMoreWaitlist(false);
+  };
   return (
     <div>
       <div className={styles.attToolbar}>
@@ -221,93 +234,58 @@ function AttendeesTab({ slug }: { slug: string }) {
           <div className={styles.capFill} style={{ width: `${pct}%` }} />
         </div>
       </div>
-      <div className={styles.attSectionLabel}>
-        {t("gatherings:manage.attendees.goingHeading", { count: goingCount })}
-      </div>
-      <div className={styles.attList}>
-        {going.map((attendee) => (
-          <div className={styles.attRow} key={attendee.id}>
-            <div
-              className={styles.attAv}
-              style={{ background: attendee.background, color: attendee.color }}
-            >
-              {attendee.initials}
-            </div>
-            <div className={styles.attInfo}>
-              <div className={styles.attName}>{attendee.name}</div>
-              <div className={styles.attMeta}>
-                {attendeeMeta(attendee, t, fmt)}
-              </div>
-            </div>
-            <div className={styles.attActions}>
-              <Button
-                variant="ghost"
-                aria-label={t("gatherings:manage.attendees.removeAria", {
-                  name: attendee.name,
-                })}
-                className={`${styles.attActionBtn} ${styles.remove}`}
-                onClick={() =>
-                  showToast(
-                    t("gatherings:manage.attendees.removedToast"),
-                    "info",
-                  )
-                }
-              >
-                {t("gatherings:manage.attendees.removeCta")}
-              </Button>
-            </div>
-          </div>
-        ))}
-        {overflow > 0 && (
-          <div className={styles.moreRow}>
-            {t("gatherings:manage.attendees.moreAttendees", {
-              count: overflow,
+      <AttendeeSection
+        heading={t("gatherings:manage.attendees.goingHeading", {
+          count: goingCount,
+        })}
+        attendees={going}
+        hasMore={hasMoreGoing}
+        loadingMore={loadingMoreGoing}
+        onLoadMore={() => void onLoadMoreGoing()}
+        renderAction={(attendee) => (
+          <Button
+            variant="ghost"
+            aria-label={t("gatherings:manage.attendees.removeAria", {
+              name: attendee.name,
             })}
-          </div>
+            className={`${styles.attActionBtn} ${styles.remove}`}
+            onClick={() =>
+              showToast(t("gatherings:manage.attendees.removedToast"), "info")
+            }
+          >
+            {t("gatherings:manage.attendees.removeCta")}
+          </Button>
         )}
-      </div>
-      <div className={styles.attSectionLabel} style={{ marginTop: 20 }}>
-        {t("gatherings:manage.attendees.waitlistHeading", {
+      />
+      <AttendeeSection
+        heading={t("gatherings:manage.attendees.waitlistHeading", {
           count: waitlistCount,
         })}
-      </div>
-      <div className={styles.attList}>
-        {waitlist.map((attendee) => (
-          <div className={styles.attRow} key={attendee.id}>
-            <div
-              className={styles.attAv}
-              style={{ background: attendee.background, color: attendee.color }}
-            >
-              {attendee.initials}
-            </div>
-            <div className={styles.attInfo}>
-              <div className={styles.attName}>{attendee.name}</div>
-              <div className={styles.attMeta}>
-                {attendeeMeta(attendee, t, fmt)}
-              </div>
-            </div>
-            <div className={styles.attActions}>
-              <Button
-                variant="ghost"
-                aria-label={t("gatherings:manage.attendees.promoteAria", {
-                  name: attendee.name,
-                })}
-                className={`${styles.attActionBtn} ${styles.promote}`}
-                onClick={() =>
-                  showToast(
-                    t("gatherings:manage.attendees.promotedToast", {
-                      name: attendee.name.split(" ")[0]!,
-                    }),
-                    "success",
-                  )
-                }
-              >
-                {t("gatherings:manage.attendees.promoteCta")}
-              </Button>
-            </div>
-          </div>
-        ))}
-      </div>
+        headingStyle={{ marginTop: 20 }}
+        attendees={waitlist}
+        hasMore={hasMoreWaitlist}
+        loadingMore={loadingMoreWaitlist}
+        onLoadMore={() => void onLoadMoreWaitlist()}
+        renderAction={(attendee) => (
+          <Button
+            variant="ghost"
+            aria-label={t("gatherings:manage.attendees.promoteAria", {
+              name: attendee.name,
+            })}
+            className={`${styles.attActionBtn} ${styles.promote}`}
+            onClick={() =>
+              showToast(
+                t("gatherings:manage.attendees.promotedToast", {
+                  name: attendee.name.split(" ")[0]!,
+                }),
+                "success",
+              )
+            }
+          >
+            {t("gatherings:manage.attendees.promoteCta")}
+          </Button>
+        )}
+      />
       {inviteOpen && (
         <InviteMembersModal slug={slug} onClose={() => setInviteOpen(false)} />
       )}
@@ -338,6 +316,7 @@ function messageRelativeTime(
 function MessagesTab() {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const composerLabelId = useId();
   const { showToast } = useToast();
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState<SentMessage[]>([]);
@@ -368,12 +347,13 @@ function MessagesTab() {
   return (
     <div>
       <div className={styles.composerCard}>
-        <div className={styles.compLabel}>
+        <div className={styles.compLabel} id={composerLabelId}>
           {t("gatherings:manage.messages.composerLabel", {
             count: ATTENDEE_COUNT,
           })}
         </div>
         <textarea
+          aria-labelledby={composerLabelId}
           className={styles.compTa}
           placeholder={t("gatherings:manage.writeUpdatePlaceholder")}
           value={message}

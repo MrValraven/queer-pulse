@@ -68,6 +68,10 @@ export const feed: Catalog = {
   "common.viewEverything": "Ver tudo",
   "common.tryAgain": "Tentar outra vez",
 
+  // ── Paginação por scroll (FeedLoadMore) ─────────────────────────────────
+  "loadMore.cta": "Carregar mais",
+  "loadMore.loading": "A carregar mais…",
+
   // ── Saudação ─────────────────────────────────────────────────────────────
   "greeting.morning": "Bom dia",
   "greeting.afternoon": "Boa tarde",

@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useCommunityEdits } from "../../../app/providers/useCommunityEdits";
 import {
+  archiveCommunity,
   createCommunity,
   createPost,
   deleteCommunityPost,
@@ -15,6 +16,7 @@ import {
   restoreCommunityReply,
   reviewJoinRequest,
   setMemberRole,
+  transferCommunityOwnership,
   unreactToPost,
   updateCommunity,
   updatePost,
@@ -246,6 +248,55 @@ export function useUpdateCommunity() {
       if (demoMode) return;
       void queryClient.invalidateQueries({ queryKey: ["community", slug] });
       void queryClient.invalidateQueries({ queryKey: ["communities"] });
+      void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+    },
+  });
+}
+
+/** POST /communities/:slug/archive — owner-only "archive community" from the mod
+ *  panel danger zone. Live archives + invalidates (the detail now 404s for
+ *  non-staff, so lists/my-communities drop it); demo is a no-op the caller
+ *  reflects with its own toast. */
+export function useArchiveCommunity() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<CommunityDetailDTO | null, Error, { slug: string }>({
+    // The mod panel toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
+    mutationFn: async ({ slug }) => {
+      if (demoMode) return null;
+      return archiveCommunity(slug);
+    },
+    onSuccess: (_data, { slug }) => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["communities"] });
+      void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+    },
+  });
+}
+
+/** POST /communities/:slug/transfer — owner-only ownership transfer. Live moves
+ *  ownership (caller becomes a mod) + invalidates the detail/roster/memberships;
+ *  demo is a no-op the caller reflects with its own toast. */
+export function useTransferOwnership(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<
+    CommunityDetailDTO | null,
+    Error,
+    { memberSlug: string }
+  >({
+    // The transfer modal toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
+    mutationFn: async ({ memberSlug }) => {
+      if (demoMode) return null;
+      return transferCommunityOwnership(slug, memberSlug);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
       void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
     },
   });

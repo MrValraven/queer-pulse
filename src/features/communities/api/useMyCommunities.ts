@@ -56,7 +56,11 @@ export function useMyCommunities(
       return Object.fromEntries(
         rows.map((r) => [
           r.slug,
-          { role: r.role, joinedAt: joinedLabel(r.joinedAt, language) },
+          {
+            role: r.role,
+            joinedAt: joinedLabel(r.joinedAt, language),
+            name: r.name,
+          },
         ]),
       );
     },

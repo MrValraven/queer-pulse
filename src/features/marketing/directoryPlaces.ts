@@ -1,5 +1,11 @@
 import { MEMBERS, memberName } from "../members/data/members";
-import type { DayHours, PhotoKey } from "./listBusiness/listBusiness.data";
+import {
+  formatDayHours,
+  normalizeDayHours,
+  normalizeHours,
+  type DayHours,
+  type PhotoKey,
+} from "./listBusiness/listBusiness.data";
 
 export type Tint = "coral" | "jade" | "plum";
 export type HoursType =
@@ -23,6 +29,11 @@ export interface Owner {
   inQueerPulse: boolean;
   /** First name, shown in copy. */
   first: string;
+  /** The owner's public profile slug, for the "View profile" deep link. Present
+   * only when they linked a public profile; absent/null otherwise (the link then
+   * falls back to the members index). Resolved server-side from the owner id —
+   * never a display name. */
+  slug?: string | null;
 }
 
 /** The listing owner's single public reply to a review, shown beneath it.
@@ -57,6 +68,12 @@ export interface Review {
 export interface DirectoryPlace {
   /* ---- card ---- */
   slug: string;
+  /** Human-readable business reference (e.g. `QPL-2026-0007`) — the id every
+   * listing MUTATION path is keyed by (`/listings/:ref/...`, incl. the dispute
+   * endpoint). Distinct from `slug` (the cosmetic public URL id). Absent for
+   * demo places and until the detail DTO carries it; the dispute action gates
+   * on its presence in live mode. */
+  ref?: string | null;
   name: string;
   cat: string;
   hood: string;
@@ -519,14 +536,14 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       d2: "",
       vibe: "A reading in progress among the stacks",
     },
-    hours: {
+    hours: normalizeHours({
       Tue: { open: true, from: "11:00", to: "19:00" },
       Wed: { open: true, from: "11:00", to: "19:00" },
       Thu: { open: true, from: "11:00", to: "19:00" },
       Fri: { open: true, from: "11:00", to: "21:00" },
       Sat: { open: true, from: "10:00", to: "21:00" },
       Sun: { open: true, from: "12:00", to: "18:00" },
-    },
+    }),
     langs: ["pt", "en"],
     safeSpaceStatus: "verified",
     safeSpaceTier: 2,
@@ -854,14 +871,14 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       d2: "",
       vibe: "A full room on a Friday night",
     },
-    hours: {
+    hours: normalizeHours({
       Tue: { open: true, from: "18:00", to: "00:00" },
       Wed: { open: true, from: "18:00", to: "00:00" },
       Thu: { open: true, from: "18:00", to: "01:00" },
       Fri: { open: true, from: "18:00", to: "02:00" },
       Sat: { open: true, from: "18:00", to: "02:00" },
       Sun: { open: true, from: "16:00", to: "23:00" },
-    },
+    }),
     langs: ["pt", "en"],
     safeSpaceStatus: "verified",
     safeSpaceTier: 3,
@@ -1741,12 +1758,13 @@ export function realHoursRows(
   const dayIds = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const dayKeys = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
   return dayIds.map((dayId, index) => {
-    const day = hours[dayId];
-    const isOpen = day?.open === true;
+    // `formatDayHours` renders one or two intervals ("12:00–15:00 · 19:00–02:00")
+    // and returns null when the day is closed or blank.
+    const value = formatDayHours(normalizeDayHours(hours[dayId]));
     return {
       dayKey: dayKeys[index]!,
-      val: isOpen ? `${day.from} — ${day.to}` : null,
-      closed: !isOpen,
+      val: value,
+      closed: value === null,
     };
   });
 }
@@ -1834,22 +1852,25 @@ export function openStatus(
   const todayIndex = (now.getDay() + 6) % 7; // 0 = Monday
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
-  const todayId = dayIdAt(todayIndex);
-  const today = hours[todayId];
-  if (today?.open) {
-    const from = minutesOf(today.from);
-    const to = minutesOf(today.to);
-    if (to > from ? nowMinutes >= from && nowMinutes < to : nowMinutes >= from) {
-      return { state: "open" };
+  const today = normalizeDayHours(hours[dayIdAt(todayIndex)]);
+  if (today.open) {
+    for (const interval of today.intervals) {
+      const from = minutesOf(interval.from);
+      const to = minutesOf(interval.to);
+      // A same-day window is open in [from, to); an overnight window (to <= from)
+      // is open from `from` until midnight tonight.
+      if (to > from ? nowMinutes >= from && nowMinutes < to : nowMinutes >= from)
+        return { state: "open" };
     }
   }
-  // Yesterday's after-midnight window may still be running.
-  const yesterdayId = dayIdAt((todayIndex + 6) % 7);
-  const yesterday = hours[yesterdayId];
-  if (yesterday?.open) {
-    const from = minutesOf(yesterday.from);
-    const to = minutesOf(yesterday.to);
-    if (to <= from && nowMinutes < to) return { state: "open" };
+  // An overnight window opened yesterday may still be running past midnight.
+  const yesterday = normalizeDayHours(hours[dayIdAt((todayIndex + 6) % 7)]);
+  if (yesterday.open) {
+    for (const interval of yesterday.intervals) {
+      const from = minutesOf(interval.from);
+      const to = minutesOf(interval.to);
+      if (to <= from && nowMinutes < to) return { state: "open" };
+    }
   }
   return { state: "closed" };
 }

@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { FiArrowUp } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { IdeaItem } from "./roadmap.data";
+import type { BacklogItem, IdeaItem, NotBuildingItem } from "./roadmap.data";
 import {
   useMyRoadmapVotes,
   useRoadmapVote,
   useSubmitRoadmapIdea,
 } from "./api/useRoadmapMutations";
+import { NotBuildingCard, PlannedCard } from "./RoadmapCards";
 import styles from "./RoadmapPage.module.css";
 
 const DECISION_KEYS = [
@@ -164,6 +165,69 @@ export function HowWeDecide() {
               <p className={styles.hcDesc}>{t(d.descKey)}</p>
             </div>
           </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export interface SomedaySectionProps {
+  /** "Someday" backlog items from `useRoadmap()`. Further out than Planned,
+   *  with no firm date — a date here would be a promise we can't keep. */
+  items: BacklogItem[];
+}
+
+/** "Someday, honestly" — the honest-roadmap backlog column. Only renders
+ *  when the admin has published at least one backlog item. */
+export function SomedaySection({ items }: SomedaySectionProps) {
+  const { t } = useTranslation();
+  if (items.length === 0) return null;
+  return (
+    <section className={styles.somedaySection}>
+      <h2 className={styles.sectionHead}>
+        <Translation
+          i18nKey="marketing:roadmap.someday.title"
+          components={{ em: <em /> }}
+        />
+      </h2>
+      <p className={styles.sectionSub}>{t("marketing:roadmap.someday.sub")}</p>
+      <div className={styles.somedayGrid}>
+        {items.map((item, index) => (
+          <FadeIn key={item.id} delay={index * 60}>
+            <PlannedCard item={item} column="someday" />
+          </FadeIn>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export interface NotBuildingSectionProps {
+  /** Dismissed ideas the team gave a member-facing reason for declining. */
+  items: NotBuildingItem[];
+}
+
+/** "Not building this, and why" — the transparency list most platforms
+ *  hide. Only renders when there's at least one published decline. */
+export function NotBuildingSection({ items }: NotBuildingSectionProps) {
+  const { t } = useTranslation();
+  if (items.length === 0) return null;
+  return (
+    <section className={styles.notBuildingSection}>
+      <h2 className={styles.sectionHead}>
+        <Translation
+          i18nKey="marketing:roadmap.notBuilding.title"
+          components={{ em: <em /> }}
+        />
+      </h2>
+      <p className={styles.sectionSub}>
+        {t("marketing:roadmap.notBuilding.sub")}
+      </p>
+      <div className={styles.notBuildingGrid}>
+        {items.map((item, index) => (
+          <FadeIn key={item.id} delay={index * 60}>
+            <NotBuildingCard item={item} />
+          </FadeIn>
         ))}
       </div>
     </section>

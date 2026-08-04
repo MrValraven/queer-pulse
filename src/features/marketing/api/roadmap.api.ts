@@ -8,7 +8,17 @@ import { apiGet, apiPost } from "../../../shared/api/client";
 
 export interface HeroStatDTO {
   label: string;
+  value?: string;
+  note?: string;
   jade: boolean;
+}
+
+/** The most recent target-date move for a committed card — a public-safe
+ *  reason only (no who/when — those stay admin-only). */
+export interface SlipDTO {
+  from: string;
+  to: string;
+  reason: string;
 }
 
 export interface ShippedItemDTO {
@@ -18,6 +28,8 @@ export interface ShippedItemDTO {
   description: string;
   date: string | null;
   requested: boolean;
+  committed: boolean;
+  latestSlip: SlipDTO | null;
 }
 
 export interface BuildingItemDTO {
@@ -29,6 +41,8 @@ export interface BuildingItemDTO {
   eta: string | null;
   progress: number;
   requested: boolean;
+  committed: boolean;
+  latestSlip: SlipDTO | null;
 }
 
 export interface PlannedItemDTO {
@@ -38,6 +52,8 @@ export interface PlannedItemDTO {
   description: string;
   votes: number;
   hot: boolean;
+  committed: boolean;
+  latestSlip: SlipDTO | null;
 }
 
 export interface TopIdeaDTO {
@@ -46,12 +62,34 @@ export interface TopIdeaDTO {
   votes: number;
 }
 
+/** Closed set of member-facing reasons an idea isn't being built — mirrors
+ *  the backend's `RoadmapDeclineReason`. */
+export type RoadmapDeclineReason =
+  | "scope"
+  | "unsafe"
+  | "capacity"
+  | "exists"
+  | "harm";
+
+/** A dismissed idea whose decline reason is member-facing — "Not building
+ *  this, and why" on the public page. */
+export interface NotBuildingDTO {
+  id: string;
+  category: string;
+  reason: RoadmapDeclineReason;
+  note: string;
+  votes: number;
+}
+
 export interface RoadmapResponseDTO {
   heroStats: HeroStatDTO[];
   shipped: ShippedItemDTO[];
   building: BuildingItemDTO[];
   planned: PlannedItemDTO[];
+  /** "Someday" — public backlog-column items, same shape as `planned`. */
+  backlog: PlannedItemDTO[];
   topIdeas: TopIdeaDTO[];
+  notBuilding: NotBuildingDTO[];
 }
 
 export const getRoadmap = () => apiGet<RoadmapResponseDTO>("/roadmap");

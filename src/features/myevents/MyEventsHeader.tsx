@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Button } from "../../shared/components/ui";
+import { Button, FeatureHelp } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
@@ -41,7 +41,8 @@ export function MyEventsHeader() {
             <Translation
               i18nKey="myevents:page.title"
               components={{ em: <em /> }}
-            />
+            />{" "}
+            <FeatureHelp id="myevents.hub" />
           </h1>
           <p className={sx("ev-sub")}>{t("myevents:page.sub")}</p>
         </div>

@@ -58,6 +58,7 @@ export function CalendarSidebar({
           <input
             className={styles.subInput}
             type="email"
+            aria-label={t("gatherings:calendar.emailPlaceholder")}
             placeholder={t("gatherings:calendar.emailPlaceholder")}
           />
           <Button type="submit" variant="primary" disabled={subscribed}>

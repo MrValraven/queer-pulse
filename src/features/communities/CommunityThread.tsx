@@ -19,6 +19,8 @@ import {
   useDeleteCommunityReply,
   useRestoreCommunityReply,
 } from "./api/useCommunityMutations";
+import { useCommunityReplies } from "./api/useCommunityReplies";
+import { replyDtoToThreadReply } from "./api/communities.adapters";
 import { CommunityHistoryModal } from "./CommunityHistoryModal";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
@@ -57,6 +59,14 @@ function useCommunityThreadState(data: ThreadData, slug: string) {
   const editReply = useEditCommunityReply(slug);
   const deleteReply = useDeleteCommunityReply(slug);
   const restoreReply = useRestoreCommunityReply(slug);
+  // Replies beyond the post's embedded preview (`data.replies`) — inert until
+  // "Load more replies" is clicked once (see `useCommunityReplies`).
+  const repliesPaging = useCommunityReplies(
+    slug,
+    data.id,
+    data.replyCount,
+    data.replies.length,
+  );
 
   const [open, setOpen] = useState(false);
   const [voted, setVoted] = useState(!!data.voted);
@@ -92,7 +102,14 @@ function useCommunityThreadState(data: ThreadData, slug: string) {
   const opCanRestore = demoMode ? opOwned && opDeleted : !!data.canRestore;
   const opCanViewHistory = demoMode ? false : !!data.canViewHistory;
 
-  const replies: Reply[] = [...data.replies, ...extraReplies].map((item) =>
+  const loadedMoreReplies = repliesPaging.extraReplies.map(
+    replyDtoToThreadReply,
+  );
+  const replies: Reply[] = [
+    ...data.replies,
+    ...loadedMoreReplies,
+    ...extraReplies,
+  ].map((item) =>
     item.id && replyOverrides[item.id]
       ? { ...item, ...replyOverrides[item.id] }
       : item,
@@ -215,6 +232,7 @@ function useCommunityThreadState(data: ThreadData, slug: string) {
     opCanRestore,
     opCanViewHistory,
     replies,
+    repliesPaging,
     toggleVote,
     postReply,
     saveOpEdit,
@@ -258,6 +276,7 @@ export function CommunityThread({
     opCanRestore,
     opCanViewHistory,
     replies,
+    repliesPaging,
     toggleVote,
     postReply,
     saveOpEdit,
@@ -334,6 +353,21 @@ export function CommunityThread({
                 }
               />
             ))}
+            {repliesPaging.hasMore && (
+              <div className={styles.loadMoreReplies}>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  disabled={repliesPaging.isLoadingMore}
+                  onClick={repliesPaging.loadMore}
+                  style={{ padding: "6px 14px", fontSize: 13 }}
+                >
+                  {repliesPaging.isLoadingMore
+                    ? t("communities:detail.thread.loadingMoreReplies")
+                    : t("communities:detail.thread.loadMoreRepliesCta")}
+                </Button>
+              </div>
+            )}
             <div className={styles.replyBar}>
               <div className={[styles.rAv, styles.tPlum].join(" ")}>Me</div>
               <MentionTextarea

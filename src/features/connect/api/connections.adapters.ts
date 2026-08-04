@@ -41,14 +41,21 @@ export function relativeAgo(
   return days === 1 ? "yesterday" : `${days} days ago`;
 }
 
-/** Month/year label the "Connected since" line renders, e.g. "Mar 2025". */
-export function monthYear(iso: string | null): string | undefined {
+/**
+ * Full date-and-time label the "Connected since" line renders, e.g.
+ * "Mar 3, 2025, 2:30 PM" — day and hour, not just month/year, so the moment a
+ * connection was made is legible at a glance.
+ */
+export function connectedAt(iso: string | null): string | undefined {
   if (!iso) return undefined;
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return undefined;
   return formatDate(date, undefined, {
+    day: "numeric",
     month: "short",
     year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
   });
 }
 
@@ -65,7 +72,7 @@ export function dtoToMeta(dto: ConnectionDTO): ConnectionMeta {
     vouchBadge: dto.vouchBadge ?? undefined,
     // Accepted connections show when they were accepted; pending ones fall back
     // to when the request was sent (only the accepted tabs render "since").
-    since: monthYear(dto.respondedAt ?? dto.createdAt),
+    since: connectedAt(dto.respondedAt ?? dto.createdAt),
     requestMessage: dto.requestMessage ?? undefined,
     requestReason: dto.requestReason ?? undefined,
     sentAgo: relativeAgo(dto.createdAt),

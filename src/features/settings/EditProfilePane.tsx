@@ -1,6 +1,6 @@
 import { useState, type KeyboardEvent } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileEdit } from "../../app/providers/useProfile";
 import { useAuth } from "../../app/providers/authContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -25,7 +25,7 @@ export type ProfileSection =
 /**
  * Full profile editor — the rich Identity / Pronouns / Bio / Skills / Visibility
  * sections. Reads and writes the logged-in member's real profile draft via
- * `useProfile()`; local state is only for the transient skill/interest text
+ * `useProfileEdit()`; local state is only for the transient skill/interest text
  * inputs and avatar object-URL cleanup. Reports any change via `onChange`
  * (with the section that changed) so the host can drive its save bar.
  */
@@ -36,7 +36,7 @@ export function EditProfilePane({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { draft, updateDraft } = useProfile();
+  const { draft, updateDraft } = useProfileEdit();
   const { user } = useAuth();
   const [skillInput, setSkillInput] = useState("");
   const [interestInput, setInterestInput] = useState("");

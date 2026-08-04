@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FiSend, FiCornerUpLeft, FiMessageCircle } from "react-icons/fi";
 import {
   Avatar,
@@ -10,6 +10,7 @@ import {
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useAuth } from "../../app/providers/authContext";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type {
@@ -20,7 +21,8 @@ import type {
   Reaction,
   ReactionKey,
 } from "./community.model";
-import { photoOf, roleLookup } from "./communityPeople";
+import type { Person } from "./communityDetails";
+import { photoOf, roleLookup, viewerPerson } from "./communityPeople";
 import { RoleBadge, ReactionBar } from "./CommunityBadges";
 import { AV_CLASS } from "./communityAvatar";
 import {
@@ -43,12 +45,19 @@ function toggle(reactions: Reaction[], key: ReactionKey): Reaction[] {
 function PulsePost({
   post,
   roleOf,
+  isMember,
+  viewer,
   pinned = false,
   onReactPost,
   onReplyPost,
 }: {
   post: Post;
   roleOf: (p: Post["author"]) => ReturnType<ReturnType<typeof roleLookup>>;
+  /** Members can react and reply; non-members see counts read-only. */
+  isMember: boolean;
+  /** The signed-in viewer, so their own optimistic reply shows their real
+   *  name/avatar rather than a generic "You". */
+  viewer: Person | null;
   pinned?: boolean;
   /** Persist a reaction toggle (no-op in demo — local state owns the UI). */
   onReactPost?: (id: string, key: ReactionKey, willReact: boolean) => void;
@@ -59,10 +68,20 @@ function PulsePost({
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const [reactions, setReactions] = useState(post.reactions);
+  // Re-sync from the server whenever this post's reactions change (a refetch
+  // after load-more or a socket invalidation), so the optimistic local copy
+  // doesn't drift from the true counts.
+  useEffect(() => {
+    setReactions(post.reactions);
+  }, [post.reactions]);
   const [showReply, setShowReply] = useState(false);
   const [replyDraft, setReplyDraft] = useState("");
   const [added, setAdded] = useState<PostReply[]>([]);
   const replies = [...post.replies, ...added];
+  // `replies` above is a bounded preview (+ locally-added optimistic replies)
+  // — the TRUE total is `post.replyCount` (absent in demo, where the mock's
+  // `replies` array already IS the whole list).
+  const replyCount = (post.replyCount ?? post.replies.length) + added.length;
   const toggleReply = () => setShowReply((s) => !s);
   const react = (key: ReactionKey) => {
     const willReact = !reactions.find((r) => r.key === key)?.reacted;
@@ -75,7 +94,7 @@ function PulsePost({
     setAdded((prev) => [
       ...prev,
       {
-        author: { initials: "Me", name: "You", tint: "plum" },
+        author: viewer ?? { initials: "Me", name: "You", tint: "plum" },
         text,
         time: t("communities:common.justNow"),
       },
@@ -84,9 +103,17 @@ function PulsePost({
     onReplyPost?.(post.id, text, () => setAdded([]));
   };
   const replyAction = t("communities:detail.pulse.replyAction");
-  const replyLabel = replies.length
-    ? t("communities:detail.pulse.replyLabel", { count: replies.length })
+  const replyLabel = replyCount
+    ? t("communities:detail.pulse.replyLabel", { count: replyCount })
     : replyAction;
+  // A just-posted item carries the standalone "just now" phrase; every other
+  // post carries a relative token ("2h") that reads as "{time} ago". Render the
+  // phrase on its own rather than wrapping it into "just now ago".
+  const justNow = t("communities:common.justNow");
+  const timeLabel =
+    post.time === justNow
+      ? justNow
+      : t("communities:common.timeAgo", { time: post.time });
   return (
     <article
       className={[styles.post, pinned && styles.pinned]
@@ -113,34 +140,50 @@ function PulsePost({
             <MemberStaffBadge slug={post.author.slug} />{" "}
             <RoleBadge role={roleOf(post.author)} />
           </div>
-          <div className={styles.pTime}>
-            {t("communities:common.timeAgo", { time: post.time })}
-          </div>
+          <div className={styles.pTime}>{timeLabel}</div>
         </div>
       </header>
       <p className={styles.pBody}>{post.body}</p>
       {post.image && (
         <div className={styles.pImg}>
-          <img src={post.image} alt="" loading="lazy" />
+          <img
+            src={post.image}
+            alt={t("communities:detail.pulse.imageAlt", {
+              name: post.author.name,
+            })}
+            loading="lazy"
+          />
         </div>
       )}
       <div className={styles.pFoot}>
-        <ReactionBar reactions={reactions} onReact={react} />
-        <span
-          role="button"
-          tabIndex={0}
-          aria-label={replyLabel}
-          className={styles.replyBtn}
-          onClick={toggleReply}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              toggleReply();
-            }
-          }}
-        >
-          <FiCornerUpLeft aria-hidden /> {replies.length || replyAction}
-        </span>
+        <ReactionBar
+          reactions={reactions}
+          onReact={react}
+          readOnly={!isMember}
+        />
+        {isMember ? (
+          <span
+            role="button"
+            tabIndex={0}
+            aria-label={replyLabel}
+            className={styles.replyBtn}
+            onClick={toggleReply}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                toggleReply();
+              }
+            }}
+          >
+            <FiCornerUpLeft aria-hidden /> {replyLabel}
+          </span>
+        ) : (
+          replyCount > 0 && (
+            <span className={styles.replyBtn}>
+              <FiCornerUpLeft aria-hidden /> {replyLabel}
+            </span>
+          )
+        )}
       </div>
       {replies.map((rep, i) => (
         <div className={styles.reply} key={`${rep.author.name}-${i}`}>
@@ -160,6 +203,7 @@ function PulsePost({
           <textarea
             className={styles.replyTa}
             rows={1}
+            aria-label={t("communities:detail.pulse.replyPlaceholder")}
             placeholder={t("communities:detail.pulse.replyPlaceholder")}
             value={replyDraft}
             onChange={(e) => setReplyDraft(e.target.value)}
@@ -189,6 +233,8 @@ export function PulseTab({
   const { showToast } = useToast();
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
+  const { user } = useAuth();
+  const viewer = useMemo(() => viewerPerson(user), [user]);
   const createPost = useCreatePost(community.slug);
   const react = useReact(community.slug);
   const unreact = useUnreact(community.slug);
@@ -217,12 +263,12 @@ export function PulseTab({
     setMine((prev) => [
       {
         id: `me-${prev.length}`,
-        author: { initials: "Me", name: "You", tint: "plum" },
+        author: viewer ?? { initials: "Me", name: "You", tint: "plum" },
         body: text,
         kind: "post",
         reactions: [{ key: "heart", count: 0 }],
         replies: [],
-        time: "just now",
+        time: t("communities:common.justNow"),
         communitySlug: community.slug,
       },
       ...prev,
@@ -267,6 +313,9 @@ export function PulseTab({
           <textarea
             className={styles.composerTa}
             rows={1}
+            aria-label={t("communities:detail.pulse.composerPlaceholder", {
+              name,
+            })}
             placeholder={t("communities:detail.pulse.composerPlaceholder", {
               name,
             })}
@@ -292,6 +341,8 @@ export function PulseTab({
           <PulsePost
             post={post}
             roleOf={roleOf}
+            isMember={isMember}
+            viewer={viewer}
             pinned
             onReactPost={onReactPost}
             onReplyPost={onReplyPost}
@@ -305,6 +356,8 @@ export function PulseTab({
             <PulsePost
               post={item.post}
               roleOf={roleOf}
+              isMember={isMember}
+              viewer={viewer}
               onReactPost={onReactPost}
               onReplyPost={onReplyPost}
             />

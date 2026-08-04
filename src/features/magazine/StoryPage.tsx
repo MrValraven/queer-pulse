@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { FiBookOpen } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
+import { EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { MagazineMasthead } from "./MagazineMasthead";
 import styles from "./StoryPage.module.css";
@@ -13,6 +16,29 @@ const INVITE = routes.requestInvite;
 
 export function StoryPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+
+  // The article below is fabricated editorial content by mock personas. Live
+  // mode has no published story yet, so it shows the same honest "coming soon"
+  // the magazine front uses — the demo mock stays the demo-mode branch.
+  if (!demoMode) {
+    return (
+      <PageShell>
+        <MagazineMasthead active="stories" />
+        <div className="wrap">
+          <EmptyState
+            icon={<FiBookOpen />}
+            title={t("magazine:sections.emptyLive.title")}
+            description={t("magazine:sections.emptyLive.description")}
+            action={{
+              label: t("magazine:sections.submit.cta"),
+              to: routes.submitStory,
+            }}
+          />
+        </div>
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell>

@@ -10,6 +10,12 @@
   flex-wrap: wrap;
 }
 
+.loadMoreRoster {
+  display: flex;
+  justify-content: center;
+  margin: 12px 0 4px;
+}
+
 /* ---- roster cards ---- */
 .rosterAv {
   display: flex;
@@ -220,7 +226,9 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: rgba(var(--plum-rgb), 0.07);
+  /* --line-rgb flips light in dark mode; --plum-rgb doesn't, so the number
+     circle vanished on the dark page. */
+  background: rgba(var(--line-rgb), 0.1);
   color: var(--text-strong);
   font-size: 11px;
   font-weight: 700;
@@ -407,6 +415,18 @@
   color: var(--ink-60);
   line-height: 1.6;
   margin: 0 0 8px;
+}
+.searchScopeNote {
+  font-size: 13px;
+  color: var(--ink-40);
+  text-align: center;
+  margin-top: 10px;
+}
+.eventsEmpty {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin: 4px 0 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

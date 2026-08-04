@@ -1,0 +1,128 @@
+/* Member-ideas triage queue — a stack of --paper cards on --cream, each an
+   idea awaiting Promote/Merge/Decline. Mirrors the row shape used across the
+   admin roadmap's other list views (Guides/Capacity/NotBuilding): flexible
+   main content on the left, a fixed vote-count + action rail on the right,
+   wrapping to stack on narrow viewports rather than a hard breakpoint. */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px 24px;
+  padding: 20px 22px;
+  border-radius: var(--radius-card, 22px);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.rowMain {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0 0 6px;
+  font-family: var(--sans);
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.note {
+  margin: 0 0 10px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.metaItem {
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+
+.duplicateHint {
+  margin: 10px 0 0;
+  padding: 9px 12px;
+  border-radius: var(--radius-badge, 14px);
+  background: rgba(var(--amber-rgb), 0.12);
+  color: var(--ink-60);
+  font-size: 12.5px;
+}
+
+.duplicateAction {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.duplicateAction:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.rowSide {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
+.voteCount {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  text-align: right;
+}
+
+.voteCount strong {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.voteCount span {
+  font-size: 12px;
+  color: var(--ink-40);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .row {
+    transition: border-color var(--dur-fast, 0.15s) var(--ease);
+  }
+}

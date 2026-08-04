@@ -10,6 +10,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { CinemaShell } from "./CinemaShell";
 import { PROMISE_ROWS, SUBMIT_STEPS } from "./cinemaSubmit.data";
@@ -53,6 +54,7 @@ export function CinemaSubmitPage() {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const form = useSubmitForm();
   const { draft } = form;
 
@@ -148,7 +150,14 @@ export function CinemaSubmitPage() {
 
         <section className={styles.subBody}>
           <div className={`wrap ${styles.sbInner}`}>
-            {phase === "success" ? (
+            {/* No film-submission endpoint exists yet. In LIVE mode we never
+                render the stepper (its final step previously resolved a
+                `setTimeout` into a fake "in the queue" success without sending
+                or storing anything). We say so plainly instead; the mock flow
+                still runs in demo mode. */}
+            {!demoMode ? (
+              <SubmitComingSoon />
+            ) : phase === "success" ? (
               <SubmitDone
                 onAnother={() => {
                   form.reset();
@@ -223,11 +232,30 @@ export function CinemaSubmitPage() {
               </div>
             )}
 
-            {phase !== "success" && <CinemaSubmitAside />}
+            {demoMode && phase !== "success" && <CinemaSubmitAside />}
           </div>
         </section>
       </div>
     </CinemaShell>
+  );
+}
+
+/** Live-mode honest state: there is no submission endpoint yet, so we never
+ *  render the stepper. Mirrors the DonateComingSoon plum-panel pattern. */
+function SubmitComingSoon() {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  return (
+    <div style={{ gridColumn: "1 / -1" }}>
+      <SuccessPanel
+        title={t("cinema:submit.comingSoon.title")}
+        em={t("cinema:submit.comingSoon.em")}
+        onClose={() => void navigate(routes.cinema)}
+        closeLabel={t("cinema:submit.comingSoon.closeLabel")}
+      >
+        {t("cinema:submit.comingSoon.body")}
+      </SuccessPanel>
+    </div>
   );
 }
 

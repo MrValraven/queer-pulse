@@ -15,6 +15,8 @@ export interface MastheadNavItem {
   key: string;
   labelKey: string;
   href: string;
+  /** Only surfaced in demo mode — its destination is fabricated content. */
+  demoOnly?: boolean;
 }
 
 export const MASTHEAD_NAV: MastheadNavItem[] = [
@@ -29,24 +31,10 @@ export const MASTHEAD_NAV: MastheadNavItem[] = [
     href: routes.issues,
   },
   {
-    key: "covers",
-    labelKey: "magazine:masthead.nav.covers",
-    href: routes.coverGallery,
-  },
-  {
-    key: "longreads",
-    labelKey: "magazine:masthead.nav.longreads",
-    href: routes.tag,
-  },
-  {
     key: "stories",
     labelKey: "magazine:masthead.nav.stories",
     href: routes.story,
-  },
-  {
-    key: "newsletter",
-    labelKey: "magazine:masthead.nav.newsletter",
-    href: routes.newsletterArchive,
+    demoOnly: true,
   },
   {
     key: "write",

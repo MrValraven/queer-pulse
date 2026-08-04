@@ -9,6 +9,7 @@
 }
 
 .chip {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -27,6 +28,18 @@
     border-color 0.16s var(--ease),
     color 0.16s var(--ease),
     background 0.16s var(--ease);
+}
+/* Touch: chips stay visually compact (~32px) but get a centered ≥44px-tall
+   hit strip. Vertical-only so wrapped chips in a row don't overlap taps. */
+@media (pointer: coarse) {
+  .chip::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
 }
 @media (hover: hover) {
   .chip:hover {

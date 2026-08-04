@@ -37,9 +37,13 @@ beforeEach(() => {
 });
 
 describe("AdminSettingsAccess", () => {
-  it("toggling registration fires the mutation with exactly one key", () => {
+  // The `admin:` namespace loads as its own async chunk, so a control's
+  // translated accessible name is only queryable one render after mount —
+  // await the first lookup via findBy (the raw key is on screen until then);
+  // once resolved the namespace is resident, so later sync queries are fine.
+  it("toggling registration fires the mutation with exactly one key", async () => {
     renderAccess();
-    const toggle = screen.getByRole("switch", {
+    const toggle = await screen.findByRole("switch", {
       name: "New account registration",
     });
     fireEvent.click(toggle);
@@ -49,18 +53,22 @@ describe("AdminSettingsAccess", () => {
     expect(mutate.mock.calls[0]![0]).toEqual({ registrationEnabled: false });
   });
 
-  it("does not mutate when lockdown is toggled — it opens the confirm modal instead", () => {
+  it("does not mutate when lockdown is toggled — it opens the confirm modal instead", async () => {
     renderAccess();
-    fireEvent.click(screen.getByRole("switch", { name: "Platform lockdown" }));
+    fireEvent.click(
+      await screen.findByRole("switch", { name: "Platform lockdown" }),
+    );
     expect(mutate).not.toHaveBeenCalled();
     expect(
       screen.getByRole("heading", { name: "Lock the platform?" }),
     ).toBeInTheDocument();
   });
 
-  it("cancelling the confirm modal leaves the lockdown switch exactly where it was", () => {
+  it("cancelling the confirm modal leaves the lockdown switch exactly where it was", async () => {
     renderAccess();
-    const toggle = screen.getByRole("switch", { name: "Platform lockdown" });
+    const toggle = await screen.findByRole("switch", {
+      name: "Platform lockdown",
+    });
     expect(toggle).toHaveAttribute("aria-checked", "false");
 
     fireEvent.click(toggle);
@@ -73,17 +81,19 @@ describe("AdminSettingsAccess", () => {
     expect(toggle).toHaveAttribute("aria-checked", "false");
   });
 
-  it("confirming lockdown fires the mutation with lockdownEnabled: true", () => {
+  it("confirming lockdown fires the mutation with lockdownEnabled: true", async () => {
     renderAccess();
-    fireEvent.click(screen.getByRole("switch", { name: "Platform lockdown" }));
+    fireEvent.click(
+      await screen.findByRole("switch", { name: "Platform lockdown" }),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Lock the platform" }));
     expect(mutate).toHaveBeenCalledTimes(1);
     expect(mutate.mock.calls[0]![0]).toEqual({ lockdownEnabled: true });
   });
 
-  it("selecting a preset fills the textarea and does not save on its own", () => {
+  it("selecting a preset fills the textarea and does not save on its own", async () => {
     renderAccess();
-    const textarea = screen.getByPlaceholderText(
+    const textarea = await screen.findByPlaceholderText(
       "What members will see while the platform is locked.",
     );
     expect(textarea).toHaveValue("");
@@ -98,9 +108,9 @@ describe("AdminSettingsAccess", () => {
     expect(mutate).not.toHaveBeenCalled();
   });
 
-  it("keeps a free-text edit made after selecting a preset (preset is a seed, not a binding)", () => {
+  it("keeps a free-text edit made after selecting a preset (preset is a seed, not a binding)", async () => {
     renderAccess();
-    const textarea = screen.getByPlaceholderText(
+    const textarea = await screen.findByPlaceholderText(
       "What members will see while the platform is locked.",
     );
     fireEvent.click(screen.getByRole("button", { name: "Scheduled maintenance" }));
@@ -109,9 +119,9 @@ describe("AdminSettingsAccess", () => {
     expect(textarea).toHaveValue("Custom wording, edited by hand");
   });
 
-  it("confirming lockdown with a preset-filled message sends exactly that text, previewed in the modal", () => {
+  it("confirming lockdown with a preset-filled message sends exactly that text, previewed in the modal", async () => {
     renderAccess();
-    const textarea = screen.getByPlaceholderText(
+    const textarea = await screen.findByPlaceholderText(
       "What members will see while the platform is locked.",
     );
     fireEvent.click(screen.getByRole("button", { name: "Scheduled maintenance" }));
@@ -140,9 +150,9 @@ describe("AdminSettingsAccess", () => {
     });
   });
 
-  it("confirming lockdown with the message cleared sends lockdownMessage: null, not the stale server value", () => {
+  it("confirming lockdown with the message cleared sends lockdownMessage: null, not the stale server value", async () => {
     renderAccess({ ...baseSettings, lockdownMessage: "Old" });
-    const textarea = screen.getByPlaceholderText(
+    const textarea = await screen.findByPlaceholderText(
       "What members will see while the platform is locked.",
     );
     expect(textarea).toHaveValue("Old");
@@ -158,7 +168,7 @@ describe("AdminSettingsAccess", () => {
     });
   });
 
-  it("keeps a half-typed message across an identity-only settings refetch (FIX 1 regression)", () => {
+  it("keeps a half-typed message across an identity-only settings refetch (FIX 1 regression)", async () => {
     // Every mutation invalidates the settings query, and invalidateQueries
     // refetches active observers regardless of staleTime — so a live refetch
     // hands back a brand-new object even when every field is unchanged. If
@@ -166,7 +176,7 @@ describe("AdminSettingsAccess", () => {
     // identity instead of its primitive fields, this new-but-equal object
     // would wipe the in-progress edit below.
     const { rerender } = renderAccess();
-    const textarea = screen.getByPlaceholderText(
+    const textarea = await screen.findByPlaceholderText(
       "What members will see while the platform is locked.",
     );
 
@@ -201,7 +211,7 @@ describe("AdminSettingsAccess", () => {
       },
     );
     renderAccess();
-    const toggle = screen.getByRole("switch", {
+    const toggle = await screen.findByRole("switch", {
       name: "New account registration",
     });
     expect(toggle).toHaveAttribute("aria-checked", "true");

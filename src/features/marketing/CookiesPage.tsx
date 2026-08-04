@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useConsent } from "../../app/providers/useConsent";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -17,30 +18,46 @@ import styles from "./CookiesPage.module.css";
 export function CookiesPage() {
   const { showToast } = useToast();
   const { t } = useTranslation();
-  const [functional, setFunctional] = useState(true);
-  const [analytics, setAnalytics] = useState(false);
+  // Persist through the real consent gate (spec 07) instead of throwing the
+  // choice away. Analytics is the one opt-in category this page surfaces;
+  // `monitoring` (error tracking) is left to the in-app preference center and
+  // is preserved untouched on a granular save.
+  const {
+    consent,
+    setConsent,
+    acceptAll: acceptAllConsent,
+    rejectAll,
+  } = useConsent();
+  const [analytics, setAnalytics] = useState(consent.analytics);
   const pageTitle = t("marketing:cookies.meta.title");
   const pageDescription = t("marketing:cookies.meta.description");
+
+  // Reflect the stored choice — including the backend reconciliation the
+  // provider runs on mount in live mode — so the toggle never drifts from what
+  // is actually persisted.
+  useEffect(() => {
+    setAnalytics(consent.analytics);
+  }, [consent.analytics]);
 
   const toggleFor: Record<
     string,
     { value: boolean; set: (v: boolean) => void }
   > = {
-    functional: { value: functional, set: setFunctional },
     analytics: { value: analytics, set: setAnalytics },
   };
 
   function save() {
+    setConsent({ analytics, monitoring: consent.monitoring }, "preference_center");
     showToast(t("marketing:cookies.toast.saved"), "success");
   }
   function acceptAll() {
-    setFunctional(true);
     setAnalytics(true);
+    acceptAllConsent("preference_center");
     showToast(t("marketing:cookies.toast.saved"), "success");
   }
   function essentialOnly() {
-    setFunctional(false);
     setAnalytics(false);
+    rejectAll("preference_center");
     showToast(t("marketing:cookies.toast.saved"), "success");
   }
 
@@ -150,12 +167,8 @@ export function CookiesPage() {
                 <span className={styles.sumName}>
                   {t("marketing:cookies.summary.functional")}
                 </span>
-                <span
-                  className={`${styles.sumVal} ${functional ? styles.sumOn : styles.sumOff}`}
-                >
-                  {functional
-                    ? t("marketing:cookies.summary.on")
-                    : t("marketing:cookies.summary.off")}
+                <span className={`${styles.sumVal} ${styles.sumReq}`}>
+                  {t("marketing:cookies.alwaysOn")}
                 </span>
               </div>
               <div className={styles.sumRow}>

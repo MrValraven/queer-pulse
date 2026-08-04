@@ -134,10 +134,15 @@ export function SubprofileShowcase({
   // Shipping a Move up/down control against an unproven contract risked a
   // broken control, which the plan explicitly says not to do; Edit is safe
   // and self-contained, so it ships alone.
-  const ownerControls =
-    isSelf && activeMeta ? (
-      <SubprofileEditButton subprofileId={activeMeta.id} />
-    ) : undefined;
+  //
+  // A co-owner sees the same Edit control on THIS persona even when viewing
+  // it nested under a co-owner's profile (`isSelf` is false there) — the
+  // backend's `viewerIsMember` flag on the public DTO is the signal, so this
+  // never needs an extra members fetch per card.
+  const canEditActive = isSelf || active.viewerIsMember;
+  const ownerControls = canEditActive ? (
+    <SubprofileEditButton subprofileId={activeMeta?.id ?? active.id} />
+  ) : undefined;
 
   return (
     <div

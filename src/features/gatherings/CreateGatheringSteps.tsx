@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -18,6 +19,7 @@ import styles from "./CreateGatheringPage.module.css";
 
 export function TypeStep({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   return (
     <div>
       <div className={styles.stepTitle}>
@@ -48,20 +50,37 @@ export function TypeStep({ form }: { form: GatheringForm }) {
           </button>
         ))}
       </div>
-      <label className={styles.label}>
+      {!form.type && (
+        <p className={styles.hint}>
+          {t("gatherings:create.step1.typeRequired")}
+        </p>
+      )}
+      <label className={styles.label} htmlFor={`${fieldId}-title`}>
         {t("gatherings:create.step1.titleLabel")}
       </label>
       <input
+        id={`${fieldId}-title`}
         className={styles.input}
         type="text"
         placeholder={t("gatherings:create.step1.titlePlaceholder")}
+        required
+        aria-invalid={!form.title.trim()}
+        aria-describedby={
+          !form.title.trim() ? `${fieldId}-title-hint` : undefined
+        }
         value={form.title}
         onChange={(e) => form.setTitle(e.target.value)}
       />
-      <label className={styles.label}>
+      {!form.title.trim() && (
+        <p id={`${fieldId}-title-hint`} className={styles.hint}>
+          {t("gatherings:create.step1.titleRequired")}
+        </p>
+      )}
+      <label className={styles.label} htmlFor={`${fieldId}-desc`}>
         {t("gatherings:create.step1.descLabel")}
       </label>
       <textarea
+        id={`${fieldId}-desc`}
         className={styles.textarea}
         placeholder={t("gatherings:create.step1.descPlaceholder")}
         value={form.description}
@@ -73,6 +92,7 @@ export function TypeStep({ form }: { form: GatheringForm }) {
 
 export function DatePlaceStep({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   return (
     <div>
       <div className={styles.stepTitle}>
@@ -84,29 +104,34 @@ export function DatePlaceStep({ form }: { form: GatheringForm }) {
       <p className={styles.stepSub}>{t("gatherings:create.step2.sub")}</p>
       <div className={styles.row2}>
         <div>
-          <label className={styles.label}>
+          <label className={styles.label} htmlFor={`${fieldId}-date`}>
             {t("gatherings:create.step2.dateLabel")}
           </label>
           <input
+            id={`${fieldId}-date`}
             className={styles.input}
             type="date"
             min={new Date().toISOString().slice(0, 10)}
             required
             aria-invalid={!form.dateValid}
+            aria-describedby={
+              !form.dateValid ? `${fieldId}-date-hint` : undefined
+            }
             value={form.date}
             onChange={(e) => form.setDate(e.target.value)}
           />
           {!form.dateValid && (
-            <p className={styles.hint}>
+            <p id={`${fieldId}-date-hint`} className={styles.hint}>
               {t("gatherings:create.step2.dateRequired")}
             </p>
           )}
         </div>
         <div>
-          <label className={styles.label}>
+          <label className={styles.label} htmlFor={`${fieldId}-time`}>
             {t("gatherings:create.step2.timeLabel")}
           </label>
           <input
+            id={`${fieldId}-time`}
             className={styles.input}
             type="time"
             value={form.time}
@@ -116,10 +141,11 @@ export function DatePlaceStep({ form }: { form: GatheringForm }) {
       </div>
       <div className={styles.row2}>
         <div>
-          <label className={styles.label}>
+          <label className={styles.label} htmlFor={`${fieldId}-endTime`}>
             {t("gatherings:create.step2.endTimeLabel")}
           </label>
           <input
+            id={`${fieldId}-endTime`}
             className={styles.input}
             type="time"
             value={form.endTime}
@@ -127,10 +153,11 @@ export function DatePlaceStep({ form }: { form: GatheringForm }) {
           />
         </div>
         <div>
-          <label className={styles.label}>
+          <label className={styles.label} htmlFor={`${fieldId}-hood`}>
             {t("gatherings:create.step2.hoodLabel")}
           </label>
           <select
+            id={`${fieldId}-hood`}
             className={styles.select}
             value={form.hood}
             onChange={(e) => form.setHood(e.target.value)}
@@ -146,30 +173,33 @@ export function DatePlaceStep({ form }: { form: GatheringForm }) {
           </select>
         </div>
       </div>
-      <label className={styles.label}>
+      <label className={styles.label} htmlFor={`${fieldId}-venue`}>
         {t("gatherings:create.step2.venueLabel")}
       </label>
       <input
+        id={`${fieldId}-venue`}
         className={styles.input}
         type="text"
         placeholder={t("gatherings:create.step2.venuePlaceholder")}
         value={form.venue}
         onChange={(e) => form.setVenue(e.target.value)}
       />
-      <label className={styles.label}>
+      <label className={styles.label} htmlFor={`${fieldId}-address`}>
         {t("gatherings:create.step2.addressLabel")}
       </label>
       <input
+        id={`${fieldId}-address`}
         className={styles.input}
         type="text"
         placeholder={t("gatherings:create.step2.addressPlaceholder")}
         value={form.address}
         onChange={(e) => form.setAddress(e.target.value)}
       />
-      <label className={styles.label}>
+      <label className={styles.label} htmlFor={`${fieldId}-directions`}>
         {t("gatherings:create.step2.directionsLabel")}
       </label>
       <input
+        id={`${fieldId}-directions`}
         className={styles.input}
         type="text"
         placeholder={t("gatherings:create.step2.directionsPlaceholder")}
@@ -182,6 +212,7 @@ export function DatePlaceStep({ form }: { form: GatheringForm }) {
 
 export function CapacityStep({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   return (
     <div>
       <div className={styles.stepTitle}>
@@ -193,10 +224,11 @@ export function CapacityStep({ form }: { form: GatheringForm }) {
       <p className={styles.stepSub}>{t("gatherings:create.step3.sub")}</p>
       <div className={styles.row2}>
         <div>
-          <label className={styles.label}>
+          <label className={styles.label} htmlFor={`${fieldId}-cap`}>
             {t("gatherings:create.step3.capLabel")}
           </label>
           <input
+            id={`${fieldId}-cap`}
             className={styles.input}
             type="number"
             min={2}
@@ -207,10 +239,11 @@ export function CapacityStep({ form }: { form: GatheringForm }) {
           />
         </div>
         <div>
-          <label className={styles.label}>
+          <label className={styles.label} htmlFor={`${fieldId}-lang`}>
             {t("gatherings:create.step3.langLabel")}
           </label>
           <select
+            id={`${fieldId}-lang`}
             className={styles.select}
             value={form.lang}
             onChange={(e) => form.setLang(e.target.value)}
@@ -223,11 +256,15 @@ export function CapacityStep({ form }: { form: GatheringForm }) {
           </select>
         </div>
       </div>
-      <label className={styles.label}>
+      <div className={styles.label} id={`${fieldId}-access-label`}>
         {t("gatherings:create.step3.accessLabel")}
-      </label>
+      </div>
       <p className={styles.hint}>{t("gatherings:create.step3.accessHint")}</p>
-      <div className={styles.accessList}>
+      <div
+        className={styles.accessList}
+        role="group"
+        aria-labelledby={`${fieldId}-access-label`}
+      >
         {ACCESS_OPTIONS.map((option) => {
           const on = form.access.has(option.value);
           return (
@@ -253,10 +290,11 @@ export function CapacityStep({ form }: { form: GatheringForm }) {
           );
         })}
       </div>
-      <label className={styles.label}>
+      <label className={styles.label} htmlFor={`${fieldId}-notes`}>
         {t("gatherings:create.step3.notesLabel")}
       </label>
       <input
+        id={`${fieldId}-notes`}
         className={styles.input}
         type="text"
         placeholder={t("gatherings:create.step3.notesPlaceholder")}
@@ -269,6 +307,7 @@ export function CapacityStep({ form }: { form: GatheringForm }) {
 
 export function PricingStep({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   return (
     <div>
       <div className={styles.stepTitle}>
@@ -429,20 +468,26 @@ export function PricingStep({ form }: { form: GatheringForm }) {
           </p>
         </div>
       )}
-      <label className={styles.label} style={{ marginTop: 4 }}>
+      <label
+        className={styles.label}
+        style={{ marginTop: 4 }}
+        htmlFor={`${fieldId}-included`}
+      >
         {t("gatherings:create.step4.includedLabel")}
       </label>
       <input
+        id={`${fieldId}-included`}
         className={styles.input}
         type="text"
         placeholder={t("gatherings:create.step4.includedPlaceholder")}
         value={form.included}
         onChange={(e) => form.setIncluded(e.target.value)}
       />
-      <label className={styles.label}>
+      <label className={styles.label} htmlFor={`${fieldId}-bring`}>
         {t("gatherings:create.step4.bringLabel")}
       </label>
       <input
+        id={`${fieldId}-bring`}
         className={styles.input}
         type="text"
         placeholder={t("gatherings:create.step4.bringPlaceholder")}

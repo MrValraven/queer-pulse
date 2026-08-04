@@ -68,8 +68,17 @@ function readInitial(): SocialState {
  *   mock experience is byte-for-byte unchanged and never hits the network.
  * - **Live mode**: `blocked`/`muted` hydrate from `GET /blocks` + `GET /mutes`;
  *   toggles fire the matching `/blocks|/mutes` call with an optimistic local
- *   update and rollback + error toast on failure. `following` stays local (no
- *   follow contract in this spec).
+ *   update and rollback + error toast on failure.
+ *
+ * **Follow** has NO member/author-level backend contract (the only real follow
+ * endpoint is per-subprofile persona follow — `POST/DELETE /subprofiles/:id/
+ * follow`, wired separately via `useFollow`). So member/author follow here is
+ * honestly gated OFF in live: `followEnabled` is false, `toggleFollow` is a
+ * no-op, and `following` is never seeded, persisted, or toggled — removing the
+ * old localStorage-only fiction. In demo mode it stays fully functional as a
+ * local store. Consumers should render the Follow control only when
+ * `followEnabled` (a follow-up for the pages that still show it in live —
+ * `magazine/AuthorHeader`; `studio`/`cinema` are already demo-only routes).
  */
 export function SocialProvider({ children }: { children: ReactNode }) {
   const { demoMode } = useDemoMode();
@@ -77,7 +86,14 @@ export function SocialProvider({ children }: { children: ReactNode }) {
   const { showToast } = useToast();
   const queryClient = useQueryClient();
   const bootstrapSettled = useSessionBootstrapSettled();
-  const [state, setState] = useState<SocialState>(readInitial);
+  // Only seed from localStorage in demo mode. Live must NOT read the demo store
+  // — that's how demo follows used to bleed into a live session, and how one
+  // member's blocked/muted list briefly leaked to the next on a shared device
+  // before server hydration. Live starts empty; `blocked`/`muted` then hydrate
+  // from the server below, and `following` stays empty (honest-gated off).
+  const [state, setState] = useState<SocialState>(() =>
+    demoMode ? readInitial() : { following: [], muted: [], blocked: [] },
+  );
 
   // Demo mode is the only durable store; live mode's truth is the server.
   useEffect(() => {
@@ -188,21 +204,27 @@ export function SocialProvider({ children }: { children: ReactNode }) {
     [demoMode, queryClient, showToast],
   );
 
-  const toggleFollow = useCallback((slug: string): boolean => {
-    // No follow contract in this spec — stays local in both modes.
-    let now = false;
-    setState((prev) => {
-      const has = prev.following.includes(slug);
-      now = !has;
-      return {
-        ...prev,
-        following: has
-          ? prev.following.filter((x) => x !== slug)
-          : [slug, ...prev.following],
-      };
-    });
-    return now;
-  }, []);
+  const toggleFollow = useCallback(
+    (slug: string): boolean => {
+      // No member/author-level follow endpoint exists (see the provider
+      // docblock). In live this is an honest no-op — never a localStorage
+      // fiction — so `following` stays empty and nothing false is persisted.
+      if (!demoMode) return false;
+      let now = false;
+      setState((prev) => {
+        const has = prev.following.includes(slug);
+        now = !has;
+        return {
+          ...prev,
+          following: has
+            ? prev.following.filter((x) => x !== slug)
+            : [slug, ...prev.following],
+        };
+      });
+      return now;
+    },
+    [demoMode],
+  );
 
   const toggleMute = useCallback(
     (slug: string) => persistToggle("muted", slug, muteMember, unmuteMember),
@@ -224,6 +246,9 @@ export function SocialProvider({ children }: { children: ReactNode }) {
     () => ({
       blocked: state.blocked,
       muted: state.muted,
+      // Live has no follow backend, so `following` is always empty there — this
+      // reads false in live and reflects the local demo store in demo.
+      followEnabled: demoMode,
       isFollowing: (slug) => state.following.includes(slug),
       toggleFollow,
       isMuted: (slug) => state.muted.includes(slug),
@@ -231,7 +256,7 @@ export function SocialProvider({ children }: { children: ReactNode }) {
       isBlocked: (slug) => state.blocked.includes(slug),
       toggleBlock,
     }),
-    [state, toggleFollow, toggleMute, toggleBlock],
+    [state, demoMode, toggleFollow, toggleMute, toggleBlock],
   );
 
   return (

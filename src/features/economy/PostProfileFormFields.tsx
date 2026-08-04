@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MODAL_TAGS, NEIGHBOURHOODS } from "./flatmates.data";
 import type { usePostProfileFormState } from "./usePostProfileFormState";
@@ -13,6 +14,7 @@ export function PostProfileFormFields({
   form: ReturnType<typeof usePostProfileFormState>;
 }) {
   const { t } = useTranslation();
+  const fieldId = useId();
 
   return (
     <div className={styles.fields}>
@@ -49,10 +51,11 @@ export function PostProfileFormFields({
       </div>
       <div className={styles.row}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>
+          <label className={styles.fieldLabel} htmlFor={`${fieldId}-pronouns`}>
             {t("economy:postProfileForm.pronounsLabel")}
           </label>
           <input
+            id={`${fieldId}-pronouns`}
             className={styles.input}
             type="text"
             placeholder={t("economy:postProfileForm.pronounsPlaceholder")}
@@ -61,10 +64,14 @@ export function PostProfileFormFields({
           />
         </div>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>
+          <label
+            className={styles.fieldLabel}
+            htmlFor={`${fieldId}-neighbourhood`}
+          >
             {t("economy:postProfileForm.neighbourhoodLabel")}
           </label>
           <select
+            id={`${fieldId}-neighbourhood`}
             className={styles.select}
             value={form.neighbourhood}
             onChange={(event) => form.setNeighbourhood(event.target.value)}
@@ -85,10 +92,11 @@ export function PostProfileFormFields({
       </div>
       <div className={styles.row}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>
+          <label className={styles.fieldLabel} htmlFor={`${fieldId}-budget`}>
             {t("economy:postProfileForm.budgetLabel")}
           </label>
           <input
+            id={`${fieldId}-budget`}
             className={styles.input}
             type="number"
             min={0}
@@ -100,10 +108,11 @@ export function PostProfileFormFields({
           />
         </div>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>
+          <label className={styles.fieldLabel} htmlFor={`${fieldId}-movein`}>
             {t("economy:postProfileForm.moveInLabel")}
           </label>
           <select
+            id={`${fieldId}-movein`}
             className={styles.select}
             value={form.moveInOption}
             onChange={(event) => form.setMoveInOption(event.target.value)}
@@ -130,10 +139,11 @@ export function PostProfileFormFields({
         </div>
       </div>
       <div className={styles.fieldGroup}>
-        <label className={styles.fieldLabel}>
+        <label className={styles.fieldLabel} htmlFor={`${fieldId}-about`}>
           {t("economy:postProfileForm.aboutLabel")}
         </label>
         <textarea
+          id={`${fieldId}-about`}
           className={styles.textarea}
           rows={4}
           placeholder={t("economy:postProfileForm.aboutPlaceholder")}

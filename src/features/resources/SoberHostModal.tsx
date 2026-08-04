@@ -1,15 +1,18 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { FiPlusCircle, FiUsers } from "react-icons/fi";
 import { Button, Sending } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ResourceModal, PlumSuccess } from "./ResourceModal";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { ResourceModal, PlumSuccess, PlumComingSoon } from "./ResourceModal";
 import styles from "./ResourceModal.module.css";
 
 type Mode = "host" | "attend";
 
 export function SoberHostModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  const fieldId = useId();
   const [mode, setMode] = useState<Mode>("host");
   const [name, setName] = useState("");
   const [detail, setDetail] = useState("");
@@ -22,6 +25,25 @@ export function SoberHostModal({ onClose }: { onClose: () => void }) {
     setPhase("loading");
     setTimeout(() => setPhase("done"), 1100);
   };
+
+  // LIVE: no host/RSVP endpoint exists — show an honest coming-soon panel
+  // instead of a mock form that fakes a "submitted"/"you're in" success.
+  if (!demoMode) {
+    return (
+      <ResourceModal title="" onClose={onClose}>
+        <PlumComingSoon
+          title={
+            <Translation
+              i18nKey="resources:sober.host.comingSoon.title"
+              components={{ em: <em /> }}
+            />
+          }
+          sub={t("resources:sober.host.comingSoon.sub")}
+          onClose={onClose}
+        />
+      </ResourceModal>
+    );
+  }
 
   return (
     <ResourceModal
@@ -88,14 +110,15 @@ export function SoberHostModal({ onClose }: { onClose: () => void }) {
               </button>
             </div>
 
-            <span className={styles.label}>
+            <label className={styles.label} htmlFor={`${fieldId}-name`}>
               {t(
                 mode === "host"
                   ? "resources:sober.host.nameLabel.host"
                   : "resources:sober.host.nameLabel.attend",
               )}
-            </span>
+            </label>
             <input
+              id={`${fieldId}-name`}
               className={styles.input}
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -106,14 +129,15 @@ export function SoberHostModal({ onClose }: { onClose: () => void }) {
               )}
             />
 
-            <span className={styles.label}>
+            <label className={styles.label} htmlFor={`${fieldId}-detail`}>
               {t(
                 mode === "host"
                   ? "resources:sober.host.detailLabel.host"
                   : "resources:sober.host.detailLabel.attend",
               )}
-            </span>
+            </label>
             <textarea
+              id={`${fieldId}-detail`}
               className={styles.textarea}
               value={detail}
               onChange={(e) => setDetail(e.target.value)}

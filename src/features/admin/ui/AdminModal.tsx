@@ -1,7 +1,12 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useId, type ReactNode } from "react";
 import { FiX } from "react-icons/fi";
 import { useScrollLock } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import {
+  pushModal,
+  popModal,
+  isTopmostModal,
+} from "../../../shared/components/ui/modalStack";
 import styles from "./adminUi.module.css";
 
 /**
@@ -25,12 +30,23 @@ export function AdminModal({
 }) {
   useScrollLock();
   const { t } = useTranslation();
+  // Stable per-instance id so this dialog can register itself on the shared
+  // modal stack (see `shared/components/ui/modalStack`) and only act on
+  // Escape while topmost — see `Modal`'s `useDismiss` for the same fix.
+  const modalId = useId();
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    pushModal(modalId);
+    return () => popModal(modalId);
+  }, [modalId]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isTopmostModal(modalId)) onClose();
+    };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [onClose, modalId]);
 
   return (
     <div

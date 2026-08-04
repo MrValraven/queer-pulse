@@ -1,6 +1,7 @@
-import { useCallback, useMemo, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, type ReactNode } from "react";
 import { type Draft } from "../../features/members/drafts.data";
-import { useLocalStorage } from "../../shared/hooks";
+import { useScopedLocalStorage } from "./useScopedLocalStorage";
+import { useStorageScope } from "./useStorageScope";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "./DemoModeProvider";
@@ -9,6 +10,7 @@ import {
   deleteDraft,
   draftToDto,
 } from "../../features/members/api/drafts.api";
+import { setMessageDraftsScope } from "../../features/messages/drafts";
 import { DraftsContext, type DraftsStore } from "./useDrafts";
 
 const STORAGE_KEY = "qp.drafts.v1";
@@ -32,14 +34,28 @@ const STORAGE_KEY = "qp.drafts.v1";
  * Write-only consumers use `useDraftsActions()` and fire nothing.
  */
 export function DraftsProvider({ children }: { children: ReactNode }) {
-  const [drafts, setDrafts] = useLocalStorage<Draft[]>(
+  // Per-user bucket — a shared device must never surface one member's drafts to
+  // the next (see `useStorageScope`/`useScopedLocalStorage`).
+  const scopeId = useStorageScope();
+  const [drafts, setDrafts] = useScopedLocalStorage<Draft[]>(
     STORAGE_KEY,
+    scopeId,
     [],
     (v): v is Draft[] => Array.isArray(v),
   );
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const { t } = useTranslation();
+
+  // Keep the message-composer drafts store (`features/messages/drafts.ts`)
+  // scoped to the SAME authenticated member as the rest of the per-user caches,
+  // so a shared device never surfaces one member's unsent composer text to the
+  // next. Driven from here — the providers layer that already owns per-user
+  // cache scoping — rather than from the messages feature, so all scoping lives
+  // in one place. (The messages controller still wipes it on a demo↔live flip.)
+  useEffect(() => {
+    setMessageDraftsScope(scopeId);
+  }, [scopeId]);
 
   const addDraft = useCallback(
     (draft: Draft) => {

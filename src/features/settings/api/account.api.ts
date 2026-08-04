@@ -160,6 +160,23 @@ export interface SubmitDsarDto {
   reauthToken: string;
 }
 
+/**
+ * POST /account/dsar — record a data-subject request. The backend derives the
+ * subject from the authenticated cookie session (never a body email), mints the
+ * reference and computes the statutory 30-day due date, and returns the created
+ * `DsarRequest`. Gated by the same step-up token as the erasure/export routes.
+ */
+export const submitDsar = (dto: SubmitDsarDto) =>
+  apiPost<DsarRequest>("/account/dsar", dto);
+
+/**
+ * GET /account/dsar — the caller's own DSAR history, newest first. Scoped
+ * server-side to the authenticated cookie session (never a body email), so the
+ * frontend never fabricates a member's request history. An empty array means
+ * the member has filed nothing yet.
+ */
+export const listDsar = () => apiGet<DsarRequest[]>("/account/dsar");
+
 /* ── Sessions (spec 08 territory — referenced here for the security email) ── */
 
 /**

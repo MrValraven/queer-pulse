@@ -65,6 +65,13 @@ const DEMO_USER: AuthUser = {
   role: "member",
   // A fixed adult mock — already attested so demo sessions never hit the age gate.
   ageAttestedAt: "2026-01-01T00:00:00.000Z",
+  // A long-standing demo member — already onboarded. The gate still lets demo
+  // sessions preview the wizard (it only bounces live members), so this just
+  // keeps the mock's shape honest.
+  onboardedAt: "2026-01-01T00:00:00.000Z",
+  // The demo member is active, never suspended — so no expiry and no reason.
+  suspendedUntil: null,
+  suspension: null,
   profile: {
     slug: currentUserSlug,
     firstName: currentUser.first,
@@ -185,6 +192,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const endPreparing = useCallback(() => setPreparing(false), []);
 
+  // Reflect a just-finished onboarding on the cached user, so the one-time gate
+  // stops replaying the wizard immediately — no /auth/me round trip needed. A
+  // no-op when logged out; demo never calls it (its mock user is already
+  // onboarded).
+  const markOnboarded = useCallback((onboardedAt: string) => {
+    setUser((prev) => (prev ? { ...prev, onboardedAt } : prev));
+  }, []);
+
   const refresh = useCallback(async () => {
     if (demoMode) return;
     // Share the on-401 single-flight + cross-tab lock (see `refreshSession`) so
@@ -220,6 +235,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       signOut,
       endPreparing,
       refresh,
+      markOnboarded,
     }),
     [
       loggedIn,
@@ -231,6 +247,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       signOut,
       endPreparing,
       refresh,
+      markOnboarded,
     ],
   );
 

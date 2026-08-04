@@ -590,13 +590,22 @@ export const marketing: Catalog = {
   "dsar.actions.info":
     "Os pedidos são revistos por uma pessoa da nossa equipa de privacidade — <b>nunca totalmente automatizado</b>.",
   "dsar.actions.submit": "Submeter pedido",
+  "dsar.actions.submitting": "A enviar…",
   "dsar.past.heading": "Os teus pedidos anteriores",
   "dsar.past.submitted": "Submetido em {date}",
   "dsar.past.responded": "Respondido em {date}",
   "dsar.past.respondedWithDuration": "Respondido em {date} · {duration}",
   "dsar.past.resolved": "Resolvido",
+  "dsar.past.status.received": "Recebido",
+  "dsar.past.status.inReview": "Em análise",
+  "dsar.past.status.rejected": "Recusado",
+  "dsar.past.loading": "A carregar os teus pedidos anteriores…",
+  "dsar.past.error": "Não foi possível carregar os teus pedidos anteriores. Tenta novamente daqui a pouco.",
+  "dsar.past.empty": "Ainda não submeteste nenhum pedido.",
   "dsar.past.objectAnalytics": "Oposição · Análise",
   "dsar.toast.submitted": "Pedido submetido — referência {ref}",
+  "dsar.toast.submitError":
+    "Não conseguimos registar esse pedido — nada foi enviado. Importas-te de tentar outra vez?",
 
   // ── Diretrizes da Comunidade ───────────────────────────────────────────
   "guidelines.meta.title": "Diretrizes da Comunidade QueerPulse",
@@ -873,7 +882,7 @@ export const marketing: Catalog = {
     "Atualizado regularmente — vê queerpulse.app/press para a versão mais recente.",
   "pressKit.readme.licenceHeading": "LICENÇA",
   "pressKit.readme.licenceBody":
-    "Todos os materiais são disponibilizados sob licença CC BY 4.0 para uso editorial. Contacta press@queerpulse.app para licenciamento comercial.",
+    "Todos os materiais são disponibilizados sob licença CC BY 4.0 para uso editorial. Contacta press@queerpulse.pt para licenciamento comercial.",
   "pressKit.readme.contentsHeading": "CONTEÚDO",
   "pressKit.readme.contents.boilerplate": "Texto institucional (3 tamanhos)",
   "pressKit.readme.contents.marks": "Marcas (SVG)",
@@ -1030,7 +1039,7 @@ export const marketing: Catalog = {
     "Nunca partilhamos os teus dados com corretores de dados nem redes publicitárias.",
   "privacy.changes.title": "Alterações a esta política",
   "privacy.changes.p1":
-    "Avisamos as pessoas da comunidade sobre alterações relevantes por email e por aviso na aplicação, antes de entrarem em vigor.",
+    "Avisamos as pessoas da comunidade sobre alterações relevantes através de um aviso na aplicação, antes de entrarem em vigor.",
   "privacy.changes.p2":
     "Clarificações menores podem ser publicadas sem aviso prévio — o número de versão e a data no topo desta página refletem sempre o texto atual.",
   "privacy.contactSection.title": "Contacto",
@@ -1118,7 +1127,7 @@ export const marketing: Catalog = {
     "Nada nestes termos limita a responsabilidade por algo que não possa legalmente ser limitado, incluindo negligência grave ou conduta dolosa.",
   "terms.changesTerms.title": "Alterações a estes termos",
   "terms.changesTerms.p1":
-    "Avisamos as pessoas da comunidade sobre alterações relevantes por email e por aviso na aplicação, antes de entrarem em vigor.",
+    "Avisamos as pessoas da comunidade sobre alterações relevantes através de um aviso na aplicação, antes de entrarem em vigor.",
   "terms.changesTerms.p2":
     "Continuar a usar a QueerPulse depois de as alterações entrarem em vigor significa que aceitas os termos atualizados.",
   "terms.law.title": "Lei aplicável",
@@ -1128,6 +1137,46 @@ export const marketing: Catalog = {
   "terms.contactSection.title": "Contacto",
   "terms.contactSection.body":
     "Perguntas sobre estes termos? Envia um email para <a>hello@queerpulse.pt</a> e uma pessoa a sério responde.",
+
+  // ── Informação legal / Imprint ────────────────────────────────────────
+  // TODO (mantenedor): o número de registo, a morada, o representante legal e o
+  // fornecedor de alojamento são marcadores em ImprintPage.data.ts, interpolados
+  // abaixo. Confirma os dados reais antes do lançamento público.
+  "imprint.meta.title": "Informação legal · QueerPulse",
+  "imprint.meta.description":
+    "Quem gere a QueerPulse: a entidade legal por trás da plataforma, como falar com uma pessoa a sério, e a lei que nos rege.",
+  "imprint.meta.lastReviewed": "Revisto pela última vez a 1 de junho de 2026",
+  "imprint.title": "Informação <em>legal</em>",
+  "imprint.plain.text":
+    "A versão simples: esta página identifica a organização que gere a QueerPulse, como nos contactar, e onde estamos registados. É o imprint exigido por lei — nada mais.",
+  "imprint.operator.title": "Quem gere a QueerPulse",
+  "imprint.operator.p1":
+    "A QueerPulse é gerida por {legalName}, uma organização sem fins lucrativos registada em Portugal.",
+  "imprint.operator.registry": "Número de registo: {registryNumber}",
+  "imprint.operator.address": "Sede registada: {registeredAddress}",
+  "imprint.operator.todo":
+    "Estes dados de registo são marcadores enquanto aguardamos o registo legal final — publicaremos aqui os números confirmados.",
+  "imprint.contact.title": "Como nos contactar",
+  "imprint.contact.p1":
+    "Para qualquer coisa nesta página — ou para o que for — envia um email para <a>{email}</a> e uma pessoa a sério responde.",
+  "imprint.contact.p2":
+    "Respondemos em inglês ou português, normalmente dentro de dois dias úteis.",
+  "imprint.representation.title": "Responsável pelo conteúdo",
+  "imprint.representation.p1":
+    "A responsabilidade editorial e legal por este site cabe a {representative}, em nome de {legalName}.",
+  "imprint.hosting.title": "Alojamento",
+  "imprint.hosting.p1":
+    "A plataforma é alojada por {hostingProvider}. A tua sessão e os teus dados são tratados como descrito na nossa Política de Privacidade.",
+  "imprint.jurisdiction.title": "Lei aplicável",
+  "imprint.jurisdiction.p1":
+    "A QueerPulse opera ao abrigo da lei portuguesa e da União Europeia.",
+  "imprint.jurisdiction.p2":
+    "Qualquer litígio que não consigamos resolver diretamente será decidido nos tribunais de Lisboa, Portugal, salvo se a lei de defesa do consumidor te der outro direito.",
+  "imprint.disputes.title": "Resolução de litígios em linha",
+  "imprint.disputes.p1":
+    "A Comissão Europeia disponibiliza uma plataforma de resolução de litígios em linha em ec.europa.eu/consumers/odr. Preferimos resolver as coisas por email primeiro — vê “Como nos contactar” acima.",
+  "imprint.contactCta":
+    "Algo aqui desatualizado? <strong>Diz-nos e corrigimos.</strong>",
 
   // ── Kit de Imprensa — secções da página ───────────────────────────────
   // Os títulos/fontes da cobertura são peças de imprensa reais (palavras de
@@ -1214,6 +1263,9 @@ export const marketing: Catalog = {
   "pressKit.coverage.section.lead":
     "Peças selecionadas em inglês e português, de 2024 a 2026. <em>Contagens de visitas são bem-vindas mas não necessárias</em> — liga antes à página de Imprensa.",
   "pressKit.coverage.openingToast": "A abrir a peça em {source}…",
+  "pressKit.coverage.emptyLive.title": "A cobertura vai aparecer aqui",
+  "pressKit.coverage.emptyLive.description":
+    "Assim que se escrever sobre a QueerPulse, ligamos as peças aqui. Para entrevistas ou pedidos de imprensa, escreve para press@queerpulse.pt.",
   "pressKit.downloads.section.title": "<em>Descarregáveis</em>",
   "pressKit.downloads.section.lead":
     "Links diretos para os ficheiros. O kit completo é um ZIP de 38 MB com tudo o que está abaixo; os ficheiros individuais são mais pequenos.",
@@ -1253,6 +1305,8 @@ export const marketing: Catalog = {
   "listBusiness.wizard.stepAria": "Passo {number}: {label}",
   "listBusiness.wizard.stepAriaDone": "Passo {number}: {label} (concluído)",
   "listBusiness.wizard.stepAriaCurrent": "Passo {number}: {label} (atual)",
+  "listBusiness.wizard.stepJumpAria": "Voltar ao passo {number}: {label}",
+  "listBusiness.wizard.stepOf": "Passo {number} de {total} — {label}",
   "listBusiness.wizard.draftSaved": "Rascunho guardado",
   "listBusiness.draftBanner.text":
     "<b>Tens um rascunho guardado.</b> Continuar de onde ficaste?",
@@ -1277,6 +1331,30 @@ export const marketing: Catalog = {
   "listBusiness.toast.submitError":
     "Não conseguimos enviar o teu espaço agora. Os teus dados ficaram guardados — tenta de novo.",
   "listBusiness.toast.withdrawn": "Anúncio retirado",
+  // Validação do servidor (item #4)
+  "listBusiness.serverError.title":
+    "O sistema da equipa da comunidade assinalou isto",
+  "listBusiness.serverError.dismiss": "Dispensar esta mensagem",
+  // Guardar e terminar mais tarde + rascunhos entre dispositivos (item #11)
+  "listBusiness.saveLater.cta": "Guardar e terminar mais tarde",
+  "listBusiness.saveLater.saving": "A guardar…",
+  "listBusiness.saveLater.toast":
+    "Guardado. Retoma quando quiseres — fica à espera nos teus rascunhos.",
+  "listBusiness.saveLater.error":
+    "Não conseguimos guardar o teu rascunho agora. Verifica a ligação e tenta de novo.",
+  "listBusiness.drafts.title": "Retoma onde ficaste",
+  "listBusiness.drafts.count": "{count} em curso",
+  "listBusiness.drafts.untitled": "Espaço sem título",
+  "listBusiness.drafts.updated": "Última edição {when}",
+  "listBusiness.drafts.resume": "Retomar",
+  "listBusiness.drafts.resuming": "A abrir…",
+  "listBusiness.drafts.delete": "Eliminar rascunho",
+  "listBusiness.drafts.loadError":
+    "Não conseguimos carregar os teus rascunhos agora.",
+  "listBusiness.resume.invalidTitle": "Este link de rascunho já não é válido",
+  "listBusiness.resume.invalidBody":
+    "O link pode ter expirado, ou o rascunho já foi submetido ou eliminado. Podes na mesma começar um anúncio novo.",
+  "listBusiness.resume.startFresh": "Começar um anúncio novo",
   // Passo 0 — percurso
   "listBusiness.step0.title": "Como é que",
   "listBusiness.step0.em": "conheces este lugar?",
@@ -1424,6 +1502,12 @@ export const marketing: Catalog = {
     "Rua e número chega — colocamos o pino a partir daí.",
   "listBusiness.step3.addressPlaceholder":
     "R. Antero de Quental 26, 1170-024 Lisboa",
+  "listBusiness.step3.locateAddress": "Localizar esta morada",
+  "listBusiness.step3.locateError":
+    "Não conseguimos encontrar essa morada. Tenta acrescentar a cidade ou o código postal — ou coloca um pino no teu bairro abaixo.",
+  "listBusiness.step3.locateDemoHint":
+    "No modo demo não é possível procurar uma morada online — colocámos um pino perto do teu bairro. Arrasta-o para o local exato.",
+  "listBusiness.step3.dropNeighbourhoodPin": "Colocar um pino em {hood}",
   "listBusiness.step3.mapLinkLabel": "Link do Google Maps",
   "listBusiness.step3.mapLinkHelper":
     "Abre o teu espaço no Google Maps, toca em Partilhar e cola o link — colocamos o pino por ti.",
@@ -1446,6 +1530,11 @@ export const marketing: Catalog = {
   "listBusiness.step3.closed": "Fechado",
   "listBusiness.step3.opensAria": "{day} — abertura",
   "listBusiness.step3.closesAria": "{day} — fecho",
+  "listBusiness.step3.addHours": "+ Dividir (pausa de almoço)",
+  "listBusiness.step3.removeHoursAria": "Remover segundo período de {day}",
+  "listBusiness.step3.nextDay": "dia seguinte",
+  "listBusiness.step3.hoursWarning":
+    "Verifica estes horários — um período está em branco, tem duração zero ou sobrepõe-se.",
   "listBusiness.step3.hoursNoteLabel":
     "Uma nota curta sobre o horário — opcional",
   "listBusiness.step3.hoursNotePlaceholder":
@@ -1485,6 +1574,8 @@ export const marketing: Catalog = {
   "listBusiness.step4.alt.vibe": "Ambiente · texto alternativo",
   "listBusiness.step4.altPlaceholder":
     "Descreve para quem é cega ou tem baixa visão",
+  "listBusiness.step4.altPlaceholderRequired":
+    "Obrigatório — descreve para quem é cega ou tem baixa visão",
   "listBusiness.step4.photo.upload": "Carregar",
   "listBusiness.step4.photo.change": "Trocar",
   "listBusiness.step4.photo.uploading": "A carregar…",
@@ -1637,11 +1728,14 @@ export const marketing: Catalog = {
   "listBusiness.missing.address": "uma morada",
   "listBusiness.missing.pin": "um pino no mapa",
   "listBusiness.missing.hours": "o horário",
+  "listBusiness.missing.hoursInvalid": "uma correção no horário",
   "listBusiness.missing.social": "links de contacto válidos",
+  "listBusiness.missing.socialFormat": "o formato dos links de contacto corrigido",
   "listBusiness.missing.rel": "a tua ligação",
   "listBusiness.missing.ownerName": "o teu nome",
   "listBusiness.missing.ownerRole": "o teu papel",
   "listBusiness.missing.contactEmail": "um email de contacto",
+  "listBusiness.missing.alt": "texto alternativo para as tuas fotos",
   "listBusiness.missing.consent": "as duas confirmações",
   // Coluna de pré-visualização ao vivo
   "listBusiness.preview.head":
@@ -1750,7 +1844,7 @@ export const marketing: Catalog = {
   "transparency.signoff.title":
     "Assinado de <em>boa-fé,</em> e pronto para perguntas.",
   "transparency.signoff.body":
-    "Este relatório foi preparado por Catarina Vaz e André Bento, revisto pela Assembleia no seu todo, e auditado de forma independente pela Dra. Helena Faria da Faria Auditoria. <em>Os erros são nossos.</em> Perguntas, correções ou preocupações: <a>transparency@queerpulse.app</a> — uma pessoa a sério lê tudo no espaço de 48 horas.",
+    "Este relatório foi preparado por Catarina Vaz e André Bento, revisto pela Assembleia no seu todo, e auditado de forma independente pela Dra. Helena Faria da Faria Auditoria. <em>Os erros são nossos.</em> Perguntas, correções ou preocupações: <a>transparency@queerpulse.pt</a> — uma pessoa a sério lê tudo no espaço de 48 horas.",
   "transparency.signoff.role.catarina":
     "Co-tesouraria · redigiu finanças + erros",
   "transparency.signoff.role.andre":
@@ -1801,11 +1895,263 @@ export const marketing: Catalog = {
   "changelog.tag.donate": "Ver para onde vai o dinheiro →",
   "changelog.tag.volunteer": "Encontra o teu caminho →",
   "changelog.tag.notifications": "Abrir as tuas notificações →",
+  "changelog.tag.connections": "Abrir as tuas ligações →",
+  "changelog.tag.trustNetwork": "Abrir a rede de confiança →",
+  "changelog.tag.invite": "Convidar alguém →",
+  "changelog.tag.imprint": "Ler o aviso legal →",
 
+  "changelog.entries.moderation-outcome-notifications.title":
+    "Passas a saber o resultado de uma decisão de moderação",
+  "changelog.entries.moderation-outcome-notifications.body":
+    "Quando a equipa de moderação avisa, suspende ou encerra uma conta, o membro passa a receber uma notificação que explica o que aconteceu e porquê — no seu próprio idioma, com a razão escrita pela moderação e uma ligação para recorrer da decisão. Um membro suspenso ou banido é também levado diretamente para uma página que mostra a mesma razão e, no caso de uma suspensão, quando termina — em vez de um ecrã em branco que não carrega. Até agora só quem fazia uma denúncia era informado do resultado; o membro afetado ficava sem saber. As notificações de moderação são sempre entregues e não podem ser silenciadas.",
+
+  "changelog.entries.community-page-polish.title":
+    "Uma página de comunidade mais acolhedora",
+  "changelog.entries.community-page-polish.body":
+    "A página de cada comunidade recebeu uma ronda de melhorias: já podes partilhar uma comunidade com alguém, sair passa a pedir confirmação para nunca acontecer por engano, o separador Eventos mostra todos os próximos convívios em vez de só o seguinte, e mudar de separador atualiza o link para poderes partilhar ou guardar uma vista específica. Quem não é membro pode ler sem caixas de resposta a mais, e as tuas publicações mostram o teu nome e foto reais assim que as partilhas.",
+
+  "changelog.entries.job-application-status.title":
+    "Vê em que ponto estão as tuas candidaturas",
+  "changelog.entries.job-application-status.body":
+    "O acompanhamento de candidaturas mostra agora as tuas candidaturas reais — a que te candidataste, quando, e em que fase está cada uma — em vez de um exemplo. Abre qualquer cartão para rever as respostas que enviaste.",
+
+  "changelog.entries.data-request-history.title":
+    "O teu histórico de pedidos de dados, num só sítio",
+  "changelog.entries.data-request-history.body":
+    "A página de privacidade lista agora os teus pedidos de dados anteriores reais — acesso, correção, oposição e os restantes — com a respetiva referência e o estado atual, para poderes acompanhar um sem adivinhar.",
+
+  "changelog.entries.community-settings-controls.title":
+    "Guarda, arquiva ou transfere a tua comunidade",
+  "changelog.entries.community-settings-controls.body":
+    "Se geres uma comunidade, as definições do painel de moderação fazem agora o que dizem: editar o nome, a descrição e as regras da casa guarda mesmo, podes arquivar uma comunidade e podes transferir a propriedade para outro membro. Sem mais alterações que ficavam pelo caminho.",
+
+  "changelog.entries.feed-keeps-loading.title":
+    "O feed continua a carregar à medida que percorres",
+  "changelog.entries.feed-keeps-loading.body":
+    "O feed da comunidade parava após a primeira página. Agora carrega mais sozinho à medida que chegas ao fim — e há um “Carregar mais” acessível por teclado para quando preferires tocar.",
+
+  "changelog.entries.faster-first-load.title":
+    "Um primeiro carregamento mais rápido",
+  "changelog.entries.faster-first-load.body":
+    "Passámos a carregar cada parte dos textos da interface apenas quando um ecrã precisa deles, em vez de enviar tudo à partida. A aplicação abre visivelmente mais depressa, sobretudo no telemóvel ou numa ligação mais lenta.",
+
+  "changelog.entries.readable-text-contrast.title":
+    "Texto mais fácil de ler em toda a aplicação",
+  "changelog.entries.readable-text-contrast.body":
+    "Um conjunto de legendas, dicas e etiquetas ténues — nas coleções, no seletor de GIFs, nos cartões de perfil e nalguns outros pontos — estava demasiado claro sobre o fundo. Passam a cumprir o contraste acessível, tanto no modo claro como no escuro.",
+
+  "changelog.entries.ios-splash-screens.title":
+    "Um ecrã de arranque cuidado no iPhone",
+  "changelog.entries.ios-splash-screens.body":
+    "Quando abres o QueerPulse a partir do ecrã principal do iPhone, mostra agora um ecrã de arranque com a marca enquanto inicia, em vez de um flash branco. As notificações no Android passam também a ter um emblema mais limpo.",
+
+  "changelog.entries.removed-content-stays-hidden.title":
+    "O conteúdo removido fica escondido em todo o lado",
+  "changelog.entries.removed-content-stays-hidden.body":
+    "Quando um moderador remove algo, isso desaparece agora de forma consistente em todos os sítios onde poderia aparecer — incluindo mensagens diretas, anúncios de negócios e de habitação, e personas — e as mensagens removidas deixam de contar para os teus emblemas de não lidas.",
+
+  "changelog.entries.help-demo-example-live-hidden.title":
+    "Os painéis de ajuda deixam de mostrar exemplos da demo no modo real",
+  "changelog.entries.help-demo-example-live-hidden.body":
+    "A ajuda “Sobre este ecrã” terminava com um exemplo “Na demo” mesmo no modo real, onde esses dados de exemplo não existem. Esse aparte passa a surgir apenas quando estás a explorar a demo.",
+
+  "changelog.entries.smaller-help-icon.title":
+    "Um ícone de ajuda “Sobre este ecrã” mais pequeno",
+  "changelog.entries.smaller-help-icon.body":
+    "O pequeno ícone de ajuda ⓘ ao lado do título de uma página crescia com o título e podia parecer demasiado grande junto aos grandes títulos de destaque. Agora tem um tamanho discreto e consistente em todos os ecrãs.",
+
+  "changelog.entries.community-rules-and-tags-polish.title":
+    "Regras da casa e etiquetas mais claras nos detalhes da comunidade",
+  "changelog.entries.community-rules-and-tags-polish.body":
+    "As regras da casa de uma comunidade passam a mostrar o texto correto em vez de um código interno, e as etiquetas no fim da página Sobre mantêm-se legíveis no modo escuro.",
+
+  "changelog.entries.co-owned-subprofiles.title":
+    "Partilha a responsabilidade por uma persona",
+  "changelog.entries.co-owned-subprofiles.body":
+    "Há trabalho que não é feito sozinho — um dueto de DJs, uma banda, um estúdio a dois. Agora podes convidar outra pessoa membro para ser responsável conjunta de um subperfil: assim que aceitar, as duas passam a geri-lo por completo, ele aparece nos perfis de ambas, e qualquer uma pode convidar mais alguém, sair, ou editar o que é partilhado. Eliminar uma persona partilhada agora avisa logo quantas pessoas isso afeta.",
+
+  "changelog.entries.smoother-mobile-navigation.title":
+    "Uma forma mais suave de navegar no telemóvel",
+  "changelog.entries.smoother-mobile-navigation.body":
+    "Navegar na QueerPulse no telemóvel devia parecer fluido, não lento. A barra de separadores no fundo do ecrã fica agora sempre visível também no navegador, não só depois de instalares a aplicação, e as páginas surgem com uma transição suave em vez de um salto brusco. Cada separador lembra-se exatamente de onde ficaste e, se tocares no separador em que já estás, és levado de volta ao topo. Desliza o dedo a partir da margem esquerda do ecrã para voltar atrás, e puxa para baixo no teu feed, nos eventos, em membros, nas mensagens ou nas notificações para atualizar com um gesto rápido em vez de recarregares a página.",
+
+  "changelog.entries.no-placeholder-people-in-live.title":
+    "O modo ao vivo agora mostra apenas pessoas reais",
+  "changelog.entries.no-placeholder-people-in-live.body":
+    "Alguns cantos da QueerPulse mostravam discretamente pessoas de exemplo da demonstração a membros reais — um diretório de bem-estar com terapeutas inventados, uma candidatura a emprego que chegava pré-preenchida com o nome e o email de outra pessoa, e histórias da revista assinadas por autores fictícios. Isto está corrigido. Vais passar a ver conteúdo real onde ele existe, os teus próprios dados onde um formulário os pede, e uma nota honesta de “ainda em construção” onde algo ainda não está pronto — nunca um substituto a fingir ser uma pessoa.",
+
+  "changelog.entries.honest-roadmap-promises.title":
+    "O roteiro agora cumpre promessas — e diz que não, com sinceridade",
+  "changelog.entries.honest-roadmap-promises.body":
+    "Quando algo no roteiro tem o selo Assumido, isso é uma promessa a sério, não um palpite — e se a data alguma vez mudar, vais ver o motivo real, publicado ali mesmo, em vez de desaparecer em silêncio. Há também uma nova lista “Não vamos construir isto, e porquê”, para que um pedido que não vai avançar receba uma resposta honesta em vez de silêncio. Por trás disto, as ferramentas de roteiro da equipa foram completamente reconstruídas — um quadro a sério para mover o trabalho da ideia até ao lançamento, uma linha do tempo, e uma fila real para ler e responder ao que os membros pedem — para que o que vês aqui se mantenha atual, não desatualizado.",
+
+  "changelog.entries.invite-resend-and-qr.title":
+    "Reenvia um convite que expirou — e partilha-o com um código QR",
+  "changelog.entries.invite-resend-and-qr.body":
+    "Um convite que expirou antes de a tua amiga lá chegar já não obriga a começar do zero. Abre os teus convites enviados, toca em “Enviar de novo” no que expirou, e o mesmo link volta a funcionar por mais uma semana. Cada convite que geras passa também a incluir um código QR, para que alguém possa entrar bastando lê-lo diretamente do teu telemóvel — à mesa ou num evento, sem link para copiar. E se um convite foi endereçado a outro email, ou se quem te convidou já não está na QueerPulse, passas a receber uma explicação clara e gentil em vez de um erro confuso.",
+  "changelog.entries.invite-resend-and-qr.tag": "Convidar alguém →",
+
+  "changelog.entries.smoother-onboarding-first-minutes.title":
+    "Um acolhimento mais suave nos teus primeiros minutos",
+  "changelog.entries.smoother-onboarding-first-minutes.body":
+    "Preparar o teu espaço ficou mais gentil. Se te afastares a meio, passamos a lembrar-nos de onde estavas e retomamos aí mesmo, em vez de recomeçar do início. As etiquetas de “aqui para” que escolhes aparecem no teu perfil desde o início, e voltar ao acolhimento nunca as vai apagar sem querer. Percorrer os passos com teclado ou leitor de ecrã coloca-te agora no sítio certo de cada vez, e podes recuar uma página sempre que quiseres uma segunda vista.",
+
+  "changelog.entries.events-open-at-top.title":
+    "Eventos abre no topo",
+  "changelog.entries.events-open-at-top.body":
+    "Abrir Eventos (ou qualquer separador) começa agora sempre no topo da página. Antes deixava-te no ponto onde tinhas feito scroll da última vez, o que, na capa alta de Eventos, te deixava preso a meio da página. Carregar no botão Voltar do navegador continua a levar-te exatamente para onde estavas.",
+  "changelog.entries.events-open-at-top.tag": "Ver eventos →",
+
+  "changelog.entries.chat-header-tap-to-profile.title":
+    "Um cabeçalho de conversa mais tranquilo",
+  "changelog.entries.chat-header-tap-to-profile.body":
+    "O topo de uma conversa funciona agora como esperarias: toca no nome ou na foto da pessoa para abrir o perfil dela — sem precisares de um botão à parte. O arranjo também ficou mais limpo, com os controlos de informação e de mensagens marcadas reunidos num par arrumado no canto, em vez de ficarem soltos fora do sítio.",
+  "changelog.entries.chat-header-tap-to-profile.tag": "Abrir mensagens →",
+
+  "changelog.entries.sheet-close-scroll-jump-fix.title":
+    "Sem mais saltos de volta ao topo",
+  "changelog.entries.sheet-close-scroll-jump-fix.body":
+    "Se abrisses a folha da tua conta a meio de uma página e a fechasses, a página às vezes saltava de volta para o topo — perdendo o teu lugar. Agora fica exatamente onde a deixaste.",
+
+  "changelog.entries.mobile-account-you-tab.title":
+    "A tua conta, a um toque no telemóvel",
+  "changelog.entries.mobile-account-you-tab.body":
+    "No telemóvel, tocar na tua foto na barra inferior abre agora um espaço só teu — o teu perfil, as tuas ligações, os lugares que guardaste, as tuas candidaturas e as definições, reunidos numa folha organizada em vez de espalhados por um menu comprido. As mensagens subiram para o topo, ao lado das notificações, para que as pessoas com quem falas estejam sempre à mão, e o menu «Mais» passa a servir apenas para explorar o resto da QueerPulse.",
+
+  "changelog.entries.instagram-style-mobile-profile.title":
+    "O teu perfil, redesenhado para o telemóvel",
+  "changelog.entries.instagram-style-mobile-profile.body":
+    "No telemóvel, o teu perfil abre agora como as aplicações que já conheces: um avatar compacto envolto num anel suave em gradiente do orgulho, uma linha de estatísticas que se lê num relance — avais, comunidades, personas — uma faixa com as tuas personas em destaque logo no topo, e o resto do perfil organizado em secções por separadores que deslizas, em vez de uma única lista comprida.",
+
+  "changelog.entries.forum-upvotes-tags-search.title":
+    "O fórum cresceu — votos, etiquetas, pesquisa e tópicos que se podem fechar",
+  "changelog.entries.forum-upvotes-tags-search.body":
+    "Os comuns ganharam um conjunto de ferramentas a sério. Podes agora votar a favor de um tópico ou de uma resposta de verdade, para que as respostas que as pessoas acharam mais úteis subam para onde as vês. Ordena o quadro por Ativos ou Sem resposta — e não só por Melhores e Recentes — para encontrares as conversas que precisam de uma voz ou as que ainda esperam a primeira resposta. Ao começares uma publicação podes juntar algumas etiquetas como #habitação ou #saúde, e ao tocar numa etiqueta filtras todo o quadro para esse tema. Há agora uma caixa de pesquisa, para procurares um tópico em vez de o teres de rolar até o encontrar. E a moderação pode fechar um tópico a novas respostas quando uma conversa já deu o que tinha a dar — continua legível, apenas em pausa.",
+  "changelog.entries.forum-upvotes-tags-search.tag": "Abrir o fórum",
+  "changelog.entries.list-business-wizard-overhaul.title":
+    "Adicionar o teu espaço ao diretório ficou bem mais fácil",
+  "changelog.entries.list-business-wizard-overhaul.body":
+    "Reconstruímos todo o fluxo de “listar um negócio”. Se só estás a recomendar um sítio de que gostas, passamos a pedir apenas o que realmente podes saber — um nome, onde fica e uma frase sobre o porquê — em vez de exigir dados de quem gere o espaço e horários que não tens. Não tens um link do Google Maps para colar? Escreve a morada e toca em “Localizar esta morada”, ou coloca um pino no bairro e ajusta-o — nunca ficas preso. Os horários passam a lidar com pausas de almoço e noites que vão para lá da meia-noite, e à medida que escreves o nome verificamos o diretório real para não adicionares um espaço que já lá está. O teu progresso vai sendo guardado e agora acompanha-te entre dispositivos, para começares no telemóvel e terminares no portátil. Cada negócio ganha também uma forma clara de reivindicar a sua própria listagem ou de contestar uma adicionada sem o seu consentimento, e qualquer pessoa continua a poder sinalizar uma listagem que não devia estar ali.",
+  "changelog.entries.list-business-wizard-overhaul.tag": "Listar o teu espaço",
+  "changelog.entries.mobile-experience-pass.title":
+    "Toda a app, à medida do teu polegar",
+  "changelog.entries.mobile-experience-pass.body":
+    "Passámos ecrã a ecrã para que o QueerPulse funcione bem com uma só mão. Os botões, etiquetas e interruptores estão maiores e mais fáceis de tocar, e os menus, filtros e caixas de diálogo sobem agora a partir do fundo do ecrã como painéis que podes afastar com um gesto — mesmo onde o teu polegar já está. Há uma seta de voltar clara no topo de cada página, mesmo sem instalar a app, e quando abres uma conversa ela ocupa o ecrã inteiro para nada te atrapalhar, com a caixa de mensagem sempre logo acima do teclado. As histórias em slides, o calendário de eventos, os filtros do diretório e as ferramentas de administração leem-se agora com conforto no telemóvel, na vertical, sem ampliar nem arrastar para os lados.",
+
+  "changelog.entries.magazine-deck-authoring.title":
+    "As pessoas editoras já podem criar os seus próprios decks interativos",
+  "changelog.entries.magazine-deck-authoring.body":
+    "O formato de slide-deck interativo da primeira página da revista costumava ser montado à mão — agora as pessoas editoras têm uma ferramenta de criação completa, direto no painel. Adiciona slides em cinco modelos (texto, imagem a toda a largura, uma estatística grande e animada, um comparador antes-e-depois, ou um momento para tocar e revelar), preenche a assinatura e os metadados, e pré-visualiza exatamente como quem lê vai ver. Guarda um rascunho enquanto ainda estás a moldá-lo, e publica quando estiver pronto — aparece com a etiqueta “Interativo” na primeira página da revista.",
+
+  "changelog.entries.listings-moderation-console.title":
+    "A fila de listagens ganhou uma consola de moderação a sério",
+  "changelog.entries.listings-moderation-console.body":
+    "Rever submissões do diretório é agora mais rápido: a fila tem paginação real, pesquisa por nome, autor ou referência, e ordenação por mais recentes, mais antigas ou nome, com uma contagem em direto para cada estado. Os moderadores podem selecionar várias submissões de uma vez para publicar, devolver a revisão ou remover em conjunto, e cada linha mostra agora há quanto tempo uma listagem está à espera, para que nada fique esquecido. Devolver ou remover uma listagem pode agora levar um motivo curto para o registo, e abrir a pré-visualização de uma listagem mostra o histórico completo de moderação, junto com qualquer fio de perguntas e respostas com quem a submeteu. Uma fila vazia finalmente parece uma boa notícia, com a sua própria ilustração em vez de um espaço em branco.",
+
+  "changelog.entries.magazine-slide-decks.title":
+    "Histórias em slide-deck interativo, já na revista",
+  "changelog.entries.magazine-slide-decks.body":
+    "Algumas histórias da revista já podem ser lidas em formato de slide-deck: slides em ecrã inteiro que percorres como numa apresentação, com texto, fotografias em página inteira, números grandes e animados, comparações de antes-e-depois e momentos que revelas ao tocar. Abre “Apresentar” para uma leitura em ecrã inteiro, sem distrações. Procura a etiqueta “Interativo” na primeira página da revista — a primeira, “Ten years in Mouraria”, já está disponível.",
+
+  "changelog.entries.real-notification-settings.title":
+    "Definições de notificações que finalmente fazem alguma coisa",
+  "changelog.entries.real-notification-settings.body":
+    "Os botões em Definições → Notificações eram só para inglês ver — mudá-los não fazia nada. Agora são reais: liga ou desliga, por tipo, os convites para encontros, os lembretes de presença, os avisos de novas mensagens, os pedidos de ligação e as respostas em tópicos, e a tua escolha é guardada e respeitada em todo o lado, incluindo as notificações push no telemóvel. As mensagens de segurança e de conta (moderação, recursos, alterações à conta) chegam sempre e não ficam escondidas atrás de um botão. Algumas linhas ainda sem funcionalidade por trás continuam honestamente marcadas como “em breve”, em vez de fingirem funcionar.",
+  "changelog.entries.platform-wide-search.title":
+    "A pesquisa passa a abranger toda a plataforma",
+  "changelog.entries.platform-wide-search.body":
+    "A pesquisa global chegava apenas a membros, comunidades, eventos, tópicos do fórum e negócios. Agora inclui também artigos da revista, empregos, anúncios de habitação, recursos, workshops e subperfis — por isso uma só pesquisa encontra o que procuras onde quer que esteja, tanto em inglês como em português.",
+  "changelog.entries.save-events-communities.title":
+    "Guarda eventos e comunidades — e guardados que ficam mesmo guardados",
+  "changelog.entries.save-events-communities.body":
+    "Agora podes guardar um encontro ou uma comunidade na tua coleção com o mesmo marcador que já usas noutros sítios. Corrigimos também dois botões de Guardar — na página de detalhe de um emprego e nas curtas-metragens — que pareciam funcionar mas esqueciam tudo assim que saías. Todos os guardados passam a persistir na tua coleção.",
+  "changelog.entries.invite-revoke-oversight.title":
+    "Recupera um convite que enviaste",
+  "changelog.entries.invite-revoke-oversight.body":
+    "Mudaste de ideias sobre um convite? Agora podes revogar um convite pendente a partir da tua lista de enviados e a ligação deixa de funcionar de imediato. Os administradores passam também a ter uma vista de Convites de toda a plataforma, para ver cada convite e o seu estado, com filtros à mão.",
+  "changelog.entries.moderation-completeness.title":
+    "Um conjunto de ferramentas de moderação mais completo",
+  "changelog.entries.moderation-completeness.body":
+    "Os moderadores passam a poder remover o perfil de um membro e avaliações de negócios individuais, e não apenas publicações e anúncios — um perfil ou avaliação removido deixa de aparecer aos restantes (e uma avaliação removida deixa de contar para a classificação de um local). Os moderadores podem também levantar uma suspensão e reintegrar um membro diretamente, em vez de ser só através do processo de recurso.",
+  "changelog.entries.account-media-safety.title":
+    "Nomes de utilizador mais seguros, armazenamento mais limpo",
+  "changelog.entries.account-media-safety.body":
+    "Algumas melhorias discretas de segurança. Quando mudas de nome de utilizador, o antigo fica reservado para ti durante 30 dias antes de outra pessoa o poder usar, para que um nome libertado não seja agarrado de imediato e as antigas menções @ não sejam silenciosamente redirecionadas para um estranho. As fotografias que substituis — avatares, imagens de anúncios, imagens de publicações — passam a ser apagadas do armazenamento em vez de ficarem para trás, as imagens de um membro suspenso deixam de ser mostradas aos outros, e concluir a introdução regista a tua concordância com as diretrizes da comunidade.",
+  "changelog.entries.legal-notice-imprint.title":
+    "Uma página de aviso legal (imprint)",
+  "changelog.entries.legal-notice-imprint.body":
+    "Adicionámos uma página de Aviso Legal na secção de Políticas, ligada a partir do rodapé, que indica quem opera a QueerPulse e como nos contactar — o tipo de imprint esperado de um serviço a operar na Europa.",
+  "changelog.entries.messages-list-virtualization.title":
+    "As conversas longas agora deslizam de forma suave, por maiores que fiquem",
+  "changelog.entries.messages-list-virtualization.body":
+    "Uma conversa muito longa ou muito ativa mantinha na página, ao mesmo tempo, todas as mensagens já carregadas, o que podia tornar o deslizar mais pesado quanto mais a conversa crescia. As mensagens agora só são desenhadas na página perto do que estás mesmo a ver, por isso uma conversa com milhares de mensagens fica tão leve como uma acabada de começar — carregar histórico mais antigo, saltar para uma resposta e deslizar até à mensagem mais recente continuam a levar-te exatamente onde esperarias.",
+  "changelog.entries.live-mode-honesty-sweep.title":
+    "Sem pessoas de exemplo, confirmações falsas ou botões sem saída",
+  "changelog.entries.live-mode-honesty-sweep.body":
+    "Uma ronda de honestidade em toda a plataforma para que nada do que vês seja inventado e nada em que toques finja funcionar. Páginas ainda em protótipo — partes da página inicial, a revista, os diretórios de terapeutas e clínicas, as trocas de competências, a incubadora e as ferramentas de eventos — mostram agora um “em breve” claro em vez de membros, eventos, prestadores “verificados” ou estatísticas inventados. Formulários que ainda não tinham destino (contacto, newsletter, preferências de cookies, candidaturas a micro-bolsas e painéis, apoios a espaços seguros, resgate de benefícios e ações de administração como publicar/exportar) já não mostram um falso “concluído”: ou guardam a sério ou dizem-te honestamente que ainda não estão abertos, e as escolhas de cookies ficam mesmo guardadas. Os diretórios de saúde e apoio jurídico, em particular, nunca mostrarão um prestador não verificado como se o tivéssemos avaliado.",
+  "changelog.entries.frontend-reliability-hardening.title":
+    "Menos rascunhos perdidos, estados de erro honestos e dispositivos partilhados mais seguros",
+  "changelog.entries.frontend-reliability-hardening.body":
+    "Uma ronda de correção em toda a aplicação para que nada perca o teu trabalho em silêncio nem te induza em erro. Sair de um evento, comunidade ou edição de perfil a meio agora avisa-te antes de as alterações desaparecerem, e as Definições já não descartam edições quando sais do ecrã. Quando algo corre mal, vês uma mensagem honesta com opção de tentar de novo em vez de um carregamento eterno ou um falso “concluído”, e uma oscilação passageira na ligação já não te incomoda com um aviso de erro sobre dados que já estás a ver. Num dispositivo partilhado, os teus itens guardados, rascunhos e apoios ficam agora separados por conta e são limpos quando terminas a sessão, para que a pessoa seguinte nunca veja as tuas coisas; e o botão “Seguir uma autora” só aparece onde seguir realmente funciona. Nos bastidores, a aplicação também recupera com elegância de uma resposta inválida ou de um separador desatualizado em vez de mostrar um ecrã de erro.",
+  "changelog.entries.screen-help-signs.title":
+    "Ajuda “Sobre este ecrã” em cada funcionalidade",
+  "changelog.entries.screen-help-signs.body":
+    "Novo numa parte da QueerPulse? Procura o pequeno botão de informação ⓘ ao lado do título do ecrã. Toca nele e um cartão curto e amigável explica para que serve o ecrã, como o usar e dá um exemplo concreto — para teres sempre a noção de como cada funcionalidade encaixa na plataforma. Está presente nos ecrãs principais (Membros, Comunidades, Fórum, Eventos, Mensagens, o diretório local, alojamento, trabalho, cultura, definições e mais), em português e inglês, e nunca atrapalha — abre-o quando quiseres, ignora-o quando não precisares.",
+  "changelog.entries.crisp-profile-photos.title":
+    "Fotos de perfil mais nítidas",
+  "changelog.entries.crisp-profile-photos.body":
+    "As fotos de perfil na página de um membro estavam a ser carregadas num tamanho pequeno e depois esticadas para preencher o retrato grande, o que deixava algumas com um aspeto suave ou desfocado. Agora pedimos a foto na resolução que a página realmente mostra, por isso as fotos de perfil aparecem nítidas.",
+  "changelog.entries.performance-cost-hardening.title":
+    "Pesquisa mais rápida, uploads mais leves e páginas movimentadas mais estáveis",
+  "changelog.entries.performance-cost-hardening.body":
+    "Uma passagem nos bastidores para manter o QueerPulse rápido e sustentável à medida que enche. A pesquisa global passa a usar índices de texto adequados, por isso encontrar pessoas, comunidades, eventos, anúncios e tópicos continua rápido por muitos membros que entrem, em vez de abrandar à medida que a plataforma cresce. As fotos que carregas são redimensionadas com cuidado antes de saírem do teu dispositivo, por isso publicar é mais rápido nos dados móveis e as páginas carregam mais leves para toda a gente. Tópicos movimentados de comunidades, listas de membros e listas de convidados de eventos passam a carregar por páginas, com um botão \"carregar mais\", em vez de trazerem tudo de uma vez, e as páginas populares que toda a comunidade partilha podem agora ser servidas a partir da cache em vez de reconstruídas sempre. Os lembretes de eventos e as notificações push saem num único lote eficiente, as imagens no topo de uma página carregam primeiro para uma primeira renderização mais ágil, e mudar de página a meio de um carregamento já não desperdiça um pedido. As listas longas — o diretório local e os tópicos movimentados do fórum — passam a revelar mais à medida que fazes scroll, em vez de renderizarem tudo de uma vez, por isso mantêm-se fluidas no telemóvel. Nada do que vês muda — só aguenta melhor com muita gente.",
+  "changelog.entries.accessibility-i18n-pwa-hardening.title":
+    "Acessibilidade, tradução e melhorias offline",
+  "changelog.entries.accessibility-i18n-pwa-hardening.body":
+    "Uma revisão para que o QueerPulse funcione para mais gente, em mais sítios. Todos os campos de formulário passam a anunciar a sua etiqueta aos leitores de ecrã, por isso registares-te, publicares uma vaga, pagares ou editares o teu perfil ficam limpos com tecnologia de apoio. Partilhar um link mostra finalmente uma imagem de pré-visualização em vez de uma miniatura partida. Se perderes a ligação, tens uma página offline a sério — não o erro do navegador — e a app instala mais leve e atualiza com uma etiqueta que espera por ti em vez de um aviso que desaparece. Os avisos passam a poder ser dispensados e pausam enquanto os lês; remover alguém de um grupo pergunta primeiro; os botões são um pouco maiores para tocar; e as horas das mensagens, mais algumas etiquetas soltas, seguem agora o idioma que escolheste, em inglês e português.",
+  "changelog.entries.launch-hardening-p1.title":
+    "Reforço de segurança, honestidade e fiabilidade",
+  "changelog.entries.launch-hardening-p1.body":
+    "Uma revisão ampla antes do lançamento. Bloquear alguém passa a travá-lo mesmo em todo o lado — deixam de passar mensagens, presença, «está a escrever» ou notificações push, e o teu perfil fica escondido de quem bloqueaste. O modo live diz a verdade: páginas que mostravam pessoas fictícias ou finjiam uma submissão passam a usar dados reais ou a dizer claramente quando algo ainda não está pronto, e pedir os teus dados (RGPD) é agora um pedido real. Editar, cancelar ou confirmar presença num convívio, e sair de uma comunidade, atualizam já o ecrã; uma falha mostra a opção de tentar de novo em vez de uma página vazia. E quando ainda não te conseguimos enviar email, deixámos de fingir que o faremos.",
+  "changelog.entries.remove-listings-from-moderation.title":
+    "Moderadores podem remover listagens do diretório",
+  "changelog.entries.remove-listings-from-moderation.body":
+    "A fila de revisão de listagens passa a ter uma ação Remover, para um moderador eliminar permanentemente uma submissão de spam, duplicada ou inapropriada em vez de apenas a devolver para revisão. Remover uma listagem live também a retira do diretório público. Cada remoção pede confirmação primeiro.",
+
+  "changelog.entries.sent-invites-status-filter.title":
+    "Filtra por estado os convites que enviaste",
+  "changelog.entries.sent-invites-status-filter.body":
+    "A lista de convites que já enviaste passa a ter separadores — Todos, Pendente, Aceite, Expirado — cada um com uma contagem, para saltares logo para os que ainda esperam resposta ou os que já foram aceites. Cada convite mostra também o dia e a hora exatos em que foi enviado e quando expira, em vez de apenas a data.",
+
+  "changelog.entries.onboarding-one-time-guard.title":
+    "Concluir a introdução agora fica guardado",
+  "changelog.entries.onboarding-one-time-guard.body":
+    "O percurso de boas-vindas que fazes logo após entrar é para acontecer uma só vez. Mas, se mais tarde o teu navegador preenchesse automaticamente o endereço da introdução, ele largava-te de novo no assistente como se nunca o tivesses feito — e avançar pelos passos podia repor em silêncio escolhas como os teus interesses em “Aqui por”. Agora registamos quando concluis a introdução e encaminhamos-te para o teu feed se voltares a cair nela, para que não se repita nem substitua o que já definiste.",
+
+  "changelog.entries.trust-network-replay-by-joins.title":
+    "A repetição da rede de confiança segue as pessoas, não o calendário",
+  "changelog.entries.trust-network-replay-by-joins.body":
+    "Na rede de confiança do painel de administração, a “Repetição” de como os avais se formaram ao longo do tempo avançava um mês de calendário de cada vez — arrastava-se por meses parados onde nada acontecia e passava a correr pelos mais movimentados. Agora percorre os momentos em que as pessoas foram efetivamente avalizadas, dando a cada evento real o mesmo tempo. O resultado acompanha o crescimento da comunidade em vez da passagem do calendário. Arrastar a barra da linha do tempo à mão funciona exatamente como antes.",
+  "changelog.entries.trust-network-invite-vs-vouch.title":
+    "Vê quem foi convidado e quem foi avalizado depois",
+  "changelog.entries.trust-network-invite-vs-vouch.body":
+    "A rede de confiança do painel de administração passa a mostrar as ligações de convite — pessoas que trouxeste tu próprio para a QueerPulse — numa cor distinta dos avais adicionados mais tarde, com uma legenda e etiquetas ao passar o rato para distinguires as duas facilmente.",
+  "changelog.entries.chef-mixologist-therapist-personas.title":
+    "Três novos tipos de persona: cozinha, coquetelaria e terapia",
+  "changelog.entries.chef-mixologist-therapist-personas.body":
+    "Já podes criar um subperfil de cozinha (menus + residências), de coquetelaria (cocktails + residências) ou de terapia (especialidades + credenciais) — cada um com as suas secções, modelo inicial e filtro no diretório, a par dos ofícios que já existiam.",
+  "changelog.entries.connections-card-polish.title":
+    "Cartões de ligação mais arrumados",
+  "changelog.entries.connections-card-polish.body":
+    "Na tua página de ligações, a linha de “pessoas em comum” passa a aparecer corretamente em vez de mostrar formatação em bruto, e a data de “Ligação” mostra o dia e a hora em que se ligaram — não apenas o mês e o ano.",
+  "changelog.entries.lightbox-focus-a11y.title":
+    "Gestão de foco mais limpa no visualizador de fotos",
+  "changelog.entries.lightbox-focus-a11y.body":
+    "Abrir uma foto em ecrã inteiro — nas galerias do diretório e nas páginas de encontros — deixa de deixar o foco do teclado preso na camada invisível de tocar-para-fechar por trás da imagem. O foco fica agora onde consegues vê-lo, o que mantém os leitores de ecrã e a navegação por teclado a funcionar sem falhas enquanto percorres as fotos.",
   "changelog.entries.directory-detail-polish.title":
-    "Uma página de espaço mais rigorosa e mais útil",
+    "Uma página de espaço redesenhada e mais rigorosa",
   "changelog.entries.directory-detail-polish.body":
-    "As páginas de negócios do diretório receberam uma ronda de correções e pequenas adições: o “Aberto agora” passa a ser calculado pelo relógio do próprio espaço (e não pelo fuso horário do teu dispositivo), a linha de localização e os dados de pesquisa deixam de assumir que tudo fica em Lisboa, os links dos sites abrem sempre corretamente e as classificações por estrelas são lidas corretamente por leitores de ecrã. Quem não tem sessão iniciada pode agora guardar um espaço (pedimos que inicies sessão), quem gere um negócio pode reivindicar o seu registo, e um link errado ou removido mostra uma verdadeira página de “não encontrado” em vez de te devolver silenciosamente ao diretório.",
+    "As páginas de negócios do diretório foram reconstruídas com um layout mais claro: o espaço apresenta-se primeiro — nome, categoria e os detalhes principais numa só linha — e só depois surge uma galeria compacta (uma foto principal com as restantes numa coluna clicável) em vez de um único banner enorme, com as ações principais mesmo ao lado do nome. Espaços novos passam a ler-se como “Novo” em vez de uma classificação vazia de zero estrelas. A par do redesenho: o “Aberto agora” é calculado pelo relógio do próprio espaço (e não pelo fuso horário do teu dispositivo), a linha de localização e os dados de pesquisa deixam de assumir que tudo fica em Lisboa, os links dos sites abrem sempre corretamente e mostram um domínio limpo, e as classificações por estrelas são lidas corretamente por leitores de ecrã. Quem não tem sessão iniciada pode agora guardar um espaço, quem gere um negócio pode reivindicar o seu registo, e um link errado ou removido mostra uma verdadeira página de “não encontrado” em vez de te devolver silenciosamente ao diretório.",
   "changelog.entries.review-author-avatars.title":
     "Vê quem deixou uma avaliação",
   "changelog.entries.review-author-avatars.body":
@@ -2240,6 +2586,8 @@ export const marketing: Catalog = {
   "roadmap.card.progressAria": "Progresso de {name}",
   "roadmap.card.mostWanted": "Mais pedido",
   "roadmap.card.votesSuffix": "votos",
+  "roadmap.card.committed": "Compromisso",
+  "roadmap.card.slipNote": "Adiado de {from} para {to} — {reason}",
   "roadmap.shape.title": "Tens uma <em>ideia?</em>",
   "roadmap.shape.sub":
     "Lemos todas as sugestões. As ideias mais votadas sobem no roteiro.",
@@ -2249,7 +2597,7 @@ export const marketing: Catalog = {
     "O que tornaria a QueerPulse melhor para ti?",
   "roadmap.submitIdea.cta": "Submeter ideia",
   "roadmap.submitIdea.toast.empty": "Escreve primeiro algumas palavras",
-  "roadmap.submitIdea.toast.submitted": "Obrigado — enviámos à equipa para revisão",
+  "roadmap.submitIdea.toast.submitted": "Obrigade — enviámos à equipa para revisão",
   "roadmap.submitIdea.toast.error": "Não foi possível submeter a tua ideia — tenta de novo",
   "roadmap.topIdeas.title": "Ideias mais pedidas",
   "roadmap.topIdeas.voted": "Votado",
@@ -2265,6 +2613,19 @@ export const marketing: Catalog = {
   "roadmap.howWeDecide.smallTeam.title": "Equipa pequena, ritmo cuidado",
   "roadmap.howWeDecide.smallTeam.desc":
     "Somos duas pessoas de engenharia e uma de design. Preferimos construir devagar e acertar.",
+  "roadmap.someday.title": "Um dia, <em>com honestidade</em>",
+  "roadmap.someday.sub":
+    "Sem data aqui, porque uma data seria uma promessa que ainda não podemos cumprir. Continua no nosso radar — vota para ajudar uma ideia a subir.",
+  "roadmap.notBuilding.title": "O que não vamos construir, e <em>porquê</em>",
+  "roadmap.notBuilding.sub":
+    "A lista que a maioria das plataformas esconde. Se dizemos que não, recebes uma razão.",
+  "roadmap.notBuilding.votesAsked_one": "{count} pessoa tinha pedido",
+  "roadmap.notBuilding.votesAsked_other": "{count} pessoas tinham pedido",
+  "roadmap.notBuilding.reason.scope.label": "Fora do que estamos a construir",
+  "roadmap.notBuilding.reason.unsafe.label": "Não conseguimos construir isto com segurança",
+  "roadmap.notBuilding.reason.capacity.label": "Sem capacidade, com honestidade",
+  "roadmap.notBuilding.reason.exists.label": "Já existe noutro lugar",
+  "roadmap.notBuilding.reason.harm.label": "O risco supera o valor",
   "roadmap.subpageIndex.title": "Já lançado",
   "roadmap.subpageIndex.changelog.label": "Registo de alterações",
   "roadmap.subpageIndex.changelog.blurb":
@@ -2380,7 +2741,7 @@ export const marketing: Catalog = {
   "postOpportunity.success.step3":
     "Vais ver todas as inscrições na página da vaga",
   "postOpportunity.success.body":
-    "Obrigado por abrires espaço para alguém ajudar. Quem estiver interessade já pode encontrar a tua vaga e mostrar interesse.",
+    "Obrigade por abrires espaço para alguém ajudar. Quem estiver interessade já pode encontrar a tua vaga e mostrar interesse.",
   "postOpportunity.actions.posting": "A publicar…",
   "postOpportunity.actions.submit": "Publicar oportunidade →",
   "postOpportunity.actions.cancel": "Cancelar",
@@ -2609,7 +2970,9 @@ export const marketing: Catalog = {
   "donateModal.field.emailReceipt": "Email para o recibo",
   "donateModal.field.emailPlaceholder": "tu@exemplo.com",
   "donateModal.field.cardNumber": "Número do cartão",
+  "donateModal.field.cardNumberPlaceholder": "1234 5678 9012 3456",
   "donateModal.field.expiry": "Validade",
+  "donateModal.field.expiryPlaceholder": "MM / AA",
   "donateModal.field.cvc": "CVC",
   "donateModal.processing": "A processar…",
   "donateModal.submitCta.monthly": "Doar {amount} / mês",
@@ -2654,6 +3017,10 @@ export const marketing: Catalog = {
   "contact.sent.body":
     "Vamos lê-la e responder, normalmente dentro de um ou dois dias. Se for uma preocupação de segurança, entramos em contacto dentro de 24 horas.",
   "contact.sent.backCta": "Voltar à QueerPulse",
+  "contact.comingSoon.title": "Este formulário ainda não está <em>ligado.</em>",
+  "contact.comingSoon.body":
+    "Ainda não ligámos este formulário à nossa caixa de entrada, por isso não consegue enviar a tua mensagem — nada foi submetido. Escreve-nos diretamente; todos os endereços à esquerda são reais e lidos por uma pessoa.",
+  "contact.comingSoon.emailCta": "Escrever para hello@queerpulse.pt",
   "contact.form.title": "Escreve-<em>nos.</em>",
   "contact.form.sub":
     "Se preferires um formulário a um email, usa este. Lemos da mesma forma.",
@@ -2801,6 +3168,11 @@ export const marketing: Catalog = {
     "Vai diretamente para a nossa equipa de parcerias. Sem funil de vendas, sem sequência de seguimento. Só uma resposta no prazo de 5 dias úteis.",
   "forOrgs.form.toast":
     "Enviado à nossa equipa de parcerias — vão responder no prazo de 5 dias úteis",
+  "forOrgs.form.comingSoon.title":
+    "Este formulário ainda não está <em>ligado.</em>",
+  "forOrgs.form.comingSoon.body":
+    "Ainda não ligámos o formulário de parcerias, por isso não consegue enviar os teus dados — nada foi submetido. Escreve diretamente à equipa de parcerias e tratamos do resto.",
+  "forOrgs.form.comingSoon.emailCta": "Escrever para partners@queerpulse.pt",
 
   // ── Diretório — chrome do diretório de negócios + página de detalhe. Os
   //    registos de locais (`directoryPlaces.ts`: nomes, taglines,
@@ -2876,9 +3248,11 @@ export const marketing: Catalog = {
   "directory.detail.badge.verifiedOwned": "Negócio queer verificado",
   "directory.detail.badge.friendly": "LGBTQ+ friendly",
   "directory.detail.reviewsCount": "· {count} avaliações",
+  "directory.detail.newBadge": "Novo",
   "directory.detail.whatItIsTitle": "O que <em>é, na prática.</em>",
   "directory.detail.goodForTitle":
     "Para que é que a comunidade diz que é <em>bom</em>",
+  "directory.detail.offersTitle": "O que este espaço <em>oferece</em>",
   "directory.detail.goodForSub": "Com base em {count} avaliações.",
   "directory.detail.hoursTitle": "Horário",
   "directory.detail.today": "Hoje",
@@ -2888,6 +3262,8 @@ export const marketing: Catalog = {
   "directory.detail.reviewsTitle":
     "Avaliações da comunidade · <em>{count}</em>",
   "directory.detail.reviewsSub": "Ordenado por mais úteis.",
+  "directory.detail.reviews.emptySub":
+    "Ainda sem avaliações — sê a primeira pessoa a deixar uma.",
   "directory.detail.ratingBreakdown": "Distribuição das avaliações",
   "directory.detail.starsCount": "{stars} estrelas, {count} avaliações",
   "directory.detail.review.formTitle": "Já cá estiveste? Deixa uma avaliação",
@@ -2961,6 +3337,46 @@ export const marketing: Catalog = {
     "Obrigada — vamos passar isto a quem gere este espaço.",
   "directory.detail.suggestEdit.errorToast":
     "Não foi possível enviar a tua sugestão. Tenta novamente.",
+  "directory.detail.contest.cta": "Sugerir uma correção ou reivindicar este negócio",
+  "directory.detail.contest.ariaLabel": "Sugerir uma correção ou reivindicar {name}",
+  "directory.detail.contest.title": "Sugerir uma correção ou reivindicar este negócio",
+  "directory.detail.contest.sub":
+    "Como queres ajudar a manter a página de {name} correta?",
+  "directory.detail.contest.suggest.title": "Sugerir uma correção",
+  "directory.detail.contest.suggest.desc":
+    "Algo está desatualizado ou errado — envia uma correção a quem gere o espaço.",
+  "directory.detail.contest.dispute.title": "Contestar este negócio",
+  "directory.detail.contest.dispute.desc":
+    "Este espaço foi listado sem o seu consentimento, ou não devia estar aqui.",
+  "directory.detail.contest.claim.title": "Reivindicar este negócio",
+  "directory.detail.contest.claim.desc":
+    "És tu que geres este espaço e queres gerir a sua página.",
+  "directory.detail.dispute.ariaLabel": "Denunciar ou contestar {name}",
+  "directory.detail.dispute.eyebrow": "Denunciar / contestar",
+  "directory.detail.dispute.title": "Contestar <em>{name}</em>",
+  "directory.detail.dispute.sub":
+    "Um espaço pode ser identificado como nosso sem o saber. Diz-nos o que está errado — uma moderadora analisa cada contestação, e nada do que escreveres é partilhado publicamente.",
+  "directory.detail.dispute.reasonLabel": "Qual é o problema?",
+  "directory.detail.dispute.reasonPlaceholder":
+    "ex.: Somos nós que gerimos este espaço e nunca fomos consultados sobre esta listagem, ou esta informação está errada.",
+  "directory.detail.dispute.emailLabel": "Email de contacto",
+  "directory.detail.dispute.emailHelper":
+    "Opcional — adiciona um se uma moderadora te dever contactar fora do QueerPulse.",
+  "directory.detail.dispute.emailPlaceholder": "tu@exemplo.com",
+  "directory.detail.dispute.emailError": "Introduz um email válido.",
+  "directory.detail.dispute.note":
+    "Contestar não remove a listagem por si só — uma moderadora analisa primeiro.",
+  "directory.detail.dispute.cancel": "Cancelar",
+  "directory.detail.dispute.submit": "Enviar à moderação",
+  "directory.detail.dispute.submitting": "A enviar…",
+  "directory.detail.dispute.errorToast":
+    "Não foi possível registar a tua contestação. Tenta novamente.",
+  "directory.detail.dispute.successAriaLabel": "Contestação recebida",
+  "directory.detail.dispute.successTitle": "Obrigada — estamos",
+  "directory.detail.dispute.successEm": "a tratar disto.",
+  "directory.detail.dispute.successBody":
+    "Uma moderadora vai analisar a tua denúncia sobre {name}. Se deixaste um email, só o usamos se precisarmos de dar seguimento.",
+  "directory.detail.dispute.doneCta": "Concluído",
   "directory.detail.mapAria": "Mapa a mostrar onde fica {name}",
   "directory.detail.languagesLabel": "Idiomas",
   "directory.detail.accessLabel": "Acessibilidade",
@@ -3318,6 +3734,9 @@ export const marketing: Catalog = {
   "local.filter.vibeLabel": "Ambiente",
   "local.filter.vibeVenueNote": "Os filtros de ambiente aplicam-se a espaços",
   "local.filter.verifiedSafeSpaces": "Espaços seguros verificados",
+  "local.filter.filters": "Filtros",
+  "local.filter.showResults_one": "Ver {count} lugar",
+  "local.filter.showResults_other": "Ver {count} lugares",
   "local.venue.back": "Voltar ao mapa",
   "local.venue.address": "Morada",
   "local.venue.hours": "Horário",

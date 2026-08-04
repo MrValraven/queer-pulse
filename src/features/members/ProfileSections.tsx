@@ -115,6 +115,7 @@ export function ProfileHero({
               src={profile.photo}
               initials={profile.initials}
               height={430}
+              srcSize={900}
               radius={20}
               placeholder={`${profile.first} ${profile.last}`}
               alt={`${profile.first} ${profile.last}`}

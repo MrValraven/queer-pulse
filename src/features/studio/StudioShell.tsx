@@ -70,6 +70,7 @@ export function StudioShell({
               </svg>
               <input
                 type="text"
+                aria-label={t("studio:shell.searchPlaceholder")}
                 placeholder={t("studio:shell.searchPlaceholder")}
               />
             </div>

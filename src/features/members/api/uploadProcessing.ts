@@ -102,6 +102,50 @@ interface Decoded {
   cleanup: () => void;
 }
 
+/**
+ * Longest-edge cap applied to every upload kind before it ever reaches the
+ * network — a listing/story photo picked straight off a modern phone camera
+ * is routinely 3000-4000px on its long edge, but no upload slot in the app
+ * (gallery hero, avatar, work image) ever displays wider than ~1600px. Without
+ * this, full-resolution originals are what gets stored AND re-served into
+ * those tiny slots forever after — the cost compounds with every photo a
+ * member ever uploads. Skipped entirely when the source is already at or
+ * under the cap (no upscaling, no wasted re-encode for an already-small file).
+ */
+const MAX_DIMENSION_PX = 1600;
+
+/** Re-encode quality used once an image is actually being downscaled — a
+ *  smaller canvas can afford more compression than the pass-through case
+ *  below, since the byte-size win is the whole point of resizing. */
+const DOWNSCALE_QUALITY = 0.8;
+
+/** Re-encode quality when the source is already within `MAX_DIMENSION_PX` —
+ *  the canvas round-trip still happens (it's what strips EXIF), so this
+ *  stays high to avoid visibly softening an image that didn't need shrinking. */
+const PASSTHROUGH_QUALITY = 0.92;
+
+/**
+ * Scale `width`×`height` down so its longest edge is at most
+ * `MAX_DIMENSION_PX`, preserving aspect ratio. Returns the original
+ * dimensions unchanged (and `scaled: false`) when already within the cap —
+ * this function only ever shrinks, never enlarges.
+ */
+function capDimensions(
+  width: number,
+  height: number,
+): { width: number; height: number; scaled: boolean } {
+  const longestEdge = Math.max(width, height);
+  if (longestEdge <= MAX_DIMENSION_PX) {
+    return { width, height, scaled: false };
+  }
+  const scaleFactor = MAX_DIMENSION_PX / longestEdge;
+  return {
+    width: Math.round(width * scaleFactor),
+    height: Math.round(height * scaleFactor),
+    scaled: true,
+  };
+}
+
 /** Decode a file to something we can measure and draw. Prefers `createImageBitmap`. */
 async function decode(file: File): Promise<Decoded> {
   if (typeof createImageBitmap === "function") {
@@ -136,23 +180,30 @@ async function decode(file: File): Promise<Decoded> {
 /**
  * Re-encode the decoded pixels through a `<canvas>`, which DROPS all EXIF/GPS
  * metadata (defence-in-depth for the outing risk — the server strip stays
- * authoritative). Tradeoffs, so we only do it for still raster types:
- *   - JPEG/WebP re-encode is lossy → quality 0.92 to stay visually clean.
- *   - Animated GIFs would be flattened to one frame, so we SKIP them and let the
- *     server strip do the work.
+ * authoritative) AND downscales to `MAX_DIMENSION_PX` on the longest edge —
+ * the client-side half of "never store/re-serve a full-res original that no
+ * upload slot ever displays at that size." Tradeoffs, so we only do it for
+ * still raster types:
+ *   - JPEG/WebP re-encode is lossy → quality 0.92 when passed through
+ *     unscaled, 0.8 when actually downscaled (see `DOWNSCALE_QUALITY`/
+ *     `PASSTHROUGH_QUALITY` above).
+ *   - Animated GIFs would be flattened to one frame, so we SKIP them entirely
+ *     (no resize, no re-encode) and let the server strip do the work.
  *   - On any failure we fall back to the original file (server strip covers us).
  */
 async function stripMetadata(file: File, decoded: Decoded): Promise<Blob> {
   if (file.type === "image/gif") return file; // preserve animation
   try {
+    const target = capDimensions(decoded.width, decoded.height);
     const canvas = document.createElement("canvas");
-    canvas.width = decoded.width;
-    canvas.height = decoded.height;
+    canvas.width = target.width;
+    canvas.height = target.height;
     const ctx = canvas.getContext("2d");
     if (!ctx) return file;
-    ctx.drawImage(decoded.source, 0, 0, decoded.width, decoded.height);
+    ctx.drawImage(decoded.source, 0, 0, target.width, target.height);
+    const quality = target.scaled ? DOWNSCALE_QUALITY : PASSTHROUGH_QUALITY;
     const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, file.type, 0.92),
+      canvas.toBlob(resolve, file.type, quality),
     );
     return blob ?? file;
   } catch {
@@ -161,9 +212,11 @@ async function stripMetadata(file: File, decoded: Decoded): Promise<Blob> {
 }
 
 /**
- * Validate dimensions and return an EXIF-stripped `Blob` ready to upload.
- * Runs in BOTH demo and live mode. Throws a human message on a too-small image
- * or an undecodable file.
+ * Validate dimensions and return an EXIF-stripped, longest-edge-capped
+ * (`MAX_DIMENSION_PX`) `Blob` ready to upload. Runs in BOTH demo and live
+ * mode, for every `UploadKind` (avatar, listing photo, gathering photo,
+ * story cover, work image, group avatar) since they all funnel through here.
+ * Throws a human message on a too-small image or an undecodable file.
  */
 export async function processImage(
   file: File,

@@ -34,7 +34,11 @@ export type NotificationKind =
   | "appeal_resolved"
   | "invite_accepted"
   | "listing_review"
-  | "roadmap_status";
+  | "roadmap_status"
+  // Sent to the member a moderation action lands on (mirrors the backend
+  // `notifications_type_enum` value added in
+  // `AddModerationOutcomeNotificationType1785900000000`).
+  | "moderation_outcome";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -69,6 +73,7 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   report_resolved: "platform",
   appeal_resolved: "platform",
   roadmap_status: "platform",
+  moderation_outcome: "platform",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */
@@ -132,6 +137,22 @@ function mentionKeyFor(type: string, payload: unknown): string {
 }
 
 /**
+ * Resolve the i18n subkey a `moderation_outcome` notification's copy lives
+ * under. The row carries `payload.action` (`warn | suspend | ban`, written by
+ * the backend) — each gets its own headline ("You've received a warning" vs
+ * "Your account has been suspended"), so the key branches to
+ * `moderation_outcome.<action>`. An unknown/missing action falls back to the
+ * flat `moderation_outcome.*` copy. Non-moderation types pass through unchanged.
+ */
+function moderationKeyFor(type: string, payload: unknown): string {
+  if (type !== "moderation_outcome") return type;
+  const action = (payload as { action?: string } | null)?.action;
+  return action === "warn" || action === "suspend" || action === "ban"
+    ? `moderation_outcome.${action}`
+    : "moderation_outcome";
+}
+
+/**
  * Render a backend notification (`type` + structured `payload`) into display
  * text, through i18n keys rather than hardcoded English — this is why the
  * formatting lives on the frontend at all: it keeps the API language-neutral
@@ -147,7 +168,15 @@ export function formatNotification(
   t: TFunction,
 ): FormattedNotification {
   const known = isKnownKind(type);
-  const key = known ? mentionKeyFor(type, payload) : FALLBACK_KEY;
+  let key: string;
+  if (!known) {
+    key = FALLBACK_KEY;
+  } else if (type === "moderation_outcome") {
+    key = moderationKeyFor(type, payload);
+  } else {
+    // `mentionKeyFor` passes every non-`mention` type through unchanged.
+    key = mentionKeyFor(type, payload);
+  }
   const tokens = interpolationTokens(payload);
   return {
     text: t(`notifications:type.${key}.text`, tokens),

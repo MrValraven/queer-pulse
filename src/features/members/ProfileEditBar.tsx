@@ -3,7 +3,7 @@ import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileEdit } from "../../app/providers/useProfile";
 import { useEscapeToCancel } from "./useEscapeToCancel";
 import styles from "./ProfileEdit.module.css";
 
@@ -22,7 +22,7 @@ export function ProfileEditBar() {
     isDirty,
     save,
     requestCancel,
-  } = useProfile();
+  } = useProfileEdit();
   useEscapeToCancel(isEditing);
 
   // Keep the saved banner mounted for one beat after `justSaved` clears so it can

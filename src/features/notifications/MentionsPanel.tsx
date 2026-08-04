@@ -67,6 +67,9 @@ function ReplyComposer({
         placeholder={t("notifications:mentions.composer.placeholder", {
           name: name.split(" ")[0],
         })}
+        aria-label={t("notifications:mentions.composer.placeholder", {
+          name: name.split(" ")[0],
+        })}
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />

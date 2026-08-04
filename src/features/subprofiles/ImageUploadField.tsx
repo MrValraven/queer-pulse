@@ -120,6 +120,7 @@ export function ImageUploadField({
         ref={fileRef}
         type="file"
         accept="image/*"
+        aria-label={t("subprofiles:imageUpload.change")}
         hidden
         onChange={(e) => {
           const f = e.target.files?.[0];

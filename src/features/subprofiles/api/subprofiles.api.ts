@@ -72,6 +72,9 @@ export type SubprofileKind =
   | "performer"
   | "photographer"
   | "videomaker"
+  | "chef"
+  | "mixologist"
+  | "therapist"
   | "generic";
 
 export type SubprofileSection =
@@ -97,6 +100,11 @@ export type SubprofileSection =
   | "appearances" // performer
   | "series" // photographer
   | "videos" // videomaker
+  | "menus" // chef
+  | "residencies" // chef + mixologist
+  | "cocktails" // mixologist
+  | "specialisms"
+  | "credentials" // therapist
   | "showcase" // generic
   | "links"; // every kind
 
@@ -167,6 +175,10 @@ export interface SubprofilePublicDTO {
   viewerEndorsed: boolean;
   followerCount: number;
   viewerFollowing: boolean;
+  // Is the current viewer a co-owner (creator or invited member) of THIS
+  // persona? Drives the "edit" affordance on a nested persona shown on a
+  // co-owner's profile.
+  viewerIsMember: boolean;
 }
 
 /** Directory / list card. */
@@ -224,6 +236,43 @@ export interface SubprofileItemInputDTO {
   tags?: string[];
   isFeatured?: boolean;
   collaborators?: string[]; // handles, resolved server-side on read
+}
+
+/** One co-owner of a shared persona. Identical to the backend `MemberView`
+ *  (`GET /subprofiles/:id/members`). */
+export interface MemberDTO {
+  userId: string;
+  name: string;
+  slug: string;
+  avatarUrl: string | null;
+  joinedAt: string;
+  isCreator: boolean;
+}
+
+/** A pending/resolved co-owner invite, keyed to the persona ("outgoing" from the
+ *  persona's side). Identical to the backend `InviteView`
+ *  (`GET /subprofiles/:id/invites`, `POST /subprofiles/:id/invites`). */
+export interface PersonaInviteDTO {
+  id: string;
+  subprofileId: string;
+  invitedUserId: string;
+  invitedByUserId: string;
+  status: "pending" | "accepted" | "declined" | "revoked";
+  createdAt: string;
+  invitedName: string;
+  invitedSlug: string;
+  invitedAvatarUrl: string | null;
+}
+
+/** A pending invite from the invited member's own side ("incoming"). Identical
+ *  to the backend `MyInviteView` (`GET /subprofiles/invites/mine`). */
+export interface MyInviteDTO {
+  id: string;
+  subprofileId: string;
+  personaName: string;
+  personaAvatarUrl: string | null;
+  invitedByName: string;
+  createdAt: string;
 }
 
 // ── Endpoint fns (contract C4) ───────────────────────────────────────────────
@@ -325,3 +374,39 @@ export const unfollowSubprofile = (id: string) =>
   apiDelete<{ followerCount: number; viewerFollowing: boolean }>(
     `/subprofiles/${id}/follow`,
   );
+
+// ── Co-ownership (contract C6) ───────────────────────────────────────────────
+
+/** List a persona's co-owners (creator + accepted invitees). */
+export const listSubprofileMembers = (id: string) =>
+  apiGet<MemberDTO[]>(`/subprofiles/${id}/members`);
+
+/** Invite another member to co-own this persona. Addressed by the invitee's
+ *  profile SLUG (the repo convention — mirrors `recipientHandle` /
+ *  `memberHandles` in messaging), resolved to a userId server-side. */
+export const inviteCoOwner = (id: string, slug: string) =>
+  apiPost<PersonaInviteDTO>(`/subprofiles/${id}/invites`, { slug });
+
+/** List a persona's outstanding/resolved co-owner invites. */
+export const listSubprofileInvites = (id: string) =>
+  apiGet<PersonaInviteDTO[]>(`/subprofiles/${id}/invites`);
+
+/** Revoke a pending co-owner invite. */
+export const revokeSubprofileInvite = (id: string, inviteId: string) =>
+  apiDelete<{ ok: true }>(`/subprofiles/${id}/invites/${inviteId}`);
+
+/** Leave a persona the current member co-owns (never the sole creator). */
+export const leaveSubprofile = (id: string) =>
+  apiDelete<{ ok: true }>(`/subprofiles/${id}/members/me`);
+
+/** The current member's own incoming co-owner invites, across all personas. */
+export const listMyPersonaInvites = () =>
+  apiGet<MyInviteDTO[]>("/subprofiles/invites/mine");
+
+/** Accept an incoming co-owner invite. */
+export const acceptPersonaInvite = (inviteId: string) =>
+  apiPost<{ ok: true }>(`/subprofiles/invites/${inviteId}/accept`);
+
+/** Decline an incoming co-owner invite. */
+export const declinePersonaInvite = (inviteId: string) =>
+  apiPost<{ ok: true }>(`/subprofiles/invites/${inviteId}/decline`);

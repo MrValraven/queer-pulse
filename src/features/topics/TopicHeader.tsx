@@ -1,4 +1,4 @@
-import { Button } from "../../shared/components/ui";
+import { Button, FeatureHelp } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
@@ -11,7 +11,9 @@ export function TopicHeader({ topic }: { topic: Topic }) {
   return (
     <header className={styles.head}>
       <div className={styles.eyebrow}>{t(topic.eyebrowKey)}</div>
-      <h1 className={styles.h1}>{topic.title}</h1>
+      <h1 className={styles.h1}>
+        {topic.title} <FeatureHelp id="topics.hub" />
+      </h1>
       <p className={styles.sub}>{topic.sub}</p>
 
       <div className={styles.stats}>

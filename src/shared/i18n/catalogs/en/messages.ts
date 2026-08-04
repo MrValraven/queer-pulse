@@ -220,6 +220,13 @@ export const messages: Catalog = {
   "group.promote": "Make admin",
   "group.demote": "Remove admin",
   "group.remove": "Remove",
+  // Confirm step before removing a member (UX polish — no destructive action
+  // without a confirm). Warm, non-blaming; the cancel keeps them in the group.
+  "group.removeConfirm.title": "Remove {name}?",
+  "group.removeConfirm.body":
+    "{name} will lose access to this group and its messages. You can always add them back later.",
+  "group.removeConfirm.cancel": "Keep in group",
+  "group.removeConfirm.confirm": "Remove member",
   "group.avatarLabel": "Group photo",
   // "Seen by N" group receipt (CLDR plural: _one / _other) — the receipt line
   // under an own message and the sheet heading.

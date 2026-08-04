@@ -5,6 +5,7 @@ import { TbBlockquote } from "react-icons/tb";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { minReadApproxText } from "./magazineFormat";
 import type { DraftForm } from "./submitStory.data";
+import type { StoryDraftSaveState } from "./useStoryDraft";
 import styles from "./SubmitStoryPage.module.css";
 
 type Tool =
@@ -63,12 +64,16 @@ export function SubmitStoryWriter({
   wordCount,
   readTime,
   saveState,
+  hasSavedDraft,
 }: {
   values: DraftForm;
   set: (patch: Partial<DraftForm>) => void;
   wordCount: number;
   readTime: number;
-  saveState: "saved" | "unsaved";
+  saveState: StoryDraftSaveState;
+  /** True once a real write has landed — until then the pristine example draft
+   *  shows no status, so "Saved" never appears before anything was persisted. */
+  hasSavedDraft: boolean;
 }) {
   const { t } = useTranslation();
   const bodyRef = useRef<HTMLTextAreaElement>(null);
@@ -123,11 +128,15 @@ export function SubmitStoryWriter({
             </button>
           </span>
         ))}
-        <span className={styles.autosave}>
-          {saveState === "saved"
-            ? t("magazine:submitStory.writer.autosaved")
-            : t("magazine:submitStory.writer.unsaved")}
-        </span>
+        {(saveState !== "saved" || hasSavedDraft) && (
+          <span className={styles.autosave} aria-live="polite">
+            {saveState === "saving"
+              ? t("magazine:submitStory.writer.saving")
+              : saveState === "unsaved"
+                ? t("magazine:submitStory.writer.unsaved")
+                : t("magazine:submitStory.writer.autosaved")}
+          </span>
+        )}
       </div>
 
       <textarea

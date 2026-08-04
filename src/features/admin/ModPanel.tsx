@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { EmptyState } from "../../shared/components/ui";
+import { EmptyState, Spinner } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { LIVING } from "../communities/livingCommunities.data";
+import { useCommunity } from "../communities/api/useCommunity";
 import {
   RequestsTab,
   ReportsTab,
@@ -19,10 +19,24 @@ const TAB_KEYS = [
 
 export function ModPanel({ slug }: { slug: string }) {
   const { t } = useTranslation();
-  const living = LIVING[slug];
+  // The real community — demo assembles it from the mock registries, live calls
+  // GET /communities/:slug. This replaces a direct `LIVING[slug]` read, which
+  // only ever resolved for the handful of mock flagships (so a real moderator's
+  // community always 404'd to "not found"). The join-request / roster tabs now
+  // source their rows — and their real ids — from the dual-mode api hooks, so a
+  // live PATCH targets a real request instead of a mock id behind a fake toast.
+  const { living, editable, myRole, notFound, isLoading } = useCommunity(slug);
   const [tab, setTab] = useState<(typeof TAB_KEYS)[number][0]>("requests");
 
-  if (!living) {
+  if (isLoading) {
+    return (
+      <div style={{ padding: "48px 0", textAlign: "center" }}>
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (notFound || !living || !editable) {
     return (
       <EmptyState
         title={t("admin:modPanel.notFound.title")}
@@ -47,10 +61,16 @@ export function ModPanel({ slug }: { slug: string }) {
           </button>
         ))}
       </div>
-      {tab === "requests" && <RequestsTab living={living} />}
+      {tab === "requests" && <RequestsTab slug={slug} />}
       {tab === "reports" && <ReportsTab living={living} />}
-      {tab === "members" && <MembersTab living={living} />}
-      {tab === "settings" && <SettingsTab living={living} />}
+      {tab === "members" && <MembersTab slug={slug} />}
+      {tab === "settings" && (
+        <SettingsTab
+          slug={slug}
+          editable={editable}
+          isOwner={myRole === "owner"}
+        />
+      )}
     </div>
   );
 }

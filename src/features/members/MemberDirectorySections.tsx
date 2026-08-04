@@ -4,6 +4,7 @@ import {
   Button,
   EmptyState,
   FadeIn,
+  FeatureHelp,
   ModalSheet,
   SkeletonLine,
 } from "../../shared/components/ui";
@@ -86,6 +87,7 @@ export function MemberDirectoryHeader({
           {t("members:directory.memberCountSuffix", { count: totalMembers })}
         </em>{" "}
         {t("members:directory.findSuffix")}
+        <FeatureHelp id="members.hub" />
       </h1>
       <p className={styles.lead}>
         <Translation i18nKey="members:directory.lead" components={{ b: <b /> }} />

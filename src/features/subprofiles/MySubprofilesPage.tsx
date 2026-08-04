@@ -6,10 +6,12 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSubprofiles } from "./api/useSubprofiles";
+import { useSubprofileMembers } from "./api/useSubprofileMembers";
 import { useSubprofileMutations } from "./api/useSubprofileMutations";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { MySubprofileRow } from "./MySubprofileRow";
 import { NewSubprofileModal } from "./NewSubprofileModal";
+import { PersonaInvitesBanner } from "./PersonaInvitesBanner";
 import styles from "./MySubprofilesPage.module.css";
 
 const MAX_SUBPROFILES = 12;
@@ -25,6 +27,14 @@ export function MySubprofilesPage() {
   const { showToast } = useToast();
   const [creating, setCreating] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<SubprofileView | null>(null);
+  // Co-owner count for the persona pending deletion — reuses the "manage
+  // co-owners" hook rather than a new backend field (`enabled` gates it off
+  // whenever no delete is in flight). Deleting removes the persona for every
+  // co-owner, not just the signed-in one, so a shared persona gets a
+  // stronger warning than a solo one.
+  const { data: deleteTargetMembers } = useSubprofileMembers(deleteTarget?.id);
+  const coOwnerCount = deleteTargetMembers?.length ?? 0;
+  const isSharedDelete = coOwnerCount > 1;
 
   const list = subprofiles ?? [];
   const atCap = list.length >= MAX_SUBPROFILES;
@@ -70,6 +80,8 @@ export function MySubprofilesPage() {
           {atCap && (
             <p className={styles.count}>{t("subprofiles:mine.atCap")}</p>
           )}
+
+          <PersonaInvitesBanner />
 
           {isLoading ? (
             <div role="status" aria-live="polite">
@@ -127,7 +139,16 @@ export function MySubprofilesPage() {
             </>
           }
         >
-          <p>{t("subprofiles:mine.deleteModalBody")}</p>
+          <p>
+            {isSharedDelete
+              ? t("subprofiles:mine.deleteModalBodyShared", {
+                  name:
+                    deleteTarget.displayName ||
+                    t("subprofiles:mine.deleteModalDefaultName"),
+                  n: coOwnerCount,
+                })
+              : t("subprofiles:mine.deleteModalBody")}
+          </p>
         </Modal>
       )}
     </AppShell>

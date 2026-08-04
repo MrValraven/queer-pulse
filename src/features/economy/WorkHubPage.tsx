@@ -5,7 +5,7 @@ import { EmptyState, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileData } from "../../app/providers/useProfile";
 import { routes } from "../../app/routeMap";
 import { NEXT_ACTIONS, STATUS_CARDS, workStatusLine } from "./work.data";
 import { WorkNextActions } from "./WorkNextActions";
@@ -18,7 +18,7 @@ export function WorkHubPage() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   // The signed-in member (real profile live, mock currentUser in demo mode).
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   const statusLine = useMemo(() => workStatusLine(t), [t]);
   // The activity summaries are demo-only fiction — live mode has no backend to
   // aggregate them yet, so it shows a neutral getting-started state.

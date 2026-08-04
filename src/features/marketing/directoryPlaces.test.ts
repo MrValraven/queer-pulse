@@ -12,16 +12,35 @@ describe("openStatus", () => {
     expect(openStatus({}, at(4, 20)).state).toBe("unknown");
   });
   it("is open inside a normal same-day window", () => {
-    const hours = { Fri: { open: true, from: "18:00", to: "23:00" } };
+    const hours = { Fri: { open: true, intervals: [{ from: "18:00", to: "23:00" }] } };
     expect(openStatus(hours, at(4, 20)).state).toBe("open"); // Fri 20:00
   });
   it("is closed before opening and on a closed day", () => {
-    const hours = { Fri: { open: true, from: "18:00", to: "23:00" } };
+    const hours = { Fri: { open: true, intervals: [{ from: "18:00", to: "23:00" }] } };
     expect(openStatus(hours, at(4, 12)).state).toBe("closed"); // Fri 12:00
     expect(openStatus(hours, at(0, 20)).state).toBe("closed"); // Mon
   });
   it("handles a window that closes after midnight", () => {
-    const hours = { Fri: { open: true, from: "18:00", to: "02:00" } };
+    const hours = { Fri: { open: true, intervals: [{ from: "18:00", to: "02:00" }] } };
     expect(openStatus(hours, at(5, 1)).state).toBe("open"); // Sat 01:00
+  });
+  it("respects a lunch-break split (closed between two windows)", () => {
+    const hours = {
+      Fri: {
+        open: true,
+        intervals: [
+          { from: "12:00", to: "15:00" },
+          { from: "19:00", to: "23:00" },
+        ],
+      },
+    };
+    expect(openStatus(hours, at(4, 13)).state).toBe("open"); // Fri 13:00
+    expect(openStatus(hours, at(4, 17)).state).toBe("closed"); // Fri 17:00 (break)
+    expect(openStatus(hours, at(4, 20)).state).toBe("open"); // Fri 20:00
+  });
+  it("still heals a legacy {open,from,to} row at runtime", () => {
+    // Older stored rows may not be migrated yet; openStatus normalizes first.
+    const legacy = { Fri: { open: true, from: "18:00", to: "23:00" } } as never;
+    expect(openStatus(legacy, at(4, 20)).state).toBe("open");
   });
 });

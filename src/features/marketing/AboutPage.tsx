@@ -1,6 +1,6 @@
 import { FiCheck, FiX } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
-import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Button, FeatureHelp, Outro, Reveal } from "../../shared/components/ui";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -33,10 +33,13 @@ export function AboutPage() {
       <PageHero
         eyebrow={t("marketing:about.hero.eyebrow")}
         title={
-          <Translation
-            i18nKey="marketing:about.hero.title"
-            components={{ em: <em /> }}
-          />
+          <>
+            <Translation
+              i18nKey="marketing:about.hero.title"
+              components={{ em: <em /> }}
+            />{" "}
+            <FeatureHelp id="marketing.about" />
+          </>
         }
         sub={t("marketing:about.hero.sub")}
       />

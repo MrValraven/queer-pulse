@@ -1,11 +1,20 @@
 import { Link } from "react-router-dom";
-import { Button } from "../../shared/components/ui";
+import { Button, FeatureHelp } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { ForumSearch } from "./ForumSearch";
 import styles from "./ForumPage.module.css";
 
-export function ForumHero({ onNewPost }: { onNewPost: () => void }) {
+export function ForumHero({
+  onNewPost,
+  q,
+  onSearch,
+}: {
+  onNewPost: () => void;
+  q: string;
+  onSearch: (q: string) => void;
+}) {
   const { t } = useTranslation();
   return (
     <section className={styles.hero}>
@@ -17,7 +26,8 @@ export function ForumHero({ onNewPost }: { onNewPost: () => void }) {
               <Translation
                 i18nKey="forum:hero.title"
                 components={{ em: <em /> }}
-              />
+              />{" "}
+              <FeatureHelp id="forum.hub" />
             </h1>
             <p>
               {t("forum:hero.lead")}{" "}
@@ -30,6 +40,7 @@ export function ForumHero({ onNewPost }: { onNewPost: () => void }) {
             {t("forum:newPostCta")}
           </Button>
         </div>
+        <ForumSearch value={q} onChange={onSearch} />
       </div>
     </section>
   );

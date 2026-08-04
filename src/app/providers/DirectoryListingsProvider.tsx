@@ -6,6 +6,7 @@ import {
   type PendingListing,
 } from "../../features/marketing/listBusiness/listBusiness.data";
 import { useListingMutations } from "../../features/marketing/listBusiness/api/useListings";
+import { draftToDto } from "../../features/marketing/listBusiness/draftToDto";
 import { useDemoMode } from "./DemoModeProvider";
 import { DirectoryListingsContext } from "./useDirectoryListingsActions";
 
@@ -50,7 +51,7 @@ export function DirectoryListingsProvider({
         // screen shows the persisted QPL ref and true status, not a
         // client-fabricated one. Invalidation (in the mutation) refreshes
         // GET /listings/mine; the dedup-by-ref merge prevents a double.
-        const persisted = await createListing.mutateAsync(draft);
+        const persisted = await createListing.mutateAsync(draftToDto(draft));
         if (persisted) {
           setLocal((prev) => [persisted, ...prev]);
           return persisted;

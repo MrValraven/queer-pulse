@@ -1,8 +1,11 @@
-import type { ListingDraft, PhotoKey } from "./listBusiness.data";
+import {
+  normalizeHours,
+  PHOTO_KEYS,
+  type ListingDraft,
+  type PhotoKey,
+} from "./listBusiness.data";
 import type { ListingDTO } from "./api/listings.api";
 import { normalizeCategory } from "../localPlaces";
-
-const PHOTO_KEYS: PhotoKey[] = ["wide", "d1", "d2", "vibe"];
 
 /**
  * Convert an owner's `ListingDTO` into a clean `ListingDraft` for seeding the
@@ -36,7 +39,9 @@ export function dtoToDraft(dto: ListingDTO): ListingDraft {
     geocoded: dto.geocoded,
     latitude: dto.latitude,
     longitude: dto.longitude,
-    hours: dto.hours,
+    // Heal legacy `{ open, from, to }` rows into the interval shape so a resumed
+    // edit renders and re-saves in the new format.
+    hours: normalizeHours(dto.hours),
     hoursNote: dto.hoursNote,
     social: dto.social,
     photos,

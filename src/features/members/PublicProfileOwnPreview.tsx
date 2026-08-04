@@ -5,7 +5,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileData } from "../../app/providers/useProfile";
 import { useAuth } from "../../app/providers/authContext";
 import { usePublicProfile } from "../../app/providers/usePublicProfile";
 import {
@@ -26,7 +26,7 @@ import styles from "./PublicProfilePage.module.css";
  * pill; signed-out visitors get the guest sign-in bar.
  *
  * This is the slug-less `/public-profile` preview, and it is always about the
- * *viewer's own* profile — `useProfile()` cannot point anywhere else. The real,
+ * *viewer's own* profile — `useProfileData()` cannot point anywhere else. The real,
  * addressable public profile that strangers read is `PublicProfileBySlug`, at
  * `/public-profile/:slug`. Keep the two apart: this one is a preview of an
  * intention, that one is what the open web actually gets served.
@@ -34,7 +34,7 @@ import styles from "./PublicProfilePage.module.css";
 export function PublicProfileOwnPreview() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   const { user } = useAuth();
   const { enabled } = usePublicProfile();
   const pub = CURRENT_USER_PUBLIC;

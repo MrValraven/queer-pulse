@@ -67,6 +67,7 @@ export function StudioSearchPage() {
         </svg>
         <input
           type="search"
+          aria-label={t("studio:search.inputPlaceholder")}
           placeholder={t("studio:search.inputPlaceholder")}
           value={query}
           onChange={(event) => setQuery(event.target.value)}

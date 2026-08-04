@@ -16,5 +16,8 @@ export const DIRECTORY_KINDS: SubprofileKind[] = [
   "performer",
   "photographer",
   "videomaker",
+  "chef",
+  "mixologist",
+  "therapist",
   "generic",
 ];

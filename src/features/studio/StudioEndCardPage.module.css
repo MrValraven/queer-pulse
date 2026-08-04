@@ -2,8 +2,6 @@
    Self-contained: literal hex mirrors the design's own :root. */
 
 .stage {
-  --coral: #e8775a;
-  --coral-rgb: 232, 119, 90;
   --jade: #4a8c6f;
   --jade-light: #9be0bd;
   --jade-rgb: 74, 140, 111;
@@ -35,7 +33,7 @@
   background:
     radial-gradient(
       820px 820px at 64% 18%,
-      rgba(232, 119, 90, 0.18),
+      rgba(var(--accent-rgb), 0.18),
       transparent 60%
     ),
     radial-gradient(
@@ -87,9 +85,9 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--coral);
+  background: var(--accent);
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 12px rgba(232, 119, 90, 0.55);
+  box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.55);
 }
 
 .cdot.j {
@@ -137,7 +135,7 @@
   width: 5px;
   flex: none;
   border-radius: 3px;
-  background: var(--coral);
+  background: var(--accent);
   opacity: 0.85;
 }
 
@@ -180,7 +178,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: var(--coral);
+  background: var(--accent);
   flex: none;
 }
 
@@ -189,7 +187,7 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: var(--coral);
+  background: var(--accent);
   transform-origin: center;
   animation: ecPulse 2.6s var(--ease) infinite;
 }
@@ -205,7 +203,7 @@
 
 .q {
   font-style: italic;
-  color: var(--coral);
+  color: var(--accent);
 }
 
 .tag {
@@ -214,7 +212,7 @@
   font-weight: 700;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--coral);
+  color: var(--accent);
   align-self: center;
   padding-top: 10px;
 }
@@ -231,7 +229,7 @@
 
 .tagline em {
   font-style: italic;
-  color: var(--coral);
+  color: var(--accent);
 }
 
 /* Ledger pill */

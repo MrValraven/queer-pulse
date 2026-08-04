@@ -160,6 +160,8 @@ export function ArticlePage() {
           src={article.image}
           alt={article.imgDesc}
           placeholder={article.imgDesc}
+          loading="eager"
+          fetchPriority="high"
         />
         <div className={styles.heroStrip} />
       </div>

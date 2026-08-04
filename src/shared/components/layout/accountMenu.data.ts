@@ -21,8 +21,7 @@ export type AccountItem = { labelKey: string; to: string; icon: IconType };
  * own two-column sub-grid in the desktop menu, separated by a divider, so the
  * clusters read as categories (people & what's on · career · writing · support).
  * Saved and Settings are NOT here — they live as icon actions in the menu header
- * (see HEADER_ACTIONS). The mobile drawer flattens ACCOUNT_ITEMS, which re-adds
- * the header actions so nothing is lost on small screens. Labels are bare nouns.
+ * (see HEADER_ACTIONS). Labels are bare nouns.
  */
 export const ACCOUNT_GROUPS: AccountItem[][] = [
   // People — you, your circles, and what's on
@@ -82,8 +81,7 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
 
 /**
  * Saved + Settings — promoted out of the grid into compact icon actions in the
- * menu header (rendered with tooltips). Kept as AccountItems so the mobile drawer
- * can re-include them via ACCOUNT_ITEMS.
+ * menu header (rendered with tooltips).
  */
 export const HEADER_ACTIONS: AccountItem[] = [
   {
@@ -98,8 +96,3 @@ export const HEADER_ACTIONS: AccountItem[] = [
   },
 ];
 
-/** Flattened links for the mobile drawer: every grid link plus the header actions. */
-export const ACCOUNT_ITEMS: AccountItem[] = [
-  ...ACCOUNT_GROUPS.flat(),
-  ...HEADER_ACTIONS,
-];

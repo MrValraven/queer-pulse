@@ -482,6 +482,13 @@ a.track:hover {
 .photo:focus-visible .photoHint {
   opacity: 1;
 }
+/* Touch devices have no hover, so the caption would never appear — show it
+   there (the gradient keeps the underlying image legible). */
+@media (hover: none) {
+  .photoHint {
+    opacity: 1;
+  }
+}
 
 /* ── Quotes ─────────────────────────────────────────────────── */
 .quotes {

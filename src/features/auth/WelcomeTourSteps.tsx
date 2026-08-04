@@ -79,19 +79,26 @@ export function TourProfile({ onNext, onBack }: StepProps) {
             className={styles.input}
             type="text"
             placeholder={t("auth:tour.profile.namePlaceholder")}
+            aria-label={t("auth:tour.profile.namePlaceholder")}
           />
           <input
             className={styles.input}
             type="text"
             placeholder={t("auth:tour.profile.pronounsPlaceholder")}
+            aria-label={t("auth:tour.profile.pronounsPlaceholder")}
           />
         </div>
         <input
           className={styles.input}
           type="text"
           placeholder={t("auth:tour.profile.rolePlaceholder")}
+          aria-label={t("auth:tour.profile.rolePlaceholder")}
         />
-        <select className={styles.select} defaultValue="">
+        <select
+          className={styles.select}
+          defaultValue=""
+          aria-label={t("auth:tour.profile.neighbourhoodDefault")}
+        >
           <option value="">
             {t("auth:tour.profile.neighbourhoodDefault")}
           </option>

@@ -109,6 +109,9 @@ export interface MemberDetail {
   /** A non-human house account — its role can't be changed, so the control is
    *  disabled with an explanation. */
   isSystem: boolean;
+  /** True while the member is under an active suspension — gates the drawer's
+   *  "Lift suspension" control. */
+  suspended?: boolean;
   glance: DrawerStat[];
   graphNote: string;
   communities: { label: string; tone: CommTone }[];
@@ -348,6 +351,9 @@ export function detailFor(member: AdminMember): MemberDetail {
     id: member.id,
     role: member.role,
     isSystem: false,
+    // Demo heuristic: an unverified, flagged (coral) member stands in for a
+    // suspended account so the "Lift suspension" control is exercisable in demo.
+    suspended: !member.verified && member.statusTone === "coral",
     glance: [
       {
         labelKey: "admin:members.glance.vouches",

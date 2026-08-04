@@ -62,6 +62,7 @@ export function GatheringPhotosLive({
               type="file"
               accept="image/*"
               hidden
+              aria-label={t("gatherings:photos.addCta")}
               onChange={(event) => void onPickFile(event)}
             />
             <Button

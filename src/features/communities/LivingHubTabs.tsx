@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { FadeIn, Tabs } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Community } from "../homepage/data/types";
@@ -16,6 +16,17 @@ import styles from "./CommunityDetailPage.module.css";
 
 type Tab = "pulse" | "discussion" | "members" | "events" | "about" | "modtools";
 
+const TABS: Tab[] = [
+  "pulse",
+  "discussion",
+  "members",
+  "events",
+  "about",
+  "modtools",
+];
+const isTab = (value: string | null): value is Tab =>
+  value != null && (TABS as string[]).includes(value);
+
 export function LivingHubTabs({
   community,
   info,
@@ -26,6 +37,7 @@ export function LivingHubTabs({
   role,
   pulsePaging,
   discussionPaging,
+  rosterPaging,
 }: {
   community: Community;
   info: CommunityDetail;
@@ -36,9 +48,26 @@ export function LivingHubTabs({
   role: CommunityRole | null;
   pulsePaging: PulsePaging;
   discussionPaging: PulsePaging;
+  rosterPaging: PulsePaging;
 }) {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<Tab>("pulse");
+  // The active tab lives in the URL (?tab=), so a tab is deep-linkable,
+  // survives a refresh, and the back button restores it. Falls back to Pulse
+  // for a missing or unknown value.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab: Tab = isTab(searchParams.get("tab"))
+    ? (searchParams.get("tab") as Tab)
+    : "pulse";
+  const setTab = (next: Tab) =>
+    setSearchParams(
+      (prev) => {
+        const params = new URLSearchParams(prev);
+        if (next === "pulse") params.delete("tab");
+        else params.set("tab", next);
+        return params;
+      },
+      { replace: true },
+    );
 
   const baseTabs: { id: Tab; label: string }[] = [
     { id: "pulse", label: t("communities:detail.tabs.pulse") },
@@ -61,9 +90,7 @@ export function LivingHubTabs({
     pulse: living.pinned.length + living.pulse.length,
     discussion: threads.length,
     members: living.stats.members,
-    // The Events tab surfaces only the next upcoming gathering, so the badge
-    // caps at 1 to match what's shown rather than the full upcoming count.
-    events: Math.min(1, living.events.filter((e) => !e.past).length),
+    events: living.events.filter((e) => !e.past).length,
     modtools:
       (living.joinRequests?.length ?? 0) + (living.reports?.length ?? 0),
   };
@@ -104,6 +131,7 @@ export function LivingHubTabs({
             roster={living.roster}
             total={living.stats.members}
             slug={living.slug}
+            paging={rosterPaging}
           />
         )}
         {active === "events" && <EventsTab events={living.events} />}

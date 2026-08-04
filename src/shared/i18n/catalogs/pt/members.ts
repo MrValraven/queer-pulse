@@ -102,6 +102,16 @@ export const members: Catalog = {
   "profile.hero.perksTitle": "Vantagens",
   "profile.hero.perksArrow": "Resgatar as tuas vantagens →",
 
+  // ── Linha de estatísticas + separadores de conteúdo (ProfileStatsRow, ProfileTabBar) ──
+  "profile.stats.vouches": "Avais",
+  "profile.stats.communities": "Comunidades",
+  "profile.stats.personas": "Também como",
+  "profile.tabs.about": "Sobre",
+  "profile.tabs.work": "Trabalho",
+  "profile.tabs.community": "Comunidade",
+  "profile.tabs.activity": "Atividade",
+  "profile.tabs.ariaLabel": "Secções do perfil",
+
   // ── Secção de comunidades (ProfileCommunities) ──────────────────────────────
   "profile.communities.title": "Comunidades",
   "profile.communities.subtitleSelf":
@@ -288,6 +298,8 @@ export const members: Catalog = {
   "publicBySlug.aboutHeading": "Sobre",
   "publicBySlug.linksHeading": "Noutros sítios",
   "publicBySlug.workHeading": "Trabalho",
+  "publicBySlug.activityHeading": "Atividade recente",
+  "publicBySlug.activityEmpty": "Ainda nada público por aqui.",
   "publicBySlug.joinTitle": "O QueerPulse é só por convite",
   "publicBySlug.joinBody":
     "Um sítio onde a Lisboa queer se junta — sem anúncios, sem algoritmo. Precisas de alguém que te traga, ou podes pedir-nos diretamente.",
@@ -401,6 +413,12 @@ export const members: Catalog = {
   "search.type.event": "Eventos",
   "search.type.forum": "Fórum",
   "search.type.business": "Negócios",
+  "search.type.magazine": "Revista",
+  "search.type.job": "Vagas",
+  "search.type.housing": "Habitação",
+  "search.type.resource": "Recursos",
+  "search.type.workshop": "Workshops",
+  "search.type.subprofile": "Subperfis",
   "search.type.board": "Quadro",
   "search.type.topic": "Tópicos",
   "search.type.page": "Páginas",
@@ -451,6 +469,10 @@ export const members: Catalog = {
   "directory.emptyAll.title": "Ainda não há pessoas aqui",
   "directory.emptyAll.description":
     "Este diretório ainda está a encher-se. À medida que as pessoas se juntam à QueerPulse e optam por ser encontráveis, vão aparecer aqui — volta a verificar em breve.",
+  "directory.error.title": "Não conseguimos carregar o diretório",
+  "directory.error.description":
+    "Algo correu mal ao procurar pessoas — isto não é um diretório vazio. Tenta novamente daqui a pouco.",
+  "directory.error.retry": "Tentar novamente",
   "directory.loadingMore": "A carregar…",
   "directory.loadMoreCta": "Carregar mais pessoas",
   "directory.filtersCta": "Filtros",
@@ -808,10 +830,9 @@ export const members: Catalog = {
   "collections.newCollection.defaultMeta":
     "Acabada de criar — começa a adicionar guardados",
   "collections.updatedJustNow": "Atualizado agora mesmo",
-  "collections.emptyLive.title": "Ainda não criaste nenhuma coleção",
+  "collections.emptyLive.title": "As coleções estão a chegar",
   "collections.emptyLive.description":
-    "As coleções são pastas para os artigos, convívios e lugares que guardas. Cria a primeira para começar a agrupar guardados pelo que significam.",
-  "collections.emptyLive.cta": "Criar uma coleção",
+    "Em breve poderás agrupar os artigos, convívios e lugares que guardas em pastas. Ainda estamos a preparar isto — por agora, nada do que organizares aqui ficaria guardado.",
 
   // ── Modais de coleções (CollectionsModals) ──────────────────────────────────
   "collections.modal.defaultDialogLabel": "Diálogo",
@@ -950,7 +971,11 @@ export const members: Catalog = {
   "perks.sidebar.suggestTitle": "Sugerir uma vantagem",
   "perks.sidebar.suggestPlaceholder": "Partilha uma ideia…",
   "perks.sidebar.sendSuggestionCta": "Enviar sugestão",
+  "perks.sidebar.suggestUnavailableToast":
+    "As sugestões de vantagens ainda não estão abertas — obrigade pela paciência.",
   "perks.claim.alreadyActive": "Já ativo",
   "perks.claim.active": "Ativo",
   "perks.claim.claimed": "Resgatado",
+  "perks.claim.unavailableToast":
+    "Resgatar vantagens ainda não está disponível — ainda estamos a preparar isto.",
 };

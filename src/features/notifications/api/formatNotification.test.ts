@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { catalogs, loadPtNamespace } from "../../../shared/i18n/catalogs";
+import { catalogs, loadNamespace, loadPtNamespace } from "../../../shared/i18n/catalogs";
 import { parseKey, resolveEntry } from "../../../shared/i18n/translate";
 import type {
   Catalog,
@@ -24,6 +24,7 @@ const resolvedCatalogs: Record<Language, Catalog> = {
 };
 
 beforeAll(async () => {
+  resolvedCatalogs.en = await loadNamespace("en", "notifications");
   resolvedCatalogs.pt = await loadPtNamespace("notifications");
 });
 

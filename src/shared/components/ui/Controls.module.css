@@ -10,6 +10,7 @@
   border: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .segBtn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -26,6 +27,19 @@
   transition:
     background 0.16s var(--ease),
     color 0.16s var(--ease);
+}
+/* Touch: the segmented control stays visually compact (~28px), but each
+   segment gets a centered ≥44px-tall hit strip so the tap target clears the
+   minimum. Vertical-only so neighbouring segments don't overlap. */
+@media (pointer: coarse) {
+  .segBtn::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
 }
 .segIcon {
   display: inline-flex;
@@ -80,6 +94,19 @@
   cursor: pointer;
   position: relative;
   transition: background 0.2s var(--ease);
+}
+/* Touch: the pill stays 44×26 visually, but the tappable region grows to a
+   full 44px height so the whole control (not just the 26px pill) is easy to
+   hit with a thumb. */
+@media (pointer: coarse) {
+  .toggle::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
 }
 .toggleOn {
   background: var(--jade);

@@ -120,6 +120,7 @@ export function VouchGraphCanvas({
                   fill="none"
                   className={cx(
                     styles.edge,
+                    e.kind === "invite" && styles.invite,
                     e.mutual && styles.mutual,
                     e.withdrawn && styles.withdrawn,
                     onPath && styles.onpath,

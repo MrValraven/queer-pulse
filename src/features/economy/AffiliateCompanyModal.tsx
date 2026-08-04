@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -39,6 +39,7 @@ function AddCompanyBlock({
   setDraft: (patch: Partial<NewCompany>) => void;
 }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   if (!adding) {
     return (
       <button
@@ -64,10 +65,11 @@ function AddCompanyBlock({
   return (
     <>
       <div className={styles.field} style={{ marginTop: 16 }}>
-        <div className={styles.label}>
+        <label className={styles.label} htmlFor={`${fieldId}-name`}>
           {t("economy:affiliateCompanyModal.addCompany.nameLabel")}
-        </div>
+        </label>
         <input
+          id={`${fieldId}-name`}
           className={styles.input}
           type="text"
           value={draft.name}
@@ -78,10 +80,11 @@ function AddCompanyBlock({
         />
       </div>
       <div className={styles.field}>
-        <div className={styles.label}>
+        <label className={styles.label} htmlFor={`${fieldId}-tagline`}>
           {t("economy:affiliateCompanyModal.addCompany.taglineLabel")}
-        </div>
+        </label>
         <input
+          id={`${fieldId}-tagline`}
           className={styles.input}
           type="text"
           value={draft.tagline}
@@ -92,10 +95,11 @@ function AddCompanyBlock({
         />
       </div>
       <div className={styles.field}>
-        <div className={styles.label}>
+        <label className={styles.label} htmlFor={`${fieldId}-about`}>
           {t("economy:affiliateCompanyModal.addCompany.aboutLabel")}
-        </div>
+        </label>
         <textarea
+          id={`${fieldId}-about`}
           className={styles.textarea}
           rows={3}
           value={draft.about}
@@ -126,6 +130,7 @@ export function AffiliateCompanyModal({
   onAffiliated: () => void;
 }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   const { affiliate } = useEmployerAffiliationActions();
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
@@ -249,10 +254,11 @@ export function AffiliateCompanyModal({
       )}
 
       <div className={styles.field} style={{ marginTop: 16 }}>
-        <div className={styles.label}>
+        <label className={styles.label} htmlFor={`${fieldId}-role`}>
           {t("economy:affiliateCompanyModal.roleLabel")}
-        </div>
+        </label>
         <select
+          id={`${fieldId}-role`}
           className={styles.select}
           value={role}
           onChange={(e) => setRole(e.target.value)}

@@ -6,6 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { GroupAddMembersModal } from "./GroupAddMembersModal";
 import { GroupAvatarField } from "./GroupAvatarField";
 import { GroupMemberRow } from "./GroupMemberRow";
+import { GroupRemoveMemberConfirm } from "./GroupRemoveMemberConfirm";
 import type { GroupMemberPick } from "./NewGroupModal";
 import type { Conversation, GroupMemberView } from "./data";
 import styles from "./NewMessageModal.module.css";
@@ -55,14 +56,20 @@ export function GroupInfoModal({
   // `undefined` = the photo was left untouched (no avatar edit is sent on save);
   // a storage key = a new photo picked; `""` = the photo was removed.
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
+  // Member armed for removal — drives the confirm step, so removal never fires
+  // straight from the roster's Remove button.
+  const [pendingRemove, setPendingRemove] =
+    useState<GroupMemberView | null>(null);
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
+      // While the confirm is open it owns Escape (it closes itself); don't also
+      // tear down the group panel underneath.
+      if (event.key === "Escape" && !pendingRemove) onClose();
     }
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [onClose, pendingRemove]);
 
   const callerIsOwner = !!active.canManageRoles;
   const isSelf = (member: GroupMemberView) =>
@@ -184,7 +191,7 @@ export function GroupInfoModal({
               canRemoveMembers={!!active.canRemoveMembers}
               callerIsOwner={callerIsOwner}
               busy={managing}
-              onRemove={onRemoveMember}
+              onRemove={setPendingRemove}
               onChangeRole={onChangeMemberRole}
             />
           ))}
@@ -199,6 +206,17 @@ export function GroupInfoModal({
         )}
       </div>
 
+      {pendingRemove && (
+        <GroupRemoveMemberConfirm
+          member={pendingRemove}
+          pending={managing}
+          onConfirm={() => {
+            onRemoveMember(pendingRemove);
+            setPendingRemove(null);
+          }}
+          onCancel={() => setPendingRemove(null)}
+        />
+      )}
       {addOpen && (
         <GroupAddMembersModal
           existingSlugs={members

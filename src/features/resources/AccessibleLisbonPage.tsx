@@ -1,8 +1,9 @@
-import { FiCheckCircle } from "react-icons/fi";
+import { FiCheckCircle, FiMapPin } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Button, EmptyState, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import {
   PageMeta,
@@ -15,6 +16,7 @@ import styles from "./resources.module.css";
 
 export function AccessibleLisbonPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const pageTitle = t("resources:accessibleLisbon.meta.title");
   const pageDescription = t("resources:accessibleLisbon.meta.description");
 
@@ -37,13 +39,31 @@ export function AccessibleLisbonPage() {
           />
         }
         lead={t("resources:accessibleLisbon.hero.lead")}
-        anchors={GROUPS.map((g) => ({
-          label: t(g.labelKey),
-          href: `#${g.id}`,
-        }))}
+        anchors={
+          demoMode
+            ? GROUPS.map((g) => ({ label: t(g.labelKey), href: `#${g.id}` }))
+            : []
+        }
       />
 
-      {GROUPS.map((group, gi) => (
+      {!demoMode && (
+        <section className={`${styles.section} ${styles.sectionPaper}`}>
+          <div className="wrap">
+            <EmptyState
+              icon={<FiMapPin />}
+              title={t("resources:accessibleLisbon.live.title")}
+              description={t("resources:accessibleLisbon.live.body")}
+              action={{
+                label: t("resources:accessibleLisbon.live.cta"),
+                to: routes.gatherings,
+              }}
+            />
+          </div>
+        </section>
+      )}
+
+      {demoMode &&
+        GROUPS.map((group, gi) => (
         <section
           key={group.id}
           className={`${styles.section} ${gi % 2 === 0 ? styles.sectionPaper : styles.sectionCream}`}

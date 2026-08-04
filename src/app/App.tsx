@@ -3,6 +3,13 @@ import { BrowserRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "../shared/api/queryClient";
 import { ThemeProvider } from "./providers/ThemeProvider";
+import { MotionProvider } from "./providers/MotionProvider";
+import { ShellFrameProvider } from "./providers/ShellFrameProvider";
+import { AppChrome } from "../shared/components/layout/AppChrome";
+import { AppFooter } from "../shared/components/layout/AppFooter";
+import { RouteTransition } from "../shared/components/layout/RouteTransition";
+import { SwipeBackShell } from "../shared/components/layout/SwipeBackShell";
+import { NavDirectionProvider } from "./providers/NavDirectionProvider";
 import { AccessibilityProvider } from "./providers/AccessibilityProvider";
 import { DisplayModeProvider } from "./providers/DisplayModeProvider";
 import { NavModeProvider } from "./providers/NavModeProvider";
@@ -39,6 +46,7 @@ import { QueryErrorToastBridge } from "../shared/components/feedback/QueryErrorT
 import { ErrorBoundary } from "../shared/components/feedback/ErrorBoundary";
 import { ConsentBanner } from "../shared/components/consent/ConsentBanner";
 import { PwaUpdatePrompt } from "../shared/components/system/PwaUpdatePrompt";
+import { OfflineGate } from "../features/system/OfflineGate";
 import { ScrollManager } from "./ScrollManager";
 import { AppRoutes } from "./routes";
 import { useVisualViewportKeyboard } from "../shared/hooks";
@@ -80,6 +88,12 @@ function QueryProvider({ children }: { children: ReactNode }) {
 // App-wide context, available everywhere including outside the router.
 const RootProviders = composeProviders([
   ThemeProvider,
+  // motion's LazyMotion (domAnimation feature bundle) + the shared
+  // reduced-motion flag consumed by useMotionPrefs(). A display/prefs
+  // concern like ThemeProvider/AccessibilityProvider, needs nothing above
+  // it, and must be above the router so route-level transitions and
+  // gestures (later tasks) can read it.
+  MotionProvider,
   // Reflects the "Reduce motion" preference onto <html>; independent of the
   // others, kept next to ThemeProvider since both drive DOM-attribute display state.
   AccessibilityProvider,
@@ -155,12 +169,49 @@ export function App() {
       <ErrorBoundary level="app">
         <BrowserRouter>
           <ScrollManager />
-          <DataProviders>
-            <AppRoutes />
-            <Suspense fallback={null}>
-              <CommandPalette />
-            </Suspense>
-          </DataProviders>
+          <ShellFrameProvider>
+            <DataProviders>
+              {/* Chrome lives INSIDE DataProviders (but above the route switch, so
+                  still mounted once and never remounting on navigation): its
+                  Navbar/BottomTabBar read member/session state — e.g. the DM
+                  unread badge transitively calls useDeletedConversations, whose
+                  provider is in DataProviders. Rendered outside it, AppChrome
+                  throws "must be used within DeletedConversationsProvider". */}
+              <AppChrome />
+              {/* Nav-direction classification (push/pop/tab-switch/replace) for
+                  RouteTransition below; needs react-router context (inside
+                  BrowserRouter) but not member/session state, so it only needs
+                  to wrap the routed content, not AppChrome. */}
+              <NavDirectionProvider>
+                {/* Offline fallback: in live mode a dead network swaps the routed
+                    UI for the branded OfflinePage (paired with the SW navigation
+                    catch handler). No-op in demo mode, which needs no network. */}
+                <OfflineGate>
+                  {/* Edge-swipe-to-go-back (mobile only; inert/unwrapped on
+                      desktop) wraps the transition so a committed swipe's
+                      navigate(-1) plays the same pop animation as the Back
+                      button. Inside OfflineGate so the offline fallback isn't
+                      draggable; around RouteTransition so it tracks the whole
+                      content plane, not just its animated inner div. */}
+                  <SwipeBackShell>
+                    {/* Animates only the routed content (transform/opacity) on
+                        navigation; chrome (AppChrome, above) stays fixed. */}
+                    <RouteTransition>
+                      <AppRoutes />
+                    </RouteTransition>
+                  </SwipeBackShell>
+                </OfflineGate>
+                <Suspense fallback={null}>
+                  <CommandPalette />
+                </Suspense>
+              </NavDirectionProvider>
+              {/* The Footer is in-flow, so — unlike the fixed Navbar/BottomTabBar
+                  in AppChrome above — it is rendered AFTER the routed content so
+                  it lands at the bottom of the page, not the top. Kept inside
+                  DataProviders so it still sees member/session context. */}
+              <AppFooter />
+            </DataProviders>
+          </ShellFrameProvider>
           <RoomLoader />
           <ConsentBanner />
           <AuthErrorToast />

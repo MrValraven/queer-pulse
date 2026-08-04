@@ -1,5 +1,8 @@
 import { useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { FiAlertTriangle } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
+import { EmptyState, PullToRefresh } from "../../shared/components/ui";
 import {
   useCountUp,
   useIncrementalList,
@@ -37,6 +40,7 @@ import styles from "./MemberDirectoryFilterPage.module.css";
 
 export function MemberDirectoryFilterPage() {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const { showToast } = useToast();
   const simLoading = useSimulatedLoad();
   const { demoMode } = useDemoMode();
@@ -76,6 +80,8 @@ export function MemberDirectoryFilterPage() {
     fetchNextPage,
     isFetchingNextPage,
     isLoading,
+    isError,
+    refetch,
   } = useMembers({
     identities: filters.identities,
     // Live mode sorts server-side (sort is part of the query key, so changing it
@@ -152,6 +158,29 @@ export function MemberDirectoryFilterPage() {
     setSort("Recently joined");
   };
 
+  // A failed live fetch (with nothing loaded) must read as an outage, not as an
+  // empty directory (audit P1-14). Once any page has loaded we keep the results
+  // rather than blowing them away for a later-page failure.
+  const showError = isError && sourceMembers.length === 0;
+
+  if (showError) {
+    return (
+      <PageShell>
+        <div className={styles.page}>
+          <EmptyState
+            icon={<FiAlertTriangle />}
+            title={t("members:directory.error.title")}
+            description={t("members:directory.error.description")}
+            action={{
+              label: t("members:directory.error.retry"),
+              onClick: refetch,
+            }}
+          />
+        </div>
+      </PageShell>
+    );
+  }
+
   return (
     <PageShell>
       <div className={styles.page}>
@@ -194,29 +223,39 @@ export function MemberDirectoryFilterPage() {
             </div>
           )}
 
-          <MemberResultsColumn
-            filters={filters}
-            sort={sort}
-            onSort={setSort}
-            chips={chips}
-            onApplyFilters={applyFilters}
-            onResetAll={resetAll}
-            isMobile={isMobile}
-            panelOpen={panelOpen}
-            onTogglePanel={() => setPanelOpen((prev) => !prev)}
-            onOpenFilters={() => setFiltersOpen(true)}
-            loading={loading}
-            shown={shown}
-            shownWindowed={shownWindowed}
-            sentinelRef={sentinelRef}
-            hasMoreWindowed={hasMoreWindowed}
-            hasActiveFilters={hasActiveFilters}
-            totalMembers={totalMembers}
-            filteredCount={filtered.length}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-            onFetchNextPage={fetchNextPage}
-          />
+          {/* `queryKey: ["members"]` matches useMembers' inline
+              `["members", demoMode, params]` as a prefix — invalidates every
+              filter/sort/mode variant, so a pull refresh refetches the
+              directory as currently filtered. */}
+          <PullToRefresh
+            onRefresh={() =>
+              queryClient.invalidateQueries({ queryKey: ["members"] })
+            }
+          >
+            <MemberResultsColumn
+              filters={filters}
+              sort={sort}
+              onSort={setSort}
+              chips={chips}
+              onApplyFilters={applyFilters}
+              onResetAll={resetAll}
+              isMobile={isMobile}
+              panelOpen={panelOpen}
+              onTogglePanel={() => setPanelOpen((prev) => !prev)}
+              onOpenFilters={() => setFiltersOpen(true)}
+              loading={loading}
+              shown={shown}
+              shownWindowed={shownWindowed}
+              sentinelRef={sentinelRef}
+              hasMoreWindowed={hasMoreWindowed}
+              hasActiveFilters={hasActiveFilters}
+              totalMembers={totalMembers}
+              filteredCount={filtered.length}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              onFetchNextPage={fetchNextPage}
+            />
+          </PullToRefresh>
         </div>
       </div>
 

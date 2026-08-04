@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getEvents, type EventFilter, type EventsPage } from "./events.api";
+import { eventKeys } from "./eventKeys";
 import { cardToCalendarEvent } from "./events.adapters";
 import { calendarEvents, type CalendarEvent } from "../data";
 
@@ -17,6 +18,11 @@ export interface EventsResult {
   isFetchingNextPage: boolean;
   /** True during the very first fetch. */
   isLoading: boolean;
+  /** True when the (live) fetch failed — the page shows an error state, not
+   *  an empty "nothing in Lisbon". Demo mode never errors. */
+  isError: boolean;
+  /** Re-run the query — wired to the error state's "Try again" action. */
+  refetch: () => void;
 }
 
 interface EventsPageVM {
@@ -38,7 +44,7 @@ interface EventsPageVM {
 export function useEvents(params: { filter?: EventFilter } = {}): EventsResult {
   const { demoMode } = useDemoMode();
   const query = useInfiniteQuery<EventsPageVM>({
-    queryKey: ["events", demoMode, params.filter],
+    queryKey: eventKeys.list(params.filter, demoMode),
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
@@ -72,5 +78,7 @@ export function useEvents(params: { filter?: EventFilter } = {}): EventsResult {
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
     isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

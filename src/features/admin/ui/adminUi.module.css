@@ -182,6 +182,13 @@
   background: rgba(var(--amber-rgb), 0.2);
   color: var(--amber-ink);
 }
+/* "Needs attention" status tone (e.g. a listing waiting in review) — same
+   amber tokens as `.chip_amber`, kept as its own semantic name so status
+   consumers read `warn` rather than a raw colour. */
+.chip_warn {
+  background: rgba(var(--amber-rgb), 0.2);
+  color: var(--amber-ink);
+}
 .chip_jade {
   background: rgba(var(--jade-rgb), 0.14);
   color: var(--jade-ink);
@@ -431,6 +438,44 @@
 }
 .modalWide {
   max-width: 680px;
+}
+/* Bottom sheet on mobile (matches the shared Modal + the app's dominant mobile
+   pattern); reverts to a centered dialog at ≥720px. */
+@media (max-width: 719.98px) {
+  .modalScrim {
+    align-items: flex-end;
+    padding: 0;
+    padding-block-end: var(--keyboard-inset, 0px);
+  }
+  .modal,
+  .modalWide {
+    position: relative;
+    max-width: none;
+    /* svh, not vh, so the sheet never runs under the mobile address bar. */
+    max-height: 92svh;
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
+  }
+  .modal::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 40px;
+    height: 5px;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: rgba(var(--plum-rgb), 0.18);
+    z-index: 2;
+  }
+  .modalHead {
+    padding-top: 26px;
+  }
+  .modalFoot {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  .modalBody:last-child {
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
 }
 @keyframes adminModalIn {
   from {

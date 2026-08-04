@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileEdit } from "../../app/providers/useProfile";
 import { useMyCommunityCards } from "./useMyCommunityCards";
 import type { FeaturedCommunityRef } from "./profileCommunities.types";
 import type { Member } from "./data/members";
@@ -34,7 +34,7 @@ export function useProfileFeaturedCommunities({
   isSelf: boolean;
   otherMember: Member | null;
 }): FeaturedCommunityRef[] {
-  const { draft } = useProfile();
+  const { draft } = useProfileEdit();
   // Only the self view reads this list (the non-self branch returns the public
   // DTO's pre-vetted refs). Gate the eligible-communities queries on `isSelf`
   // so viewing another member's profile no longer fires — then discards —

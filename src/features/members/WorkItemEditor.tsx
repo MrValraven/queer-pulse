@@ -112,6 +112,7 @@ export function WorkItemEditor({
         ref={fileRef}
         type="file"
         accept="image/*"
+        aria-label={t("members:workItem.change")}
         hidden
         onChange={(e) => {
           const f = e.target.files?.[0];

@@ -10,7 +10,7 @@ import { firstLinkUrl, renderWithLinks } from "./linkify";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { LinkPreview } from "./LinkPreview";
 import { MessageActions } from "./MessageActions";
-import { ReactionChips } from "./ReactionChips";
+import { SwipeReplyHint, BubbleReactionStrip } from "./MessageBubbleParts";
 import { findReactionMine } from "./reactionKeys";
 import { InlineEditField } from "./InlineEditField";
 import type { LongPressOrigin } from "./useLongPress";
@@ -391,7 +391,6 @@ function MessageBubbleImpl({
   const canOpenOverlay = !!message.id;
   const canInteract = canOpenOverlay && !message.deletedAt;
   const reactions = message.reactions ?? [];
-  const hasVisibleReactions = reactions.some((reaction) => reaction.count > 0);
   function openOverlayFromBubble() {
     const node = wrapRef.current;
     if (!node) return;
@@ -474,27 +473,10 @@ function MessageBubbleImpl({
       onKeyDown={canOpenOverlay ? handleBubbleKeyDown : undefined}
       aria-keyshortcuts={canOpenOverlay ? "Enter" : undefined}
     >
-      {/* Reply-hint icon revealed on the side being uncovered as the bubble
-          swipes toward `replyDirection` (right for received, left for sent) —
-          fades AND scales in with drag progress. Always mounted (invisible at
-          rest, opacity 0 below) so `useMessageGestures` has a stable node to
-          write opacity/scale progress to DIRECTLY on every pointer move — no
-          React state, no re-render, per frame. Still cues progress under
-          reduced motion even though the bubble itself doesn't visibly move. */}
-      <span
-        ref={hintRef}
-        className={[styles.swipeReplyHint, isSent && styles.swipeReplyHintEnd]
-          .filter(Boolean)
-          .join(" ")}
-        style={{ opacity: 0 }}
-        aria-hidden="true"
-      >
-        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
-          stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M9 5 4 10l5 5" />
-          <path d="M4 10h8a4 4 0 0 1 4 4v1" />
-        </svg>
-      </span>
+      {/* Reply-hint icon revealed as the bubble swipes toward `replyDirection`;
+          `useMessageGestures` writes opacity/scale progress straight to `hintRef`
+          every pointer move (no React state). See `SwipeReplyHint`. */}
+      <SwipeReplyHint hintRef={hintRef} isSent={isSent} />
       <MessageBubbleBody
         message={message}
         index={index}
@@ -534,15 +516,15 @@ function MessageBubbleImpl({
           onOpenOverlay={openOverlayFromBubble}
         />
       </div>
-      {hasVisibleReactions && (
-        <ReactionChips
-          reactions={reactions}
-          onToggle={(reactionKey, mine) =>
-            onReactionToggle?.(message, reactionKey, mine)
-          }
-          isNewReaction={(reactionKey) => isNewReaction?.(message, reactionKey) ?? false}
-        />
-      )}
+      <BubbleReactionStrip
+        reactions={reactions}
+        onToggle={(reactionKey, mine) =>
+          onReactionToggle?.(message, reactionKey, mine)
+        }
+        isNewReaction={(reactionKey) =>
+          isNewReaction?.(message, reactionKey) ?? false
+        }
+      />
     </div>
   );
 }
@@ -692,10 +674,11 @@ function MessageRunViewImpl({
       : null;
 
   return (
-    <div
-      className={[styles.run, isSent && styles.runSent].filter(Boolean).join(" ")}
-      role="listitem"
-    >
+    // No `role` here: this run's `listitem` semantics now live one level up,
+    // on `MessageAreaRow`'s own wrapper div (the virtualized row's direct
+    // list-child) — see that file's comment. A `listitem` nested directly
+    // inside another `listitem` (without an intervening `list`) is invalid.
+    <div className={[styles.run, isSent && styles.runSent].filter(Boolean).join(" ")}>
       {/* 1:1 threads show only the counterpart's avatar (the header already
           identifies who you're talking to); your own outgoing runs carry no
           avatar — alignment + colour distinguish them, WhatsApp/iMessage-style. */}

@@ -1,26 +1,61 @@
+import { FiBookOpen } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
+import { EmptyState } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { routes } from "../../app/routeMap";
 import { MagazineMasthead } from "./MagazineMasthead";
 import { IssueCover } from "./IssueCover";
 import { IssueContents } from "./IssueContents";
+import { DEMO_ISSUE_COVER } from "./issue.data";
 import { useIssue } from "./api/useIssue";
+import styles from "./IssuePage.module.css";
 
 /** The prototype's route has no `:number` param yet — this always shows the
  *  current issue, "09". */
 const CURRENT_ISSUE_NUMBER = "09";
 
 export function IssuePage() {
-  const { data: liveIssue } = useIssue(CURRENT_ISSUE_NUMBER);
+  const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  const { data: liveIssue, isLoading, isError } = useIssue(CURRENT_ISSUE_NUMBER);
+
+  // Demo mode renders the fabricated issue-09 record; live mode overlays the
+  // real title/dek/date and shows ONLY those — the TOC, contributors, stat
+  // counts and editor's letter have no backend analogue, so they stay demo-only.
+  const cover = demoMode ? DEMO_ISSUE_COVER : liveIssue;
+  const showEmpty = !demoMode && !isLoading && (isError || !cover);
 
   return (
     <PageShell>
       <MagazineMasthead active="issues" />
-      <IssueCover
-        number={liveIssue?.number}
-        title={liveIssue?.title}
-        dek={liveIssue?.dek}
-        publishedLabel={liveIssue?.publishedLabel}
-      />
-      <IssueContents />
+      {showEmpty ? (
+        <div className="wrap">
+          <div className={styles.liveEmpty}>
+            <EmptyState
+              icon={<FiBookOpen />}
+              title={t("magazine:issue.emptyLiveTitle")}
+              description={t("magazine:issue.emptyLiveBody")}
+              action={{
+                label: t("magazine:sections.submit.cta"),
+                to: routes.submitStory,
+              }}
+            />
+          </div>
+        </div>
+      ) : (
+        <>
+          <IssueCover
+            demoMode={demoMode}
+            loading={!demoMode && isLoading}
+            number={cover?.number}
+            title={cover?.title}
+            dek={cover?.dek}
+            publishedLabel={cover?.publishedLabel}
+          />
+          {demoMode && <IssueContents />}
+        </>
+      )}
     </PageShell>
   );
 }

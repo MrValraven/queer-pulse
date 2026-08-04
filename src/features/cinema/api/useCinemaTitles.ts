@@ -8,6 +8,8 @@ export interface CinemaTitlesResult {
   titles: CinemaTitleCard[];
   isLoading: boolean;
   isError: boolean;
+  /** Re-run the catalogue fetch — wired to the error state's "Try again". */
+  refetch: () => void;
 }
 
 /**
@@ -37,5 +39,6 @@ export function useCinemaTitles(): CinemaTitlesResult {
     titles: query.data ?? [],
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

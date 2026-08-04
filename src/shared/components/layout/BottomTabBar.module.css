@@ -25,6 +25,14 @@
   padding-right: env(safe-area-inset-right);
 }
 
+/* Hidden while a conversation is open on a phone (MessagesPage sets
+   `data-messages-thread`), so the chat composer owns the bottom edge instead of
+   stacking under a second bottom bar — the WhatsApp/Telegram in-thread pattern.
+   The two-pane range (768–860px) never sets the signal, so the bar stays. */
+:global(html[data-messages-thread="true"]) .bar {
+  display: none;
+}
+
 .tab {
   display: flex;
   flex-direction: column;
@@ -60,6 +68,21 @@
   width: 22px;
   height: 22px;
   flex: none;
+}
+
+/* The You tab's avatar sits in the same slot as the sibling .icon glyphs.
+   Avatar's own `size={24}` prop sizes the circle itself (a hair larger than
+   the 22px icon glyphs reads intentional for a photo, not a mismatch); this
+   rule only keeps it from shrinking in the flex column, same as .icon's
+   flex: none. Active state can't rely on the tab's color swap — a photo
+   doesn't recolor — so it gets a ring in the same accent the label uses. */
+.tabAvatar {
+  flex: none;
+}
+
+.tabActive .tabAvatar {
+  box-shadow: 0 0 0 2px var(--accent);
+  border-radius: 50%;
 }
 
 .label {

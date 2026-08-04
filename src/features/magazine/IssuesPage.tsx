@@ -21,8 +21,8 @@ import { useIssues } from "./api/useIssues";
 const ARCHIVE_SKELETON_COUNT = 8;
 
 const ISSUE = routes.issue;
-/** The hardcoded "current issue" showcase below never varies by mode — see
- *  `IssueCover`'s doc comment for the same "no backend analogue" pattern. */
+/** The hardcoded "current issue" showcase (`CurrentIssueSection`) is fabricated
+ *  issue-09 copy with no backend analogue, so it renders in demo mode only. */
 const CURRENT_ISSUE_NUMBER = "09";
 const CURRENT_ISSUE_PUBLISHED = new Date(2026, 5, 6);
 
@@ -40,8 +40,8 @@ interface Issue {
 }
 /**
  * Content: this is the same shape `useIssues()` returns in live mode (see
- * `issuesList = liveIssues ?? ISSUES` below) — every field here is the
- * issue's own editorial record, so none of it is translated.
+ * `issuesList = demoMode ? ISSUES : (liveIssues ?? [])` below) — every field
+ * here is the issue's own editorial record, so none of it is translated.
  */
 const ISSUES: Issue[] = [
   {
@@ -206,7 +206,7 @@ function IssueRowSkeleton() {
   );
 }
 
-function IssuesHero() {
+function IssuesHero({ demoMode }: { demoMode: boolean }) {
   const { t } = useTranslation();
   return (
     <section className={styles.hero}>
@@ -219,28 +219,32 @@ function IssuesHero() {
           />
         </h1>
         <p className={styles.dek}>{t("magazine:issues.heroDek")}</p>
-        <div className={styles.metaRow}>
-          <span>
-            <b>
-              <em>9</em>
-            </b>
-            {t("magazine:issues.stats.issuesPublished", { count: 9 })}
-          </span>
-          <span>
-            <b>108</b>
-            {t("magazine:issues.stats.articlesArchived", { count: 108 })}
-          </span>
-          <span>
-            <b>52</b>
-            {t("magazine:issues.stats.contributorsAllTime", { count: 52 })}
-          </span>
-          <span>
-            <b>
-              <em>11</em>
-            </b>
-            {t("magazine:issues.stats.languagesTranslated", { count: 11 })}
-          </span>
-        </div>
+        {/* All-time archive counts are fabricated — there's no aggregate
+            endpoint behind them, so they stay demo-only. */}
+        {demoMode && (
+          <div className={styles.metaRow}>
+            <span>
+              <b>
+                <em>9</em>
+              </b>
+              {t("magazine:issues.stats.issuesPublished", { count: 9 })}
+            </span>
+            <span>
+              <b>108</b>
+              {t("magazine:issues.stats.articlesArchived", { count: 108 })}
+            </span>
+            <span>
+              <b>52</b>
+              {t("magazine:issues.stats.contributorsAllTime", { count: 52 })}
+            </span>
+            <span>
+              <b>
+                <em>11</em>
+              </b>
+              {t("magazine:issues.stats.languagesTranslated", { count: 11 })}
+            </span>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -446,8 +450,11 @@ export function IssuesPage() {
     <PageShell>
       <MagazineMasthead active="issues" />
       <div className={styles.page}>
-        <IssuesHero />
-        <CurrentIssueSection />
+        <IssuesHero demoMode={demoMode} />
+        {/* The current-issue showcase hardcodes issue 09's title/dek/stats and
+            has no backend analogue — demo-only. In live the archive grid below
+            already surfaces the real current issue (flagged `current`). */}
+        {demoMode && <CurrentIssueSection />}
         <ArchiveSection
           view={view}
           onView={setView}

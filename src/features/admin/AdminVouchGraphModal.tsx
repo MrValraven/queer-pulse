@@ -129,6 +129,14 @@ function Legend({ mode }: { mode: VouchMode }) {
         {t("admin:vouchGraph.legend.plain.mutual")}
       </span>
       <span className={styles.leg}>
+        <span className={styles.legLineInvite} />
+        {t("admin:vouchGraph.legend.plain.invited")}
+      </span>
+      <span className={styles.leg}>
+        <span className={styles.legLineVouch} />
+        {t("admin:vouchGraph.legend.plain.vouched")}
+      </span>
+      <span className={styles.leg}>
         <span className={styles.legHatch} />
         {t("admin:vouchGraph.legend.plain.anonymous")}
       </span>
@@ -295,6 +303,7 @@ function GraphModalInner({
             onCite={() =>
               showToast(t("admin:vouchGraph.modal.citeToast"), "success")
             }
+            onCloseSheet={() => g.select(null)}
           />
         </div>
 

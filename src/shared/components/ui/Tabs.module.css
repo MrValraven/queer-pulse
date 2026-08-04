@@ -7,6 +7,7 @@
   flex-wrap: wrap;
 }
 .tab {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -23,6 +24,19 @@
     background 0.16s var(--ease),
     color 0.16s var(--ease),
     border-color 0.16s var(--ease);
+}
+/* Touch: tabs stay visually compact (~34px pill, ~38px underline) but get a
+   centered ≥44px-tall hit strip. Vertical-only keeps neighbouring tabs from
+   overlapping; the strip height covers both variants regardless of padding. */
+@media (pointer: coarse) {
+  .tab::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
 }
 @media (hover: hover) {
   .tab:hover {

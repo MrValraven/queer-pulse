@@ -135,6 +135,12 @@ export function ConnectionsProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, connected: slugs }));
   }, []);
 
+  // Roll an optimistic move back to a snapshot captured before the action, so a
+  // failed accept/decline doesn't leave the member showing as connected locally.
+  const restore = useCallback((snapshot: ConnectionsState) => {
+    setState(snapshot);
+  }, []);
+
   const value = useMemo<ConnectionsStore>(
     () => ({
       ...state,
@@ -146,8 +152,9 @@ export function ConnectionsProvider({ children }: { children: ReactNode }) {
       withdraw,
       sendRequest,
       setConnected,
+      restore,
     }),
-    [state, accept, decline, withdraw, sendRequest, setConnected],
+    [state, accept, decline, withdraw, sendRequest, setConnected, restore],
   );
 
   return (

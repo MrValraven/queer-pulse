@@ -25,8 +25,28 @@
   transform: rotate(180deg);
 }
 
+/* Grid-rows accordion: the track animates 0fr→1fr while the inner wrapper
+   clips overflow (min-height:0 lets the track actually collapse). Only the
+   grid track animates — no layout thrash on paint. */
 .panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-base) var(--ease);
+}
+.panelOpen {
+  grid-template-rows: 1fr;
+}
+
+.panelInner {
+  min-height: 0;
+  overflow: hidden;
   padding: 0 0 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
 }
 
 .colHead {

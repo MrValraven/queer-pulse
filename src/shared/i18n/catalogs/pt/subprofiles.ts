@@ -85,6 +85,9 @@ export const subprofiles: Catalog = {
   "kind.performer": "Performance",
   "kind.photographer": "Fotografia",
   "kind.videomaker": "Videografia",
+  "kind.chef": "Cozinha",
+  "kind.mixologist": "Coquetelaria",
+  "kind.therapist": "Terapia",
   "kind.generic": "Generalista",
 
   // Rótulos de secção — `section` também é persistido (SubprofileItemDTO.section).
@@ -110,6 +113,11 @@ export const subprofiles: Catalog = {
   "section.appearances": "Aparições",
   "section.series": "Séries",
   "section.videos": "Vídeos",
+  "section.menus": "Menus",
+  "section.residencies": "Residências",
+  "section.cocktails": "Cocktails",
+  "section.specialisms": "Especialidades",
+  "section.credentials": "Credenciais",
   "section.showcase": "Mostra",
   "section.links": "Links",
 
@@ -228,6 +236,8 @@ export const subprofiles: Catalog = {
   "mine.deleteModalConfirm": "Eliminar",
   "mine.deleteModalDeleting": "A eliminar…",
   "mine.deleteModalBody": "Isto não pode ser desfeito.",
+  "mine.deleteModalBodyShared":
+    "Isto remove {name} para todos os {n} coproprietários — não pode ser desfeito.",
   "mine.rowEdit": "Editar",
   "mine.rowDelete": "Eliminar",
   "mine.endorsementCount_one": "{count} endosso",
@@ -283,6 +293,8 @@ export const subprofiles: Catalog = {
 
   "metaForm.save": "Guardar detalhes",
   "metaForm.saving": "A guardar…",
+  "metaForm.leaveConfirm":
+    "Tens alterações por guardar neste perfil. Queres sair sem as guardar?",
   "metaForm.toastSaved": "Detalhes guardados",
   "metaForm.toastError":
     "Não conseguimos guardar isso agora — tenta outra vez.",
@@ -426,6 +438,11 @@ export const subprofiles: Catalog = {
     "A guardar parado o que normalmente passa depressa demais.",
   "template.tagline.videomaker":
     "Imagens em movimento, feitas com intenção.",
+  "template.tagline.chef":
+    "A cozinhar para mesas queer, um prato de cada vez.",
+  "template.tagline.mixologist": "Bebidas preparadas para a noite que vem aí.",
+  "template.tagline.therapist":
+    "Um espaço afirmativo para pensar as coisas com calma.",
   "template.tagline.generic": "Umas quantas coisas que fiz, reunidas aqui.",
 
   // Exemplos por secção (usados tanto pelo modelo inicial como pelo botão
@@ -503,6 +520,21 @@ export const subprofiles: Catalog = {
   "template.section.showcase.item1.title": "Algo que fiz",
   "template.section.showcase.item1.subtitle": "Uma etiqueta curta para isto",
   "template.section.showcase.item1.desc": "O que é e porque está aqui.",
+  "template.section.menus.item1.title": "Um menu ou prato de assinatura",
+  "template.section.menus.item1.subtitle": "O evento ou o espaço",
+  "template.section.menus.item1.desc":
+    "O que leva e a história por trás do prato.",
+  "template.section.residencies.item1.title": "Uma residência ou pop-up",
+  "template.section.residencies.item1.subtitle": "Onde aconteceu",
+  "template.section.cocktails.item1.title": "Um cocktail de assinatura",
+  "template.section.cocktails.item1.subtitle": "O destilado base",
+  "template.section.cocktails.item1.desc":
+    "O que leva e o que o inspirou.",
+  "template.section.specialisms.item1.title": "Uma área com que trabalho",
+  "template.section.specialisms.item1.desc":
+    "Para quem é e como a abordas.",
+  "template.section.credentials.item1.title": "Uma qualificação ou formação",
+  "template.section.credentials.item1.subtitle": "A entidade que a atribui",
 
   // Campo de imagem (ImageUploadField)
   "imageUpload.defaultPlaceholder": "Imagem",
@@ -607,4 +639,50 @@ export const subprofiles: Catalog = {
   "affiliationsEditor.saved": "Links guardados",
   "affiliationsEditor.error":
     "Não conseguimos guardar isso agora — tenta outra vez.",
+
+  // Painel de responsáveis conjuntos (SubprofileOwnersPanel, no editor)
+  "owners.title": "Responsáveis conjuntos",
+  "owners.note": "Todas as pessoas aqui podem editar esta persona em conjunto.",
+  "owners.creatorTag": "Criadora",
+  "owners.youTag": "Tu",
+  "owners.pendingHeading": "Convites pendentes",
+  "owners.inviteCta": "Convidar um responsável",
+  "owners.revokeAria": "Revogar o convite a {name}",
+  "owners.toastRevoked": "Convite revogado",
+  "owners.toastRevokeError":
+    "Não conseguimos revogar isso agora — tenta outra vez.",
+  "owners.leaveCta": "Sair da persona",
+  "owners.leaveModalTitle": "Sair desta persona?",
+  "owners.leaveModalBody":
+    "Vais perder a capacidade de a editar. Os outros responsáveis mantêm tudo como está.",
+  "owners.leaveModalKeep": "Ficar",
+  "owners.leaveModalConfirm": "Sair",
+  "owners.leaveModalLeaving": "A sair…",
+  "owners.toastLeft": "Saíste desta persona",
+  "owners.toastLeaveError": "Não conseguimos fazer isso agora — tenta outra vez.",
+
+  // Modal de convite a um responsável (InviteCoOwnerModal)
+  "invite.title": "Convidar um responsável",
+  "invite.sub":
+    "A pessoa vai precisar de aceitar antes de poder gerir esta persona.",
+  "invite.searchPlaceholder": "Procura nas tuas ligações",
+  "invite.searchAria": "Procura nas tuas ligações",
+  "invite.empty": "Não há mais ligações para convidar.",
+  "invite.cta": "Convidar",
+  "invite.inviting": "A convidar…",
+  "invite.toastSent":
+    "Convite enviado — a pessoa vai precisar de aceitar antes de poder gerir esta persona.",
+  "invite.toastError": "Não conseguimos enviar esse convite — tenta outra vez.",
+
+  // Painel de convites recebidos (PersonaInvitesBanner, em MySubprofilesPage)
+  "invites.regionLabel": "Convites para seres responsável conjunta de uma persona",
+  "invites.message": "{inviter} convidou-te para seres responsável conjunta de <em>{persona}</em>",
+  "invites.accept": "Aceitar",
+  "invites.accepting": "A aceitar…",
+  "invites.decline": "Recusar",
+  "invites.declining": "A recusar…",
+  "invites.toastAccepted": "Agora és responsável conjunta de {name}",
+  "invites.toastAcceptError": "Não conseguimos aceitar esse convite — tenta outra vez.",
+  "invites.toastDeclined": "Convite recusado",
+  "invites.toastDeclineError": "Não conseguimos recusar esse convite — tenta outra vez.",
 };

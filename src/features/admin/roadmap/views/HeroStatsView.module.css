@@ -1,0 +1,90 @@
+/* Hero stats editor — a small grid of tiles, each a value + note pair that
+   saves independently on blur. Paper cards on the page's cream background,
+   same radius/border language as the rest of the redesign. */
+
+.view {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 22px 0;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0 0 6px;
+  font-family: var(--serif);
+  font-size: clamp(21px, 2.6vw, 27px);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.title em {
+  color: var(--accent-ink);
+  font-style: italic;
+}
+
+.subtitle {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.previewHint {
+  flex: none;
+  padding-top: 4px;
+  font-size: 12.5px;
+  color: var(--ink-40);
+  white-space: nowrap;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.tile {
+  padding: 18px 18px 10px;
+  border-radius: var(--radius-card, 22px);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.valueField input.valueInput {
+  font-family: var(--serif);
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  padding: 10px 14px;
+}
+
+.noGrowthTheatre {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(var(--jade-rgb), 0.08);
+  border: 1px solid rgba(var(--jade-rgb), 0.25);
+  color: var(--ink-60);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.noGrowthTheatre svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--jade);
+}

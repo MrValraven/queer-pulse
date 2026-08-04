@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import {
   applicationToView,
   deadlineText,
@@ -12,7 +12,7 @@ import {
   postJobStateToCreateJobDto,
 } from "./jobs.adapters";
 import { createFormatters } from "../../../shared/i18n/format";
-import { catalogs } from "../../../shared/i18n/catalogs";
+import { catalogs, loadNamespace } from "../../../shared/i18n/catalogs";
 import type { TFunction } from "../../../shared/i18n/types";
 import type {
   JobApplicationDTO,
@@ -27,9 +27,16 @@ import type { PostJobState } from "../usePostJobForm";
  * A minimal `t` over the real `en` catalog — asserts against the shipped copy
  * rather than a fixture, so a key that goes missing fails here too.
  */
+// The `economy` namespace is now lazily loaded; `beforeAll` swaps in the real
+// catalog (an empty placeholder is present until its chunk resolves).
+let economyCatalog = catalogs.en.economy;
+beforeAll(async () => {
+  economyCatalog = await loadNamespace("en", "economy");
+});
+
 const t: TFunction = (key, options) => {
-  const [ns, path] = key.split(":");
-  const value = catalogs.en[ns as "economy"]?.[path ?? ""] ?? key;
+  const [, path] = key.split(":");
+  const value = economyCatalog?.[path ?? ""] ?? key;
   return Object.entries(options ?? {}).reduce(
     (acc, [token, val]) => acc.replace(`{${token}}`, String(val)),
     value,

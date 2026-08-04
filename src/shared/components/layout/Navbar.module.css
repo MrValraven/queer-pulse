@@ -36,6 +36,41 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
+/* Start cluster: the contextual mobile back chevron + the brand, kept together
+   at the leading edge so the brand doesn't shift when the chevron appears. */
+.navLeft {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+.backButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-strong);
+  transition: background var(--dur-base) var(--ease);
+}
+/* Extend the tap target to ≥44px without growing the 38px visual circle. */
+.backButton::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+}
+@media (hover: hover) {
+  .backButton:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
+}
+
 .bell {
   position: relative;
   display: flex;

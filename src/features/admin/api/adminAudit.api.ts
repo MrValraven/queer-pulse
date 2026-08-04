@@ -20,6 +20,11 @@ export interface AuditFeedRowDTO {
 export interface AuditFeedResponseDTO {
   items: AuditFeedRowDTO[];
   total: number;
+  /** Echoed back from the request — the canonical offset envelope now carries
+   *  the page cursor alongside `total`. The hook already knows the page/size it
+   *  asked for, so it derives `pageCount` from `total` and its own page size. */
+  page: number;
+  pageSize: number;
   moderators: { id: string; name: string }[];
 }
 

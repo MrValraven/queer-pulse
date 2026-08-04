@@ -66,6 +66,7 @@ export function NominateChangemakerSection() {
             type="text"
             autoComplete="off"
             enterKeyHint="send"
+            aria-label={t("community:changemakers.nominate.namePlaceholder")}
             placeholder={t("community:changemakers.nominate.namePlaceholder")}
             value={nominee}
             onChange={(e) => setNominee(e.target.value)}

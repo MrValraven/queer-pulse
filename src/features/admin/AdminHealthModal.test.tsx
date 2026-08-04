@@ -18,11 +18,14 @@ function renderModal(breakdown: [number, number, number | null, number]) {
 }
 
 describe("AdminHealthModal", () => {
-  it("says a null signal is not measured rather than rendering it as zero", () => {
+  it("says a null signal is not measured rather than rendering it as zero", async () => {
     // A zero would read as "this community has terrible sentiment" when the
     // truth is that nothing on the platform measures sentiment at all.
     renderModal([91, 100, null, 90]);
-    expect(screen.getByText("Not measured yet")).toBeInTheDocument();
+    // "Not measured yet" is an `admin:` namespace string, and that namespace
+    // loads as its own async chunk — so await its resolution rather than
+    // querying synchronously (the raw key is on screen for one render first).
+    expect(await screen.findByText("Not measured yet")).toBeInTheDocument();
     expect(screen.queryByText("0")).not.toBeInTheDocument();
   });
 

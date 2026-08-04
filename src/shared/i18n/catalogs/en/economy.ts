@@ -586,7 +586,8 @@ export const economy: Catalog = {
     "Suggestions are reviewed before they're added to the board. Only suggest landlords you or someone you trust has actually rented from.",
   "suggestLandlord.submitting": "Sending…",
   "suggestLandlord.submitCta": "Suggest landlord",
-  "suggestLandlord.success.title": "Thank you. <em>Sent to review.</em>",
+  "suggestLandlord.success.title": "Thank you.",
+  "suggestLandlord.success.em": "Sent to review.",
   "suggestLandlord.success.body":
     "A moderator will look over <strong>{name}</strong> before adding them to the board. We'll let you know if we need anything else.",
   "suggestLandlord.error": "Couldn't send that — mind trying again?",
@@ -614,6 +615,11 @@ export const economy: Catalog = {
   "housingListing.unsaveAriaLabel": "Remove {title} from saved",
   "housingListing.savedToast": "Saved {title}",
   "housingListing.unsavedToast": "Removed {title} from saved",
+  // Fetch-error state (non-404): show a retry rather than silently redirecting.
+  "housingListing.error.title": "We couldn't load this place",
+  "housingListing.error.body":
+    "Something went wrong on our end, not yours. Give it another try in a moment.",
+  "housingListing.error.retry": "Try again",
 
   // ── ReportListingModal ─────────────────────────────────────────────────
   "housingListing.report": "Report",
@@ -1221,6 +1227,10 @@ export const economy: Catalog = {
 
   // ── BarterDetailPage (+ ProposeCard / QuestionModal) ────────────────────
   "barterDetail.back": "← Skill exchange",
+  "barterDetail.emptyLive.title": "This swap isn't live yet",
+  "barterDetail.emptyLive.description":
+    "The skill exchange starts empty at launch and fills with swaps members actually post. There's nothing to show at this link yet.",
+  "barterDetail.emptyLive.cta": "Back to skill exchange",
   "barterDetail.sub.offering":
     "On offer to the community — swap it for something they need.",
   "barterDetail.sub.seeking":
@@ -1720,6 +1730,33 @@ export const economy: Catalog = {
   "applicationStatus.empty.description":
     "When you apply to a job, grant, or opportunity, you'll be able to track every one — and compare offers side by side — right here.",
   "applicationStatus.empty.browseCta": "Browse jobs",
+
+  "applicationStatus.error.title": "We couldn't load your applications",
+  "applicationStatus.error.description":
+    "Something went wrong fetching your applications. Give it a moment and try again — nothing you've sent is lost.",
+
+  // Live-mode tracker chrome — the applied-on subtitle, the status-derived
+  // stages, status lines, and badges the API-backed cards render (the rich
+  // recruiter/interview/offer fiction is demo-only).
+  "applicationStatus.live.appliedOn": "Applied {date}",
+  "applicationStatus.live.action.viewSubmission": "View submission",
+  "applicationStatus.live.stage.submitted": "Submitted",
+  "applicationStatus.live.stage.review": "In review",
+  "applicationStatus.live.stage.decision": "Decision",
+  "applicationStatus.live.stage.offer": "Offer",
+  "applicationStatus.live.stage.declined": "Not this time",
+  "applicationStatus.live.status.submitted":
+    "Sent to the company — you'll see updates here as they respond.",
+  "applicationStatus.live.status.reviewing":
+    "The company is reading your application now.",
+  "applicationStatus.live.status.accepted":
+    "Great news — your application was accepted.",
+  "applicationStatus.live.status.declined":
+    "This one didn't work out. Kept here for your records.",
+  "applicationStatus.live.badge.submitted": "Just sent",
+  "applicationStatus.live.badge.reviewing": "In review",
+  "applicationStatus.live.badge.accepted": "Accepted",
+  "applicationStatus.live.badge.declined": "Closed",
 
   "applicationStatus.card.stepOf": "Step {step} of {total}",
   "applicationStatus.card.whatThisMeans": "What this means",
@@ -2856,6 +2893,13 @@ export const economy: Catalog = {
   "affiliateCompanyModal.confirmCta": "Confirm & continue",
   "affiliateCompanyModal.createErrorToast":
     "We couldn't create that company. Please try again.",
+
+  // ── Coming soon (live mode: honest stand-in for flows with no backend yet) ─
+  "comingSoon.title": "Not live",
+  "comingSoon.em": "just yet.",
+  "comingSoon.body":
+    "This form is part of the preview — it'll connect for real once QueerPulse launches. Nothing you enter here is sent anywhere.",
+  "comingSoon.close": "Got it",
 
   // ── IncubatorModals: CohortApplyModal ────────────────────────────────────
   "incubatorApply.success.title": "Application",

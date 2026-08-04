@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiAward, FiCheck } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useStepGate, useUnsavedChangesGuard } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -40,21 +41,43 @@ export function CreateGatheringPage() {
 
   const isSuccess = step === 6;
   const fill = ((step - 1) / TOTAL_STEPS) * 100;
-  // Step 2 needs a real future date before the organiser can continue; the
-  // final step needs all three confirmations (and no in-flight publish).
-  const dateStepBlocked = step === 2 && !form.dateValid;
-  const publishBlocked =
-    step === TOTAL_STEPS && (!form.allChecked || createEvent.isPending);
-  const nextDisabled = dateStepBlocked || publishBlocked;
-  const nextHint = dateStepBlocked
-    ? t("gatherings:create.nav.dateHint")
-    : step === TOTAL_STEPS && !form.allChecked
-      ? t("gatherings:create.nav.publishHint")
-      : undefined;
+  // Per-step required-field gate (steps are 1-indexed here): step 1 needs a
+  // format and a name so a nameless/typeless gathering can never advance or
+  // publish; step 2 needs a real future start; the final step needs all three
+  // confirmations. Every other step is optional and always advanceable.
+  const missingByStep = useMemo<Record<number, readonly unknown[]>>(
+    () => ({
+      1: [!form.type, !form.title.trim()].filter(Boolean),
+      2: form.dateValid ? [] : ["date"],
+      [TOTAL_STEPS]: form.allChecked ? [] : ["confirm"],
+    }),
+    [form.type, form.title, form.dateValid, form.allChecked],
+  );
+  const canAdvanceStep = useStepGate(missingByStep);
+
+  // Warn before an in-progress gathering is abandoned. Inactive once we reach the
+  // success step (step 6) so the success CTAs — and, in live mode, the automatic
+  // redirect to the new event page — navigate freely without a false prompt.
+  useUnsavedChangesGuard({
+    active: form.dirty && step !== 6 && !createEvent.isPending,
+    confirmMessage: t("gatherings:create.nav.leaveConfirm"),
+  });
+
+  const publishPending = step === TOTAL_STEPS && createEvent.isPending;
+  const nextDisabled = !canAdvanceStep(step) || publishPending;
+  const nextHint =
+    step === 1 && !canAdvanceStep(1)
+      ? t("gatherings:create.nav.detailsHint")
+      : step === 2 && !form.dateValid
+        ? t("gatherings:create.nav.dateHint")
+        : step === TOTAL_STEPS && !form.allChecked
+          ? t("gatherings:create.nav.publishHint")
+          : undefined;
 
   const next = () => {
+    if (!canAdvanceStep(step)) return;
     if (step === TOTAL_STEPS) {
-      if (!form.allChecked || createEvent.isPending) return;
+      if (createEvent.isPending) return;
       // Only celebrate on a real success. The old code advanced to the success
       // step and toasted "published" synchronously, before the request settled,
       // so a rejected create (e.g. a 400) still showed the success panel and its
@@ -72,7 +95,6 @@ export function CreateGatheringPage() {
       });
       return;
     }
-    if (dateStepBlocked) return;
     setStep((s) => s + 1);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };

@@ -3,13 +3,14 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { LANDLORDS } from "../landlords";
 import { getLandlords } from "./landlord.api";
 import { cardDtoToLandlordCard, type LandlordCard } from "./landlord.adapters";
+import { economyKeys } from "./economyKeys";
 
 /** Landlord board cards. Demo → the LANDLORDS fixture (as cards); live →
  * GET /landlords. Empty array is a valid live state. */
 export function useLandlords() {
   const { demoMode } = useDemoMode();
   return useQuery<LandlordCard[]>({
-    queryKey: ["landlords", demoMode],
+    queryKey: economyKeys.landlords(demoMode),
     initialData: demoMode ? LANDLORDS.map(toCard) : undefined,
     placeholderData: keepPreviousData,
     queryFn: async () => {

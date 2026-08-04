@@ -42,7 +42,12 @@ export function InviteLandingPage() {
   // Once a valid invite resolves, stash what the join flow needs to survive the
   // hop into onboarding: the code (to redeem) and the welcome payload (inviter +
   // vouch), since the in-memory invite is gone after a full-page auth redirect.
-  const validInvite = invite?.status === "valid" ? invite : undefined;
+  // An inviter who's no longer active never counts as joinable, even if the
+  // status is still `valid` — so we don't stash a join off a ghost.
+  const validInvite =
+    invite?.status === "valid" && invite.inviterActive !== false
+      ? invite
+      : undefined;
   useEffect(() => {
     if (!validInvite) return;
     rememberPendingInvite(validInvite.code);
@@ -79,8 +84,15 @@ export function InviteLandingPage() {
   // While GET /invites/:code resolves the inviter.
   if (isLoading) return <InviteLoadingView />;
 
-  // Bad, used, expired or revoked code → the expired/invalid screen.
-  if (isError || !invite || invite.status !== "valid")
+  // Bad, used, expired or revoked code — or a valid code whose inviter is no
+  // longer active — → the tailored invite-state screen (reasonFromInvite picks
+  // the right copy, including the "inviter inactive" state).
+  if (
+    isError ||
+    !invite ||
+    invite.status !== "valid" ||
+    invite.inviterActive === false
+  )
     return <InviteExpiredPage invite={invite ?? undefined} />;
 
   if (joined) return <OnboardingPage />;

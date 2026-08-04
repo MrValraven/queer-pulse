@@ -8,10 +8,58 @@
   margin: 20px 0 24px;
 }
 
+/* Search + status pills, the right-hand controls of the "All members" tab. */
+.allControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+}
+
+/* ── Name search ─────────────────────────────────────────── */
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  height: 36px;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  color: var(--ink-40);
+  transition: border-color 0.18s var(--ease);
+}
+
+.search:focus-within {
+  border-color: var(--line-strong);
+  color: var(--ink-60);
+}
+
+.searchInput {
+  width: 190px;
+  max-width: 100%;
+  border: none;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: var(--ink-40);
+}
+
+/* Hide the native clear affordance so the field matches the pill styling. */
+.searchInput::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .filterPill {

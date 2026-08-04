@@ -63,6 +63,39 @@
   border-radius: 6px;
   padding: 2px 7px;
 }
+/* The Esc hint is meaningless without a physical keyboard — hide it on touch,
+   where the close button below is the exit. */
+@media (hover: none) {
+  .kbd {
+    display: none;
+  }
+}
+
+.close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  margin: -6px -6px -6px 0;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  color: var(--ink-40);
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: color 0.18s var(--ease);
+}
+@media (hover: hover) {
+  .close:hover {
+    color: var(--ink);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .close {
+    transition: none;
+  }
+}
 
 .recents {
   display: flex;
@@ -82,6 +115,13 @@
   transition:
     border-color 0.18s var(--ease),
     color 0.18s var(--ease);
+}
+/* Full 44px recent-search targets on touch, without enlarging the pill ink. */
+@media (pointer: coarse) {
+  .recentChip {
+    min-height: 44px;
+    padding-block: 11px;
+  }
 }
 
 @media (hover: hover) {

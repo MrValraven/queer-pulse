@@ -2,6 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getCompanies } from "./companies.api";
 import { companyCardToEmployer, type EmployerCard } from "./companies.adapters";
+import { economyKeys } from "./economyKeys";
 
 /**
  * The mock employers grid, with each row's profile slug resolved by name.
@@ -56,7 +57,7 @@ export function useCompanies(): CompaniesResult {
   const { demoMode } = useDemoMode();
 
   const query = useInfiniteQuery<CompaniesPageVM>({
-    queryKey: ["companies", demoMode],
+    queryKey: economyKeys.companies(demoMode),
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {

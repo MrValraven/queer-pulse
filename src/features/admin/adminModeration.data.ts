@@ -98,6 +98,15 @@ export interface ReportDetail {
   redactionNote?: string;
   thread: ThreadMsg[];
   people: DrawerPerson[];
+  /** Listing-dispute enrichment (listing subjects only): the disputer's
+   *  free-text reason for challenging the listing. Rendered when non-empty. */
+  disputeReason?: string;
+  /** Listing-dispute enrichment (listing subjects only): the ownership/claim
+   *  evidence the lister pasted into the listing. Rendered when non-empty. */
+  listingEvidence?: string;
+  /** Listing-dispute enrichment (listing subjects only): an off-account contact
+   *  address the disputer left, so a moderator can reach them. Non-empty only. */
+  contactEmail?: string;
 }
 
 /** Real per-member counts, resolved via `admin:moderation.priorReports.*` at
@@ -321,6 +330,49 @@ export const OTHER_REPORTS: ModReport[] = [
     reportedName: "@coin_daily",
     age: "8h",
     risk: { tone: "amber", key: "admin:moderation.risk.medium" },
+  },
+  {
+    id: "r-listing-dispute",
+    severity: "medium",
+    category: "Listing dispute",
+    chips: [
+      { tone: "amber", labelKey: "admin:moderation.chip.listingDispute" },
+    ],
+    title: "Ownership of a café listing is being disputed",
+    preview:
+      'A member says the "Rosa Amarga" café listing was claimed by someone who does not run it, and has offered proof they are the actual owner.',
+    reporterName: "Bruna T.",
+    reportedName: "rosa-amarga-cafe",
+    community: "Porto Queers",
+    age: "11h",
+    risk: { tone: "amber", key: "admin:moderation.risk.medium" },
+    detail: {
+      contentAuthor: "rosa-amarga-cafe · listed by @lreis",
+      excerpt:
+        '"Rosa Amarga — a queer-owned café in Cedofeita. Coffee, zines and a small library. Open Wed–Sun."',
+      disputeReason:
+        "I've run Rosa Amarga since we opened in 2022. This listing was created by someone who used to work a few shifts here and left last year — they've listed themselves as the owner and set the contact to their own number. I'd like the listing corrected and the ownership handed back to the café.",
+      listingEvidence:
+        "Business registration (NIF 5xx xxx xxx) in my name, the lease for the Rua de Cedofeita space, and the café's verified Instagram (@rosaamarga) which links back to this profile. Happy to send scans to the safety team.",
+      contactEmail: "ines@rosaamarga.pt",
+      thread: [],
+      people: [
+        {
+          role: "Reporter",
+          name: "Bruna T.",
+          initials: "BT",
+          tone: "plum",
+          meta: "Member since 2022 · says she is the café's actual owner.",
+        },
+        {
+          role: "Lister",
+          name: "@lreis",
+          initials: "LR",
+          tone: "coral",
+          meta: "Created the listing 3 weeks ago · former staff member.",
+        },
+      ],
+    },
   },
   {
     id: "r-offtopic",

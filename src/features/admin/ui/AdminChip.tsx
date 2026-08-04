@@ -2,7 +2,14 @@ import type { ReactNode } from "react";
 import styles from "./adminUi.module.css";
 
 export type AdminTone =
-  "danger" | "coral" | "amber" | "jade" | "violet" | "plum" | "ghost";
+  | "danger"
+  | "coral"
+  | "amber"
+  | "warn"
+  | "jade"
+  | "violet"
+  | "plum"
+  | "ghost";
 
 export function AdminChip({
   tone = "plum",

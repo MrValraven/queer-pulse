@@ -1,7 +1,10 @@
+import { FiHeart } from "react-icons/fi";
 import { Navigate, useParams } from "react-router-dom";
 import { routes } from "../../../app/routeMap";
+import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { PageShell } from "../../../shared/components/layout";
 import {
+  EmptyState,
   FadeIn,
   SkeletonCard,
   SkeletonLine,
@@ -24,11 +27,37 @@ import styles from "./TherapistProfilePage.module.css";
 export function TherapistProfilePage() {
   const { id } = useParams();
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad();
   const therapist = THERAPISTS.find(
     (therapistEntry) => therapistEntry.id === id,
   );
   const profile = id ? THERAPIST_PROFILES[id] : undefined;
+
+  // Live mode has no therapist backend, so the whole profile — bio, booking
+  // calendar, fees — is fabricated. Never render a bookable "verified" therapist
+  // against the real API; show an honest coming-soon instead (demo keeps mock).
+  if (!demoMode) {
+    return (
+      <PageShell>
+        <PageMeta
+          title={t("resources:therapists.meta.title")}
+          description={t("resources:therapists.meta.description")}
+        />
+        <div className={styles.page}>
+          <EmptyState
+            icon={<FiHeart />}
+            title={t("resources:therapistProfilePage.live.title")}
+            description={t("resources:therapistProfilePage.live.body")}
+            action={{
+              label: t("resources:therapistProfilePage.live.cta"),
+              to: routes.mentalHealth,
+            }}
+          />
+        </div>
+      </PageShell>
+    );
+  }
 
   if (!therapist || !profile) {
     return <Navigate to={routes.mentalHealth} replace />;

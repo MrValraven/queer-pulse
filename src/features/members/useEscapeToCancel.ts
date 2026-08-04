@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileEdit } from "../../app/providers/useProfile";
 
 /**
  * Discards the editor on Escape while `enabled` — used by the edit bar. Routes
@@ -9,7 +9,7 @@ import { useProfile } from "../../app/providers/useProfile";
  * (react-refresh/only-export-components).
  */
 export function useEscapeToCancel(enabled: boolean) {
-  const { requestCancel } = useProfile();
+  const { requestCancel } = useProfileEdit();
   useEffect(() => {
     if (!enabled) return;
     function onKey(event: globalThis.KeyboardEvent) {

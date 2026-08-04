@@ -54,6 +54,7 @@ export function SearchPage() {
                 type="text"
                 enterKeyHint="search"
                 placeholder={t("members:search.hero.placeholder")}
+                aria-label={t("members:search.hero.placeholder")}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => {

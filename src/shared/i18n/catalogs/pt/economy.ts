@@ -603,7 +603,8 @@ export const economy: Catalog = {
     "As sugestões são revistas antes de entrarem no quadro. Sugere apenas pessoas proprietárias com quem tu ou alguém de confiança já arrendou.",
   "suggestLandlord.submitting": "A enviar…",
   "suggestLandlord.submitCta": "Sugerir pessoa proprietária",
-  "suggestLandlord.success.title": "Obrigada. <em>Enviado para revisão.</em>",
+  "suggestLandlord.success.title": "Obrigada.",
+  "suggestLandlord.success.em": "Enviado para revisão.",
   "suggestLandlord.success.body":
     "Uma pessoa moderadora vai rever <strong>{name}</strong> antes de a adicionar ao quadro. Avisamos-te se precisarmos de mais alguma coisa.",
   "suggestLandlord.error": "Não foi possível enviar — importas-te de tentar outra vez?",
@@ -631,6 +632,12 @@ export const economy: Catalog = {
   "housingListing.unsaveAriaLabel": "Remover {title} das guardadas",
   "housingListing.savedToast": "{title} guardada",
   "housingListing.unsavedToast": "{title} removida das guardadas",
+  // Estado de erro de carregamento (não 404): mostra tentar de novo em vez de
+  // redirecionar em silêncio.
+  "housingListing.error.title": "Não conseguimos carregar este espaço",
+  "housingListing.error.body":
+    "Algo correu mal do nosso lado, não do teu. Tenta de novo daqui a um instante.",
+  "housingListing.error.retry": "Tentar de novo",
 
   // ── ReportListingModal ─────────────────────────────────────────────────
   "housingListing.report": "Denunciar",
@@ -1244,6 +1251,10 @@ export const economy: Catalog = {
 
   // ── BarterDetailPage (+ ProposeCard / QuestionModal) ────────────────────
   "barterDetail.back": "← Troca de competências",
+  "barterDetail.emptyLive.title": "Esta troca ainda não está ativa",
+  "barterDetail.emptyLive.description":
+    "A troca de competências começa vazia no lançamento e enche-se com as trocas que os membros realmente publicam. Ainda não há nada para mostrar neste link.",
+  "barterDetail.emptyLive.cta": "Voltar à troca de competências",
   "barterDetail.sub.offering":
     "Disponível para a comunidade — troca por algo que a pessoa precisa.",
   "barterDetail.sub.seeking": "À procura disto — e a oferecer algo em troca.",
@@ -1726,6 +1737,34 @@ export const economy: Catalog = {
   "applicationStatus.empty.description":
     "Quando te candidatares a uma vaga, bolsa ou oportunidade, vais poder acompanhar todas — e comparar ofertas lado a lado — aqui mesmo.",
   "applicationStatus.empty.browseCta": "Explorar vagas",
+
+  "applicationStatus.error.title": "Não foi possível carregar as tuas candidaturas",
+  "applicationStatus.error.description":
+    "Algo correu mal ao obter as tuas candidaturas. Espera um momento e tenta de novo — nada do que enviaste se perdeu.",
+
+  // Elementos do acompanhamento em modo real — o subtítulo da data de
+  // candidatura, as etapas derivadas do estado, as linhas de estado e os
+  // selos que os cartões vindos da API mostram (a ficção detalhada de
+  // recrutador/entrevista/oferta é apenas do modo demo).
+  "applicationStatus.live.appliedOn": "Candidatura em {date}",
+  "applicationStatus.live.action.viewSubmission": "Ver candidatura",
+  "applicationStatus.live.stage.submitted": "Enviada",
+  "applicationStatus.live.stage.review": "Em análise",
+  "applicationStatus.live.stage.decision": "Decisão",
+  "applicationStatus.live.stage.offer": "Oferta",
+  "applicationStatus.live.stage.declined": "Desta vez não",
+  "applicationStatus.live.status.submitted":
+    "Enviada à empresa — vais ver as atualizações aqui à medida que responderem.",
+  "applicationStatus.live.status.reviewing":
+    "A empresa está a ler a tua candidatura agora.",
+  "applicationStatus.live.status.accepted":
+    "Boas notícias — a tua candidatura foi aceite.",
+  "applicationStatus.live.status.declined":
+    "Desta vez não resultou. Fica guardada aqui para o teu registo.",
+  "applicationStatus.live.badge.submitted": "Acabada de enviar",
+  "applicationStatus.live.badge.reviewing": "Em análise",
+  "applicationStatus.live.badge.accepted": "Aceite",
+  "applicationStatus.live.badge.declined": "Fechada",
 
   "applicationStatus.card.stepOf": "Passo {step} de {total}",
   "applicationStatus.card.whatThisMeans": "O que isto significa",
@@ -2867,6 +2906,13 @@ export const economy: Catalog = {
   "affiliateCompanyModal.confirmCta": "Confirmar e continuar",
   "affiliateCompanyModal.createErrorToast":
     "Não foi possível criar essa empresa. Tenta novamente.",
+
+  // ── Coming soon (live mode: honest stand-in for flows with no backend yet) ─
+  "comingSoon.title": "Ainda não está",
+  "comingSoon.em": "ativo.",
+  "comingSoon.body":
+    "Este formulário faz parte da pré-visualização — vai ligar-se a sério quando a QueerPulse arrancar. Nada do que escreveres aqui é enviado para lado nenhum.",
+  "comingSoon.close": "Percebido",
 
   // ── IncubatorModals: CohortApplyModal ────────────────────────────────────
   "incubatorApply.success.title": "Candidatura",

@@ -94,7 +94,7 @@ export function StudioCheckoutPage() {
               id="co-card"
               className={s.coInput}
               inputMode="numeric"
-              placeholder="1234 5678 9012 3456"
+              placeholder={t("studio:checkout.cardPlaceholder")}
               required
             />
           </div>
@@ -106,7 +106,7 @@ export function StudioCheckoutPage() {
               <input
                 id="co-exp"
                 className={s.coInput}
-                placeholder="MM / YY"
+                placeholder={t("studio:checkout.expiryPlaceholder")}
                 required
               />
             </div>

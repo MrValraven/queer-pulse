@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { FiAlertCircle } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -14,6 +15,7 @@ export function PostJobStepDetails({
   showErrors: boolean;
 }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   const { state, patch } = form;
   const titleMissing = showErrors && !state.title.trim();
   const descMissing = showErrors && !state.description.trim();
@@ -39,7 +41,7 @@ export function PostJobStepDetails({
             .filter(Boolean)
             .join(" ")}
         >
-          <div className={styles.label}>
+          <label className={styles.label} htmlFor={`${fieldId}-title`}>
             {t("economy:postJob.field.title")}{" "}
             <span className={styles.req}>*</span>
             <span
@@ -55,8 +57,9 @@ export function PostJobStepDetails({
                 max: TITLE_MAX,
               })}
             </span>
-          </div>
+          </label>
           <input
+            id={`${fieldId}-title`}
             className={styles.input}
             type="text"
             maxLength={90}
@@ -75,7 +78,7 @@ export function PostJobStepDetails({
             .filter(Boolean)
             .join(" ")}
         >
-          <div className={styles.label}>
+          <label className={styles.label} htmlFor={`${fieldId}-desc`}>
             {t("economy:postJob.step2.lookingForLabel")}{" "}
             <span className={styles.req}>*</span>
             <span className={styles.counter}>
@@ -83,8 +86,9 @@ export function PostJobStepDetails({
                 count: state.description.length,
               })}
             </span>
-          </div>
+          </label>
           <textarea
+            id={`${fieldId}-desc`}
             className={styles.textarea}
             value={state.description}
             onChange={(e) => patch({ description: e.target.value })}
@@ -106,10 +110,11 @@ export function PostJobStepDetails({
         </div>
         <div className={styles.fieldRow} style={{ marginTop: 12 }}>
           <div className={styles.field}>
-            <div className={styles.label}>
+            <label className={styles.label} htmlFor={`${fieldId}-deadline`}>
               {t("economy:postJob.step2.applyBy")}
-            </div>
+            </label>
             <input
+              id={`${fieldId}-deadline`}
               className={styles.input}
               type="date"
               value={state.deadline}
@@ -117,10 +122,11 @@ export function PostJobStepDetails({
             />
           </div>
           <div className={styles.field}>
-            <div className={styles.label}>
+            <label className={styles.label} htmlFor={`${fieldId}-start`}>
               {t("economy:postJob.step2.startDate")}
-            </div>
+            </label>
             <input
+              id={`${fieldId}-start`}
               className={styles.input}
               type="text"
               value={state.startDate}

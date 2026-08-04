@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiCheck, FiMessageCircle } from "react-icons/fi";
-import { Avatar, SearchInput } from "../../shared/components/ui";
+import { Avatar, Button, SearchInput } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMemberContact } from "../connect/useMemberContact";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { RosterMember } from "./community.model";
+import type { PulsePaging } from "./api/useCommunityPosts";
 import { photoOf } from "./communityPeople";
 import { alsoIn } from "./communityConnections";
 import { RoleBadge } from "./CommunityBadges";
@@ -52,10 +53,15 @@ export function RosterTab({
   roster,
   total,
   slug,
+  paging,
 }: {
   roster: RosterMember[];
   total: number;
   slug: string;
+  /** Live-mode pagination for the roster; inert in demo (`hasNextPage: false`).
+   *  Search below filters only the members loaded so far — "Load more" widens
+   *  what search can find, same trade-off as any paginated-then-searched list. */
+  paging: PulsePaging;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -147,6 +153,27 @@ export function RosterTab({
           count: total,
         })}
       </p>
+      {/* Search filters only the members loaded so far — flag it when more
+          pages remain so a thin result isn't mistaken for the whole roster. */}
+      {q.trim() && paging.hasNextPage && (
+        <p className={styles.searchScopeNote}>
+          {t("communities:detail.roster.searchScopeNote")}
+        </p>
+      )}
+      {paging.hasNextPage && (
+        <div className={styles.loadMoreRoster}>
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={paging.isFetchingNextPage}
+            onClick={paging.fetchNextPage}
+          >
+            {paging.isFetchingNextPage
+              ? t("communities:detail.roster.loadingMore")
+              : t("communities:detail.roster.loadMoreCta")}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

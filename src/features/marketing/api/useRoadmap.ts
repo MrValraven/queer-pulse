@@ -2,8 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getRoadmap, type RoadmapResponseDTO } from "./roadmap.api";
 import type {
+  BacklogItem,
   BuildingItem,
   IdeaItem,
+  NotBuildingItem,
   PlannedItem,
   ShippedItem,
 } from "../roadmap.data";
@@ -14,11 +16,15 @@ import type {
 // default to "") lives in this one adapter, never in the page or cards.
 
 export interface RoadmapView {
-  heroStats: { label: string; jade?: boolean }[];
+  heroStats: { label: string; value?: string; note?: string; jade?: boolean }[];
   shipped: ShippedItem[];
   building: BuildingItem[];
   planned: PlannedItem[];
+  /** "Someday" — public backlog-column items. */
+  backlog: BacklogItem[];
   topIdeas: IdeaItem[];
+  /** "Not building this, and why" — dismissed ideas with a public reason. */
+  notBuilding: NotBuildingItem[];
   /** True while the initial live fetch is in flight (demo resolves instantly). */
   loading: boolean;
 }
@@ -28,15 +34,16 @@ export interface RoadmapView {
 // demand inside the demo queryFn (see below) so it never ships in the live
 // bundle.
 async function buildDemo(): Promise<Omit<RoadmapView, "loading">> {
-  const { HERO_STATS, SHIPPED, BUILDING, PLANNED, TOP_IDEAS } = await import(
-    "../roadmap.data"
-  );
+  const { HERO_STATS, SHIPPED, BUILDING, PLANNED, BACKLOG, TOP_IDEAS, NOT_BUILDING } =
+    await import("../roadmap.data");
   return {
     heroStats: HERO_STATS,
     shipped: SHIPPED,
     building: BUILDING,
     planned: PLANNED,
+    backlog: BACKLOG,
     topIdeas: TOP_IDEAS.map((idea) => ({ ...idea })),
+    notBuilding: NOT_BUILDING,
   };
 }
 
@@ -44,6 +51,8 @@ function fromDto(dto: RoadmapResponseDTO): Omit<RoadmapView, "loading"> {
   return {
     heroStats: dto.heroStats.map((stat) => ({
       label: stat.label,
+      value: stat.value,
+      note: stat.note,
       jade: stat.jade,
     })),
     shipped: dto.shipped.map((item) => ({ ...item, date: item.date ?? "" })),
@@ -53,11 +62,13 @@ function fromDto(dto: RoadmapResponseDTO): Omit<RoadmapView, "loading"> {
       eta: item.eta ?? "",
     })),
     planned: dto.planned,
+    backlog: dto.backlog,
     topIdeas: dto.topIdeas.map((idea) => ({
       id: idea.id,
       text: idea.text,
       votes: idea.votes,
     })),
+    notBuilding: dto.notBuilding,
   };
 }
 
@@ -66,14 +77,17 @@ const EMPTY: Omit<RoadmapView, "loading"> = {
   shipped: [],
   building: [],
   planned: [],
+  backlog: [],
   topIdeas: [],
+  notBuilding: [],
 };
 
 /**
  * Data source for the public `/about/roadmap` page — hero stats plus the
- * shipped / building / planned columns and the top-voted ideas list. Demo
- * returns the page's own mocks; live calls `GET /roadmap` once (the admin
- * owns the content, this hook is the public read).
+ * shipped / building / planned / backlog columns, the top-voted ideas list,
+ * and the not-building list. Demo returns the page's own mocks; live calls
+ * `GET /roadmap` once (the admin owns the content, this hook is the public
+ * read).
  */
 export function useRoadmap(): RoadmapView {
   const { demoMode } = useDemoMode();

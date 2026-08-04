@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom";
+import { Navigate, Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { ParamRedirect } from "../../app/routes.redirects";
 import { auth, lazyNamed } from "../../app/routeHelpers";
@@ -31,8 +31,18 @@ export function authRoutes() {
         path={routes.requestInvite}
         element={auth(<RequestInvitePage />)}
       />
-      <Route path="/auth/onboarding" element={auth(<OnboardingPage />)} />
-      <Route path={routes.welcome} element={auth(<OnboardingPage />)} />
+      <Route path={routes.onboarding} element={auth(<OnboardingPage />)} />
+      {/* `/auth/welcome` is a legacy alias for the one-time onboarding wizard.
+          It must not mount the wizard a second time: the one-time gate in
+          authGate.ts matches only `routes.onboarding`, so an already-onboarded
+          member hitting the alias would replay the whole flow (silently
+          re-submitting profile fields). Redirect to the canonical path instead,
+          so a single route — and a single gate — governs onboarding. Demo mode
+          stays explorable because the gate only bounces in live mode. */}
+      <Route
+        path={routes.welcome}
+        element={<Navigate to={routes.onboarding} replace />}
+      />
       <Route path={routes.welcomeTour} element={auth(<WelcomeTourPage />)} />
       <Route
         path="/invite/:code"

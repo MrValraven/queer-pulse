@@ -11,12 +11,12 @@ import {
   PerksLadder,
 } from "./BadgesSections";
 import { useRecognition } from "./api/useRecognition";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileData } from "../../app/providers/useProfile";
 import styles from "./BadgesPage.module.css";
 
 export function BadgesPage() {
   const { t } = useTranslation();
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   // Gate the recognition-driven surfaces on the hook's real-data flags so live
   // mode shows loading/error/empty states instead of the zeroed placeholder
   // (and never the demo fixtures). Demo mode always has real data.

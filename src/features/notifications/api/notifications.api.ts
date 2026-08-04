@@ -40,20 +40,24 @@ export interface NotificationDTO {
 }
 
 /**
- * Paginated list envelope the backend wraps notification rows in. This already
- * matches what `NotificationsService.list()` returns.
+ * Paginated list envelope the backend wraps notification rows in — the repo's
+ * canonical offset envelope (`{ items, total, page, pageSize }`), matching what
+ * `NotificationsService.list()` returns. The feed here only consumes the first
+ * page's `items`; `total`/`page`/`pageSize` are carried for when the list grows
+ * a "load more".
  */
 interface NotificationsPage {
   items: NotificationDTO[];
+  total: number;
   page: number;
-  hasMore: boolean;
+  pageSize: number;
 }
 
 /**
  * GET /notifications — optionally filtered to unread only. The backend answers
- * with a `{ items, page, hasMore }` envelope, so we unwrap to the row array the
- * hooks expect. Tolerates a bare array too, in case the endpoint is ever
- * un-paginated.
+ * with a `{ items, total, page, pageSize }` envelope, so we unwrap to the row
+ * array the hooks expect. Tolerates a bare array too, in case the endpoint is
+ * ever un-paginated.
  */
 export const getNotifications = async (
   unread?: boolean,

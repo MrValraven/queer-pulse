@@ -1,0 +1,45 @@
+/* Pull-to-refresh wrapper. `overscroll-behavior: contain` stops scroll
+   chaining into whatever sits behind this container AND disables the
+   browser's own native pull-to-refresh on the y-axis, so it never fires
+   alongside ours. `touch-action: pan-y` keeps native vertical scrolling
+   live — our gesture only produces a visible pull once the container is
+   already at scrollTop 0, where there's nothing left to scroll natively. */
+.container {
+  position: relative;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  height: 100%;
+}
+
+/* Sits underneath .content in DOM/paint order at rest (content's opaque
+   background fully covers it) and is uncovered as .content translates down
+   by the eased pull distance. Never receives pointer events itself — the
+   gesture is bound to .container. */
+.indicator {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.arrow {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--jade);
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: block;
+}
+
+.spinnerJade {
+  color: var(--jade);
+}
+
+.content {
+  position: relative;
+  background: var(--cream);
+}

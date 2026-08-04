@@ -5,6 +5,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { getWorkshops } from "./workshops.api";
 import { workshopDtoToWorkshop } from "./workshops.adapters";
+import { economyKeys } from "./economyKeys";
 import { WORKSHOPS, type Workshop } from "../workshops.data";
 
 export interface WorkshopsResult {
@@ -58,7 +59,7 @@ export function useWorkshops(params: { cat?: string } = {}): WorkshopsResult {
   const fmt = useFormat();
 
   const query = useInfiniteQuery<WorkshopsPageVM>({
-    queryKey: ["workshops", demoMode, language, params],
+    queryKey: economyKeys.workshops(demoMode, language, params),
     // `loggedIn` is false while the session is still being determined, so this
     // also parks the fetch until GET /auth/me resolves rather than racing it.
     enabled: !demoMode && loggedIn,

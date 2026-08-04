@@ -5,6 +5,7 @@ import {
   Button,
   EmptyState,
   FadeIn,
+  FeatureHelp,
   Outro,
   Reveal,
   SkeletonLine,
@@ -88,7 +89,8 @@ export function CommunitiesPage() {
             <Translation
               i18nKey="communities:discover.hero.title"
               components={{ em: <em /> }}
-            />
+            />{" "}
+            <FeatureHelp id="communities.hub" />
           </Reveal>
           <Reveal as="p" className={styles.lede} delay={120}>
             {t("communities:discover.hero.lead")}

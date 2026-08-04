@@ -1,5 +1,10 @@
 import { FiShield } from "react-icons/fi";
-import { CheckLine, FormField, Toggle } from "../../../shared/components/ui";
+import {
+  CheckLine,
+  FormField,
+  RadioCardGroup,
+  Toggle,
+} from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
@@ -29,29 +34,26 @@ function RadioStack({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={styles.stack} role="radiogroup" aria-label={label}>
-      {options.map((o) => {
-        const on = value === o.id;
-        return (
-          <button
-            key={o.id}
-            type="button"
-            role="radio"
-            aria-checked={on}
-            className={[styles.radioOpt, on && styles.optOn]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={() => onChange(o.id)}
-          >
+    <RadioCardGroup
+      className={styles.stack}
+      optionClassName={styles.radioOpt}
+      checkedClassName={styles.optOn}
+      ariaLabel={label}
+      value={value}
+      onChange={onChange}
+      options={options.map((o) => ({
+        id: o.id,
+        render: (
+          <>
             <span className={styles.roDot} aria-hidden />
             <span className={styles.radioTxt}>
               <b>{t(o.labelKey)}</b>
               <span>{t(o.descKey)}</span>
             </span>
-          </button>
-        );
-      })}
-    </div>
+          </>
+        ),
+      }))}
+    />
   );
 }
 

@@ -7,6 +7,7 @@ import {
   EmptyState,
   ImageSlot,
   Reveal,
+  Tag,
 } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -26,6 +27,7 @@ import {
   COMMUNITY,
   LETTERS,
   ARCHIVE,
+  FEATURED_DECK,
 } from "./magazinePage.data";
 
 /** A translated heading that carries the coral `<em>` emphasis run. */
@@ -125,6 +127,39 @@ function FeaturedEssay() {
       <div className={styles.fePull}>
         "The community did not follow my identity. My identity followed the
         community."
+      </div>
+    </Reveal>
+  );
+}
+
+/** Discovery block promoting the interactive slide deck. */
+function FeaturedDeck() {
+  const { t } = useTranslation();
+  return (
+    <Reveal className={styles.featuredDeck}>
+      <div className={styles.fdMedia}>
+        <ImageSlot
+          src={FEATURED_DECK.cover}
+          alt={FEATURED_DECK.coverDesc}
+          tint="jade"
+          height={220}
+          radius={16}
+          placeholder={FEATURED_DECK.coverDesc}
+        />
+      </div>
+      <div>
+        <Tag>{t("magazine:deck.badge")}</Tag>
+        <h2 className={styles.fdTitle}>{FEATURED_DECK.title}</h2>
+        <div className={styles.feByline}>
+          By <AuthorLink name={FEATURED_DECK.byline} />
+        </div>
+        <p className={styles.feExcerpt}>{FEATURED_DECK.excerpt}</p>
+        <Link
+          className={styles.feRead}
+          to={`${routes.deck}?id=${FEATURED_DECK.id}`}
+        >
+          {t("magazine:deck.start")} <span>→</span>
+        </Link>
       </div>
     </Reveal>
   );
@@ -242,6 +277,7 @@ export function MagazineSections() {
         </section>
 
         <FeaturedEssay />
+        <FeaturedDeck />
 
         <section className={styles.section}>
           <SectionHead

@@ -139,6 +139,17 @@ export function modReportDtoToView(dto: ModReportDTO): ModReport {
         anon: p.handle == null && p.role.toLowerCase().includes("reporter"),
       })),
     };
+    // Listing-dispute enrichment (listing subjects only) — hand-mapped by the
+    // backend onto the detail; pass it straight through when present.
+    if (dto.detail.disputeReason) {
+      view.detail.disputeReason = dto.detail.disputeReason;
+    }
+    if (dto.detail.listingEvidence) {
+      view.detail.listingEvidence = dto.detail.listingEvidence;
+    }
+    if (dto.detail.contactEmail) {
+      view.detail.contactEmail = dto.detail.contactEmail;
+    }
   }
   return view;
 }

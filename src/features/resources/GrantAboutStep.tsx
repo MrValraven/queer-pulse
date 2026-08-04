@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -17,6 +18,7 @@ export function AboutStep({
   toggleCheck: (n: number) => void;
 }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   return (
     <>
       <div className={styles.stepTitle}>
@@ -28,30 +30,36 @@ export function AboutStep({
       <p className={styles.stepSub}>
         {t("resources:microGrants.apply.about.stepSub")}
       </p>
-      <label className={styles.label}>
+      <label className={styles.label} htmlFor={`${fieldId}-name`}>
         {t("resources:microGrants.apply.about.nameLabel")}
       </label>
       <input
+        id={`${fieldId}-name`}
         className={styles.input}
         type="text"
         placeholder={t("resources:microGrants.apply.about.namePlaceholder")}
         value={appName}
         onChange={(e) => setAppName(e.target.value)}
       />
-      <label className={styles.label}>
+      <label className={styles.label} htmlFor={`${fieldId}-connection`}>
         {t("resources:microGrants.apply.about.connectionLabel")}
       </label>
       <textarea
+        id={`${fieldId}-connection`}
         className={styles.textarea}
         placeholder={t(
           "resources:microGrants.apply.about.connectionPlaceholder",
         )}
         style={{ minHeight: 90 }}
       />
-      <label className={styles.label}>
+      <label className={styles.label} htmlFor={`${fieldId}-prior`}>
         {t("resources:microGrants.apply.about.priorGrantLabel")}
       </label>
-      <select className={styles.select} defaultValue="">
+      <select
+        id={`${fieldId}-prior`}
+        className={styles.select}
+        defaultValue=""
+      >
         <option value="">
           {t("resources:microGrants.apply.about.priorGrant.select")}
         </option>

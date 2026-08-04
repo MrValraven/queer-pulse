@@ -61,6 +61,7 @@ export const ANCHOR = {
   address: "lb-address",
   hours: "lb-hours",
   social: "lb-social",
+  photos: "lb-photos",
   rel: "lb-rel",
   ownerName: "lb-owner-name",
   ownerRole: "lb-owner-role",
@@ -281,24 +282,95 @@ export const DAYS: DayDef[] = [
   { id: "Sun", labelKey: "marketing:listBusiness.day.sun" },
 ];
 
-export const NEIGHBOURHOODS = [
-  "Anjos",
-  "Arroios",
-  "Graça",
-  "Alfama",
-  "Mouraria",
-  "Príncipe Real",
-  "Bairro Alto",
-  "Cais do Sodré",
-  "Santos",
-  "Estrela",
-  "Campo de Ourique",
-  "Alvalade",
-  "Marvila",
-  "Beato",
-  "Intendente",
-  "Elsewhere in Lisbon",
-];
+/* ---------- City seam (item #15) ----------
+   The whole wizard is Lisbon-only today. Everything city-specific lives on this
+   single `CITY` object so a second city becomes a data change, not a code
+   change: the neighbourhood dropdown, the fallback map centroids used when a
+   member can't paste a Google Maps link (item #1), the default timezone the
+   directory reads hours against, and the "Elsewhere in <city>" catch-all.
+   Consumers still import `NEIGHBOURHOODS` (derived below) unchanged. */
+export interface LatLng {
+  latitude: number;
+  longitude: number;
+}
+export interface CityConfig {
+  id: string;
+  name: string;
+  defaultTimezone: string;
+  centroid: LatLng;
+  /** Named neighbourhoods (the catch-all is appended separately). */
+  neighbourhoods: string[];
+  /** Stable, locale-independent value for the trailing "anywhere else in this
+   *  city" option (submitted to the backend / fed to `neighbourhoodCentroid`).
+   *  Its user-facing label is localised via `hoodLabel`, not this string. */
+  elsewhereLabel: string;
+  /** Approx centroid per named neighbourhood — the geocode fallback pin. */
+  neighbourhoodCentroids: Record<string, LatLng>;
+}
+
+export const CITY: CityConfig = {
+  id: "lisbon",
+  name: "Lisbon",
+  defaultTimezone: "Europe/Lisbon",
+  centroid: { latitude: 38.7223, longitude: -9.1393 },
+  neighbourhoods: [
+    "Anjos",
+    "Arroios",
+    "Graça",
+    "Alfama",
+    "Mouraria",
+    "Príncipe Real",
+    "Bairro Alto",
+    "Cais do Sodré",
+    "Santos",
+    "Estrela",
+    "Campo de Ourique",
+    "Alvalade",
+    "Marvila",
+    "Beato",
+    "Intendente",
+  ],
+  elsewhereLabel: "Elsewhere in Lisbon",
+  neighbourhoodCentroids: {
+    Anjos: { latitude: 38.7267, longitude: -9.135 },
+    Arroios: { latitude: 38.7295, longitude: -9.135 },
+    Graça: { latitude: 38.7186, longitude: -9.13 },
+    Alfama: { latitude: 38.712, longitude: -9.129 },
+    Mouraria: { latitude: 38.7155, longitude: -9.1355 },
+    "Príncipe Real": { latitude: 38.7175, longitude: -9.149 },
+    "Bairro Alto": { latitude: 38.712, longitude: -9.146 },
+    "Cais do Sodré": { latitude: 38.7065, longitude: -9.145 },
+    Santos: { latitude: 38.7075, longitude: -9.156 },
+    Estrela: { latitude: 38.7135, longitude: -9.16 },
+    "Campo de Ourique": { latitude: 38.7185, longitude: -9.166 },
+    Alvalade: { latitude: 38.753, longitude: -9.144 },
+    Marvila: { latitude: 38.738, longitude: -9.101 },
+    Beato: { latitude: 38.733, longitude: -9.109 },
+    Intendente: { latitude: 38.722, longitude: -9.1355 },
+  },
+};
+
+/** Neighbourhood dropdown options: the named list + the "Elsewhere" catch-all.
+ *  Derived from `CITY` so a new city is one config edit. */
+export const NEIGHBOURHOODS = [...CITY.neighbourhoods, CITY.elsewhereLabel];
+
+/** Display label for a neighbourhood option. Named neighbourhoods are proper
+ *  nouns rendered as-is; the trailing catch-all resolves to the shared
+ *  `auth:tour.neighbourhood.elsewhere` catalog string so it localises. Value in
+ *  `NEIGHBOURHOODS` stays stable (`CITY.elsewhereLabel`) regardless of locale. */
+export function hoodLabel(t: TFunction, hood: string): string {
+  return hood === CITY.elsewhereLabel
+    ? t("auth:tour.neighbourhood.elsewhere")
+    : hood;
+}
+
+/** Best-effort fallback coordinate for a neighbourhood, so a member who can't
+ *  paste a Google Maps link still gets a draggable pin near the right area
+ *  instead of being stuck at the location step (item #1). Unknown/"Elsewhere"
+ *  falls back to the city centroid. */
+export function neighbourhoodCentroid(hood: string): LatLng {
+  return CITY.neighbourhoodCentroids[hood] ?? CITY.centroid;
+}
 
 /** Seed directory used only for live duplicate detection on the name field. */
 export interface SeedPlace {
@@ -340,13 +412,23 @@ export function witLine(text = ""): WitLine {
   return { id: `wit-${witSeq}`, text };
 }
 
-export interface DayHours {
-  open: boolean;
+/* ---------- Opening hours (item #6 — split intervals + overnight) ----------
+   A day can be closed, or open across one or two intervals. Each interval is a
+   `from`–`to` pair in "HH:MM"; when `to <= from` the interval runs past midnight
+   (a late bar), which is VALID. Two intervals model a lunch-break closure
+   (e.g. 12:00–15:00 · 19:00–23:00). Legacy `{ open, from, to }` rows are healed
+   by `normalizeDayHours`. */
+export interface HoursInterval {
   from: string;
   to: string;
 }
+export interface DayHours {
+  open: boolean;
+  intervals: HoursInterval[];
+}
 
 export type PhotoKey = "wide" | "d1" | "d2" | "vibe";
+export const PHOTO_KEYS: PhotoKey[] = ["wide", "d1", "d2", "vibe"];
 
 export interface ListingDraft {
   path: ListingPath | "";
@@ -398,12 +480,117 @@ export interface PendingListing extends ListingDraft {
 
 /* ---------- Helpers ---------- */
 
+/** A sensible default single interval for a freshly-opened day. */
+export function defaultInterval(): HoursInterval {
+  return { from: "09:00", to: "18:00" };
+}
+
 export function emptyHours(): Record<string, DayHours> {
-  const h: Record<string, DayHours> = {};
-  DAYS.forEach((d) => {
-    h[d.id] = { open: false, from: "09:00", to: "18:00" };
+  const hours: Record<string, DayHours> = {};
+  DAYS.forEach((day) => {
+    hours[day.id] = { open: false, intervals: [defaultInterval()] };
   });
-  return h;
+  return hours;
+}
+
+/** Heal one day into the interval shape — accepts the new shape, the legacy
+ *  `{ open, from, to }` shape, or junk (→ a closed default day). Idempotent. */
+export function normalizeDayHours(raw: unknown): DayHours {
+  if (raw && typeof raw === "object") {
+    const record = raw as Record<string, unknown>;
+    if (Array.isArray(record.intervals)) {
+      const intervals = record.intervals
+        .filter(
+          (interval): interval is HoursInterval =>
+            !!interval &&
+            typeof (interval as HoursInterval).from === "string" &&
+            typeof (interval as HoursInterval).to === "string",
+        )
+        .map((interval) => ({ from: interval.from, to: interval.to }));
+      return {
+        open: Boolean(record.open),
+        intervals: intervals.length ? intervals : [defaultInterval()],
+      };
+    }
+    if (typeof record.from === "string" && typeof record.to === "string") {
+      return {
+        open: Boolean(record.open),
+        intervals: [{ from: record.from, to: record.to }],
+      };
+    }
+  }
+  return { open: false, intervals: [defaultInterval()] };
+}
+
+/** Heal a whole week's hours map (tolerates missing days + legacy rows). */
+export function normalizeHours(
+  raw: Record<string, unknown> | null | undefined,
+): Record<string, DayHours> {
+  const hours: Record<string, DayHours> = {};
+  DAYS.forEach((day) => {
+    hours[day.id] = normalizeDayHours(raw?.[day.id]);
+  });
+  return hours;
+}
+
+/** True when this interval closes after midnight (spills into the next day). */
+export function isOvernight(interval: HoursInterval): boolean {
+  return interval.to <= interval.from;
+}
+
+/** A compact human string for one day's hours, or null when closed/blank —
+ *  e.g. "12:00–15:00 · 19:00–02:00". Used by every read-only hours display. */
+export function formatDayHours(day: DayHours | undefined): string | null {
+  if (!day?.open) return null;
+  const label = day.intervals
+    .filter((interval) => interval.from && interval.to)
+    .map((interval) => `${interval.from}–${interval.to}`)
+    .join(" · ");
+  return label || null;
+}
+
+function toMinutes(hourMinute: string): number {
+  const [hour, minute] = hourMinute.split(":");
+  return Number(hour) * 60 + Number(minute);
+}
+
+/** Two same-day intervals overlap? Overnight intervals are treated as reaching
+ *  midnight for this check, which is enough to catch obvious editor mistakes. */
+function intervalsOverlap(first: HoursInterval, second: HoursInterval): boolean {
+  const span = (interval: HoursInterval): [number, number] => {
+    const start = toMinutes(interval.from);
+    const end = isOvernight(interval) ? 24 * 60 : toMinutes(interval.to);
+    return [start, end];
+  };
+  const [firstStart, firstEnd] = span(first);
+  const [secondStart, secondEnd] = span(second);
+  return firstStart < secondEnd && secondStart < firstEnd;
+}
+
+/** Validity of one day for the step gate + inline editor warnings. An open day
+ *  needs ≥1 interval, every interval needs both times, a zero-length interval
+ *  (`to === from`) is invalid, `to < from` (overnight) is valid, and two
+ *  intervals must not overlap. A closed day is always valid. */
+export function dayHoursValid(day: DayHours): boolean {
+  if (!day.open) return true;
+  if (!day.intervals.length) return false;
+  const wellFormed = day.intervals.every(
+    (interval) => interval.from && interval.to && interval.from !== interval.to,
+  );
+  if (!wellFormed) return false;
+  if (day.intervals.length === 2)
+    return !intervalsOverlap(day.intervals[0]!, day.intervals[1]!);
+  return true;
+}
+
+/** Every open day across the week is well-formed. */
+export function hoursValid(hours: Record<string, DayHours>): boolean {
+  return DAYS.every((day) => dayHoursValid(hours[day.id] ?? { open: false, intervals: [] }));
+}
+
+/** At least one day is open somewhere in the week. */
+export function anyDayOpen(hours: Record<string, DayHours>): boolean {
+  return DAYS.some((day) => hours[day.id]?.open);
 }
 
 export function slugify(s: string): string {

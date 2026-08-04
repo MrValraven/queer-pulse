@@ -147,6 +147,8 @@ export const admin: Catalog = {
     "Não são linhas numa tabela — são pessoas em quem alguém confiou o suficiente para as trazer. Pronomes e nomes escolhidos são os únicos nomes mostrados aqui. {count} pessoas estão à espera de serem acolhidas.",
   "members.header.exportCta": "Exportar",
   "members.filterAriaLabel": "Filtrar pessoas",
+  "members.searchPlaceholder": "Pesquisar por nome…",
+  "members.searchAriaLabel": "Pesquisar pessoas por nome ou pronome",
   "members.tabs.all": "Todas as pessoas",
   "members.tabs.pending": "Verificação pendente",
   "members.tabs.flagged": "Sinalizadas",
@@ -218,8 +220,19 @@ export const admin: Catalog = {
   "members.drawer.restrictedToast":
     "Restrição aplicada a {name} · {duration} · {scope} — aviso enviado",
   "members.drawer.restrictionUndoneToast": "Restrição anulada.",
+  "members.drawer.comingSoonToast":
+    "Esta ação de moderação ainda não está disponível.",
 
   // ── Membros: gestão de papéis (conceder/remover moderador e admin) ────────
+  "members.suspension.sectionTitle": "Suspensão",
+  "members.suspension.description":
+    "Este membro está atualmente suspenso. Levantar a suspensão reativa a conta e restaura o acesso de imediato.",
+  "members.suspension.liftCta": "Levantar suspensão",
+  "members.suspension.liftedToast": "{name} foi reintegrade.",
+  "members.suspension.confirm.title": "Reintegrar {name}?",
+  "members.suspension.confirm.body":
+    "Isto levanta a suspensão de {name} e restaura o acesso total de imediato. Fica registado na trilha de auditoria em teu nome — podes voltar a suspender se necessário.",
+  "members.suspension.confirm.confirmCta": "Levantar suspensão",
   "members.role.sectionTitle": "Papel e permissões",
   "members.role.currentLabel": "Papel atual",
   "members.role.description":
@@ -387,17 +400,133 @@ export const admin: Catalog = {
     "O perfil de espaço seguro de {name} foi guardado",
 
   // ── Fila de espaços do diretório ──────────────────────────────────────────
+  // ── Supervisão de convites (/admin/invites) ──────────────────────────
+  "adminInvites.title": "Supervisão de <em>convites</em>",
+  "adminInvites.header.eyebrow": "Confiança e segurança",
+  "adminInvites.header.title": "Todos os <em>convites</em>",
+  "adminInvites.header.sub":
+    "Todo o grafo de convites vouched: quem enviou o quê, quem aceitou, e o que ainda está aberto. Filtra por estado para auditar as ligações da rede.",
+  "adminInvites.empty": "Nenhum convite corresponde a este filtro ainda.",
+  "adminInvites.filter.all": "Todos",
+  "adminInvites.filter.valid": "Pendentes",
+  "adminInvites.filter.used": "Aceites",
+  "adminInvites.filter.expired": "Expirados",
+  "adminInvites.filter.revoked": "Revogados",
+  "adminInvites.status.valid": "Pendente",
+  "adminInvites.status.used": "Aceite",
+  "adminInvites.status.expired": "Expirado",
+  "adminInvites.status.revoked": "Revogado",
+  "adminInvites.row.from": "De {name}",
+  "adminInvites.row.toMember": "aceite por {name}",
+  "adminInvites.row.toEmail": "enviado para {email}",
+  "adminInvites.row.toAnyone": "link aberto — ainda sem destinatário",
+  "adminInvites.row.sent": "Enviado {date}",
+  "adminInvites.row.expires": "expira {date}",
+  "adminInvites.loadMore": "Carregar mais",
+  "adminInvites.loadingMore": "A carregar…",
+
+  "adminCommissionInterests.title": "Interesse em <em>encomendas</em>",
+  "adminCommissionInterests.header.eyebrow": "Cultura",
+  "adminCommissionInterests.header.title": "Interesse no <em>quadro de encomendas</em>",
+  "adminCommissionInterests.header.sub":
+    "Todos os membros que manifestaram interesse num projeto do Quadro de Encomendas — que briefing, com quem querem trabalhar e a sua nota. Filtra por categoria.",
+  "adminCommissionInterests.empty":
+    "Nenhum interesse corresponde a este filtro ainda.",
+  "adminCommissionInterests.error":
+    "Não foi possível carregar o interesse em encomendas. Tenta novamente.",
+  "adminCommissionInterests.unknownMember": "Um antigo membro",
+  "adminCommissionInterests.filter.all": "Todos",
+  "adminCommissionInterests.row.from": "De {name}",
+  "adminCommissionInterests.row.to": "a contactar {name}",
+  "adminCommissionInterests.row.sent": "Enviado {date}",
+  "adminCommissionInterests.loadMore": "Carregar mais",
+  "adminCommissionInterests.loadingMore": "A carregar…",
+
+  "adminChangemakerNominations.title": "Nomeações de <em>agentes de mudança</em>",
+  "adminChangemakerNominations.header.eyebrow": "Comunidade",
+  "adminChangemakerNominations.header.title": "Quem os membros <em>propõem</em>",
+  "adminChangemakerNominations.header.sub":
+    "Todos os nomes que os membros nomearam para o diretório de Agentes de Mudança, dos mais recentes primeiro — uma lista para rever.",
+  "adminChangemakerNominations.empty": "Ainda não há nomeações.",
+  "adminChangemakerNominations.error":
+    "Não foi possível carregar as nomeações. Tenta novamente.",
+  "adminChangemakerNominations.unknownMember": "Um antigo membro",
+  "adminChangemakerNominations.row.by": "Nomeado por {name}",
+  "adminChangemakerNominations.row.sent": "Enviado {date}",
+  "adminChangemakerNominations.loadMore": "Carregar mais",
+  "adminChangemakerNominations.loadingMore": "A carregar…",
+
+  "adminReadingGroupProposals.title": "Propostas de <em>grupos de leitura</em>",
+  "adminReadingGroupProposals.header.eyebrow": "Comunidade",
+  "adminReadingGroupProposals.header.title": "Grupos que os membros <em>querem criar</em>",
+  "adminReadingGroupProposals.header.sub":
+    "Todos os “Cria o teu grupo” que um membro submeteu — o livro, o porquê, o formato e o tamanho. Filtra por formato.",
+  "adminReadingGroupProposals.empty":
+    "Nenhuma proposta corresponde a este filtro ainda.",
+  "adminReadingGroupProposals.error":
+    "Não foi possível carregar as propostas. Tenta novamente.",
+  "adminReadingGroupProposals.unknownMember": "Um antigo membro",
+  "adminReadingGroupProposals.filter.all": "Todos",
+  "adminReadingGroupProposals.format.In-person": "Presencial",
+  "adminReadingGroupProposals.format.Online": "Online",
+  "adminReadingGroupProposals.format.Either": "Qualquer",
+  "adminReadingGroupProposals.row.by": "Proposto por {name}",
+  "adminReadingGroupProposals.row.maxPeople": "até {count} pessoas",
+  "adminReadingGroupProposals.row.sent": "Enviado {date}",
+  "adminReadingGroupProposals.loadMore": "Carregar mais",
+  "adminReadingGroupProposals.loadingMore": "A carregar…",
+
+  "adminMagazineSubmissions.title": "Propostas de <em>histórias</em>",
+  "adminMagazineSubmissions.header.eyebrow": "Revista",
+  "adminMagazineSubmissions.header.title": "Propostas dos <em>leitores</em>",
+  "adminMagazineSubmissions.header.sub":
+    "Todas as propostas de histórias que os leitores enviaram à revista — o título provisório, o formato, a proposta e o estado. Filtra por estado.",
+  "adminMagazineSubmissions.empty":
+    "Nenhuma proposta corresponde a este filtro ainda.",
+  "adminMagazineSubmissions.error":
+    "Não foi possível carregar as propostas. Tenta novamente.",
+  "adminMagazineSubmissions.unknownMember": "Um antigo membro",
+  "adminMagazineSubmissions.filter.all": "Todas",
+  "adminMagazineSubmissions.filter.submitted": "Submetidas",
+  "adminMagazineSubmissions.filter.in_review": "Em análise",
+  "adminMagazineSubmissions.filter.accepted": "Aceites",
+  "adminMagazineSubmissions.filter.rejected": "Recusadas",
+  "adminMagazineSubmissions.filter.published": "Publicadas",
+  "adminMagazineSubmissions.filter.draft": "Rascunho",
+  "adminMagazineSubmissions.status.submitted": "Submetida",
+  "adminMagazineSubmissions.status.in_review": "Em análise",
+  "adminMagazineSubmissions.status.accepted": "Aceite",
+  "adminMagazineSubmissions.status.rejected": "Recusada",
+  "adminMagazineSubmissions.status.published": "Publicada",
+  "adminMagazineSubmissions.status.draft": "Rascunho",
+  "adminMagazineSubmissions.row.by": "De {name}",
+  "adminMagazineSubmissions.row.sent": "Enviado {date}",
+  "adminMagazineSubmissions.loadMore": "Carregar mais",
+  "adminMagazineSubmissions.loadingMore": "A carregar…",
+
   "adminListings.title": "Espaços do <em>diretório</em>",
   "adminListings.header.eyebrow": "Moderação",
   "adminListings.header.title": "Rever <em>submissões</em>",
   "adminListings.header.sub":
     "Todos os espaços que alguém adicionou ao diretório. Avança um espaço quando estiver pronto, ou devolve-o com uma pergunta rápida.",
-  "adminListings.empty": "Nada nesta fila de momento.",
+  "adminListings.emptyQueue.title": "Já estás em <em>dia</em>",
+  "adminListings.emptyQueue.body":
+    "Todas as submissões já têm o seu lugar — não há nada à tua espera agora. Novas listagens aparecem aqui assim que alguém as adicionar.",
   "adminListings.unknownSubmitter": "Membro desconhecido",
+  "adminListings.row.submittedAgo": "Enviado {time}",
   "adminListings.filter.all": "Todos",
   "adminListings.filter.review": "Em revisão",
   "adminListings.filter.question": "Pergunta rápida",
   "adminListings.filter.live": "Publicado",
+  "adminListings.filter.ariaLabel": "Filtrar por estado",
+  "adminListings.filter.countedLabel": "{label} ({count})",
+  "adminListings.search.placeholder": "Pesquisar por nome, autor ou ref…",
+  "adminListings.search.ariaLabel": "Pesquisar listagens",
+  "adminListings.sort.label": "Ordenar",
+  "adminListings.sort.newest": "Mais recentes",
+  "adminListings.sort.oldest": "Mais antigas",
+  "adminListings.sort.name": "Nome",
+  "adminListings.view.ariaLabel": "Mudar de vista",
   "adminListings.status.review": "Em revisão",
   "adminListings.status.question": "Pergunta rápida",
   "adminListings.status.live": "Publicado",
@@ -424,6 +553,73 @@ export const admin: Catalog = {
     "Esta página não tem nenhum membro associado — não há a quem enviar a pergunta.",
   "adminListings.view.queue": "Submissões",
   "adminListings.view.editSuggestions": "Sugestões de edição",
+  "adminListings.remove.cta": "Remover",
+  "adminListings.actions.moreAriaLabel": "Mais ações para {name}",
+  "adminListings.remove.confirm.title": "Remover {name}?",
+  "adminListings.remove.confirm.body":
+    "Isto elimina a listagem permanentemente e não pode ser desfeito. Quem submeteu não será notificado.",
+  "adminListings.remove.confirm.liveWarning":
+    "Esta listagem está live — removê-la também a retira imediatamente do diretório público.",
+  "adminListings.remove.confirm.confirmCta": "Remover listagem",
+  "adminListings.remove.toast.removed": "{name} foi removido.",
+  "adminListings.loadMoreCta": "Carregar mais",
+  "adminListings.selectAll.ariaLabel": "Selecionar todas as listagens visíveis",
+  "adminListings.selectAll.label": "Selecionar todos os visíveis",
+  "adminListings.selectRow.ariaLabel": "Selecionar {name}",
+  "adminListings.bulk.ariaLabel": "Ações em massa",
+  "adminListings.bulk.selectedCount_one": "{count} selecionada",
+  "adminListings.bulk.selectedCount_other": "{count} selecionadas",
+  "adminListings.bulk.publishCta": "Publicar",
+  "adminListings.bulk.sendBackCta": "Devolver a revisão",
+  "adminListings.bulk.removeCta": "Remover",
+  "adminListings.bulk.clearCta": "Limpar",
+  "adminListings.bulk.capNote": "Seleção limitada a {cap} listagens",
+  "adminListings.bulk.toast.success_one": "{count} listagem atualizada.",
+  "adminListings.bulk.toast.success_other": "{count} listagens atualizadas.",
+  "adminListings.bulk.toast.partial":
+    "{updated} atualizadas, {failed} não foram.",
+  "adminListings.bulk.action.publish": "Não foi possível publicar as listagens selecionadas",
+  "adminListings.bulk.action.sendBack":
+    "Não foi possível devolver as listagens selecionadas a revisão",
+  "adminListings.bulk.action.remove":
+    "Não foi possível remover as listagens selecionadas",
+  "adminListings.bulk.confirmRemove.title_one": "Remover {count} listagem?",
+  "adminListings.bulk.confirmRemove.title_other": "Remover {count} listagens?",
+  "adminListings.bulk.confirmRemove.body_one":
+    "Isto elimina permanentemente a listagem selecionada e não pode ser desfeito. Quem submeteu não será notificado.",
+  "adminListings.bulk.confirmRemove.body_other":
+    "Isto elimina permanentemente as {count} listagens selecionadas e não pode ser desfeito. Quem submeteu não será notificado.",
+  "adminListings.bulk.confirmRemove.reasonLabel": "Motivo (opcional)",
+  "adminListings.bulk.confirmRemove.reasonPlaceholder":
+    "Adiciona uma nota para o registo…",
+  "adminListings.bulk.confirmRemove.confirmCta": "Remover listagens",
+  "adminListings.remove.confirm.reasonLabel": "Motivo (opcional)",
+  "adminListings.remove.confirm.reasonPlaceholder":
+    "Adiciona uma nota para o registo…",
+  "adminListings.sendBack.confirm.title": "Devolver {name} a revisão?",
+  "adminListings.sendBack.confirm.body":
+    "{name} volta para a fila de revisão. Adiciona uma nota rápida se ajudar na próxima passagem.",
+  "adminListings.sendBack.confirm.reasonLabel": "Motivo (opcional)",
+  "adminListings.sendBack.confirm.reasonPlaceholder":
+    "O que precisa de outro olhar…",
+  "adminListings.sendBack.confirm.confirmCta": "Devolver a revisão",
+  // ── Histórico da gaveta + fio de perguntas e respostas ────────────────────────
+  "adminListings.history.eventsHeading": "Histórico de moderação",
+  "adminListings.history.questionsHeading": "Perguntas",
+  "adminListings.history.error":
+    "Não foi possível carregar o histórico desta listagem.",
+  "adminListings.history.emptyEvents": "Ainda sem ações de moderação.",
+  "adminListings.history.emptyQuestions": "Ainda sem perguntas.",
+  "adminListings.history.unknownActor": "Um moderador",
+  "adminListings.history.event.statusChanged":
+    "{actor} moveu isto de {from} para {to}.",
+  "adminListings.history.event.bulkStatus":
+    "{actor} moveu isto de {from} para {to} (ação em massa).",
+  "adminListings.history.event.removed": "{actor} removeu esta listagem.",
+  "adminListings.history.event.questionAsked": "{actor} fez uma pergunta.",
+  "adminListings.history.event.answered": "{actor} respondeu a uma pergunta.",
+  "adminListings.history.askedBy": "Perguntado por {actor}",
+  "adminListings.history.awaitingReply": "A aguardar resposta",
 
   // ── Sugestões de edição ──────────────────────────────────────────────────────
   "editSuggestions.empty": "Sem correções neste filtro, por agora.",
@@ -519,6 +715,9 @@ export const admin: Catalog = {
   "moderation.reportDrawer.threadTitle": "Conversa em redor",
   "moderation.reportDrawer.flaggedTag": "Sinalizado",
   "moderation.reportDrawer.peopleTitle": "Pessoas envolvidas",
+  "moderation.reportDrawer.disputeReasonTitle": "Motivo da contestação",
+  "moderation.reportDrawer.listingEvidenceTitle": "Prova de propriedade",
+  "moderation.reportDrawer.contactEmailTitle": "Contacto de quem contesta",
   "moderation.reportDrawer.contextLoading": "A carregar o contexto da denúncia",
   "moderation.reportDrawer.limitedContext":
     "Esta denúncia chegou sem a conversa completa anexada. Podes na mesma agir a partir do resumo abaixo.",
@@ -617,6 +816,7 @@ export const admin: Catalog = {
   "moderation.chip.vouchAbuse": "Abuso de avais",
   "moderation.chip.spam": "Spam",
   "moderation.chip.offTopic": "Fora do tópico",
+  "moderation.chip.listingDispute": "Contestação de listagem",
   "moderation.chip.appeal": "Recurso",
   "moderation.chip.identityShielded": "Identidade protegida",
   "moderation.chip.appealRestriction": "Recurso · restrição",
@@ -733,6 +933,8 @@ export const admin: Catalog = {
   "communities.settings.addModToast":
     "Procurar pessoas para adicionar à moderação",
   "communities.settings.modRemovedToast": "Removemos {name} da moderação",
+  "communities.settings.comingSoonToast":
+    "A gestão de moderação ainda não está disponível.",
   "communities.settings.secondVouch.title":
     "Exigir um segundo aval para entrar",
   "communities.settings.secondVouch.sub":
@@ -826,6 +1028,8 @@ export const admin: Catalog = {
   "governance.header.publishCta": "Publicar relatório",
   "governance.header.publishToast":
     "Relatório de transparência em fila — as pessoas serão notificadas quando for publicado.",
+  "governance.header.publishComingSoonToast":
+    "A publicação de relatórios de transparência ainda não está disponível.",
   "governance.tabs.finances": "Finanças",
   "governance.tabs.policy": "Política e versões",
   "governance.tabs.audit": "Registo de auditoria",
@@ -911,6 +1115,8 @@ export const admin: Catalog = {
   "governance.audit.metaZero": "Nenhuma entrada corresponde a estes filtros.",
   "governance.audit.metaMatch": "{count} entradas",
   "governance.audit.exportToast": "Exportadas {total} entradas em CSV",
+  "governance.audit.exportComingSoonToast":
+    "A exportação do registo de auditoria ainda não está disponível.",
   "governance.audit.exportCta": "Exportar CSV",
   "governance.audit.columns.moderator": "Pessoa moderadora",
   "governance.audit.columns.action": "Ação",
@@ -1046,20 +1252,34 @@ export const admin: Catalog = {
   "modPanel.settings.rulesPlaceholder": "Escreve as regras, uma por linha…",
   "modPanel.settings.saveCta": "Guardar definições",
   "modPanel.settings.savedToast": "Definições da comunidade guardadas.",
+  "modPanel.settings.errorToast":
+    "Não foi possível concluir. Tenta novamente dentro de momentos.",
+  "modPanel.settings.cancel": "Cancelar",
   "modPanel.settings.dangerZone": "Zona de risco",
   "modPanel.settings.irreversible": "Ações irreversíveis",
   "modPanel.settings.archive.title": "Arquivar comunidade",
   "modPanel.settings.archive.desc":
-    "As pessoas mantêm o histórico, mas novas publicações ficam desativadas.",
+    "Encerra a comunidade. As pessoas mantêm o histórico, mas ela sai da descoberta e ninguém pode publicar.",
   "modPanel.settings.archive.cta": "Arquivar",
-  "modPanel.settings.archive.toast":
-    "Comunidade arquivada. As pessoas foram notificadas.",
+  "modPanel.settings.archive.toast": "Comunidade arquivada.",
+  "modPanel.settings.archive.confirm.title": "Arquivar esta comunidade?",
+  "modPanel.settings.archive.confirm.body":
+    "Isto encerra a comunidade para todas as pessoas. Mantêm o histórico, mas ela desaparece da descoberta e ninguém pode publicar. Só tu, como fundadora, podes fazer isto.",
+  "modPanel.settings.archive.confirm.cta": "Sim, arquivar",
   "modPanel.settings.transfer.title": "Transferir propriedade",
   "modPanel.settings.transfer.desc":
-    "Entrega a comunidade a outra pessoa. Vais perder as permissões de fundadora.",
+    "Entrega a comunidade a outra pessoa. Passas a moderadora.",
   "modPanel.settings.transfer.cta": "Transferir",
   "modPanel.settings.transfer.toast":
-    "Transferência de propriedade iniciada — a nova pessoa responsável vai receber um convite.",
+    "Propriedade transferida. Passaste a moderadora aqui.",
+  "modPanel.settings.transfer.modal.title": "Transferir propriedade",
+  "modPanel.settings.transfer.modal.body":
+    "Escolhe a pessoa que se vai tornar responsável. Ficas como moderadora.",
+  "modPanel.settings.transfer.modal.pickLabel": "Escolhe a nova pessoa responsável",
+  "modPanel.settings.transfer.modal.emptyTitle": "Ainda não há a quem entregar",
+  "modPanel.settings.transfer.modal.emptyDesc":
+    "Precisas de pelo menos mais uma pessoa antes de poder transferir a propriedade.",
+  "modPanel.settings.transfer.modal.cta": "Transferir propriedade",
 
   // ── Rede de avais (visualização da rede de confiança) ─────────────────────
   "vouchGraph.modes.network": "Rede",
@@ -1080,6 +1300,8 @@ export const admin: Catalog = {
   "vouchGraph.legend.plain.trusted": "De confiança",
   "vouchGraph.legend.plain.verified": "Verificada",
   "vouchGraph.legend.plain.mutual": "Aval mútuo",
+  "vouchGraph.legend.plain.invited": "Convidou",
+  "vouchGraph.legend.plain.vouched": "Avalizou depois",
   "vouchGraph.legend.plain.anonymous": "Anónima",
   "vouchGraph.legend.plain.private": "Rede privada",
 
@@ -1088,6 +1310,9 @@ export const admin: Catalog = {
   "vouchGraph.relationship.group": "Mesmo grupo",
   "vouchGraph.relationship.met_through": "Conhecemo-nos na QueerPulse",
   "vouchGraph.relationship.neighbours": "Vizinhança",
+
+  "vouchGraph.edgeKind.invite": "Convidou",
+  "vouchGraph.edgeKind.vouch": "Avalizou depois",
 
   "vouchGraph.modal.ariaLabel": "Rede de confiança",
   "vouchGraph.modal.eyebrow": "Rede de confiança",
@@ -1577,4 +1802,567 @@ export const admin: Catalog = {
   "roadmap.heroStats.autofill.building": "{count} em curso",
   "roadmap.heroStats.autofill.planned_one": "{count} planeado",
   "roadmap.heroStats.autofill.planned_other": "{count} planeados",
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // Reformulação do roteiro (quadro de 9 vistas, painel lateral, vistas
+  // guardadas, modais). Aditivo: as chaves planas roadmap.board.*/
+  // roadmap.ideas.*/roadmap.heroStats.* acima mantêm-se para a interface
+  // atual de 3 separadores até ser migrada; tudo abaixo está isolado sob
+  // novos sub-caminhos para não colidir com nem ler silenciosamente do
+  // conjunto antigo.
+  // ═══════════════════════════════════════════════════════════════════════
+
+  // ── Categorias — partilhadas entre quadro/barra de ferramentas/painel/capacidade
+  "roadmap.categories.resources": "Recursos",
+  "roadmap.categories.gatherings": "Encontros",
+  "roadmap.categories.members": "Pessoas",
+  "roadmap.categories.safety": "Segurança",
+  "roadmap.categories.content": "Conteúdo",
+  "roadmap.categories.messaging": "Mensagens",
+  "roadmap.categories.community": "Comunidade",
+  "roadmap.categories.economy": "Economia",
+  "roadmap.categories.platform": "Plataforma",
+
+  // ── Estrutura da página — eyebrow/título/subtítulo + ações do cabeçalho ──
+  "roadmap.page.eyebrow": "Roteiro",
+  "roadmap.page.title": "Molda o <em>roteiro</em>",
+  "roadmap.page.sub":
+    "Arrasta itens entre colunas, tria o que os membros pediram e controla exatamente o que a página pública mostra. Uma data alterada pede-te sempre um motivo — é esse o objetivo.",
+  "roadmap.page.newItemCta": "Novo item",
+  "roadmap.page.draftDigestCta": "Rascunhar resumo",
+  "roadmap.page.previewPublicCta": "Pré-visualizar página pública",
+  "roadmap.page.auditLogCta": "Registo de auditoria",
+
+  // ── Separadores — 9 vistas. tabs.board/tabs.heroStats acima já têm o
+  // texto certo e são reutilizadas; o resto é novo.
+  "roadmap.tabs.timeline": "Cronologia",
+  "roadmap.tabs.guides": "Guias",
+  "roadmap.tabs.capacity": "Capacidade",
+  "roadmap.tabs.memberIdeas": "Ideias de membros",
+  "roadmap.tabs.notBuilding": "Não vamos construir",
+  "roadmap.tabs.publicPreview": "Pré-visualização pública",
+  "roadmap.tabs.archive": "Arquivo",
+
+  // ── Fiada de vistas guardadas ────────────────────────────────────────────
+  "roadmap.savedViews.label": "Vistas guardadas",
+  "roadmap.savedViews.late": "O que está atrasado",
+  "roadmap.savedViews.unassigned": "Sem responsável, P0/P1",
+  "roadmap.savedViews.blocked": "Bloqueados",
+  "roadmap.savedViews.stale": "Parados",
+  "roadmap.savedViews.guidesOnly": "Só guias",
+  "roadmap.savedViews.needsSafety": "Precisa de revisão de segurança",
+  "roadmap.savedViews.needsFunding": "Precisa de financiamento",
+
+  // ── Barra de ferramentas — pesquisa, filtros, ordenação, densidade ──────
+  "roadmap.toolbar.searchPlaceholder": "Filtrar itens…",
+  "roadmap.toolbar.searchAriaLabel": "Filtrar itens do roteiro",
+  "roadmap.toolbar.categoryAll": "Todas as categorias",
+  "roadmap.toolbar.ownerAll": "Qualquer responsável",
+  "roadmap.toolbar.ownerUnassigned": "Sem responsável",
+  "roadmap.toolbar.sortManual": "Ordem manual",
+  "roadmap.toolbar.sortVotes": "Mais votados",
+  "roadmap.toolbar.sortPriority": "Prioridade",
+  "roadmap.toolbar.sortStale": "Há mais tempo sem atualização",
+  "roadmap.toolbar.denseToggle": "Compacto",
+  "roadmap.toolbar.dragHint": "Arrasta para mover ou reordenar · ? para atalhos",
+
+  // ── Quadro — colunas (backlog é nova; lançado/em construção/planeado
+  // reutilizam as chaves roadmap.board.column.* acima, mesmo texto),
+  // subtítulos, estados vazios/WIP, dicas das etiquetas, avisos, menu.
+  "roadmap.board.column.backlog": "Backlog",
+  "roadmap.board.column.subtitle.backlog": "Estacionado, mas com intenção",
+  "roadmap.board.column.subtitle.planned": "Assumido, ainda por começar",
+  "roadmap.board.column.subtitle.building": "A mexer nisso",
+  "roadmap.board.column.subtitle.shipped": "Ativo para os membros",
+  "roadmap.board.addToColumnAriaLabel": "Adicionar a {column}",
+  "roadmap.board.emptyColumn": "Nada por aqui",
+  "roadmap.board.wipOverMessage":
+    "Acima do limite de {limit} em curso — algo aqui não está mesmo a ser construído.",
+  "roadmap.board.gripAriaLabel": "Arrasta para mover ou reordenar",
+  "roadmap.board.openCardAriaLabel": "Abrir {name}",
+  "roadmap.board.selectCardAriaLabel": "Selecionar {name}",
+  "roadmap.board.flag.requested": "Os membros pediram isto",
+  "roadmap.board.flag.committed": "Assumido — é uma promessa",
+  "roadmap.board.flag.hidden": "Oculto do roteiro público",
+  "roadmap.board.flag.safetyGated":
+    "Precisa de revisão de segurança antes de ficar público",
+  "roadmap.board.flag.spike": "Pico de votos invulgar — possível manipulação",
+  "roadmap.board.flag.slips": "Meta adiada {count}×",
+  "roadmap.board.alert.blocked": "Bloqueado · {reason}",
+  "roadmap.board.alert.waitingOn": "À espera de {name}",
+  "roadmap.board.alert.waitingOnMore": "À espera de {name} +{count}",
+  "roadmap.board.alert.staleUntouched": "Sem tocar há {days} dias",
+  "roadmap.board.menu.moveTo": "Mover para {column}",
+  "roadmap.board.menu.editDetails": "Editar detalhes",
+  "roadmap.board.menu.showPublic": "Mostrar publicamente",
+  "roadmap.board.menu.hidePublic": "Ocultar do público",
+  "roadmap.board.menu.duplicate": "Duplicar",
+  "roadmap.board.menu.notifyVoters_one": "Notificar {count} pessoa que votou…",
+  "roadmap.board.menu.notifyVoters_other":
+    "Notificar {count} pessoas que votaram…",
+  "roadmap.board.menu.archive": "Arquivar",
+
+  // ── Barra de seleção em massa ────────────────────────────────────────────
+  "roadmap.bulkBar.selectedLabel_one": "{count} selecionado",
+  "roadmap.bulkBar.selectedLabel_other": "{count} selecionados",
+  "roadmap.bulkBar.moveToPlaceholder": "Mover para…",
+  "roadmap.bulkBar.showPublicly": "Mostrar publicamente",
+  "roadmap.bulkBar.hide": "Ocultar",
+  "roadmap.bulkBar.archive": "Arquivar",
+  "roadmap.bulkBar.clear": "Limpar",
+  "roadmap.bulkBar.delete": "Eliminar",
+  "roadmap.bulkBar.confirmDelete.title_one": "Eliminar {count} item?",
+  "roadmap.bulkBar.confirmDelete.title_other": "Eliminar {count} itens?",
+  "roadmap.bulkBar.confirmDelete.body_one":
+    "Isto remove permanentemente o item selecionado do roteiro e não pode ser desfeito.",
+  "roadmap.bulkBar.confirmDelete.body_other":
+    "Isto remove permanentemente os {count} itens selecionados do roteiro e não pode ser desfeito.",
+  "roadmap.bulkBar.confirmDelete.confirmCta": "Eliminar itens",
+
+  // ── Painel lateral do item — cabeçalho + rótulos partilhados pela grelha ─
+  "roadmap.drawer.eyebrow": "Item do roteiro",
+  "roadmap.drawer.touchedLabel": "Atualizado há {days}d",
+  "roadmap.drawer.field.title": "Título",
+  "roadmap.drawer.field.status": "Estado",
+  "roadmap.drawer.field.target": "Meta",
+  "roadmap.drawer.field.owner": "Responsável",
+  "roadmap.drawer.field.priority": "Prioridade",
+  "roadmap.drawer.field.scope": "Âmbito",
+  "roadmap.drawer.field.scopeAll": "Todas as comunidades",
+  "roadmap.drawer.saveCta": "Guardar e publicar",
+  "roadmap.drawer.saveEditCta": "Guardar",
+  "roadmap.drawer.archiveCta": "Arquivar",
+  "roadmap.drawer.auditNote":
+    "Cada edição fica registada. Os membros conseguem ver quando uma data mudou e porquê — um roteiro que desliza em silêncio é só uma lista de desejos.",
+  "roadmap.drawer.openAuditCta": "Abrir o registo de auditoria",
+  "roadmap.drawer.deleteConfirm.title": 'Eliminar "{name}"?',
+  "roadmap.drawer.deleteConfirm.body":
+    "Isto remove-o permanentemente do roteiro e não pode ser desfeito.",
+
+  // Painel · secção Compromisso
+  "roadmap.drawer.commitment.title": "Compromisso",
+  "roadmap.drawer.commitment.note":
+    "porque é que os membros deviam acreditar na data",
+  "roadmap.drawer.commitment.confidence.likely.label": "Provável",
+  "roadmap.drawer.commitment.confidence.likely.desc": "Vemos o caminho todo",
+  "roadmap.drawer.commitment.confidence.maybe.label": "Talvez",
+  "roadmap.drawer.commitment.confidence.maybe.desc":
+    "Depende de capacidade ou de dinheiro",
+  "roadmap.drawer.commitment.confidence.hoping.label": "Esperamos",
+  "roadmap.drawer.commitment.confidence.hoping.desc":
+    "Queremos isto, ainda sem caminho definido",
+  "roadmap.drawer.commitment.promiseToggle.title":
+    "É uma promessa, não uma exploração",
+  "roadmap.drawer.commitment.promiseToggle.sub":
+    'Os itens assumidos são identificados como promessas publicamente. Todo o resto lê-se como "queremos fazer isto".',
+  "roadmap.drawer.commitment.slipHistoryTitle":
+    "Histórico de datas — adiada {count}×",
+  "roadmap.drawer.commitment.slipHistoryEmpty":
+    "Nunca mudou. Alterar a meta pede-te sempre um motivo público.",
+
+  // Painel · secção Lista de verificação do guia (guias de saúde/legais)
+  "roadmap.drawer.guide.title": "Lista de verificação do guia",
+  "roadmap.drawer.guide.note": "conteúdo de saúde e legal precisa de revisão",
+  "roadmap.drawer.guide.step.research": "Investigação",
+  "roadmap.drawer.guide.step.draft": "Rascunho",
+  "roadmap.drawer.guide.step.lived": "Revisão por experiência vivida",
+  "roadmap.drawer.guide.step.expert": "Revisão especializada / legal",
+  "roadmap.drawer.guide.step.translate": "Traduzir (PT)",
+  "roadmap.drawer.guide.step.publish": "Publicar",
+  "roadmap.drawer.guide.reviewerLabel": "Revisor",
+  "roadmap.drawer.guide.reviewerPlaceholder": "Quem verificou isto",
+  "roadmap.drawer.guide.credentialLabel": "Credencial",
+  "roadmap.drawer.guide.credentialPlaceholder":
+    "Porque é que tem competência para isto",
+  "roadmap.drawer.guide.reVerifyByLabel": "Reverificar até",
+  "roadmap.drawer.guide.languagesLabel": "Idiomas",
+  "roadmap.drawer.guide.reVerifyWarning":
+    "A reverificação vence em {days} dias. Informação de saúde e legal desatualiza-se — orientação desatualizada é pior do que nenhuma.",
+  "roadmap.drawer.guide.reVerifyOverdue_one":
+    "A reverificação está atrasada há {count} dia.",
+  "roadmap.drawer.guide.reVerifyOverdue_other":
+    "A reverificação está atrasada há {count} dias.",
+  "roadmap.drawer.guide.notAGuideCta": "Isto não é um guia",
+  // Itens sem guia mostram um simples cursor de progresso em vez da lista.
+  "roadmap.drawer.progress.title": "Progresso",
+  "roadmap.drawer.progress.percentDoneLabel": "Percentagem concluída",
+  "roadmap.drawer.progress.trackAsGuideCta":
+    "Acompanhar isto como guia de recursos",
+
+  // Painel · secção Bloqueado
+  "roadmap.drawer.blocked.title": "Bloqueado",
+  "roadmap.drawer.blocked.note":
+    "mostrado publicamente — estar bloqueado não é vergonha nenhuma",
+  "roadmap.drawer.blocked.byLabel": "Bloqueado por",
+  "roadmap.drawer.blocked.byPlaceholder": "Pessoa ou equipa",
+  "roadmap.drawer.blocked.unblockCta": "Desbloquear",
+  "roadmap.drawer.blocked.whyPlaceholder":
+    "O que é que está mesmo a impedir isto?",
+  "roadmap.drawer.blocked.none": "Não está bloqueado.",
+  "roadmap.drawer.blocked.markCta": "Marcar como bloqueado",
+
+  // Painel · secção Dependências
+  "roadmap.drawer.deps.title": "Dependências",
+  "roadmap.drawer.deps.none": "Nada a impedir isto.",
+  "roadmap.drawer.deps.addPlaceholder": "Adicionar uma dependência…",
+  "roadmap.drawer.deps.cannotShip": "Não pode ser lançado antes de {items}.",
+
+  // Painel · secção Capacidade e dinheiro
+  "roadmap.drawer.capacity.title": "Capacidade e dinheiro",
+  "roadmap.drawer.capacity.note":
+    "os itens de voluntariado atrasam-se primeiro — é aritmética, não é culpa de ninguém",
+  "roadmap.drawer.capacity.whoLabel": "Quem está a fazer isto",
+  "roadmap.drawer.capacity.paidOption": "Trabalho pago",
+  "roadmap.drawer.capacity.volunteerOption": "Voluntariado",
+  "roadmap.drawer.capacity.hoursLabel": "Horas / semana",
+  "roadmap.drawer.capacity.costLabel": "Custo",
+  "roadmap.drawer.capacity.cost.none": "Sem custo",
+  "roadmap.drawer.capacity.cost.small": "Pequeno (<500 €)",
+  "roadmap.drawer.capacity.cost.funded": "Financiado",
+  "roadmap.drawer.capacity.cost.needs": "Precisa de financiamento",
+  "roadmap.drawer.capacity.ownerLoadLabel": "Carga do responsável",
+  "roadmap.drawer.capacity.noOwner": "Ninguém é responsável por isto",
+  "roadmap.drawer.capacity.ownerLoadValue": "{hours}h de {cap}h",
+
+  // Painel · secção Visibilidade e segurança
+  "roadmap.drawer.visibility.title": "Visibilidade e segurança",
+  "roadmap.drawer.visibility.publicToggle.title": "Visível no roteiro público",
+  "roadmap.drawer.visibility.publicToggle.sub":
+    "Os membros veem, votam e comentam.",
+  "roadmap.drawer.visibility.requestedToggle.title": "Pedido por membros",
+  "roadmap.drawer.visibility.requestedToggle.sub":
+    "Veio de uma ideia ou de um pedido repetido.",
+  "roadmap.drawer.visibility.safetyLabel": "Revisão de segurança",
+  "roadmap.drawer.visibility.safety.none": "Sem revisão necessária",
+  "roadmap.drawer.visibility.safety.required":
+    "Revisão de segurança necessária",
+  "roadmap.drawer.visibility.safety.cleared": "Segurança confirmada",
+  "roadmap.drawer.visibility.gatedWarning":
+    "Bloqueado. Isto não pode ser publicado até a equipa de Confiança e Segurança dar luz verde.",
+
+  // Painel · secção Votos de membros
+  "roadmap.drawer.votes.title": "Votos de membros",
+  "roadmap.drawer.votes.otherCommunitiesLabel": "Todas as outras pessoas",
+  "roadmap.drawer.votes.totalLabel": "Total de votos",
+  "roadmap.drawer.votes.notifiedLabel": "Notificado",
+  "roadmap.drawer.votes.notifiedYes": "Sim",
+  "roadmap.drawer.votes.notifiedNo": "Ainda não",
+  "roadmap.drawer.votes.spikeLabel": "Pico",
+  "roadmap.drawer.votes.spikeFlagged": "Assinalado",
+  "roadmap.drawer.votes.spikeNormal": "Normal",
+  "roadmap.drawer.votes.notifyCta_one":
+    "Notificar a {count} pessoa que pediu isto…",
+  "roadmap.drawer.votes.notifyCta_other":
+    "Notificar as {count} pessoas que pediram isto…",
+
+  // Painel · secção Comentários
+  "roadmap.drawer.comments.title": "Comentários",
+  "roadmap.drawer.comments.empty": "Ainda sem comentários.",
+  "roadmap.drawer.comments.hideCta": "Ocultar",
+  "roadmap.drawer.comments.unhideCta": "Reexibir",
+  "roadmap.drawer.comments.hiddenStatus": "Oculto",
+
+  // Painel · Notas internas / Frase pública
+  "roadmap.drawer.internalNotes.title": "Notas internas",
+  "roadmap.drawer.internalNotes.note": "nunca é público",
+  "roadmap.drawer.internalNotes.placeholder":
+    "Âmbito, dependências, o que faria abandonarmos isto.",
+  "roadmap.drawer.publicOneLiner.title": "Frase pública",
+  "roadmap.drawer.publicOneLiner.note": "mostrada em /roadmap",
+  "roadmap.drawer.publicOneLiner.placeholder":
+    "Simples, caloroso, sem jargão de roteiro.",
+
+  // ── Modais ──────────────────────────────────────────────────────────────
+  // Motivo do adiamento
+  "roadmap.modals.slipReason.eyebrow": "Mudança de data",
+  "roadmap.modals.slipReason.title": "Porque é que isto está a <em>mudar</em>?",
+  "roadmap.modals.slipReason.targetLabel": "Meta",
+  "roadmap.modals.slipReason.body":
+    "Este motivo é publicado no roteiro público, junto ao item. Os membros perdoam datas adiadas; não perdoam datas adiadas em silêncio.",
+  "roadmap.modals.slipReason.placeholder":
+    "ex.: disponibilidade do revisor clínico — preferimos atrasar do que errar.",
+  "roadmap.modals.slipReason.confirmCta": "Mudar a data",
+  "roadmap.modals.slipReason.cancelCta": "Manter como está",
+  "roadmap.modals.slipReason.missingReasonToast":
+    "Uma data adiada precisa de um motivo — é disso mesmo que se trata",
+
+  // Bloqueio de segurança
+  "roadmap.modals.safetyGate.eyebrow": "Bloqueio de segurança",
+  "roadmap.modals.safetyGate.title":
+    "Isto precisa primeiro de uma <em>revisão de segurança</em>",
+  "roadmap.modals.safetyGate.body":
+    "Assinalado como sensível. Conteúdo sobre habitação, asilo e empregadores pode expor membros — publicá-lo cedo demais é um risco real, não só um passo do processo.",
+  "roadmap.modals.safetyGate.note":
+    "Dar luz verde fica registado em teu nome. Só a equipa de Confiança e Segurança devia fazer isto.",
+  "roadmap.modals.safetyGate.confirmCta": "Aprovar revisão e publicar",
+  "roadmap.modals.safetyGate.cancelCta": "Deixar bloqueado",
+
+  // Juntar ideia
+  "roadmap.modals.mergeIdea.eyebrow": "Juntar ideia",
+  "roadmap.modals.mergeIdea.title": "Juntar isto a um <em>item já existente</em>",
+  "roadmap.modals.mergeIdea.body":
+    "Juntar move os votos e diz ao membro para onde foi a ideia dele.",
+  "roadmap.modals.mergeIdea.ideaLabel": "Ideia de um membro",
+  "roadmap.modals.mergeIdea.mergeIntoLabel": "Juntar a",
+  "roadmap.modals.mergeIdea.suggestedTag": "sugerido",
+  "roadmap.modals.mergeIdea.confirmCta": "Juntar e notificar",
+  "roadmap.modals.mergeIdea.missingPickToast":
+    "Escolhe um item do quadro para juntar",
+  "roadmap.modals.mergeIdea.emptyTargets":
+    "Ainda não há nada no quadro para juntar a isto.",
+
+  // Recusar
+  "roadmap.modals.decline.eyebrow": "Recusar",
+  "roadmap.modals.decline.title": "Diz que não, com um <em>motivo</em>",
+  "roadmap.modals.decline.ideaLabel": "Ideia de um membro",
+  "roadmap.modals.decline.reasonLabel": "Motivo",
+  "roadmap.modals.decline.publishedWordingLabel": "Texto publicado",
+  "roadmap.modals.decline.publishedWordingHint":
+    'aparece em "Não vamos construir isto, e porquê"',
+  "roadmap.modals.decline.confirmCta": "Recusar publicamente",
+  "roadmap.modals.decline.missingReasonToast":
+    "Escreve o motivo — recusar sem um motivo é silêncio",
+  "roadmap.modals.decline.reason.scope.label": "Fora do que somos",
+  "roadmap.modals.decline.reason.scope.wording":
+    "Isto não é para o que a QueerPulse existe — puxar-nos-ia na direção de sermos uma plataforma qualquer.",
+  "roadmap.modals.decline.reason.unsafe.label":
+    "Não conseguimos construir isto com segurança",
+  "roadmap.modals.decline.reason.unsafe.wording":
+    "Não conseguíamos lançar isto sem pôr membros em risco. Se isso mudar, voltamos a olhar para o assunto.",
+  "roadmap.modals.decline.reason.capacity.label": "Sem capacidade, sinceramente",
+  "roadmap.modals.decline.reason.capacity.wording":
+    "Somos cinco pessoas. É uma ideia real que não conseguimos assumir agora.",
+  "roadmap.modals.decline.reason.exists.label": "Já existe noutro lugar",
+  "roadmap.modals.decline.reason.exists.wording":
+    "Já há alguém na comunidade a fazer isto bem, e preferimos apontar para essa pessoa.",
+  "roadmap.modals.decline.reason.harm.label": "O risco de dano supera o valor",
+  "roadmap.modals.decline.reason.harm.wording":
+    "A versão disto que funciona para alguns membros exporia outros.",
+
+  // Notificar quem votou
+  "roadmap.modals.notifyVoters.eyebrow": "Avisar quem pediu",
+  "roadmap.modals.notifyVoters.title_one": "Notificar <em>{count}</em> membro",
+  "roadmap.modals.notifyVoters.title_other": "Notificar <em>{count}</em> membros",
+  "roadmap.modals.notifyVoters.itemLabel": "Item",
+  "roadmap.modals.notifyVoters.messageLabel": "Mensagem",
+  "roadmap.modals.notifyVoters.onceOnlyTitle": "Um único email, sem seguimentos",
+  "roadmap.modals.notifyVoters.onceOnlySub":
+    "Nunca voltamos a contactar quem já votou. Isto envia-se uma vez e para.",
+  "roadmap.modals.notifyVoters.confirmCta": "Enviar uma vez",
+  "roadmap.modals.notifyVoters.cancelCta": "Agora não",
+  "roadmap.modals.notifyVoters.shippedMessage":
+    '"{name}" já está ativo. Foste tu que pediste isto — obrigade por teres falado.',
+  "roadmap.modals.notifyVoters.movedMessage":
+    '"{name}" acabou de passar para {column}.',
+
+  // Resumo mensal
+  "roadmap.modals.digest.eyebrow": "Resumo mensal",
+  "roadmap.modals.digest.title": '"Pediram, nós <em>construímos</em>"',
+  "roadmap.modals.digest.body":
+    "Rascunhado a partir do quadro: o que foi lançado, que datas mudaram e porquê, e o que recusámos. Edita à vontade.",
+  "roadmap.modals.digest.confirmCta": "Copiar para o email",
+  "roadmap.modals.digest.heading": "O que aconteceu em {month}",
+  "roadmap.modals.digest.shippedHeading": "Lançado",
+  "roadmap.modals.digest.movedHeading": "Datas que mudaram, e porquê",
+  "roadmap.modals.digest.movedEmpty": "Nada mudou este mês.",
+  "roadmap.modals.digest.declinedHeading": "Ao que dissemos não",
+  "roadmap.modals.digest.footer":
+    "{count} coisas estão em curso. O quadro completo está em /roadmap.",
+
+  // Registo de auditoria
+  "roadmap.modals.auditLog.eyebrow": "Trilha de auditoria",
+  "roadmap.modals.auditLog.title": "Cada mudança, <em>registada</em>",
+  "roadmap.modals.auditLog.exportCta": "Exportar CSV para a governança",
+  "roadmap.modals.auditLog.resetBoardCta": "Repor o quadro",
+  "roadmap.modals.auditLog.resetBoardHint":
+    "Repõe o quadro de demonstração deste navegador para o roteiro semeado — todas as edições feitas em modo de demonstração são desfeitas. Isto não pode ser desfeito.",
+
+  // Atalhos
+  "roadmap.modals.shortcuts.eyebrow": "Teclado",
+  "roadmap.modals.shortcuts.title": "Move-te sem o <em>rato</em>",
+  "roadmap.modals.shortcuts.filter": "Filtrar",
+  "roadmap.modals.shortcuts.newItem": "Novo item",
+  "roadmap.modals.shortcuts.moveThroughCards": "Percorrer os cartões",
+  "roadmap.modals.shortcuts.editFocused": "Editar o cartão em foco",
+  "roadmap.modals.shortcuts.saveClose": "Guardar e fechar",
+  "roadmap.modals.shortcuts.close": "Fechar",
+  "roadmap.modals.shortcuts.thisList": "Esta lista",
+  "roadmap.modals.shortcuts.dragMove": "Mover ou reordenar",
+  "roadmap.modals.shortcuts.gotItCta": "Percebido",
+
+  // ── Vista de Cronologia ─────────────────────────────────────────────────
+  "roadmap.timelineView.unscheduledLabel": "Por agendar",
+  "roadmap.timelineView.laneCount": "{items} itens · {shipped} lançados",
+
+  // ── Vista de Capacidade ─────────────────────────────────────────────────
+  "roadmap.capacityView.title": "Quem está a <em>carregar</em> o quê",
+  "roadmap.capacityView.subtitle": "Carga em construção vs. horas indicadas",
+  "roadmap.capacityView.loadSummary":
+    "{building} em construção, {planned} planeados",
+  "roadmap.capacityView.paidTag": "Pago",
+  "roadmap.capacityView.volunteerTag": "Voluntariado",
+  "roadmap.capacityView.atOnceTag": "{count} ao mesmo tempo",
+  "roadmap.capacityView.unassignedActiveLabel": "Sem responsável, ativos",
+  "roadmap.capacityView.unassignedActiveWarn": "{count} são P0/P1",
+  "roadmap.capacityView.unassignedActiveOk": "Nenhum urgente",
+  "roadmap.capacityView.paidVsVolunteerLabel": "Trabalho pago vs. voluntariado",
+  "roadmap.capacityView.paidVsVolunteerFoot":
+    "Os itens de voluntariado atrasam-se primeiro — isso não é uma falha moral, é aritmética.",
+  "roadmap.capacityView.needsFundingLabel": "Precisa de financiamento",
+  "roadmap.capacityView.needsFundingEmpty": "Nada está à espera de dinheiro.",
+  "roadmap.capacityView.sustainerNote":
+    "Liga isto ao escalão de apoiante. Quem paga mais devia conseguir ver exatamente que item o seu dinheiro desbloqueia.",
+  "roadmap.capacityView.emptyRosterTitle": "Ainda sem membros na equipa",
+  "roadmap.capacityView.emptyRosterBody":
+    "Adiciona alguém à equipa para veres aqui a sua carga em construção.",
+
+  // ── Vista de Guias ──────────────────────────────────────────────────────
+  "roadmap.guidesView.subtitle":
+    "Guias de recursos com informação de saúde, legal ou de segurança — acompanha aqui o estado da revisão, não só o de publicação.",
+  "roadmap.guidesView.reVerifyWarning_one":
+    "{count} guia precisa de reverificação. Informação de saúde e legal desatualiza-se. {names}.",
+  "roadmap.guidesView.reVerifyWarning_other":
+    "{count} guias precisam de reverificação. Informação de saúde e legal desatualiza-se. {names}.",
+  "roadmap.guidesView.progressLabel": "Progresso",
+  "roadmap.guidesView.reviewerLabel": "Revisor",
+  "roadmap.guidesView.notAssigned": "Sem atribuição",
+  "roadmap.guidesView.credentialNeeded": "falta credencial",
+  "roadmap.guidesView.reVerifyByLabel": "Reverificar até",
+  "roadmap.guidesView.overdueLabel": "{days} dias em atraso",
+  "roadmap.guidesView.dueInLabel": "dentro de {days} dias",
+  "roadmap.guidesView.emptyTitle": "Ainda sem guias",
+  "roadmap.guidesView.emptyBody":
+    "Marca um item do roteiro como guia de recursos para lhe dar uma lista de verificação.",
+
+  // ── Vista de Ideias de membros ──────────────────────────────────────────
+  "roadmap.ideasView.ageSuffix": "há {age}",
+  "roadmap.ideasView.submittedByMember": "De um membro",
+  "roadmap.ideasView.submittedByTeam": "Da equipa",
+  "roadmap.ideasView.voteSpike": "Pico de votos — {votes} votos em {hours}h",
+  "roadmap.ideasView.duplicateHint": "Parece um duplicado de {name}",
+  "roadmap.ideasView.mergeInsteadCta": "Juntar em vez disso",
+  "roadmap.ideasView.votesLabel": "votos",
+  "roadmap.ideasView.mergeCta": "Juntar",
+  "roadmap.ideasView.declineCta": "Recusar",
+  "roadmap.ideasView.emptyTitle": "Caixa de entrada vazia",
+  "roadmap.ideasView.emptyBody":
+    'Todas as ideias de membros foram triadas. As ideias recusadas ficam em "Não vamos construir" com um motivo — nunca em silêncio.',
+
+  // ── Vista Não vamos construir ───────────────────────────────────────────
+  "roadmap.notBuildingView.publicBanner":
+    "Esta página é pública. Dizer o que não vamos construir, e porquê, é a coisa que mais gera confiança no roteiro. A maioria das plataformas esconde isto.",
+  "roadmap.notBuildingView.hadAskedLabel": "tinham pedido",
+  "roadmap.notBuildingView.reopenCta": "Reabrir",
+  "roadmap.notBuildingView.emptyTitle": "Ainda nada recusado",
+  "roadmap.notBuildingView.emptyBody":
+    "Quando recusas uma ideia de um membro, ela fica aqui com o motivo.",
+
+  // ── Vista de Arquivo ────────────────────────────────────────────────────
+  "roadmap.archiveView.wasColumnLabel": "estava em {column}",
+  "roadmap.archiveView.votesLabel": "votos",
+  "roadmap.archiveView.restoreCta": "Restaurar",
+  "roadmap.archiveView.deleteForGoodCta": "Eliminar definitivamente",
+  "roadmap.archiveView.deleteConfirmTitle": 'Eliminar "{name}" definitivamente?',
+  "roadmap.archiveView.deleteConfirmBody":
+    "Eliminar é para sempre — arquivar guarda o histórico. Isto não pode ser desfeito.",
+  "roadmap.archiveView.emptyTitle": "O arquivo está vazio",
+  "roadmap.archiveView.emptyBody":
+    "Arquivar guarda o histórico sem sobrecarregar o quadro. Eliminar é para sempre — prefere arquivar.",
+
+  // ── Vista de estatísticas públicas (editor da reformulação — grupo
+  // separado do editor dos 3 separadores, ver nota acima de roadmap.heroStats.*)
+  "roadmap.heroStatsView.title": "Estatísticas <em>públicas</em> do topo",
+  "roadmap.heroStatsView.previewLinkCta": "Pré-visualizar página pública →",
+  "roadmap.heroStatsView.subtitle":
+    "Estes quatro números ficam no topo do roteiro visto pelos membros. Mantém-nos honestos — se um número precisar de uma ressalva, escreve-a na nota e ela aparece como dica.",
+  "roadmap.heroStatsView.captionPlaceholder": "Ressalva / como se conta",
+  "roadmap.heroStatsView.noGrowthTheatre":
+    "Sem teatro de crescimento. Publicamos contagens, nunca números de seguidores ou gráficos de vaidade. Um número que não se explica numa frase não tem lugar aqui.",
+
+  // ── Vista de pré-visualização pública ───────────────────────────────────
+  "roadmap.publicPreview.banner_one":
+    "É isto que os membros veem em /roadmap. {hidden} item oculto · {promises} assumidos como promessas · passa o rato por cima de qualquer item para o editar.",
+  "roadmap.publicPreview.banner_other":
+    "É isto que os membros veem em /roadmap. {hidden} itens ocultos · {promises} assumidos como promessas · passa o rato por cima de qualquer item para o editar.",
+  "roadmap.publicPreview.editCta": "Editar",
+  "roadmap.publicPreview.buildingHeading": "Em construção",
+  "roadmap.publicPreview.buildingSub": "O que estamos mesmo a fazer agora.",
+  "roadmap.publicPreview.nextUpHeading": "A seguir",
+  "roadmap.publicPreview.nextUpSub":
+    "Assumido. As datas são metas, e avisamos-te quando mudam.",
+  "roadmap.publicPreview.somedayHeading": "Um dia, com sinceridade",
+  "roadmap.publicPreview.somedaySub": "Queremos isto. Dar uma data seria mentir.",
+  "roadmap.publicPreview.shippedHeading": "Lançado",
+  "roadmap.publicPreview.shippedSub":
+    "O registo de mudanças. Cada um destes foi pedido por alguém na sala.",
+  "roadmap.publicPreview.notBuildingHeading": "Não vamos construir isto, e porquê",
+  "roadmap.publicPreview.notBuildingSub":
+    "A lista que a maioria das plataformas esconde. Se dissermos que não, tens um motivo.",
+  "roadmap.publicPreview.requestedTag": "Pediste isto",
+  "roadmap.publicPreview.committedTag": "Assumido",
+  "roadmap.publicPreview.noPublicNoteFallback":
+    "Ainda sem nota pública — os membros não vão ver nada aqui até adicionares uma.",
+  "roadmap.publicPreview.movedOnce": "Adiada uma vez — {from} → {to}.",
+  "roadmap.publicPreview.movedMultiple": "Adiada {count}× — {from} → {to}.",
+  "roadmap.publicPreview.blockedNote": "Bloqueado à espera de {by}.",
+  "roadmap.publicPreview.noDateHonest": "Sem data — sinceramente",
+  "roadmap.publicPreview.liveLabel": "Ativo",
+  "roadmap.publicPreview.editItemTooltip": "Editar este item",
+  "roadmap.publicPreview.copyPermalinkTooltip":
+    "Copiar hiperligação permanente",
+  "roadmap.publicPreview.subscribeHeading": "Sabe quando isto mudar",
+  "roadmap.publicPreview.subscribeBody":
+    "Um email por mês com o que foi lançado, o que mudou e ao que dissemos não. Nunca marketing de produto.",
+  "roadmap.publicPreview.subscribeEmailPlaceholder": "tu@email.com",
+  "roadmap.publicPreview.subscribeCta": "Subscrever",
+  "roadmap.publicPreview.rssCta": "RSS",
+
+  // ── Notificações — resposta para cada ação que altera dados ─────────────
+  "roadmap.toasts.moved": '"{name}" passou para {column}',
+  "roadmap.toasts.bulkMoved_one": "{count} item movido para {column}",
+  "roadmap.toasts.bulkMoved_other": "{count} itens movidos para {column}",
+  "roadmap.toasts.published": "Agora visível no roteiro público",
+  "roadmap.toasts.hidden": "Oculto do roteiro público",
+  "roadmap.toasts.duplicated": "Duplicado.",
+  "roadmap.toasts.bulkPublished_one": "{count} item mostrado no roteiro público",
+  "roadmap.toasts.bulkPublished_other":
+    "{count} itens mostrados no roteiro público",
+  "roadmap.toasts.bulkHidden_one": "{count} item ocultado do roteiro público",
+  "roadmap.toasts.bulkHidden_other":
+    "{count} itens ocultados do roteiro público",
+  "roadmap.toasts.archived": '"{name}" arquivado',
+  "roadmap.toasts.bulkArchived_one": "{count} item arquivado",
+  "roadmap.toasts.bulkArchived_other": "{count} itens arquivados",
+  "roadmap.toasts.restored": '"{name}" restaurado',
+  "roadmap.toasts.deleted": '"{name}" eliminado',
+  "roadmap.toasts.bulkDeleted_one": "{count} item eliminado",
+  "roadmap.toasts.bulkDeleted_other": "{count} itens eliminados",
+  "roadmap.toasts.saved": "Guardado — roteiro público atualizado",
+  "roadmap.toasts.dateMoved": "Data alterada — os membros vão ver o motivo",
+  "roadmap.toasts.safetyCleared": "Segurança confirmada e publicado",
+  "roadmap.toasts.merged_one":
+    "Juntado — {votes} voto movido, e {name} soube para onde foi",
+  "roadmap.toasts.merged_other":
+    "Juntado — {votes} votos movidos, e {name} soube para onde foi",
+  "roadmap.toasts.promoted_one": '"{name}" promovido — {votes} pessoa notificada',
+  "roadmap.toasts.promoted_other":
+    '"{name}" promovido — {votes} pessoas notificadas',
+  "roadmap.toasts.promoteError": "Não foi possível promover esta ideia",
+  "roadmap.toasts.declined":
+    "Recusado publicamente com um motivo — avisámos {name}",
+  "roadmap.toasts.reopened": '"{name}" está de volta à fila de ideias',
+  "roadmap.toasts.reopenError": "Não foi possível reabrir esta ideia",
+  "roadmap.toasts.notified_one":
+    "{count} pessoa notificada — um email, sem seguimentos",
+  "roadmap.toasts.notified_other":
+    "{count} pessoas notificadas — um email, sem seguimentos",
+  "roadmap.toasts.digestCopied": "Resumo copiado — cola-o no email mensal",
+  "roadmap.toasts.permalinkCopied": "{url} copiado",
+  "roadmap.toasts.rssInfo": "RSS: {url}",
+  "roadmap.toasts.auditExported": "Registo de auditoria exportado para a governança",
+  "roadmap.toasts.boardReset": "Quadro reposto com o roteiro semeado",
+  "roadmap.toasts.safetyReviewNeededInfo_one":
+    "{count} item precisa de revisão de segurança primeiro",
+  "roadmap.toasts.safetyReviewNeededInfo_other":
+    "{count} itens precisam de revisão de segurança primeiro",
 };

@@ -1,4 +1,5 @@
 import { Button, Reveal, SkeletonLine } from "../../shared/components/ui";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -336,6 +337,7 @@ export function DecisionsSection() {
 
 export function RaiseSection() {
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
   const { t } = useTranslation();
   return (
     <Reveal as="section" className={styles.section} id="raise">
@@ -360,10 +362,25 @@ export function RaiseSection() {
           className={styles.rcForm}
           onSubmit={(e) => {
             e.preventDefault();
-            showToast(t("governance:sections.raise.submittedToast"), "success");
+            // No backend concern-intake endpoint exists yet (the governance
+            // controller only exposes GET overview/finances). Demo mode keeps
+            // the prototype's simulated confirmation; live mode stays honest
+            // rather than telling a member we received a concern we can't store.
+            if (demoMode) {
+              showToast(
+                t("governance:sections.raise.submittedToast"),
+                "success",
+              );
+            } else {
+              showToast(t("governance:sections.raise.comingSoonToast"), "info");
+            }
           }}
         >
-          <select className={styles.rcSelect} defaultValue="">
+          <select
+            className={styles.rcSelect}
+            defaultValue=""
+            aria-label={t("governance:sections.raise.selectPlaceholder")}
+          >
             <option value="" disabled>
               {t("governance:sections.raise.selectPlaceholder")}
             </option>
@@ -376,11 +393,13 @@ export function RaiseSection() {
           <textarea
             className={styles.rcTextarea}
             placeholder={t("governance:sections.raise.textareaPlaceholder")}
+            aria-label={t("governance:sections.raise.textareaPlaceholder")}
           />
           <input
             className={styles.rcInput}
             type="email"
             placeholder={t("governance:sections.raise.emailPlaceholder")}
+            aria-label={t("governance:sections.raise.emailPlaceholder")}
           />
           <Button type="submit">
             {t("governance:sections.raise.submitCta")}

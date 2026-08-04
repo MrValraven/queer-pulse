@@ -5,6 +5,7 @@ import {
   type RecommendationDTO,
   type RecommendBody,
 } from "./landlord.api";
+import { economyKeys } from "./economyKeys";
 
 export function useRecommendLandlord(slug: string) {
   const { demoMode } = useDemoMode();
@@ -23,7 +24,7 @@ export function useRecommendLandlord(slug: string) {
     onSuccess: () => {
       if (!demoMode) {
         void queryClient.invalidateQueries({
-          queryKey: ["landlord", false, slug],
+          queryKey: economyKeys.landlord(false, slug),
         });
       }
     },

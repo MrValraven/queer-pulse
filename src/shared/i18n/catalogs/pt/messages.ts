@@ -210,6 +210,13 @@ export const messages: Catalog = {
   "group.promote": "Tornar admin",
   "group.demote": "Remover admin",
   "group.remove": "Remover",
+  // Passo de confirmação antes de remover um membro (sem ação destrutiva sem
+  // confirmar). Caloroso, sem culpar; o cancelar mantém-no no grupo.
+  "group.removeConfirm.title": "Remover {name}?",
+  "group.removeConfirm.body":
+    "{name} vai perder o acesso a este grupo e às suas mensagens. Podes voltar a adicionar quando quiseres.",
+  "group.removeConfirm.cancel": "Manter no grupo",
+  "group.removeConfirm.confirm": "Remover membro",
   "group.avatarLabel": "Foto do grupo",
   // Recibo de grupo "Visto por N" (plural CLDR: _one / _other) — a linha sob a
   // própria mensagem e o título da folha.

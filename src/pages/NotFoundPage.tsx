@@ -108,6 +108,7 @@ export function NotFoundPage() {
             <input
               className={styles.searchInput}
               type="text"
+              aria-label={t("system:notFound.searchPlaceholder")}
               placeholder={t("system:notFound.searchPlaceholder")}
               value={query}
               onChange={(e) => setQuery(e.target.value)}

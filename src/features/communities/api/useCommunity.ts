@@ -41,7 +41,15 @@ export interface CommunityResult {
   /** True when the community doesn't exist or is private + hidden (→ 404 path). */
   notFound: boolean;
   isLoading: boolean;
+  /** True when the (live) fetch failed for a non-404 reason — the page shows a
+   *  retryable error state instead of an eternal skeleton (P1-14). Never true in
+   *  demo mode. */
+  isError: boolean;
+  /** Re-run the live query — wired to the error state's "Try again" action. */
+  refetch: () => void;
 }
+
+const NOOP = () => {};
 
 const EMPTY: CommunityResult = {
   community: null,
@@ -52,6 +60,8 @@ const EMPTY: CommunityResult = {
   editable: null,
   notFound: false,
   isLoading: false,
+  isError: false,
+  refetch: NOOP,
 };
 
 /**
@@ -122,6 +132,8 @@ export function useCommunity(slug: string | undefined): CommunityResult {
       editable,
       notFound: false,
       isLoading: false,
+      isError: false,
+      refetch: NOOP,
     };
   }, [all, createdDetail, slug, roleIn, hasRequested, overrideFor]);
 
@@ -140,6 +152,8 @@ export function useCommunity(slug: string | undefined): CommunityResult {
           editable: dtoToEditable(dto),
           notFound: false,
           isLoading: false,
+          isError: false,
+          refetch: NOOP,
         };
       } catch (e) {
         if (e instanceof ApiError && e.status === 404) {
@@ -151,5 +165,12 @@ export function useCommunity(slug: string | undefined): CommunityResult {
   });
 
   if (demoMode) return demoResult;
-  return query.data ?? { ...EMPTY, isLoading: query.isLoading };
+  const base = query.data ?? { ...EMPTY, isLoading: query.isLoading };
+  // Inject the live error signal + retry at the boundary (the cached `data`
+  // literal carries the no-op defaults; a non-404 failure surfaces here).
+  return {
+    ...base,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }

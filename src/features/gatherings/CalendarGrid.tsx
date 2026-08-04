@@ -9,6 +9,12 @@ import { CALENDAR_TODAY, WEEKDAY_REFERENCE } from "./calendar.data";
 import { sameDay } from "./calendarGrid.helpers";
 import styles from "./CalendarGrid.module.css";
 
+// On narrow (phone) day cells only this many event dots are shown; any beyond
+// collapse into a "+N" overflow indicator (see CalendarGrid.module.css). Desktop
+// cells are wide enough to render every dot, so the extra dots + indicator are
+// toggled purely in CSS by the same @media query.
+const MAX_MOBILE_DAY_DOTS = 3;
+
 export function EventCardSkeleton() {
   return (
     <div className={styles.eventCard} aria-hidden>
@@ -139,16 +145,23 @@ export function MonthGrid({
               >
                 <div className={styles.dayNum}>{day}</div>
                 {events.length > 0 && (
-                  <div className={styles.dayDots}>
-                    {events.map((e, idx) => (
-                      <span
-                        key={idx}
-                        className={styles.dayDot}
-                        style={{ background: e.orgColor }}
-                        title={e.title}
-                      />
-                    ))}
-                  </div>
+                  <>
+                    <div className={styles.dayDots}>
+                      {events.map((event, eventIndex) => (
+                        <span
+                          key={eventIndex}
+                          className={styles.dayDot}
+                          style={{ background: event.orgColor }}
+                          title={event.title}
+                        />
+                      ))}
+                    </div>
+                    {events.length > MAX_MOBILE_DAY_DOTS && (
+                      <span className={styles.dayMore} aria-hidden="true">
+                        +{events.length - MAX_MOBILE_DAY_DOTS}
+                      </span>
+                    )}
+                  </>
                 )}
               </button>
             );

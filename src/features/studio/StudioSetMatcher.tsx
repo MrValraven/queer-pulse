@@ -52,7 +52,11 @@ export function StudioSetMatcher({
       <div className={s.secLbl}>
         {t("studio:setSubmission.matcher.tracklistLabel")}
       </div>
-      <textarea className={s.paste} defaultValue={PASTE} />
+      <textarea
+        className={s.paste}
+        aria-label={t("studio:setSubmission.matcher.tracklistLabel")}
+        defaultValue={PASTE}
+      />
       <div className={s.pasteHint}>
         <Translation
           i18nKey="studio:setSubmission.matcher.pasteHint"

@@ -30,6 +30,14 @@ export const common: Catalog = {
   "toast.saveFailed": "Não foi possível guardar — verifica a ligação e tenta de novo.",
   "toast.removeFailed": "Não foi possível atualizar — verifica a ligação e tenta de novo.",
 
+  // Estado de erro de carregamento (falha de fetch em modo live) — reutilizável
+  // por páginas que trocam todo o conteúdo por um erro com repetição, em vez de
+  // um vazio-falso ou um esqueleto eterno (eventos, comunidade, moderação).
+  "error.title": "Algo correu mal",
+  "error.description":
+    "Não foi possível carregar isto agora. Verifica a ligação e tenta de novo.",
+  "error.retry": "Tentar de novo",
+
   // Exemplos de interpolação + pluralização ("bem-vinde": forma neutra -e)
   "greeting.welcome": "Bem-vinde de volta, {name}",
   "members.count_one": "{count} pessoa",

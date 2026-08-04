@@ -311,7 +311,7 @@ export const cinema: Catalog = {
   "collectionsIndex.outro.cta": "Open a collection →",
   "collectionsIndex.card.curatedBy": "Curated by",
   "collectionsIndex.propose.toast":
-    "Send your 200-word thesis to curators@queerpulse.co — the council responds within 3 weeks.",
+    "Send your 200-word thesis to curators@queerpulse.pt — the council responds within 3 weeks.",
   "collectionsIndex.propose.cta": "Propose a collection",
   "collectionsIndex.propose.meetCouncilCta": "Meet the council",
 
@@ -812,6 +812,11 @@ export const cinema: Catalog = {
   "submit.success.body":
     "Thank you for trusting us with it. Non-exclusive means nothing changes for you elsewhere — keep showing it wherever you like while we take a look.",
   "submit.success.anotherCta": "Submit another film",
+  "submit.comingSoon.title": "Submissions aren't",
+  "submit.comingSoon.em": "open yet.",
+  "submit.comingSoon.body":
+    "Made Here isn't taking films over the wire yet, so nothing you enter here is sent or stored. We're building the submission pipeline now — check back soon, and browse what the co-op is already screening in the meantime.",
+  "submit.comingSoon.closeLabel": "Browse the cinema",
   "submit.aside.nextHeading": "What happens next",
   "submit.aside.accessHeading": "Accessibility standard",
   "submit.aside.accessBody":
@@ -1112,6 +1117,7 @@ export const cinema: Catalog = {
   "live.error.title": "The programme didn't load",
   "live.error.description":
     "Something went wrong loading the catalogue. Please try again in a moment.",
+  "live.error.retry": "Try again",
   "live.pick.title": "Pick a film to watch",
   "live.pick.description":
     "Choose a title from the programme to start watching.",

@@ -1,5 +1,5 @@
 // src/features/messages/MessageReportModal.tsx
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { Modal } from "../../shared/components/ui/Modal";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -35,6 +35,7 @@ export function MessageReportModal({ messageId, onClose }: MessageReportModalPro
     [t],
   );
   const [reason, setReason] = useState<ReasonCode>(reasons[0]!.code);
+  const detailFieldId = useId();
   const [detail, setDetail] = useState("");
   const [done, setDone] = useState(false);
   const createReport = useCreateReport();
@@ -120,8 +121,11 @@ export function MessageReportModal({ messageId, onClose }: MessageReportModalPro
           </label>
         ))}
       </div>
-      <div className={styles.reportLabel}>{t("safety:flag.form.detailLabel")}</div>
+      <label className={styles.reportLabel} htmlFor={detailFieldId}>
+        {t("safety:flag.form.detailLabel")}
+      </label>
       <textarea
+        id={detailFieldId}
         className={styles.reportTextarea}
         placeholder={t("safety:flag.form.detailPlaceholder")}
         value={detail}

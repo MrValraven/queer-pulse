@@ -33,6 +33,9 @@ const GATED_PATTERNS: string[] = [
   "/admin",
   "/admin/*",
   "/mod/*",
+  // Magazine editorial tools (dashboard + deck authoring) — staff-only
+  "/magazine/editor",
+  "/magazine/editor/*",
   // Personal member surfaces
   "/feed",
   "/search",
@@ -127,7 +130,13 @@ function matchesAny(pathname: string, patterns: string[]): boolean {
  * of truth and must 403 each call regardless.
  */
 const ADMIN_PATTERNS: string[] = ["/admin", "/admin/*"];
-const MOD_PATTERNS: string[] = ["/mod/*"];
+const MOD_PATTERNS: string[] = [
+  "/mod/*",
+  // Magazine editorial tools (dashboard + deck authoring) are editor-work:
+  // open to moderators and admins, not admin-only.
+  "/magazine/editor",
+  "/magazine/editor/*",
+];
 
 /**
  * Guest-only surfaces: the sign-in / sign-up entry pages that only make sense to
@@ -200,7 +209,7 @@ export function useIsLinkVisible(): (href: string) => boolean {
  * null when the visitor is allowed through (logged in, or on a public route).
  */
 export function useAuthGateRedirect(): string | null {
-  const { loggedIn, checking, role, status } = useAuth();
+  const { loggedIn, checking, role, status, user } = useAuth();
   const { demoMode } = useDemoMode();
   const { pathname, search } = useLocation();
 
@@ -223,6 +232,28 @@ export function useAuthGateRedirect(): string | null {
     if (!demoMode && status === "deactivated") {
       return pathname === routes.deleteAccount ? null : routes.deleteAccount;
     }
+    // A suspended member: their sessions are revoked and every ActiveMemberGuard
+    // route 403s, so a gated page would render a blank screen with no
+    // explanation. Send them to the account-suspended page (or account-banned
+    // when the suspension is permanent — status "suspended" with no
+    // `suspendedUntil`), which now shows the real reason + expiry from /auth/me.
+    // Unlike a deactivation, a suspension still lets them read PUBLIC content
+    // (magazine, policies, crisis pages), so only a *gated* path bounces — and
+    // the status + appeal pages are always allowed so the reason and the appeal
+    // stay reachable. Demo mode has no real status, so this never fires there.
+    if (!demoMode && status === "suspended") {
+      const target = user?.suspendedUntil
+        ? routes.accountSuspended
+        : routes.accountBanned;
+      const alwaysAllowed: string[] = [
+        routes.accountSuspended,
+        routes.accountBanned,
+        routes.appealSubmit,
+        routes.appealOutcome,
+      ];
+      if (alwaysAllowed.includes(pathname)) return null;
+      return isGatedPath(pathname) ? target : null;
+    }
     // Role-gate admin/mod surfaces. Demo mode is intentionally an explorable
     // sandbox where the admin panel is reachable (its team role is simulated via
     // the demo-only role store in features/admin/adminRole.ts), so role isn't enforced
@@ -241,6 +272,21 @@ export function useAuthGateRedirect(): string | null {
     // feed (or the `?next=` they were headed for) instead of the auth screens.
     if (isGuestOnlyPath(pathname)) {
       return safeNext(new URLSearchParams(search).get("next"));
+    }
+    // The post-signup onboarding wizard is one-time. A member who already
+    // finished it (onboardedAt set — backfilled for pre-existing members) has no
+    // reason to be back here; browser autofill of the saved /auth/onboarding URL
+    // is the usual way they land on it, and replaying it can silently re-submit
+    // profile fields (the intents step overwrites `lookingFor`). Bounce them to
+    // their feed. A member still mid-onboarding (onboardedAt null) falls through
+    // and keeps the wizard. Demo mode is left explorable so the flow can be
+    // previewed — it only ever fires in live mode.
+    if (
+      !demoMode &&
+      user?.onboardedAt &&
+      matchPath(routes.onboarding, pathname)
+    ) {
+      return routes.feed;
     }
     return null;
   }

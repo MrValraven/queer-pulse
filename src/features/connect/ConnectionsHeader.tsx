@@ -1,5 +1,5 @@
 import { FiInfo, FiUserPlus } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, FeatureHelp } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -17,7 +17,8 @@ export function ConnectionsHeader() {
             <Translation
               i18nKey="connect:page.title"
               components={{ em: <em /> }}
-            />
+            />{" "}
+            <FeatureHelp id="connect.connections" />
           </h1>
           <p className={styles.lead}>{t("connect:page.lead")}</p>
         </div>

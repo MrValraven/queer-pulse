@@ -48,6 +48,14 @@ describe("forum adapters carry the post id + flags", () => {
       lastActivityAt: "2026-07-23T10:00:00Z",
       createdAt: "2026-07-23T10:00:00Z",
       canEdit: false,
+      canDelete: false,
+      canRestore: false,
+      canViewHistory: false,
+      canLock: false,
+      opPostId: "op-1",
+      opVoteCount: 0,
+      myVote: 0,
+      tags: [],
     };
     const detail = threadDetail(
       thread,

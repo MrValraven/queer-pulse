@@ -1,6 +1,9 @@
 .cover {
   padding-top: 92px;
 }
+.liveEmpty {
+  padding: 120px 0;
+}
 .coverInner {
   max-width: 1180px;
   margin: 0 auto;

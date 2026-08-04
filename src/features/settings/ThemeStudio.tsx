@@ -157,6 +157,7 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
         </div>
         <select
           className={styles.badgeSelect}
+          aria-label={t("settings:themeStudio.badgeDisplayLabel")}
           value={badge}
           onChange={(e) => edit({ badge: e.target.value })}
         >

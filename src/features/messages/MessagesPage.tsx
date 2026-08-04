@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppShell } from "../../shared/components/layout";
 import { MentionNamesProvider } from "../../shared/mentions/MentionNames";
 import { ConversationPanel } from "./ConversationPanel";
@@ -17,7 +17,6 @@ export function MessagesPage() {
     view,
     setView,
     loading,
-    unread,
     visibleThreads,
     forwardableGroups,
     activeId,
@@ -66,8 +65,20 @@ export function MessagesPage() {
   const showList = !isMobile || view === "list";
   const showThread = !isMobile || view === "thread";
 
+  // Inside a conversation on a phone, hide the global bottom tab bar (like
+  // WhatsApp/Telegram) so two bottom bars don't stack. The html signal also
+  // collapses `--bottom-inset` to just the home-indicator inset (standalone.css)
+  // so the composer doesn't reserve space for a bar that's no longer there.
+  useEffect(() => {
+    const inMobileThread = isMobile && view === "thread";
+    const root = document.documentElement;
+    if (inMobileThread) root.setAttribute("data-messages-thread", "true");
+    else root.removeAttribute("data-messages-thread");
+    return () => root.removeAttribute("data-messages-thread");
+  }, [isMobile, view]);
+
   return (
-    <AppShell unreadCount={unread} fullHeight>
+    <AppShell fullHeight>
       <MentionNamesProvider>
         <div className={styles.app}>
         {showList && (

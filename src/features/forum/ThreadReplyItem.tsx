@@ -199,7 +199,9 @@ export function ThreadReplyItem({
                   .join(" ")}
                 onClick={() => toggleReplyLike(reply)}
               >
-                <FiHeart /> {reply.reactions + (isLiked ? 1 : 0)}
+                {/* Raw server count — the vote mutation patches `reactions` in
+                    place, so a local `+1` here would double-count. */}
+                <FiHeart aria-hidden="true" /> {reply.reactions}
               </button>
               {onReply && (
                 <button

@@ -189,6 +189,11 @@ function sourceHrefFromPayload(
   if (payload.source === "appeal") {
     return routes.appealOutcome;
   }
+  // A moderation outcome (warn/suspend/ban) links to the appeal page so the
+  // decision is contestable. No slug needed.
+  if (payload.source === "moderation") {
+    return routes.appealSubmit;
+  }
   return undefined;
 }
 

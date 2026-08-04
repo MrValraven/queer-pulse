@@ -79,9 +79,27 @@ export const forum: Catalog = {
   "compose.cancel": "Cancel",
   "compose.publishCta": "Publish post",
 
+  // ── ComposeThreadModal · tags field ─────────────────────────────────────
+  "compose.tagsFieldLabel": "Tags",
+  "compose.tagsPlaceholder": "Add a tag and press Enter",
+  "compose.tagsHint": "Up to {max} tags — keep them simple, like #housing or #health.",
+  "compose.removeTagAria": "Remove tag {tag}",
+
+  // ── Forum search ────────────────────────────────────────────────────────
+  "search.placeholder": "Search the forum…",
+  "search.ariaLabel": "Search the forum",
+  "search.clearAria": "Clear search",
+
   // ── ForumThreadList ─────────────────────────────────────────────────────
   "threadList.top": "Top",
   "threadList.new": "New",
+  "threadList.active": "Active",
+  "threadList.unanswered": "Unanswered",
+  "threadList.sortAria": "Sort posts",
+  "threadList.filteringByTag": "Filtering by",
+  "threadList.clearTag": "Clear",
+  "threadList.clearTagAria": "Clear the {tag} filter",
+  "threadList.filterByTagAria": "Filter posts by {tag}",
   "threadList.count_one": "{formatted} thread",
   "threadList.count_other": "{formatted} threads",
   "threadList.emptyFiltered.title": "Nothing in this category yet",
@@ -127,10 +145,24 @@ export const forum: Catalog = {
   "threadOp.saved": "Saved",
   "threadOp.bookmark": "Bookmark",
   "threadOp.report": "Report",
+  "threadOp.voteAria": "Upvote this post",
+  "threadOp.unvoteAria": "Remove your upvote",
+
+  // ── Locked thread (moderator has closed replies) ────────────────────────
+  "locked.title": "This thread is closed to new replies",
+  "locked.body":
+    "A moderator has closed this thread, so replies are paused. You can still read everything here.",
+  "locked.replyBlockedToast": "This thread is closed to new replies.",
+
+  // ── ThreadTopbar · moderator lock control ───────────────────────────────
+  "topbar.lockThread": "Close thread",
+  "topbar.unlockThread": "Reopen thread",
 
   // ── ThreadPage ──────────────────────────────────────────────────────────
   "threadPage.breadcrumbForum": "Forum",
   "threadPage.replyPostedToast": "Reply posted",
+  "threadPage.replyFailedToast":
+    "Couldn't post your reply — try again in a moment.",
   "threadPage.notFound.title": "This thread isn't here",
   "threadPage.notFound.description":
     "It may have been removed, or the link might be broken. Head back to the forum to find current conversations.",
@@ -206,9 +238,11 @@ export const forum: Catalog = {
   "history.titleChange": "Title was: {title}",
   "history.close": "Close",
 
-  // ── Toasts (edit / delete / restore) ─────────────────────────────────────
+  // ── Toasts (edit / delete / restore / lock) ──────────────────────────────
   "toast.editSaved": "Your edit is live.",
   "toast.deleted": "Post deleted.",
   "toast.restored": "Post restored.",
+  "toast.threadLocked": "Thread closed to new replies.",
+  "toast.threadUnlocked": "Thread reopened.",
   "toast.error": "Something went wrong. Try again in a moment.",
 };

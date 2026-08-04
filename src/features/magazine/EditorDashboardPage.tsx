@@ -23,6 +23,7 @@ import { EditorNeedsStrip } from "./EditorNeedsStrip";
 import { EditorStats } from "./EditorStats";
 import { EditorToolbar } from "./EditorToolbar";
 import { EditorPiecesTable } from "./EditorPiecesTable";
+import { EditorDecksSection } from "./EditorDecksSection";
 import { EditorPitchInbox } from "./EditorPitchInbox";
 import { EditorBulkBar } from "./EditorBulkBar";
 import { EditorSidebar } from "./EditorSidebar";
@@ -174,6 +175,9 @@ export function EditorDashboardPage() {
                 onToggleMyQueue={dash.toggleMyQueue}
                 onShortcuts={() => setModal({ kind: "shortcuts" })}
               />
+            </FadeIn>
+            <FadeIn delay={220}>
+              <EditorDecksSection />
             </FadeIn>
             <div className={styles.edGrid}>
               <div>

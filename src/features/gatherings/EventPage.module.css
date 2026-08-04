@@ -206,6 +206,9 @@
 .calloutWrap {
   margin-top: 16px;
 }
+.saveEventRow {
+  margin-top: 12px;
+}
 
 .ticketCard {
   background: var(--paper);
@@ -494,6 +497,11 @@
 }
 
 @media (max-width: 860px) {
+  .hero {
+    /* The floating nav band is ~80px (--nav-top + --nav-height); 120px left too
+       much dead plum above the fold on phones. Clear the nav + a little air. */
+    padding-top: 88px;
+  }
   .layout {
     grid-template-columns: 1fr;
   }

@@ -1,5 +1,5 @@
 import { ChipSelect, Toggle } from "../../shared/components/ui";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileEdit } from "../../app/providers/useProfile";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { LOOKING_FOR } from "../settings/interests.data";
 import { Section } from "./ProfileSections";
@@ -14,7 +14,7 @@ import styles from "./ProfilePage.module.css";
  */
 export function LookingForEditor() {
   const { t } = useTranslation();
-  const { draft, updateDraft } = useProfile();
+  const { draft, updateDraft } = useProfileEdit();
   return (
     <Section title={t("members:profileEdit.lookingFor.heading")}>
       <p className={styles.lookingForHelper}>

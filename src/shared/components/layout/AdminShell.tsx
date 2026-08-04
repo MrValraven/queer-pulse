@@ -1,13 +1,21 @@
-import { type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { FiSearch, FiMoon, FiSun, FiBell } from "react-icons/fi";
+import { FiSearch, FiMoon, FiSun, FiBell, FiMenu } from "react-icons/fi";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useToast } from "../feedback/useToast";
 import { useTranslation } from "../../i18n/useTranslation";
+import { useMediaQuery, useScrollLock } from "../../hooks";
 import { AdminSidebar } from "./AdminSidebar";
+import { useNavDrawerFocus } from "./useNavDrawerFocus";
 import styles from "./AdminShell.module.css";
 
 export { ADMIN_NAV } from "./adminNav.data";
+
+/** id linking the topbar hamburger (`aria-controls`) to the off-canvas panel. */
+const SIDEBAR_DRAWER_ID = "admin-sidebar-drawer";
+
+/** Mirrors the CSS `@media (max-width: 900px)` where the sidebar goes off-canvas. */
+const MOBILE_QUERY = "(max-width: 900px)";
 
 interface Crumb {
   label: string;
@@ -31,12 +39,80 @@ export function AdminShell({
   const resolvedSearchPlaceholder =
     searchPlaceholder ?? t("shared:adminShell.searchPlaceholder");
 
+  // Below the mobile breakpoint the sidebar is a slide-in off-canvas panel; on
+  // desktop it stays a static rail (the panel wrapper is `display: contents`),
+  // so the drawer machinery only engages while `isMobile`.
+  const isMobile = useMediaQuery(MOBILE_QUERY);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const drawerPanelRef = useRef<HTMLDivElement>(null);
+  const isDrawerActive = isMobile && isDrawerOpen;
+  const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
+
+  // Growing past the breakpoint reveals the static rail, so drop any open state
+  // rather than leave a stale off-canvas panel behind the desktop layout.
+  useEffect(() => {
+    if (!isMobile) setIsDrawerOpen(false);
+  }, [isMobile]);
+
+  // Lock page scroll and trap focus only while the drawer is genuinely open on
+  // mobile. `useNavDrawerFocus` (shared with MobileNavDrawer) captures the
+  // trigger, traps Tab inside the panel, closes on Escape, and restores focus
+  // to the hamburger on close.
+  useScrollLock(isDrawerActive);
+  useNavDrawerFocus({
+    isOpen: isDrawerActive,
+    panelRef: drawerPanelRef,
+    onClose: closeDrawer,
+  });
+
+  // Dialog semantics belong to the panel only when it is acting as the mobile
+  // off-canvas drawer — never on the static desktop rail.
+  const drawerDialogProps = isMobile
+    ? {
+        role: "dialog" as const,
+        "aria-modal": true,
+        "aria-label": t("nav:menu"),
+        tabIndex: -1,
+      }
+    : {};
+
   return (
     <div className={styles.shell}>
-      <AdminSidebar />
+      {isDrawerActive && (
+        <div
+          className={styles.scrim}
+          role="presentation"
+          onClick={closeDrawer}
+        />
+      )}
+
+      <div
+        id={SIDEBAR_DRAWER_ID}
+        ref={drawerPanelRef}
+        className={[styles.sidebarDock, isDrawerOpen && styles.sidebarDockOpen]
+          .filter(Boolean)
+          .join(" ")}
+        // When collapsed off-canvas on mobile, take the panel out of the tab
+        // order and hide it from assistive tech; on desktop it is the live rail.
+        inert={isMobile && !isDrawerOpen}
+        {...drawerDialogProps}
+      >
+        <AdminSidebar onNavigate={closeDrawer} />
+      </div>
 
       <div className={styles.main}>
         <header className={styles.topbar}>
+          <button
+            type="button"
+            className={styles.menuBtn}
+            aria-label={isDrawerOpen ? t("nav:closeMenu") : t("nav:openMenu")}
+            aria-expanded={isDrawerOpen}
+            aria-controls={SIDEBAR_DRAWER_ID}
+            onClick={() => setIsDrawerOpen((open) => !open)}
+          >
+            <FiMenu aria-hidden />
+          </button>
+
           <div className={styles.crumb}>
             {breadcrumb.map((c) => (
               <span key={c.to ?? c.label} className={styles.crumbCrumb}>

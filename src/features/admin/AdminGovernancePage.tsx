@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FadeIn, Button } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -11,6 +12,7 @@ import { AdminGovernanceAudit } from "./AdminGovernanceAudit";
 
 export function AdminGovernancePage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [active, setActive] = useState("finances");
   const { showToast } = useToast();
 
@@ -46,7 +48,15 @@ export function AdminGovernancePage() {
             <Button
               variant="ghost"
               onClick={() =>
-                showToast(t("admin:governance.header.publishToast"), "success")
+                demoMode
+                  ? showToast(
+                      t("admin:governance.header.publishToast"),
+                      "success",
+                    )
+                  : showToast(
+                      t("admin:governance.header.publishComingSoonToast"),
+                      "info",
+                    )
               }
             >
               {t("admin:governance.header.publishCta")}

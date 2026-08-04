@@ -1,12 +1,13 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui";
+import { canGoBack } from "./SwipeBackShell";
+import { tabOf } from "./tabRoots";
 import { useScrolled } from "../../hooks/useScrolled";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useAuth } from "../../../app/providers/authContext";
 import { useNavMode } from "../../../app/providers/navModeContext";
-import { useDisplayMode } from "../../../app/providers/displayModeContext";
 import { routes } from "../../../app/routeMap";
 import { useUnreadCount } from "../../../features/notifications/api/useUnreadCount";
 import { useUnreadMessages } from "../../../features/messages/api/useConversations";
@@ -16,9 +17,30 @@ import { MegaNav } from "./MegaNav";
 import { Sidebar } from "./Sidebar";
 import { AccountMenu } from "./AccountMenu";
 import { MobileNavDrawer } from "./MobileNavDrawer";
-import { NAV_DRAWER_TRIGGER_ATTRIBUTE } from "./useNavDrawerFocus";
+import { AccountSheet } from "./AccountSheet";
 import { useNavDrawer } from "../../../app/providers/navDrawerContext";
 import styles from "./Navbar.module.css";
+
+/** React-router stamps a per-entry index on history.state; -1 when absent so
+    `canGoBack` reads false (mirrors SwipeBackShell's own private guard). */
+function currentHistoryIdx(): number {
+  const state = window.history.state as { idx?: number } | null;
+  return typeof state?.idx === "number" ? state.idx : -1;
+}
+
+function BackChevronIcon() {
+  return (
+    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M15 5l-7 7 7 7"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 function Brand({ to }: { to: string }) {
   return (
@@ -90,23 +112,35 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
   const { loggedIn } = useAuth();
   const { navMode } = useNavMode();
   const { t } = useTranslation();
-  const { drawerOpen, openDrawer, closeDrawer } = useNavDrawer();
-  const { isInstalled } = useDisplayMode();
+  const { activeSheet, closeSheet } = useNavDrawer();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   // The drawer only renders below the mobile breakpoint (see the gate at the
   // bottom of this component), but the open state lives in a provider that
   // outlives it. Without this, resizing past 860px with the drawer open unmounts
-  // it while `drawerOpen` stays true — so resizing back down reopens a drawer
+  // it while `activeSheet` stays non-null — so resizing back down reopens a drawer
   // the user never asked for, and leaves the scroll lock and the pushed history
   // entry live in between. Close it as the gate closes.
   useEffect(() => {
-    if (!isMobile && drawerOpen) closeDrawer();
-  }, [isMobile, drawerOpen, closeDrawer]);
-  // Installed on mobile: the tab bar owns navigation, so the top bar drops to a
-  // slim title strip. The hamburger goes with it — the "More" tab opens the
-  // drawer now — but search and the notifications bell have no other home, so
-  // they stay.
-  const isAppBar = isInstalled && isMobile;
+    if (!isMobile && activeSheet) closeSheet();
+  }, [isMobile, activeSheet, closeSheet]);
+  // On any mobile view (installed or browser tab): the bottom tab bar owns
+  // navigation, so the top bar drops to a slim title strip. The hamburger goes
+  // with it — the "More" tab opens the drawer now — but search and the
+  // notifications bell have no other home, so they stay.
+  const isAppBar = isMobile;
+
+  // Contextual back affordance for the mobile app bar. In an installed
+  // standalone PWA there's no browser back button, so a detail page's only way
+  // back would otherwise be the invisible edge-swipe. Shows only when history
+  // can go back AND we're not already on a primary tab root (where "back" would
+  // leave the app). Reuses the exact guard the edge-swipe uses (`canGoBack` +
+  // the router's history idx), so the two never disagree. `useLocation` above
+  // makes this recompute on every navigation despite the persistent mount.
+  const atTabRoot = tabOf(pathname) === pathname;
+  const showBackButton =
+    isAppBar && !atTabRoot && canGoBack(currentHistoryIdx());
 
   // Desktop sidebar mode: swap the whole top bar for the left rail. Mobile always
   // keeps the top bar + drawer below, regardless of nav mode.
@@ -125,7 +159,21 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
           .filter(Boolean)
           .join(" ")}
       >
-        <Brand to={loggedIn ? routes.feed : routes.homepage} />
+        <div className={styles.navLeft}>
+          {showBackButton && (
+            <button
+              type="button"
+              className={styles.backButton}
+              onClick={() => {
+                void navigate(-1);
+              }}
+              aria-label={t("nav:back")}
+            >
+              <BackChevronIcon />
+            </button>
+          )}
+          <Brand to={loggedIn ? routes.feed : routes.homepage} />
+        </div>
 
         <div className={styles.links}>
           <MegaNav />
@@ -141,8 +189,8 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>
 
-          {(!isMobile || isAppBar) && (
-            // Opens the global ⌘K command palette (see CommandPalette / OPEN_SEARCH_EVENT).
+          {/* Opens the global ⌘K command palette (see CommandPalette / OPEN_SEARCH_EVENT). Desktop only — mobile search lives in the More sheet. */}
+          {!isMobile && (
             <button
               type="button"
               className={styles.bell}
@@ -155,9 +203,14 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
             </button>
           )}
 
+          {/* Mobile app bar mirrors Instagram: messages + notifications
+              top-right; the avatar "You" tab lives in the bottom bar. */}
           {isAppBar &&
             (loggedIn ? (
-              <NotificationsBell unreadCount={unreadCount} />
+              <>
+                <MessagesLink />
+                <NotificationsBell unreadCount={unreadCount} />
+              </>
             ) : (
               <Link to={routes.signIn} className={styles.signIn}>
                 {t("nav:signIn")}
@@ -181,24 +234,15 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
                 </Button>
               </>
             ))}
-
-          {isMobile && !isAppBar && (
-            <button
-              type="button"
-              className={styles.menuButton}
-              onClick={openDrawer}
-              aria-haspopup="dialog"
-              aria-expanded={drawerOpen}
-              aria-label={t("nav:openMenu")}
-              {...{ [NAV_DRAWER_TRIGGER_ATTRIBUTE]: "" }}
-            >
-              <MenuIcon />
-            </button>
-          )}
         </div>
       </nav>
 
-      {isMobile && <MobileNavDrawer />}
+      {isMobile && (
+        <>
+          <MobileNavDrawer />
+          <AccountSheet />
+        </>
+      )}
     </>
   );
 }
@@ -255,40 +299,6 @@ function SunIcon() {
         d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
         stroke="currentColor"
         strokeWidth={2}
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function MenuIcon() {
-  return (
-    <svg width={20} height={20} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <line
-        x1={3}
-        y1={6}
-        x2={21}
-        y2={6}
-        stroke="currentColor"
-        strokeWidth={2.2}
-        strokeLinecap="round"
-      />
-      <line
-        x1={3}
-        y1={12}
-        x2={21}
-        y2={12}
-        stroke="currentColor"
-        strokeWidth={2.2}
-        strokeLinecap="round"
-      />
-      <line
-        x1={3}
-        y1={18}
-        x2={21}
-        y2={18}
-        stroke="currentColor"
-        strokeWidth={2.2}
         strokeLinecap="round"
       />
     </svg>

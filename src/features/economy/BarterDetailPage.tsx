@@ -1,7 +1,9 @@
 import { Link, Navigate, useParams } from "react-router-dom";
+import { FiRepeat } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Avatar, FadeIn } from "../../shared/components/ui";
+import { Avatar, EmptyState, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -48,9 +50,35 @@ const SUBLINE_KEY: Record<Mode, string> = {
 
 export function BarterDetailPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { id } = useParams();
   const b = BARTERS.find((x) => x.id === id);
   const loading = useSimulatedLoad();
+
+  // Live mode has no real skill-exchange board yet — the BARTERS mock is
+  // demo-only fiction, so never let it stand in for a real swap detail. Show an
+  // honest coming-soon state instead of hardcoded mock content.
+  if (!demoMode) {
+    return (
+      <PageShell>
+        <div className={styles.page}>
+          <Link to={routes.barter} className={styles.back}>
+            {t("economy:barterDetail.back")}
+          </Link>
+          <EmptyState
+            icon={<FiRepeat />}
+            title={t("economy:barterDetail.emptyLive.title")}
+            description={t("economy:barterDetail.emptyLive.description")}
+            action={{
+              label: t("economy:barterDetail.emptyLive.cta"),
+              to: routes.barter,
+            }}
+          />
+        </div>
+      </PageShell>
+    );
+  }
+
   if (!b) return <Navigate to={routes.barter} replace />;
 
   const info = getMemberInfo(b);

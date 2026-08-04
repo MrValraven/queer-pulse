@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useProfile } from "../../../app/providers/useProfile";
+import { useProfileData } from "../../../app/providers/useProfile";
 import type { DirectoryPlace, Review } from "../directoryPlaces";
 import { submitReview, type SubmitReviewInput } from "./directory.api";
 import { DIRECTORY_KEY } from "./useDirectory";
@@ -23,7 +23,7 @@ function recomputeRating(reviews: Review[]): { score: string; count: number } {
  */
 export function useSubmitReview(slug: string) {
   const { demoMode } = useDemoMode();
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   const queryClient = useQueryClient();
 
   return useMutation<Review, Error, SubmitReviewInput>({

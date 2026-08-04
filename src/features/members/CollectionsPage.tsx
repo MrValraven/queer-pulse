@@ -189,6 +189,10 @@ export function CollectionsPage() {
   }, [contents, savedItems]);
 
   const createCollection = (name: string, privacy: Privacy) => {
+    // No collections endpoint exists yet — creation lives only in local state and
+    // would vanish on reload. Demo simulates it; live never offers a create that
+    // silently goes nowhere (entry points are demo-gated below).
+    if (!demoMode) return;
     const id = `c-${Date.now()}`;
     setCollections((prev) => [
       {
@@ -256,9 +260,11 @@ export function CollectionsPage() {
               {t("members:collections.header.lead")}
             </p>
           </div>
-          <Button variant="primary" onClick={() => setModal({ type: "new" })}>
-            {t("members:collections.header.newCta")}
-          </Button>
+          {demoMode && (
+            <Button variant="primary" onClick={() => setModal({ type: "new" })}>
+              {t("members:collections.header.newCta")}
+            </Button>
+          )}
         </header>
 
         <SavedByYou />
@@ -268,10 +274,6 @@ export function CollectionsPage() {
             icon={<FiFolder />}
             title={t("members:collections.emptyLive.title")}
             description={t("members:collections.emptyLive.description")}
-            action={{
-              label: t("members:collections.emptyLive.cta"),
-              onClick: () => setModal({ type: "new" }),
-            }}
           />
         ) : (
         <div className={styles.grid}>

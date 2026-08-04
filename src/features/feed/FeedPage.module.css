@@ -83,6 +83,14 @@
   flex-direction: column;
   gap: 10px;
 }
+/* Infinite-scroll pager below the live feed (FeedLoadMore). Also the
+   IntersectionObserver sentinel node — its own height keeps the observer's
+   generous rootMargin from clamping to zero. */
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
 .card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);

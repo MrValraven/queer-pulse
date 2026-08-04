@@ -4,6 +4,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   catLabel,
   DAYS,
+  formatDayHours,
   goodForLabel,
   initials,
   langLabel,
@@ -18,8 +19,8 @@ function hoursLine(draft: ListingDraft): string | null {
   const open = DAYS.filter((d) => draft.hours[d.id]?.open);
   const first = open[0];
   if (!first) return null;
-  const sample = draft.hours[first.id]!;
-  return `${open.map((d) => d.id).join(", ")} · ${sample.from}–${sample.to}`;
+  const sample = formatDayHours(draft.hours[first.id]);
+  return `${open.map((d) => d.id).join(", ")} · ${sample ?? ""}`;
 }
 
 /** Sticky directory-card + detail-page preview that mirrors the live form. */

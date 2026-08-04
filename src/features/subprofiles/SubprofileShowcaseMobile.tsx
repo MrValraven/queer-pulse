@@ -64,14 +64,17 @@ export function SubprofileShowcaseMobile({
     const persona = personas[0];
     if (!persona) return null;
     const meta = ownerMetaBySlug?.get(persona.slug);
+    // A co-owner sees Edit here even when viewing a co-owner's profile
+    // (`isSelf` false) — `viewerIsMember` on the public DTO is the signal.
+    const canEdit = isSelf || persona.viewerIsMember;
     return (
       <div className={styles.mobileAccordion}>
         <SubprofileFeatureCard
           persona={persona}
           href={nestedPersonaPath(ownerSlug, persona.slug)}
           ownerControls={
-            isSelf && meta ? (
-              <SubprofileEditButton subprofileId={meta.id} />
+            canEdit ? (
+              <SubprofileEditButton subprofileId={meta?.id ?? persona.id} />
             ) : undefined
           }
           status={meta?.status}
@@ -88,6 +91,9 @@ export function SubprofileShowcaseMobile({
       {personas.map((persona) => {
         const isExpanded = persona.slug === expandedSlug;
         const meta = ownerMetaBySlug?.get(persona.slug);
+        // A co-owner sees Edit here even when viewing a co-owner's profile
+        // (`isSelf` false) — `viewerIsMember` on the public DTO is the signal.
+        const canEdit = isSelf || persona.viewerIsMember;
         return (
           <SubprofileMobileRow
             key={persona.slug}
@@ -102,8 +108,8 @@ export function SubprofileShowcaseMobile({
               persona={persona}
               href={nestedPersonaPath(ownerSlug, persona.slug)}
               ownerControls={
-                isSelf && meta ? (
-                  <SubprofileEditButton subprofileId={meta.id} />
+                canEdit ? (
+                  <SubprofileEditButton subprofileId={meta?.id ?? persona.id} />
                 ) : undefined
               }
               status={meta?.status}

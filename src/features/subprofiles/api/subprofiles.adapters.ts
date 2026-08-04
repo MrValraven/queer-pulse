@@ -99,6 +99,10 @@ export interface PublicSubprofileView {
   viewerEndorsed: boolean;
   followerCount: number;
   viewerFollowing: boolean;
+  /** Is the signed-in viewer a co-owner (creator or invited member) of THIS
+   *  persona? Drives the "edit" affordance on a nested persona shown on a
+   *  co-owner's profile (in addition to the owner's own `isSelf` view). */
+  viewerIsMember: boolean;
 }
 
 /** Per-persona owner-only metadata (status/visibility/position/id), threaded
@@ -223,6 +227,7 @@ export function publicSubprofileToView(
     viewerEndorsed: dto.viewerEndorsed,
     followerCount: dto.followerCount,
     viewerFollowing: dto.viewerFollowing,
+    viewerIsMember: dto.viewerIsMember,
   };
 }
 
@@ -262,6 +267,10 @@ export function ownerViewToShowcaseView(
     viewerEndorsed: false,
     followerCount: view.followerCount,
     viewerFollowing: false,
+    // The signed-in owner is trivially a member of their own persona; the
+    // showcase already renders edit controls via `isSelf` here, but keeping
+    // this accurate avoids a silently-wrong flag on the shared view model.
+    viewerIsMember: true,
   };
 }
 

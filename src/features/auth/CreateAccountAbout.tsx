@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PRONOUNS, VIS_OPTS, type Visibility } from "./createAccount.data";
@@ -21,6 +22,7 @@ export function AboutAndVisibility({
   setVisibility,
 }: AboutProps) {
   const { t } = useTranslation();
+  const fieldId = useId();
   return (
     <>
       <div className={styles.section}>
@@ -37,8 +39,11 @@ export function AboutAndVisibility({
           />
         </FormField>
         <div className={styles.field}>
-          <label>{t("auth:createAccount.field.pronouns.label")}</label>
+          <label htmlFor={`${fieldId}-pronouns`}>
+            {t("auth:createAccount.field.pronouns.label")}
+          </label>
           <input
+            id={`${fieldId}-pronouns`}
             type="text"
             placeholder={t("auth:createAccount.field.pronouns.placeholder")}
             value={pronouns}

@@ -1,5 +1,5 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileEdit } from "../../app/providers/useProfile";
 import { DIRECTORY_BLURB_MAX_CHARS } from "./directoryBlurb";
 import { DirectoryCardPreview } from "./DirectoryCardPreview";
 import { InlineTextarea } from "./profileEditControls";
@@ -20,7 +20,7 @@ const COUNTER_VISIBLE_FROM = DIRECTORY_BLURB_MAX_CHARS - 30;
  */
 export function ProfileShortBioField() {
   const { t } = useTranslation();
-  const { draft, updateDraft } = useProfile();
+  const { draft, updateDraft } = useProfileEdit();
 
   const length = draft.role.trim().length;
   const showCounter = length >= COUNTER_VISIBLE_FROM;

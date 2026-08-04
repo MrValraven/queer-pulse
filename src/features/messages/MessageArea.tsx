@@ -1,36 +1,23 @@
 import {
-  Fragment,
   useCallback,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
   type RefObject,
 } from "react";
+import type { Virtualizer } from "@tanstack/react-virtual";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
-import { MessageRunView, type RunParticipant } from "./MessageRun";
-import { buildTimeline } from "./messageRuns";
-import { SystemMessagePill } from "./SystemMessagePill";
+import { type RunParticipant } from "./MessageRun";
+import { MessageAreaRow } from "./MessageAreaRow";
+import { gapAfterRow, type MessageRow } from "./messageRows";
 import { TypingIndicatorRow } from "./TypingIndicatorRow";
 import type { LongPressOrigin } from "./useLongPress";
 import type { SeenByEntry } from "./groupReceipts";
 import type { ChatMessage, GroupMemberView } from "./data";
 import styles from "./MessagesPage.module.css";
-
-/**
- * `day` is a stable canonical id ("Today" / "Yesterday", or an already
- * locale-formatted date string from the adapter) — only the two chrome buckets
- * computed client-side resolve through the catalog; any other value is a date
- * string rendered as-is.
- */
-function dayHeading(day: string, t: TFunction): string {
-  if (day === "Today") return t("messages:day.today");
-  if (day === "Yesterday") return t("messages:day.yesterday");
-  return day;
-}
 
 /** Stable identity of a message for continuity tracking: the server id, or the
  *  ISO timestamp as a fallback. Demo/optimistic messages have neither → the
@@ -221,15 +208,23 @@ function useNewIncomingAnnouncement(
 
 export interface MessageAreaProps {
   areaRef: RefObject<HTMLDivElement | null>;
-  /** Wraps the day-groups + typing row as ONE stable node for
+  /** Wraps the virtualized sizer + typing row as ONE stable node for
    *  `useMessageScroll`'s resize-follow `ResizeObserver` to watch — see that
    *  hook's `contentRef` comment. */
   contentRef: RefObject<HTMLDivElement | null>;
+  /** Only used for the live-region "new message" announcement and the
+   *  entrance-animation freshness gate below — rendering itself is driven
+   *  entirely by `rows`/`rowVirtualizer` (see `useMessageRowVirtualizer`). */
   messageGroups: { day: string; items: ChatMessage[] }[];
+  /** The flattened, virtualizer-keyed row list (day separators, the unread
+   *  divider, runs, system pills, the group "Seen by" line) built once
+   *  upstream by `useMessageRowVirtualizer` from the same `messageGroups`. */
+  rows: MessageRow[];
+  /** The `@tanstack/react-virtual` instance driving which rows actually
+   *  mount, built alongside `rows` so both stay in lock-step. */
+  rowVirtualizer: Virtualizer<HTMLDivElement, Element>;
   loadingOlder: boolean;
   onScroll: () => void;
-  /** The message the "New messages" divider renders before (matched by reference). */
-  dividerAnchorMessage: ChatMessage | undefined;
   counterpart: RunParticipant;
   counterpartName: string;
   /** GROUP thread → received runs carry per-sender name + avatar attribution. */
@@ -284,9 +279,10 @@ export function MessageArea({
   areaRef,
   contentRef,
   messageGroups,
+  rows,
+  rowVirtualizer,
   loadingOlder,
   onScroll,
-  dividerAnchorMessage,
   counterpart,
   counterpartName,
   isGroup,
@@ -319,19 +315,7 @@ export function MessageArea({
     conversationId,
     messageGroups,
   );
-  // Each day-group's timeline (sender runs + system pills), built once per
-  // `messageGroups`/`dividerAnchorMessage` change instead of on every render —
-  // `messageGroups` is already a stable memoized reference upstream, and
-  // `dividerAnchorMessage` is a latched ref value, so this only re-walks the
-  // messages when the thread's actual content changes.
-  const timeline = useMemo(
-    () =>
-      messageGroups.map((group) => ({
-        day: group.day,
-        blocks: buildTimeline(group.items, undefined, dividerAnchorMessage),
-      })),
-    [messageGroups, dividerAnchorMessage],
-  );
+  const groupSeenByCount = groupSeenBy?.length ?? 0;
   return (
     <>
       {/* Scoped live region: announces ONLY new inbound messages (see the
@@ -364,126 +348,70 @@ export function MessageArea({
         {/* The ONE node `useMessageScroll`'s resize-follow ResizeObserver
             watches (see its `contentRef` comment) — a plain in-flow wrapper,
             so its own box grows with any descendant (a late image, an added
-            reaction, an expanding inline edit), unlike `.area` itself, whose
-            `overflow-y: auto` box never changes size. */}
+            reaction, an expanding inline edit, or the virtualized sizer below
+            correcting an estimated row to its measured height), unlike
+            `.area` itself, whose `overflow-y: auto` box never changes size. */}
         <div className={styles.areaContent} ref={contentRef}>
-        {timeline.map((group) => (
-          <div key={group.day} className={styles.dayGroup}>
-            <div
-              className={styles.daySep}
-              role="separator"
-              aria-label={t("messages:day.separatorLabel", {
-                day: dayHeading(group.day, t),
-              })}
-            >
-              <span className={styles.daySepLabel} aria-hidden="true">
-                {dayHeading(group.day, t)}
-              </span>
-            </div>
-            <div className={styles.runs} role="list">
-            {group.blocks.map(
-              (block, index) => {
-                // A system block anchors on its own message; a run block on its
-                // first bubble — either can carry the unread divider before it.
-                const anchor =
-                  block.kind === "run" ? block.run.items[0] : block.message;
-                const blockKey =
-                  (block.kind === "run"
-                    ? block.run.items[0]?.id
-                    : block.message.id) ?? `${group.day}-block-${index}`;
-                const showDivider =
-                  dividerAnchorMessage !== undefined &&
-                  anchor === dividerAnchorMessage;
-                return (
-                  <Fragment key={blockKey}>
-                    {showDivider && (
-                      <div
-                        className={styles.unreadDivider}
-                        role="separator"
-                        aria-label={t(
-                          "messages:conversation.unreadDividerAria",
-                        )}
-                      >
-                        <span aria-hidden="true">
-                          {t("messages:conversation.unreadDivider")}
-                        </span>
-                      </div>
-                    )}
-                    {block.kind === "system" ? (
-                      block.message.systemEvent && (
-                        <SystemMessagePill event={block.message.systemEvent} />
-                      )
-                    ) : (
-                      <MessageRunView
-                        run={block.run}
-                        counterpart={counterpart}
-                        selfName={t("messages:conversation.you")}
-                        counterpartName={counterpartName}
-                        isGroup={isGroup}
-                        onRetry={onRetry}
-                        showSeen={
-                          seenActive &&
-                          block.run.items[block.run.items.length - 1] ===
-                            lastOutbound
-                        }
-                        showDelivered={
-                          deliveredActive &&
-                          block.run.items[block.run.items.length - 1] ===
-                            lastOutbound
-                        }
-                        onReactionToggle={onReactionToggle}
-                        onReply={onReply}
-                        onOpenActions={onOpenActions}
-                        editingMessageId={editingMessageId}
-                        onBeginEdit={onBeginEdit}
-                        onSubmitEdit={onSubmitEdit}
-                        onCancelEdit={onCancelEdit}
-                        onJumpToMessage={onJumpToMessage}
-                        isNewMessage={isNewMessage}
-                        isNewReaction={isNewReaction}
-                      />
-                    )}
-                    {/* Group "Seen by N": a tappable receipt under the run that
-                        ends with the caller's latest message. DMs use the jade
-                        double-check tick instead (rendered in the bubble). */}
-                    {block.kind === "run" &&
-                      isGroup &&
-                      groupSeenBy &&
-                      groupSeenBy.length > 0 &&
-                      block.run.items[block.run.items.length - 1] ===
-                        lastOutbound && (
-                        <button
-                          type="button"
-                          className={styles.groupSeenByLine}
-                          onClick={onOpenSeenBy}
-                        >
-                          {t("messages:group.seenByCount", {
-                            count: groupSeenBy.length,
-                          })}
-                        </button>
-                      )}
-                  </Fragment>
-                );
-              },
-            )}
-            </div>
+          {/* The virtualized sizer: its height is the virtualizer's running
+              total across every row's real (or, until measured, estimated)
+              height, and each row below is absolutely positioned within it by
+              its own `top` offset — only the visible window + a small
+              overscan actually mounts, however long the thread gets. */}
+          <div
+            className={styles.virtualSizer}
+            role="list"
+            style={{ height: rowVirtualizer.getTotalSize() }}
+          >
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+              const row = rows[virtualRow.index];
+              if (!row) return null;
+              return (
+                <MessageAreaRow
+                  key={virtualRow.key}
+                  row={row}
+                  index={virtualRow.index}
+                  measureElementRef={rowVirtualizer.measureElement}
+                  top={virtualRow.start}
+                  paddingBottomPx={gapAfterRow(row, rows[virtualRow.index + 1])}
+                  counterpart={counterpart}
+                  counterpartName={counterpartName}
+                  isGroup={isGroup}
+                  onRetry={onRetry}
+                  lastOutbound={lastOutbound}
+                  seenActive={seenActive}
+                  deliveredActive={deliveredActive}
+                  groupSeenByCount={groupSeenByCount}
+                  onOpenSeenBy={onOpenSeenBy}
+                  onReactionToggle={onReactionToggle}
+                  onReply={onReply}
+                  onOpenActions={onOpenActions}
+                  editingMessageId={editingMessageId}
+                  onBeginEdit={onBeginEdit}
+                  onSubmitEdit={onSubmitEdit}
+                  onCancelEdit={onCancelEdit}
+                  onJumpToMessage={onJumpToMessage}
+                  isNewMessage={isNewMessage}
+                  isNewReaction={isNewReaction}
+                />
+              );
+            })}
           </div>
-        ))}
-        {/* In-list typing indicator: styled as an incoming bubble on the left
-            (same avatar + alignment as a received run) so the signal lives
-            inside the conversation flow (WhatsApp/Signal-style) instead of only
-            above the composer. Rendered at the very bottom of the log, so it
-            grows the content and the scroll hook's ResizeObserver keeps a
-            pinned reader anchored to it. It subscribes to typing frames
-            INTERNALLY, so a typing frame re-renders only this leaf — never this
-            component or the log above it. */}
-        <TypingIndicatorRow
-          conversationId={conversationId}
-          counterpart={counterpart}
-          counterpartName={counterpartName}
-          isGroup={isGroup}
-          members={groupMembers}
-        />
+          {/* In-list typing indicator: styled as an incoming bubble on the left
+              (same avatar + alignment as a received run) so the signal lives
+              inside the conversation flow (WhatsApp/Signal-style) instead of only
+              above the composer. Rendered at the very bottom of the log, so it
+              grows the content and the scroll hook's ResizeObserver keeps a
+              pinned reader anchored to it. It subscribes to typing frames
+              INTERNALLY, so a typing frame re-renders only this leaf — never this
+              component or the log above it. Kept OUTSIDE the virtualized sizer:
+              it's always exactly one instance, so it never needs windowing. */}
+          <TypingIndicatorRow
+            conversationId={conversationId}
+            counterpart={counterpart}
+            counterpartName={counterpartName}
+            isGroup={isGroup}
+            members={groupMembers}
+          />
         </div>
       </div>
     </>

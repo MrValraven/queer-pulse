@@ -289,7 +289,7 @@ GOVERNMENT/LEGAL DATA REQUESTS: see §04 — no informal asks complied with.
 
 Prepared by Catarina Vaz & André Bento.
 Independently audited by Dra. Helena Faria, Faria Auditoria.
-Questions: transparency@queerpulse.app
+Questions: transparency@queerpulse.pt
 `;
 
 const REPORT_CSV = `section,metric,value
@@ -318,7 +318,7 @@ export function Signoff() {
           components={{
             em: <em />,
             // eslint-disable-next-line jsx-a11y/anchor-has-content -- false positive: an element template for <Translation>, which clones it with the translated children at render.
-            a: <a href="mailto:transparency@queerpulse.app" />,
+            a: <a href="mailto:transparency@queerpulse.pt" />,
           }}
         />
       </p>

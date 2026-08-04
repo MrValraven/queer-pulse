@@ -24,6 +24,15 @@
   transition: color 0.2s, border-color 0.2s;
 }
 
+/* Touch devices need a >=44px hit area (WCAG 2.5.8). The icon stays visually the
+   same size; only the tappable circle grows. Fine-pointer (desktop) keeps 36px. */
+@media (pointer: coarse) {
+  .navBtn {
+    width: 44px;
+    height: 44px;
+  }
+}
+
 @media (hover: hover) {
   .navBtn:hover {
     border-color: rgba(var(--line-rgb), 0.4);
@@ -136,6 +145,17 @@
   flex: none;
 }
 
+/* "+N" overflow indicator. Desktop cells are wide enough to show every dot, so
+   this is hidden here and only revealed (with the dots capped) on narrow cells. */
+.dayMore {
+  display: none;
+  margin-top: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink-40);
+}
+
 .eventList {
   display: flex;
   flex-direction: column;
@@ -214,6 +234,25 @@
   font-weight: 500;
   letter-spacing: -0.01em;
   color: var(--text-strong);
+}
+
+/* Phone: day cells shrink to ~45px, so trim their padding and cap the event dots.
+   Beyond MAX_MOBILE_DAY_DOTS (3, in CalendarGrid.tsx) dots hide and the "+N"
+   indicator shows instead of many wrapping 7px dots. */
+@media (max-width: 860px) {
+  .day {
+    padding: 6px 5px;
+    min-height: 60px;
+  }
+  .dayNum {
+    margin-bottom: 4px;
+  }
+  .dayDot:nth-child(n + 4) {
+    display: none;
+  }
+  .dayMore {
+    display: inline-block;
+  }
 }
 
 [data-theme="dark"] .grid,

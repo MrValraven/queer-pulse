@@ -7,6 +7,7 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
+import { useUnsavedChangesGuard } from "../../../shared/hooks";
 import { useCommunityMembership } from "../../../app/providers/useCommunityMembership";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
@@ -97,6 +98,14 @@ export function StartCommunityPage() {
     },
     [],
   );
+
+  // Warn before an in-progress community is abandoned. Only while still on the
+  // form: once founding begins (phase "opening"/"done") the guard is inactive, so
+  // the live-mode redirect into the brand-new community hub navigates freely.
+  useUnsavedChangesGuard({
+    active: phase === "form" && form.dirty,
+    confirmMessage: t("communities:start.leaveConfirm"),
+  });
 
   const scrollUp = () => window.scrollTo({ top: 0, behavior: "smooth" });
   const goToStep = (n: number) => {

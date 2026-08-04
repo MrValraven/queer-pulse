@@ -89,12 +89,14 @@ export function BarterPostStrip({
           >
             <input
               className={styles.psInput}
+              aria-label={t("economy:barter.postStrip.offerPlaceholder")}
               placeholder={t("economy:barter.postStrip.offerPlaceholder")}
               value={offerText}
               onChange={(e) => setOfferText(e.target.value)}
             />
             <input
               className={styles.psInput}
+              aria-label={t("economy:barter.postStrip.wantPlaceholder")}
               placeholder={t("economy:barter.postStrip.wantPlaceholder")}
               value={wantText}
               onChange={(e) => setWantText(e.target.value)}

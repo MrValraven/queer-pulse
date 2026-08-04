@@ -41,6 +41,12 @@ export const auth: Catalog = {
   "signIn.notice.inviteInvalid.title": "That invite isn't valid",
   "signIn.notice.inviteInvalid.body":
     "This invite link has expired or was already used. Ask your inviter for a fresh one, or request an invite yourself.",
+  "signIn.notice.inviteEmailMismatch.title": "This invite was set for a different email",
+  "signIn.notice.inviteEmailMismatch.body":
+    "Someone set this invite aside for one specific address. Sign in with that email, or ask them for a new invite for the one you're using.",
+  "signIn.notice.inviteInviterInactive.title": "The person who invited you has moved on",
+  "signIn.notice.inviteInviterInactive.body":
+    "Whoever sent this invite is no longer active on QueerPulse, so it can't bring you in. Ask another member you know for a fresh invite, or request one yourself.",
   "signIn.notice.accessDenied.title": "Sign-in was cancelled",
   "signIn.notice.accessDenied.body":
     "Looks like you cancelled the Google consent screen. No harm done — try again whenever you're ready.",
@@ -192,6 +198,8 @@ export const auth: Catalog = {
   "invite.ready.copyFailed": "Couldn't copy — try selecting the link instead",
   "invite.ready.copyLinkAriaLabel": "Copy invite link",
   "invite.ready.shareThrough": "Share through",
+  "invite.ready.qrHint": "Or let them scan it",
+  "invite.ready.qrLabel": "QR code for this invite link — scan it to open the invitation",
   "invite.ready.oneTimeLink": "One-time link",
   "invite.ready.expiresIn7Days": "Expires in 7 days",
   "invite.ready.expiresOn": "Expires {date}",
@@ -204,6 +212,7 @@ export const auth: Catalog = {
   "invite.sent.summary.expires": "Expires",
 
   "invite.sentList.label": "Invites you've sent",
+  "invite.sentList.filter.all": "All",
   "invite.sentList.status.valid": "Pending",
   "invite.sentList.status.used": "Accepted",
   "invite.sentList.status.expired": "Expired",
@@ -211,6 +220,21 @@ export const auth: Catalog = {
   "invite.sentList.detail.joined": "Joined — welcome {name}",
   "invite.sentList.detail.sentExpires": "Sent {sent} · expires {expires}",
   "invite.sentList.detail.sentExpired": "Sent {sent} · expired {expires}",
+  "invite.sentList.detail.sent": "Sent {sent}",
+  "invite.sentList.revokeCta": "Revoke",
+  "invite.sentList.revoking": "Revoking…",
+  "invite.sentList.revokedToast": "Invite revoked — the link no longer works.",
+  "invite.sentList.resendCta": "Send again",
+  "invite.sentList.resending": "Sending…",
+  "invite.sentList.resentToast": "Invite sent again — same link, fresh for another week.",
+  "invite.sentList.resendError.notYours":
+    "This isn't one of your invites to send again.",
+  "invite.sentList.resendError.notFound":
+    "We couldn't find that invite — it may have already been cleared.",
+  "invite.sentList.resendError.notResendable":
+    "Only an expired invite can be sent again — this one's already been used, withdrawn, or is still live.",
+  "invite.sentList.resendError.generic":
+    "Couldn't send that one again just now — give it another try in a moment.",
 
   // ── Invite unfurl preview card (mirrors the static Open Graph tags) ──
   "sharePreview.heroTitle.line1": "Walk into a room",
@@ -338,6 +362,7 @@ export const auth: Catalog = {
   "onboarding.stepWelcome.body":
     "QueerPulse is a cared-for professional network rooted in Lisbon. You were invited because someone here knows your worth.",
   "onboarding.stepWelcome.cta": "Let's get started",
+  "onboarding.stepWelcome.back": "← Back",
 
   "onboarding.stepPhoto.heading": "Put a face to the <em>name</em>",
   "onboarding.stepPhoto.body":

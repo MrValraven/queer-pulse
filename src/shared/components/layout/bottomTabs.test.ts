@@ -3,7 +3,7 @@ import { MEMBER_TABS, PUBLIC_TABS, activeTabKey } from "./bottomTabs";
 
 describe("tab sets", () => {
   it("leaves the last slot for More", () => {
-    expect(MEMBER_TABS).toHaveLength(4);
+    expect(MEMBER_TABS).toHaveLength(3);
     expect(PUBLIC_TABS).toHaveLength(3);
   });
 

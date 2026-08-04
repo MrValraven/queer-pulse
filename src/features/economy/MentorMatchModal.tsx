@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
+import { FiClock } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Mode } from "./mentorship.data";
 import {
@@ -17,6 +20,7 @@ export function MentorMatchModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   useScrollLock();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -57,24 +61,43 @@ export function MentorMatchModal({
         >
           ×
         </button>
-        <div className={styles.mmBar}>
-          <div
-            className={styles.mmFill}
-            style={{ transform: `scaleX(${fill / 100})` }}
-          />
-        </div>
-        <div className={styles.mmLabel}>
-          {done
-            ? t("economy:mentorship.match.done")
-            : t("economy:mentorship.match.stepOf", { step, total })}
-        </div>
-
-        {done ? (
-          <MentorMatchSuccess mode={mode} onClose={onClose} />
-        ) : mode === "mentee" ? (
-          <MenteeSteps step={step} setStep={setStep} />
+        {!demoMode ? (
+          // No mentor-matching endpoint yet — an honest coming-soon rather than
+          // walking the member through a wizard that fakes a match on submit.
+          <div className={styles.mmSuccess}>
+            <div className={styles.mmSuccessIcon}>
+              <FiClock />
+            </div>
+            <div className={styles.mmTitle} style={{ fontSize: 24 }}>
+              {t("economy:comingSoon.title")} {t("economy:comingSoon.em")}
+            </div>
+            <p className={styles.mmDesc}>{t("economy:comingSoon.body")}</p>
+            <Button type="button" variant="ghost" onClick={onClose}>
+              {t("economy:comingSoon.close")}
+            </Button>
+          </div>
         ) : (
-          <MentorSteps step={step} setStep={setStep} />
+          <>
+            <div className={styles.mmBar}>
+              <div
+                className={styles.mmFill}
+                style={{ transform: `scaleX(${fill / 100})` }}
+              />
+            </div>
+            <div className={styles.mmLabel}>
+              {done
+                ? t("economy:mentorship.match.done")
+                : t("economy:mentorship.match.stepOf", { step, total })}
+            </div>
+
+            {done ? (
+              <MentorMatchSuccess mode={mode} onClose={onClose} />
+            ) : mode === "mentee" ? (
+              <MenteeSteps step={step} setStep={setStep} />
+            ) : (
+              <MentorSteps step={step} setStep={setStep} />
+            )}
+          </>
         )}
       </div>
     </div>

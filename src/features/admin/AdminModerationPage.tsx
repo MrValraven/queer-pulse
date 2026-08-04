@@ -1,5 +1,5 @@
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { FadeIn } from "../../shared/components/ui";
+import { FadeIn, FeatureHelp } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { AdminPageHeader, AdminTabs } from "./ui";
@@ -37,18 +37,21 @@ export function AdminModerationPage() {
         <AdminPageHeader
           eyebrow={t("admin:moderation.header.eyebrow")}
           title={
-            q.counts.open === 0 ? (
-              <Translation
-                i18nKey="admin:moderation.header.titleClear"
-                components={{ em: <em /> }}
-              />
-            ) : (
-              <Translation
-                i18nKey="admin:moderation.header.title"
-                components={{ em: <em /> }}
-                values={{ count: q.counts.open }}
-              />
-            )
+            <>
+              {q.counts.open === 0 ? (
+                <Translation
+                  i18nKey="admin:moderation.header.titleClear"
+                  components={{ em: <em /> }}
+                />
+              ) : (
+                <Translation
+                  i18nKey="admin:moderation.header.title"
+                  components={{ em: <em /> }}
+                  values={{ count: q.counts.open }}
+                />
+              )}{" "}
+              <FeatureHelp id="admin.moderation" />
+            </>
           }
           sub={t("admin:moderation.header.sub")}
         />

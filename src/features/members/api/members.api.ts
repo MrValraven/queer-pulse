@@ -5,6 +5,7 @@ import {
   apiPut,
   apiDelete,
 } from "../../../shared/api/client";
+import { validateProfile } from "../../../shared/api/validation";
 import type { VouchRelationship } from "../vouchMember.data";
 import type { CommunityType } from "../../homepage/data/types";
 
@@ -198,7 +199,7 @@ export function getMembers(
 }
 
 export const getProfile = (slug: string) =>
-  apiGet<ProfileDTO>(`/profiles/${slug}`);
+  apiGet<ProfileDTO>(`/profiles/${slug}`, undefined, validateProfile);
 
 /** Fields the current member can edit on their own profile (PATCH /profiles/me). */
 export interface UpdateProfileDTO {

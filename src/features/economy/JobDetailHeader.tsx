@@ -26,6 +26,7 @@ export function JobDetailHeader({
           className={`${styles.save} ${saved ? styles.saved : ""}`}
           onClick={onToggleSave}
           aria-pressed={saved}
+          aria-label={t("economy:jobDetail.saveTitle")}
           title={t("economy:jobDetail.saveTitle")}
         >
           <svg viewBox="0 0 16 16">

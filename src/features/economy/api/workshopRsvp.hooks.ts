@@ -7,6 +7,7 @@ import {
   rsvpToWorkshop as rsvpRequest,
   type WorkshopRsvpStatus,
 } from "./workshopRsvp.api";
+import { economyKeys } from "./economyKeys";
 
 /** Where the viewer stands on one workshop, plus the counts that go with it. */
 export interface WorkshopRsvpState {
@@ -95,8 +96,12 @@ export function useWorkshopRsvpStore(): WorkshopRsvpStore {
   // so both caches are stale the moment a seat changes hands.
   const invalidate = useCallback(
     (id: string) => {
-      void queryClient.invalidateQueries({ queryKey: ["workshops"] });
-      void queryClient.invalidateQueries({ queryKey: ["workshop", id] });
+      void queryClient.invalidateQueries({
+        queryKey: economyKeys.workshopsRoot,
+      });
+      void queryClient.invalidateQueries({
+        queryKey: economyKeys.workshopById(id),
+      });
     },
     [queryClient],
   );

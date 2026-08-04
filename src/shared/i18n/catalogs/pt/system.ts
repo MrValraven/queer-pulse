@@ -101,6 +101,11 @@ export const system: Catalog = {
     "A tua conta está <em>suspensa</em> durante {days} dias.",
   "accountSuspended.lead":
     "Uma pessoa moderadora reviu uma denúncia e decidiu que a tua mensagem recente em <b>{channel}</b> violou o §02·02 do Código de Conduta (<em>identificação de género incorreta repetida</em>). Esta é uma <b>suspensão temporária no nível 3</b> da escala de moderação.",
+  // Texto de introdução em modo real (membro mesmo suspenso) — os detalhes ficam
+  // no bloco de motivo abaixo, vindos da nota de moderação, por isso é geral.
+  "accountSuspended.leadLive":
+    "A tua conta está em pausa enquanto uma decisão de moderação se mantém. Aqui está o que aconteceu — e como responder.",
+  "accountSuspended.reason.title": "Porque é que a tua conta foi pausada",
   "accountSuspended.details.action": "Ação",
   "accountSuspended.details.actionValue": "Suspensão de {days} dias",
   "accountSuspended.details.started": "Início",
@@ -201,9 +206,12 @@ export const system: Catalog = {
   "inviteState.notFound.heading": "Não conseguimos <em>reconhecer esta ligação.</em>",
   "inviteState.notFound.lead":
     "Esta ligação de convite não corresponde a nada do nosso lado. Pode ter sido mal copiada ou cortada ao ser partilhada. Pede um novo convite e nós tratamos de te pôr lá dentro.",
+  "inviteState.inviterInactive.eyebrow": "Quem convidou já não está ativo",
+  "inviteState.inviterInactive.heading": "A pessoa que te convidou <em>já não está por cá.</em>",
+  "inviteState.inviterInactive.lead":
+    "Quem enviou este convite já não está ativo no QueerPulse, por isso a ligação não te consegue trazer para dentro. Não foi nada que tenhas feito — pede um novo convite a outra pessoa que conheças, ou pede um e nós tratamos do resto.",
   "inviteState.details.expiredOn": "Expirou",
   "inviteState.details.vouchedBy": "Aval de",
-  "inviteState.actions.resend": "Pedir a {name} para reenviar →",
   "inviteState.actions.requestNew": "Pedir um novo convite",
   "inviteState.actions.signIn": "Entrar",
   "inviteState.actions.contact": "Falar com a equipa",
@@ -271,17 +279,17 @@ export const system: Catalog = {
     "Feito por pessoas em Lisboa, que preferem lançar mais devagar do que arriscar partir o apoio em crise.",
 
   // ── OfflinePage.tsx ───────────────────────────────────────────────────────
-  "offline.eyebrow": "Sem ligação · versão em cache",
+  "offline.eyebrow": "Sem ligação",
   "offline.h1": "Estás <em>offline.</em>",
   "offline.lead":
-    "Sem sinal, ou não conseguimos contactar os nossos servidores. <b>Não te preocupes</b> — as tuas confirmações de convívios, o teu mapa de espaços seguros guardado e o teu bilhete QR continuam aqui neste dispositivo.",
-  "offline.cachedTitle":
-    "Disponível offline · guardado em cache neste dispositivo",
-  "offline.cached.ticket.label":
-    "O teu bilhete QR — Noite de consultas abertas",
-  "offline.cached.ticket.sub": "{date} · Café Beirão · em cache há 3h",
-  "offline.cached.map.label": "Mapa de espaços seguros · Lisboa",
-  "offline.cached.map.sub": "42 locais · atualizado {when}",
+    "Sem sinal, ou não conseguimos contactar os nossos servidores neste momento. <b>As páginas que já abriste</b> neste dispositivo podem ainda carregar — experimenta uma abaixo.",
+  "offline.tryTitle": "Experimenta uma página que já abriste",
+  "offline.links.feed.label": "Feed da comunidade",
+  "offline.links.feed.sub": "As novidades da tua comunidade",
+  "offline.links.events.label": "Eventos",
+  "offline.links.events.sub": "O que se passa e as tuas confirmações",
+  "offline.links.messages.label": "Mensagens",
+  "offline.links.messages.sub": "As tuas conversas recentes",
   "offline.status": "À escuta de sinal",
   "offline.retryCta": "Tentar outra vez",
   "offline.retryingCta": "Ainda offline",
@@ -307,7 +315,7 @@ export const system: Catalog = {
   "pendingReview.timeline.step4.title":
     "Convite enviado · ativa-se no prazo de 14 dias",
   "pendingReview.timeline.step4.desc":
-    "Vais receber um email com uma ligação de utilização única",
+    "Vais receber uma ligação de utilização única para ativar a tua conta",
   "pendingReview.actions.magazineCta": "Ler a revista →",
   "pendingReview.actions.vouchCta": "Pedir um aval a alguém da comunidade",
   "pendingReview.actions.updateInterestsCta": "Atualizar os meus interesses",

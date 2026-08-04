@@ -5,6 +5,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { getWorkshop } from "./workshops.api";
 import { workshopDtoToWorkshop } from "./workshops.adapters";
+import { economyKeys } from "./economyKeys";
 import type { Workshop } from "../workshops.data";
 
 export interface WorkshopResult {
@@ -40,7 +41,7 @@ export function useWorkshop(slug: string | undefined): WorkshopResult {
   const shouldFetch = !demoMode && !!slug;
 
   const query = useQuery({
-    queryKey: ["workshop", slug, demoMode, language],
+    queryKey: economyKeys.workshop(slug, demoMode, language),
     enabled: shouldFetch,
     queryFn: async () => {
       const dto = await getWorkshop(slug as string);

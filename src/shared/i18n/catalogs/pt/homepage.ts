@@ -254,12 +254,14 @@ export const homepage: Catalog = {
   "newsletter.success.body":
     "Vamos começar a enviar o <strong>resumo semanal</strong> para <strong>{email}</strong> todas as quintas-feiras.",
   "newsletter.success.checkInboxNote":
-    "Verifica a tua caixa de entrada para confirmares a subscrição — o link expira em 48 horas.",
+    "Está tudo pronto — não é preciso email de confirmação. Podes alterar ou parar a qualquer momento nas definições.",
   "newsletter.success.useDifferentEmailCta": "Usar outro email",
   "newsletter.emailPlaceholder": "oteu@email.com",
   "newsletter.subscribeCta": "Subscrever",
   "newsletter.note":
     "Só para a comunidade · sem spam · cancela quando quiseres",
+  "newsletter.comingSoon":
+    "O resumo semanal ainda não está a ser enviado — ainda o estamos a construir. Quando estiver disponível, poderás subscrever aqui mesmo.",
 
   // ── Outro (chamada final) ──────────────────────────────────────────────────
   "outro.title": "Entra numa sala onde <em>já pertences.</em>",

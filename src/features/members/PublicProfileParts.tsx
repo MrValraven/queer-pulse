@@ -1,12 +1,35 @@
-import { FiExternalLink } from "react-icons/fi";
+import type { IconType } from "react-icons";
+import {
+  FiBookOpen,
+  FiCalendar,
+  FiCamera,
+  FiEdit3,
+  FiExternalLink,
+  FiFileText,
+  FiMessageCircle,
+  FiMusic,
+} from "react-icons/fi";
 import { FadeIn, ImageSlot } from "../../shared/components/ui";
 import { safeHref } from "../../shared/lib/safeHref";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { ActivityKind } from "./api/members.api";
 import type {
+  PublicProfileActivityDTO,
   PublicProfileLinkDTO,
   PublicProfileWorkDTO,
 } from "./api/publicProfile.api";
 import styles from "./PublicProfilePage.module.css";
+
+/** Activity kind → its icon (mirrors the live adapter's ACTIVITY_ICONS). */
+const ACTIVITY_ICONS: Record<ActivityKind, IconType> = {
+  post: FiFileText,
+  event: FiCalendar,
+  message: FiMessageCircle,
+  reading: FiBookOpen,
+  edit: FiEdit3,
+  photo: FiCamera,
+  music: FiMusic,
+};
 
 /**
  * The member's outbound links.
@@ -50,6 +73,55 @@ export function PublicProfileLinks({
           );
         })}
       </ul>
+    </FadeIn>
+  );
+}
+
+/**
+ * Recent public activity, as a logged-out visitor sees it. Rows are static
+ * (not links): the open web gets the fact of an action, never a deep link into
+ * the members' app (the backend drops `toLink` for this endpoint). When there
+ * is nothing to show, a quiet honest line — never fabricated activity.
+ */
+export function PublicProfileActivity({
+  activity,
+}: {
+  activity: PublicProfileActivityDTO[];
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <FadeIn as="section" className={styles.sec} delay={260}>
+      <div className={styles.secH}>
+        <h2>{t("members:publicBySlug.activityHeading")}</h2>
+      </div>
+      {activity.length === 0 ? (
+        <p className={styles.activityEmpty}>
+          {t("members:publicBySlug.activityEmpty")}
+        </p>
+      ) : (
+        <ul className={styles.activityList}>
+          {activity.map((item, index) => {
+            const Icon = ACTIVITY_ICONS[item.kind] ?? FiFileText;
+            return (
+              <li
+                key={`${item.title}-${index}`}
+                className={styles.activityItem}
+              >
+                <span className={styles.activityIcon} aria-hidden>
+                  <Icon />
+                </span>
+                <span className={styles.activityBody}>
+                  <span className={styles.activityTitle}>{item.title}</span>
+                  {item.sub && (
+                    <span className={styles.activitySub}>{item.sub}</span>
+                  )}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </FadeIn>
   );
 }

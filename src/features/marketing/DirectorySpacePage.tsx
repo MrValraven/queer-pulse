@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { FiMapPin } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { EmptyState, SkeletonLine } from "../../shared/components/ui";
+import { EmptyState, FeatureHelp, SkeletonLine } from "../../shared/components/ui";
 import { ErrorFallback } from "../../shared/components/feedback/ErrorFallback";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDirectoryPlace } from "./api/useDirectory";
@@ -126,7 +126,9 @@ export function DirectorySpacePage() {
                     {categoryText}
                   </Link>
                 </li>
-                <li aria-current="page">{place.name}</li>
+                <li aria-current="page">
+                  {place.name} <FeatureHelp id="local.directoryDetail" />
+                </li>
               </ol>
             </nav>
             {owned && (

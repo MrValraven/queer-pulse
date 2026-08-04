@@ -1,5 +1,13 @@
-import type { ListingQueueRow } from "./api/adminListings.api";
+import {
+  countListingsByStatus,
+  type AdminListingsPageVM,
+  type ListingHistoryDTO,
+  type ListingQueueRow,
+  type ListingQueueSort,
+} from "./api/adminListings.api";
 import type { ListingDTO } from "../marketing/listBusiness/api/listings.api";
+import type { ListingStatus } from "../marketing/listBusiness/listBusiness.data";
+import type { MemberRefDTO } from "../../shared/api/refs";
 
 /** Build a demo ListingDTO with sensible defaults, overridden per fixture. */
 function demoListing(overrides: Partial<ListingDTO> & Pick<
@@ -168,3 +176,245 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
     }),
   },
 ];
+
+/**
+ * A demo-session-only mutation overlay, keyed by `ref`. `ADMIN_LISTINGS_QUEUE`
+ * itself is never mutated (a page reload must reset demo state), but a status
+ * move/ask/remove needs to survive a fresh `filterDemoListingQueue()` call for
+ * a status/q/sort combination the moderator hasn't visited yet this session —
+ * without this overlay, switching to a not-yet-cached tab would re-derive
+ * straight from the untouched fixture and the row would revert to its
+ * pre-mutation status. `patchListingInCache` (see `api/useAdminListings.ts`)
+ * separately patches whatever queries are ALREADY cached, for instant
+ * same-tab feedback; this module-level `Map` is the durability layer that
+ * covers every other (cached-later-or-never) query for the rest of the demo
+ * session. Module-level, not `useState`/context, on purpose: it must survive
+ * remounts of every hook/component reading the queue, and reset only on a
+ * full page reload (real demo-state semantics), not on navigation.
+ */
+export type DemoListingMutation = { status?: ListingStatus; removed?: true };
+const demoListingMutations = new Map<string, DemoListingMutation>();
+
+/** Record a demo-mode moderation action against `ref` so every subsequent
+ *  `filterDemoListingQueue()` call — including for a filter combo that has
+ *  never been fetched — reflects it. Demo-only; live mode must never call
+ *  this (it relies on server truth + `invalidateQueries` instead). */
+export function recordDemoListingMutation(
+  ref: string,
+  patch: DemoListingMutation,
+) {
+  demoListingMutations.set(ref, {
+    ...demoListingMutations.get(ref),
+    ...patch,
+  });
+}
+
+/** Read `ref`'s current overlay entry, if any — for a mutation's `onMutate`
+ *  to snapshot before calling `recordDemoListingMutation`, so a (currently
+ *  hypothetical, since no demo `mutationFn` rejects) `onError` can undo
+ *  exactly what it overwrote via `restoreDemoListingMutation` below, keeping
+ *  this registry symmetric with the react-query cache snapshot/restore right
+ *  next to it in every call site. */
+export function getDemoListingMutation(
+  ref: string,
+): DemoListingMutation | undefined {
+  return demoListingMutations.get(ref);
+}
+
+/** The `onError` counterpart to `recordDemoListingMutation`: restore `ref`'s
+ *  overlay entry to what `getDemoListingMutation` captured before the failed
+ *  mutation's `onMutate` patch — or clear the entry entirely if there wasn't
+ *  one yet. */
+export function restoreDemoListingMutation(
+  ref: string,
+  previousMutation: DemoListingMutation | undefined,
+) {
+  if (previousMutation) {
+    demoListingMutations.set(ref, previousMutation);
+  } else {
+    demoListingMutations.delete(ref);
+  }
+}
+
+/** Reset the demo-session mutation overlay. Nothing in the app calls this
+ *  today (a page reload already clears the in-memory `Map`); kept for
+ *  completeness and for tests that want a clean slate between cases. */
+export function clearDemoListingMutations() {
+  demoListingMutations.clear();
+}
+
+/** Apply the demo-session overlay on top of the immutable fixture: drop rows
+ *  marked `removed`, and re-status rows with a recorded `status` override.
+ *  Must run BEFORE search/status filtering and counting, so every derived
+ *  view (the visible list, the tab counts) agrees with prior mutations. */
+function applyDemoListingMutations(
+  rows: ListingQueueRow[],
+): ListingQueueRow[] {
+  const overlaidRows: ListingQueueRow[] = [];
+  for (const row of rows) {
+    const mutation = demoListingMutations.get(row.ref);
+    if (!mutation) {
+      overlaidRows.push(row);
+      continue;
+    }
+    if (mutation.removed) continue;
+    overlaidRows.push(
+      mutation.status ? { ...row, status: mutation.status } : row,
+    );
+  }
+  return overlaidRows;
+}
+
+const DEMO_LISTING_SORTS: Record<
+  ListingQueueSort,
+  (rowA: ListingQueueRow, rowB: ListingQueueRow) => number
+> = {
+  newest: (rowA, rowB) => rowB.createdAt.localeCompare(rowA.createdAt),
+  oldest: (rowA, rowB) => rowA.createdAt.localeCompare(rowB.createdAt),
+  name: (rowA, rowB) => rowA.name.localeCompare(rowB.name),
+};
+
+/** Case-insensitive substring match across name / submitter / ref, mirroring
+ *  the backend's `q ILIKE` search across `l.name` / submitter first name /
+ *  `l.ref` — so the demo queue's search stays honest once the search input
+ *  lands (W1-2) rather than silently no-op'ing in demo mode. */
+function matchesListingQuery(row: ListingQueueRow, query: string): boolean {
+  const needle = query.trim().toLowerCase();
+  if (!needle) return true;
+  return (
+    row.name.toLowerCase().includes(needle) ||
+    row.submitterName.toLowerCase().includes(needle) ||
+    row.ref.toLowerCase().includes(needle)
+  );
+}
+
+/**
+ * Demo-mode equivalent of `GET /listings/admin/queue`: applies the
+ * demo-session mutation overlay (`applyDemoListingMutations`) on top of the
+ * immutable fixture first, then filters by `q` (name/submitter/ref), derives
+ * `counts` from that `q`-filtered set (matching the backend's counts
+ * semantics — scoped by search, NOT by status), then filters by `status` and
+ * sorts. Always answers a single full page — demo mode never paginates, and
+ * `ADMIN_LISTINGS_QUEUE` itself is never mutated.
+ *
+ * Applying the overlay before filtering/counting is what keeps a
+ * never-before-fetched status tab honest: without it, a fresh call here would
+ * read the untouched fixture and a just-moved/removed row would reappear at
+ * its pre-mutation status the moment the moderator switches to a tab they
+ * haven't visited yet this session.
+ */
+export function filterDemoListingQueue({
+  status,
+  q = "",
+  sort = "newest",
+}: {
+  status?: ListingStatus;
+  q?: string;
+  sort?: ListingQueueSort;
+}): AdminListingsPageVM {
+  const overlaidRows = applyDemoListingMutations(ADMIN_LISTINGS_QUEUE);
+  const searchedRows = overlaidRows.filter((row) =>
+    matchesListingQuery(row, q),
+  );
+  const counts = countListingsByStatus(searchedRows);
+  const statusFilteredRows = status
+    ? searchedRows.filter((row) => row.status === status)
+    : searchedRows;
+  const sortedRows = [...statusFilteredRows].sort(DEMO_LISTING_SORTS[sort]);
+  return {
+    rows: sortedRows,
+    total: sortedRows.length,
+    page: 1,
+    pageSize: sortedRows.length,
+    counts,
+  };
+}
+
+/** The demo moderator persona behind every fixture moderation event/question
+ *  below — reuses `sofia` from `adminMembers.data.ts` rather than inventing a
+ *  one-off name. */
+const DEMO_MODERATOR: MemberRefDTO = {
+  slug: "sofia",
+  firstName: "Sofia",
+  lastName: "Almeida",
+  avatarUrl: null,
+};
+
+/**
+ * Demo-only moderation history + Q&A thread, keyed by listing `ref` — the
+ * fixture `useListingHistory` reads in demo mode. Deliberately populated for
+ * only two of the three demo listings: `QPL-2026-0007` shows a full
+ * round-trip (asked → answered → sent back with a reason), `QPL-2026-0006`
+ * shows a question still awaiting the submitter's reply. `QPL-2026-0005`
+ * (already live, nothing eventful behind it) has no entry, so
+ * `useListingHistory` falls back to an empty history for it — exercising
+ * `ListingHistoryPanel`'s empty state honestly instead of needing a fourth
+ * throwaway listing.
+ */
+export const DEMO_LISTING_HISTORY: Record<string, ListingHistoryDTO> = {
+  "QPL-2026-0007": {
+    events: [
+      {
+        id: "evt-0007-2",
+        action: "status_changed",
+        fromStatus: "question",
+        toStatus: "review",
+        reason:
+          "Thanks for confirming the street number — back in the queue for a final look before we publish.",
+        actor: DEMO_MODERATOR,
+        createdAt: "2026-07-28T16:40:00.000Z",
+      },
+      {
+        id: "evt-0007-1",
+        action: "question_asked",
+        fromStatus: "review",
+        toStatus: "question",
+        reason: null,
+        actor: DEMO_MODERATOR,
+        createdAt: "2026-07-28T14:00:00.000Z",
+      },
+    ],
+    questions: [
+      {
+        id: "q-0007-1",
+        body: "Hi! Before we publish this, could you confirm the street number — R. da Escola Politécnica 60, or 60A?",
+        answer: "It's 60 — no A. Thanks for double-checking!",
+        answeredAt: "2026-07-28T16:35:00.000Z",
+        askedBy: DEMO_MODERATOR,
+        createdAt: "2026-07-28T14:00:00.000Z",
+      },
+    ],
+  },
+  "QPL-2026-0006": {
+    events: [
+      {
+        id: "evt-0006-1",
+        action: "question_asked",
+        fromStatus: "review",
+        toStatus: "question",
+        reason: null,
+        actor: DEMO_MODERATOR,
+        createdAt: "2026-07-27T15:10:00.000Z",
+      },
+    ],
+    questions: [
+      {
+        id: "q-0006-1",
+        body: "Quick one — is entry genuinely free for every event, or just some of the programme?",
+        answer: null,
+        answeredAt: null,
+        askedBy: DEMO_MODERATOR,
+        createdAt: "2026-07-27T15:10:00.000Z",
+      },
+    ],
+  },
+};
+
+const EMPTY_LISTING_HISTORY: ListingHistoryDTO = { events: [], questions: [] };
+
+/** Demo-mode equivalent of `GET /listings/admin/:ref/history` — a listing
+ *  with no fixture entry answers an honest empty history rather than a 404,
+ *  since the demo queue's three fixtures aren't all meant to have a story. */
+export function getDemoListingHistory(ref: string): ListingHistoryDTO {
+  return DEMO_LISTING_HISTORY[ref] ?? EMPTY_LISTING_HISTORY;
+}

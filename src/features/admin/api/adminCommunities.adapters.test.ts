@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { cardDtoToCommunity, detailDtoToCommunity } from "./adminCommunities.adapters";
-import { catalogs } from "../../../shared/i18n/catalogs";
+import { catalogs, loadNamespace } from "../../../shared/i18n/catalogs";
 import { createFormatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
 import type {
@@ -16,9 +16,16 @@ import type {
  * too. Mirrors `src/features/economy/api/jobs.adapters.test.ts`'s `t`, just
  * renamed (this task's binding constraint bans single-letter identifiers).
  */
+// The `admin` namespace is now lazily loaded; `beforeAll` swaps in the real
+// catalog (an empty placeholder is present until its chunk resolves).
+let adminCatalog = catalogs.en.admin;
+beforeAll(async () => {
+  adminCatalog = await loadNamespace("en", "admin");
+});
+
 const translate: TFunction = (key, options) => {
-  const [namespace, path] = key.split(":");
-  const value = catalogs.en[namespace as "admin"]?.[path ?? ""] ?? key;
+  const [, path] = key.split(":");
+  const value = adminCatalog?.[path ?? ""] ?? key;
   return Object.entries(options ?? {}).reduce(
     (accumulated, [token, tokenValue]) =>
       accumulated.replace(`{${token}}`, String(tokenValue)),

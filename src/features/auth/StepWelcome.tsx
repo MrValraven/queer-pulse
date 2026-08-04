@@ -11,9 +11,11 @@ import styles from "./OnboardingPage.module.css";
 export function StepWelcome({
   stepLabel,
   onNext,
+  onBack,
 }: {
   stepLabel: string;
   onNext: () => void;
+  onBack: () => void;
 }) {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -106,6 +108,9 @@ export function StepWelcome({
       <div className={styles.p}>{t("auth:onboarding.stepWelcome.body")}</div>
       <div className={styles.nav}>
         <Button onClick={onNext}>{t("auth:onboarding.stepWelcome.cta")}</Button>
+        <button type="button" className={styles.back} onClick={onBack}>
+          {t("auth:onboarding.stepWelcome.back")}
+        </button>
       </div>
     </>
   );

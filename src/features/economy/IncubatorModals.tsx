@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
-import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
+import { ComingSoonPanel, ModalShell, Sending, SuccessPanel } from "./ModalKit";
 import { useSubmitFlow } from "./modalFlow";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ApplicationModals.module.css";
@@ -9,6 +10,7 @@ import styles from "./ApplicationModals.module.css";
 /* ── Apply for cohort 3 ─────────────────────────────────────────────── */
 export function CohortApplyModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pitch, setPitch] = useState("");
@@ -18,6 +20,16 @@ export function CohortApplyModal({ onClose }: { onClose: () => void }) {
     /.+@.+\..+/.test(email) &&
     pitch.trim().length >= 30;
   const charsLeft = 30 - pitch.trim().length;
+
+  // No cohort-applications endpoint yet — in live, stay honest rather than fake
+  // a "received" success the backend can't record.
+  if (!demoMode) {
+    return (
+      <ModalShell onClose={onClose} success>
+        <ComingSoonPanel onClose={onClose} />
+      </ModalShell>
+    );
+  }
 
   return (
     <ModalShell onClose={onClose} success={done}>
@@ -114,6 +126,7 @@ export function CohortApplyModal({ onClose }: { onClose: () => void }) {
 /* ── Become a mentor ────────────────────────────────────────────────── */
 export function MentorSignupModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [expertise, setExpertise] = useState("");
@@ -125,6 +138,15 @@ export function MentorSignupModal({ onClose }: { onClose: () => void }) {
     expertise.trim().length > 1 &&
     why.trim().length >= 30;
   const charsLeft = 30 - why.trim().length;
+
+  // No mentor-signup endpoint yet — honest coming-soon in live.
+  if (!demoMode) {
+    return (
+      <ModalShell onClose={onClose} success>
+        <ComingSoonPanel onClose={onClose} />
+      </ModalShell>
+    );
+  }
 
   return (
     <ModalShell onClose={onClose} success={done}>
@@ -239,12 +261,22 @@ export function RequestSessionModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [when, setWhen] = useState("");
   const [message, setMessage] = useState("");
   const { sending, done, submit } = useSubmitFlow();
   const valid = when.trim().length > 1 && message.trim().length >= 20;
   const charsLeft = 20 - message.trim().length;
   const mentorFirstName = mentorName.split(" ")[0] ?? mentorName;
+
+  // No session-request endpoint yet — honest coming-soon in live.
+  if (!demoMode) {
+    return (
+      <ModalShell onClose={onClose} success>
+        <ComingSoonPanel onClose={onClose} />
+      </ModalShell>
+    );
+  }
 
   return (
     <ModalShell onClose={onClose} success={done}>

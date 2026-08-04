@@ -25,7 +25,8 @@
   border-radius: 8px;
 }
 .joinHint {
-  background: rgba(var(--plum-rgb), 0.04);
+  /* line-rgb flips in dark mode; plum-rgb doesn't (see tag/ruleNum fixes). */
+  background: rgba(var(--line-rgb), 0.05);
   border: 1.5px dashed rgba(var(--line-rgb), 0.14);
   border-radius: 14px;
   padding: 14px 18px;
@@ -95,7 +96,7 @@
   border-radius: 14px;
   overflow: hidden;
   aspect-ratio: 16 / 9;
-  background: rgba(var(--plum-rgb), 0.06);
+  background: rgba(var(--line-rgb), 0.06);
 }
 .pImg img {
   width: 100%;
@@ -131,7 +132,7 @@
 }
 @media (hover: hover) {
   .replyBtn:hover {
-    background: rgba(var(--plum-rgb), 0.06);
+    background: rgba(var(--line-rgb), 0.08);
     color: var(--ink);
   }
 }

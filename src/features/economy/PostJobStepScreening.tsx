@@ -75,6 +75,7 @@ export function PostJobStepScreening({
                 className={styles.input}
                 value={q}
                 onChange={(e) => setQuestion(i, e.target.value)}
+                aria-label={t("economy:postJob.step4.questionPlaceholder")}
                 placeholder={t("economy:postJob.step4.questionPlaceholder")}
               />
               <button

@@ -2,6 +2,7 @@ import { FiCheck } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   DAYS,
+  formatDayHours,
   goodForLabel,
   initials,
   langLabel,
@@ -80,14 +81,12 @@ export function ListBusinessPreviewDetails({
           <h4>{t("marketing:listBusiness.fullPreview.hours")}</h4>
           <div className={styles.fpHours}>
             {DAYS.map((day) => {
-              const hours = draft.hours[day.id]!;
+              const dayLabel = formatDayHours(draft.hours[day.id]);
               return (
                 <div key={day.id} className={styles.fpHrow}>
                   <span>{t(day.labelKey)}</span>
                   <span>
-                    {hours.open
-                      ? `${hours.from}–${hours.to}`
-                      : t("marketing:listBusiness.step3.closed")}
+                    {dayLabel ?? t("marketing:listBusiness.step3.closed")}
                   </span>
                 </div>
               );

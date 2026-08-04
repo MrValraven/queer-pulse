@@ -31,10 +31,7 @@ export const magazine: Catalog = {
   "masthead.tagline": "Publicada no primeiro dia de cada mês",
   "masthead.nav.current": "Edição atual",
   "masthead.nav.issues": "Edições",
-  "masthead.nav.covers": "Capas",
-  "masthead.nav.longreads": "Reportagens longas",
   "masthead.nav.stories": "Histórias",
-  "masthead.nav.newsletter": "Newsletter",
   "masthead.nav.write": "Escreve para nós",
 
   // ── MagazinePage ─────────────────────────────────────────────────────────
@@ -50,16 +47,6 @@ export const magazine: Catalog = {
   "landing.nav.communityLife": "Vida da comunidade",
   "landing.nav.letters": "Cartas",
   "landing.nav.archive": "Arquivo",
-  "landing.subpageIndexTitle": "Mais da Revista",
-  "landing.subpages.covers.label": "Galeria de capas",
-  "landing.subpages.covers.blurb":
-    "Todas as capas que já publicámos, num só lugar.",
-  "landing.subpages.longreads.label": "Reportagens longas",
-  "landing.subpages.longreads.blurb":
-    "As nossas reportagens e ensaios mais longos e aprofundados.",
-  "landing.subpages.newsletter.label": "Newsletter",
-  "landing.subpages.newsletter.blurb":
-    "Edições anteriores da newsletter da QueerPulse.",
 
   // ── MagazineCover ────────────────────────────────────────────────────────
   "cover.coverAlt": "Retrato de capa",
@@ -132,6 +119,90 @@ export const magazine: Catalog = {
   "toolbar.linkCopyErrorToast": "Não foi possível copiar o link",
   "toolbar.fallbackTitle": "Este artigo",
 
+  // ── Chrome do leitor de deck — DeckViewer, DeckControls, DeckPresentButton,
+  // componentes de slide, e o bloco FeaturedDeck ───────────────────────────
+  "deck.present": "Apresentar",
+  "deck.close": "Fechar",
+  "deck.next": "Slide seguinte",
+  "deck.prev": "Slide anterior",
+  "deck.slideCounter": "{current} / {total}",
+  "deck.goToSlide": "Ir para o slide {n}",
+  "deck.tapToReveal": "Toque para revelar",
+  "deck.beforeAfterHint": "Arraste para comparar",
+  "deck.end": "Chegou ao fim",
+  "deck.backToMagazine": "Voltar à revista",
+  "deck.badge": "Interativo",
+  "deck.start": "Começar a história",
+
+  // ── Editor de decks — DeckMetaForm, DeckSlidesEditor, SlideEditorCard,
+  // ImageUrlField, DeckEditorPage (uso interno) ───────────────────────────
+  "deck.editor.imageUrlInvalid": "Indica um URL de imagem válido",
+  "deck.editor.slug": "Slug",
+  "deck.editor.title": "Título",
+  "deck.editor.kicker": "Antetítulo",
+  "deck.editor.section": "Secção",
+  "deck.editor.byline": "Assinatura",
+  "deck.editor.role": "Função",
+  "deck.editor.readTime": "Tempo de leitura",
+  "deck.editor.authorBio": "Biografia da autoria",
+  "deck.editor.tags": "Etiquetas",
+  "deck.editor.related": "Relacionados",
+  "deck.editor.cover": "Imagem de capa",
+  "deck.editor.coverDesc": "Descrição da capa",
+  "deck.editor.slideNumber": "Slide {n}",
+  "deck.editor.addSlide": "Adicionar slide",
+  "deck.editor.addSlideLayout": "Modelo",
+  "deck.editor.moveUp": "Mover para cima",
+  "deck.editor.moveDown": "Mover para baixo",
+  "deck.editor.removeSlide": "Remover slide",
+  "deck.editor.layout.text": "Texto",
+  "deck.editor.layout.image": "Imagem",
+  "deck.editor.layout.stat": "Estatística",
+  "deck.editor.layout.beforeAfter": "Antes / depois",
+  "deck.editor.layout.reveal": "Revelar",
+  "deck.editor.field.eyebrow": "Antetítulo",
+  "deck.editor.field.heading": "Título",
+  "deck.editor.field.body": "Texto",
+  "deck.editor.field.pull": "Citação em destaque",
+  "deck.editor.field.align": "Alinhamento",
+  "deck.editor.field.alignDefault": "Predefinido",
+  "deck.editor.field.alignLeft": "Esquerda",
+  "deck.editor.field.alignCenter": "Centro",
+  "deck.editor.field.imageSrc": "URL da imagem",
+  "deck.editor.field.alt": "Texto alternativo",
+  "deck.editor.field.caption": "Legenda",
+  "deck.editor.field.tint": "Cor",
+  "deck.editor.field.value": "Valor",
+  "deck.editor.field.unit": "Unidade",
+  "deck.editor.field.label": "Etiqueta",
+  "deck.editor.field.source": "Fonte",
+  "deck.editor.field.before": "Antes",
+  "deck.editor.field.after": "Depois",
+  "deck.editor.field.prompt": "Instrução",
+  "deck.editor.field.hidden": "Escondido até tocar",
+  "deck.editor.tint.default": "Predefinida",
+  "deck.editor.tint.coral": "Coral",
+  "deck.editor.tint.jade": "Jade",
+  "deck.editor.tint.plum": "Ameixa",
+  "deck.editor.tint.auth": "Sólida",
+  "deck.editor.newTitle": "Novo deck",
+  "deck.editor.editTitle": "Editar deck",
+  "deck.editor.saveDraft": "Guardar rascunho",
+  "deck.editor.publish": "Publicar",
+  "deck.editor.unpublish": "Despublicar",
+  "deck.editor.delete": "Eliminar",
+  "deck.editor.deleteConfirm":
+    "Eliminar este deck? Não é possível desfazer.",
+  "deck.editor.leaveConfirm":
+    "Tens alterações por guardar. Sair sem guardar?",
+  "deck.editor.previewEmpty": "Adiciona um slide para pré-visualizar",
+  "deck.editor.saved": "Rascunho guardado",
+  "deck.editor.publishedToast": "Deck publicado",
+  "deck.editor.deletedToast": "Deck eliminado",
+  "deck.editor.saveError":
+    "Não foi possível guardar o teu deck — tenta de novo.",
+  "deck.editor.backToDashboard": "Voltar ao painel",
+
   // ── Issue chrome — partilhado por IssueCover, IssueContents, IssuesPage ──
   "issue.backToAllIssues": "← Todas as edições",
   "issue.currentPill": "Atual",
@@ -149,6 +220,10 @@ export const magazine: Catalog = {
   "issue.letterEyebrow": "Carta da direção editorial",
   "issue.readCta": "Ler a edição {number} →",
   "issue.orderPrintCta": "Encomendar a versão impressa · {price}",
+  // Modo live: apresentado quando ainda não há uma edição publicada para ler.
+  "issue.emptyLiveTitle": "Esta edição ainda não saiu",
+  "issue.emptyLiveBody":
+    "A edição atual ainda está a ser preparada. Volta em breve — ou propõe-nos um texto para publicar nela.",
 
   // ── IssueContents ────────────────────────────────────────────────────────
   "contents.heading.coverStory": "Reportagem de capa",
@@ -429,6 +504,20 @@ export const magazine: Catalog = {
   "editor.sideCards.exportContributorList":
     "→ Exportar lista de pessoas colaboradoras (CSV)",
 
+  // ── EditorDecksSection ──────────────────────────────────────────────────
+  "editor.decks.title": "Decks interativos",
+  "editor.decks.countLabel": "{count} decks",
+  "editor.decks.columnTitle": "Título",
+  "editor.decks.columnSection": "Secção",
+  "editor.decks.columnStatus": "Estado",
+  "editor.decks.emptyTitle": "Ainda não há decks",
+  "editor.decks.emptyBody":
+    "Os decks interativos que criares aparecem aqui — começa um e publica-o quando estiver pronto.",
+  "editor.decks.new": "Novo deck",
+  "editor.decks.statusPublished": "Publicado",
+  "editor.decks.statusDraft": "Rascunho",
+  "editor.decks.edit": "Editar",
+
   // ── EditorDashboardPage ────────────────────────────────────────────────
   "editor.page.emptyTitle": "A secretária está livre",
   "editor.page.emptyDescription":
@@ -556,8 +645,9 @@ export const magazine: Catalog = {
   "submitStory.writer.tool.quote": "Citação em bloco",
   "submitStory.writer.tool.bullet": "Lista com marcadores",
   "submitStory.writer.tool.image": "Imagem",
-  "submitStory.writer.autosaved": "Guardado automaticamente",
-  "submitStory.writer.unsaved": "Por guardar…",
+  "submitStory.writer.autosaved": "Rascunho guardado",
+  "submitStory.writer.saving": "A guardar…",
+  "submitStory.writer.unsaved": "Por guardar",
   "submitStory.writer.headlineAria": "Título",
   "submitStory.writer.headlinePlaceholder": "O teu título",
   "submitStory.writer.standfirstAria": "Resumo",
@@ -569,7 +659,14 @@ export const magazine: Catalog = {
   "submitStory.writer.wordCount_other": "{count} palavras",
 
   // ── SubmitStoryEditor ──────────────────────────────────────────────────
-  "submitStory.editor.draftSaved": "Rascunho guardado.",
+  "submitStory.editor.draftSaved":
+    "Rascunho guardado — fica aqui para quando voltares.",
+  "submitStory.editor.draftSaveError":
+    "Não foi possível guardar o rascunho — o teu navegador pode estar a bloquear o armazenamento.",
+  "submitStory.resume.text":
+    "Deixaste uma história por terminar. <b>Continuar de onde ficaste?</b>",
+  "submitStory.resume.startFresh": "Começar de novo",
+  "submitStory.resume.resume": "Retomar rascunho",
   "submitStory.editor.chooseSectionError":
     "Escolhe primeiro uma secção para a tua peça.",
   "submitStory.editor.needHeadlineError":
@@ -659,27 +756,6 @@ export const magazine: Catalog = {
   "pitchTracker.pitch.oweOurExes.statusLabel":
     "Não entra nesta edição · muito próxima",
 
-  // ══════════════════ NewsletterSubscribe ═══════════════════════════════════
-  "newsletter.subscribe.streamLabel.all": "as três newsletters",
-  "newsletter.subscribe.streamLabel.dispatch": "o Dispatch da Comunidade",
-  "newsletter.subscribe.streamLabel.long": "a mensal Reportagens longas",
-  "newsletter.subscribe.streamLabel.trans": "o boletim do Trans Hub",
-  "newsletter.subscribe.confirmToast":
-    "Quase lá — confirma na tua caixa de entrada",
-  "newsletter.subscribe.doneTitle": "Falta mais um <em>passo.</em>",
-  "newsletter.subscribe.doneBody":
-    "Vamos enviar <strong>{stream}</strong> para <strong>{email}</strong>.",
-  "newsletter.subscribe.doneNext":
-    "Confirma na tua caixa de entrada — o link expira em 48 horas. Podes mudar que newsletters recebes a partir de qualquer email.",
-  "newsletter.subscribe.anotherCta": "Subscrever outro email",
-  "newsletter.subscribe.emailPlaceholder": "tu@exemplo.com",
-  "newsletter.subscribe.submitCta": "Subscrever →",
-  "newsletter.subscribe.footAll": "Escolhe que newsletters queres no passo 2. ",
-  "newsletter.subscribe.footOne":
-    "Vais receber <strong>{stream}</strong> — ajusta no passo 2. ",
-  "newsletter.subscribe.footShared":
-    "Cancela a subscrição num toque a partir de qualquer email. Nunca partilhamos o teu endereço.",
-
   // ══════════════════ PrintOrderModal (edição impressa da Edição 09) ═══════
   "printOrder.dialogAria": "Encomendar a edição impressa",
   "printOrder.closeAria": "Fechar",
@@ -704,19 +780,6 @@ export const magazine: Catalog = {
   "printOrder.placingCta": "A colocar a tua encomenda…",
   "printOrder.placeCta": "Fazer encomenda — {total} €",
 
-  // ══════════════════ CoverGalleryPage ══════════════════════════════════════
-  // Os registos de COVERS/STATS/ILLUS (tema de cada capa, créditos de autoria,
-  // estatísticas de impressão) são conteúdo específico de cada edição —
-  // ficam como dados em inglês.
-  "coverGallery.backLink": "a Revista",
-  "coverGallery.eyebrow": "Revista · todas as capas · 2024 → presente",
-  "coverGallery.title": "Nove <em>capas,</em> uma por estação.",
-  "coverGallery.dek":
-    "Todas as capas da Revista QueerPulse, por ordem. Impressas em risografia em Lisboa, em formato A5. Cada uma foi feita por uma pessoa artista diferente, em conjunto com a redação. <em>A imprensa pode utilizar qualquer uma destas imagens</em> nos termos do nosso <a>dossiê de imprensa</a>.",
-  "coverGallery.madeWithHeading": "Feitas <em>com</em>",
-  "coverGallery.madeWithSub":
-    "Pessoas artistas de capa, por ordem de capa. A maioria são pessoas da comunidade; duas foram encomendadas externamente.",
-
   // ══════════════════ Páginas de reportagem (Story showcase) ═════════════════
   // StoryPage/StoryTomasPage/StorySafetyPage e os respetivos *Article são
   // peças completas da revista (título, nome de autoria, categoria, tempo de
@@ -739,64 +802,4 @@ export const magazine: Catalog = {
   "story.outro.safety.sub":
     "Não somos para todas as pessoas. Mas se isto faz sentido para ti, talvez sejas para nós.",
   "story.safety.byline": "A equipa da QueerPulse",
-
-  // ══════════════════ TagPage (secção Reportagens longas) ═══════════════════
-  // O kicker/título/dek/assinatura de cada peça (TagPageHero destacada +
-  // TagPageList, tag.data.tsx) é conteúdo editorial, deixado em inglês. Os
-  // rótulos CHIPS de tópico funcionam também como o valor de filtro guardado,
-  // comparado com `topics` de cada peça — nunca passar isso pelo catálogo
-  // (partiria o filtro em modo pt). Só o chrome da secção é traduzido abaixo.
-  "tag.hero.eyebrow": "Revista · categoria",
-  "tag.hero.h1": "Reportagens <em>longas.</em>",
-  "tag.hero.dek":
-    "<b>Peças de vinte minutos ou mais.</b> Ensaios reportados, perfis com múltiplas fontes, e o tipo de trabalho longo que pede algo a quem lê. Jornalismo lento, de propósito. Peça nova a cada duas quintas-feiras.",
-  "tag.hero.filterLabel": "Filtrar",
-  "tag.hero.stats.piecesInSection": "Peças nesta secção",
-  "tag.hero.stats.minAverageRead": "Min. de leitura em média",
-  "tag.hero.stats.issuesRepresented": "Edições representadas",
-  "tag.hero.stats.contributors": "Pessoas colaboradoras",
-  "tag.hero.curatorEyebrow": "Nota editorial",
-  "tag.list.emptyTitle": "Ainda não há reportagens longas nesta categoria",
-  "tag.list.emptyDescription":
-    "Ainda não há nada arquivado em <em>{topic}</em> nas reportagens longas. Explora todas as peças, ou recebe a próxima por email.",
-  "tag.list.showAllCta": "Mostrar todas as reportagens longas",
-  "tag.list.loadingMore": "A carregar reportagens longas mais antigas…",
-  "tag.list.loadOlder_one": "Carregar {count} reportagem longa mais antiga",
-  "tag.list.loadOlder_other":
-    "Carregar {count} reportagens longas mais antigas",
-  // Modo live: ainda não foi publicada nenhuma reportagem com esta etiqueta.
-  "tag.list.liveEmptyTitle": "Ainda não há histórias com esta etiqueta",
-  "tag.list.liveEmptyDescription":
-    "Ainda não há nada arquivado com esta etiqueta. À medida que as histórias forem saindo, juntam-se aqui — volta em breve.",
-
-  // ══════════════════ Arquivo da newsletter ═══════════════════════════════
-  // O título/dek/meta de cada edição (newsletterArchive.data.tsx YEARS/LATEST,
-  // e o corpo completo das edições enviadas em newsletterArchiveIssue.data.tsx)
-  // é o conteúdo real da newsletter enviada — fica em inglês, como o corpo de
-  // um artigo. Só o chrome da página do arquivo é traduzido abaixo.
-  "newsletterArchive.hero.eyebrow": "Arquivo da newsletter · desde 2024",
-  "newsletterArchive.hero.h1": "Todos os emails que já <em>enviámos.</em>",
-  "newsletterArchive.hero.dek":
-    "Três newsletters: um resumo comunitário quinzenal, um complemento mensal de reportagens longas e um boletim do Trans Hub. Todas gratuitas. Lê qualquer uma delas aqui — ou subscreve e enviamo-las diretamente.",
-  "newsletterArchive.hero.stats.issuesInArchive": "Edições no arquivo",
-  "newsletterArchive.hero.stats.activeStreams": "Newsletters ativas",
-  "newsletterArchive.hero.stats.subscribersAllStreams":
-    "Pessoas subscritoras em todas as newsletters",
-  "newsletterArchive.hero.stats.languages": "Idiomas · EN & PT",
-  "newsletterArchive.tabsAriaLabel": "Newsletters",
-  "newsletterArchive.readInBrowserCta": "Ler no navegador →",
-  // Modo live: ainda não foi enviada nenhuma edição, por isso o arquivo está
-  // vazio. O formulário de subscrição acima continua a funcionar.
-  "newsletterArchive.emptyLive.title": "O arquivo da newsletter está quase a chegar",
-  "newsletterArchive.emptyLive.description":
-    "Ainda não enviámos a nossa primeira edição. Subscreve acima e recebe-la assim que sair — depois todas as edições ficam aqui.",
-  "newsletterArchive.list.emptyTitle": "Ainda não há edições nesta newsletter",
-  "newsletterArchive.list.emptyDescription":
-    "Ainda não foi enviado nada nesta newsletter. Explora as três — há bastante no arquivo.",
-  "newsletterArchive.list.clearFiltersCta": "Limpar filtros",
-  "newsletterArchive.list.loadOlder_one": "Carregar {count} edição mais antiga",
-  "newsletterArchive.list.loadOlder_other":
-    "Carregar {count} edições mais antigas",
-  "newsletterArchive.issue.backToArchive": "Voltar ao arquivo",
-  "newsletterArchive.issue.browseFullArchive": "Explorar o arquivo completo",
 };

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiMapPin, FiSearch } from "react-icons/fi";
 import { EmptyState, SkeletonLine } from "../../shared/components/ui";
+import { useIncrementalList } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { type LocalPlace } from "./localPlaces";
@@ -49,6 +50,18 @@ export function DirectoryListView({
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [been, setBeen] = useState<Record<string, number>>({});
 
+  // `places` is the platform's whole (unpaginated) live directory, filtered
+  // client-side — mounting every card at once means the grid's live DOM node
+  // count grows 1:1 with total listings platform-wide. Window it the same way
+  // MemberDirectoryFilterPage windows its grid: a capped initial slice grown
+  // via an IntersectionObserver sentinel, resetting whenever the filtered set's
+  // identity changes (a new search/category/vibe result).
+  const {
+    visible: placesWindowed,
+    sentinelRef,
+    hasMore,
+  } = useIncrementalList(places, { initial: 24, step: 24 });
+
   function toggleExpand(placeId: string) {
     setExpandedId((current) => (current === placeId ? null : placeId));
   }
@@ -95,19 +108,24 @@ export function DirectoryListView({
         ) : places.length === 0 ? (
           emptyState
         ) : (
-          <div className={s.grid}>
-            {places.map((place, index) => (
-              <LocalPlaceCard
-                key={place.id}
-                place={place}
-                index={index}
-                expandedId={expandedId}
-                been={been}
-                onToggleExpand={toggleExpand}
-                onMarkBeen={markBeen}
-              />
-            ))}
-          </div>
+          <>
+            <div className={s.grid}>
+              {placesWindowed.map((place, index) => (
+                <LocalPlaceCard
+                  key={place.id}
+                  place={place}
+                  index={index}
+                  expandedId={expandedId}
+                  been={been}
+                  onToggleExpand={toggleExpand}
+                  onMarkBeen={markBeen}
+                />
+              ))}
+            </div>
+            {hasMore && (
+              <div ref={sentinelRef} className={s.sentinel} aria-hidden="true" />
+            )}
+          </>
         )}
       </div>
     </section>

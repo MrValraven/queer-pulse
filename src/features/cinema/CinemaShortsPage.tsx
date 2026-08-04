@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useSaved } from "../../app/providers/useSaved";
 import { CinemaComingSoon } from "./CinemaComingSoon";
 import { Button, Outro } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -22,7 +23,12 @@ import {
   Transparency,
   WatchParties,
 } from "./CinemaShortsCommunity";
-import { seededSeen, type ShortsShelf } from "./cinemaShorts.data";
+import {
+  getShort,
+  seededSeen,
+  shortFilms,
+  type ShortsShelf,
+} from "./cinemaShorts.data";
 import styles from "./CinemaShortsPage.module.css";
 
 /** Made Here — the community catalogue of member-made queer short films. */
@@ -35,25 +41,40 @@ export function CinemaShortsPage() {
 function DemoCinemaShortsPage() {
   const { showToast } = useToast();
   const { t } = useTranslation();
-  const [saved, setSaved] = useState<string[]>([]);
+  const { isSaved, toggleSave } = useSaved();
+
+  // The shelf still speaks in bare film ids, but its saved-state is now backed
+  // by the real, backend-wired SavedProvider (kind "film") instead of throwaway
+  // local state. Scope the derived list to shorts ids so other saved films
+  // don't leak into the catalogue's "Saved" filter.
+  const savedFilmIds = useMemo(
+    () => shortFilms.filter((film) => isSaved(`film:${film.id}`)).map((film) => film.id),
+    [isSaved],
+  );
 
   const shelf = useMemo<ShortsShelf>(
     () => ({
-      saved,
+      saved: savedFilmIds,
       seen: seededSeen,
-      onToggleSave: (id) =>
-        setSaved((prev) => {
-          const has = prev.includes(id);
-          showToast(
-            t(
-              has
-                ? "cinema:film.watchlist.removedToast"
-                : "cinema:shorts.toast.savedToWatchlist",
-            ),
-            "success",
-          );
-          return has ? prev.filter((x) => x !== id) : [...prev, id];
-        }),
+      onToggleSave: (id) => {
+        const film = getShort(id);
+        if (!film) return;
+        const nowSaved = toggleSave({
+          id: `film:${id}`,
+          kind: "film",
+          title: `${film.titlePre}${film.titleEm}${film.titlePost ?? ""}`,
+          href: routes.film,
+          meta: film.makerShort,
+        });
+        showToast(
+          t(
+            nowSaved
+              ? "cinema:shorts.toast.savedToWatchlist"
+              : "cinema:film.watchlist.removedToast",
+          ),
+          "success",
+        );
+      },
       onShare: (label) =>
         showToast(
           t("cinema:shorts.toast.linkCopiedShare", { label }),
@@ -61,7 +82,7 @@ function DemoCinemaShortsPage() {
         ),
       notify: (message) => showToast(message, "success"),
     }),
-    [saved, showToast, t],
+    [savedFilmIds, toggleSave, showToast, t],
   );
 
   return (

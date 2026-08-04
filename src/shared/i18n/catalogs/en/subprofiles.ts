@@ -87,6 +87,9 @@ export const subprofiles: Catalog = {
   "kind.performer": "Performer",
   "kind.photographer": "Photographer",
   "kind.videomaker": "Videomaker",
+  "kind.chef": "Chef",
+  "kind.mixologist": "Mixologist",
+  "kind.therapist": "Therapist",
   "kind.generic": "Other",
 
   // Section display labels — `section` is also persisted (SubprofileItemDTO.section).
@@ -112,6 +115,11 @@ export const subprofiles: Catalog = {
   "section.appearances": "Appearances",
   "section.series": "Series",
   "section.videos": "Videos",
+  "section.menus": "Menus",
+  "section.residencies": "Residencies",
+  "section.cocktails": "Cocktails",
+  "section.specialisms": "Specialisms",
+  "section.credentials": "Credentials",
   "section.showcase": "Showcase",
   "section.links": "Links",
 
@@ -225,6 +233,8 @@ export const subprofiles: Catalog = {
   "mine.deleteModalConfirm": "Delete",
   "mine.deleteModalDeleting": "Deleting…",
   "mine.deleteModalBody": "This can't be undone.",
+  "mine.deleteModalBodyShared":
+    "This removes {name} for all {n} co-owners — it can't be undone.",
   "mine.rowEdit": "Edit",
   "mine.rowDelete": "Delete",
   "mine.endorsementCount_one": "{count} endorsement",
@@ -278,6 +288,8 @@ export const subprofiles: Catalog = {
 
   "metaForm.save": "Save details",
   "metaForm.saving": "Saving…",
+  "metaForm.leaveConfirm":
+    "You have unsaved changes to this profile. Leave without saving them?",
   "metaForm.toastSaved": "Details saved",
   "metaForm.toastError": "We couldn't save that just now — try again.",
 
@@ -409,6 +421,9 @@ export const subprofiles: Catalog = {
   "template.tagline.photographer":
     "Holding still what usually moves too fast.",
   "template.tagline.videomaker": "Moving pictures, made with intention.",
+  "template.tagline.chef": "Cooking for queer tables, one plate at a time.",
+  "template.tagline.mixologist": "Drinks mixed for the night ahead.",
+  "template.tagline.therapist": "An affirming space to think things through.",
   "template.tagline.generic": "A few things I've made, gathered here.",
 
   // Per-section example items (used by both the create-time template and
@@ -482,6 +497,21 @@ export const subprofiles: Catalog = {
   "template.section.showcase.item1.title": "Something I made",
   "template.section.showcase.item1.subtitle": "A short label for it",
   "template.section.showcase.item1.desc": "What it is and why it's here.",
+  "template.section.menus.item1.title": "A menu or signature dish",
+  "template.section.menus.item1.subtitle": "The event or venue",
+  "template.section.menus.item1.desc":
+    "What's on it and the story behind the plate.",
+  "template.section.residencies.item1.title": "A residency or pop-up",
+  "template.section.residencies.item1.subtitle": "Where it happened",
+  "template.section.cocktails.item1.title": "A signature cocktail",
+  "template.section.cocktails.item1.subtitle": "The base spirit",
+  "template.section.cocktails.item1.desc":
+    "What's in it and what inspired it.",
+  "template.section.specialisms.item1.title": "An area I work with",
+  "template.section.specialisms.item1.desc":
+    "Who it's for and how you approach it.",
+  "template.section.credentials.item1.title": "A qualification or training",
+  "template.section.credentials.item1.subtitle": "The awarding body",
 
   // Image upload field (ImageUploadField)
   "imageUpload.defaultPlaceholder": "Image",
@@ -583,4 +613,48 @@ export const subprofiles: Catalog = {
   "affiliationsEditor.saving": "Saving…",
   "affiliationsEditor.saved": "Links saved",
   "affiliationsEditor.error": "We couldn't save that just now — try again.",
+
+  // Co-owners panel (SubprofileOwnersPanel, in the editor)
+  "owners.title": "Co-owners",
+  "owners.note": "Everyone here can edit this persona together.",
+  "owners.creatorTag": "Creator",
+  "owners.youTag": "You",
+  "owners.pendingHeading": "Pending invites",
+  "owners.inviteCta": "Invite a co-owner",
+  "owners.revokeAria": "Revoke the invite to {name}",
+  "owners.toastRevoked": "Invite revoked",
+  "owners.toastRevokeError": "We couldn't revoke that just now — try again.",
+  "owners.leaveCta": "Leave persona",
+  "owners.leaveModalTitle": "Leave this persona?",
+  "owners.leaveModalBody":
+    "You'll lose the ability to edit it. The other co-owners keep everything as it is.",
+  "owners.leaveModalKeep": "Stay",
+  "owners.leaveModalConfirm": "Leave",
+  "owners.leaveModalLeaving": "Leaving…",
+  "owners.toastLeft": "You've left this persona",
+  "owners.toastLeaveError": "We couldn't do that just now — try again.",
+
+  // Invite-a-co-owner modal (InviteCoOwnerModal)
+  "invite.title": "Invite a co-owner",
+  "invite.sub": "They'll need to accept before they can manage this persona.",
+  "invite.searchPlaceholder": "Search your connections",
+  "invite.searchAria": "Search your connections",
+  "invite.empty": "No connections left to invite.",
+  "invite.cta": "Invite",
+  "invite.inviting": "Inviting…",
+  "invite.toastSent":
+    "Invite sent — they'll need to accept before they can manage this persona.",
+  "invite.toastError": "We couldn't send that invite — try again.",
+
+  // Incoming co-owner invites banner (PersonaInvitesBanner, on MySubprofilesPage)
+  "invites.regionLabel": "Invitations to co-own a persona",
+  "invites.message": "{inviter} invited you to co-own <em>{persona}</em>",
+  "invites.accept": "Accept",
+  "invites.accepting": "Accepting…",
+  "invites.decline": "Decline",
+  "invites.declining": "Declining…",
+  "invites.toastAccepted": "You now co-own {name}",
+  "invites.toastAcceptError": "We couldn't accept that invite — try again.",
+  "invites.toastDeclined": "Invite declined",
+  "invites.toastDeclineError": "We couldn't decline that invite — try again.",
 };

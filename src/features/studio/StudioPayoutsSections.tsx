@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { FiZap, FiSettings } from "react-icons/fi";
 import { FadeIn } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -276,6 +277,7 @@ export function PayoutsList({
 
 export function PayoutsSidebar() {
   const { t } = useTranslation();
+  const fieldId = useId();
   return (
     <div className={s.col}>
       <div className={s.sideCard}>
@@ -334,8 +336,13 @@ export function PayoutsSidebar() {
           </h3>
         </div>
         <div className={s.field}>
-          <label>{t("studio:payouts.preferences.threshold.label")}</label>
-          <select defaultValue={t("studio:payouts.preferences.threshold.opt5")}>
+          <label htmlFor={`${fieldId}-threshold`}>
+            {t("studio:payouts.preferences.threshold.label")}
+          </label>
+          <select
+            id={`${fieldId}-threshold`}
+            defaultValue={t("studio:payouts.preferences.threshold.opt5")}
+          >
             <option>{t("studio:payouts.preferences.threshold.opt5")}</option>
             <option>{t("studio:payouts.preferences.threshold.opt20")}</option>
             <option>{t("studio:payouts.preferences.threshold.opt100")}</option>
@@ -345,17 +352,27 @@ export function PayoutsSidebar() {
           </span>
         </div>
         <div className={s.field}>
-          <label>{t("studio:payouts.preferences.taxResidency.label")}</label>
-          <input type="text" defaultValue="Portugal · NIF on file" />
+          <label htmlFor={`${fieldId}-tax`}>
+            {t("studio:payouts.preferences.taxResidency.label")}
+          </label>
+          <input
+            id={`${fieldId}-tax`}
+            type="text"
+            defaultValue="Portugal · NIF on file"
+          />
           <span className={s.fhint}>
             {t("studio:payouts.preferences.taxResidency.hint")}
           </span>
         </div>
         <div className={s.field}>
-          <label>
+          <label htmlFor={`${fieldId}-email`}>
             {t("studio:payouts.preferences.notificationEmail.label")}
           </label>
-          <input type="email" defaultValue="mariana@queerpulse.org" />
+          <input
+            id={`${fieldId}-email`}
+            type="email"
+            defaultValue="mariana@queerpulse.org"
+          />
         </div>
       </div>
     </div>

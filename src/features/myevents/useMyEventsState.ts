@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import type { ToastAction } from "../../shared/components/feedback/toastContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -15,6 +23,7 @@ import { useMyEventsSafety } from "./useMyEventsSafety";
 import { useMyEventsModals } from "./useMyEventsModals";
 import { useMyEventsRsvp } from "./useMyEventsRsvp";
 import { useMyEventsData } from "./api/useMyEventsData";
+import { reconcileById, trackDirty } from "./myEvents.reconcile";
 
 /** Central state + actions for the My Events dashboard. */
 export function useMyEventsState(): MyEventsValue {
@@ -40,14 +49,63 @@ export function useMyEventsState(): MyEventsValue {
     notifs: sourceNotifs,
     loading: dataLoading,
   } = useMyEventsData();
-  const [events, setEvents] = useState<MyEvent[]>(sourceEvents);
-  const [notifs, setNotifs] = useState<Notif[]>(sourceNotifs);
-  // Syncs to the data hook's source (live GET /events refetch resyncs to server).
+  const [events, setEventsRaw] = useState<MyEvent[]>(sourceEvents);
+  const [notifs, setNotifsRaw] = useState<Notif[]>(sourceNotifs);
+  // Ids the user has optimistically edited since the last server sync. A
+  // background refetch must not clobber these rows — see `myEvents.reconcile`.
+  const dirtyEventIds = useRef<Set<string>>(new Set());
+  const dirtyNotifIds = useRef<Set<string>>(new Set());
+
+  // Every optimistic edit flows through these wrapped setters (handed to the
+  // rsvp/selection sub-hooks and the local notif actions), which record the
+  // touched ids as dirty. The raw setters above are reserved for the server
+  // resync below, so a resync never marks a row dirty.
+  const setEvents = useCallback<Dispatch<SetStateAction<MyEvent[]>>>(
+    (update) =>
+      setEventsRaw((prev) => {
+        const next =
+          typeof update === "function"
+            ? (update as (value: MyEvent[]) => MyEvent[])(prev)
+            : update;
+        trackDirty(prev, next, dirtyEventIds.current);
+        return next;
+      }),
+    [],
+  );
+  const setNotifs = useCallback<Dispatch<SetStateAction<Notif[]>>>(
+    (update) =>
+      setNotifsRaw((prev) => {
+        const next =
+          typeof update === "function"
+            ? (update as (value: Notif[]) => Notif[])(prev)
+            : update;
+        trackDirty(prev, next, dirtyNotifIds.current);
+        return next;
+      }),
+    [],
+  );
+
+  // Resync to the data hook's source when a live GET /events (or /event-invites)
+  // refetch resolves — but reconcile by id so a background refetch adopts fresh
+  // server truth for untouched rows while preserving any row with a pending
+  // optimistic edit (RSVP, bulk-remove, mark-read). Blindly replacing here was
+  // the query-mirror antipattern that clobbered in-flight edits.
   // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => setEvents(sourceEvents), [sourceEvents]);
-  // Syncs to the data hook's source (live GET /event-invites refetch resyncs).
+  useEffect(
+    () =>
+      setEventsRaw((prev) =>
+        reconcileById(prev, sourceEvents, dirtyEventIds.current),
+      ),
+    [sourceEvents],
+  );
   // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => setNotifs(sourceNotifs), [sourceNotifs]);
+  useEffect(
+    () =>
+      setNotifsRaw((prev) =>
+        reconcileById(prev, sourceNotifs, dirtyNotifIds.current),
+      ),
+    [sourceNotifs],
+  );
   const byId = useCallback(
     (id: string) => events.find((e) => e.id === id),
     [events],

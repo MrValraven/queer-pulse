@@ -89,6 +89,8 @@ export interface AdminMemberDetailDTO {
   verified: boolean;
   role: MemberRole;
   isSystem: boolean;
+  /** True while the member is under an active suspension. */
+  suspended?: boolean;
   avatarUrl: string | null;
   vouchCount: number;
   outboundVouchCount: number;
@@ -138,3 +140,11 @@ export interface AdminMemberRoleDTO {
  *  admin) and 403/409s otherwise. */
 export const patchAdminMemberRole = (memberId: string, role: MemberRole) =>
   apiPatch<AdminMemberRoleDTO>(`/admin/members/${memberId}/role`, { role });
+
+/**
+ * Lift a member's active suspension (reinstate them), consuming the backend's
+ * moderator endpoint `PATCH /mod/users/:userId/suspension` (liftSuspension).
+ * Moderator/admin-only; the backend enforces the guardrails and 403s otherwise.
+ */
+export const liftUserSuspension = (userId: string) =>
+  apiPatch<void>(`/mod/users/${userId}/suspension`, { action: "lift" });

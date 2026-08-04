@@ -241,6 +241,12 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+/* Single column on the narrowest phones so cards aren't squeezed. */
+@media (max-width: 400px) {
+  .hallGrid {
+    grid-template-columns: 1fr;
+  }
+}
 .hallCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);

@@ -12,6 +12,11 @@ import {
   FiCpu,
   FiFileText,
   FiMap,
+  FiMail,
+  FiUserPlus,
+  FiFeather,
+  FiBookOpen,
+  FiEdit3,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
@@ -65,9 +70,34 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: FiFileText,
   },
   {
+    labelKey: "shared:adminNav.items.invites",
+    to: routes.adminInvites,
+    icon: FiMail,
+  },
+  {
     labelKey: "community:changemakers.admin.navLabel",
     to: routes.adminChangemakers,
     icon: FiHeart,
+  },
+  {
+    labelKey: "shared:adminNav.items.changemakerNominations",
+    to: routes.adminChangemakerNominations,
+    icon: FiUserPlus,
+  },
+  {
+    labelKey: "shared:adminNav.items.commissionInterests",
+    to: routes.adminCommissionInterests,
+    icon: FiFeather,
+  },
+  {
+    labelKey: "shared:adminNav.items.readingGroupProposals",
+    to: routes.adminReadingGroupProposals,
+    icon: FiBookOpen,
+  },
+  {
+    labelKey: "shared:adminNav.items.magazineSubmissions",
+    to: routes.adminMagazineSubmissions,
+    icon: FiEdit3,
   },
   {
     labelKey: "shared:adminNav.items.partnerships",

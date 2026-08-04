@@ -371,7 +371,7 @@ export const sections: RightsSection[] = [
         q: "How do I request a specific accessible format?",
         a: (
           <>
-            Email <strong>rights@queerpulse.com</strong> or raise it from your
+            Email <strong>rights@queerpulse.pt</strong> or raise it from your
             Studio dashboard. Whether it's described audio, a specific caption
             format, or an alternative statement layout, a human will sort it out
             with you.
@@ -393,7 +393,7 @@ export const contact = {
   ),
   body: (
     <>
-      Write to <strong>rights@queerpulse.com</strong> — a human will reply
+      Write to <strong>rights@queerpulse.pt</strong> — a human will reply
       within 48 hours, in English or Portuguese. We don't use template responses
       for legal questions.
     </>

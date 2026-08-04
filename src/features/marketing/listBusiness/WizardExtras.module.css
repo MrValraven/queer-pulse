@@ -1,0 +1,64 @@
+/* Small wizard chrome extras owned by ListingWizard: the server-side (422)
+   validation banner (item #4) and the "Save & finish later" affordance
+   (item #11). Colocated here so no other agent's CSS module is touched. */
+
+.serverError {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 18px;
+  padding: 13px 15px;
+  border-radius: var(--radius-card);
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.28);
+  color: var(--ink);
+}
+
+.serverErrorIcon {
+  flex: none;
+  margin-top: 1px;
+  color: var(--accent);
+}
+
+.serverErrorBody {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.serverErrorTitle {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.serverErrorMessage {
+  margin-top: 2px;
+  font-size: 0.88rem;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.serverErrorDismiss {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-40);
+  cursor: pointer;
+  transition: color 0.16s var(--ease), background 0.16s var(--ease);
+}
+
+.serverErrorDismiss:hover {
+  color: var(--ink);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+
+.saveLaterRow {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 14px;
+}

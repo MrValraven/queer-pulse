@@ -104,6 +104,7 @@ export function ConnectionsAllTab({
           className={styles.sortSel}
           value={sort}
           onChange={(e) => setSort(e.target.value as Sort)}
+          aria-label={t("members:directory.sortLabel")}
         >
           {SORTS.map((s) => (
             <option key={s} value={s}>

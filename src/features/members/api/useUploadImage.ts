@@ -121,8 +121,13 @@ async function putWithRetry(
  * to render immediately as an `<img src>`, built from the blob this hook
  * already has in hand — zero extra network cost.
  *
- * Validation (type, size, dimensions) and a client-side EXIF/GPS strip run in
- * BOTH modes — see `uploadProcessing.ts`. Then:
+ * Validation (type, size, dimensions), a client-side EXIF/GPS strip, and a
+ * longest-edge downscale (cap ~1600px, re-encoded at quality 0.8 when actually
+ * shrunk) all run in BOTH modes — see `uploadProcessing.ts`. This is the one
+ * shared path every `UploadKind` funnels through, so a full-resolution phone
+ * photo picked for an avatar, a listing photo, or a gathering photo is never
+ * what gets stored or re-served — only images already smaller than the cap
+ * skip the resize (still re-encoded once, for the metadata strip). Then:
  *
  * - **Demo mode:** never touches the network. There is no real storage `key`
  *   in this mode, so both `key` and `previewUrl` are the same local object

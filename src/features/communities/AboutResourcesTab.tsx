@@ -4,6 +4,7 @@ import type { IconType } from "react-icons";
 import type { CommunityDetail } from "./communityDetails";
 import type { CommunityResource, LivingCommunity } from "./community.model";
 import { sisterCommunities } from "./communityConnections";
+import { RULE_PRESET_KEYS } from "./startCommunity/startCommunity.data";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { leadingInitials } from "../../shared/lib/initials";
 import detail from "./CommunityDetailPage.module.css";
@@ -49,7 +50,10 @@ export function AboutResourcesTab({
         {living.rules.map((r, i) => (
           <li className={styles.rule} key={r}>
             <span className={styles.ruleNum}>{i + 1}</span>
-            <span>{r}</span>
+            {/* Preset rules are stored as i18n keys (a stable, language-
+                independent id); custom rules are content typed by the member
+                and rendered verbatim. Mirrors StepTone's covenant editor. */}
+            <span>{RULE_PRESET_KEYS.includes(r) ? t(r) : r}</span>
           </li>
         ))}
       </ol>

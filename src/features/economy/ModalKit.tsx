@@ -1,5 +1,10 @@
-import { useEffect, useRef, type ReactNode } from "react";
-import { FiCheck, FiFile } from "react-icons/fi";
+import {
+  useEffect,
+  useRef,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from "react";
+import { FiCheck, FiClock, FiFile } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -93,6 +98,44 @@ export function ModalShell({
       previouslyFocused?.focus?.();
     };
   }, []);
+
+  // Drag-to-dismiss for the mobile sheet (mirrors the shared <ModalSheet>).
+  // Touch-only — mouse is ignored so the desktop centered dialog is untouched.
+  // A downward drag past the threshold closes; anything shorter springs back.
+  // The transform is written straight to the sheet element to stay off the React
+  // render path during the drag.
+  const dragStartYRef = useRef<number | null>(null);
+  const handleGrabberPointerDown = (event: ReactPointerEvent) => {
+    if (event.pointerType === "mouse") return;
+    dragStartYRef.current = event.clientY;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+  const handleGrabberPointerMove = (event: ReactPointerEvent) => {
+    const sheet = dialogRef.current;
+    if (dragStartYRef.current === null || !sheet) return;
+    const dragDistance = Math.max(0, event.clientY - dragStartYRef.current);
+    sheet.style.transition = "none";
+    sheet.style.transform = `translateY(${dragDistance}px)`;
+  };
+  const handleGrabberPointerEnd = (event: ReactPointerEvent) => {
+    const sheet = dialogRef.current;
+    if (dragStartYRef.current === null || !sheet) return;
+    const dragDistance = event.clientY - dragStartYRef.current;
+    dragStartYRef.current = null;
+    if (dragDistance > 120) {
+      onClose();
+      return;
+    }
+    sheet.style.transition = "transform var(--dur-base, 0.24s) var(--ease)";
+    sheet.style.transform = "translateY(0)";
+    const clearInlineDragStyles = () => {
+      sheet.style.transition = "";
+      sheet.style.transform = "";
+      sheet.removeEventListener("transitionend", clearInlineDragStyles);
+    };
+    sheet.addEventListener("transitionend", clearInlineDragStyles);
+  };
+
   return (
     <div
       className={styles.overlay}
@@ -117,6 +160,16 @@ export function ModalShell({
         aria-modal="true"
         aria-label={ariaLabel}
       >
+        {!success && (
+          <div
+            className={styles.grabber}
+            aria-hidden
+            onPointerDown={handleGrabberPointerDown}
+            onPointerMove={handleGrabberPointerMove}
+            onPointerUp={handleGrabberPointerEnd}
+            onPointerCancel={handleGrabberPointerEnd}
+          />
+        )}
         <button
           type="button"
           className={styles.close}
@@ -126,6 +179,31 @@ export function ModalShell({
           ×
         </button>
         {children}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Plum-panel "coming soon" shown in live mode for submit flows that have no
+ * backend yet — an honest stand-in so we never fake a success the API can't
+ * deliver. Reuses the success panel's chrome with a clock glyph.
+ */
+export function ComingSoonPanel({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.success}>
+      <div className={styles.successIcon}>
+        <FiClock size={26} color="var(--jade)" aria-hidden />
+      </div>
+      <h2>
+        {t("economy:comingSoon.title")} <em>{t("economy:comingSoon.em")}</em>
+      </h2>
+      <p>{t("economy:comingSoon.body")}</p>
+      <div className={styles.successBtn}>
+        <Button size="lg" variant="ghost-dark" onClick={onClose}>
+          {t("economy:comingSoon.close")}
+        </Button>
       </div>
     </div>
   );

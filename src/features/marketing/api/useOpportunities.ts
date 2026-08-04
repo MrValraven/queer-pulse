@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getOpportunities, type Cause, type Commit } from "./volunteering.api";
+import { opportunityKeys } from "./opportunityKeys";
 import { cardToOpportunity } from "./volunteering.adapters";
 import type { VolunteerOpportunity } from "../volunteerOpportunities";
 
@@ -43,7 +44,7 @@ export function useOpportunities(
 ): OpportunitiesResult {
   const { demoMode } = useDemoMode();
   const query = useInfiniteQuery<OpportunitiesPageVM>({
-    queryKey: ["opportunities", demoMode, params],
+    queryKey: opportunityKeys.list(params, demoMode),
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {

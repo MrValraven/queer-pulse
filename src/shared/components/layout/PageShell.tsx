@@ -1,27 +1,24 @@
 import type { ReactNode } from "react";
-import { Navbar } from "./Navbar";
-import { Footer } from "./Footer";
-import { BottomTabBar } from "./BottomTabBar";
+import { useRegisterShellFrame } from "../../../app/providers/ShellFrameProvider";
 import { MAIN_CONTENT_ID, SkipToContentLink } from "./SkipToContentLink";
 
 /**
- * Standard page frame: fixed Navbar, main content, plum Footer, and — when
- * running as an installed PWA on mobile — the bottom tab bar. BottomTabBar
- * returns null in every other case, so this costs nothing in a browser tab.
+ * Standard page frame. The Navbar/Footer/BottomTabBar are now rendered once by
+ * the persistent AppChrome (mounted in App.tsx); this component only owns the
+ * <main> content region and registers itself with ShellFrameProvider so AppChrome
+ * knows a standard frame is on screen.
  *
  * `tabIndex={-1}` on `<main>` is what makes the skip link actually work: without
  * it the fragment jump scrolls but leaves focus stranded back in the nav.
  */
 export function PageShell({ children }: { children: ReactNode }) {
+  useRegisterShellFrame();
   return (
     <>
       <SkipToContentLink />
-      <Navbar />
       <main id={MAIN_CONTENT_ID} tabIndex={-1} data-page-main>
         {children}
       </main>
-      <Footer />
-      <BottomTabBar />
     </>
   );
 }

@@ -43,6 +43,18 @@ export default defineConfig({
           if (/[\\/]node_modules[\\/]@visx[\\/]/.test(id)) {
             return "vendor-visx";
           }
+          // motion (LazyMotion's domAnimation feature bundle) is imported by
+          // MotionProvider, which mounts app-wide — keep it out of the entry
+          // chunk and in its own runtime-cached bucket instead (it is
+          // deliberately absent from sw.ts's injectManifest.globPatterns
+          // precache diet, so it downloads on first use, not on first visit).
+          // `motion` is a thin shim re-exporting `framer-motion` — the actual
+          // LazyMotion/domMax/drag implementation resolves under
+          // node_modules/framer-motion/, not node_modules/motion/, so both
+          // must match or framer-motion falls through into the entry chunk.
+          if (/[\\/]node_modules[\\/](motion|framer-motion)[\\/]/.test(id)) {
+            return "vendor-motion";
+          }
           return undefined;
         },
       },
@@ -132,6 +144,26 @@ export default defineConfig({
         // precache cap; `pnpm build` fails without this. (Was under
         // `workbox.maximumFileSizeToCacheInBytes` in generateSW mode.)
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+        // Precache diet. The default globs would precache all ~470 built chunks
+        // on the first visit (the whole app, ~13 MB). Instead precache only the
+        // *app shell*: index.html, every CSS file, the entry chunk
+        // (assets/index-*.js) and the core react/query vendor chunks, the
+        // manifest, fonts, and icons. The lazy route chunks — including the
+        // heavy vendor-maplibre / vendor-visx buckets (see manualChunks above)
+        // and every per-page bundle — are left out and runtime-cached on first
+        // use by src/sw.ts's script route. Keep this in sync with the vendor
+        // chunk names in manualChunks.
+        globPatterns: [
+          "index.html",
+          "manifest.webmanifest",
+          "**/*.css",
+          "assets/index-*.js",
+          "assets/vendor-react-*.js",
+          "assets/vendor-query-*.js",
+          "**/*.woff2",
+          "favicon.svg",
+          "icons/*.png",
+        ],
       },
     }),
   ],

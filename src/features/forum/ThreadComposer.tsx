@@ -3,7 +3,7 @@ import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ForumAvatar } from "./ForumAuthor";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileData } from "../../app/providers/useProfile";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import styles from "./ThreadPage.module.css";
 
@@ -23,7 +23,7 @@ export function ThreadComposer({
   const { t } = useTranslation();
   // The signed-in member, mode-aware: the real user in live, the mock persona in
   // demo — so the composer never borrows the demo persona's avatar in production.
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   return (
     <div className={styles.compose}>
       <div className={styles.crHead}>

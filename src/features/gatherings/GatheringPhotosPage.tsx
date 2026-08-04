@@ -184,7 +184,7 @@ function GatheringPhotosFooter() {
             components={{
               em: <em />,
               // eslint-disable-next-line jsx-a11y/anchor-has-content -- element template; <Translation> clones it with the link text at render time.
-              mailLink: <a href="mailto:photos@queerpulse.app" />,
+              mailLink: <a href="mailto:photos@queerpulse.pt" />,
               privLink: <Link to={routes.privacy} />,
             }}
           />

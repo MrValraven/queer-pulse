@@ -16,19 +16,19 @@ const FOCUSABLE_SELECTOR =
  * close. Extracted from the component so it stays inside the 200-line budget.
  */
 export function useNavDrawerFocus({
-  drawerOpen,
+  isOpen,
   panelRef,
-  closeDrawer,
+  onClose,
 }: {
-  drawerOpen: boolean;
+  isOpen: boolean;
   panelRef: RefObject<HTMLDivElement | null>;
-  closeDrawer: () => void;
+  onClose: () => void;
 }) {
   const triggerRef = useRef<HTMLElement | null>(null);
   const lastPointerDownTargetRef = useRef<HTMLElement | null>(null);
 
   // Track the most recently pointer-pressed focusable element, independent of
-  // drawerOpen so it is already populated by the time the open-effect below
+  // isOpen so it is already populated by the time the open-effect below
   // reads it. This exists purely as a fallback for the Safari quirk described
   // there: Safari (desktop and iOS) does not move focus to a <button> on
   // pointer/touch activation, so document.activeElement is unreliable for the
@@ -53,7 +53,7 @@ export function useNavDrawerFocus({
   }, []);
 
   useEffect(() => {
-    if (!drawerOpen) return;
+    if (!isOpen) return;
 
     // Capture whichever control opened the drawer — the hamburger in browser
     // mode, the More tab when installed — so focus returns there on close. The
@@ -83,7 +83,7 @@ export function useNavDrawerFocus({
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        closeDrawer();
+        onClose();
         return;
       }
       if (event.key !== "Tab") return;
@@ -111,7 +111,7 @@ export function useNavDrawerFocus({
       restoreFocus(triggerRef.current);
       triggerRef.current = null;
     };
-  }, [drawerOpen, panelRef, closeDrawer]);
+  }, [isOpen, panelRef, onClose]);
 }
 
 /**

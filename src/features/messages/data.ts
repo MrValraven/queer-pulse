@@ -99,6 +99,17 @@ export interface ChatMessage {
   starred?: boolean;
   /** Server-authoritative: whether the viewer may pin/unpin this message (live). */
   canPin?: boolean;
+  /** Server-authoritative: whether the viewer may edit this message (live) —
+   *  author, within the server's edit window, not deleted. Drives the Edit
+   *  action; never recomputed client-side. Absent for demo/optimistic messages
+   *  (which have no server id and never reach the action menu). */
+  canEdit?: boolean;
+  /** Server-authoritative: whether the viewer may delete this message (live) —
+   *  author or platform staff, not already deleted. Drives the Delete action. */
+  canDelete?: boolean;
+  /** Server-authoritative: whether the viewer may report this message (live) —
+   *  not the viewer's own message, not deleted. Drives the Report action. */
+  canReport?: boolean;
 }
 
 export interface Conversation {

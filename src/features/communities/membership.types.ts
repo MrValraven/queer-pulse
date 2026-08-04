@@ -15,4 +15,11 @@ export interface Membership {
   role: CommunityRole;
   /** Human-readable join label for display (mock; e.g. "just now"). */
   joinedAt: string;
+  /**
+   * The community's display name. Live mode carries it from `GET /me/communities`
+   * (`MyCommunityDTO.name`) so cross-community surfaces resolve names from real
+   * data instead of the mock directory. Optional: the demo membership store
+   * doesn't set it and falls back to the static directory.
+   */
+  name?: string;
 }

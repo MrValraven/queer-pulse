@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { routes, linkToPath } from "../../app/routeMap";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { issueLabelText } from "./magazineFormat";
 import { MASTHEAD_META, MASTHEAD_NAV } from "./magazineMasthead.data";
 import styles from "./MagazineMasthead.module.css";
@@ -9,6 +10,7 @@ import styles from "./MagazineMasthead.module.css";
 export function MagazineMasthead({ active }: { active?: string }) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const { demoMode } = useDemoMode();
 
   return (
     <div className={styles.masthead}>
@@ -20,12 +22,22 @@ export function MagazineMasthead({ active }: { active?: string }) {
             Magazine
           </Link>
           <div className={styles.mmMeta}>
-            <div className={styles.mmIssue}>
-              {issueLabelText(MASTHEAD_META.issueNumber, t)}
-            </div>
-            <div className={styles.mmDate}>
-              {fmt.date(MASTHEAD_META.date, { month: "long", year: "numeric" })}
-            </div>
+            {/* The current issue number/date is fabricated demo chrome — there
+                is no cheap "current issue" endpoint to feed the masthead, so
+                live mode shows only the (translated) publishing cadence. */}
+            {demoMode && (
+              <>
+                <div className={styles.mmIssue}>
+                  {issueLabelText(MASTHEAD_META.issueNumber, t)}
+                </div>
+                <div className={styles.mmDate}>
+                  {fmt.date(MASTHEAD_META.date, {
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </div>
+              </>
+            )}
             <div className={styles.mmTagline}>
               {t(MASTHEAD_META.taglineKey)}
             </div>
@@ -35,7 +47,9 @@ export function MagazineMasthead({ active }: { active?: string }) {
           className={styles.magNav}
           aria-label={t("magazine:masthead.sectionsAriaLabel")}
         >
-          {MASTHEAD_NAV.map((item) => {
+          {MASTHEAD_NAV.filter(
+            (item) => demoMode || !item.demoOnly,
+          ).map((item) => {
             const isActive = item.key === active;
             return (
               <Link

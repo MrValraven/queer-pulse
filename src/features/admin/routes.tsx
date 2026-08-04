@@ -8,7 +8,12 @@ const AdminMembersPage = lazyNamed(() => import("./AdminMembersPage"), "AdminMem
 const AdminBotsPage = lazyNamed(() => import("./AdminBotsPage"), "AdminBotsPage");
 const AdminSafeSpacesPage = lazyNamed(() => import("./AdminSafeSpacesPage"), "AdminSafeSpacesPage");
 const AdminListingsPage = lazyNamed(() => import("./AdminListingsPage"), "AdminListingsPage");
+const AdminInvitesPage = lazyNamed(() => import("./AdminInvitesPage"), "AdminInvitesPage");
 const AdminChangemakersPage = lazyNamed(() => import("./AdminChangemakersPage"), "AdminChangemakersPage");
+const AdminChangemakerNominationsPage = lazyNamed(() => import("./AdminChangemakerNominationsPage"), "AdminChangemakerNominationsPage");
+const AdminCommissionInterestsPage = lazyNamed(() => import("./AdminCommissionInterestsPage"), "AdminCommissionInterestsPage");
+const AdminReadingGroupProposalsPage = lazyNamed(() => import("./AdminReadingGroupProposalsPage"), "AdminReadingGroupProposalsPage");
+const AdminMagazineSubmissionsPage = lazyNamed(() => import("./AdminMagazineSubmissionsPage"), "AdminMagazineSubmissionsPage");
 const AdminCommunitiesPage = lazyNamed(() => import("./AdminCommunitiesPage"), "AdminCommunitiesPage");
 const AdminCommunityModPage = lazyNamed(() => import("./AdminCommunityModPage"), "AdminCommunityModPage");
 const AdminGovernancePage = lazyNamed(() => import("./AdminGovernancePage"), "AdminGovernancePage");
@@ -29,9 +34,26 @@ export function adminRoutes() {
       <Route path={routes.adminBots} element={<AdminBotsPage />} />
       <Route path={routes.adminSafeSpaces} element={<AdminSafeSpacesPage />} />
       <Route path={routes.adminListings} element={<AdminListingsPage />} />
+      <Route path={routes.adminInvites} element={<AdminInvitesPage />} />
       <Route
         path={routes.adminChangemakers}
         element={<AdminChangemakersPage />}
+      />
+      <Route
+        path={routes.adminChangemakerNominations}
+        element={<AdminChangemakerNominationsPage />}
+      />
+      <Route
+        path={routes.adminCommissionInterests}
+        element={<AdminCommissionInterestsPage />}
+      />
+      <Route
+        path={routes.adminReadingGroupProposals}
+        element={<AdminReadingGroupProposalsPage />}
+      />
+      <Route
+        path={routes.adminMagazineSubmissions}
+        element={<AdminMagazineSubmissionsPage />}
       />
       <Route
         path={routes.adminCommunities}

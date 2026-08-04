@@ -1,9 +1,10 @@
-import { FiCheckCircle } from "react-icons/fi";
+import { FiCheckCircle, FiHeart } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Button, EmptyState, Outro, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import {
   PageMeta,
@@ -18,6 +19,7 @@ import styles from "./resources.module.css";
 export function QueerPaediatriciansPage() {
   const { showToast } = useToast();
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const pageTitle = t("resources:queerPaediatricians.meta.title");
   const pageDescription = t("resources:queerPaediatricians.meta.description");
 
@@ -70,41 +72,53 @@ export function QueerPaediatriciansPage() {
           <Reveal as="p" className={styles.leadP}>
             {t("resources:queerPaediatricians.list.lead")}
           </Reveal>
-          <div className={styles.grid}>
-            {PROVIDERS.map((p, i) => (
-              <Reveal key={p.name} className={styles.card} delay={i * 55}>
-                <span className={styles.verifiedTag}>
-                  <FiCheckCircle aria-hidden /> {p.checked}
-                </span>
-                <div className={styles.cardName} style={{ fontSize: 19 }}>
-                  {p.name}
-                </div>
-                <div className={styles.archiveMeta}>
-                  {p.practice} · {p.neighbourhood}
-                </div>
-                <div className={styles.cardSpec}>{p.notedFor}</div>
-                <div className={styles.tags}>
-                  {p.tags.map((tag) => (
-                    <span key={tag} className={styles.tag}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </Reveal>
-            ))}
-            <div className={`${styles.card} ${styles.cardDashed}`}>
-              {t("resources:queerPaediatricians.suggest.prompt")}
-              <Button
-                variant="ghost"
-                style={{ marginTop: 12 }}
-                onClick={() =>
-                  showToast(t("resources:queerPaediatricians.suggest.toast"))
-                }
-              >
-                {t("resources:queerPaediatricians.suggest.cta")}
-              </Button>
+          {demoMode ? (
+            <div className={styles.grid}>
+              {PROVIDERS.map((p, i) => (
+                <Reveal key={p.name} className={styles.card} delay={i * 55}>
+                  <span className={styles.verifiedTag}>
+                    <FiCheckCircle aria-hidden /> {p.checked}
+                  </span>
+                  <div className={styles.cardName} style={{ fontSize: 19 }}>
+                    {p.name}
+                  </div>
+                  <div className={styles.archiveMeta}>
+                    {p.practice} · {p.neighbourhood}
+                  </div>
+                  <div className={styles.cardSpec}>{p.notedFor}</div>
+                  <div className={styles.tags}>
+                    {p.tags.map((tag) => (
+                      <span key={tag} className={styles.tag}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </Reveal>
+              ))}
+              <div className={`${styles.card} ${styles.cardDashed}`}>
+                {t("resources:queerPaediatricians.suggest.prompt")}
+                <Button
+                  variant="ghost"
+                  style={{ marginTop: 12 }}
+                  onClick={() =>
+                    showToast(t("resources:queerPaediatricians.suggest.toast"))
+                  }
+                >
+                  {t("resources:queerPaediatricians.suggest.cta")}
+                </Button>
+              </div>
             </div>
-          </div>
+          ) : (
+            <EmptyState
+              icon={<FiHeart />}
+              title={t("resources:queerPaediatricians.live.title")}
+              description={t("resources:queerPaediatricians.live.body")}
+              action={{
+                label: t("resources:queerPaediatricians.live.cta"),
+                to: routes.forum,
+              }}
+            />
+          )}
         </div>
       </section>
 

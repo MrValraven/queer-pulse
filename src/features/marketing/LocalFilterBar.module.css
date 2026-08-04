@@ -79,6 +79,13 @@
     color: var(--text-strong);
   }
 }
+/* Touch: lift the ~30px vibe/safe chips to the ≥44px target minimum (they sit in
+   the mobile Filters sheet); padding is unchanged so the resting ink stays compact. */
+@media (pointer: coarse) {
+  .chip {
+    min-height: 44px;
+  }
+}
 .chipOn {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
@@ -183,6 +190,12 @@
     color: var(--text-strong);
   }
 }
+/* Touch: lift the ~29px toggle to the ≥44px target minimum, ink unchanged. */
+@media (pointer: coarse) {
+  .refineToggle {
+    min-height: 44px;
+  }
+}
 /* Count of active-but-hidden refinements, so a collapsed drawer still signals
    that filters are applied. */
 .refineCount {
@@ -230,4 +243,87 @@
   .refineWrap {
     transition: none;
   }
+}
+
+/* ── Mobile: compact sticky toolbar ──────────────────────────────────────────
+   On phones the full filter set (search + wrapping chips + refine drawer) would
+   eat 200–260px of a sticky bar, so it collapses behind a single "Filters"
+   control that opens the set in a bottom sheet. The List/Map switcher rides
+   alongside it so a visitor scrolled deep into the list can still flip to the
+   map without scrolling back up. Frosted like the desktop `.bar`. */
+.mobileBar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
+  background: rgba(var(--cream-rgb), 0.88);
+  backdrop-filter: blur(12px);
+}
+:global([data-theme="dark"]) .mobileBar {
+  background: rgba(26, 16, 40, 0.86);
+}
+.mobileBarRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.filtersButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 16px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-strong);
+  background: var(--paper);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+.filtersButton svg {
+  width: 16px;
+  height: 16px;
+  color: var(--ink-40);
+}
+@media (hover: hover) {
+  .filtersButton:hover {
+    border-color: var(--line-strong);
+  }
+}
+:global([data-theme="dark"]) .filtersButton {
+  border-color: rgba(var(--cream-rgb), 0.14);
+}
+
+/* ── Mobile: "Filters" sheet head + close CTA ───────────────────────────────── */
+.sheetHead {
+  /* Clear the sheet's absolute close button (top-right) so nothing sits under it. */
+  padding-inline-end: 44px;
+  margin-bottom: 6px;
+}
+.sheetTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  margin: 0;
+}
+.sheetActions {
+  position: sticky;
+  bottom: 0;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--cream);
+  display: flex;
+}
+.sheetActions > * {
+  flex: 1;
 }

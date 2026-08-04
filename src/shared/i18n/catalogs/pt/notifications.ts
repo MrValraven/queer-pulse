@@ -151,6 +151,21 @@ export const notifications: Catalog = {
   "type.roadmap_status.text": "Há novidades sobre uma ideia que partilhaste.",
   "type.roadmap_status.meta": "Atualização do roteiro",
 
+  // Resultado de moderação — título por ação; a nota da equipa dirigida ao
+  // membro ("a razão que o membro lê") entra como {note}. Ao tocar, abre a
+  // página de recurso. As chaves simples são o fallback para uma ação
+  // desconhecida.
+  "type.moderation_outcome.text": "Há uma decisão da equipa de moderação.",
+  "type.moderation_outcome.meta": "{note}",
+  "type.moderation_outcome.warn.text":
+    "Recebeste um aviso da equipa de moderação.",
+  "type.moderation_outcome.warn.meta": "{note}",
+  "type.moderation_outcome.suspend.text": "A tua conta foi suspensa.",
+  "type.moderation_outcome.suspend.meta": "{note}",
+  "type.moderation_outcome.ban.text":
+    "A tua conta foi suspensa permanentemente.",
+  "type.moderation_outcome.ban.meta": "{note}",
+
   "type.unknown.text": "Tens uma nova notificação.",
   "type.unknown.meta": "Notificação",
 

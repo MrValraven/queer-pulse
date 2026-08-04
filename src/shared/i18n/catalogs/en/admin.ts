@@ -150,6 +150,8 @@ export const admin: Catalog = {
     "Not rows in a table — members someone trusted enough to bring in. Pronouns and chosen names are the only names shown here. {count} people are waiting to be welcomed in.",
   "members.header.exportCta": "Export",
   "members.filterAriaLabel": "Filter members",
+  "members.searchPlaceholder": "Search by name…",
+  "members.searchAriaLabel": "Search members by name or pronoun",
   "members.tabs.all": "All members",
   "members.tabs.pending": "Verification pending",
   "members.tabs.flagged": "Flagged",
@@ -217,8 +219,22 @@ export const admin: Catalog = {
   "members.drawer.restrictedToast":
     "Restricted · {duration} · {scope} — {name} notified",
   "members.drawer.restrictionUndoneToast": "Restriction reversed.",
+  // Shown in live mode where verify / message / restrict have no backend
+  // endpoint yet — the drawer stays honest instead of faking success (demo
+  // keeps the simulated flow). Role changes are the one wired action.
+  "members.drawer.comingSoonToast":
+    "This moderation action isn't available yet.",
 
   // ── Members: role management (grant/revoke moderator & admin) ─────────────
+  "members.suspension.sectionTitle": "Suspension",
+  "members.suspension.description":
+    "This member is currently suspended. Lifting it reinstates their account and restores their access right away.",
+  "members.suspension.liftCta": "Lift suspension",
+  "members.suspension.liftedToast": "{name} has been reinstated.",
+  "members.suspension.confirm.title": "Reinstate {name}?",
+  "members.suspension.confirm.body":
+    "This lifts {name}'s suspension and restores full access immediately. It's logged in the audit trail under your name — you can suspend again if needed.",
+  "members.suspension.confirm.confirmCta": "Lift suspension",
   "members.role.sectionTitle": "Role & permissions",
   "members.role.currentLabel": "Current role",
   "members.role.description":
@@ -384,17 +400,135 @@ export const admin: Catalog = {
   "adminSafeSpaces.modal.savedToast": "{name}'s safe space profile was saved",
 
   // ── Directory listings queue ──────────────────────────────────────────────
+  // ── Admin invite oversight (/admin/invites) ──────────────────────────
+  "adminInvites.title": "Invite <em>oversight</em>",
+  "adminInvites.header.eyebrow": "Trust & safety",
+  "adminInvites.header.title": "Every <em>invite</em>",
+  "adminInvites.header.sub":
+    "The whole vouched-invite graph: who sent what, who accepted, and what's still open. Filter by status to audit the network's edges.",
+  "adminInvites.empty": "No invites match this filter yet.",
+  "adminInvites.filter.all": "All",
+  "adminInvites.filter.valid": "Pending",
+  "adminInvites.filter.used": "Accepted",
+  "adminInvites.filter.expired": "Expired",
+  "adminInvites.filter.revoked": "Revoked",
+  "adminInvites.status.valid": "Pending",
+  "adminInvites.status.used": "Accepted",
+  "adminInvites.status.expired": "Expired",
+  "adminInvites.status.revoked": "Revoked",
+  "adminInvites.row.from": "From {name}",
+  "adminInvites.row.toMember": "accepted by {name}",
+  "adminInvites.row.toEmail": "sent to {email}",
+  "adminInvites.row.toAnyone": "open link — no recipient yet",
+  "adminInvites.row.sent": "Sent {date}",
+  "adminInvites.row.expires": "expires {date}",
+  "adminInvites.loadMore": "Load more",
+  "adminInvites.loadingMore": "Loading…",
+
+  "adminCommissionInterests.title": "Commission <em>interest</em>",
+  "adminCommissionInterests.header.eyebrow": "Culture",
+  "adminCommissionInterests.header.title": "Commission board <em>interest</em>",
+  "adminCommissionInterests.header.sub":
+    "Every member who reached out about a Commission Board project — which brief, who they want to work with, and their note. Filter by category.",
+  "adminCommissionInterests.empty":
+    "No commission interest matches this filter yet.",
+  "adminCommissionInterests.error":
+    "We couldn't load commission interest. Please try again.",
+  "adminCommissionInterests.unknownMember": "A former member",
+  "adminCommissionInterests.filter.all": "All",
+  "adminCommissionInterests.row.from": "From {name}",
+  "adminCommissionInterests.row.to": "reaching out to {name}",
+  "adminCommissionInterests.row.sent": "Sent {date}",
+  "adminCommissionInterests.loadMore": "Load more",
+  "adminCommissionInterests.loadingMore": "Loading…",
+
+  "adminChangemakerNominations.title": "Changemaker <em>nominations</em>",
+  "adminChangemakerNominations.header.eyebrow": "Community",
+  "adminChangemakerNominations.header.title": "Who members <em>put forward</em>",
+  "adminChangemakerNominations.header.sub":
+    "Every name members have nominated for the Change Makers directory, newest first — a shortlist to review.",
+  "adminChangemakerNominations.empty": "No nominations yet.",
+  "adminChangemakerNominations.error":
+    "We couldn't load nominations. Please try again.",
+  "adminChangemakerNominations.unknownMember": "A former member",
+  "adminChangemakerNominations.row.by": "Nominated by {name}",
+  "adminChangemakerNominations.row.sent": "Sent {date}",
+  "adminChangemakerNominations.loadMore": "Load more",
+  "adminChangemakerNominations.loadingMore": "Loading…",
+
+  "adminReadingGroupProposals.title": "Reading group <em>proposals</em>",
+  "adminReadingGroupProposals.header.eyebrow": "Community",
+  "adminReadingGroupProposals.header.title": "Groups members <em>want to start</em>",
+  "adminReadingGroupProposals.header.sub":
+    "Every “Start your own group” a member has submitted — the book, why, format, and size. Filter by format.",
+  "adminReadingGroupProposals.empty":
+    "No reading group proposals match this filter yet.",
+  "adminReadingGroupProposals.error":
+    "We couldn't load reading group proposals. Please try again.",
+  "adminReadingGroupProposals.unknownMember": "A former member",
+  "adminReadingGroupProposals.filter.all": "All",
+  "adminReadingGroupProposals.format.In-person": "In person",
+  "adminReadingGroupProposals.format.Online": "Online",
+  "adminReadingGroupProposals.format.Either": "Either",
+  "adminReadingGroupProposals.row.by": "Proposed by {name}",
+  "adminReadingGroupProposals.row.maxPeople": "up to {count} people",
+  "adminReadingGroupProposals.row.sent": "Sent {date}",
+  "adminReadingGroupProposals.loadMore": "Load more",
+  "adminReadingGroupProposals.loadingMore": "Loading…",
+
+  "adminMagazineSubmissions.title": "Story <em>submissions</em>",
+  "adminMagazineSubmissions.header.eyebrow": "Magazine",
+  "adminMagazineSubmissions.header.title": "Reader <em>pitches</em>",
+  "adminMagazineSubmissions.header.sub":
+    "Every story pitch readers have sent the magazine — the working title, format, pitch, and where it sits. Filter by status.",
+  "adminMagazineSubmissions.empty":
+    "No submissions match this filter yet.",
+  "adminMagazineSubmissions.error":
+    "We couldn't load submissions. Please try again.",
+  "adminMagazineSubmissions.unknownMember": "A former member",
+  "adminMagazineSubmissions.filter.all": "All",
+  "adminMagazineSubmissions.filter.submitted": "Submitted",
+  "adminMagazineSubmissions.filter.in_review": "In review",
+  "adminMagazineSubmissions.filter.accepted": "Accepted",
+  "adminMagazineSubmissions.filter.rejected": "Declined",
+  "adminMagazineSubmissions.filter.published": "Published",
+  "adminMagazineSubmissions.filter.draft": "Draft",
+  "adminMagazineSubmissions.status.submitted": "Submitted",
+  "adminMagazineSubmissions.status.in_review": "In review",
+  "adminMagazineSubmissions.status.accepted": "Accepted",
+  "adminMagazineSubmissions.status.rejected": "Declined",
+  "adminMagazineSubmissions.status.published": "Published",
+  "adminMagazineSubmissions.status.draft": "Draft",
+  "adminMagazineSubmissions.row.by": "From {name}",
+  "adminMagazineSubmissions.row.sent": "Sent {date}",
+  "adminMagazineSubmissions.loadMore": "Load more",
+  "adminMagazineSubmissions.loadingMore": "Loading…",
+
   "adminListings.title": "Directory <em>listings</em>",
   "adminListings.header.eyebrow": "Moderation",
   "adminListings.header.title": "Review <em>submissions</em>",
   "adminListings.header.sub":
     "Every place a member has added to the directory. Move a listing forward when it's ready, or send it back with a quick question.",
-  "adminListings.empty": "Nothing in this queue right now.",
+  "adminListings.emptyQueue.title": "You're all <em>caught up</em>",
+  "adminListings.emptyQueue.body":
+    "Every submission has found its place — nothing's waiting on you right now. New listings will land here the moment someone adds one.",
   "adminListings.unknownSubmitter": "Unknown member",
+  // Secondary, subtle meta-line text — a moderator triaging the queue can
+  // see how long a listing has been waiting without opening it.
+  "adminListings.row.submittedAgo": "Submitted {time}",
   "adminListings.filter.all": "All",
   "adminListings.filter.review": "In review",
   "adminListings.filter.question": "Quick question",
   "adminListings.filter.live": "Live",
+  "adminListings.filter.ariaLabel": "Filter by status",
+  "adminListings.filter.countedLabel": "{label} ({count})",
+  "adminListings.search.placeholder": "Search by name, submitter, or ref…",
+  "adminListings.search.ariaLabel": "Search listings",
+  "adminListings.sort.label": "Sort",
+  "adminListings.sort.newest": "Newest",
+  "adminListings.sort.oldest": "Oldest",
+  "adminListings.sort.name": "Name",
+  "adminListings.view.ariaLabel": "Switch view",
   "adminListings.status.review": "In review",
   "adminListings.status.question": "Quick question",
   "adminListings.status.live": "Live",
@@ -421,6 +555,70 @@ export const admin: Catalog = {
     "This listing has no member to contact — there's no one to send a question to.",
   "adminListings.view.queue": "Submissions",
   "adminListings.view.editSuggestions": "Edit suggestions",
+  "adminListings.remove.cta": "Remove",
+  "adminListings.actions.moreAriaLabel": "More actions for {name}",
+  "adminListings.remove.confirm.title": "Remove {name}?",
+  "adminListings.remove.confirm.body":
+    "This permanently deletes the listing and can't be undone. The submitter won't be notified.",
+  "adminListings.remove.confirm.liveWarning":
+    "This listing is live — removing it also takes it off the public directory immediately.",
+  "adminListings.remove.confirm.confirmCta": "Remove listing",
+  "adminListings.remove.toast.removed": "{name} was removed.",
+  "adminListings.loadMoreCta": "Load more",
+  "adminListings.selectAll.ariaLabel": "Select all visible listings",
+  "adminListings.selectAll.label": "Select all visible",
+  "adminListings.selectRow.ariaLabel": "Select {name}",
+  "adminListings.bulk.ariaLabel": "Bulk actions",
+  "adminListings.bulk.selectedCount_one": "{count} selected",
+  "adminListings.bulk.selectedCount_other": "{count} selected",
+  "adminListings.bulk.publishCta": "Publish live",
+  "adminListings.bulk.sendBackCta": "Send back to review",
+  "adminListings.bulk.removeCta": "Remove",
+  "adminListings.bulk.clearCta": "Clear",
+  "adminListings.bulk.capNote": "Selection capped at {cap} listings",
+  "adminListings.bulk.toast.success_one": "{count} listing updated.",
+  "adminListings.bulk.toast.success_other": "{count} listings updated.",
+  "adminListings.bulk.toast.partial": "{updated} updated, {failed} skipped.",
+  "adminListings.bulk.action.publish": "Couldn't publish the selected listings",
+  "adminListings.bulk.action.sendBack":
+    "Couldn't send the selected listings back to review",
+  "adminListings.bulk.action.remove": "Couldn't remove the selected listings",
+  "adminListings.bulk.confirmRemove.title_one": "Remove {count} listing?",
+  "adminListings.bulk.confirmRemove.title_other": "Remove {count} listings?",
+  "adminListings.bulk.confirmRemove.body_one":
+    "This permanently deletes the selected listing and can't be undone. Submitters won't be notified.",
+  "adminListings.bulk.confirmRemove.body_other":
+    "This permanently deletes all {count} selected listings and can't be undone. Submitters won't be notified.",
+  "adminListings.bulk.confirmRemove.reasonLabel": "Reason (optional)",
+  "adminListings.bulk.confirmRemove.reasonPlaceholder":
+    "Add a note for the record…",
+  "adminListings.bulk.confirmRemove.confirmCta": "Remove listings",
+  "adminListings.remove.confirm.reasonLabel": "Reason (optional)",
+  "adminListings.remove.confirm.reasonPlaceholder":
+    "Add a note for the record…",
+  "adminListings.sendBack.confirm.title": "Send {name} back to review?",
+  "adminListings.sendBack.confirm.body":
+    "{name} moves back into the review queue. Add a quick note if it helps the next pass.",
+  "adminListings.sendBack.confirm.reasonLabel": "Reason (optional)",
+  "adminListings.sendBack.confirm.reasonPlaceholder":
+    "What needs another look…",
+  "adminListings.sendBack.confirm.confirmCta": "Send back to review",
+  // ── Drawer history + Q&A thread ───────────────────────────────────────────
+  "adminListings.history.eventsHeading": "Moderation history",
+  "adminListings.history.questionsHeading": "Questions",
+  "adminListings.history.error": "Couldn't load this listing's history.",
+  "adminListings.history.emptyEvents": "No moderator actions yet.",
+  "adminListings.history.emptyQuestions": "No questions asked yet.",
+  "adminListings.history.unknownActor": "A moderator",
+  "adminListings.history.event.statusChanged":
+    "{actor} moved this from {from} to {to}.",
+  "adminListings.history.event.bulkStatus":
+    "{actor} moved this from {from} to {to} (bulk action).",
+  "adminListings.history.event.removed": "{actor} removed this listing.",
+  "adminListings.history.event.questionAsked": "{actor} asked a question.",
+  "adminListings.history.event.answered": "{actor} replied to a question.",
+  "adminListings.history.askedBy": "Asked by {actor}",
+  "adminListings.history.awaitingReply": "Awaiting reply",
 
   // ── Edit suggestions ─────────────────────────────────────────────────────────
   "editSuggestions.empty": "No corrections in this filter right now.",
@@ -513,6 +711,9 @@ export const admin: Catalog = {
   "moderation.reportDrawer.threadTitle": "Surrounding thread",
   "moderation.reportDrawer.flaggedTag": "Flagged",
   "moderation.reportDrawer.peopleTitle": "People involved",
+  "moderation.reportDrawer.disputeReasonTitle": "Dispute reason",
+  "moderation.reportDrawer.listingEvidenceTitle": "Ownership evidence",
+  "moderation.reportDrawer.contactEmailTitle": "Disputer contact",
   "moderation.reportDrawer.contextLoading": "Loading the report's context",
   "moderation.reportDrawer.limitedContext":
     "This report came in without the full thread attached. You can still act on the summary below.",
@@ -609,6 +810,7 @@ export const admin: Catalog = {
   "moderation.chip.vouchAbuse": "Vouch-abuse",
   "moderation.chip.spam": "Spam",
   "moderation.chip.offTopic": "Off-topic",
+  "moderation.chip.listingDispute": "Listing dispute",
   "moderation.chip.appeal": "Appeal",
   "moderation.chip.identityShielded": "Identity shielded",
   "moderation.chip.appealRestriction": "Appeal · restriction",
@@ -726,6 +928,11 @@ export const admin: Catalog = {
   "communities.settings.addModCta": "+ Add",
   "communities.settings.addModToast": "Search members to add as moderator",
   "communities.settings.modRemovedToast": "Removed {name} as moderator",
+  // Live mode has no moderator-management endpoint yet — adding/removing a mod
+  // stays honest rather than mutating the real roster client-side and offering
+  // a fake Undo (demo keeps the simulated behaviour).
+  "communities.settings.comingSoonToast":
+    "Managing moderators isn't available yet.",
   "communities.settings.secondVouch.title": "Require a second vouch to join",
   "communities.settings.secondVouch.sub":
     "Slows growth, raises trust. Recommended for support spaces.",
@@ -821,6 +1028,10 @@ export const admin: Catalog = {
   "governance.header.publishCta": "Publish report",
   "governance.header.publishToast":
     "Transparency report queued — members will be notified when it publishes.",
+  // Live mode: no publish endpoint yet, so stay honest (demo keeps the queued
+  // confirmation above).
+  "governance.header.publishComingSoonToast":
+    "Publishing transparency reports isn't available yet.",
   "governance.tabs.finances": "Finances",
   "governance.tabs.policy": "Policy & versions",
   "governance.tabs.audit": "Audit log",
@@ -903,6 +1114,10 @@ export const admin: Catalog = {
   "governance.audit.metaZero": "No entries match these filters.",
   "governance.audit.metaMatch": "{count} entries",
   "governance.audit.exportToast": "Exported {total} entries as CSV",
+  // Live mode: no export endpoint yet (and only the current page is loaded, so
+  // a client-side dump would be partial). Stay honest; demo keeps the toast.
+  "governance.audit.exportComingSoonToast":
+    "Exporting the audit log isn't available yet.",
   "governance.audit.exportCta": "Export CSV",
   "governance.audit.columns.moderator": "Moderator",
   "governance.audit.columns.action": "Action",
@@ -1038,20 +1253,34 @@ export const admin: Catalog = {
   "modPanel.settings.rulesPlaceholder": "Enter rules, one per line…",
   "modPanel.settings.saveCta": "Save settings",
   "modPanel.settings.savedToast": "Community settings saved.",
+  "modPanel.settings.errorToast":
+    "That didn't go through. Please try again in a moment.",
+  "modPanel.settings.cancel": "Cancel",
   "modPanel.settings.dangerZone": "Danger zone",
   "modPanel.settings.irreversible": "Irreversible actions",
   "modPanel.settings.archive.title": "Archive community",
   "modPanel.settings.archive.desc":
-    "Members keep their history but new posts are disabled.",
+    "Take the community down. Members keep their history, but it leaves discovery and no one can post.",
   "modPanel.settings.archive.cta": "Archive",
-  "modPanel.settings.archive.toast":
-    "Community archived. Members have been notified.",
+  "modPanel.settings.archive.toast": "Community archived.",
+  "modPanel.settings.archive.confirm.title": "Archive this community?",
+  "modPanel.settings.archive.confirm.body":
+    "This takes the community down for everyone. Members keep their history, but it disappears from discovery and no new posts can be made. Only you, as the owner, can do this.",
+  "modPanel.settings.archive.confirm.cta": "Yes, archive it",
   "modPanel.settings.transfer.title": "Transfer ownership",
   "modPanel.settings.transfer.desc":
-    "Hand the community to another member. You'll lose owner permissions.",
+    "Hand the community to another member. You'll step down to moderator.",
   "modPanel.settings.transfer.cta": "Transfer",
   "modPanel.settings.transfer.toast":
-    "Ownership transfer initiated — the new owner will receive an invite.",
+    "Ownership transferred. You're now a moderator here.",
+  "modPanel.settings.transfer.modal.title": "Transfer ownership",
+  "modPanel.settings.transfer.modal.body":
+    "Choose the member to become the new owner. You'll stay on as a moderator.",
+  "modPanel.settings.transfer.modal.pickLabel": "Choose the new owner",
+  "modPanel.settings.transfer.modal.emptyTitle": "No one to hand it to yet",
+  "modPanel.settings.transfer.modal.emptyDesc":
+    "You need at least one other member before you can transfer ownership.",
+  "modPanel.settings.transfer.modal.cta": "Transfer ownership",
 
   // ── Vouch graph (trust-network visualisation) ─────────────────────────────
   "vouchGraph.modes.network": "Network",
@@ -1071,6 +1300,8 @@ export const admin: Catalog = {
   "vouchGraph.legend.plain.trusted": "Trusted",
   "vouchGraph.legend.plain.verified": "Verified",
   "vouchGraph.legend.plain.mutual": "Mutual vouch",
+  "vouchGraph.legend.plain.invited": "Invited",
+  "vouchGraph.legend.plain.vouched": "Vouched after",
   "vouchGraph.legend.plain.anonymous": "Anonymous",
   "vouchGraph.legend.plain.private": "Private network",
 
@@ -1079,6 +1310,9 @@ export const admin: Catalog = {
   "vouchGraph.relationship.group": "Same group",
   "vouchGraph.relationship.met_through": "Met through QueerPulse",
   "vouchGraph.relationship.neighbours": "Neighbours",
+
+  "vouchGraph.edgeKind.invite": "Invited",
+  "vouchGraph.edgeKind.vouch": "Vouched after",
 
   "vouchGraph.modal.ariaLabel": "Trust network",
   "vouchGraph.modal.eyebrow": "Trust network",
@@ -1563,4 +1797,555 @@ export const admin: Catalog = {
   "roadmap.heroStats.autofill.building": "{count} in progress",
   "roadmap.heroStats.autofill.planned_one": "{count} planned",
   "roadmap.heroStats.autofill.planned_other": "{count} planned",
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // Roadmap redesign (9-view board, deep drawer, saved views, modals).
+  // Additive: the flat roadmap.board.*/roadmap.ideas.*/roadmap.heroStats.*
+  // keys above stay in place for the current 3-tab UI until it's migrated;
+  // everything below is scoped to the new views under fresh sub-paths so
+  // neither set collides with or silently reads from the other.
+  // ═══════════════════════════════════════════════════════════════════════
+
+  // ── Category taxonomy — shared across board/toolbar/drawer/capacity/etc ───
+  "roadmap.categories.resources": "Resources",
+  "roadmap.categories.gatherings": "Gatherings",
+  "roadmap.categories.members": "Members",
+  "roadmap.categories.safety": "Safety",
+  "roadmap.categories.content": "Content",
+  "roadmap.categories.messaging": "Messaging",
+  "roadmap.categories.community": "Community",
+  "roadmap.categories.economy": "Economy",
+  "roadmap.categories.platform": "Platform",
+
+  // ── Page shell — eyebrow/title/sub + header actions ────────────────────
+  "roadmap.page.eyebrow": "Roadmap",
+  "roadmap.page.title": "Shape the <em>roadmap</em>",
+  "roadmap.page.sub":
+    "Drag items between columns, triage what members asked for, and control exactly what the public page shows. A moved date always asks you for a reason — that is the point.",
+  "roadmap.page.newItemCta": "New item",
+  "roadmap.page.draftDigestCta": "Draft digest",
+  "roadmap.page.previewPublicCta": "Preview public page",
+  "roadmap.page.auditLogCta": "Audit log",
+
+  // ── Tabs — 9 views. tabs.board/tabs.heroStats above already carry the
+  // right copy and are reused as-is; the rest are new.
+  "roadmap.tabs.timeline": "Timeline",
+  "roadmap.tabs.guides": "Guides",
+  "roadmap.tabs.capacity": "Capacity",
+  "roadmap.tabs.memberIdeas": "Member ideas",
+  "roadmap.tabs.notBuilding": "Not building",
+  "roadmap.tabs.publicPreview": "Public preview",
+  "roadmap.tabs.archive": "Archive",
+
+  // ── Saved views chip row ────────────────────────────────────────────────
+  "roadmap.savedViews.label": "Saved views",
+  "roadmap.savedViews.late": "What is late",
+  "roadmap.savedViews.unassigned": "Unassigned P0/P1",
+  "roadmap.savedViews.blocked": "Blocked",
+  "roadmap.savedViews.stale": "Stale",
+  "roadmap.savedViews.guidesOnly": "Guides only",
+  "roadmap.savedViews.needsSafety": "Needs safety review",
+  "roadmap.savedViews.needsFunding": "Needs funding",
+
+  // ── Toolbar — search, filters, sort, density, drag hint ────────────────
+  "roadmap.toolbar.searchPlaceholder": "Filter items…",
+  "roadmap.toolbar.searchAriaLabel": "Filter roadmap items",
+  "roadmap.toolbar.categoryAll": "All categories",
+  "roadmap.toolbar.ownerAll": "Any owner",
+  "roadmap.toolbar.ownerUnassigned": "Unassigned",
+  "roadmap.toolbar.sortManual": "Manual order",
+  "roadmap.toolbar.sortVotes": "Most voted",
+  "roadmap.toolbar.sortPriority": "Priority",
+  "roadmap.toolbar.sortStale": "Least recently touched",
+  "roadmap.toolbar.denseToggle": "Compact",
+  "roadmap.toolbar.dragHint": "Drag to move or reorder · ? for shortcuts",
+
+  // ── Board — columns (backlog is new; shipped/building/planned reuse the
+  // existing roadmap.board.column.* keys above, same copy), subtitles,
+  // empty/WIP states, flag tooltips, alert strips, kebab menu.
+  "roadmap.board.column.backlog": "Backlog",
+  "roadmap.board.column.subtitle.backlog": "Parked with intent",
+  "roadmap.board.column.subtitle.planned": "Committed, not started",
+  "roadmap.board.column.subtitle.building": "Hands on it",
+  "roadmap.board.column.subtitle.shipped": "Live for members",
+  "roadmap.board.addToColumnAriaLabel": "Add to {column}",
+  "roadmap.board.emptyColumn": "Nothing here",
+  "roadmap.board.wipOverMessage":
+    "Over the WIP limit of {limit} — something here is not really being built.",
+  "roadmap.board.gripAriaLabel": "Drag to move or reorder",
+  "roadmap.board.openCardAriaLabel": "Open {name}",
+  "roadmap.board.selectCardAriaLabel": "Select {name}",
+  "roadmap.board.flag.requested": "Members asked for this",
+  "roadmap.board.flag.committed": "Committed — this is a promise",
+  "roadmap.board.flag.hidden": "Hidden from the public roadmap",
+  "roadmap.board.flag.safetyGated":
+    "Safety review required before this can go public",
+  "roadmap.board.flag.spike": "Unusual vote spike — possible brigading",
+  "roadmap.board.flag.slips": "Target moved {count}×",
+  "roadmap.board.alert.blocked": "Blocked · {reason}",
+  "roadmap.board.alert.waitingOn": "Waiting on {name}",
+  "roadmap.board.alert.waitingOnMore": "Waiting on {name} +{count}",
+  "roadmap.board.alert.staleUntouched": "Untouched {days} days",
+  "roadmap.board.menu.moveTo": "Move to {column}",
+  "roadmap.board.menu.editDetails": "Edit details",
+  "roadmap.board.menu.showPublic": "Show on public",
+  "roadmap.board.menu.hidePublic": "Hide from public",
+  "roadmap.board.menu.duplicate": "Duplicate",
+  "roadmap.board.menu.notifyVoters_one": "Notify {count} voter…",
+  "roadmap.board.menu.notifyVoters_other": "Notify {count} voters…",
+  "roadmap.board.menu.archive": "Archive",
+
+  // ── Bulk selection bar ──────────────────────────────────────────────────
+  "roadmap.bulkBar.selectedLabel_one": "{count} selected",
+  "roadmap.bulkBar.selectedLabel_other": "{count} selected",
+  "roadmap.bulkBar.moveToPlaceholder": "Move to…",
+  "roadmap.bulkBar.showPublicly": "Show publicly",
+  "roadmap.bulkBar.hide": "Hide",
+  "roadmap.bulkBar.archive": "Archive",
+  "roadmap.bulkBar.clear": "Clear",
+  "roadmap.bulkBar.delete": "Delete",
+  "roadmap.bulkBar.confirmDelete.title_one": "Delete {count} item?",
+  "roadmap.bulkBar.confirmDelete.title_other": "Delete {count} items?",
+  "roadmap.bulkBar.confirmDelete.body_one":
+    "This permanently removes the selected item from the roadmap and can't be undone.",
+  "roadmap.bulkBar.confirmDelete.body_other":
+    "This permanently removes all {count} selected items from the roadmap and can't be undone.",
+  "roadmap.bulkBar.confirmDelete.confirmCta": "Delete items",
+
+  // ── Item drawer — top bar + field labels shared by the grid ─────────────
+  "roadmap.drawer.eyebrow": "Roadmap item",
+  "roadmap.drawer.touchedLabel": "Touched {days}d ago",
+  "roadmap.drawer.field.title": "Title",
+  "roadmap.drawer.field.status": "Status",
+  "roadmap.drawer.field.target": "Target",
+  "roadmap.drawer.field.owner": "Owner",
+  "roadmap.drawer.field.priority": "Priority",
+  "roadmap.drawer.field.scope": "Scope",
+  "roadmap.drawer.field.scopeAll": "All communities",
+  "roadmap.drawer.saveCta": "Save & publish",
+  "roadmap.drawer.saveEditCta": "Save",
+  "roadmap.drawer.archiveCta": "Archive",
+  "roadmap.drawer.auditNote":
+    "Every edit is logged. Members can see when a date moved and why — a roadmap that quietly slips is just a wishlist.",
+  "roadmap.drawer.openAuditCta": "Open the audit log",
+  "roadmap.drawer.deleteConfirm.title": 'Delete "{name}"?',
+  "roadmap.drawer.deleteConfirm.body":
+    "This permanently removes it from the roadmap and can't be undone.",
+
+  // Drawer · Commitment section
+  "roadmap.drawer.commitment.title": "Commitment",
+  "roadmap.drawer.commitment.note": "why members should believe the date",
+  "roadmap.drawer.commitment.confidence.likely.label": "Likely",
+  "roadmap.drawer.commitment.confidence.likely.desc":
+    "We can see the whole path",
+  "roadmap.drawer.commitment.confidence.maybe.label": "Maybe",
+  "roadmap.drawer.commitment.confidence.maybe.desc":
+    "Depends on capacity or money",
+  "roadmap.drawer.commitment.confidence.hoping.label": "Hoping",
+  "roadmap.drawer.commitment.confidence.hoping.desc":
+    "We want this, no path yet",
+  "roadmap.drawer.commitment.promiseToggle.title":
+    "This is a promise, not an exploration",
+  "roadmap.drawer.commitment.promiseToggle.sub":
+    'Committed items are labelled as promises publicly. Everything else reads as "we want to".',
+  "roadmap.drawer.commitment.slipHistoryTitle": "Date history — moved {count}×",
+  "roadmap.drawer.commitment.slipHistoryEmpty":
+    "Never moved. Changing the target asks you for a public reason.",
+
+  // Drawer · Guide checklist section (health/legal resource guides)
+  "roadmap.drawer.guide.title": "Guide checklist",
+  "roadmap.drawer.guide.note": "health & legal content needs review",
+  "roadmap.drawer.guide.step.research": "Research",
+  "roadmap.drawer.guide.step.draft": "Draft",
+  "roadmap.drawer.guide.step.lived": "Lived-experience review",
+  "roadmap.drawer.guide.step.expert": "Expert / legal review",
+  "roadmap.drawer.guide.step.translate": "Translate (PT)",
+  "roadmap.drawer.guide.step.publish": "Publish",
+  "roadmap.drawer.guide.reviewerLabel": "Reviewer",
+  "roadmap.drawer.guide.reviewerPlaceholder": "Who checked this",
+  "roadmap.drawer.guide.credentialLabel": "Their credential",
+  "roadmap.drawer.guide.credentialPlaceholder": "Why they are qualified",
+  "roadmap.drawer.guide.reVerifyByLabel": "Re-verify by",
+  "roadmap.drawer.guide.languagesLabel": "Languages",
+  "roadmap.drawer.guide.reVerifyWarning":
+    "Re-verify due in {days} days. Health and legal facts rot — stale guidance is worse than none.",
+  "roadmap.drawer.guide.reVerifyOverdue_one":
+    "Re-verify is overdue by {count} day.",
+  "roadmap.drawer.guide.reVerifyOverdue_other":
+    "Re-verify is overdue by {count} days.",
+  "roadmap.drawer.guide.notAGuideCta": "This is not a guide",
+  // Non-guide items show a plain progress slider instead of the checklist.
+  "roadmap.drawer.progress.title": "Progress",
+  "roadmap.drawer.progress.percentDoneLabel": "Percent done",
+  "roadmap.drawer.progress.trackAsGuideCta":
+    "Track this as a resource guide instead",
+
+  // Drawer · Blocked section
+  "roadmap.drawer.blocked.title": "Blocked",
+  "roadmap.drawer.blocked.note": "shown publicly — blockers are not embarrassing",
+  "roadmap.drawer.blocked.byLabel": "Blocked by",
+  "roadmap.drawer.blocked.byPlaceholder": "Person or team",
+  "roadmap.drawer.blocked.unblockCta": "Unblock",
+  "roadmap.drawer.blocked.whyPlaceholder": "What exactly is it waiting on?",
+  "roadmap.drawer.blocked.none": "Not blocked.",
+  "roadmap.drawer.blocked.markCta": "Mark as blocked",
+
+  // Drawer · Dependencies section
+  "roadmap.drawer.deps.title": "Dependencies",
+  "roadmap.drawer.deps.none": "Nothing blocking this.",
+  "roadmap.drawer.deps.addPlaceholder": "Add a dependency…",
+  "roadmap.drawer.deps.cannotShip": "Cannot ship before {items}.",
+
+  // Drawer · Capacity & money section
+  "roadmap.drawer.capacity.title": "Capacity & money",
+  "roadmap.drawer.capacity.note":
+    "volunteer items slip first — that is arithmetic, not blame",
+  "roadmap.drawer.capacity.whoLabel": "Who is doing it",
+  "roadmap.drawer.capacity.paidOption": "Paid work",
+  "roadmap.drawer.capacity.volunteerOption": "Volunteer",
+  "roadmap.drawer.capacity.hoursLabel": "Hours / week",
+  "roadmap.drawer.capacity.costLabel": "Cost",
+  "roadmap.drawer.capacity.cost.none": "No cost",
+  "roadmap.drawer.capacity.cost.small": "Small (<€500)",
+  "roadmap.drawer.capacity.cost.funded": "Funded",
+  "roadmap.drawer.capacity.cost.needs": "Needs funding",
+  "roadmap.drawer.capacity.ownerLoadLabel": "Owner load",
+  "roadmap.drawer.capacity.noOwner": "Nobody owns this",
+  "roadmap.drawer.capacity.ownerLoadValue": "{hours}h of {cap}h",
+
+  // Drawer · Visibility & safety section
+  "roadmap.drawer.visibility.title": "Visibility & safety",
+  "roadmap.drawer.visibility.publicToggle.title":
+    "Visible on the public roadmap",
+  "roadmap.drawer.visibility.publicToggle.sub":
+    "Members see it, vote and comment.",
+  "roadmap.drawer.visibility.requestedToggle.title": "Member requested",
+  "roadmap.drawer.visibility.requestedToggle.sub":
+    "Came from an idea or a repeated ask.",
+  "roadmap.drawer.visibility.safetyLabel": "Safety review",
+  "roadmap.drawer.visibility.safety.none": "No review needed",
+  "roadmap.drawer.visibility.safety.required": "Safety review required",
+  "roadmap.drawer.visibility.safety.cleared": "Safety cleared",
+  "roadmap.drawer.visibility.gatedWarning":
+    "Gated. This cannot be published until Trust & Safety clears it.",
+
+  // Drawer · Member votes section
+  "roadmap.drawer.votes.title": "Member votes",
+  "roadmap.drawer.votes.otherCommunitiesLabel": "Everyone else",
+  "roadmap.drawer.votes.totalLabel": "Total votes",
+  "roadmap.drawer.votes.notifiedLabel": "Notified",
+  "roadmap.drawer.votes.notifiedYes": "Yes",
+  "roadmap.drawer.votes.notifiedNo": "Not yet",
+  "roadmap.drawer.votes.spikeLabel": "Spike",
+  "roadmap.drawer.votes.spikeFlagged": "Flagged",
+  "roadmap.drawer.votes.spikeNormal": "Normal",
+  "roadmap.drawer.votes.notifyCta_one": "Notify the {count} person who asked…",
+  "roadmap.drawer.votes.notifyCta_other": "Notify the {count} people who asked…",
+
+  // Drawer · Comments section
+  "roadmap.drawer.comments.title": "Comments",
+  "roadmap.drawer.comments.empty": "No comments yet.",
+  "roadmap.drawer.comments.hideCta": "Hide",
+  "roadmap.drawer.comments.unhideCta": "Unhide",
+  "roadmap.drawer.comments.hiddenStatus": "Hidden",
+
+  // Drawer · Internal notes / Public one-liner
+  "roadmap.drawer.internalNotes.title": "Internal notes",
+  "roadmap.drawer.internalNotes.note": "never public",
+  "roadmap.drawer.internalNotes.placeholder":
+    "Scope, dependencies, what would make us drop it.",
+  "roadmap.drawer.publicOneLiner.title": "Public one-liner",
+  "roadmap.drawer.publicOneLiner.note": "shown on /roadmap",
+  "roadmap.drawer.publicOneLiner.placeholder":
+    "Plain, warm, no roadmap-speak.",
+
+  // ── Modals ──────────────────────────────────────────────────────────────
+  // Slip reason
+  "roadmap.modals.slipReason.eyebrow": "Date change",
+  "roadmap.modals.slipReason.title": "Why is this <em>moving</em>?",
+  "roadmap.modals.slipReason.targetLabel": "Target",
+  "roadmap.modals.slipReason.body":
+    "This reason is published on the public roadmap next to the item. Members forgive slipping dates; they do not forgive silent ones.",
+  "roadmap.modals.slipReason.placeholder":
+    "e.g. Clinical reviewer availability — we would rather be late than wrong.",
+  "roadmap.modals.slipReason.confirmCta": "Move the date",
+  "roadmap.modals.slipReason.cancelCta": "Keep it as it is",
+  "roadmap.modals.slipReason.missingReasonToast":
+    "A moved date needs a reason — that is the whole point",
+
+  // Safety gate
+  "roadmap.modals.safetyGate.eyebrow": "Safety gate",
+  "roadmap.modals.safetyGate.title": "This needs a <em>safety review</em> first",
+  "roadmap.modals.safetyGate.body":
+    "Flagged as sensitive. Housing, asylum and employer content can expose members — publishing it early is a real risk, not a process step.",
+  "roadmap.modals.safetyGate.note":
+    "Clearing is logged against your name. Only Trust & Safety should do this.",
+  "roadmap.modals.safetyGate.confirmCta": "Clear review & publish",
+  "roadmap.modals.safetyGate.cancelCta": "Leave it gated",
+
+  // Merge idea
+  "roadmap.modals.mergeIdea.eyebrow": "Merge idea",
+  "roadmap.modals.mergeIdea.title": "Fold this into an <em>existing item</em>",
+  "roadmap.modals.mergeIdea.body":
+    "Merging moves the votes across and tells the member where their idea went.",
+  "roadmap.modals.mergeIdea.ideaLabel": "Member idea",
+  "roadmap.modals.mergeIdea.mergeIntoLabel": "Merge into",
+  "roadmap.modals.mergeIdea.suggestedTag": "suggested",
+  "roadmap.modals.mergeIdea.confirmCta": "Merge & notify",
+  "roadmap.modals.mergeIdea.missingPickToast":
+    "Pick a board item to merge into",
+  "roadmap.modals.mergeIdea.emptyTargets":
+    "There's nothing on the board yet to merge this into.",
+
+  // Decline
+  "roadmap.modals.decline.eyebrow": "Decline",
+  "roadmap.modals.decline.title": "Say no, with a <em>reason</em>",
+  "roadmap.modals.decline.ideaLabel": "Member idea",
+  "roadmap.modals.decline.reasonLabel": "Reason",
+  "roadmap.modals.decline.publishedWordingLabel": "Published wording",
+  "roadmap.modals.decline.publishedWordingHint":
+    'appears under "Not building this, and why"',
+  "roadmap.modals.decline.confirmCta": "Decline publicly",
+  "roadmap.modals.decline.missingReasonToast":
+    "Write the reason — declining without one is silence",
+  "roadmap.modals.decline.reason.scope.label": "Outside what we are",
+  "roadmap.modals.decline.reason.scope.wording":
+    "This is not what QueerPulse is for — it would pull us toward being a platform.",
+  "roadmap.modals.decline.reason.unsafe.label": "Cannot build it safely",
+  "roadmap.modals.decline.reason.unsafe.wording":
+    "We could not ship this without putting members at risk. If that changes, we will revisit.",
+  "roadmap.modals.decline.reason.capacity.label": "No capacity, honestly",
+  "roadmap.modals.decline.reason.capacity.wording":
+    "We are five people. This is a real idea we cannot staff right now.",
+  "roadmap.modals.decline.reason.exists.label": "Already exists elsewhere",
+  "roadmap.modals.decline.reason.exists.wording":
+    "Someone in the community already does this well and we would rather point at them.",
+  "roadmap.modals.decline.reason.harm.label": "Risk of harm outweighs value",
+  "roadmap.modals.decline.reason.harm.wording":
+    "The version of this that works for some members would expose others.",
+
+  // Notify voters
+  "roadmap.modals.notifyVoters.eyebrow": "Tell the people who asked",
+  "roadmap.modals.notifyVoters.title_one": "Notify <em>{count}</em> member",
+  "roadmap.modals.notifyVoters.title_other": "Notify <em>{count}</em> members",
+  "roadmap.modals.notifyVoters.itemLabel": "Item",
+  "roadmap.modals.notifyVoters.messageLabel": "Message",
+  "roadmap.modals.notifyVoters.onceOnlyTitle": "One email, no follow-ups",
+  "roadmap.modals.notifyVoters.onceOnlySub":
+    "We never re-engage people who voted. This sends once and stops.",
+  "roadmap.modals.notifyVoters.confirmCta": "Send once",
+  "roadmap.modals.notifyVoters.cancelCta": "Not now",
+  "roadmap.modals.notifyVoters.shippedMessage":
+    '"{name}" is live. You asked for this — thank you for saying so.',
+  "roadmap.modals.notifyVoters.movedMessage":
+    '"{name}" just moved to {column}.',
+
+  // Digest
+  "roadmap.modals.digest.eyebrow": "Monthly digest",
+  "roadmap.modals.digest.title": '"You asked, we <em>built</em>"',
+  "roadmap.modals.digest.body":
+    "Drafted from the board: what shipped, which dates moved and why, and what we declined. Edit freely.",
+  "roadmap.modals.digest.confirmCta": "Copy for the email",
+  "roadmap.modals.digest.heading": "What happened in {month}",
+  "roadmap.modals.digest.shippedHeading": "Shipped",
+  "roadmap.modals.digest.movedHeading": "Dates that moved, and why",
+  "roadmap.modals.digest.movedEmpty": "Nothing moved this month.",
+  "roadmap.modals.digest.declinedHeading": "What we said no to",
+  "roadmap.modals.digest.footer":
+    "{count} things are in progress. The full board is at /roadmap.",
+
+  // Audit log
+  "roadmap.modals.auditLog.eyebrow": "Audit trail",
+  "roadmap.modals.auditLog.title": "Every change, <em>on the record</em>",
+  "roadmap.modals.auditLog.exportCta": "Export CSV for governance",
+  "roadmap.modals.auditLog.resetBoardCta": "Reset board",
+  "roadmap.modals.auditLog.resetBoardHint":
+    "Resets this browser's demo board back to the seeded roadmap — every edit made in demo mode is undone. This can't be undone.",
+
+  // Shortcuts
+  "roadmap.modals.shortcuts.eyebrow": "Keyboard",
+  "roadmap.modals.shortcuts.title": "Move without the <em>mouse</em>",
+  "roadmap.modals.shortcuts.filter": "Filter",
+  "roadmap.modals.shortcuts.newItem": "New item",
+  "roadmap.modals.shortcuts.moveThroughCards": "Move through cards",
+  "roadmap.modals.shortcuts.editFocused": "Edit focused card",
+  "roadmap.modals.shortcuts.saveClose": "Save & close",
+  "roadmap.modals.shortcuts.close": "Close",
+  "roadmap.modals.shortcuts.thisList": "This list",
+  "roadmap.modals.shortcuts.dragMove": "Move or reorder",
+  "roadmap.modals.shortcuts.gotItCta": "Got it",
+
+  // ── Timeline view ───────────────────────────────────────────────────────
+  "roadmap.timelineView.unscheduledLabel": "Unscheduled",
+  "roadmap.timelineView.laneCount": "{items} items · {shipped} shipped",
+
+  // ── Capacity view ───────────────────────────────────────────────────────
+  "roadmap.capacityView.title": "Who is <em>carrying</em> what",
+  "roadmap.capacityView.subtitle": "Building-now load vs. stated hours",
+  "roadmap.capacityView.loadSummary": "{building} building, {planned} planned",
+  "roadmap.capacityView.paidTag": "Paid",
+  "roadmap.capacityView.volunteerTag": "Volunteer",
+  "roadmap.capacityView.atOnceTag": "{count} at once",
+  "roadmap.capacityView.unassignedActiveLabel": "Unassigned, active",
+  "roadmap.capacityView.unassignedActiveWarn": "{count} are P0/P1",
+  "roadmap.capacityView.unassignedActiveOk": "None urgent",
+  "roadmap.capacityView.paidVsVolunteerLabel": "Paid vs. volunteer work",
+  "roadmap.capacityView.paidVsVolunteerFoot":
+    "Volunteer items slip first — that is not a moral failing, it is arithmetic.",
+  "roadmap.capacityView.needsFundingLabel": "Needs funding",
+  "roadmap.capacityView.needsFundingEmpty": "Nothing is waiting on money.",
+  "roadmap.capacityView.sustainerNote":
+    "Tie this to the sustainer tier. Members paying more should be able to see exactly which item their money unblocks.",
+  "roadmap.capacityView.emptyRosterTitle": "No team members yet",
+  "roadmap.capacityView.emptyRosterBody":
+    "Add someone to the roster to see their building-now load here.",
+
+  // ── Guides view ─────────────────────────────────────────────────────────
+  "roadmap.guidesView.subtitle":
+    "Resource guides that carry health, legal or safety information — track review status here, not just publish status.",
+  "roadmap.guidesView.reVerifyWarning_one":
+    "{count} guide needs re-verifying. Health and legal information rots. {names}.",
+  "roadmap.guidesView.reVerifyWarning_other":
+    "{count} guides need re-verifying. Health and legal information rots. {names}.",
+  "roadmap.guidesView.progressLabel": "Progress",
+  "roadmap.guidesView.reviewerLabel": "Reviewer",
+  "roadmap.guidesView.notAssigned": "Not assigned",
+  "roadmap.guidesView.credentialNeeded": "credential needed",
+  "roadmap.guidesView.reVerifyByLabel": "Re-verify by",
+  "roadmap.guidesView.overdueLabel": "{days} days overdue",
+  "roadmap.guidesView.dueInLabel": "in {days} days",
+  "roadmap.guidesView.emptyTitle": "No guides yet",
+  "roadmap.guidesView.emptyBody":
+    "Tag a roadmap item as a resource guide to give it a review checklist.",
+
+  // ── Member ideas view ───────────────────────────────────────────────────
+  "roadmap.ideasView.ageSuffix": "{age} ago",
+  "roadmap.ideasView.submittedByMember": "From a member",
+  "roadmap.ideasView.submittedByTeam": "From the team",
+  "roadmap.ideasView.voteSpike": "Vote spike — {votes} votes in {hours}h",
+  "roadmap.ideasView.duplicateHint": "Looks like a duplicate of {name}",
+  "roadmap.ideasView.mergeInsteadCta": "Merge instead",
+  "roadmap.ideasView.votesLabel": "votes",
+  "roadmap.ideasView.mergeCta": "Merge",
+  "roadmap.ideasView.declineCta": "Decline",
+  "roadmap.ideasView.emptyTitle": "Inbox zero",
+  "roadmap.ideasView.emptyBody":
+    'Every member idea has been triaged. Declined ideas live under "Not building" with a reason attached — never silence.',
+
+  // ── Not building view ───────────────────────────────────────────────────
+  "roadmap.notBuildingView.publicBanner":
+    "This page is public. Saying what you will not build, and why, is the most trust-building thing on the roadmap. Most platforms hide it.",
+  "roadmap.notBuildingView.hadAskedLabel": "had asked",
+  "roadmap.notBuildingView.reopenCta": "Reopen",
+  "roadmap.notBuildingView.emptyTitle": "Nothing declined yet",
+  "roadmap.notBuildingView.emptyBody":
+    "When you decline a member idea it lands here with its reason.",
+
+  // ── Archive view ────────────────────────────────────────────────────────
+  "roadmap.archiveView.wasColumnLabel": "was {column}",
+  "roadmap.archiveView.votesLabel": "votes",
+  "roadmap.archiveView.restoreCta": "Restore",
+  "roadmap.archiveView.deleteForGoodCta": "Delete for good",
+  "roadmap.archiveView.deleteConfirmTitle": 'Delete "{name}" for good?',
+  "roadmap.archiveView.deleteConfirmBody":
+    "Deleting is forever — archiving keeps the history. This can't be undone.",
+  "roadmap.archiveView.emptyTitle": "Archive is empty",
+  "roadmap.archiveView.emptyBody":
+    "Archiving keeps the history without cluttering the board. Deleting is forever — prefer archive.",
+
+  // ── Hero stats view (redesign's editor — see note above roadmap.heroStats.*
+  // for why this is a separate group from the current 3-tab editor) ───────
+  "roadmap.heroStatsView.title": "Public <em>hero stats</em>",
+  "roadmap.heroStatsView.previewLinkCta": "Preview public page →",
+  "roadmap.heroStatsView.subtitle":
+    "These four numbers sit at the top of the member-facing roadmap. Keep them honest — if a number needs a caveat, write it in the note and it shows as a tooltip.",
+  "roadmap.heroStatsView.captionPlaceholder": "Caveat / how it is counted",
+  "roadmap.heroStatsView.noGrowthTheatre":
+    "No growth theatre. We publish counts, never follower numbers or vanity graphs. Any stat that cannot be explained in one line does not belong here.",
+
+  // ── Public preview view ─────────────────────────────────────────────────
+  "roadmap.publicPreview.banner_one":
+    "This is what members see at /roadmap. {hidden} item hidden · {promises} committed as promises · hover any item to edit it inline.",
+  "roadmap.publicPreview.banner_other":
+    "This is what members see at /roadmap. {hidden} items hidden · {promises} committed as promises · hover any item to edit it inline.",
+  "roadmap.publicPreview.editCta": "Edit",
+  "roadmap.publicPreview.buildingHeading": "Building now",
+  "roadmap.publicPreview.buildingSub": "What we are actually doing right now.",
+  "roadmap.publicPreview.nextUpHeading": "Next up",
+  "roadmap.publicPreview.nextUpSub":
+    "Committed. Dates are targets, and we tell you when they move.",
+  "roadmap.publicPreview.somedayHeading": "Someday, honestly",
+  "roadmap.publicPreview.somedaySub": "We want these. No date would be a lie.",
+  "roadmap.publicPreview.shippedHeading": "Shipped",
+  "roadmap.publicPreview.shippedSub":
+    "The changelog. Every one of these was asked for by someone in the room.",
+  "roadmap.publicPreview.notBuildingHeading": "Not building this, and why",
+  "roadmap.publicPreview.notBuildingSub":
+    "The list most platforms hide. If we say no, you get a reason.",
+  "roadmap.publicPreview.requestedTag": "You asked for this",
+  "roadmap.publicPreview.committedTag": "Committed",
+  "roadmap.publicPreview.noPublicNoteFallback":
+    "No public note yet — members won't see anything here until you add one.",
+  "roadmap.publicPreview.movedOnce": "Moved once — {from} → {to}.",
+  "roadmap.publicPreview.movedMultiple": "Moved {count}× — {from} → {to}.",
+  "roadmap.publicPreview.blockedNote": "Blocked on {by}.",
+  "roadmap.publicPreview.noDateHonest": "No date — honestly",
+  "roadmap.publicPreview.liveLabel": "Live",
+  "roadmap.publicPreview.editItemTooltip": "Edit this item",
+  "roadmap.publicPreview.copyPermalinkTooltip": "Copy permalink",
+  "roadmap.publicPreview.subscribeHeading": "Get told when this changes",
+  "roadmap.publicPreview.subscribeBody":
+    "One email a month with what shipped, what moved and what we said no to. No product marketing, ever.",
+  "roadmap.publicPreview.subscribeEmailPlaceholder": "you@email.com",
+  "roadmap.publicPreview.subscribeCta": "Subscribe",
+  "roadmap.publicPreview.rssCta": "RSS",
+
+  // ── Toasts — feedback for every mutating action ────────────────────────
+  "roadmap.toasts.moved": '"{name}" moved to {column}',
+  "roadmap.toasts.bulkMoved_one": "{count} item moved to {column}",
+  "roadmap.toasts.bulkMoved_other": "{count} items moved to {column}",
+  "roadmap.toasts.published": "Now visible on the public roadmap",
+  "roadmap.toasts.hidden": "Hidden from the public roadmap",
+  "roadmap.toasts.duplicated": "Duplicated.",
+  "roadmap.toasts.bulkPublished_one": "{count} item shown on the public roadmap",
+  "roadmap.toasts.bulkPublished_other":
+    "{count} items shown on the public roadmap",
+  "roadmap.toasts.bulkHidden_one": "{count} item hidden from the public roadmap",
+  "roadmap.toasts.bulkHidden_other":
+    "{count} items hidden from the public roadmap",
+  "roadmap.toasts.archived": '"{name}" archived',
+  "roadmap.toasts.bulkArchived_one": "{count} item archived",
+  "roadmap.toasts.bulkArchived_other": "{count} items archived",
+  "roadmap.toasts.restored": '"{name}" restored',
+  "roadmap.toasts.deleted": '"{name}" deleted',
+  "roadmap.toasts.bulkDeleted_one": "{count} item deleted",
+  "roadmap.toasts.bulkDeleted_other": "{count} items deleted",
+  "roadmap.toasts.saved": "Saved — public roadmap updated",
+  "roadmap.toasts.dateMoved": "Date moved — members will see the reason",
+  "roadmap.toasts.safetyCleared": "Safety cleared and published",
+  "roadmap.toasts.merged_one":
+    'Merged — {votes} vote moved, and {name} was told where it went',
+  "roadmap.toasts.merged_other":
+    'Merged — {votes} votes moved, and {name} was told where it went',
+  "roadmap.toasts.promoted_one": '"{name}" promoted — {votes} voter notified',
+  "roadmap.toasts.promoted_other":
+    '"{name}" promoted — {votes} voters notified',
+  "roadmap.toasts.promoteError": "Couldn't promote that idea",
+  "roadmap.toasts.declined": "Declined publicly with a reason — {name} was told",
+  "roadmap.toasts.reopened": '"{name}" is back in the ideas queue',
+  "roadmap.toasts.reopenError": "Couldn't reopen that idea",
+  "roadmap.toasts.notified_one":
+    "{count} voter notified — one email, no follow-ups",
+  "roadmap.toasts.notified_other":
+    "{count} voters notified — one email, no follow-ups",
+  "roadmap.toasts.digestCopied":
+    "Digest copied — paste it into the monthly email",
+  "roadmap.toasts.permalinkCopied": "Copied {url}",
+  "roadmap.toasts.rssInfo": "RSS: {url}",
+  "roadmap.toasts.auditExported": "Audit log exported for governance",
+  "roadmap.toasts.boardReset": "Board reset to the seeded roadmap",
+  "roadmap.toasts.safetyReviewNeededInfo_one":
+    "{count} item needs a safety review first",
+  "roadmap.toasts.safetyReviewNeededInfo_other":
+    "{count} items need a safety review first",
 };

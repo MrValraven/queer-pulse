@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileEdit } from "../../app/providers/useProfile";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { EditProfilePane, type ProfileSection } from "./EditProfilePane";
@@ -17,7 +17,7 @@ export function EditProfilePage() {
     null,
   );
   const savedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { save, isSaving, saveError, cancelEditing } = useProfile();
+  const { save, isSaving, saveError, cancelEditing } = useProfileEdit();
 
   const unsaved = changed.size > 0;
 

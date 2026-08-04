@@ -5,7 +5,8 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
-import { useProfile } from "../../app/providers/useProfile";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useProfileData } from "../../app/providers/useProfile";
 import { CommunitiesHomeDigest } from "./CommunitiesHomeDigest";
 import { CommunitiesHomeSidebar } from "./CommunitiesHomeSidebar";
 import {
@@ -17,9 +18,10 @@ import styles from "./CommunitiesHomePage.module.css";
 
 export function CommunitiesHomePage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad(500);
   // The signed-in member (real profile live, mock currentUser in demo mode).
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   const firstName = profile.first;
   const { pulse, todos, myCommunities, upcoming, suggestions, digest } =
     useCommunitiesHomeData();
@@ -66,7 +68,10 @@ export function CommunitiesHomePage() {
             />
           ) : (
             <>
-              <CommunitiesHomeDigest digest={digest} />
+              {/* The weekly digest is derived entirely from the `getLiving`
+                  mock — there's no live feed backend — so it only renders in
+                  demo mode rather than showing a misleading all-zero week. */}
+              {demoMode && <CommunitiesHomeDigest digest={digest} />}
 
               <div className={styles.layout}>
                 <div>

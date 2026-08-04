@@ -240,6 +240,10 @@
     stroke-opacity: 1;
   }
 }
+/* Invite edge (voucher brought this member in) — warm amber vs the plum base. */
+.invite {
+  stroke: rgba(var(--amber-rgb), 0.55);
+}
 .mutual {
   stroke: rgba(var(--jade-rgb), 0.55);
 }
@@ -546,9 +550,105 @@
   overflow-y: auto;
 }
 @media (max-width: 920px) {
-  .inspector {
+  /* No inspector rail on a phone. With nothing selected there is nothing to
+     show; the moment a node is tapped its details + verify/cite actions
+     surface as a reachable bottom sheet instead of vanishing. */
+  .inspector[data-state="empty"] {
     display: none;
   }
+  .inspector[data-state="open"] {
+    position: absolute;
+    inset: auto 0 0 0;
+    width: auto;
+    max-height: 78%;
+    z-index: 5;
+    border-left: none;
+    border-top: 1px solid rgba(var(--line-rgb), 0.12);
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -20px 50px -26px rgba(0, 0, 0, 0.5);
+    padding-top: 30px;
+    padding-bottom: max(22px, env(safe-area-inset-bottom));
+    overscroll-behavior: contain;
+    animation: vgSheetIn var(--dur-base) var(--ease-out);
+  }
+}
+@keyframes vgSheetIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .inspector[data-state="open"] {
+    animation: none;
+  }
+}
+
+/* Bottom-sheet affordances — only visible on the phone layout where the
+   inspector becomes a sheet; on desktop it is a persistent rail. */
+.insGrab,
+.insSheetClose {
+  display: none;
+}
+@media (max-width: 920px) {
+  .insGrab {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 88px;
+    height: 26px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  .insGrab::before {
+    content: "";
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 42px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(var(--plum-rgb), 0.22);
+  }
+  .insSheetClose {
+    display: flex;
+    position: absolute;
+    top: 4px;
+    right: 8px;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    color: var(--ink-60);
+    cursor: pointer;
+  }
+  .insSheetClose svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+@media (hover: hover) and (max-width: 920px) {
+  .insSheetClose:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+    color: var(--text-strong);
+  }
+}
+.insGrab:focus-visible,
+.insSheetClose:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 .insHead {
   display: flex;
@@ -849,6 +949,20 @@
   flex: none;
   border-radius: 2px;
   background: var(--jade);
+}
+.legLineInvite {
+  width: 18px;
+  height: 3px;
+  flex: none;
+  border-radius: 2px;
+  background: rgba(var(--amber-rgb), 0.85);
+}
+.legLineVouch {
+  width: 18px;
+  height: 3px;
+  flex: none;
+  border-radius: 2px;
+  background: rgba(var(--plum-rgb), 0.55);
 }
 .legHatch {
   width: 12px;

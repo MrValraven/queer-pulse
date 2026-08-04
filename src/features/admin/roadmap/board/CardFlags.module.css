@@ -1,0 +1,28 @@
+.row {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-40);
+  font-size: 12px;
+  cursor: default;
+}
+
+.flag:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 1px;
+}
+
+.flagWarn {
+  color: var(--amber-ink);
+}

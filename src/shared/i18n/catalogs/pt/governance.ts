@@ -197,4 +197,6 @@ export const governance: Catalog = {
   "sections.raise.submitCta": "Submeter →",
   "sections.raise.submittedToast":
     "Submetido — entraremos em contacto no prazo de 48 horas",
+  "sections.raise.comingSoonToast":
+    "A receção de preocupações ainda não está ativa — este formulário não está ligado.",
 };

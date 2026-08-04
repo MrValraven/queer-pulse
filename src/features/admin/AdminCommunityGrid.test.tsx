@@ -55,10 +55,12 @@ function makeCommunity(slug: string): Community {
 }
 
 describe("AdminCommunityGrid", () => {
-  it("shows the empty state when the platform has no communities", () => {
+  it("shows the empty state when the platform has no communities", async () => {
     communities = [];
     renderGrid();
-    expect(screen.getByText(/No spaces/)).toBeInTheDocument();
+    // `admin` is a lazy-loaded i18n namespace, so the translated empty-state
+    // text lands after the provider's post-commit chunk load — await it.
+    expect(await screen.findByText(/No spaces/)).toBeInTheDocument();
   });
 
   // Loading and failure both leave `data` undefined, exactly as a genuinely
@@ -72,12 +74,12 @@ describe("AdminCommunityGrid", () => {
     expect(screen.queryByText(/No spaces/)).not.toBeInTheDocument();
   });
 
-  it("says the load failed rather than showing the empty state on error", () => {
+  it("says the load failed rather than showing the empty state on error", async () => {
     communities = undefined;
     isError = true;
     renderGrid();
+    expect(await screen.findByText(/Couldn’t load/)).toBeInTheDocument();
     expect(screen.queryByText(/No spaces/)).not.toBeInTheDocument();
-    expect(screen.getByText(/Couldn’t load/)).toBeInTheDocument();
   });
 
   // The headline sits one element above the empty/error panel, but it reads
@@ -85,40 +87,40 @@ describe("AdminCommunityGrid", () => {
   // announce "0 spaces" while the fetch is in flight or after it fails, the
   // exact class of lie the two tests above already guard against one element
   // lower.
-  it("does not announce zero spaces in the headline while loading", () => {
+  it("does not announce zero spaces in the headline while loading", async () => {
     communities = undefined;
     isLoading = true;
     renderGrid();
+    expect(await screen.findByText(/^Spaces,/)).toBeInTheDocument();
     expect(screen.queryByText(/0 spaces/)).not.toBeInTheDocument();
-    expect(screen.getByText(/^Spaces,/)).toBeInTheDocument();
   });
 
-  it("does not announce zero spaces in the headline after a failed load", () => {
+  it("does not announce zero spaces in the headline after a failed load", async () => {
     communities = undefined;
     isError = true;
     renderGrid();
+    expect(await screen.findByText(/^Spaces,/)).toBeInTheDocument();
     expect(screen.queryByText(/0 spaces/)).not.toBeInTheDocument();
-    expect(screen.getByText(/^Spaces,/)).toBeInTheDocument();
   });
 
-  it("spells the headline count from the number of communities rendered", () => {
+  it("spells the headline count from the number of communities rendered", async () => {
     communities = [makeCommunity("a"), makeCommunity("b"), makeCommunity("c")];
     renderGrid();
-    expect(screen.getByText(/Three spaces,/)).toBeInTheDocument();
+    expect(await screen.findByText(/Three spaces,/)).toBeInTheDocument();
   });
 
-  it("says one space, singular, for a single community", () => {
+  it("says one space, singular, for a single community", async () => {
     communities = [makeCommunity("a")];
     renderGrid();
-    expect(screen.getByText(/One space,/)).toBeInTheDocument();
+    expect(await screen.findByText(/One space,/)).toBeInTheDocument();
   });
 
-  it("uses a numeral past thirty", () => {
+  it("uses a numeral past thirty", async () => {
     communities = Array.from({ length: 31 }, (_, index) =>
       makeCommunity(`community-${index}`),
     );
     renderGrid();
-    expect(screen.getByText(/31 spaces,/)).toBeInTheDocument();
+    expect(await screen.findByText(/31 spaces,/)).toBeInTheDocument();
   });
 
   // Admins do not found communities — members do. The button was a dead toast

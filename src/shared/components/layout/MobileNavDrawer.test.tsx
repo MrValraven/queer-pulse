@@ -9,9 +9,9 @@ import { NAV_DRAWER_TRIGGER_ATTRIBUTE } from "./useNavDrawerFocus";
 import { TestProviders } from "../../../test/TestProviders";
 
 function OpenButton() {
-  const { openDrawer } = useNavDrawer();
+  const { openSheet } = useNavDrawer();
   return (
-    <button type="button" onClick={openDrawer}>
+    <button type="button" onClick={() => openSheet("browse")}>
       open drawer
     </button>
   );
@@ -173,12 +173,12 @@ describe("MobileNavDrawer Back-gesture handling", () => {
  * up, leaving the captured trigger detached from the document.
  */
 function DisappearingTrigger({ children }: { children?: React.ReactNode }) {
-  const { openDrawer } = useNavDrawer();
+  const { openSheet } = useNavDrawer();
   const [triggerMounted, setTriggerMounted] = useState(true);
   return (
     <>
       {triggerMounted && (
-        <button type="button" onClick={openDrawer}>
+        <button type="button" onClick={() => openSheet("browse")}>
           open drawer
         </button>
       )}

@@ -6,6 +6,7 @@ import {
   type CreateJobApplicationDto,
   type CreateJobDto,
 } from "./jobs.api";
+import { economyKeys } from "./economyKeys";
 
 /**
  * Each mutation branches on `demoMode`: demo is a no-op (the calling component
@@ -28,11 +29,13 @@ export function useCreateJob() {
       return { slug: res.slug };
     },
     onSuccess: (_res, dto) => {
-      void queryClient.invalidateQueries({ queryKey: ["jobs"] });
-      void queryClient.invalidateQueries({ queryKey: ["companies"] });
+      void queryClient.invalidateQueries({ queryKey: economyKeys.jobsRoot });
+      void queryClient.invalidateQueries({
+        queryKey: economyKeys.companiesRoot,
+      });
       if (dto.companySlug) {
         void queryClient.invalidateQueries({
-          queryKey: ["company", dto.companySlug],
+          queryKey: economyKeys.companyBySlug(dto.companySlug),
         });
       }
     },
@@ -56,8 +59,12 @@ export function useApplyToJob(slug: string) {
       await applyToJob(slug, dto);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["job", slug] });
-      void queryClient.invalidateQueries({ queryKey: ["my-applications"] });
+      void queryClient.invalidateQueries({
+        queryKey: economyKeys.jobBySlug(slug),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: economyKeys.myApplicationsRoot,
+      });
     },
   });
 }

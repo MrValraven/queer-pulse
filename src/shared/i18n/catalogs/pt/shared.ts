@@ -88,6 +88,8 @@ export const shared: Catalog = {
   "accountMenu.items.help": "Ajuda",
   "accountMenu.ariaLabel": "Menu da conta",
   "accountMenu.header.subtitle": "Perfil e conta",
+  "accountSheet.title": "A sua conta",
+  "accountSheet.viewProfile": "Ver perfil",
   "accountMenu.staff.magazineEditor": "Editor da revista",
   "accountMenu.staff.admin": "Admin",
   "accountMenu.mod.modTools": "Ferramentas de moderação",
@@ -134,6 +136,11 @@ export const shared: Catalog = {
   "adminNav.items.moderation": "Moderação",
   "adminNav.items.safeSpaces": "Espaços seguros",
   "adminNav.items.listings": "Espaços",
+  "adminNav.items.invites": "Convites",
+  "adminNav.items.changemakerNominations": "Nomeações",
+  "adminNav.items.commissionInterests": "Encomendas",
+  "adminNav.items.readingGroupProposals": "Grupos de leitura",
+  "adminNav.items.magazineSubmissions": "Propostas",
   "adminNav.items.partnerships": "Parcerias",
   "adminNav.items.orgTiers": "Níveis de parceria",
   "adminNav.items.governance": "Governação",
@@ -164,6 +171,9 @@ export const shared: Catalog = {
 
   // Modal / ModalSheet
   "modal.close": "Fechar",
+
+  // Toast — botão de dispensar (fechar) em cada toast
+  "toast.dismiss": "Dispensar",
 
   // SearchInput
   "searchInput.placeholder": "Pesquisar…",
@@ -330,4 +340,5 @@ export const shared: Catalog = {
   "footerData.base.guidelines": "Diretrizes da comunidade",
   "footerData.base.accessibility": "Acessibilidade",
   "footerData.base.security": "Segurança",
+  "footerData.base.imprint": "Informação legal",
 };

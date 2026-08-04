@@ -70,6 +70,7 @@ export function SubmitStoryCover({
         ref={inputRef}
         type="file"
         accept="image/png,image/jpeg,image/webp"
+        aria-label={t("magazine:submitStory.cover.addCta")}
         hidden
         onChange={(e) => {
           void pick(e.target.files?.[0]);

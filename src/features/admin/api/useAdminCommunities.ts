@@ -2,6 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { loadNamespace } from "../../../shared/i18n/catalogs";
+import { intlLocale } from "../../../shared/i18n/locale";
+import { parseKey, resolveEntry } from "../../../shared/i18n/translate";
+import type { Language, TFunction } from "../../../shared/i18n/types";
 import { COMMUNITIES, type Community } from "../adminCommunities.data";
 import {
   cardDtoToCommunity,
@@ -13,6 +17,41 @@ import {
 } from "./adminCommunities.api";
 
 const ADMIN_COMMUNITIES_KEY = "admin-communities";
+
+/**
+ * A `translate` bound to the *resolved* `admin` catalog for `language` (with EN
+ * as the universal fallback), built from `loadNamespace` — which resolves the
+ * lazy `admin` chunk and caches it — rather than the provider's `t`.
+ *
+ * The adapters classify chrome (activity labels, moderator role lines) through
+ * `translate()`, and this mapping happens inside the react-query `queryFn` the
+ * moment a fetch resolves. The provider's `t`, however, resolves lazy
+ * namespaces out of React state that only fills in AFTER a post-commit effect
+ * loads the chunk — so a `queryFn` mapping DTOs can win that race and bake raw
+ * `admin:…` keys into the cached, adapted result, which then never re-maps
+ * because the query key hasn't changed. Awaiting the catalog here makes the
+ * adaptation deterministic regardless of provider timing. `language` still sits
+ * in the query key, so a language switch refetches and rebuilds this translator
+ * for the new locale.
+ */
+async function loadAdminTranslate(language: Language): Promise<TFunction> {
+  const ADMIN_NAMESPACE = "admin" as const;
+  const [activeCatalog, englishCatalog] = await Promise.all([
+    loadNamespace(language, ADMIN_NAMESPACE),
+    language === "en"
+      ? Promise.resolve(undefined)
+      : loadNamespace("en", ADMIN_NAMESPACE),
+  ]);
+  return (key, options) => {
+    const { path } = parseKey(key);
+    const active = resolveEntry(activeCatalog, path, intlLocale(language), options);
+    if (active !== undefined) return active;
+    const fallback = englishCatalog
+      ? resolveEntry(englishCatalog, path, "en", options)
+      : undefined;
+    return fallback ?? key;
+  };
+}
 
 /**
  * Every community on the platform, for the admin grid. Demo mode returns the
@@ -28,15 +67,21 @@ const ADMIN_COMMUNITIES_KEY = "admin-communities";
  */
 export function useAdminCommunities() {
   const { demoMode } = useDemoMode();
-  const { t, language } = useTranslation();
+  const { language } = useTranslation();
   const fmt = useFormat();
   return useQuery<Community[]>({
     queryKey: [ADMIN_COMMUNITIES_KEY, demoMode, language],
     initialData: demoMode ? COMMUNITIES : undefined,
     queryFn: async () => {
       if (demoMode) return COMMUNITIES;
-      const cardDtos = await getAdminCommunities();
-      return cardDtos.map((cardDto) => cardDtoToCommunity(cardDto, t, fmt));
+      // Map with a catalog-bound translator (namespace guaranteed loaded), not
+      // the provider's lazy `t`, so the adapted result can't bake a raw
+      // `admin:…` key when the fetch wins the namespace-load race.
+      const [cardDtos, translate] = await Promise.all([
+        getAdminCommunities(),
+        loadAdminTranslate(language),
+      ]);
+      return cardDtos.map((cardDto) => cardDtoToCommunity(cardDto, translate, fmt));
     },
   });
 }
@@ -48,7 +93,7 @@ export function useAdminCommunities() {
  */
 export function useAdminCommunity(slug: string | null) {
   const { demoMode } = useDemoMode();
-  const { t, language } = useTranslation();
+  const { language } = useTranslation();
   const fmt = useFormat();
   return useQuery<Community | undefined>({
     queryKey: [ADMIN_COMMUNITIES_KEY, "detail", slug, demoMode, language],
@@ -61,7 +106,13 @@ export function useAdminCommunity(slug: string | null) {
         return COMMUNITIES.find((community) => community.slug === slug);
       }
       if (slug === null) return undefined;
-      return detailDtoToCommunity(await getAdminCommunity(slug), t, fmt);
+      // Catalog-bound translator (see useAdminCommunities) — deterministic
+      // regardless of lazy-namespace timing.
+      const [detailDto, translate] = await Promise.all([
+        getAdminCommunity(slug),
+        loadAdminTranslate(language),
+      ]);
+      return detailDtoToCommunity(detailDto, translate, fmt);
     },
   });
 }

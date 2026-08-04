@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "../../../shared/api/client";
+import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
 
 /** The person who created the invite — resolved server-side from the code. */
 export interface InviteInviterDTO {
@@ -14,13 +14,18 @@ export interface InviteDTO {
   code: string;
   /** Only `valid` lets the recipient continue; the rest route to the expired page. */
   status: "valid" | "expired" | "used" | "revoked";
-  /** ISO timestamp the invite stops working. */
-  expiresAt: string;
-  /** Days the link stays live from creation (for the "Valid for N days" badge). */
-  validForDays: number;
+  /** ISO timestamp the invite stops working. Null when it has no set expiry. */
+  expiresAt: string | null;
+  /** Days the link stays live from creation (for the "Valid for N days" badge).
+   *  Null when the invite has no set expiry. */
+  validForDays: number | null;
   /** Current community size, for the "247 members" line. */
   memberCount: number;
   inviter: InviteInviterDTO;
+  /** Whether the inviter is still an active member. `false` means they're
+   *  deactivated / suspended / banned / erased — the redeem flow must not let a
+   *  new member join off a ghost, even when `status` is still `valid`. */
+  inviterActive: boolean;
   /** The personal note the inviter wrote — shown in the link preview / landing. */
   note?: string;
   /** The inviter's vouch (why they're inviting this person) — shown at onboarding. */
@@ -62,30 +67,35 @@ export const createInvite = (payload: CreateInvitePayload) =>
 // exactly one redemption point: sign-up.
 
 /**
- * One invite the current member has already sent, as returned by GET /invites.
+ * One invite the current member has already sent, as returned by GET /invites
+ * (and echoed back by the revoke + resend endpoints). This is the backend's
+ * finalized `MyInviteView` — build the adapter in `useSentInvites` to this shape.
  *
- * ASSUMED SHAPE (the backend contract for this list isn't pinned yet): the row is
- * `{ code, status, expiresAt, note?, acceptedBy?, createdAt }`. `status` reuses the
- * same lifecycle union as {@link InviteDTO} (`valid` | `expired` | `used` | `revoked`).
- * `acceptedBy` is only present once a recipient has redeemed the code (`used`), and
- * carries just enough to render who joined. Adjust the adapter in `useSentInvites`
- * if the real endpoint names these fields differently.
+ * `status` reuses the same lifecycle union as {@link InviteDTO}
+ * (`valid` | `expired` | `used` | `revoked`), computed server-side.
  */
 export interface SentInviteDTO {
+  /** Stable invite uuid — used to patch the right cache row optimistically.
+   *  The revoke and resend routes both resolve by `code`, not this id. */
+  id: string;
   code: string;
+  /** The personal note the member wrote when sending it, if any. */
+  note: string | null;
+  /** The inviter's vouch — why they're inviting this person — if any. */
+  vouch: string | null;
+  /** The address the invite was addressed to, if it was an email invite. */
+  email: string | null;
   status: InviteDTO["status"];
-  /** ISO timestamp the invite stops working. */
-  expiresAt: string;
+  /** ISO timestamp the invite stops working. May be null (no set expiry). */
+  expiresAt: string | null;
   /** ISO timestamp the invite was created (for "Sent 2 days ago"). */
   createdAt: string;
-  /** The personal note the member wrote when sending it, if any. */
-  note?: string;
-  /** Present once redeemed: the recipient who accepted the invite. */
-  acceptedBy?: {
-    slug: string;
+  /** Non-null ONLY when `status === "used"`: the member who redeemed the code. */
+  acceptedBy: {
     firstName: string;
     lastName: string;
-    avatarUrl?: string | null;
+    slug: string;
+    avatarUrl: string | null;
   } | null;
 }
 
@@ -94,6 +104,27 @@ export interface SentInviteDTO {
  * The backend scopes this to the current session — no member id needed.
  */
 export const getSentInvites = () => apiGet<SentInviteDTO[]>("/invites");
+
+/**
+ * Re-mint an expired invite the current member owns: the backend resets its
+ * expiry to +7d and flips the status back to valid/pending, keeping the same
+ * code (quota-neutral). Returns the updated {@link SentInviteDTO} row.
+ *
+ * Only an `expired` invite you own is resendable — the backend 403s an invite
+ * that isn't yours, 404s an unknown code, and 409s one that's already accepted,
+ * revoked, or still valid.
+ */
+export const resendInvite = (code: string) =>
+  apiPost<SentInviteDTO>(`/invites/${encodeURIComponent(code)}/resend`);
+
+/**
+ * Revoke one of the current member's own still-pending invites, killing the
+ * link immediately. The backend scopes this to the session (you can only revoke
+ * an invite you sent) and 403/404s otherwise. Targets the invite by its `code`
+ * — the `DELETE /invites/:code` route resolves by code, not the row uuid.
+ */
+export const revokeInvite = (code: string) =>
+  apiDelete<void>(`/invites/${encodeURIComponent(code)}`);
 
 /**
  * The member's personal-invite allowance for the current calendar month, as

@@ -79,7 +79,7 @@
 .state {
   padding: 16px;
   text-align: center;
-  color: rgba(var(--ink-rgb), 0.6);
+  color: var(--ink-40);
   font-family: var(--sans);
   font-size: 0.9rem;
 }
@@ -93,7 +93,7 @@
 .comingSoonHint {
   padding: 0 16px 18px;
   text-align: center;
-  color: rgba(var(--ink-rgb), 0.6);
+  color: var(--ink-40);
   font-family: var(--sans);
   font-size: 0.85rem;
   line-height: 1.45;
@@ -114,6 +114,6 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
   font-family: var(--sans);
   font-size: 0.72rem;
-  color: rgba(var(--ink-rgb), 0.5);
+  color: var(--ink-40);
   text-align: right;
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
@@ -6,6 +6,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { type Perk, sidebarCopy } from "./perks.data";
 import { useRecognition } from "./api/useRecognition";
 import styles from "./PerksPage.module.css";
@@ -74,6 +75,7 @@ function LockMini() {
 
 function ClaimButton({ label, toast }: { label: string; toast: string }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const [claimed, setClaimed] = useState(false);
 
@@ -87,6 +89,12 @@ function ClaimButton({ label, toast }: { label: string; toast: string }) {
   return (
     <Button
       onClick={() => {
+        // No claim endpoint exists yet. Demo simulates the redemption; live must
+        // not fake a "claimed" success — say plainly it isn't wired up.
+        if (!demoMode) {
+          showToast(t("members:perks.claim.unavailableToast"), "info");
+          return;
+        }
         setClaimed(true);
         showToast(toast, "success");
       }}
@@ -190,11 +198,19 @@ export function PerkGroups() {
 
 export function PerksSidebar() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { level } = useRecognition();
   const { showToast } = useToast();
   const [idea, setIdea] = useState("");
+  const suggestFieldId = useId();
 
   function send() {
+    // No suggestion endpoint yet. Demo confirms receipt; live must not fake it.
+    if (!demoMode) {
+      showToast(t("members:perks.sidebar.suggestUnavailableToast"), "info");
+      setIdea("");
+      return;
+    }
     showToast(sidebarCopy.suggestToast, "success");
     setIdea("");
   }
@@ -246,8 +262,11 @@ export function PerksSidebar() {
         <div className={styles.sbTitle}>
           {t("members:perks.sidebar.suggestTitle")}
         </div>
-        <div className={styles.suggestLabel}>{sidebarCopy.suggestPrompt}</div>
+        <label className={styles.suggestLabel} htmlFor={suggestFieldId}>
+          {sidebarCopy.suggestPrompt}
+        </label>
         <textarea
+          id={suggestFieldId}
           className={styles.suggestTa}
           placeholder={t("members:perks.sidebar.suggestPlaceholder")}
           value={idea}

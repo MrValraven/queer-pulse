@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { useAuth } from "../../app/providers/authContext";
 import { useIsOnline } from "../../shared/api/realtime";
 import { ConversationComposerDock } from "./ConversationComposerDock";
@@ -7,15 +7,10 @@ import { ConversationHeader } from "./ConversationHeader";
 import { ConversationOverlays } from "./ConversationOverlays";
 import { ConversationPinnedBanner } from "./ConversationPinnedBanner";
 import type { GroupMemberPick } from "./NewGroupModal";
-import { useGroupIndicators } from "./useGroupIndicators";
 import { MessageArea } from "./MessageArea";
-import { type RunParticipant } from "./MessageRun";
-import { useJumpToMessage } from "./useJumpToMessage";
 import { useMessageActionMenu } from "./useMessageActionMenu";
-import { useSearchJump } from "./useSearchJump";
-import { useMessageScroll } from "./useMessageScroll";
+import { useMessageLogState } from "./useMessageLogState";
 import { useMessageReceipts } from "./useMessageReceipts";
-import { useUnreadDivider } from "./useUnreadDivider";
 import { useConversationPinStar } from "./useConversationPinStar";
 import { type ChatMessage, type Conversation, type GroupMemberView } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
@@ -111,7 +106,6 @@ export function ConversationPanel({
   groupManaging = false,
 }: ConversationPanelProps) {
   const { user } = useAuth();
-  const viewerIsStaff = user?.role === "admin" || user?.role === "moderator";
   /** Whether the group-info / management view is open (groups only). */
   const [groupInfoOpen, setGroupInfoOpen] = useState(false);
   /** Whether the "Seen by" sheet is open (groups only). */
@@ -143,16 +137,6 @@ export function ConversationPanel({
     deletePending,
   } = useMessageActionMenu(active.id);
 
-  // The single scroll-to + highlight mechanism, reused by the reply-quote jump
-  // below AND the cross-inbox-search jump effect — no second scroll/highlight
-  // system. Returns whether the target bubble was in the rendered DOM.
-  const jumpToMessage = useJumpToMessage();
-
-  // A search/starred result was picked: scroll to + highlight the target bubble
-  // once its thread is open (retry-until-rendered, then give up). Extracted to a
-  // hook to keep this component under the line cap.
-  useSearchJump(jumpToMessageId, jumpToMessage, onJumpHandled);
-
   // Presence for JUST this counterpart — a selector hook that only re-renders
   // this panel when THEIR own online status flips, not on every presence frame
   // for every other member (see `useIsOnline`).
@@ -169,83 +153,39 @@ export function ConversationPanel({
     active,
   );
 
-  const flatMessages = useMemo(
-    () => messageGroups.flatMap((group) => group.items),
-    [messageGroups],
-  );
-  const messageCount = flatMessages.length;
-  // Inbound-only tally for the jump-pill count — a reader's own sends never count as "new".
-  const inboundCount = useMemo(
-    () => flatMessages.filter((message) => message.from === "them").length,
-    [flatMessages],
-  );
-  const dividerAnchorMessage = useUnreadDivider(flatMessages, active.id, active.unreadCount ?? 0);
-
-  // "Seen": the last message I sent, and whether the counterpart's read
-  // watermark has caught up to it — only that message's run shows the label. A
-  // single backward walk (not a copy+reverse of the whole history, which grows
-  // unbounded as the thread does) finds it in the fewest steps.
-  const lastOutbound = useMemo(() => {
-    for (let index = flatMessages.length - 1; index >= 0; index -= 1) {
-      const candidate = flatMessages[index]!;
-      if (candidate.from === "me") return candidate;
-    }
-    return undefined;
-  }, [flatMessages]);
-  const seenActive =
-    !!lastOutbound?.at &&
-    !!counterpartLastReadAt &&
-    lastOutbound.at <= counterpartLastReadAt;
-  // "Delivered" (double check): the counterpart's delivered watermark has caught
-  // the last outbound message. One rung below seen — resolved with lower
-  // precedence in the run view, so a seen message never regresses to delivered.
-  const deliveredActive =
-    !!lastOutbound?.at &&
-    !!counterpartDeliveredAt &&
-    lastOutbound.at <= counterpartDeliveredAt;
-
+  // Every value the scrolling message log is derived from (flattened
+  // messages, receipts, virtualized rows, scroll/jump state) lives in one
+  // cohesive hook — see its own file comment for why.
   const {
     areaRef,
     contentRef,
+    rows,
+    rowVirtualizer,
     showJumpPill,
     newMessagesCount,
     handleAreaScroll,
     jumpToLatest,
-  } = useMessageScroll(
-      messageCount,
-      inboundCount,
-      active.id,
-      hasMoreOlder,
-      loadingOlder,
-      onLoadOlder,
-    );
-
-  // GROUP-only "Seen by N" (the aggregated typing label lives inside
-  // `TypingIndicatorRow` now — mounted by `MessageArea` itself, driven by its
-  // own `useTypingIndicator` subscription — so a typing frame never reaches
-  // this panel at all).
-  const { groupSeenBy } = useGroupIndicators(active, lastOutbound, {
-    id: myUserId ?? null,
-    slug: user?.profile?.slug,
-  });
-
-  // Memoized on the counterpart's actual identity fields (not `active` itself,
-  // which also carries fast-changing bits like `hasLeft`) so this object's
-  // reference stays stable across unrelated re-renders — `MessageRunView` and
-  // `MessageBubble` are `React.memo`'d, and an unstable object prop here would
-  // defeat that on every panel render.
-  const counterpart: RunParticipant = useMemo(
-    () => ({
-      initials: active.initials,
-      tint: active.tint,
-      src: active.avatarUrl,
-    }),
-    [active.initials, active.tint, active.avatarUrl],
+    jumpToMessageVirtualized,
+    counterpart,
+    groupSeenBy,
+    lastOutbound,
+    seenActive,
+    deliveredActive,
+  } = useMessageLogState(
+    active,
+    messageGroups,
+    myUserId,
+    user?.profile?.slug,
+    counterpartLastReadAt,
+    counterpartDeliveredAt,
+    hasMoreOlder,
+    loadingOlder,
+    onLoadOlder,
+    jumpToMessageId,
+    onJumpHandled,
   );
 
-  // Stable identity for the same reason as `counterpart` above — passed to
-  // `MessageArea`, which isn't itself memoized, but keeping every callback
-  // prop stable is cheap and consistent with the rest of this panel.
+  // Stable identity — passed to `MessageArea`, which isn't itself memoized.
   const onOpenSeenBy = useCallback(() => setSeenBySheetOpen(true), []);
 
   return (
@@ -258,15 +198,16 @@ export function ConversationPanel({
         onOpenGroupInfo={() => setGroupInfoOpen(true)}
       />
 
-      <ConversationPinnedBanner pinned={pinnedMessages} onJump={jumpToMessage} />
+      <ConversationPinnedBanner pinned={pinnedMessages} onJump={jumpToMessageVirtualized} />
 
       <MessageArea
         areaRef={areaRef}
         contentRef={contentRef}
         messageGroups={messageGroups}
+        rows={rows}
+        rowVirtualizer={rowVirtualizer}
         loadingOlder={loadingOlder}
         onScroll={handleAreaScroll}
-        dividerAnchorMessage={dividerAnchorMessage}
         counterpart={counterpart}
         counterpartName={active.name}
         isGroup={active.isGroup}
@@ -285,7 +226,7 @@ export function ConversationPanel({
         onBeginEdit={beginEdit}
         onSubmitEdit={submitEdit}
         onCancelEdit={cancelEdit}
-        onJumpToMessage={jumpToMessage}
+        onJumpToMessage={jumpToMessageVirtualized}
       />
 
       <ConversationComposerDock
@@ -303,7 +244,6 @@ export function ConversationPanel({
         actionTarget={actionTarget}
         deleteTarget={deleteTarget}
         reportTarget={reportTarget}
-        viewerIsStaff={viewerIsStaff}
         onReactionToggle={handleReactionToggle}
         onSetReply={onSetReply}
         onBeginEdit={beginEdit}

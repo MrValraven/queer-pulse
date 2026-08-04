@@ -237,11 +237,13 @@ export const homepage: Catalog = {
   "newsletter.success.body":
     "We'll start sending the <strong>Weekly digest</strong> to <strong>{email}</strong> every Thursday.",
   "newsletter.success.checkInboxNote":
-    "Check your inbox to confirm your subscription — the link expires in 48 hours.",
+    "You're all set — no confirmation email needed. You can change or stop this anytime from your settings.",
   "newsletter.success.useDifferentEmailCta": "Use a different email",
   "newsletter.emailPlaceholder": "your@email.com",
   "newsletter.subscribeCta": "Subscribe",
   "newsletter.note": "Members only · no spam · unsubscribe anytime",
+  "newsletter.comingSoon":
+    "The weekly digest isn't sending yet — we're still building it. Once it's live, you'll be able to subscribe right here.",
 
   // ── Outro (final CTA) ──────────────────────────────────────────────────────
   "outro.title": "Walk into a room where you <em>already belong.</em>",

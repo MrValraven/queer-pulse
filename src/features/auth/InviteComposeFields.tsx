@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./InvitePage.module.css";
 
@@ -22,14 +23,16 @@ export function InviteComposeFields({
   setNote,
 }: InviteComposeFieldsProps) {
   const { t } = useTranslation();
+  const fieldId = useId();
   return (
     <div className={styles.card}>
       <div className={styles.field}>
-        <label>
+        <label htmlFor={`${fieldId}-vouch`}>
           {t("auth:invite.compose.vouch.label")}{" "}
           <span style={optionalStyle}>{t("auth:common.optionalSuffix")}</span>
         </label>
         <textarea
+          id={`${fieldId}-vouch`}
           maxLength={280}
           placeholder={t("auth:invite.compose.vouch.placeholder")}
           value={vouch}
@@ -39,11 +42,12 @@ export function InviteComposeFields({
       </div>
 
       <div className={styles.field}>
-        <label>
+        <label htmlFor={`${fieldId}-note`}>
           {t("auth:invite.compose.note.label")}{" "}
           <span style={optionalStyle}>{t("auth:common.optionalSuffix")}</span>
         </label>
         <textarea
+          id={`${fieldId}-note`}
           maxLength={200}
           placeholder={t("auth:invite.compose.note.placeholder")}
           value={note}

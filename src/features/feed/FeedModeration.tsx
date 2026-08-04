@@ -370,6 +370,7 @@ export function ReportModal({
             </div>
             <textarea
               className={styles.detail}
+              aria-label={t("feed:moderation.reportDialog.detailPlaceholder")}
               placeholder={t("feed:moderation.reportDialog.detailPlaceholder")}
               value={detail}
               onChange={(e) => setDetail(e.target.value)}

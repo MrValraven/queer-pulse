@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { ChipSelect, ComingSoon, Toggle } from "../../shared/components/ui";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileEdit } from "../../app/providers/useProfile";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -21,7 +21,7 @@ import styles from "./InterestsPane.module.css";
 
 export function InterestsPane({ onChange }: { onChange: () => void }) {
   const { t } = useTranslation();
-  const { draft, updateDraft } = useProfile();
+  const { draft, updateDraft } = useProfileEdit();
   const uid = useId();
   const [ageIndex, setAgeIndex] = useState(DEFAULT_AGE_INDEX);
   const [freq, setFreq] = useState(DEFAULT_FREQ);
@@ -88,8 +88,11 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
         </div>
         <div className={styles.worldGrid}>
           <div className={styles.field}>
-            <label>{t("settings:interests.life.cityLabel")}</label>
+            <label htmlFor={`${uid}-city`}>
+              {t("settings:interests.life.cityLabel")}
+            </label>
             <input
+              id={`${uid}-city`}
               type="text"
               defaultValue="Lisbon, Portugal"
               disabled
@@ -97,8 +100,11 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             />
           </div>
           <div className={styles.field}>
-            <label>{t("settings:interests.life.languagesLabel")}</label>
+            <label htmlFor={`${uid}-languages`}>
+              {t("settings:interests.life.languagesLabel")}
+            </label>
             <input
+              id={`${uid}-languages`}
               type="text"
               placeholder={t("settings:interests.life.languagesPlaceholder")}
               disabled
@@ -107,13 +113,14 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
           </div>
         </div>
         <div className={styles.field}>
-          <label>
+          <label htmlFor={`${uid}-age`}>
             {t("settings:interests.life.ageLabel")}{" "}
             <span className={styles.fieldNote}>
               {t("settings:interests.life.ageNote")}
             </span>
           </label>
           <input
+            id={`${uid}-age`}
             type="range"
             className={styles.ageSlider}
             min={0}

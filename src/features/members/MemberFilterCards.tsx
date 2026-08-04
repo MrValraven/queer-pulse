@@ -162,6 +162,7 @@ export function FiltersSidebar({
           <input
             type="number"
             placeholder={t("members:directory.filter.fromPlaceholder")}
+            aria-label={t("members:directory.filter.fromPlaceholder")}
             min={0}
             max={9}
             value={filters.yearsFrom}
@@ -176,6 +177,7 @@ export function FiltersSidebar({
           <input
             type="number"
             placeholder={t("members:directory.filter.yearsPlaceholder")}
+            aria-label={t("members:directory.filter.yearsPlaceholder")}
             min={0}
             max={9}
             value={filters.yearsTo}

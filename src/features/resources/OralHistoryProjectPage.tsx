@@ -3,6 +3,7 @@ import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
@@ -12,6 +13,7 @@ import styles from "./resources.module.css";
 export function OralHistoryProjectPage() {
   const { showToast } = useToast();
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const pageTitle = t("resources:oralHistoryProject.meta.title");
   const pageDescription = t("resources:oralHistoryProject.meta.description");
 
@@ -94,7 +96,13 @@ export function OralHistoryProjectPage() {
               variant="jade"
               size="lg"
               onClick={() =>
-                showToast(t("resources:oralHistoryProject.participateToast"))
+                showToast(
+                  t(
+                    demoMode
+                      ? "resources:oralHistoryProject.participateToast"
+                      : "resources:oralHistoryProject.participateLiveToast",
+                  ),
+                )
               }
             >
               {t("resources:oralHistoryProject.participateCta")}

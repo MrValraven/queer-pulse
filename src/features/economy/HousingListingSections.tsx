@@ -160,3 +160,21 @@ export function HousingListingSidebar({
     </aside>
   );
 }
+
+/**
+ * Shown when the listing fetch fails for a reason that ISN'T a genuine 404
+ * (network drop, timeout, 5xx). A silent redirect to the board would hide the
+ * failure and lose the URL; instead we keep the reader here with a retry.
+ */
+export function HousingListingError({ onRetry }: { onRetry: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <div className={s.errorState} role="alert">
+      <h1 className={s.errorTitle}>{t("economy:housingListing.error.title")}</h1>
+      <p className={s.errorBody}>{t("economy:housingListing.error.body")}</p>
+      <Button variant="primary" onClick={onRetry}>
+        {t("economy:housingListing.error.retry")}
+      </Button>
+    </div>
+  );
+}

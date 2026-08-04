@@ -93,14 +93,14 @@ export const QUICK_STARTS: {
     descriptionKey: "auth:onboarding.quickStart.browseDirectory.desc",
   },
   {
-    to: "/calendar",
+    to: routes.calendar,
     icon: FiCalendar,
     iconBackground: "rgba(232,119,90,.08)",
     titleKey: "auth:onboarding.quickStart.gatherings.title",
     descriptionKey: "auth:onboarding.quickStart.gatherings.desc",
   },
   {
-    to: "/magazine",
+    to: routes.magazine,
     icon: FiBookOpen,
     iconBackground: "rgba(74,140,111,.08)",
     titleKey: "auth:onboarding.quickStart.magazine.title",

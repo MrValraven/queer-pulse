@@ -41,6 +41,9 @@ export function BarterProposeCard({
       <div className={styles.proposeBody}>
         <textarea
           className={styles.proposeTextarea}
+          aria-label={t("economy:barterDetail.propose.placeholder", {
+            firstName,
+          })}
           placeholder={t("economy:barterDetail.propose.placeholder", {
             firstName,
           })}

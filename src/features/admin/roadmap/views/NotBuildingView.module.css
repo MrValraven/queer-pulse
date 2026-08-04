@@ -1,0 +1,113 @@
+/* "Not building this, and why" — the same list the public page reads. A jade
+   banner leads (saying no with a reason is trust-building, worth naming),
+   then a stack of --paper rows shaped like IdeasView's for visual continuity
+   across the two idea-facing views. */
+
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 22px 0 0;
+  padding: 16px 20px;
+  border-radius: var(--radius-card, 22px);
+  background: rgba(var(--jade-rgb), 0.12);
+  border: 1px solid rgba(var(--jade-rgb), 0.28);
+}
+
+.banner p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--jade-ink);
+}
+
+.bannerIcon {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  color: var(--jade);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px 24px;
+  padding: 20px 22px;
+  border-radius: var(--radius-card, 22px);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.rowMain {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 10px;
+}
+
+.reasonTag {
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: var(--radius-tag, 7px);
+  background: rgba(var(--line-rgb), 0.08);
+  color: var(--ink-60);
+}
+
+.metaItem {
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+
+.title {
+  margin: 0 0 6px;
+  font-family: var(--sans);
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.wording {
+  margin: 0 0 10px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.hadAsked {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+
+.rowSide {
+  display: flex;
+  align-items: flex-start;
+  flex: 0 0 auto;
+}
+
+.rowSide button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}

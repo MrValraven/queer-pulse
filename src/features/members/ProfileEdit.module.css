@@ -496,7 +496,7 @@
 .avatarError {
   margin-top: 10px;
   font-size: 0.85rem;
-  color: var(--coral);
+  color: var(--accent);
 }
 
 /* ---- Social links editor -------------------------------------------------- */

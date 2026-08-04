@@ -1,7 +1,12 @@
 import { useMemo, useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { FiHeart } from "react-icons/fi";
-import { Button, EmptyState, Outro } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  FeatureHelp,
+  Outro,
+} from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -53,7 +58,8 @@ export function SkillsPage() {
             <Translation
               i18nKey="economy:skills.hero.title"
               components={{ em: <em /> }}
-            />
+            />{" "}
+            <FeatureHelp id="economy.skills" />
           </h1>
           <p>{t("economy:skills.hero.lead")}</p>
         </div>

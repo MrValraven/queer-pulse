@@ -21,11 +21,11 @@ export interface MessageActionOverlayProps {
   isSent: boolean;
   /** Where the pressed bubble is, for positioning the lifted clone + menu. */
   anchorRect: DOMRect;
-  /** Own message AND within the 15-min edit window. */
+  /** Server-authoritative: own message AND within the server's edit window. */
   canEdit: boolean;
-  /** Own message OR staff. */
+  /** Server-authoritative: own message OR staff. */
   canDelete: boolean;
-  /** NOT own message. */
+  /** Server-authoritative: NOT own message. */
   canReport: boolean;
   /** May pin/unpin this message (server-authoritative). */
   canPin: boolean;
@@ -153,6 +153,17 @@ export function MessageActionOverlay({
   const horizontalStyle = isSent
     ? { right: Math.min(maxInset, Math.max(edgeGap, visibleWidth - anchorRect.right)) }
     : { left: Math.min(maxInset, Math.max(edgeGap, anchorRect.left)) };
+  // The column anchors to the pressed bubble (`top` when it opens below,
+  // `bottom` when it opens above), not to the viewport edge it grows toward —
+  // so a fixed/viewport-relative max-height alone can't guarantee it fits: a
+  // long quoted message plus the full 8-item action menu can still exceed the
+  // actual room between the anchor and that edge. Cap it to the real
+  // available space in the direction it's growing; `.overlayColumn`'s
+  // `overflow-y: auto` makes anything still too tall scroll internally
+  // instead of pushing later actions off-screen.
+  const overlayMaxHeight = openBelow
+    ? Math.max(120, visibleHeight - anchorRect.top - edgeGap)
+    : Math.max(120, anchorRect.bottom - edgeGap);
   const runThenClose = (action: () => void) => () => {
     action();
     onClose();
@@ -177,6 +188,7 @@ export function MessageActionOverlay({
           bottom: openBelow
             ? undefined
             : visibleHeight - anchorRect.bottom,
+          maxHeight: overlayMaxHeight,
           ...horizontalStyle,
         }}
         onClick={(event) => event.stopPropagation()}

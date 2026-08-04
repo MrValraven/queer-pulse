@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiShield } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, ComingSoon } from "../../shared/components/ui";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -49,9 +50,39 @@ function VouchSuccessPanel({
 }
 
 /**
+ * Live-mode panel for the vouch flow — adding a member vouch has no backend
+ * yet (the safe-spaces API is read-only), so live mode shows this honest
+ * plum-panel notice instead of a form that would fake a submission. Demo mode
+ * still renders the full relationship + note form and its animated success.
+ */
+function VouchComingSoon({ onDone }: { onDone: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.success}>
+      <ComingSoon label={t("safety:vouchModal.comingSoon.badge")} />
+      <div className={styles.successTitle} style={{ marginTop: 16 }}>
+        <Translation
+          i18nKey="safety:vouchModal.comingSoon.title"
+          components={{ em: <em /> }}
+        />
+      </div>
+      <p className={styles.successSub}>
+        {t("safety:vouchModal.comingSoon.body")}
+      </p>
+      <div className={styles.successActions}>
+        <Button variant="ghost-dark" className={styles.full} onClick={onDone}>
+          {t("safety:vouchModal.comingSoon.doneCta")}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+/**
  * Add a safety vouch for a verified space. A short relationship + note form that
  * runs loading → animated plum-panel success. Self-contained: owns its own state
- * and locks scroll while mounted.
+ * and locks scroll while mounted. Live mode has no vouch backend, so it shows an
+ * honest coming-soon panel instead of the fake-success form.
  */
 export function VouchModal({
   spaceName,
@@ -61,6 +92,7 @@ export function VouchModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [relationship, setRelationship] = useState(RELATIONSHIP_KEYS[0]!);
   const [note, setNote] = useState("");
   const [status, setStatus] = useState<"form" | "loading" | "done">("form");
@@ -108,7 +140,9 @@ export function VouchModal({
         </button>
 
         <div className={styles.scroll}>
-          {status === "done" ? (
+          {!demoMode ? (
+            <VouchComingSoon onDone={onClose} />
+          ) : status === "done" ? (
             <VouchSuccessPanel spaceName={spaceName} onDone={onClose} />
           ) : (
             <div>
@@ -156,6 +190,7 @@ export function VouchModal({
               <textarea
                 className={styles.textarea}
                 placeholder={t("safety:vouchModal.form.notePlaceholder")}
+                aria-label={t("safety:vouchModal.form.noteLabel")}
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
               />

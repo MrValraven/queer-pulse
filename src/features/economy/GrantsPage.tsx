@@ -5,6 +5,7 @@ import { PageShell } from "../../shared/components/layout";
 import {
   Button,
   EmptyState,
+  FeatureHelp,
   Outro,
   Reveal,
   SubpageIndex,
@@ -53,7 +54,8 @@ export function GrantsPage() {
             <Translation
               i18nKey="economy:grants.hero.title"
               components={{ em: <em /> }}
-            />
+            />{" "}
+            <FeatureHelp id="economy.grants" />
           </Reveal>
           <Reveal as="p" className={styles.heroSub} delay={120}>
             {t("economy:grants.hero.lead")}

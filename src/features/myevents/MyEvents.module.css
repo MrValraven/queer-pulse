@@ -227,6 +227,10 @@
 .cal-cell {
   position: relative;
   aspect-ratio: 1/1;
+  /* Touch-target floor: the square aspect-ratio gives ≥44px on typical phones,
+     but on very narrow screens (7 cols under ~320px) it would dip below the
+     touch minimum — pin a floor so day cells stay tappable. */
+  min-height: 44px;
   border-radius: 11px;
   border: 1px solid transparent;
   background: transparent;

@@ -11,11 +11,11 @@ export interface MessageContextMenuProps {
   /** Where to open — the cursor for a right-click, or the bubble corner for a
    *  keyboard/"⋯" open. Viewport coordinates. */
   anchor: { x: number; y: number };
-  /** Own message AND within the 15-min edit window. */
+  /** Server-authoritative: own message AND within the server's edit window. */
   canEdit: boolean;
-  /** Own message OR staff. */
+  /** Server-authoritative: own message OR staff. */
   canDelete: boolean;
-  /** NOT own message. */
+  /** Server-authoritative: NOT own message. */
   canReport: boolean;
   /** May pin/unpin this message (server-authoritative). */
   canPin: boolean;

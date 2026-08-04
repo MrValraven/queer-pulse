@@ -77,7 +77,7 @@ export function DonateModalFields({
           inputMode="numeric"
           value={card}
           onChange={(e) => setCard(formatCard(e.target.value))}
-          placeholder="4242 4242 4242 4242"
+          placeholder={t("marketing:donateModal.field.cardNumberPlaceholder")}
           autoComplete="cc-number"
         />
       </div>
@@ -90,7 +90,7 @@ export function DonateModalFields({
             id="dn-exp"
             value={expiry}
             onChange={(e) => setExpiry(formatExpiry(e.target.value))}
-            placeholder="MM / YY"
+            placeholder={t("marketing:donateModal.field.expiryPlaceholder")}
             autoComplete="cc-exp"
           />
         </div>

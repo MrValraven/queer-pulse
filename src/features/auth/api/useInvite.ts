@@ -20,6 +20,9 @@ export interface InviteView {
   note?: string;
   /** The inviter's vouch — why they're inviting you — surfaced at onboarding. */
   vouch?: string;
+  /** False when the inviter is no longer active (deactivated / suspended /
+   *  banned / erased) — the landing shows a tailored "inviter inactive" state. */
+  inviterActive: boolean;
   /** Pre-formatted expiry, e.g. "12 June 2026". */
   expiryLabel: string;
   validForDays: number;
@@ -31,7 +34,8 @@ const DEMO_NOTE =
 const DEMO_VOUCH =
   "They’re exactly the kind of person this community was built for — thoughtful, creative, and genuinely invested in making queer spaces better.";
 
-function formatExpiry(iso: string): string {
+function formatExpiry(iso: string | null): string {
+  if (!iso) return "";
   const parsedDate = new Date(iso);
   if (Number.isNaN(parsedDate.getTime())) return "";
   // Default `formatDate` options are day / long-month / year — the exact shape
@@ -54,8 +58,11 @@ function dtoToView(dto: InviteDTO): InviteView {
     },
     note: dto.note,
     vouch: dto.vouch,
+    inviterActive: dto.inviterActive,
     expiryLabel: formatExpiry(dto.expiresAt),
-    validForDays: dto.validForDays,
+    // Falls back to 0 only if the backend ever omits the expiry window; in
+    // practice every minted invite sets one, so the badge always reads a real N.
+    validForDays: dto.validForDays ?? 0,
     memberCount: dto.memberCount,
   };
 }
@@ -76,6 +83,7 @@ function demoInvite(code: string): InviteView {
     },
     note: DEMO_NOTE,
     vouch: DEMO_VOUCH,
+    inviterActive: true,
     expiryLabel: "12 June 2026",
     validForDays: 7,
     memberCount: 247,

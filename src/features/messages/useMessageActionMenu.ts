@@ -8,10 +8,6 @@ import {
 import { type LongPressOrigin } from "./useLongPress";
 import { type ChatMessage } from "./data";
 
-/** Own messages remain editable for 15 minutes after they were sent (client
- *  gate; the server is the authority and rejects edits past its own window). */
-const EDIT_WINDOW_MS = 15 * 60 * 1000;
-
 /** The message the long-press/right-click action menu is open for. `source`
  *  decides the surface — touch long-press → full-screen overlay; desktop
  *  right-click/keyboard → compact context menu at `point`. */
@@ -20,8 +16,10 @@ export type ActionOverlayTarget =
       message: ChatMessage;
       rect: DOMRect;
       isSent: boolean;
-      /** Snapshotted at open time (the edit window is time-relative — computing
-       *  it during render would be an impure, drifting value). */
+      /** Server-authoritative (`MessageResponse.canEdit`), snapshotted at open
+       *  time. Never recomputed client-side — the server is the sole authority
+       *  on the edit window, mirroring exactly what the edit endpoint accepts.
+       *  Absent (demo/optimistic messages) reads as false. */
       canEdit: boolean;
       source: "touch" | "pointer";
       point?: { x: number; y: number };
@@ -100,15 +98,12 @@ export function useMessageActionMenu(conversationId: string): MessageActionMenu 
   const openActions = useCallback(
     (message: ChatMessage, origin: LongPressOrigin, isSent: boolean) => {
       if (!message.id) return;
-      const canEdit =
-        isSent &&
-        !!message.at &&
-        Date.now() - new Date(message.at).getTime() < EDIT_WINDOW_MS;
       setActionTarget({
         message,
         rect: origin.rect,
         isSent,
-        canEdit,
+        // Server-authoritative — see `ActionOverlayTarget.canEdit`.
+        canEdit: !!message.canEdit,
         source: origin.source,
         point: origin.point,
       });

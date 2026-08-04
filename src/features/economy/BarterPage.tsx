@@ -131,6 +131,7 @@ export function BarterPage() {
             <input
               className={styles.search}
               type="text"
+              aria-label={t("economy:barter.search.placeholder")}
               placeholder={t("economy:barter.search.placeholder")}
               value={query}
               onChange={(e) => setQuery(e.target.value)}

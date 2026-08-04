@@ -1,17 +1,13 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { SystemStateShell } from "../../shared/components/layout";
-import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import styles from "./OfflinePage.module.css";
 
-/** Fixed demo "cached" moments — a real Date so the sub-label can localize. */
-const TICKET_CACHED_DATE = new Date(2026, 5, 12);
-
-interface CachedItem {
+interface OfflineLink {
   to: string;
   label: string;
   sub: string;
@@ -19,22 +15,36 @@ interface CachedItem {
 }
 
 /**
- * i18n Pattern B: the ticket/map sub-labels fuse chrome with a formatted date
- * or relative time, so this needs `t` + `fmt` at call time (memoized by the
- * component below).
+ * Honest offline navigation. We can't know for certain which pages the runtime
+ * cache holds, so this offers the app's core sections framed as "try one" — the
+ * service worker serves any that were opened before, and the rest simply fail
+ * to load. No fabricated "your ticket is cached" claims or invented dates.
  */
-function buildCached(t: TFunction, fmt: Formatters): CachedItem[] {
+function buildLinks(t: TFunction): OfflineLink[] {
   return [
     {
-      to: routes.rsvpTicket,
-      label: t("system:offline.cached.ticket.label"),
-      sub: t("system:offline.cached.ticket.sub", {
-        date: fmt.date(TICKET_CACHED_DATE, {
-          weekday: "short",
-          day: "numeric",
-          month: "short",
-        }),
-      }),
+      to: routes.feed,
+      label: t("system:offline.links.feed.label"),
+      sub: t("system:offline.links.feed.sub"),
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="14" y2="18" />
+        </svg>
+      ),
+    },
+    {
+      to: routes.events,
+      label: t("system:offline.links.events.label"),
+      sub: t("system:offline.links.events.sub"),
       icon: (
         <svg
           viewBox="0 0 24 24"
@@ -46,15 +56,15 @@ function buildCached(t: TFunction, fmt: Formatters): CachedItem[] {
         >
           <rect x="3" y="4" width="18" height="18" rx="2" />
           <line x1="3" y1="10" x2="21" y2="10" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="16" y1="2" x2="16" y2="6" />
         </svg>
       ),
     },
     {
-      to: routes.spacesMap,
-      label: t("system:offline.cached.map.label"),
-      sub: t("system:offline.cached.map.sub", {
-        when: fmt.relativeTime(-1, "day"),
-      }),
+      to: routes.messages,
+      label: t("system:offline.links.messages.label"),
+      sub: t("system:offline.links.messages.sub"),
       icon: (
         <svg
           viewBox="0 0 24 24"
@@ -64,8 +74,7 @@ function buildCached(t: TFunction, fmt: Formatters): CachedItem[] {
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-          <circle cx="12" cy="10" r="3" />
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
         </svg>
       ),
     },
@@ -74,9 +83,8 @@ function buildCached(t: TFunction, fmt: Formatters): CachedItem[] {
 
 export function OfflinePage() {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const [retrying, setRetrying] = useState(false);
-  const cached = useMemo(() => buildCached(t, fmt), [t, fmt]);
+  const links = buildLinks(t);
 
   function retry() {
     if (navigator.onLine) {
@@ -120,11 +128,9 @@ export function OfflinePage() {
         </p>
 
         <div className={styles.cached}>
-          <h3 className={styles.cachedTitle}>
-            {t("system:offline.cachedTitle")}
-          </h3>
+          <h3 className={styles.cachedTitle}>{t("system:offline.tryTitle")}</h3>
           <div className={styles.cachedList}>
-            {cached.map((item) => (
+            {links.map((item) => (
               <Link key={item.to} to={item.to} className={styles.cachedRow}>
                 <div className={styles.cachedIc}>{item.icon}</div>
                 <div className={styles.cachedText}>

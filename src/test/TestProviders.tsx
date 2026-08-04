@@ -7,6 +7,7 @@ import { DemoModeProvider } from "../app/providers/DemoModeProvider";
 import { AuthProvider } from "../app/providers/AuthProvider";
 import { ConsentProvider } from "../app/providers/ConsentProvider";
 import { NavModeProvider } from "../app/providers/NavModeProvider";
+import { ShellFrameProvider } from "../app/providers/ShellFrameProvider";
 import { I18nProvider } from "../app/providers/I18nProvider";
 import { ToastProvider } from "../shared/components/feedback/ToastProvider";
 import { SessionBootstrapProvider } from "../app/providers/SessionBootstrapProvider";
@@ -45,6 +46,9 @@ const PROVIDERS: ProviderComponent[] = [
   AuthProvider,
   ConsentProvider,
   NavModeProvider,
+  // Mirrors App.tsx, where ShellFrameProvider wraps the app above DataProviders;
+  // pages that call useRegisterShellFrame throw without it.
+  ShellFrameProvider,
   I18nProvider,
   ToastProvider,
   SessionBootstrapProvider,

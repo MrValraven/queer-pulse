@@ -3,6 +3,7 @@ import { Button, ImageSlot, Outro, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
@@ -12,6 +13,7 @@ import styles from "./resources.module.css";
 export function QtipocArchivePage() {
   const { showToast } = useToast();
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const pageTitle = t("resources:qtipocArchive.meta.title");
   const pageDescription = t("resources:qtipocArchive.meta.description");
 
@@ -104,7 +106,13 @@ export function QtipocArchivePage() {
               variant="ghost"
               style={{ marginTop: 12 }}
               onClick={() =>
-                showToast(t("resources:qtipocArchive.contribute.toast"))
+                showToast(
+                  t(
+                    demoMode
+                      ? "resources:qtipocArchive.contribute.toast"
+                      : "resources:qtipocArchive.contribute.liveToast",
+                  ),
+                )
               }
             >
               {t("resources:qtipocArchive.contribute.cta")}

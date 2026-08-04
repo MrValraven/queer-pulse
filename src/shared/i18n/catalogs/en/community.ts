@@ -712,7 +712,7 @@ export const community: Catalog = {
 
   "readingGroups.waitlist.heading": "You're on the <em>waitlist.</em>",
   "readingGroups.waitlist.sub":
-    "We'll email you the moment someone cancels — no need to keep checking back.",
+    "We'll let you know the moment a spot opens up — no need to keep checking back.",
   "readingGroups.waitlist.position": "You're #{position}",
 
   "readingGroups.listGroup.heading": "Start your <em>own group.</em>",

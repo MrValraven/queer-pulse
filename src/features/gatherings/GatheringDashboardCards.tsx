@@ -80,6 +80,7 @@ export function CheckInColumn({
           <input
             className={styles.nameSearch}
             type="text"
+            aria-label={t("gatherings:dashboard.checkin.searchPlaceholder")}
             placeholder={t("gatherings:dashboard.checkin.searchPlaceholder")}
             value={scanQuery}
             onChange={(e) => setScanQuery(e.target.value)}
@@ -206,6 +207,7 @@ export function GuestListCard({
         <input
           className={styles.attSearch}
           type="text"
+          aria-label={t("gatherings:dashboard.guestList.searchPlaceholder")}
           placeholder={t("gatherings:dashboard.guestList.searchPlaceholder")}
           value={query}
           onChange={(e) => setQuery(e.target.value)}

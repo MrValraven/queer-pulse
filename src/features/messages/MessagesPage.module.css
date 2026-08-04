@@ -8,30 +8,41 @@
    below swaps it for the installed-PWA app-bar's own real height once that
    bar (not the pill) is what's actually on screen. `--bottom-inset` is the
    existing token standalone.css already publishes for exactly this purpose
-   (0px in a browser tab; the tab bar's total occupied height, home-indicator
-   inset included, once installed) — reusing it here is what keeps the
+   (0px above the 860px mobile breakpoint; BottomTabBar's total occupied
+   height, home-indicator inset included, on ANY mobile view — a browser tab
+   or installed alike, since BottomTabBar/`.appBar` key off the breakpoint
+   alone now, not install state) — reusing it here is what keeps the
    composer clear of `BottomTabBar` instead of hiding behind it.
-   `--keyboard-inset` (useVisualViewportKeyboard) still subtracts the
-   on-screen keyboard's overlap on top of both. */
+   `--keyboard-inset` (useVisualViewportKeyboard) is the on-screen keyboard's
+   overlap. It is NOT additional clearance stacked on top of the tab bar's:
+   an open keyboard already covers/replaces the tab bar (they can't both be
+   visible at once), so summing them lifted the composer by the tab bar's
+   height even while the keyboard was up. Taking the larger of the two is
+   what's actually on screen at the bottom edge in either state. */
 .app {
   display: flex;
   --messages-top-offset: calc(var(--nav-top) + var(--nav-height) + 12px);
   margin-top: var(--messages-top-offset);
   height: calc(
-    100svh - var(--messages-top-offset) - var(--bottom-inset) -
-      var(--keyboard-inset, 0px)
+    100svh - var(--messages-top-offset) -
+      max(var(--bottom-inset), var(--keyboard-inset, 0px))
   );
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
-/* Installed PWA (≤860px — the same condition BottomTabBar/`.appBar` gate on):
-   the floating pill is replaced by the slim app-bar strip, so clear THAT
-   bar's real height instead of the pill's. (`main[data-page-main]
-   [data-shell="full-height"]` in standalone.css zeroes the generic hero-band
-   margin for this route, so this is the ONLY top-offset math in play here —
-   nothing stacks on top of it, which is what previously doubled the gap on
-   some devices and let it undershoot on others.) */
+/* Any mobile view (≤860px — the same condition BottomTabBar/`.appBar` gate
+   on, browser tab or installed alike): the floating pill is replaced by the
+   slim app-bar strip, so clear THAT bar's real height instead of the pill's.
+   Unqualified — Navbar.tsx's `isAppBar` is `isMobile`, not gated on install,
+   so a mobile browser tab now shows the same slim strip and needs the same
+   swap; leaving this standalone-only kept the larger pill-navbar offset in a
+   browser tab while the actual bar on screen was the slim strip, opening a
+   mismatched gap under it. (`main[data-page-main][data-shell="full-height"]`
+   in standalone.css zeroes the generic hero-band margin for this route — also
+   unqualified now, for the same reason — so this remains the ONLY top-offset
+   math in play here; nothing stacks on top of it, which is what previously
+   doubled the gap on some devices and let it undershoot on others.) */
 @media (max-width: 860px) {
-  :global([data-display-mode="standalone"]) .app {
+  .app {
     --messages-top-offset: calc(var(--app-bar-h) + env(safe-area-inset-top));
   }
 }
@@ -267,6 +278,42 @@
     display: flex;
   }
 }
+/* Identity block — avatar + name + meta as ONE control. Tapping it opens the
+   profile (DMs) or the group-info view (groups), the pattern people know from
+   WhatsApp/Telegram; it also absorbs the header's middle whitespace so a short
+   name no longer leaves a dead gap. Official accounts (no profile) render the
+   static variant below without the tap affordance. */
+.identityRow {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 6px;
+  margin-inline-start: -6px;
+  border-radius: var(--radius-card);
+}
+.identityBtn {
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .identityBtn:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
+}
+.identityBtn:active {
+  background: rgba(var(--plum-rgb), 0.1);
+}
+.identityBtn:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+}
 .ctbInfo {
   flex: 1;
   min-width: 0;
@@ -284,6 +331,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* The name truncates on its own so a long name ellipsizes instead of shoving
+   the staff badge onto a second line. */
+.ctbNameText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .ctbMeta {
   font-size: 12px;
   color: var(--ink-40);
@@ -299,37 +354,16 @@
   border-radius: 50%;
   background: var(--jade);
 }
-.ctbLink {
+/* Right-hand action cluster: starred-messages + "about this screen" info, as a
+   matched pair of quiet 44px icon buttons in the top-right one-handed reach
+   corner. Replaces the old loud coral "View profile" link — the whole identity
+   block now does that job. */
+.ctbActions {
   flex: none;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 4px;
-  /* 44px comfort floor (was 40px) — this sits in the top-right one-handed
-     reach corner, so it's worth the extra pixels. */
-  min-height: 44px;
-  padding: 8px 14px;
+  gap: 2px;
   margin-inline-end: -6px;
-  border-radius: var(--radius-pill);
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--accent-ink);
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: background var(--dur-fast) var(--ease);
-}
-@media (hover: hover) {
-  .ctbLink:hover {
-    background: rgba(var(--accent-rgb), 0.1);
-  }
-}
-.ctbLink:active {
-  background: rgba(var(--accent-rgb), 0.16);
-}
-.ctbLink:focus-visible {
-  outline: 2px solid var(--accent-ink);
-  outline-offset: 2px;
 }
 
 .area {
@@ -380,6 +414,16 @@
   flex-direction: column;
   gap: 10px;
 }
+/* The virtualized message rows' positioning root — `@tanstack/react-virtual`
+   sizes this to its running total-height and absolutely positions each row
+   inside it via its own `top` offset (see `MessageArea`/`MessageAreaRow`).
+   `flex-shrink: 0` so `.areaContent`'s flex layout never squashes its
+   explicit, JS-driven height. */
+.virtualSizer {
+  position: relative;
+  width: 100%;
+  flex-shrink: 0;
+}
 /* Wraps the composer so `.jumpPill` (below) can anchor to ITS real top edge —
    see the comment there for why. Just a passthrough box (no sizing of its
    own): `.composer` keeps its normal flex-column height inside it. */
@@ -416,17 +460,6 @@
      bottom-anchored bubble's directional origin, not a floating, centered
      control), so this pill gets its own non-scaling entrance instead. */
   animation: jumpPillIn var(--dur-base) var(--ease-out) both;
-}
-.dayGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.runs {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
 }
 .daySep {
   display: flex;
@@ -990,53 +1023,15 @@
   outline-offset: 2px;
 }
 
-.messageActionsMenu {
-  position: absolute;
-  top: calc(100% + 6px);
-  inset-inline-end: 0;
-  min-width: 148px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: var(--radius-badge);
-  box-shadow: var(--shadow-toast);
-  padding: 4px;
-  z-index: 4;
-  animation: msgBubbleIn var(--dur-fast) var(--ease-out) both;
-}
-.messageActionsMenuItem {
-  display: block;
-  width: 100%;
-  text-align: start;
-  padding: 8px 10px;
-  border-radius: var(--radius-badge);
-  border: none;
-  background: none;
-  font-family: var(--sans);
-  font-size: 0.8125rem;
-  color: var(--ink);
-  cursor: pointer;
-}
-@media (hover: hover) {
-  .messageActionsMenuItem:hover {
-    background: rgba(var(--plum-rgb), 0.06);
-  }
-}
-.messageActionsMenuItem:focus-visible {
-  outline: 2px solid var(--plum);
-  outline-offset: -2px;
-}
-.messageActionsMenuItemDanger {
-  color: var(--danger);
-}
-
 .reactionChips {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
   margin-block-start: 4px;
   /* The chip row hangs below the bubble in normal flow, but `.runBubbles`'s
-     2px inner gap (or `.runs`'s 12px between runs, for a run's last bubble)
-     was only ever tuned for a plain bubble's edge — with a reaction pill
+     2px inner gap (or `gapAfterRow`'s 12px `paddingBottom` between virtualized
+     rows, for a run's last bubble — see `messageRows.ts`) was only ever tuned
+     for a plain bubble's edge — with a reaction pill
      sitting right at that boundary, the next row crowded it. A little extra
      room here (WhatsApp/Telegram give a reacted message the same nudge) only
      applies to messages that actually have a visible reaction, since this
@@ -1198,8 +1193,14 @@
 }
 
 .composer {
+  /* No extra `env(safe-area-inset-bottom)` here: `.app`'s height already
+     stops short of the tab bar/home-indicator by `--bottom-inset` (which
+     itself folds in `env(safe-area-inset-bottom)` — see standalone.css), and
+     by `--keyboard-inset` when the keyboard is up. `.composer` is a normal
+     flex child inside that already-clamped box, so adding the safe-area
+     inset again here just padded an extra gap between the composer and
+     whatever's actually below it. */
   padding: 12px 16px;
-  padding-block-end: calc(12px + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
   display: flex;
   flex-direction: column;
@@ -1638,7 +1639,6 @@
   border: 1px solid rgba(var(--cream-rgb), 0.14);
 }
 :global([data-theme="dark"]) .messageActions,
-:global([data-theme="dark"]) .messageActionsMenu,
 :global([data-theme="dark"]) .reactionPicker,
 :global([data-theme="dark"]) .reactionChip {
   border-color: rgba(var(--cream-rgb), 0.14);
@@ -1853,6 +1853,16 @@
   flex-direction: column;
   gap: 8px;
   max-width: min(320px, 82vw);
+  /* Outer ceiling: never taller than the visible viewport itself, even if
+     the precise per-anchor `maxHeight` MessageActionOverlay sets inline
+     (bounded to the actual space between the pressed bubble and the
+     screen edge it opens toward) is ever missing. A long quoted bubble plus
+     the full action menu can otherwise exceed a short phone's viewport and
+     push Delete/Report off-screen — `overflow-y: auto` keeps every action
+     reachable by scrolling the column itself instead. */
+  max-height: calc(100svh - 16px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 0 16px;
 }
 .overlayColumnBelow {

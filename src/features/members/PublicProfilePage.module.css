@@ -531,3 +531,53 @@
   aspect-ratio: 4 / 3;
   margin-bottom: 12px;
 }
+
+/* Recent activity (public, static rows) */
+.activityList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.activityItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 4px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
+}
+.activityItem:last-child {
+  border-bottom: none;
+}
+.activityIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  color: var(--accent);
+  font-size: 15px;
+}
+.activityBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.activityTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.activitySub {
+  font-size: 13px;
+  color: var(--ink-40);
+}
+.activityEmpty {
+  font-size: 14px;
+  color: var(--ink-40);
+}

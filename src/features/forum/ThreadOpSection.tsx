@@ -15,16 +15,15 @@ import {
 export function ThreadOpSection({
   thread,
   opView,
-  liked,
-  setLiked,
+  onVote,
   bookmarked,
   setBookmarked,
   moderation,
 }: {
   thread: Thread;
   opView: ReturnType<typeof deriveOpView>;
-  liked: boolean;
-  setLiked: Dispatch<SetStateAction<boolean>>;
+  /** Cast/retract the viewer's vote on the opening post (real backend vote). */
+  onVote: () => void;
   bookmarked: boolean;
   setBookmarked: Dispatch<SetStateAction<boolean>>;
   moderation: ReturnType<typeof useThreadModeration>;
@@ -36,8 +35,7 @@ export function ThreadOpSection({
       body={opView.opBody}
       editedAt={opView.opEditedAt}
       deleted={opView.opDeleted}
-      liked={liked}
-      setLiked={setLiked}
+      onVote={onVote}
       bookmarked={bookmarked}
       setBookmarked={setBookmarked}
       onReport={() => moderation.setReportingAuthor(thread.author.name)}

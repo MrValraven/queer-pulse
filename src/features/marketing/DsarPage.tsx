@@ -8,6 +8,14 @@ import type { TFunction } from "../../shared/i18n/types";
 import { routes } from "../../app/routeMap";
 import styles from "./DsarPage.module.css";
 import { Button, FormField, HubBackLink } from "../../shared/components/ui";
+import { useFormat } from "../../shared/i18n/format";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useAuth } from "../../app/providers/authContext";
+import { useSubmitDsar, useListDsar } from "../settings/api/useDsar";
+import type {
+  DsarArticle,
+  DsarStatus,
+} from "../settings/api/account.api";
 
 const PRIVACY = routes.privacy;
 
@@ -74,23 +82,28 @@ function buildRights(t: TFunction): Right[] {
 /** i18n Pattern A — plain-string chrome, resolved via `t()` at render. */
 const SCOPES = [
   {
+    id: "profile",
     bKey: "marketing:dsar.scopes.profile.b",
     sKey: "marketing:dsar.scopes.profile.s",
     checked: true,
   },
   {
+    id: "connections",
     bKey: "marketing:dsar.scopes.connections.b",
     sKey: "marketing:dsar.scopes.connections.s",
   },
   {
+    id: "activity",
     bKey: "marketing:dsar.scopes.activity.b",
     sKey: "marketing:dsar.scopes.activity.s",
   },
   {
+    id: "billing",
     bKey: "marketing:dsar.scopes.billing.b",
     sKey: "marketing:dsar.scopes.billing.s",
   },
   {
+    id: "moderation",
     bKey: "marketing:dsar.scopes.moderation.b",
     sKey: "marketing:dsar.scopes.moderation.s",
   },
@@ -144,20 +157,59 @@ function RightPicker({
 function DsarRequestForm({ right }: { right: Right }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
+  const { user } = useAuth();
+  const submitDsarRequest = useSubmitDsar();
   const [scopes, setScopes] = useState<boolean[]>(
     SCOPES.map((scope) => !!scope.checked),
   );
+  const [details, setDetails] = useState("");
+  const [context, setContext] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  // The account a live request is filed against IS the signed-in session — the
+  // backend derives the subject from the cookie and the page never sends an
+  // address. Demo has no real session, so it shows the prototype persona; live
+  // shows the actual account email and never lets the demo identity leak in.
+  const accountValue = demoMode
+    ? "tomas@example.com · Tomás Mendes"
+    : (user?.email ?? "");
+
+  const detailsValid = details.trim().length > 0;
+
+  const handleSubmit = async () => {
+    if (!detailsValid || submitting) return;
+    const selectedScopes = SCOPES.filter((_, index) => scopes[index]).map(
+      (scope) => scope.id,
+    );
+    setSubmitting(true);
+    try {
+      const created = await submitDsarRequest({
+        article: right.art as DsarArticle,
+        scopes: selectedScopes,
+        details: details.trim(),
+        context: context.trim() || undefined,
+      });
+      showToast(
+        t("marketing:dsar.toast.submitted", { ref: created.reference }),
+        "success",
+        3500,
+      );
+    } catch {
+      // Never fake success on failure: keep the form exactly as the member left
+      // it and say plainly that nothing was recorded.
+      showToast(t("marketing:dsar.toast.submitError"), "error");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <form
       className={styles.form}
       onSubmit={(e) => {
         e.preventDefault();
-        showToast(
-          t("marketing:dsar.toast.submitted", { ref: "QP-DSAR-2026-0019" }),
-          "success",
-          3500,
-        );
+        void handleSubmit();
       }}
     >
       <h2>
@@ -168,7 +220,7 @@ function DsarRequestForm({ right }: { right: Right }) {
       <FormField label={t("marketing:dsar.form.accountLabel")}>
         <input
           type="text"
-          value="tomas@example.com · Tomás Mendes"
+          value={accountValue}
           readOnly
           style={{ opacity: 0.7 }}
         />
@@ -179,6 +231,8 @@ function DsarRequestForm({ right }: { right: Right }) {
         helper={t("marketing:dsar.form.whatChanged.helper")}
       >
         <textarea
+          value={details}
+          onChange={(e) => setDetails(e.target.value)}
           placeholder={t("marketing:dsar.form.whatChanged.placeholder")}
         />
       </FormField>
@@ -234,7 +288,11 @@ function DsarRequestForm({ right }: { right: Right }) {
           endpoint and a real retention policy before any copy describes one. */}
 
       <FormField label={t("marketing:dsar.form.contextLabel")}>
-        <textarea placeholder={t("marketing:dsar.form.contextPlaceholder")} />
+        <textarea
+          value={context}
+          onChange={(e) => setContext(e.target.value)}
+          placeholder={t("marketing:dsar.form.contextPlaceholder")}
+        />
       </FormField>
 
       <div className={styles.legalStrip}>
@@ -251,55 +309,109 @@ function DsarRequestForm({ right }: { right: Right }) {
             components={{ b: <b /> }}
           />
         </div>
-        <Button variant="primary" type="submit">
-          {t("marketing:dsar.actions.submit")}
+        <Button
+          variant="primary"
+          type="submit"
+          disabled={!detailsValid || submitting}
+        >
+          {submitting
+            ? t("marketing:dsar.actions.submitting")
+            : t("marketing:dsar.actions.submit")}
         </Button>
       </div>
     </form>
   );
 }
 
-/** The member's past DSAR requests. Record specifics (ref, dates, which
- * right) are the member's own request history — in live mode this is fetched
- * per-account, so it stays untranslated content; only the surrounding
- * "submitted"/"responded"/"Resolved" chrome words are translated. */
+/** Which right each DSAR was filed under, resolved from the article number the
+ * backend stores — the live rows carry no free-text label, so the label is
+ * always derived here rather than sent. */
+const ARTICLE_TITLE_KEY: Record<DsarArticle, string> = {
+  15: "marketing:dsar.rights.access.formTitle",
+  16: "marketing:dsar.rights.rectification.formTitle",
+  17: "marketing:dsar.rights.erasure.formTitle",
+  21: "marketing:dsar.rights.objection.formTitle",
+};
+
+const STATUS_LABEL_KEY: Record<DsarStatus, string> = {
+  received: "marketing:dsar.past.status.received",
+  in_review: "marketing:dsar.past.status.inReview",
+  resolved: "marketing:dsar.past.resolved",
+  rejected: "marketing:dsar.past.status.rejected",
+};
+
+/**
+ * The member's own DSAR history. Live mode renders the real
+ * `GET /account/dsar` rows (references, statuses, dates the backend recorded);
+ * demo renders the colocated sample. A live member never sees fabricated
+ * reference numbers as their history, and the same renderer covers both modes
+ * because demo and live share the `DsarRequest` shape. Loading / empty / error
+ * states are spoken plainly, matching the honest-failure stance of the form. */
 function PastRequests() {
   const { t } = useTranslation();
+  const fmt = useFormat();
+  const { requests, loading, failed } = useListDsar();
+
+  const statusClass: Record<DsarStatus, string | undefined> = {
+    received: styles.statusPending,
+    in_review: styles.statusPending,
+    resolved: styles.statusDone,
+    rejected: styles.statusRejected,
+  };
 
   return (
     <>
       <div className={styles.pastH}>{t("marketing:dsar.past.heading")}</div>
-      <div className={styles.pastRow}>
-        <span className={styles.num}>QP-DSAR-2026-018</span>
-        <span>
-          <b>{t("marketing:dsar.rights.access.formTitle")}</b> ·{" "}
-          {t("marketing:dsar.past.submitted", { date: "14 Mar 2026" })} ·{" "}
-          {t("marketing:dsar.past.respondedWithDuration", {
-            date: "17 Mar",
-            duration: "3 days",
-          })}
-        </span>
-        <span className={`${styles.status} ${styles.statusDone}`}>
-          {t("marketing:dsar.past.resolved")}
-        </span>
-      </div>
-      <div className={styles.pastRow}>
-        <span className={styles.num}>QP-DSAR-2025-184</span>
-        <span>
-          <b>{t("marketing:dsar.past.objectAnalytics")}</b> ·{" "}
-          {t("marketing:dsar.past.submitted", { date: "11 Nov 2025" })} ·{" "}
-          {t("marketing:dsar.past.responded", { date: "13 Nov" })}
-        </span>
-        <span className={`${styles.status} ${styles.statusDone}`}>
-          {t("marketing:dsar.past.resolved")}
-        </span>
-      </div>
+
+      {loading && (
+        <div className={styles.pastNote}>{t("marketing:dsar.past.loading")}</div>
+      )}
+      {failed && (
+        <div className={styles.pastNote}>{t("marketing:dsar.past.error")}</div>
+      )}
+      {!loading && !failed && requests.length === 0 && (
+        <div className={styles.pastNote}>{t("marketing:dsar.past.empty")}</div>
+      )}
+
+      {!loading &&
+        !failed &&
+        requests.map((request) => (
+          <div key={request.reference} className={styles.pastRow}>
+            <span className={styles.num}>{request.reference}</span>
+            <span>
+              <b>{t(ARTICLE_TITLE_KEY[request.article])}</b> ·{" "}
+              {t("marketing:dsar.past.submitted", {
+                date: fmt.date(new Date(request.submittedAt), {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                }),
+              })}
+              {request.respondedAt && (
+                <>
+                  {" · "}
+                  {t("marketing:dsar.past.responded", {
+                    date: fmt.date(new Date(request.respondedAt), {
+                      day: "numeric",
+                      month: "short",
+                    }),
+                  })}
+                </>
+              )}
+            </span>
+            <span className={`${styles.status} ${statusClass[request.status]}`}>
+              {t(STATUS_LABEL_KEY[request.status])}
+            </span>
+          </div>
+        ))}
     </>
   );
 }
 
 export function DsarPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  const { user } = useAuth();
   const [art, setArt] = useState(16);
   const rights = buildRights(t);
   const right = rights.find((r) => r.art === art)!;
@@ -339,7 +451,10 @@ export function DsarPage() {
 
         <DsarRequestForm right={right} />
 
-        <PastRequests />
+        {/* History is per-account: shown in demo, or to a signed-in member in
+            live. A logged-out live visitor has no history to fetch (and the
+            endpoint is auth-gated), so the section is simply omitted for them. */}
+        {(demoMode || user) && <PastRequests />}
       </div>
     </PageShell>
   );

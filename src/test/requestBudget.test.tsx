@@ -122,6 +122,10 @@ function registerSessionHandlers() {
         status: "active",
         role: "member",
         ageAttestedAt: "2026-01-01T00:00:00.000Z",
+        // Non-null: `validateAuthUser` requires the field (string|null), and a
+        // non-null value marks the member already-onboarded so the auth gate
+        // doesn't bounce this live render to /auth/onboarding.
+        onboardedAt: "2026-01-01T00:00:00.000Z",
         profile: {
           slug: SLUG,
           firstName: "Demo",
@@ -204,8 +208,17 @@ const SESSION_REQUEST_BUDGET = [
   "/v1/auth/me",
   "/v1/consent/me",
   "/v1/me/bootstrap",
-  "/v1/notifications/unread-count",
-  "/v1/conversations/unread-count",
+  // The nav's bell (`useUnreadCount`) and DM (`useUnreadMessages`) badges used
+  // to render inside the page's own Navbar/AppShell and so fired here. They now
+  // live in the persistent App-level `AppChrome` (the PWA-nav refactor), which
+  // `App.tsx` mounts as a sibling of the routes — NOT inside the route content
+  // this harness renders. So their `/v1/notifications/unread-count` and
+  // `/v1/conversations/unread-count` reads no longer fire in these route-budget
+  // renders (confirmed: no `<nav>` mounts here). Their handlers stay registered
+  // in `registerSessionHandlers()` as a defensive net — if a route ever fires
+  // one again it surfaces as an unexpected (received-not-expected) entry rather
+  // than an unhandled-request error. They belong to the AppChrome layer's own
+  // coverage, not this route-content budget.
 ];
 
 /**
@@ -232,17 +245,31 @@ const SESSION_REQUEST_BUDGET = [
 function registerAppWideHandlers() {
   server.use(
     http.get(`${API_V1}/conversations`, () => HttpResponse.json([])),
+    // Public kill-switch projection read app-wide by `usePlatformStatus`
+    // (lockdown / registration banners), fired on every live route. Benign
+    // "fails-open" default = platform fully open, nothing locked.
+    http.get(`${API_V1}/platform-status`, () =>
+      HttpResponse.json({
+        registrationOpen: true,
+        joinRequestsOpen: true,
+        locked: false,
+        lockdownMessage: null,
+        registrationClosedMessage: null,
+      }),
+    ),
   );
 }
 
 /**
- * Deliberately EMPTY: the DM-badge fetch that used to live here no longer pulls
- * the full `/v1/conversations` inbox — it fetches the cheap
- * `/v1/conversations/unread-count`, which is a session path (see
- * `SESSION_REQUEST_BUDGET`). So there is no non-session endpoint that fires on
- * every route. Kept as a named constant so each route's expected array still
- * documents that it accounts for the "app-wide" layer, and so re-adding an
- * app-wide read has one obvious home.
+ * Non-session reads fired by the ROUTE CONTENT on every live route — as opposed
+ * to the App-level chrome this harness doesn't mount. Currently empty:
+ * `/v1/platform-status` (`usePlatformStatus`, the lockdown/registration banner)
+ * fires from the marketing Navbar / App-level chrome, not the routed page, so
+ * it does not appear in these route-content budgets (its handler is still
+ * registered defensively in `registerAppWideHandlers()`). The DM-badge fetch is
+ * likewise chrome-level now (see `SESSION_REQUEST_BUDGET`). Kept as a named
+ * constant so each route's expected array documents that it accounts for the
+ * app-wide layer, and so a genuinely route-level app-wide read has one home.
  */
 const APP_WIDE_REQUEST_BUDGET: string[] = [];
 
@@ -347,6 +374,12 @@ describe("request budget (live mode)", () => {
     async () => {
       registerSessionHandlers();
       registerAppWideHandlers();
+      // The wizard's SavedDraftsPanel now reads the caller's in-progress drafts
+      // (`GET /listing-drafts`, cross-device drafts) on mount — a resume list,
+      // not the `/listings/mine` published-listings read this test guards against.
+      server.use(
+        http.get(`${API_V1}/listing-drafts`, () => HttpResponse.json([])),
+      );
       const seen = await renderRouteLive("/local/directory/list");
 
       // The load-bearing assertion is the ABSENCE of /listings/mine.
@@ -361,19 +394,21 @@ describe("request budget (live mode)", () => {
       expect(seen).not.toContain("/v1/listings/mine");
 
       // OBSERVED (see file header): ListBusinessPage is a PageShell marketing
-      // wizard whose own render tree fires no read beyond
-      // `useDirectoryListingsActions` (a write-only overlay). Everything it
-      // requests therefore comes from the shared session layer alone —
-      // nothing route-specific, and (since the DM badge is now gated off in
-      // live mode) nothing app-wide either — which is exactly what makes it a
-      // clean guard that no eager read has crept into the listing wizard. In
-      // particular the profile-page reads
-      // (`/v1/communities`, `/v1/connections/accepted`,
-      // `/v1/directory/by-member/:slug`, `/v1/me/communities`) do NOT fire
-      // here: they are subscribed by member-profile components, not by this
-      // page or the shared chrome.
+      // wizard. Its one route-level read is the SavedDraftsPanel's
+      // `/v1/listing-drafts` resume list; everything else comes from the shared
+      // session layer alone — nothing else route-specific, and nothing app-wide
+      // (those reads are App-chrome-level, not mounted by this harness — see the
+      // budget constants). That keeps it a clean guard that no *listings* read
+      // (esp. `/v1/listings/mine`) has crept into the wizard. In particular the
+      // profile-page reads (`/v1/communities`, `/v1/connections/accepted`,
+      // `/v1/directory/by-member/:slug`, `/v1/me/communities`) do NOT fire here:
+      // they are subscribed by member-profile components, not by this page.
       expect(seen).toEqual(
-        [...SESSION_REQUEST_BUDGET, ...APP_WIDE_REQUEST_BUDGET].sort(),
+        [
+          ...SESSION_REQUEST_BUDGET,
+          ...APP_WIDE_REQUEST_BUDGET,
+          "/v1/listing-drafts",
+        ].sort(),
       );
     },
     15000,

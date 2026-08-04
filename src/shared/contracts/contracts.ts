@@ -164,6 +164,16 @@ export interface MessageResponse {
   starred: boolean;
   /** Server-authoritative: whether this viewer may pin/unpin this message. */
   canPin: boolean;
+  /** Server-authoritative: whether this viewer may edit this message (author,
+   *  within the server's edit window, not deleted). Mirrors exactly what the
+   *  edit endpoint would accept — never recompute this client-side. */
+  canEdit: boolean;
+  /** Server-authoritative: whether this viewer may delete this message (author
+   *  or platform staff, not already deleted). Mirrors the delete endpoint. */
+  canDelete: boolean;
+  /** Server-authoritative: whether this viewer may report this message (not
+   *  the author's own message, not deleted). */
+  canReport: boolean;
   replyTo: {
     id: string;
     snippet: string;
@@ -389,6 +399,24 @@ export interface ForumThreadResponse {
   lastActivityAt: string;
   createdAt: string;
   canEdit: boolean;
+  /** Row-moderation permissions on the thread's opening post, denormalized onto
+   *  the thread DTO so the list row can render its ⋯ menu (delete / restore /
+   *  history) without fetching the post. `canLock` is a thread-level moderator
+   *  permission (close / reopen replies). Author sees `canEdit`; a moderator who
+   *  isn't the author sees the others. */
+  canDelete: boolean;
+  canRestore: boolean;
+  canViewHistory: boolean;
+  canLock: boolean;
+  /** Id of the thread's opening post (oldest post) — the list-row upvote +
+   *  row-moderation target. Empty string on responses that didn't resolve it. */
+  opPostId: string;
+  /** The OP post's vote count — drives the card upvotes and the "Top" sort. */
+  opVoteCount: number;
+  /** The viewer's own vote on the OP (0 or 1). */
+  myVote: number;
+  /** Normalized (lowercase, deduped) thread tags. */
+  tags: string[];
 }
 
 export interface ForumPostResponse {

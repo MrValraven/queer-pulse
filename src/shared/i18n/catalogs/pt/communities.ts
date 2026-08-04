@@ -109,6 +109,20 @@ export const communities: Catalog = {
   "detail.join.request": "Pedir para entrar",
   "detail.joined": "Já és membro",
   "detail.requested": "Pedido enviado",
+  "detail.save.cta": "Guardar",
+  "detail.save.saved": "Guardado",
+  "detail.save.savedToast": "Comunidade guardada no teu perfil.",
+  "detail.save.removedToast": "Comunidade removida dos guardados.",
+  "detail.save.saveAriaLabel": "Guardar {name}",
+  "detail.save.unsaveAriaLabel": "Remover {name} dos guardados",
+  "detail.share.cta": "Partilhar",
+  "detail.share.ariaLabel": "Partilhar {name}",
+  "detail.share.copiedToast": "Link copiado para a área de transferência.",
+  "detail.leave.confirm.title": "Sair de {name}?",
+  "detail.leave.confirm.body":
+    "Deixas de ver o pulso e os convívios desta comunidade. Podes voltar sempre que quiseres — só precisas de entrar de novo.",
+  "detail.leave.confirm.cancel": "Ficar",
+  "detail.leave.confirm.confirmCta": "Sair da comunidade",
   "detail.hero.andMore": "e mais {count}",
   "detail.sidebar.organiser": "Organização",
   "detail.sidebar.messageCta": "Enviar mensagem",
@@ -153,6 +167,8 @@ export const communities: Catalog = {
   "detail.thread.editSavedToast": "A tua edição está publicada.",
   "detail.thread.deletedToast": "Mensagem eliminada.",
   "detail.thread.restoredToast": "Mensagem restaurada.",
+  "detail.thread.loadMoreRepliesCta": "Carregar mais respostas",
+  "detail.thread.loadingMoreReplies": "A carregar…",
 
   // ── Separador Discussão (hub completo) ────────────────────────────────────
   "detail.discussion.searchAria": "Pesquisar discussões",
@@ -165,12 +181,18 @@ export const communities: Catalog = {
   "detail.discussion.empty.title": "Nada corresponde ainda",
   "detail.discussion.empty.description":
     "Tenta outra pesquisa, ou começa a discussão abaixo.",
+  "detail.discussion.empty.searchMore":
+    "Nenhuma das discussões carregadas corresponde. Carrega mais para pesquisar as restantes.",
+  "detail.discussion.searchScopeNote":
+    "A pesquisar apenas as discussões já carregadas — carrega mais para alargar.",
   "detail.discussion.startedToast": "Discussão iniciada.",
   // TODO(i18n-pt): translate — EN placeholder kept for parity-test symmetry.
   "detail.discussion.loadMore": "Load more",
 
   // ── Separador Eventos (hub completo) ──────────────────────────────────────
   "detail.events.upcoming": "Próximos convívios",
+  "detail.events.noUpcoming":
+    "Ainda não há convívios no calendário — volta em breve.",
   "detail.events.past": "Convívios passados",
   "detail.events.recapCta": "Ler retrospetiva",
   "detail.events.rsvpCta": "Confirmar presença",
@@ -184,6 +206,10 @@ export const communities: Catalog = {
   "detail.roster.messageCta": "Mensagem",
   "detail.roster.showingOf_one": "A mostrar {shown} de {count} pessoa",
   "detail.roster.showingOf_other": "A mostrar {shown} de {count} pessoas",
+  "detail.roster.searchScopeNote":
+    "A pesquisar apenas as pessoas já carregadas — carrega mais para alargar.",
+  "detail.roster.loadMoreCta": "Carregar mais pessoas",
+  "detail.roster.loadingMore": "A carregar…",
 
   // ── Separador de ferramentas de moderação (hub completo) ──────────────────
   "detail.modtools.joinRequests.label": "Pessoas a pedir para entrar",
@@ -224,6 +250,7 @@ export const communities: Catalog = {
   "detail.pulse.replyLabel_other": "Ver {count} respostas",
   "detail.pulse.replyAction": "Responder",
   "detail.pulse.replyPlaceholder": "Escreve uma resposta…",
+  "detail.pulse.imageAlt": "Imagem partilhada por {name}",
   "detail.pulse.sharedToast": "Partilhado com a comunidade.",
   "detail.pulse.loadingMore": "A carregar…",
   "detail.pulse.loadMoreCta": "Carregar mais publicações",
@@ -303,6 +330,8 @@ export const communities: Catalog = {
   "start.next.open": "Abrir as portas →",
   "start.next.fallback": "Continuar →",
   "start.opening.status": "A abrir as portas…",
+  "start.leaveConfirm":
+    "Tens uma comunidade por terminar aqui. Queres sair sem a guardar?",
   "start.cancel": "Cancelar",
   "start.back": "← Voltar",
   "start.actions.stillNeeded": "Ainda falta:",

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { FadeIn } from "../../shared/components/ui";
@@ -9,6 +8,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { usePostedJobs } from "../../app/providers/usePostedJobs";
+import { useSaved } from "../../app/providers/useSaved";
 import { JOBS } from "./jobs.data";
 import { useJob } from "./api/useJob";
 import { JobDetailSkeleton } from "./JobDetailSkeleton";
@@ -25,7 +25,7 @@ export function JobDetailPage() {
   const { demoMode } = useDemoMode();
   const { postedJobs } = usePostedJobs();
   const jobQuery = useJob(slug);
-  const [saved, setSaved] = useState(false);
+  const { isSaved, toggleSave } = useSaved();
   const simLoading = useSimulatedLoad();
 
   // Demo merges locally-posted jobs over the mock board; live reads the query.
@@ -53,6 +53,19 @@ export function JobDetailPage() {
 
   if (!job) return <Navigate to={routes.jobs} replace />;
 
+  const savedId = `job:${job.slug}`;
+  const saved = isSaved(savedId);
+  // Built here, in the null-narrowed scope, so the toggle handler needn't
+  // re-narrow `job` inside its closure.
+  const savedItem = {
+    id: savedId,
+    kind: "job" as const,
+    title: job.title,
+    href: `${routes.jobs}/${job.slug}`,
+    meta: `${job.organization} · ${job.location}`,
+    description: job.description,
+  };
+
   const d = job.detail;
   // The full deadline: a locale-formatted date, or the "Open" chrome string
   // when the listing has no closing date.
@@ -70,16 +83,16 @@ export function JobDetailPage() {
     </div>
   );
 
-  function toggleSave() {
-    setSaved((s) => {
-      showToast(
-        t(
-          s ? "economy:jobDetail.unsavedToast" : "economy:jobDetail.savedToast",
-        ),
-        "info",
-      );
-      return !s;
-    });
+  function handleToggleSave() {
+    const nowSaved = toggleSave(savedItem);
+    showToast(
+      t(
+        nowSaved
+          ? "economy:jobDetail.savedToast"
+          : "economy:jobDetail.unsavedToast",
+      ),
+      "success",
+    );
   }
 
   return (
@@ -92,7 +105,7 @@ export function JobDetailPage() {
             job={job}
             deadlineFull={deadlineFull}
             saved={saved}
-            onToggleSave={toggleSave}
+            onToggleSave={handleToggleSave}
           />
 
           <div className={styles.layout}>

@@ -205,6 +205,9 @@ export function RestrictModal({
         className={styles.textarea}
         value={note}
         onChange={(e) => setNote(e.target.value)}
+        aria-label={t("admin:members.restrict.notePlaceholder", {
+          name: first,
+        })}
         placeholder={t("admin:members.restrict.notePlaceholder", {
           name: first,
         })}

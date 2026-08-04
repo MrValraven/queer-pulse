@@ -1,15 +1,11 @@
-import {
-  BUILDING,
-  HERO_STATS,
-  PLANNED,
-  SHIPPED,
-  TOP_IDEAS,
-} from "../marketing/roadmap.data";
 import type {
-  AdminRoadmapItemDTO,
   AdminRoadmapIdeaDTO,
+  AdminRoadmapItemDTO,
   RoadmapAdminHeroStatDTO,
+  RoadmapAuditEntryDTO,
+  RoadmapTeamMemberDTO,
 } from "./api/roadmapAdmin.api";
+import { buildRoadmapSeed } from "./adminRoadmap.seed";
 
 /**
  * View types for the admin roadmap tools — identical in shape to the
@@ -25,6 +21,8 @@ export type AdminRoadmapHeroStat = RoadmapAdminHeroStatDTO;
 export interface DemoRoadmapState {
   items: AdminRoadmapItem[];
   ideas: AdminRoadmapIdea[];
+  team: RoadmapTeamMemberDTO[];
+  audit: RoadmapAuditEntryDTO[];
   heroStats: AdminRoadmapHeroStat[];
 }
 
@@ -32,94 +30,19 @@ export interface DemoRoadmapState {
 // The DEMO source of truth for the admin roadmap tools. In live mode the
 // server owns this content (`GET/POST/PATCH/DELETE /roadmap/admin/*`); in
 // demo mode there is no backend, so admin edits (create/update/delete an
-// item or idea, reorder, edit hero stats) persist here instead, keyed to
-// localStorage so they survive a reload (mirrors `outbox.ts` /
+// item/idea/team member, reorder, edit hero stats) persist here instead,
+// keyed to localStorage so they survive a reload (mirrors `outbox.ts` /
 // `DeletedConversationsProvider`'s "demo edits are local fiction" idiom).
-// Seeded once per browser from the public roadmap page's own mock content
-// (`marketing/roadmap.data.ts`) the first time it's read — after that, the
-// stored copy (not the seed) is the source of truth until it's cleared.
-
-const STORAGE_KEY = "qp:demo:roadmap";
-
-function buildSeed(): DemoRoadmapState {
-  const items: AdminRoadmapItem[] = [
-    ...SHIPPED.map(
-      (item, index): AdminRoadmapItem => ({
-        id: item.id,
-        column: "shipped",
-        category: item.category,
-        name: item.name,
-        description: item.description,
-        date: item.date,
-        stage: null,
-        eta: null,
-        progress: null,
-        votes: 0,
-        liveVotes: 0,
-        requested: item.requested ?? false,
-        hot: false,
-        sortOrder: index,
-      }),
-    ),
-    ...BUILDING.map(
-      (item, index): AdminRoadmapItem => ({
-        id: item.id,
-        column: "building",
-        category: item.category,
-        name: item.name,
-        description: item.description,
-        date: null,
-        stage: item.stage,
-        eta: item.eta,
-        progress: item.progress,
-        votes: 0,
-        liveVotes: 0,
-        requested: item.requested ?? false,
-        hot: false,
-        sortOrder: index,
-      }),
-    ),
-    ...PLANNED.map(
-      (item, index): AdminRoadmapItem => ({
-        id: item.id,
-        column: "planned",
-        category: item.category,
-        name: item.name,
-        description: item.description,
-        date: null,
-        stage: null,
-        eta: null,
-        progress: null,
-        votes: item.votes,
-        liveVotes: 0,
-        requested: false,
-        hot: item.hot ?? false,
-        sortOrder: index,
-      }),
-    ),
-  ];
-
-  const ideas: AdminRoadmapIdea[] = TOP_IDEAS.map(
-    (idea, index): AdminRoadmapIdea => ({
-      id: idea.id,
-      text: idea.text,
-      status: "published",
-      votes: idea.votes,
-      liveVotes: 0,
-      fromMember: true,
-      sortOrder: index,
-      // Seed mock has no real submission date — stagger by index so a
-      // sort-by-newest reads sensibly.
-      createdAt: new Date(2026, 6, 1 + index).toISOString(),
-    }),
-  );
-
-  const heroStats: AdminRoadmapHeroStat[] = HERO_STATS.map((stat) => ({
-    ...stat,
-  }));
-
-  return { items, ideas, heroStats };
-}
+// Seeded once per browser (`buildRoadmapSeed()`, in the colocated
+// `adminRoadmap.seed.ts`) the first time it's read — after that, the stored
+// copy (not the seed) is the source of truth until it's cleared.
+//
+// The storage key is versioned (`v2`): the prior shape
+// (`{ items, ideas, heroStats }`, no `team`/`audit`, thin item/idea fields)
+// would otherwise deserialize successfully but be missing every field the
+// rich admin UI (drawer, capacity view, audit log) expects. Bumping the key
+// forces a fresh seed instead of silently running with a stale shape.
+const STORAGE_KEY = "qp:demo:roadmap:v2";
 
 function isDemoRoadmapState(value: unknown): value is DemoRoadmapState {
   if (!value || typeof value !== "object") return false;
@@ -127,6 +50,8 @@ function isDemoRoadmapState(value: unknown): value is DemoRoadmapState {
   return (
     Array.isArray(candidate.items) &&
     Array.isArray(candidate.ideas) &&
+    Array.isArray(candidate.team) &&
+    Array.isArray(candidate.audit) &&
     Array.isArray(candidate.heroStats)
   );
 }
@@ -151,13 +76,13 @@ function persist(state: DemoRoadmapState): void {
 }
 
 /**
- * Read the demo-mode admin roadmap store, seeding it from the public
- * roadmap page's mock content on first read in this browser.
+ * Read the demo-mode admin roadmap store, seeding it from the rich prototype
+ * fixture (`buildRoadmapSeed()`) on first read in this browser.
  */
 export function readDemoRoadmap(): DemoRoadmapState {
   const stored = readStored();
   if (stored) return stored;
-  const seeded = buildSeed();
+  const seeded = buildRoadmapSeed();
   persist(seeded);
   return seeded;
 }

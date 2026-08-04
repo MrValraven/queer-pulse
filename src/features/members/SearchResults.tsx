@@ -266,6 +266,12 @@ function HitsView({
       "event",
       "forum",
       "business",
+      "magazine",
+      "job",
+      "housing",
+      "resource",
+      "workshop",
+      "subprofile",
       "board",
       "page",
     ];

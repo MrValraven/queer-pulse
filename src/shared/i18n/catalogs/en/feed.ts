@@ -62,6 +62,10 @@ export const feed: Catalog = {
   "common.viewEverything": "View everything",
   "common.tryAgain": "Try again",
 
+  // ── Infinite-scroll pager (FeedLoadMore) ────────────────────────────────
+  "loadMore.cta": "Load more",
+  "loadMore.loading": "Loading more…",
+
   // ── Greeting ────────────────────────────────────────────────────────────
   "greeting.morning": "Good morning",
   "greeting.afternoon": "Good afternoon",

@@ -54,7 +54,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 110px 20px 80px;
+  padding: 110px 20px max(80px, env(safe-area-inset-bottom));
 }
 .card {
   background: var(--paper);
@@ -64,6 +64,14 @@
   width: 100%;
   max-width: 540px;
   box-shadow: 0 6px 52px -10px rgba(var(--plum-rgb), 0.16);
+}
+
+/* The card is a focus target only for step-transition focus management (it is
+   programmatically focused, never a keyboard tab stop — tabIndex is -1), so it
+   carries no visible ring; keyboard users still get :focus-visible rings on the
+   real controls inside it. */
+.card:focus {
+  outline: none;
 }
 
 /* Directional step transitions — forward slides in from the right, back from
@@ -430,6 +438,14 @@
   background: rgba(var(--jade-rgb), 0.1);
   color: var(--jade);
 }
+/* Join is the primary action of this step — give it a full 44px touch target on
+   touch devices without enlarging its ink. */
+@media (pointer: coarse) {
+  .ccJoin {
+    min-height: 44px;
+    padding-block: 11px;
+  }
+}
 
 .quickStart {
   display: flex;
@@ -492,6 +508,24 @@
 .nav > button {
   width: 100%;
   justify-content: center;
+}
+
+/* On phones, tall steps can push Continue below the fold. Pin the step nav to
+   the bottom of the viewport as the card scrolls, so the primary action stays
+   in the thumb arc. Full-bleed to the card edges with a paper backdrop so
+   content scrolls cleanly under it; safe-area padding clears the home
+   indicator. */
+@media (max-width: 860px) {
+  .nav {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    margin-inline: -40px;
+    margin-block-end: -44px;
+    padding: 14px 40px max(14px, env(safe-area-inset-bottom));
+    background: var(--paper);
+    box-shadow: 0 -10px 24px -14px rgba(var(--plum-rgb), 0.22);
+  }
 }
 .back {
   display: inline-flex;

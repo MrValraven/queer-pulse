@@ -3,6 +3,7 @@ import { Button, ImageSlot, Outro, Reveal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
@@ -12,6 +13,7 @@ import styles from "./resources.module.css";
 export function SharedEquipmentPage() {
   const { showToast } = useToast();
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const pageTitle = t("resources:sharedEquipment.meta.title");
   const pageDescription = t("resources:sharedEquipment.meta.description");
 
@@ -81,9 +83,11 @@ export function SharedEquipmentPage() {
                       disabled={!item.available}
                       onClick={() =>
                         showToast(
-                          t("resources:sharedEquipment.requestToast", {
-                            name,
-                          }),
+                          demoMode
+                            ? t("resources:sharedEquipment.requestToast", {
+                                name,
+                              })
+                            : t("resources:sharedEquipment.requestLiveToast"),
                         )
                       }
                     >

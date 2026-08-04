@@ -1,0 +1,192 @@
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FiUserPlus, FiUsers, FiX } from "react-icons/fi";
+import { Avatar, Badge, Button, Modal } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useAuth } from "../../app/providers/authContext";
+import { reasonFor } from "../../shared/api/errorMessage";
+import { initialsFromName } from "../../shared/lib/initials";
+import { useSubprofileMembers } from "./api/useSubprofileMembers";
+import { useSubprofileInvites } from "./api/useSubprofileInvites";
+import { InviteCoOwnerModal } from "./InviteCoOwnerModal";
+import sharedStyles from "./SubprofileEditor.module.css";
+import styles from "./SubprofileOwnersPanel.module.css";
+
+/**
+ * Owner-facing "Co-owners" card: everyone who can currently edit this persona,
+ * outstanding invites (with revoke), an entry point to invite someone new, and
+ * — once there's more than one member — a way for the signed-in member to
+ * leave. `subprofileId` drives both the members and invites hooks, which
+ * branch demo/live internally (this component just consumes them).
+ */
+export function SubprofileOwnersPanel({
+  subprofileId,
+}: {
+  subprofileId: string;
+}) {
+  const { t } = useTranslation();
+  const { showToast } = useToast();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { data: members, leave } = useSubprofileMembers(subprofileId);
+  const { data: invites, revoke } = useSubprofileInvites(subprofileId);
+  const [inviting, setInviting] = useState(false);
+  const [revokingId, setRevokingId] = useState<string | null>(null);
+  const [leaveOpen, setLeaveOpen] = useState(false);
+
+  const memberList = members ?? [];
+  const pendingInvites = (invites ?? []).filter(
+    (invite) => invite.status === "pending",
+  );
+  const mySlug = user?.profile.slug;
+  const canLeave = memberList.length > 1;
+
+  const excludedSlugs = useMemo(
+    () => [
+      ...(members ?? []).map((member) => member.slug),
+      ...(invites ?? [])
+        .filter((invite) => invite.status === "pending")
+        .map((invite) => invite.invitedSlug),
+    ],
+    [members, invites],
+  );
+
+  async function handleRevoke(inviteId: string) {
+    setRevokingId(inviteId);
+    try {
+      await revoke.mutateAsync(inviteId);
+      showToast(t("subprofiles:owners.toastRevoked"), "info");
+    } catch (error) {
+      showToast(
+        reasonFor(error) ?? t("subprofiles:owners.toastRevokeError"),
+        "error",
+      );
+    } finally {
+      setRevokingId(null);
+    }
+  }
+
+  async function handleLeave() {
+    try {
+      await leave.mutateAsync();
+      setLeaveOpen(false);
+      showToast(t("subprofiles:owners.toastLeft"), "info");
+      void navigate("/account/subprofiles");
+    } catch (error) {
+      showToast(
+        reasonFor(error) ?? t("subprofiles:owners.toastLeaveError"),
+        "error",
+      );
+    }
+  }
+
+  return (
+    <section className={sharedStyles.card}>
+      <div className={sharedStyles.cardHead}>
+        <span className={sharedStyles.cardIcon}>
+          <FiUsers size={20} aria-hidden />
+        </span>
+        <h2 className={sharedStyles.cardTitle}>{t("subprofiles:owners.title")}</h2>
+      </div>
+      <p className={sharedStyles.cardNote}>{t("subprofiles:owners.note")}</p>
+
+      <ul className={styles.list}>
+        {memberList.map((member) => (
+          <li key={member.userId} className={styles.row}>
+            <Avatar
+              initials={initialsFromName(member.name, "?")}
+              src={member.avatarUrl ?? undefined}
+              tint="plum"
+              size={40}
+            />
+            <span className={styles.rowName}>{member.name}</span>
+            {member.isCreator && (
+              <Badge tone="plum">{t("subprofiles:owners.creatorTag")}</Badge>
+            )}
+            {member.slug === mySlug && (
+              <Badge tone="ghost">{t("subprofiles:owners.youTag")}</Badge>
+            )}
+          </li>
+        ))}
+      </ul>
+
+      {pendingInvites.length > 0 && (
+        <>
+          <p className={styles.pendingHeading}>
+            {t("subprofiles:owners.pendingHeading")}
+          </p>
+          <ul className={styles.list}>
+            {pendingInvites.map((invite) => (
+              <li key={invite.id} className={styles.row}>
+                <Avatar
+                  initials={initialsFromName(invite.invitedName, "?")}
+                  src={invite.invitedAvatarUrl ?? undefined}
+                  tint="plum"
+                  size={40}
+                />
+                <span className={styles.rowName}>{invite.invitedName}</span>
+                <button
+                  type="button"
+                  className={styles.revokeBtn}
+                  onClick={() => void handleRevoke(invite.id)}
+                  disabled={revokingId === invite.id}
+                  aria-label={t("subprofiles:owners.revokeAria", {
+                    name: invite.invitedName,
+                  })}
+                >
+                  <FiX size={16} aria-hidden />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      <div className={styles.foot}>
+        <Button variant="ghost" onClick={() => setInviting(true)}>
+          <FiUserPlus size={16} aria-hidden />{" "}
+          {t("subprofiles:owners.inviteCta")}
+        </Button>
+        {canLeave && (
+          <Button variant="ghost" onClick={() => setLeaveOpen(true)}>
+            {t("subprofiles:owners.leaveCta")}
+          </Button>
+        )}
+      </div>
+
+      {inviting && (
+        <InviteCoOwnerModal
+          subprofileId={subprofileId}
+          excludedSlugs={excludedSlugs}
+          onClose={() => setInviting(false)}
+        />
+      )}
+
+      {leaveOpen && (
+        <Modal
+          title={t("subprofiles:owners.leaveModalTitle")}
+          onClose={() => setLeaveOpen(false)}
+          footer={
+            <>
+              <Button variant="ghost" onClick={() => setLeaveOpen(false)}>
+                {t("subprofiles:owners.leaveModalKeep")}
+              </Button>
+              <Button
+                variant="danger"
+                onClick={() => void handleLeave()}
+                disabled={leave.isPending}
+              >
+                {leave.isPending
+                  ? t("subprofiles:owners.leaveModalLeaving")
+                  : t("subprofiles:owners.leaveModalConfirm")}
+              </Button>
+            </>
+          }
+        >
+          <p>{t("subprofiles:owners.leaveModalBody")}</p>
+        </Modal>
+      )}
+    </section>
+  );
+}

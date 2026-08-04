@@ -3,7 +3,8 @@ import { FiUser } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useProfile } from "../../app/providers/useProfile";
+import { useUnsavedChangesGuard } from "../../shared/hooks";
+import { useProfileData } from "../../app/providers/useProfile";
 import type {
   AccentKey,
   AvailabilityKey,
@@ -35,7 +36,7 @@ export function SubprofileMetaForm({
   const { t } = useTranslation();
   // The signed-in member's own slug for the linked-address preview — the real
   // user in live mode, the mock persona in demo (never the hardcoded slug).
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
 
   const [displayName, setDisplayName] = useState(subprofile.displayName);
   const [tagline, setTagline] = useState(subprofile.tagline);
@@ -69,6 +70,32 @@ export function SubprofileMetaForm({
   // The CTA label and URL only make sense as a pair — a label with nowhere to
   // go, or a bare link with no call to action, is worse than neither.
   const ctaMismatch = Boolean(ctaLabel.trim()) !== Boolean(ctaUrl.trim());
+
+  // Any local field diverged from the persisted persona? Compared against the
+  // same prop expressions the useState initializers use, and the parent keys this
+  // form on `subprofile.id`, so after a save-triggered refetch (same id) the state
+  // equals the fresh props again and this settles back to false — no stale prompt.
+  const dirty =
+    displayName !== subprofile.displayName ||
+    tagline !== subprofile.tagline ||
+    bio !== subprofile.bio ||
+    avatarUrl !== (subprofile.avatarUrl ?? "") ||
+    link !== subprofile.linkVisibility ||
+    visibility !== subprofile.visibility ||
+    slug !== subprofile.slug ||
+    handle !== (subprofile.handle ?? "") ||
+    coverUrl !== (subprofile.coverUrl ?? "") ||
+    accent !== (subprofile.accent ?? "") ||
+    availability !== (subprofile.availability ?? "") ||
+    ctaLabel !== subprofile.ctaLabel ||
+    ctaUrl !== subprofile.ctaUrl;
+
+  // Warn before navigating away from unsaved persona edits (this form saves only
+  // on an explicit click; a click into any other page would otherwise drop them).
+  useUnsavedChangesGuard({
+    active: dirty && !update.isPending,
+    confirmMessage: t("subprofiles:metaForm.leaveConfirm"),
+  });
 
   async function save() {
     if (nameMissing || handleBlocked) return;

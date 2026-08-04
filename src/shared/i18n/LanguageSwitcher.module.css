@@ -27,7 +27,7 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   line-height: 1;
-  color: color-mix(in srgb, currentColor 55%, transparent);
+  color: color-mix(in srgb, currentColor 62%, transparent);
   background: transparent;
   border: none;
   border-radius: 999px;

@@ -92,12 +92,16 @@ export interface AttendeeDTO {
   waitlistPosition?: number;
 }
 
-export interface AttendeesResponse {
-  going: AttendeeDTO[];
-  waitlist: AttendeeDTO[];
-  goingCount: number;
-  waitlistCount: number;
-  capacity?: number;
+/** GET /events/:slug/attendees?status=&page= — one RSVP status's own
+ *  paginated page. `total` is that status's own count (going-count or
+ *  waitlist-count, depending on `status`); `capacity` rides along so the
+ *  manage dashboard's "N of capacity spots filled" bar needs no second call. */
+export interface AttendeesPageDTO {
+  items: AttendeeDTO[];
+  total: number;
+  page: number;
+  pageSize: number;
+  capacity?: number | null;
 }
 
 // ── Create / update payloads ────────────────────────────────────────────────
@@ -148,8 +152,15 @@ export const updateEvent = (slug: string, dto: UpdateEventDto) =>
 export const cancelEvent = (slug: string) =>
   apiPost<{ ok: true }>(`/events/${slug}/cancel`);
 
-export const getAttendees = (slug: string) =>
-  apiGet<AttendeesResponse>(`/events/${slug}/attendees`);
+export const getAttendees = (
+  slug: string,
+  status: "going" | "waitlisted",
+  page?: number,
+) => {
+  const q = new URLSearchParams({ status });
+  if (page) q.set("page", String(page));
+  return apiGet<AttendeesPageDTO>(`/events/${slug}/attendees?${q.toString()}`);
+};
 
 export const rsvpEvent = (slug: string, status: "going" | "maybe") =>
   apiPost<{ status: RsvpStatus }>(`/events/${slug}/rsvp`, { status });

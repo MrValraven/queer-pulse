@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../../shared/components/ui";
+import { Button, FeatureHelp } from "../../shared/components/ui";
 import { ToolPage } from "./tools/ToolPage";
 import { useIssuer } from "./tools/useIssuer";
 import { usePrintDocument } from "./tools/usePrintDocument";
@@ -59,10 +59,13 @@ export function InvoiceGeneratorPage() {
     <ToolPage
       eyebrow={t("economy:toolPage.eyebrowFreelance")}
       title={
-        <Translation
-          i18nKey="economy:invoiceTool.title"
-          components={{ em: <em /> }}
-        />
+        <>
+          <Translation
+            i18nKey="economy:invoiceTool.title"
+            components={{ em: <em /> }}
+          />{" "}
+          <FeatureHelp id="economy.tools" />
+        </>
       }
       subtitle={t("economy:invoiceTool.sub")}
       form={

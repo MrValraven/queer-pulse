@@ -40,6 +40,9 @@ export interface CommunityDetailDTO extends CommunityCardDTO {
   rules: string[];
   owner: MemberRefDTO | null;
   createdAt: string;
+  /** True once an owner has archived the community. Only ever present for the
+   *  community's own owner/mods (outsiders 404 an archived community). */
+  archived?: boolean;
   myJoinRequestStatus: JoinRequestStatus | null;
 }
 export interface CommunityReactionSummary {
@@ -74,7 +77,11 @@ export interface CommunityPostDTO {
   canRestore: boolean;
   canViewHistory: boolean;
   reactions: CommunityReactionSummary[];
+  /** A bounded PREVIEW (oldest-first, capped server-side), NOT every reply —
+   *  compare `replies.length < replyCount` to know whether more exist, and
+   *  fetch them via `getPostReplies` (`useCommunityReplies`). */
   replies: CommunityReplyDTO[];
+  /** The TRUE total reply count, independent of the `replies` preview above. */
   replyCount: number;
 }
 export interface CommunityPostHistoryEntry {
@@ -179,6 +186,16 @@ export const createCommunity = (dto: CreateCommunityDto) =>
 export const updateCommunity = (slug: string, dto: UpdateCommunityDto) =>
   apiPatch<CommunityDetailDTO>(`/communities/${slug}`, dto);
 
+/** POST /communities/:slug/archive — owner takes the community down. Idempotent;
+ *  returns the (now archived) detail. */
+export const archiveCommunity = (slug: string) =>
+  apiPost<CommunityDetailDTO>(`/communities/${slug}/archive`, {});
+
+/** POST /communities/:slug/transfer — owner hands the community to another
+ *  member (who becomes owner; the caller is demoted to mod). */
+export const transferCommunityOwnership = (slug: string, memberSlug: string) =>
+  apiPost<CommunityDetailDTO>(`/communities/${slug}/transfer`, { memberSlug });
+
 export async function getCommunityPosts(slug: string, page?: number) {
   const q = new URLSearchParams();
   if (page) q.set("page", String(page));
@@ -209,6 +226,21 @@ export const replyToPost = (slug: string, id: string, text: string) =>
   apiPost<CommunityReplyDTO>(`/communities/${slug}/posts/${id}/replies`, {
     text,
   });
+
+/** GET /communities/:slug/posts/:id/replies?page= — every reply beyond the
+ *  post's bounded preview, oldest-first. `page=1` is deliberately the SAME
+ *  window the preview already embeds (same page size, same order), so a
+ *  "load more" click starts at `page=2` — see `useCommunityReplies`. */
+export async function getPostReplies(
+  slug: string,
+  postId: string,
+  page: number,
+) {
+  const res = await apiGet<
+    CommunityReplyDTO[] | Paginated<CommunityReplyDTO>
+  >(`/communities/${slug}/posts/${postId}/replies?page=${page}`);
+  return toItemsPage(res);
+}
 
 /** DELETE /communities/:slug/posts/:id — soft tombstone (author or owner/mod). */
 export const deleteCommunityPost = (slug: string, id: string) =>
@@ -266,8 +298,15 @@ export const getCommunityReplyHistory = (
     `/communities/${slug}/posts/${postId}/replies/${replyId}/history`,
   );
 
-export const getRoster = (slug: string) =>
-  apiGet<RosterEntryDTO[]>(`/communities/${slug}/roster`);
+export async function getRoster(slug: string, page?: number) {
+  const q = new URLSearchParams();
+  if (page) q.set("page", String(page));
+  const qs = q.toString();
+  const res = await apiGet<RosterEntryDTO[] | Paginated<RosterEntryDTO>>(
+    `/communities/${slug}/roster${qs ? `?${qs}` : ""}`,
+  );
+  return toItemsPage(res);
+}
 
 export const joinCommunity = (slug: string, note?: string) =>
   apiPost<JoinResultDTO>(`/communities/${slug}/join`, note ? { note } : {});

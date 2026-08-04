@@ -340,10 +340,9 @@
   }
 }
 .moreRow {
-  opacity: 0.5;
-  font-size: 13px;
-  color: var(--ink-40);
-  padding: 11px 14px 11px 60px;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0 4px;
 }
 
 .composerCard {

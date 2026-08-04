@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { FiFileText } from "react-icons/fi";
+import { FiAlertCircle, FiFileText } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState } from "../../shared/components/ui";
-import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
-import { APPS } from "./applicationStatus.data";
+import { useMyApplications } from "./api/useMyApplications";
 import type { Application, Cat, ActionKind } from "./applicationStatus.types";
 import { ApplicationModal } from "./ApplicationModals";
 import { CompareOffersModal } from "./CompareOffersModal";
@@ -25,15 +23,16 @@ interface OpenModal {
 
 export function ApplicationStatusPage() {
   const { t } = useTranslation();
-  const loading = useSimulatedLoad();
-  const { demoMode } = useDemoMode();
-  // The tracked applications are demo-only fiction; live mode starts empty until
-  // the member actually applies to something.
-  const [apps, setApps] = useState<Application[]>(() => (demoMode ? APPS : []));
-  const [prevDemo, setPrevDemo] = useState(demoMode);
-  if (prevDemo !== demoMode) {
-    setPrevDemo(demoMode);
-    setApps(demoMode ? APPS : []);
+  // Dual-mode source: demo returns the rich mock, live fetches the member's real
+  // applications (GET /me/applications). A local copy backs the demo modals'
+  // optimistic patching; it reseeds whenever the source array changes (demo/live
+  // toggle, language switch, or the live fetch resolving).
+  const { applications, isLoading, isError } = useMyApplications();
+  const [apps, setApps] = useState<Application[]>(applications);
+  const [prevSource, setPrevSource] = useState(applications);
+  if (prevSource !== applications) {
+    setPrevSource(applications);
+    setApps(applications);
   }
   const [tab, setTab] = useState<Cat | "all">("all");
   const [open, setOpen] = useState<OpenModal | null>(null);
@@ -125,7 +124,17 @@ export function ApplicationStatusPage() {
           sentCount={sentCount}
         />
 
-        {!loading && apps.length === 0 ? (
+        {isError ? (
+          <EmptyState
+            icon={<FiAlertCircle />}
+            title={t("economy:applicationStatus.error.title")}
+            description={t("economy:applicationStatus.error.description")}
+            action={{
+              label: t("economy:applicationStatus.empty.browseCta"),
+              to: routes.jobs,
+            }}
+          />
+        ) : !isLoading && apps.length === 0 ? (
           <EmptyState
             icon={<FiFileText />}
             title={t("economy:applicationStatus.empty.title")}
@@ -142,7 +151,7 @@ export function ApplicationStatusPage() {
             <ApplicationStatusLegend />
 
             <ApplicationStatusList
-              loading={loading}
+              loading={isLoading}
               groups={groups}
               canCompare={canCompare}
               onCompare={() => setComparing(true)}

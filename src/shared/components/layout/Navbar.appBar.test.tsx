@@ -4,14 +4,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AUTH_STORAGE_KEY } from "../../../features/marketing/cookies.data";
 import { DisplayModeContext } from "../../../app/providers/displayModeContext";
 import { NavDrawerProvider } from "../../../app/providers/NavDrawerProvider";
+import { useNavDrawer } from "../../../app/providers/navDrawerContext";
 import { TestProviders } from "../../../test/TestProviders";
 import { Navbar } from "./Navbar";
 
 /**
- * `Navbar`'s `isAppBar` branch (installed PWA + mobile: hamburger swapped for
- * the notifications bell / sign-in link, `.appBar` styling applied) only fires
- * under `(max-width: 860px)` with `DisplayModeContext` reporting `isInstalled`.
- * Mirrors the stub in BottomTabBar.test.tsx.
+ * `Navbar`'s `isAppBar` branch (hamburger removed in favor of the
+ * notifications bell / sign-in link, `.appBar` styling applied) fires on any
+ * mobile view — `(max-width: 860px)` — regardless of `DisplayModeContext`'s
+ * `isInstalled`. The bottom tab bar's "More" tab owns the drawer now, so the
+ * hamburger is gone whether the app is installed or just open in a mobile
+ * browser tab. Mirrors the stub in BottomTabBar.test.tsx.
  */
 function stubMobileMediaQuery() {
   vi.stubGlobal("matchMedia", (query: string) => ({
@@ -65,15 +68,18 @@ describe("Navbar app-bar branch", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows the hamburger in ordinary browser mobile mode", () => {
+  it("also hides the hamburger and shows the notifications bell in an ordinary mobile browser tab (not just installed)", () => {
+    // The bottom tab bar's "More" tab opens the drawer on any mobile view now,
+    // so the browser-tab case must match the installed case exactly — no
+    // hamburger, same bell.
     renderNavbar("browser");
 
     expect(
-      screen.getByRole("button", { name: /open menu/i }),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByRole("link", { name: /notifications/i }),
+      screen.queryByRole("button", { name: /open menu/i }),
     ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /notifications/i }),
+    ).toBeInTheDocument();
   });
 
   it("shows the sign-in link instead of the bell when installed on mobile, logged out", () => {
@@ -99,6 +105,12 @@ describe("Navbar app-bar branch", () => {
     // (Vitest's CSSEnablerPlugin, "stable" strategy) rather than undefined —
     // a readable string, just not the bare `appBar` literal. Assert on the
     // property name as a substring instead of an exact match.
+    expect(screen.getByRole("navigation").className).toContain("appBar");
+  });
+
+  it("applies the appBar class to the nav in an ordinary mobile browser tab too", () => {
+    renderNavbar("browser");
+
     expect(screen.getByRole("navigation").className).toContain("appBar");
   });
 });
@@ -138,6 +150,19 @@ function stubResizableMediaQuery() {
   };
 }
 
+// Navbar no longer renders its own drawer trigger on mobile — the bottom tab
+// bar's "More" tab owns that job now (a later task). This stand-in trigger
+// opens the same NavDrawerProvider Navbar reads from, so the resize-guard
+// effect can still be exercised against a real open drawer.
+function DrawerTrigger() {
+  const { openSheet } = useNavDrawer();
+  return (
+    <button type="button" onClick={() => openSheet("browse")}>
+      open drawer
+    </button>
+  );
+}
+
 describe("Navbar mobile-drawer gate", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
@@ -156,13 +181,14 @@ describe("Navbar mobile-drawer gate", () => {
           value={{ displayMode: "browser", isInstalled: false }}
         >
           <NavDrawerProvider>
+            <DrawerTrigger />
             <Navbar />
           </NavDrawerProvider>
         </DisplayModeContext.Provider>
       </TestProviders>,
     );
 
-    await user.click(screen.getByRole("button", { name: /open menu/i }));
+    await user.click(screen.getByRole("button", { name: "open drawer" }));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
 
     mediaQuery.setMobile(false);
@@ -171,8 +197,5 @@ describe("Navbar mobile-drawer gate", () => {
     // Back under the breakpoint: the drawer must NOT come back already open.
     mediaQuery.setMobile(true);
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /open menu/i }),
-    ).toHaveAttribute("aria-expanded", "false");
   });
 });

@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useId, useState, type ReactNode } from "react";
 import { FiStar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -167,6 +167,7 @@ export function MessageModal({
           </p>
           <textarea
             className={styles.textarea}
+            aria-label={t("economy:housingModal.message.eyebrow")}
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
@@ -212,6 +213,7 @@ export function RecommendModal({
   onSubmitted?: (stars: number, text: string) => void;
 }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   const { showToast } = useToast();
   const [stars, setStars] = useState(5);
   const [text, setText] = useState("");
@@ -305,10 +307,11 @@ export function RecommendModal({
             ))}
           </div>
 
-          <div className={styles.label}>
+          <label className={styles.label} htmlFor={`${fieldId}-review`}>
             {t("economy:housingModal.recommend.whatShouldKnow")}
-          </div>
+          </label>
           <textarea
+            id={`${fieldId}-review`}
             className={styles.textarea}
             placeholder={t("economy:housingModal.recommend.placeholder")}
             value={text}

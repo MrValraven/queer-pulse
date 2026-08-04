@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getEvent } from "./events.api";
+import { eventKeys } from "./eventKeys";
 import { detailToGathering } from "./events.adapters";
 import { resolveGathering, type GatheringDetail } from "../data";
 
@@ -21,7 +22,7 @@ export function useEvent(param: string | undefined) {
   const { demoMode } = useDemoMode();
   const slug = (param ?? "").replace(/-[a-z0-9]+$/i, "") || (param ?? "");
   return useQuery<EventResult>({
-    queryKey: ["event", demoMode, param],
+    queryKey: eventKeys.detail(param, demoMode),
     // Never fetch without a slug: `GET /events/` is matched by the *list*
     // handler (Express routing ignores the trailing slash), which answers 200
     // with an events page. The adapter would read that as a detail DTO and

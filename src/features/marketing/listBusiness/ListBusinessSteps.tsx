@@ -11,24 +11,28 @@ import {
   FiX,
 } from "react-icons/fi";
 import { useState } from "react";
-import { FormField } from "../../../shared/components/ui";
+import { FormField, RadioCardGroup } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   ANCHOR,
   CATS,
   catLabel,
-  findDuplicates,
   GOODFOR,
   goodForLabel,
+  hoodLabel,
   initials,
   LANGS,
   langLabel,
   NEIGHBOURHOODS,
   PRICES,
   VERIFY,
+  type ListingPath,
+  type OwnerBadge,
   type VerifyOption,
 } from "./listBusiness.data";
+import { useSimilarListings } from "./api/useSimilarListings";
+import type { SimilarListing } from "./api/listings.api";
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
 import styles from "./ListBusinessPage.module.css";
@@ -57,81 +61,72 @@ export function StepPath({
         em={t("marketing:listBusiness.step0.em")}
         sub={t("marketing:listBusiness.step0.sub")}
       />
-      <div
+      <RadioCardGroup<ListingPath>
         id={ANCHOR.path}
         className={styles.pathGrid}
-        role="radiogroup"
-        aria-label={t("marketing:listBusiness.step0.pathAria")}
-      >
-        <button
-          type="button"
-          role="radio"
-          aria-checked={draft.path === "claim"}
-          className={[
-            styles.pathCard,
-            draft.path === "claim" && styles.pathCardOn,
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          onClick={() => pickPath("claim")}
-        >
-          <span className={`${styles.pcIc} ${styles.pcIcOwn}`}>
-            <FiHome />
-          </span>
-          <b>{t("marketing:listBusiness.step0.claim.title")}</b>
-          <span>{t("marketing:listBusiness.step0.claim.desc")}</span>
-        </button>
-        <button
-          type="button"
-          role="radio"
-          aria-checked={draft.path === "suggest"}
-          className={[
-            styles.pathCard,
-            draft.path === "suggest" && styles.pathCardOn,
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          onClick={() => pickPath("suggest")}
-        >
-          <span className={`${styles.pcIc} ${styles.pcIcSug}`}>
-            <FiHeart />
-          </span>
-          <b>{t("marketing:listBusiness.step0.suggest.title")}</b>
-          <span>{t("marketing:listBusiness.step0.suggest.desc")}</span>
-        </button>
-      </div>
+        optionClassName={styles.pathCard}
+        checkedClassName={styles.pathCardOn}
+        ariaLabel={t("marketing:listBusiness.step0.pathAria")}
+        value={draft.path}
+        onChange={pickPath}
+        options={[
+          {
+            id: "claim",
+            render: (
+              <>
+                <span className={`${styles.pcIc} ${styles.pcIcOwn}`}>
+                  <FiHome />
+                </span>
+                <b>{t("marketing:listBusiness.step0.claim.title")}</b>
+                <span>{t("marketing:listBusiness.step0.claim.desc")}</span>
+              </>
+            ),
+          },
+          {
+            id: "suggest",
+            render: (
+              <>
+                <span className={`${styles.pcIc} ${styles.pcIcSug}`}>
+                  <FiHeart />
+                </span>
+                <b>{t("marketing:listBusiness.step0.suggest.title")}</b>
+                <span>{t("marketing:listBusiness.step0.suggest.desc")}</span>
+              </>
+            ),
+          },
+        ]}
+      />
 
       {draft.path === "claim" && (
         <div id={ANCHOR.verify} className={styles.revealBlock}>
           <label>{t("marketing:listBusiness.step0.verifyLabel")}</label>
           <p>{t("marketing:listBusiness.step0.verifyHelp")}</p>
-          <div className={styles.stack}>
-            {VERIFY.map((v: VerifyOption) => {
+          <RadioCardGroup
+            className={styles.stack}
+            optionClassName={styles.verifyOpt}
+            checkedClassName={styles.optOn}
+            ariaLabel={t("marketing:listBusiness.step0.verifyLabel")}
+            value={draft.verify}
+            onChange={(id) => set({ verify: id })}
+            options={VERIFY.map((v: VerifyOption) => {
               const Icon = VERIFY_ICON[v.id] ?? FiMail;
-              const on = draft.verify === v.id;
-              return (
-                <button
-                  key={v.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={on}
-                  className={[styles.verifyOpt, on && styles.optOn]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={() => set({ verify: v.id })}
-                >
-                  <span className={styles.voIc}>
-                    <Icon size={17} />
-                  </span>
-                  <span className={styles.radioTxt}>
-                    <b>{t(v.labelKey)}</b>
-                    <span>{t(v.descKey)}</span>
-                  </span>
-                  <span className={styles.voBadge}>{t(v.badgeKey)}</span>
-                </button>
-              );
+              return {
+                id: v.id,
+                render: (
+                  <>
+                    <span className={styles.voIc}>
+                      <Icon size={17} />
+                    </span>
+                    <span className={styles.radioTxt}>
+                      <b>{t(v.labelKey)}</b>
+                      <span>{t(v.descKey)}</span>
+                    </span>
+                    <span className={styles.voBadge}>{t(v.badgeKey)}</span>
+                  </>
+                ),
+              };
             })}
-          </div>
+          />
         </div>
       )}
 
@@ -151,24 +146,20 @@ export function StepPath({
 
 /** Directory look-alikes surfaced under the name field so people don't
  *  re-list an existing place. */
-function DuplicateNotice({
-  dups,
-}: {
-  dups: ReturnType<typeof findDuplicates>;
-}) {
+function DuplicateNotice({ dups }: { dups: SimilarListing[] }) {
   const { t } = useTranslation();
   return (
     <div className={styles.dupNotice} role="alert">
       <div className={styles.dnHead}>
         {t("marketing:listBusiness.step1.dupHead")}
       </div>
-      {dups.map((m) => (
-        <div key={m.name} className={styles.dupMatch}>
-          <span className={styles.dmAv}>{initials(m.name)}</span>
+      {dups.map((match) => (
+        <div key={match.slug || match.name} className={styles.dupMatch}>
+          <span className={styles.dmAv}>{initials(match.name)}</span>
           <span className={styles.dmInfo}>
-            <b>{m.name}</b>
+            <b>{match.name}</b>
             <span>
-              {catLabel(t, m.cat)} · {m.hood}
+              {catLabel(t, match.cat)} · {match.hood}
             </span>
           </span>
         </div>
@@ -181,7 +172,13 @@ function DuplicateNotice({
 export function StepBasics({ form }: { form: ListingForm }) {
   const { t } = useTranslation();
   const { draft, set, toggleCat, pickBadge } = form;
-  const dups = findDuplicates(draft.name);
+  // Live duplicate detection against the real directory — by name, and by
+  // proximity once a pin exists (item #5).
+  const coords =
+    draft.latitude !== null && draft.longitude !== null
+      ? { latitude: draft.latitude, longitude: draft.longitude }
+      : null;
+  const dups = useSimilarListings(draft.name, coords);
   return (
     <div className={styles.stepBody}>
       <PaneHeader
@@ -254,7 +251,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
           </option>
           {NEIGHBOURHOODS.map((h) => (
             <option key={h} value={h}>
-              {h}
+              {hoodLabel(t, h)}
             </option>
           ))}
         </select>
@@ -267,45 +264,40 @@ export function StepBasics({ form }: { form: ListingForm }) {
         required
         helper={t("marketing:listBusiness.step1.badgeHelper")}
       >
-        <div
+        <RadioCardGroup<OwnerBadge>
           className={styles.optGrid}
-          role="radiogroup"
-          aria-label={t("marketing:listBusiness.step1.badgeAria")}
-        >
-          <button
-            type="button"
-            role="radio"
-            aria-checked={draft.badge === "owned"}
-            className={[styles.optCard, draft.badge === "owned" && styles.optOn]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={() => pickBadge("owned")}
-          >
-            <span className={`${styles.ownTag} ${styles.ownTagJade}`}>
-              {t("marketing:listBusiness.step1.owned.tag")}
-            </span>
-            <b>{t("marketing:listBusiness.step1.owned.title")}</b>
-            <span>{t("marketing:listBusiness.step1.owned.desc")}</span>
-          </button>
-          <button
-            type="button"
-            role="radio"
-            aria-checked={draft.badge === "friendly"}
-            className={[
-              styles.optCard,
-              draft.badge === "friendly" && styles.optOn,
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={() => pickBadge("friendly")}
-          >
-            <span className={`${styles.ownTag} ${styles.ownTagCoral}`}>
-              {t("marketing:listBusiness.step1.friendly.tag")}
-            </span>
-            <b>{t("marketing:listBusiness.step1.friendly.title")}</b>
-            <span>{t("marketing:listBusiness.step1.friendly.desc")}</span>
-          </button>
-        </div>
+          optionClassName={styles.optCard}
+          checkedClassName={styles.optOn}
+          ariaLabel={t("marketing:listBusiness.step1.badgeAria")}
+          value={draft.badge}
+          onChange={pickBadge}
+          options={[
+            {
+              id: "owned",
+              render: (
+                <>
+                  <span className={`${styles.ownTag} ${styles.ownTagJade}`}>
+                    {t("marketing:listBusiness.step1.owned.tag")}
+                  </span>
+                  <b>{t("marketing:listBusiness.step1.owned.title")}</b>
+                  <span>{t("marketing:listBusiness.step1.owned.desc")}</span>
+                </>
+              ),
+            },
+            {
+              id: "friendly",
+              render: (
+                <>
+                  <span className={`${styles.ownTag} ${styles.ownTagCoral}`}>
+                    {t("marketing:listBusiness.step1.friendly.tag")}
+                  </span>
+                  <b>{t("marketing:listBusiness.step1.friendly.title")}</b>
+                  <span>{t("marketing:listBusiness.step1.friendly.desc")}</span>
+                </>
+              ),
+            },
+          ]}
+        />
       </FormField>
       {draft.badge === "owned" && (
         <div className={styles.revealBlock}>
@@ -331,30 +323,23 @@ export function StepBasics({ form }: { form: ListingForm }) {
         label={t("marketing:listBusiness.step1.priceLabel")}
         required
       >
-        <div
+        <RadioCardGroup
           className={styles.priceRow}
-          role="radiogroup"
-          aria-label={t("marketing:listBusiness.step1.priceAria")}
-        >
-          {PRICES.map((p) => {
-            const on = draft.price === p.id;
-            return (
-              <button
-                key={p.id}
-                type="button"
-                role="radio"
-                aria-checked={on}
-                className={[styles.chip, styles.priceChip, on && styles.chipOn]
-                  .filter(Boolean)
-                  .join(" ")}
-                onClick={() => set({ price: p.id })}
-              >
+          optionClassName={`${styles.chip} ${styles.priceChip}`}
+          checkedClassName={styles.chipOn}
+          ariaLabel={t("marketing:listBusiness.step1.priceAria")}
+          value={draft.price}
+          onChange={(id) => set({ price: id })}
+          options={PRICES.map((p) => ({
+            id: p.id,
+            render: (
+              <>
                 <span className={styles.priceSym}>{p.sym}</span>
                 <span className={styles.priceLbl}>{t(p.labelKey)}</span>
-              </button>
-            );
-          })}
-        </div>
+              </>
+            ),
+          }))}
+        />
       </FormField>
 
       <FormField

@@ -241,7 +241,7 @@ export const safety: Catalog = {
   "appeal.pending.submittedLabel": "Submitted",
   "appeal.pending.expectedLabel": "Expected response",
   "appeal.pending.info":
-    "<strong>While your appeal is under review:</strong> the original decision remains in place, but no further action will be taken. You'll be notified by email as soon as a decision is reached.",
+    "<strong>While your appeal is under review:</strong> the original decision remains in place, but no further action will be taken. The outcome shows up right here — check back on this page, or sign in and open your appeals to see where it stands.",
   "appeal.pending.govLink": "How moderation works →",
 
   "appeal.overturned.title": "Your appeal was <em>successful</em>",
@@ -281,13 +281,13 @@ export const safety: Catalog = {
   "appealSubmit.form.submitting": "Sending…",
   "appealSubmit.form.ladderCta": "Read the community ladder",
   "appealSubmit.notice":
-    "<b>While your appeal is reviewed,</b> the original decision stays in place. You'll hear back by email — usually within a few days.",
+    "<b>While your appeal is reviewed,</b> the original decision stays in place. The outcome lands on this page — usually within a few days. Check back, or reopen your appeal any time to see where it stands.",
   "appealSubmit.foot":
     "Every appeal, and how it was decided, is logged in our <a>transparency record</a>.",
   "appealSubmit.errorFrame": "Couldn't file your appeal",
   "appealSubmit.success.title": "Your appeal is <em>in</em>",
   "appealSubmit.success.sub":
-    "A moderator who wasn't involved in the original decision will review it. We'll email you the moment there's an outcome.",
+    "A moderator who wasn't involved in the original decision will review it. The outcome shows up here — track your appeal on this page to see it the moment it's decided.",
   "appealSubmit.success.filedLabel": "Filed",
   "appealSubmit.success.trackCta": "Track this appeal",
   "appealSubmit.success.howCta": "How moderation works",
@@ -655,4 +655,9 @@ export const safety: Catalog = {
   "vouchModal.form.cancelCta": "Cancel",
   "vouchModal.form.submitting": "Submitting…",
   "vouchModal.form.submitCta": "Add my vouch",
+  "vouchModal.comingSoon.badge": "Coming soon",
+  "vouchModal.comingSoon.title": "Vouches are <em>coming soon.</em>",
+  "vouchModal.comingSoon.body":
+    "We're still building the trust pipeline behind member vouches. Switch on the demo platform to preview the full flow, or check back soon.",
+  "vouchModal.comingSoon.doneCta": "Close",
 };

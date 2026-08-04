@@ -4,8 +4,9 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { useSaved } from "../../app/providers/useSaved";
 import { routes } from "../../app/routeMap";
 import { PageShell } from "../../shared/components/layout";
-import { Button, FadeIn } from "../../shared/components/ui";
+import { Button, FadeIn, FeatureHelp } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { ApiError } from "../../shared/api/client";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { GAL_BG } from "./housingListing.data";
@@ -13,6 +14,7 @@ import { FILTERS } from "./housing.data";
 import { MessageModal } from "./HousingModals";
 import { HousingListingSkeleton } from "./HousingListingSkeleton";
 import {
+  HousingListingError,
   HousingListingMain,
   HousingListingSidebar,
 } from "./HousingListingSections";
@@ -30,7 +32,7 @@ export function HousingListingPage() {
   const { isSaved, toggleSave } = useSaved();
   const { showToast } = useToast();
 
-  const { data, isLoading, isError } = useHousingListing(slug);
+  const { data, isLoading, isError, error, refetch } = useHousingListing(slug);
   const { data: allListings = [] } = useHousingListings("all");
 
   if (isLoading || loading) {
@@ -46,7 +48,26 @@ export function HousingListingPage() {
     );
   }
 
-  if (isError || !data) return <Navigate to={routes.housing} replace />;
+  // Only a genuine 404 (or a demo slug that simply doesn't exist → data is null
+  // with no error) means "not found" and earns the redirect. Any OTHER failure
+  // — network drop, timeout, 5xx — keeps the reader here with a retry instead of
+  // silently bouncing them to the board.
+  const isNotFound =
+    (error instanceof ApiError && error.status === 404) || (!isError && !data);
+  if (isNotFound) return <Navigate to={routes.housing} replace />;
+
+  if (isError || !data) {
+    return (
+      <PageShell>
+        <div className={s.page}>
+          <Link to={routes.housing} className={s.back}>
+            {t("economy:housingListing.back")}
+          </Link>
+          <HousingListingError onRetry={() => void refetch()} />
+        </div>
+      </PageShell>
+    );
+  }
 
   const listing = data.listing;
   const similar = allListings
@@ -136,7 +157,9 @@ export function HousingListingPage() {
                 )}
               </Button>
             </div>
-            <h1 className={s.title}>{listing.title}</h1>
+            <h1 className={s.title}>
+              {listing.title} <FeatureHelp id="housing.listing" />
+            </h1>
             <div className={s.metaRow}>
               <span className={s.metaPill}>
                 <FiMapPin /> {listing.hood}

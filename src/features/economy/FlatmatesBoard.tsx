@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { FiHome } from "react-icons/fi";
-import { Button, EmptyState, FadeIn, Outro } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  FadeIn,
+  FeatureHelp,
+  Outro,
+} from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
@@ -81,7 +87,8 @@ export function FlatmatesBoard() {
           {!boardEmpty && (
             <div className={styles.top}>
               <div className={styles.count}>
-                {t("economy:flatmates.count", { count: filtered.length })}
+                {t("economy:flatmates.count", { count: filtered.length })}{" "}
+                <FeatureHelp id="housing.flatmates" />
               </div>
               <button
                 type="button"

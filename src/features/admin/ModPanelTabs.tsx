@@ -16,33 +16,50 @@ import {
   useRemoveMember,
   useReviewJoinRequest,
   useSetMemberRole,
+  useUpdateCommunity,
 } from "../communities/api/useCommunityMutations";
+import type {
+  AccessTier,
+  UpdateCommunityDto,
+} from "../communities/api/communities.api";
+import type { EditableCommunityFields } from "../communities/api/communities.adapters";
+import { useJoinRequests } from "../communities/api/useJoinRequests";
+import { useRoster } from "../communities/api/useRoster";
 import type { LivingCommunity } from "../communities/community.model";
 import { photoOf } from "../communities/communityPeople";
 import { RoleBadge } from "../communities/CommunityBadges";
 import { defaultSettings } from "./adminMod.data";
+import {
+  ArchiveConfirmModal,
+  TransferOwnershipModal,
+} from "./ModPanelDangerModals";
 import styles from "./ModPanel.module.css";
 
 /* -------------------------------------------------------------------------- */
 /* RequestsTab                                                                  */
 /* -------------------------------------------------------------------------- */
 
-export function RequestsTab({ living }: { living: LivingCommunity }) {
+export function RequestsTab({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
-  const reviewRequest = useReviewJoinRequest(living.slug);
-  // Intentional: snapshot the prop into local state once, then mutate locally as
-  // the moderator approves/dismisses. Not a live sync with the source list.
-  const [requests, setRequests] = useState(living.joinRequests ?? []);
+  // Live: GET /communities/:slug/join-requests (real ids); demo: the flagship's
+  // mock queue. Either way the review PATCH below now carries a real id.
+  const incoming = useJoinRequests(slug);
+  const reviewRequest = useReviewJoinRequest(slug);
+  // Track which requests the moderator has already actioned this session and
+  // hide them, rather than snapshotting the list once — so a live queue that
+  // arrives after the first render still shows, and optimistic removals stick.
+  const [resolvedIds, setResolvedIds] = useState<string[]>([]);
   const [search, setSearch] = useState("");
 
+  const requests = incoming.filter((r) => !resolvedIds.includes(r.id));
   const filtered = requests.filter((r) =>
     r.person.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   const resolveRequest = (id: string, name: string, approved: boolean) => {
-    setRequests((prev) => prev.filter((r) => r.id !== id));
+    setResolvedIds((prev) => [...prev, id]);
     reviewRequest.mutate({ id, action: approved ? "approve" : "decline" });
     showToast(
       t(
@@ -59,7 +76,7 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
     for (const r of requests) {
       reviewRequest.mutate({ id: r.id, action: "approve" });
     }
-    setRequests([]);
+    setResolvedIds((prev) => [...prev, ...requests.map((r) => r.id)]);
     showToast(
       t("admin:modPanel.requests.approvedAllToast", {
         count: requests.length,
@@ -74,6 +91,7 @@ export function RequestsTab({ living }: { living: LivingCommunity }) {
         <FiSearch className={styles.searchIcon} aria-hidden />
         <input
           className={styles.search}
+          aria-label={t("admin:modPanel.requests.searchPlaceholder")}
           placeholder={t("admin:modPanel.requests.searchPlaceholder")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -242,12 +260,16 @@ const ROLE_FILTER_KEYS = [
   ["member", "modPanel.members.roleFilter.member"],
 ] as const;
 
-export function MembersTab({ living }: { living: LivingCommunity }) {
+export function MembersTab({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
-  const setMemberRole = useSetMemberRole(living.slug);
-  const removeMemberMutation = useRemoveMember(living.slug);
+  // Live: GET /communities/:slug/roster (real member slugs); demo: the mock
+  // roster. The role/remove mutations below already key off `slug`, so a live
+  // promote/demote/remove now targets a real member instead of a mock id.
+  const { roster } = useRoster(slug);
+  const setMemberRole = useSetMemberRole(slug);
+  const removeMemberMutation = useRemoveMember(slug);
   const [promoted, setPromoted] = useState<string[]>([]);
   const [removed, setRemoved] = useState<string[]>([]);
   const [roleFilter, setRoleFilter] = useState<"all" | "mod" | "member">("all");
@@ -278,7 +300,7 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
     showToast(t("admin:modPanel.members.removedToast", { name }), "info");
   };
 
-  const manageable = living.roster
+  const manageable = roster
     .filter((m) => !removed.includes(memberKey(m.slug, m.name)))
     .filter((m) => m.name.toLowerCase().includes(search.toLowerCase()))
     .filter((m) => {
@@ -298,6 +320,7 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
         <FiSearch className={styles.searchIcon} aria-hidden />
         <input
           className={styles.search}
+          aria-label={t("admin:modPanel.members.searchPlaceholder")}
           placeholder={t("admin:modPanel.members.searchPlaceholder")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -408,14 +431,31 @@ export function MembersTab({ living }: { living: LivingCommunity }) {
 /* SettingsTab                                                                  */
 /* -------------------------------------------------------------------------- */
 
-export function SettingsTab({ living }: { living: LivingCommunity }) {
+const modeToTier = (
+  mode: "open" | "request" | "invite",
+): AccessTier =>
+  mode === "open" ? "public" : mode === "request" ? "request" : "invite";
+
+export function SettingsTab({
+  slug,
+  editable,
+  isOwner,
+}: {
+  slug: string;
+  editable: EditableCommunityFields;
+  isOwner: boolean;
+}) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { showToast } = useToast();
-  const init = defaultSettings(living);
+  const init = defaultSettings(editable);
   const [name, setName] = useState(init.name);
   const [description, setDescription] = useState(init.description);
   const [mode, setMode] = useState(init.membershipMode);
   const [rules, setRules] = useState(init.rules);
+  const [archiveOpen, setArchiveOpen] = useState(false);
+  const [transferOpen, setTransferOpen] = useState(false);
+  const updateCommunity = useUpdateCommunity();
 
   const MODE_KEYS = [
     ["open", "modPanel.settings.mode.open"],
@@ -424,15 +464,32 @@ export function SettingsTab({ living }: { living: LivingCommunity }) {
   ] as const;
 
   const save = () => {
-    showToast(t("admin:modPanel.settings.savedToast"), "success");
-  };
-
-  const archive = () => {
-    showToast(t("admin:modPanel.settings.archive.toast"), "info");
-  };
-
-  const transfer = () => {
-    showToast(t("admin:modPanel.settings.transfer.toast"), "info");
+    if (updateCommunity.isPending) return;
+    // Partial PATCH: only the fields this tab actually edits. `accessTier` is
+    // sent ONLY when the membership mode changed, so a private-tier community
+    // (which shows as "invite" in the 3-way selector) isn't silently flipped to
+    // invite on an unrelated save. Purpose / whoFor / type / features /
+    // rosterVisible are left untouched (edited from the full edit modal).
+    const dto: UpdateCommunityDto = {
+      name: name.trim(),
+      tagline: description.trim(),
+      rules: rules
+        .split("\n")
+        .map((rule) => rule.trim())
+        .filter(Boolean),
+    };
+    if (mode !== init.membershipMode) {
+      dto.accessTier = modeToTier(mode);
+    }
+    updateCommunity.mutate(
+      { slug, dto },
+      {
+        onSuccess: () =>
+          showToast(t("admin:modPanel.settings.savedToast"), "success"),
+        onError: () =>
+          showToast(t("admin:modPanel.settings.errorToast"), "error"),
+      },
+    );
   };
 
   return (
@@ -495,45 +552,68 @@ export function SettingsTab({ living }: { living: LivingCommunity }) {
         />
       </div>
       <div className={styles.saveRow}>
-        <Button variant="primary" onClick={save}>
+        <Button
+          variant="primary"
+          onClick={save}
+          disabled={updateCommunity.isPending}
+        >
           {t("admin:modPanel.settings.saveCta")}
         </Button>
       </div>
 
-      <div className={styles.secLbl}>
-        {t("admin:modPanel.settings.dangerZone")}
-      </div>
-      <div className={styles.dangerZone}>
-        <div className={styles.danger}>
-          {t("admin:modPanel.settings.irreversible")}
-        </div>
-        <div className={styles.dangerRow}>
-          <div className={styles.dangerInfo}>
-            <div className={styles.dangerTitle}>
-              {t("admin:modPanel.settings.archive.title")}
+      {/* Archiving and transferring the whole community are owner-only on the
+          server, so live mode shows the danger zone to the owner alone (a mod
+          would just hit a 403). Demo keeps it always visible — it's the mock
+          showcase, and the seeded moderator persona never actually owns a
+          flagship. */}
+      {(demoMode || isOwner) && (
+        <>
+          <div className={styles.secLbl}>
+            {t("admin:modPanel.settings.dangerZone")}
+          </div>
+          <div className={styles.dangerZone}>
+            <div className={styles.danger}>
+              {t("admin:modPanel.settings.irreversible")}
             </div>
-            <div className={styles.dangerDesc}>
-              {t("admin:modPanel.settings.archive.desc")}
+            <div className={styles.dangerRow}>
+              <div className={styles.dangerInfo}>
+                <div className={styles.dangerTitle}>
+                  {t("admin:modPanel.settings.archive.title")}
+                </div>
+                <div className={styles.dangerDesc}>
+                  {t("admin:modPanel.settings.archive.desc")}
+                </div>
+              </div>
+              <Button variant="ghost" onClick={() => setArchiveOpen(true)}>
+                {t("admin:modPanel.settings.archive.cta")}
+              </Button>
+            </div>
+            <div className={styles.dangerRow}>
+              <div className={styles.dangerInfo}>
+                <div className={styles.dangerTitle}>
+                  {t("admin:modPanel.settings.transfer.title")}
+                </div>
+                <div className={styles.dangerDesc}>
+                  {t("admin:modPanel.settings.transfer.desc")}
+                </div>
+              </div>
+              <Button variant="ghost" onClick={() => setTransferOpen(true)}>
+                {t("admin:modPanel.settings.transfer.cta")}
+              </Button>
             </div>
           </div>
-          <Button variant="ghost" onClick={archive}>
-            {t("admin:modPanel.settings.archive.cta")}
-          </Button>
-        </div>
-        <div className={styles.dangerRow}>
-          <div className={styles.dangerInfo}>
-            <div className={styles.dangerTitle}>
-              {t("admin:modPanel.settings.transfer.title")}
-            </div>
-            <div className={styles.dangerDesc}>
-              {t("admin:modPanel.settings.transfer.desc")}
-            </div>
-          </div>
-          <Button variant="ghost" onClick={transfer}>
-            {t("admin:modPanel.settings.transfer.cta")}
-          </Button>
-        </div>
-      </div>
+        </>
+      )}
+
+      {archiveOpen && (
+        <ArchiveConfirmModal slug={slug} onClose={() => setArchiveOpen(false)} />
+      )}
+      {transferOpen && (
+        <TransferOwnershipModal
+          slug={slug}
+          onClose={() => setTransferOpen(false)}
+        />
+      )}
     </div>
   );
 }

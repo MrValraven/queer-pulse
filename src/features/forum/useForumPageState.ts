@@ -1,13 +1,16 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { type Thread } from "./forum.data";
-import { useThreads } from "./api/useForum";
-import { useEditThreadTitle } from "./api/useForumMutations";
+import { useForumCounts, useThreads } from "./api/useForum";
+import { useEditThreadTitle, useVotePost } from "./api/useForumMutations";
+import { type ForumSort, type ForumThreadCounts } from "./api/forum.api";
 import { useCreateThreadFlow } from "./useCreateThreadFlow";
+import { useForumRowModeration } from "./useForumRowModeration";
 // DEMO-ONLY persona — read ONLY inside the `demoMode` branch of `canEditThread`
 // below; the live branch must use solely the DTO's `thread.canEdit` flag.
 import { currentUser } from "../members/data/members";
@@ -15,12 +18,14 @@ import { currentUser } from "../members/data/members";
 const PROMPT_DISMISSED_KEY = "qp_forum_prompt_dismissed";
 
 /**
- * Owns every ForumPage concern that isn't markup — thread source + filter/sort,
- * vote toggling, the first-post prompt's dismissal, the create-thread flow
- * (with its optimistic thread object), and the title-edit flow — lifting them
- * out of ForumPage the same way `useThreadModeration` lifts moderation state
- * out of ThreadPage, so the route component itself stays well under the line
- * budget. Behaviour is identical to the inline state/handlers it replaces.
+ * Owns every ForumPage concern that isn't markup — thread source (with server
+ * sort/tag/search), real OP voting, truthful counts, the first-post prompt, the
+ * create-thread flow, the title-edit flow, and row moderation — lifting them
+ * out of ForumPage so the route component stays well under the line budget.
+ *
+ * `sort` is a plain state; `tag` + `q` live in the URL so they're shareable and
+ * survive reloads. All three flow to `useThreads`/`useForumCounts`, which apply
+ * them server-side in live mode; demo re-derives filter/sort locally.
  */
 export function useForumPageState() {
   const { t } = useTranslation();
@@ -28,14 +33,49 @@ export function useForumPageState() {
   const { user } = useAuth();
   const simLoading = useSimulatedLoad();
   const { showToast } = useToast();
+
   const [cat, setCat] = useState("all");
+  const [sort, setSort] = useState<ForumSort>("top");
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tag = searchParams.get("tag") ?? undefined;
+  const q = searchParams.get("q") ?? "";
+  const setParam = useCallback(
+    (key: string, value: string | null) =>
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          if (value) next.set(key, value);
+          else next.delete(key);
+          return next;
+        },
+        { replace: true },
+      ),
+    [setSearchParams],
+  );
+  const setQ = useCallback(
+    (next: string) => setParam("q", next.trim() || null),
+    [setParam],
+  );
+  const setTag = useCallback(
+    (next: string | null) => setParam("tag", next),
+    [setParam],
+  );
+
   // Thread source: demo returns the full mock as one terminal page, live pages
-  // through GET /forum/threads via the "Load more" button below the list.
-  const threadsQuery = useThreads(cat);
+  // through GET /forum/threads (already sorted/filtered) via "Load more".
+  const threadsQuery = useThreads(cat, { sort, tag, q: q || undefined });
   const { hasNextPage, fetchNextPage, isFetchingNextPage } = threadsQuery;
   const loading = demoMode ? simLoading : threadsQuery.isLoading;
-  const [sort, setSort] = useState<"top" | "new">("top");
-  const [voted, setVoted] = useState<Set<number>>(new Set());
+
+  // Truthful counts (server in live / mock-derived in demo) — never the length
+  // of the loaded page, which only ever sees the fetched slice.
+  const countsResult = useForumCounts(q || undefined, tag);
+  const counts: ForumThreadCounts = countsResult.counts ?? { all: 0 };
+
+  const votePost = useVotePost();
+  const moderation = useForumRowModeration();
+
   const [extraThreads, setExtraThreads] = useState<Thread[]>([]);
   const [editingTitleThreadId, setEditingTitleThreadId] = useState<
     number | null
@@ -70,31 +110,44 @@ export function useForumPageState() {
       onAfterPublish: () => {
         setCat("all");
         setSort("new");
+        setTag(null);
+        setQ("");
         dismissPrompt();
       },
     });
 
   const allThreads = useMemo(() => {
-    // Once the server-persisted copy of a just-posted thread comes back in the
-    // refetched list, drop the local optimistic copy so the post doesn't render
-    // twice (matched on category + title). Demo never refetches, so its
-    // optimistic posts are kept as the record.
-    const serverKeys = new Set(
-      threadsQuery.threads.map((thread) => `${thread.category}::${thread.title}`),
+    // Dedupe the local optimistic copy against the refetched server list by
+    // SERVER SLUG (stamped once the create mutation resolves) — never
+    // `category::title`, which collided as soon as two drafts shared a title and
+    // is what left the just-posted card linking to a dead route. Demo never
+    // refetches, so its optimistic posts (no slug) are always kept as the record.
+    const serverSlugs = new Set(
+      threadsQuery.threads
+        .map((thread) => thread.slug)
+        .filter((slug): slug is string => Boolean(slug)),
     );
     const optimistic = extraThreads.filter(
-      (thread) => !serverKeys.has(`${thread.category}::${thread.title}`),
+      (thread) => !(thread.slug && serverSlugs.has(thread.slug)),
     );
     return [...optimistic, ...threadsQuery.threads];
   }, [extraThreads, threadsQuery.threads]);
 
-  // Live: author-only edit right comes from the DTO flag on the card.
-  // Demo: the persona owns threads it authored ("You" / its slug). currentUser
+  // Gate for the row's ⋯ moderation menu (kept named `canEditThread` so the list
+  // prop contract — ForumThreadList → ForumThreadRow — is unchanged).
+  // Live: show the menu when the viewer can do ANY row action — edit (author),
+  // OR delete / restore / view-history (moderator who isn't the author).
+  // Narrowing this to `canEdit` alone hid the menu for moderators, so
+  // delete/restore/history never rendered.
+  // Demo: the persona owns threads it authored ("You" / its slug); currentUser
   // is only touched inside this demoMode branch.
   const canEditThread = (thread: Thread): boolean =>
     demoMode
       ? thread.author.slug === currentUser.slug || thread.author.name === "You"
-      : !!thread.canEdit;
+      : !!thread.canEdit ||
+        !!thread.canDelete ||
+        !!thread.canRestore ||
+        !!thread.canViewHistory;
 
   const editingThread =
     editingTitleThreadId != null
@@ -107,8 +160,6 @@ export function useForumPageState() {
 
   function saveThreadTitle(title: string) {
     if (demoMode) {
-      // Demo edit only ever targets locally-composed threads (in extraThreads);
-      // seeded THREADS are never authored by the demo persona.
       setExtraThreads((prev) =>
         prev.map((thread) =>
           thread.id === editingTitleThreadId ? { ...thread, title } : thread,
@@ -124,43 +175,67 @@ export function useForumPageState() {
     showToast(t("forum:toast.editSaved"), "success");
   }
 
-  // Sidebar post counts derived from the real threads (members' posts), so they
-  // stay truthful and update live when a member publishes a new one.
-  const counts = useMemo(() => {
-    const by: Record<string, number> = {};
-    for (const thread of allThreads) by[thread.category] = (by[thread.category] ?? 0) + 1;
-    return by;
-  }, [allThreads]);
+  const filtered = cat !== "all" || !!tag || !!q;
+
+  function resetFilters() {
+    setCat("all");
+    setTag(null);
+    setQ("");
+  }
 
   const threads = useMemo(() => {
-    const filtered = allThreads.filter((thread) => cat === "all" || thread.category === cat);
-    if (sort === "new") return [...filtered].sort((a, b) => b.id - a.id);
-    return [...filtered].sort(
+    // Live: the server already applied category + tag + q + sort; render as-is
+    // (optimistic posts first). Demo: no server, so filter + sort the mock here.
+    if (!demoMode) return allThreads;
+    let list = allThreads.filter(
+      (thread) => cat === "all" || thread.category === cat,
+    );
+    if (tag) list = list.filter((thread) => thread.tags.includes(tag));
+    if (q) {
+      const needle = q.toLowerCase();
+      list = list.filter((thread) => thread.title.toLowerCase().includes(needle));
+    }
+    if (sort === "new") return [...list].sort((a, b) => b.id - a.id);
+    if (sort === "unanswered")
+      return list.filter((thread) => thread.comments === 0).sort((a, b) => b.id - a.id);
+    // Demo mock carries no `lastActivityAt`; approximate recent activity by
+    // reply volume so "Active" reads distinctly from "New"/"Top".
+    if (sort === "active")
+      return [...list].sort((a, b) => b.comments - a.comments || b.id - a.id);
+    return [...list].sort(
       (a, b) =>
         (b.pinned ? 1000 : 0) + b.upvotes - ((a.pinned ? 1000 : 0) + a.upvotes),
     );
-  }, [allThreads, cat, sort]);
+  }, [demoMode, allThreads, cat, tag, q, sort]);
 
-  function toggleVote(id: number) {
-    setVoted((cur) => {
-      const next = new Set(cur);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
+  // Vote on the list row: acts on the thread's OPENING post. Live threads carry
+  // a real `opPostId`; demo threads carry a SYNTHETIC one (`demo-op-<id>`, see
+  // `THREADS`), so this fires in both modes. `useVotePost` optimistically patches
+  // `upvotes` + `myVote` on the cached card — the demo list is cached, so the row
+  // toggles in place; demo makes no API call, live also POSTs the vote.
+  const onVote = useCallback(
+    (thread: Thread) => {
+      if (thread.opPostId) votePost.vote(thread.opPostId, thread.myVote ? 0 : 1);
+    },
+    [votePost],
+  );
+
+  const headerCount =
+    cat === "all" ? (counts.all ?? 0) : (counts[cat] ?? 0);
 
   return {
     cat,
     setCat,
+    sort,
+    setSort,
+    tag,
+    setTag,
+    q,
+    setQ,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
     loading,
-    sort,
-    setSort,
-    voted,
-    toggleVote,
     composing,
     composeSeed,
     openCompose,
@@ -175,7 +250,13 @@ export function useForumPageState() {
     setEditingTitleThreadId,
     closeEditTitle,
     counts,
+    totalCount: counts.all ?? 0,
+    headerCount,
     threads,
+    filtered,
+    resetFilters,
+    onVote,
+    moderation,
     publishThread,
   };
 }

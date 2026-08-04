@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -28,6 +28,7 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { showToast } = useToast();
+  const fieldId = useId();
   const [setType, setSetType] = useState(SET_TYPES[0]!.id);
 
   return (
@@ -40,12 +41,21 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
           />
         </h3>
         <div className={s.field}>
-          <label>{t("studio:setSubmission.sidebar.titleLabel")}</label>
-          <input type="text" defaultValue="House for the tired" />
+          <label htmlFor={`${fieldId}-title`}>
+            {t("studio:setSubmission.sidebar.titleLabel")}
+          </label>
+          <input
+            id={`${fieldId}-title`}
+            type="text"
+            defaultValue="House for the tired"
+          />
         </div>
         <div className={s.field}>
-          <label>{t("studio:setSubmission.sidebar.typeLabel")}</label>
+          <label htmlFor={`${fieldId}-type`}>
+            {t("studio:setSubmission.sidebar.typeLabel")}
+          </label>
           <select
+            id={`${fieldId}-type`}
             value={setType}
             onChange={(event) => setSetType(event.target.value)}
           >

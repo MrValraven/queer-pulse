@@ -1,6 +1,7 @@
-import { Fragment, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, type ReactNode } from "react";
 import { FiAlertCircle, FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
+import { usePrefersReducedMotion } from "../../../shared/hooks/usePrefersReducedMotion";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
@@ -9,6 +10,7 @@ import {
   type MissingField,
 } from "./listBusiness.data";
 import styles from "./ListBusinessPage.module.css";
+import chrome from "./ListBusinessChrome.module.css";
 
 /**
  * Scroll to the field a "what's still needed" chip names, flash it, and move
@@ -35,53 +37,119 @@ function jumpToField(anchor: string) {
   }
 }
 
-/** Step pills + progress bar + autosave status. */
+/** Step pills + progress bar + autosave status.
+ *
+ *  Mobile step-progress: on narrow screens the shared pill labels collapse to
+ *  bare numbers, so the row becomes a self-contained horizontal scroller (never
+ *  clipping or forcing page scroll) with the active pill scrolled into view, and
+ *  a compact "Step N of N — Label" line names the current step + announces it.
+ *
+ *  Pill jump-back: pass `onJump` to turn every VISITED (completed) pill into a
+ *  button that returns to that step. The caller already has `goToStep` — wire it
+ *  through as `onJump={goToStep}` from WizardFormPane. Omitted → pills are inert
+ *  (current behaviour), so this is a no-op until wired. */
 export function WizardChrome({
   step,
   savedAt,
   isEdit = false,
+  onJump,
 }: {
   step: number;
   savedAt: number | null;
   /** Edit mode never renders StepPath (step 0) — drop its pill so it doesn't
    *  show as a completed step that isn't actually reachable. */
   isEdit?: boolean;
+  /** Jump back to a visited step. When absent, pills stay non-interactive. */
+  onJump?: (step: number) => void;
 }) {
   const { t } = useTranslation();
+  const reducedMotion = usePrefersReducedMotion();
+  const activePillRef = useRef<HTMLDivElement | null>(null);
   const baseStep = isEdit ? 1 : 0; // wizard step index that pills[0] maps to
   const pills = isEdit ? PILL_LABEL_KEYS.slice(1) : PILL_LABEL_KEYS;
   const lastStep = TOTAL_STEPS - 1;
   const fill = ((step - baseStep) / (lastStep - baseStep)) * 100;
+  const currentIndex = step - baseStep; // pill position (0-based) of the current step
+
+  // Keep the active pill visible when the row is a narrow horizontal scroller.
+  // block:"nearest" avoids yanking the page vertically when it's already in view.
+  useEffect(() => {
+    activePillRef.current?.scrollIntoView({
+      behavior: reducedMotion ? "auto" : "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }, [step, reducedMotion]);
+
   return (
     <div className={styles.wizTop}>
-      <div className={styles.pills}>
+      <p className={chrome.stepMeta} aria-live="polite">
+        {t("marketing:listBusiness.wizard.stepOf", {
+          number: currentIndex + 1,
+          total: pills.length,
+          label: t(pills[currentIndex] ?? pills[pills.length - 1]!),
+        })}
+      </p>
+      <div className={chrome.pillRow}>
         {pills.map((labelKey, index) => {
           const actualStep = index + baseStep; // the real wizard step this pill maps to
-          const cls =
-            actualStep < step
-              ? styles.wpDone
-              : actualStep === step
-                ? styles.wpActive
-                : undefined;
+          const isDone = actualStep < step;
+          const isCurrent = actualStep === step;
+          const cls = isDone
+            ? styles.wpDone
+            : isCurrent
+              ? styles.wpActive
+              : undefined;
           const label = t(labelKey);
-          const ariaKey =
-            actualStep < step
-              ? "marketing:listBusiness.wizard.stepAriaDone"
-              : actualStep === step
-                ? "marketing:listBusiness.wizard.stepAriaCurrent"
-                : "marketing:listBusiness.wizard.stepAria";
+          const pillClass = [styles.wp, chrome.pill, cls]
+            .filter(Boolean)
+            .join(" ");
+          const inner = (
+            <>
+              <span className={styles.wpN} aria-hidden>
+                {isDone ? <FiCheck size={13} /> : index + 1}
+              </span>
+              {/* Label is hidden on narrow screens by the shared .wpL rule;
+                  the compact line above supplies the name there. */}
+              <span className={styles.wpL}>{label}</span>
+            </>
+          );
+          // Only a VISITED step is reachable by tapping its pill.
+          const canJump = isDone && Boolean(onJump);
           return (
             <Fragment key={labelKey}>
-              <div
-                className={[styles.wp, cls].filter(Boolean).join(" ")}
-                aria-label={t(ariaKey, { number: index + 1, label })}
-              >
-                <span className={styles.wpN} aria-hidden>
-                  {actualStep < step ? <FiCheck size={13} /> : index + 1}
-                </span>
-                <span className={styles.wpL}>{label}</span>
-              </div>
-              {index < pills.length - 1 && <span className={styles.wpBar} />}
+              {canJump ? (
+                <button
+                  type="button"
+                  className={[pillClass, chrome.jumpable].join(" ")}
+                  onClick={() => onJump?.(actualStep)}
+                  aria-label={t(
+                    "marketing:listBusiness.wizard.stepJumpAria",
+                    { number: index + 1, label },
+                  )}
+                >
+                  {inner}
+                </button>
+              ) : (
+                <div
+                  ref={isCurrent ? activePillRef : undefined}
+                  className={pillClass}
+                  aria-current={isCurrent ? "step" : undefined}
+                  aria-label={t(
+                    isDone
+                      ? "marketing:listBusiness.wizard.stepAriaDone"
+                      : isCurrent
+                        ? "marketing:listBusiness.wizard.stepAriaCurrent"
+                        : "marketing:listBusiness.wizard.stepAria",
+                    { number: index + 1, label },
+                  )}
+                >
+                  {inner}
+                </div>
+              )}
+              {index < pills.length - 1 && (
+                <span className={chrome.bar} aria-hidden />
+              )}
             </Fragment>
           );
         })}

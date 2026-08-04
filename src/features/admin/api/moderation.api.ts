@@ -1,4 +1,5 @@
 import { apiGet, apiPatch } from "../../../shared/api/client";
+import type { Paginated } from "../../../shared/contracts/contracts";
 import type { ReasonCode, ReportSubjectType } from "../../safety/reportReasons";
 
 /**
@@ -72,6 +73,19 @@ export interface ModReportDTO {
       flagged?: boolean;
     }[];
     people: { role: string; name: string; handle?: string; meta: string }[];
+    /**
+     * Listing-report enrichment — only present on a `listing`-subject report's
+     * detail (hand-mapped server-side; see queerpulse-backend
+     * `moderation-response.ts` / `buildListingEnrichment`). `disputeReason` is
+     * the free-text a disputer/claimer typed (`POST /listings/:ref/dispute`);
+     * `listingEvidence` is the ownership/claim proof the lister pasted into the
+     * listing itself — surfaced so a moderator can weigh a claim in the drawer.
+     * `contactEmail` is an optional off-account address the disputer left so a
+     * moderator can reach them (they may not be reachable via their member DMs).
+     */
+    disputeReason?: string;
+    listingEvidence?: string;
+    contactEmail?: string;
   };
 }
 
@@ -81,10 +95,17 @@ export interface ModCounts {
   resolved: number;
 }
 
-export interface ModReportsResponse {
-  items: ModReportDTO[];
+/**
+ * The moderation queue answers with the app's canonical cursor-page envelope
+ * (`Paginated<T>` = `{ data, pageInfo: { nextCursor, hasMore } }`, the same
+ * shape the feed/forum/messages lists use), with the real per-tab `counts`
+ * carried alongside — counts are queue-header domain data with no home in the
+ * pagination envelope, so they ride along rather than being dropped. This
+ * replaces the former one-off `{ items, counts, page: { cursor } }` shape;
+ * `useModReports` reads `.data` (not `.items`) and `.counts`.
+ */
+export interface ModReportsResponse extends Paginated<ModReportDTO> {
   counts: ModCounts;
-  page?: { cursor?: string | null };
 }
 
 export interface ModReportsParams {

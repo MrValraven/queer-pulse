@@ -35,6 +35,7 @@ const PlatformsPage = lazyNamed(() => import("./PlatformsPage"), "PlatformsPage"
 const VisasPage = lazyNamed(() => import("./VisasPage"), "VisasPage");
 const ArrivingPage = lazyNamed(() => import("./ArrivingPage"), "ArrivingPage");
 const CookiesPage = lazyNamed(() => import("./CookiesPage"), "CookiesPage");
+const ImprintPage = lazyNamed(() => import("./ImprintPage"), "ImprintPage");
 const DonatePage = lazyNamed(() => import("./DonatePage"), "DonatePage");
 
 /** Marketing, policy, roadmap/press, about/help/volunteer, partners, activism,
@@ -55,6 +56,7 @@ export function marketingRoutes() {
       <Route path={routes.terms} element={<TermsPage />} />
       <Route path={routes.dsar} element={<DsarPage />} />
       <Route path={routes.cookies} element={<CookiesPage />} />
+      <Route path={routes.imprint} element={<ImprintPage />} />
       <Route path={routes.constitution} element={<ConstitutionPage />} />
       <Route path={routes.codeOfConduct} element={<CodeOfConductPage />} />
       <Route

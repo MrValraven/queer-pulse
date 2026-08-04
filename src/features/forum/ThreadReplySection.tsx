@@ -1,10 +1,13 @@
 import { type RefObject } from "react";
+import { FiLock } from "react-icons/fi";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Reply, type ReplySortId } from "./forum.data";
 import { type ReplyNode } from "./buildReplyTree";
 import { ReplySortBar, ThreadReplies } from "./ThreadReplies";
 import { ThreadComposer } from "./ThreadComposer";
 import { type useThreadModeration } from "./useThreadModeration";
 import { type useNestedReplyComposer } from "./useNestedReplyComposer";
+import styles from "./ThreadPage.module.css";
 
 /** The whole reply area of a thread: the sort bar, the reply tree (with its
  *  per-reply moderation actions and inline nested-reply composer), and the
@@ -19,6 +22,7 @@ export function ThreadReplySection({
   setSort,
   count,
   loading,
+  isLocked,
   nodes,
   replyKey,
   likedReplies,
@@ -40,6 +44,9 @@ export function ThreadReplySection({
   setSort: (s: ReplySortId) => void;
   count: number;
   loading: boolean;
+  /** When true, replies are closed: no reply/nested-reply composers render and
+   *  a banner stands in for the bottom composer. */
+  isLocked: boolean;
   /** Reply tree, already sorted (see buildReplyTree) — top-level nodes only;
    *  each node recurses into its own children. */
   nodes: ReplyNode[];
@@ -66,6 +73,7 @@ export function ThreadReplySection({
 
       <ThreadReplies
         loading={loading}
+        isLocked={isLocked}
         nodes={nodes}
         replyKey={replyKey}
         likedReplies={likedReplies}
@@ -101,13 +109,33 @@ export function ThreadReplySection({
         setInlineDraft={nestedReplies.setInlineDraft}
       />
 
-      <ThreadComposer
-        authorName={authorName}
-        reply={reply}
-        setReply={setReply}
-        onPost={onPost}
-        textareaRef={textareaRef}
-      />
+      {isLocked ? (
+        <LockedBanner />
+      ) : (
+        <ThreadComposer
+          authorName={authorName}
+          reply={reply}
+          setReply={setReply}
+          onPost={onPost}
+          textareaRef={textareaRef}
+        />
+      )}
     </>
+  );
+}
+
+/** Stands in for the reply composer when a moderator has closed replies. Uses
+ *  the plum-panel pattern (plum surface, cream text) with a lock icon — warm,
+ *  not punitive: the conversation is still fully readable above. */
+function LockedBanner() {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.lockedBanner} role="status">
+      <FiLock className={styles.lockedIcon} aria-hidden="true" />
+      <div>
+        <p className={styles.lockedTitle}>{t("forum:locked.title")}</p>
+        <p className={styles.lockedBody}>{t("forum:locked.body")}</p>
+      </div>
+    </div>
   );
 }

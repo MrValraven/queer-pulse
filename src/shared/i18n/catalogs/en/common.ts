@@ -24,6 +24,14 @@ export const common: Catalog = {
   "toast.saveFailed": "That didn't save — check your connection and try again.",
   "toast.removeFailed": "That didn't update — check your connection and try again.",
 
+  // Reusable branded query-error state (a failed live fetch) — shown by pages
+  // that swap their whole board for a retryable error instead of a false-empty
+  // or an eternal skeleton (events hub, community detail, admin moderation).
+  "error.title": "Something went wrong",
+  "error.description":
+    "We couldn't load this right now. Check your connection and try again.",
+  "error.retry": "Try again",
+
   // Interpolation + pluralization examples (proves the helpers, and reusable).
   "greeting.welcome": "Welcome back, {name}",
   "members.count_one": "{count} member",

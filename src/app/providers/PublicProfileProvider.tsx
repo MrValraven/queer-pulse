@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useProfile } from "./useProfile";
+import { useProfileData } from "./useProfile";
 import { useDemoMode } from "./DemoModeProvider";
 import { useAuth } from "./authContext";
 import {
@@ -53,7 +53,7 @@ function signalsFromProfile(profile: {
 /**
  * Owns the member's public-profile preference and derives eligibility from their
  * live profile. Must sit inside `ProfileProvider`, since eligibility reads
- * `useProfile()`.
+ * `useProfileData()`.
  *
  * Dual-mode: demo mode is session-only (no network) and scores eligibility from
  * the `currentUserPublic.data` fixture, exactly as the prototype always did.
@@ -61,7 +61,7 @@ function signalsFromProfile(profile: {
  * the signed-in member's real profile.
  */
 export function PublicProfileProvider({ children }: { children: ReactNode }) {
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   const { demoMode } = useDemoMode();
   const { loggedIn } = useAuth();
   const queryClient = useQueryClient();

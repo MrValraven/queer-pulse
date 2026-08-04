@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { FiCalendar } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button, EmptyState, SkeletonLine, Tag } from "../../shared/components/ui";
+import { Button, EmptyState, FeatureHelp, SkeletonLine, Tag } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -113,7 +113,9 @@ export function GatheringPage() {
                   )}
                 </Tag>
               </div>
-              <h1 className={styles.title}>{gathering.title}</h1>
+              <h1 className={styles.title}>
+                {gathering.title} <FeatureHelp id="events.detail" />
+              </h1>
               <div className={styles.meta}>
                 <span className={styles.metaItem}>
                   <span className={styles.metaDot} />

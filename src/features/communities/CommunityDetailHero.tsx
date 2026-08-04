@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { FiCheck, FiClock } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { FiBookmark, FiCheck, FiClock, FiShare2 } from "react-icons/fi";
+import { Button, FeatureHelp } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { Community } from "../homepage/data/types";
@@ -19,6 +19,9 @@ export function CommunityDetailHero({
   heroAvatars,
   memberNum,
   hasCount,
+  saved,
+  onToggleSave,
+  onShare,
   onJoin,
   onLeave,
   onEdit,
@@ -32,6 +35,9 @@ export function CommunityDetailHero({
   heroAvatars: Person[];
   memberNum: number;
   hasCount: boolean;
+  saved: boolean;
+  onToggleSave: () => void;
+  onShare: () => void;
   onJoin: () => void;
   onLeave: () => void;
   onEdit: () => void;
@@ -47,7 +53,12 @@ export function CommunityDetailHero({
           <span className={styles.dot} />
           {detail.badge}
         </div>
-        <h1 className={styles.h1}>{community.name}</h1>
+        {/* FeatureHelp sits beside the heading, not inside it, so the info
+            button doesn't pollute the h1's accessible name. */}
+        <div className={styles.h1Row}>
+          <h1 className={styles.h1}>{community.name}</h1>
+          <FeatureHelp id="community.detail" />
+        </div>
         <p className={styles.heroSub}>{community.description}</p>
         <div className={styles.heroMeta}>
           <span>{community.count}</span>
@@ -62,7 +73,7 @@ export function CommunityDetailHero({
               <FiCheck aria-hidden /> {t("communities:detail.joined")}
             </Button>
           ) : requested ? (
-            <Button variant="ghost" disabled>
+            <Button variant="ghost-dark" disabled>
               <FiClock aria-hidden /> {t("communities:detail.requested")}
             </Button>
           ) : (
@@ -71,10 +82,37 @@ export function CommunityDetailHero({
             </Button>
           )}
           {canEdit && (
-            <Button variant="ghost" onClick={onEdit}>
+            <Button variant="ghost-dark" onClick={onEdit}>
               {t("communities:edit.cta")}
             </Button>
           )}
+          <Button
+            variant="ghost-dark"
+            onClick={onToggleSave}
+            aria-pressed={saved}
+            aria-label={t(
+              saved
+                ? "communities:detail.save.unsaveAriaLabel"
+                : "communities:detail.save.saveAriaLabel",
+              { name: community.name },
+            )}
+          >
+            <FiBookmark aria-hidden fill={saved ? "currentColor" : "none"} />
+            {t(
+              saved
+                ? "communities:detail.save.saved"
+                : "communities:detail.save.cta",
+            )}
+          </Button>
+          <Button
+            variant="ghost-dark"
+            onClick={onShare}
+            aria-label={t("communities:detail.share.ariaLabel", {
+              name: community.name,
+            })}
+          >
+            <FiShare2 aria-hidden /> {t("communities:detail.share.cta")}
+          </Button>
           <CommunityHeroAvatars
             avatars={heroAvatars}
             memberNum={memberNum}

@@ -1,21 +1,27 @@
-/* Mobile nav drawer — the full-screen accordion panel opened by the Navbar
-   hamburger (browser mode) or the BottomTabBar "More" tab (installed mode).
-   Extracted from Navbar.module.css so the drawer owns its own styles. Tokens
-   only. */
+/* Mobile nav drawer — presented as a bottom SHEET (slides up, grabber) opened
+   by the Navbar hamburger (browser mode) or the BottomTabBar "More" tab
+   (installed mode), for one-handed reach. Extracted from Navbar.module.css so
+   the drawer owns its own styles. Drag-to-dismiss lives on .grabberZone (see
+   MobileNavDrawer.tsx); .panel itself only ever animates via motion's drag
+   transform or the CSS entrance keyframe below, never a native touch-action
+   gesture, so its own overflow-y scroll is left completely alone.
+   Tokens only. */
 .overlay {
   position: fixed;
   inset: 0;
   z-index: 99;
   background: rgba(var(--plum-rgb), 0.4);
   backdrop-filter: var(--blur-overlay);
-  display: flex;
-  justify-content: flex-end;
 }
 .panel {
-  width: min(82vw, 320px);
-  height: 100%;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 85svh;
+  border-radius: 20px 20px 0 0;
   background: var(--cream);
-  padding: 84px 28px 28px;
+  padding: 4px 28px max(16px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -27,6 +33,78 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  /* MobileNavDrawer early-returns null while closed, so there is no persisted
+     "closed" DOM state to transition from — the sheet mounts fresh each open,
+     same as ResourceModal's/Consent's bottom sheets. An entrance `animation`
+     (not a `.panelOpen`-class `transition`) is therefore the correct match
+     for how this component actually toggles. */
+  animation: mobileNavSheetUp var(--dur-slow) var(--ease-out);
+}
+@keyframes mobileNavSheetUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}
+/* The actual pointerdown target for drag-to-dismiss: sized well past the
+   visual pill so the touch hit area clears the WCAG 24px floor (and gets
+   close to the 44px comfort target) without inflating the visible grabber.
+   touch-action: none is deliberate here — this is a surface we fully drive
+   (a drag handle, the skill's own canonical `none` example) — but it is
+   scoped to this ~40px strip alone, so pinch-zoom and scroll stay native
+   everywhere else in the sheet, including one pixel below this zone. */
+.grabberZone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  touch-action: none;
+  cursor: grab;
+  flex: none;
+}
+.grabber {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  /* rgba(var(--line-rgb), …) is the repo's dark-mode-aware equivalent of the
+     hairline plum used for borders elsewhere (ResourceModal, Consent) — it
+     flips with the theme instead of a hardcoded rgba(45,27,61,…). */
+  background: rgba(var(--line-rgb), 0.2);
+}
+
+/* Explicit, always-visible close affordance — the grabber above is a
+   supplementary gesture surface (aria-hidden, not a discrete control), so
+   this remains the one real, keyboard-reachable close control alongside
+   backdrop-click/Esc/Back, and the only one under reduced motion (drag is
+   disabled there). 44px meets the touch target floor. */
+.closeButton {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(var(--line-rgb), 0.12);
+  color: var(--text-strong);
+  font-size: 18px;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .closeButton:hover {
+    background: rgba(var(--line-rgb), 0.2);
+  }
 }
 
 /* A column flex container shrinks its children to fit before it will scroll.
@@ -36,11 +114,19 @@
   flex: none;
 }
 
-/* Installed mode keeps the fixed tab bar painted above the drawer (z-index 100
-   vs the overlay's 99), so the last links would otherwise sit under it.
-   Mirrors the `main[data-page-main]` reservation in standalone.css. */
+/* The fixed tab bar (BottomTabBar) paints above the drawer overlay (z-index
+   100 vs the overlay's 99) on ANY mobile view now, not just the installed
+   shell — BottomTabBar renders in a mobile browser tab too (see
+   BottomTabBar.tsx: gated on `isMobile`, not install), and its "More" tab is
+   what opens this drawer, so the bar is always on screen behind it. Without
+   this, the sheet's last links sit under the bar in a browser tab exactly as
+   they used to in the installed shell. Mirrors the `main[data-page-main]`
+   reservation in standalone.css, unqualified for the same reason. Replaces
+   (not stacks on top of) the base `.panel` bottom padding above: that
+   `max(16px, env(...))` has no tab-bar term, so this is the real value
+   whenever the bar is on screen. */
 @media (max-width: 860px) {
-  :global(html[data-display-mode="standalone"]) .panel {
+  .panel {
     padding-bottom: calc(28px + var(--tab-bar-h) + env(safe-area-inset-bottom));
   }
 }

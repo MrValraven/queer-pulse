@@ -6,9 +6,10 @@ import {
   type FormEvent,
 } from "react";
 import { FiPause } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, ComingSoon } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useAuth } from "../../app/providers/authContext";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { logError } from "../../shared/observability/logger";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -34,6 +35,7 @@ export function DeleteAccountSection() {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { signOut } = useAuth();
+  const { demoMode } = useDemoMode();
   const reauth = useReauth();
   const requestDeletion = useRequestDeletion();
   const deactivate = useDeactivate();
@@ -148,19 +150,33 @@ export function DeleteAccountSection() {
                 components={{ strong: <strong /> }}
               />
             </p>
-            <Button
-              variant="ghost"
-              onClick={() =>
-                showToast(
-                  t("settings:deleteAccount.toast.pausedEmails"),
-                  "success",
-                )
-              }
-              style={{ marginTop: 12 }}
-            >
-              <FiPause aria-hidden="true" />{" "}
-              {t("settings:deleteAccount.pauseStrip.cta")}
-            </Button>
+            {/* Email delivery has no backend yet (the Notifications pane marks
+                the same controls "coming soon"). Demo keeps the prototype
+                confirmation; live must not claim a save nothing performs. */}
+            {demoMode ? (
+              <Button
+                variant="ghost"
+                onClick={() =>
+                  showToast(
+                    t("settings:deleteAccount.toast.pausedEmails"),
+                    "success",
+                  )
+                }
+                style={{ marginTop: 12 }}
+              >
+                <FiPause aria-hidden="true" />{" "}
+                {t("settings:deleteAccount.pauseStrip.cta")}
+              </Button>
+            ) : (
+              <Button
+                variant="ghost"
+                disabled
+                style={{ marginTop: 12 }}
+              >
+                <FiPause aria-hidden="true" />{" "}
+                {t("settings:deleteAccount.pauseStrip.cta")} <ComingSoon />
+              </Button>
+            )}
           </div>
         </div>
       )}

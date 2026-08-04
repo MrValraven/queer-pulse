@@ -42,6 +42,7 @@ export function trustNetworkDtoToData(dto: TrustNetworkDTO): TrustGraphData {
     relationship: edge.relationship,
     reason: edge.note,
     anonymous: edge.anonymous,
+    kind: edge.kind,
   }));
 
   // Even angular spread of the distinct scenes around the focus.

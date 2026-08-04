@@ -1,6 +1,14 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { FiMessageCircle } from "react-icons/fi";
-import { EmptyState, FadeIn, SearchInput } from "../../shared/components/ui";
+import { paneScrollRegistry } from "../../app/paneScrollRegistry";
+import {
+  EmptyState,
+  FadeIn,
+  FeatureHelp,
+  PullToRefresh,
+  SearchInput,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DeleteConversationDialog } from "./DeleteConversationDialog";
 import { MessagesSearchResults } from "./MessagesSearchResults";
@@ -8,6 +16,23 @@ import { MessageThreadListSkeleton } from "./MessagesSkeleton";
 import { MessagesThreadRow } from "./MessagesThreadRow";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
+
+/**
+ * The element that actually scrolls inside `.threadList`. `PullToRefresh` nests
+ * its own `overflow-y: auto; height: 100%` scroller as the direct child, so the
+ * rows overflow THAT element while `.threadList`'s single child fits it exactly
+ * — meaning the inner one is the real scroll surface. Register that so
+ * scroll-to-top / per-navigation restore act on the surface that moves, falling
+ * back to `.threadList` itself if the structure ever changes.
+ */
+function resolveScrollContainer(root: HTMLElement): HTMLElement {
+  const child = root.firstElementChild;
+  if (child instanceof HTMLElement) {
+    const overflowY = getComputedStyle(child).overflowY;
+    if (overflowY === "auto" || overflowY === "scroll") return child;
+  }
+  return root;
+}
 
 export function MessagesThreadList({
   loading,
@@ -40,14 +65,28 @@ export function MessagesThreadList({
   deletePending: boolean;
 }) {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [confirmDelete, setConfirmDelete] = useState<Conversation | null>(
     null,
   );
+  // The inbox list is this fullHeight route's own scroll surface (the window
+  // doesn't move). Register it so ScrollManager can restore/reset its offset per
+  // navigation and honour a tap-on-the-active-tab scroll-to-top — the pane half
+  // of the internally-scrolled scroll logic (see paneScrollRegistry).
+  const threadListRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const root = threadListRef.current;
+    if (!root) return;
+    return paneScrollRegistry.register(resolveScrollContainer(root));
+  }, []);
   return (
     <div className={styles.threadPanel}>
       <div className={styles.tpTop}>
         <div className={styles.tpHeadRow}>
-          <div className={styles.tpTitle}>{t("messages:thread.title")}</div>
+          <div className={styles.tpTitle}>
+            {t("messages:thread.title")}
+            <FeatureHelp id="messages.inbox" />
+          </div>
           <div className={styles.tpHeadActions}>
             <button
               type="button"
@@ -117,48 +156,63 @@ export function MessagesThreadList({
         />
       </div>
 
-      <div className={styles.threadList}>
-        {loading && <MessageThreadListSkeleton count={6} />}
-        {/* Query present → the unified search view: name-matched conversations
-            (already filtered by the controller into `threads`) alongside
-            cross-conversation message-body hits. */}
-        {!loading && query.trim() && (
-          <MessagesSearchResults
-            query={query}
-            threads={threads}
-            activeId={activeId}
-            readIds={readIds}
-            onOpen={onOpen}
-            onRequestDelete={setConfirmDelete}
-            onSelectResult={onSelectResult}
-            onClearSearch={() => onQueryChange("")}
-          />
-        )}
-        {!loading && !query.trim() && threads.length === 0 && (
-          <EmptyState
-            compact
-            icon={<FiMessageCircle />}
-            title={t("messages:thread.emptyTitle")}
-            description={t("messages:thread.emptyDescription")}
-            action={{
-              label: t("messages:thread.newMessage"),
-              onClick: onCompose,
-            }}
-          />
-        )}
-        {!loading &&
-          !query.trim() &&
-          threads.map((thread, index) => (
-            <FadeIn key={thread.id} delay={Math.min(index, 8) * 60}>
-              <MessagesThreadRow
-                thread={thread}
-                activeId={activeId}
-                readIds={readIds}
-                onOpen={onOpen}
-                onRequestDelete={setConfirmDelete}
-              />
-            </FadeIn>
-          ))}
+      <div className={styles.threadList} ref={threadListRef}>
+        {/* `queryKey: ["conversations"]` matches useConversations' inline
+            `["conversations", demoMode, deletedToken]` as a prefix — the same
+            convention every conversations mutation in this feature already
+            uses to invalidate the inbox (useMessageActions/useMessageMutations).
+            No `disabled` gate: this panel is the thread LIST, which carries no
+            composer of its own — the message composer lives entirely inside
+            the separate `ConversationPanel` (on mobile the two panels aren't
+            even shown at once; on desktop they're independent scroll regions),
+            so a pull here can never fight a focused input. */}
+        <PullToRefresh
+          onRefresh={() =>
+            queryClient.invalidateQueries({ queryKey: ["conversations"] })
+          }
+        >
+          {loading && <MessageThreadListSkeleton count={6} />}
+          {/* Query present → the unified search view: name-matched conversations
+              (already filtered by the controller into `threads`) alongside
+              cross-conversation message-body hits. */}
+          {!loading && query.trim() && (
+            <MessagesSearchResults
+              query={query}
+              threads={threads}
+              activeId={activeId}
+              readIds={readIds}
+              onOpen={onOpen}
+              onRequestDelete={setConfirmDelete}
+              onSelectResult={onSelectResult}
+              onClearSearch={() => onQueryChange("")}
+            />
+          )}
+          {!loading && !query.trim() && threads.length === 0 && (
+            <EmptyState
+              compact
+              icon={<FiMessageCircle />}
+              title={t("messages:thread.emptyTitle")}
+              description={t("messages:thread.emptyDescription")}
+              action={{
+                label: t("messages:thread.newMessage"),
+                onClick: onCompose,
+              }}
+            />
+          )}
+          {!loading &&
+            !query.trim() &&
+            threads.map((thread, index) => (
+              <FadeIn key={thread.id} delay={Math.min(index, 8) * 60}>
+                <MessagesThreadRow
+                  thread={thread}
+                  activeId={activeId}
+                  readIds={readIds}
+                  onOpen={onOpen}
+                  onRequestDelete={setConfirmDelete}
+                />
+              </FadeIn>
+            ))}
+        </PullToRefresh>
       </div>
       {confirmDelete && (
         <DeleteConversationDialog

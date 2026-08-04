@@ -2,6 +2,7 @@ import type { Formatters } from "../../../shared/i18n/format";
 import type { DirectoryPlace, Tint } from "../directoryPlaces";
 import {
   initials,
+  normalizeHours,
   type PendingListing,
   type PhotoKey,
 } from "../listBusiness/listBusiness.data";
@@ -65,6 +66,9 @@ export function detailDtoToPlace(
 ): DirectoryPlace {
   return {
     slug: dto.slug,
+    // Present once the backend detail DTO carries it; drives the live dispute
+    // action's addressability for non-owners.
+    ref: dto.ref ?? null,
     name: dto.name,
     cat: dto.cat,
     hood: dto.hood,
@@ -84,6 +88,8 @@ export function detailDtoToPlace(
     safeSpaceVouches: dto.safeSpaceVouches,
     safeSpaceRemoval: dto.safeSpaceRemoval,
     tagline: dto.tagline,
+    city: dto.city ?? undefined,
+    timezone: dto.timezone ?? undefined,
     pills: dto.pills,
     rating: dto.rating,
     gallery: dto.gallery,
@@ -96,7 +102,7 @@ export function detailDtoToPlace(
     address: dto.address,
     photos: dto.photos,
     alt: dto.alt,
-    hours: dto.hours,
+    hours: dto.hours ? normalizeHours(dto.hours) : dto.hours,
     langs: dto.langs,
     savedCount: dto.savedCount,
     reviews: dto.reviews,
@@ -250,7 +256,7 @@ export function submittedToPlace(listing: PendingListing): DirectoryPlace {
     address: listing.address,
     photos,
     alt: listing.alt,
-    hours: listing.hours,
+    hours: normalizeHours(listing.hours),
     langs: listing.langs,
     reviews: [],
   };

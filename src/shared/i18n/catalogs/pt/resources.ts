@@ -41,6 +41,9 @@ export const resources: Catalog = {
   "suggestEdit.success.title": "Sugestão <em>recebida.</em>",
   "suggestEdit.success.sub":
     "A equipa editorial vê as sugestões semanalmente e discute alterações maiores na assembleia mensal. Este é um documento vivo precisamente por causa de sugestões como a tua.",
+  "suggestEdit.comingSoon.title": "As edições ainda não estão <em>abertas.</em>",
+  "suggestEdit.comingSoon.sub":
+    "As sugestões ao glossário ainda não estão ligadas à equipa editorial no site em produção, por isso não chegariam a ninguém. Preferimos ser honestes a fingir um recibo. Volta cá em breve.",
   "suggestEdit.body.intro":
     "Editado pela comunidade. Se uma definição parecer incompleta ou incorreta, diz-nos qual o termo e o que mudarias.",
   "suggestEdit.form.termLabel": "Qual termo",
@@ -1127,6 +1130,9 @@ export const resources: Catalog = {
     "Um coordenador vai confirmar a listagem sem álcool e adicioná-la ao calendário dentro de um dia. Vais receber a checklist de anfitrião por email.",
   "sober.host.success.attendSub":
     "Guardámos o teu lugar. A localização privada e um lembrete simpático vão chegar-te no dia anterior — nada é partilhado publicamente.",
+  "sober.host.comingSoon.title": "Os convívios sem álcool estão <em>a chegar.</em>",
+  "sober.host.comingSoon.sub":
+    "Organizar e confirmar presença ainda não está ligado no site em produção, por isso nada do que escreveres aqui chegaria a uma coordenação. Em vez de fingir, dizemo-lo com clareza — isto abre em breve.",
   "sober.host.intro":
     "Começa um convívio sem álcool, ou junta-te a uma reunião de pares já existente. De qualquer forma, decides tu quão visível queres estar.",
   "sober.host.modeLabel": "O que gostarias de fazer?",
@@ -1414,6 +1420,9 @@ export const resources: Catalog = {
   "microGrants.apply.success.sub":
     "Vamos confirmar a receção por email dentro de 24 horas. O painel de avaliação reúne-se em meados de julho. Terás uma resposta antes de 31 de julho, seja qual for o resultado.",
   "microGrants.apply.success.closeCta": "Fechar",
+  "microGrants.apply.comingSoon.title": "As candidaturas abrem <em>em breve.</em>",
+  "microGrants.apply.comingSoon.sub":
+    "A receção de candidaturas ainda não está ligada no site em produção, por isso nada do que escrevesses aqui chegaria ao painel de avaliação. Preferimos dizê-lo com clareza a fingir um recibo. A ronda do 2.º trimestre abre em breve — volta cá, ou contacta o coletivo se for urgente.",
 
   "microGrants.apply.category.stepTitle": "Que tipo de <em>projeto?</em>",
   "microGrants.apply.category.stepSub":
@@ -1494,6 +1503,9 @@ export const resources: Catalog = {
   "microGrants.panel.success.title": "Estás na <em>lista.</em>",
   "microGrants.panel.success.sub":
     "Obrigade. A coordenação do painel avalia as novas pessoas voluntárias antes de cada trimestre e contacta-te antes de a ronda do 3.º trimestre abrir. Os painéis rodam para o trabalho se manter partilhado.",
+  "microGrants.panel.comingSoon.title": "Ainda não aceitamos <em>inscrições.</em>",
+  "microGrants.panel.comingSoon.sub":
+    "A inscrição no painel ainda não está ligada no site em produção, por isso este formulário não chegaria a ninguém. Não quisemos fingir o contrário. O painel abre a novas pessoas voluntárias antes de cada trimestre — volta cá em breve.",
   "microGrants.panel.intro":
     "O painel lê as candidaturas e decide as bolsas em conjunto. Mantemo-lo pequeno, rotativo e deliberadamente diverso — sem gatekeepers profissionais.",
   "microGrants.panel.nameLabel": "Nome",
@@ -2452,4 +2464,43 @@ export const resources: Catalog = {
     "Não só as partes mais fáceis de acolher. Tudo.",
   "intersectionality.outro.findCta": "Encontrar o teu grupo comunitário",
   "intersectionality.outro.forumCta": "Fórum →",
+
+  // ── Section J: honestidade em modo live — sem prestadores "verificados"
+  //    fabricados nem submissões falsas na API real (o demo mantém o mock) ──
+  "therapistProfilePage.live.title": "Este diretório ainda está a ser construído.",
+  "therapistProfilePage.live.body":
+    "Estamos a verificar terapeutas afirmativos para pessoas queer em Lisboa antes de qualquer perfil ficar visível aqui, para que cada um seja alguém em quem podes confiar. Ainda não há nada para marcar.",
+  "therapistProfilePage.live.cta": "Voltar à saúde mental",
+
+  "queerPaediatricians.live.title":
+    "Os pediatras verificados estão para breve.",
+  "queerPaediatricians.live.body":
+    "Ainda estamos a confirmar que consultórios pediátricos são genuinamente afirmativos para pessoas queer e trans antes de os listarmos. Em vez de mostrar nomes não verificados, esperamos até que cada perfil seja de confiança.",
+  "queerPaediatricians.live.cta": "Perguntar à comunidade",
+
+  "legal.lawyers.live.title": "O diretório de advogados está para breve.",
+  "legal.lawyers.live.body":
+    "Estamos a validar advogados afirmativos para pessoas LGBTQ+ antes de os listarmos, para não te encaminharmos para alguém que não possamos apoiar. Entretanto, podes denunciar discriminação e ajudamos-te a encontrar apoio.",
+  "legal.lawyers.live.cta": "Denunciar um problema",
+
+  "sexualHealth.testing.live.title": "O diretório de clínicas está para breve.",
+  "sexualHealth.testing.live.body":
+    "Estamos a verificar que serviços de rastreio são genuinamente amigos de pessoas queer e trans antes de os listarmos aqui, para que cada clínica seja de confiança.",
+  "sexualHealth.guides.ask.liveBody":
+    "As perguntas anónimas ainda não estão abertas — estamos a preparar uma forma segura de os voluntários de saúde da comunidade as responderem. Volta em breve.",
+
+  "accessibleLisbon.live.title":
+    "Os espaços acessíveis verificados estão para breve.",
+  "accessibleLisbon.live.body":
+    "Estamos a confirmar acesso sem degraus, casas de banho acessíveis e formação do pessoal com cada espaço antes de o listarmos, para que cada lugar aqui tenha sido verificado por membros.",
+  "accessibleLisbon.live.cta": "Encontrar encontros",
+
+  "ingredientsMap.missing.liveToast":
+    "As sugestões da comunidade ainda não estão abertas — este mapa ainda está a ser construído.",
+  "oralHistoryProject.participateLiveToast":
+    "As inscrições ainda não estão abertas — o projeto de história oral ainda está a ser preparado.",
+  "qtipocArchive.contribute.liveToast":
+    "As contribuições ainda não estão abertas — o arquivo ainda está a ser construído.",
+  "sharedEquipment.requestLiveToast":
+    "A biblioteca de empréstimos ainda não está ativa — volta em breve.",
 };

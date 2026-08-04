@@ -4,6 +4,8 @@
   background: rgba(26, 26, 31, 0.55);
   z-index: 200;
   display: flex;
+  /* Bottom sheet on mobile (in the thumb arc); centered dialog on wider
+     viewports — matching the shared <Modal>/<ModalSheet> pattern. */
   align-items: flex-end;
   justify-content: center;
   backdrop-filter: blur(4px);
@@ -11,6 +13,12 @@
   /* Lift the sheet above the on-screen keyboard on iOS (see
      useVisualViewportKeyboard) so the submit button isn't hidden behind it. */
   padding-block-end: var(--keyboard-inset, 0px);
+}
+@media (min-width: 720px) {
+  .overlay {
+    align-items: center;
+    padding: 24px;
+  }
 }
 .modal {
   background: var(--paper);
@@ -23,8 +31,35 @@
      browser chrome and pushes actions off-screen. */
   max-height: 92svh;
   overflow-y: auto;
+  overscroll-behavior: contain;
   animation: modalUp 0.4s cubic-bezier(0.22, 0.68, 0.16, 1);
   transition: background-color 0.45s var(--ease);
+}
+/* Drag-grabber — a REAL element (not a pseudo) so it can own the drag gesture.
+   ModalShell (ModalKit.tsx) renders it and wires drag-to-dismiss; the .close
+   button stays the keyboard/click path. Sticky so it rides the sheet's own
+   scroll; the negative top margin lifts it into the sheet's top padding. Hidden
+   on the centered desktop dialog. */
+.grabber {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  width: 40px;
+  height: 5px;
+  margin: -32px auto 14px;
+  border-radius: 999px;
+  background: rgba(var(--plum-rgb), 0.18);
+  /* The sheet owns this vertical gesture; don't let it scroll the sheet body. */
+  touch-action: none;
+  cursor: grab;
+}
+@media (min-width: 720px) {
+  .modal {
+    border-radius: 28px;
+  }
+  .grabber {
+    display: none;
+  }
 }
 .modalWide {
   max-width: 760px;
@@ -64,6 +99,14 @@
   align-items: center;
   justify-content: center;
   transition: background 0.2s var(--ease);
+}
+/* Touch: extend the 36px close chip's hit area to ≥44px without growing the ink. */
+@media (pointer: coarse) {
+  .close::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
 }
 @media (hover: hover) {
   .close:hover {
@@ -449,6 +492,25 @@
 /* ── Read note (plum reading panel) ──────────────────────────────────── */
 .readModal {
   background: var(--plum);
+}
+/* The read-note panel isn't a ModalShell, so it keeps a visual-only grabber via
+   a pseudo (it has no drag wiring; its close button dismisses). */
+.readModal::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(var(--cream-rgb), 0.28);
+  pointer-events: none;
+}
+@media (min-width: 720px) {
+  .readModal::before {
+    display: none;
+  }
 }
 .readModal .close {
   background: rgba(var(--cream-rgb), 0.12);

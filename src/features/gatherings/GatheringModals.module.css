@@ -1,16 +1,30 @@
 /* Shared modal shell + form + plum-panel success for gatherings flows */
 
+/* Mobile: bottom-anchored sheet in the thumb's reach. Becomes a centered
+   dialog from 720px up (desktop appearance unchanged). Shared by every
+   gathering flow, so all three panels below (.modal / .successPanel /
+   .loadingPanel) take the same sheet→dialog treatment. */
 .overlay {
   position: fixed;
   inset: 0;
   background: rgba(26, 26, 31, 0.55);
   z-index: 200;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  padding: 24px;
+  padding: 0;
+  /* Lift the bottom-anchored sheet above the on-screen keyboard on iOS
+     (published app-wide by useVisualViewportKeyboard; 0px when no keyboard). */
+  padding-block-end: var(--keyboard-inset, 0px);
   backdrop-filter: blur(4px);
   animation: overlayIn 0.3s var(--ease) both;
+}
+@media (min-width: 720px) {
+  .overlay {
+    align-items: center;
+    padding: 24px;
+    padding-block-end: max(24px, var(--keyboard-inset, 0px));
+  }
 }
 @keyframes overlayIn {
   from {
@@ -25,14 +39,27 @@
 
 .modal {
   background: var(--paper);
-  border-radius: var(--radius-card, 22px);
+  /* Sheet on mobile — round only the top corners. */
+  border-radius: var(--radius-card, 22px) var(--radius-card, 22px) 0 0;
   width: 100%;
-  max-width: 520px;
-  padding: 34px 36px 38px;
+  /* Clear the iOS home indicator on the flush-to-bottom sheet. */
+  padding: 34px 36px max(38px, env(safe-area-inset-bottom));
   position: relative;
-  max-height: 90svh;
+  max-height: 92svh;
   overflow-y: auto;
+  /* Keep an over-scroll from chaining to the page behind the sheet. */
+  overscroll-behavior: contain;
+  box-shadow: 0 -18px 50px rgba(26, 26, 31, 0.28);
   animation: modalUp 0.4s var(--ease);
+}
+@media (min-width: 720px) {
+  .modal {
+    max-width: 520px;
+    max-height: 90svh;
+    border-radius: var(--radius-card, 22px);
+    padding: 34px 36px 38px;
+    box-shadow: none;
+  }
 }
 @keyframes modalUp {
   from {
@@ -120,13 +147,27 @@
 .successPanel {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  border-radius: var(--radius-card, 22px);
+  /* Sheet on mobile — round only the top corners. */
+  border-radius: var(--radius-card, 22px) var(--radius-card, 22px) 0 0;
   width: 100%;
-  max-width: 520px;
-  padding: 40px 38px 38px;
+  max-height: 92svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Clear the iOS home indicator on the flush-to-bottom sheet. */
+  padding: 40px 38px max(38px, env(safe-area-inset-bottom));
   position: relative;
   text-align: left;
+  box-shadow: 0 -18px 50px rgba(26, 26, 31, 0.28);
   animation: modalUp 0.4s var(--ease);
+}
+@media (min-width: 720px) {
+  .successPanel {
+    max-width: 520px;
+    max-height: none;
+    border-radius: var(--radius-card, 22px);
+    padding: 40px 38px 38px;
+    box-shadow: none;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .successPanel {
@@ -200,12 +241,26 @@
 .loadingPanel {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  border-radius: var(--radius-card, 22px);
+  /* Sheet on mobile — round only the top corners. */
+  border-radius: var(--radius-card, 22px) var(--radius-card, 22px) 0 0;
   width: 100%;
-  max-width: 520px;
-  padding: 48px 38px;
+  max-height: 92svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Clear the iOS home indicator on the flush-to-bottom sheet. */
+  padding: 48px 38px max(48px, env(safe-area-inset-bottom));
   text-align: center;
+  box-shadow: 0 -18px 50px rgba(26, 26, 31, 0.28);
   animation: modalUp 0.4s var(--ease);
+}
+@media (min-width: 720px) {
+  .loadingPanel {
+    max-width: 520px;
+    max-height: none;
+    border-radius: var(--radius-card, 22px);
+    padding: 48px 38px;
+    box-shadow: none;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .loadingPanel {

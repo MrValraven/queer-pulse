@@ -1,9 +1,10 @@
 import { FormField } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { ANCHOR, DAYS, validateSocials } from "./listBusiness.data";
+import { ANCHOR, validateSocials } from "./listBusiness.data";
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
 import { ListBusinessLocationField } from "./ListBusinessLocationField";
+import { ListingHoursEditor } from "./ListingHoursEditor";
 import styles from "./ListBusinessPage.module.css";
 
 const SOCIALS: {
@@ -40,9 +41,8 @@ const SOCIALS: {
 
 export function StepPractical({ form }: { form: ListingForm }) {
   const { t } = useTranslation();
-  const { draft, set, setDay, copyMonToAll, clearHours, setSocial } = form;
+  const { draft, set, setSocial } = form;
   const socialOk = validateSocials(draft.social);
-  const anyOpen = DAYS.some((d) => draft.hours[d.id]?.open);
 
   return (
     <div className={styles.stepBody}>
@@ -54,99 +54,7 @@ export function StepPractical({ form }: { form: ListingForm }) {
 
       <ListBusinessLocationField draft={draft} set={set} />
 
-      <h3 className={styles.groupH}>
-        {t("marketing:listBusiness.step3.hoursHeading")}
-      </h3>
-      <div className={styles.hoursSection}>
-        <div className={styles.hoursTools}>
-        <span
-          className={[
-            styles.openNow,
-            anyOpen ? styles.openNowOpen : styles.openNowClosed,
-          ].join(" ")}
-        >
-          {anyOpen
-            ? t("marketing:listBusiness.step3.hasOpenHours")
-            : t("marketing:listBusiness.step3.allClosed")}
-        </span>
-        <button
-          type="button"
-          className={styles.hoursToolBtn}
-          onClick={copyMonToAll}
-        >
-          {t("marketing:listBusiness.step3.copyMonday")}
-        </button>
-        <button
-          type="button"
-          className={styles.hoursToolBtn}
-          onClick={clearHours}
-        >
-          {t("marketing:listBusiness.step3.markAllClosed")}
-        </button>
-      </div>
-      <div id={ANCHOR.hours} className={styles.hoursGrid}>
-        {DAYS.map((d) => {
-          const h = draft.hours[d.id]!;
-          const dayLabel = t(d.labelKey);
-          return (
-            <div key={d.id} className={styles.hrow}>
-              <span className={styles.hday}>{dayLabel}</span>
-              <button
-                type="button"
-                aria-pressed={h.open}
-                className={[styles.htg, h.open && styles.htgOpen]
-                  .filter(Boolean)
-                  .join(" ")}
-                onClick={() => setDay(d.id, { open: !h.open })}
-              >
-                {h.open
-                  ? t("marketing:listBusiness.step3.open")
-                  : t("marketing:listBusiness.step3.closed")}
-              </button>
-              <div className={styles.htimes}>
-                {h.open ? (
-                  <>
-                    <input
-                      type="time"
-                      value={h.from}
-                      aria-label={t("marketing:listBusiness.step3.opensAria", {
-                        day: dayLabel,
-                      })}
-                      onChange={(e) => setDay(d.id, { from: e.target.value })}
-                    />
-                    <span className={styles.dash}>–</span>
-                    <input
-                      type="time"
-                      value={h.to}
-                      aria-label={t("marketing:listBusiness.step3.closesAria", {
-                        day: dayLabel,
-                      })}
-                      onChange={(e) => setDay(d.id, { to: e.target.value })}
-                    />
-                  </>
-                ) : (
-                  <span className={styles.closedLbl}>
-                    {t("marketing:listBusiness.step3.closed")}
-                  </span>
-                )}
-              </div>
-            </div>
-          );
-        })}
-        </div>
-      </div>
-      <FormField
-        className={styles.lbField}
-        label={t("marketing:listBusiness.step3.hoursNoteLabel")}
-      >
-        <input
-          type="text"
-          maxLength={80}
-          placeholder={t("marketing:listBusiness.step3.hoursNotePlaceholder")}
-          value={draft.hoursNote}
-          onChange={(e) => set({ hoursNote: e.target.value })}
-        />
-      </FormField>
+      <ListingHoursEditor form={form} />
 
       <h3 className={styles.groupH}>
         {t("marketing:listBusiness.step3.onlineHeading")}

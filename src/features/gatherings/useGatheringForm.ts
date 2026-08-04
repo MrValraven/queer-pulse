@@ -8,8 +8,22 @@ export function useGatheringForm() {
   const [typeIcon, setTypeIcon] = useState<IconType | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("19:00");
+  const [date, setDateValue] = useState("");
+  const [time, setTimeValue] = useState("19:00");
+  // Snapshot of "now" used by the future-start check below. Reading a live
+  // `Date.now()` during render is non-idempotent (impure); instead we capture the
+  // clock once and refresh it whenever the organiser edits the date or time — the
+  // only fields that affect whether the start is still in the future — so the
+  // validity the user sees always reflects the moment they changed the value.
+  const [now, setNow] = useState(() => Date.now());
+  const setDate = (value: string) => {
+    setNow(Date.now());
+    setDateValue(value);
+  };
+  const setTime = (value: string) => {
+    setNow(Date.now());
+    setTimeValue(value);
+  };
   const [endTime, setEndTime] = useState("22:00");
   const [hood, setHood] = useState("");
   const [venue, setVenue] = useState("");
@@ -55,9 +69,25 @@ export function useGatheringForm() {
   // exactly what gets submitted.
   const startAt = date ? new Date(`${date}T${time || "19:00"}`) : null;
   const dateValid =
-    !!startAt &&
-    !Number.isNaN(startAt.getTime()) &&
-    startAt.getTime() > Date.now();
+    !!startAt && !Number.isNaN(startAt.getTime()) && startAt.getTime() > now;
+
+  // Has the organiser entered anything worth warning them about losing? Only
+  // fields they actually filled count — the pre-seeded defaults (time, capacity,
+  // language, prices, spots) don't, so an untouched wizard never prompts on exit.
+  const dirty =
+    Boolean(type) ||
+    title.trim().length > 0 ||
+    description.trim().length > 0 ||
+    date.length > 0 ||
+    hood.length > 0 ||
+    venue.trim().length > 0 ||
+    address.trim().length > 0 ||
+    directions.trim().length > 0 ||
+    accessNotes.trim().length > 0 ||
+    included.trim().length > 0 ||
+    bring.trim().length > 0 ||
+    access.size > 0 ||
+    checks.some(Boolean);
 
   return {
     type,
@@ -109,6 +139,7 @@ export function useGatheringForm() {
     allChecked,
     checkedCount,
     dateValid,
+    dirty,
     selectType,
     toggleAccess,
     toggleCheck,

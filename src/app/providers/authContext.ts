@@ -60,6 +60,14 @@ export interface AuthContextValue {
   endPreparing: () => void;
   /** Re-run POST /auth/refresh + GET /auth/me (e.g. after a promotion). */
   refresh: () => Promise<void>;
+  /**
+   * Patch the cached user's `onboardedAt` in place after the member finishes the
+   * onboarding wizard, so the one-time gate (`useAuthGateRedirect`) sees them as
+   * onboarded for the rest of the session without waiting for a full `/auth/me`
+   * refetch. Without this the wizard can replay in-session (e.g. browser autofill
+   * of the saved `/auth/onboarding` URL) because the client cache is still stale.
+   */
+  markOnboarded: (onboardedAt: string) => void;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);

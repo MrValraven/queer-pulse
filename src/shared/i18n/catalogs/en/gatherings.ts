@@ -131,6 +131,12 @@ export const gatherings: Catalog = {
   "event.guidelines.body2":
     "The sliding scale is not a suggestion — if you can pay the higher tier, please do. It directly subsidises someone else's ticket.",
   "event.hero.viewProfileCta": "View profile",
+  "event.save.cta": "Save event",
+  "event.save.saved": "Saved",
+  "event.save.savedToast": "Event saved to your gatherings.",
+  "event.save.removedToast": "Event removed from saved.",
+  "event.save.saveAriaLabel": "Save {title}",
+  "event.save.unsaveAriaLabel": "Remove {title} from saved",
   "event.membersOnly.title": "QueerPulse members only",
   "event.membersOnly.body":
     "This event is private. If someone forwarded you this link, ask them to invite you to the network first.",
@@ -165,7 +171,7 @@ export const gatherings: Catalog = {
   "event.rsvp.disabledHint": "Enter your name and a valid email to continue",
   "event.rsvp.noteFull":
     "We'll email you the moment a spot opens. Leaving the waitlist is one click.",
-  "event.rsvp.confirmationEmailNote": "You'll receive a confirmation email.",
+  "event.rsvp.confirmationEmailNote": "Your place is saved — you'll find it under your gatherings.",
   "event.rsvp.cancelPolicy": "You can cancel up to 48 hours before the event.",
   "event.rsvp.waitlistTitle": "You're <em>#{position}</em> on the waitlist.",
   "event.rsvp.waitlistBody":
@@ -422,7 +428,7 @@ export const gatherings: Catalog = {
   "photos.policyBody1":
     "Every photo here was taken by an attending member with consent from the people in the frame. <b>Faces are blurred by default</b> unless the person specifically opted in by name. This isn't a privacy nicety — it's how we make sure people show up next time.",
   "photos.policyBody2":
-    'If you see yourself in a photo and want it removed (or unblurred), email <mailLink>photos@queerpulse.app</mailLink> — we\'ll handle it within 24 hours, no questions. <em>You can also untick "appear in event photos" globally</em> in <privLink>Privacy settings</privLink>.',
+    'If you see yourself in a photo and want it removed (or unblurred), email <mailLink>photos@queerpulse.pt</mailLink> — we\'ll handle it within 24 hours, no questions. <em>You can also untick "appear in event photos" globally</em> in <privLink>Privacy settings</privLink>.',
   "photos.photographersTitle": "Photographers <em>this event</em>",
   "photos.readRecapCta": "Read the recap",
   "photos.nextClinicCta": "Next clinic · {date}",
@@ -508,7 +514,7 @@ export const gatherings: Catalog = {
   "create.toast.published": "Your gathering is live",
   "create.success.title": "Your gathering <em>is live.</em>",
   "create.success.body":
-    "It's now visible on the QueerPulse gatherings board. Members can see it and RSVP. You'll get an email notification for each new attendee.",
+    "It's now visible on the QueerPulse gatherings board. Members can see it and RSVP. Each new attendee shows up in your gathering's guest list.",
   "create.success.accessLabel": "Accessibility shown to attendees",
   "create.success.viewCta": "View on board",
   "create.success.eventCta": "See your event page",
@@ -516,6 +522,9 @@ export const gatherings: Catalog = {
   "create.nav.back": "Back",
   "create.nav.publishHint": "Confirm all three boxes above to publish",
   "create.nav.dateHint": "Pick a date and time in the future to continue",
+  "create.nav.detailsHint": "Pick a format and name your gathering to continue",
+  "create.nav.leaveConfirm":
+    "You have an unpublished gathering here. Leave without saving it?",
   "create.nav.publish": "Publish gathering",
   "create.nav.continue": "Continue",
   "create.sidebar.tipLabel": "Tip for this step",
@@ -527,9 +536,12 @@ export const gatherings: Catalog = {
   "create.step1.title": "What kind of <em>gathering?</em>",
   "create.step1.sub":
     "Choose the format. This determines some of the fields that follow.",
+  "create.step1.typeRequired": "Pick a format to get started.",
   "create.step1.titleLabel": "Event title",
   "create.step1.titlePlaceholder":
     "A clear, specific title — not a pun, not a mystery",
+  "create.step1.titleRequired":
+    "Give your gathering a name so people know what they're coming to.",
   "create.step1.descLabel": "Short description",
   "create.step1.descPlaceholder":
     "What will people do? What should they expect? What makes this gathering worth attending?",
@@ -816,6 +828,22 @@ export const gatherings: Catalog = {
   "manageComingSoon.browseCta": "Browse gatherings",
   "manageComingSoon.backHome": "Back to home",
 
+  // ── Prototype pages: live-mode coming-soon (demo-only, no live gathering) ─────
+  "prototypeComingSoon.browseCta": "Browse gatherings",
+  "prototypeComingSoon.backHome": "Back to home",
+  "eventComingSoon.title": "This gathering is <em>coming soon</em>",
+  "eventComingSoon.description":
+    "This is a preview of how a gathering looks — it isn't a live event yet, so there's nothing here to RSVP to. Browse what's actually happening and reserve your spot there.",
+  "rsvpComingSoon.title": "RSVPs are <em>coming soon</em>",
+  "rsvpComingSoon.description":
+    "This confirmation page is part of the prototype and isn't tied to a live RSVP yet. Browse what's on and reserve a real spot — your confirmation will land here once hosting is live.",
+  "cohostInviteComingSoon.title": "Co-hosting is <em>coming soon</em>",
+  "cohostInviteComingSoon.description":
+    "Inviting and accepting a co-host isn't live yet. Browse what's happening in the meantime — co-hosting tools land alongside the hosting dashboard soon.",
+  "recapComingSoon.title": "Recaps are <em>coming soon</em>",
+  "recapComingSoon.description":
+    "Sharing photos and notes from a gathering isn't live yet, so nothing you add here would be saved. Browse what's on — recaps arrive with the hosting tools soon.",
+
   // ── Manage: overview tab ─────────────────────────────────────────────────────
   "manage.overview.stat.going": "Going",
   "manage.overview.stat.waitlist": "Waitlist",
@@ -839,8 +867,8 @@ export const gatherings: Catalog = {
   "manage.attendees.goingHeading_other": "Going ({count})",
   "manage.attendees.waitlistHeading_one": "Waitlist ({count})",
   "manage.attendees.waitlistHeading_other": "Waitlist ({count})",
-  "manage.attendees.moreAttendees_one": "+ {count} more attendee",
-  "manage.attendees.moreAttendees_other": "+ {count} more attendees",
+  "manage.attendees.loadMoreCta": "Load more",
+  "manage.attendees.loadingMore": "Loading…",
   "manage.attendees.removeAria": "Remove {name} from guest list",
   "manage.attendees.removeCta": "Remove",
   "manage.attendees.removedToast": "Removed from guest list",
@@ -934,9 +962,9 @@ export const gatherings: Catalog = {
   "manage.messageModal.sendCta_other": "Send to {count} attendees",
   "manage.messageModal.successTitle": "Message <em>sent.</em>",
   "manage.messageModal.successSub_one":
-    '"{subject}" went out to all <b>{count} confirmed attendee</b>. They\'ll get it by email and in their QueerPulse notifications.',
+    '"{subject}" went out to all <b>{count} confirmed attendee</b>. They\'ll get it in their QueerPulse notifications.',
   "manage.messageModal.successSub_other":
-    '"{subject}" went out to all <b>{count} confirmed attendees</b>. They\'ll get it by email and in their QueerPulse notifications.',
+    '"{subject}" went out to all <b>{count} confirmed attendees</b>. They\'ll get it in their QueerPulse notifications.',
   "manage.messageModal.successMeta_one": "Sent just now · {count} recipient",
   "manage.messageModal.successMeta_other": "Sent just now · {count} recipients",
 
@@ -957,9 +985,9 @@ export const gatherings: Catalog = {
   "manage.invite.sentToast_other": "Invitation sent to {count} members",
   "manage.invite.successTitle": "Invitations <em>on their way.</em>",
   "manage.invite.successSub_one":
-    "<b>{count} member</b> just got an invite to this gathering, by email and in their QueerPulse notifications. You'll see them appear as they RSVP.",
+    "<b>{count} member</b> just got an invite to this gathering in their QueerPulse notifications. You'll see them appear as they RSVP.",
   "manage.invite.successSub_other":
-    "<b>{count} members</b> just got an invite to this gathering, by email and in their QueerPulse notifications. You'll see them appear as they RSVP.",
+    "<b>{count} members</b> just got an invite to this gathering in their QueerPulse notifications. You'll see them appear as they RSVP.",
   "manage.invite.successMeta_one": "Sent just now · {count} invited",
   "manage.invite.successMeta_other": "Sent just now · {count} invited",
 

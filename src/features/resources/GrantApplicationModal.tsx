@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { FiSun, FiX } from "react-icons/fi";
+import { FiClock, FiSun, FiX } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useScrollLock } from "../../shared/hooks";
 import {
   STEP_LABEL_KEYS,
@@ -17,8 +18,64 @@ import {
 } from "./GrantApplicationSteps";
 import styles from "./MicroGrantsPage.module.css";
 
+/** Honest live-mode panel: the grant wizard has no backing endpoint, so we say
+ *  so plainly on the sheet instead of faking an "application submitted" success. */
+function GrantApplicationComingSoon({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <div
+      className={styles.overlay}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        className={styles.sheet}
+        role="dialog"
+        aria-modal="true"
+        aria-label={t("resources:microGrants.apply.modalAriaLabel")}
+      >
+        <div className={styles.sheetHead}>
+          <div className={styles.sheetTitle}>
+            {t("resources:microGrants.apply.modalTitle")}
+          </div>
+          <button
+            type="button"
+            className={styles.close}
+            onClick={onClose}
+            aria-label={t("shared:modal.close")}
+          >
+            <FiX aria-hidden />
+          </button>
+        </div>
+        <div className={styles.modalBody}>
+          <div className={styles.success}>
+            <div className={styles.successIcon}>
+              <FiClock />
+            </div>
+            <div className={styles.successTitle}>
+              <Translation
+                i18nKey="resources:microGrants.apply.comingSoon.title"
+                components={{ em: <em /> }}
+              />
+            </div>
+            <p className={styles.successSub}>
+              {t("resources:microGrants.apply.comingSoon.sub")}
+            </p>
+            <button type="button" className={styles.next} onClick={onClose}>
+              {t("resources:microGrants.apply.success.closeCta")}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   useScrollLock();
   const [step, setStep] = useState(1);
   const [cat, setCat] = useState<number | null>(null);
@@ -67,6 +124,12 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
       else nx.add(n);
       return nx;
     });
+
+  // LIVE: there is no grant-intake endpoint (resources are read-only + seeded,
+  // see resources.api.ts). Rather than walk someone through a 5-step wizard
+  // that fakes an "application submitted" success reaching no one, show an
+  // honest coming-soon panel. The full mock wizard still runs in demo mode.
+  if (!demoMode) return <GrantApplicationComingSoon onClose={onClose} />;
 
   return (
     <div

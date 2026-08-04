@@ -1,7 +1,7 @@
 import { Tag, TagRow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileData } from "../../app/providers/useProfile";
 import { fullName } from "../members/data/members";
 import {
   OUT_AT_WORK,
@@ -16,7 +16,7 @@ import styles from "./WorkProfilePage.module.css";
 export function IdentitySection() {
   const { t } = useTranslation();
   // The signed-in member (real profile live, mock currentUser in demo mode).
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   return (
     <section className={styles.section}>
       <h2 className={styles.sectionTitle}>
@@ -37,6 +37,7 @@ export function IdentitySection() {
           <input
             className={styles.fieldInput}
             type="text"
+            aria-label={t("economy:workProfile.identity.nameInUse")}
             defaultValue={fullName(profile)}
           />
         </div>
@@ -50,6 +51,7 @@ export function IdentitySection() {
           <input
             className={styles.fieldInput}
             type="text"
+            aria-label={t("economy:workProfile.identity.legalName")}
             placeholder={t("economy:workProfile.identity.legalNamePlaceholder")}
           />
           <div className={styles.fieldHint}>
@@ -66,6 +68,7 @@ export function IdentitySection() {
           <input
             className={styles.fieldInput}
             type="text"
+            aria-label={t("economy:workProfile.identity.pronouns")}
             defaultValue={profile.pronouns ?? ""}
           />
         </div>
@@ -76,6 +79,7 @@ export function IdentitySection() {
           <input
             className={styles.fieldInput}
             type="text"
+            aria-label={t("economy:workProfile.identity.headline")}
             defaultValue={profile.role}
           />
         </div>
@@ -88,6 +92,7 @@ export function IdentitySection() {
         <input
           className={styles.fieldInput}
           type="text"
+          aria-label={t("economy:workProfile.identity.location")}
           defaultValue={profile.hood}
         />
       </div>
@@ -98,6 +103,7 @@ export function IdentitySection() {
         </div>
         <textarea
           className={styles.fieldTextarea}
+          aria-label={t("economy:workProfile.identity.bio")}
           placeholder={t("economy:workProfile.identity.bioPlaceholder")}
         />
       </div>

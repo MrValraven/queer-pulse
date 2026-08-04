@@ -143,7 +143,11 @@ export function StudioOpenCallCard({ call: c }: Props) {
               </div>
             ))}
           </div>
-          <textarea className={s.attachTa} placeholder={c.placeholder} />
+          <textarea
+            className={s.attachTa}
+            aria-label={t("studio:calls.card.attachLabel")}
+            placeholder={c.placeholder}
+          />
           <div className={s.attachFoot}>
             <button
               type="button"

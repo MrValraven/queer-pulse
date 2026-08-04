@@ -1,7 +1,7 @@
 import { currentUser, fullName } from "../members/data/members";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileData } from "../../app/providers/useProfile";
 import styles from "./ThemeStudio.module.css";
 
 /**
@@ -19,7 +19,7 @@ export function ThemeStudioPreview({
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   // Live mode previews the signed-in member's own profile (from ProfileProvider);
   // the mock "Tiago Costa" seed is only ever shown in demo mode.
   const previewMember = demoMode ? currentUser : profile;

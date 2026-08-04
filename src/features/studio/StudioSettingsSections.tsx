@@ -173,7 +173,10 @@ export function CaptionsSection() {
           <h4>{t("studio:settings.captions.lyricLanguage.heading")}</h4>
           <p>{t("studio:settings.captions.lyricLanguage.body")}</p>
         </div>
-        <select className={s.selectMini}>
+        <select
+          className={s.selectMini}
+          aria-label={t("studio:settings.captions.lyricLanguage.heading")}
+        >
           <option>
             {t("studio:settings.captions.lyricLanguage.opt.original")}
           </option>

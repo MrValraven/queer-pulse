@@ -331,6 +331,34 @@
   font-style: italic;
 }
 
+.featuredDeck {
+  background: var(--plum);
+  border-radius: var(--radius-card);
+  padding: 40px;
+  margin: 0 0 64px;
+  display: grid;
+  grid-template-columns: minmax(240px, 380px) 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.fdMedia {
+  border-radius: 16px;
+  overflow: hidden;
+}
+.fdTitle {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(24px, 3vw, 34px);
+  color: rgba(var(--cream-rgb), 1);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 14px 0 10px;
+}
+.fdTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+
 .letters {
   border: 2px solid var(--line-strong);
   border-radius: var(--radius-card);
@@ -458,7 +486,8 @@
   .csTextInner {
     max-width: none;
   }
-  .featured {
+  .featured,
+  .featuredDeck {
     grid-template-columns: 1fr;
     padding: 36px 32px;
   }

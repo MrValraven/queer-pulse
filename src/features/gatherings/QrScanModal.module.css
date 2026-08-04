@@ -1,23 +1,70 @@
+/* Mobile: a bottom-anchored sheet in the thumb's reach. Becomes a centered
+   dialog from 720px up (desktop appearance unchanged). */
 .overlay {
   position: fixed;
   inset: 0;
   background: rgba(26, 26, 31, 0.55);
   z-index: 200;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  padding: 24px;
+  padding: 0;
+  /* Lift the bottom-anchored sheet above the on-screen keyboard on iOS
+     (published app-wide by useVisualViewportKeyboard; 0px when no keyboard). */
+  padding-block-end: var(--keyboard-inset, 0px);
   backdrop-filter: blur(4px);
+}
+@media (min-width: 720px) {
+  .overlay {
+    align-items: center;
+    padding: 24px;
+    padding-block-end: max(24px, var(--keyboard-inset, 0px));
+  }
 }
 
 .modal {
   background: var(--paper);
-  border-radius: var(--radius-card, 22px);
+  /* Sheet on mobile — round only the top corners. */
+  border-radius: var(--radius-card, 22px) var(--radius-card, 22px) 0 0;
   width: 100%;
-  max-width: 440px;
-  padding: 30px 32px 34px;
+  /* svh, not vh: vh is the large viewport and overflows under mobile chrome. */
+  max-height: 92svh;
+  overflow-y: auto;
+  /* Keep an over-scroll from chaining to the page behind the sheet. */
+  overscroll-behavior: contain;
+  /* Clear the iOS home indicator on the flush-to-bottom sheet. */
+  padding: 30px 32px max(34px, env(safe-area-inset-bottom));
   position: relative;
+  box-shadow: 0 -18px 50px rgba(26, 26, 31, 0.28);
   animation: up 0.4s var(--ease);
+}
+@media (min-width: 720px) {
+  .modal {
+    max-width: 440px;
+    max-height: none;
+    border-radius: var(--radius-card, 22px);
+    padding: 30px 32px 34px;
+    box-shadow: none;
+  }
+}
+
+/* Drag-affordance grabber — a visible cue the panel is a sheet. Hidden on
+   desktop where it's a centered dialog. */
+.grabber {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  width: 40px;
+  height: 5px;
+  margin: -12px auto 16px;
+  border-radius: 999px;
+  background: rgba(var(--plum-rgb), 0.18);
+  touch-action: none;
+}
+@media (min-width: 720px) {
+  .grabber {
+    display: none;
+  }
 }
 @keyframes up {
   from {
@@ -181,16 +228,28 @@
   margin-top: 14px;
 }
 
-/* plum success */
+/* plum success — same sheet→dialog treatment as the scan panel */
 .success {
   background: var(--plum);
-  border-radius: var(--radius-card, 22px);
+  border-radius: var(--radius-card, 22px) var(--radius-card, 22px) 0 0;
   width: 100%;
-  max-width: 440px;
-  padding: 36px 34px 34px;
+  max-height: 92svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 36px 34px max(34px, env(safe-area-inset-bottom));
   position: relative;
   color: rgba(var(--cream-rgb), 1);
+  box-shadow: 0 -18px 50px rgba(26, 26, 31, 0.28);
   animation: up 0.4s var(--ease);
+}
+@media (min-width: 720px) {
+  .success {
+    max-width: 440px;
+    max-height: none;
+    border-radius: var(--radius-card, 22px);
+    padding: 36px 34px 34px;
+    box-shadow: none;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .success {

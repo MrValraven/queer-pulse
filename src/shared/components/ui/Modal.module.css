@@ -76,6 +76,7 @@
 }
 .modalX {
   flex: none;
+  position: relative;
   width: 34px;
   height: 34px;
   display: grid;
@@ -88,6 +89,15 @@
   transition:
     background 0.16s var(--ease),
     color 0.16s var(--ease);
+}
+/* On touch, keep the visual at 34px but extend the hit area to ≥44px so the
+   close button clears the WCAG/Apple/Material touch-target minimum. */
+@media (pointer: coarse) {
+  .modalX::before {
+    content: "";
+    position: absolute;
+    inset: -5px;
+  }
 }
 @media (hover: hover) {
   .modalX:hover {
@@ -106,6 +116,51 @@
   gap: 10px;
   padding: 16px 24px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* The centered dialog becomes a bottom sheet on mobile — the app's dominant,
+   more thumb-reachable pattern (matches .overlay/.sheet below). Reverts to a
+   centered dialog at ≥720px. This brings every centered <Modal> consumer
+   (confirmations, edit forms, profile peeks) into the mobile sheet idiom. */
+@media (max-width: 719.98px) {
+  .scrim {
+    align-items: flex-end;
+    padding: 0;
+    /* Lift above the on-screen keyboard, same as the sheet overlay. */
+    padding-block-end: var(--keyboard-inset, 0px);
+  }
+  .modal,
+  .modalWide {
+    position: relative;
+    max-width: none;
+    max-height: 92svh;
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
+    animation: sheetUp 0.4s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
+  }
+  /* Visible grabber affordance signalling the sheet nature; dismissal stays on
+     the close button (drag-to-dismiss is the ModalSheet variant's job). */
+  .modal::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 40px;
+    height: 5px;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: rgba(var(--plum-rgb), 0.18);
+    z-index: 2;
+  }
+  .modalHead {
+    padding-top: 26px;
+  }
+  /* Clear the iOS home indicator on whichever element ends the sheet. */
+  .modalFoot {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  .modalBody:last-child {
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
 }
 
 /* ── Bottom-sheet content modal ──────────────────────────────────────────── */
@@ -204,6 +259,14 @@
   transition:
     background 0.16s var(--ease),
     color 0.16s var(--ease);
+}
+/* Touch: extend the 36px close chip's hit area to ≥44px without growing the ink. */
+@media (pointer: coarse) {
+  .close::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
 }
 @media (hover: hover) {
   .close:hover {

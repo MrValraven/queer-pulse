@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, type ReactNode } from "react";
-import { useLocalStorage } from "../../shared/hooks";
+import { useScopedLocalStorage } from "./useScopedLocalStorage";
+import { useStorageScope } from "./useStorageScope";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "./DemoModeProvider";
@@ -33,8 +34,14 @@ const isSavedItemArray = (v: unknown): v is SavedItem[] => Array.isArray(v);
  * rolls the local state back on failure.
  */
 export function SavedProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useLocalStorage<SavedItem[]>(
+  // Per-user bucket: a shared device must never surface one member's saved
+  // items to the next before server hydration lands. `scopeId` is the live
+  // user's id (or "demo" for the single mock persona; `null` while signed out,
+  // which resets this to empty). See `useStorageScope`/`useScopedLocalStorage`.
+  const scopeId = useStorageScope();
+  const [items, setItems] = useScopedLocalStorage<SavedItem[]>(
     STORAGE_KEY,
+    scopeId,
     [],
     isSavedItemArray,
   );

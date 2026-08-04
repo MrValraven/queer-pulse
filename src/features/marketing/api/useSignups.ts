@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getSignups } from "./volunteering.api";
+import { opportunityKeys } from "./opportunityKeys";
 import { signupToRow, type SignupRow } from "./volunteering.adapters";
 
 /**
@@ -12,7 +13,7 @@ import { signupToRow, type SignupRow } from "./volunteering.adapters";
 export function useSignups(slug: string | undefined, isPoster: boolean) {
   const { demoMode } = useDemoMode();
   return useQuery<SignupRow[]>({
-    queryKey: ["opportunity-signups", demoMode, slug],
+    queryKey: opportunityKeys.signups(slug, demoMode),
     enabled: Boolean(slug) && isPoster && !demoMode,
     queryFn: async () => {
       if (demoMode || !slug) return [];

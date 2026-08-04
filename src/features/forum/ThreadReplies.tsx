@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FiMessageSquare } from "react-icons/fi";
 import { Button, EmptyState } from "../../shared/components/ui";
+import { useIncrementalList } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -73,6 +74,7 @@ export function ReplySortBar({
 
 export function ThreadReplies({
   loading,
+  isLocked,
   nodes,
   replyKey,
   likedReplies,
@@ -100,6 +102,9 @@ export function ThreadReplies({
   setInlineDraft,
 }: {
   loading: boolean;
+  /** When true, replies are closed: no reply affordance or inline composer
+   *  renders on any node in the tree. */
+  isLocked: boolean;
   /** Reply tree, already sorted (see buildReplyTree) — top-level nodes only;
    *  each node recurses into its own children. */
   nodes: ReplyNode[];
@@ -130,6 +135,23 @@ export function ThreadReplies({
   setInlineDraft: (value: string) => void;
 }) {
   const { t } = useTranslation();
+
+  // `nodes` accumulates every page fetched so far (each "Load more" click
+  // appends a server page and every reply loaded stays mounted, expanded, and
+  // nested — never re-collapsed by default). A long, well-commented thread can
+  // realistically reach the high hundreds of mounted reply subtrees. Window the
+  // TOP-LEVEL list the same way MemberDirectoryFilterPage windows its card
+  // grid: a capped initial slice grown via an IntersectionObserver sentinel,
+  // independent of the server-side "Load more" pagination below. This caps how
+  // many top-level trees mount at once; it does not cap a single expanded
+  // node's own descendant count, which the existing collapse/"continue this
+  // thread" affordances already bound (see ThreadReplyNode).
+  const {
+    visible: nodesWindowed,
+    sentinelRef,
+    hasMore: hasMoreWindowed,
+  } = useIncrementalList(nodes, { initial: 20, step: 20 });
+
   return (
     <div>
       {loading && <ThreadRepliesSkeleton count={3} />}
@@ -146,12 +168,13 @@ export function ThreadReplies({
         />
       )}
       {!loading &&
-        nodes.map((topLevelNode, topLevelIndex) => (
+        nodesWindowed.map((topLevelNode, topLevelIndex) => (
           <ThreadReplyNode
             key={topLevelNode.reply.id}
             node={topLevelNode}
             index={topLevelIndex}
             replyKey={replyKey}
+            isLocked={isLocked}
             likedReplies={likedReplies}
             toggleReplyLike={toggleReplyLike}
             demoMode={demoMode}
@@ -173,6 +196,10 @@ export function ThreadReplies({
             setInlineDraft={setInlineDraft}
           />
         ))}
+
+      {!loading && hasMoreWindowed && (
+        <div ref={sentinelRef} className={styles.sentinel} aria-hidden="true" />
+      )}
 
       {!loading && hasNextPage && (
         <div className={styles.loadMore}>

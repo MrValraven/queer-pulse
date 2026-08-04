@@ -88,23 +88,27 @@ export function DirectoryResultsHeader({
               </select>
             </label>
 
-            <SegmentedControl
-              label={t("marketing:local.view.toggleAria")}
-              options={[
-                {
-                  value: "list",
-                  label: t("marketing:local.view.list"),
-                  icon: <FiList />,
-                },
-                {
-                  value: "map",
-                  label: t("marketing:local.view.map"),
-                  icon: <FiMap />,
-                },
-              ]}
-              value={view}
-              onChange={onViewChange}
-            />
+            {/* Desktop only: on phones the switcher rides in the sticky filter
+                bar so it stays reachable while scrolled into the list. */}
+            <div className={s.viewSwitcherDesktop}>
+              <SegmentedControl
+                label={t("marketing:local.view.toggleAria")}
+                options={[
+                  {
+                    value: "list",
+                    label: t("marketing:local.view.list"),
+                    icon: <FiList />,
+                  },
+                  {
+                    value: "map",
+                    label: t("marketing:local.view.map"),
+                    icon: <FiMap />,
+                  },
+                ]}
+                value={view}
+                onChange={onViewChange}
+              />
+            </div>
           </div>
         </div>
 

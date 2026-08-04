@@ -649,6 +649,29 @@
   color: var(--ink-60);
 }
 
+/* ── Decks section ── */
+.deckStatus {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: var(--radius-tag);
+  display: inline-block;
+  white-space: nowrap;
+}
+.deckStatusDraft {
+  color: var(--ink-60);
+  background: rgba(45, 27, 61, 0.07);
+}
+.deckStatusPublished {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.12);
+}
+.newDeckBtn {
+  margin-top: 14px;
+}
+
 /* ── Pitch inbox ── */
 .pitchBody {
   padding: 8px 22px;

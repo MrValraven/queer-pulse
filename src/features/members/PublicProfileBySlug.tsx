@@ -4,6 +4,7 @@ import {
   Button,
   EmptyState,
   FadeIn,
+  FeatureHelp,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { PageMeta } from "../../shared/seo";
@@ -12,7 +13,11 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { leadingInitials } from "../../shared/lib/initials";
 import { routes } from "../../app/routeMap";
 import { usePublicProfileBySlug } from "./api/usePublicProfile";
-import { PublicProfileLinks, PublicProfileWork } from "./PublicProfileParts";
+import {
+  PublicProfileActivity,
+  PublicProfileLinks,
+  PublicProfileWork,
+} from "./PublicProfileParts";
 import styles from "./PublicProfilePage.module.css";
 
 /** Two initials from a display name, for the avatar fallback. */
@@ -93,7 +98,9 @@ export function PublicProfileBySlug({ slug }: { slug: string }) {
             <div className={styles.eyebrow}>
               {t("members:publicProfile.head.eyebrow", { slug: profile.slug })}
             </div>
-            <h1 className={styles.name}>{profile.displayName}</h1>
+            <h1 className={styles.name}>
+              {profile.displayName} <FeatureHelp id="members.profile" />
+            </h1>
             {profile.pronouns && (
               <div className={styles.pronouns}>
                 <span className={styles.pron}>{profile.pronouns}</span>
@@ -119,6 +126,7 @@ export function PublicProfileBySlug({ slug }: { slug: string }) {
 
         <PublicProfileLinks links={profile.links} />
         <PublicProfileWork work={profile.work} />
+        <PublicProfileActivity activity={profile.activity} />
 
         <div className={styles.bottomCta}>
           <div>

@@ -61,7 +61,7 @@ function LiveFilmCard({ title }: { title: CinemaTitleCard }) {
 export function CinemaLiveCatalog() {
   const { t } = useTranslation();
   const { loggedIn, checking } = useAuth();
-  const { titles, isLoading, isError } = useCinemaTitles();
+  const { titles, isLoading, isError, refetch } = useCinemaTitles();
 
   return (
     <CinemaShell>
@@ -94,6 +94,7 @@ export function CinemaLiveCatalog() {
               icon={<FiFilm />}
               title={t("cinema:live.error.title")}
               description={t("cinema:live.error.description")}
+              action={{ label: t("cinema:live.error.retry"), onClick: refetch }}
             />
           ) : titles.length === 0 ? (
             <EmptyState

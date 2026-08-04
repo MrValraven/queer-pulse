@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileEdit } from "../../app/providers/useProfile";
 import { useProfileTheme } from "../../app/providers/useProfileTheme";
-import { useScrollLock } from "../../shared/hooks";
+import { useScrollLock, useUnsavedChangesGuard } from "../../shared/hooks";
 import { AppShell } from "../../shared/components/layout";
 import { FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -28,7 +28,7 @@ export function SettingsPage() {
   const { showToast } = useToast();
   const { commit: commitTheme, discard: discardTheme } = useProfileTheme();
   const { save, cancelEditing, startEditing, isSaving, saveError, isEditing } =
-    useProfile();
+    useProfileEdit();
   const [params] = useSearchParams();
   const initialPane = (() => {
     const p = params.get("pane");
@@ -78,6 +78,23 @@ export function SettingsPage() {
   );
 
   const markChanged = () => setDirty(true);
+
+  // Warn before a dirty Settings pane is abandoned — in-app navigation and hard
+  // tab-close both prompt. Previously the save bar was the only signal and a
+  // click into any other page silently discarded the edits. On confirmed leave,
+  // roll back the same way Discard does so no half-open edit session lingers.
+  useUnsavedChangesGuard({
+    active: dirty && !showDelete,
+    confirmMessage: t("settings:page.leaveConfirm"),
+    onConfirmLeave: () => {
+      if (openedRef.current) {
+        cancelEditing();
+        openedRef.current = false;
+      }
+      discardTheme();
+      setDirty(false);
+    },
+  });
 
   return (
     <AppShell>

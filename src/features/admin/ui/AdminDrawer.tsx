@@ -1,7 +1,12 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useId, type ReactNode } from "react";
 import { FiX } from "react-icons/fi";
 import { useScrollLock } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import {
+  pushModal,
+  popModal,
+  isTopmostModal,
+} from "../../../shared/components/ui/modalStack";
 import styles from "./adminUi.module.css";
 
 /**
@@ -23,12 +28,27 @@ export function AdminDrawer({
 }) {
   useScrollLock();
   const { t } = useTranslation();
+  // Stable per-instance id so this drawer can register itself on the shared
+  // modal stack (see `shared/components/ui/modalStack`) and only act on
+  // Escape while topmost — same fix as `AdminModal`'s `useDismiss`. Without
+  // this, a stack-aware dialog opened from inside the drawer (e.g. a delete
+  // confirm `AdminModal`) and this drawer's own unconditional listener would
+  // both fire on one Escape press, closing the confirm AND discarding the
+  // drawer underneath it.
+  const drawerId = useId();
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    pushModal(drawerId);
+    return () => popModal(drawerId);
+  }, [drawerId]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isTopmostModal(drawerId)) onClose();
+    };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [onClose, drawerId]);
 
   return (
     <>

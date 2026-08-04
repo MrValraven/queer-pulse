@@ -127,7 +127,7 @@
 }
 .pdfSub {
   font-size: 12px;
-  color: rgba(var(--ink-rgb), 0.5);
+  color: var(--ink-40);
   text-align: center;
   margin: 4px 0 24px;
   font-style: italic;
@@ -181,7 +181,7 @@
   gap: 8px;
   font-size: 12.5px;
   font-weight: 600;
-  color: rgba(var(--ink-rgb), 0.6);
+  color: var(--ink-40);
 }
 .lock svg {
   width: 15px;

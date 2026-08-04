@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
@@ -60,6 +60,7 @@ export function FlagVenueModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   const [done, setDone] = useState(false);
   return (
     <ModalShell
@@ -92,10 +93,14 @@ export function FlagVenueModal({
           </p>
           <div className={styles.fields}>
             <div>
-              <label className={styles.fieldLabel}>
+              <label
+                className={styles.fieldLabel}
+                htmlFor={`${fieldId}-venue`}
+              >
                 {t("marketing:accessibility.flagModal.venueLabel")}
               </label>
               <input
+                id={`${fieldId}-venue`}
                 className={styles.input}
                 type="text"
                 value={venue}
@@ -103,10 +108,17 @@ export function FlagVenueModal({
               />
             </div>
             <div>
-              <label className={styles.fieldLabel}>
+              <label
+                className={styles.fieldLabel}
+                htmlFor={`${fieldId}-issue`}
+              >
                 {t("marketing:accessibility.flagModal.issueTypeLabel")}
               </label>
-              <select className={styles.select} defaultValue="">
+              <select
+                id={`${fieldId}-issue`}
+                className={styles.select}
+                defaultValue=""
+              >
                 <option value="">
                   {t("marketing:accessibility.flagModal.issueTypePlaceholder")}
                 </option>
@@ -116,10 +128,14 @@ export function FlagVenueModal({
               </select>
             </div>
             <div>
-              <label className={styles.fieldLabel}>
+              <label
+                className={styles.fieldLabel}
+                htmlFor={`${fieldId}-what`}
+              >
                 {t("marketing:accessibility.flagModal.whatHappenedLabel")}
               </label>
               <textarea
+                id={`${fieldId}-what`}
                 className={styles.textarea}
                 rows={3}
                 placeholder={t(
@@ -128,10 +144,14 @@ export function FlagVenueModal({
               />
             </div>
             <div>
-              <label className={styles.fieldLabel}>
+              <label
+                className={styles.fieldLabel}
+                htmlFor={`${fieldId}-when`}
+              >
                 {t("marketing:accessibility.flagModal.whenLabel")}
               </label>
               <input
+                id={`${fieldId}-when`}
                 className={styles.input}
                 type="text"
                 placeholder={t(
@@ -160,6 +180,7 @@ export function FlagVenueModal({
 
 export function AccommodationsModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   const [done, setDone] = useState(false);
   return (
     <ModalShell
@@ -192,10 +213,14 @@ export function AccommodationsModal({ onClose }: { onClose: () => void }) {
           </p>
           <div className={styles.fields}>
             <div>
-              <label className={styles.fieldLabel}>
+              <label
+                className={styles.fieldLabel}
+                htmlFor={`${fieldId}-name`}
+              >
                 {t("marketing:accessibility.accomModal.nameLabel")}
               </label>
               <input
+                id={`${fieldId}-name`}
                 className={styles.input}
                 type="text"
                 placeholder={t(
@@ -204,10 +229,14 @@ export function AccommodationsModal({ onClose }: { onClose: () => void }) {
               />
             </div>
             <div>
-              <label className={styles.fieldLabel}>
+              <label
+                className={styles.fieldLabel}
+                htmlFor={`${fieldId}-event`}
+              >
                 {t("marketing:accessibility.accomModal.eventLabel")}
               </label>
               <input
+                id={`${fieldId}-event`}
                 className={styles.input}
                 type="text"
                 placeholder={t(
@@ -216,10 +245,14 @@ export function AccommodationsModal({ onClose }: { onClose: () => void }) {
               />
             </div>
             <div>
-              <label className={styles.fieldLabel}>
+              <label
+                className={styles.fieldLabel}
+                htmlFor={`${fieldId}-need`}
+              >
                 {t("marketing:accessibility.accomModal.needLabel")}
               </label>
               <textarea
+                id={`${fieldId}-need`}
                 className={styles.textarea}
                 rows={4}
                 placeholder={t(
@@ -228,10 +261,14 @@ export function AccommodationsModal({ onClose }: { onClose: () => void }) {
               />
             </div>
             <div>
-              <label className={styles.fieldLabel}>
+              <label
+                className={styles.fieldLabel}
+                htmlFor={`${fieldId}-contact`}
+              >
                 {t("marketing:accessibility.accomModal.contactLabel")}
               </label>
               <input
+                id={`${fieldId}-contact`}
                 className={styles.input}
                 type="text"
                 placeholder={t(

@@ -35,30 +35,47 @@ const updateDraft = vi.fn(
     if (patch.featuredCommunities) draftFeaturedSlugs = patch.featuredCommunities;
   },
 );
-vi.mock("../../app/providers/useProfile", async (importOriginal) => ({
-  // `useProfile` now lives in `useProfile.ts` (both this component and
-  // `PublicProfileProvider` import it there). Keep the module's real exports
-  // (`ProfileContext`, `toDraft`, …) so the real `ProfileProvider` that
-  // TestProviders mounts still works; override only the `useProfile` hook the
-  // component reads. It must supply a realistic full context value, not just
-  // what our own component reads, since PublicProfileProvider also calls it.
-  ...(await importOriginal<
-    typeof import("../../app/providers/useProfile")
-  >()),
-  useProfile: () => ({
-    profile: currentUser,
+vi.mock("../../app/providers/useProfile", async (importOriginal) => {
+  // Fresh fixtures built PER CALL (not hoisted to module scope) so each
+  // re-render re-reads the live `draftFeaturedSlugs` — tests reassign it
+  // (`draftFeaturedSlugs = [...]`) between renders and expect that to show up
+  // in the next `draft` read, the same way the original single-hook mock did.
+  const editFixture = () => ({
     isEditing: true,
     draft: { featuredCommunities: draftFeaturedSlugs },
     justSaved: false,
     savedVersion: 0,
     isSaving: false,
     saveError: null,
+    isDirty: false,
     startEditing: vi.fn(),
     cancelEditing: vi.fn(),
+    requestCancel: vi.fn(),
     save: vi.fn(() => Promise.resolve(true)),
     updateDraft,
-  }),
-}));
+  });
+  const dataFixture = () => ({
+    profile: currentUser,
+    isProfileLoading: false,
+    isProfileError: false,
+    retryProfile: vi.fn(),
+  });
+  return {
+    // Keep the module's real exports (`ProfileDataContext`, `toDraft`, …) so
+    // the real `ProfileProvider` that TestProviders mounts still works;
+    // override only the hooks the components under test actually read.
+    // `useProfile` (both this component and `PublicProfileProvider` used to
+    // share it) is kept for compatibility; `CommunitiesPickerSection` now
+    // reads the split `useProfileEdit()` (see `useProfile.ts`'s context
+    // split), and `PublicProfileProvider` reads `useProfileData()`.
+    ...(await importOriginal<
+      typeof import("../../app/providers/useProfile")
+    >()),
+    useProfile: () => ({ ...dataFixture(), ...editFixture() }),
+    useProfileData: dataFixture,
+    useProfileEdit: editFixture,
+  };
+});
 
 function renderPicker(onChange?: (section: string) => void) {
   return render(

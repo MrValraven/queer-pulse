@@ -4,6 +4,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { getJobs } from "./jobs.api";
 import { jobCardToJob } from "./jobs.adapters";
+import { economyKeys } from "./economyKeys";
 import type { Job } from "../jobs.data";
 
 export interface JobsResult {
@@ -47,7 +48,7 @@ export function useJobs(
   const fmt = useFormat();
 
   const query = useInfiniteQuery<JobsPageVM>({
-    queryKey: ["jobs", demoMode, language, params],
+    queryKey: economyKeys.jobs(demoMode, language, params),
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {

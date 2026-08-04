@@ -22,11 +22,13 @@ import { useSessionBootstrapSettled } from "../../shared/api/useSessionBootstrap
 import { reasonFor } from "../../shared/api/errorMessage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  ProfileContext,
+  ProfileDataContext,
+  ProfileEditContext,
   toDraft,
   draftToUpdateDto,
   isDraftDirty,
-  type ProfileContextValue,
+  type ProfileDataValue,
+  type ProfileEditValue,
   type ProfileDraft,
 } from "./useProfile";
 
@@ -113,8 +115,13 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   // changes, but don't clobber unsaved local edits.
   useEffect(() => {
     if (seed === lastSeed.current) return;
-    lastSeed.current = seed;
+    // Bail BEFORE advancing the ref: if we marked this seed "consumed" here and
+    // then returned because of `isEditing`, a later non-editing render carrying
+    // the same seed would short-circuit at the guard above and the seed would be
+    // swallowed permanently. `isEditing` is a dependency, so this effect re-runs
+    // when editing ends and picks the pending seed up then.
     if (isEditing) return;
+    lastSeed.current = seed;
     // Re-seeds from the async /auth/me + own-profile fetch when it resolves.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setProfile(seed);
@@ -263,9 +270,25 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     void refetchOwnProfile();
   }, [refetchOwnProfile]);
 
-  const value = useMemo<ProfileContextValue>(
+  // Split into two memoized values, each behind its OWN context — see
+  // `useProfile.ts`'s `ProfileDataValue`/`ProfileEditValue` doc comments. A
+  // display-only consumer that calls `useProfileData()` now only re-renders
+  // when `dataValue`'s own deps change (the committed profile + fetch
+  // status) — NOT on every `updateDraft` keystroke of an unrelated
+  // in-progress edit elsewhere in the tree, which used to force a re-render
+  // through the single combined context both halves shared before.
+  const dataValue = useMemo<ProfileDataValue>(
     () => ({
       profile,
+      isProfileLoading,
+      isProfileError,
+      retryProfile,
+    }),
+    [profile, isProfileLoading, isProfileError, retryProfile],
+  );
+
+  const editValue = useMemo<ProfileEditValue>(
+    () => ({
       isEditing,
       draft,
       justSaved,
@@ -273,9 +296,6 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       isSaving,
       saveError,
       isDirty,
-      isProfileLoading,
-      isProfileError,
-      retryProfile,
       startEditing,
       cancelEditing,
       requestCancel,
@@ -283,7 +303,6 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       updateDraft,
     }),
     [
-      profile,
       isEditing,
       draft,
       justSaved,
@@ -291,9 +310,6 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       isSaving,
       saveError,
       isDirty,
-      isProfileLoading,
-      isProfileError,
-      retryProfile,
       startEditing,
       cancelEditing,
       requestCancel,
@@ -303,6 +319,10 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   );
 
   return (
-    <ProfileContext.Provider value={value}>{children}</ProfileContext.Provider>
+    <ProfileDataContext.Provider value={dataValue}>
+      <ProfileEditContext.Provider value={editValue}>
+        {children}
+      </ProfileEditContext.Provider>
+    </ProfileDataContext.Provider>
   );
 }

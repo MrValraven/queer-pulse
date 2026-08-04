@@ -251,12 +251,12 @@
   cursor: default;
 }
 .rowActionDanger {
-  color: var(--coral-ink, var(--coral));
-  background: rgba(var(--coral-rgb), 0.12);
+  color: var(--accent-ink, var(--accent));
+  background: rgba(var(--accent-rgb), 0.12);
 }
 @media (hover: hover) {
   .rowActionDanger:hover {
-    background: rgba(var(--coral-rgb), 0.22);
+    background: rgba(var(--accent-rgb), 0.22);
   }
 }
 .sectionAction {

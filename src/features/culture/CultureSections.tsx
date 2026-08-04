@@ -59,9 +59,11 @@ export function ClubSection() {
         }
         sub={t("culture:club.picksSub")}
         action={
-          <Button onClick={() => setPicking(true)}>
-            {t("culture:club.suggestPickCta")}
-          </Button>
+          demoMode ? (
+            <Button onClick={() => setPicking(true)}>
+              {t("culture:club.suggestPickCta")}
+            </Button>
+          ) : null
         }
       />
 
@@ -213,9 +215,11 @@ export function CommissionsSection() {
         }
         sub={t("culture:commissions.sub")}
         action={
-          <Button onClick={() => setPosting(true)}>
-            {t("culture:commissions.postProjectCta")}
-          </Button>
+          demoMode ? (
+            <Button onClick={() => setPosting(true)}>
+              {t("culture:commissions.postProjectCta")}
+            </Button>
+          ) : null
         }
       />
       {demoMode ? (
@@ -251,9 +255,11 @@ export function ShowcaseSection() {
         }
         sub={t("culture:showcase.sub")}
         action={
-          <Button onClick={() => setSubmitting(true)}>
-            {t("culture:showcase.submitWorkCta")}
-          </Button>
+          demoMode ? (
+            <Button onClick={() => setSubmitting(true)}>
+              {t("culture:showcase.submitWorkCta")}
+            </Button>
+          ) : null
         }
       />
       {demoMode ? (
@@ -303,9 +309,11 @@ export function RadioIntro() {
         }
         sub={t("culture:radio.sub")}
         action={
-          <Button onClick={() => setSubmitting(true)}>
-            {t("culture:radio.submitPlaylistCta")}
-          </Button>
+          demoMode ? (
+            <Button onClick={() => setSubmitting(true)}>
+              {t("culture:radio.submitPlaylistCta")}
+            </Button>
+          ) : null
         }
       />
       {!demoMode && (

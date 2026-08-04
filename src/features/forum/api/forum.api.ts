@@ -16,16 +16,53 @@ import type {
 
 export type { ForumThreadResponse, ForumPostResponse, ForumPostHistoryResponse };
 
-/** GET /forum/threads?category=&cursor= — a cursor page of threads. */
-export async function getThreads(category?: string, cursor?: string) {
-  const q = new URLSearchParams();
-  if (category && category !== "all") q.set("category", category);
-  if (cursor) q.set("cursor", cursor);
-  const qs = q.toString();
+/** Server-supported orderings for the thread list. */
+export type ForumSort = "new" | "top" | "active" | "unanswered";
+
+/** Optional list filters/ordering, folded into the query string alongside
+ *  `category`/`cursor`. */
+export interface GetThreadsOptions {
+  sort?: ForumSort;
+  tag?: string;
+  q?: string;
+}
+
+/** GET /forum/threads?category=&cursor=&sort=&tag=&q= — a cursor page of
+ *  threads. */
+export async function getThreads(
+  category?: string,
+  cursor?: string,
+  opts?: GetThreadsOptions,
+) {
+  const params = new URLSearchParams();
+  if (category && category !== "all") params.set("category", category);
+  if (cursor) params.set("cursor", cursor);
+  if (opts?.sort) params.set("sort", opts.sort);
+  if (opts?.tag) params.set("tag", opts.tag);
+  if (opts?.q) params.set("q", opts.q);
+  const qs = params.toString();
   const res = await apiGet<
     ForumThreadResponse[] | Paginated<ForumThreadResponse>
   >(`/forum/threads${qs ? `?${qs}` : ""}`);
   return toPage(res);
+}
+
+/** Per-category thread counts plus an `all` total, block-filtered like the
+ *  list. Category keys mirror the list's `category` values. */
+export interface ForumThreadCounts {
+  all: number;
+  [category: string]: number;
+}
+
+/** GET /forum/threads/counts?q=&tag= — counts for the sidebar + list header. */
+export async function getThreadCounts(q?: string, tag?: string) {
+  const params = new URLSearchParams();
+  if (q) params.set("q", q);
+  if (tag) params.set("tag", tag);
+  const qs = params.toString();
+  return apiGet<ForumThreadCounts>(
+    `/forum/threads/counts${qs ? `?${qs}` : ""}`,
+  );
 }
 
 /** GET /forum/threads/:slug — thread meta (title, author, counts). */
@@ -47,6 +84,9 @@ export interface CreateThreadDto {
   title: string;
   body: string;
   category: string;
+  /** Optional free-text tags collected by ComposeThreadModal; the backend
+   *  already persists them. */
+  tags?: string[];
 }
 
 /** POST /forum/threads — ComposeThreadModal. */
@@ -66,6 +106,12 @@ export const replyToThread = (
     ...(parentPostId ? { parentPostId } : {}),
   });
 
+/** POST /forum/posts/:id/vote — cast (`value: 1`) or clear (`value: 0`) the
+ *  viewer's upvote on a post (idempotent). Returns the post with the updated
+ *  `voteCount` + `myVote`. */
+export const votePost = (id: string, value: 0 | 1) =>
+  apiPost<ForumPostResponse>(`/forum/posts/${id}/vote`, { value });
+
 /** PATCH /forum/posts/:id — author edits a post body. */
 export const editPost = (id: string, body: string) =>
   apiPatch<ForumPostResponse>(`/forum/posts/${id}`, { body });
@@ -81,6 +127,16 @@ export const restorePost = (id: string) =>
 /** PATCH /forum/threads/:slug — author edits the thread title. */
 export const editThreadTitle = (slug: string, title: string) =>
   apiPatch<ForumThreadResponse>(`/forum/threads/${slug}`, { title });
+
+/** POST /forum/threads/:slug/lock — moderator closes the thread to replies.
+ *  Returns the updated thread. */
+export const lockThread = (slug: string) =>
+  apiPost<ForumThreadResponse>(`/forum/threads/${slug}/lock`);
+
+/** POST /forum/threads/:slug/unlock — moderator reopens the thread. Returns
+ *  the updated thread. */
+export const unlockThread = (slug: string) =>
+  apiPost<ForumThreadResponse>(`/forum/threads/${slug}/unlock`);
 
 // The backend serializes each revision's editor as `editor` (see
 // queerpulse-backend's ForumPostHistoryEntry), but the FE contract names the

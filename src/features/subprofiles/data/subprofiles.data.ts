@@ -1,8 +1,11 @@
-import { currentUserSlug } from "../../members/data/members";
+import { currentUser, currentUserSlug } from "../../members/data/members";
 import { isContentSection } from "../subprofile-kinds";
 import type {
   CollaboratorDTO,
   EndorserDTO,
+  MemberDTO,
+  MyInviteDTO,
+  PersonaInviteDTO,
   SubprofileCardDTO,
   SubprofileDTO,
   SubprofilePublicDTO,
@@ -620,6 +623,12 @@ export function toPublicDto(sp: DemoSubprofile): SubprofilePublicDTO {
     followerCount: sp.followerCount,
     viewerFollowing: sp.viewerFollowing,
     affiliations: sp.affiliations,
+    // Demo has no reachable public view of the one co-owned persona (it's
+    // the current user's unpublished draft — `DEMO_CO_OWNED_SUBPROFILE_ID` —
+    // so it never passes the linked+published / unlinked+published+open
+    // gates below). Every demo public persona is solo-owned, so `false` here
+    // is always correct, not a placeholder.
+    viewerIsMember: false,
   };
   if (sp.linkVisibility === "linked") {
     base.ownerSlug = sp.ownerSlug;
@@ -785,6 +794,87 @@ export const mockDirectory = (
 /** Count of content items (section ≠ links) — mirrors the ≥3 publish threshold. */
 export const contentItemCount = (dto: SubprofileDTO): number =>
   dto.items.filter((i) => isContentSection(i.section)).length;
+
+// ── Co-ownership mocks (contract C6) ─────────────────────────────────────────
+// Demo-only member/invite views for `GET/POST /subprofiles/:id/members|invites`
+// and `GET /subprofiles/invites/mine`. These back the demo branch of Task 8's
+// hooks only — no live code path may import this module.
+
+/** The persona used to demonstrate co-ownership end-to-end (Task 12 builds the
+ *  invite/manage UI against this exact id): the current demo user's own draft —
+ *  the only entry in `DEMO_SUBPROFILES` owned by `currentUserSlug`, i.e. the
+ *  only one `mockMineSubprofiles()` would ever expose "members" actions for. */
+export const DEMO_CO_OWNED_SUBPROFILE_ID = TIAGO_DRAFT.id;
+
+/** The current demo user, shaped as a `MemberDTO` — always the creator. Reuses
+ *  the `currentUser`/`currentUserSlug` identity already seeded for this mock
+ *  registry; never invented. */
+const CURRENT_USER_MEMBER: MemberDTO = {
+  userId: currentUserSlug,
+  name: `${currentUser.first} ${currentUser.last}`,
+  slug: currentUser.slug,
+  avatarUrl: currentUser.photo ?? null,
+  joinedAt: "2026-01-04T00:00:00.000Z",
+  isCreator: true,
+};
+
+/** The accepted co-owner on `DEMO_CO_OWNED_SUBPROFILE_ID` — reuses the Rui
+ *  identity already seeded above (`RUI_COLLABORATOR`) rather than inventing a
+ *  new member. */
+const CO_OWNER_MEMBER: MemberDTO = {
+  userId: RUI_COLLABORATOR.slug ?? RUI_COLLABORATOR.handle,
+  name: RUI_COLLABORATOR.name,
+  slug: RUI_COLLABORATOR.slug ?? RUI_COLLABORATOR.handle,
+  avatarUrl: RUI_COLLABORATOR.avatarUrl,
+  joinedAt: "2026-02-10T00:00:00.000Z",
+  isCreator: false,
+};
+
+/** GET /subprofiles/:id/members mock. The designated co-owned example returns
+ *  both the creator and the accepted co-owner; every other persona returns the
+ *  current demo user as sole creator. */
+export function mockPersonaMembers(id: string): MemberDTO[] {
+  if (id === DEMO_CO_OWNED_SUBPROFILE_ID) {
+    return [CURRENT_USER_MEMBER, CO_OWNER_MEMBER];
+  }
+  return [CURRENT_USER_MEMBER];
+}
+
+/** GET /subprofiles/:id/invites mock. The designated co-owned example has one
+ *  outstanding outgoing invite (to Diogo, reusing his existing `NIGHTFORM`
+ *  identity); every other persona has none. */
+export function mockPersonaInvites(id: string): PersonaInviteDTO[] {
+  if (id !== DEMO_CO_OWNED_SUBPROFILE_ID) return [];
+  return [
+    {
+      id: "invite-tiago-draft-diogo",
+      subprofileId: DEMO_CO_OWNED_SUBPROFILE_ID,
+      invitedUserId: NIGHTFORM.ownerSlug,
+      invitedByUserId: CURRENT_USER_MEMBER.userId,
+      status: "pending",
+      createdAt: "2026-08-02T00:00:00.000Z",
+      invitedName: NIGHTFORM.ownerName,
+      invitedSlug: NIGHTFORM.ownerSlug,
+      invitedAvatarUrl: NIGHTFORM.avatarUrl,
+    },
+  ];
+}
+
+/** GET /subprofiles/invites/mine mock — one incoming invite so the dashboard
+ *  banner (Task 10) is demonstrable: Diogo (NIGHTFORM's owner) invites the
+ *  current demo user to co-own NIGHTFORM. */
+export function mockMyPersonaInvites(): MyInviteDTO[] {
+  return [
+    {
+      id: "invite-nightform-current-user",
+      subprofileId: NIGHTFORM.id,
+      personaName: NIGHTFORM.displayName,
+      personaAvatarUrl: NIGHTFORM.avatarUrl,
+      invitedByName: NIGHTFORM.ownerName,
+      createdAt: "2026-08-01T00:00:00.000Z",
+    },
+  ];
+}
 
 // ── Publish completeness check (demo simulation of the backend gate) ─────────
 // Constants mirror contract C5; the codes returned match the exact strings the

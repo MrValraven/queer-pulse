@@ -137,6 +137,18 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 6px;
 }
+/* Fewer columns on narrow phones so each square swatch stays tappable rather
+   than crushed (a single full-width square would be oversized, so step to 2). */
+@media (max-width: 560px) {
+  .patternGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 380px) {
+  .patternGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 .patSwatch {
   width: 100%;
   padding: 0;

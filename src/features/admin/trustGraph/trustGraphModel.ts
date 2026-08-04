@@ -46,6 +46,8 @@ export interface VouchEdge {
   relationship?: string | null;
   reason?: string | null;
   anonymous?: boolean;
+  /** 'invite' = the voucher brought this member onto the platform. */
+  kind?: "invite" | "vouch";
 }
 
 export interface Scene {

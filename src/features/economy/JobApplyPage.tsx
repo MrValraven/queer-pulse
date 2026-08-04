@@ -11,6 +11,9 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useAuth } from "../../app/providers/authContext";
+import { useProfileData } from "../../app/providers/useProfile";
+import type { AuthUser } from "../auth/api/auth.api";
 import { ApiError } from "../../shared/api/client";
 import { routes } from "../../app/routeMap";
 import { JOBS } from "./jobs.data";
@@ -26,7 +29,9 @@ import { JobApplyForm, type JobApplyFields } from "./JobApplyForm";
 import { JobApplySidebar } from "./JobApplySidebar";
 import styles from "./JobApplyPage.module.css";
 
-const INITIAL: JobApplyFields = {
+/** Demo-mode seed: the mock applicant persona, kept exactly as before so the
+ *  prototype pre-fills the form as a showcase. */
+const DEMO_INITIAL: JobApplyFields = {
   name: APPLICANT.name,
   pronouns: APPLICANT.pronouns,
   email: APPLICANT.email,
@@ -40,6 +45,37 @@ const INITIAL: JobApplyFields = {
   salary: "",
   extra: "",
 };
+
+/**
+ * Live-mode seed: identity pre-filled from the SIGNED-IN member (never the demo
+ * persona), blank where the profile has no value. Name/pronouns/email/profile
+ * URL come straight from the auth session (present the moment the gated route
+ * renders); `location` comes from the member's own profile, which is still the
+ * seed fallback until its fetch lands — so it stays blank while loading rather
+ * than flash a placeholder location the applicant didn't enter.
+ */
+function liveInitialFields(
+  user: AuthUser | null,
+  hood: string,
+  isProfileLoading: boolean,
+): JobApplyFields {
+  const profile = user?.profile;
+  const name = profile ? `${profile.firstName} ${profile.lastName}`.trim() : "";
+  return {
+    name,
+    pronouns: profile?.pronouns ?? "",
+    email: user?.email ?? "",
+    location: isProfileLoading ? "" : hood,
+    cvName: "",
+    site: "",
+    instagram: "",
+    profileUrl: profile?.slug ? `queerpulse.app/p/${profile.slug}` : "",
+    letter: "",
+    when: "now",
+    salary: "",
+    extra: "",
+  };
+}
 
 /** Map the apply form into the application DTO the API expects. */
 function toApplicationDto(fields: JobApplyFields): CreateJobApplicationDto {
@@ -66,9 +102,18 @@ export function JobApplyPage() {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { demoMode } = useDemoMode();
+  const { user } = useAuth();
+  const { profile, isProfileLoading } = useProfileData();
   const { data: fetchedJob, isLoading } = useJob(slug);
   const apply = useApplyToJob(slug ?? "");
-  const [fields, setFields] = useState<JobApplyFields>(INITIAL);
+  // Derived inside the component so the live seed can read the session/profile
+  // hooks. Demo keeps the mock persona; live pre-fills from the signed-in member
+  // (see `liveInitialFields`), never the mock.
+  const [fields, setFields] = useState<JobApplyFields>(() =>
+    demoMode
+      ? DEMO_INITIAL
+      : liveInitialFields(user, profile.hood, isProfileLoading),
+  );
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 

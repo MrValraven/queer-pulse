@@ -12,11 +12,13 @@ const FILTERS: StatusFilter[] = ["pending", "accepted", "dismissed", "all"];
 
 /**
  * Moderator triage of member-submitted "suggest an edit" corrections to
- * directory listings (a tab inside `AdminListingsPage`). Mirrors that page's
+ * directory listings (a tab inside `AdminListingsPage`). Uses its own
  * status-filter + optimistic-override shape: `useResolveEditSuggestion`'s
  * demo mutation never touches the fixture, so a just-resolved suggestion is
- * reflected immediately via a local override map, exactly like
- * `AdminListingsPage`'s `statusOverrides`.
+ * reflected immediately via a local override map. (The listings queue itself
+ * has since moved this pattern into the react-query cache directly — see
+ * `patchListingInCache` in `api/useAdminListings.ts` — but this tab wasn't in
+ * scope for that refactor.)
  */
 export function EditSuggestionsSection() {
   const { t } = useTranslation();

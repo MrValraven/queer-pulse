@@ -40,8 +40,15 @@ export function MegaNavDrawer({ onNavigate }: MegaNavDrawerProps) {
                 <FiChevronDown />
               </span>
             </button>
-            {isOpen && (
-              <div className={styles.panel}>
+            {/* Panel stays mounted so the grid-rows 0fr→1fr transition can
+                play on open/close (mirrors SidebarGroup). Hidden from a11y
+                tree and made inert-ish via aria-hidden when collapsed. */}
+            <div
+              className={[styles.panel, isOpen && styles.panelOpen]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              <div className={styles.panelInner} aria-hidden={!isOpen}>
                 {menu.columns.map((column) => (
                   <div key={column.headKey}>
                     <div className={styles.colHead}>{t(column.headKey)}</div>
@@ -61,6 +68,7 @@ export function MegaNavDrawer({ onNavigate }: MegaNavDrawerProps) {
                           .filter(Boolean)
                           .join(" ")}
                         onClick={onNavigate}
+                        tabIndex={isOpen ? undefined : -1}
                       >
                         {t(link.labelKey)}
                       </Link>
@@ -71,6 +79,7 @@ export function MegaNavDrawer({ onNavigate }: MegaNavDrawerProps) {
                         replace
                         className={styles.cta}
                         onClick={onNavigate}
+                        tabIndex={isOpen ? undefined : -1}
                       >
                         {t(column.cta.labelKey)}
                       </Button>
@@ -78,7 +87,7 @@ export function MegaNavDrawer({ onNavigate }: MegaNavDrawerProps) {
                   </div>
                 ))}
               </div>
-            )}
+            </div>
           </div>
         );
       })}

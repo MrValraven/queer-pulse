@@ -1,0 +1,94 @@
+.wrap {
+  position: relative;
+  flex: none;
+}
+
+.trigger {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-40);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+/* Widen the tap target to the ~44px floor without growing the glyph — the
+   trigger sits last in `.headRow` (Card.module.css), so there's open card
+   padding to grow into on the right/top/bottom; `CardFlags` sits ~6px to
+   the left with no click handler of its own, so a small overlap there
+   doesn't steal a real interaction. */
+.trigger::before {
+  content: "";
+  position: absolute;
+  inset-block: -9px;
+  inset-inline-start: -3px;
+  inset-inline-end: -9px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .trigger:hover {
+    background: rgba(var(--line-rgb), 0.08);
+    color: var(--ink);
+  }
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 1px;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 20;
+  min-width: 180px;
+  padding: 6px;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: 12px;
+  background: var(--paper);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.item {
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+
+.item:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 1px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:hover {
+    background: var(--cream);
+  }
+}
+
+.itemDanger {
+  color: var(--danger);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .itemDanger:hover {
+    background: rgba(var(--danger-rgb), 0.08);
+  }
+}

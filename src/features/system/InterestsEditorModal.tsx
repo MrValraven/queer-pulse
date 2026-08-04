@@ -40,6 +40,7 @@ export function InterestsEditorModal({ onClose }: { onClose: () => void }) {
         aria-modal="true"
         aria-labelledby="interests-title"
       >
+        <span className={styles.grabber} aria-hidden />
         <button
           type="button"
           className={styles.close}

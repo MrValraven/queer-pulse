@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { catalogs } from "../../../shared/i18n/catalogs";
+import { beforeAll, describe, expect, it } from "vitest";
+import { catalogs, loadNamespace } from "../../../shared/i18n/catalogs";
 import { resolveEntry } from "../../../shared/i18n/translate";
 import { createFormatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
@@ -13,11 +13,19 @@ import type { SessionResponse } from "./account.api";
 
 /** A real (English) `t`, resolved against the shipped catalog — so this test
  * asserts against the actual translated copy rather than a duplicated literal. */
+// The `settings` namespace is now lazily loaded (see catalogs/index.ts), so
+// `catalogs.en.settings` is an empty placeholder until its chunk resolves.
+// `beforeAll` swaps the real catalog in the same way the provider does.
+let settingsCatalog = catalogs.en.settings;
+beforeAll(async () => {
+  settingsCatalog = await loadNamespace("en", "settings");
+});
+
 const t: TFunction = (key, options) => {
   const path = key.startsWith("settings:")
     ? key.slice("settings:".length)
     : key;
-  return resolveEntry(catalogs.en.settings, path, "en", options) ?? key;
+  return resolveEntry(settingsCatalog, path, "en", options) ?? key;
 };
 const fmt = createFormatters("en");
 

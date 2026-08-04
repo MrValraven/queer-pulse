@@ -1,4 +1,4 @@
-import { Button, Eyebrow, Reveal } from "../../../shared/components/ui";
+import { Button, Eyebrow, FeatureHelp, Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
@@ -16,6 +16,7 @@ export function Hero() {
               IntersectionObserver + up to 900ms opacity/transform transition. */}
           <Eyebrow live className={styles.eyebrow}>
             {t("homepage:hero.eyebrow")}
+            <FeatureHelp id="home.landing" />
           </Eyebrow>
 
           <h1 className={styles.title}>

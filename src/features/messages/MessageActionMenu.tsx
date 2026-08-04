@@ -6,11 +6,11 @@ import styles from "./MessagesPage.module.css";
 export interface MessageActionMenuProps {
   /** Focus target: the parent moves focus here on open and traps it. */
   menuRef: RefObject<HTMLDivElement | null>;
-  /** Own message AND within the 15-min edit window. */
+  /** Server-authoritative: own message AND within the server's edit window. */
   canEdit: boolean;
-  /** Own message OR staff. */
+  /** Server-authoritative: own message OR staff. */
   canDelete: boolean;
-  /** NOT own message. */
+  /** Server-authoritative: NOT own message. */
   canReport: boolean;
   /** Server-authoritative: may pin/unpin this message. */
   canPin: boolean;

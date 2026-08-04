@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { ChipSelect, Toggle } from "../../shared/components/ui";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileEdit } from "../../app/providers/useProfile";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDiscoverableIdentities } from "./api/useDiscoverableIdentities";
@@ -15,7 +15,7 @@ import styles from "./InterestsPane.module.css";
  */
 export function PrivateIdentitiesSection({ onChange }: { onChange: () => void }) {
   const { t } = useTranslation();
-  const { draft, updateDraft } = useProfile();
+  const { draft, updateDraft } = useProfileEdit();
   const uid = useId();
   const [skipped, setSkipped] = useState(false);
 
@@ -107,7 +107,7 @@ function IdentityToggleRow({
  */
 export function DiscoverableIdentitiesSection() {
   const { t } = useTranslation();
-  const { draft, savedVersion } = useProfile();
+  const { draft, savedVersion } = useProfileEdit();
   const { showToast } = useToast();
   // Rows are drawn from the member's own saved-and-publishable identities.
   const draftPublishable = publishableIdentities(draft.identities);

@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { FiAlertCircle } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -26,17 +27,19 @@ function Select({
   optional?: boolean;
 }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   return (
     <div className={styles.field}>
-      <div className={styles.label}>
+      <label className={styles.label} htmlFor={`${fieldId}-select`}>
         {label}
         {optional && (
           <span className={styles.opt}>
             {t("economy:postJob.field.optional")}
           </span>
         )}
-      </div>
+      </label>
       <select
+        id={`${fieldId}-select`}
         className={styles.select}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -59,6 +62,7 @@ export function PostJobStepType({
   showErrors: boolean;
 }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   const { state, patch, needsCity, showsTimezone } = form;
   const cityMissing = showErrors && needsCity && !state.city.trim();
 
@@ -120,11 +124,12 @@ export function PostJobStepType({
               .filter(Boolean)
               .join(" ")}
           >
-            <div className={styles.label}>
+            <label className={styles.label} htmlFor={`${fieldId}-city`}>
               {t("economy:postJob.field.location")}{" "}
               <span className={styles.req}>*</span>
-            </div>
+            </label>
             <input
+              id={`${fieldId}-city`}
               className={styles.input}
               type="text"
               value={state.city}

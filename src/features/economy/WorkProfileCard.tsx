@@ -1,7 +1,7 @@
 import { Avatar, Button, VisibilityBadge } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileData } from "../../app/providers/useProfile";
 import { fullName, type Member } from "../members/data/members";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./WorkHubPage.module.css";
@@ -27,7 +27,7 @@ function completenessOf(member: Member): number {
 export function WorkProfileCard() {
   const { t } = useTranslation();
   // The signed-in member (real profile live, mock currentUser in demo mode).
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   const completeness = completenessOf(profile);
   return (
     <div className={styles.pCard}>

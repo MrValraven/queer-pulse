@@ -4,6 +4,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useDeletedConversations } from "../../../app/providers/useDeletedConversations";
 import { useAuth } from "../../../app/providers/authContext";
 import { initialsOf, tintForSlug } from "../../../shared/api/refs";
+import { activeLocale } from "../../../shared/i18n/locale";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { MessageSearchResponse } from "../../../shared/contracts/contracts";
 import { conversations as mockConversations } from "../data";
@@ -115,15 +116,16 @@ function shortTime(iso: string): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "";
   const now = new Date();
+  const locale = activeLocale();
   if (date.toDateString() === now.toDateString()) {
-    return date.toLocaleTimeString(undefined, {
+    return date.toLocaleTimeString(locale, {
       hour: "numeric",
       minute: "2-digit",
     });
   }
   const days = Math.round((now.getTime() - date.getTime()) / 86_400_000);
-  if (days < 7) return date.toLocaleDateString(undefined, { weekday: "short" });
-  return date.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+  if (days < 7) return date.toLocaleDateString(locale, { weekday: "short" });
+  return date.toLocaleDateString(locale, { day: "numeric", month: "short" });
 }
 
 /** Demo search: filter the colocated mock message set locally — no network. */
@@ -186,7 +188,10 @@ export function useMessageSearch(
   const liveQuery = useQuery<MessageSearchResponse>({
     queryKey: ["messageSearch", trimmed, demoMode],
     enabled: enabled && !demoMode,
-    queryFn: () => searchMessages(trimmed, SEARCH_LIMIT),
+    // Forward react-query's own cancellation signal into the fetch — a fast
+    // retype (new `trimmed` → new queryKey) cancels the previous keystroke's
+    // request at the network layer, not just in the query cache.
+    queryFn: ({ signal }) => searchMessages(trimmed, SEARCH_LIMIT, signal),
     // A search term is short-lived; keep results briefly so re-typing the same
     // query doesn't refetch, but don't hoard stale corpora.
     staleTime: 30_000,

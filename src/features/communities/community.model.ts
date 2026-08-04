@@ -35,7 +35,12 @@ export interface Post {
   kind: "post" | "announcement";
   pinned?: boolean;
   reactions: Reaction[];
+  /** A bounded PREVIEW (server-capped), NOT every reply — see `replyCount`. */
   replies: PostReply[];
+  /** The TRUE total reply count. Live-wired posts always set this (may
+   *  exceed `replies.length`); demo mock posts omit it, so callers fall back
+   *  to `replies.length`. */
+  replyCount?: number;
   time: string;
   /** ISO creation timestamp (for Newest sorting in the discussion view). */
   createdAt?: string;

@@ -269,9 +269,16 @@ function ConnectionMeta({ view }: { view: ConnectionView }) {
   return (
     <div className={styles.meta}>
       {badgeKey && <span className={styles.vouched}>{t(badgeKey)}</span>}
-      {mutuals != null && (
-        <span>{t("connect:card.mutuals", { count: mutuals })}</span>
-      )}
+      {mutuals != null &&
+        (mutuals > 0 ? (
+          <Translation
+            i18nKey="connect:card.mutuals"
+            components={{ b: <b /> }}
+            values={{ count: mutuals }}
+          />
+        ) : (
+          <span className={styles.metaMuted}>{t("connect:card.noMutuals")}</span>
+        ))}
       {since && (
         <Translation
           i18nKey="connect:card.connectedSince"

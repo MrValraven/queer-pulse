@@ -244,7 +244,11 @@ export function WatchControls({
         >
           AD
         </button>
-        <select className={styles.ctrlLang} defaultValue="en">
+        <select
+          className={styles.ctrlLang}
+          defaultValue="en"
+          aria-label={t("cinema:film.facts.language")}
+        >
           <option value="pt">
             {t("cinema:watch.controls.subtitleLang.pt")}
           </option>
@@ -364,6 +368,13 @@ export function WatchSidePanel() {
                   send();
                 }
               }}
+              aria-label={
+                tab === "live-qna"
+                  ? t("cinema:watch.sidePanel.qnaPlaceholder", {
+                      name: "Maria",
+                    })
+                  : t("cinema:watch.sidePanel.lobbyPlaceholder")
+              }
               placeholder={
                 tab === "live-qna"
                   ? t("cinema:watch.sidePanel.qnaPlaceholder", {

@@ -1,17 +1,28 @@
+/* Mobile: a bottom-anchored sheet in the thumb's reach. Becomes a centered
+   dialog from 720px up (desktop appearance unchanged). The safe-area inset
+   rides on the overlay (not the panel) so the plum .success panel's edge-bleed
+   negative margins keep matching the panel padding. */
 .overlay {
   position: fixed;
   inset: 0;
   z-index: 200;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  padding: 24px;
-  /* Lift above the on-screen keyboard on iOS (see useVisualViewportKeyboard),
-     keeping the 24px gutter as the floor when the keyboard is closed. */
-  padding-block-end: max(24px, var(--keyboard-inset, 0px));
+  padding: 0;
+  /* Lift the sheet above the on-screen keyboard (useVisualViewportKeyboard)
+     and clear the iOS home indicator. */
+  padding-block-end: max(var(--keyboard-inset, 0px), env(safe-area-inset-bottom));
   background: rgba(var(--plum-rgb), 0.5);
   backdrop-filter: blur(3px);
   animation: fade 0.2s var(--ease);
+}
+@media (min-width: 720px) {
+  .overlay {
+    align-items: center;
+    padding: 24px;
+    padding-block-end: max(24px, var(--keyboard-inset, 0px));
+  }
 }
 @keyframes fade {
   from {
@@ -21,15 +32,25 @@
 .modal {
   position: relative;
   width: 100%;
-  max-width: 520px;
   /* svh, not vh: vh is the large viewport and overflows under mobile chrome. */
-  max-height: 86svh;
+  max-height: 92svh;
   overflow-y: auto;
+  /* Keep an over-scroll from chaining to the page behind the sheet. */
+  overscroll-behavior: contain;
   background: var(--cream);
-  border-radius: var(--radius-card);
+  /* Sheet on mobile — round only the top corners. */
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
   padding: 36px 36px 28px;
-  box-shadow: 0 30px 80px rgba(var(--plum-rgb), 0.28);
+  box-shadow: 0 -18px 50px rgba(var(--plum-rgb), 0.28);
   animation: rise 0.24s var(--ease);
+}
+@media (min-width: 720px) {
+  .modal {
+    max-width: 520px;
+    max-height: 86svh;
+    border-radius: var(--radius-card);
+    box-shadow: 0 30px 80px rgba(var(--plum-rgb), 0.28);
+  }
 }
 @keyframes rise {
   from {
@@ -87,7 +108,7 @@
 }
 .sub {
   font-size: 14px;
-  color: rgba(var(--ink-rgb), 0.6);
+  color: var(--ink-40);
   line-height: 1.5;
   margin-bottom: 22px;
 }
@@ -132,7 +153,7 @@
   font-family: var(--sans);
   font-size: 13.5px;
   font-weight: 600;
-  color: rgba(var(--ink-rgb), 0.55);
+  color: var(--ink-40);
   cursor: pointer;
 }
 @media (hover: hover) {
@@ -185,7 +206,7 @@
 }
 .rowMeta {
   font-size: 12.5px;
-  color: rgba(var(--ink-rgb), 0.55);
+  color: var(--ink-40);
 }
 
 .empty {
@@ -195,7 +216,7 @@
   gap: 12px;
   text-align: center;
   padding: 40px 20px;
-  color: rgba(var(--ink-rgb), 0.55);
+  color: var(--ink-40);
   font-size: 14px;
 }
 .empty svg {
@@ -254,7 +275,7 @@
 }
 .pickMeta {
   font-size: 12px;
-  color: rgba(var(--ink-rgb), 0.55);
+  color: var(--ink-40);
 }
 .pickAdd {
   color: var(--accent-ink);
@@ -265,13 +286,19 @@
 .success {
   background: var(--plum);
   margin: -36px -36px -28px;
-  border-radius: var(--radius-card);
+  /* Match the mobile sheet — flat bottom corners; full card on desktop. */
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
   padding: 44px 40px 40px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 14px;
+}
+@media (min-width: 720px) {
+  .success {
+    border-radius: var(--radius-card);
+  }
 }
 .successIcon {
   width: 56px;

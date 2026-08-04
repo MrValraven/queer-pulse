@@ -88,12 +88,27 @@ export function threadToCard(
     },
     posted: relative(dto.lastActivityAt, t, fmt),
     views: 0,
-    upvotes: 0,
+    // The card's upvote count is the OP post's vote count (denormalized onto the
+    // thread DTO), NOT a hardcoded 0 — this is what the list-row upvote button
+    // reads and mutates via `opPostId`.
+    upvotes: dto.opVoteCount,
     comments: dto.replyCount,
-    tags: [],
+    tags: dto.tags ?? [],
     body: [],
     replies: [],
+    // Row-moderation permissions (denormalized onto the thread DTO) so the list
+    // row can render its ⋯ menu without fetching the OP post. `canLock` is the
+    // thread-level moderator permission (close / reopen replies).
     canEdit: dto.canEdit,
+    canDelete: dto.canDelete,
+    canRestore: dto.canRestore,
+    canViewHistory: dto.canViewHistory,
+    canLock: dto.canLock,
+    // OP-vote wiring: the list-row upvote acts on the OP post (`opPostId`) and
+    // reflects the viewer's own vote (`myVote`); `isLocked` gates the composer.
+    opPostId: dto.opPostId,
+    isLocked: dto.isLocked,
+    myVote: dto.myVote,
   };
 }
 
@@ -120,6 +135,7 @@ export function postToReply(
     isOP,
     body: paragraphs(dto.body),
     reactions: dto.voteCount,
+    myVote: dto.myVote,
     postId: dto.id,
     editedAt: dto.editedAt,
     deleted: dto.deleted,
@@ -144,12 +160,19 @@ export function threadDetail(
     ...card,
     excerpt: op ? (paragraphs(op.body)[0] ?? "") : "",
     body: op ? paragraphs(op.body) : [],
-    upvotes: op?.voteCount ?? 0,
+    // OP fields come from the fetched OP post itself here (not the card's
+    // denormalized copy), so the thread page's upvote button reads the live
+    // count + the viewer's own vote and stays consistent with `useVotePost`.
+    upvotes: op?.voteCount ?? card.upvotes,
+    myVote: op?.myVote ?? card.myVote,
     replies: rest.map((post) => postToReply(post, t, fmt)),
-    opPostId: op?.id,
+    opPostId: op?.id ?? card.opPostId,
     editedAt: op?.editedAt ?? null,
     deleted: op?.deleted ?? false,
     removedByModerator: op?.moderationRemoved ?? false,
+    // Post-level permissions come from the fetched OP post itself. `canLock` is
+    // thread-level and is NOT overridden here — it flows through from the `card`
+    // spread above (the thread DTO), which is where the lock permission lives.
     canEdit: op?.canEdit ?? false,
     canDelete: op?.canDelete ?? false,
     canRestore: op?.canRestore ?? false,

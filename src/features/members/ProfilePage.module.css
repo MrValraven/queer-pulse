@@ -680,6 +680,21 @@ button.socialChip {
   .shapingsGrid {
     grid-template-columns: 1fr;
   }
+  /* Below 640px, two Selected Work cards shrink to ~150px each on a 375px
+     phone — go single-column so each card keeps a readable width. */
+  .workGrid {
+    grid-template-columns: 1fr;
+  }
+  /* The base 104px clearance is sized for the desktop floating pill Navbar.
+     On phones the fixed chrome is only the slim `.appBar` strip — occupied
+     height `--app-bar-h` + the top safe-area inset (see Navbar.module.css /
+     MobileProfile.module.css `.tabList`) — so clear that instead, plus a
+     small breathing gap, for a tight Instagram-like top. */
+  div.backBar {
+    padding-top: calc(
+      var(--app-bar-h) + env(safe-area-inset-top) + var(--gap-sm)
+    );
+  }
 }
 
 :global([data-theme="dark"]) .nowCard,

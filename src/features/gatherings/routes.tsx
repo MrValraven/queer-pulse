@@ -1,6 +1,7 @@
 import { Navigate, Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
+import { GatheringComingSoon } from "./GatheringComingSoon";
 
 const EventsHubPage = lazyNamed(() => import("./EventsHubPage"), "EventsHubPage");
 const GatheringPage = lazyNamed(() => import("./GatheringPage"), "GatheringPage");
@@ -20,10 +21,14 @@ const CreateGatheringPage = lazyNamed(() => import("./CreateGatheringPage"), "Cr
 /** The gatherings surface: calendar, events, a gathering's detail + management
  *  sub-pages, RSVP/checkout, hosting, and the gatherings index.
  *
- *  The `/manage` dashboard is a demo-only prototype fixed to a single mock
- *  gathering (it fires edit/cancel mutations at a hardcoded slug), so in LIVE
- *  mode it resolves to an honest coming-soon instead — no real mutation can
- *  target that hardcoded slug. Every other route here is really wired. */
+ *  Several routes here are demo-only prototypes each fixed to a single mock
+ *  gathering — the `/manage` dashboard, the standalone `/event` detail, the
+ *  `/rsvp` confirmation, the co-host invite, and the recap. They fire real
+ *  RSVP / un-RSVP / invite-response mutations (or, for the recap, orphan a real
+ *  photo upload) at a hardcoded slug/id that ignores the route, so in LIVE mode
+ *  they resolve to an honest coming-soon instead — no real write can target
+ *  that hardcoded id. The real event surface is `/gatherings/:slug` (really
+ *  wired). Every other route here is really wired too. */
 export function gatheringRoutes(demoMode: boolean) {
   return (
     <>
@@ -37,7 +42,13 @@ export function gatheringRoutes(demoMode: boolean) {
       <Route path={`${routes.gatherings}/:slug`} element={<GatheringPage />} />
       <Route
         path={`${routes.gatherings}/:slug/recap`}
-        element={<GatheringRecapPage />}
+        element={
+          demoMode ? (
+            <GatheringRecapPage />
+          ) : (
+            <GatheringComingSoon variant="recap" />
+          )
+        }
       />
       <Route
         path={`${routes.gatherings}/:slug/cancelled`}
@@ -59,11 +70,22 @@ export function gatheringRoutes(demoMode: boolean) {
       />
       <Route
         path={`${routes.gatherings}/:slug/co-host-invite`}
-        element={<CoHostInvitePage />}
+        element={
+          demoMode ? <CoHostInvitePage /> : <GatheringComingSoon variant="cohost" />
+        }
       />
-      <Route path={routes.event} element={<EventPage />} />
-      <Route path={routes.rsvp} element={<RsvpPage />} />
-      <Route path={routes.rsvpTicket} element={<RsvpPage />} />
+      <Route
+        path={routes.event}
+        element={demoMode ? <EventPage /> : <GatheringComingSoon variant="event" />}
+      />
+      <Route
+        path={routes.rsvp}
+        element={demoMode ? <RsvpPage /> : <GatheringComingSoon variant="rsvp" />}
+      />
+      <Route
+        path={routes.rsvpTicket}
+        element={demoMode ? <RsvpPage /> : <GatheringComingSoon variant="rsvp" />}
+      />
       <Route path={routes.checkout} element={<CheckoutPage />} />
       <Route path={routes.host} element={<HostPage />} />
       <Route path={routes.createGathering} element={<CreateGatheringPage />} />

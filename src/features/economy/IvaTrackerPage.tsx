@@ -3,6 +3,7 @@ import { useLocalStorage } from "./tools/useLocalStorage";
 import { IvaTrackerForm } from "./IvaTrackerForm";
 import { IvaTrackerStatus } from "./IvaTrackerStatus";
 import { IVA_SEED, type IvaEntry } from "./ivaTracker.data";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 
@@ -13,9 +14,13 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
  */
 export function IvaTrackerPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  // The IVA_SEED is demo-only fiction (its running total reads as a real, in-
+  // progress year). In live mode the tracker starts empty so it only ever holds
+  // amounts the member actually enters on this device.
   const [entries, setEntries] = useLocalStorage<IvaEntry[]>(
     "qp.economy.ivaEntries",
-    IVA_SEED,
+    demoMode ? IVA_SEED : [],
   );
 
   return (

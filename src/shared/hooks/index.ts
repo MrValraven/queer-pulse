@@ -31,3 +31,4 @@ export {
   type UseRequiredFieldValidationOptions,
   type RequiredFieldValidation,
 } from "./useWizardForm";
+export { useOnlineStatus } from "./useOnlineStatus";

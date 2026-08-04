@@ -248,6 +248,7 @@ export function SubscribeStrip() {
             className={styles.subInput}
             type="email"
             placeholder={t("system:status.subscribe.placeholder")}
+            aria-label={t("system:status.subscribe.placeholder")}
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}

@@ -1,0 +1,32 @@
+/* RadioCardGroup — shared accessible radiogroup primitive.
+
+   Layout and the selected/resting look come entirely from the caller's
+   pass-through classes (each wizard group keeps its existing visual). This
+   module owns only the keyboard-affordance layer that every group should share:
+   a consistent focus-visible ring on the roving-tabindex option, and honouring
+   reduced-motion. */
+
+.group {
+  /* Marker + safety: never let a grid/flex child force the group to overflow
+     its column. Layout itself is supplied by the caller's className. */
+  min-width: 0;
+}
+
+.option {
+  /* The caller's base class supplies the resting look; we only guarantee a
+     clear keyboard focus ring since options are reached via arrow keys. */
+  outline: none;
+}
+
+.option:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .option {
+    transition: none !important;
+    animation: none !important;
+  }
+}

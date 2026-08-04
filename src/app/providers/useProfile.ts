@@ -119,9 +119,38 @@ export function draftToUpdateDto(d: ProfileDraft): UpdateProfileDTO {
   };
 }
 
-export interface ProfileContextValue {
+/**
+ * The stable, read-mostly half of the logged-in member's profile state — the
+ * committed `profile` plus its fetch/error status. Split out from
+ * `ProfileEditValue` (the fast-changing in-progress-edit state) so a
+ * display-only consumer (a byline, a nav card, a "featured on profile" list)
+ * re-renders only when the COMMITTED profile actually changes, never on
+ * every keystroke of an unrelated in-progress edit elsewhere in the tree —
+ * see `react-rendering.md`'s context-fan-out guidance, anchored at this
+ * file's pre-split `ProfileContextValue`.
+ */
+export interface ProfileDataValue {
   /** Committed, live profile of the logged-in member — what their own hero renders. */
   profile: Member;
+  /** True while the logged-in member's own profile is still being fetched in live
+   *  mode (so the page can skeleton instead of flashing seed/mock content). */
+  isProfileLoading: boolean;
+  /** True when the own-profile fetch failed in live mode (so the page can show an
+   *  error + retry instead of silently rendering mock fallback content). */
+  isProfileError: boolean;
+  /** Re-run the own-profile fetch after an error. */
+  retryProfile: () => void;
+}
+
+/**
+ * The fast-changing half: the in-progress edit session (draft, dirty/saving
+ * state, mutators). Isolated in its own context so a component that drives
+ * editing but never reads the committed `profile`/loading/error fields never
+ * re-renders on those instead — and, more importantly, so a read-only
+ * `profile` consumer (via `useProfileData()` below) never re-renders on
+ * THIS half's every-keystroke `updateDraft` churn.
+ */
+export interface ProfileEditValue {
   isEditing: boolean;
   draft: ProfileDraft;
   /** True for a few seconds after a save, to drive the confirmation banner. */
@@ -140,14 +169,6 @@ export interface ProfileContextValue {
   /** True when the draft differs from the committed profile — drives the
    *  "unsaved changes" indicator, the navigation guard, and confirm-on-discard. */
   isDirty: boolean;
-  /** True while the logged-in member's own profile is still being fetched in live
-   *  mode (so the page can skeleton instead of flashing seed/mock content). */
-  isProfileLoading: boolean;
-  /** True when the own-profile fetch failed in live mode (so the page can show an
-   *  error + retry instead of silently rendering mock fallback content). */
-  isProfileError: boolean;
-  /** Re-run the own-profile fetch after an error. */
-  retryProfile: () => void;
   startEditing: () => void;
   cancelEditing: () => void;
   /** Leave edit mode, confirming first when there are unsaved changes. */
@@ -157,10 +178,50 @@ export interface ProfileContextValue {
   updateDraft: (patch: Partial<ProfileDraft>) => void;
 }
 
-export const ProfileContext = createContext<ProfileContextValue | null>(null);
+/** Full shape — every field from both halves. Kept for `useProfile()`, the
+ *  pre-split combined hook every existing call site already uses; a new call
+ *  site that only needs one half should prefer `useProfileData()`/
+ *  `useProfileEdit()` below instead, which don't re-render on the other
+ *  half's changes. */
+export type ProfileContextValue = ProfileDataValue & ProfileEditValue;
 
-export function useProfile(): ProfileContextValue {
-  const ctx = useContext(ProfileContext);
-  if (!ctx) throw new Error("useProfile must be used within a ProfileProvider");
+export const ProfileDataContext = createContext<ProfileDataValue | null>(null);
+export const ProfileEditContext = createContext<ProfileEditValue | null>(null);
+
+/** The committed profile + its fetch status only — doesn't re-render while an
+ *  in-progress edit is being typed elsewhere in the tree. Prefer this over
+ *  `useProfile()` for any read-only/display consumer (the large majority —
+ *  a nav avatar, a byline, a featured-communities card, a review composer
+ *  reading the author's own name). */
+export function useProfileData(): ProfileDataValue {
+  const ctx = useContext(ProfileDataContext);
+  if (!ctx) {
+    throw new Error("useProfileData must be used within a ProfileProvider");
+  }
   return ctx;
+}
+
+/** The in-progress edit session only (draft, dirty/saving state, mutators).
+ *  Prefer this over `useProfile()` for a component that drives editing but
+ *  never reads the committed `profile`/loading/error fields (the settings
+ *  panes, the edit bar, the escape-to-cancel shortcut). */
+export function useProfileEdit(): ProfileEditValue {
+  const ctx = useContext(ProfileEditContext);
+  if (!ctx) {
+    throw new Error("useProfileEdit must be used within a ProfileProvider");
+  }
+  return ctx;
+}
+
+/**
+ * Combined read — every field from both halves, in the original single-object
+ * shape. Kept for backward compatibility and for consumers that genuinely
+ * need both (e.g. `ProfilePage`, which shows the committed `profile`
+ * alongside the edit affordances in the very same render). Subscribes to
+ * BOTH contexts, so it re-renders on either half's changes — new call sites
+ * that only need one half should prefer `useProfileData()`/`useProfileEdit()`
+ * above.
+ */
+export function useProfile(): ProfileContextValue {
+  return { ...useProfileData(), ...useProfileEdit() };
 }

@@ -5,6 +5,7 @@ import { useFormat } from "../../../shared/i18n/format";
 import { getCompany } from "./companies.api";
 import { companyDetailToProfile } from "./companies.adapters";
 import { jobCardToJob } from "./jobs.adapters";
+import { economyKeys } from "./economyKeys";
 import type { CompanyProfile } from "../companies.data";
 import type { Job } from "../jobs.data";
 
@@ -26,7 +27,7 @@ export function useCompany(slug: string | undefined) {
   const { t, language } = useTranslation();
   const fmt = useFormat();
   return useQuery<CompanyResult>({
-    queryKey: ["company", slug, demoMode, language],
+    queryKey: economyKeys.company(slug, demoMode, language),
     enabled: Boolean(slug),
     queryFn: async () => {
       if (!slug) return { profile: null, openRoles: null, isOwner: false };

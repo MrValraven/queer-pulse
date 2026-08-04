@@ -1,4 +1,4 @@
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileEdit } from "../../app/providers/useProfile";
 import { useMyCommunityCards } from "../members/useMyCommunityCards";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -33,7 +33,7 @@ export function CommunitiesPickerSection({
   onChange,
 }: CommunitiesPickerSectionProps) {
   const { t } = useTranslation();
-  const { draft, updateDraft } = useProfile();
+  const { draft, updateDraft } = useProfileEdit();
   const eligibleCommunities = useMyCommunityCards();
   const featuredSlugs = draft.featuredCommunities;
   const atCap = featuredSlugs.length >= MAX_FEATURED;

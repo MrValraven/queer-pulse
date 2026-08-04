@@ -1,6 +1,31 @@
+import type { IconType } from "react-icons";
+import {
+  FiBookOpen,
+  FiCalendar,
+  FiCamera,
+  FiEdit3,
+  FiFileText,
+  FiMessageCircle,
+  FiMusic,
+} from "react-icons/fi";
 import { MEMBERS } from "./data/members";
 import { SOCIAL_PLATFORMS } from "./socialLinks.data";
+import type { ActivityKind } from "./api/members.api";
 import type { PublicProfileDTO } from "./api/publicProfile.api";
+
+// The seeded registry stores each activity's icon directly; the wire DTO speaks
+// `kind`. This reverses the same icon↔kind mapping the live adapter uses
+// (`members.adapters.ts` ACTIVITY_ICONS) so the demo projects through the exact
+// shape the public endpoint returns. Unknown icons fall back to "post".
+const ICON_TO_KIND = new Map<IconType, ActivityKind>([
+  [FiFileText, "post"],
+  [FiCalendar, "event"],
+  [FiMessageCircle, "message"],
+  [FiBookOpen, "reading"],
+  [FiEdit3, "edit"],
+  [FiCamera, "photo"],
+  [FiMusic, "music"],
+]);
 
 /**
  * Demo mode's stand-in for GET /public/profiles/:slug.
@@ -38,6 +63,11 @@ export function demoPublicProfile(slug: string): PublicProfileDTO | null {
       title: item.title,
       year: item.year,
       imageUrl: item.image ?? null,
+    })),
+    activity: (member.activity ?? []).map((item) => ({
+      kind: ICON_TO_KIND.get(item.icon) ?? "post",
+      title: item.title,
+      sub: item.sub,
     })),
   };
 }

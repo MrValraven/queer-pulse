@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { FiBell, FiAlertCircle } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import { Tabs } from "../../shared/components/ui";
+import { Tabs, FeatureHelp, PullToRefresh } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { NotificationsListSkeleton } from "./NotificationsSkeleton";
@@ -19,6 +20,7 @@ type NotificationId = Notification["id"];
 
 export function NotificationsPage() {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const {
     data: notifications = [],
     isLoading,
@@ -93,12 +95,13 @@ export function NotificationsPage() {
   );
 
   return (
-    <AppShell unreadCount={unreadCount}>
+    <AppShell>
       <div className={styles.page}>
         <div className={styles.inner}>
           <div className={styles.header}>
             <div className={styles.title}>
               {t("notifications:page.title")}
+              <FeatureHelp id="notifications.hub" />
               {unreadCount > 0 && (
                 <span className={styles.badge}>{unreadCount}</span>
               )}
@@ -173,20 +176,31 @@ export function NotificationsPage() {
               <div>{t("notifications:page.empty.description")}</div>
             </div>
           ) : (
-            <div className={styles.list}>
-              {recent.length > 0 && (
-                <div className={styles.day}>
-                  {t("notifications:page.dayRecent")}
-                </div>
-              )}
-              {recent.map((n, i) => renderItem(n, i))}
-              {earlier.length > 0 && (
-                <div className={styles.day}>
-                  {t("notifications:page.dayEarlier")}
-                </div>
-              )}
-              {earlier.map((n, i) => renderItem(n, recent.length + i))}
-            </div>
+            // `queryKey: ["notifications"]` matches useNotifications' inline
+            // `["notifications", demoMode, unreadOnly, language]` as a prefix —
+            // the same convention useMarkAllRead/useMarkNotificationRead already
+            // use to invalidate this feed (also catches the unread-count query,
+            // which is fine — it should refresh alongside the list).
+            <PullToRefresh
+              onRefresh={() =>
+                queryClient.invalidateQueries({ queryKey: ["notifications"] })
+              }
+            >
+              <div className={styles.list}>
+                {recent.length > 0 && (
+                  <div className={styles.day}>
+                    {t("notifications:page.dayRecent")}
+                  </div>
+                )}
+                {recent.map((n, i) => renderItem(n, i))}
+                {earlier.length > 0 && (
+                  <div className={styles.day}>
+                    {t("notifications:page.dayEarlier")}
+                  </div>
+                )}
+                {earlier.map((n, i) => renderItem(n, recent.length + i))}
+              </div>
+            </PullToRefresh>
           )}
         </div>
       </div>

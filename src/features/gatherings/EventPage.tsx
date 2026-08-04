@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Avatar, ImageSlot } from "../../shared/components/ui";
-import { FiLock } from "react-icons/fi";
+import { Avatar, Button, ImageSlot } from "../../shared/components/ui";
+import { FiBookmark, FiLock } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
+import { useSaved } from "../../app/providers/useSaved";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { spotsText } from "./data";
@@ -32,6 +34,32 @@ import styles from "./EventPage.module.css";
 export function EventPage() {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const { showToast } = useToast();
+  const { isSaved, toggleSave } = useSaved();
+
+  // The static EventPage mirrors the RSVP card's stable placeholder slug so the
+  // saved item lines up with a real event once this page is data-driven.
+  const savedId = "event:welcome-dinner";
+  const eventTitle = `${EVENT_TITLE_LINE} ${EVENT_TITLE_EM}`;
+  const saved = isSaved(savedId);
+
+  function handleToggleSave() {
+    const nowSaved = toggleSave({
+      id: savedId,
+      kind: "event",
+      title: eventTitle,
+      href: routes.event,
+      meta: EVENT_PILL_LOCATION,
+    });
+    showToast(
+      t(
+        nowSaved
+          ? "gatherings:event.save.savedToast"
+          : "gatherings:event.save.removedToast",
+      ),
+      "success",
+    );
+  }
 
   return (
     <PageShell>
@@ -90,6 +118,8 @@ export function EventPage() {
           radius={0}
           placeholder={EVENT_HERO_ALT}
           className={styles.imgStrip}
+          loading="eager"
+          fetchPriority="high"
         />
       </div>
 
@@ -161,6 +191,31 @@ export function EventPage() {
 
             <div className={styles.aside} id="event-rsvp-aside">
               <EventRsvpCard />
+
+              <div className={styles.saveEventRow}>
+                <Button
+                  variant="ghost"
+                  onClick={handleToggleSave}
+                  aria-pressed={saved}
+                  aria-label={t(
+                    saved
+                      ? "gatherings:event.save.unsaveAriaLabel"
+                      : "gatherings:event.save.saveAriaLabel",
+                    { title: eventTitle },
+                  )}
+                  style={{ width: "100%" }}
+                >
+                  <FiBookmark
+                    aria-hidden
+                    fill={saved ? "currentColor" : "none"}
+                  />
+                  {t(
+                    saved
+                      ? "gatherings:event.save.saved"
+                      : "gatherings:event.save.cta",
+                  )}
+                </Button>
+              </div>
 
               <div className={styles.membersOnly}>
                 <div

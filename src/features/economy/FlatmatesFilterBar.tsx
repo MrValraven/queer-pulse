@@ -58,6 +58,7 @@ export function FlatmatesFilterBar({
           <div className={styles.spacer} />
           <select
             className={styles.fSelect}
+            aria-label={t("economy:flatmates.filter.anyNeighbourhood")}
             value={neighbourhood}
             onChange={(e) => setNeighbourhood(e.target.value)}
           >
@@ -72,6 +73,7 @@ export function FlatmatesFilterBar({
           </select>
           <select
             className={styles.fSelect}
+            aria-label={t("economy:flatmates.filter.anyBudget")}
             value={budget}
             onChange={(e) => setBudget(e.target.value)}
           >
@@ -93,6 +95,7 @@ export function FlatmatesFilterBar({
           </select>
           <select
             className={styles.fSelect}
+            aria-label={t("economy:flatmates.filter.anyMoveIn")}
             value={movein}
             onChange={(e) => setMovein(e.target.value)}
           >

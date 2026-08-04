@@ -4,13 +4,16 @@ import {
   FiAward,
   FiBookOpen,
   FiCamera,
+  FiClipboard,
   FiCode,
+  FiCoffee,
   FiDisc,
   FiFeather,
   FiFilm,
   FiGitBranch,
   FiGrid,
   FiHeadphones,
+  FiHeart,
   FiImage,
   FiLayers,
   FiLink,
@@ -44,6 +47,9 @@ export const KIND_SECTIONS: Record<SubprofileKind, SubprofileSection[]> = {
   performer: ["appearances", "reel"],
   photographer: ["series", "exhibitions"],
   videomaker: ["videos", "screenings"],
+  chef: ["menus", "residencies"],
+  mixologist: ["cocktails", "residencies"],
+  therapist: ["specialisms", "credentials"],
   generic: ["showcase"],
 };
 
@@ -197,6 +203,35 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
     icon: FiVideo,
     fields: ["title", "subtitle", "description", "imageUrl", "url", "date"],
   },
+  // chef
+  menus: {
+    labelKey: "subprofiles:section.menus",
+    icon: FiClipboard,
+    fields: ["title", "subtitle", "description", "imageUrl", "date", "url"],
+  },
+  // chef + mixologist
+  residencies: {
+    labelKey: "subprofiles:section.residencies",
+    icon: FiMapPin,
+    fields: ["title", "subtitle", "date", "url"],
+  },
+  // mixologist
+  cocktails: {
+    labelKey: "subprofiles:section.cocktails",
+    icon: FiCoffee,
+    fields: ["title", "subtitle", "description", "imageUrl", "date"],
+  },
+  // therapist
+  specialisms: {
+    labelKey: "subprofiles:section.specialisms",
+    icon: FiHeart,
+    fields: ["title", "description"],
+  },
+  credentials: {
+    labelKey: "subprofiles:section.credentials",
+    icon: FiAward,
+    fields: ["title", "subtitle", "date"],
+  },
   // generic
   showcase: {
     labelKey: "subprofiles:section.showcase",
@@ -238,6 +273,9 @@ export const KIND_LABEL_KEYS: Record<SubprofileKind, string> = {
   performer: "subprofiles:kind.performer",
   photographer: "subprofiles:kind.photographer",
   videomaker: "subprofiles:kind.videomaker",
+  chef: "subprofiles:kind.chef",
+  mixologist: "subprofiles:kind.mixologist",
+  therapist: "subprofiles:kind.therapist",
   generic: "subprofiles:kind.generic",
 };
 
@@ -266,6 +304,9 @@ export const KIND_LABELS: Record<SubprofileKind, string> = {
   performer: "Performer",
   photographer: "Photographer",
   videomaker: "Videomaker",
+  chef: "Chef",
+  mixologist: "Mixologist",
+  therapist: "Therapist",
   generic: "Other",
 };
 
@@ -294,6 +335,9 @@ const KIND_SLUG: Record<SubprofileKind, string> = {
   performer: "performer",
   photographer: "photographer",
   videomaker: "videomaker",
+  chef: "chef",
+  mixologist: "mixologist",
+  therapist: "therapist",
   generic: "other",
 };
 

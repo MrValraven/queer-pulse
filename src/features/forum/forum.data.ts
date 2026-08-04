@@ -79,6 +79,9 @@ export interface Reply {
   canDelete?: boolean;
   canRestore?: boolean;
   canViewHistory?: boolean;
+  /** Viewer's vote on this reply (0 or 1) — live only; demo keeps like state
+   *  local. Optional so demo seed data still typechecks. */
+  myVote?: number;
 }
 
 export interface Thread {
@@ -110,6 +113,12 @@ export interface Thread {
   replies: Reply[];
   /** Backend id of the opening post (edit/delete/restore/history target). */
   opPostId?: string;
+  /** Whether replies are closed. Live-provided; demo threads are unlocked.
+   *  Optional so demo seed data still typechecks. */
+  isLocked?: boolean;
+  /** Viewer's vote on the opening post (0 or 1) — live only. Optional so demo
+   *  seed data still typechecks. */
+  myVote?: number;
   editedAt?: string | null;
   deleted?: boolean;
   removedByModerator?: boolean;
@@ -117,6 +126,9 @@ export interface Thread {
   canDelete?: boolean;
   canRestore?: boolean;
   canViewHistory?: boolean;
+  /** Whether the viewer may lock/unlock this thread (moderator permission).
+   *  Live-provided; absent on demo threads, so the lock control is live-only. */
+  canLock?: boolean;
 }
 
 // ── Author / reply identity, driven by the member registry ──────────────────
@@ -216,6 +228,20 @@ export const SELF_AUTHOR: Thread["author"] = {
 };
 
 /**
+ * Neutral, non-persona author for an optimistic LIVE thread when the session
+ * profile isn't available. Compose is auth-gated, so this is a defensive
+ * fallback only — it exists so live can NEVER borrow the demo `SELF_AUTHOR`
+ * ("Tiago Costa") persona. It carries no slug/photo (links nowhere) and reads as
+ * the viewer's own post ("You") until the create response reconciles the card.
+ */
+export const NEUTRAL_AUTHOR: Thread["author"] = {
+  initials: "",
+  name: "You",
+  background: "var(--plum)",
+  color: "var(--cream)",
+};
+
+/**
  * Author block for a REAL authenticated member publishing in live mode, built
  * entirely from the session profile (`useAuth().user.profile`) — never the mock
  * registry — so the demo "Tiago Costa" persona can never appear on a production
@@ -239,9 +265,19 @@ export function selfAuthorFromProfile(profile: {
   };
 }
 
+/**
+ * Scripted demo threads. Each carries a SYNTHETIC `opPostId` (`demo-op-<id>`) so
+ * the demo upvote button toggles: the demo thread list is cached via
+ * `useThreads`' `queryFn`, and `useVotePost`'s optimistic `onMutate` finds the
+ * card by `opPostId` and flips `myVote`/`upvotes` in place (demo makes no API
+ * call). These ids are demo-only — live never reads `THREADS` for the list — so
+ * they cannot reach a production request. None of these threads is authored by
+ * the demo persona, so the synthetic id never surfaces a moderation menu.
+ */
 export const THREADS: Thread[] = [
   {
     id: 1,
+    opPostId: "demo-op-1",
     category: "guides",
     pinned: true,
     title: "Master resource guide: LGBTQ+ in Lisbon",
@@ -297,6 +333,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 2,
+    opPostId: "demo-op-2",
     category: "health",
     pinned: true,
     title: "Trans-affirming healthcare in Lisbon — the full guide",
@@ -347,6 +384,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 3,
+    opPostId: "demo-op-3",
     category: "general",
     pinned: true,
     title: "Welcome thread — introduce yourself",
@@ -394,6 +432,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 5,
+    opPostId: "demo-op-5",
     category: "activism",
     title: "Proposal: Monthly queer film night at Cinema São Jorge",
     excerpt:
@@ -447,6 +486,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 6,
+    opPostId: "demo-op-6",
     category: "general",
     title: "What queer spaces in Lisbon do you miss or want to see return?",
     excerpt:
@@ -500,6 +540,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 8,
+    opPostId: "demo-op-8",
     category: "housing",
     title: "Honest guide to finding a flat in Lisbon as a newcomer",
     excerpt:
@@ -539,6 +580,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 16,
+    opPostId: "demo-op-16",
     category: "trans",
     pinned: true,
     title: "Trans healthcare in Portugal 2026 — the complete SNS guide",
@@ -579,6 +621,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 11,
+    opPostId: "demo-op-11",
     category: "arts",
     title: "Vote: Queer film series — what do we watch in July?",
     excerpt:
@@ -627,6 +670,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 13,
+    opPostId: "demo-op-13",
     category: "general",
     title: "Should QueerPulse be more accessible to non-professionals?",
     excerpt:
@@ -679,6 +723,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 18,
+    opPostId: "demo-op-18",
     category: "activism",
     title: "Micro-grants: Q3 2026 applications now open",
     excerpt:
@@ -717,6 +762,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 15,
+    opPostId: "demo-op-15",
     category: "jobs",
     title: "Queer-run bookshop in Anjos — hiring a bookseller",
     excerpt:
@@ -766,6 +812,7 @@ export const THREADS: Thread[] = [
   },
   {
     id: 19,
+    opPostId: "demo-op-19",
     category: "trans",
     title: "Legal name change in Portugal — sharing experiences and tips",
     excerpt:

@@ -418,6 +418,7 @@ export function detailDtoToMember(
     id: detailDto.id,
     role: detailDto.role,
     isSystem: detailDto.isSystem,
+    suspended: detailDto.suspended ?? false,
     glance: glanceFor(detailDto, t),
     graphNote: graphNoteFor(detailDto, t),
     communities: detailDto.communities.map((communityDto) =>

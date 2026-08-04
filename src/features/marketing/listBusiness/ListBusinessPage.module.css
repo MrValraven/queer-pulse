@@ -1086,6 +1086,9 @@
   font-weight: 600;
   color: var(--ink-60);
 }
+.altReq {
+  color: var(--accent);
+}
 
 /* ===== Photo slot (upload / URL) ===== */
 .photoField {

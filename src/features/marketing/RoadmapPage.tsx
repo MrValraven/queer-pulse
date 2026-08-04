@@ -7,13 +7,27 @@ import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { useRoadmap } from "./api/useRoadmap";
 import { BuildingCard, PlannedCard, ShippedCard } from "./RoadmapCards";
-import { HowWeDecide, SubmitIdea, TopIdeas } from "./RoadmapSections";
+import {
+  HowWeDecide,
+  NotBuildingSection,
+  SomedaySection,
+  SubmitIdea,
+  TopIdeas,
+} from "./RoadmapSections";
 import styles from "./RoadmapPage.module.css";
 
 export function RoadmapPage() {
   const { t } = useTranslation();
-  const { heroStats, shipped, building, planned, topIdeas, loading } =
-    useRoadmap();
+  const {
+    heroStats,
+    shipped,
+    building,
+    planned,
+    backlog,
+    topIdeas,
+    notBuilding,
+    loading,
+  } = useRoadmap();
   const pageTitle = t("marketing:roadmap.meta.title");
   const pageDescription = t("marketing:roadmap.meta.description");
 
@@ -40,12 +54,18 @@ export function RoadmapPage() {
           <p className={styles.heroSub}>{t("marketing:roadmap.hero.sub")}</p>
           <div className={styles.heroStats}>
             {heroStats.map((stat) => (
-              <span
+              <div
                 key={stat.label}
-                className={`${styles.statChip} ${stat.jade ? styles.jade : ""}`}
+                className={`${styles.statTile} ${stat.jade ? styles.jade : ""}`}
               >
-                {stat.label}
-              </span>
+                {stat.value && (
+                  <div className={styles.statValue}>{stat.value}</div>
+                )}
+                <div className={styles.statLabel}>{stat.label}</div>
+                {stat.note && (
+                  <div className={styles.statNote}>{stat.note}</div>
+                )}
+              </div>
             ))}
           </div>
         </div>
@@ -108,6 +128,8 @@ export function RoadmapPage() {
             </section>
           </div>
 
+          {!loading && <SomedaySection items={backlog} />}
+
           <section className={styles.shapeSection}>
             <h2 className={styles.sectionHead}>
               <Translation
@@ -125,6 +147,8 @@ export function RoadmapPage() {
           </section>
 
           <HowWeDecide />
+
+          {!loading && <NotBuildingSection items={notBuilding} />}
         </div>
       </div>
 

@@ -31,6 +31,7 @@ export const connect: Catalog = {
   "toast.declined": "Politely declined",
   "toast.withdrawn": "Request withdrawn",
   "toast.unblocked": "Unblocked {name}",
+  "toast.actionFailed": "That didn't go through. Please try again.",
 
   // Per-card "more" menu (ConnectionCards)
   "moreMenu.ariaMore": "More options for {name}",

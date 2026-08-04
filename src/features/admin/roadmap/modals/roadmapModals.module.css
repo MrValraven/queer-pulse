@@ -1,0 +1,296 @@
+/* Shared styles for the 8 roadmap admin modals (Task C4). Kept as one
+   colocated module — every modal is small and shares the same handful of
+   shapes (a body paragraph, a radiogroup option list, a reassurance box, a
+   textarea, a keyboard/audit list) rather than each needing its own file. */
+
+.body {
+  margin: 0 0 16px;
+  color: var(--ink-60);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 12px;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.metaLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.metaValue {
+  font-size: 14px;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.field {
+  margin-bottom: 14px;
+}
+
+.field textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+/* Visible label for a non-native control (a radiogroup `FormField` can't
+   wire up directly — see its `nativeControl` guard) — matches `FormField`'s
+   own `.label` look so it reads as part of the same form. */
+.groupLabel {
+  margin-bottom: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.digestTextarea {
+  width: 100%;
+  min-height: 320px;
+  padding: 13px 15px;
+  font-family: var(--mono, monospace);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: 12px;
+  resize: vertical;
+}
+
+.digestTextarea:focus {
+  outline: none;
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+  background: var(--paper);
+}
+
+/* ── Radiogroup option list (merge target / decline reason) ─────────────── */
+.optionList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 280px;
+  overflow-y: auto;
+  margin-bottom: 14px;
+}
+
+.optionCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.16s var(--ease),
+    background 0.16s var(--ease);
+}
+
+@media (hover: hover) {
+  .optionCard:hover {
+    border-color: rgba(var(--accent-rgb), 0.4);
+  }
+}
+
+.optionCardOn {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+.optionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.optionCat {
+  font-size: 12px;
+  color: var(--ink-40);
+  flex: none;
+}
+
+.emptyOption {
+  padding: 14px;
+  text-align: center;
+  color: var(--ink-40);
+  font-size: 13px;
+}
+
+/* ── Reassurance box (notify voters "one email, no follow-ups") ─────────── */
+.reassurance {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  background: rgba(var(--jade-rgb), 0.08);
+  border: 1px solid rgba(var(--jade-rgb), 0.22);
+  border-radius: 12px;
+}
+
+.reassuranceIcon {
+  flex: none;
+  color: var(--jade);
+  margin-top: 1px;
+}
+
+.reassuranceTx {
+  min-width: 0;
+}
+
+.reassuranceTitle {
+  margin: 0 0 2px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.reassuranceSub {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+
+/* ── Note box (safety gate) ──────────────────────────────────────────────── */
+.note {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
+  border-radius: 12px;
+  color: var(--text-strong);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ── Keyboard shortcuts list ─────────────────────────────────────────────── */
+.shortcutList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.shortcutRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 2px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+.shortcutRow:last-child {
+  border-bottom: none;
+}
+
+.shortcutLabel {
+  font-size: 14px;
+  color: var(--ink-60);
+}
+
+.shortcutKeys {
+  display: flex;
+  gap: 4px;
+  flex: none;
+}
+
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 24px;
+  padding: 0 6px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 6px;
+  font-family: var(--mono, monospace);
+  font-size: 12px;
+  color: var(--text-strong);
+  box-shadow: 0 1px 0 rgba(var(--line-rgb), 0.16);
+}
+
+/* ── Audit log list ──────────────────────────────────────────────────────── */
+.auditList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 360px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+}
+
+.auditRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 2px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+.auditRow:last-child {
+  border-bottom: none;
+}
+
+.auditWhat {
+  font-size: 14px;
+  color: var(--text-strong);
+}
+
+.auditMeta {
+  font-size: 12px;
+  color: var(--ink-40);
+}
+
+.auditActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dangerZone {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.dangerHint {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--ink-40);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .optionCard {
+    transition: none;
+  }
+}

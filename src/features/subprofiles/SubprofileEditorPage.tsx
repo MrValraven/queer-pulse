@@ -10,6 +10,7 @@ import { SubprofileMetaForm } from "./SubprofileMetaForm";
 import { SubprofileSocialLinksEditor } from "./SubprofileSocialLinksEditor";
 import { SubprofileAffiliationsEditor } from "./SubprofileAffiliationsEditor";
 import { SubprofileSectionEditor } from "./SubprofileSectionEditor";
+import { SubprofileOwnersPanel } from "./SubprofileOwnersPanel";
 import { SubprofilePublishPanel } from "./SubprofilePublishPanel";
 import styles from "./SubprofileEditor.module.css";
 
@@ -96,6 +97,8 @@ export function SubprofileEditorPage() {
               section={section}
             />
           ))}
+
+          <SubprofileOwnersPanel subprofileId={subprofile.id} />
 
           <SubprofilePublishPanel subprofile={subprofile} />
         </div>

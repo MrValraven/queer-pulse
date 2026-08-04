@@ -61,6 +61,42 @@ export interface ResolvedMapLink {
 export const resolveMapLink = (url: string) =>
   apiPost<ResolvedMapLink>("/geocode/resolve-link", { url });
 
+/**
+ * POST /geocode/address — geocode a typed street address to coordinates, so a
+ * member who has no Google Maps link to paste can still place their pin
+ * (item #1). Same response shape as `resolveMapLink`. Throws on an
+ * un-geocodable address; the caller falls back to a neighbourhood centroid.
+ */
+export const geocodeAddress = (address: string) =>
+  apiPost<ResolvedMapLink>("/geocode/address", { address });
+
+/** One directory look-alike surfaced while the member types a name (item #5). */
+export interface SimilarListing {
+  name: string;
+  cat: string;
+  hood: string;
+  slug: string;
+  /** Metres from the typed coordinates, or null when matched by name only. */
+  distanceM: number | null;
+}
+
+/**
+ * GET /listings/similar — real duplicate detection against the live directory,
+ * by name (fuzzy) and/or proximity to the given coordinates. Replaces the old
+ * hardcoded 6-place seed match. Returns at most five.
+ */
+export function getSimilarListings(
+  name: string,
+  coords?: { latitude: number; longitude: number },
+): Promise<SimilarListing[]> {
+  const params = new URLSearchParams({ name });
+  if (coords) {
+    params.set("lat", String(coords.latitude));
+    params.set("lng", String(coords.longitude));
+  }
+  return apiGet<SimilarListing[]>(`/listings/similar?${params.toString()}`);
+}
+
 /** GET /listings/mine?page= — the caller's own submitted listings. */
 export async function getMyListings(page = 1): Promise<Paginated<ListingDTO>> {
   const res = await apiGet<ListingDTO[] | Paginated<ListingDTO>>(
@@ -81,14 +117,25 @@ export const updateListing = (ref: string, dto: Partial<CreateListingDto>) =>
 export const deleteListing = (ref: string) =>
   apiDelete<void>(`/listings/${ref}`);
 
+/** DELETE /listings/admin/:ref — moderator hard-delete of any listing
+ *  (204 No Content). Separate from `deleteListing`, which is owner-scoped.
+ *  `reason` is optional free text recorded on the listing's moderation event. */
+export const deleteListingAsModerator = (ref: string, reason?: string) =>
+  apiDelete<void>(`/listings/admin/${ref}`, { reason });
+
 /**
  * PATCH /listings/:ref/status — move a listing along its review status.
  * Moderator-only: this is NOT called from the member client (members cannot
  * self-transition their own listings). Declared here for contract completeness
- * and use by the moderation surface.
+ * and use by the moderation surface. `reason` is optional free text recorded
+ * on the listing's moderation event (and DM'd to the submitter on a send-back
+ * per the backend contract).
  */
-export const setListingStatus = (ref: string, status: ListingStatus) =>
-  apiPatch<ListingDTO>(`/listings/${ref}/status`, { status });
+export const setListingStatus = (
+  ref: string,
+  status: ListingStatus,
+  reason?: string,
+) => apiPatch<ListingDTO>(`/listings/${ref}/status`, { status, reason });
 
 /**
  * POST /listings/:ref/question — a moderator asks the submitter a question.

@@ -60,6 +60,7 @@ export function StepTone({ form }: { form: CommunityForm }) {
         <input
           type="text"
           className={styles.input}
+          aria-label={t("communities:start.tone.addPlaceholder")}
           placeholder={t("communities:start.tone.addPlaceholder")}
           value={custom}
           onChange={(e) => setCustom(e.target.value)}

@@ -68,12 +68,20 @@
   text-transform: uppercase;
   color: var(--jade-soft);
   margin-bottom: 16px;
+  margin-left: 14px;
 }
 .typeBadge .dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: var(--jade-soft);
+}
+.h1Row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 .h1 {
   font-family: var(--serif);
@@ -82,7 +90,6 @@
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.97;
-  margin-bottom: 12px;
 }
 .heroSub {
   font-size: 15px;
@@ -320,7 +327,11 @@
   display: inline-block;
   font-size: 13px;
   font-weight: 500;
-  background: rgba(var(--plum-rgb), 0.06);
+  /* --line-rgb flips to light channels in dark mode; --plum-rgb does not, so a
+     plum tint at 6% vanished on the dark page. This keeps a legible chip fill
+     in both themes. */
+  background: rgba(var(--line-rgb), 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 8px;
   padding: 6px 12px;
   color: var(--ink-60);
@@ -523,6 +534,11 @@
   color: var(--ink-60);
   line-height: 1.6;
 }
+.loadMoreReplies {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0 4px;
+}
 .replyBar {
   display: flex;
   gap: 10px;
@@ -549,13 +565,14 @@
 .npTa:focus-visible {
   outline: none;
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.1);
+  /* line-rgb flips light in dark mode so the focus ring stays visible. */
+  box-shadow: 0 0 0 3px rgba(var(--line-rgb), 0.18);
 }
 .replyTa:focus {
   border-color: rgba(var(--line-rgb), 0.3);
 }
 .newPost {
-  background: rgba(var(--plum-rgb), 0.04);
+  background: rgba(var(--line-rgb), 0.05);
   border: 1.5px dashed rgba(var(--line-rgb), 0.14);
   border-radius: 14px;
   padding: 16px 20px;
@@ -798,6 +815,8 @@
   color: var(--jade);
 }
 .tPlum {
-  background: rgba(var(--plum-rgb), 0.1);
+  /* The "Me" avatar tint. Coral/jade tints stay vivid on dark, but a plum tint
+     disappears on the dark paper — line-rgb flips it to a light fill instead. */
+  background: rgba(var(--line-rgb), 0.14);
   color: var(--text-strong);
 }

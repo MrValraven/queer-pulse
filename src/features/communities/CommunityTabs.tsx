@@ -276,6 +276,7 @@ export function ForumTab({
           <textarea
             className={styles.npTa}
             rows={1}
+            aria-label={t("communities:detail.forum.newPostPlaceholder")}
             placeholder={t("communities:detail.forum.newPostPlaceholder")}
             value={newPost}
             onChange={(event) => setNewPost(event.target.value)}

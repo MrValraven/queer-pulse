@@ -254,7 +254,7 @@ export const safety: Catalog = {
   "appeal.pending.submittedLabel": "Submetido",
   "appeal.pending.expectedLabel": "Resposta esperada",
   "appeal.pending.info":
-    "<strong>Enquanto o teu recurso está em análise:</strong> a decisão original mantém-se em vigor, mas nenhuma ação adicional será tomada. Vais ser notificade por email assim que uma decisão for tomada.",
+    "<strong>Enquanto o teu recurso está em análise:</strong> a decisão original mantém-se em vigor, mas nenhuma ação adicional será tomada. O resultado aparece aqui mesmo — volta a esta página, ou inicia sessão e abre os teus recursos para veres em que ponto está.",
   "appeal.pending.govLink": "Como funciona a moderação →",
 
   "appeal.overturned.title": "O teu recurso foi <em>bem-sucedido</em>",
@@ -294,13 +294,13 @@ export const safety: Catalog = {
   "appealSubmit.form.submitting": "A enviar…",
   "appealSubmit.form.ladderCta": "Ler a escala da comunidade",
   "appealSubmit.notice":
-    "<b>Enquanto o teu recurso é analisado,</b> a decisão original mantém-se. Vais ter resposta por email — normalmente dentro de alguns dias.",
+    "<b>Enquanto o teu recurso é analisado,</b> a decisão original mantém-se. O resultado aparece nesta página — normalmente dentro de alguns dias. Volta cá, ou reabre o teu recurso a qualquer momento para veres em que ponto está.",
   "appealSubmit.foot":
     "Todos os recursos, e como foram decididos, ficam registados no nosso <a>registo de transparência</a>.",
   "appealSubmit.errorFrame": "Não foi possível registar o teu recurso",
   "appealSubmit.success.title": "O teu recurso <em>entrou</em>",
   "appealSubmit.success.sub":
-    "Um moderador que não esteve envolvido na decisão original vai analisá-lo. Enviamos-te um email assim que houver um resultado.",
+    "Um moderador que não esteve envolvido na decisão original vai analisá-lo. O resultado aparece aqui — acompanha o teu recurso nesta página para o veres assim que for decidido.",
   "appealSubmit.success.filedLabel": "Registado",
   "appealSubmit.success.trackCta": "Acompanhar este recurso",
   "appealSubmit.success.howCta": "Como funciona a moderação",
@@ -674,4 +674,9 @@ export const safety: Catalog = {
   "vouchModal.form.cancelCta": "Cancelar",
   "vouchModal.form.submitting": "A submeter…",
   "vouchModal.form.submitCta": "Adicionar o meu aval",
+  "vouchModal.comingSoon.badge": "Brevemente",
+  "vouchModal.comingSoon.title": "Os avais estão <em>a chegar em breve.</em>",
+  "vouchModal.comingSoon.body":
+    "Ainda estamos a construir o processo de confiança por trás dos avais de membros. Ative a plataforma de demonstração para pré-visualizar o fluxo completo, ou volte em breve.",
+  "vouchModal.comingSoon.doneCta": "Fechar",
 };

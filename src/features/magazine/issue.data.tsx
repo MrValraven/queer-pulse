@@ -19,6 +19,34 @@ export interface Entry {
 export const ISSUE_COVER_IMG =
   "https://images.unsplash.com/photo-1775633954065-887d3f2025bd?q=80&w=600&auto=format&fit=crop";
 
+/**
+ * Demo-mode cover values for the always-issue-09 page. These are the
+ * fabricated editorial fields the prototype ships (title/dek/season/stats/
+ * publish date); live mode overlays the real title/dek/date from
+ * GET /magazine/issues/:number and never renders the fabricated season line,
+ * stat counts or editor's letter. Kept here (not as component default props)
+ * so a missing/failed live fetch can never silently fall back to this mock.
+ */
+export const DEMO_ISSUE_COVER = {
+  number: "09",
+  season: "Spring · 2026",
+  title: (
+    <>
+      On <em>health.</em>
+    </>
+  ),
+  dek: (
+    <>
+      Twelve pieces about how we keep our bodies, our minds, and each other.
+      Reported, debated, illustrated. <em>Sometimes funny.</em>
+    </>
+  ),
+  publishedLabel: "6 Jun 2026",
+  featureCount: 12,
+  pageCount: 84,
+  contributorCount: 8,
+} as const;
+
 export const PRINT_EDITION_IMG =
   "https://images.unsplash.com/photo-1759926967575-e3254dc7d531?q=80&w=600&auto=format&fit=crop";
 

@@ -1,0 +1,53 @@
+import { apiGet } from "../../../shared/api/client";
+
+/**
+ * Admin invite oversight (`/admin/invites`, admin-only). Lists every invite on
+ * the platform — who sent it, who (if anyone) accepted it, its status, and its
+ * dates — so staff can audit the vouched-invite graph. The backend scopes this
+ * to admins and 403s otherwise; this file only owns the wire shape.
+ */
+
+export type AdminInviteStatus = "valid" | "used" | "expired" | "revoked";
+
+export interface AdminInvitePersonDTO {
+  slug: string;
+  name: string;
+  avatarUrl?: string | null;
+}
+
+export interface AdminInviteDTO {
+  id: string;
+  code: string;
+  status: AdminInviteStatus;
+  /** The member who created the invite. */
+  inviter: AdminInvitePersonDTO;
+  /** The recipient who accepted it, once `used`. */
+  invitee?: AdminInvitePersonDTO | null;
+  /** The email the inviter addressed it to, if any. */
+  email?: string | null;
+  /** ISO timestamp the invite was created. */
+  createdAt: string;
+  /** ISO timestamp the invite stops working. */
+  expiresAt: string;
+}
+
+export interface AdminInviteListDTO {
+  items: AdminInviteDTO[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+/** Paginated invite list for the admin panel, optionally filtered by status. */
+export const getAdminInvites = (parameters: {
+  page?: number;
+  status?: AdminInviteStatus;
+}) => {
+  const searchParams = new URLSearchParams();
+  if (parameters.page) searchParams.set("page", String(parameters.page));
+  if (parameters.status) searchParams.set("status", parameters.status);
+  const querySuffix = searchParams.toString();
+  return apiGet<AdminInviteListDTO>(
+    `/admin/invites${querySuffix ? `?${querySuffix}` : ""}`,
+  );
+};

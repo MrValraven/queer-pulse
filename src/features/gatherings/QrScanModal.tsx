@@ -129,6 +129,7 @@ export function QrScanModal({
         aria-label={t("gatherings:qr.title")}
         className={styles.modal}
       >
+        <span className={styles.grabber} aria-hidden />
         <button
           type="button"
           className={styles.close}

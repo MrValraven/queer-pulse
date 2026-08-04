@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, SkeletonLine } from "../../shared/components/ui";
 import { AdminDrawer, AdminAvatar, AdminChip } from "./ui";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminVouchGraphModal } from "./AdminVouchGraphModal";
@@ -10,6 +11,7 @@ import {
   SealedIdentity,
 } from "./AdminMemberDrawerSections";
 import { AdminMemberRoleControl } from "./AdminMemberRoleControl";
+import { AdminMemberSuspensionControl } from "./AdminMemberSuspensionControl";
 import { MessageModal, RestrictModal } from "./AdminMemberModals";
 import { portrait } from "./adminPeople.data";
 import { useAdminMember } from "./api/useAdminMembers";
@@ -24,6 +26,7 @@ interface Props {
 const firstName = (full: string) => full.split(" ")[0];
 
 export function AdminMemberDrawer({ member, onClose }: Props) {
+  const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const { t } = useTranslation();
   const [confirming, setConfirming] = useState(false);
@@ -84,12 +87,17 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
                 variant="jade"
                 size="md"
                 onClick={() =>
-                  showToast(
-                    t("admin:members.drawer.verifiedToast", {
-                      name: member.name,
-                    }),
-                    "success",
-                  )
+                  demoMode
+                    ? showToast(
+                        t("admin:members.drawer.verifiedToast", {
+                          name: member.name,
+                        }),
+                        "success",
+                      )
+                    : showToast(
+                        t("admin:members.drawer.comingSoonToast"),
+                        "info",
+                      )
                 }
               >
                 {t("admin:members.drawer.verifyCta")}
@@ -97,14 +105,28 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
               <Button
                 variant="ghost"
                 size="md"
-                onClick={() => setModal("message")}
+                onClick={() =>
+                  demoMode
+                    ? setModal("message")
+                    : showToast(
+                        t("admin:members.drawer.comingSoonToast"),
+                        "info",
+                      )
+                }
               >
                 {t("admin:members.drawer.messageCta")}
               </Button>
               <Button
                 variant="ghost"
                 size="md"
-                onClick={() => setModal("restrict")}
+                onClick={() =>
+                  demoMode
+                    ? setModal("restrict")
+                    : showToast(
+                        t("admin:members.drawer.comingSoonToast"),
+                        "info",
+                      )
+                }
               >
                 {t("admin:members.drawer.restrictCta")}
               </Button>
@@ -125,6 +147,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
         ) : (
           <>
             <AdminMemberRoleControl member={member} detail={detail} />
+            <AdminMemberSuspensionControl member={member} detail={detail} />
             <MemberOverviewSections
               detail={detail}
               memberName={member.name}

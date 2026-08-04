@@ -33,6 +33,9 @@ export const resources: Catalog = {
   "suggestEdit.success.title": "Suggestion <em>received.</em>",
   "suggestEdit.success.sub":
     "The editors look at suggestions weekly and discuss bigger changes at the monthly assembly. This is a living document precisely because of edits like yours.",
+  "suggestEdit.comingSoon.title": "Edits aren't open <em>yet.</em>",
+  "suggestEdit.comingSoon.sub":
+    "Glossary suggestions aren't wired to the editors on the live site yet, so this wouldn't reach anyone. We'd rather be honest than fake a receipt. Check back soon.",
   "suggestEdit.body.intro":
     "Community-edited. If a definition feels incomplete or wrong, tell us which term and what you'd change.",
   "suggestEdit.form.termLabel": "Which term",
@@ -1126,6 +1129,9 @@ export const resources: Catalog = {
     "A coordinator will confirm the alcohol-free listing and add it to the calendar within a day. You'll get the host checklist by email.",
   "sober.host.success.attendSub":
     "We've saved your spot. The private location and a gentle reminder will reach you the day before — nothing is shared publicly.",
+  "sober.host.comingSoon.title": "Sober meet-ups are <em>coming.</em>",
+  "sober.host.comingSoon.sub":
+    "Hosting and RSVP aren't connected on the live site yet, so nothing you enter here would reach a coordinator. Rather than fake it, we'll say it plainly — this opens soon.",
   "sober.host.intro":
     "Start an alcohol-free meet-up, or join an existing peer meeting. Either way, you decide how visible you are.",
   "sober.host.modeLabel": "What would you like to do?",
@@ -1407,6 +1413,9 @@ export const resources: Catalog = {
   "microGrants.apply.success.sub":
     "We'll confirm receipt by email within 24 hours. The review panel meets in mid-July. You'll hear back before 31 July regardless of outcome.",
   "microGrants.apply.success.closeCta": "Close",
+  "microGrants.apply.comingSoon.title": "Applications open <em>soon.</em>",
+  "microGrants.apply.comingSoon.sub":
+    "Grant intake isn't wired up on the live site yet, so nothing you'd enter here would reach the review panel. We'd rather say that plainly than fake a receipt. The Q2 round opens soon — check back, or reach the collective if it's urgent.",
 
   "microGrants.apply.category.stepTitle": "What kind of <em>project?</em>",
   "microGrants.apply.category.stepSub":
@@ -1484,6 +1493,9 @@ export const resources: Catalog = {
   "microGrants.panel.success.title": "You're on the <em>list.</em>",
   "microGrants.panel.success.sub":
     "Thank you. The panel coordinator reviews new volunteers ahead of each quarter and will be in touch before the Q3 round opens. Panels rotate so the work stays shared.",
+  "microGrants.panel.comingSoon.title": "Not taking sign-ups <em>yet.</em>",
+  "microGrants.panel.comingSoon.sub":
+    "Panel sign-up isn't connected on the live site yet, so this form wouldn't reach anyone. We didn't want to pretend otherwise. The panel opens to new volunteers before each quarter — check back soon.",
   "microGrants.panel.intro":
     "The panel reads applications and decides grants together. We keep it small, rotating, and deliberately mixed — no professional gatekeepers.",
   "microGrants.panel.nameLabel": "Name",
@@ -2443,4 +2455,43 @@ export const resources: Catalog = {
     "Not the parts that are easiest to hold. All of it.",
   "intersectionality.outro.findCta": "Find your community group",
   "intersectionality.outro.forumCta": "Forum →",
+
+  // ── Section J: live-mode honesty — no fabricated "verified" providers or
+  //    fake submits leak when running against the real API (demo keeps mock) ──
+  "therapistProfilePage.live.title": "This directory is still being built.",
+  "therapistProfilePage.live.body":
+    "We're verifying queer-affirming therapists in Lisbon before any profile goes live here, so every listing is one you can trust. There's nothing to book yet.",
+  "therapistProfilePage.live.cta": "Back to mental health",
+
+  "queerPaediatricians.live.title":
+    "Verified paediatricians are coming soon.",
+  "queerPaediatricians.live.body":
+    "We're still confirming which paediatric practices are genuinely queer- and trans-affirming before we list them. Rather than show unverified names, we're waiting until every profile is one you can trust.",
+  "queerPaediatricians.live.cta": "Ask the community",
+
+  "legal.lawyers.live.title": "The lawyer directory is coming soon.",
+  "legal.lawyers.live.body":
+    "We're vetting LGBTQ+-affirming lawyers before listing them, so we don't send you to someone we can't stand behind. In the meantime, you can report discrimination and we'll help you find support.",
+  "legal.lawyers.live.cta": "Report an issue",
+
+  "sexualHealth.testing.live.title": "The clinic directory is coming soon.",
+  "sexualHealth.testing.live.body":
+    "We're verifying which testing services are genuinely queer- and trans-friendly before we list them here, so every clinic is one you can trust.",
+  "sexualHealth.guides.ask.liveBody":
+    "Anonymous questions aren't open yet — we're setting up a safe way for the community's health volunteers to answer them. Check back soon.",
+
+  "accessibleLisbon.live.title":
+    "Verified accessible spaces are coming soon.",
+  "accessibleLisbon.live.body":
+    "We're confirming step-free access, accessible bathrooms and staff training with each venue before we list it, so every space here is one members have checked.",
+  "accessibleLisbon.live.cta": "Find gatherings",
+
+  "ingredientsMap.missing.liveToast":
+    "Community suggestions aren't open yet — this map is still being built.",
+  "oralHistoryProject.participateLiveToast":
+    "Sign-ups aren't open yet — the oral-history project is still being set up.",
+  "qtipocArchive.contribute.liveToast":
+    "Contributions aren't open yet — the archive is still being built.",
+  "sharedEquipment.requestLiveToast":
+    "The lending library isn't live yet — check back soon.",
 };

@@ -28,19 +28,22 @@ function renderSignIn(initialEntries = ["/auth/sign-in"]) {
 }
 
 describe("SignInPage — closed states", () => {
-  it("?error=registration_disabled renders the registration-paused notice", () => {
+  it("?error=registration_disabled renders the registration-paused notice", async () => {
     status = undefined;
     renderSignIn(["/auth/sign-in?error=registration_disabled"]);
 
+    // `findBy` (not `getBy`) awaits the lazy `auth` i18n namespace chunk
+    // resolving — until it does, these copy strings render as their raw keys.
+    // Same convention as AdminSettingsAccess.test.tsx.
     expect(
-      screen.getByText(
+      await screen.findByText(
         "We’re not creating new accounts right now. If you already have one, you can still sign in.",
       ),
     ).toBeInTheDocument();
     expect(screen.getByText("New accounts are paused")).toBeInTheDocument();
   });
 
-  it("registrationOpen: false renders the closed state and still offers sign-in", () => {
+  it("registrationOpen: false renders the closed state and still offers sign-in", async () => {
     status = {
       registrationOpen: false,
       joinRequestsOpen: true,
@@ -50,15 +53,18 @@ describe("SignInPage — closed states", () => {
     };
     renderSignIn();
 
-    // The admin's own message wins over the catalog fallback.
+    // The admin's own message wins over the catalog fallback. It's a literal
+    // passed straight through (not a translation), so it's present immediately.
     expect(screen.getByText("We paused signups for a bit.")).toBeInTheDocument();
     // Sign-in itself is never gated on this flag — the whole point of it.
+    // `findBy` awaits the lazy `auth` namespace so the button's translated
+    // label resolves.
     expect(
-      screen.getByRole("button", { name: /Continue with Google/ }),
+      await screen.findByRole("button", { name: /Continue with Google/ }),
     ).toBeEnabled();
   });
 
-  it("fails open: a failed GET /platform-status renders the page exactly as normal", () => {
+  it("fails open: a failed GET /platform-status renders the page exactly as normal", async () => {
     // `data` is `undefined` on both a still-loading and an errored query, so
     // this one variable exercises the fail-open branch either way. This is the
     // regression that matters most: a broken status endpoint must never
@@ -66,9 +72,11 @@ describe("SignInPage — closed states", () => {
     status = undefined;
     renderSignIn();
 
-    expect(screen.queryByText("New accounts are paused")).not.toBeInTheDocument();
+    // `findBy` awaits the lazy `auth` namespace so the button's translated
+    // label resolves; the closed-state notice must never appear here.
     expect(
-      screen.getByRole("button", { name: /Continue with Google/ }),
+      await screen.findByRole("button", { name: /Continue with Google/ }),
     ).toBeEnabled();
+    expect(screen.queryByText("New accounts are paused")).not.toBeInTheDocument();
   });
 });

@@ -1,0 +1,9 @@
+/* Edge-swipe-to-go-back surface wrapping the routed content plane (see
+   SwipeBackShell.tsx). pan-y keeps native vertical scrolling working
+   everywhere on every page; pinch-zoom stays enabled too — the gesture only
+   ever claims native horizontal panning, and only once armed at the left
+   edge, so neither scroll nor zoom accessibility is traded away for it. */
+.surface {
+  touch-action: pan-y pinch-zoom;
+  min-height: 100%;
+}

@@ -1,7 +1,30 @@
 import type { Person } from "./communityDetails";
 import type { RosterMember } from "./community.model";
 import type { CommunityRole } from "./membership.types";
+import type { AuthUser } from "../auth/api/auth.api";
 import { memberProfiles } from "../members/data/memberProfiles";
+
+/**
+ * The signed-in viewer as a community `Person`, so their own optimistic posts
+ * and replies render with their real name, initials and avatar instead of a
+ * generic "You". Reads the session user from `useAuth()` (the real member in
+ * both demo and live mode) — never the mock registry. Returns null when logged
+ * out, so the call site keeps its own fallback.
+ */
+export function viewerPerson(user: AuthUser | null): Person | null {
+  if (!user) return null;
+  const { firstName, lastName, slug, avatarUrl } = user.profile;
+  const name = [firstName, lastName].filter(Boolean).join(" ") || firstName;
+  const initials =
+    `${firstName?.[0] ?? ""}${lastName?.[0] ?? ""}` || firstName.slice(0, 2);
+  return {
+    initials: initials.toUpperCase(),
+    name,
+    tint: "plum",
+    slug,
+    avatarUrl: avatarUrl ?? undefined,
+  };
+}
 
 /**
  * Resolve a person's avatar photo: their own `avatarUrl` (the real picture the

@@ -3,7 +3,12 @@ import { routes } from "../../app/routeMap";
 import type { InviteView } from "../auth/api/useInvite";
 
 /** Why an invite link can't be used — drives copy, rows, and CTAs. */
-export type InviteFailureReason = "expired" | "used" | "revoked" | "notFound";
+export type InviteFailureReason =
+  | "expired"
+  | "used"
+  | "revoked"
+  | "notFound"
+  | "inviterInactive";
 
 /** A single action button on the invite-state card. */
 export interface InviteStateCta {
@@ -61,6 +66,15 @@ const QuestionStamp = (
   </svg>
 );
 
+const InactiveStamp = (
+  <svg viewBox="0 0 24 24" aria-hidden>
+    <circle cx="12" cy="12" r="9" />
+    <circle cx="12" cy="10" r="2.3" />
+    <path d="M8 16.5a4 4 0 0 1 8 0" />
+    <line x1="6.5" y1="6.5" x2="17.5" y2="17.5" />
+  </svg>
+);
+
 export const INVITE_STATE_CONFIG: Record<InviteFailureReason, InviteStateConfig> = {
   expired: {
     eyebrowKey: "system:inviteState.expired.eyebrow",
@@ -68,8 +82,10 @@ export const INVITE_STATE_CONFIG: Record<InviteFailureReason, InviteStateConfig>
     leadKey: "system:inviteState.expired.lead",
     showExpiry: true,
     showInviter: true,
-    primary: { labelKey: "system:inviteState.actions.resend", to: routes.contact, withInviterName: true },
-    secondary: { labelKey: "system:inviteState.actions.requestNew", to: routes.requestInvite },
+    // The recipient can't trigger a resend — that lives on the sender's own
+    // invite list now — so the honest primary is to request a fresh invite.
+    primary: { labelKey: "system:inviteState.actions.requestNew", to: routes.requestInvite },
+    secondary: { labelKey: "system:inviteState.actions.contact", to: routes.contact },
     stamp: ClockStamp,
   },
   used: {
@@ -102,16 +118,30 @@ export const INVITE_STATE_CONFIG: Record<InviteFailureReason, InviteStateConfig>
     secondary: { labelKey: "system:inviteState.actions.contact", to: routes.contact },
     stamp: QuestionStamp,
   },
+  inviterInactive: {
+    eyebrowKey: "system:inviteState.inviterInactive.eyebrow",
+    headingKey: "system:inviteState.inviterInactive.heading",
+    leadKey: "system:inviteState.inviterInactive.lead",
+    showExpiry: false,
+    // The inviter is gone, so a "Vouched by {name}" row would only confuse.
+    showInviter: false,
+    primary: { labelKey: "system:inviteState.actions.requestNew", to: routes.requestInvite },
+    secondary: { labelKey: "system:inviteState.actions.contact", to: routes.contact },
+    stamp: InactiveStamp,
+  },
 };
 
 /**
  * Map a resolved invite to the reason its landing screen should show. A missing
- * invite (bad code / 404 / network error) is `notFound`; otherwise the backend
- * status decides. `valid` never reaches this page, so it falls through to
- * `notFound` defensively.
+ * invite (bad code / 404 / network error) is `notFound`; an inviter who's no
+ * longer active takes precedence over everything (even a `valid` status, since a
+ * new member must not join off a ghost); otherwise the backend status decides.
+ * `valid` never otherwise reaches this page, so it falls through to `notFound`
+ * defensively.
  */
 export function reasonFromInvite(invite: InviteView | undefined): InviteFailureReason {
   if (!invite) return "notFound";
+  if (invite.inviterActive === false) return "inviterInactive";
   switch (invite.status) {
     case "expired":
       return "expired";
@@ -138,6 +168,7 @@ export const DEMO_EXPIRED_INVITE: InviteView = {
     initials: "CV",
     since: "2024",
   },
+  inviterActive: true,
   expiryLabel: "6 June 2026",
   validForDays: 14,
   memberCount: 247,

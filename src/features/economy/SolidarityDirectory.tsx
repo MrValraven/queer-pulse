@@ -89,6 +89,7 @@ export function SolidarityDirectory() {
             <div className={styles.cbSearch}>
               <input
                 type="text"
+                aria-label={t("economy:solidarityDirectory.searchPlaceholder")}
                 placeholder={t("economy:solidarityDirectory.searchPlaceholder")}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}

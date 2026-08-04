@@ -1,0 +1,74 @@
+/* SubprofileOwnersPanel — the card chrome (.card/.cardHead/.cardIcon/
+   .cardTitle/.cardNote) comes from the shared SubprofileEditor.module.css;
+   only the member/invite rows and footer live here. */
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 4px;
+}
+
+.rowName {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pendingHeading {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin: 18px 0 4px;
+}
+
+.revokeBtn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent-ink);
+  cursor: pointer;
+  transition: background 0.15s var(--ease);
+}
+@media (hover: hover) {
+  .revokeBtn:not(:disabled):hover {
+    background: rgba(var(--accent-rgb), 0.2);
+  }
+}
+.revokeBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.revokeBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}

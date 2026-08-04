@@ -13,6 +13,11 @@ export interface MembersResult {
   fetchNextPage: () => void;
   isFetchingNextPage: boolean;
   isLoading: boolean;
+  /** True when the initial (live) fetch failed — distinct from an empty
+   *  directory. The page shows a retryable error state, not a false-empty. */
+  isError: boolean;
+  /** Re-run the query after a failure — wired to the error state's retry. */
+  refetch: () => void;
 }
 
 interface MembersPageVM {
@@ -69,5 +74,7 @@ export function useMembers(
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
     isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

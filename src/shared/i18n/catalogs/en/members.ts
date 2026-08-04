@@ -99,6 +99,16 @@ export const members: Catalog = {
   "profile.hero.perksTitle": "Member perks",
   "profile.hero.perksArrow": "Redeem your perks →",
 
+  // ── Profile stat row + content tabs (ProfileStatsRow, ProfileTabBar) ───────
+  "profile.stats.vouches": "Vouches",
+  "profile.stats.communities": "Communities",
+  "profile.stats.personas": "Also as",
+  "profile.tabs.about": "About",
+  "profile.tabs.work": "Work",
+  "profile.tabs.community": "Community",
+  "profile.tabs.activity": "Activity",
+  "profile.tabs.ariaLabel": "Profile sections",
+
   // ── Communities section (ProfileCommunities) ────────────────────────────────
   "profile.communities.title": "Communities",
   "profile.communities.subtitleSelf":
@@ -284,6 +294,8 @@ export const members: Catalog = {
   "publicBySlug.aboutHeading": "About",
   "publicBySlug.linksHeading": "Elsewhere",
   "publicBySlug.workHeading": "Work",
+  "publicBySlug.activityHeading": "Recent activity",
+  "publicBySlug.activityEmpty": "Nothing public just yet.",
   "publicBySlug.joinTitle": "QueerPulse is invite-only",
   "publicBySlug.joinBody":
     "A place queer Lisbon gathers — no ads, no algorithm. You need someone to bring you in, or you can ask us directly.",
@@ -396,6 +408,12 @@ export const members: Catalog = {
   "search.type.event": "Events",
   "search.type.forum": "Forum",
   "search.type.business": "Businesses",
+  "search.type.magazine": "Magazine",
+  "search.type.job": "Jobs",
+  "search.type.housing": "Housing",
+  "search.type.resource": "Resources",
+  "search.type.workshop": "Workshops",
+  "search.type.subprofile": "Subprofiles",
   "search.type.board": "Board",
   "search.type.topic": "Topics",
   "search.type.page": "Pages",
@@ -444,6 +462,10 @@ export const members: Catalog = {
   "directory.emptyAll.title": "No members here yet",
   "directory.emptyAll.description":
     "This directory is still filling up. As people join QueerPulse and opt in to being findable, they'll show up here — check back soon.",
+  "directory.error.title": "We couldn't load the directory",
+  "directory.error.description":
+    "Something went wrong finding members just now — this isn't an empty directory. Give it another try in a moment.",
+  "directory.error.retry": "Try again",
   "directory.loadingMore": "Loading…",
   "directory.loadMoreCta": "Load more members",
   "directory.filtersCta": "Filters",
@@ -796,10 +818,9 @@ export const members: Catalog = {
   "collections.toast.created": "Collection created",
   "collections.newCollection.defaultMeta": "Just created — start adding saves",
   "collections.updatedJustNow": "Updated just now",
-  "collections.emptyLive.title": "You haven't created any collections yet",
+  "collections.emptyLive.title": "Collections are coming soon",
   "collections.emptyLive.description":
-    "Collections are folders for the articles, events and places you save. Create your first to start grouping saves by why they matter.",
-  "collections.emptyLive.cta": "Create a collection",
+    "Soon you'll be able to group the articles, events and places you save into folders. We're still wiring this up — for now, nothing you organise here would be kept.",
 
   // ── Collections modals (CollectionsModals) ──────────────────────────────────
   "collections.modal.defaultDialogLabel": "Dialog",
@@ -935,7 +956,11 @@ export const members: Catalog = {
   "perks.sidebar.suggestTitle": "Suggest a perk",
   "perks.sidebar.suggestPlaceholder": "Share an idea…",
   "perks.sidebar.sendSuggestionCta": "Send suggestion",
+  "perks.sidebar.suggestUnavailableToast":
+    "Perk suggestions aren't open yet — thanks for your patience.",
   "perks.claim.alreadyActive": "Already active",
   "perks.claim.active": "Active",
   "perks.claim.claimed": "Claimed",
+  "perks.claim.unavailableToast":
+    "Claiming perks isn't available yet — we're still wiring this up.",
 };

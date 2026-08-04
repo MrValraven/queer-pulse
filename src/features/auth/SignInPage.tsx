@@ -50,6 +50,22 @@ function noticeForAuthError(code: string, t: TFunction): Notice {
         title: t("auth:signIn.notice.inviteInvalid.title"),
         body: t("auth:signIn.notice.inviteInvalid.body"),
       };
+    // The invite was addressed to a specific email and the Google account that
+    // just signed in doesn't match it — sign in with that address, or ask anew.
+    case "invite_email_mismatch":
+      return {
+        Icon: FiMail,
+        title: t("auth:signIn.notice.inviteEmailMismatch.title"),
+        body: t("auth:signIn.notice.inviteEmailMismatch.body"),
+      };
+    // The person who sent the invite is no longer active on QueerPulse, so their
+    // invite can't bring someone in. Not the visitor's fault — point them onward.
+    case "invite_inviter_inactive":
+      return {
+        Icon: FiUserPlus,
+        title: t("auth:signIn.notice.inviteInviterInactive.title"),
+        body: t("auth:signIn.notice.inviteInviterInactive.body"),
+      };
     // This address is on the erasure suppression list: they deleted their
     // account, and silently re-creating it would undo that. Not an error on
     // their part, so the copy stays warm and points at a human, not a retry.

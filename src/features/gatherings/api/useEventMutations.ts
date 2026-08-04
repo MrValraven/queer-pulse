@@ -13,6 +13,7 @@ import {
   type CreateEventDto,
   type UpdateEventDto,
 } from "./events.api";
+import { eventKeys } from "./eventKeys";
 import type { AttendeesResult } from "./useAttendees";
 
 /** Rollback context carried from onMutate → onError for the attendee-count optimism. */
@@ -41,7 +42,7 @@ export function useCreateEvent() {
       return { slug: res.slug };
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["events"] });
+      void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
     },
   });
 }
@@ -55,9 +56,12 @@ export function useUpdateEvent(slug: string) {
       if (demoMode) return;
       await updateEvent(slug, dto);
     },
+    // The detail query is keyed on the raw route param (`<slug>-<shortId>`),
+    // which may differ from this mutation's `slug`, so invalidate the whole
+    // detail root — guaranteed to match the mounted detail regardless of mode.
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["event", slug] });
-      void queryClient.invalidateQueries({ queryKey: ["events"] });
+      void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
+      void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
     },
   });
 }
@@ -72,8 +76,8 @@ export function useCancelEvent(slug: string) {
       await cancelEvent(slug);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["event", slug] });
-      void queryClient.invalidateQueries({ queryKey: ["events"] });
+      void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
+      void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
     },
   });
 }
@@ -83,7 +87,8 @@ export function useCancelEvent(slug: string) {
  *
  * Optimistic: the going head-count bumps immediately (and rolls back if the
  * request fails), then `onSettled` re-syncs from the server. The attendees
- * query is keyed `["attendees", demoMode, slug]`, so we patch that exact key.
+ * query is keyed via `eventKeys.attendees(slug, demoMode)`, so we patch that
+ * exact key.
  */
 export function useRsvp(slug: string) {
   const { demoMode } = useDemoMode();
@@ -94,7 +99,7 @@ export function useRsvp(slug: string) {
       await rsvpEvent(slug, status);
     },
     onMutate: async (status) => {
-      const key = ["attendees", demoMode, slug] as const;
+      const key = eventKeys.attendees(slug, demoMode);
       await queryClient.cancelQueries({ queryKey: key });
       const prev = queryClient.getQueryData<AttendeesResult>(key);
       if (prev && status === "going") {
@@ -109,9 +114,14 @@ export function useRsvp(slug: string) {
       if (ctx) queryClient.setQueryData(ctx.key, ctx.prev);
     },
     onSettled: () => {
-      void queryClient.invalidateQueries({ queryKey: ["event"] });
-      void queryClient.invalidateQueries({ queryKey: ["attendees"] });
-      void queryClient.invalidateQueries({ queryKey: ["events"] });
+      void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
+      // Scope to THIS event's attendees only — the app-wide `attendeesRoot`
+      // prefix would refetch every mounted attendees dashboard and reset each
+      // one's `loadMore` paging (including this one's) back to page 1.
+      void queryClient.invalidateQueries({
+        queryKey: eventKeys.attendees(slug, demoMode),
+      });
+      void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
     },
   });
 }
@@ -126,7 +136,7 @@ export function useUnrsvp(slug: string) {
       await unrsvpEvent(slug);
     },
     onMutate: async () => {
-      const key = ["attendees", demoMode, slug] as const;
+      const key = eventKeys.attendees(slug, demoMode);
       await queryClient.cancelQueries({ queryKey: key });
       const prev = queryClient.getQueryData<AttendeesResult>(key);
       if (prev) {
@@ -141,9 +151,13 @@ export function useUnrsvp(slug: string) {
       if (ctx) queryClient.setQueryData(ctx.key, ctx.prev);
     },
     onSettled: () => {
-      void queryClient.invalidateQueries({ queryKey: ["event"] });
-      void queryClient.invalidateQueries({ queryKey: ["attendees"] });
-      void queryClient.invalidateQueries({ queryKey: ["events"] });
+      void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
+      // Scope to THIS event's attendees only (see useRsvp) — avoids resetting
+      // every mounted attendees dashboard's `loadMore` paging.
+      void queryClient.invalidateQueries({
+        queryKey: eventKeys.attendees(slug, demoMode),
+      });
+      void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
     },
   });
 }
@@ -158,7 +172,7 @@ export function useAddCohost(slug: string) {
       await addCohost(slug, cohostSlug);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["event", slug] });
+      void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
     },
   });
 }
@@ -173,7 +187,7 @@ export function useRemoveCohost(slug: string) {
       await removeCohost(slug, cohostSlug);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["event", slug] });
+      void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
     },
   });
 }
@@ -188,7 +202,10 @@ export function useInviteMembers(slug: string) {
       await inviteToEvent(slug, slugs);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["attendees", slug] });
+      // Scope to THIS event's attendees only (see useRsvp).
+      void queryClient.invalidateQueries({
+        queryKey: eventKeys.attendees(slug, demoMode),
+      });
     },
   });
 }
@@ -204,7 +221,7 @@ export function useRespondInvite() {
         await respondInvite(id, action);
       },
       onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: ["events"] });
+        void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
       },
     },
   );

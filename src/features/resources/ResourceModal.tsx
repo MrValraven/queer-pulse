@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from "react";
-import { FiCheck, FiX } from "react-icons/fi";
+import { FiCheck, FiClock, FiX } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -80,6 +80,40 @@ export function PlumSuccess({
     <div className={styles.success}>
       <div className={styles.successIcon}>
         <FiCheck />
+      </div>
+      <div className={styles.successTitle}>{title}</div>
+      <p className={styles.successSub}>{sub}</p>
+      <div className={styles.successActions}>
+        <Button type="button" variant="ghost-dark" onClick={onClose}>
+          {closeLabel ?? t("resources:modal.doneCta")}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Honest plum-panel "coming soon" state. Shown in LIVE mode in place of a
+ * submission form whose backing endpoint does not exist yet — so we never
+ * fabricate a success ("submitted"/"received") for a request that reaches no
+ * one. The demo mode keeps the full mock form + simulated success.
+ */
+export function PlumComingSoon({
+  title,
+  sub,
+  onClose,
+  closeLabel,
+}: {
+  title: ReactNode;
+  sub: ReactNode;
+  onClose: () => void;
+  closeLabel?: string;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.success}>
+      <div className={styles.successIcon}>
+        <FiClock />
       </div>
       <div className={styles.successTitle}>{title}</div>
       <p className={styles.successSub}>{sub}</p>

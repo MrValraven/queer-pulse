@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiSearch, FiCornerDownLeft } from "react-icons/fi";
+import { FiSearch, FiCornerDownLeft, FiX } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks/useScrollLock";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -140,6 +140,7 @@ export function CommandPalette() {
             className={styles.input}
             type="text"
             role="combobox"
+            aria-label={t("members:commandPalette.placeholder")}
             aria-expanded
             aria-controls="qp-cmd-results"
             // Voice the active row to screen readers as Arrow keys move it. The
@@ -157,6 +158,17 @@ export function CommandPalette() {
             onKeyDown={onKeyDown}
           />
           <kbd className={styles.kbd}>{t("members:commandPalette.escKey")}</kbd>
+          {/* Visible tap target to dismiss one-handed with the keyboard up —
+              scrim-tap/Escape are the only other exits and neither is reachable
+              by thumb on a phone. */}
+          <button
+            type="button"
+            className={styles.close}
+            onClick={close}
+            aria-label={t("shared:modal.close")}
+          >
+            <FiX aria-hidden />
+          </button>
         </div>
 
         {signInRequired ? (

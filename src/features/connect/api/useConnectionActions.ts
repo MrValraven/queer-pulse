@@ -1,8 +1,14 @@
 import { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useConnections } from "../../../app/providers/useConnections";
+import {
+  useConnections,
+  type ConnectionsState,
+} from "../../../app/providers/useConnections";
 import { useSocial } from "../../../app/providers/useSocial";
+import { useToast } from "../../../shared/components/feedback/useToast";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { reasonFor } from "../../../shared/api/errorMessage";
 import {
   removeConnection,
   respondConnection,
@@ -35,13 +41,33 @@ export interface ConnectionRef {
 export function useConnectionActions() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  const { accept, decline, withdraw, sendRequest } = useConnections();
+  const { connected, incoming, sent, accept, decline, withdraw, sendRequest, restore } =
+    useConnections();
   const { toggleBlock } = useSocial();
+  const { showToast } = useToast();
+  const { t } = useTranslation();
 
   const invalidate = useCallback(() => {
     void queryClient.invalidateQueries({ queryKey: ["connections"] });
     void queryClient.invalidateQueries({ queryKey: ["members"] });
   }, [queryClient]);
+
+  // Snapshot the provider's relationship state before an optimistic move so a
+  // failed live-mode PATCH can roll it back (demo never reaches the network, so
+  // it never rolls back). Without this a rejected accept/decline left the member
+  // showing as connected locally AND surfaced as an unhandled promise rejection.
+  const snapshot = useCallback(
+    (): ConnectionsState => ({ connected, incoming, sent }),
+    [connected, incoming, sent],
+  );
+
+  const rollback = useCallback(
+    (prev: ConnectionsState, error: unknown) => {
+      restore(prev);
+      showToast(reasonFor(error) ?? t("connect:toast.actionFailed"), "error");
+    },
+    [restore, showToast, t],
+  );
 
   const patch = useCallback(
     async (ref: ConnectionRef, action: ConnectionAction) => {
@@ -55,19 +81,29 @@ export function useConnectionActions() {
   /** Accept an incoming request. */
   const acceptRequest = useCallback(
     async (ref: ConnectionRef) => {
+      const prev = snapshot();
       accept(ref.slug); // demo + optimistic local move
-      await patch(ref, "accept");
+      try {
+        await patch(ref, "accept");
+      } catch (error) {
+        rollback(prev, error);
+      }
     },
-    [accept, patch],
+    [accept, patch, snapshot, rollback],
   );
 
   /** Politely decline an incoming request. */
   const declineRequest = useCallback(
     async (ref: ConnectionRef) => {
+      const prev = snapshot();
       decline(ref.slug);
-      await patch(ref, "decline");
+      try {
+        await patch(ref, "decline");
+      } catch (error) {
+        rollback(prev, error);
+      }
     },
-    [decline, patch],
+    [decline, patch, snapshot, rollback],
   );
 
   /** Withdraw a request you sent (delete the pending outgoing connection). */

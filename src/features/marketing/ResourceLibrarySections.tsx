@@ -62,6 +62,7 @@ export function ResourceFilterBar({
             </svg>
             <input
               type="text"
+              aria-label={t("marketing:resourceLibrary.search.placeholder")}
               placeholder={t("marketing:resourceLibrary.search.placeholder")}
               value={query}
               onChange={(e) => onQuery(e.target.value)}

@@ -122,6 +122,7 @@ export function ListingPhotoField({
       <input
         type="url"
         className={styles.photoUrlInput}
+        aria-label={t("marketing:listBusiness.step4.photo.urlPlaceholder")}
         placeholder={t("marketing:listBusiness.step4.photo.urlPlaceholder")}
         value={urlText}
         onChange={(event) => applyUrl(event.target.value)}
@@ -136,6 +137,7 @@ export function ListingPhotoField({
         ref={fileInputRef}
         type="file"
         accept="image/*"
+        aria-label={t("marketing:listBusiness.step4.photo.upload")}
         hidden
         onChange={(event) => {
           const file = event.target.files?.[0];

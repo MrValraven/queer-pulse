@@ -15,13 +15,32 @@
 
 const STORAGE_KEY = "qp.messages.drafts.v1";
 
+// The authenticated member this device's composer drafts belong to (mirrors the
+// per-user cache scoping in `app/providers/useStorageScope`). Set by
+// `DraftsProvider` so a shared device never surfaces one member's unsent
+// composer text to the next: a live user id gets a per-user key suffix, while
+// "demo" (single mock persona) and the signed-out/unset state keep the base key
+// — the messages UI is unreachable while signed out, so the base key there only
+// ever holds demo data.
+let activeScope: string | null = null;
+
+/** Point the composer-draft store at a given member's bucket (see `activeScope`). */
+export function setMessageDraftsScope(scopeId: string | null): void {
+  activeScope = scopeId;
+}
+
+function storageKey(): string {
+  if (!activeScope || activeScope === "demo") return STORAGE_KEY;
+  return `${STORAGE_KEY}.u.${activeScope}`;
+}
+
 /** Per-conversation composer text, keyed by conversation id. */
 export type DraftMap = Record<string, string>;
 
 /** Read the persisted drafts, tolerating a corrupt / absent / foreign payload. */
 export function loadDrafts(): DraftMap {
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = window.localStorage.getItem(storageKey());
     if (!raw) return {};
     const parsed = JSON.parse(raw) as unknown;
     if (!parsed || typeof parsed !== "object") return {};
@@ -50,10 +69,10 @@ export function saveDraft(conversationId: string, text: string): void {
     if (text.length > 0) map[conversationId] = text;
     else delete map[conversationId];
     if (Object.keys(map).length === 0) {
-      window.localStorage.removeItem(STORAGE_KEY);
+      window.localStorage.removeItem(storageKey());
       return;
     }
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
+    window.localStorage.setItem(storageKey(), JSON.stringify(map));
   } catch {
     // ignore storage failures (private mode / quota)
   }
@@ -67,7 +86,7 @@ export function clearDraft(conversationId: string): void {
 /** Wipe every stored draft (called when demo mode flips). */
 export function clearDrafts(): void {
   try {
-    window.localStorage.removeItem(STORAGE_KEY);
+    window.localStorage.removeItem(storageKey());
   } catch {
     // ignore storage failures
   }

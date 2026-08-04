@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiChevronLeft, FiChevronRight, FiInbox } from "react-icons/fi";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -17,6 +18,7 @@ const PAGE_SIZE = 8;
 
 export function AdminGovernanceAudit() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const fmt = useFormat();
   const { showToast } = useToast();
   const [filters, setFilters] = useState<AuditFilterState>(
@@ -65,10 +67,17 @@ export function AdminGovernanceAudit() {
         onChange={changeFilters}
         moderators={moderators}
         onExport={() =>
-          showToast(
-            t("admin:governance.audit.exportToast", { total: totalDisplay }),
-            "success",
-          )
+          demoMode
+            ? showToast(
+                t("admin:governance.audit.exportToast", {
+                  total: totalDisplay,
+                }),
+                "success",
+              )
+            : showToast(
+                t("admin:governance.audit.exportComingSoonToast"),
+                "info",
+              )
         }
       />
 

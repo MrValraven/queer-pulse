@@ -21,7 +21,7 @@ const DTO: TrustNetworkDTO = {
     {
       id: "kai>ines", from: "kai", to: "ines", mutual: false, withdrawn: false,
       createdAt: "2025-11-02T00:00:00.000Z", relationship: "friends",
-      note: "Instant trust.", anonymous: false,
+      note: "Instant trust.", anonymous: false, kind: "vouch",
     },
   ],
   scenes: [{ id: "c1", label: "Trans & Friends", color: "var(--jade)" }],
@@ -45,5 +45,47 @@ describe("trustNetworkDtoToData", () => {
         y: expect.any(Number) as unknown as number,
       }),
     );
+  });
+
+  it("passes edge kind through from DTO to model", () => {
+    const dto: TrustNetworkDTO = {
+      nodes: [
+        {
+          id: "a", slug: "a", name: "Ana Reis", pronouns: "she/her",
+          initials: "AR", tone: "jade", avatarUrl: null, joinedAt: "2023-03-01T00:00:00.000Z",
+          standing: "trusted", sceneId: "c1", role: "owner", openReportCount: 0,
+          verified: true, private: false,
+        },
+        {
+          id: "b", slug: "b", name: "Bruno Alves", pronouns: "he/him",
+          initials: "BA", tone: "plum", avatarUrl: null, joinedAt: "2025-11-01T00:00:00.000Z",
+          standing: "trusted", sceneId: "c1", role: "member", openReportCount: 0,
+          verified: true, private: false,
+        },
+        {
+          id: "c", slug: "c", name: "Carla Nunes", pronouns: "she/her",
+          initials: "CN", tone: "coral", avatarUrl: null, joinedAt: "2026-01-01T00:00:00.000Z",
+          standing: "trusted", sceneId: "c1", role: "member", openReportCount: 0,
+          verified: true, private: false,
+        },
+      ],
+      edges: [
+        {
+          id: "a>b", from: "a", to: "b", mutual: false, withdrawn: false,
+          createdAt: "2026-01-15T00:00:00.000Z", relationship: null,
+          note: null, anonymous: false, kind: "invite",
+        },
+        {
+          id: "a>c", from: "a", to: "c", mutual: false, withdrawn: false,
+          createdAt: "2026-02-15T00:00:00.000Z", relationship: null,
+          note: null, anonymous: false, kind: "vouch",
+        },
+      ],
+      scenes: [],
+      truncated: false,
+    };
+    const data = trustNetworkDtoToData(dto);
+    expect(data.edges.find((edge) => edge.id === "a>b")?.kind).toBe("invite");
+    expect(data.edges.find((edge) => edge.id === "a>c")?.kind).toBe("vouch");
   });
 });

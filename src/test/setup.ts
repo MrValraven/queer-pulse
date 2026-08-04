@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom/vitest";
-import { afterEach, expect, vi } from "vitest";
+import { afterEach, beforeEach, expect, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
 import * as axeMatchers from "vitest-axe/matchers.js";
 
@@ -77,7 +77,33 @@ if (!URL.revokeObjectURL) {
   URL.revokeObjectURL = () => {};
 }
 
+// ── MSW × jsdom × Node AbortSignal realm mismatch ────────────────────────────
+// MSW v2's fetch interceptor (under Node + jsdom) validates `RequestInit.signal`
+// against a *different* `AbortSignal` realm than the app's global one, so ANY
+// signal the app attaches — including a native `new AbortController().signal` —
+// is rejected with `Expected signal (...) to be an instance of AbortSignal`, and
+// live route-render / request-budget tests never receive a response (see the
+// timeout controller in src/shared/api/client.ts). The signal only drives fetch
+// timeout/cancellation, which these tests don't exercise, so we strip it from
+// fetch inits in the test env. Wrapped per-test (and restored after) so it sits
+// OUTSIDE whatever `fetch` MSW installs in its own `beforeAll`, and never
+// accumulates. Request URL/method — all the request-budget assertions observe —
+// are untouched, so counts are unaffected.
+let fetchBeforeStrip: typeof globalThis.fetch | undefined;
+beforeEach(() => {
+  fetchBeforeStrip = globalThis.fetch;
+  const inner = fetchBeforeStrip;
+  globalThis.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+    if (init && "signal" in init) {
+      const { signal: _signal, ...withoutSignal } = init;
+      return inner(input, withoutSignal);
+    }
+    return inner(input, init);
+  }) as typeof globalThis.fetch;
+});
+
 afterEach(() => {
+  if (fetchBeforeStrip) globalThis.fetch = fetchBeforeStrip;
   cleanup();
   vi.restoreAllMocks();
   vi.unstubAllGlobals();

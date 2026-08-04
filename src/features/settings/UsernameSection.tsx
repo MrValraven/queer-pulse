@@ -3,7 +3,7 @@ import { Button } from "../../shared/components/ui";
 import { ApiError } from "../../shared/api/client";
 import { normalizeHandle } from "../../shared/handles";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileData } from "../../app/providers/useProfile";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -37,7 +37,7 @@ function messageForError(err: unknown, t: TFunction): string {
  */
 export function UsernameSection() {
   const { t } = useTranslation();
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
 

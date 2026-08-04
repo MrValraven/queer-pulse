@@ -1,21 +1,105 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./OnboardingPage.module.css";
 import { TOTAL_STEPS } from "./onboardingPage.data";
 import { routes } from "../../app/routeMap";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useAuth } from "../../app/providers/authContext";
+import { useScopedLocalStorage } from "../../app/providers/useScopedLocalStorage";
+import { useStorageScope } from "../../app/providers/useStorageScope";
+import { safeStorage } from "../../shared/storage/safeStorage";
+import { postCompleteOnboarding } from "./api/auth.api";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { FeatureHelp } from "../../shared/components/ui";
 import { StepIntro, StepNorms, StepDone } from "./OnboardingSteps";
 import { StepIntents } from "./StepIntents";
 import { StepWelcome } from "./StepWelcome";
 import { StepPhoto } from "./StepPhoto";
 import { StepCommunities } from "./StepCommunities";
 
+// Per-member resume marker: the current step is persisted so an abandoned
+// onboarding picks up where it left off instead of restarting at step 0.
+// `useScopedLocalStorage` namespaces it by user id (`${key}.u.<id>`), so a
+// shared device never surfaces one member's progress to the next. Never written
+// in demo mode (scope forced to null below).
+const ONBOARDING_STEP_KEY = "qp.onboarding.step";
+
+/** Guard a persisted step: only an in-range integer index is restored; anything
+ *  else (corrupt payload, an out-of-range value after TOTAL_STEPS shrank) resets
+ *  to the intro rather than dropping the member onto a missing step. */
+function isValidStepIndex(value: unknown): value is number {
+  return (
+    typeof value === "number" &&
+    Number.isInteger(value) &&
+    value >= 0 &&
+    value < TOTAL_STEPS
+  );
+}
+
 export function OnboardingPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  const { markOnboarded } = useAuth();
+
   // Seven steps in total, indexed 0–6. Step 0 is the warm "let's begin" intro,
   // counted as Step 1 so the "Step X of N" label is honest and continuous.
-  const [step, setStep] = useState(0);
+  // Live members resume their saved step; demo mode forces the scope to null so
+  // nothing is persisted and the flow always previews from the start.
+  const storageScope = useStorageScope();
+  const persistScope = demoMode ? null : storageScope;
+  const [step, setStep] = useScopedLocalStorage<number>(
+    ONBOARDING_STEP_KEY,
+    persistScope,
+    0,
+    isValidStepIndex,
+  );
   const [dir, setDir] = useState<"fwd" | "back">("fwd");
+  // The step card is remounted on every step (`key={step}`), which drops focus to
+  // <body>; this ref lets us move focus back into the fresh step for keyboard/SR
+  // users (see the effect below).
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Reaching the final step (StepDone) is what "finished onboarding" means:
+  // stamp it on the member so the auth gate keeps them out of this one-time
+  // wizard on a later visit (e.g. browser-autofilled /auth/onboarding). Fired
+  // once, best-effort — a failure just risks seeing the wizard again, never
+  // blocks finishing — and never in demo mode (no backend). The server call is
+  // idempotent, so a stray double-fire is harmless.
+  const stampedRef = useRef(false);
+  useEffect(() => {
+    if (demoMode || stampedRef.current) return;
+    if (step !== TOTAL_STEPS - 1) return;
+    stampedRef.current = true;
+    void postCompleteOnboarding()
+      .then(({ onboardedAt }) => {
+        // Reflect the stamp on the cached user immediately, so the one-time gate
+        // won't replay the wizard later in this session (e.g. browser autofill of
+        // the saved /auth/onboarding URL) off a stale `onboardedAt: null`.
+        markOnboarded(onboardedAt);
+      })
+      .catch(() => {
+        // Best-effort: leave the flag set so we don't hammer the endpoint; the
+        // gate's backfill and a future finish cover the miss.
+      })
+      .finally(() => {
+        // Onboarding is finished — drop the resume marker so a later visit never
+        // reopens the wizard mid-flow. The hook offers no remove, so we clear its
+        // per-user bucket key directly (this path is always live with a real
+        // scope; the key mirrors `useScopedLocalStorage`'s `${base}.u.<id>`).
+        if (persistScope) {
+          safeStorage.remove(`${ONBOARDING_STEP_KEY}.u.${persistScope}`);
+        }
+      });
+  }, [step, demoMode, markOnboarded, persistScope]);
+
+  // Focus management: on each step transition the `key={step}` remount drops
+  // focus to <body>, so keyboard and screen-reader users lose their place. Move
+  // focus into the fresh step container instead. `preventScroll` stops a
+  // competing focus-scroll — `go()` sets the scroll position explicitly — which
+  // keeps the transition calm and reduced-motion friendly.
+  useEffect(() => {
+    cardRef.current?.focus({ preventScroll: true });
+  }, [step]);
 
   // Linear progress: each of the TOTAL_STEPS advances the bar by an equal share.
   const progress = ((step + 1) / TOTAL_STEPS) * 100;
@@ -38,7 +122,10 @@ export function OnboardingPage() {
           style={{ width: `${progress}%` }}
         />
       </div>
-      <div className={styles.progressLabel}>{stepLabel}</div>
+      <div className={styles.progressLabel}>
+        {stepLabel}
+        <FeatureHelp id="auth.onboarding" />
+      </div>
       <Link to={routes.homepage} className={styles.brand}>
         <span className={styles.pulseDot} aria-hidden />
         {"Queer"}
@@ -47,6 +134,8 @@ export function OnboardingPage() {
 
       <div className={styles.page}>
         <div
+          ref={cardRef}
+          tabIndex={-1}
           className={`${styles.card} ${dir === "back" ? styles.cardBack : styles.cardFwd}`}
           key={step}
         >
@@ -54,7 +143,11 @@ export function OnboardingPage() {
             <StepIntro stepLabel={stepLabel} onNext={() => go(1)} />
           )}
           {step === 1 && (
-            <StepWelcome stepLabel={stepLabel} onNext={() => go(2)} />
+            <StepWelcome
+              stepLabel={stepLabel}
+              onNext={() => go(2)}
+              onBack={() => go(0)}
+            />
           )}
           {step === 2 && (
             <StepPhoto

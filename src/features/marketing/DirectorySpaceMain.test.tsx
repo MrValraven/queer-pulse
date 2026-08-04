@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
+import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { I18nProvider } from "../../app/providers/I18nProvider";
 import { DemoModeProvider } from "../../app/providers/DemoModeProvider";
@@ -16,7 +17,11 @@ function renderMain(node: ReactNode) {
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
         <DemoModeProvider>
-          <ToastProvider>{node}</ToastProvider>
+          <ToastProvider>
+            {/* DirectorySpaceMain always renders DirectoryReviewsSection,
+                which links out via react-router <Link> — provide a router. */}
+            <MemoryRouter>{node}</MemoryRouter>
+          </ToastProvider>
         </DemoModeProvider>
       </I18nProvider>
     </QueryClientProvider>,
@@ -28,16 +33,18 @@ describe("DirectorySpaceMain hours", () => {
     vi.useRealTimers();
   });
 
-  it("shows an Open now chip when real hours say it is open", () => {
+  it("shows an Open now chip when real hours say it is open", async () => {
     vi.setSystemTime(new Date(2026, 5, 5, 20, 0)); // Fri 5 Jun 2026, 20:00
     const place = {
       ...DIRECTORY_PLACES[0]!,
-      hours: { Fri: { open: true, from: "18:00", to: "23:00" } },
+      hours: { Fri: { open: true, intervals: [{ from: "18:00", to: "23:00" }] } },
     };
 
     renderMain(<DirectorySpaceMain place={place} preview />);
 
-    expect(screen.getByText(/open now/i)).toBeInTheDocument();
+    // `findBy` (not `getBy`) awaits the lazy `marketing` i18n namespace chunk
+    // resolving — until it does the chip renders as its raw translation key.
+    expect(await screen.findByText(/open now/i)).toBeInTheDocument();
   });
 
   it("renders the template hours table with no chip for demo places", () => {

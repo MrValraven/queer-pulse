@@ -123,14 +123,22 @@ export function MenteeSteps({
             <input
               className={styles.mmInput}
               type="text"
+              aria-label={t("economy:mentorship.mentee.step2.namePlaceholder")}
               placeholder={t("economy:mentorship.mentee.step2.namePlaceholder")}
             />
             <input
               className={styles.mmInput}
               type="text"
+              aria-label={t("economy:mentorship.mentee.step2.rolePlaceholder")}
               placeholder={t("economy:mentorship.mentee.step2.rolePlaceholder")}
             />
-            <select className={styles.mmSelect} defaultValue="">
+            <select
+              className={styles.mmSelect}
+              aria-label={t(
+                "economy:mentorship.mentee.step2.frequencyPlaceholder",
+              )}
+              defaultValue=""
+            >
               <option value="">
                 {t("economy:mentorship.mentee.step2.frequencyPlaceholder")}
               </option>
@@ -147,6 +155,7 @@ export function MenteeSteps({
             <textarea
               className={styles.mmTextarea}
               rows={3}
+              aria-label={t("economy:mentorship.mentee.step2.notePlaceholder")}
               placeholder={t("economy:mentorship.mentee.step2.notePlaceholder")}
             />
           </div>
@@ -181,6 +190,7 @@ export function MenteeSteps({
             <input
               className={styles.mmInput}
               type="email"
+              aria-label={t("economy:mentorship.mentee.step3.emailPlaceholder")}
               placeholder={t(
                 "economy:mentorship.mentee.step3.emailPlaceholder",
               )}
@@ -266,9 +276,16 @@ export function MentorSteps({
             <input
               className={styles.mmInput}
               type="text"
+              aria-label={t("economy:mentorship.mentor.step2.namePlaceholder")}
               placeholder={t("economy:mentorship.mentor.step2.namePlaceholder")}
             />
-            <select className={styles.mmSelect} defaultValue="">
+            <select
+              className={styles.mmSelect}
+              aria-label={t(
+                "economy:mentorship.mentor.step2.menteesPlaceholder",
+              )}
+              defaultValue=""
+            >
               <option value="">
                 {t("economy:mentorship.mentor.step2.menteesPlaceholder")}
               </option>
@@ -282,7 +299,11 @@ export function MentorSteps({
                 {t("economy:mentorship.mentor.step2.mentees.three")}
               </option>
             </select>
-            <select className={styles.mmSelect} defaultValue="">
+            <select
+              className={styles.mmSelect}
+              aria-label={t("economy:mentorship.mentor.step2.formatPlaceholder")}
+              defaultValue=""
+            >
               <option value="">
                 {t("economy:mentorship.mentor.step2.formatPlaceholder")}
               </option>
@@ -299,6 +320,7 @@ export function MentorSteps({
             <input
               className={styles.mmInput}
               type="email"
+              aria-label={t("economy:mentorship.mentor.step2.emailPlaceholder")}
               placeholder={t(
                 "economy:mentorship.mentor.step2.emailPlaceholder",
               )}

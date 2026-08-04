@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { TbPin } from "react-icons/tb";
+import { TbPin, TbArrowBigUp, TbArrowBigUpFilled } from "react-icons/tb";
 import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -14,21 +14,29 @@ import styles from "./ForumPage.module.css";
 export function ForumThreadRow({
   thread,
   index,
-  voted,
-  toggleVote,
+  onVote,
+  onTagClick,
   canEditThread,
   onEditTitle,
+  onDelete,
+  onRestore,
+  onHistory,
 }: {
   thread: Thread;
   index: number;
-  voted: Set<number>;
-  toggleVote: (id: number) => void;
+  onVote: (thread: Thread) => void;
+  onTagClick: (tag: string) => void;
   canEditThread: (thread: Thread) => boolean;
   onEditTitle: (thread: Thread) => void;
+  onDelete: (thread: Thread) => void;
+  onRestore: (thread: Thread) => void;
+  onHistory: (thread: Thread) => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const isVoted = voted.has(thread.id);
+  // Real vote: pressed state + count come straight from the card (patched
+  // optimistically by `useVotePost`), not a local toggle set.
+  const isVoted = !!thread.myVote;
   const catMeta = CATS.find((c) => c.id === thread.category);
   const cs = CAT_STYLE[thread.category];
   return (
@@ -52,12 +60,12 @@ export function ForumThreadRow({
             }
             onClick={(e) => {
               e.preventDefault();
-              toggleVote(thread.id);
+              onVote(thread);
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                toggleVote(thread.id);
+                onVote(thread);
               }
             }}
           >
@@ -67,11 +75,9 @@ export function ForumThreadRow({
                 .filter(Boolean)
                 .join(" ")}
             >
-              ▲
+              {isVoted ? <TbArrowBigUpFilled /> : <TbArrowBigUp />}
             </span>
-            <span className={styles.voteN}>
-              {thread.upvotes + (isVoted ? 1 : 0)}
-            </span>
+            <span className={styles.voteN}>{thread.upvotes}</span>
           </div>
           <div>
             <div className={styles.badges}>
@@ -88,7 +94,25 @@ export function ForumThreadRow({
                 {catMeta && t(catMeta.nameKey)}
               </span>
               {thread.tags.map((tg) => (
-                <span key={tg} className={styles.tag}>
+                <span
+                  key={tg}
+                  role="button"
+                  tabIndex={0}
+                  className={styles.tag}
+                  aria-label={t("forum:threadList.filterByTagAria", { tag: tg })}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onTagClick(tg);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      onTagClick(tg);
+                    }
+                  }}
+                >
                   #{tg}
                 </span>
               ))}
@@ -134,11 +158,19 @@ export function ForumThreadRow({
         {canEditThread(thread) && (
           <div className={styles.threadMenu}>
             <PostActionsMenu
-              canEdit
+              // The row menu now shows for any moderatable thread, so `canEdit`
+              // must be the real edit right (author only), not literal `true` —
+              // otherwise a moderator who isn't the author sees a bogus "Edit".
+              // Live: the DTO boolean. Demo: no DTO flag, so fall back to the
+              // persona-ownership gate (which returned true to open the menu).
+              canEdit={thread.canEdit ?? canEditThread(thread)}
+              canDelete={thread.canDelete}
+              canRestore={thread.canRestore}
+              canViewHistory={thread.canViewHistory}
               onEdit={() => onEditTitle(thread)}
-              onDelete={() => {}}
-              onRestore={() => {}}
-              onHistory={() => {}}
+              onDelete={() => onDelete(thread)}
+              onRestore={() => onRestore(thread)}
+              onHistory={() => onHistory(thread)}
             />
           </div>
         )}

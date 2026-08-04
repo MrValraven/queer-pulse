@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiX } from "react-icons/fi";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminChip, AdminToggle } from "./ui";
@@ -13,6 +14,7 @@ import styles from "./AdminCommunitiesPage.module.css";
 
 export function SettingsPane({ community }: { community: Community }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const [moderators, setModerators] = useState<Moderator[]>(community.moderators);
   // Neither `join` nor `code` has a backend field yet (live mode — see
@@ -33,6 +35,14 @@ export function SettingsPane({ community }: { community: Community }) {
   const [autoFreeze, setAutoFreeze] = useState(hasAutoFreezeData);
 
   function removeMod(m: Moderator) {
+    // Live mode has no moderator-management endpoint yet (see
+    // adminCommunities.adapters.ts). The roster the drawer shows is real API
+    // data, so mutating it client-side + offering a fake Undo would claim a
+    // removal that never reached the backend. Stay honest until it's wired.
+    if (!demoMode) {
+      showToast(t("admin:communities.settings.comingSoonToast"), "info");
+      return;
+    }
     setModerators((prev) => prev.filter((x) => x.name !== m.name));
     showToast(
       t("admin:communities.settings.modRemovedToast", { name: m.name }),
@@ -85,7 +95,14 @@ export function SettingsPane({ community }: { community: Community }) {
             type="button"
             className={styles.addBtn}
             onClick={() =>
-              showToast(t("admin:communities.settings.addModToast"), "info")
+              showToast(
+                t(
+                  demoMode
+                    ? "admin:communities.settings.addModToast"
+                    : "admin:communities.settings.comingSoonToast",
+                ),
+                "info",
+              )
             }
           >
             {t("admin:communities.settings.addModCta")}

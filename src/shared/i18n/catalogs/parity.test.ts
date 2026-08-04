@@ -1,22 +1,23 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { catalogs, loadPtNamespace } from "./index";
+import { catalogs, loadNamespace } from "./index";
 import type { Catalog, Language, Namespace } from "../types";
 
 const namespaces = Object.keys(catalogs.en) as Namespace[];
 const languages = ["en", "pt"] as const;
 
 /**
- * PT ships most namespaces as lazy chunks, so `catalogs.pt[namespace]` is a
- * placeholder until loaded. Resolve the real catalog for either language.
+ * Both languages ship most namespaces as lazy chunks now (see
+ * catalogs/index.ts), so `catalogs[language][namespace]` is a placeholder
+ * until loaded. Resolve the real catalog for either language — never read
+ * `catalogs[language][namespace]` directly at module scope for a non-shell
+ * namespace, or you'll get the frozen `{}` stand-in instead of real strings.
  */
 async function catalogFor(
   language: Language,
   namespace: Namespace,
 ): Promise<Catalog> {
-  return language === "pt"
-    ? loadPtNamespace(namespace)
-    : catalogs.en[namespace];
+  return loadNamespace(language, namespace);
 }
 
 /**
@@ -42,14 +43,14 @@ describe("catalog parity", () => {
   it.each(namespaces)(
     "pt/%s declares exactly the keys en/%s declares",
     async (namespace) => {
-      const enKeys = Object.keys(catalogs.en[namespace]).sort();
-      const ptKeys = Object.keys(await loadPtNamespace(namespace)).sort();
+      const enKeys = Object.keys(await catalogFor("en", namespace)).sort();
+      const ptKeys = Object.keys(await catalogFor("pt", namespace)).sort();
       expect(ptKeys).toEqual(enKeys);
     },
   );
 
   it.each(namespaces)("pt/%s has no empty values", async (namespace) => {
-    const ptCatalog = await loadPtNamespace(namespace);
+    const ptCatalog = await catalogFor("pt", namespace);
     const blank = Object.entries(ptCatalog)
       .filter(([, value]) => value.trim() === "")
       .map(([key]) => key);

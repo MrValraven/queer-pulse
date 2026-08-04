@@ -1,4 +1,5 @@
 import { initialsOf, tintForSlug } from "../../../shared/api/refs";
+import { activeLocale } from "../../../shared/i18n/locale";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { ChatMessage, Conversation, GroupMemberView } from "../data";
 import type { ConversationResponse, MessageResponse } from "./messages.api";
@@ -21,14 +22,15 @@ export function timeLabel(iso: string): string {
   if (Number.isNaN(d.getTime())) return "";
   const now = new Date();
   const sameDay = d.toDateString() === now.toDateString();
+  const locale = activeLocale();
   if (sameDay)
-    return d.toLocaleTimeString(undefined, {
+    return d.toLocaleTimeString(locale, {
       hour: "numeric",
       minute: "2-digit",
     });
   const days = Math.round((now.getTime() - d.getTime()) / 86_400_000);
-  if (days < 7) return d.toLocaleDateString(undefined, { weekday: "short" });
-  return d.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+  if (days < 7) return d.toLocaleDateString(locale, { weekday: "short" });
+  return d.toLocaleDateString(locale, { day: "numeric", month: "short" });
 }
 
 /** Day heading ("Today" / "Yesterday" / "1 Jun") the panel groups by. */
@@ -43,7 +45,7 @@ function dayLabel(iso: string): string {
   );
   if (days === 0) return "Today";
   if (days === 1) return "Yesterday";
-  return d.toLocaleDateString(undefined, {
+  return d.toLocaleDateString(activeLocale(), {
     day: "numeric",
     month: "long",
     year: d.getFullYear() === now.getFullYear() ? undefined : "numeric",
@@ -174,6 +176,9 @@ export function messageToChat(
     pinnedAt: dto.pinnedAt ?? undefined,
     starred: dto.starred || undefined,
     canPin: dto.canPin,
+    canEdit: dto.canEdit,
+    canDelete: dto.canDelete,
+    canReport: dto.canReport,
     // System message → a centred event pill. The system message's sender IS the
     // actor (see `postSystemMessage`), so `isMe` doubles as "the actor is you".
     kind:

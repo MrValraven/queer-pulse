@@ -183,14 +183,23 @@ export const updateGroup = (
 ) => apiPatch<ConversationResponse>(`/conversations/${conversationId}`, changes);
 
 /** GET /messages/search?q= — cross-conversation body search, scoped server-side
- *  to the caller's conversations and floored by their `clearedAt`. */
+ *  to the caller's conversations and floored by their `clearedAt`. Accepts an
+ *  `AbortSignal` (react-query forwards its `queryFn` signal here) so a fast
+ *  retype cancels the previous keystroke's still-in-flight request instead of
+ *  letting it run to completion against the backend. */
 export async function searchMessages(
   query: string,
   limit?: number,
+  signal?: AbortSignal,
 ): Promise<MessageSearchResponse> {
   const params = new URLSearchParams({ q: query });
   if (limit) params.set("limit", String(limit));
-  return apiGet<MessageSearchResponse>(`/messages/search?${params.toString()}`);
+  return apiGet<MessageSearchResponse>(
+    `/messages/search?${params.toString()}`,
+    undefined,
+    undefined,
+    signal,
+  );
 }
 
 /** POST /conversations/:id/read — clear unread up to `lastReadAt`. */

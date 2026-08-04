@@ -4,6 +4,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { getJob } from "./jobs.api";
 import { jobDetailToJob } from "./jobs.adapters";
+import { economyKeys } from "./economyKeys";
 import type { Job } from "../jobs.data";
 
 /**
@@ -19,7 +20,7 @@ export function useJob(slug: string | undefined) {
   const { t, language } = useTranslation();
   const fmt = useFormat();
   return useQuery<Job | null>({
-    queryKey: ["job", slug, demoMode, language],
+    queryKey: economyKeys.job(slug, demoMode, language),
     enabled: Boolean(slug),
     queryFn: async () => {
       if (!slug) return null;

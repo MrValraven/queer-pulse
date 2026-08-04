@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction } from "react";
+import { useId, type Dispatch, type SetStateAction } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminCheckLine, AdminToggle } from "./ui";
 import type {
@@ -34,9 +34,12 @@ function MessageField({
   onCommit: () => void;
 }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   return (
     <div className={styles.field}>
-      <label className={styles.fieldLabel}>{label}</label>
+      <label className={styles.fieldLabel} htmlFor={fieldId}>
+        {label}
+      </label>
       <div className={styles.presetRow}>
         <span className={styles.presetHint}>
           {t("admin:settings.presets.label")}
@@ -53,6 +56,7 @@ function MessageField({
         ))}
       </div>
       <textarea
+        id={fieldId}
         className={styles.textarea}
         value={value}
         placeholder={placeholder}

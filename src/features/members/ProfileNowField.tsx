@@ -1,5 +1,5 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileEdit } from "../../app/providers/useProfile";
 import { InlineTextarea } from "./profileEditControls";
 import { OpenToEditor } from "./OpenToEditor";
 import styles from "./ProfileEdit.module.css";
@@ -12,7 +12,7 @@ import styles from "./ProfileEdit.module.css";
  */
 export function ProfileNowField() {
   const { t } = useTranslation();
-  const { draft, updateDraft } = useProfile();
+  const { draft, updateDraft } = useProfileEdit();
 
   return (
     <div className={styles.field}>

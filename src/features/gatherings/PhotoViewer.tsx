@@ -67,12 +67,17 @@ export function PhotoViewer({
       {/* The lightbox is itself full-bleed, so click-to-dismiss can't live on
           the dialog element. A real button behind the content keeps the
           affordance without putting a handler on a non-interactive role; it's
-          hidden from AT because the topbar close button already exposes it. */}
+          hidden from AT because the topbar close button already exposes it.
+          `tabIndex={-1}` only drops it from the Tab order, not from
+          click-focus, so we also preventDefault the mousedown: focus must
+          never land on this aria-hidden node (browsers block aria-hidden on a
+          focused element). */}
       <button
         type="button"
         aria-hidden="true"
         tabIndex={-1}
         className={styles.backdrop}
+        onMouseDown={(event) => event.preventDefault()}
         onClick={onClose}
       />
       <div className={styles.topbar}>

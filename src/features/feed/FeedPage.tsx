@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import {
   FiInbox,
   FiUsers,
@@ -10,6 +11,8 @@ import {
   SkeletonAvatar,
   SkeletonLine,
   EmptyState,
+  FeatureHelp,
+  PullToRefresh,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { HubPulseCard, type HubPost } from "../communities/HubPulseCard";
@@ -22,6 +25,7 @@ import {
 } from "./feed.data";
 import type { FeedItem } from "./api/feed.api";
 import { NewMemberCard, PostCard } from "./FeedCards";
+import { FeedLoadMore } from "./FeedLoadMore";
 import { useFeedPage } from "./useFeedPage";
 import { FeedSidebar } from "./FeedSidebar";
 import styles from "./FeedPage.module.css";
@@ -63,7 +67,7 @@ function FeedGreeting({
     <div className={styles.greetingRow}>
       <div>
         <div className={styles.greeting}>
-          {greeting}, <em>{first}</em>
+          {greeting}, <em>{first}</em> <FeatureHelp id="feed.hub" />
         </div>
         <div className={styles.greetingDate}>{dateLine}</div>
       </div>
@@ -190,6 +194,7 @@ function FeedListBody({
 
 export function FeedPage() {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const {
     demoMode,
     greeting,
@@ -211,6 +216,9 @@ export function FeedPage() {
     pulse,
     staticItems,
     revealDelay,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
     sidebarLoading,
     sidebarMembers,
     sidebarGatherings,
@@ -253,7 +261,7 @@ export function FeedPage() {
   );
 
   return (
-    <AppShell unreadCount={demoMode ? 3 : 0}>
+    <AppShell>
       <div className={styles.page}>
         <div className="wrap">
           <FeedGreeting greeting={greeting} dateLine={dateLine} first={first} />
@@ -280,19 +288,41 @@ export function FeedPage() {
                     .filter(Boolean)
                     .join(" ")}
                 >
-                  <FeedListBody
-                    loading={loading}
-                    demoMode={demoMode}
-                    isError={isError}
-                    empty={empty}
-                    emptyPanel={emptyPanel}
-                    errorPanel={errorPanel}
-                    livePosts={livePosts}
-                    liveMembers={liveMembers}
-                    pulse={pulse}
-                    staticItems={staticItems}
-                    revealDelay={revealDelay}
-                  />
+                  {/* `queryKey: ["feed"]` matches useFeed's `["feed", tab, demoMode]`
+                      as a prefix — invalidates every tab/mode variant, so a pull
+                      refresh refetches whichever tab is currently displayed. */}
+                  <PullToRefresh
+                    onRefresh={() =>
+                      queryClient.invalidateQueries({ queryKey: ["feed"] })
+                    }
+                  >
+                    <FeedListBody
+                      loading={loading}
+                      demoMode={demoMode}
+                      isError={isError}
+                      empty={empty}
+                      emptyPanel={emptyPanel}
+                      errorPanel={errorPanel}
+                      livePosts={livePosts}
+                      liveMembers={liveMembers}
+                      pulse={pulse}
+                      staticItems={staticItems}
+                      revealDelay={revealDelay}
+                    />
+                    {/* Live-only infinite-scroll pager. Self-guards on
+                        `hasNextPage` (false in demo mode, where the feed hook is
+                        disabled), so it renders nothing until there's a real
+                        next cursor page to fetch. */}
+                    {!demoMode && !loading && !isError && !empty && (
+                      <FeedLoadMore
+                        hasNextPage={hasNextPage}
+                        fetchNextPage={() => {
+                          void fetchNextPage();
+                        }}
+                        isFetchingNextPage={isFetchingNextPage}
+                      />
+                    )}
+                  </PullToRefresh>
                 </div>
               </div>
             </div>

@@ -35,6 +35,19 @@ export function useVouchGraph(graph: TrustGraph, initialFocus: string) {
 
   const expandedKey = useMemo(() => [...expanded].sort().join(","), [expanded]);
 
+  /**
+   * The distinct months in which a vouch actually appears, ascending. Replay
+   * hops through *these* rather than every calendar month between tMin and
+   * tMax, so the animation is paced by real activity (people joining / getting
+   * vouched for) instead of dwelling on empty months. Edge dates are the only
+   * thing that changes the visible graph, so every step reveals something.
+   */
+  const eventValues = useMemo(() => {
+    const values = new Set<number>();
+    graph.edges.forEach((e) => values.add(ymValue(e.date)));
+    return [...values].sort((a, b) => a - b);
+  }, [graph]);
+
   const { visIds, visEdges } = useMemo(() => {
     const set = new Set<string>([focus]);
     graph.neighbors(focus, true).forEach((n) => set.add(n));
@@ -153,15 +166,21 @@ export function useVouchGraph(graph: TrustGraph, initialFocus: string) {
 
   const replay = useCallback(() => {
     if (replayRef.current !== null) return;
+    if (eventValues.length === 0) return;
     setReplaying(true);
-    setTimeCut(graph.tMin);
-    let v = graph.tMin;
+    setTimeCut(eventValues[0]!);
+    let index = 0;
     replayRef.current = window.setInterval(() => {
-      v += 1;
-      setTimeCut(v);
-      if (v >= graph.tMax) stopReplay();
+      index += 1;
+      const next = eventValues[index];
+      if (next === undefined) {
+        stopReplay();
+        return;
+      }
+      setTimeCut(next);
+      if (index >= eventValues.length - 1) stopReplay();
     }, REPLAY_STEP_MS);
-  }, [graph, stopReplay]);
+  }, [eventValues, stopReplay]);
 
   useEffect(() => stopReplay, [stopReplay]);
 

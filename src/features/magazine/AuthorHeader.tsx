@@ -1,9 +1,7 @@
-import { Link } from "react-router-dom";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSocial } from "../../app/providers/useSocial";
-import { routes } from "../../app/routeMap";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { Author } from "./authorContent.data";
 import styles from "./AuthorPage.module.css";
@@ -11,7 +9,7 @@ import styles from "./AuthorPage.module.css";
 export function AuthorHeader({ author }: { author: Author }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { isFollowing, toggleFollow } = useSocial();
+  const { isFollowing, toggleFollow, followEnabled } = useSocial();
   const following = isFollowing(author.slug);
   const label = author.firstName;
 
@@ -31,22 +29,26 @@ export function AuthorHeader({ author }: { author: Author }) {
           <div className={styles.role}>{author.role}</div>
           <p className={styles.bio}>{author.bio}</p>
           <div className={styles.metaRow}>
-            <Button
-              variant={following ? "ghost" : "primary"}
-              onClick={() => {
-                const now = toggleFollow(author.slug);
-                showToast(
-                  now
-                    ? t("magazine:author.followingToast", { name: label })
-                    : t("magazine:author.unfollowedToast", { name: label }),
-                  now ? "success" : "info",
-                );
-              }}
-            >
-              {following
-                ? t("magazine:author.followingCta")
-                : t("magazine:author.followWriterCta")}
-            </Button>
+            {/* Member-level follow has no live backend (only per-subprofile
+                persona follow does), so hide the control unless it's real. */}
+            {followEnabled && (
+              <Button
+                variant={following ? "ghost" : "primary"}
+                onClick={() => {
+                  const now = toggleFollow(author.slug);
+                  showToast(
+                    now
+                      ? t("magazine:author.followingToast", { name: label })
+                      : t("magazine:author.unfollowedToast", { name: label }),
+                    now ? "success" : "info",
+                  );
+                }}
+              >
+                {following
+                  ? t("magazine:author.followingCta")
+                  : t("magazine:author.followWriterCta")}
+              </Button>
+            )}
             <span className={styles.pronouns}>{author.pronouns}</span>
           </div>
         </div>
@@ -72,15 +74,14 @@ export function AuthorHeader({ author }: { author: Author }) {
 
       <div className={styles.beats}>
         {author.beats.map((beat, index) => (
-          <Link
+          <span
             key={beat}
-            to={routes.tag}
             className={[styles.beat, index === 0 && styles.beatPrimary]
               .filter(Boolean)
               .join(" ")}
           >
             {beat}
-          </Link>
+          </span>
         ))}
       </div>
     </>

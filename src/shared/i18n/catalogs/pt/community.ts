@@ -747,7 +747,7 @@ export const community: Catalog = {
 
   "readingGroups.waitlist.heading": "Estás na <em>lista de espera.</em>",
   "readingGroups.waitlist.sub":
-    "Enviamos-te um email assim que alguém desistir — não precisas de estar sempre a verificar.",
+    "Avisamos-te assim que surgir uma vaga — não precisas de estar sempre a verificar.",
   "readingGroups.waitlist.position": "Estás em #{position}",
 
   "readingGroups.listGroup.heading": "Cria o <em>teu próprio grupo.</em>",

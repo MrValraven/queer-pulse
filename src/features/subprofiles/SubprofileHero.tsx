@@ -4,11 +4,11 @@ import { safeHref } from "../../shared/lib/safeHref";
 import { Link } from "react-router-dom";
 import { FiArrowUpRight } from "react-icons/fi";
 import { HiOutlineQrCode } from "react-icons/hi2";
-import { Avatar, Button, Reveal } from "../../shared/components/ui";
+import { Avatar, Button, FeatureHelp, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes, subprofileEditPath } from "../../app/routeMap";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileData } from "../../app/providers/useProfile";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMemberContact } from "../connect/useMemberContact";
@@ -39,7 +39,7 @@ export function SubprofileHero({
 }) {
   const { t } = useTranslation();
   const { contact } = useMemberContact(view.ownerSlug ?? "");
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   const { user } = useAuth();
   const { demoMode } = useDemoMode();
   const [shareCardOpen, setShareCardOpen] = useState(false);
@@ -56,7 +56,7 @@ export function SubprofileHero({
     Boolean(view.ownerName) &&
     Boolean(view.ownerSlug);
 
-  // Live's `useProfile()` falls back to the demo mock persona when there's no
+  // Live's `useProfileData()` falls back to the demo mock persona when there's no
   // authenticated user (see ProfileProvider), so `profile.slug` is only a
   // trustworthy "who's viewing" signal in demo mode or when live mode actually
   // has a signed-in user — otherwise a logged-out visitor could spuriously
@@ -104,7 +104,9 @@ export function SubprofileHero({
 
             <div className={styles.heroText}>
               <span className={styles.kindBadge}>{t(KIND_LABEL_KEYS[view.kind])}</span>
-              <h1 className={styles.name}>{view.displayName}</h1>
+              <h1 className={styles.name}>
+                {view.displayName} <FeatureHelp id="subprofiles.detail" />
+              </h1>
               {view.tagline && <p className={styles.tagline}>{view.tagline}</p>}
 
               <SubprofileSocialRow links={view.socialLinks} accent={accent} />

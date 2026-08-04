@@ -87,6 +87,7 @@ export function A11yDisplaySection({
         <input
           type="range"
           className={styles.sliderInput}
+          aria-label={t("settings:a11y.textSize.label")}
           min={80}
           max={160}
           step={10}

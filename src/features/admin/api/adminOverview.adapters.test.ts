@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import {
   FiCheckCircle,
   FiAlertTriangle,
@@ -16,7 +16,7 @@ import {
   chartMax,
 } from "./adminOverview.adapters";
 import { REPORT_SERIES, TRIAGE_QUEUE } from "../adminDashboard.data";
-import { catalogs } from "../../../shared/i18n/catalogs";
+import { catalogs, loadNamespace } from "../../../shared/i18n/catalogs";
 import { createFormatters } from "../../../shared/i18n/format";
 import type { TFunction, TranslateOptions } from "../../../shared/i18n/types";
 import type { AdminOverviewDTO } from "./adminOverview.api";
@@ -36,9 +36,16 @@ function interpolate(template: string, options?: TranslateOptions): string {
   );
 }
 
+// The `admin` namespace is now lazily loaded; `beforeAll` swaps in the real
+// catalog (an empty placeholder is present until its chunk resolves).
+let adminCatalog = catalogs.en.admin;
+beforeAll(async () => {
+  adminCatalog = await loadNamespace("en", "admin");
+});
+
 const translate: TFunction = (key, options) => {
-  const [namespace, path] = key.split(":");
-  const catalog = catalogs.en[namespace as "admin"];
+  const [, path] = key.split(":");
+  const catalog = adminCatalog;
   if (catalog && typeof options?.count === "number") {
     const pluralCategory = options.count === 1 ? "one" : "other";
     const pluralValue =

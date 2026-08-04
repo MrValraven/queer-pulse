@@ -1,4 +1,8 @@
 import { apiGet, apiPost } from "../../../shared/api/client";
+import {
+  validateDirectoryDetail,
+  validateDirectoryList,
+} from "../../../shared/api/validation";
 import type { HoursType, Owner, Review, Tint } from "../directoryPlaces";
 import type { DayHours, PhotoKey } from "../listBusiness/listBusiness.data";
 
@@ -43,7 +47,11 @@ export function getDirectory(params?: {
   if (params?.q) search.set("q", params.q);
   if (params?.safe) search.set("safe", params.safe);
   const query = search.toString();
-  return apiGet<DirectoryCardDTO[]>(`/directory${query ? `?${query}` : ""}`);
+  return apiGet<DirectoryCardDTO[]>(
+    `/directory${query ? `?${query}` : ""}`,
+    undefined,
+    validateDirectoryList,
+  );
 }
 
 /** A safe-space "promise" the venue keeps — mirrors the backend's
@@ -91,7 +99,17 @@ export interface SafeSpaceRemovalDTO {
  * empty whenever the listing has never been a verified/removed safe space.
  */
 export interface DirectoryDetailDTO extends DirectoryCardDTO {
+  /** Human-readable business reference (`QPL-2026-…`) the dispute endpoint is
+   * keyed by. Optional here because it is a companion backend addition: the
+   * detail response must add `ref: listing.ref` for a non-owner to be able to
+   * dispute/contest a listing (owners already resolve it via `/listings/mine`).
+   * Absent ⇒ the FE hides the live dispute action. */
+  ref?: string;
   tagline: string;
+  /** City the venue sits in; `null` ⇒ the FE defaults to Lisbon. */
+  city: string | null;
+  /** IANA timezone the hours run on; `null` ⇒ the FE defaults to Europe/Lisbon. */
+  timezone: string | null;
   pills: string[];
   gallery: string[];
   whatItIs: string[];
@@ -132,11 +150,15 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
  * the public grid uses, so visitors can see the places a member runs.
  */
 export const getListingsByMember = (slug: string) =>
-  apiGet<DirectoryCardDTO[]>(`/directory/by-member/${encodeURIComponent(slug)}`);
+  apiGet<DirectoryCardDTO[]>(
+    `/directory/by-member/${encodeURIComponent(slug)}`,
+    undefined,
+    validateDirectoryList,
+  );
 
 /** GET /directory/:slug — one live directory listing by slug (public). */
 export const getDirectorySpace = (slug: string) =>
-  apiGet<DirectoryDetailDTO>(`/directory/${slug}`);
+  apiGet<DirectoryDetailDTO>(`/directory/${slug}`, undefined, validateDirectoryDetail);
 
 /** Body for leaving a review. */
 export interface SubmitReviewInput {

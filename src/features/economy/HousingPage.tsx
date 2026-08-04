@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Reveal, Tabs } from "../../shared/components/ui";
+import { FeatureHelp, Reveal, Tabs } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -58,7 +58,8 @@ export function HousingPage() {
             <Translation
               i18nKey="economy:housing.hero.title"
               components={{ em: <em /> }}
-            />
+            />{" "}
+            <FeatureHelp id="housing.hub" />
           </Reveal>
           <Reveal as="p" delay={120}>
             {t("economy:housing.hero.lead")}

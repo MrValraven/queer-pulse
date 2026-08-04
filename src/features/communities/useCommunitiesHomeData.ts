@@ -1,3 +1,4 @@
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMyCommunities } from "./api/useMyCommunities";
 import { useAllCommunities } from "./useAllCommunities";
 import { getLiving } from "./livingCommunities.data";
@@ -13,17 +14,38 @@ function interleave(lists: HubPost[][]): HubPost[] {
   return out;
 }
 
-/** Derives every list the communities home renders from your memberships. */
+/** Derives every list the communities home renders from your memberships.
+ *
+ * The cross-community activity feed (pulse / to-dos / upcoming / digest) and the
+ * "suggested communities" rail are prototype-only — they read the `getLiving`
+ * mock registry and the static directory, neither of which has a live backend.
+ * So in live mode this hook resolves ONLY what real data can back: the
+ * membership list itself (names + roles from `GET /me/communities`). Everything
+ * mock-derived collapses to empty, and the page renders honest empty states
+ * rather than fabricated activity. Demo mode is unchanged. */
 export function useCommunitiesHomeData() {
+  const { demoMode } = useDemoMode();
   const memberships = useMyCommunities();
   const communities = useAllCommunities();
 
-  const mine = Object.keys(memberships).map((slug) => ({
-    slug,
-    role: memberships[slug]!.role,
-    living: getLiving(slug),
-    community: communities.find((c) => c.slug === slug),
-  }));
+  const mine = Object.keys(memberships).map((slug) => {
+    const membership = memberships[slug]!;
+    // Only consult the mock directory in demo mode — in live it would resolve a
+    // real community against a fabricated name/count if the slugs happened to
+    // collide.
+    const community = demoMode
+      ? communities.find((c) => c.slug === slug)
+      : undefined;
+    return {
+      slug,
+      role: membership.role,
+      // Live: the real name from `/me/communities`; demo: the directory entry.
+      name: membership.name ?? community?.name ?? slug,
+      count: community?.count ?? "",
+      living: demoMode ? getLiving(slug) : undefined,
+      community,
+    };
+  });
 
   const pulse = interleave(
     mine
@@ -31,7 +53,7 @@ export function useCommunitiesHomeData() {
       .map((m) =>
         [...m.living!.pinned, ...m.living!.pulse].slice(0, 4).map((post) => ({
           post,
-          communityName: m.community?.name ?? m.slug,
+          communityName: m.name,
           communitySlug: m.slug,
         })),
       ),
@@ -41,7 +63,7 @@ export function useCommunitiesHomeData() {
     .filter((m) => (m.role === "owner" || m.role === "mod") && m.living)
     .map((m) => ({
       slug: m.slug,
-      name: m.community?.name ?? m.slug,
+      name: m.name,
       requests: m.living!.joinRequests?.length ?? 0,
       reports: m.living!.reports?.length ?? 0,
     }))
@@ -49,8 +71,8 @@ export function useCommunitiesHomeData() {
 
   const myCommunities: MyCommunity[] = mine.map((m) => ({
     slug: m.slug,
-    name: m.community?.name ?? m.slug,
-    count: m.community?.count ?? "",
+    name: m.name,
+    count: m.count,
     role: m.role,
   }));
 
@@ -61,15 +83,18 @@ export function useCommunitiesHomeData() {
         .living!.events.filter((e) => !e.past)
         .map((event) => ({
           event,
-          name: m.community?.name ?? m.slug,
+          name: m.name,
           slug: m.slug,
         })),
     )
     .slice(0, 4);
 
-  const suggestions = communities
-    .filter((c) => c.slug && !memberships[c.slug] && !c.privateBadge)
-    .slice(0, 4);
+  // Prototype-only rail — fabricated from the static directory, no live backend.
+  const suggestions = demoMode
+    ? communities
+        .filter((c) => c.slug && !memberships[c.slug] && !c.privateBadge)
+        .slice(0, 4)
+    : [];
 
   const livingMine = mine.map((m) => m.living).filter(Boolean) as NonNullable<
     (typeof mine)[number]["living"]

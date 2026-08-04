@@ -5,6 +5,37 @@
   background: var(--cream);
 }
 
+/* ── Sidebar dock ────────────────────────────────────────────────────────────
+   Wraps the sidebar. On desktop it is `display: contents`, so the <aside> stays
+   the first grid column exactly as before. Below the mobile breakpoint it turns
+   into a fixed, slide-in off-canvas panel (see the media query at the bottom). */
+.sidebarDock {
+  display: contents;
+}
+
+/* Backdrop behind the mobile off-canvas panel. Only rendered while the drawer
+   is open on mobile, so no desktop guard is needed. */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  background: rgba(0, 0, 0, 0.44);
+  animation: axScrimIn 0.2s var(--ease, ease);
+}
+@keyframes axScrimIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scrim {
+    animation: none;
+  }
+}
+
 /* ── Sidebar ─────────────────────────────────────────────────────────────── */
 .sidebar {
   position: sticky;
@@ -471,6 +502,33 @@
   color: var(--ink-40);
 }
 
+/* Off-canvas toggle. Hidden on desktop; revealed at the mobile breakpoint. */
+.menuBtn {
+  display: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 11px;
+  background: var(--paper);
+  color: var(--ink-60);
+  cursor: pointer;
+  transition:
+    background var(--dur, 0.18s) var(--ease, ease),
+    color var(--dur, 0.18s) var(--ease, ease);
+}
+.menuBtn svg {
+  width: 20px;
+  height: 20px;
+}
+@media (hover: hover) {
+  .menuBtn:hover {
+    background: var(--cream);
+    color: var(--text-strong);
+  }
+}
+
 .topRight {
   display: flex;
   align-items: center;
@@ -519,11 +577,42 @@
   .shell {
     grid-template-columns: 1fr;
   }
-  .sidebar {
-    position: static;
-    height: auto;
-    flex-direction: column;
+
+  /* The dock leaves `display: contents` and becomes a fixed slide-in panel off
+     the left edge. It sits above the topbar (z-50) and the scrim (z-65). */
+  .sidebarDock {
+    display: block;
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: 70;
+    width: min(84vw, 300px);
+    transform: translateX(-100%);
+    transition: transform var(--dur, 0.24s) var(--ease, ease);
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.32);
   }
+  .sidebarDockOpen {
+    transform: translateX(0);
+  }
+
+  /* Fill the fixed dock and clear the notch; the nav scrolls internally. */
+  .sidebar {
+    position: relative;
+    height: 100%;
+    padding-block-start: max(18px, env(safe-area-inset-top));
+    padding-block-end: max(16px, env(safe-area-inset-bottom));
+  }
+
+  .menuBtn {
+    display: grid;
+    order: 0;
+  }
+  /* Comfortable ≥44px touch targets for the topbar icon buttons on mobile. */
+  .iconBtn {
+    width: 44px;
+    height: 44px;
+  }
+
   .topbar {
     padding: 12px 18px;
     flex-wrap: wrap;
@@ -543,5 +632,11 @@
   }
   .content {
     padding: 20px 18px 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebarDock {
+    transition: none;
   }
 }

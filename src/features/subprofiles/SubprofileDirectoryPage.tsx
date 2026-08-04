@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { FiLayers, FiAlertCircle } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import { EmptyState, Reveal, Spinner } from "../../shared/components/ui";
+import { EmptyState, FeatureHelp, Reveal, Spinner } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSubprofileDirectory } from "./api/useSubprofileDirectory";
@@ -89,7 +89,8 @@ export function SubprofileDirectoryPage() {
               <Translation
                 i18nKey="subprofiles:directory.title"
                 components={{ em: <em /> }}
-              />
+              />{" "}
+              <FeatureHelp id="subprofiles.hub" />
             </h1>
             <p className={styles.sub}>{t("subprofiles:directory.subtitle")}</p>
           </header>

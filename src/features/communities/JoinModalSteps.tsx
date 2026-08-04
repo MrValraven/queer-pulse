@@ -52,6 +52,7 @@ export function JoinStepIntro({
             autoComplete="off"
             autoCapitalize="characters"
             enterKeyHint="next"
+            aria-label={t("communities:join.intro.invitePlaceholder")}
             placeholder={t("communities:join.intro.invitePlaceholder")}
             value={inviteCode}
             onChange={(e) => setInviteCode(e.target.value)}
@@ -82,16 +83,19 @@ export function JoinStepAbout({ onNext }: { onNext: () => void }) {
         <input
           className={styles.input}
           type="text"
+          aria-label={t("communities:join.about.namePlaceholder")}
           placeholder={t("communities:join.about.namePlaceholder")}
         />
         <input
           className={styles.input}
           type="text"
+          aria-label={t("communities:join.about.pronounsPlaceholder")}
           placeholder={t("communities:join.about.pronounsPlaceholder")}
         />
         <textarea
           className={styles.textarea}
           rows={3}
+          aria-label={t("communities:join.about.aboutPlaceholder")}
           placeholder={t("communities:join.about.aboutPlaceholder")}
         />
       </div>
@@ -126,6 +130,7 @@ export function JoinStepInvolvement({
         <input
           className={styles.input}
           type="email"
+          aria-label={t("communities:join.involvement.emailPlaceholder")}
           placeholder={t("communities:join.involvement.emailPlaceholder")}
         />
         <div>

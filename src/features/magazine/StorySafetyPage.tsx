@@ -1,13 +1,39 @@
+import { FiBookOpen } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro } from "../../shared/components/ui";
+import { Button, EmptyState, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
+import { MagazineMasthead } from "./MagazineMasthead";
 import { StorySafetyArticle } from "./StorySafetyArticle";
 import styles from "./StorySafetyPage.module.css";
 
 export function StorySafetyPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+
+  // The article below is fabricated editorial content. Live mode has no
+  // published story yet, so it shows the same honest "coming soon" the magazine
+  // front uses — the demo mock stays the demo-mode branch.
+  if (!demoMode) {
+    return (
+      <PageShell>
+        <MagazineMasthead active="stories" />
+        <div className="wrap">
+          <EmptyState
+            icon={<FiBookOpen />}
+            title={t("magazine:sections.emptyLive.title")}
+            description={t("magazine:sections.emptyLive.description")}
+            action={{
+              label: t("magazine:sections.submit.cta"),
+              to: routes.submitStory,
+            }}
+          />
+        </div>
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell>

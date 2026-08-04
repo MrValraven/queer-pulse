@@ -425,6 +425,36 @@
   border-radius: 16px;
   padding: 18px 20px;
 }
+
+/* Locked-thread banner — the plum-panel pattern standing in for the composer
+   when replies are closed. Warm, not punitive: the thread stays fully readable
+   above it. */
+.lockedBanner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 28px;
+  background: var(--plum);
+  border-radius: 16px;
+  padding: 18px 22px;
+}
+.lockedIcon {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  color: var(--accent);
+}
+.lockedTitle {
+  font-family: var(--serif);
+  font-size: 17px;
+  color: var(--cream);
+  margin-bottom: 2px;
+}
+.lockedBody {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: rgba(var(--cream-rgb), 0.8);
+}
 .crHead {
   display: flex;
   align-items: center;
@@ -533,6 +563,13 @@
   margin-top: 12px;
 }
 
+/* Zero-height scroll marker for progressive windowing — reveals the next
+   batch of top-level reply trees as it nears the viewport. Never occupies
+   visual space. Mirrors MemberDirectoryFilterPage.module.css's `.sentinel`. */
+.sentinel {
+  height: 1px;
+}
+
 /* ── Nested replies: indent, thread-line, collapse/continue affordances ── */
 
 /* One reply + its subtree. Depth 0 stays flush-left (no line, no indent —
@@ -602,7 +639,14 @@
   .collapseToggle,
   .replyReplyBtn,
   .branchToggle,
-  .continueThread {
+  .continueThread,
+  .reaction,
+  .replyReact,
+  .replyReact svg {
     transition: none;
+  }
+  /* Hold the "voted" heart at rest size — no scale pop on toggle. */
+  .replyReactOn svg {
+    transform: none;
   }
 }

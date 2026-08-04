@@ -1,0 +1,259 @@
+/* ── Guides view ──────────────────────────────────────────────────────────
+   A row-per-guide list: category + flags + title, a 6-step checklist, and
+   4 info cells (progress / reviewer / re-verify / languages). Rows are real
+   `<button>`s (whole row opens the item drawer) holding only non-interactive
+   children, so no nested-interactive or custom role/tabIndex plumbing is
+   needed. */
+
+.view {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 22px 0;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 20px;
+  color: var(--ink);
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ink-60);
+  max-width: 62ch;
+}
+
+/* ── Re-verify banner ─────────────────────────────────────────────────── */
+.reVerifyBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: var(--radius-card, 22px);
+  background: rgba(var(--danger-rgb), 0.08);
+  border: 1px solid rgba(var(--danger-rgb), 0.2);
+  color: var(--ink);
+}
+
+.reVerifyBanner p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.reVerifyIcon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--danger);
+}
+
+/* ── Row list ─────────────────────────────────────────────────────────── */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  padding: 18px 20px;
+  border-radius: var(--radius-card, 22px);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color var(--dur-fast, 0.15s) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row:hover {
+    border-color: rgba(var(--line-rgb), 0.22);
+  }
+}
+
+.row:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 2px;
+}
+
+.rowTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.flags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-40);
+}
+
+.flag {
+  display: inline-flex;
+}
+
+.rowTitle {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* ── 6-step checklist ─────────────────────────────────────────────────── */
+.checklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checklistItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(var(--line-rgb), 0.3);
+  color: var(--cream);
+  font-size: 11px;
+  flex: none;
+}
+
+.dotOn {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+
+.checklistLabel {
+  font-size: 12px;
+  color: var(--ink-60);
+}
+
+/* ── Info cells ───────────────────────────────────────────────────────── */
+.cells {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.cellLabel {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-40);
+}
+
+.cellValue {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.cellValueDanger {
+  composes: cellValue;
+  color: var(--danger);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cellSub {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink-60);
+}
+
+.cellSubDanger {
+  composes: cellSub;
+  color: var(--danger);
+}
+
+.cellMuted {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-40);
+  font-style: italic;
+}
+
+.meterTrack {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(var(--plum-rgb), 0.07);
+  overflow: hidden;
+  margin-top: 3px;
+}
+
+.meterFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--jade);
+  transform-origin: left center;
+  /* The repo's global reduced-motion rule (`src/styles/base.css`) clamps
+     every `transition-duration` to ~0 under `prefers-reduced-motion` /
+     the in-app toggle, so this stays a plain unconditional transition. */
+  transition: width 0.5s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
+}
+
+/* ── Language pills ───────────────────────────────────────────────────── */
+.languages {
+  display: flex;
+  gap: 5px;
+}
+
+.langPill {
+  padding: 3px 7px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  background: rgba(var(--line-rgb), 0.08);
+  color: var(--ink-40);
+}
+
+.langPillOn {
+  background: rgba(var(--jade-rgb), 0.16);
+  color: var(--jade-ink);
+}

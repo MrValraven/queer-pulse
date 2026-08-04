@@ -1,0 +1,187 @@
+/* The Board card (RoadmapCard.tsx) plus its progress meter and meta row
+   (CardProgressMeter.tsx / CardMeta.tsx) — three files, one visual unit, so
+   they share this module rather than each guessing the others' spacing.
+
+   `.card` itself never gets a `transform`: the delete-confirm `AdminModal`
+   renders as its literal DOM child (not a portal — see `AdminModal.tsx`),
+   and a `transform` on an ancestor would create a new containing block that
+   traps the modal's `position: fixed` scrim inside the card's own bounds.
+   Hover/drag feedback here is shadow/opacity only, never translate/scale —
+   which also means there is nothing to disable under reduced motion. */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition:
+    box-shadow var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+}
+
+.card:focus-within {
+  border-color: var(--line-strong);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 2px;
+}
+
+/* The `j`/`k` roving-focus ring (useBoardDnd) — a distinct accent color so
+   it reads separately from the native Tab `:focus-visible` ring above. */
+.cardFocused {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cardDragging {
+  opacity: 0.5;
+}
+
+.cardDense {
+  padding: 9px 12px;
+  gap: 5px;
+}
+
+.headRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.checkboxWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  cursor: pointer;
+}
+
+/* Widen the tap target toward the ~44px floor without growing the glyph —
+   the checkbox leads `.headRow`, so there's open card padding to grow into
+   on the left/top/bottom; `.grip` sits ~6px to the right with no click
+   handler of its own, so a small overlap there doesn't steal a real
+   interaction. */
+.checkboxWrap::before {
+  content: "";
+  position: absolute;
+  inset-block: -14px;
+  inset-inline-start: -14px;
+  inset-inline-end: -3px;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--plum);
+  cursor: pointer;
+  flex: none;
+}
+
+.grip {
+  flex: none;
+  color: var(--ink-40);
+  font-size: 14px;
+  line-height: 1;
+  cursor: grab;
+  user-select: none;
+}
+
+.categoryChip {
+  font-size: 11px;
+}
+
+.priorityChip {
+  font-size: 11px;
+}
+
+.menuSlot {
+  margin-inline-start: auto;
+  flex: none;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 14.5px;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.progressTrack {
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(var(--line-rgb), 0.12);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transform-origin: left;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.progressFillBlocked {
+  background: var(--danger);
+}
+
+.alert {
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(var(--amber-rgb), 0.16);
+  color: var(--amber-ink);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.metaQuarter {
+  font-size: 11.5px;
+  color: var(--ink-40);
+  font-weight: 600;
+}
+
+.metaVotes {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11.5px;
+  color: var(--ink-60);
+}
+
+.metaConfidence {
+  font-size: 10.5px;
+}
+
+.metaOwner {
+  margin-inline-start: auto;
+}
+
+.metaUnassigned {
+  margin-inline-start: auto;
+  font-size: 11px;
+  color: var(--ink-40);
+}

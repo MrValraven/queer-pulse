@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Eyebrow, ImageSlot, type ImageSlotTint } from "../../../shared/components/ui";
+import { Button, Eyebrow, FeatureHelp, ImageSlot, type ImageSlotTint } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { usePrefersReducedMotion } from "../../../shared/hooks";
@@ -97,7 +97,9 @@ function EmptyHero() {
         <div className={styles.emptyInner}>
           <RotatingTagline className={styles.taglineEmpty} />
           <Eyebrow>{t(hubCopy.eyebrowKey)}</Eyebrow>
-          <h1 className={styles.emptyTitle}>{t("gatherings:hub.empty.title")}</h1>
+          <h1 className={styles.emptyTitle}>
+            {t("gatherings:hub.empty.title")} <FeatureHelp id="events.hub" />
+          </h1>
           <p className={styles.emptySub}>{t("gatherings:hub.empty.body")}</p>
           <div className={styles.cta}>
             <Button size="lg" to={routes.host}>
@@ -150,7 +152,9 @@ export function EventsHubHero({ lead, now, onSeeAll }: EventsHubHeroProps) {
           <Eyebrow live={bucket === "tonight"} className={styles.eyebrow}>
             {t(timeBucketLabelKey(bucket))}
           </Eyebrow>
-          <h1 className={styles.title}>{lead.title}</h1>
+          <h1 className={styles.title}>
+            {lead.title} <FeatureHelp id="events.hub" />
+          </h1>
           <p className={styles.meta}>
             <span className={styles.metaItem}>
               {fmt.date(lead.date, { weekday: "long", day: "numeric", month: "long" })}

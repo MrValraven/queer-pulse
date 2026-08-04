@@ -1,10 +1,6 @@
-import { useEffect, useRef } from "react";
+import { useState } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
-import { useToast } from "../feedback/useToast";
-import { useTranslation } from "../../i18n/useTranslation";
-
-/** Long enough to be reachable, since this toast asks for a decision. */
-const UPDATE_TOAST_MS = 30_000;
+import { PwaUpdatePill } from "./PwaUpdatePill";
 
 /**
  * Registers the service worker and, when a new build is waiting, offers a
@@ -13,42 +9,32 @@ const UPDATE_TOAST_MS = 30_000;
  * the user's say-so: auto-claiming mid-session can leave the running page
  * importing lazy chunks the new build no longer ships.
  *
- * Renders nothing — the UI is the toast.
+ * The UI is a PERSISTENT pill (PwaUpdatePill), not a transient toast: a
+ * service-worker update asks for a decision, and a 30-second toast that a user
+ * happens not to see means they run a stale build until their next cold start.
+ * The pill stays until the user reloads or dismisses it (dismissal is honoured
+ * until the next new build is detected).
  */
 export function PwaUpdatePrompt() {
-  const { t } = useTranslation();
-  const { showToast } = useToast();
   const {
     needRefresh: [needRefresh],
     updateServiceWorker,
   } = useRegisterSW();
+  // Dismissal hides the pill for the rest of this session; a cold start (or the
+  // next genuinely new build after a reload) surfaces it again.
+  const [dismissed, setDismissed] = useState(false);
+  const [updating, setUpdating] = useState(false);
 
-  // `t` is a useCallback keyed on the active language, so it changes whenever
-  // the user switches language. Reading it through a ref (rather than listing
-  // it as an effect dependency) keeps the toast localised without re-running
-  // the effect - and firing a duplicate toast - on a language change while
-  // the update toast is already showing. The ref is synced from its own
-  // effect (never written during render, per `react-hooks/refs`) so it still
-  // always holds the latest translate function by the time the toast fires.
-  const translateFunctionRef = useRef(t);
-  useEffect(() => {
-    translateFunctionRef.current = t;
-  });
+  if (!needRefresh || dismissed) return null;
 
-  useEffect(() => {
-    if (!needRefresh) return;
-    const translate = translateFunctionRef.current;
-    showToast(translate("nav:updateAvailable"), "info", UPDATE_TOAST_MS, {
-      label: translate("nav:updateReload"),
-      onClick: () => {
-        // Immediate feedback: the swap (skipWaiting → controllerchange →
-        // reload) takes a beat, so surface an "Updating…" toast that holds
-        // until the page reloads. Without it a tap looks like it did nothing.
-        showToast(translate("nav:updating"), "info", UPDATE_TOAST_MS);
+  return (
+    <PwaUpdatePill
+      updating={updating}
+      onReload={() => {
+        setUpdating(true);
         void updateServiceWorker(true);
-      },
-    });
-  }, [needRefresh, showToast, updateServiceWorker]);
-
-  return null;
+      }}
+      onDismiss={() => setDismissed(true)}
+    />
+  );
 }

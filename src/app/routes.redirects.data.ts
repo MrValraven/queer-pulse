@@ -29,9 +29,6 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/author", routes.author],
   ["/issue", routes.issue],
   ["/issues", routes.issues],
-  ["/cover-gallery", routes.coverGallery],
-  ["/tag", routes.tag],
-  ["/newsletter-archive", routes.newsletterArchive],
   ["/story", routes.story],
   ["/story-tomas", routes.storyTomas],
   ["/story-safety", routes.storySafety],
@@ -85,8 +82,11 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/create-account", routes.createAccount],
   ["/invite", routes.invite],
   ["/request-invite", routes.requestInvite],
-  ["/onboarding", "/auth/onboarding"],
-  ["/welcome", routes.welcome],
+  ["/onboarding", routes.onboarding],
+  // `/welcome` is a legacy alias of the onboarding wizard — send it straight to
+  // the canonical path (not the `/auth/welcome` alias, which only redirects here
+  // again) so it lands in one hop and under the one-time gate.
+  ["/welcome", routes.onboarding],
   ["/welcome-tour", routes.welcomeTour],
   // About
   ["/contact", routes.contact],

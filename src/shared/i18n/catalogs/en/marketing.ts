@@ -575,13 +575,22 @@ export const marketing: Catalog = {
   "dsar.actions.info":
     "Requests are reviewed by a person on our privacy team — <b>never fully automated</b>.",
   "dsar.actions.submit": "Submit request",
+  "dsar.actions.submitting": "Sending…",
   "dsar.past.heading": "Your past requests",
   "dsar.past.submitted": "Submitted {date}",
   "dsar.past.responded": "Responded {date}",
   "dsar.past.respondedWithDuration": "Responded {date} · {duration}",
   "dsar.past.resolved": "Resolved",
+  "dsar.past.status.received": "Received",
+  "dsar.past.status.inReview": "In review",
+  "dsar.past.status.rejected": "Rejected",
+  "dsar.past.loading": "Loading your past requests…",
+  "dsar.past.error": "We couldn't load your past requests. Please try again shortly.",
+  "dsar.past.empty": "You haven't filed any requests yet.",
   "dsar.past.objectAnalytics": "Objection · Analytics",
   "dsar.toast.submitted": "Request submitted — reference {ref}",
+  "dsar.toast.submitError":
+    "We couldn't record that request — nothing was sent. Mind trying again?",
 
   // ── Community Guidelines ──────────────────────────────────────────────
   "guidelines.meta.title": "QueerPulse Community Guidelines",
@@ -847,7 +856,7 @@ export const marketing: Catalog = {
     "Updated regularly — see queerpulse.app/press for the latest.",
   "pressKit.readme.licenceHeading": "LICENCE",
   "pressKit.readme.licenceBody":
-    "All assets are released under CC BY 4.0 for editorial use. Contact press@queerpulse.app for commercial licensing.",
+    "All assets are released under CC BY 4.0 for editorial use. Contact press@queerpulse.pt for commercial licensing.",
   "pressKit.readme.contentsHeading": "CONTENTS",
   "pressKit.readme.contents.boilerplate": "Boilerplate (3 lengths)",
   "pressKit.readme.contents.marks": "Marks (SVG)",
@@ -1001,7 +1010,7 @@ export const marketing: Catalog = {
     "We never share your data with data brokers or advertising networks.",
   "privacy.changes.title": "Changes to this policy",
   "privacy.changes.p1":
-    "We'll notify members of material changes by email and an in-app notice before they take effect.",
+    "We'll post material changes as an in-app notice before they take effect.",
   "privacy.changes.p2":
     "Minor clarifications may be published without notice — the version number and date at the top of this page always reflect the current text.",
   "privacy.contactSection.title": "Contact",
@@ -1087,7 +1096,7 @@ export const marketing: Catalog = {
     "Nothing in these terms limits liability for anything that can't legally be limited, including gross negligence or wilful misconduct.",
   "terms.changesTerms.title": "Changes to these terms",
   "terms.changesTerms.p1":
-    "We'll notify members of material changes by email and an in-app notice before they take effect.",
+    "We'll post material changes as an in-app notice before they take effect.",
   "terms.changesTerms.p2":
     "Continuing to use QueerPulse after changes take effect means you accept the updated terms.",
   "terms.law.title": "Governing law",
@@ -1097,6 +1106,46 @@ export const marketing: Catalog = {
   "terms.contactSection.title": "Contact",
   "terms.contactSection.body":
     "Questions about these terms? Email <a>hello@queerpulse.pt</a> and a real person will respond.",
+
+  // ── Imprint / Legal Notice ────────────────────────────────────────────
+  // TODO (maintainer): the operator's registration number, address, legal
+  // representative, and hosting provider are placeholders in ImprintPage.data.ts
+  // and interpolated below. Confirm the real details before public launch.
+  "imprint.meta.title": "Legal notice · QueerPulse",
+  "imprint.meta.description":
+    "Who runs QueerPulse: the legal entity behind the platform, how to reach a real person, and the law we answer to.",
+  "imprint.meta.lastReviewed": "Last reviewed 1 June 2026",
+  "imprint.title": "Legal <em>notice</em>",
+  "imprint.plain.text":
+    "The plain version: this page names the organisation that operates QueerPulse, how to reach us, and where we're registered. It's the legally required imprint — nothing more.",
+  "imprint.operator.title": "Who operates QueerPulse",
+  "imprint.operator.p1":
+    "QueerPulse is operated by {legalName}, a not-for-profit registered in Portugal.",
+  "imprint.operator.registry": "Registration number: {registryNumber}",
+  "imprint.operator.address": "Registered address: {registeredAddress}",
+  "imprint.operator.todo":
+    "These registration details are placeholders pending the operator's final legal filing — we'll publish the confirmed numbers here.",
+  "imprint.contact.title": "How to reach us",
+  "imprint.contact.p1":
+    "For anything on this page — or anything at all — email <a>{email}</a> and a real person will answer.",
+  "imprint.contact.p2":
+    "We reply in English or Portuguese, usually within two working days.",
+  "imprint.representation.title": "Responsible for content",
+  "imprint.representation.p1":
+    "Editorial and legal responsibility for this site rests with {representative}, on behalf of {legalName}.",
+  "imprint.hosting.title": "Hosting",
+  "imprint.hosting.p1":
+    "The platform is hosted by {hostingProvider}. Your session and data are handled as described in our Privacy Policy.",
+  "imprint.jurisdiction.title": "Governing law",
+  "imprint.jurisdiction.p1":
+    "QueerPulse operates under Portuguese and European Union law.",
+  "imprint.jurisdiction.p2":
+    "Any dispute we can't settle directly will be heard in the courts of Lisbon, Portugal, unless consumer-protection law gives you another right.",
+  "imprint.disputes.title": "Online dispute resolution",
+  "imprint.disputes.p1":
+    "The European Commission runs an online dispute-resolution platform at ec.europa.eu/consumers/odr. We'd rather sort things out by email first — see “How to reach us” above.",
+  "imprint.contactCta":
+    "Something here out of date? <strong>Tell us and we'll fix it.</strong>",
 
   // ── Press Kit — page sections ─────────────────────────────────────────
   // Coverage headlines/sources are real press pieces (someone else's words)
@@ -1177,6 +1226,9 @@ export const marketing: Catalog = {
   "pressKit.coverage.section.lead":
     "Selected English- and Portuguese-language pieces from 2024–2026. <em>Hit-counts welcome but not necessary</em> — link to Press instead.",
   "pressKit.coverage.openingToast": "Opening coverage in {source}…",
+  "pressKit.coverage.emptyLive.title": "Coverage will appear here",
+  "pressKit.coverage.emptyLive.description":
+    "Once QueerPulse is written about, we'll link the pieces here. For interviews or press enquiries, email press@queerpulse.pt.",
   "pressKit.downloads.section.title": "<em>Downloads</em>",
   "pressKit.downloads.section.lead":
     "Direct file links. The full kit is a 38 MB ZIP with everything below; individual files are smaller.",
@@ -1215,6 +1267,8 @@ export const marketing: Catalog = {
   "listBusiness.wizard.stepAria": "Step {number}: {label}",
   "listBusiness.wizard.stepAriaDone": "Step {number}: {label} (done)",
   "listBusiness.wizard.stepAriaCurrent": "Step {number}: {label} (current)",
+  "listBusiness.wizard.stepJumpAria": "Go back to step {number}: {label}",
+  "listBusiness.wizard.stepOf": "Step {number} of {total} — {label}",
   "listBusiness.wizard.draftSaved": "Draft saved",
   "listBusiness.draftBanner.text":
     "<b>You have a saved draft.</b> Pick up where you left off?",
@@ -1238,6 +1292,29 @@ export const marketing: Catalog = {
   "listBusiness.toast.submitError":
     "We couldn't send your listing just now. Your details are saved — try again.",
   "listBusiness.toast.withdrawn": "Listing withdrawn",
+  // Server-side validation (item #4)
+  "listBusiness.serverError.title": "The community team's system flagged this",
+  "listBusiness.serverError.dismiss": "Dismiss this message",
+  // Save & finish later + cross-device drafts (item #11)
+  "listBusiness.saveLater.cta": "Save & finish later",
+  "listBusiness.saveLater.saving": "Saving…",
+  "listBusiness.saveLater.toast":
+    "Saved. Pick this back up any time — it's waiting in your drafts.",
+  "listBusiness.saveLater.error":
+    "We couldn't save your draft just now. Check your connection and try again.",
+  "listBusiness.drafts.title": "Pick up where you left off",
+  "listBusiness.drafts.count": "{count} in progress",
+  "listBusiness.drafts.untitled": "Untitled place",
+  "listBusiness.drafts.updated": "Last edited {when}",
+  "listBusiness.drafts.resume": "Resume",
+  "listBusiness.drafts.resuming": "Opening…",
+  "listBusiness.drafts.delete": "Delete draft",
+  "listBusiness.drafts.loadError":
+    "We couldn't load your saved drafts just now.",
+  "listBusiness.resume.invalidTitle": "This draft link is no longer valid",
+  "listBusiness.resume.invalidBody":
+    "The link may have expired, or the draft was already submitted or deleted. You can still start a fresh listing.",
+  "listBusiness.resume.startFresh": "Start a fresh listing",
   // Step 0 — path
   "listBusiness.step0.title": "How do you",
   "listBusiness.step0.em": "know this place?",
@@ -1379,6 +1456,12 @@ export const marketing: Catalog = {
     "Street and number is enough — we'll place the pin from there.",
   "listBusiness.step3.addressPlaceholder":
     "R. Antero de Quental 26, 1170-024 Lisboa",
+  "listBusiness.step3.locateAddress": "Locate this address",
+  "listBusiness.step3.locateError":
+    "We couldn't find that address. Try adding the city or postcode — or drop a pin on your neighbourhood below.",
+  "listBusiness.step3.locateDemoHint":
+    "Demo mode can't look up an address online — we've dropped a pin near your neighbourhood. Drag it to the exact spot.",
+  "listBusiness.step3.dropNeighbourhoodPin": "Drop a pin on {hood}",
   "listBusiness.step3.mapLinkLabel": "Google Maps link",
   "listBusiness.step3.mapLinkHelper":
     "Open your place in Google Maps, tap Share, and paste the link — we'll drop the pin for you.",
@@ -1401,6 +1484,11 @@ export const marketing: Catalog = {
   "listBusiness.step3.closed": "Closed",
   "listBusiness.step3.opensAria": "{day} opens",
   "listBusiness.step3.closesAria": "{day} closes",
+  "listBusiness.step3.addHours": "+ Split (lunch break)",
+  "listBusiness.step3.removeHoursAria": "Remove second window on {day}",
+  "listBusiness.step3.nextDay": "next day",
+  "listBusiness.step3.hoursWarning":
+    "Check these times — a window is blank, zero-length, or overlaps.",
   "listBusiness.step3.hoursNoteLabel": "A short hours note — optional",
   "listBusiness.step3.hoursNotePlaceholder":
     "Closed Mondays. The back room books separately.",
@@ -1439,6 +1527,8 @@ export const marketing: Catalog = {
   "listBusiness.step4.alt.vibe": "Vibe · alt text",
   "listBusiness.step4.altPlaceholder":
     "Describe it for blind & low-vision members",
+  "listBusiness.step4.altPlaceholderRequired":
+    "Required — describe it for blind & low-vision members",
   "listBusiness.step4.photo.upload": "Upload",
   "listBusiness.step4.photo.change": "Change",
   "listBusiness.step4.photo.uploading": "Uploading…",
@@ -1591,11 +1681,14 @@ export const marketing: Catalog = {
   "listBusiness.missing.address": "an address",
   "listBusiness.missing.pin": "a map pin",
   "listBusiness.missing.hours": "opening hours",
+  "listBusiness.missing.hoursInvalid": "a fix to the opening hours",
   "listBusiness.missing.social": "valid contact links",
+  "listBusiness.missing.socialFormat": "the contact-link format fixed",
   "listBusiness.missing.rel": "your connection",
   "listBusiness.missing.ownerName": "your name",
   "listBusiness.missing.ownerRole": "your role",
   "listBusiness.missing.contactEmail": "a contact email",
+  "listBusiness.missing.alt": "alt text for your photos",
   "listBusiness.missing.consent": "both confirmations",
   // Live preview column
   "listBusiness.preview.head": "Live preview · updates as you type",
@@ -1700,7 +1793,7 @@ export const marketing: Catalog = {
   "transparency.signoff.title":
     "Signed in <em>good faith,</em> and ready for questions.",
   "transparency.signoff.body":
-    "This report was prepared by Catarina Vaz and André Bento, reviewed by the full Assembly, and audited independently by Dra. Helena Faria of Faria Auditoria. <em>Errors are ours.</em> Questions, corrections, or concerns: <a>transparency@queerpulse.app</a> — a real person reads them within 48 hours.",
+    "This report was prepared by Catarina Vaz and André Bento, reviewed by the full Assembly, and audited independently by Dra. Helena Faria of Faria Auditoria. <em>Errors are ours.</em> Questions, corrections, or concerns: <a>transparency@queerpulse.pt</a> — a real person reads them within 48 hours.",
   "transparency.signoff.role.catarina":
     "Co-treasurer · drafted finance + mistakes",
   "transparency.signoff.role.andre":
@@ -1709,7 +1802,7 @@ export const marketing: Catalog = {
   "transparency.signoff.downloadPdf": "Download PDF (84 pages)",
   "transparency.signoff.downloadCsv": "Download raw CSV",
 
-  // ── Changelog — page chrome. The 18 dated release entries (title/body/tag)
+  // ── Changelog — page chrome. The 19 dated release entries (title/body/tag)
   //    are historical release notes — left English due to volume; flagged in
   //    the sweep report rather than rushed.
   "changelog.hero.backLabel": "Roadmap",
@@ -1750,11 +1843,263 @@ export const marketing: Catalog = {
   "changelog.tag.donate": "See where money goes →",
   "changelog.tag.volunteer": "Find a way in →",
   "changelog.tag.notifications": "Open your notifications →",
+  "changelog.tag.connections": "Open your connections →",
+  "changelog.tag.trustNetwork": "Open the trust network →",
+  "changelog.tag.invite": "Invite someone →",
+  "changelog.tag.imprint": "Read the legal notice →",
 
+  "changelog.entries.moderation-outcome-notifications.title":
+    "You'll now hear the outcome of a moderation decision",
+  "changelog.entries.moderation-outcome-notifications.body":
+    "When the moderation team warns, suspends, or closes an account, the member now receives a notification explaining what happened and why — in their own language, with the reason the moderator wrote and a link to appeal the decision. A suspended or banned member is also taken straight to a page that shows the same reason and, for a suspension, when it lifts — instead of a blank screen that won't load. Until now only the person who filed a report was told the outcome; the member it affected was left in the dark. Moderation notifications are always delivered and can't be muted.",
+
+  "changelog.entries.community-page-polish.title":
+    "A friendlier community page",
+  "changelog.entries.community-page-polish.body":
+    "The single community page got a pass of polish: you can now share a community with a friend, leaving one asks you to confirm first so it never happens by accident, the Events tab lists every upcoming gathering instead of just the next, and switching tabs updates the link so you can share or bookmark a specific view. Non-members can read along without stray reply boxes, and your own posts now show your real name and photo the moment you share them.",
+
+  "changelog.entries.job-application-status.title":
+    "See where your job applications stand",
+  "changelog.entries.job-application-status.body":
+    "The application tracker now shows your real applications — what you applied to, when, and where each one is in the process — instead of a placeholder. Open any card to revisit the answers you sent.",
+
+  "changelog.entries.data-request-history.title":
+    "Your data-request history, in one place",
+  "changelog.entries.data-request-history.body":
+    "The privacy page now lists your real past data requests — access, correction, objection and the rest — with their reference and current status, so you can follow one up without guessing.",
+
+  "changelog.entries.community-settings-controls.title":
+    "Save, archive, or hand over your community",
+  "changelog.entries.community-settings-controls.body":
+    "If you run a community, the moderation panel's settings now do what they say: editing the name, description and house rules saves for real, you can archive a community, and you can transfer ownership to another member. No more changes that quietly went nowhere.",
+
+  "changelog.entries.feed-keeps-loading.title":
+    "The feed keeps loading as you scroll",
+  "changelog.entries.feed-keeps-loading.body":
+    "The community feed used to stop after the first page. It now loads more on its own as you reach the end — and there's a keyboard-friendly “Load more” for when you'd rather tap.",
+
+  "changelog.entries.faster-first-load.title":
+    "A faster first load",
+  "changelog.entries.faster-first-load.body":
+    "We now load each part of the interface's wording only when a screen needs it, instead of shipping all of it up front. The app opens noticeably quicker, especially on a phone or a slower connection.",
+
+  "changelog.entries.readable-text-contrast.title":
+    "Easier-to-read text across the app",
+  "changelog.entries.readable-text-contrast.body":
+    "A set of faint captions, hints and labels — in collections, the GIF picker, profile cards and a few other spots — were too light against the background. They now meet accessible contrast, in both light and dark mode.",
+
+  "changelog.entries.ios-splash-screens.title":
+    "A polished launch screen on iPhone",
+  "changelog.entries.ios-splash-screens.body":
+    "When you open QueerPulse from your iPhone home screen, it now shows a proper branded launch screen while it starts up, instead of a blank white flash. Android notifications also get a cleaner badge.",
+
+  "changelog.entries.removed-content-stays-hidden.title":
+    "Removed content stays hidden everywhere",
+  "changelog.entries.removed-content-stays-hidden.body":
+    "When a moderator takes something down, it now consistently disappears everywhere it could show — including direct messages, business and housing listings, and personas — and taken-down messages no longer count toward your unread badges.",
+
+  "changelog.entries.help-demo-example-live-hidden.title":
+    "Help panels no longer show demo examples in live mode",
+  "changelog.entries.help-demo-example-live-hidden.body":
+    "The “About this screen” help used to end with an “In the demo” example even in live mode, where that sample data doesn't exist. That aside now only appears when you're exploring the demo.",
+
+  "changelog.entries.smaller-help-icon.title":
+    "A smaller “About this screen” help icon",
+  "changelog.entries.smaller-help-icon.body":
+    "The little ⓘ help icon next to a page title used to grow with the heading and could look oversized next to the big display titles. It's now a discreet, consistent size on every screen.",
+
+  "changelog.entries.community-rules-and-tags-polish.title":
+    "Clearer house rules and tags in community details",
+  "changelog.entries.community-rules-and-tags-polish.body":
+    "A community's house rules now show their proper wording instead of an internal code, and the tags at the bottom of the About page stay legible in dark mode.",
+
+  "changelog.entries.co-owned-subprofiles.title":
+    "Co-own a persona with someone else",
+  "changelog.entries.co-owned-subprofiles.body":
+    "Some work is a duet, not a solo — a DJ act, a band, a joint studio. You can now invite another member to co-own a subprofile: once they accept, you both fully manage it, it shows up on both your profiles, and either of you can invite someone new, leave, or edit what's shared. Deleting a co-owned persona now tells you upfront how many people it affects.",
+
+  "changelog.entries.smoother-mobile-navigation.title":
+    "A smoother way to move around on your phone",
+  "changelog.entries.smoother-mobile-navigation.body":
+    "Getting around QueerPulse on a phone should feel like moving, not loading. The bottom tab bar now stays with you in the browser too, not only once you've installed the app, and pages settle into place with a smooth transition instead of snapping. Each tab remembers exactly where you left it, and tapping the one you're already on carries you straight back to the top. Swipe in from the left edge of the screen to go back, and pull down on your feed, events, members, messages or notifications to refresh with a quick tug instead of a reload.",
+
+  "changelog.entries.no-placeholder-people-in-live.title":
+    "Live mode now shows only real people",
+  "changelog.entries.no-placeholder-people-in-live.body":
+    "A few corners of QueerPulse were quietly showing example people from the demo to real members — a wellbeing directory of made-up therapists, a job application that arrived pre-filled with someone else's name and email, and magazine stories written by placeholder authors. That's fixed. You'll now see real content where it exists, your own details where a form asks for them, and an honest “still being built” note where something isn't ready yet — never a stand-in pretending to be a person.",
+
+  "changelog.entries.honest-roadmap-promises.title":
+    "The roadmap now keeps its promises — and says no, honestly",
+  "changelog.entries.honest-roadmap-promises.body":
+    "When something on the roadmap carries a Committed badge, that's a real promise, not a guess — and if its date ever moves, you'll see the actual reason why, published right there instead of quietly disappearing. There's also a new “Not building this, and why” list, so a request that isn't happening gets an honest answer instead of silence. Behind it, the team's roadmap tools got a full rebuild — a proper board for moving work from idea to shipped, a timeline, and a real queue for reading and responding to what members ask for — so what you see here stays current, not stale.",
+
+  "changelog.entries.invite-resend-and-qr.title":
+    "Resend an invite that ran out — and share it with a QR code",
+  "changelog.entries.invite-resend-and-qr.body":
+    "An invite that expired before your friend got to it no longer means starting over. Open your sent invites, tap “Send again” on the expired one, and the same link comes back to life for another week. Every invite you generate now also comes with a QR code, so someone can join by scanning it straight from your phone — across a table or at an event, no link to copy. And if an invite was addressed to a different email, or the person who invited you is no longer on QueerPulse, you'll now get a clear, kind explanation instead of a puzzling error.",
+  "changelog.entries.invite-resend-and-qr.tag": "Invite someone →",
+
+  "changelog.entries.smoother-onboarding-first-minutes.title":
+    "A gentler welcome for your first few minutes",
+  "changelog.entries.smoother-onboarding-first-minutes.body":
+    "Setting up your space just got kinder. If you step away partway through, we now remember where you were and pick up right there instead of starting you over. The “here for” tags you choose show on your profile from the start, and coming back to onboarding will never quietly overwrite them. Moving through the steps with a keyboard or screen reader now lands you in the right place each time, and you can step back a page whenever you want a second look.",
+
+  "changelog.entries.events-open-at-top.title":
+    "Events opens at the top",
+  "changelog.entries.events-open-at-top.body":
+    "Opening Events (or any tab) now always starts you at the top of the page. It used to drop you back at wherever you'd last scrolled to, which on the tall Events cover left you stranded mid-page. Pressing your browser's Back button still returns you to exactly where you were.",
+  "changelog.entries.events-open-at-top.tag": "Browse events →",
+
+  "changelog.entries.chat-header-tap-to-profile.title":
+    "A calmer chat header",
+  "changelog.entries.chat-header-tap-to-profile.body":
+    "The top of a conversation now works the way you'd expect: tap the person's name or photo to open their profile — no separate button needed. The layout is tidier too, with the info and starred-messages controls gathered into one neat pair in the corner instead of floating out of place.",
+  "changelog.entries.chat-header-tap-to-profile.tag": "Open messages →",
+
+  "changelog.entries.sheet-close-scroll-jump-fix.title":
+    "No more jumping back to the top",
+  "changelog.entries.sheet-close-scroll-jump-fix.body":
+    "If you opened your account sheet partway down a page and closed it again, the page would sometimes snap back up to the top — losing your place. It now stays exactly where you left it.",
+
+  "changelog.entries.mobile-account-you-tab.title":
+    "Your account, one tap away on mobile",
+  "changelog.entries.mobile-account-you-tab.body":
+    "On a phone, tapping your photo in the bottom bar now opens a space that's just yours — your profile, connections, saved places, applications and settings, gathered into one tidy sheet instead of scattered down a long menu. Messages moved up top beside notifications, so the people you're talking to stay within reach, and the “More” menu is now just for exploring the rest of QueerPulse.",
+
+  "changelog.entries.instagram-style-mobile-profile.title":
+    "Your profile, redesigned for your phone",
+  "changelog.entries.instagram-style-mobile-profile.body":
+    "On a phone, your profile now opens the way the apps you already know do: a compact avatar wrapped in a soft pride-gradient ring, a stat row you can take in at a glance — vouches, communities, personas — a highlights strip of your personas right up top, and the rest of your profile organised into swipeable, tabbed sections instead of one long scroll.",
+
+  "changelog.entries.forum-upvotes-tags-search.title":
+    "The forum grew up — upvotes, tags, search and lockable threads",
+  "changelog.entries.forum-upvotes-tags-search.body":
+    "The commons got a proper set of tools. You can now upvote a thread or a reply for real, so the answers people found most useful rise to where you'll see them. Sort the board by Active or Unanswered — not just Top and New — to find the conversations that need a voice or the ones still waiting for a first reply. When you start a post you can add a few tags like #housing or #health, and tapping any tag filters the whole board down to that topic. There's a search box now, so you can look for a thread instead of scrolling for it. And moderators can close a thread to new replies when a conversation has run its course — it stays readable, just paused.",
+  "changelog.entries.forum-upvotes-tags-search.tag": "Open the forum",
+  "changelog.entries.list-business-wizard-overhaul.title":
+    "Adding your space to the directory just got a lot easier",
+  "changelog.entries.list-business-wizard-overhaul.body":
+    "We rebuilt the whole “list a business” flow. If you're just recommending a place you love, we now only ask for what you can actually know — a name, where it is and a line about why — instead of demanding owner details and opening hours you don't have. Can't paste a Google Maps link? Type the address and tap “Locate this address”, or drop a pin on the neighbourhood and nudge it into place — you're never stuck. Opening hours now handle lunch-break splits and late nights that run past midnight, and as you type a name we check the real directory so you don't accidentally add a place that's already there. Your progress saves as you go and now follows you across devices, so you can start on your phone and finish on a laptop. Every business also gets a clear way to claim its own listing or dispute one added without its say-so, and anyone can still flag a listing that shouldn't be there.",
+  "changelog.entries.list-business-wizard-overhaul.tag": "List your space",
+  "changelog.entries.mobile-experience-pass.title":
+    "The whole app, tuned for your thumb",
+  "changelog.entries.mobile-experience-pass.body":
+    "We went screen by screen to make QueerPulse feel right in one hand. Buttons, chips and switches are bigger and easier to hit, and menus, filters and dialogs now rise up from the bottom of the screen as sheets you can flick away — right where your thumb already is. There's a clear back arrow at the top of every page you can reach without installing the app, and when you open a chat it fills the screen so nothing gets in the way, with the message box always sitting just above the keyboard. Slide-deck stories, the events calendar, the directory filters and the admin tools all read comfortably on a phone now, in portrait, without pinching or scrolling sideways.",
+
+  "changelog.entries.magazine-deck-authoring.title":
+    "Editors can now build their own interactive decks",
+  "changelog.entries.magazine-deck-authoring.body":
+    "The interactive slide-deck format from the magazine's front page used to be something we assembled by hand — now editors get a full authoring tool right in the dashboard. Add slides in five layouts (text, full-bleed image, a big animated stat, a before-and-after slider, or a tap-to-reveal moment), fill in the byline and metadata, and preview it exactly as readers will see it. Save a draft while you're still shaping it, then publish when it's ready — it'll show up with the “Interactive” tag on the magazine's front page.",
+
+  "changelog.entries.listings-moderation-console.title":
+    "The listings queue is now a real moderation console",
+  "changelog.entries.listings-moderation-console.body":
+    "Reviewing directory submissions is faster now: the queue has real pagination, search by name, submitter or reference, and sort by newest, oldest, or name, with a live count for each status. Moderators can select several submissions at once to publish, send back, or remove them together, and every row now shows how long a listing has been waiting so nothing sits forgotten. Sending a listing back or removing it can carry a short reason for the record, and opening a listing's preview now shows its full moderation history alongside any question-and-answer thread with the person who submitted it. An empty queue finally looks like good news, with its own illustration instead of a blank space.",
+
+  "changelog.entries.magazine-slide-decks.title":
+    "Interactive slide-deck stories, now in the magazine",
+  "changelog.entries.magazine-slide-decks.body":
+    "Some magazine stories can now be read as a slide deck: full-screen slides you tap through like a presentation, mixing text, full-bleed photos, big animated numbers, before-and-after image sliders and moments you tap to reveal. Open “Present” for a distraction-free, full-screen read. Look for the “Interactive” tag on the magazine's front page — the first one, “Ten years in Mouraria,” is live now.",
+
+  "changelog.entries.real-notification-settings.title":
+    "Notification settings that actually do something",
+  "changelog.entries.real-notification-settings.body":
+    "The toggles in Settings → Notifications used to be for show — flipping them changed nothing. Now they're real: turn gathering invites, RSVP reminders, new-message alerts, connection requests and thread replies on or off per type, and your choice is saved and respected everywhere, including phone push. Safety and account messages (moderation, appeals, account changes) always come through and aren't hidden behind a toggle. A few rows with no feature behind them yet are still honestly marked “coming soon” rather than pretending to work.",
+  "changelog.entries.platform-wide-search.title":
+    "Search now covers the whole platform",
+  "changelog.entries.platform-wide-search.body":
+    "Global search reached only members, communities, events, forum threads and businesses. It now spans magazine articles, jobs, housing listings, resources, workshops and subprofiles too — so one search finds the thing you're looking for wherever it lives, in both English and Portuguese.",
+  "changelog.entries.save-events-communities.title":
+    "Save events and communities — and saves that really stick",
+  "changelog.entries.save-events-communities.body":
+    "You can now save a gathering or a community to your collection with the same bookmark you already use elsewhere. We also fixed two Save buttons — on a job's detail page and on short films — that looked like they worked but forgot everything the moment you left. Every save now persists to your collection.",
+  "changelog.entries.invite-revoke-oversight.title":
+    "Take back an invite you've sent",
+  "changelog.entries.invite-revoke-oversight.body":
+    "Changed your mind about an invitation? You can now revoke a pending invite from your sent list and the link stops working immediately. Admins also get a new platform-wide Invites view to see every invitation and its status, filterable at a glance.",
+  "changelog.entries.moderation-completeness.title":
+    "A more complete moderation toolkit",
+  "changelog.entries.moderation-completeness.body":
+    "Moderators can now take down a member's profile and individual business reviews, not just posts and listings — a removed profile or review stops showing to everyone else (and a removed review stops counting toward a place's rating). Moderators can also lift a suspension and reinstate a member directly, instead of only through the appeal flow.",
+  "changelog.entries.account-media-safety.title":
+    "Safer handles, cleaner storage",
+  "changelog.entries.account-media-safety.body":
+    "A few quiet safety improvements. When you change your username, the old one is now held for you for 30 days before anyone else can take it, so a freed handle can't be instantly grabbed and old @mentions can't be quietly redirected to a stranger. Photos you replace — avatars, listing pictures, post images — are now deleted from storage instead of lingering, a suspended member's images stop being served to others, and finishing onboarding records your agreement to the community guidelines.",
+  "changelog.entries.legal-notice-imprint.title":
+    "A legal notice (imprint) page",
+  "changelog.entries.legal-notice-imprint.body":
+    "Added a Legal Notice page under Policies, linked from the footer, setting out who operates QueerPulse and how to reach us — the kind of imprint that's expected of a service operating in Europe.",
+  "changelog.entries.messages-list-virtualization.title":
+    "Long chats now scroll smoothly, however big they get",
+  "changelog.entries.messages-list-virtualization.body":
+    "A very long or very active conversation used to keep every message it had ever loaded sitting in the page at once, which could make scrolling feel heavy the longer a chat went on. Messages now render only the ones actually near your screen, so a thread with thousands of messages feels just as light as a brand-new one — loading older history, jumping to a reply, and scrolling to the latest message all still land exactly where you'd expect.",
+  "changelog.entries.live-mode-honesty-sweep.title":
+    "No more placeholder people, fake confirmations or dead-end buttons",
+  "changelog.entries.live-mode-honesty-sweep.body":
+    "A platform-wide honesty pass so nothing you see is invented and nothing you tap pretends to work. Prototype pages that hadn't been wired up yet — parts of the homepage, the magazine, the therapist and clinic directories, skill-swaps, the incubator and gatherings tools — now show a clear “coming soon” instead of made-up members, events, “verified” providers or statistics. Forms that had no home yet (contact, newsletter, cookie preferences, micro-grant and panel applications, safe-space vouches, perk claims, and admin actions like publish/export) no longer flash a false “done”: they either save for real or tell you honestly they're not open yet, and cookie choices now actually stick. Health and legal directories in particular will never show an unverified provider as if we'd vetted them.",
+  "changelog.entries.frontend-reliability-hardening.title":
+    "Fewer lost drafts, honest error states and safer shared devices",
+  "changelog.entries.frontend-reliability-hardening.body":
+    "A correctness pass across the app so nothing quietly loses your work or misleads you. Leaving a half-finished gathering, community or profile edit now warns you before your changes disappear, and Settings no longer discards edits when you navigate away. When something goes wrong, you see an honest message with a retry instead of an eternal loading state or a false “done”, and a passing wobble in your connection no longer nags you with an error toast for data you're already looking at. On a shared device your saved items, drafts and vouches are now kept separate per account and cleared when you sign out, so the next person never sees your things; and the “Follow a writer” button only appears where following actually works. Under the hood the app also recovers gracefully from a bad response or an out-of-date tab instead of showing a crash screen.",
+  "changelog.entries.screen-help-signs.title":
+    "“About this screen” help on every feature",
+  "changelog.entries.screen-help-signs.body":
+    "New to a part of QueerPulse? Look for the small ⓘ info button next to a screen's title. Tap it and a short, friendly card explains what the screen is for, how to use it, and gives one concrete example — so you always have a sense of how each feature fits into the platform. It's there across the main screens (Members, Communities, Forum, Events, Messages, the local directory, housing, work, culture, settings and more), in both English and Portuguese, and it never gets in the way — open it when you want it, ignore it when you don't.",
+  "changelog.entries.crisp-profile-photos.title":
+    "Sharper profile photos",
+  "changelog.entries.crisp-profile-photos.body":
+    "Profile pictures on a member's page were being fetched at a small size and then stretched to fill the big portrait, which left some looking soft or blurry. We now request the photo at the resolution the page actually shows, so profile pictures render crisp.",
+  "changelog.entries.performance-cost-hardening.title":
+    "Faster search, lighter uploads and steadier busy pages",
+  "changelog.entries.performance-cost-hardening.body":
+    "A behind-the-scenes pass to keep QueerPulse quick and affordable as it fills up. Global search now uses proper text indexes, so finding people, communities, events, listings and threads stays fast no matter how many members join instead of slowing down as the platform grows. Photos you upload are gently resized before they leave your device, so posting is quicker on mobile data and pages load lighter for everyone. Busy community threads, member rosters and event guest lists now load in tidy pages with a \"load more\" button rather than pulling in everything at once, and popular pages the whole community shares can now be served from the cache instead of rebuilt every time. Event reminders and push notifications go out in a single efficient batch, images at the top of a page load first for a snappier first paint, and switching pages mid-load no longer wastes a request. Long lists — the local directory and busy forum threads — now reveal more as you scroll instead of rendering everything at once, so they stay smooth on a phone. Nothing you see changes — it just holds up better under a crowd.",
+  "changelog.entries.accessibility-i18n-pwa-hardening.title":
+    "Accessibility, translation and offline polish",
+  "changelog.entries.accessibility-i18n-pwa-hardening.body":
+    "A sweep to make QueerPulse work for more people, in more places. Every form field now announces its label to screen readers, so signing up, posting a job, checking out or editing your profile all read cleanly with assistive tech. Sharing a link finally shows a preview image instead of a broken thumbnail. Lose your connection and you get a real offline page — not the browser's error — and the app installs lighter and updates with a pill that waits for you instead of a toast that vanishes. Toasts can now be dismissed and pause while you read them; removing someone from a group asks first; buttons are a little bigger to tap; and message timestamps plus a few stray labels now follow the language you chose, in both English and Portuguese.",
+  "changelog.entries.launch-hardening-p1.title":
+    "Safety, honesty and reliability hardening",
+  "changelog.entries.launch-hardening-p1.body":
+    "A broad pre-launch pass. Blocking someone now truly stops them everywhere — no more DMs, presence, typing or push slipping through, and your profile is hidden from anyone you've blocked. Live mode tells the truth: pages that used to show placeholder people or fake a submission now either use real data or say plainly when something isn't ready yet, and requesting your data (GDPR) is a real request. Editing, cancelling or RSVPing to a gathering, and leaving a community, now refresh the screen straight away; an outage shows a retry instead of an empty page. And where we can't yet email you, we no longer pretend we will.",
+  "changelog.entries.remove-listings-from-moderation.title":
+    "Moderators can remove directory listings",
+  "changelog.entries.remove-listings-from-moderation.body":
+    "The listings review queue now has a Remove action, so a moderator can permanently delete a spam, duplicate or inappropriate submission instead of only sending it back to review. Removing a live listing also takes it off the public directory. Every removal asks for confirmation first.",
+
+  "changelog.entries.sent-invites-status-filter.title":
+    "Filter the invites you've sent by status",
+  "changelog.entries.sent-invites-status-filter.body":
+    "The list of invites you've already sent now has tabs — All, Pending, Accepted, Expired — each showing a count, so you can jump straight to the ones still waiting for a reply or the ones that landed. Each invite also shows the exact day and time it was sent and when it expires, instead of just the date.",
+
+  "changelog.entries.onboarding-one-time-guard.title":
+    "Finishing onboarding now sticks",
+  "changelog.entries.onboarding-one-time-guard.body":
+    "The welcome flow you go through right after joining is meant to happen once. If your browser later autofilled the saved onboarding address, though, it would drop you straight back into the wizard as if you'd never done it — and clicking through could quietly reset choices like your “Here for” intents. We now record when you finish onboarding and send you on to your feed if you land back on it, so it can't replay or overwrite what you already set.",
+
+  "changelog.entries.trust-network-replay-by-joins.title":
+    "Trust-network replay now follows the people, not the calendar",
+  "changelog.entries.trust-network-replay-by-joins.body":
+    "In the admin trust network, the “Replay” of how vouches formed over time used to advance one calendar month at a time — so it crawled through quiet months where nothing happened and flashed past the busy ones. It now steps through the moments people were actually vouched for, giving each real event equal time. The result tracks how the community grew instead of the passage of the calendar. Dragging the timeline slider by hand works exactly as before.",
+  "changelog.entries.trust-network-invite-vs-vouch.title":
+    "See who was invited vs vouched for",
+  "changelog.entries.trust-network-invite-vs-vouch.body":
+    "The admin trust network now shows invite connections — people you brought onto QueerPulse yourself — in a distinct colour from vouches added later, with a legend and hover labels so the two are easy to tell apart at a glance.",
+  "changelog.entries.chef-mixologist-therapist-personas.title":
+    "Three new persona types: chef, mixologist and therapist",
+  "changelog.entries.chef-mixologist-therapist-personas.body":
+    "You can now build a subprofile as a chef (menus + residencies), a mixologist (cocktails + residencies) or a therapist (specialisms + credentials) — each with its own sections, starter template and directory filter, alongside the crafts already there.",
+  "changelog.entries.connections-card-polish.title":
+    "Tidier connection cards",
+  "changelog.entries.connections-card-polish.body":
+    "On your connections page, the “mutuals” line now renders properly instead of showing raw formatting, and the “Connected” date shows the day and time you connected — not just the month and year.",
+  "changelog.entries.lightbox-focus-a11y.title":
+    "Cleaner focus handling in the photo viewer",
+  "changelog.entries.lightbox-focus-a11y.body":
+    "Opening a photo full-screen — in the directory galleries and on gathering pages — no longer leaves keyboard focus stranded on the invisible tap-to-close layer behind the image. Focus now stays where you can see it, which keeps screen readers and keyboard navigation working smoothly while you flip through photos.",
   "changelog.entries.directory-detail-polish.title":
-    "A more accurate, more useful place page",
+    "A redesigned, more accurate place page",
   "changelog.entries.directory-detail-polish.body":
-    "Directory listings got a round of fixes and small additions: “Open now” is now worked out on the venue's own clock (not your device's timezone), the location line and search data no longer assume every place is in Lisbon, website links always open correctly, and star ratings read properly to screen readers. Signed-out visitors can now save a place (we'll ask you to sign in), people who run a venue can claim its listing, and a mistyped or removed listing shows a real “not found” page instead of quietly bouncing you back to the directory.",
+    "Directory listings were rebuilt around a clearer layout: the place introduces itself first — name, category, and its key details in one row — then a compact photo gallery (a main shot with the rest in a clickable column) instead of one oversized banner, with the main actions sitting right beside the name. New venues now read as “New” rather than a hollow zero-star rating. Alongside the redesign: “Open now” is worked out on the venue's own clock (not your device's timezone), the location line and search data no longer assume every place is in Lisbon, website links always open correctly and show a tidy domain, and star ratings read properly to screen readers. Signed-out visitors can now save a place, people who run a venue can claim its listing, and a mistyped or removed listing shows a real “not found” page instead of quietly bouncing you back to the directory.",
   "changelog.entries.review-author-avatars.title":
     "See who left a review",
   "changelog.entries.review-author-avatars.body":
@@ -2190,6 +2535,8 @@ export const marketing: Catalog = {
   "roadmap.card.progressAria": "{name} progress",
   "roadmap.card.mostWanted": "Most wanted",
   "roadmap.card.votesSuffix": "votes",
+  "roadmap.card.committed": "Committed",
+  "roadmap.card.slipNote": "Moved {from} → {to} — {reason}",
   "roadmap.shape.title": "Have an <em>idea?</em>",
   "roadmap.shape.sub":
     "We read every suggestion. The most-voted ideas move up the roadmap.",
@@ -2215,6 +2562,19 @@ export const marketing: Catalog = {
   "roadmap.howWeDecide.smallTeam.title": "Small team, careful pace",
   "roadmap.howWeDecide.smallTeam.desc":
     "We're two engineers and a designer. We'd rather build slowly and get it right.",
+  "roadmap.someday.title": "Someday, <em>honestly</em>",
+  "roadmap.someday.sub":
+    "No date here, because a date would be a promise we can't keep yet. Still on our radar — vote to help one rise.",
+  "roadmap.notBuilding.title": "Not building this, and <em>why</em>",
+  "roadmap.notBuilding.sub":
+    "The list most platforms hide. If we say no, you get a reason.",
+  "roadmap.notBuilding.votesAsked_one": "{count} member had asked",
+  "roadmap.notBuilding.votesAsked_other": "{count} members had asked",
+  "roadmap.notBuilding.reason.scope.label": "Outside what we're building",
+  "roadmap.notBuilding.reason.unsafe.label": "We can't build it safely",
+  "roadmap.notBuilding.reason.capacity.label": "No capacity, honestly",
+  "roadmap.notBuilding.reason.exists.label": "Already exists elsewhere",
+  "roadmap.notBuilding.reason.harm.label": "The risk outweighs the value",
   "roadmap.subpageIndex.title": "Already shipped",
   "roadmap.subpageIndex.changelog.label": "Changelog",
   "roadmap.subpageIndex.changelog.blurb":
@@ -2547,7 +2907,9 @@ export const marketing: Catalog = {
   "donateModal.field.emailReceipt": "Email for receipt",
   "donateModal.field.emailPlaceholder": "you@example.com",
   "donateModal.field.cardNumber": "Card number",
+  "donateModal.field.cardNumberPlaceholder": "1234 5678 9012 3456",
   "donateModal.field.expiry": "Expiry",
+  "donateModal.field.expiryPlaceholder": "MM / YY",
   "donateModal.field.cvc": "CVC",
   "donateModal.processing": "Processing…",
   "donateModal.submitCta.monthly": "Donate {amount} / month",
@@ -2591,6 +2953,10 @@ export const marketing: Catalog = {
   "contact.sent.body":
     "We'll read it and write back, usually within a day or two. If it's a safety concern, we'll be in touch within 24 hours.",
   "contact.sent.backCta": "Back to QueerPulse",
+  "contact.comingSoon.title": "This form isn't <em>wired up yet.</em>",
+  "contact.comingSoon.body":
+    "We haven't connected this form to our inbox yet, so it can't send your message — nothing was submitted. Email us directly instead; every address on the left is real and read by a person.",
+  "contact.comingSoon.emailCta": "Email hello@queerpulse.pt",
   "contact.form.title": "Write to <em>us.</em>",
   "contact.form.sub":
     "If you prefer a form to an email, use this. We read it the same way.",
@@ -2732,6 +3098,10 @@ export const marketing: Catalog = {
     "Goes directly to our partnerships team. No sales funnel, no follow-up sequence. Just a reply within 5 working days.",
   "forOrgs.form.toast":
     "Sent to our partnerships team — they'll reply within 5 working days",
+  "forOrgs.form.comingSoon.title": "This form isn't <em>wired up yet.</em>",
+  "forOrgs.form.comingSoon.body":
+    "We haven't connected the partnerships form yet, so it can't send your details — nothing was submitted. Email the partnerships team directly and we'll take it from there.",
+  "forOrgs.form.comingSoon.emailCta": "Email partners@queerpulse.pt",
 
   // ── Directory — business directory + detail page chrome. Place records
   //    (`directoryPlaces.ts`: names, taglines, reviews, owner bios) are each
@@ -2890,6 +3260,46 @@ export const marketing: Catalog = {
     "Thanks — we'll pass it along to the owner.",
   "directory.detail.suggestEdit.errorToast":
     "Couldn't send your suggestion. Please try again.",
+  "directory.detail.contest.cta": "Suggest an edit or claim this listing",
+  "directory.detail.contest.ariaLabel": "Suggest an edit or claim {name}",
+  "directory.detail.contest.title": "Suggest an edit or claim this listing",
+  "directory.detail.contest.sub":
+    "How would you like to help keep {name}'s entry accurate?",
+  "directory.detail.contest.suggest.title": "Suggest an edit",
+  "directory.detail.contest.suggest.desc":
+    "Something's outdated or wrong — send a correction to the owner.",
+  "directory.detail.contest.dispute.title": "Dispute this listing",
+  "directory.detail.contest.dispute.desc":
+    "This place was listed without its say-so, or shouldn't be here at all.",
+  "directory.detail.contest.claim.title": "Claim this listing",
+  "directory.detail.contest.claim.desc":
+    "You run this place and want to manage its entry.",
+  "directory.detail.dispute.ariaLabel": "Report or dispute {name}",
+  "directory.detail.dispute.eyebrow": "Report / dispute",
+  "directory.detail.dispute.title": "Contest <em>{name}</em>",
+  "directory.detail.dispute.sub":
+    "A place can be tagged as ours without its knowledge. Tell us what's wrong — a moderator reviews every dispute, and nothing you write is shared publicly.",
+  "directory.detail.dispute.reasonLabel": "What's the problem?",
+  "directory.detail.dispute.reasonPlaceholder":
+    "e.g. We run this venue and were never asked to be listed, or this information is wrong.",
+  "directory.detail.dispute.emailLabel": "Contact email",
+  "directory.detail.dispute.emailHelper":
+    "Optional — add one if a moderator should reach you outside QueerPulse.",
+  "directory.detail.dispute.emailPlaceholder": "you@example.com",
+  "directory.detail.dispute.emailError": "Enter a valid email address.",
+  "directory.detail.dispute.note":
+    "Filing a dispute doesn't remove the listing on its own — a moderator looks into it first.",
+  "directory.detail.dispute.cancel": "Cancel",
+  "directory.detail.dispute.submit": "Send to moderators",
+  "directory.detail.dispute.submitting": "Sending…",
+  "directory.detail.dispute.errorToast":
+    "Couldn't file your dispute. Please try again.",
+  "directory.detail.dispute.successAriaLabel": "Dispute received",
+  "directory.detail.dispute.successTitle": "Thanks — we're",
+  "directory.detail.dispute.successEm": "on it.",
+  "directory.detail.dispute.successBody":
+    "A moderator will review your report about {name}. If you left an email, we'll use it only if we need to follow up.",
+  "directory.detail.dispute.doneCta": "Done",
   "directory.detail.mapAria": "Map showing where {name} is",
   "directory.detail.languagesLabel": "Languages",
   "directory.detail.accessLabel": "Access",
@@ -3239,6 +3649,9 @@ export const marketing: Catalog = {
   "local.filter.vibeLabel": "Vibe",
   "local.filter.vibeVenueNote": "Vibe filters apply to venues",
   "local.filter.verifiedSafeSpaces": "Verified safe spaces",
+  "local.filter.filters": "Filters",
+  "local.filter.showResults_one": "Show {count} place",
+  "local.filter.showResults_other": "Show {count} places",
   "local.venue.back": "Back to the map",
   "local.venue.address": "Address",
   "local.venue.hours": "Hours",

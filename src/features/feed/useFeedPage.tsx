@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileData } from "../../app/providers/useProfile";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMyCommunities } from "../communities/api/useMyCommunities";
 import { communities } from "../homepage/data/communities";
@@ -86,7 +86,7 @@ export function useFeedPage() {
   const memberships = useMyCommunities();
   const { blocked, muted } = useSocial();
   // The signed-in member (real profile live, mock currentUser in demo mode).
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   const { greeting, dateLine } = useNowGreeting();
 
   // Live feed source (inert in demo mode, which renders its scripted cards).
@@ -250,6 +250,11 @@ export function useFeedPage() {
     pulse,
     staticItems,
     revealDelay,
+    // Cursor pagination for the live feed (inert in demo mode, where the hook is
+    // disabled so `hasNextPage` is false and the pager never renders).
+    hasNextPage: feed.hasNextPage,
+    fetchNextPage: feed.fetchNextPage,
+    isFetchingNextPage: feed.isFetchingNextPage,
     sidebarLoading:
       loading || (!demoMode && (sidebarFeed.isLoading || upcomingFeed.isLoading)),
     sidebarMembers,

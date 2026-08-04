@@ -1,4 +1,4 @@
-import { FiLock, FiUser } from "react-icons/fi";
+import { FiLock, FiUser, FiX } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -19,6 +19,8 @@ interface Props {
   onVerify: (id: string) => void;
   onExpand: (id: string) => void;
   onCite: (id: string) => void;
+  /** Deselect the node — dismisses the mobile bottom sheet. */
+  onCloseSheet: () => void;
 }
 
 function VAvatar({
@@ -102,6 +104,11 @@ function VouchList({
                       {t("admin:vouchGraph.inspector.mutualTag")}
                     </span>
                   )}
+                  {e.kind && (
+                    <span className={styles.tag}>
+                      {t(`admin:vouchGraph.edgeKind.${e.kind}`)}
+                    </span>
+                  )}
                   {e.relationship && (
                     <span className={styles.tag}>
                       {relationshipLabel(t, e.relationship)}
@@ -125,6 +132,7 @@ export function VouchGraphInspector({
   onVerify,
   onExpand,
   onCite,
+  onCloseSheet,
 }: Props) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -132,7 +140,7 @@ export function VouchGraphInspector({
 
   if (!sel) {
     return (
-      <aside className={styles.inspector}>
+      <aside className={styles.inspector} data-state="empty">
         <div className={styles.insEmpty}>
           <span className={styles.insEmptyIc}>
             <FiUser aria-hidden />
@@ -157,7 +165,21 @@ export function VouchGraphInspector({
   );
 
   return (
-    <aside className={styles.inspector}>
+    <aside className={styles.inspector} data-state="open">
+      <button
+        type="button"
+        className={styles.insGrab}
+        onClick={onCloseSheet}
+        aria-label={t("admin:common.close")}
+      />
+      <button
+        type="button"
+        className={styles.insSheetClose}
+        onClick={onCloseSheet}
+        aria-label={t("admin:common.close")}
+      >
+        <FiX aria-hidden />
+      </button>
       <div className={styles.insHead}>
         <VAvatar
           initials={p.initials}

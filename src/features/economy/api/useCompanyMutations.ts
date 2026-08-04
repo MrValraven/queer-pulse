@@ -6,6 +6,7 @@ import {
   type CreateCompanyDto,
   type CreateReviewDto,
 } from "./companies.api";
+import { economyKeys } from "./economyKeys";
 
 /**
  * POST /companies — create/claim a company. Demo is a no-op (returns null; the
@@ -25,7 +26,9 @@ export function useCreateCompany() {
       return { slug: res.slug };
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["companies"] });
+      void queryClient.invalidateQueries({
+        queryKey: economyKeys.companiesRoot,
+      });
     },
   });
 }
@@ -48,8 +51,12 @@ export function useCreateReview(slug: string) {
       await createReview(slug, dto);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["company-reviews", slug] });
-      void queryClient.invalidateQueries({ queryKey: ["company", slug] });
+      void queryClient.invalidateQueries({
+        queryKey: economyKeys.companyReviewsBySlug(slug),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: economyKeys.companyBySlug(slug),
+      });
     },
   });
 }

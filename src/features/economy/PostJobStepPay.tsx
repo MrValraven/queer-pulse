@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { FiZap } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -8,6 +9,7 @@ import styles from "./PostJobPage.module.css";
 
 export function PostJobStepPay({ form }: { form: PostJobForm }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   const { state, patch, toggleIn } = form;
 
   return (
@@ -35,10 +37,11 @@ export function PostJobStepPay({ form }: { form: PostJobForm }) {
             .join(" ")}
         >
           <div className={styles.field} style={{ marginBottom: 0 }}>
-            <div className={styles.label}>
+            <label className={styles.label} htmlFor={`${fieldId}-currency`}>
               {t("economy:postJob.step3.currency")}
-            </div>
+            </label>
             <select
+              id={`${fieldId}-currency`}
               className={styles.select}
               value={state.currency}
               onChange={(e) => patch({ currency: e.target.value })}
@@ -49,8 +52,11 @@ export function PostJobStepPay({ form }: { form: PostJobForm }) {
             </select>
           </div>
           <div className={styles.field} style={{ marginBottom: 0 }}>
-            <div className={styles.label}>{t("economy:postJob.step3.min")}</div>
+            <label className={styles.label} htmlFor={`${fieldId}-min`}>
+              {t("economy:postJob.step3.min")}
+            </label>
             <input
+              id={`${fieldId}-min`}
               className={styles.input}
               type="number"
               value={state.rateMin}
@@ -59,13 +65,14 @@ export function PostJobStepPay({ form }: { form: PostJobForm }) {
             />
           </div>
           <div className={styles.field} style={{ marginBottom: 0 }}>
-            <div className={styles.label}>
+            <label className={styles.label} htmlFor={`${fieldId}-max`}>
               {t("economy:postJob.step3.max")}{" "}
               <span className={styles.opt}>
                 {t("economy:postJob.step3.optAbbrev")}
               </span>
-            </div>
+            </label>
             <input
+              id={`${fieldId}-max`}
               className={styles.input}
               type="number"
               value={state.rateMax}
@@ -74,8 +81,11 @@ export function PostJobStepPay({ form }: { form: PostJobForm }) {
             />
           </div>
           <div className={styles.field} style={{ marginBottom: 0 }}>
-            <div className={styles.label}>{t("economy:postJob.step3.per")}</div>
+            <label className={styles.label} htmlFor={`${fieldId}-per`}>
+              {t("economy:postJob.step3.per")}
+            </label>
             <select
+              id={`${fieldId}-per`}
               className={styles.select}
               value={state.ratePer}
               onChange={(e) => patch({ ratePer: e.target.value })}

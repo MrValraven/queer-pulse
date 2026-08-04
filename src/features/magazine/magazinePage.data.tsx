@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
-import { routes } from "../../app/routeMap";
 import { MEMBERS, memberName } from "../members/data/members";
 
 export interface Card {
@@ -60,6 +59,37 @@ export interface Letter {
   body: string;
   from: string;
 }
+
+/** Promo data for the interactive slide deck, surfaced as a discovery block
+ * on the magazine front. Mirrors the example deck's own surface fields
+ * (`src/features/magazine/data/decks.mock.tsx`, id "ten-years-mouraria") so
+ * the promo stays consistent with the deck it links to. */
+export const FEATURED_DECK: {
+  id: string;
+  title: ReactNode;
+  byline: string;
+  readTime: string;
+  cover: string;
+  coverDesc: string;
+  excerpt: string;
+} = {
+  id: "ten-years-mouraria",
+  title: (
+    <>
+      Ten years in Mouraria,
+      <br />
+      <em>slide by slide</em>
+    </>
+  ),
+  byline: memberName("ines"),
+  readTime: "7 slides · 4 min",
+  cover:
+    "https://images.unsplash.com/photo-1601977078202-8825cd23ddf3?q=80&w=1000&auto=format&fit=crop",
+  coverDesc:
+    "Narrow street in Mouraria, late afternoon light, laundry lines overhead",
+  excerpt:
+    "Seven of them met at a language exchange in 2016. This is what the next ten years did to a chosen family — one slide at a time.",
+};
 
 export const FEATURES: Card[] = [
   {
@@ -360,22 +390,4 @@ export const NAV_ITEMS: { anchor: string; labelKey: string }[] = [
   },
   { anchor: "letters", labelKey: "magazine:landing.nav.letters" },
   { anchor: "archive", labelKey: "magazine:landing.nav.archive" },
-];
-
-export const MAGAZINE_SUBPAGES = [
-  {
-    labelKey: "magazine:landing.subpages.covers.label",
-    to: routes.coverGallery,
-    blurbKey: "magazine:landing.subpages.covers.blurb",
-  },
-  {
-    labelKey: "magazine:landing.subpages.longreads.label",
-    to: routes.tag,
-    blurbKey: "magazine:landing.subpages.longreads.blurb",
-  },
-  {
-    labelKey: "magazine:landing.subpages.newsletter.label",
-    to: routes.newsletterArchive,
-    blurbKey: "magazine:landing.subpages.newsletter.blurb",
-  },
 ];

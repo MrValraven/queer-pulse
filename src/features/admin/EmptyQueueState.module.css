@@ -1,0 +1,112 @@
+/* Plum-panel empty state for the listings moderation queue — same house
+   pattern as SuccessPanel (plum bg, cream text, coral <em>, jade mark),
+   plus a small abstract illustration. See the `illustration` skill. */
+
+.panel {
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  text-align: center;
+  padding: 40px 32px 36px;
+  border-radius: var(--radius-card, 22px);
+  margin-top: 20px;
+  animation: qpEmptyQueueIn 0.34s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
+}
+
+.mark {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 6px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(var(--jade-rgb), 0.2);
+}
+
+.art {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  margin: 4px auto 4px;
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: clamp(20px, 2.6vw, 25px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 4px 0 10px;
+}
+.title em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.body {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(var(--cream-rgb), 0.8);
+  margin: 0 auto;
+  max-width: 42ch;
+}
+
+/* One-time settle-in: the glow blooms, the horizon draws in, the orbs arrive
+   already at rest. Transform/opacity only; disabled under reduced motion. */
+.artGlow {
+  animation: qpQueueGlowIn 0.4s var(--ease-out, ease-out) both;
+}
+.artLine {
+  animation: qpQueueLineIn 0.4s var(--ease-out, ease-out) 0.08s both;
+}
+.artOrb {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: qpQueueOrbIn 0.36s var(--ease, ease) 0.18s both;
+}
+
+@keyframes qpEmptyQueueIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes qpQueueGlowIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes qpQueueLineIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes qpQueueOrbIn {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .artGlow,
+  .artLine,
+  .artOrb {
+    animation: none;
+  }
+}

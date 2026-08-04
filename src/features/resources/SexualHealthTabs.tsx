@@ -4,6 +4,7 @@ import { FiCheck, FiInfo, FiMapPin, FiStar } from "react-icons/fi";
 import { Button, EmptyState, FilterChips } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import {
   CLINICS,
@@ -21,6 +22,7 @@ import styles from "./SexualHealthPage.module.css";
 
 export function TestingTab() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [clinicFilter, setClinicFilter] = useState<ClinicType | "all">("all");
   const [openClinic, setOpenClinic] = useState<string | null>(null);
   const clinics = CLINICS.filter(
@@ -58,6 +60,14 @@ export function TestingTab() {
         ))}
       </div>
 
+      {!demoMode ? (
+        <EmptyState
+          icon={<FiMapPin />}
+          title={t("resources:sexualHealth.testing.live.title")}
+          description={t("resources:sexualHealth.testing.live.body")}
+        />
+      ) : (
+        <>
       <FilterChips
         className={styles.clinicFilters}
         label={t("resources:sexualHealth.testing.filterAria")}
@@ -170,6 +180,8 @@ export function TestingTab() {
       </div>
 
       <TestingNominate />
+        </>
+      )}
     </>
   );
 }
@@ -313,6 +325,7 @@ export function HivTab() {
 
 export function GuidesTab() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [question, setQuestion] = useState("");
   const [asked, setAsked] = useState(false);
   return (
@@ -343,6 +356,12 @@ export function GuidesTab() {
           </div>
         ))}
       </div>
+      {!demoMode ? (
+        <div className={styles.anonBox}>
+          <h3>{t("resources:sexualHealth.guides.ask.title")}</h3>
+          <p>{t("resources:sexualHealth.guides.ask.liveBody")}</p>
+        </div>
+      ) : (
       <div className={styles.anonBox}>
         {asked ? (
           <div className={styles.anonDone}>
@@ -371,6 +390,7 @@ export function GuidesTab() {
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               placeholder={t("resources:sexualHealth.guides.ask.placeholder")}
+              aria-label={t("resources:sexualHealth.guides.ask.placeholder")}
             />
             <div className={styles.anonFoot}>
               <span className={styles.anonNote}>
@@ -390,6 +410,7 @@ export function GuidesTab() {
           </>
         )}
       </div>
+      )}
     </>
   );
 }

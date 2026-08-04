@@ -6,8 +6,18 @@ export interface SocialContextValue {
   blocked: string[];
   /** Slugs the user has muted, most-recent first. */
   muted: string[];
+  /**
+   * Whether member/author "Follow" is a real capability here. False in live —
+   * there is no member/author-level follow endpoint (only per-subprofile
+   * persona follow, wired separately via `useFollow`), so `toggleFollow` is an
+   * honest no-op and `isFollowing` is always false there. True in demo, where
+   * follow is a local store. Consumers should render the Follow control only
+   * when this is true.
+   */
+  followEnabled: boolean;
   isFollowing: (slug: string) => boolean;
-  /** Toggle follow; returns the new state (true = now following). */
+  /** Toggle follow; returns the new state (true = now following). No-op in live
+   *  (see `followEnabled`). */
   toggleFollow: (slug: string) => boolean;
   isMuted: (slug: string) => boolean;
   /** Toggle mute; returns the new state (true = now muted). */

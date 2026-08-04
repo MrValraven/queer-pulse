@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Button, Sending } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { GLOSSARY } from "./queer101.data";
-import { ResourceModal, PlumSuccess } from "./ResourceModal";
+import { ResourceModal, PlumSuccess, PlumComingSoon } from "./ResourceModal";
 import styles from "./ResourceModal.module.css";
 
 export function SuggestEditModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  const fieldId = useId();
   const [term, setTerm] = useState("");
   const [change, setChange] = useState("");
   const [phase, setPhase] = useState<"form" | "loading" | "done">("form");
@@ -19,6 +22,25 @@ export function SuggestEditModal({ onClose }: { onClose: () => void }) {
     setPhase("loading");
     setTimeout(() => setPhase("done"), 1100);
   };
+
+  // LIVE: glossary has no authoring endpoint (see resources.api.ts) — show an
+  // honest coming-soon panel instead of faking a "suggestion received" success.
+  if (!demoMode) {
+    return (
+      <ResourceModal title="" onClose={onClose}>
+        <PlumComingSoon
+          title={
+            <Translation
+              i18nKey="resources:suggestEdit.comingSoon.title"
+              components={{ em: <em /> }}
+            />
+          }
+          sub={t("resources:suggestEdit.comingSoon.sub")}
+          onClose={onClose}
+        />
+      </ResourceModal>
+    );
+  }
 
   return (
     <ResourceModal
@@ -43,10 +65,11 @@ export function SuggestEditModal({ onClose }: { onClose: () => void }) {
               {t("resources:suggestEdit.body.intro")}
             </p>
 
-            <span className={styles.label}>
+            <label className={styles.label} htmlFor={`${fieldId}-term`}>
               {t("resources:suggestEdit.form.termLabel")}
-            </span>
+            </label>
             <select
+              id={`${fieldId}-term`}
               className={styles.select}
               value={term}
               onChange={(e) => setTerm(e.target.value)}
@@ -64,10 +87,11 @@ export function SuggestEditModal({ onClose }: { onClose: () => void }) {
               </option>
             </select>
 
-            <span className={styles.label}>
+            <label className={styles.label} htmlFor={`${fieldId}-change`}>
               {t("resources:suggestEdit.form.changeLabel")}
-            </span>
+            </label>
             <textarea
+              id={`${fieldId}-change`}
               className={styles.textarea}
               value={change}
               onChange={(e) => setChange(e.target.value)}

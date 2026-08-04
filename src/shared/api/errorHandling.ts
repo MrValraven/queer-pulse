@@ -48,7 +48,11 @@ function messageFor(error: unknown): string | null {
  *  contract without importing react-query's deep generics. */
 export function handleQueryError(
   error: unknown,
-  query: { queryKey: unknown; meta?: Record<string, unknown> },
+  query: {
+    queryKey: unknown;
+    state?: { data?: unknown };
+    meta?: Record<string, unknown>;
+  },
 ): void {
   logError(error, { queryKey: query.queryKey });
   if (demo.current) return;
@@ -56,6 +60,13 @@ export function handleQueryError(
   // soft by design and the page renders identically either way (see
   // usePlatformStatus). Logged above, never toasted.
   if (query.meta?.silentError) return;
+  // Background-refetch failure vs first-load failure. If the query already holds
+  // cached data, that (stale-but-valid) data is still on screen and the page is
+  // unchanged by this failure — a toast here would nag on every transient blip
+  // behind an intact page (a tab regains focus, a poll fires on a flaky
+  // connection). Only an *initial* load with no data yet leaves the user facing
+  // an error/empty state that needs explaining. Logged above either way.
+  if (query.state?.data !== undefined) return;
   if (error instanceof ApiError && error.status < 500) return;
   const msg = messageFor(error);
   if (msg) emit?.(msg, "error", 6000);

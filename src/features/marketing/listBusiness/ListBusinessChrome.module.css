@@ -1,0 +1,100 @@
+/* ===========================================================
+   List-a-business wizard chrome — mobile step-progress styles.
+   Colocated with ListBusinessChrome.tsx. The shared pill visuals
+   (.wp / .wpN / .wpL / .wpActive / .wpDone) still live in
+   ListBusinessPage.module.css and are reused as-is; this file only
+   owns the row LAYOUT (scroll-on-narrow), the connector bar, the
+   tappable "jump back" affordance, and the compact text fallback.
+   =========================================================== */
+
+/* Row container. Desktop: wraps cleanly so pills never clip the page.
+   Narrow: a single self-contained horizontal scroller (no page overflow),
+   with the active pill scrolled into view by the component. */
+.pillRow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+@media (max-width: 680px) {
+  .pillRow {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 6px;
+    /* keep the swipe here — never chain to the page / pull-to-refresh */
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
+    scroll-snap-type: x proximity;
+    /* room so focus rings and partial pills aren't clipped */
+    padding-block: 2px;
+    scroll-padding-inline: 16px;
+    /* the compact text line already names the step; a scrollbar would
+       only add clutter under the thumb */
+    scrollbar-width: none;
+  }
+  .pillRow::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Applied to every pill (div or button) so it keeps its size inside the
+   narrow scroller instead of shrinking, and snaps into place. */
+.pill {
+  flex: none;
+  scroll-snap-align: center;
+}
+
+/* A visited pill is a real button that jumps back to that step. Reset the
+   native chrome down to the shared .wp look, and grow the hit area to a
+   comfortable touch target (the 27px number alone is below the 44px floor)
+   without disturbing the row's baseline. */
+.jumpable {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 9px 6px;
+}
+.jumpable:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .jumpable:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
+}
+
+/* Connector between pills — owned here (not the shared .wpBar) so it keeps a
+   fixed width inside the narrow scroller instead of collapsing under flex. */
+.bar {
+  width: 18px;
+  height: 2px;
+  flex: none;
+  border-radius: 2px;
+  background: rgba(var(--plum-rgb), 0.1);
+}
+
+/* Compact "Step N of N — Label" fallback. Hidden on wide screens (the labelled
+   pills carry the state there); shown on narrow screens where the shared pill
+   labels collapse to bare numbers. aria-live announces the step change to
+   screen readers on the sizes where it is visible. */
+.stepMeta {
+  display: none;
+}
+@media (max-width: 680px) {
+  .stepMeta {
+    display: block;
+    margin: 0 0 12px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text-strong);
+  }
+}

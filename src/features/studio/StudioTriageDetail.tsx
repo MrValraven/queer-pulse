@@ -90,6 +90,7 @@ export function StudioTriageDetail() {
           })}
         </h4>
         <textarea
+          aria-label={t("studio:triage.detail.decision.placeholder")}
           placeholder={t("studio:triage.detail.decision.placeholder")}
         />
         <div

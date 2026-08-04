@@ -1,5 +1,8 @@
 import { useMemo, useState } from "react";
+import { FiFileText } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { EmptyState } from "../../shared/components/ui";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -312,6 +315,7 @@ export function FactsSection() {
 export function CoverageSection() {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
@@ -329,33 +333,41 @@ export function CoverageSection() {
           components={{ em: <em /> }}
         />
       </p>
-      <div className={styles.covList}>
-        {COVERAGE.map((c, i) => (
-          <button
-            type="button"
-            className={styles.covRow}
-            key={i}
-            onClick={() => {
-              showToast(
-                t("marketing:pressKit.coverage.openingToast", {
-                  source: c.source.split(" · ")[0] ?? c.source,
-                }),
-                "info",
-              );
-            }}
-          >
-            <div>
-              <div className={styles.covSource}>{c.source}</div>
-              <div className={styles.covTitle}>{c.title}</div>
-              <div className={styles.covMeta}>{c.meta}</div>
-            </div>
-            <div className={styles.covDate}>
-              {c.day}
-              <em>{c.month}</em>
-            </div>
-          </button>
-        ))}
-      </div>
+      {demoMode ? (
+        <div className={styles.covList}>
+          {COVERAGE.map((c, i) => (
+            <button
+              type="button"
+              className={styles.covRow}
+              key={i}
+              onClick={() => {
+                showToast(
+                  t("marketing:pressKit.coverage.openingToast", {
+                    source: c.source.split(" · ")[0] ?? c.source,
+                  }),
+                  "info",
+                );
+              }}
+            >
+              <div>
+                <div className={styles.covSource}>{c.source}</div>
+                <div className={styles.covTitle}>{c.title}</div>
+                <div className={styles.covMeta}>{c.meta}</div>
+              </div>
+              <div className={styles.covDate}>
+                {c.day}
+                <em>{c.month}</em>
+              </div>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <EmptyState
+          icon={<FiFileText />}
+          title={t("marketing:pressKit.coverage.emptyLive.title")}
+          description={t("marketing:pressKit.coverage.emptyLive.description")}
+        />
+      )}
     </section>
   );
 }

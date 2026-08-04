@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Translation } from "../../shared/i18n/Translation";
@@ -19,6 +20,7 @@ export function PostJobStepReview({
   onEdit: (step: number) => void;
 }) {
   const { t } = useTranslation();
+  const fieldId = useId();
   const { state, patch, toggleIn } = form;
   const showEmail = state.contacts.includes("Email");
   const showLink = state.contacts.includes("External link");
@@ -70,10 +72,11 @@ export function PostJobStepReview({
         </div>
         {showEmail && (
           <div className={styles.field} style={{ marginTop: 14 }}>
-            <div className={styles.label}>
+            <label className={styles.label} htmlFor={`${fieldId}-email`}>
               {t("economy:postJob.step5.emailLabel")}
-            </div>
+            </label>
             <input
+              id={`${fieldId}-email`}
               className={styles.input}
               type="email"
               value={state.email}
@@ -84,10 +87,11 @@ export function PostJobStepReview({
         )}
         {showLink && (
           <div className={styles.field} style={{ marginTop: 14 }}>
-            <div className={styles.label}>
+            <label className={styles.label} htmlFor={`${fieldId}-link`}>
               {t("economy:postJob.step5.linkLabel")}
-            </div>
+            </label>
             <input
+              id={`${fieldId}-link`}
               className={styles.input}
               type="url"
               value={state.link}

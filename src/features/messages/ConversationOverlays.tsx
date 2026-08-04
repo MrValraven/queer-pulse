@@ -28,7 +28,6 @@ export interface ConversationOverlaysProps {
   deleteTarget: ChatMessage | null;
   /** Message the report modal is open for (its server id is the report subject). */
   reportTarget: ChatMessage | null;
-  viewerIsStaff: boolean;
   onReactionToggle: (message: ChatMessage, key: MessageReactionKey, mine: boolean) => void;
   /** Starts (or replaces) the reply draft with `message`. */
   onSetReply?: (message: ChatMessage) => void;
@@ -60,7 +59,6 @@ export function ConversationOverlays({
   actionTarget,
   deleteTarget,
   reportTarget,
-  viewerIsStaff,
   onReactionToggle,
   onSetReply,
   onBeginEdit,
@@ -96,8 +94,11 @@ export function ConversationOverlays({
           // presentation differs (touch overlay vs. desktop context menu).
           const shared = {
             canEdit,
-            canDelete: isSent || viewerIsStaff,
-            canReport: !isSent,
+            // Server-authoritative (`MessageResponse.canDelete`/`canReport`) —
+            // mirrors exactly what the delete/report endpoints would accept
+            // (author-or-staff; not-own-message), never recomputed client-side.
+            canDelete: !!message.canDelete,
+            canReport: !!message.canReport,
             // Pin is server-gated via the DTO `canPin`; pinned/starred reflect
             // the message's current SHARED/PRIVATE state.
             canPin: !!message.canPin,

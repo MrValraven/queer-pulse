@@ -78,25 +78,38 @@ const REACTION_LABEL_KEY: Record<ReactionKey, string> = {
 export function ReactionBar({
   reactions,
   onReact,
+  readOnly = false,
 }: {
   reactions: Reaction[];
   onReact?: (key: ReactionKey) => void;
+  /** Non-members can see the reaction counts but not toggle them — the pills
+   *  render as static text (no button role, no focus, no handlers). */
+  readOnly?: boolean;
 }) {
   const { t } = useTranslation();
   return (
     <div className={styles.reactions}>
       {reactions.map((r) => {
         const Icon = REACTION_ICON[r.key];
+        const label = t("communities:badges.reaction.ariaLabel", {
+          label: t(REACTION_LABEL_KEY[r.key]),
+          count: r.count,
+        });
+        if (readOnly) {
+          return (
+            <span key={r.key} className={styles.pill} aria-label={label}>
+              <Icon aria-hidden />
+              {r.count}
+            </span>
+          );
+        }
         return (
           <span
             key={r.key}
             role="button"
             tabIndex={0}
             aria-pressed={r.reacted}
-            aria-label={t("communities:badges.reaction.ariaLabel", {
-              label: t(REACTION_LABEL_KEY[r.key]),
-              count: r.count,
-            })}
+            aria-label={label}
             className={[styles.pill, r.reacted && styles.pillOn]
               .filter(Boolean)
               .join(" ")}

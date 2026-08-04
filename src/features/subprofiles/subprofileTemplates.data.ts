@@ -217,6 +217,46 @@ export const TEMPLATE_ITEMS: Partial<Record<SubprofileSection, TemplateItem[]>> 
       date: "2025",
     },
   ],
+  // chef
+  menus: [
+    {
+      titleKey: "subprofiles:template.section.menus.item1.title",
+      subtitleKey: "subprofiles:template.section.menus.item1.subtitle",
+      descriptionKey: "subprofiles:template.section.menus.item1.desc",
+      date: "2025",
+    },
+  ],
+  // chef + mixologist
+  residencies: [
+    {
+      titleKey: "subprofiles:template.section.residencies.item1.title",
+      subtitleKey: "subprofiles:template.section.residencies.item1.subtitle",
+      date: "2025",
+    },
+  ],
+  // mixologist
+  cocktails: [
+    {
+      titleKey: "subprofiles:template.section.cocktails.item1.title",
+      subtitleKey: "subprofiles:template.section.cocktails.item1.subtitle",
+      descriptionKey: "subprofiles:template.section.cocktails.item1.desc",
+      date: "2025",
+    },
+  ],
+  // therapist
+  specialisms: [
+    {
+      titleKey: "subprofiles:template.section.specialisms.item1.title",
+      descriptionKey: "subprofiles:template.section.specialisms.item1.desc",
+    },
+  ],
+  credentials: [
+    {
+      titleKey: "subprofiles:template.section.credentials.item1.title",
+      subtitleKey: "subprofiles:template.section.credentials.item1.subtitle",
+      date: "2025",
+    },
+  ],
   // generic
   showcase: [
     {
@@ -244,6 +284,9 @@ export const TEMPLATE_TAGLINE: Partial<Record<SubprofileKind, string>> = {
   performer: "subprofiles:template.tagline.performer",
   photographer: "subprofiles:template.tagline.photographer",
   videomaker: "subprofiles:template.tagline.videomaker",
+  chef: "subprofiles:template.tagline.chef",
+  mixologist: "subprofiles:template.tagline.mixologist",
+  therapist: "subprofiles:template.tagline.therapist",
   generic: "subprofiles:template.tagline.generic",
 };
 

@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { FiShield } from "react-icons/fi";
-import { Button, Toggle } from "../../shared/components/ui";
+import { Button, FeatureHelp, Toggle } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
-import { useProfile } from "../../app/providers/useProfile";
+import { useProfileData, useProfileEdit } from "../../app/providers/useProfile";
 import { useConsent } from "../../app/providers/useConsent";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
@@ -16,6 +16,8 @@ import {
   VISIBILITY_OPTIONS,
 } from "./SettingsPanes.data";
 import { PushNotificationRow } from "../push/PushNotificationRow";
+import { NOTIFICATION_PREFERENCE_CATEGORY } from "./api/notificationPreferences.api";
+import { useNotificationPreferences } from "./api/useNotificationPreferences";
 import { SIM_GROUPS, type SimFlow } from "./simulations.data";
 import { SimulationPreviewModal } from "./SimulationPreviewModal";
 import { DestructiveActionFlow } from "./DestructiveActionFlow";
@@ -33,32 +35,43 @@ import styles from "./SettingsPage.module.css";
 
 export function NotificationsPane({ onChange }: { onChange: () => void }) {
   const { t } = useTranslation();
+  // Genuinely-wired per-category switches (demo = local, live = GET/PUT
+  // /me/notification-preferences). These save immediately on flip, so they do
+  // NOT participate in the pane's dirty/save flow (`onChange`) — that stays for
+  // the still-cosmetic rows below.
+  const { isEnabled, setEnabled } = useNotificationPreferences();
   return (
     <Pane
       title={
-        <Translation
-          i18nKey="settings:notifications.title"
-          components={{ em: <em /> }}
-        />
+        <>
+          <Translation
+            i18nKey="settings:notifications.title"
+            components={{ em: <em /> }}
+          />{" "}
+          <FeatureHelp id="settings.privacy" />
+        </>
       }
       sub={t("settings:notifications.sub")}
     >
       <Section label={t("settings:notifications.section.gatherings")}>
         <ToggleList>
-          <ToggleRow
+          <ConsentToggleRow
             title={t("settings:notifications.gatherings.newAnnounced.title")}
             description={t("settings:notifications.gatherings.newAnnounced.desc")}
-            defaultChecked
-            comingSoon
-            onChange={onChange}
+            checked={isEnabled(NOTIFICATION_PREFERENCE_CATEGORY.eventInvites)}
+            onChange={(next) =>
+              setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.eventInvites, next)
+            }
           />
-          <ToggleRow
+          <ConsentToggleRow
             title={t("settings:notifications.gatherings.rsvpReminder.title")}
             description={t("settings:notifications.gatherings.rsvpReminder.desc")}
-            defaultChecked
-            comingSoon
-            onChange={onChange}
+            checked={isEnabled(NOTIFICATION_PREFERENCE_CATEGORY.eventReminders)}
+            onChange={(next) =>
+              setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.eventReminders, next)
+            }
           />
+          {/* No "spots almost full" notification exists yet — still cosmetic. */}
           <ToggleRow
             title={t("settings:notifications.gatherings.lastFewSpots.title")}
             description={t("settings:notifications.gatherings.lastFewSpots.desc")}
@@ -70,20 +83,23 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
       <Section label={t("settings:notifications.section.messagesConnections")}>
         <ToggleList>
           <PushNotificationRow />
-          <ToggleRow
+          <ConsentToggleRow
             title={t("settings:notifications.messages.newMessage.title")}
             description={t("settings:notifications.messages.newMessage.desc")}
-            defaultChecked
-            comingSoon
-            onChange={onChange}
+            checked={isEnabled(NOTIFICATION_PREFERENCE_CATEGORY.newMessages)}
+            onChange={(next) =>
+              setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.newMessages, next)
+            }
           />
-          <ToggleRow
+          <ConsentToggleRow
             title={t("settings:notifications.messages.connectionRequest.title")}
             description={t("settings:notifications.messages.connectionRequest.desc")}
-            defaultChecked
-            comingSoon
-            onChange={onChange}
+            checked={isEnabled(NOTIFICATION_PREFERENCE_CATEGORY.connections)}
+            onChange={(next) =>
+              setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.connections, next)
+            }
           />
+          {/* No "wave"/"say hello" notification type exists yet — cosmetic. */}
           <ToggleRow
             title={t("settings:notifications.messages.sayHello.title")}
             description={t("settings:notifications.messages.sayHello.desc")}
@@ -94,20 +110,28 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
       </Section>
       <Section label={t("settings:notifications.section.communitiesBoard")}>
         <ToggleList>
+          {/* No "new post in a community" notification is emitted (only replies)
+              — still cosmetic. */}
           <ToggleRow
             title={t("settings:notifications.communities.newPost.title")}
             description={t("settings:notifications.communities.newPost.desc")}
-            defaultChecked
             comingSoon
             onChange={onChange}
           />
-          <ToggleRow
+          <ConsentToggleRow
             title={t("settings:notifications.communities.threadReply.title")}
             description={t("settings:notifications.communities.threadReply.desc")}
-            defaultChecked
-            comingSoon
-            onChange={onChange}
+            checked={isEnabled(
+              NOTIFICATION_PREFERENCE_CATEGORY.communityReplies,
+            )}
+            onChange={(next) =>
+              setEnabled(
+                NOTIFICATION_PREFERENCE_CATEGORY.communityReplies,
+                next,
+              )
+            }
           />
+          {/* No weekly email digest job exists yet — cosmetic. */}
           <ToggleRow
             title={t("settings:notifications.communities.weeklyDigest.title")}
             description={t("settings:notifications.communities.weeklyDigest.desc")}
@@ -190,6 +214,7 @@ export function LanguagePane() {
           className={styles.termSearch}
           type="search"
           placeholder={t("settings:language.searchPlaceholder")}
+          aria-label={t("settings:language.searchPlaceholder")}
           value={termQuery}
           onChange={(e) => setTermQuery(e.target.value)}
         />
@@ -245,7 +270,7 @@ export function DataPane({
 }) {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { profile } = useProfile();
+  const { profile } = useProfileData();
   const { consent, setConsent, openPreferences } = useConsent();
   const [exportKind, setExportKind] = useState<ExportKind | null>(null);
   const [deactivateOpen, setDeactivateOpen] = useState(false);
@@ -458,7 +483,7 @@ export function SimulationsPane() {
 
 export function VisibilityPane({ onChange }: { onChange: () => void }) {
   const { t } = useTranslation();
-  const { draft, updateDraft } = useProfile();
+  const { draft, updateDraft } = useProfileEdit();
   return (
     <Pane
       title={
@@ -533,10 +558,13 @@ export function AccountPane({ onChange }: { onChange: () => void }) {
   return (
     <Pane
       title={
-        <Translation
-          i18nKey="settings:account.title"
-          components={{ em: <em /> }}
-        />
+        <>
+          <Translation
+            i18nKey="settings:account.title"
+            components={{ em: <em /> }}
+          />{" "}
+          <FeatureHelp id="settings.hub" />
+        </>
       }
       sub={t("settings:account.sub")}
     >

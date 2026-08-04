@@ -14,6 +14,7 @@ export type TipData =
   | {
       kind: "edge";
       label: string;
+      edgeKind?: "invite" | "vouch";
       relationship?: string;
       reason?: string;
       date: string;
@@ -54,6 +55,11 @@ export function VouchGraphTooltip({ tip, x, y }: Props) {
       ) : (
         <>
           <div className={styles.tipName}>{tip.label}</div>
+          {tip.edgeKind && (
+            <div className={styles.tipTag}>
+              {t(`admin:vouchGraph.edgeKind.${tip.edgeKind}`)}
+            </div>
+          )}
           {tip.relationship && (
             <div className={styles.tipTag}>{tip.relationship}</div>
           )}

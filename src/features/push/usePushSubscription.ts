@@ -51,23 +51,38 @@ export function usePushSubscription(): PushSubscriptionApi {
   const enable = useCallback(async () => {
     if (!supported || !vapidPublicKey) return;
     setBusy(true);
+    // Track the browser subscription so we can roll it back if the server call
+    // fails — otherwise a failed enable leaves a PushSubscription the server
+    // never registered (an orphan: it receives no pushes, and a later enable()
+    // sees getSubscription() return it and assumes all is well).
+    let subscription: PushSubscription | null = null;
     try {
       const result = await Notification.requestPermission();
       setPermission(result);
       if (result !== "granted") return;
       const registration = await navigator.serviceWorker.ready;
-      const subscription = await registration.pushManager.subscribe({
+      subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
       });
-      const json = subscription.toJSON();
-      const endpoint = json.endpoint;
-      const p256dh = json.keys?.p256dh;
-      const auth = json.keys?.auth;
-      if (!demoMode && endpoint && p256dh && auth) {
-        await subscribePush({ endpoint, keys: { p256dh, auth } });
+      if (!demoMode) {
+        const json = subscription.toJSON();
+        const endpoint = json.endpoint;
+        const p256dh = json.keys?.p256dh;
+        const auth = json.keys?.auth;
+        if (endpoint && p256dh && auth) {
+          await subscribePush({ endpoint, keys: { p256dh, auth } });
+        }
       }
       setIsSubscribed(true);
+    } catch {
+      // Server registration failed after the browser created a subscription:
+      // unsubscribe the browser so it doesn't orphan, and reflect the failure
+      // by leaving the toggle off.
+      if (subscription) {
+        await subscription.unsubscribe().catch(() => {});
+      }
+      setIsSubscribed(false);
     } finally {
       setBusy(false);
     }
@@ -81,10 +96,21 @@ export function usePushSubscription(): PushSubscriptionApi {
       const subscription = await registration.pushManager.getSubscription();
       if (subscription) {
         const { endpoint } = subscription;
-        await subscription.unsubscribe();
-        if (!demoMode) await unsubscribePush(endpoint);
+        const removed = await subscription.unsubscribe();
+        // Only drop the server record / flip the toggle once the browser
+        // actually released the subscription; if unsubscribe() returned false
+        // the device is still subscribed, so leave state untouched.
+        if (!removed) return;
+        if (!demoMode) {
+          // Best-effort: the browser subscription is already gone, so a failure
+          // here can't leave a browser-side orphan — the server drops the dead
+          // endpoint on its next 410 (Gone) push response.
+          await unsubscribePush(endpoint).catch(() => {});
+        }
+        setIsSubscribed(false);
+      } else {
+        setIsSubscribed(false);
       }
-      setIsSubscribed(false);
     } finally {
       setBusy(false);
     }

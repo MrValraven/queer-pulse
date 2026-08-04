@@ -152,3 +152,12 @@ export const closeJob = (slug: string) =>
 
 export const applyToJob = (slug: string, dto: CreateJobApplicationDto) =>
   apiPost<JobApplicationDTO>(`/jobs/${slug}/applications`, dto);
+
+/**
+ * GET /me/applications — the authenticated member's own job applications,
+ * newest first. Backs `useMyApplications` (the Application Status tracker). The
+ * backend hand-maps each row to `JobApplicationDTO` (no column leaks) and the
+ * set is naturally bounded to one member's own applications.
+ */
+export const getMyApplications = () =>
+  apiGet<JobApplicationDTO[]>("/me/applications");

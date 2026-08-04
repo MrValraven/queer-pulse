@@ -1,4 +1,5 @@
-import { FadeIn } from "../../shared/components/ui";
+import { FiAlertTriangle } from "react-icons/fi";
+import { EmptyState, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import {
@@ -14,6 +15,24 @@ import styles from "./AdminModerationPage.module.css";
 import type { useModerationQueue } from "./useModerationQueue";
 
 type Queue = ReturnType<typeof useModerationQueue>;
+
+/** Branded, retryable error state (audit P1-14): a failed live fetch must read
+ *  as an outage, not a false "all caught up". Demo mode never errors. */
+function QueueErrorPane({ onRetry }: { onRetry: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.pane}>
+      <FadeIn>
+        <EmptyState
+          icon={<FiAlertTriangle />}
+          title={t("common:error.title")}
+          description={t("common:error.description")}
+          action={{ label: t("common:error.retry"), onClick: onRetry }}
+        />
+      </FadeIn>
+    </div>
+  );
+}
 
 export function OpenPane({ q }: { q: Queue }) {
   const { t } = useTranslation();
@@ -34,6 +53,11 @@ export function OpenPane({ q }: { q: Queue }) {
   // Live mode fetches asynchronously — don't flash "all caught up" while loading.
   if (q.loading && open.length === 0) {
     return <div className={styles.pane} aria-busy="true" />;
+  }
+
+  // An outage must not read as "all caught up" — show a retryable error instead.
+  if (q.isError && open.length === 0) {
+    return <QueueErrorPane onRetry={q.refetch} />;
   }
 
   if (open.length === 0) {
@@ -102,6 +126,10 @@ export function AppealsPane({ q }: { q: Queue }) {
   const { t } = useTranslation();
   const { appeals, leaving } = q;
 
+  if (q.isError && appeals.length === 0) {
+    return <QueueErrorPane onRetry={q.refetch} />;
+  }
+
   if (appeals.length === 0) {
     return (
       <div className={styles.pane}>
@@ -146,6 +174,10 @@ export function ResolvedPane({ q }: { q: Queue }) {
   // rather than flashing an empty "nothing resolved" state.
   if (q.loading && resolved.length === 0) {
     return <div className={styles.pane} aria-busy="true" />;
+  }
+
+  if (q.isError && resolved.length === 0) {
+    return <QueueErrorPane onRetry={q.refetch} />;
   }
 
   return (

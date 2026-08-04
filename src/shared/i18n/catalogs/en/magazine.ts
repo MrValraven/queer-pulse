@@ -28,10 +28,7 @@ export const magazine: Catalog = {
   "masthead.tagline": "Published the first of every month",
   "masthead.nav.current": "Current issue",
   "masthead.nav.issues": "Issues",
-  "masthead.nav.covers": "Covers",
-  "masthead.nav.longreads": "Long reads",
   "masthead.nav.stories": "Stories",
-  "masthead.nav.newsletter": "Newsletter",
   "masthead.nav.write": "Write for us",
 
   // ── MagazinePage ─────────────────────────────────────────────────────────
@@ -47,15 +44,6 @@ export const magazine: Catalog = {
   "landing.nav.communityLife": "Community Life",
   "landing.nav.letters": "Letters",
   "landing.nav.archive": "Archive",
-  "landing.subpageIndexTitle": "More from the Magazine",
-  "landing.subpages.covers.label": "Cover gallery",
-  "landing.subpages.covers.blurb": "Every cover we've published, in one place.",
-  "landing.subpages.longreads.label": "Long reads",
-  "landing.subpages.longreads.blurb":
-    "Our longest, deepest reporting and essays.",
-  "landing.subpages.newsletter.label": "Newsletter",
-  "landing.subpages.newsletter.blurb":
-    "Past editions of the QueerPulse newsletter.",
 
   // ── MagazineCover ────────────────────────────────────────────────────────
   "cover.coverAlt": "Cover portrait",
@@ -128,6 +116,88 @@ export const magazine: Catalog = {
   "toolbar.linkCopyErrorToast": "Could not copy the link",
   "toolbar.fallbackTitle": "This article",
 
+  // ── Deck reader chrome — DeckViewer, DeckControls, DeckPresentButton,
+  // slide components, and the FeaturedDeck block ──────────────────────────
+  "deck.present": "Present",
+  "deck.close": "Close",
+  "deck.next": "Next slide",
+  "deck.prev": "Previous slide",
+  "deck.slideCounter": "{current} / {total}",
+  "deck.goToSlide": "Go to slide {n}",
+  "deck.tapToReveal": "Tap to reveal",
+  "deck.beforeAfterHint": "Drag to compare",
+  "deck.end": "You've reached the end",
+  "deck.backToMagazine": "Back to the magazine",
+  "deck.badge": "Interactive",
+  "deck.start": "Start the story",
+
+  // ── Deck-authoring editor — DeckMetaForm, DeckSlidesEditor, SlideEditorCard,
+  // ImageUrlField, DeckEditorPage (staff-only) ─────────────────────────────
+  "deck.editor.imageUrlInvalid": "Enter a valid image URL",
+  "deck.editor.slug": "Slug",
+  "deck.editor.title": "Title",
+  "deck.editor.kicker": "Kicker",
+  "deck.editor.section": "Section",
+  "deck.editor.byline": "Byline",
+  "deck.editor.role": "Role",
+  "deck.editor.readTime": "Read time",
+  "deck.editor.authorBio": "Author bio",
+  "deck.editor.tags": "Tags",
+  "deck.editor.related": "Related",
+  "deck.editor.cover": "Cover image",
+  "deck.editor.coverDesc": "Cover description",
+  "deck.editor.slideNumber": "Slide {n}",
+  "deck.editor.addSlide": "Add slide",
+  "deck.editor.addSlideLayout": "Layout",
+  "deck.editor.moveUp": "Move up",
+  "deck.editor.moveDown": "Move down",
+  "deck.editor.removeSlide": "Remove slide",
+  "deck.editor.layout.text": "Text",
+  "deck.editor.layout.image": "Image",
+  "deck.editor.layout.stat": "Stat",
+  "deck.editor.layout.beforeAfter": "Before / after",
+  "deck.editor.layout.reveal": "Reveal",
+  "deck.editor.field.eyebrow": "Eyebrow",
+  "deck.editor.field.heading": "Heading",
+  "deck.editor.field.body": "Body",
+  "deck.editor.field.pull": "Pull quote",
+  "deck.editor.field.align": "Alignment",
+  "deck.editor.field.alignDefault": "Default",
+  "deck.editor.field.alignLeft": "Left",
+  "deck.editor.field.alignCenter": "Center",
+  "deck.editor.field.imageSrc": "Image URL",
+  "deck.editor.field.alt": "Alt text",
+  "deck.editor.field.caption": "Caption",
+  "deck.editor.field.tint": "Tint",
+  "deck.editor.field.value": "Value",
+  "deck.editor.field.unit": "Unit",
+  "deck.editor.field.label": "Label",
+  "deck.editor.field.source": "Source",
+  "deck.editor.field.before": "Before",
+  "deck.editor.field.after": "After",
+  "deck.editor.field.prompt": "Prompt",
+  "deck.editor.field.hidden": "Hidden until tapped",
+  "deck.editor.tint.default": "Default",
+  "deck.editor.tint.coral": "Coral",
+  "deck.editor.tint.jade": "Jade",
+  "deck.editor.tint.plum": "Plum",
+  "deck.editor.tint.auth": "Solid",
+  "deck.editor.newTitle": "New deck",
+  "deck.editor.editTitle": "Edit deck",
+  "deck.editor.saveDraft": "Save draft",
+  "deck.editor.publish": "Publish",
+  "deck.editor.unpublish": "Unpublish",
+  "deck.editor.delete": "Delete",
+  "deck.editor.deleteConfirm": "Delete this deck? This can't be undone.",
+  "deck.editor.leaveConfirm":
+    "You have unsaved changes. Leave without saving?",
+  "deck.editor.previewEmpty": "Add a slide to preview",
+  "deck.editor.saved": "Draft saved",
+  "deck.editor.publishedToast": "Deck published",
+  "deck.editor.deletedToast": "Deck deleted",
+  "deck.editor.saveError": "We couldn't save your deck — please try again.",
+  "deck.editor.backToDashboard": "Back to dashboard",
+
   // ── Issue chrome — shared by IssueCover, IssueContents, IssuesPage ────────
   "issue.backToAllIssues": "← All issues",
   "issue.currentPill": "Current",
@@ -145,6 +215,10 @@ export const magazine: Catalog = {
   "issue.letterEyebrow": "Editor's letter",
   "issue.readCta": "Read issue {number} →",
   "issue.orderPrintCta": "Order print · {price}",
+  // Live mode: shown when there is no published issue to read yet.
+  "issue.emptyLiveTitle": "This issue isn't out yet",
+  "issue.emptyLiveBody":
+    "The current issue is still being put together. Check back soon — or pitch us a piece to run in it.",
 
   // ── IssueContents ────────────────────────────────────────────────────────
   "contents.heading.coverStory": "Cover story",
@@ -414,6 +488,20 @@ export const magazine: Catalog = {
   "editor.sideCards.previewIssueLayout": "→ Preview issue layout",
   "editor.sideCards.exportContributorList": "→ Export contributor list (CSV)",
 
+  // ── EditorDecksSection ──────────────────────────────────────────────────
+  "editor.decks.title": "Interactive decks",
+  "editor.decks.countLabel": "{count} decks",
+  "editor.decks.columnTitle": "Title",
+  "editor.decks.columnSection": "Section",
+  "editor.decks.columnStatus": "Status",
+  "editor.decks.emptyTitle": "No decks yet",
+  "editor.decks.emptyBody":
+    "Interactive slide decks you create will show up here — start one and publish it whenever it's ready.",
+  "editor.decks.new": "New deck",
+  "editor.decks.statusPublished": "Published",
+  "editor.decks.statusDraft": "Draft",
+  "editor.decks.edit": "Edit",
+
   // ── EditorDashboardPage ────────────────────────────────────────────────
   "editor.page.emptyTitle": "The desk is clear",
   "editor.page.emptyDescription":
@@ -539,8 +627,9 @@ export const magazine: Catalog = {
   "submitStory.writer.tool.quote": "Block quote",
   "submitStory.writer.tool.bullet": "Bullet list",
   "submitStory.writer.tool.image": "Image",
-  "submitStory.writer.autosaved": "Autosaved",
-  "submitStory.writer.unsaved": "Unsaved…",
+  "submitStory.writer.autosaved": "Draft saved",
+  "submitStory.writer.saving": "Saving…",
+  "submitStory.writer.unsaved": "Not saved",
   "submitStory.writer.headlineAria": "Headline",
   "submitStory.writer.headlinePlaceholder": "Your headline",
   "submitStory.writer.standfirstAria": "Standfirst",
@@ -552,7 +641,13 @@ export const magazine: Catalog = {
   "submitStory.writer.wordCount_other": "{count} words",
 
   // ── SubmitStoryEditor ──────────────────────────────────────────────────
-  "submitStory.editor.draftSaved": "Draft saved.",
+  "submitStory.editor.draftSaved": "Draft saved — it'll be here when you come back.",
+  "submitStory.editor.draftSaveError":
+    "We couldn't save your draft — your browser may be blocking storage.",
+  "submitStory.resume.text":
+    "You left a story unfinished. <b>Pick up where you left off?</b>",
+  "submitStory.resume.startFresh": "Start fresh",
+  "submitStory.resume.resume": "Resume draft",
   "submitStory.editor.chooseSectionError":
     "Choose a section for your piece first.",
   "submitStory.editor.needHeadlineError":
@@ -649,27 +744,6 @@ export const magazine: Catalog = {
   "pitchTracker.pitch.risoPrinting.statusLabel": "Published",
   "pitchTracker.pitch.oweOurExes.statusLabel": "Not this issue · close fit",
 
-  // ══════════════════ NewsletterSubscribe ═══════════════════════════════════
-  "newsletter.subscribe.streamLabel.all": "all three newsletters",
-  "newsletter.subscribe.streamLabel.dispatch": "the Community dispatch",
-  "newsletter.subscribe.streamLabel.long": "the Long reads monthly",
-  "newsletter.subscribe.streamLabel.trans": "the Trans Hub bulletin",
-  "newsletter.subscribe.confirmToast":
-    "Almost there — check your inbox to confirm",
-  "newsletter.subscribe.doneTitle": "One more <em>step.</em>",
-  "newsletter.subscribe.doneBody":
-    "We'll send <strong>{stream}</strong> to <strong>{email}</strong>.",
-  "newsletter.subscribe.doneNext":
-    "Check your inbox to confirm — the link expires in 48 hours. You can change which streams you get from any email.",
-  "newsletter.subscribe.anotherCta": "Subscribe another email",
-  "newsletter.subscribe.emailPlaceholder": "you@example.com",
-  "newsletter.subscribe.submitCta": "Subscribe →",
-  "newsletter.subscribe.footAll": "Pick which newsletters you want in step 2. ",
-  "newsletter.subscribe.footOne":
-    "You'll get <strong>{stream}</strong> — adjust in step 2. ",
-  "newsletter.subscribe.footShared":
-    "Unsubscribe one-tap from any email. We never share your address.",
-
   // ══════════════════ PrintOrderModal (Issue 09 print run) ══════════════════
   "printOrder.dialogAria": "Order the print edition",
   "printOrder.closeAria": "Close",
@@ -693,18 +767,6 @@ export const magazine: Catalog = {
   "printOrder.cancelCta": "← Cancel",
   "printOrder.placingCta": "Placing your order…",
   "printOrder.placeCta": "Place order — €{total}",
-
-  // ══════════════════ CoverGalleryPage ══════════════════════════════════════
-  // COVERS/STATS/ILLUS records (each cover's theme, artist credits, print
-  // stats) are specific-issue content — left as English mock data.
-  "coverGallery.backLink": "the Magazine",
-  "coverGallery.eyebrow": "Magazine · all covers · 2024 → present",
-  "coverGallery.title": "Nine <em>covers,</em> one each season.",
-  "coverGallery.dek":
-    "Every QueerPulse Magazine cover, in order. Risograph-printed in Lisbon, sized A5. Each was made by a different artist working with the editorial team. <em>Press is welcome to use any of these images</em> under the terms in our <a>press kit</a>.",
-  "coverGallery.madeWithHeading": "Made <em>with</em>",
-  "coverGallery.madeWithSub":
-    "Cover artists, in cover order. Most are members; two we commissioned externally.",
 
   // ══════════════════ Story showcase pages ══════════════════════════════════
   // StoryPage/StoryTomasPage/StorySafetyPage + their *Article components are
@@ -730,62 +792,4 @@ export const magazine: Catalog = {
   // Byline author for the safety piece — the platform team, not an individual
   // writer, so it is chrome and translated (read time and date stay editorial).
   "story.safety.byline": "The QueerPulse team",
-
-  // ══════════════════ TagPage (Long reads section) ═══════════════════════════
-  // Per-piece kicker/title/dek/byline (TagPageHero featured + TagPageList
-  // items, tag.data.tsx) are editorial content, left in English. CHIPS topic
-  // labels double as the stored filter value matched against each item's
-  // `topics` — never route those through the catalog (would break the pt-mode
-  // filter). Only the section chrome below is translated.
-  "tag.hero.eyebrow": "Magazine · category",
-  "tag.hero.h1": "Long <em>reads.</em>",
-  "tag.hero.dek":
-    "<b>Twenty-minute pieces and up.</b> Reported essays, multi-source profiles, and the kind of long-form work that asks something of the reader. Slow journalism on purpose. New piece every other Thursday.",
-  "tag.hero.filterLabel": "Filter",
-  "tag.hero.stats.piecesInSection": "Pieces in this section",
-  "tag.hero.stats.minAverageRead": "Min average read",
-  "tag.hero.stats.issuesRepresented": "Issues represented",
-  "tag.hero.stats.contributors": "Contributors",
-  "tag.hero.curatorEyebrow": "Editor's note",
-  "tag.list.emptyTitle": "No long reads in this category yet",
-  "tag.list.emptyDescription":
-    "Nothing filed under <em>{topic}</em> in long reads so far. Browse every piece, or get the next one by email.",
-  "tag.list.showAllCta": "Show all long reads",
-  "tag.list.loadingMore": "Loading older long reads…",
-  "tag.list.loadOlder_one": "Load {count} older long read",
-  "tag.list.loadOlder_other": "Load {count} older long reads",
-  // Live mode: no tagged long reads have been published yet.
-  "tag.list.liveEmptyTitle": "No tagged stories yet",
-  "tag.list.liveEmptyDescription":
-    "Nothing has been filed under this tag so far. As stories go up, they'll gather here — come back soon.",
-
-  // ══════════════════ Newsletter archive ══════════════════════════════════
-  // Per-issue title/dek/meta (newsletterArchive.data.tsx YEARS/LATEST, and the
-  // full sent-issue bodies in newsletterArchiveIssue.data.tsx) are the actual
-  // sent newsletter's own content — left in English throughout, like an
-  // article body. Only the archive's page chrome is translated below.
-  "newsletterArchive.hero.eyebrow": "Newsletter archive · since 2024",
-  "newsletterArchive.hero.h1": "Every email we've <em>sent.</em>",
-  "newsletterArchive.hero.dek":
-    "Three newsletters: a fortnightly community dispatch, a monthly long-read companion, and a Trans Hub bulletin. All free. Read any of them here — or subscribe and we'll send them straight.",
-  "newsletterArchive.hero.stats.issuesInArchive": "Issues in the archive",
-  "newsletterArchive.hero.stats.activeStreams": "Active newsletter streams",
-  "newsletterArchive.hero.stats.subscribersAllStreams":
-    "Subscribers across all streams",
-  "newsletterArchive.hero.stats.languages": "Languages · EN & PT",
-  "newsletterArchive.tabsAriaLabel": "Newsletter streams",
-  "newsletterArchive.readInBrowserCta": "Read in browser →",
-  // Live mode: no issues have been sent yet, so the archive is empty. The
-  // subscribe form above still works, so people can be first in line.
-  "newsletterArchive.emptyLive.title": "Newsletter archive coming soon",
-  "newsletterArchive.emptyLive.description":
-    "We haven't sent our first issue yet. Subscribe above and you'll get it the moment it goes out — every issue then lives here.",
-  "newsletterArchive.list.emptyTitle": "No issues in this stream",
-  "newsletterArchive.list.emptyDescription":
-    "Nothing's gone out on this stream yet. Take a look across all three — there's plenty in the archive.",
-  "newsletterArchive.list.clearFiltersCta": "Clear filters",
-  "newsletterArchive.list.loadOlder_one": "Load {count} older issue",
-  "newsletterArchive.list.loadOlder_other": "Load {count} older issues",
-  "newsletterArchive.issue.backToArchive": "Back to the archive",
-  "newsletterArchive.issue.browseFullArchive": "Browse the full archive",
 };

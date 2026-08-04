@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ImageSlot } from "../../shared/components/ui";
+import { FeatureHelp, ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { memberName } from "../members/data/members";
 import { routes } from "../../app/routeMap";
@@ -24,6 +24,8 @@ export function MagazineCover() {
           alt={t("magazine:cover.coverAlt")}
           placeholder={t("magazine:cover.coverPlaceholder")}
           style={{ position: "absolute", inset: 0 }}
+          loading="eager"
+          fetchPriority="high"
         />
         <div className={styles.csImageLabel}>
           {t("magazine:cover.coverImageLabel")}
@@ -37,7 +39,7 @@ export function MagazineCover() {
           <h1 className={styles.csTitle}>
             The city changed.
             <br />
-            <em>Did we?</em>
+            <em>Did we?</em> <FeatureHelp id="magazine.hub" />
           </h1>
           <div className={styles.csByline}>
             {t("magazine:cover.byline")}{" "}

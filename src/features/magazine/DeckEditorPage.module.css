@@ -1,0 +1,292 @@
+/*
+ * Shared styles for the deck-authoring editor (DeckEditorPage + its
+ * sub-components: DeckMetaForm now, DeckSlidesEditor / SlideEditorCard /
+ * DeckEditorPreview in a later task). Keep this file appendable — later
+ * tasks add classes here rather than opening a second module.
+ */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 13px 15px;
+  font-family: var(--sans);
+  /* >=16px so iOS Safari never zooms the viewport on focus. */
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: 12px;
+  outline: none;
+  transition:
+    border-color 0.22s var(--ease),
+    box-shadow 0.22s var(--ease),
+    background 0.22s var(--ease);
+}
+
+.textarea {
+  min-height: 96px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+  background: var(--paper);
+}
+
+.input:focus-visible,
+.textarea:focus-visible {
+  box-shadow: 0 0 0 3px rgba(var(--cream-rgb), 0.95);
+}
+
+.select {
+  width: 100%;
+  padding: 13px 15px;
+  font-family: var(--sans);
+  /* >=16px so iOS Safari never zooms the viewport on focus. */
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: 12px;
+  outline: none;
+  cursor: pointer;
+  transition:
+    border-color 0.22s var(--ease),
+    box-shadow 0.22s var(--ease),
+    background 0.22s var(--ease);
+}
+
+.select:focus {
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+  background: var(--paper);
+}
+
+.select:focus-visible {
+  box-shadow: 0 0 0 3px rgba(var(--cream-rgb), 0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input,
+  .textarea,
+  .select {
+    transition: none;
+  }
+}
+
+/* ── Slides editor (DeckSlidesEditor + SlideEditorCard) ──────────────── */
+
+.slideList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.slideCard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: color-mix(in srgb, var(--plum) 2.5%, var(--cream));
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.slideHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.slideName {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.slideControls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.moveBtn,
+.removeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+  line-height: 1;
+  border-radius: 9px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  background: var(--paper);
+  color: var(--ink-60);
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease);
+}
+
+.removeBtn {
+  color: var(--accent-ink);
+}
+
+.moveBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (hover: hover) {
+  .moveBtn:not(:disabled):hover,
+  .removeBtn:hover {
+    border-color: var(--line-strong);
+    color: var(--ink);
+  }
+}
+
+.moveBtn:focus-visible,
+.removeBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.slideBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.slideGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 12px;
+}
+
+.slideGroupTitle {
+  margin: 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.addSlide {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.addSlide .field {
+  min-width: 220px;
+}
+
+/* ── Editor page shell (DeckEditorPage) ───────────────────────────────── */
+
+.page {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 40px 28px 120px;
+}
+
+.editorHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid var(--line-strong);
+}
+
+.editorHead h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 26px;
+  color: var(--ink);
+}
+
+.editorGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .editorGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.preview {
+  position: sticky;
+  top: 24px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.previewFrame {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 18px;
+}
+
+.previewEmpty {
+  margin: 0;
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--ink-40);
+}

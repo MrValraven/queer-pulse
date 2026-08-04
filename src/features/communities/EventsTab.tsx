@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, FeatureHelp } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
@@ -48,19 +48,23 @@ function EventRow({ ev }: { ev: CommunityEvent }) {
 
 export function EventsTab({ events }: { events: CommunityEvent[] }) {
   const { t } = useTranslation();
-  // Surface only the next (most recent) upcoming gathering here; earlier ones in
-  // the list are later dates, so the first is the soonest. Past recaps below are
-  // unaffected.
-  const upcoming = events.filter((e) => !e.past).slice(0, 1);
+  // Show every upcoming gathering (soonest first — the list is date-ordered),
+  // not just the next one; the sidebar already highlights the single soonest.
+  const upcoming = events.filter((e) => !e.past);
   const past = events.filter((e) => e.past);
   return (
     <div>
       <div className={detail.secLbl}>
-        {t("communities:detail.events.upcoming")}
+        {t("communities:detail.events.upcoming")}{" "}
+        <FeatureHelp id="community.events" />
       </div>
-      {upcoming.map((ev) => (
-        <EventRow key={ev.id} ev={ev} />
-      ))}
+      {upcoming.length > 0 ? (
+        upcoming.map((ev) => <EventRow key={ev.id} ev={ev} />)
+      ) : (
+        <p className={styles.eventsEmpty}>
+          {t("communities:detail.events.noUpcoming")}
+        </p>
+      )}
 
       {past.length > 0 && (
         <>

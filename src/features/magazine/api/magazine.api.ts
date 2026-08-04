@@ -1,4 +1,5 @@
-import { apiGet, apiPost } from "../../../shared/api/client";
+import { apiDelete, apiGet, apiPatch, apiPost } from "../../../shared/api/client";
+import type { Slide } from "../data/decks";
 
 // ── Backend DTOs ───────────────────────────────────────────────────────────
 // Shapes the NestJS magazine domain returns (mirrors
@@ -71,6 +72,60 @@ export interface CreateStorySubmissionDto {
   pitch: string;
 }
 
+/** A row as returned by GET /magazine/decks (list) — no `authorBio`/`related`/`slides`. */
+export interface DeckListItemDTO {
+  id: string;
+  slug: string;
+  title: string;
+  kicker: string;
+  section: string;
+  byline: string;
+  role: string | null;
+  readTime: string;
+  cover: string;
+  coverDesc: string;
+  tags: string[];
+  /** ISO 8601, or null for an unpublished/draft deck. */
+  publishedAt: string | null;
+}
+
+/** Full deck detail from GET /magazine/decks/:slug. */
+export interface DeckDTO extends DeckListItemDTO {
+  authorBio: string;
+  related: string[];
+  slides: Slide[];
+}
+
+export interface DecksPage {
+  items: DeckListItemDTO[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+// ── Admin request DTOs ──────────────────────────────────────────────────────
+// Bodies for the moderator/admin-only authoring endpoints (mirrors
+// `queerpulse-backend/src/magazine/dto/{create,update}-deck.dto.ts`).
+
+export interface CreateDeckDto {
+  slug: string;
+  title: string;
+  kicker?: string;
+  section?: string;
+  byline?: string;
+  role?: string;
+  authorBio?: string;
+  cover?: string;
+  coverDesc?: string;
+  readTime?: string;
+  tags?: string[];
+  related?: string[];
+  slides: Slide[];
+}
+
+/** `PATCH /magazine/admin/decks/:id` — every creation field patchable, plus `published`. */
+export type UpdateDeckDto = Partial<CreateDeckDto> & { published?: boolean };
+
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
 
 export const getIssues = () => apiGet<IssueDTO[]>("/magazine/issues");
@@ -102,3 +157,34 @@ export const createStorySubmission = (dto: CreateStorySubmissionDto) =>
 /** GET /magazine/submissions/mine — the caller's own pitches. */
 export const getMySubmissions = () =>
   apiGet<StorySubmissionDTO[]>("/magazine/submissions/mine");
+
+export function getDecks(params: { tag?: string; page?: number } = {}) {
+  const q = new URLSearchParams();
+  if (params.tag) q.set("tag", params.tag);
+  if (params.page) q.set("page", String(params.page));
+  const qs = q.toString();
+  return apiGet<DecksPage>(`/magazine/decks${qs ? `?${qs}` : ""}`);
+}
+
+export const getDeck = (slug: string) =>
+  apiGet<DeckDTO>(`/magazine/decks/${slug}`);
+
+// ── Admin (moderator/admin-only) calls ──────────────────────────────────────
+// `AdminMagazineDecksController` — distinct route prefix from the public
+// `magazine/decks` reads above; drafts included, id-addressed not slug-addressed.
+
+/** GET /magazine/admin/decks — every deck, drafts included; a bare array (not paginated). */
+export const getAdminDecks = () =>
+  apiGet<DeckListItemDTO[]>("/magazine/admin/decks");
+
+export const getAdminDeck = (id: string) =>
+  apiGet<DeckDTO>(`/magazine/admin/decks/${id}`);
+
+export const createDeck = (dto: CreateDeckDto) =>
+  apiPost<DeckDTO>("/magazine/admin/decks", dto);
+
+export const updateDeck = (id: string, dto: UpdateDeckDto) =>
+  apiPatch<DeckDTO>(`/magazine/admin/decks/${id}`, dto);
+
+export const deleteDeck = (id: string) =>
+  apiDelete<void>(`/magazine/admin/decks/${id}`);

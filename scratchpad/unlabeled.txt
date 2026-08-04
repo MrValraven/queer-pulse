@@ -1,0 +1,196 @@
+src/features/admin/AdminMemberModals.tsx:204  <textarea>
+src/features/admin/AdminSafeSpaceModalLists.tsx:119  <input>
+src/features/admin/AdminSafeSpaceModalLists.tsx:127  <input>
+src/features/admin/AdminSafeSpaceModalLists.tsx:137  <textarea>
+src/features/admin/AdminSafeSpaceModalLists.tsx:146  <input>
+src/features/admin/AdminSafeSpaceModalLists.tsx:45  <input>
+src/features/admin/AdminSafeSpaceModalLists.tsx:55  <input>
+src/features/admin/AdminSettingsAccessCards.tsx:55  <textarea>
+src/features/admin/ModPanelTabs.tsx:299  <input>
+src/features/admin/ModPanelTabs.tsx:75  <input>
+src/features/auth/CreateAccountAbout.tsx:41  <input type=text>
+src/features/auth/InviteComposeFields.tsx:32  <textarea>
+src/features/auth/InviteComposeFields.tsx:46  <textarea>
+src/features/auth/WelcomeTourSteps.tsx:78  <input type=text>
+src/features/auth/WelcomeTourSteps.tsx:83  <input type=text>
+src/features/auth/WelcomeTourSteps.tsx:89  <input type=text>
+src/features/auth/WelcomeTourSteps.tsx:94  <select>
+src/features/cinema/WatchPageSections.tsx:247  <select>
+src/features/cinema/WatchPageSections.tsx:358  <input>
+src/features/communities/CommunityTabs.tsx:276  <textarea>
+src/features/communities/DiscussionTab.tsx:153  <textarea>
+src/features/communities/JoinModalSteps.tsx:126  <input type=email>
+src/features/communities/JoinModalSteps.tsx:49  <input type=text>
+src/features/communities/JoinModalSteps.tsx:82  <input type=text>
+src/features/communities/JoinModalSteps.tsx:87  <input type=text>
+src/features/communities/JoinModalSteps.tsx:92  <textarea>
+src/features/communities/PulseTab.tsx:160  <textarea>
+src/features/communities/PulseTab.tsx:267  <textarea>
+src/features/communities/startCommunity/StartCommunityTone.tsx:60  <input type=text>
+src/features/community/NominateChangemakerSection.tsx:64  <input type=text>
+src/features/connect/ConnectionsAllTab.tsx:103  <select>
+src/features/economy/AffiliateCompanyModal.tsx:255  <select>
+src/features/economy/AffiliateCompanyModal.tsx:70  <input type=text>
+src/features/economy/AffiliateCompanyModal.tsx:84  <input type=text>
+src/features/economy/AffiliateCompanyModal.tsx:98  <textarea>
+src/features/economy/BarterPage.tsx:131  <input type=text>
+src/features/economy/BarterPostStrip.tsx:90  <input>
+src/features/economy/BarterPostStrip.tsx:96  <input>
+src/features/economy/BarterProposeCard.tsx:42  <textarea>
+src/features/economy/FlatmatesFilterBar.tsx:59  <select>
+src/features/economy/FlatmatesFilterBar.tsx:73  <select>
+src/features/economy/FlatmatesFilterBar.tsx:94  <select>
+src/features/economy/HousingModals.tsx:168  <textarea>
+src/features/economy/HousingModals.tsx:311  <textarea>
+src/features/economy/MentorMatchSteps.tsx:123  <input type=text>
+src/features/economy/MentorMatchSteps.tsx:128  <input type=text>
+src/features/economy/MentorMatchSteps.tsx:133  <select>
+src/features/economy/MentorMatchSteps.tsx:147  <textarea>
+src/features/economy/MentorMatchSteps.tsx:181  <input type=email>
+src/features/economy/MentorMatchSteps.tsx:266  <input type=text>
+src/features/economy/MentorMatchSteps.tsx:271  <select>
+src/features/economy/MentorMatchSteps.tsx:285  <select>
+src/features/economy/MentorMatchSteps.tsx:299  <input type=email>
+src/features/economy/PostJobSkills.tsx:57  <input type=text>
+src/features/economy/PostJobStepDetails.tsx:112  <input type=date>
+src/features/economy/PostJobStepDetails.tsx:123  <input type=text>
+src/features/economy/PostJobStepDetails.tsx:59  <input type=text>
+src/features/economy/PostJobStepDetails.tsx:87  <textarea>
+src/features/economy/PostJobStepPay.tsx:41  <select>
+src/features/economy/PostJobStepPay.tsx:53  <input type=number>
+src/features/economy/PostJobStepPay.tsx:68  <input type=number>
+src/features/economy/PostJobStepPay.tsx:78  <select>
+src/features/economy/PostJobStepReview.tsx:76  <input type=email>
+src/features/economy/PostJobStepReview.tsx:90  <input type=url>
+src/features/economy/PostJobStepScreening.tsx:74  <input>
+src/features/economy/PostJobStepType.tsx:127  <input type=text>
+src/features/economy/PostJobStepType.tsx:39  <select>
+src/features/economy/PostProfileFormFields.tsx:106  <select>
+src/features/economy/PostProfileFormFields.tsx:136  <textarea>
+src/features/economy/PostProfileFormFields.tsx:55  <input type=text>
+src/features/economy/PostProfileFormFields.tsx:67  <select>
+src/features/economy/PostProfileFormFields.tsx:91  <input type=number>
+src/features/economy/SalarySubmitModal.tsx:53  <input type=text>
+src/features/economy/SalarySubmitModal.tsx:58  <input type=text>
+src/features/economy/SalarySubmitModal.tsx:64  <input type=number>
+src/features/economy/SalarySubmitModal.tsx:71  <input type=number>
+src/features/economy/SalarySubmitModal.tsx:77  <select>
+src/features/economy/SolidarityDirectory.tsx:90  <input type=text>
+src/features/economy/WorkProfileSections.tsx:37  <input type=text>
+src/features/economy/WorkProfileSections.tsx:50  <input type=text>
+src/features/economy/WorkProfileSections.tsx:66  <input type=text>
+src/features/economy/WorkProfileSections.tsx:76  <input type=text>
+src/features/economy/WorkProfileSections.tsx:88  <input type=text>
+src/features/economy/WorkProfileSections.tsx:99  <textarea>
+src/features/feed/FeedModeration.tsx:371  <textarea>
+src/features/gatherings/CalendarSidebar.tsx:58  <input type=email>
+src/features/gatherings/CreateGatheringSteps.tsx:109  <input type=time>
+src/features/gatherings/CreateGatheringSteps.tsx:122  <input type=time>
+src/features/gatherings/CreateGatheringSteps.tsx:133  <select>
+src/features/gatherings/CreateGatheringSteps.tsx:152  <input type=text>
+src/features/gatherings/CreateGatheringSteps.tsx:162  <input type=text>
+src/features/gatherings/CreateGatheringSteps.tsx:172  <input type=text>
+src/features/gatherings/CreateGatheringSteps.tsx:199  <input type=number>
+src/features/gatherings/CreateGatheringSteps.tsx:213  <select>
+src/features/gatherings/CreateGatheringSteps.tsx:259  <input type=text>
+src/features/gatherings/CreateGatheringSteps.tsx:435  <input type=text>
+src/features/gatherings/CreateGatheringSteps.tsx:445  <input type=text>
+src/features/gatherings/CreateGatheringSteps.tsx:54  <input type=text>
+src/features/gatherings/CreateGatheringSteps.tsx:64  <textarea>
+src/features/gatherings/CreateGatheringSteps.tsx:90  <input type=date>
+src/features/gatherings/EventRsvpCard.tsx:130  <input type=text>
+src/features/gatherings/EventRsvpCard.tsx:142  <input type=email>
+src/features/gatherings/EventRsvpCard.tsx:157  <input type=text>
+src/features/gatherings/GatheringDashboardCards.tsx:206  <input type=text>
+src/features/gatherings/GatheringDashboardCards.tsx:80  <input type=text>
+src/features/gatherings/GatheringPhotosLive.tsx:60  <input type=file>
+src/features/gatherings/GatheringRecapPage.tsx:137  <input type=file>
+src/features/gatherings/ManageGatheringTabs.tsx:376  <textarea>
+src/features/governance/GovernanceSections.tsx:366  <select>
+src/features/governance/GovernanceSections.tsx:376  <textarea>
+src/features/governance/GovernanceSections.tsx:380  <input type=email>
+src/features/homepage/sections/Newsletter.tsx:71  <input type=email>
+src/features/magazine/SubmitStoryCover.tsx:69  <input type=file>
+src/features/marketing/AccessibilityModals.tsx:109  <select>
+src/features/marketing/AccessibilityModals.tsx:122  <textarea>
+src/features/marketing/AccessibilityModals.tsx:134  <input type=text>
+src/features/marketing/AccessibilityModals.tsx:198  <input type=text>
+src/features/marketing/AccessibilityModals.tsx:210  <input type=text>
+src/features/marketing/AccessibilityModals.tsx:222  <textarea>
+src/features/marketing/AccessibilityModals.tsx:234  <input type=text>
+src/features/marketing/AccessibilityModals.tsx:98  <input type=text>
+src/features/marketing/DirectoryReviewForm.tsx:96  <textarea>
+src/features/marketing/ForOrganisationsSections.tsx:134  <input type=text>
+src/features/marketing/ForOrganisationsSections.tsx:142  <input type=text>
+src/features/marketing/ForOrganisationsSections.tsx:150  <input type=email>
+src/features/marketing/ForOrganisationsSections.tsx:158  <select>
+src/features/marketing/ForOrganisationsSections.tsx:171  <textarea>
+src/features/marketing/ResourceLibrarySections.tsx:63  <input type=text>
+src/features/marketing/SubmitPartnerFields.tsx:166  <input type=text>
+src/features/marketing/listBusiness/ListingPhotoField.tsx:122  <input type=url>
+src/features/marketing/listBusiness/ListingPhotoField.tsx:135  <input type=file>
+src/features/marketing/listBusiness/ListingPhotoGallery.tsx:87  <input type=text>
+src/features/members/AvatarEditor.tsx:113  <input type=file>
+src/features/members/CommandPalette.tsx:138  <input type=text>
+src/features/members/MemberFilterCards.tsx:162  <input type=number>
+src/features/members/MemberFilterCards.tsx:176  <input type=number>
+src/features/members/PerksSections.tsx:250  <textarea>
+src/features/members/SearchPage.tsx:52  <input type=text>
+src/features/members/VouchMemberModalParts.tsx:242  <textarea>
+src/features/members/WorkItemEditor.tsx:111  <input type=file>
+src/features/messages/MessageReportModal.tsx:124  <textarea>
+src/features/myevents/RsvpDetailsModal.tsx:77  <input type=text>
+src/features/notifications/MentionsPanel.tsx:63  <textarea>
+src/features/resources/GlossaryPage.tsx:167  <input type=text>
+src/features/resources/GrantAboutStep.tsx:34  <input type=text>
+src/features/resources/GrantAboutStep.tsx:44  <textarea>
+src/features/resources/GrantAboutStep.tsx:54  <select>
+src/features/resources/GrantBudgetStep.tsx:36  <input>
+src/features/resources/GrantBudgetStep.tsx:44  <input type=number>
+src/features/resources/GrantBudgetStep.tsx:84  <input type=text>
+src/features/resources/PanelSignupModal.tsx:52  <input>
+src/features/resources/PanelSignupModal.tsx:63  <input type=email>
+src/features/resources/PanelSignupModal.tsx:75  <textarea>
+src/features/resources/Queer101Sections.tsx:130  <input type=search>
+src/features/resources/SexualHealthTabs.tsx:369  <textarea>
+src/features/resources/SexualHealthTestingNominate.tsx:38  <textarea>
+src/features/resources/SoberHostModal.tsx:116  <textarea>
+src/features/resources/SoberHostModal.tsx:98  <input>
+src/features/resources/SuggestEditModal.tsx:49  <select>
+src/features/resources/SuggestEditModal.tsx:70  <textarea>
+src/features/safety/SafeSpacesSections.tsx:237  <input type=text>
+src/features/safety/SafeSpacesSections.tsx:245  <input type=text>
+src/features/safety/SafeSpacesSections.tsx:250  <select>
+src/features/safety/SafeSpacesSections.tsx:258  <textarea>
+src/features/safety/VouchModal.tsx:156  <textarea>
+src/features/settings/AccessibilityPrefSections.tsx:87  <input type=range>
+src/features/settings/DeleteAccountSections.tsx:189  <input type=text>
+src/features/settings/EditProfileSections.tsx:177  <input type=file>
+src/features/settings/EditProfileSections.tsx:192  <input type=text>
+src/features/settings/EditProfileSections.tsx:209  <input type=text>
+src/features/settings/EditProfileSections.tsx:301  <input type=text>
+src/features/settings/EditProfileSections.tsx:367  <textarea>
+src/features/settings/EditProfileSections.tsx:378  <input type=text>
+src/features/settings/EditProfileSections.tsx:432  <input type=text>
+src/features/settings/EditProfileSections.tsx:468  <input type=text>
+src/features/settings/InterestsPane.tsx:101  <input type=text>
+src/features/settings/InterestsPane.tsx:116  <input type=range>
+src/features/settings/InterestsPane.tsx:92  <input type=text>
+src/features/settings/SettingsPanes.tsx:189  <input type=search>
+src/features/settings/ThemeStudio.tsx:158  <select>
+src/features/studio/StudioLiveChat.tsx:84  <input>
+src/features/studio/StudioOpenCallCard.tsx:146  <textarea>
+src/features/studio/StudioPayoutsSections.tsx:338  <select>
+src/features/studio/StudioPayoutsSections.tsx:349  <input type=text>
+src/features/studio/StudioPayoutsSections.tsx:358  <input type=email>
+src/features/studio/StudioSearchPage.tsx:68  <input type=search>
+src/features/studio/StudioSetMatcher.tsx:55  <textarea>
+src/features/studio/StudioSetSidebar.tsx:44  <input type=text>
+src/features/studio/StudioSetSidebar.tsx:48  <select>
+src/features/studio/StudioSettingsSections.tsx:176  <select>
+src/features/studio/StudioShell.tsx:71  <input type=text>
+src/features/studio/StudioTipModal.tsx:126  <input type=number>
+src/features/studio/StudioTriageDetail.tsx:92  <textarea>
+src/features/subprofiles/ImageUploadField.tsx:119  <input type=file>
+src/features/system/StatusComponents.tsx:247  <input type=email>
+src/pages/NotFoundPage.tsx:108  <input type=text>

@@ -9,6 +9,12 @@
   gap: 72px;
   align-items: start;
 }
+/* Live mode hides the fabricated digest preview column — collapse to a single
+   column so the subscribe form doesn't sit beside an empty grid cell. */
+.solo {
+  grid-template-columns: 1fr;
+  max-width: 640px;
+}
 .title {
   font-family: var(--serif);
   font-weight: 400;

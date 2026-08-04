@@ -1,0 +1,496 @@
+/* Mobile profile (≤640px) — Instagram-style layout. Tokens only. */
+
+/* ── Stat row (MobileProfileStats) ───────────────────────────────────────── */
+.statRow {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+  padding: var(--gap-sm) 0;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-badge);
+}
+
+.statColumn {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+  padding-block: 2px;
+  min-height: 44px;
+}
+
+.statColumn + .statColumn {
+  border-inline-start: 1px solid rgba(45, 27, 61, 0.09);
+}
+
+.statNumber {
+  font-family: var(--serif);
+  font-size: clamp(20px, 5vw, 22px);
+  line-height: 1.1;
+  color: var(--text-strong);
+}
+
+.statLabel {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+/* ── Persona highlights row (MobilePersonaHighlights) ────────────────────── */
+.highlightsRow {
+  display: flex;
+  gap: var(--gap-sm);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  /* Block padding is this row's only distance from the header above and the
+     sticky tab bar below (siblings in MobileProfileView stack in plain flow,
+     no shared flex gap) — --gap-grid rather than --gap-xs so the space
+     BETWEEN these three groups reads clearly larger than the --gap-sm used
+     WITHIN each group (e.g. the header's own internal rows). */
+  padding-block: var(--gap-grid);
+  /* MobileProfileView no longer wraps this row in a shared `.wrap` (see its
+     doc comment), so this is now the row's real page gutter, not just
+     focus-ring clearance — same left/right inset as `.wrap` in base.css, put
+     on the scroll container itself so the first/last highlight sits inset
+     from the edge at rest but can still scroll flush to it. */
+  padding-left: calc(var(--wrap-px, 28px) + env(safe-area-inset-left));
+  padding-right: calc(var(--wrap-px, 28px) + env(safe-area-inset-right));
+  scrollbar-width: none;
+}
+
+.highlightsRow::-webkit-scrollbar {
+  display: none;
+}
+
+.highlightItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  width: 68px;
+  min-height: 44px;
+  padding-block: 2px;
+  scroll-snap-align: start;
+  text-decoration: none;
+  color: inherit;
+  touch-action: manipulation;
+  border-radius: var(--radius-badge);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .highlightItem {
+    transition: none;
+  }
+}
+
+.highlightItem:active {
+  transform: scale(0.96);
+}
+
+.highlightItem:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.highlightAvatarFrame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.highlightAddFrame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px dashed var(--accent);
+  background: var(--paper);
+  color: var(--accent);
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.highlightLabel {
+  display: block;
+  max-width: 68px;
+  font-family: var(--sans);
+  font-size: 11px;
+  line-height: 1.2;
+  color: var(--ink-60);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+/* ── Sticky content-tab bar (MobileProfileTabs) ──────────────────────────── */
+.tabsWrap {
+  /* Establishes the containing block the sticky tablist positions against. */
+  position: relative;
+}
+
+.tabList {
+  position: sticky;
+  /* Clears the real mobile top chrome. At the ≤860px breakpoint this
+     component renders at, the floating pill Navbar swaps to the slim
+     `.appBar` strip (Navbar.module.css, `isAppBar = isMobile`) — occupied
+     height `--app-bar-h` + the top safe-area inset, NOT the desktop
+     `--nav-top` + `--nav-height` band (standalone.css pulls `main` up by
+     exactly that difference for the same reason). If this bar is ever reused
+     above ~860px, this offset needs revisiting for the taller floating pill. */
+  top: calc(var(--app-bar-h) + env(safe-area-inset-top));
+  z-index: 20;
+  display: flex;
+  background: rgba(var(--cream-rgb), 0.92);
+  backdrop-filter: var(--blur-nav);
+  -webkit-backdrop-filter: var(--blur-nav);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* --cream-rgb is fixed to the LIGHT cream channels in both themes (see
+   tokens/colors.css — cream-on-plum surfaces need to stay light), so this
+   translucent backdrop doesn't flip automatically the way --line-rgb does.
+   Same fix, same literal values as Navbar.module.css `.nav`/`.appBar`'s dark
+   override, so the sticky tab bar reads as the same glass surface as the app
+   bar it sits under. */
+:global([data-theme="dark"]) .tabList {
+  background: rgba(14, 8, 32, 0.92);
+}
+
+.tabIndicator {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: calc(100% / var(--tab-count));
+  height: 2px;
+  border-radius: var(--radius-tag);
+  background: var(--accent);
+  transform: translateX(calc(var(--active-index) * 100%));
+  transition: transform var(--dur-fast) var(--ease);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabIndicator {
+    transition: none;
+  }
+}
+
+.tab {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 0;
+  min-height: 48px;
+  padding-block: 8px;
+  background: none;
+  border: none;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-60);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tab:hover {
+    color: var(--ink);
+  }
+}
+
+.tabActive {
+  color: var(--accent);
+}
+
+.tabIcon {
+  font-size: 18px;
+}
+
+.tabLabel {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tabPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding-top: var(--gap-sm);
+}
+
+/* `MobileProfileTabPanels`' `SectionWrap` renders unconditionally around
+   each section so it can apply a single `.wrap` gutter, but the section
+   inside self-hides (returns `null`) when its data is empty — that leaves an
+   empty, childless wrapper `<div>` sitting between `.tabPanel`'s flex
+   siblings. Collapse it entirely so an empty section doesn't still consume
+   a `.tabPanel` flex-gap gap on both sides (this selector has no local class
+   name to scope, so it applies as plain CSS without needing `:global()`). */
+[data-section-wrap]:empty {
+  display: none;
+}
+
+/* ── Header cluster (MobileProfileHeader) ────────────────────────────────── */
+.mheader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  /* MobileProfileView no longer wraps this in a shared `.wrap` (see its doc
+     comment) — same left/right inset as `.wrap` in base.css, so the header
+     keeps its page gutter now that it owns it directly. */
+  padding-left: calc(var(--wrap-px, 28px) + env(safe-area-inset-left));
+  padding-right: calc(var(--wrap-px, 28px) + env(safe-area-inset-right));
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+
+.statsSlot {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Pride ring — the one sanctioned place to compose pride colour outside the
+   token system's ordinary rules. No dedicated pride/rainbow token exists yet
+   (checked tokens/colors.css), so the ring is composed from the existing
+   brand hues instead of new hex: coral (--accent), violet, jade, plum. */
+.ringWrap {
+  position: relative;
+  flex: none;
+}
+
+.prideRing {
+  box-sizing: border-box;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  padding: 3px;
+  background: conic-gradient(
+    from 180deg,
+    var(--accent),
+    var(--violet),
+    var(--jade),
+    var(--plum),
+    var(--accent)
+  );
+}
+
+.ringGap {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  padding: 2px;
+  background: var(--cream);
+}
+
+.verifiedBadge {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--jade);
+  border: 2px solid var(--cream);
+  box-shadow: 0 2px 6px -2px rgba(var(--jade-rgb), 0.7);
+}
+
+/* ── Identity block (MobileProfileIdentity) ──────────────────────────────── */
+.identity {
+  display: flex;
+  flex-direction: column;
+}
+
+.identityEyebrow {
+  margin-bottom: var(--gap-xs);
+}
+
+.identityNameRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+.identityName {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(26px, 7vw, 32px);
+  color: var(--text-strong);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.identityName em {
+  font-style: italic;
+}
+
+.identityRole {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: var(--ink);
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+.identityPronoun {
+  color: var(--ink-60);
+  font-weight: 400;
+}
+
+.identityWhere {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+.identityLoc {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.identityPin {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+.identityMuted {
+  color: var(--ink-60);
+}
+
+.identityHereFor {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 8px;
+  margin-top: 10px;
+}
+
+.identityHereForLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.identityHereForChip {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+  border-radius: var(--radius-tag);
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.identityHereForHint {
+  font-size: 12px;
+  color: var(--ink-40);
+  font-style: italic;
+}
+
+.identityBio {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin-top: 12px;
+}
+
+.identityTags {
+  margin-top: var(--gap-xs);
+}
+
+/* ── Full-width action row (MobileProfileHeader) ─────────────────────────── */
+/* ProfileHeroActions and ProfileSafetyMenu each own their own CSS module, so
+   their internal button row can't be reached by class name from here — the
+   `> div` / `> *` structural selectors target their known DOM shape (one
+   wrapper div of buttons) instead, which is stable because both components
+   are single-purpose and always render that shape. */
+.actionRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+.actionsSlot {
+  flex: 1;
+  min-width: 0;
+}
+
+.actionsSlot > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  width: 100%;
+}
+
+.actionsSlot > div > * {
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: center;
+}
+
+/* ── Dark-mode hairline fix ───────────────────────────────────────────────
+   .statRow / .statColumn write their border as a literal plum rgba() (the
+   pre-token-system convention still used by ProfilePage.module.css's own
+   card borders), which never flips. On the dark --paper card surface it's
+   dark-hairline-on-dark-card and disappears. Same fix, same value as
+   ProfilePage.module.css's `.nowCard`/`.ask`/etc. dark override. */
+:global([data-theme="dark"]) .statRow,
+:global([data-theme="dark"]) .statColumn + .statColumn {
+  border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+.actionRow > .safetySlot {
+  flex: 0 0 auto;
+}

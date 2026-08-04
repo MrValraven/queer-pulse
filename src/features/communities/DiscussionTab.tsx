@@ -3,14 +3,17 @@ import {
   Button,
   FadeIn,
   EmptyState,
+  FeatureHelp,
   SearchInput,
   FilterChips,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useAuth } from "../../app/providers/authContext";
 import type { Thread as ThreadData } from "./communityDetails";
 import type { PulsePaging } from "./api/useCommunityPosts";
+import { viewerPerson } from "./communityPeople";
 import { useCreatePost } from "./api/useCommunityMutations";
 import { CommunityThread } from "./CommunityThread";
 import detail from "./CommunityDetailPage.module.css";
@@ -32,6 +35,7 @@ export function DiscussionTab({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
+  const { user } = useAuth();
   const createPost = useCreatePost(slug);
   const [searchTerm, setSearchTerm] = useState("");
   const [chip, setChip] = useState<Chip>("All");
@@ -65,7 +69,7 @@ export function DiscussionTab({
       id: optimisticId,
       votes: 0,
       title: heading,
-      author: { initials: "Me", name: "You", tint: "plum" },
+      author: viewerPerson(user) ?? { initials: "Me", name: "You", tint: "plum" },
       time: t("communities:common.justNow"),
       replyCount: 0,
       post: text,
@@ -100,13 +104,20 @@ export function DiscussionTab({
 
   return (
     <div>
-      <SearchInput
+      <div
         className={styles.searchRow}
-        ariaLabel={t("communities:detail.discussion.searchAria")}
-        placeholder={t("communities:detail.discussion.searchPlaceholder")}
-        value={searchTerm}
-        onChange={setSearchTerm}
-      />
+        style={{ display: "flex", alignItems: "center", gap: 8 }}
+      >
+        <div style={{ flex: 1 }}>
+          <SearchInput
+            ariaLabel={t("communities:detail.discussion.searchAria")}
+            placeholder={t("communities:detail.discussion.searchPlaceholder")}
+            value={searchTerm}
+            onChange={setSearchTerm}
+          />
+        </div>
+        <FeatureHelp id="community.forum" />
+      </div>
       <FilterChips
         className={styles.chips}
         label={t("communities:detail.discussion.filterAria")}
@@ -118,7 +129,11 @@ export function DiscussionTab({
       {shown.length === 0 ? (
         <EmptyState
           title={t("communities:detail.discussion.empty.title")}
-          description={t("communities:detail.discussion.empty.description")}
+          description={t(
+            searchTerm.trim() && paging.hasNextPage
+              ? "communities:detail.discussion.empty.searchMore"
+              : "communities:detail.discussion.empty.description",
+          )}
         />
       ) : (
         shown.map((thread, index) => (
@@ -126,6 +141,14 @@ export function DiscussionTab({
             <CommunityThread data={thread} slug={slug} />
           </FadeIn>
         ))
+      )}
+
+      {/* Search only filters the discussions loaded so far — say so when there
+          are more pages, so a member doesn't read a thin result as complete. */}
+      {searchTerm.trim() && shown.length > 0 && paging.hasNextPage && (
+        <p className={styles.searchScopeNote}>
+          {t("communities:detail.discussion.searchScopeNote")}
+        </p>
       )}
 
       {paging.hasNextPage && (
@@ -153,6 +176,7 @@ export function DiscussionTab({
           <textarea
             className={detail.npTa}
             rows={1}
+            aria-label={t("communities:detail.forum.newPostPlaceholder")}
             placeholder={t("communities:detail.forum.newPostPlaceholder")}
             value={newPost}
             onChange={(event) => setNewPost(event.target.value)}

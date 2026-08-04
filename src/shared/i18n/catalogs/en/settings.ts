@@ -53,11 +53,13 @@ export const settings: Catalog = {
   "page.saveBar.savedToast": "Settings saved",
   "page.saveBar.saveErrorToast":
     "We couldn't save your changes. Please try again.",
+  "page.leaveConfirm":
+    "You have unsaved changes here. Leave without saving them?",
 
   // ── SettingsControls.tsx — DeleteAccountModal (first confirm step) ───────
   "controls.deleteModal.title": "Delete your account?",
   "controls.deleteModal.body":
-    "Deleting permanently erases your profile, messages, community posts, and all associated data within 30 days. It cannot be undone. We recommend downloading your data first. Next, you'll confirm your password and we'll email you to finish the request.",
+    "Deleting permanently erases your profile, messages, community posts, and all associated data within 30 days. It cannot be undone. We recommend downloading your data first. Next, you'll confirm it's you and finish the request right here.",
   "controls.deleteModal.cancel": "Cancel",
   "controls.deleteModal.continue": "Continue to delete",
 
@@ -89,7 +91,7 @@ export const settings: Catalog = {
     "Gathering your data and packaging it as a JSON file. This usually takes a moment…",
   "modals.dataExport.readyTitle": "Your export is <em>ready.</em>",
   "modals.dataExport.readyBody":
-    "We've packaged your data as <strong>{filename}</strong>. In the real product we'd also email you a secure link — here you can download it now.",
+    "We've packaged your data as <strong>{filename}</strong>. Nothing is emailed — you download it right here, on this page.",
   "modals.dataExport.downloadCta": "Download {filename}",
 
   // ── SettingsPersonalisation.tsx — ProfileThemePane ───────────────────────
@@ -528,14 +530,14 @@ export const settings: Catalog = {
   "sessions.empty.none.desc":
     "Nothing is signed in right now — not even this device, which usually means your session is about to be refreshed.",
   "sessions.toast.signedOut":
-    "Session ended. If we didn't recognise that device, we'll email the address on file.",
+    "Session ended. If that wasn't you, review your active sessions and sign out anything you don't recognise.",
   "sessions.toast.signedOutError":
     "We couldn't sign that session out. Try again.",
   "sessions.toast.signedOutAll": "All other sessions signed out",
   "sessions.toast.signedOutAllError":
     "We couldn't sign the others out. Try again.",
   "sessions.footNote":
-    "<strong>Something looks wrong?</strong> Sign out anything you don't recognise, then <a>tell us what happened</a> — we'll help you lock things down. When you sign an unrecognised session out, we email the address on file so there's an out-of-band record of what happened.",
+    "<strong>Something looks wrong?</strong> Sign out anything you don't recognise, then <a>tell us what happened</a> — we'll help you lock things down.",
 
   // ── DataExportPage.tsx — hero + toast + outro ────────────────────────────
   "dataExport.hero.eyebrow": "Your data · GDPR Art. 20",
@@ -605,7 +607,7 @@ export const settings: Catalog = {
   "dataExport.status.retry": "Request again",
   "dataExport.status.building.title": "Building your archive",
   "dataExport.status.building.body":
-    "We're gathering your data and packaging it up. This can take a little while — we'll email you the moment it's ready, so you can close this page.",
+    "We're gathering your data and packaging it up. This only takes a moment — stay on this page and your archive will be ready to download right here.",
   "dataExport.status.download": "Download {filename}",
 
   // ── DataExportSections.tsx — DataExportIncluded ──────────────────────────
@@ -839,7 +841,7 @@ export const settings: Catalog = {
   "destructiveFlow.delete.loadingText": "Scheduling your account for deletion…",
   "destructiveFlow.delete.resultTitle": "It's <em>scheduled.</em>",
   "destructiveFlow.delete.resultBody":
-    "Your account is scheduled for deletion. Check your inbox for a confirmation email — you have <strong>30 days</strong> to cancel by signing back in. After that, your data is permanently erased. Take care of yourself.",
+    "Your account is scheduled for deletion. You have <strong>30 days</strong> to change your mind — just sign back in with Google and we'll stop the erasure. After that, your data is permanently erased. Take care of yourself.",
 
   // ── ThemeStudio.tsx / profileTheme.data.ts — profile theme picker. Pride
   // flag NAMES (FLAG_SWATCHES.label) are deliberately left in English: they're
@@ -857,7 +859,8 @@ export const settings: Catalog = {
   "themeStudio.showBadgesToggle": "Show badges on profile",
   "themeStudio.showLevelToggle": "Show level on profile",
   "themeStudio.previewLabel": "Preview",
-  "themeStudio.previewHintTop": "Updates live as you pick a theme.",
+  "themeStudio.previewHintTop":
+    "Updates live as you pick a theme. Saved to this browser as a preview — it isn't shown on your public profile yet.",
   "themeStudio.profileCardLabel": "Profile card",
   "themeStudio.directoryCardLabel": "Directory card",
   "themeStudio.directoryHint":

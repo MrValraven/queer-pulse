@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getOpportunity } from "./volunteering.api";
+import { opportunityKeys } from "./opportunityKeys";
 import { detailToOpportunity } from "./volunteering.adapters";
 import type { VolunteerOpportunity } from "../volunteerOpportunities";
 
@@ -33,7 +34,7 @@ function parseSpots(s: string): { filled: number; total: number } {
 export function useOpportunity(slug: string | undefined) {
   const { demoMode } = useDemoMode();
   return useQuery<OpportunityResult>({
-    queryKey: ["opportunity", demoMode, slug],
+    queryKey: opportunityKeys.detail(slug, demoMode),
     enabled: Boolean(slug),
     queryFn: async () => {
       if (demoMode) {

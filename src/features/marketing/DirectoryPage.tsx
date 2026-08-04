@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { PageHero, PageShell } from "../../shared/components/layout";
-import { Button, Outro, Reveal } from "../../shared/components/ui";
+import { Button, FeatureHelp, Outro, Reveal } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -52,10 +52,13 @@ export function DirectoryPage() {
       <PageHero
         eyebrow={t("marketing:directory.hero.eyebrow")}
         title={
-          <Translation
-            i18nKey="marketing:directory.hero.title"
-            components={{ em: <em /> }}
-          />
+          <>
+            <Translation
+              i18nKey="marketing:directory.hero.title"
+              components={{ em: <em /> }}
+            />{" "}
+            <FeatureHelp id="local.directory" />
+          </>
         }
         sub={t("marketing:directory.hero.sub")}
       >
@@ -74,6 +77,10 @@ export function DirectoryPage() {
         onToggleVibe={toggleVibe}
         safeOnly={safe === "verified"}
         onToggleSafeOnly={() => setSafe(safe !== "verified")}
+        view={view}
+        onViewChange={selectView}
+        activeFilterCount={activeFilters.length}
+        resultCount={filtered.length}
       />
 
       <DirectoryResultsHeader

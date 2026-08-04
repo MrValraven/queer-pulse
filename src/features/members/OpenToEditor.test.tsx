@@ -20,8 +20,11 @@ const addField = () => screen.getByRole("textbox");
 describe("OpenToEditor", () => {
   it("adds a preset when its chip is tapped", async () => {
     const onChange = renderEditor();
+    // The `members` namespace loads lazily (catalogs/index.ts), so the chip's
+    // label resolves after the post-commit effect fetches it — await it rather
+    // than reading the raw key. Mirrors MemberFilterCards.staffBadge.test.tsx.
     await userEvent.click(
-      screen.getByRole("button", { name: "Collaborating" }),
+      await screen.findByRole("button", { name: "Collaborating" }),
     );
     expect(onChange).toHaveBeenCalledWith([
       { kind: "preset", id: "collaborating" },
@@ -30,7 +33,7 @@ describe("OpenToEditor", () => {
 
   it("removes a preset when its selected chip is tapped again", async () => {
     const onChange = renderEditor([{ kind: "preset", id: "collaborating" }]);
-    const chip = screen.getByRole("button", { name: "Collaborating" });
+    const chip = await screen.findByRole("button", { name: "Collaborating" });
     expect(chip).toHaveAttribute("aria-pressed", "true");
     await userEvent.click(chip);
     expect(onChange).toHaveBeenCalledWith([]);
@@ -64,7 +67,7 @@ describe("OpenToEditor", () => {
   it("removes a custom entry with its × button", async () => {
     const onChange = renderEditor([{ kind: "custom", label: "Archive tips" }]);
     await userEvent.click(
-      screen.getByRole("button", { name: "Remove Archive tips" }),
+      await screen.findByRole("button", { name: "Remove Archive tips" }),
     );
     expect(onChange).toHaveBeenCalledWith([]);
   });

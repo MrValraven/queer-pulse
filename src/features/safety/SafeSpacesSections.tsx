@@ -238,6 +238,7 @@ function NominateForm({
           className={styles.nomInput}
           type="text"
           placeholder={t("safety:spaces.nominate.namePlaceholder")}
+          aria-label={t("safety:spaces.nominate.namePlaceholder")}
           value={nomName}
           onChange={(e) => onNomName(e.target.value)}
           required
@@ -246,8 +247,13 @@ function NominateForm({
           className={styles.nomInput}
           type="text"
           placeholder={t("safety:spaces.nominate.addressPlaceholder")}
+          aria-label={t("safety:spaces.nominate.addressPlaceholder")}
         />
-        <select className={styles.nomSelect} defaultValue="">
+        <select
+          className={styles.nomSelect}
+          defaultValue=""
+          aria-label={t("safety:spaces.nominate.typeSelect.placeholder")}
+        >
           <option value="">
             {t("safety:spaces.nominate.typeSelect.placeholder")}
           </option>
@@ -258,6 +264,7 @@ function NominateForm({
         <textarea
           className={styles.nomTextarea}
           placeholder={t("safety:spaces.nominate.reasonPlaceholder")}
+          aria-label={t("safety:spaces.nominate.reasonPlaceholder")}
         />
         <button type="submit" className={styles.nomBtn}>
           {t("safety:spaces.nominate.submitCta")}

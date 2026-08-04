@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro, SubpageIndex } from "../../shared/components/ui";
+import { Button, FeatureHelp, Outro, SubpageIndex } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -74,10 +74,13 @@ export function WellbeingPage() {
         eyebrow={t("resources:wellbeing.hero.eyebrow")}
         eyebrowDotColor="var(--jade)"
         title={
-          <Translation
-            i18nKey="resources:wellbeing.hero.title"
-            components={{ em: <em /> }}
-          />
+          <>
+            <Translation
+              i18nKey="resources:wellbeing.hero.title"
+              components={{ em: <em /> }}
+            />{" "}
+            <FeatureHelp id="resources.hub" />
+          </>
         }
         lead={t("resources:wellbeing.hero.lead")}
         anchors={anchors}

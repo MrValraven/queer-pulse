@@ -1,4 +1,4 @@
-import { type FormEvent } from "react";
+import { useId, type FormEvent } from "react";
 import { FiAlertCircle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
@@ -173,11 +173,12 @@ export function DeleteConfirmForm({
   onSubmit: (event: FormEvent) => void;
 }) {
   const { t } = useTranslation();
+  const confirmLabelId = useId();
   return (
     <form className={styles.confirmForm} onSubmit={onSubmit}>
       {content.phraseKey && (
         <div>
-          <div className={styles.cfLabel}>
+          <div className={styles.cfLabel} id={confirmLabelId}>
             <Translation
               i18nKey="settings:deleteAccount.confirm.typeLabel"
               components={{
@@ -187,6 +188,7 @@ export function DeleteConfirmForm({
             />
           </div>
           <input
+            aria-labelledby={confirmLabelId}
             className={[
               styles.cfInput,
               content.isDanger && styles.cfInputDanger,

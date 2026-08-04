@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useScrollLock } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./EconomyPage.module.css";
 
@@ -11,6 +12,7 @@ export function SalarySubmitModal({
   onSubmit: () => void;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   useScrollLock();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -46,6 +48,23 @@ export function SalarySubmitModal({
             ×
           </button>
         </div>
+        {!demoMode ? (
+          // No salary-board endpoint yet — stay honest instead of faking an
+          // "submitted anonymously" success the backend can't record.
+          <>
+            <div className={styles.modalSub}>
+              {t("economy:comingSoon.body")}
+            </div>
+            <button
+              type="button"
+              className={`${styles.primaryBtn} ${styles.modalSubmit}`}
+              onClick={onClose}
+            >
+              {t("economy:comingSoon.close")}
+            </button>
+          </>
+        ) : (
+          <>
         <div className={styles.modalSub}>
           {t("economy:salarySubmitModal.subtitle")}
         </div>
@@ -53,17 +72,22 @@ export function SalarySubmitModal({
           <input
             className={styles.modalInput}
             type="text"
+            aria-label={t("economy:salarySubmitModal.jobTitlePlaceholder")}
             placeholder={t("economy:salarySubmitModal.jobTitlePlaceholder")}
           />
           <input
             className={styles.modalInput}
             type="text"
+            aria-label={t("economy:salarySubmitModal.sectorPlaceholder")}
             placeholder={t("economy:salarySubmitModal.sectorPlaceholder")}
           />
           <div className={styles.modalRow2}>
             <input
               className={styles.modalInput}
               type="number"
+              aria-label={t(
+                "economy:salarySubmitModal.annualSalaryPlaceholder",
+              )}
               placeholder={t(
                 "economy:salarySubmitModal.annualSalaryPlaceholder",
               )}
@@ -71,10 +95,15 @@ export function SalarySubmitModal({
             <input
               className={styles.modalInput}
               type="number"
+              aria-label={t("economy:salarySubmitModal.yearsExpPlaceholder")}
               placeholder={t("economy:salarySubmitModal.yearsExpPlaceholder")}
             />
           </div>
-          <select className={styles.modalSelect} defaultValue="">
+          <select
+            className={styles.modalSelect}
+            defaultValue=""
+            aria-label={t("economy:salarySubmitModal.employmentTypeLabel")}
+          >
             <option value="">
               {t("economy:salarySubmitModal.employmentTypeLabel")}
             </option>
@@ -102,6 +131,8 @@ export function SalarySubmitModal({
         >
           {t("economy:salarySubmitModal.submitCta")}
         </button>
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,0 +1,150 @@
+/* Small round info button that sits inline beside a screen title. Kept at a
+   fixed size (not em-relative) so it stays a discreet chip beside any heading —
+   em sizing made it balloon next to the large hero serifs. */
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  width: 1.5em;
+  height: 1.5em;
+  margin-left: 0.5rem;
+  padding: 0;
+  font-size: 0.9rem;
+  color: rgba(var(--plum-rgb), 0.62);
+  background: rgba(var(--plum-rgb), 0.06);
+  border: 1px solid rgba(var(--line-rgb), 0.9);
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    color var(--dur-fast, 0.12s) var(--ease, ease),
+    background var(--dur-fast, 0.12s) var(--ease, ease),
+    border-color var(--dur-fast, 0.12s) var(--ease, ease);
+}
+
+.trigger svg {
+  width: 1.05em;
+  height: 1.05em;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .trigger:hover {
+    color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.1);
+    border-color: rgba(var(--accent-rgb), 0.5);
+  }
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trigger {
+    transition: none;
+  }
+}
+
+/* Icon-button variant — for an action cluster (e.g. the chat header), where the
+   trigger must match sibling 44px icon buttons rather than sit beside a title.
+   Mirrors the messages `.ctbIconBtn` treatment so the pair reads as one set. */
+.iconTrigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--ink-40);
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    color var(--dur-fast, 0.12s) var(--ease, ease),
+    background var(--dur-fast, 0.12s) var(--ease, ease);
+}
+
+.iconTrigger svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .iconTrigger:hover {
+    color: var(--text-strong);
+    background: rgba(var(--plum-rgb), 0.07);
+  }
+}
+
+.iconTrigger:active {
+  color: var(--text-strong);
+  background: rgba(var(--plum-rgb), 0.12);
+}
+
+.iconTrigger:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iconTrigger {
+    transition: none;
+  }
+}
+
+/* Modal body */
+.intro {
+  margin: 0;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: var(--lh-body, 1.6);
+}
+
+.useHeading {
+  margin: 18px 0 8px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow, 0.08em);
+  text-transform: uppercase;
+  color: rgba(var(--plum-rgb), 0.66);
+}
+
+.useList {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 7px;
+  color: var(--ink);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.useList li::marker {
+  color: var(--accent);
+}
+
+/* Demo-mode example: a soft jade aside, matching the app's "example" accent. */
+.demo {
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  background: var(--jade-soft, rgba(var(--jade-rgb), 0.1));
+  border: 1px solid rgba(var(--jade-rgb), 0.28);
+  border-radius: var(--radius-card, 14px);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.demoLabel {
+  display: block;
+  margin-bottom: 3px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow, 0.08em);
+  text-transform: uppercase;
+  color: var(--jade-ink, var(--jade));
+}

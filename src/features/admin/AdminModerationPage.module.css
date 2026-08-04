@@ -547,6 +547,25 @@ button.reportMain:focus-visible {
   color: var(--jade);
 }
 
+/* Listing-dispute context (dispute reason / ownership evidence). A calmer,
+   plum-tinted variant of .dExcerpt — this is claim/context, not the reported
+   content itself, so it reads as neutral rather than danger. */
+.dClaim {
+  margin: 0;
+  padding: 14px 16px;
+  border-left: 3px solid var(--plum);
+  border-radius: 0 14px 14px 0;
+  background: rgba(var(--plum-rgb), 0.05);
+  font-size: 14px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  color: var(--text-strong);
+}
+[data-theme="dark"] .dClaim {
+  background: rgba(var(--ink-rgb), 0.06);
+  color: var(--ink);
+}
+
 /* thread */
 .dThread {
   display: flex;

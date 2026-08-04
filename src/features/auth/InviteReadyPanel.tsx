@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CreatedInvite } from "./api/useCreateInvite";
 import { SHARE_TARGETS, buildShareMessage } from "./invite.data";
 import { expiryLabel } from "./inviteLinkPanel.data";
+import { InviteQrCode } from "./InviteQrCode";
 import { useInviteSender } from "./useInviteSender";
 import styles from "./InvitePage.module.css";
 
@@ -59,6 +60,17 @@ export function InviteReadyPanel({ invite }: { invite: CreatedInvite }) {
             </a>
           ))}
         </div>
+      </div>
+
+      <div className={styles.readyQr}>
+        <InviteQrCode
+          value={invite.fullUrl}
+          label={t("auth:invite.ready.qrLabel")}
+          className={styles.readyQrTile}
+        />
+        <span className={styles.readyQrHint}>
+          {t("auth:invite.ready.qrHint")}
+        </span>
       </div>
 
       <div className={styles.readyMeta}>

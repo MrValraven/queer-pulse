@@ -85,9 +85,28 @@ export const forum: Catalog = {
   "compose.cancel": "Cancelar",
   "compose.publishCta": "Publicar",
 
+  // ── ComposeThreadModal · campo de etiquetas ─────────────────────────────
+  "compose.tagsFieldLabel": "Etiquetas",
+  "compose.tagsPlaceholder": "Adiciona uma etiqueta e pressiona Enter",
+  "compose.tagsHint":
+    "Até {max} etiquetas — mantém-nas simples, como #habitação ou #saúde.",
+  "compose.removeTagAria": "Remover etiqueta {tag}",
+
+  // ── Pesquisa do fórum ───────────────────────────────────────────────────
+  "search.placeholder": "Pesquisar no fórum…",
+  "search.ariaLabel": "Pesquisar no fórum",
+  "search.clearAria": "Limpar pesquisa",
+
   // ── ForumThreadList ─────────────────────────────────────────────────────
   "threadList.top": "Melhores",
   "threadList.new": "Recentes",
+  "threadList.active": "Ativos",
+  "threadList.unanswered": "Sem resposta",
+  "threadList.sortAria": "Ordenar publicações",
+  "threadList.filteringByTag": "A filtrar por",
+  "threadList.clearTag": "Limpar",
+  "threadList.clearTagAria": "Limpar o filtro {tag}",
+  "threadList.filterByTagAria": "Filtrar publicações por {tag}",
   "threadList.count_one": "{formatted} publicação",
   "threadList.count_other": "{formatted} publicações",
   "threadList.emptyFiltered.title": "Ainda nada nesta categoria",
@@ -133,10 +152,24 @@ export const forum: Catalog = {
   "threadOp.saved": "Guardado",
   "threadOp.bookmark": "Guardar",
   "threadOp.report": "Denunciar",
+  "threadOp.voteAria": "Votar a favor desta publicação",
+  "threadOp.unvoteAria": "Remover o teu voto",
+
+  // ── Tópico fechado (a moderação fechou as respostas) ────────────────────
+  "locked.title": "Este tópico está fechado a novas respostas",
+  "locked.body":
+    "Uma pessoa moderadora fechou este tópico, por isso as respostas estão em pausa. Podes continuar a ler tudo aqui.",
+  "locked.replyBlockedToast": "Este tópico está fechado a novas respostas.",
+
+  // ── ThreadTopbar · controlo de fecho da moderação ───────────────────────
+  "topbar.lockThread": "Fechar tópico",
+  "topbar.unlockThread": "Reabrir tópico",
 
   // ── ThreadPage ──────────────────────────────────────────────────────────
   "threadPage.breadcrumbForum": "Fórum",
   "threadPage.replyPostedToast": "Resposta publicada",
+  "threadPage.replyFailedToast":
+    "Não foi possível publicar a tua resposta — tenta novamente daqui a pouco.",
   "threadPage.notFound.title": "Este tópico não está aqui",
   "threadPage.notFound.description":
     "Pode ter sido removido ou o link pode estar quebrado. Volta ao fórum para encontrares as conversas atuais.",
@@ -212,9 +245,11 @@ export const forum: Catalog = {
   "history.titleChange": "Título anterior: {title}",
   "history.close": "Fechar",
 
-  // ── Toasts (edit / delete / restore) ─────────────────────────────────────
+  // ── Toasts (edit / delete / restore / lock) ──────────────────────────────
   "toast.editSaved": "A tua edição está publicada.",
   "toast.deleted": "Publicação eliminada.",
   "toast.restored": "Publicação restaurada.",
+  "toast.threadLocked": "Tópico fechado a novas respostas.",
+  "toast.threadUnlocked": "Tópico reaberto.",
   "toast.error": "Algo correu mal. Tenta novamente daqui a pouco.",
 };

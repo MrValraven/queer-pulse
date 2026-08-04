@@ -320,6 +320,7 @@ export interface VouchEdge {
   date: string;
   tag?: string;
   reason?: string;
+  kind?: "invite" | "vouch";
 }
 
 const RAW_EDGES: Omit<VouchEdge, "id">[] = [
@@ -378,6 +379,7 @@ const RAW_EDGES: Omit<VouchEdge, "id">[] = [
     to: "marco",
     date: "2026-05",
     reason: "Exactly who this network is for.",
+    kind: "invite",
   },
   {
     from: "sofia",
@@ -390,6 +392,7 @@ const RAW_EDGES: Omit<VouchEdge, "id">[] = [
     to: "nadia",
     date: "2026-01",
     reason: "Brilliant, kind, ready.",
+    kind: "invite",
   },
   {
     from: "kai",
@@ -409,6 +412,7 @@ const RAW_EDGES: Omit<VouchEdge, "id">[] = [
     date: "2026-06",
     tag: "collaborator",
     reason: "We make work together.",
+    kind: "invite",
   },
   { from: "sofia", to: "devon", mutual: true, date: "2025-07" },
   { from: "kai", to: "devon", date: "2025-09" },
@@ -532,6 +536,7 @@ const DEMO_EDGES: ModelEdge[] = EDGES.map((edge) => ({
   relationship: edge.tag ?? null,
   reason: edge.reason ?? null,
   anonymous: personById[edge.from]?.anon ?? false,
+  kind: edge.kind ?? "vouch",
 }));
 
 const DEMO_SCENE_ANCHOR: Record<string, { x: number; y: number }> =

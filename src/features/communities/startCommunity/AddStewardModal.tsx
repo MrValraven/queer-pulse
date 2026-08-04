@@ -58,6 +58,7 @@ export function AddStewardModal({
         aria-label={t("communities:start.running.addStewardModal.eyebrow")}
         className={styles.modal}
       >
+        <span className={styles.grabber} aria-hidden />
         <button
           type="button"
           className={styles.close}

@@ -59,10 +59,15 @@ export function useModReports() {
         getAppeals(),
         getModReports({ tab: "resolved", sort: "priority" }),
       ]);
+      // Canonical cursor-page envelope: rows live under `.data`, real per-tab
+      // totals under `.counts` (carried alongside the envelope). Only the first
+      // page (newest-first, bounded by the backend's DEFAULT_LIMIT) is read —
+      // `pageInfo.nextCursor`/`hasMore` are available for a future infinite
+      // scroll — while `counts` always reflects the true totals for the header.
       return {
-        open: reports.items.map(modReportDtoToView),
+        open: reports.data.map(modReportDtoToView),
         appeals: appeals.map(appealDtoToView),
-        resolved: resolved.items.map(resolvedDtoToView),
+        resolved: resolved.data.map(resolvedDtoToView),
         counts: reports.counts,
       };
     },

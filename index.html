@@ -45,6 +45,80 @@
     <meta name="apple-mobile-web-app-title" content="QueerPulse" />
 
     <!--
+      iOS launch (splash) images. iOS ignores the manifest's background_color
+      and shows a WHITE flash on cold-launch of an installed PWA unless it finds
+      an apple-touch-startup-image matching the device's exact CSS size ×
+      pixel-ratio. There is no wildcard: each device needs its own PNG.
+
+      ASSETS TO PRODUCE (a human/design step — put them in public/splash/,
+      each a full-bleed --plum #2D1B3D canvas with the centred wordmark, at the
+      PIXEL size = css-width×ratio by css-height×ratio):
+        splash/iphone-2796x1290.png  (430×932 @3 — 15/14 Pro Max)   [landscape swap for portrait tag below]
+        splash/iphone-1290x2796.png  (430×932 @3 — 15/14 Pro Max, portrait)
+        splash/iphone-1179x2556.png  (393×852 @3 — 15/15 Pro/14 Pro)
+        splash/iphone-1170x2532.png  (390×844 @3 — 14/13/12)
+        splash/iphone-1125x2436.png  (375×812 @3 — 13 mini/12 mini/11 Pro/X/XS)
+        splash/iphone-1242x2688.png  (414×896 @3 — 11 Pro Max/XS Max)
+        splash/iphone-828x1792.png   (414×896 @2 — 11/XR)
+        splash/iphone-750x1334.png   (375×667 @2 — SE/8/7/6s)
+        splash/ipad-1536x2048.png    (768×1024 @2 — common iPad, portrait)
+      Consider adding a generator to scripts/generate-icons.mjs (same sharp
+      pipeline) so these stay in sync. Until the PNGs exist these tags 404
+      harmlessly and iOS simply falls back to the white launch screen.
+      Media queries are portrait, except the 15/14 Pro Max, which also has a
+      landscape variant (orientation:landscape → iphone-2796x1290.png). Add
+      landscape variants for the other devices the same way if wanted.
+    -->
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/iphone-1290x2796.png"
+      media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <!-- Landscape companion for the 15/14 Pro Max: same device dimensions, only
+         the orientation + asset differ, so a landscape cold-launch gets the
+         2796×1290 splash instead of the white flash. -->
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/iphone-2796x1290.png"
+      media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/iphone-1179x2556.png"
+      media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/iphone-1170x2532.png"
+      media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/iphone-1125x2436.png"
+      media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/iphone-1242x2688.png"
+      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/iphone-828x1792.png"
+      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/iphone-750x1334.png"
+      media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="/splash/ipad-1536x2048.png"
+      media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+
+    <!--
       Base / default social metadata. NEUTRAL, brand-level copy only — this
       static shell is served to every route and to every non-JS social scraper,
       so it must never be invite-specific. Per-route overrides come from

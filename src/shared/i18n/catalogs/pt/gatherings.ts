@@ -132,6 +132,12 @@ export const gatherings: Catalog = {
   "event.guidelines.body2":
     "A escala progressiva não é uma sugestão — se conseguires pagar o escalão mais alto, paga-o. Isso subsidia diretamente o bilhete de outra pessoa.",
   "event.hero.viewProfileCta": "Ver perfil",
+  "event.save.cta": "Guardar evento",
+  "event.save.saved": "Guardado",
+  "event.save.savedToast": "Evento guardado nos teus encontros.",
+  "event.save.removedToast": "Evento removido dos guardados.",
+  "event.save.saveAriaLabel": "Guardar {title}",
+  "event.save.unsaveAriaLabel": "Remover {title} dos guardados",
   "event.membersOnly.title": "Só para pessoas da QueerPulse",
   "event.membersOnly.body":
     "Este evento é privado. Se alguém te reencaminhou este link, pede-lhe primeiro que te convide para a rede.",
@@ -167,7 +173,7 @@ export const gatherings: Catalog = {
     "Indica o teu nome e um email válido para continuar",
   "event.rsvp.noteFull":
     "Enviamos-te um email assim que surgir uma vaga. Sair da lista de espera é só um clique.",
-  "event.rsvp.confirmationEmailNote": "Vais receber um email de confirmação.",
+  "event.rsvp.confirmationEmailNote": "O teu lugar está guardado — encontra-lo nos teus convívios.",
   "event.rsvp.cancelPolicy": "Podes cancelar até 48 horas antes do evento.",
   "event.rsvp.waitlistTitle":
     "Estás em <em>#{position}</em> na lista de espera.",
@@ -430,7 +436,7 @@ export const gatherings: Catalog = {
   "photos.policyBody1":
     "Todas as fotos aqui foram tiradas por uma pessoa presente, com consentimento das pessoas fotografadas. <b>Os rostos são desfocados por predefinição</b>, a menos que a pessoa tenha optado por aparecer identificada. Isto não é uma cortesia de privacidade — é como garantimos que as pessoas voltam da próxima vez.",
   "photos.policyBody2":
-    'Se te vires numa foto e quiseres que seja removida (ou desfocada), envia um email para <mailLink>photos@queerpulse.app</mailLink> — tratamos disso em 24 horas, sem perguntas. <em>Também podes desativar globalmente "aparecer em fotos de eventos"</em> nas <privLink>Definições de privacidade</privLink>.',
+    'Se te vires numa foto e quiseres que seja removida (ou desfocada), envia um email para <mailLink>photos@queerpulse.pt</mailLink> — tratamos disso em 24 horas, sem perguntas. <em>Também podes desativar globalmente "aparecer em fotos de eventos"</em> nas <privLink>Definições de privacidade</privLink>.',
   "photos.photographersTitle": "Quem fotografou <em>este evento</em>",
   "photos.readRecapCta": "Ler o resumo",
   "photos.nextClinicCta": "Próxima clínica · {date}",
@@ -518,7 +524,7 @@ export const gatherings: Catalog = {
   "create.toast.published": "O teu convívio está no ar",
   "create.success.title": "O teu convívio <em>está no ar.</em>",
   "create.success.body":
-    "Já está visível no quadro de convívios da QueerPulse. As pessoas podem vê-lo e confirmar presença. Vais receber uma notificação por email a cada nova pessoa inscrita.",
+    "Já está visível no quadro de convívios da QueerPulse. As pessoas podem vê-lo e confirmar presença. Cada nova pessoa inscrita aparece na lista de convidados do teu convívio.",
   "create.success.accessLabel":
     "Acessibilidade mostrada às pessoas participantes",
   "create.success.viewCta": "Ver no quadro",
@@ -527,6 +533,10 @@ export const gatherings: Catalog = {
   "create.nav.back": "Voltar",
   "create.nav.publishHint": "Confirma as três caixas acima para publicar",
   "create.nav.dateHint": "Escolhe uma data e hora no futuro para continuar",
+  "create.nav.detailsHint":
+    "Escolhe um formato e dá um nome ao teu convívio para continuar",
+  "create.nav.leaveConfirm":
+    "Tens um convívio por publicar aqui. Queres sair sem o guardar?",
   "create.nav.publish": "Publicar convívio",
   "create.nav.continue": "Continuar",
   "create.sidebar.tipLabel": "Dica para esta etapa",
@@ -538,9 +548,12 @@ export const gatherings: Catalog = {
   "create.step1.title": "Que tipo de <em>convívio?</em>",
   "create.step1.sub":
     "Escolhe o formato. Isto determina alguns dos campos seguintes.",
+  "create.step1.typeRequired": "Escolhe um formato para começar.",
   "create.step1.titleLabel": "Título do evento",
   "create.step1.titlePlaceholder":
     "Um título claro e específico — nada de trocadilhos ou mistérios",
+  "create.step1.titleRequired":
+    "Dá um nome ao teu convívio para as pessoas saberem ao que vêm.",
   "create.step1.descLabel": "Descrição breve",
   "create.step1.descPlaceholder":
     "O que é que as pessoas vão fazer? O que devem esperar? O que torna este convívio digno de participar?",
@@ -841,6 +854,22 @@ export const gatherings: Catalog = {
   "manageComingSoon.browseCta": "Explorar encontros",
   "manageComingSoon.backHome": "Voltar ao início",
 
+  // ── Páginas protótipo: coming-soon em modo live (só demo, sem encontro real) ──
+  "prototypeComingSoon.browseCta": "Explorar encontros",
+  "prototypeComingSoon.backHome": "Voltar ao início",
+  "eventComingSoon.title": "Este encontro <em>chega em breve</em>",
+  "eventComingSoon.description":
+    "Isto é uma pré-visualização de como fica um encontro — ainda não é um evento real, por isso não há aqui presença para confirmar. Explora o que está mesmo a acontecer e reserva o teu lugar por lá.",
+  "rsvpComingSoon.title": "As confirmações de presença <em>chegam em breve</em>",
+  "rsvpComingSoon.description":
+    "Esta página de confirmação faz parte do protótipo e ainda não está ligada a uma presença real. Explora o que se passa e reserva um lugar a sério — a tua confirmação aparece aqui assim que a organização estiver disponível.",
+  "cohostInviteComingSoon.title": "Coanfitriões <em>chegam em breve</em>",
+  "cohostInviteComingSoon.description":
+    "Convidar e aceitar um coanfitrião ainda não está disponível. Entretanto, explora o que está a acontecer — as ferramentas de coanfitrião chegam com o painel de anfitrião em breve.",
+  "recapComingSoon.title": "Os resumos <em>chegam em breve</em>",
+  "recapComingSoon.description":
+    "Partilhar fotos e notas de um encontro ainda não está disponível, por isso nada do que adicionares aqui seria guardado. Explora o que se passa — os resumos chegam com as ferramentas de anfitrião em breve.",
+
   // ── Manage: overview tab ─────────────────────────────────────────────────────
   "manage.overview.stat.going": "Vão",
   "manage.overview.stat.waitlist": "Lista de espera",
@@ -864,8 +893,8 @@ export const gatherings: Catalog = {
   "manage.attendees.goingHeading_other": "Vão ({count})",
   "manage.attendees.waitlistHeading_one": "Lista de espera ({count})",
   "manage.attendees.waitlistHeading_other": "Lista de espera ({count})",
-  "manage.attendees.moreAttendees_one": "+ mais {count} pessoa",
-  "manage.attendees.moreAttendees_other": "+ mais {count} pessoas",
+  "manage.attendees.loadMoreCta": "Carregar mais",
+  "manage.attendees.loadingMore": "A carregar…",
   "manage.attendees.removeAria":
     "Remover {name} da lista de pessoas convidadas",
   "manage.attendees.removeCta": "Remover",
@@ -966,9 +995,9 @@ export const gatherings: Catalog = {
   "manage.messageModal.sendCta_other": "Enviar a {count} pessoas",
   "manage.messageModal.successTitle": "Mensagem <em>enviada.</em>",
   "manage.messageModal.successSub_one":
-    '"{subject}" chegou a <b>{count} pessoa confirmada</b>. Vão recebê-la por email e nas notificações da QueerPulse.',
+    '"{subject}" chegou a <b>{count} pessoa confirmada</b>. Vão recebê-la nas notificações da QueerPulse.',
   "manage.messageModal.successSub_other":
-    '"{subject}" chegou a <b>{count} pessoas confirmadas</b>. Vão recebê-la por email e nas notificações da QueerPulse.',
+    '"{subject}" chegou a <b>{count} pessoas confirmadas</b>. Vão recebê-la nas notificações da QueerPulse.',
   "manage.messageModal.successMeta_one": "Enviado agora mesmo · {count} pessoa",
   "manage.messageModal.successMeta_other":
     "Enviado agora mesmo · {count} pessoas",
@@ -990,9 +1019,9 @@ export const gatherings: Catalog = {
   "manage.invite.sentToast_other": "Convite enviado a {count} pessoas",
   "manage.invite.successTitle": "Convites <em>a caminho.</em>",
   "manage.invite.successSub_one":
-    "<b>{count} pessoa</b> acabou de receber um convite para este convívio, por email e nas notificações da QueerPulse. Vais vê-la aparecer assim que confirmar presença.",
+    "<b>{count} pessoa</b> acabou de receber um convite para este convívio, nas notificações da QueerPulse. Vais vê-la aparecer assim que confirmar presença.",
   "manage.invite.successSub_other":
-    "<b>{count} pessoas</b> acabaram de receber um convite para este convívio, por email e nas notificações da QueerPulse. Vais vê-las aparecer à medida que confirmam presença.",
+    "<b>{count} pessoas</b> acabaram de receber um convite para este convívio, nas notificações da QueerPulse. Vais vê-las aparecer à medida que confirmam presença.",
   "manage.invite.successMeta_one": "Enviado agora mesmo · {count} convite",
   "manage.invite.successMeta_other": "Enviado agora mesmo · {count} convites",
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, ImageSlot } from "../../shared/components/ui";
+import { Button, FeatureHelp, ImageSlot } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -39,7 +39,8 @@ export function StudioLandingHero() {
             <Translation
               i18nKey="studio:landing.hero.title"
               components={{ em: <em /> }}
-            />
+            />{" "}
+            <FeatureHelp id="studio.hub" />
           </h1>
           <p className={styles.dek}>
             <Translation

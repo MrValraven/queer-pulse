@@ -27,8 +27,11 @@ const ELIGIBLE_COMMUNITY_CARDS: FeaturedCommunityRef[] = [
 vi.mock("./useMyCommunityCards", () => ({
   useMyCommunityCards: () => ELIGIBLE_COMMUNITY_CARDS,
 }));
+// `useProfileFeaturedCommunities` reads only the split `useProfileEdit()`
+// (see `useProfile.ts`'s context split) — mock that directly rather than the
+// combined `useProfile()` it used to call.
 vi.mock("../../app/providers/useProfile", () => ({
-  useProfile: () => ({
+  useProfileEdit: () => ({
     draft: { featuredCommunities: ["trans-hub", "queer-runners", "ghost"] },
   }),
 }));

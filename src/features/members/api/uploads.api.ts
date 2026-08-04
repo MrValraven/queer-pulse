@@ -47,8 +47,12 @@ export type UploadKind =
  *      EVERY kind including avatars. This is the authoritative defence against
  *      the geolocation-outing risk; the client-side strip in `uploadProcessing`
  *      is only best-effort defence-in-depth.
- *   4. Resize / re-encode per kind (avatar 512², cover 1600px) to WebP/AVIF with
- *      a JPEG fallback.
+ *   4. Resize / re-encode per kind (avatar 1024², cover 1600px) to WebP/AVIF with
+ *      a JPEG fallback. NOTE: avatars are displayed in a ~430px-tall profile
+ *      hero, so on a 2×/3× retina screen they need ~860-1290px — do NOT cap the
+ *      server avatar resize below ~1024² or the hero renders visibly soft. (The
+ *      client already downscales every kind to a 1600px longest edge, so this
+ *      server step only re-crops/formats; keep it at or above 1024².)
  *   5. Private-by-default bucket; presign grants write to a single key only.
  *
  *   NOTE: `listing-photo` is a new kind (added 2026-07-30) — same presign flow,

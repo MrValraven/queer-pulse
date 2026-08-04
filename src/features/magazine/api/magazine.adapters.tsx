@@ -4,11 +4,14 @@ import { leadingInitials } from "../../../shared/lib/initials";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { Author, AuthorArticle } from "../authorContent.data";
 import type { Article } from "../data/articles";
+import type { SlideDeck } from "../data/decks";
 import type { Pitch } from "../pitchTracker.data";
 import type {
   ArticleDTO,
   ArticleListItemDTO,
   AuthorDTO,
+  DeckDTO,
+  DeckListItemDTO,
   IssueDTO,
   SubmissionStatus,
   StorySubmissionDTO,
@@ -180,6 +183,43 @@ export function articleResponseToArticle(
       .split(/\n{2,}/)
       .map((block) => block.trim())
       .filter(Boolean),
+  };
+}
+
+// ── Decks ────────────────────────────────────────────────────────────────
+
+/** A live deck/related-list row adapted into the frontend `SlideDeck` shape. */
+export function deckListItemToDeck(
+  dto: DeckListItemDTO,
+  fmt: Formatters,
+): SlideDeck {
+  return {
+    id: dto.slug,
+    kicker: dto.kicker,
+    section: dto.section,
+    title: dto.title,
+    byline: dto.byline,
+    role: dto.role,
+    date: dto.publishedAt ? formatMonthYear(dto.publishedAt, fmt) : "",
+    readTime: dto.readTime,
+    initials: initialsFor(dto.byline),
+    tint: tintFor(dto.slug),
+    cover: dto.cover,
+    coverDesc: dto.coverDesc,
+    authorBio: "",
+    tags: dto.tags,
+    related: [],
+    slides: [],
+  };
+}
+
+/** Full deck detail (with slides) adapted into the frontend `SlideDeck` shape. */
+export function deckResponseToDeck(dto: DeckDTO, fmt: Formatters): SlideDeck {
+  return {
+    ...deckListItemToDeck(dto, fmt),
+    authorBio: dto.authorBio ?? "",
+    related: dto.related ?? [],
+    slides: dto.slides ?? [],
   };
 }
 

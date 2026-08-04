@@ -1,8 +1,10 @@
 import { PageShell } from "../../shared/components/layout";
 import { FadeIn } from "../../shared/components/ui";
 import { ComposeThreadModal } from "./ComposeThreadModal";
+import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
 import { EditTitleModal } from "./EditTitleModal";
 import { FirstPostPrompt } from "./FirstPostPrompt";
+import { ForumEditHistoryModal } from "./ForumEditHistoryModal";
 import { ForumSidebar } from "./ForumSidebar";
 import { ForumThreadList } from "./ForumThreadList";
 import { ForumHero } from "./ForumHero";
@@ -12,10 +14,15 @@ import styles from "./ForumPage.module.css";
 
 export function ForumPage() {
   const page = useForumPageState();
+  const { moderation } = page;
 
   return (
     <PageShell>
-      <ForumHero onNewPost={() => page.openCompose()} />
+      <ForumHero
+        onNewPost={() => page.openCompose()}
+        q={page.q}
+        onSearch={page.setQ}
+      />
 
       <section className={styles.body}>
         <div className="wrap">
@@ -24,7 +31,7 @@ export function ForumPage() {
               cat={page.cat}
               setCat={page.setCat}
               counts={page.counts}
-              totalCount={page.allThreads.length}
+              totalCount={page.totalCount}
             />
             <div>
               {page.showFirstPostPrompt && (
@@ -41,13 +48,19 @@ export function ForumPage() {
                 threads={page.threads}
                 sort={page.sort}
                 setSort={page.setSort}
-                voted={page.voted}
-                toggleVote={page.toggleVote}
-                filtered={page.cat !== "all"}
-                onShowAll={() => page.setCat("all")}
+                headerCount={page.headerCount}
+                activeTag={page.tag}
+                onClearTag={() => page.setTag(null)}
+                onTagClick={page.setTag}
+                onVote={page.onVote}
+                filtered={page.filtered}
+                onShowAll={page.resetFilters}
                 onCompose={() => page.openCompose()}
                 canEditThread={page.canEditThread}
                 onEditTitle={(thread) => page.setEditingTitleThreadId(thread.id)}
+                onDelete={moderation.requestDelete}
+                onRestore={moderation.requestRestore}
+                onHistory={moderation.requestHistory}
               />
 
               <ForumLoadMore
@@ -74,6 +87,21 @@ export function ForumPage() {
           busy={page.editingTitleThreadIsBusy}
           onSave={page.saveThreadTitle}
           onClose={page.closeEditTitle}
+        />
+      )}
+
+      {moderation.confirmDelete && (
+        <ConfirmDeleteModal
+          busy={moderation.deleteBusy}
+          onConfirm={moderation.confirmDeleteNow}
+          onClose={() => moderation.setConfirmDelete(null)}
+        />
+      )}
+
+      {moderation.historyPostId && (
+        <ForumEditHistoryModal
+          postId={moderation.historyPostId}
+          onClose={() => moderation.setHistoryPostId(null)}
         />
       )}
     </PageShell>

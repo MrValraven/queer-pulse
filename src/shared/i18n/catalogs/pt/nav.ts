@@ -11,12 +11,17 @@ export const nav: Catalog = {
   requestInvite: "Pedir um convite",
   signOut: "Sair",
   openMenu: "Abrir o menu",
+  closeMenu: "Fechar o menu",
+  back: "Voltar",
   menu: "Menu",
   more: "Mais",
+  you: "Você",
+  account: "A sua conta",
   primary: "Principal",
   updateAvailable: "Está pronta uma nova versão do QueerPulse.",
   updateReload: "Recarregar",
   updating: "A atualizar…",
+  updateDismiss: "Dispensar atualização",
 
   // Destinos principais ("Members" → "Pessoas": neutro, evita "membros")
   members: "Pessoas",

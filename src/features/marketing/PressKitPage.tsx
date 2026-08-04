@@ -61,7 +61,7 @@ export function PressKitPage() {
             >
               {t("marketing:pressKit.hero.downloadKitCta")}
             </Button>
-            <Button href="mailto:press@queerpulse.app" variant="ghost">
+            <Button href="mailto:press@queerpulse.pt" variant="ghost">
               {t("marketing:pressKit.hero.askPersonCta")}
             </Button>
           </div>
@@ -75,7 +75,7 @@ export function PressKitPage() {
               i18nKey="marketing:pressKit.contact.deskLabel"
               components={{ b: <b /> }}
             />{" "}
-            <a href="mailto:press@queerpulse.app">press@queerpulse.app</a>
+            <a href="mailto:press@queerpulse.pt">press@queerpulse.pt</a>
           </span>
           <span className={styles.sep}>·</span>
           <span>
@@ -129,7 +129,7 @@ export function PressKitPage() {
           <Translation
             i18nKey="marketing:pressKit.footerNote.commercial"
             // eslint-disable-next-line jsx-a11y/anchor-has-content -- false positive: an element template for <Translation>, which clones it with the translated children at render.
-            components={{ a: <a href="mailto:press@queerpulse.app" /> }}
+            components={{ a: <a href="mailto:press@queerpulse.pt" /> }}
           />
         </div>
       </div>
@@ -143,7 +143,7 @@ export function PressKitPage() {
         }
         sub={t("marketing:pressKit.outro.sub")}
       >
-        <Button size="lg" href="mailto:press@queerpulse.app">
+        <Button size="lg" href="mailto:press@queerpulse.pt">
           {t("marketing:pressKit.outro.contactCta")}
         </Button>
       </Outro>

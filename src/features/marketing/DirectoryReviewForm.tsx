@@ -97,6 +97,7 @@ export function DirectoryReviewForm({ slug }: { slug: string }) {
         className={s.reviewInput}
         value={text}
         onChange={(event) => setText(event.target.value)}
+        aria-label={t("marketing:directory.detail.review.placeholder")}
         placeholder={t("marketing:directory.detail.review.placeholder")}
         rows={3}
         maxLength={2000}

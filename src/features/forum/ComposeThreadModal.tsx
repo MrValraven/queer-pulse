@@ -5,12 +5,14 @@ import { useFocusOnMount, useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CATS } from "./forum.data";
+import { ComposeTagsField } from "./ComposeTagsField";
 import styles from "./ComposeThreadModal.module.css";
 
 export interface NewThreadInput {
   title: string;
   body: string;
   cat: string;
+  tags: string[];
 }
 
 interface ComposeThreadModalProps {
@@ -34,6 +36,7 @@ export function ComposeThreadModal({
   const [title, setTitle] = useState(initialTitle);
   const [body, setBody] = useState("");
   const [cat, setCat] = useState(POST_CATS[0]!.id);
+  const [tags, setTags] = useState<string[]>([]);
   const [published, setPublished] = useState(false);
   const titleRef = useFocusOnMount<HTMLInputElement>();
 
@@ -88,7 +91,7 @@ export function ComposeThreadModal({
             onSubmit={(e) => {
               e.preventDefault();
               if (!canPublish) return;
-              onPublish({ title: title.trim(), body: body.trim(), cat });
+              onPublish({ title: title.trim(), body: body.trim(), cat, tags });
               setPublished(true);
             }}
           >
@@ -129,6 +132,8 @@ export function ComposeThreadModal({
                 ))}
               </select>
             </label>
+
+            <ComposeTagsField tags={tags} onChange={setTags} />
 
             <label className={styles.field}>
               <span className={styles.fieldLabel}>

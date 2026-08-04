@@ -3,11 +3,22 @@ import { Button } from "../../shared/components/ui";
 import { SystemStateShell } from "../../shared/components/layout";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useAuth } from "../../app/providers/authContext";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import styles from "./AccountBannedPage.module.css";
 
 export function AccountBannedPage() {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const { demoMode } = useDemoMode();
+
+  // A permanent ban is status "suspended" with no `suspendedUntil`. When a real
+  // banned member views this, show their actual reason from `/auth/me` instead
+  // of the demo case-file copy; fall back to the generic copy if none is on
+  // record.
+  const banned = !demoMode && user?.status === "suspended";
+  const reasonNote = banned ? user?.suspension?.note?.trim() || null : null;
 
   return (
     <SystemStateShell orbTone="plum" mutedBrand>
@@ -42,10 +53,14 @@ export function AccountBannedPage() {
         <div className={styles.violation}>
           <h4>{t("system:accountBanned.violation.title")}</h4>
           <p>
-            <Translation
-              i18nKey="system:accountBanned.violation.body"
-              components={{ b: <b /> }}
-            />
+            {reasonNote ? (
+              reasonNote
+            ) : (
+              <Translation
+                i18nKey="system:accountBanned.violation.body"
+                components={{ b: <b /> }}
+              />
+            )}
           </p>
         </div>
 

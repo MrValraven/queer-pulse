@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Button, ImageSlot } from "../../shared/components/ui";
+import { Button, FeatureHelp, ImageSlot } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -29,7 +29,7 @@ export function CinemaMast() {
               })}
             </div>
             <h1 className={styles.mastBrand}>
-              Queer<em>Pulse</em> Cinema
+              Queer<em>Pulse</em> Cinema <FeatureHelp id="cinema.hub" />
             </h1>
           </div>
           <div className={styles.mastMeta}>

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
+import { hapticTap } from "../../shared/lib/haptics";
 
 /** Set on the pressed element for the whole duration of a touch long-press
  *  hold (see `onPointerDown`/`clear` below) — a plain DOM attribute, not React
@@ -82,10 +83,9 @@ export function useLongPress(
         timerRef.current = null;
         element.removeAttribute(PRESS_ACTIVE_ATTRIBUTE);
         pressedElementRef.current = null;
-        // Feature-detected haptic tick confirming the hold engaged — a no-op
-        // (not an error) anywhere the Vibration API is unsupported, notably
-        // iOS Safari.
-        if ("vibrate" in navigator) navigator.vibrate(10);
+        // A haptic tick confirming the hold engaged — no-op where the Vibration
+        // API is unsupported (notably iOS Safari).
+        hapticTap();
         fire(element, "touch");
       }, delayMs);
     },

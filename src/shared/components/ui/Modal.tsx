@@ -5,9 +5,11 @@ import {
   type ReactNode,
   type PointerEvent as ReactPointerEvent,
 } from "react";
+import { createPortal } from "react-dom";
 import { FiX } from "react-icons/fi";
 import { useScrollLock } from "../../hooks";
 import { useTranslation } from "../../i18n/useTranslation";
+import { pushModal, popModal, isTopmostModal } from "./modalStack";
 import styles from "./Modal.module.css";
 
 const FOCUSABLE =
@@ -22,6 +24,9 @@ const FOCUSABLE =
  */
 function useDismiss(onClose: () => void) {
   const dialogRef = useRef<HTMLDivElement>(null);
+  // Stable per-instance id so this dialog can register itself on the shared
+  // modal stack (see `./modalStack`) and only act on Escape while topmost.
+  const modalId = useId();
   // Latest-callback ref so the setup effect can run once on mount (deps `[]`)
   // without an inline `onClose` re-running the focus-trap + initial focus on
   // every parent render, which would yank focus back mid-interaction.
@@ -32,6 +37,7 @@ function useDismiss(onClose: () => void) {
   useScrollLock();
 
   useEffect(() => {
+    pushModal(modalId);
     const dialog = dialogRef.current;
     const previouslyFocused = document.activeElement as HTMLElement | null;
 
@@ -49,7 +55,11 @@ function useDismiss(onClose: () => void) {
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        onCloseRef.current();
+        // Only the topmost dialog dismisses — a lone dialog is always
+        // topmost, so single-modal behavior is unchanged; a dialog opened
+        // from inside another (e.g. a confirm dialog in a drawer's footer)
+        // no longer closes both on one Escape press.
+        if (isTopmostModal(modalId)) onCloseRef.current();
         return;
       }
       if (e.key !== "Tab" || !dialog) return;
@@ -73,10 +83,11 @@ function useDismiss(onClose: () => void) {
 
     document.addEventListener("keydown", onKey);
     return () => {
+      popModal(modalId);
       document.removeEventListener("keydown", onKey);
       previouslyFocused?.focus?.();
     };
-  }, []);
+  }, [modalId]);
 
   return dialogRef;
 }
@@ -109,7 +120,15 @@ export function Modal({
   const { t } = useTranslation();
   const dialogRef = useDismiss(onClose);
   const titleId = useId();
-  return (
+  // Portal to <body> so the fixed scrim is anchored to the viewport, never to a
+  // transformed/contained ancestor. A `transform`, `filter`, `contain: paint`
+  // or `content-visibility: auto` on any ancestor establishes a containing
+  // block that would confine this `position: fixed` scrim to that ancestor's
+  // box instead of the viewport (e.g. FeedPage's `.greetingRow`, which keeps a
+  // resting transform from its `feedEnter` fill-mode animation). Rendering
+  // through <body> escapes all of them. React events still bubble via the React
+  // tree, so onClose et al. work unchanged.
+  return createPortal(
     <div
       className={styles.scrim}
       role="presentation"
@@ -147,7 +166,8 @@ export function Modal({
         <div className={styles.modalBody}>{children}</div>
         {footer && <div className={styles.modalFoot}>{footer}</div>}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -216,7 +236,9 @@ export function ModalSheet({
     sheet.addEventListener("transitionend", clearInlineDragStyles);
   };
 
-  return (
+  // Portal to <body> for the same reason as <Modal> above: the fixed overlay
+  // must anchor to the viewport, not to any transformed/contained ancestor.
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -261,6 +283,7 @@ export function ModalSheet({
         )}
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

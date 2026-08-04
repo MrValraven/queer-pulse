@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { Avatar, Button, Toggle } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -122,6 +123,7 @@ export function VouchForm({
   onSubmit: () => void;
 }) {
   const { t } = useTranslation();
+  const noteFieldId = useId();
   return (
     <div>
       <div className={styles.eye}>{t("members:vouch.modal.form.eyebrow")}</div>
@@ -236,10 +238,11 @@ export function VouchForm({
         </>
       )}
 
-      <div className={styles.label}>
+      <label className={styles.label} htmlFor={noteFieldId}>
         {t("members:vouch.modal.form.noteLabel")}
-      </div>
+      </label>
       <textarea
+        id={noteFieldId}
         className={styles.textarea}
         placeholder={t("members:vouch.modal.form.notePlaceholder", { first })}
         value={note}

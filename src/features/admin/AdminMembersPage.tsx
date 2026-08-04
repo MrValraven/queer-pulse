@@ -1,5 +1,10 @@
-import { useState } from "react";
-import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { useMemo, useState } from "react";
+import {
+  Button,
+  FadeIn,
+  FeatureHelp,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -21,6 +26,7 @@ export function AdminMembersPage() {
   const fmt = useFormat();
   const [tab, setTab] = useState<TabId>("all");
   const [filter, setFilter] = useState<StatusFilter>("all");
+  const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<AdminMember | null>(null);
 
   const {
@@ -33,6 +39,22 @@ export function AdminMembersPage() {
   } = useAdminMembers(filter);
   const { data: flagged = [] } = useAdminFlagged();
   const pendingCount = useJoinRequests("pending").data?.length ?? 0;
+
+  // Client-side name search over the members already loaded. It narrows what's
+  // on screen without a refetch; server-side pagination ("Load more") is hidden
+  // while a query is active so we never imply results beyond what we've matched.
+  const query = search.trim().toLowerCase();
+  const visibleMembers = useMemo(
+    () =>
+      query
+        ? members.filter(
+            (member) =>
+              member.name.toLowerCase().includes(query) ||
+              member.pronoun.toLowerCase().includes(query),
+          )
+        : members,
+    [members, query],
+  );
 
   const TABS: AdminTab[] = [
     { id: "all", label: t("admin:members.tabs.all") },
@@ -75,7 +97,8 @@ export function AdminMembersPage() {
               <Translation
                 i18nKey="admin:members.header.titleLine2"
                 components={{ em: <em /> }}
-              />
+              />{" "}
+              <FeatureHelp id="admin.members" />
             </>
           }
           sub={t("admin:members.header.sub", { count: pendingCount })}
@@ -95,22 +118,35 @@ export function AdminMembersPage() {
             onChange={(id) => setTab(id as TabId)}
           />
           {tab === "all" && (
-            <div
-              className={styles.filters}
-              role="group"
-              aria-label={t("admin:members.filterAriaLabel")}
-            >
-              {FILTERS.map((statusFilter) => (
-                <button
-                  key={statusFilter.id}
-                  type="button"
-                  className={`${styles.filterPill} ${filter === statusFilter.id ? styles.filterPillOn : ""}`}
-                  aria-pressed={filter === statusFilter.id}
-                  onClick={() => setFilter(statusFilter.id)}
-                >
-                  {statusFilter.label}
-                </button>
-              ))}
+            <div className={styles.allControls}>
+              <div className={styles.search}>
+                <SearchIcon />
+                <input
+                  type="search"
+                  className={styles.searchInput}
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder={t("admin:members.searchPlaceholder")}
+                  aria-label={t("admin:members.searchAriaLabel")}
+                />
+              </div>
+              <div
+                className={styles.filters}
+                role="group"
+                aria-label={t("admin:members.filterAriaLabel")}
+              >
+                {FILTERS.map((statusFilter) => (
+                  <button
+                    key={statusFilter.id}
+                    type="button"
+                    className={`${styles.filterPill} ${filter === statusFilter.id ? styles.filterPillOn : ""}`}
+                    aria-pressed={filter === statusFilter.id}
+                    onClick={() => setFilter(statusFilter.id)}
+                  >
+                    {statusFilter.label}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -122,8 +158,8 @@ export function AdminMembersPage() {
             <MemberRowsSkeleton />
           ) : (
             <>
-              <AdminMemberRows members={members} onSelect={setSelected} />
-              {hasNextPage && (
+              <AdminMemberRows members={visibleMembers} onSelect={setSelected} />
+              {hasNextPage && !query && (
                 <div className={styles.loadMore}>
                   <Button
                     variant="ghost"
@@ -148,6 +184,25 @@ export function AdminMembersPage() {
         />
       )}
     </AdminShell>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="7" />
+      <line x1="21" y1="21" x2="16.5" y2="16.5" />
+    </svg>
   );
 }
 

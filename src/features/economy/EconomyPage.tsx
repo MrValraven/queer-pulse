@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro } from "../../shared/components/ui";
+import { Button, FeatureHelp, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { JOBS, MENTORSHIP, type Tab } from "./economy.data";
@@ -26,7 +26,8 @@ export function EconomyPage() {
             <Translation
               i18nKey="economy:hub.title"
               components={{ em: <em /> }}
-            />
+            />{" "}
+            <FeatureHelp id="economy.hub" />
           </h1>
           <p className={styles.lead}>{t("economy:hub.lead")}</p>
           <div className={styles.tabs}>

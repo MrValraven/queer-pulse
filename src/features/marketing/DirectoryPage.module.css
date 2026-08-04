@@ -208,6 +208,13 @@
   gap: 12px;
   flex-wrap: wrap;
 }
+/* The List/Map switcher shows here on desktop; on phones (≤860px) it moves into
+   the sticky filter bar so it stays reachable while scrolled into the list. */
+@media (max-width: 860px) {
+  .viewSwitcherDesktop {
+    display: none;
+  }
+}
 
 /* Sort — a native select styled to the token system for a familiar control. */
 .sort {
@@ -240,6 +247,13 @@
 :global([data-theme="dark"]) .sortSelect {
   border-color: rgba(var(--cream-rgb), 0.14);
 }
+/* Touch: lift the native select to the ≥44px target minimum while the resting
+   control stays visually compact. */
+@media (pointer: coarse) {
+  .sortSelect {
+    min-height: 44px;
+  }
+}
 
 /* Active filters — removable chips + Clear all. */
 .activeRow {
@@ -257,6 +271,7 @@
   color: var(--ink-40);
 }
 .activeChip {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -278,6 +293,15 @@
   height: 13px;
   opacity: 0.7;
 }
+/* Touch: extend the ~26px chip's hit area to the ≥44px minimum without growing
+   the ink, so the remove-tap clears the WCAG/Apple/Material target floor. */
+@media (pointer: coarse) {
+  .activeChip::before {
+    content: "";
+    position: absolute;
+    inset: -9px;
+  }
+}
 @media (hover: hover) {
   .activeChip:hover {
     background: rgba(var(--accent-rgb), 0.16);
@@ -285,6 +309,7 @@
   }
 }
 .clearAll {
+  position: relative;
   font-family: var(--sans);
   font-size: 12.5px;
   font-weight: 600;
@@ -295,6 +320,14 @@
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+/* Touch: extend the text link's hit area to the ≥44px minimum, ink unchanged. */
+@media (pointer: coarse) {
+  .clearAll::before {
+    content: "";
+    position: absolute;
+    inset: -9px -4px;
+  }
 }
 @media (hover: hover) {
   .clearAll:hover {
@@ -313,4 +346,11 @@
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
+}
+
+/* Zero-height scroll marker for progressive windowing — reveals the next
+   batch of directory cards as it nears the viewport. Never occupies visual
+   space. Mirrors MemberDirectoryFilterPage.module.css's `.sentinel`. */
+.sentinel {
+  height: 1px;
 }

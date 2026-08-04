@@ -31,3 +31,16 @@ export function detectLanguage(): Language {
 export function intlLocale(language: Language): string {
   return language === "pt" ? "pt-PT" : "en";
 }
+
+/**
+ * The active BCP-47 locale for `Intl.*`, resolved *outside* React from the same
+ * persisted language the `I18nProvider` writes on every change (see
+ * `STORAGE_KEY`). Lets non-React formatting sites — message-timestamp adapters,
+ * socket cache patches — format in the app's active language instead of the
+ * device locale (`toLocale*(undefined, …)`), which is otherwise unreachable
+ * without threading the language through every react-query hook. Detection order
+ * matches `detectLanguage()`, so it agrees with the provider's own initial state.
+ */
+export function activeLocale(): string {
+  return intlLocale(detectLanguage());
+}
