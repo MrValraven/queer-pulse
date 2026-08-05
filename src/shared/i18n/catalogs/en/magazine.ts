@@ -669,6 +669,7 @@ export const magazine: Catalog = {
   "submitStory.cover.hint":
     "JPG, PNG or WebP · min 1200 × 600px · displayed at top of published story",
   "submitStory.cover.uploadingProgress": "Uploading… {progress}%",
+  "submitStory.cover.progressLabel": "Cover upload progress",
   "submitStory.cover.errorFallback":
     "We couldn't add that cover. Please try again.",
 

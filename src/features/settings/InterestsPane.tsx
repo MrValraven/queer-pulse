@@ -167,6 +167,7 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             <button
               key={opt.key}
               type="button"
+              aria-label={t(opt.titleKey)}
               className={`${styles.freqOpt} ${freq === opt.key ? styles.freqOptSelected : ""}`}
               disabled
               onClick={() => {

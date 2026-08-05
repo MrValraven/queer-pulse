@@ -300,7 +300,7 @@ export function StudioReceiptPage() {
         <p className={s.privNote}>
           <Translation
             i18nKey="studio:receipt.privacyNote"
-            // eslint-disable-next-line jsx-a11y/anchor-has-content -- false positive: an element template for <Translation>, which clones it with the translated children at render.
+            // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- <a> is an element template; <Translation> clones it with the translated link children at render time.
             components={{ em: <em />, a: <a href="#privacy" /> }}
           />
         </p>

@@ -1,4 +1,4 @@
-import { apiGet, apiPatch } from "../../../shared/api/client";
+import { apiDelete, apiGet, apiPatch, apiPost } from "../../../shared/api/client";
 
 /**
  * Admin members panel (`/admin/members`, admin-only). Mirrors the backend's
@@ -46,6 +46,10 @@ export interface AdminMemberCardDTO {
   avatarUrl: string | null;
   vouchCount: number;
   vouchedBy: VouchAvatarDTO[];
+  /** Additive functional grants on top of `role` (e.g. `magazine_editor`) —
+   *  see `staffRoles.registry.ts`. Raw strings here; the adapter narrows to
+   *  known `StaffRoleId`s. */
+  staffRoles: string[];
 }
 
 export interface AdminMemberListDTO {
@@ -100,6 +104,10 @@ export interface AdminMemberDetailDTO {
   contributions: { kind: string; detail: string | null; at: string }[];
   moderationTimeline: AdminMemberModerationEntryDTO[];
   graph: { center: VouchAvatarDTO; nodes: VouchGraphNodeDTO[] };
+  /** Additive functional grants on top of `role` (e.g. `magazine_editor`) —
+   *  see `staffRoles.registry.ts`. Raw strings here; the adapter narrows to
+   *  known `StaffRoleId`s. */
+  staffRoles: string[];
 }
 
 /** Paginated member grid for the admin panel, optionally filtered. Admin-only — 403s otherwise. */
@@ -148,3 +156,25 @@ export const patchAdminMemberRole = (memberId: string, role: MemberRole) =>
  */
 export const liftUserSuspension = (userId: string) =>
   apiPatch<void>(`/mod/users/${userId}/suspension`, { action: "lift" });
+
+/** The shape returned after a staff-role grant/revoke, so the roster/drawer
+ *  can patch in place. Mirrors the backend's grant/revoke response. */
+export interface AdminStaffRolesDTO {
+  userId: string;
+  slug: string;
+  staffRoles: string[];
+}
+
+/** Grant one additive staff role (e.g. `magazine_editor`) to a member.
+ *  Admin-only; the backend enforces the guardrails (no house account) and
+ *  403/404s otherwise. */
+export const grantStaffRole = (memberId: string, role: string) =>
+  apiPost<AdminStaffRolesDTO>(`/admin/members/${memberId}/staff-roles`, {
+    role,
+  });
+
+/** Revoke one additive staff role from a member. Admin-only. */
+export const revokeStaffRole = (memberId: string, role: string) =>
+  apiDelete<AdminStaffRolesDTO>(
+    `/admin/members/${memberId}/staff-roles/${role}`,
+  );

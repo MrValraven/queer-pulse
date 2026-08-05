@@ -118,6 +118,9 @@ export interface ProfileDTO extends MemberCardDTO {
   /** Whether the member's trust network (vouchers/vouched-for) is hidden
    *  from other members. Admins can still see it for safety. */
   privateNetwork?: boolean;
+  /** Whether the member has opted in to being featured on the admin-curated
+   *  homepage. Only surfaced to the profile owner. */
+  featuredConsent?: boolean;
   socials?: SocialLinkDTO[];
   work?: WorkItemDTO[];
   /** Whether the member is identity-verified (drives the "Verified member" badge). */
@@ -223,6 +226,9 @@ export interface UpdateProfileDTO {
   /** Whether the member's trust network (vouchers/vouched-for) is hidden
    *  from other members. Admins can still see it for safety. */
   privateNetwork?: boolean;
+  /** Whether the member has opted in to being featured on the admin-curated
+   *  homepage. Only meaningful when `visibility` is `"open"`. */
+  featuredConsent?: boolean;
   tags?: string[];
   /** Ordered slugs of the communities the member has chosen to feature on
    *  their profile. */

@@ -31,6 +31,12 @@
   font-size: 16px;
 }
 
+.sm {
+  padding: 8px 16px;
+  font-size: 13.5px;
+  min-height: 40px;
+}
+
 /* Disabled — applies to <button> only (links are never disabled).
    `[aria-disabled="true"]` gets the identical treatment on purpose: a submit
    button that is merely *invalid* should stay focusable and clickable so the

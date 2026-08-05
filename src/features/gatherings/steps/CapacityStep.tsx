@@ -1,5 +1,6 @@
 import { useId } from "react";
 import { FiCheck } from "react-icons/fi";
+import { useMyCommunityOptions } from "../../communities/api/useMyCommunityOptions";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ACCESS_OPTIONS, LANGS } from "../createGathering.data";
@@ -9,6 +10,7 @@ import styles from "../CreateGatheringPage.module.css";
 export function CapacityStep({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
   const fieldId = useId();
+  const myCommunityOptions = useMyCommunityOptions();
   return (
     <div>
       <div className={styles.stepTitle}>
@@ -97,6 +99,28 @@ export function CapacityStep({ form }: { form: GatheringForm }) {
         value={form.accessNotes}
         onChange={(e) => form.setAccessNotes(e.target.value)}
       />
+      {myCommunityOptions.length > 0 && (
+        <>
+          <label className={styles.label} htmlFor={`${fieldId}-community`}>
+            {t("gatherings:create.step3.communityLabel")}
+          </label>
+          <select
+            id={`${fieldId}-community`}
+            className={styles.select}
+            value={form.communitySlug}
+            onChange={(e) => form.setCommunitySlug(e.target.value)}
+          >
+            <option value="">
+              {t("gatherings:create.step3.communityNone")}
+            </option>
+            {myCommunityOptions.map((community) => (
+              <option key={community.slug} value={community.slug}>
+                {community.name}
+              </option>
+            ))}
+          </select>
+        </>
+      )}
     </div>
   );
 }

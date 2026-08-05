@@ -21,6 +21,7 @@ export function SeatHold({ left, expired, reHold }: Props) {
               i18nKey="gatherings:checkout.hold.expiredText"
               components={{
                 retry: (
+                  // eslint-disable-next-line jsx-a11y/control-has-associated-label -- <button> is an element template; <Translation> clones it with the retry link text at render time.
                   <button
                     className={s["co-rehold"]}
                     type="button"

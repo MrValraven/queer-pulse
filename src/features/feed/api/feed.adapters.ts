@@ -18,12 +18,12 @@ const AUTHOR_TINTS = ["jade", "coral", "plum"] as const;
 
 /** Two-letter initials from a "First Last" display name. Exported for reuse
  *  by other cards deriving avatar fallback initials from a plain name string
- *  (e.g. `NewMemberCard` for a live `new_member` item). */
+ *  (e.g. `MemberCard` for a live `new_member` item). */
 export function initials(name: string): string {
   return initialsFromName(name);
 }
 
-/** GET /feed item → the `FeedPost` a `PostCard` renders. */
+/** GET /feed item → the `FeedPost` a `CommunityPostCard` renders. */
 export function feedItemToPost(item: FeedItem, fmt: Formatters): FeedPost {
   const actor = item.actor;
   const slug = actor?.handle ?? "";
@@ -40,5 +40,7 @@ export function feedItemToPost(item: FeedItem, fmt: Formatters): FeedPost {
     body: item.summary,
     likeCount: 0,
     replies: [],
+    link: item.link,
+    avatarUrl: actor?.avatarUrl ?? null,
   };
 }

@@ -3,6 +3,7 @@ import { FiShield, FiTool, FiLayout, FiDatabase } from "react-icons/fi";
 import { useTranslation } from "../../i18n/useTranslation";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useMyCommunities } from "../../../features/communities/api/useMyCommunities";
+import { useHasStaffRole } from "../../../features/auth/api/useMyStaffRoles";
 import { routes, modPanel } from "../../../app/routeMap";
 import {
   DEMO_MOD_SLUG,
@@ -13,9 +14,17 @@ import styles from "./AccountMenu.module.css";
 
 /**
  * The role-gated entries in the account menu. `role` is the real `useAuth().role`
- * in live mode (simulated only in demo), so these links now appear exactly to the
- * people the route gate and the backend RolesGuard will actually let through —
+ * in live mode (simulated only in demo), so the admin/mod links appear exactly to
+ * the people the route gate and the backend RolesGuard will actually let through —
  * previously every member saw them and every one of them bounced to the homepage.
+ *
+ * The magazine-editor link is gated separately on the `magazine_editor` staff-role
+ * *capability* (`useHasStaffRole`), not on `role`, since granting that capability
+ * to a non-admin member (via `AdminMembersService.grantStaffRole`) already gives
+ * them backend access and passes the `/magazine/editor` authGate — the menu just
+ * needs to surface a link to it. Admins remain covered because `useHasStaffRole`
+ * treats them as a superset, and demo mode grants every staff role so the
+ * sandbox stays explorable.
  */
 export function RoleLinks({
   role,
@@ -27,6 +36,7 @@ export function RoleLinks({
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const memberships = useMyCommunities();
+  const canEditMagazine = useHasStaffRole("magazine_editor");
   // The community the "Mod tools" link opens. Demo deep-links into the mock
   // flagship; live resolves the moderator's OWN first owned/moderated community
   // from their real memberships (previously hardcoded to the demo slug, which
@@ -37,19 +47,22 @@ export function RoleLinks({
       memberships[communitySlug]!.role === "mod",
   );
   const modSlug = demoMode ? DEMO_MOD_SLUG : liveModSlug;
+  const magazineEditorLink = canEditMagazine ? (
+    <Link
+      to={routes.magazineEditor}
+      className={styles.item}
+      onClick={onNavigate}
+    >
+      <FiLayout aria-hidden className={styles.itemIcon} />
+      <span className={styles.itemLabel}>
+        {t("shared:accountMenu.staff.magazineEditor")}
+      </span>
+    </Link>
+  ) : null;
   if (role === "admin") {
     return (
       <>
-        <Link
-          to={routes.magazineEditor}
-          className={styles.item}
-          onClick={onNavigate}
-        >
-          <FiLayout aria-hidden className={styles.itemIcon} />
-          <span className={styles.itemLabel}>
-            {t("shared:accountMenu.staff.magazineEditor")}
-          </span>
-        </Link>
+        {magazineEditorLink}
         <Link
           to={routes.admin}
           className={styles.item}
@@ -65,22 +78,26 @@ export function RoleLinks({
   }
   if (role === "moderator") {
     // No owned/moderated community resolved (live) → nothing to moderate, so
-    // don't surface a link that dead-ends.
-    if (!modSlug) return null;
+    // don't surface a link that dead-ends. The magazine-editor link (if any)
+    // is independent of this and still renders.
+    if (!modSlug) return magazineEditorLink;
     return (
-      <Link
-        to={modPanel(modSlug)}
-        className={styles.item}
-        onClick={onNavigate}
-      >
-        <FiTool aria-hidden className={styles.itemIcon} />
-        <span className={styles.itemLabel}>
-          {t("shared:accountMenu.mod.modTools")}
-        </span>
-      </Link>
+      <>
+        {magazineEditorLink}
+        <Link
+          to={modPanel(modSlug)}
+          className={styles.item}
+          onClick={onNavigate}
+        >
+          <FiTool aria-hidden className={styles.itemIcon} />
+          <span className={styles.itemLabel}>
+            {t("shared:accountMenu.mod.modTools")}
+          </span>
+        </Link>
+      </>
     );
   }
-  return null;
+  return magazineEditorLink;
 }
 
 /** Controls at the foot of the menu: the demo data toggle, the navigation-layout

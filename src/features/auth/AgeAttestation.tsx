@@ -53,6 +53,7 @@ export function AgeAttestation({
           components={{
             eligibility: <Link to={`${routes.terms}#eligibility`} />,
             under18: (
+              // eslint-disable-next-line jsx-a11y/control-has-associated-label -- <button> is an element template; <Translation> clones it with link text at render time.
               <button
                 type="button"
                 className={styles.under18}

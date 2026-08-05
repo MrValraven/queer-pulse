@@ -39,6 +39,7 @@ export function ExpressPay({ pf }: { pf: PaymentForm }) {
         <button
           className={cx(s["co-xbtn"], s.paypal)}
           type="button"
+          aria-label={t("gatherings:checkout.express.payWithPaypal")}
           onClick={() => pf.express("PayPal")}
         >
           <span className={s.xw}>

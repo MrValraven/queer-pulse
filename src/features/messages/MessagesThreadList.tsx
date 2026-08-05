@@ -167,6 +167,7 @@ export function MessagesThreadList({
             even shown at once; on desktop they're independent scroll regions),
             so a pull here can never fight a focused input. */}
         <PullToRefresh
+          scrollable
           onRefresh={() =>
             queryClient.invalidateQueries({ queryKey: ["conversations"] })
           }

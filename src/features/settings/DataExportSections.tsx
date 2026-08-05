@@ -86,6 +86,7 @@ export function DataExportForm({
               .join(" ")}
             role="button"
             tabIndex={0}
+            aria-label={t(dt.labelKey)}
             aria-pressed={checked[i]}
             onClick={() => toggleType(i)}
             onKeyDown={(e) => {

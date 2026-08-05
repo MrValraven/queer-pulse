@@ -255,6 +255,21 @@ export const admin: Catalog = {
     "{name} will lose access to every admin tool right away. You can restore it later. This is recorded in the audit log under your name.",
   "members.role.demoteConfirm.confirmCta": "Remove admin",
 
+  // ── Members: staff roles (additive functional grants, e.g. magazine desk) ─
+  "staffRoles.title": "Roles & access",
+  "staffRoles.subtitle":
+    "Grant functional roles on top of this member's account level.",
+  "staffRoles.accountLevelLabel": "Account level",
+  "staffRoles.grantsLabel": "Staff roles",
+  "staffRoles.magazineEditor.label": "Magazine Editor",
+  "staffRoles.magazineEditor.desc":
+    "Runs the editorial desk — publish pieces, manage decks, review pitches.",
+  "staffRoles.magazineWriter.label": "Magazine Writer",
+  "staffRoles.magazineWriter.desc":
+    "Drafts and submits pieces for editorial review.",
+  "staffRoles.adminSuperset": "Admins already have every staff capability.",
+  "staffRoles.systemLocked": "System accounts can't hold staff roles.",
+
   "members.timeline.title": "Moderation history — for & against",
   "members.timeline.auditLinkCta": "Every entry in the audit log",
 
@@ -2348,4 +2363,90 @@ export const admin: Catalog = {
     "{count} item needs a safety review first",
   "roadmap.toasts.safetyReviewNeededInfo_other":
     "{count} items need a safety review first",
+
+  // ── Landing page (/admin/landing) ───────────────────────────────────────
+  "landing.header.eyebrow": "Live site",
+  "landing.header.sub": "Curate the sections signed-out visitors see on the homepage.",
+
+  "landing.tabs.member": "Members",
+  "landing.tabs.community": "Communities",
+  "landing.tabs.changemaker": "Changemakers",
+
+  "landing.helper.member":
+    "Only public members who've opted in to be featured show up here — nobody appears without saying yes first.",
+  "landing.helper.community":
+    "Any published community can be featured — pick the ones you'd want a first-time visitor to see.",
+  "landing.helper.changemaker":
+    "Published changemaker profiles are ready to feature here.",
+
+  "landing.picker.searchPlaceholder": "Search by name…",
+  "landing.picker.searchAriaLabel": "Search who's eligible to feature",
+  "landing.picker.addCta": "Add",
+  "landing.picker.submitCta": "Add to homepage",
+  "landing.picker.addedToast": "Added to the homepage",
+  "landing.picker.addError": "Couldn't add — try again",
+  "landing.picker.noResults": 'No matches for "{search}".',
+  "landing.picker.empty.member":
+    "Nobody eligible right now — members need to opt in before they can appear here.",
+  "landing.picker.empty.community":
+    "No published communities are eligible yet.",
+  "landing.picker.empty.changemaker":
+    "No published changemaker profiles are eligible yet.",
+
+  "landing.editor.quoteLabel": "Quote",
+  "landing.editor.quoteHelper":
+    "A short line in their own words — what QueerPulse means to them.",
+  "landing.editor.quotePlaceholder":
+    '"This is the first place I felt fully myself."',
+  "landing.editor.blurbLabel": "Blurb",
+  "landing.editor.blurbHelperOptional":
+    "Optional — a line about what makes this community worth joining.",
+  "landing.editor.blurbPlaceholder": "A line or two, in your own words.",
+  "landing.editor.causeLabel": "Cause",
+  "landing.editor.causePlaceholder": "e.g. Housing justice",
+  "landing.editor.tagsLabel": "Tags",
+  "landing.editor.tagsHelper":
+    "Comma-separated — shown as small labels under their name.",
+  "landing.editor.tagsPlaceholder": "housing, mutual aid, organizing",
+  "landing.editor.editCta": "Edit copy",
+  "landing.editor.collapseCta": "Close",
+  "landing.editor.save": "Save",
+  "landing.editor.savedToast": "Copy saved",
+  "landing.editor.saveError": "Couldn't save — try again",
+
+  "landing.list.activeToggleAria": "Show {name} on the live homepage",
+  "landing.list.activeToggleLabel": "Live",
+  "landing.list.inactivePill": "Hidden by you",
+  "landing.list.moveUpAria": "Move {name} up",
+  "landing.list.moveDownAria": "Move {name} down",
+  "landing.list.reorderError": "Couldn't reorder — try again",
+  "landing.list.activeToggleError": "Couldn't update — try again",
+  "landing.list.previewEmpty":
+    "No copy yet — add some so this reads well on the homepage.",
+  "landing.list.unknownTarget": "This profile no longer exists",
+  "landing.list.empty.member.title": "No members featured yet",
+  "landing.list.empty.member.body":
+    "Search for a public member on the left and add them — their quote will appear here, ready to edit.",
+  "landing.list.empty.community.title": "No communities featured yet",
+  "landing.list.empty.community.body":
+    "Search for a published community on the left and add it to the homepage.",
+  "landing.list.empty.changemaker.title": "No changemakers featured yet",
+  "landing.list.empty.changemaker.body":
+    "Search for a published changemaker profile on the left and add it to the homepage.",
+
+  "landing.remove.cta": "Remove",
+  "landing.remove.title": "Remove from the homepage?",
+  "landing.remove.body":
+    "This takes them off the live homepage. You can feature them again anytime.",
+  "landing.remove.confirm": "Remove",
+  "landing.remove.toast": "Removed from the homepage",
+  "landing.remove.error": "Couldn't remove — try again",
+
+  // Backend-classified `hiddenReason` on an already-featured slot — see
+  // `landingFeatures.adapters.ts`'s `HIDDEN_REASON_KEY`.
+  "landing.hidden.consent_revoked": "Hidden — consent withdrawn",
+  "landing.hidden.went_private": "Hidden — profile went private",
+  "landing.hidden.unpublished": "Hidden — unpublished",
+  "landing.hidden.not_public": "Hidden — no longer public",
+  "landing.hidden.deleted": "Hidden — profile deleted",
 };

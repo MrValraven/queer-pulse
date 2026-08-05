@@ -36,6 +36,14 @@ export interface AuthContextValue {
   status: MemberStatus | null;
   role: MemberRole | null;
   /**
+   * Additive staff-role grants (e.g. `magazine_editor`) held on top of `role` —
+   * `[]` when logged out or when the signed-in user holds none. Read this via
+   * `useMyStaffRoles`/`useHasStaffRole` (`features/auth/api/useMyStaffRoles.ts`)
+   * rather than directly, since those also apply the demo-mode "grant everything"
+   * override and the admin-superset rule.
+   */
+  staffRoles: string[];
+  /**
    * Set when loading the session (`GET /auth/me`) failed for a *server* reason
    * (5xx / network) rather than the member simply being signed out (401). The
    * UI surfaces this so a backend fault isn't silently mistaken for logged-out.

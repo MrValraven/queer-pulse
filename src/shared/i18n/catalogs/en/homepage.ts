@@ -144,6 +144,12 @@ export const homepage: Catalog = {
   "discovery.featuredMembersAria": "Featured members",
   "discovery.featureMemberAria": "Show {name}",
 
+  // ── Live sections (admin-curated, real data — see Live* section components) ─
+  "liveDiscovery.eyebrow": "Curated by our team",
+  "liveCommunities.sub":
+    "A few communities our team wanted you to see — real rooms, kept by real people.",
+  "liveCommunities.memberCount": "{count} members",
+
   // ── Gatherings (homepage teaser) ──────────────────────────────────────────
   "gatherings.title": "Meet in <em>real rooms.</em>",
   "gatherings.subtitle":

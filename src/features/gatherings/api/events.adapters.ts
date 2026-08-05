@@ -210,5 +210,8 @@ export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
     // members-only (visible to the network), the backend's "members" value.
     visibility: "members",
     status: "published",
+    // Only sent when the organiser picked one of their communities — omitted
+    // keeps the gathering public, exactly as before this field existed.
+    ...(form.communitySlug ? { communitySlug: form.communitySlug } : {}),
   };
 }

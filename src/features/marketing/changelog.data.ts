@@ -93,6 +93,84 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "community-activity-in-your-feed",
+        category: "feature",
+        date: "4 Aug 2026",
+        ...entryKeys("community-activity-in-your-feed"),
+        tag: {
+          labelKey: "marketing:changelog.tag.feed",
+          to: routes.feed,
+        },
+      },
+      {
+        id: "assignable-staff-roles",
+        category: "feature",
+        date: "4 Aug 2026",
+        ...entryKeys("assignable-staff-roles"),
+        tag: {
+          labelKey: "marketing:changelog.entries.assignable-staff-roles.tag",
+          to: routes.adminMembers,
+        },
+      },
+      {
+        id: "feed-scroll-no-longer-sticks",
+        category: "fix",
+        date: "4 Aug 2026",
+        ...entryKeys("feed-scroll-no-longer-sticks"),
+        tag: {
+          labelKey: "marketing:changelog.tag.feed",
+          to: routes.feed,
+        },
+      },
+      {
+        id: "fresh-feed-card-layout",
+        category: "improvement",
+        date: "4 Aug 2026",
+        ...entryKeys("fresh-feed-card-layout"),
+        tag: {
+          labelKey: "marketing:changelog.tag.feed",
+          to: routes.feed,
+        },
+      },
+      {
+        id: "mobile-profile-top-breathing-room",
+        category: "improvement",
+        date: "4 Aug 2026",
+        ...entryKeys("mobile-profile-top-breathing-room"),
+      },
+      {
+        id: "accessible-names-screen-readers",
+        category: "improvement",
+        date: "4 Aug 2026",
+        ...entryKeys("accessible-names-screen-readers"),
+      },
+      {
+        id: "feature-communities-cta-jump",
+        category: "fix",
+        date: "4 Aug 2026",
+        ...entryKeys("feature-communities-cta-jump"),
+        tag: {
+          labelKey: "marketing:changelog.entries.feature-communities-cta-jump.tag",
+          to: `${routes.editProfile}#communities`,
+        },
+      },
+      {
+        id: "live-homepage-curated-sections",
+        category: "feature",
+        date: "4 Aug 2026",
+        ...entryKeys("live-homepage-curated-sections"),
+      },
+      {
+        id: "featured-homepage-consent-toggle",
+        category: "feature",
+        date: "4 Aug 2026",
+        ...entryKeys("featured-homepage-consent-toggle"),
+        tag: {
+          labelKey: "marketing:changelog.entries.featured-homepage-consent-toggle.tag",
+          to: `${routes.settings}?pane=visibility`,
+        },
+      },
+      {
         id: "icons-not-text-symbols",
         category: "improvement",
         date: "4 Aug 2026",

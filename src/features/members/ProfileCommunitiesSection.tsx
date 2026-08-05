@@ -52,7 +52,7 @@ export function ProfileCommunitiesSection({
             description={t("members:profile.communities.empty.description")}
             action={{
               label: t("members:profile.communities.empty.cta"),
-              to: routes.editProfile,
+              to: `${routes.editProfile}#communities`,
             }}
           />
         </Section>

@@ -90,7 +90,12 @@ export function ContactPage() {
             <p>{t("marketing:contact.hero.body")}</p>
             <div className={s.routes}>
               {ROUTES.map((r) => (
-                <a key={r.email} className={s.route} href={`mailto:${r.email}`}>
+                <a
+                  key={r.email}
+                  className={s.route}
+                  href={`mailto:${r.email}`}
+                  aria-label={t(r.titleKey)}
+                >
                   <span className={s.routeIcon} style={{ background: r.background }}>
                     <r.icon />
                   </span>

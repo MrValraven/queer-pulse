@@ -146,7 +146,7 @@ export function CancelledRefundInfo() {
                 }),
                 host: HOST_NAME,
               }}
-              // eslint-disable-next-line jsx-a11y/anchor-has-content -- element template; <Translation> clones it with the link text at render time.
+              // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- element template; <Translation> clones it with the link text at render time.
               components={{ a: <a href="#july" /> }}
             />
           </span>

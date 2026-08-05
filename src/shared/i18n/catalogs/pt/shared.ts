@@ -133,6 +133,7 @@ export const shared: Catalog = {
 
   // adminNav.data.ts
   "adminNav.items.overview": "Visão geral",
+  "adminNav.items.landing": "Página inicial",
   "adminNav.items.moderation": "Moderação",
   "adminNav.items.safeSpaces": "Espaços seguros",
   "adminNav.items.listings": "Espaços",

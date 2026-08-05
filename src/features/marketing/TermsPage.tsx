@@ -154,7 +154,7 @@ function buildTermsSections(t: TFunction): LegalSection[] {
           <p>
             <Translation
               i18nKey="marketing:terms.contactSection.body"
-              // eslint-disable-next-line jsx-a11y/anchor-has-content -- false positive: an element template for <Translation>, which clones it with the translated children at render.
+              // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- false positive: an element template for <Translation>, which clones it with the translated children (its accessible name) at render.
               components={{ a: <a href="mailto:hello@queerpulse.pt" /> }}
             />
           </p>

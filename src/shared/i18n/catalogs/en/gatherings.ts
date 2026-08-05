@@ -580,6 +580,8 @@ export const gatherings: Catalog = {
   "create.step3.notesLabel": "Accessibility notes (optional)",
   "create.step3.notesPlaceholder":
     "Anything else attendees should know — steps, parking, sound level…",
+  "create.step3.communityLabel": "Post to a community (optional)",
+  "create.step3.communityNone": "None — public gathering",
 
   // CreateGatheringSteps.tsx — step 4: pricing
   "create.step4.title": "Tickets and <em>pricing.</em>",
@@ -1165,6 +1167,7 @@ export const gatherings: Catalog = {
   "checkout.express.heading": "Express checkout",
   "checkout.express.orPayByCard": "or pay by card",
   "checkout.express.confirmingToast": "Confirming with {label}…",
+  "checkout.express.payWithPaypal": "Pay with PayPal",
 
   // Promo code
   "checkout.promo.invalidError": "That code isn't valid or has expired.",

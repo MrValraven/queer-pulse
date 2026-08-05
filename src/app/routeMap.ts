@@ -55,6 +55,7 @@ export function linkToPath(href: string): string {
 export const routes = {
   admin: "/admin",
   adminCommunities: "/admin/communities",
+  adminLanding: "/admin/landing",
   adminMembers: "/admin/members",
   adminBots: "/admin/bots",
   adminChangemakers: "/admin/changemakers",

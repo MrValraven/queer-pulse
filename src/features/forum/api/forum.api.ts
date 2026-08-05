@@ -87,6 +87,9 @@ export interface CreateThreadDto {
   /** Optional free-text tags collected by ComposeThreadModal; the backend
    *  already persists them. */
   tags?: string[];
+  /** Attach the thread to one of the author's communities. Omitted (or
+   *  undefined) keeps it a global thread, as before. */
+  communitySlug?: string;
 }
 
 /** POST /forum/threads — ComposeThreadModal. */

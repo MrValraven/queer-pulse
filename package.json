@@ -3,9 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20.11.0",
+    "pnpm": ">=9.0.0"
+  },
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && pnpm sitemap && pnpm og && vite build && pnpm prerender:browser && pnpm prerender",
+    "build": "pnpm lint:a11y && tsc -b && pnpm sitemap && pnpm og && vite build && pnpm prerender:browser && pnpm prerender",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:a11y": "node scripts/report-a11y.mjs",
@@ -21,12 +26,6 @@
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
     "test:e2e": "playwright test"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "msw"
-    ]
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.3.0",

@@ -159,6 +159,12 @@ export const homepage: Catalog = {
   "discovery.featuredMembersAria": "Pessoas em destaque",
   "discovery.featureMemberAria": "Mostrar {name}",
 
+  // ── Live sections (curadoria da equipa, dados reais) ──────────────────────
+  "liveDiscovery.eyebrow": "Escolhido pela nossa equipa",
+  "liveCommunities.sub":
+    "Algumas comunidades que a nossa equipa quis mostrar-te — salas reais, geridas por pessoas reais.",
+  "liveCommunities.memberCount": "{count} membros",
+
   // ── Gatherings (destaque na homepage) ─────────────────────────────────────
   "gatherings.title": "Encontra-te em <em>salas reais.</em>",
   "gatherings.subtitle":

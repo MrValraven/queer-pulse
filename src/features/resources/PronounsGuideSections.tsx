@@ -94,7 +94,7 @@ export function WhereGrid() {
 
 /** FAQ #2 (deadname) and #6 (legal name data) carry an `<a>` run needing a real link. */
 const FAQ_LINK: Record<number, ReactElement> = {
-  // eslint-disable-next-line jsx-a11y/anchor-has-content -- element template; <Translation> clones it with the link text at render time.
+  // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- <a> is an element template; <Translation> clones it with link text at render time.
   1: <a href="mailto:help@queerpulse.pt" />,
   5: <Link to={routes.dataExport} />,
 };

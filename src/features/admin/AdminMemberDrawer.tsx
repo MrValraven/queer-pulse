@@ -6,11 +6,11 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminVouchGraphModal } from "./AdminVouchGraphModal";
 import {
+  RolesAndAccessSection,
   MemberOverviewSections,
   ModerationTimeline,
   SealedIdentity,
 } from "./AdminMemberDrawerSections";
-import { AdminMemberRoleControl } from "./AdminMemberRoleControl";
 import { AdminMemberSuspensionControl } from "./AdminMemberSuspensionControl";
 import { MessageModal, RestrictModal } from "./AdminMemberModals";
 import { portrait } from "./adminPeople.data";
@@ -146,7 +146,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
           <DrawerBodySkeleton />
         ) : (
           <>
-            <AdminMemberRoleControl member={member} detail={detail} />
+            <RolesAndAccessSection member={member} detail={detail} />
             <AdminMemberSuspensionControl member={member} detail={detail} />
             <MemberOverviewSections
               detail={detail}

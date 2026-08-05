@@ -120,6 +120,9 @@ export interface CreateEventDto {
   visibility?: EventVisibility;
   status?: EventStatus;
   coverImageUrl?: string;
+  /** Attach the gathering to one of the organiser's communities. Omitted (or
+   *  undefined) keeps it a public/global gathering, as before. */
+  communitySlug?: string;
 }
 
 /** PATCH /events/:slug — every field optional. */

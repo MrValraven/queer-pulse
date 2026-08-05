@@ -144,6 +144,7 @@ export const shared: Catalog = {
   // English: in live mode those are the moderator's real communities/role,
   // fetched data, not platform chrome).
   "adminNav.items.overview": "Overview",
+  "adminNav.items.landing": "Landing page",
   "adminNav.items.moderation": "Moderation",
   "adminNav.items.safeSpaces": "Safe spaces",
   "adminNav.items.listings": "Listings",

@@ -71,6 +71,7 @@ const baseCardDto: AdminMemberCardDTO = {
   avatarUrl: null,
   vouchCount: 21,
   vouchedBy: [{ initials: "TM", tone: "violet", slug: "t", avatarUrl: null }],
+  staffRoles: [],
 };
 
 describe("cardDtoToMember", () => {
@@ -251,6 +252,7 @@ const baseDetailDto: AdminMemberDetailDTO = {
       },
     ],
   },
+  staffRoles: [],
 };
 
 describe("detailDtoToMember", () => {

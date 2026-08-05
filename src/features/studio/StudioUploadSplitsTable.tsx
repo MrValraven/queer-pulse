@@ -63,6 +63,7 @@ export function SplitsTable({
         <tbody>
           {rows.map((row) => (
             <tr key={row.name}>
+              {/* eslint-disable-next-line jsx-a11y/control-has-associated-label -- data cell, not an interactive control; the collaborator name/handle text (row.name/subtitle) is the cell's content, nested one level past the rule's static depth limit. */}
               <td>
                 <div className={s.splitWho}>
                   <span

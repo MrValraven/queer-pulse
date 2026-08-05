@@ -137,6 +137,7 @@ export function SubmitStoryCover({
           <div
             className={upload.track}
             role="progressbar"
+            aria-label={t("magazine:submitStory.cover.progressLabel")}
             aria-valuenow={progress ?? 0}
             aria-valuemin={0}
             aria-valuemax={100}

@@ -63,6 +63,10 @@ const DEMO_USER: AuthUser = {
   email: "you@queerpulse.test",
   status: "active",
   role: "member",
+  // The demo account tier itself grants nothing here — `useMyStaffRoles`
+  // grants ALL staff roles in demo mode directly off `demoMode`, not off this
+  // field, so it stays an honest empty array.
+  staffRoles: [],
   // A fixed adult mock — already attested so demo sessions never hit the age gate.
   ageAttestedAt: "2026-01-01T00:00:00.000Z",
   // A long-standing demo member — already onboarded. The gate still lets demo
@@ -230,6 +234,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       status: user?.status ?? null,
       role: user?.role ?? null,
+      staffRoles: user?.staffRoles ?? [],
       authError,
       signIn,
       signOut,

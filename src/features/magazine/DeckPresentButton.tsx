@@ -35,6 +35,7 @@ export function DeckPresentButton({
       </Button>
       {presenting &&
         createPortal(
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- WAI-ARIA modal dialog: the dialog intentionally handles Escape to dismiss itself.
           <div
             ref={overlayRef}
             className={styles.present}

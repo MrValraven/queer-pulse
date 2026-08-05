@@ -26,6 +26,7 @@ export function StudioTierPicker() {
         {t("studio:signin.join.chooseTier")}
       </div>
 
+      {/* eslint-disable-next-line jsx-a11y/control-has-associated-label -- role="button" card is named by its visible <h4> tier title (rendered via <Translation>) and body, which the rule's child-depth limit can't see through. */}
       <div
         className={[styles.tier, selectedTier === "studio" ? styles.tierOn : ""]
           .filter(Boolean)
@@ -73,6 +74,7 @@ export function StudioTierPicker() {
         </div>
       </div>
 
+      {/* eslint-disable-next-line jsx-a11y/control-has-associated-label -- role="button" card is named by its visible <h4> tier title (rendered via <Translation>) and body, which the rule's child-depth limit can't see through. */}
       <div
         className={[styles.tier, selectedTier === "coop" ? styles.tierOn : ""]
           .filter(Boolean)

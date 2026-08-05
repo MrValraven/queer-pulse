@@ -1,10 +1,9 @@
 import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useFormat } from "../../../shared/i18n/format";
-import { FEED_POST, type FeedPost, type FeedTab } from "../feed.data";
+import { useSocial } from "../../../app/providers/useSocial";
+import type { FeedTab } from "../feed.data";
 import { getFeed, type FeedItem } from "./feed.api";
-import { feedItemToPost } from "./feed.adapters";
 
 interface FeedPage {
   items: FeedItem[];
@@ -12,17 +11,19 @@ interface FeedPage {
 }
 
 /**
- * The feed, cursor-paginated (infinite scroll). Demo mode returns the colocated
- * `FEED_POST` mock so the demo experience is unchanged; live mode calls
- * GET /feed?tab= and adapts each `FeedItem` to the `FeedPost` card view-model.
+ * The feed, cursor-paginated (infinite scroll). Demo mode is inert (the page
+ * renders its scripted cards directly); this hook only drives the live
+ * rendering path. Live mode calls GET /feed?tab= and returns the backend's
+ * merged `FeedItem[]` **in the order the server produced it** — community_post
+ * / forum_thread / gathering / new_member interleaved newest-first. This hook
+ * deliberately does NOT partition by type or adapt items to a card
+ * view-model (e.g. via `feedItemToPost`) — the render layer switches on
+ * `item.type` per card so the merge order survives to the screen.
  * `queryKey` includes `demoMode` + `tab` so caches never cross the boundary.
- *
- * Demo mode is inert (the page renders its scripted cards directly); this hook
- * only drives the live rendering path.
  */
 export function useFeed(tab: FeedTab) {
   const { demoMode } = useDemoMode();
-  const fmt = useFormat();
+  const { blocked, muted } = useSocial();
 
   const query = useInfiniteQuery<FeedPage>({
     queryKey: ["feed", tab, demoMode],
@@ -39,26 +40,26 @@ export function useFeed(tab: FeedTab) {
     getNextPageParam: (last) => last.nextCursor ?? undefined,
   });
 
-  const items = useMemo<FeedItem[]>(
-    () => (query.data?.pages ?? []).flatMap((p) => p.items),
-    [query.data],
+  // Defense-in-depth: hide any author I've blocked or muted from my feed. The
+  // server is authoritative in live mode; this just stops any flash of their
+  // content before a fresh block/mute has propagated.
+  const hiddenAuthorHandles = useMemo(
+    () => new Set([...blocked, ...muted]),
+    [blocked, muted],
   );
 
-  const posts = useMemo<FeedPost[]>(() => {
-    if (demoMode) return [FEED_POST];
-    return items
-      .filter((it) => it.type === "community_post")
-      .map((item) => feedItemToPost(item, fmt));
-  }, [demoMode, items, fmt]);
-
-  // Recently-joined members ("People" tab, also folded into "All") — rendered
-  // by `NewMemberCard` directly off the raw `FeedItem`, not adapted to
-  // `FeedPost` (unlike `posts` above) since the card's shape differs enough
-  // that adapting would just be indirection.
-  const newMembers = useMemo<FeedItem[]>(() => {
+  // The merged feed, flattened across pages and block/mute filtered, in the
+  // backend's merge order — no type partitioning, no per-card adaptation.
+  const items = useMemo<FeedItem[]>(() => {
     if (demoMode) return [];
-    return items.filter((it) => it.type === "new_member");
-  }, [demoMode, items]);
+    const flattenedItems = (query.data?.pages ?? []).flatMap(
+      (page) => page.items,
+    );
+    return flattenedItems.filter(
+      (item) =>
+        !item.actor?.handle || !hiddenAuthorHandles.has(item.actor.handle),
+    );
+  }, [demoMode, query.data, hiddenAuthorHandles]);
 
-  return { ...query, posts, newMembers };
+  return { ...query, items };
 }

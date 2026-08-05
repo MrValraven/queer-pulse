@@ -176,6 +176,7 @@ export function MessageActionOverlay({
       onClick={onClose}
       role="presentation"
     >
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions -- onClick only stops backdrop-close propagation; the dialog is dismissed via Escape/backdrop, not this handler. */}
       <div
         ref={columnRef}
         className={[

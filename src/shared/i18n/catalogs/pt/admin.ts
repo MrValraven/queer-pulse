@@ -253,6 +253,22 @@ export const admin: Catalog = {
     "{name} vai perder acesso a todas as ferramentas de admin de imediato. Podes restaurar mais tarde. Isto fica registado no histórico de auditoria em teu nome.",
   "members.role.demoteConfirm.confirmCta": "Remover admin",
 
+  // ── Membros: papéis de equipa (concessões funcionais adicionais, ex. desk da revista)
+  "staffRoles.title": "Papéis e acesso",
+  "staffRoles.subtitle":
+    "Concede papéis funcionais para além do nível de conta desta pessoa.",
+  "staffRoles.accountLevelLabel": "Nível de conta",
+  "staffRoles.grantsLabel": "Papéis de equipa",
+  "staffRoles.magazineEditor.label": "Editor da revista",
+  "staffRoles.magazineEditor.desc":
+    "Gere o desk editorial — publica peças, gere decks, revê propostas.",
+  "staffRoles.magazineWriter.label": "Redator da revista",
+  "staffRoles.magazineWriter.desc":
+    "Escreve rascunhos e submete peças para revisão editorial.",
+  "staffRoles.adminSuperset":
+    "A administração já tem todas as capacidades de equipa.",
+  "staffRoles.systemLocked": "Contas do sistema não podem ter papéis de equipa.",
+
   "members.timeline.title": "Histórico de moderação — a favor e contra",
   "members.timeline.auditLinkCta": "Todas as entradas no registo de auditoria",
 
@@ -2365,4 +2381,92 @@ export const admin: Catalog = {
     "{count} item precisa de revisão de segurança primeiro",
   "roadmap.toasts.safetyReviewNeededInfo_other":
     "{count} itens precisam de revisão de segurança primeiro",
+
+  // ── Página inicial (/admin/landing) ─────────────────────────────────────
+  "landing.header.eyebrow": "Site público",
+  "landing.header.sub": "Cura as secções que os visitantes não autenticados veem na página inicial.",
+
+  "landing.tabs.member": "Pessoas",
+  "landing.tabs.community": "Comunidades",
+  "landing.tabs.changemaker": "Agentes de mudança",
+
+  "landing.helper.member":
+    "Só aparecem aqui pessoas públicas que aceitaram ser destacadas — ninguém aparece sem ter dito que sim primeiro.",
+  "landing.helper.community":
+    "Qualquer comunidade publicada pode ser destacada — escolhe as que gostarias que quem visita pela primeira vez visse.",
+  "landing.helper.changemaker":
+    "Os perfis de agentes de mudança publicados estão prontos a ser destacados aqui.",
+
+  "landing.picker.searchPlaceholder": "Pesquisar por nome…",
+  "landing.picker.searchAriaLabel": "Pesquisar pessoas elegíveis para destaque",
+  "landing.picker.addCta": "Adicionar",
+  "landing.picker.submitCta": "Adicionar à página inicial",
+  "landing.picker.addedToast": "Adicionado à página inicial",
+  "landing.picker.addError": "Não foi possível adicionar — tenta outra vez",
+  "landing.picker.noResults": 'Sem resultados para "{search}".',
+  "landing.picker.empty.member":
+    "Ninguém elegível neste momento — as pessoas têm de aceitar antes de poderem aparecer aqui.",
+  "landing.picker.empty.community":
+    "Ainda não há comunidades publicadas elegíveis.",
+  "landing.picker.empty.changemaker":
+    "Ainda não há perfis de agentes de mudança publicados elegíveis.",
+
+  "landing.editor.quoteLabel": "Citação",
+  "landing.editor.quoteHelper":
+    "Uma frase curta, nas palavras dela — o que a QueerPulse significa para a pessoa.",
+  "landing.editor.quotePlaceholder":
+    '"Este foi o primeiro lugar onde me senti completamente eu."',
+  "landing.editor.blurbLabel": "Descrição breve",
+  "landing.editor.blurbHelperOptional":
+    "Opcional — uma frase sobre o que torna esta comunidade especial.",
+  "landing.editor.blurbPlaceholder": "Uma ou duas frases, nas tuas palavras.",
+  "landing.editor.causeLabel": "Causa",
+  "landing.editor.causePlaceholder": "ex.: Justiça habitacional",
+  "landing.editor.tagsLabel": "Etiquetas",
+  "landing.editor.tagsHelper":
+    "Separadas por vírgulas — aparecem como pequenas etiquetas por baixo do nome.",
+  "landing.editor.tagsPlaceholder": "habitação, entreajuda, ativismo",
+  "landing.editor.editCta": "Editar texto",
+  "landing.editor.collapseCta": "Fechar",
+  "landing.editor.save": "Guardar",
+  "landing.editor.savedToast": "Texto guardado",
+  "landing.editor.saveError": "Não foi possível guardar — tenta outra vez",
+
+  "landing.list.activeToggleAria": "Mostrar {name} na página inicial pública",
+  "landing.list.activeToggleLabel": "Ativo",
+  "landing.list.inactivePill": "Ocultado por ti",
+  "landing.list.moveUpAria": "Mover {name} para cima",
+  "landing.list.moveDownAria": "Mover {name} para baixo",
+  "landing.list.reorderError": "Não foi possível reordenar — tenta outra vez",
+  "landing.list.activeToggleError":
+    "Não foi possível atualizar — tenta outra vez",
+  "landing.list.previewEmpty":
+    "Ainda sem texto — adiciona algum para ficar bem na página inicial.",
+  "landing.list.unknownTarget": "Este perfil já não existe",
+  "landing.list.empty.member.title": "Ainda sem pessoas em destaque",
+  "landing.list.empty.member.body":
+    "Procura uma pessoa pública à esquerda e adiciona-a — a citação dela vai aparecer aqui, pronta a editar.",
+  "landing.list.empty.community.title": "Ainda sem comunidades em destaque",
+  "landing.list.empty.community.body":
+    "Procura uma comunidade publicada à esquerda e adiciona-a à página inicial.",
+  "landing.list.empty.changemaker.title":
+    "Ainda sem agentes de mudança em destaque",
+  "landing.list.empty.changemaker.body":
+    "Procura um perfil de agente de mudança publicado à esquerda e adiciona-o à página inicial.",
+
+  "landing.remove.cta": "Remover",
+  "landing.remove.title": "Remover da página inicial?",
+  "landing.remove.body":
+    "Isto tira a pessoa da página inicial pública. Podes voltar a destacá-la quando quiseres.",
+  "landing.remove.confirm": "Remover",
+  "landing.remove.toast": "Removido da página inicial",
+  "landing.remove.error": "Não foi possível remover — tenta outra vez",
+
+  // `hiddenReason` classificado pelo backend num slot já destacado — ver
+  // `HIDDEN_REASON_KEY` em `landingFeatures.adapters.ts`.
+  "landing.hidden.consent_revoked": "Oculto — consentimento retirado",
+  "landing.hidden.went_private": "Oculto — perfil tornou-se privado",
+  "landing.hidden.unpublished": "Oculto — despublicado",
+  "landing.hidden.not_public": "Oculto — já não é público",
+  "landing.hidden.deleted": "Oculto — perfil eliminado",
 };

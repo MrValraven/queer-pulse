@@ -148,6 +148,7 @@ export function SubprofileSwitchList({
         />
       )}
 
+      {/* eslint-disable-next-line jsx-a11y/interactive-supports-focus -- roving-tabindex tablist: focus lives on the selected tab child (SubprofileSwitchRow, tabIndex 0), not this container; onKeyDown catches Arrow/Home/End bubbling from the focused tab. */}
       <div
         className={styles.switchList}
         role="tablist"

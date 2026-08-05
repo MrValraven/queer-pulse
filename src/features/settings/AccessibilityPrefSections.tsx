@@ -217,6 +217,7 @@ export function A11yReadingSection({
               type="button"
               key={theme}
               title={t(titleKey)}
+              aria-label={t(titleKey)}
               aria-pressed={prefs.colorTheme === theme}
               className={[
                 styles.colorSwatch,

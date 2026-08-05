@@ -54,6 +54,15 @@ export interface AuthUser {
    * generic copy.
    */
   suspension?: { note: string; reasonCode: string } | null;
+  /**
+   * Additive "staff role" grants (e.g. `magazine_editor`) held on top of the
+   * account tier (`role`) — orthogonal capabilities, not a higher tier. Defaults
+   * to `[]` at the validation seam (`validateAuthUser`) when the backend payload
+   * omits it, so older/partial `/auth/me` responses never crash. Untyped as
+   * `StaffRoleId[]` here to avoid a dependency from `auth` → `admin`; callers
+   * narrow with `isStaffRoleId`/`STAFF_ROLE_IDS` (see `useMyStaffRoles`).
+   */
+  staffRoles: string[];
   profile: {
     slug: string;
     firstName: string;

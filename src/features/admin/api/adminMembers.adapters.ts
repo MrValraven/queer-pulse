@@ -1,5 +1,6 @@
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
+import { isStaffRoleId } from "../staffRoles.registry";
 import type { AvatarTone } from "../ui";
 import type {
   AdminMember,
@@ -104,6 +105,7 @@ export function cardDtoToMember(
         avatarUrl: vouchAvatarDto.avatarUrl,
       }),
     ),
+    staffRoles: cardDto.staffRoles.filter(isStaffRoleId),
   };
 }
 
@@ -437,5 +439,6 @@ export function detailDtoToMember(
       center: vouchAvatarDtoToAvatar(detailDto.graph.center),
       nodes: detailDto.graph.nodes.map(graphNodeDtoToNode),
     },
+    staffRoles: detailDto.staffRoles.filter(isStaffRoleId),
   };
 }

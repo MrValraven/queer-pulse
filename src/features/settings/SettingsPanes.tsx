@@ -239,24 +239,40 @@ function ConsentToggleRow({
   description,
   checked,
   onChange,
+  disabled,
+  disabledHint,
 }: {
   title: string;
   description: string;
   checked: boolean;
   onChange: (next: boolean) => void;
+  /** Disables the toggle when a prerequisite isn't met (e.g. the profile
+   *  isn't public yet) without hiding the row. */
+  disabled?: boolean;
+  /** Shown below the description in place of normal interaction, explaining
+   *  why the toggle is disabled. Only rendered when `disabled` is true. */
+  disabledHint?: string;
 }) {
   return (
     <div className={styles.toggleRow}>
       <div className={styles.toggleLabel}>
         <div className={styles.toggleTitle}>{title}</div>
         <div className={styles.toggleDesc}>{description}</div>
+        {disabled && disabledHint && (
+          <div className={styles.toggleHint}>{disabledHint}</div>
+        )}
       </div>
-      <Toggle
-        tone="coral"
-        checked={checked}
-        onChange={onChange}
-        label={title}
-      />
+      <div
+        className={disabled ? styles.disabledControl : undefined}
+        inert={disabled}
+      >
+        <Toggle
+          tone="coral"
+          checked={checked}
+          onChange={onChange}
+          label={title}
+        />
+      </div>
     </div>
   );
 }
@@ -525,6 +541,17 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
             checked={draft.privateNetwork}
             onChange={(next) => {
               updateDraft({ privateNetwork: next });
+              onChange();
+            }}
+          />
+          <ConsentToggleRow
+            title={t("settings:visibility.featuredConsent.label")}
+            description={t("settings:visibility.featuredConsent.description")}
+            checked={draft.featuredConsent}
+            disabled={draft.visibility !== "open"}
+            disabledHint={t("settings:visibility.featuredConsent.disabledHint")}
+            onChange={(next) => {
+              updateDraft({ featuredConsent: next });
               onChange();
             }}
           />

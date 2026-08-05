@@ -18,6 +18,7 @@ export function SwitchRow({
       type="button"
       role="switch"
       aria-checked={on}
+      aria-label={name}
       className={styles.switchRow}
       onClick={onToggle}
     >

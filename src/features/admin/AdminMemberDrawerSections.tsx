@@ -5,12 +5,46 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { AdminChip } from "./ui";
 import { VouchGraphPreview, VouchGraphLegend } from "./VouchGraphPreview";
+import { AdminMemberRoleControl } from "./AdminMemberRoleControl";
+import { AdminMemberStaffRoles } from "./AdminMemberStaffRoles";
 import {
   SEALED_IDENTITY,
+  type AdminMember,
   type MemberDetail,
   type ModerationEntry,
 } from "./adminMembers.data";
 import styles from "./AdminMembersPage.module.css";
+
+/* ── Roles & access (tier control + staff-role grants) ──────────────────── */
+
+/**
+ * Groups the tier control (`AdminMemberRoleControl`) with the additive
+ * staff-role toggles (`AdminMemberStaffRoles`) under one umbrella heading —
+ * the tier is "how much power", staff roles are "which functional desks".
+ */
+export function RolesAndAccessSection({
+  member,
+  detail,
+}: {
+  member: AdminMember;
+  detail: MemberDetail;
+}) {
+  const { t } = useTranslation();
+  return (
+    <section className={styles.dSection}>
+      <h3 className={styles.dHeading}>{t("admin:staffRoles.title")}</h3>
+      <p className={styles.dHint}>{t("admin:staffRoles.subtitle")}</p>
+      <AdminMemberRoleControl member={member} detail={detail} />
+      <AdminMemberStaffRoles
+        memberId={member.id}
+        slug={member.slug}
+        isSystem={detail.isSystem}
+        role={detail.role}
+        staffRoles={detail.staffRoles}
+      />
+    </section>
+  );
+}
 
 /* ── At a glance / trust network / communities / contributions ──────────── */
 

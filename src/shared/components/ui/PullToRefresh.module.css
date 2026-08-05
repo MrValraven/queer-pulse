@@ -1,14 +1,33 @@
-/* Pull-to-refresh wrapper. `overscroll-behavior: contain` stops scroll
-   chaining into whatever sits behind this container AND disables the
-   browser's own native pull-to-refresh on the y-axis, so it never fires
-   alongside ours. `touch-action: pan-y` keeps native vertical scrolling
-   live — our gesture only produces a visible pull once the container is
-   already at scrollTop 0, where there's nothing left to scroll natively. */
+/* Pull-to-refresh wrapper. By DEFAULT this is scroll-transparent: it does NOT
+   establish its own scroll container, so the window keeps its single native
+   vertical scroll and this wrapper just hosts the gesture + indicator. That is
+   the correct mode for every window-scrolled page (feed, notifications, members,
+   gatherings): the gesture arms off `window.scrollY` (see usePullToRefresh's
+   `atScrollTop`), so it works without an internal scroller.
+
+   Why not always scroll internally: `overflow-y: auto` + `height: 100%` here
+   resolves against the flex parent to a FRACTIONAL definite height equal to the
+   wrapper's own content (e.g. 1756.3px). The sub-pixel remainder makes the
+   browser treat the wrapper as marginally scrollable, so it becomes the wheel's
+   scroll target — and `overscroll-behavior: contain` then blocks the wheel from
+   chaining to the window, freezing the page while the pointer is over the feed.
+
+   `touch-action: pan-y` keeps native vertical scrolling live — our gesture only
+   produces a visible pull once we're already at the top, where there's nothing
+   left to scroll natively. */
 .container {
   position: relative;
+  touch-action: pan-y;
+}
+
+/* Opt-in internal scroller for a `fullHeight` layout (Messages), where an
+   ancestor bounds this wrapper's height and the rows are meant to overflow the
+   wrapper ITSELF rather than the window. Here `overscroll-behavior: contain` is
+   correct: it stops scroll chaining out of the bounded list and disables the
+   browser's own native pull-to-refresh so it never fires alongside ours. */
+.scrollable {
   overflow-y: auto;
   overscroll-behavior: contain;
-  touch-action: pan-y;
   height: 100%;
 }
 

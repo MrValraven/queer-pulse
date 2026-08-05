@@ -184,6 +184,7 @@ export function ShowUpAtWorkSection({
                 type="button"
                 role="switch"
                 aria-checked={on}
+                aria-label={t(option.labelKey)}
                 className={[styles.toggleRow, on && styles.toggleRowOn]
                   .filter(Boolean)
                   .join(" ")}
@@ -239,6 +240,7 @@ export function ShowUpAtWorkSection({
         type="button"
         role="switch"
         aria-checked={safeOnly}
+        aria-label={t("economy:workProfile.showUp.safeOnly.label")}
         className={[styles.toggleRow, safeOnly && styles.toggleRowOn]
           .filter(Boolean)
           .join(" ")}

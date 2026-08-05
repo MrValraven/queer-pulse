@@ -127,6 +127,7 @@ export function CinemaLiveWatch({ titleId }: { titleId: string | null }) {
         <div className={styles.zone}>
           <div className={styles.screen}>
             {session ? (
+              // eslint-disable-next-line jsx-a11y/media-has-caption -- live studio stream; no caption track source available (demo/live).
               <video
                 ref={videoRef}
                 src={session.hlsUrl}

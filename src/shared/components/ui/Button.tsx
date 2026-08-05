@@ -4,7 +4,7 @@ import styles from "./Button.module.css";
 
 export type ButtonVariant =
   "primary" | "ghost" | "ghost-dark" | "jade" | "danger";
-export type ButtonSize = "md" | "lg";
+export type ButtonSize = "sm" | "md" | "lg";
 
 const variantClass: Record<ButtonVariant, string | undefined> = {
   primary: styles.primary,
@@ -50,6 +50,7 @@ function buildClassName(
     styles.button,
     variantClass[variant],
     size === "lg" && styles.lg,
+    size === "sm" && styles.sm,
     extra,
   ]
     .filter(Boolean)

@@ -62,7 +62,13 @@ export function useCreateThreadFlow({
     setComposing(false);
   }
 
-  function publishThread({ title, body, cat: postCat, tags }: NewThreadInput) {
+  function publishThread({
+    title,
+    body,
+    cat: postCat,
+    tags,
+    communitySlug,
+  }: NewThreadInput) {
     // A client-only temp id keys the optimistic card so the create response can
     // reconcile it (stamp the server slug) once it resolves.
     const tempId = Date.now();
@@ -102,7 +108,13 @@ export function useCreateThreadFlow({
     // Demo mode no-ops (the local thread above is the record).
     if (demoMode) return;
     createMutation.mutate(
-      { title, body, category: postCat, tags },
+      {
+        title,
+        body,
+        category: postCat,
+        tags,
+        ...(communitySlug ? { communitySlug } : {}),
+      },
       {
         onSuccess: (created) => {
           setExtraThreads((prev) =>

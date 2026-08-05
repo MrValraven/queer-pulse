@@ -136,6 +136,14 @@ export const validateAuthUser: ResponseValidator<AuthUser> = (data) => {
   // The optional fields (pronouns, avatarUrl) are intentionally not asserted:
   // the app treats their absence as a valid state, so validating them would
   // reject legitimate bodies. This guard is a tripwire for the REQUIRED shape.
+
+  // `staffRoles` is additive and backend-optional (older/partial payloads may
+  // omit it entirely) — default to `[]` rather than assert, so a missing or
+  // malformed value never turns into a loud 422 for an unrelated field.
+  data.staffRoles = Array.isArray(data.staffRoles)
+    ? data.staffRoles.filter((value): value is string => typeof value === "string")
+    : [];
+
   return data as unknown as AuthUser;
 };
 

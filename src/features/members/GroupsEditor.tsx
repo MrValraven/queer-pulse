@@ -82,7 +82,9 @@ export function GroupsEditor({
       </div>
       <datalist id={rolesListId}>
         {GROUP_ROLE_SUGGESTIONS.map((role) => (
-          <option key={role} value={role} />
+          <option key={role} value={role}>
+            {role}
+          </option>
         ))}
       </datalist>
       <Button

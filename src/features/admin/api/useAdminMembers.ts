@@ -2,6 +2,9 @@ import {
   useInfiniteQuery,
   useQuery,
   useQueryClient,
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useDemoAwareMutation } from "./demoAwareMutation";
@@ -16,6 +19,7 @@ import {
   type FlaggedMember,
   type MemberDetail,
 } from "../adminMembers.data";
+import type { StaffRoleId } from "../staffRoles.registry";
 import {
   cardDtoToMember,
   detailDtoToMember,
@@ -25,9 +29,12 @@ import {
   getAdminFlagged,
   getAdminMember,
   getAdminMembers,
+  grantStaffRole,
   liftUserSuspension,
   patchAdminMemberRole,
+  revokeStaffRole,
   type AdminMemberRoleDTO,
+  type AdminStaffRolesDTO,
   type MemberRole,
 } from "./adminMembers.api";
 
@@ -216,6 +223,206 @@ export function useLiftSuspension() {
     live: async ({ memberId }) => {
       await liftUserSuspension(memberId);
     },
+    onLiveSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
+    },
+  });
+}
+
+/* ── Staff roles (additive, on top of `role`) ────────────────────────────── */
+
+type StaffRolesSnapshot = Array<[QueryKey, unknown]>;
+
+/**
+ * Does `queryKey` (an `["admin-members", …]` query) belong to `demoMode`?
+ * `demoMode` sits at a different position depending on the query's own
+ * shape — position 1 for the roster (`["admin-members", demoMode, filter,
+ * language]`), position 3 for the drawer detail (`["admin-members",
+ * "detail", memberId, demoMode, language]`), position 2 for the flagged
+ * queue (`["admin-members", "flagged", demoMode, language]`) — so this reads
+ * the right slot per shape rather than assuming one fixed position.
+ */
+function staffRolesQueryMatchesMode(
+  queryKey: QueryKey,
+  demoMode: boolean,
+): boolean {
+  if (queryKey[1] === "detail") return queryKey[3] === demoMode;
+  if (queryKey[1] === "flagged") return queryKey[2] === demoMode;
+  return queryKey[1] === demoMode;
+}
+
+/**
+ * Optimistically add/remove one staff role on member `memberId`'s cached
+ * `staffRoles`, across every currently-cached `["admin-members"]` query for
+ * the CURRENT `demoMode` this session has touched: the roster's
+ * `useInfiniteQuery` pages (`items[]`) AND the open drawer's detail query
+ * (`["admin-members", "detail", memberId, …]`). Scoped to `demoMode` (via
+ * {@link staffRolesQueryMatchesMode}) the same way `useAdminListings.ts`'s
+ * `snapshotAdminListingsQueries`/`patchListingInCache` scope to
+ * `[ADMIN_LISTINGS_KEY, demoMode]` — otherwise a demo-mode grant/revoke could
+ * cancel an in-flight live fetch or rewrite/roll back the OTHER mode's
+ * cached entries (they share the bare `["admin-members"]` prefix but
+ * `demoMode` sits at a different position per query shape here, so a single
+ * `[..., demoMode]` prefix can't cover both — hence the predicate). Cancels
+ * in-flight `["admin-members"]` queries for this mode first (so a resolving
+ * fetch can't stomp the optimistic patch), then returns a snapshot of every
+ * query touched — the mutation's `onMutate` context — for
+ * {@link restoreStaffRolesSnapshot} to roll back to on `onError`.
+ *
+ * The flagged-members query (`["admin-members", "flagged", …]`) is skipped:
+ * `FlaggedMember` carries no `staffRoles`. Distinguishing "detail" from
+ * "roster" queries reads position 1 of the key (`"detail"` / `"flagged"` vs.
+ * the roster's `demoMode` boolean) rather than inspecting the cached value's
+ * shape, mirroring `patchListingInCache`'s reliance on its own query key.
+ */
+export async function patchStaffRolesInCache(
+  queryClient: QueryClient,
+  demoMode: boolean,
+  memberId: string,
+  updater: (current: StaffRoleId[]) => StaffRoleId[],
+): Promise<StaffRolesSnapshot> {
+  const modeFilter = {
+    queryKey: ["admin-members"] as QueryKey,
+    predicate: (query: { queryKey: QueryKey }) =>
+      staffRolesQueryMatchesMode(query.queryKey, demoMode),
+  };
+  await queryClient.cancelQueries(modeFilter);
+  const previousQueries = queryClient.getQueriesData(
+    modeFilter,
+  ) as StaffRolesSnapshot;
+
+  for (const [queryKey, currentData] of previousQueries) {
+    if (!currentData) continue;
+
+    if (queryKey[1] === "detail") {
+      if (queryKey[2] !== memberId) continue;
+      const detail = currentData as MemberDetail;
+      queryClient.setQueryData(queryKey, {
+        ...detail,
+        staffRoles: updater(detail.staffRoles),
+      });
+      continue;
+    }
+
+    if (queryKey[1] === "flagged") continue;
+
+    const rosterData = currentData as InfiniteData<AdminMembersPageVM>;
+    if (!rosterData.pages) continue;
+    let memberWasFound = false;
+    const patchedPages = rosterData.pages.map((page) => ({
+      ...page,
+      items: page.items.map((item) => {
+        if (item.id !== memberId) return item;
+        memberWasFound = true;
+        return { ...item, staffRoles: updater(item.staffRoles) };
+      }),
+    }));
+    if (memberWasFound) {
+      queryClient.setQueryData(queryKey, {
+        ...rosterData,
+        pages: patchedPages,
+      });
+    }
+  }
+
+  return previousQueries;
+}
+
+/** Restore a snapshot taken by {@link patchStaffRolesInCache}, e.g. after a
+ *  failed grant/revoke mutation. */
+export function restoreStaffRolesSnapshot(
+  queryClient: QueryClient,
+  snapshot: StaffRolesSnapshot | undefined,
+) {
+  if (!snapshot) return;
+  for (const [queryKey, data] of snapshot) {
+    queryClient.setQueryData(queryKey, data);
+  }
+}
+
+interface StaffRoleMutationVars {
+  memberId: string;
+  slug: string;
+  role: StaffRoleId;
+  isSystem: boolean;
+}
+
+/**
+ * Grant one additive staff role (e.g. `magazine_editor`) to a member —
+ * functional capabilities that sit on top of `role`, not tiers above it (see
+ * `staffRoles.registry.ts`). Unlike `useUpdateMemberRole`'s single-value tier
+ * swap, this optimistically patches `onMutate` (both the roster row and the
+ * open drawer detail via {@link patchStaffRolesInCache}) and rolls back in
+ * `onError`, so the drawer's toggle flips instantly rather than waiting on a
+ * round-trip.
+ *
+ * Demo mode never touches the network — the optimistic patch IS its source of
+ * truth (the roster's demo data is regenerated from fixtures on every render,
+ * so there's nothing else to persist); `demoResult` stays shape-correct
+ * anyway per `useDemoAwareMutation`'s contract. Live mode calls
+ * `POST /admin/members/:id/staff-roles` and reconciles both caches via
+ * `invalidateQueries` on success.
+ */
+export function useGrantStaffRole() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useDemoAwareMutation<
+    AdminStaffRolesDTO,
+    unknown,
+    StaffRoleMutationVars,
+    StaffRolesSnapshot
+  >({
+    demoMode,
+    demoLatencyMs: 0,
+    mutationKey: ["admin-members", "grant-staff-role"],
+    demoResult: ({ memberId, slug, role }) => ({
+      userId: memberId,
+      slug,
+      staffRoles: [role],
+    }),
+    live: ({ memberId, role }) => grantStaffRole(memberId, role),
+    onMutate: ({ memberId, role }) =>
+      patchStaffRolesInCache(queryClient, demoMode, memberId, (current) =>
+        current.includes(role) ? current : [...current, role],
+      ),
+    onError: (_error, _vars, context) =>
+      restoreStaffRolesSnapshot(queryClient, context),
+    onLiveSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
+    },
+  });
+}
+
+/**
+ * Revoke one additive staff role from a member — the mirror of
+ * {@link useGrantStaffRole}: optimistically filters the role out of the
+ * cached `staffRoles`, rolled back on error, `DELETE
+ * /admin/members/:id/staff-roles/:role` in live mode.
+ */
+export function useRevokeStaffRole() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useDemoAwareMutation<
+    AdminStaffRolesDTO,
+    unknown,
+    StaffRoleMutationVars,
+    StaffRolesSnapshot
+  >({
+    demoMode,
+    demoLatencyMs: 0,
+    mutationKey: ["admin-members", "revoke-staff-role"],
+    demoResult: ({ memberId, slug }) => ({
+      userId: memberId,
+      slug,
+      staffRoles: [],
+    }),
+    live: ({ memberId, role }) => revokeStaffRole(memberId, role),
+    onMutate: ({ memberId, role }) =>
+      patchStaffRolesInCache(queryClient, demoMode, memberId, (current) =>
+        current.filter((heldRole) => heldRole !== role),
+      ),
+    onError: (_error, _vars, context) =>
+      restoreStaffRolesSnapshot(queryClient, context),
     onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
     },

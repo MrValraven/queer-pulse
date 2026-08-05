@@ -2,6 +2,7 @@ import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminAvatar, AdminChip } from "./ui";
 import { portrait } from "./adminPeople.data";
+import { STAFF_ROLES } from "./staffRoles.registry";
 import type {
   AdminMember,
   FlaggedMember,
@@ -62,6 +63,13 @@ export function AdminMemberRows({
                     {t(`admin:members.role.value.${m.role}`)}
                   </AdminChip>
                 )}
+                {STAFF_ROLES.filter((staffRole) =>
+                  m.staffRoles.includes(staffRole.id),
+                ).map((staffRole) => (
+                  <AdminChip key={staffRole.id} tone="ghost">
+                    {t(staffRole.labelKey)}
+                  </AdminChip>
+                ))}
               </div>
               <div className={styles.rowMeta}>{m.meta}</div>
             </div>

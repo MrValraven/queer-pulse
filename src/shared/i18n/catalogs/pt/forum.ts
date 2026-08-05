@@ -80,6 +80,8 @@ export const forum: Catalog = {
   "compose.titleFieldLabel": "Título",
   "compose.titlePlaceholder": "Um título claro e específico",
   "compose.categoryFieldLabel": "Categoria",
+  "compose.communityFieldLabel": "Publicar numa comunidade (opcional)",
+  "compose.communityNone": "Nenhuma — publicação global",
   "compose.postFieldLabel": "Publicação",
   "compose.postPlaceholder": "Escreve a tua publicação…",
   "compose.cancel": "Cancelar",

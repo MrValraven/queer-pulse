@@ -1901,6 +1901,55 @@ export const marketing: Catalog = {
   "changelog.tag.imprint": "Ler o aviso legal",
   "changelog.tag.feed": "Abrir o teu feed",
 
+  "changelog.entries.community-activity-in-your-feed.title":
+    "O teu feed mostra agora o que se passa nas tuas comunidades",
+  "changelog.entries.community-activity-in-your-feed.body":
+    "O feed principal passa a trazer atividade real das comunidades de que fazes parte — publicações, anúncios, novos convívios, tópicos do fórum e quem se juntou agora mesmo. Quando crias um convívio ou começas um tópico no fórum, podes partilhá-lo diretamente numa das tuas comunidades.",
+
+  "changelog.entries.assignable-staff-roles.title":
+    "A administração já pode atribuir funções da equipa da revista",
+  "changelog.entries.assignable-staff-roles.body":
+    "A partir do diretório de membros, a administração pode atribuir duas funções específicas, além do nível de conta de cada pessoa: Editor da revista e Redator da revista. O acesso ao desk editorial da revista passa a seguir a função de Editor da revista, em vez de qualquer pessoa moderadora — a administração mantém o acesso, como antes.",
+  "changelog.entries.assignable-staff-roles.tag": "Abrir o diretório de membros",
+
+  "changelog.entries.feed-scroll-no-longer-sticks.title":
+    "O teu feed volta a rolar sem prender",
+  "changelog.entries.feed-scroll-no-longer-sticks.body":
+    "No feed inicial, nas notificações, nos membros e nos encontros, rolar com o rato ou o trackpad por cima do conteúdo podia ficar preso, sem mover nada enquanto a página não avançava. Agora rola a página como deve ser, em todo o lado.",
+
+  "changelog.entries.fresh-feed-card-layout.title":
+    "Um visual renovado para o teu feed",
+  "changelog.entries.fresh-feed-card-layout.body":
+    "Todos os cartões do teu feed inicial — novos membros, encontros, comunidades e publicações de comunidades — passam agora a partilhar um layout mais limpo, e ficam dois por linha em ecrãs mais largos, para veres mais coisas de relance.",
+
+  "changelog.entries.feature-communities-cta-jump.title":
+    "“Escolher comunidades” leva-te agora diretamente ao seletor",
+  "changelog.entries.feature-communities-cta-jump.body":
+    "No teu perfil, o botão “Escolher comunidades” do bloco Comunidades abre agora o Editar perfil já com o ecrã posicionado no seletor de comunidades, em vez de te deixar no topo da página à procura dele.",
+  "changelog.entries.feature-communities-cta-jump.tag": "Escolher comunidades",
+
+  "changelog.entries.live-homepage-curated-sections.title":
+    "A página inicial mostra agora pessoas e comunidades reais, com curadoria da equipa",
+  "changelog.entries.live-homepage-curated-sections.body":
+    "As secções de pessoas, comunidades e agentes de mudança da página inicial pública passam agora a vir da lista com curadoria da administração — pessoas e comunidades reais que a equipa escolheu apresentar, não conteúdo de exemplo. Uma secção fica escondida até haver algo escolhido para ela.",
+
+  "changelog.entries.featured-homepage-consent-toggle.title":
+    "Consente ser destacade na página inicial",
+  "changelog.entries.featured-homepage-consent-toggle.body":
+    "As definições de privacidade têm agora um interruptor que deixa a administração destacar-te na página inicial com curadoria — uma citação ou destaque de membro, escolhido apenas entre perfis públicos com consentimento dado. Vem desligado por predefinição, só fica disponível depois de definires o perfil como “Aberto a ligações”, e podes voltar a desligá-lo quando quiseres.",
+  "changelog.entries.featured-homepage-consent-toggle.tag":
+    "Abrir as tuas definições de privacidade",
+
+  "changelog.entries.mobile-profile-top-breathing-room.title":
+    "Um topo mais calmo nos perfis no telemóvel",
+  "changelog.entries.mobile-profile-top-breathing-room.body":
+    "As páginas de perfil no telemóvel passam a ter mais espaço no topo, para que o avatar e os detalhes deixem de ficar espremidos por baixo do cabeçalho. Também retirámos o nome “Queer Pulse” da faixa superior nas páginas internas — a seta de voltar e o botão de início na barra inferior já te levam para onde precisas, por isso era só ruído.",
+
+  "changelog.entries.accessible-names-screen-readers.title":
+    "Os leitores de ecrã passam a nomear todos os controlos",
+  "changelog.entries.accessible-names-screen-readers.body":
+    "Os botões e interruptores que mostravam apenas um ícone — o botão de enviar no chat de uma transmissão, os botões de pagamento na finalização da compra, os interruptores nas tuas definições de estúdio, os cartões de moderação e de notificações — passam a anunciar um nome claro aos leitores de ecrã, para que nada seja lido como um “botão” sem nome. Acrescentámos também uma verificação automática que mantém toda a aplicação sem rótulos em falta daqui para a frente. Nada muda no aspeto ou no funcionamento; é apenas uma melhoria de acessibilidade.",
+
   "changelog.entries.icons-not-text-symbols.title":
     "Ícones mais nítidos em vez de símbolos de texto",
   "changelog.entries.icons-not-text-symbols.body":

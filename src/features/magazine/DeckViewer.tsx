@@ -37,8 +37,10 @@ export function DeckViewer({ deck, index, onIndex }: DeckViewerProps) {
   const touchX = useRef<number | null>(null);
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- APG carousel: the region is intentionally keyboard-interactive for arrow-key slide nav.
     <div
       className={styles.viewer}
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- APG carousel: region is intentionally focusable so keyboard users can arrow between slides.
       tabIndex={0}
       role="region"
       aria-roledescription="carousel"

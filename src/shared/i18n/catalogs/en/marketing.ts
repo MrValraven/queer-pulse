@@ -1849,6 +1849,55 @@ export const marketing: Catalog = {
   "changelog.tag.imprint": "Read the legal notice",
   "changelog.tag.feed": "Open your feed",
 
+  "changelog.entries.community-activity-in-your-feed.title":
+    "Your feed now shows what's happening in your communities",
+  "changelog.entries.community-activity-in-your-feed.body":
+    "Your home feed pulls in real activity from the communities you're part of — posts, announcements, new gatherings, forum threads, and the people who just joined. When you create a gathering or start a forum thread, you can share it straight to one of your communities.",
+
+  "changelog.entries.assignable-staff-roles.title":
+    "Admins can now assign magazine staff roles",
+  "changelog.entries.assignable-staff-roles.body":
+    "From the member directory, admins can grant two functional roles on top of a member's account level: Magazine Editor and Magazine Writer. Access to the magazine editorial desk now follows the Magazine Editor role rather than any moderator — admins keep access, as before.",
+  "changelog.entries.assignable-staff-roles.tag": "Open the member directory",
+
+  "changelog.entries.feed-scroll-no-longer-sticks.title":
+    "Your feed scrolls smoothly again",
+  "changelog.entries.feed-scroll-no-longer-sticks.body":
+    "On the home feed, notifications, members and gatherings, scrolling with a mouse or trackpad over the content could get stuck, moving nothing while the page stayed put. It now scrolls the page the way it should, everywhere.",
+
+  "changelog.entries.fresh-feed-card-layout.title":
+    "A fresh look for your feed",
+  "changelog.entries.fresh-feed-card-layout.body":
+    "Every card in your home feed — new members, gatherings, communities and community posts — now shares one cleaner layout, and packs two-to-a-row on wider screens so you can browse more at a glance.",
+
+  "changelog.entries.feature-communities-cta-jump.title":
+    "“Choose communities” now takes you straight to the picker",
+  "changelog.entries.feature-communities-cta-jump.body":
+    "On your profile, the Communities block's “Choose communities” button now opens Edit profile scrolled right to the communities picker, instead of dropping you at the top of the page to find it yourself.",
+  "changelog.entries.feature-communities-cta-jump.tag": "Choose communities",
+
+  "changelog.entries.live-homepage-curated-sections.title":
+    "The homepage now shows real, admin-curated people and communities",
+  "changelog.entries.live-homepage-curated-sections.body":
+    "The public homepage's member, community, and changemaker sections now pull from the admin-curated list — real people and communities the team has chosen to introduce, not placeholder content. A section stays hidden until something's been curated for it.",
+
+  "changelog.entries.featured-homepage-consent-toggle.title":
+    "Opt in to being featured on the homepage",
+  "changelog.entries.featured-homepage-consent-toggle.body":
+    "Privacy settings now has a toggle letting admins feature you on the admin-curated homepage — a member quote or highlight, chosen only from public, opted-in profiles. It's off by default, only available once your profile is set to “Open to connect,” and you can turn it off again any time.",
+  "changelog.entries.featured-homepage-consent-toggle.tag":
+    "Open your privacy settings",
+
+  "changelog.entries.mobile-profile-top-breathing-room.title":
+    "A calmer top on mobile profiles",
+  "changelog.entries.mobile-profile-top-breathing-room.body":
+    "Profile pages on phones now have more breathing room at the top, so the avatar and details no longer sit crammed under the header. We also dropped the “Queer Pulse” wordmark from the top strip on inner pages — the back arrow and the home button in the bottom bar already get you where you need to go, so it was just clutter.",
+
+  "changelog.entries.accessible-names-screen-readers.title":
+    "Screen readers now name every control",
+  "changelog.entries.accessible-names-screen-readers.body":
+    "Buttons and switches that showed only an icon — the send button in a livestream chat, the payment buttons at checkout, the toggles in your studio settings, moderation and notification cards — now announce a clear name to screen readers, so nothing reads as an unlabelled “button”. We also added an automatic check that holds the whole app at zero missing labels from here on. Nothing about how anything looks or works has changed; it's purely an accessibility pass.",
+
   "changelog.entries.icons-not-text-symbols.title":
     "Crisper icons in place of text symbols",
   "changelog.entries.icons-not-text-symbols.body":

@@ -172,7 +172,14 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
               <BackChevronIcon />
             </button>
           )}
-          <Brand to={loggedIn ? routes.feed : routes.homepage} />
+          {/* On the mobile app bar, the back chevron already sits top-left on
+              detail pages AND the bottom tab bar owns "home" — so the wordmark
+              is redundant there. Keep it only when there's no back button
+              (tab roots, and deep-linked detail pages with no history), so the
+              top-left is never empty. Desktop always shows it. */}
+          {!showBackButton && (
+            <Brand to={loggedIn ? routes.feed : routes.homepage} />
+          )}
         </div>
 
         <div className={styles.links}>

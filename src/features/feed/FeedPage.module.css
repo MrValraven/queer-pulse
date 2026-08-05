@@ -83,23 +83,51 @@
   flex-direction: column;
   gap: 10px;
 }
-/* The feed items lay out as a responsive grid so light cards (new members,
-   saved links, recaps) pack two-or-more to a row instead of each stretching
-   the full column and leaving dead space. `auto-fill` + `minmax` reflows
-   intrinsically — two-up at desktop feed-column width, one column on a phone —
-   with no device breakpoints. Rich cards (posts, community pulse, gatherings)
-   and the empty/error/pager rows opt back into a full-width row via .spanFull. */
+/* The feed items lay out as a uniform responsive grid so every card (posts,
+   new members, saved links, recaps, community pulse, gatherings) packs
+   two-up at desktop feed-column width instead of each stretching the full
+   column and leaving dead space. `auto-fill` + `minmax` reflows intrinsically
+   to one column on a phone, with no device breakpoints. The empty/error and
+   pager rows opt out into a full-width row via .spanFull. */
 .grid {
   display: grid;
-  /* `min(300px, 100%)` clamps the column floor to the container on very narrow
-     phones, so the 300px minimum can never push the track past the viewport and
+  /* `min(320px, 100%)` clamps the column floor to the container on very narrow
+     phones, so the minimum can never push the track past the viewport and
      spawn a horizontal scrollbar. */
-  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+  gap: 14px;
   align-items: start;
 }
 .spanFull {
   grid-column: 1 / -1;
+}
+
+/* Feed hero banner: a small pill under the greeting summarizing recent
+   activity (new joins / shared communities). Coral-tinted background with
+   --accent-ink text, which is the token tuned for AA-contrast coral text on
+   light/tinted surfaces (5.94:1 on --paper, ≥4.5:1 over coral-tinted badges
+   — see colors.css). `flex-wrap` + no fixed width lets long translated copy
+   wrap onto a second line rather than overflow on a narrow phone. */
+.banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  flex-wrap: wrap;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  color: var(--accent-ink);
+  font-size: 0.86rem;
+  font-weight: 500;
+  margin-block: 4px 14px;
+}
+.bannerDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
 }
 /* Infinite-scroll pager below the live feed (FeedLoadMore). Also the
    IntersectionObserver sentinel node — its own height keeps the observer's

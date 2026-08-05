@@ -1,5 +1,6 @@
 import type { AvatarTone } from "./ui";
 import type { MemberRole } from "./api/adminMembers.api";
+import type { StaffRoleId } from "./staffRoles.registry";
 import { portraitByInitials } from "./adminVouchGraph.data";
 
 /* ── Types ────────────────────────────────────────────────── */
@@ -56,6 +57,9 @@ export interface AdminMember {
   vouchCount: number;
   /** the small stacked vouch avatars to preview on the row */
   vouchedBy: VouchAvatar[];
+  /** Additive functional grants on top of `role` (e.g. `magazine_editor`) —
+   *  drives the row's staff-role badges and the drawer's toggle list. */
+  staffRoles: StaffRoleId[];
 }
 
 /** Canonical, stable flagged-member status id — the chip label resolves via
@@ -124,6 +128,9 @@ export interface MemberDetail {
     center: { initials: string; tone: AvatarTone; avatarUrl?: string | null };
     nodes: GraphNode[];
   };
+  /** Additive functional grants on top of `role` (e.g. `magazine_editor`) —
+   *  drives the drawer's "Roles & access" toggle list. */
+  staffRoles: StaffRoleId[];
 }
 
 /** Vanity total shown in the admin members header in demo mode. Also doubles
@@ -152,6 +159,7 @@ export const MEMBERS: AdminMember[] = [
       { initials: "AL", tone: "coral", avatarUrl: portraitByInitials("AL") },
       { initials: "DO", tone: "coral", avatarUrl: portraitByInitials("DO") },
     ],
+    staffRoles: [],
   },
   {
     id: "devon",
@@ -170,6 +178,7 @@ export const MEMBERS: AdminMember[] = [
       { initials: "IM", tone: "jade", avatarUrl: portraitByInitials("IM") },
       { initials: "KS", tone: "plum", avatarUrl: portraitByInitials("KS") },
     ],
+    staffRoles: ["magazine_editor"],
   },
   {
     id: "theo",
@@ -189,6 +198,7 @@ export const MEMBERS: AdminMember[] = [
       { initials: "IM", tone: "jade", avatarUrl: portraitByInitials("IM") },
       { initials: "SA", tone: "amber", avatarUrl: portraitByInitials("SA") },
     ],
+    staffRoles: [],
   },
   {
     id: "sofia",
@@ -207,6 +217,7 @@ export const MEMBERS: AdminMember[] = [
       { initials: "DO", tone: "coral", avatarUrl: portraitByInitials("DO") },
       { initials: "TM", tone: "violet", avatarUrl: portraitByInitials("TM") },
     ],
+    staffRoles: ["magazine_writer"],
   },
   {
     id: "kai",
@@ -224,6 +235,7 @@ export const MEMBERS: AdminMember[] = [
     vouchedBy: [
       { initials: "SA", tone: "amber", avatarUrl: portraitByInitials("SA") },
     ],
+    staffRoles: [],
   },
 ];
 
@@ -339,6 +351,7 @@ export const MEMBER_DETAIL: Record<string, MemberDetail> = {
         { initials: "BR", tone: "violet", direction: "inbound" },
       ],
     },
+    staffRoles: [],
   },
 };
 
@@ -396,6 +409,7 @@ export function detailFor(member: AdminMember): MemberDetail {
           )
         : [{ initials: "?", tone: "anon", direction: "inbound" }],
     },
+    staffRoles: member.staffRoles,
   };
 }
 

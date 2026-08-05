@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button, ModalSheet } from "../../shared/components/ui";
+import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CATS } from "./forum.data";
@@ -12,6 +13,9 @@ export interface NewThreadInput {
   body: string;
   cat: string;
   tags: string[];
+  /** The community this thread is posted to, or undefined for a global,
+   *  everyone-sees-it thread. */
+  communitySlug?: string;
 }
 
 interface ComposeThreadModalProps {
@@ -35,7 +39,9 @@ export function ComposeThreadModal({
   const [body, setBody] = useState("");
   const [cat, setCat] = useState(POST_CATS[0]!.id);
   const [tags, setTags] = useState<string[]>([]);
+  const [communitySlug, setCommunitySlug] = useState("");
   const [published, setPublished] = useState(false);
+  const myCommunityOptions = useMyCommunityOptions();
 
   const canPublish = title.trim().length > 0 && body.trim().length > 0;
 
@@ -69,7 +75,13 @@ export function ComposeThreadModal({
         onSubmit={(e) => {
           e.preventDefault();
           if (!canPublish) return;
-          onPublish({ title: title.trim(), body: body.trim(), cat, tags });
+          onPublish({
+            title: title.trim(),
+            body: body.trim(),
+            cat,
+            tags,
+            ...(communitySlug ? { communitySlug } : {}),
+          });
           setPublished(true);
         }}
       >
@@ -107,6 +119,26 @@ export function ComposeThreadModal({
             ))}
           </select>
         </label>
+
+        {myCommunityOptions.length > 0 && (
+          <label className={styles.field}>
+            <span className={styles.fieldLabel}>
+              {t("forum:compose.communityFieldLabel")}
+            </span>
+            <select
+              className={styles.input}
+              value={communitySlug}
+              onChange={(e) => setCommunitySlug(e.target.value)}
+            >
+              <option value="">{t("forum:compose.communityNone")}</option>
+              {myCommunityOptions.map((community) => (
+                <option key={community.slug} value={community.slug}>
+                  {community.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
 
         <ComposeTagsField tags={tags} onChange={setTags} />
 

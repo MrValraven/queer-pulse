@@ -52,7 +52,7 @@ function buildImprintSections(t: TFunction): LegalSection[] {
             <Translation
               i18nKey="marketing:imprint.contact.p1"
               values={{ email: IMPRINT_ENTITY.email }}
-              // eslint-disable-next-line jsx-a11y/anchor-has-content -- element template for <Translation>, cloned with translated children at render.
+              // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- element template for <Translation>, cloned with translated children (its accessible name) at render.
               components={{ a: <a href={`mailto:${IMPRINT_ENTITY.email}`} /> }}
             />
           </p>

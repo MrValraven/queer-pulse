@@ -27,6 +27,7 @@ export function NotifPanel() {
           <div className={sx("notif-empty")}>{t("myevents:notif.empty")}</div>
         ) : (
           notifs.map((n, i) => (
+            // eslint-disable-next-line jsx-a11y/control-has-associated-label -- accessible name comes from the dynamic lead/bold/tail/time children the linter can't read statically.
             <button
               key={n.id}
               type="button"

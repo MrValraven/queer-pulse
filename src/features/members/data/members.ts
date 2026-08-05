@@ -117,6 +117,10 @@ export interface Member {
    *  from other members. Owner-only control; defaults to false (visible)
    *  when absent. Admins can still see it for safety. */
   privateNetwork?: boolean;
+  /** Whether the member has opted in to being featured on the admin-curated
+   *  homepage. Owner-only control; defaults to false when absent. Only
+   *  meaningful when the profile's `visibility` is `"open"`. */
+  featuredConsent?: boolean;
   board: BoardItem[];
   /** Member slugs of people who have vouched (cross-referenced into the registry). */
   vouchers: string[];

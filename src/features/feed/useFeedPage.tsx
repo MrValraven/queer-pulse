@@ -21,33 +21,33 @@ import { initials } from "./api/feed.adapters";
 import { tintForSlug } from "../../shared/api/refs";
 import {
   GatheringCard,
-  NewMemberCard,
-  PostCard,
+  MemberCard,
+  CommunityCard,
+  CommunityPostCard,
   SavedArticleCard,
   RecapCard,
 } from "./FeedCards";
+import { DEMO_BANNER } from "./feedCards.data";
 import { useFeed } from "./api/useFeed";
+import type { FeedItem } from "./api/feed.api";
 import { useSequencedTabSwap } from "./useSequencedTabSwap";
 
 /** Each feed item tagged with the tabs it belongs to (besides "All"). Cards with
- *  an identifiable author carry `authorSlug` so blocked/muted authors filter out.
- *  `wide` cards (posts, gatherings) hold enough content to earn a full-width row;
- *  the rest are light and pack into the feed grid two-or-more to a row. */
+ *  an identifiable author carry `authorSlug` so blocked/muted authors filter out. */
 const FEED_ITEMS: {
   key: string;
   tab: FeedTab;
   Card: () => React.ReactElement;
   authorSlug?: string;
-  wide?: boolean;
 }[] = [
-  { key: "gathering", tab: "Gatherings", Card: GatheringCard, wide: true },
-  { key: "new-member", tab: "People", Card: NewMemberCard, authorSlug: "kai" },
+  { key: "community", tab: "Communities", Card: CommunityCard },
+  { key: "gathering", tab: "Gatherings", Card: GatheringCard },
+  { key: "new-member", tab: "People", Card: MemberCard, authorSlug: "kai" },
   {
     key: "post",
     tab: "Posts",
-    Card: () => <PostCard />,
+    Card: () => <CommunityPostCard />,
     authorSlug: FEED_POST.slug,
-    wide: true,
   },
   { key: "saved-article", tab: "Posts", Card: SavedArticleCard },
   { key: "recap", tab: "Gatherings", Card: RecapCard },
@@ -97,9 +97,10 @@ export function useFeedPage() {
   const feed = useFeed(displayTab);
   // The sidebar's "New this week" widget is page-global — it must stay put no
   // matter which feed tab is active. Source it from a dedicated People-tab
-  // query rather than the tab-scoped `feed` above, whose `newMembers` is empty
-  // on tabs like Gatherings/Posts. When the active tab *is* People this shares
-  // `feed`'s query key, so react-query dedupes it into a single request.
+  // query rather than the tab-scoped `feed` above, whose `items` carries no
+  // `new_member` entries on tabs like Gatherings/Posts. When the active tab
+  // *is* People this shares `feed`'s query key, so react-query dedupes it
+  // into a single request.
   const sidebarFeed = useFeed("People");
   // The sidebar's "Upcoming" widget shows the upcoming gatherings, independent of
   // the active feed tab — same page-global rationale as the members widget.
@@ -151,40 +152,40 @@ export function useFeedPage() {
   const pulse = (demoMode && showCommunity ? communityPulse : []).filter(
     (item) => !item.post.author.slug || !hidden.has(item.post.author.slug),
   );
-  const staticItems =
-    demoMode && displayTab !== "Communities"
-      ? FEED_ITEMS.filter(
-          ({ tab, authorSlug }) =>
-            (displayTab === "All" || tab === displayTab) &&
-            !(authorSlug && hidden.has(authorSlug)),
-        )
-      : [];
-  // Live posts (block/mute filtered — defense-in-depth over the server filter).
-  const livePosts = demoMode
-    ? []
-    : feed.posts.filter((p) => !p.slug || !hidden.has(p.slug));
-  // Live "new member" items (People tab, also folded into All) — same
-  // defense-in-depth block/mute filtering as livePosts above.
-  const liveMembers = demoMode
-    ? []
-    : feed.newMembers.filter(
-        (m) => !m.actor?.handle || !hidden.has(m.actor.handle),
-      );
+  const staticItems = demoMode
+    ? FEED_ITEMS.filter(
+        ({ tab, authorSlug }) =>
+          (displayTab === "All" || tab === displayTab) &&
+          !(authorSlug && hidden.has(authorSlug)),
+      )
+    : [];
+  // Live feed items, merged newest-first exactly as the backend returned them
+  // (community_post/forum_thread/gathering/new_member interleaved) — `useFeed`
+  // already applies the block/mute filter, so no re-filtering needed here.
+  const liveItems: FeedItem[] = demoMode ? [] : feed.items;
+  // Feed hero banner counts: the scripted demo copy, or a modest live
+  // derivation from this tab's new-member items (no dedicated live endpoint
+  // for "sharing" activity yet, so that side stays 0 rather than guessed at).
+  const liveNewMemberCount = liveItems.filter(
+    (item) => item.type === "new_member",
+  ).length;
+  const banner = demoMode
+    ? DEMO_BANNER
+    : liveNewMemberCount > 0
+      ? { joined: liveNewMemberCount, sharing: 0 }
+      : null;
   const empty = demoMode
     ? pulse.length === 0 && staticItems.length === 0
-    : livePosts.length === 0 && liveMembers.length === 0;
+    : liveItems.length === 0;
 
   // Sidebar "New this week" rows: the demo mock in demo mode, otherwise the live
-  // recently-joined members from the tab-independent `sidebarFeed` (block/mute
-  // filtered like the list) mapped to the widget's row shape and capped to a
-  // short list. Items without a handle can't link to a profile, so they're
-  // dropped. Sourcing this from `sidebarFeed` (not `liveMembers`) keeps the
-  // widget populated across every tab switch.
-  const sidebarNewMembers = demoMode
-    ? []
-    : sidebarFeed.newMembers.filter(
-        (member) => !member.actor?.handle || !hidden.has(member.actor.handle),
-      );
+  // recently-joined members from the tab-independent `sidebarFeed` (already
+  // block/mute filtered by `useFeed`, and already scoped to `new_member` items
+  // by the backend's People-tab filter) mapped to the widget's row shape and
+  // capped to a short list. Items without a handle can't link to a profile, so
+  // they're dropped. Sourcing this from `sidebarFeed` (not `liveItems`) keeps
+  // the widget populated across every tab switch.
+  const sidebarNewMembers = demoMode ? [] : sidebarFeed.items;
   const sidebarMembers: SidebarMember[] = demoMode
     ? NEW_THIS_WEEK
     : sidebarNewMembers
@@ -249,10 +250,10 @@ export function useFeedPage() {
     isError: feed.isError,
     refetch: feed.refetch,
     empty,
-    livePosts,
-    liveMembers,
+    liveItems,
     pulse,
     staticItems,
+    banner,
     revealDelay,
     // Cursor pagination for the live feed (inert in demo mode, where the hook is
     // disabled so `hasNextPage` is false and the pager never renders).

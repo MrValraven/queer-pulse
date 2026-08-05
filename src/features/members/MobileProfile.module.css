@@ -271,6 +271,13 @@
      keeps its page gutter now that it owns it directly. */
   padding-left: calc(var(--wrap-px, 28px) + env(safe-area-inset-left));
   padding-right: calc(var(--wrap-px, 28px) + env(safe-area-inset-right));
+  /* Now the first element on the page (the "Back to the room" row is hidden on
+     phones — see ProfilePage.module.css), so this owns the fixed app-bar
+     clearance. `main[data-page-main]` is pulled up by
+     `calc(app-bar-h + safe - (nav-top + nav-height))` on mobile
+     (standalone.css); mirroring the SAME tokens makes the two cancel exactly,
+     landing the avatar `--gap-grid` below the app bar on every device. */
+  padding-top: calc(var(--nav-top) + var(--nav-height) + var(--gap-grid));
 }
 
 .topRow {

@@ -262,6 +262,7 @@ export function AppealCard({
       style={{ ["--stripe" as string]: sev.stripe }}
       onClick={() => onOpen(appeal)}
       role="button"
+      aria-label={appeal.title}
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {

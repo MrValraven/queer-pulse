@@ -46,6 +46,9 @@ export interface ProfileDraft {
   /** Whether the member's trust network (vouchers/vouched-for) is hidden
    *  from other members. Admins can still see it for safety. */
   privateNetwork: boolean;
+  /** Whether the member has opted in to being featured on the admin-curated
+   *  homepage. Only meaningful when `visibility` is `"open"`. */
+  featuredConsent: boolean;
   /** Ordered slugs of the communities the member has chosen to feature on
    *  their profile — editable via the featured-communities picker. */
   featuredCommunities: string[];
@@ -80,6 +83,7 @@ export function toDraft(m: Member): ProfileDraft {
     lookingFor: [...(m.lookingFor ?? [])],
     lookingForPublic: m.lookingForPublic ?? false,
     privateNetwork: m.privateNetwork ?? false,
+    featuredConsent: m.featuredConsent ?? false,
     featuredCommunities: (m.featuredCommunities ?? []).map((ref) => ref.slug),
   };
 }
@@ -115,6 +119,7 @@ export function draftToUpdateDto(d: ProfileDraft): UpdateProfileDTO {
     lookingFor: d.lookingFor,
     lookingForPublic: d.lookingForPublic,
     privateNetwork: d.privateNetwork,
+    featuredConsent: d.featuredConsent,
     featuredCommunities: d.featuredCommunities,
   };
 }

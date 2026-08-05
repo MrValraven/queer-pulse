@@ -690,10 +690,13 @@ button.socialChip {
      height `--app-bar-h` + the top safe-area inset (see Navbar.module.css /
      MobileProfile.module.css `.tabList`) — so clear that instead, plus a
      small breathing gap, for a tight Instagram-like top. */
+  /* On phones the slim app bar already carries a back chevron (when there's
+     history) and the bottom tab bar owns Home/Members — so this separate
+     "Back to the room" row is redundant. Drop it for a single, tighter top;
+     the app-bar clearance it used to provide moves onto `.mheader` (the first
+     mobile element, see MobileProfile.module.css). */
   div.backBar {
-    padding-top: calc(
-      var(--app-bar-h) + env(safe-area-inset-top) + var(--gap-sm)
-    );
+    display: none;
   }
 }
 

@@ -35,6 +35,7 @@ export function EventCard({ event }: { event: CalendarEvent }) {
   const navigate = useNavigate();
   const fmt = useFormat();
   return (
+    // eslint-disable-next-line jsx-a11y/control-has-associated-label -- labelled by its visible text children (date, org, title, and venue/time) rendered from event data.
     <div
       className={styles.eventCard}
       onClick={() => void navigate(event.to)}

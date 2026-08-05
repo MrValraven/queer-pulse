@@ -201,6 +201,13 @@ export interface FeedPost {
   body: string;
   likeCount: number;
   replies: FeedReply[];
+  /** Thread deep-link for live posts, mapped from the feed API's `FeedItem.link`.
+   *  Demo posts omit it — `CommunityPostCard` falls back to `/communities`. */
+  link?: string;
+  /** Author avatar for live posts, mapped from the feed API's
+   *  `FeedItem.actor.avatarUrl`. Demo posts omit it — `CommunityPostCard`
+   *  falls back to initials. */
+  avatarUrl?: string | null;
 }
 
 export const FEED_POST: FeedPost = {

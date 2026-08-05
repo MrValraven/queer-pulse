@@ -227,6 +227,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       lookingFor: draft.lookingFor,
       lookingForPublic: draft.lookingForPublic,
       privateNetwork: draft.privateNetwork,
+      featuredConsent: draft.featuredConsent,
       // Self display (Task 3) always reads live from `draft.featuredCommunities`,
       // so no ref rebuild is needed here — `useMyCommunityCards` is a hook and
       // can't be called inside `save`. Keep the prior resolved refs so this

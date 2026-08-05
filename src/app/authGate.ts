@@ -2,6 +2,7 @@ import { matchPath, useLocation } from "react-router-dom";
 import { useAuth } from "./providers/authContext";
 import { useDemoMode } from "./providers/DemoModeProvider";
 import { linkToPath, routes } from "./routeMap";
+import type { StaffRoleId } from "../features/admin/staffRoles.registry";
 
 /**
  * Auth gating policy for the walled-garden model.
@@ -130,12 +131,18 @@ function matchesAny(pathname: string, patterns: string[]): boolean {
  * of truth and must 403 each call regardless.
  */
 const ADMIN_PATTERNS: string[] = ["/admin", "/admin/*"];
-const MOD_PATTERNS: string[] = [
-  "/mod/*",
-  // Magazine editorial tools (dashboard + deck authoring) are editor-work:
-  // open to moderators and admins, not admin-only.
-  "/magazine/editor",
-  "/magazine/editor/*",
+const MOD_PATTERNS: string[] = ["/mod/*"];
+
+/**
+ * Capability-gated surfaces: closed to the ordinary member tier regardless of
+ * `role`, and opened by holding the matching additive staff-role grant (or by
+ * being an admin, a superset — see the `role !== "admin"` short-circuit in
+ * `useAuthGateRedirect`). Magazine editorial tools moved here from
+ * MOD_PATTERNS: a moderator no longer gets them for free, only members holding
+ * `magazine_editor` (plus admins).
+ */
+const CAPABILITY_PATTERNS: { patterns: string[]; capability: StaffRoleId }[] = [
+  { patterns: ["/magazine/editor", "/magazine/editor/*"], capability: "magazine_editor" },
 ];
 
 /**
@@ -168,6 +175,14 @@ function safeNext(next: string | null): string {
 export function requiredRole(pathname: string): "admin" | "mod" | null {
   if (matchesAny(pathname, ADMIN_PATTERNS)) return "admin";
   if (matchesAny(pathname, MOD_PATTERNS)) return "mod";
+  return null;
+}
+
+/** The staff role a path demands, or null when the account tier is sufficient. */
+export function requiredCapability(pathname: string): StaffRoleId | null {
+  for (const entry of CAPABILITY_PATTERNS) {
+    if (matchesAny(pathname, entry.patterns)) return entry.capability;
+  }
   return null;
 }
 
@@ -209,7 +224,7 @@ export function useIsLinkVisible(): (href: string) => boolean {
  * null when the visitor is allowed through (logged in, or on a public route).
  */
 export function useAuthGateRedirect(): string | null {
-  const { loggedIn, checking, role, status, user } = useAuth();
+  const { loggedIn, checking, role, status, user, staffRoles } = useAuth();
   const { demoMode } = useDemoMode();
   const { pathname, search } = useLocation();
 
@@ -265,6 +280,17 @@ export function useAuthGateRedirect(): string | null {
       const need = requiredRole(pathname);
       if (need === "admin" && role !== "admin") return routes.homepage;
       if (need === "mod" && role !== "moderator" && role !== "admin") {
+        return routes.homepage;
+      }
+      // Capability-gated surfaces (e.g. /magazine/editor): the account tier
+      // alone isn't enough — admins are a superset, everyone else needs the
+      // matching additive staff-role grant.
+      const capability = requiredCapability(pathname);
+      if (
+        capability &&
+        role !== "admin" &&
+        !(staffRoles ?? []).includes(capability)
+      ) {
         return routes.homepage;
       }
     }

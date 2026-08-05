@@ -2,6 +2,7 @@ import {
   FiGrid,
   FiShield,
   FiUsers,
+  FiHome,
   FiGlobe,
   FiAward,
   FiInbox,
@@ -57,6 +58,11 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: FiUsers,
     badge: "members",
     tone: "warn",
+  },
+  {
+    labelKey: "shared:adminNav.items.landing",
+    to: routes.adminLanding,
+    icon: FiHome,
   },
   { labelKey: "nav:communities", to: routes.adminCommunities, icon: FiGlobe },
   {

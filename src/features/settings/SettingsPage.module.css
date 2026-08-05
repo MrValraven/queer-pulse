@@ -145,6 +145,17 @@
   opacity: 0.5;
   pointer-events: none;
 }
+.disabledControl {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.toggleHint {
+  font-size: 12.5px;
+  font-style: italic;
+  color: var(--ink-60);
+  margin-top: 4px;
+  line-height: 1.5;
+}
 
 .selectRow {
   display: flex;

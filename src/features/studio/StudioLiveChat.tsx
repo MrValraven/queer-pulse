@@ -87,10 +87,12 @@ export function StudioLiveChat({ onTip }: { onTip: () => void }) {
           />
           <button
             type="button"
+            aria-label={t("studio:liveChat.sendAria")}
             title={t("studio:liveChat.sendAria")}
             onClick={() => showToast(t("studio:liveChat.sentToast"), "success")}
           >
             <svg
+              aria-hidden="true"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"

@@ -84,8 +84,10 @@ export function AdminMemberRoleControl({
   };
 
   return (
-    <section className={styles.dSection}>
-      <h3 className={styles.dHeading}>{t("admin:members.role.sectionTitle")}</h3>
+    <div>
+      <span className={styles.subGroupLabel}>
+        {t("admin:staffRoles.accountLevelLabel")}
+      </span>
       <div className={styles.roleCurrentRow}>
         <span className={styles.roleCurrentLabel}>
           {t("admin:members.role.currentLabel")}
@@ -140,6 +142,6 @@ export function AdminMemberRoleControl({
           </p>
         </AdminModal>
       )}
-    </section>
+    </div>
   );
 }

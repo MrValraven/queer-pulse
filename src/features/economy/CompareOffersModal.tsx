@@ -33,6 +33,7 @@ export function CompareOffersModal({
         <table className={styles.table}>
           <thead>
             <tr>
+              {/* eslint-disable-next-line jsx-a11y/control-has-associated-label -- empty top-left corner cell of the comparison grid; a layout spacer <th>, not an interactive control. */}
               <th className={styles.rowHead} />
               {offers.map((a) => (
                 <th key={a.id} className={styles.colHead}>
@@ -75,6 +76,7 @@ export function CompareOffersModal({
               ))}
             </tr>
             <tr>
+              {/* eslint-disable-next-line jsx-a11y/control-has-associated-label -- empty spacer cell above the respond buttons; a layout <th>, not an interactive control. */}
               <th className={styles.rowHead} />
               {offers.map((a) => (
                 <td key={a.id} className={styles.cell}>

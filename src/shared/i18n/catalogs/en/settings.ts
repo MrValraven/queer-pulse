@@ -343,6 +343,11 @@ export const settings: Catalog = {
   "visibility.privateNetwork.label": "Keep my trust network private",
   "visibility.privateNetwork.help":
     "Hide who's vouched for you, and who you've vouched for, from other members. Admins can still see it for safety.",
+  "visibility.featuredConsent.label": "Let admins feature you on the homepage",
+  "visibility.featuredConsent.description":
+    "Public, opted-in members may be picked to appear on the homepage from time to time. Turn it off whenever you'd rather stay out of the spotlight.",
+  "visibility.featuredConsent.disabledHint":
+    'Set your visibility to "Open to connect" first — only public profiles can be featured.',
   "visibility.newArrivals.title": 'Show me in "New arrivals"',
   "visibility.newArrivals.desc":
     "Let the community know you've recently joined",

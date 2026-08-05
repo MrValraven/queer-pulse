@@ -347,6 +347,12 @@ export const settings: Catalog = {
   "visibility.privateNetwork.label": "Manter a minha rede de confiança privada",
   "visibility.privateNetwork.help":
     "Esconde de outros membros quem te deu aval e a quem deste aval. A administração continua a conseguir ver, por motivos de segurança.",
+  "visibility.featuredConsent.label":
+    "Deixar a administração destacar-te na página inicial",
+  "visibility.featuredConsent.description":
+    "Membros públicos que deram o seu consentimento podem ser escolhidos para aparecer na página inicial de vez em quando. Podes desativar isto quando quiseres ficar fora dos destaques.",
+  "visibility.featuredConsent.disabledHint":
+    'Define primeiro a tua visibilidade como "Aberto a ligações" — só perfis públicos podem ser destacados.',
   "visibility.newArrivals.title": "Mostrar-me em «Novidades»",
   "visibility.newArrivals.desc":
     "Diz à comunidade que te juntaste recentemente",

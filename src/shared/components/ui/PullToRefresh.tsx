@@ -24,10 +24,16 @@ import styles from "./PullToRefresh.module.css";
 export function PullToRefresh({
   onRefresh,
   disabled,
+  scrollable,
   children,
 }: {
   onRefresh: () => Promise<unknown>;
   disabled?: boolean;
+  /** Establish an internal scroll container (`overflow-y: auto; height: 100%`)
+   *  for a `fullHeight` layout whose rows overflow THIS wrapper rather than the
+   *  window — currently only Messages' thread list. Omit on window-scrolled
+   *  pages: an internal scroller there sub-pixel-traps the page's own scroll. */
+  scrollable?: boolean;
   children: ReactNode;
 }) {
   const { reducedMotion } = useMotionPrefs();
@@ -38,7 +44,12 @@ export function PullToRefresh({
   const arrowRotate = useTransform(pull, [0, DEFAULT_THRESHOLD_PX], [0, 180]);
 
   return (
-    <div className={styles.container} {...bind}>
+    <div
+      className={[styles.container, scrollable && styles.scrollable]
+        .filter(Boolean)
+        .join(" ")}
+      {...bind}
+    >
       <div className={styles.indicator}>
         {refreshing && <Spinner className={styles.spinnerJade} />}
         {!refreshing && !reducedMotion && (

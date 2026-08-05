@@ -98,7 +98,7 @@ export function MaintenancePage() {
         <p className={styles.meta}>
           <Translation
             i18nKey="system:maintenance.meta.line1"
-            // eslint-disable-next-line jsx-a11y/anchor-has-content -- element template; <Translation> clones it with the link text at render time.
+            // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- element template; <Translation> clones it with the link text at render time.
             components={{ a: <a href="https://status.queerpulse.app" /> }}
           />
           <br />

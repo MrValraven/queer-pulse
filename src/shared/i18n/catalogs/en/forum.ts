@@ -74,6 +74,8 @@ export const forum: Catalog = {
   "compose.titleFieldLabel": "Title",
   "compose.titlePlaceholder": "A clear, specific title",
   "compose.categoryFieldLabel": "Category",
+  "compose.communityFieldLabel": "Post to a community (optional)",
+  "compose.communityNone": "None — global thread",
   "compose.postFieldLabel": "Post",
   "compose.postPlaceholder": "Write your post…",
   "compose.cancel": "Cancel",

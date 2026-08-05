@@ -33,6 +33,7 @@ function AngleCard({
         .join(" ")}
       onClick={onSelect}
       aria-pressed={selected}
+      aria-label={t(angle.nameKey)}
     >
       <span className={styles.angleRadio} aria-hidden />
       <span className={styles.angleText}>

@@ -15,16 +15,22 @@ import {
   PullToRefresh,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { HubPulseCard, type HubPost } from "../communities/HubPulseCard";
+import { useFormat, type Formatters } from "../../shared/i18n/format";
+import type { HubPost } from "../communities/HubPulseCard";
 import {
   FEED_TABS,
   FEED_TAB_LABEL_KEY,
   type FeedTab,
-  type FeedPost,
   type FeedTabIcon,
 } from "./feed.data";
 import type { FeedItem } from "./api/feed.api";
-import { NewMemberCard, PostCard } from "./FeedCards";
+import { feedItemToPost } from "./api/feed.adapters";
+import {
+  MemberCard,
+  CommunityPostCard,
+  GatheringCard,
+  ForumThreadCard,
+} from "./FeedCards";
 import { FeedLoadMore } from "./FeedLoadMore";
 import { useFeedPage } from "./useFeedPage";
 import { FeedSidebar } from "./FeedSidebar";
@@ -101,19 +107,41 @@ function FeedTabs({
   );
 }
 
+/** Render the right card for one live `FeedItem`, switching on `type`. The
+ *  backend merges all four types into a single ordered `/feed` page (Task 7),
+ *  so the render layer — not the hook — is what adapts each item to its
+ *  card. `community_post` is the one type whose card still speaks the
+ *  prototype's `FeedPost` shape, so it's the one adapted via
+ *  `feedItemToPost`; the other three cards render straight off the raw
+ *  `FeedItem`. `default` is a defensive no-op for a future item type the
+ *  backend ships before this switch is updated for it. */
+function renderLiveFeedCard(item: FeedItem, fmt: Formatters): React.ReactNode {
+  switch (item.type) {
+    case "community_post":
+      return <CommunityPostCard post={feedItemToPost(item, fmt)} />;
+    case "gathering":
+      return <GatheringCard item={item} />;
+    case "forum_thread":
+      return <ForumThreadCard item={item} />;
+    case "new_member":
+      return <MemberCard item={item} />;
+    default:
+      return null;
+  }
+}
+
 /** The feed list items for the current tab/mode. Purely presentational: the
  *  page derives the arrays and the empty/error panels, this renders the right
  *  branch. Kept separate so the reveal wrappers and skeletons stay in one place
  *  and FeedPage itself stays small. */
-function FeedListBody({
+export function FeedListBody({
   loading,
   demoMode,
   isError,
   empty,
   emptyPanel,
   errorPanel,
-  livePosts,
-  liveMembers,
+  liveItems,
   pulse,
   staticItems,
   revealDelay,
@@ -124,16 +152,12 @@ function FeedListBody({
   empty: boolean;
   emptyPanel: React.ReactNode;
   errorPanel: React.ReactNode;
-  livePosts: FeedPost[];
-  liveMembers: FeedItem[];
+  liveItems: FeedItem[];
   pulse: HubPost[];
-  staticItems: { key: string; Card: () => React.ReactElement; wide?: boolean }[];
+  staticItems: { key: string; Card: () => React.ReactElement }[];
   revealDelay: (index: number) => string;
 }) {
-  // Rich cards (posts, community pulse, gatherings) hold enough content to earn
-  // a full-width row; light cards (new members, saved links) share a grid row.
-  const revealClass = (wide?: boolean) =>
-    [styles.cardReveal, wide && styles.spanFull].filter(Boolean).join(" ");
+  const fmt = useFormat();
 
   if (loading) {
     return (
@@ -150,22 +174,13 @@ function FeedListBody({
     if (empty) return <div className={styles.spanFull}>{emptyPanel}</div>;
     return (
       <>
-        {livePosts.map((post, index) => (
-          <div
-            key={post.id}
-            className={revealClass(true)}
-            style={{ animationDelay: revealDelay(index) }}
-          >
-            <PostCard post={post} />
-          </div>
-        ))}
-        {liveMembers.map((item, index) => (
+        {liveItems.map((item, index) => (
           <div
             key={item.id}
-            className={revealClass()}
-            style={{ animationDelay: revealDelay(index + livePosts.length) }}
+            className={styles.cardReveal}
+            style={{ animationDelay: revealDelay(index) }}
           >
-            <NewMemberCard item={item} />
+            {renderLiveFeedCard(item, fmt)}
           </div>
         ))}
       </>
@@ -178,16 +193,16 @@ function FeedListBody({
       {pulse.map((item, index) => (
         <div
           key={item.post.id}
-          className={revealClass(true)}
+          className={styles.cardReveal}
           style={{ animationDelay: revealDelay(index) }}
         >
-          <HubPulseCard item={item} />
+          <CommunityPostCard hub={item} />
         </div>
       ))}
-      {staticItems.map(({ key, Card, wide }, index) => (
+      {staticItems.map(({ key, Card }, index) => (
         <div
           key={key}
-          className={revealClass(wide)}
+          className={styles.cardReveal}
           style={{ animationDelay: revealDelay(index + pulse.length) }}
         >
           <Card />
@@ -216,10 +231,10 @@ export function FeedPage() {
     isError,
     refetch,
     empty,
-    livePosts,
-    liveMembers,
+    liveItems,
     pulse,
     staticItems,
+    banner,
     revealDelay,
     hasNextPage,
     fetchNextPage,
@@ -271,6 +286,18 @@ export function FeedPage() {
         <div className="wrap">
           <FeedGreeting greeting={greeting} dateLine={dateLine} first={first} />
 
+          {banner && (
+            <div className={styles.banner}>
+              <span className={styles.bannerDot} aria-hidden />
+              <span>
+                {t("feed:banner.joined", { count: banner.joined })}
+                {banner.sharing > 0 && (
+                  <> · {t("feed:banner.sharing", { count: banner.sharing })}</>
+                )}
+              </span>
+            </div>
+          )}
+
           <div className={styles.layout}>
             <div>
               <FeedTabs activeTab={targetTab} onSelect={selectTab} />
@@ -301,8 +328,10 @@ export function FeedPage() {
                       queryClient.invalidateQueries({ queryKey: ["feed"] })
                     }
                   >
-                    {/* Responsive card grid: light cards pack two-up, wide cards
-                        (.spanFull) claim a full row. See FeedListBody. */}
+                    {/* Responsive card grid: every card packs two-up (auto-fill
+                        reflows to one-up on narrow viewports). `.spanFull` is
+                        reserved for the empty/error panels and the pager row
+                        below, which legitimately claim the full width. */}
                     <div className={styles.grid}>
                       <FeedListBody
                         loading={loading}
@@ -311,8 +340,7 @@ export function FeedPage() {
                         empty={empty}
                         emptyPanel={emptyPanel}
                         errorPanel={errorPanel}
-                        livePosts={livePosts}
-                        liveMembers={liveMembers}
+                        liveItems={liveItems}
                         pulse={pulse}
                         staticItems={staticItems}
                         revealDelay={revealDelay}

@@ -58,14 +58,22 @@ export function AudioSection() {
             />
           </p>
         </div>
-        <Toggle on={normalise} onToggle={() => setNormalise((v) => !v)} />
+        <Toggle
+          on={normalise}
+          onToggle={() => setNormalise((v) => !v)}
+          label={t("studio:settings.audio.normalise.heading")}
+        />
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
           <h4>{t("studio:settings.audio.crossfade.heading")}</h4>
           <p>{t("studio:settings.audio.crossfade.body")}</p>
         </div>
-        <Toggle on={crossfade} onToggle={() => setCrossfade((v) => !v)} />
+        <Toggle
+          on={crossfade}
+          onToggle={() => setCrossfade((v) => !v)}
+          label={t("studio:settings.audio.crossfade.heading")}
+        />
       </div>
     </section>
   );
@@ -93,14 +101,22 @@ export function PrivacySection() {
           <h4>{t("studio:settings.privacy.history.heading")}</h4>
           <p>{t("studio:settings.privacy.history.body")}</p>
         </div>
-        <Toggle on={history} onToggle={() => setHistory((v) => !v)} />
+        <Toggle
+          on={history}
+          onToggle={() => setHistory((v) => !v)}
+          label={t("studio:settings.privacy.history.heading")}
+        />
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
           <h4>{t("studio:settings.privacy.cloudSync.heading")}</h4>
           <p>{t("studio:settings.privacy.cloudSync.body")}</p>
         </div>
-        <Toggle on={cloudSync} onToggle={() => setCloudSync((v) => !v)} />
+        <Toggle
+          on={cloudSync}
+          onToggle={() => setCloudSync((v) => !v)}
+          label={t("studio:settings.privacy.cloudSync.heading")}
+        />
       </div>
       <div className={`${s.opt} ${s.optBlock}`}>
         <div className={s.ot} style={{ marginBottom: 12 }}>
@@ -123,7 +139,11 @@ export function PrivacySection() {
           <h4>{t("studio:settings.privacy.tipReceipts.heading")}</h4>
           <p>{t("studio:settings.privacy.tipReceipts.body")}</p>
         </div>
-        <Toggle on={receipts} onToggle={() => setReceipts((v) => !v)} />
+        <Toggle
+          on={receipts}
+          onToggle={() => setReceipts((v) => !v)}
+          label={t("studio:settings.privacy.tipReceipts.heading")}
+        />
       </div>
     </section>
   );
@@ -155,7 +175,11 @@ export function CaptionsSection() {
             />
           </p>
         </div>
-        <Toggle on={captions} onToggle={() => setCaptions((v) => !v)} />
+        <Toggle
+          on={captions}
+          onToggle={() => setCaptions((v) => !v)}
+          label={t("studio:settings.captions.showCaptions.heading")}
+        />
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
@@ -199,7 +223,11 @@ export function CaptionsSection() {
           <h4>{t("studio:settings.captions.showBoth.heading")}</h4>
           <p>{t("studio:settings.captions.showBoth.body")}</p>
         </div>
-        <Toggle on={showBoth} onToggle={() => setShowBoth((v) => !v)} />
+        <Toggle
+          on={showBoth}
+          onToggle={() => setShowBoth((v) => !v)}
+          label={t("studio:settings.captions.showBoth.heading")}
+        />
       </div>
     </section>
   );
@@ -257,7 +285,11 @@ export function TippingSection() {
             })}
           </p>
         </div>
-        <Toggle on={roundUp} onToggle={() => setRoundUp((v) => !v)} />
+        <Toggle
+          on={roundUp}
+          onToggle={() => setRoundUp((v) => !v)}
+          label={t("studio:settings.tipping.roundUp.heading")}
+        />
       </div>
     </section>
   );

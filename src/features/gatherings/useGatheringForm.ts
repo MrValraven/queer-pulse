@@ -27,6 +27,9 @@ export function useGatheringForm() {
   const [endTime, setEndTime] = useState("22:00");
   const [hood, setHood] = useState("");
   const [venue, setVenue] = useState("");
+  // The community this gathering is posted to, or "" for a public gathering
+  // visible to everyone (the wizard's default — matches prior behaviour).
+  const [communitySlug, setCommunitySlug] = useState("");
   const [address, setAddress] = useState("");
   const [directions, setDirections] = useState("");
   const [cap, setCap] = useState("14");
@@ -104,6 +107,8 @@ export function useGatheringForm() {
     setEndTime,
     hood,
     setHood,
+    communitySlug,
+    setCommunitySlug,
     venue,
     setVenue,
     address,

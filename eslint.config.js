@@ -144,12 +144,37 @@ export default defineConfig([
       //    render time. The rule can't see that. Don't "fix" them by adding
       //    dummy children. (Current jsx-a11y no longer flags them: 0 hits.)
       //    UPDATE (2026-07-29): the 218/81/68 figures above are the historical
-      //    introduction baseline. That tail has since been largely cleared —
-      //    the current count is 7 (5 aria-role, 1 click-events-have-key-events,
-      //    1 no-static-element-interactions). Run `pnpm lint:a11y` for the live
-      //    breakdown. With the tail this small, promoting these rules to
-      //    "error" (blocking new a11y debt) is now realistic.
+      //    introduction baseline. That tail has since been largely cleared.
+      //    UPDATE (2026-08-04): the entire jsx-a11y tail was driven to ZERO
+      //    (was 44 — 37 `control-has-associated-label` + 7 interaction rules —
+      //    fixed with real accessible names where a control was genuinely
+      //    unlabelled, and justified per-line `eslint-disable`s only where the
+      //    rule misfires: `<Translation>` link-templates, APG carousels, a
+      //    keyboard-dismissed dialog's stop-propagation onClick, table cells,
+      //    a live stream with no caption source). Two gates hold it there:
+      //    (1) the accessible-name + ARIA-correctness rules below are "error"
+      //    (block via `pnpm lint`); (2) `pnpm lint:a11y` RATCHETS the total to
+      //    BUDGET = 0 in scripts/report-a11y.mjs, run first in `pnpm build`, so
+      //    ANY new warning from ANY jsx-a11y rule fails the build. Promote more
+      //    rules to "error" here as you gain confidence they won't misfire.
       ...jsxA11yWarnings,
+      // --- ARIA correctness + accessible names (graduated to "error") -------
+      // These rules are all at zero and stay there: for a screen-reader-using
+      // audience, a bad ARIA attribute or an image with no text alternative is
+      // a correctness bug, not stylistic debt. Erroring them means a new
+      // violation blocks CI the same way a type error does. `alt-text` guards
+      // <img>/<area>/<input type=image> accessible names; the `aria-*` family
+      // guards that ARIA props/values/roles are real and valid; the two
+      // `role-*-aria-*` rules guard that an explicit role has (and only has) its
+      // allowed ARIA props. Promote further rules here as each is driven to zero.
+      "jsx-a11y/alt-text": "error",
+      "jsx-a11y/aria-activedescendant-has-tabindex": "error",
+      "jsx-a11y/aria-props": "error",
+      "jsx-a11y/aria-proptypes": "error",
+      "jsx-a11y/aria-role": "error",
+      "jsx-a11y/aria-unsupported-elements": "error",
+      "jsx-a11y/role-has-required-aria-props": "error",
+      "jsx-a11y/role-supports-aria-props": "error",
       // --- Forms accessibility gate (WCAG 1.3.1 / 4.1.2) -------------------
       // The forms sweep drove every visible `<label>` to an associated control
       // (htmlFor+id, wrapping, or a converted div→label), and every otherwise

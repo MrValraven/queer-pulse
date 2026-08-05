@@ -10,10 +10,24 @@
  * with the most hits, and a running total, so the debt is visible and its
  * trend is trackable as rules are driven to zero and promoted to "error".
  *
- * Run: `pnpm lint:a11y`. Reporting only — it always exits 0 and never gates CI.
+ * RATCHET: the total is held at/under BUDGET below (now 0 — the whole tail was
+ * driven to zero on 2026-08-04). At or under budget the script exits 0; if the
+ * count grows past it, the script exits 1 so the build (`pnpm build` runs this
+ * first) blocks the new a11y debt. This covers EVERY jsx-a11y rule that is still
+ * only "warn" in eslint.config.js — the accessible-name/ARIA-correctness rules
+ * that hard-error through `pnpm lint` don't need it, but the interaction rules
+ * (which legitimately take an occasional justified `eslint-disable`) are held at
+ * zero here without the friction of erroring them.
+ *
+ * Run: `pnpm lint:a11y`.
  */
 
 import { execFileSync } from "node:child_process";
+
+// The most a11y warnings allowed before this gate fails. Currently 0: the tail
+// is fully cleared. Only ever ratchet this DOWN, never up without a written
+// reason — every increase is new a11y debt for a screen-reader-using audience.
+const BUDGET = 0;
 
 // ESLint exits non-zero whenever any error exists; its JSON report is still on
 // stdout in that case, so read stdout off the thrown error too.
@@ -55,7 +69,9 @@ const topFiles = [...countByFile.entries()]
   .slice(0, 15);
 
 if (total === 0) {
-  console.log("No jsx-a11y warnings. Promote the a11y rules to \"error\".");
+  console.log(
+    "No jsx-a11y warnings — the ratchet (BUDGET = 0) holds the whole set at zero.",
+  );
   process.exit(0);
 }
 
@@ -71,7 +87,23 @@ for (const [relativePath, count] of topFiles) {
   console.log(`  ${String(count).padStart(4)}  ${relativePath}`);
 }
 
-console.log(
-  `\n${countByFile.size} files affected. This is a reporting tool only — ` +
-    "a11y rules stay at \"warn\" until each is driven to zero (see eslint.config.js).",
-);
+console.log(`\n${countByFile.size} files affected.`);
+
+// Ratchet: fail if the tail grew, nudge to lock in any gain, else pass.
+if (total > BUDGET) {
+  console.error(
+    `\nA11Y RATCHET FAILED: ${total} warnings exceeds the budget of ${BUDGET}.\n` +
+      `Fix the ${total - BUDGET} new one(s), or — only with a written reason — ` +
+      "raise BUDGET in scripts/report-a11y.mjs.",
+  );
+  process.exit(1);
+}
+
+if (total < BUDGET) {
+  console.log(
+    `\nUnder budget (${total} < ${BUDGET}). Lower BUDGET to ${total} in ` +
+      "scripts/report-a11y.mjs to lock in the gain (ratchet down).",
+  );
+} else {
+  console.log(`\nAt budget (${BUDGET}). Drive rules to zero and promote them to "error".`);
+}

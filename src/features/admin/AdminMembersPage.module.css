@@ -493,6 +493,17 @@
   line-height: 1.5;
 }
 
+/* Roles & access — a labelled sub-group beneath the section's micro-heading.
+   Sentence-case + darker ink so the two groups read as the real group titles,
+   subordinate to the uppercase "Roles & access" eyebrow above them. */
+.subGroupLabel {
+  display: block;
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
 /* Role & permissions control */
 .roleCurrentRow {
   display: flex;
@@ -518,6 +529,56 @@
   font-size: 14px;
   line-height: 1.6;
   color: var(--ink);
+}
+
+/* Staff roles (additive functional grants, e.g. magazine desk) — divided from
+   the account-level control above by a hairline so the two groups read apart. */
+.staffRolesGroup {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.staffRoleList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.staffRoleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1px solid rgba(var(--line-rgb), 0.07);
+  border-radius: 14px;
+}
+
+.staffRoleText {
+  min-width: 0;
+}
+
+.staffRoleLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+[data-theme="dark"] .staffRoleLabel {
+  color: var(--ink);
+}
+
+.staffRoleDesc {
+  display: block;
+  margin-top: 2px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-60);
 }
 
 /* At a glance grid */
