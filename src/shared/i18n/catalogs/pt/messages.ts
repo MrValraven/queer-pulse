@@ -40,6 +40,11 @@ export const messages: Catalog = {
   "gif.comingSoonTitle": "Os GIFs estão a chegar",
   "gif.comingSoonHint": "Estamos a preparar a pesquisa de GIFs — volta em breve para dar movimento às tuas mensagens.",
 
+  // Connection status strip (ConnectionStatusBanner) at the top of the open
+  // thread — surfaces when the member is offline or the socket is reconnecting.
+  "connection.offline": "Estás offline — as mensagens serão enviadas quando voltares a ligar-te.",
+  "connection.reconnecting": "A reconectar…",
+
   // Atalhos — o "?" no compositor que lista os símbolos de menção. Tocar numa
   // linha insere o símbolo na mensagem para abrir a sugestão automática.
   "shortcuts.open": "Atalhos",

@@ -3,13 +3,16 @@ import { Button, Sending } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { submitIntake } from "../../shared/api/intakes";
 import { GLOSSARY } from "./queer101.data";
-import { ResourceModal, PlumSuccess, PlumComingSoon } from "./ResourceModal";
+import { ResourceModal, PlumSuccess } from "./ResourceModal";
 import styles from "./ResourceModal.module.css";
 
 export function SuggestEditModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
+  const { showToast } = useToast();
   const fieldId = useId();
   const [term, setTerm] = useState("");
   const [change, setChange] = useState("");
@@ -17,30 +20,26 @@ export function SuggestEditModal({ onClose }: { onClose: () => void }) {
 
   const valid = term.trim().length > 0 && change.trim().length > 8;
 
-  const submit = () => {
+  // LIVE: POST the suggestion to the generic intake endpoint; demo keeps the
+  // simulated success. On failure we drop back to the form and toast.
+  const submit = async () => {
     if (!valid || phase === "loading") return;
     setPhase("loading");
-    setTimeout(() => setPhase("done"), 1100);
+    if (demoMode) {
+      setTimeout(() => setPhase("done"), 1100);
+      return;
+    }
+    try {
+      await submitIntake("suggest_edit", {
+        term: term.trim(),
+        change: change.trim(),
+      });
+      setPhase("done");
+    } catch {
+      setPhase("form");
+      showToast(t("shared:intake.errorToast"), "error");
+    }
   };
-
-  // LIVE: glossary has no authoring endpoint (see resources.api.ts) — show an
-  // honest coming-soon panel instead of faking a "suggestion received" success.
-  if (!demoMode) {
-    return (
-      <ResourceModal title="" onClose={onClose}>
-        <PlumComingSoon
-          title={
-            <Translation
-              i18nKey="resources:suggestEdit.comingSoon.title"
-              components={{ em: <em /> }}
-            />
-          }
-          sub={t("resources:suggestEdit.comingSoon.sub")}
-          onClose={onClose}
-        />
-      </ResourceModal>
-    );
-  }
 
   return (
     <ResourceModal
@@ -106,7 +105,7 @@ export function SuggestEditModal({ onClose }: { onClose: () => void }) {
             <Button
               type="button"
               variant="primary"
-              onClick={submit}
+              onClick={() => void submit()}
               disabled={!valid || phase === "loading"}
             >
               {phase === "loading" ? (

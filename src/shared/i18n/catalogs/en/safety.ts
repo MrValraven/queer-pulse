@@ -184,6 +184,12 @@ export const safety: Catalog = {
   "blockMute.choose.liveDurationNote":
     "A mute lasts until you unmute — timed mutes are a demo-only preview.",
 
+  "blockMute.explainer.sub":
+    "Muting and blocking always start from someone's profile. Open the profile of the person you want to mute or block, then use the safety menu there.",
+  "blockMute.explainer.muteTitle": "Muting",
+  "blockMute.explainer.blockTitle": "Blocking",
+  "blockMute.explainer.membersCta": "Browse members",
+
   "blockMute.muted.title": "You've <em>muted</em> {name}",
   "blockMute.muted.sub":
     "Their posts and replies are now hidden from your feed. They don't know.",
@@ -566,6 +572,8 @@ export const safety: Catalog = {
   "spaces.nominate.reasonPlaceholder":
     "Why do you think this space should be verified? Specific experiences help.",
   "spaces.nominate.submitCta": "Submit nomination",
+  "spaces.nominate.submitting": "Submitting…",
+  "spaces.nominate.error": "That didn't go through. Please try again.",
   "spaces.nominate.thanks.title": "Thank you. We're <em>on it.</em>",
   "spaces.nominate.thanks.textNamed":
     "Your nomination for <strong>{name}</strong> is in. The community is the reason this list means anything — adding to it is genuinely a gift.",

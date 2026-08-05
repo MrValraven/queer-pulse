@@ -1,5 +1,6 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { ApiError } from "../../../shared/api/client";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
@@ -202,11 +203,25 @@ export function useThread(routeParam: string) {
     return threadDetail(metaQuery.data, posts, t, fmt);
   }, [demoMode, routeParam, metaQuery.data, posts, t, fmt]);
 
+  // Split a failed meta fetch into a genuine 404 (the slug resolves to nothing →
+  // an honest "not found") vs any other failure (500 / network / timeout →
+  // retryable "something went wrong"). Conflating them showed a real outage as
+  // if the thread had been deleted, with no way to retry.
+  const metaError = metaQuery.error;
+  const isHttp404 = metaError instanceof ApiError && metaError.status === 404;
+
   return {
     thread,
     // Only meaningful in live mode; demo drives its own simulated spinner.
     isLoading: live && (metaQuery.isLoading || postsQuery.isLoading),
-    isNotFound: live && metaQuery.isError,
+    // A genuine 404 — the thread doesn't exist.
+    isNotFound: live && metaQuery.isError && isHttp404,
+    // A retryable failure (anything that isn't a 404).
+    isError: live && metaQuery.isError && !isHttp404,
+    refetch: () => {
+      void metaQuery.refetch();
+      void postsQuery.refetch();
+    },
     hasNextPage: !demoMode && postsQuery.hasNextPage,
     fetchNextPage: () => void postsQuery.fetchNextPage(),
     isFetchingNextPage: postsQuery.isFetchingNextPage,

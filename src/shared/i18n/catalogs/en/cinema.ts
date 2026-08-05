@@ -670,7 +670,6 @@ export const cinema: Catalog = {
   "openCalls.card.downloadToast":
     "Brief PDF is downloading — check your files.",
   "openCalls.card.applyCta": "Apply",
-  "openCalls.card.comingSoonToast": "{label} — coming soon.",
   "openCalls.outro.title": "Fund the <em>next</em> call.",
   "openCalls.outro.sub":
     "Sustainers fund the commissions. Every new sustainer grows the next season's pool.",

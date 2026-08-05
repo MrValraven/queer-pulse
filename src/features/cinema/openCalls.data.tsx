@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { ImageSlotTint } from "../../shared/components/ui/ImageSlot";
+import { routes } from "../../app/routeMap";
 
 /** Season stats shown in the hero sidebar. Labels are catalog keys (Pattern A);
  * values are this season's own figures and are not translatable text. */
@@ -163,6 +164,9 @@ export interface SmallCall {
   body: string;
   meta: { v: ReactNode; k: string }[];
   secondaryLabel: string;
+  /** Real destination for the secondary CTA (a `routes.*` slug) so it isn't a
+   * dead "coming soon" toast (P3-16). */
+  secondaryTo: string;
 }
 
 export const smallCalls: SmallCall[] = [
@@ -192,6 +196,7 @@ export const smallCalls: SmallCall[] = [
       },
     ],
     secondaryLabel: "Learn more",
+    secondaryTo: routes.cinemaAbout,
   },
   {
     id: "first-feature-mentorship",
@@ -212,6 +217,7 @@ export const smallCalls: SmallCall[] = [
       },
     ],
     secondaryLabel: "Meet the mentors",
+    secondaryTo: routes.cinemaFilmmaker,
   },
 ];
 

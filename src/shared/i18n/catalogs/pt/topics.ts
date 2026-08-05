@@ -14,8 +14,10 @@ export const topics: Catalog = {
   "stats.newValue": "Novo",
 
   "header.followCta": "Seguir tópico",
+  "header.followingCta": "A seguir",
   "header.writePostCta": "Escrever uma publicação",
   "header.followToast": "Agora a seguir #{tag}",
+  "header.unfollowToast": "Já não segues #{tag}",
 
   "feed.filters.all": "Todas",
   "feed.filters.threads": "Threads",

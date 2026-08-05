@@ -92,6 +92,16 @@ export const notifications: Catalog = {
   "type.event_cancelled.text": "Um convívio em que vais estar foi cancelado.",
   "type.event_cancelled.meta": "Atualização de convívio",
 
+  "type.event_updated.text":
+    "Mudaram detalhes de um convívio em que vais estar.",
+  "type.event_updated.meta": "Atualização de convívio",
+  "type.event_updated.time.text":
+    "Mudou a hora de início de um convívio em que vais estar.",
+  "type.event_updated.time.meta": "Atualização de convívio",
+  "type.event_updated.location.text":
+    "Mudou o local de um convívio em que vais estar.",
+  "type.event_updated.location.meta": "Atualização de convívio",
+
   // Cobertura alargada de notificações. As personalizadas têm o campo
   // `<profile>{name}</profile>` em `textNamed`; as geradas pelo sistema
   // (pedido aprovado/recusado, registo aprovado, denúncia/recurso/roteiro) não
@@ -259,6 +269,11 @@ export const notifications: Catalog = {
   "mentions.empty.title": "Sem menções por aqui",
   "mentions.empty.description":
     "Não há nada nesta vista por agora. Quando alguém te mencionar, aparece aqui — não precisas de andar à procura.",
+  // Live ainda não tem endpoint de caixa de menções — mostrado em vez de uma
+  // lista vazia silenciosa, para ler como honestamente por terminar (MentionsPanel).
+  "mentions.comingSoon.title": "As menções estão a caminho",
+  "mentions.comingSoon.description":
+    "Ainda estamos a construir o sítio onde cada menção @ aterra. Até lá, continuas a saber assim que alguém te mencionar.",
   "mentions.composer.placeholder": "Responder a {name}…",
   "mentions.row.read": "Lida",
   "mentions.row.going": "Vais",
@@ -279,6 +294,13 @@ export const notifications: Catalog = {
   "mentions.context.thread": "numa conversa",
   "mentions.context.eventInvite": "num convite para um encontro",
   "mentions.context.communityReply": "numa resposta na comunidade {community}",
+  // Caixa de menções em direto (GET /mentions) — grupo do dia + alternativas
+  // quando a linha do backend não traz rótulo/autor resolvido (MentionsPanel).
+  "mentions.day.earlier": "Mais antigas",
+  "mentions.liveContext.community": "num post da comunidade",
+  "mentions.liveContext.generic": "mencionou-te",
+  "mentions.liveWhere.fallback": "a conversa",
+  "mentions.liveActor.unknown": "Alguém",
 
   // Pré-visualização de notificação (NotificationDeepLinkPage.tsx / Cards.tsx)
   "deepLink.back": "Notificações",

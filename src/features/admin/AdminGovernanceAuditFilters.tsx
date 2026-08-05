@@ -12,11 +12,16 @@ export function AdminGovernanceAuditFilters({
   filters,
   onChange,
   onExport,
+  exportDisabled,
+  exportTitle,
   moderators,
 }: {
   filters: AuditFilterState;
   onChange: (next: AuditFilterState) => void;
   onExport: () => void;
+  /** Disable the export CTA with a reason (no export endpoint in live yet). */
+  exportDisabled?: boolean;
+  exportTitle?: string;
   moderators: { id: string; name: string }[];
 }) {
   const { t } = useTranslation();
@@ -82,7 +87,12 @@ export function AdminGovernanceAuditFilters({
         onChange={(v) => set("range", v as AuditFilterState["range"])}
       />
 
-      <Button variant="ghost" onClick={onExport}>
+      <Button
+        variant="ghost"
+        onClick={onExport}
+        disabled={exportDisabled}
+        title={exportDisabled ? exportTitle : undefined}
+      >
         <FiDownload aria-hidden /> {t("admin:governance.audit.exportCta")}
       </Button>
     </div>

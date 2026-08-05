@@ -122,19 +122,28 @@ export function OralHistoryProjectPage() {
               components={{ em: <em /> }}
             />
           </Reveal>
-          <div>
-            {VOICES.map((v) => (
-              <Reveal key={v.who} className={styles.qaItem}>
-                <div
-                  className={styles.qaQ}
-                  style={{ fontStyle: "italic", fontWeight: 400 }}
-                >
-                  "{v.text}"
-                </div>
-                <div className={styles.archiveMeta}>{v.who}</div>
-              </Reveal>
-            ))}
-          </div>
+          {/* The named "voices" are prototype fixtures. Live mode has no real
+              recorded excerpts yet, so it shows an honest empty state instead
+              of fabricated community quotes. */}
+          {demoMode ? (
+            <div>
+              {VOICES.map((v) => (
+                <Reveal key={v.who} className={styles.qaItem}>
+                  <div
+                    className={styles.qaQ}
+                    style={{ fontStyle: "italic", fontWeight: 400 }}
+                  >
+                    "{v.text}"
+                  </div>
+                  <div className={styles.archiveMeta}>{v.who}</div>
+                </Reveal>
+              ))}
+            </div>
+          ) : (
+            <Reveal as="p" className={styles.leadP} style={{ maxWidth: "64ch" }}>
+              {t("resources:oralHistoryProject.voices.live.body")}
+            </Reveal>
+          )}
         </div>
       </section>
 

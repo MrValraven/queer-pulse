@@ -2,12 +2,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   addCohost,
+  bookmarkEvent,
   cancelEvent,
   createEvent,
   inviteToEvent,
   removeCohost,
   respondInvite,
   rsvpEvent,
+  unbookmarkEvent,
   unrsvpEvent,
   updateEvent,
   type CreateEventDto,
@@ -15,6 +17,7 @@ import {
 } from "./events.api";
 import { eventKeys } from "./eventKeys";
 import type { AttendeesResult } from "./useAttendees";
+import type { EventResult } from "./useEvent";
 
 /** Rollback context carried from onMutate → onError for the attendee-count optimism. */
 interface RsvpContext {
@@ -157,6 +160,61 @@ export function useUnrsvp(slug: string) {
       void queryClient.invalidateQueries({
         queryKey: eventKeys.attendees(slug, demoMode),
       });
+      void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
+    },
+  });
+}
+
+/** Rollback context for the optimistic bookmark patch on the detail query. */
+interface BookmarkContext {
+  key: readonly unknown[];
+  prev: EventResult | undefined;
+}
+
+/**
+ * POST/DELETE /events/:slug/bookmark — the event-detail "Save" toggle.
+ *
+ * `next` is the desired saved state. Optimistic: the mounted detail query's
+ * `gathering.bookmarked` flips immediately (rolling back on error), then live
+ * mode re-syncs from the server and refreshes the `filter=saved` list so the
+ * My Events "Saved" tab reflects the change. `param` is the raw route param the
+ * detail query is keyed on (`<slug>-<shortId>`); `slug` is the real slug the API
+ * expects. Demo mode never hits the network and skips the invalidation, so the
+ * optimistic patch simply persists in local cache — demo behaviour unchanged.
+ */
+export function useToggleEventBookmark(
+  slug: string,
+  param: string | undefined,
+) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, boolean, BookmarkContext>({
+    mutationFn: async (next) => {
+      if (demoMode) return;
+      if (next) await bookmarkEvent(slug);
+      else await unbookmarkEvent(slug);
+    },
+    onMutate: async (next) => {
+      const key = eventKeys.detail(param, demoMode);
+      await queryClient.cancelQueries({ queryKey: key });
+      const prev = queryClient.getQueryData<EventResult>(key);
+      if (prev) {
+        queryClient.setQueryData<EventResult>(key, {
+          ...prev,
+          gathering: { ...prev.gathering, bookmarked: next },
+        });
+      }
+      return { key, prev };
+    },
+    onError: (_e, _next, ctx) => {
+      if (ctx) queryClient.setQueryData(ctx.key, ctx.prev);
+    },
+    onSettled: () => {
+      // Demo keeps the optimistic local patch (no server to reconcile with);
+      // refetching would overwrite it from the static mock. Live re-syncs the
+      // detail and the Saved (filter=saved) list.
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
       void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
     },
   });

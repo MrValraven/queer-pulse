@@ -92,6 +92,7 @@ export const members: Catalog = {
   "profile.hero.requestIntroCta": "Pedir uma apresentação",
   "profile.hero.sayHelloCta": "Dizer olá",
   "profile.hero.vouchedFor": "Avalizaste {first}",
+  "profile.hero.vouchedShort": "Com aval",
   "profile.hero.withdrawVouchCta": "Retirar aval",
   "profile.hero.vouchForCta": "Avalizar {first}",
   "profile.hero.levelLabel": "Nível {number}",
@@ -827,12 +828,23 @@ export const members: Catalog = {
   "collections.recentSaves.unfiledCount": "+ {count} por arquivar",
   "collections.recentSaves.addCta": "+ Adicionar a uma coleção",
   "collections.toast.created": "Coleção criada",
+  "collections.toast.createError":
+    "Não foi possível criar essa coleção. Tenta de novo.",
+  "collections.toast.addError":
+    "Não foi possível adicionar isso à tua coleção. Tenta de novo.",
+  "collections.toast.removed": "Removido da coleção",
+  "collections.toast.removeError":
+    "Não foi possível remover esse item. Tenta de novo.",
   "collections.newCollection.defaultMeta":
     "Acabada de criar — começa a adicionar guardados",
   "collections.updatedJustNow": "Atualizado agora mesmo",
-  "collections.emptyLive.title": "As coleções estão a chegar",
+  // Card de coleção em modo live (valores vêm do servidor).
+  "collections.live.updated": "Atualizado {time}",
+  "collections.live.itemCount_one": "{count} guardado",
+  "collections.live.itemCount_other": "{count} guardados",
+  "collections.emptyLive.title": "Ainda sem coleções",
   "collections.emptyLive.description":
-    "Em breve poderás agrupar os artigos, convívios e lugares que guardas em pastas. Ainda estamos a preparar isto — por agora, nada do que organizares aqui ficaria guardado.",
+    "Agrupa os artigos, convívios e lugares que guardas em pastas. Cria a tua primeira coleção para começar.",
 
   // ── Modais de coleções (CollectionsModals) ──────────────────────────────────
   "collections.modal.defaultDialogLabel": "Diálogo",
@@ -854,6 +866,7 @@ export const members: Catalog = {
   "collections.modal.view.emptyText":
     "Ainda não há nada aqui. Adiciona guardados a partir da lista abaixo da grelha.",
   "collections.modal.view.close": "Fechar",
+  "collections.modal.view.removeItem": "Remover da coleção",
   "collections.modal.add.dialogLabel": "Adicionar a uma coleção",
   "collections.modal.add.eyebrow": "Adicionar a uma coleção",
   "collections.modal.add.title": "Onde deve ficar isto?",

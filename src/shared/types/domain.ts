@@ -21,6 +21,12 @@ export interface Community {
   joinLabel: string;
   dashed?: boolean;
   privateBadge?: boolean;
+  /** The community's join policy, when the source knows it (the live card DTO or
+   *  the demo registry). "public" = anyone can join instantly; the other tiers
+   *  gate entry (request/invite) or hide the roster (private). Absent when the
+   *  source doesn't carry it. Mirrors the backend `AccessTier`; inlined here
+   *  because this shared module must not import from a feature slice. */
+  accessTier?: "public" | "request" | "invite" | "private";
   /** Stable slug for the community detail route (`/community/:slug`). */
   slug?: string;
   /** The viewer's roster role in this community when the source knows it (the

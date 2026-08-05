@@ -2186,6 +2186,52 @@
   text-overflow: ellipsis;
 }
 
+/* Connection status strip (offline / reconnecting) at the top of the open
+   thread. Driven by the socket + navigator.onLine; hidden while connected and
+   in demo mode. Centred, unobtrusive, matches the pinned-banner rhythm. */
+.connectionBanner {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 22px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+  background: rgba(var(--plum-rgb), 0.05);
+  color: var(--text-strong);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.connectionBanner[data-status="offline"] {
+  background: rgba(var(--accent-rgb), 0.1);
+}
+.connectionBannerIcon {
+  flex: none;
+  display: inline-flex;
+  color: currentColor;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .connectionBanner[data-status="reconnecting"] .connectionBannerIcon {
+    animation: connBannerPulse 1.4s var(--ease) infinite;
+  }
+}
+@keyframes connBannerPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+:global([data-theme="dark"]) .connectionBanner {
+  background: rgba(var(--cream-rgb), 0.06);
+  border-color: rgba(var(--cream-rgb), 0.1);
+}
+
 /* "Forwarded" label above a forwarded bubble's body. */
 .forwardedLabel {
   display: block;

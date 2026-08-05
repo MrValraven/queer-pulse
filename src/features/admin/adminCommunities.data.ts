@@ -71,6 +71,12 @@ export interface Moderator {
   tone: AvatarTone;
   /** Sub-line, e.g. "founded the community · 21 vouches". */
   role: string;
+  /** The member's user id — set in live mode so the remove control can target
+   *  the real roster row. Absent in demo (fixtures have no backend id). */
+  memberId?: string;
+  /** Whether this moderator is the community's founder (owner). The founder
+   *  cannot be demoted, so live mode hides their remove control. */
+  isOwner?: boolean;
 }
 
 export interface Community {

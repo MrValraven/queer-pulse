@@ -92,11 +92,15 @@ export function MessageModal({
 
 /* ── Restrict modal ──────────────────────────────────────── */
 
-type DurationId = "24h" | "7d" | "30d" | "permanent";
+export type RestrictDurationId = "24h" | "7d" | "30d" | "permanent";
 type ScopeId = "community" | "platform";
-type RestrictReasonId = "harassment" | "misgendering" | "hostile" | "other";
+export type RestrictReasonId =
+  | "harassment"
+  | "misgendering"
+  | "hostile"
+  | "other";
 
-const DURATION_IDS: DurationId[] = ["24h", "7d", "30d", "permanent"];
+const DURATION_IDS: RestrictDurationId[] = ["24h", "7d", "30d", "permanent"];
 const SCOPE_IDS: ScopeId[] = ["community", "platform"];
 const REASON_IDS: RestrictReasonId[] = [
   "harassment",
@@ -105,31 +109,75 @@ const REASON_IDS: RestrictReasonId[] = [
   "other",
 ];
 
+/** FE duration id → the backend's `duration` string. `permanent` sends no
+ *  duration, which the backend reads as a permanent ban. */
+export const RESTRICT_DURATION_TO_API: Record<
+  RestrictDurationId,
+  string | undefined
+> = {
+  "24h": "24h",
+  "7d": "7d",
+  "30d": "30d",
+  permanent: undefined,
+};
+
+/** FE reason id → a shared reason-catalogue code the backend accepts
+ *  (`@IsIn(REASON_CODES)`). "Misgendering / deadnaming" maps to the catalogue's
+ *  `discrimination` ("Discrimination or misgendering"); "hostile" to
+ *  `harassment`. */
+export const RESTRICT_REASON_TO_CODE: Record<RestrictReasonId, string> = {
+  harassment: "harassment",
+  misgendering: "discrimination",
+  hostile: "harassment",
+  other: "other",
+};
+
+/** The values the drawer needs to compose either the demo toast (labels) or the
+ *  live `POST /admin/members/:id/restrict` body (ids). */
+export interface RestrictSelection {
+  durationId: RestrictDurationId;
+  scopeId: ScopeId;
+  reasonId: RestrictReasonId;
+  note: string;
+  durationLabel: string;
+  scopeLabel: string;
+}
+
 export function RestrictModal({
   name,
   onClose,
   onApply,
   onMissingReason,
+  platformOnly = false,
 }: {
   name: string;
   onClose: () => void;
-  /** Passes already-translated labels — the caller only composes a toast with
-   *  them, so a language switch mid-session can never corrupt stored state. */
-  onApply: (durationLabel: string, scopeLabel: string) => void;
+  /** Passes the raw selection so the caller can send the live restriction, plus
+   *  already-translated labels for the demo toast — resolving the labels here
+   *  means a language switch mid-session can never corrupt stored state. */
+  onApply: (selection: RestrictSelection) => void;
   onMissingReason: () => void;
+  /** Live mode has no community-scoped restriction backend, so the scope is
+   *  locked to platform-wide (the only thing the endpoint can honestly do)
+   *  rather than offering a "This community" option that silently acts
+   *  platform-wide. Demo keeps both scopes for the prototype. */
+  platformOnly?: boolean;
 }) {
   const { t } = useTranslation();
   const first = firstName(name);
-  const [dur, setDur] = useState<DurationId>("7d");
-  const [scope, setScope] = useState<ScopeId>("community");
+  const [dur, setDur] = useState<RestrictDurationId>("7d");
+  const [scope, setScope] = useState<ScopeId>(
+    platformOnly ? "platform" : "community",
+  );
   const [reason, setReason] = useState<RestrictReasonId | null>(null);
   const [note, setNote] = useState("");
 
+  const scopeIds = platformOnly ? (["platform"] as ScopeId[]) : SCOPE_IDS;
   const durationOptions: AdminSegOption[] = DURATION_IDS.map((id) => ({
     value: id,
     label: t(`admin:members.restrict.duration.${id}`),
   }));
-  const scopeOptions: AdminSegOption[] = SCOPE_IDS.map((id) => ({
+  const scopeOptions: AdminSegOption[] = scopeIds.map((id) => ({
     value: id,
     label: t(
       `admin:members.restrict.scope.${id === "community" ? "community" : "platform"}`,
@@ -157,10 +205,16 @@ export function RestrictModal({
             size="md"
             onClick={() =>
               reason
-                ? onApply(
-                    t(`admin:members.restrict.duration.${dur}`),
-                    t(`admin:members.restrict.scope.${scope}`),
-                  )
+                ? onApply({
+                    durationId: dur,
+                    scopeId: scope,
+                    reasonId: reason,
+                    note,
+                    durationLabel: t(
+                      `admin:members.restrict.duration.${dur}`,
+                    ),
+                    scopeLabel: t(`admin:members.restrict.scope.${scope}`),
+                  })
                 : onMissingReason()
             }
           >
@@ -175,7 +229,7 @@ export function RestrictModal({
       <AdminSeg
         options={durationOptions}
         value={dur}
-        onChange={(v) => setDur(v as DurationId)}
+        onChange={(v) => setDur(v as RestrictDurationId)}
       />
 
       <label className={styles.fieldLabel}>

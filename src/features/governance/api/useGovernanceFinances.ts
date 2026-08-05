@@ -17,8 +17,19 @@ export interface GovernanceFinancesResult {
   eventNotes: FinanceEventNoteDTO[];
   reserve: FinanceReserveDTO | null;
   partners: FinancePartnerDTO[];
+  /** Structured quarter totals (euros) — the stable source for the income /
+   *  expenditure column totals. Matched by DTO field, never by the display
+   *  label of a stat tile, so localisation or a reworded live report can't
+   *  break the totals. Null when the report omits them. */
+  incomeTotal: number | null;
+  expenseTotal: number | null;
   /** True while the initial live fetch is in flight (demo resolves instantly). */
   loading: boolean;
+  /** True when the live fetch failed — the section renders a retry state
+   *  instead of a silently-empty figures grid. Always false in demo. */
+  error: boolean;
+  /** Refetch the finances after an error (wired to the retry affordance). */
+  retry: () => void;
 }
 
 // Demo mode reshapes the page's own mocks into the backend response shape so
@@ -45,18 +56,24 @@ async function buildDemoFinances(): Promise<GovernanceFinanceResponseDTO> {
     eventNotes: EVENTS.map(([title, body]) => ({ title, body })),
     reserve: { current: RESERVE_CURRENT, target: RESERVE_TARGET },
     partners: FINANCE_PARTNERS,
+    // Structured totals mirror the demo `FIN_STATS` "total income"/"total
+    // expenditure" tiles (€4,620 / €4,150) so demo and live derive the column
+    // totals from the same DTO field, not a hardcoded label match.
+    incomeTotal: 4620,
+    expenseTotal: 4150,
     publishedAt: "",
   };
 }
 
-const EMPTY: GovernanceFinancesResult = {
+const EMPTY: Omit<GovernanceFinancesResult, "loading" | "error" | "retry"> = {
   stats: [],
   income: [],
   expense: [],
   eventNotes: [],
   reserve: null,
   partners: [],
-  loading: false,
+  incomeTotal: null,
+  expenseTotal: null,
 };
 
 /**
@@ -78,8 +95,12 @@ export function useGovernanceFinances(): GovernanceFinancesResult {
       demoMode ? buildDemoFinances() : getGovernanceFinances(),
   });
 
+  const retry = () => {
+    void query.refetch();
+  };
+
   if (!query.data) {
-    return { ...EMPTY, loading: query.isPending };
+    return { ...EMPTY, loading: query.isPending, error: query.isError, retry };
   }
 
   return {
@@ -89,6 +110,10 @@ export function useGovernanceFinances(): GovernanceFinancesResult {
     eventNotes: query.data.eventNotes,
     reserve: query.data.reserve,
     partners: query.data.partners,
+    incomeTotal: query.data.incomeTotal ?? null,
+    expenseTotal: query.data.expenseTotal ?? null,
     loading: false,
+    error: false,
+    retry,
   };
 }

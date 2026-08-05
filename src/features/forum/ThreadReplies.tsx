@@ -98,6 +98,7 @@ export function ThreadReplies({
   onStartReply,
   onCancelReply,
   onPostReply,
+  onReport,
   inlineDraft,
   setInlineDraft,
 }: {
@@ -131,6 +132,8 @@ export function ThreadReplies({
   onStartReply: (reply: Reply) => void;
   onCancelReply: () => void;
   onPostReply: (body: string) => void;
+  /** Report a specific reply — opens the report modal targeting its `postId`. */
+  onReport: (reply: Reply) => void;
   inlineDraft: string;
   setInlineDraft: (value: string) => void;
 }) {
@@ -192,6 +195,7 @@ export function ThreadReplies({
             onStartReply={onStartReply}
             onCancelReply={onCancelReply}
             onPostReply={onPostReply}
+            onReport={onReport}
             inlineDraft={inlineDraft}
             setInlineDraft={setInlineDraft}
           />

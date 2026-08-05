@@ -26,8 +26,10 @@ export const topics: Catalog = {
 
   // Header actions
   "header.followCta": "Follow topic",
+  "header.followingCta": "Following",
   "header.writePostCta": "Write a post",
   "header.followToast": "Now following #{tag}",
+  "header.unfollowToast": "No longer following #{tag}",
 
   // Feed filter chips
   "feed.filters.all": "All",

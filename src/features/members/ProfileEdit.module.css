@@ -454,6 +454,23 @@
   margin-top: 8px;
 }
 
+/* On phones the three visibility options can't fit one flex row and
+   `flex-wrap: wrap` dropped "Private" onto its own line inside the pill. Lay
+   them out as three equal columns instead so they always share one row; a long
+   label wraps within its own third rather than breaking the pill. Desktop keeps
+   the inline-flex pill above (wide right column already fits one row). */
+@media (max-width: 640px) {
+  .segmented {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .segment {
+    min-width: 0;
+    padding-inline: 6px;
+    text-align: center;
+  }
+}
+
 /* ---- Avatar editor -------------------------------------------------------- */
 .avatarWrap {
   position: relative;
@@ -497,6 +514,45 @@
   margin-top: 10px;
   font-size: 0.85rem;
   color: var(--accent);
+}
+
+/* Circular variant (mobile editor) — mirrors the read-only view's pride ring
+   (MobileProfile.module.css `.prideRing`/`.ringGap`), sized up as the edit
+   focus, with the actions centered beneath rather than overlaid. */
+.avatarCircleWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.avatarPrideRing {
+  box-sizing: border-box;
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  padding: 3px;
+  background: conic-gradient(
+    from 180deg,
+    var(--accent),
+    var(--violet),
+    var(--jade),
+    var(--plum),
+    var(--accent)
+  );
+}
+.avatarRingGap {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  padding: 2px;
+  background: var(--cream);
+}
+.avatarCircleActions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 /* ---- Social links editor -------------------------------------------------- */
@@ -719,9 +775,14 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
+  /* Sit flush on top of the mobile bottom tab bar instead of behind it —
+     `--bottom-inset` is 0 on desktop and the bar's full occupied height
+     (tab-bar height + iOS home-indicator inset) under the ≤860px mobile
+     breakpoint, so the home indicator is already cleared by the tab bar and
+     must not be added to this bar's padding again. */
+  bottom: var(--bottom-inset, 0px);
   z-index: 95;
-  padding: 16px clamp(20px, 5vw, 64px) calc(16px + env(safe-area-inset-bottom));
+  padding: 16px clamp(20px, 5vw, 64px) 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -795,12 +856,25 @@
 /* ---- Preview banner ------------------------------------------------------- */
 .previewBar {
   position: fixed;
-  left: 50%;
-  bottom: calc(22px + env(safe-area-inset-bottom));
-  transform: translateX(-50%);
+  /* Anchor to BOTH edges (not `left: 50%`) so the pill's available width is the
+     full viewport, then size to content and centre with auto margins. With
+     `left: 50%` the shrink-to-fit width was capped at ~50vw — narrower than the
+     banner text — which forced the flex label to shrink, and the global
+     `overflow-wrap: anywhere` let it collapse to a one-character-per-line column
+     on phones. `max-content` + `max-width` keeps it a compact centred pill on
+     desktop while letting the label wrap normally when space is tight. */
+  left: 0;
+  right: 0;
+  /* Float above the mobile bottom tab bar; `--bottom-inset` already folds in
+     the home-indicator inset on mobile (0 on desktop). */
+  bottom: calc(22px + var(--bottom-inset, 0px));
+  width: max-content;
+  max-width: calc(100% - 24px);
+  margin-inline: auto;
   z-index: 95;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 14px;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
@@ -817,6 +891,27 @@
   font-family: var(--serif);
   font-style: italic;
   font-weight: 400;
+}
+
+/* On narrow phones the label and the actions can't share one row without the
+   buttons shrinking below a comfortable tap target. Stack them: the label
+   takes its own row, and Discard / Save split the full width evenly. */
+@media (max-width: 560px) {
+  .saveBar {
+    gap: 10px 16px;
+    padding-left: clamp(16px, 5vw, 64px);
+    padding-right: clamp(16px, 5vw, 64px);
+  }
+  .unsavedLabel,
+  .saveError {
+    flex: 1 1 100%;
+  }
+  .saveActions {
+    width: 100%;
+  }
+  .saveActions > * {
+    flex: 1 1 0;
+  }
 }
 
 @keyframes barSlide {
@@ -841,11 +936,11 @@
 }
 @keyframes barSlideUp {
   from {
-    transform: translateX(-50%) translateY(20px);
+    transform: translateY(20px);
     opacity: 0;
   }
   to {
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
     opacity: 1;
   }
 }
@@ -928,4 +1023,44 @@
 .workRemove:focus-visible {
   outline: none;
   box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.12);
+}
+
+/* ---- Mobile edit layout (MobileEditableProfileHero) ----------------------- */
+.mEditHeader {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 460px;
+  margin-inline: auto;
+  padding-left: calc(var(--wrap-px, 28px) + env(safe-area-inset-left));
+  padding-right: calc(var(--wrap-px, 28px) + env(safe-area-inset-right));
+  padding-top: calc(var(--nav-top) + var(--nav-height) + var(--gap-grid));
+}
+.mEditAvatar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+/* Centered identity block: centre the labels, the name inputs and the chip
+   rows. `text-align: center` inherits into descendants, so the multi-line
+   short-bio textarea is pulled back to left-aligned below — centred running
+   text reads poorly. The single-line name/neighbourhood inputs stay centred to
+   match the view's centred cap. */
+.identityCentered {
+  text-align: center;
+}
+.identityCentered .nameEdit {
+  justify-content: center;
+}
+.identityCentered .shortBioInput {
+  text-align: left;
+}
+
+/* `.chips` (PronounPicker's pronoun-chip row) is a flex container
+   (display: flex; flex-wrap: wrap;), so the ancestor's text-align: center
+   above does not centre it — flex-start is the default main-axis alignment
+   for flex children regardless of text-align. Centre it explicitly. */
+.identityCentered .chips {
+  justify-content: center;
 }

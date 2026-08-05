@@ -2013,6 +2013,8 @@ export const resources: Catalog = {
     "Obrigade — a Sofia vai contactar-te com calma para conversar sobre isto. Sem compromisso.",
 
   "oralHistoryProject.voices.title": "Nas <em>palavras delas</em>",
+  "oralHistoryProject.voices.live.body":
+    "As primeiras gravações ainda estão a ser reunidas. Assim que as pessoas participantes escolherem como partilhar as suas palavras, as suas vozes vão aparecer aqui — nada antes de estarem prontas.",
 
   "oralHistoryProject.outro.title": "História, <em>mantida honesta.</em>",
   "oralHistoryProject.outro.sub":
@@ -2235,6 +2237,8 @@ export const resources: Catalog = {
   "sharedEquipment.kit.title": "O <em>material</em>",
   "sharedEquipment.kit.lead":
     "Está tudo no atelier. Toca em pedir e uma pessoa moderadora confirma o teu horário.",
+  "sharedEquipment.kit.live.body":
+    "O material partilhado e o seu calendário de reservas ainda não estão disponíveis online. Assim que o inventário do atelier estiver registado, vais poder ver o que está livre e pedir um horário aqui.",
   "sharedEquipment.item1.name": "Risógrafo a duas cores",
   "sharedEquipment.item1.specs":
     "RZ recondicionado, A3, atualmente com coral + preto carregados. Fica no atelier para uso coletivo.",

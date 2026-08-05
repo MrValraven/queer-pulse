@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { useAuth } from "../../app/providers/authContext";
 import { useIsOnline } from "../../shared/api/realtime";
+import { ConnectionStatusBanner } from "./ConnectionStatusBanner";
 import { ConversationComposerDock } from "./ConversationComposerDock";
 import { ConversationGroupModals } from "./ConversationGroupModals";
 import { ConversationHeader } from "./ConversationHeader";
@@ -197,6 +198,8 @@ export function ConversationPanel({
         onOpenStarred={onOpenStarred}
         onOpenGroupInfo={() => setGroupInfoOpen(true)}
       />
+
+      <ConnectionStatusBanner />
 
       <ConversationPinnedBanner pinned={pinnedMessages} onJump={jumpToMessageVirtualized} />
 

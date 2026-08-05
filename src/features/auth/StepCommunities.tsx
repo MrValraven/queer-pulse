@@ -1,37 +1,68 @@
 import { useState } from "react";
 import { FiArrowLeft, FiCheck } from "react-icons/fi";
+import { useAuth } from "../../app/providers/authContext";
 import { Button, SkeletonCard } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCommunities } from "../communities/api/useCommunities";
-import { useJoinCommunity } from "../communities/api/useCommunityMutations";
+import {
+  useJoinCommunity,
+  useLeaveCommunity,
+} from "../communities/api/useCommunityMutations";
 import type { Community } from "../homepage/data/types";
 import { SkipLink, type StepProps } from "./OnboardingStepChrome";
 import styles from "./OnboardingPage.module.css";
 
 const SUGGESTION_LIMIT = 4;
 
-/** One suggested community with its own real join mutation (one hook per card
- *  keeps rules-of-hooks intact across a variable-length grid). */
+/** Onboarding only suggests communities you can join in one tap — the "public"
+ *  tier. Request/invite/private communities gate entry (a join here would sit
+ *  pending or be refused), so they don't belong in this quick pick-and-join
+ *  step. Treat a missing tier as open only when the card isn't otherwise flagged
+ *  private, so both the live card DTO (always carries `accessTier`) and the demo
+ *  registry (tags only the gated one) filter correctly. */
+function isOpenlyJoinable(community: Community): boolean {
+  if (community.privateBadge || community.dashed) return false;
+  return community.accessTier === undefined || community.accessTier === "public";
+}
+
+/** One suggested community with its own join + leave mutations (one hook set per
+ *  card keeps rules-of-hooks intact across a variable-length grid). The button
+ *  toggles: tap to join, tap again to leave. */
 function CommunityJoinCard({ community }: { community: Community }) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const slug = community.slug ?? "";
   const joinCommunity = useJoinCommunity(slug);
+  const leaveCommunity = useLeaveCommunity(slug);
   // Seed from the card's own role (live discover cards carry `myRole`); demo
   // cards leave it unset, so they start un-joined and flip on click.
   const [status, setStatus] = useState<"idle" | "joined" | "requested">(
     community.myRole ? "joined" : "idle",
   );
   const isMember = status !== "idle";
+  const isPending = joinCommunity.isPending || leaveCommunity.isPending;
 
-  async function handleJoin() {
-    if (isMember) return;
-    setStatus("joined");
-    try {
-      const result = await joinCommunity.mutateAsync({});
-      if (result?.outcome === "requested") setStatus("requested");
-    } catch {
+  async function handleToggle() {
+    if (isPending) return;
+    if (status === "joined") {
+      // Leave. Self-leave passes the caller's own member slug; demo mode's
+      // mutation is a no-op (empty slug is harmless), live mode always has a
+      // profile slug on the session. Roll back to joined if the call fails.
       setStatus("idle");
+      try {
+        await leaveCommunity.mutateAsync({ memberSlug: user?.profile.slug ?? "" });
+      } catch {
+        setStatus("joined");
+      }
+    } else if (status === "idle") {
+      setStatus("joined");
+      try {
+        const result = await joinCommunity.mutateAsync({});
+        if (result?.outcome === "requested") setStatus("requested");
+      } catch {
+        setStatus("idle");
+      }
     }
   }
 
@@ -49,8 +80,14 @@ function CommunityJoinCard({ community }: { community: Community }) {
         className={[styles.ccJoin, isMember && styles.ccJoinActive]
           .filter(Boolean)
           .join(" ")}
-        onClick={() => void handleJoin()}
-        disabled={joinCommunity.isPending}
+        onClick={() => void handleToggle()}
+        disabled={isPending}
+        aria-pressed={isMember}
+        title={
+          status === "joined"
+            ? t("auth:onboarding.stepCommunities.leave")
+            : undefined
+        }
       >
         {status === "requested" ? (
           <>
@@ -73,6 +110,7 @@ export function StepCommunities({ onNext, onBack, stepLabel }: StepProps) {
   const { items, isLoading } = useCommunities({ filter: "discover" });
   const suggestions = items
     .filter((community) => Boolean(community.slug))
+    .filter(isOpenlyJoinable)
     .slice(0, SUGGESTION_LIMIT);
 
   return (

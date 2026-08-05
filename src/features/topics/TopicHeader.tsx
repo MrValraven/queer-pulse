@@ -1,14 +1,16 @@
 import { FiArrowRight } from "react-icons/fi";
 import { Button, FeatureHelp } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
+import { useTopicFollow } from "./api/useTopicFollow";
 import type { Topic } from "./topics.data";
 import styles from "./TopicPage.module.css";
 
 export function TopicHeader({ topic }: { topic: Topic }) {
-  const { showToast } = useToast();
   const { t } = useTranslation();
+  // P2-15: follow is now backed by `/topics/:slug/follow` in live and keeps the
+  // mock toast in demo, so the button is always shown (it used to be demo-only).
+  const { isFollowing, isPending, toggle } = useTopicFollow(topic.tag);
   return (
     <header className={styles.head}>
       <div className={styles.eyebrow}>{t(topic.eyebrowKey)}</div>
@@ -31,15 +33,12 @@ export function TopicHeader({ topic }: { topic: Topic }) {
 
       <div className={styles.actions}>
         <Button
-          variant="primary"
-          onClick={() =>
-            showToast(
-              t("topics:header.followToast", { tag: topic.tag }),
-              "success",
-            )
-          }
+          variant={isFollowing ? "ghost" : "primary"}
+          onClick={toggle}
+          disabled={isPending}
+          aria-pressed={isFollowing}
         >
-          {t("topics:header.followCta")}
+          {t(isFollowing ? "topics:header.followingCta" : "topics:header.followCta")}
         </Button>
         <Button variant="ghost" to={linkToPath(topic.writeHref)}>
           {t("topics:header.writePostCta")}

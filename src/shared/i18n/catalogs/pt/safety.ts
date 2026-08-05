@@ -195,6 +195,12 @@ export const safety: Catalog = {
   "blockMute.choose.liveDurationNote":
     "Um silenciamento dura até o desfazeres — os silenciamentos temporizados são uma pré-visualização só de demonstração.",
 
+  "blockMute.explainer.sub":
+    "Silenciar e bloquear começam sempre a partir do perfil de alguém. Abre o perfil da pessoa que queres silenciar ou bloquear e usa aí o menu de segurança.",
+  "blockMute.explainer.muteTitle": "Silenciar",
+  "blockMute.explainer.blockTitle": "Bloquear",
+  "blockMute.explainer.membersCta": "Ver pessoas",
+
   "blockMute.muted.title": "<em>Silenciaste</em> {name}",
   "blockMute.muted.sub":
     "As publicações e respostas desta pessoa estão agora escondidas do teu feed. Não fica a saber.",
@@ -582,6 +588,8 @@ export const safety: Catalog = {
   "spaces.nominate.reasonPlaceholder":
     "Porque achas que este espaço deve ser verificado? Experiências específicas ajudam.",
   "spaces.nominate.submitCta": "Submeter nomeação",
+  "spaces.nominate.submitting": "A submeter…",
+  "spaces.nominate.error": "Não foi possível submeter. Tenta novamente.",
   "spaces.nominate.thanks.title":
     "Obrigade. Já estamos a <em>tratar disso.</em>",
   "spaces.nominate.thanks.textNamed":

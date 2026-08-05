@@ -56,10 +56,30 @@ export function InlineTextarea({
 }) {
   const ref = useRef<HTMLTextAreaElement>(null);
   useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    el.style.height = "auto";
-    el.style.height = `${el.scrollHeight}px`;
+    const element = ref.current;
+    if (!element) return;
+    const fit = () => {
+      element.style.height = "auto";
+      element.style.height = `${element.scrollHeight}px`;
+    };
+    fit();
+    // A one-shot measure freezes a stale height when the textarea's width or the
+    // font changes after mount — e.g. measured mid-entrance in the narrow mobile
+    // editor, or before the web font loads — leaving a tall empty box. Recompute
+    // on width changes (ResizeObserver) and once fonts are ready (which reflows
+    // the text but not the explicitly-set box height, so the observer misses it).
+    const observer = new ResizeObserver(fit);
+    observer.observe(element);
+    let cancelled = false;
+    if (typeof document !== "undefined" && document.fonts) {
+      void document.fonts.ready.then(() => {
+        if (!cancelled) fit();
+      });
+    }
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+    };
   }, [value]);
   return (
     <textarea

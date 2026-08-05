@@ -744,6 +744,7 @@ export const community: Catalog = {
   "readingGroups.card.joinWaitlistCta": "Entrar na lista de espera",
   "readingGroups.card.requestToJoinCta": "Pedir para entrar",
   "readingGroups.card.onWaitlist": "Em lista de espera · #{position}",
+  "readingGroups.card.waitlistUnavailable": "Lista de espera em breve",
 
   "readingGroups.waitlist.heading": "Estás na <em>lista de espera.</em>",
   "readingGroups.waitlist.sub":

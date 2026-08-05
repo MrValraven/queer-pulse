@@ -32,10 +32,15 @@ import {
   grantStaffRole,
   liftUserSuspension,
   patchAdminMemberRole,
+  restrictMember,
   revokeStaffRole,
+  verifyMember,
   type AdminMemberRoleDTO,
   type AdminStaffRolesDTO,
   type MemberRole,
+  type RestrictedMemberDTO,
+  type RestrictMemberInput,
+  type VerifiedMemberDTO,
 } from "./adminMembers.api";
 
 interface AdminMembersPageVM {
@@ -223,6 +228,75 @@ export function useLiftSuspension() {
     live: async ({ memberId }) => {
       await liftUserSuspension(memberId);
     },
+    onLiveSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
+    },
+  });
+}
+
+/**
+ * Verify a member from the drawer.
+ *
+ * Demo mode never touches the network — it resolves a synthetic success DTO so
+ * the operator can see the flow without mutating fixtures (the roster's demo
+ * data is regenerated from `MEMBERS` on every render, so there's nothing to
+ * persist). Live mode calls `POST /admin/members/:id/verify` (idempotent) and,
+ * on success, invalidates the shared `["admin-members"]` prefix so the roster
+ * row and the open drawer both re-read the member as verified. Failures surface
+ * through the global mutation-error toast — never faked into success.
+ */
+export function useVerifyMember() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useDemoAwareMutation<
+    VerifiedMemberDTO,
+    unknown,
+    { memberId: string; slug: string }
+  >({
+    demoMode,
+    demoLatencyMs: 0,
+    mutationKey: ["admin-members", "verify"],
+    demoResult: ({ memberId, slug }) => ({
+      id: memberId,
+      slug,
+      verified: true,
+      verifiedAt: new Date().toISOString(),
+    }),
+    live: ({ memberId }) => verifyMember(memberId),
+    onLiveSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
+    },
+  });
+}
+
+/**
+ * Restrict a member (platform-wide) from the drawer's Restrict modal.
+ *
+ * Demo mode resolves synthetically. Live mode calls
+ * `POST /admin/members/:id/restrict` — a `duration` (`"7d"`/`"24h"`/`"30d"`)
+ * makes it a time-boxed suspension; omitting it makes it a permanent ban. The
+ * backend enforces the guardrails (not yourself, not a staff/house account) and
+ * 403/404s otherwise, surfaced by the global mutation-error toast. On success
+ * both the roster and the open drawer re-read off the shared `["admin-members"]`
+ * key prefix so the member shows as limited/suspended everywhere.
+ */
+export function useRestrictMember() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useDemoAwareMutation<
+    RestrictedMemberDTO,
+    unknown,
+    { memberId: string; input: RestrictMemberInput }
+  >({
+    demoMode,
+    demoLatencyMs: 0,
+    mutationKey: ["admin-members", "restrict"],
+    demoResult: ({ memberId, input }) => ({
+      id: memberId,
+      status: "suspended",
+      suspendedUntil: input.duration ? new Date().toISOString() : null,
+    }),
+    live: ({ memberId, input }) => restrictMember(memberId, input),
     onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
     },

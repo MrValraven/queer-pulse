@@ -48,6 +48,8 @@ export function useMyEventsState(): MyEventsValue {
     events: sourceEvents,
     notifs: sourceNotifs,
     loading: dataLoading,
+    hasError,
+    retry,
   } = useMyEventsData();
   const [events, setEventsRaw] = useState<MyEvent[]>(sourceEvents);
   const [notifs, setNotifsRaw] = useState<Notif[]>(sourceNotifs);
@@ -284,6 +286,12 @@ export function useMyEventsState(): MyEventsValue {
     unreadCount,
     counts,
     byId,
+    hasError,
+    retry,
+    // Live has no notifications contract yet, so the header bell + "What's
+    // changed" panel are demo-only — see MyEventsHeader. DEFERRED(needs
+    // notifications endpoint, Phase 2).
+    notificationsEnabled: demoMode,
     pill,
     selectedDate,
     loading,

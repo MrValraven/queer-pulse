@@ -10,6 +10,7 @@ import { AdminChip, AdminAvatar } from "./ui";
 import { portrait } from "./adminPeople.data";
 import { DEFAULT_AUDIT_FILTERS, type AuditFilterState } from "./adminGovernance.data";
 import { useAdminAudit, type AuditRowView } from "./api/useAdminAudit";
+import { downloadAuditCsv } from "./api/adminAudit.api";
 import { AdminGovernanceAuditFilters } from "./AdminGovernanceAuditFilters";
 import { AdminGovernanceAuditModal } from "./AdminGovernanceAuditModal";
 import styles from "./AdminGovernancePage.module.css";
@@ -39,6 +40,33 @@ export function AdminGovernanceAudit() {
   };
 
   const totalDisplay = fmt.number(total);
+
+  // Export the audit feed as CSV. Demo keeps the prototype's confirmation toast
+  // (no backend, no real file); live streams the CSV from `/mod/audit.csv`
+  // honouring the current filters, then confirms — or shows an honest error.
+  const handleExport = async () => {
+    if (demoMode) {
+      showToast(
+        t("admin:governance.audit.exportToast", { total: totalDisplay }),
+        "success",
+      );
+      return;
+    }
+    try {
+      await downloadAuditCsv({
+        moderator: filters.moderator === "all" ? undefined : filters.moderator,
+        action: filters.action === "all" ? undefined : filters.action,
+        range: filters.range === "all" ? undefined : filters.range,
+        q: filters.query.trim() || undefined,
+      });
+      showToast(
+        t("admin:governance.audit.exportToast", { total: totalDisplay }),
+        "success",
+      );
+    } catch {
+      showToast(t("admin:governance.audit.exportError"), "error");
+    }
+  };
   const metaLabel =
     total === 0
       ? t("admin:governance.audit.metaZero")
@@ -66,19 +94,9 @@ export function AdminGovernanceAudit() {
         filters={filters}
         onChange={changeFilters}
         moderators={moderators}
-        onExport={() =>
-          demoMode
-            ? showToast(
-                t("admin:governance.audit.exportToast", {
-                  total: totalDisplay,
-                }),
-                "success",
-              )
-            : showToast(
-                t("admin:governance.audit.exportComingSoonToast"),
-                "info",
-              )
-        }
+        // P3-8: live now streams a real CSV from `GET /mod/audit.csv` honouring
+        // the current filters; demo keeps the prototype's confirmation toast.
+        onExport={handleExport}
       />
 
       <div className={styles.auditCard}>

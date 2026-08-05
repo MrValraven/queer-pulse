@@ -14,9 +14,17 @@ const VALID_SLUGS = Object.keys(COOP_TEMPLATE_CONTENT) as CoopTemplateSlug[];
 /**
  * Full in-app document for one housing co-op formation template. Cards on
  * `HousingCoopPage` link here by slug; the content itself lives in
- * `coopTemplateContent.data.tsx` (English-authored drafts, not yet
- * translated — PT falls back to the same text, same as the rest of the
- * platform-authored housing co-op content).
+ * `coopTemplateContent.data.tsx` (English-authored drafts, not yet translated
+ * — PT falls back to the same text, same as the rest of the platform-authored
+ * housing co-op content).
+ *
+ * DEFERRED (tracker P3-27): `coopTemplateContent.data.tsx` is ~750 lines of
+ * legal/organisational formation prose across several templates. Localising it
+ * to pt-PT at EN/PT parity is a professional legal-translation task, not a
+ * mechanical string move, so it is intentionally left English-only for now (the
+ * page shows a disclaimer). The chrome around it (back link, disclaimer) IS
+ * already routed through the `economy` catalog. Localise the document bodies in
+ * a dedicated i18n pass when PT translation capacity is available.
  */
 export function CoopTemplatePage() {
   const { t } = useTranslation();

@@ -1901,6 +1901,96 @@ export const marketing: Catalog = {
   "changelog.tag.imprint": "Ler o aviso legal",
   "changelog.tag.feed": "Abrir o teu feed",
 
+  "changelog.entries.trust-network-legend-withdrawn.title":
+    "A legenda da rede de confiança já explica as linhas tracejadas",
+  "changelog.entries.trust-network-legend-withdrawn.body":
+    "No mapa da Rede de Confiança, um aval que foi retirado é desenhado como uma linha tracejada vermelha. A legenda passa a nomeá-lo — «Aval retirado» — para que as linhas tracejadas deixem de ser um mistério.",
+
+  "changelog.entries.trust-network-replay-timeline.title":
+    "A repetição da Rede de Confiança conta a história pessoa a pessoa",
+  "changelog.entries.trust-network-replay-timeline.body":
+    "Antes, a repetição da Rede de Confiança avançava mês a mês, juntando num só borrão toda a gente que entrou no mesmo mês. Agora percorre a rede uma ligação de cada vez, pela ordem real em que as pessoas chegaram — cada passo nomeia quem se ligou e quando, e a linha correspondente na lista lateral acende-se enquanto reproduz.",
+
+  "changelog.entries.pronouns-on-member-cards.title":
+    "Cartões de novos membros mais completos no feed",
+  "changelog.entries.pronouns-on-member-cards.body":
+    "Os cartões de novos membros no teu feed passam a mostrar os pronomes da pessoa mesmo ao lado do nome, além de onde vive e dos seus interesses — para ficares com uma ideia de alguém ainda antes de abrires o perfil. A localização fica oculta para quem não tem o perfil público.",
+
+  "changelog.entries.onboarding-join-and-leave.title":
+    "Junta-te — e sai — de comunidades durante o registo",
+  "changelog.entries.onboarding-join-and-leave.body":
+    "No passo de registo que sugere comunidades, agora podes tocar novamente numa comunidade a que já te juntaste para sair, caso mudes de ideias. As sugestões passam também a mostrar apenas comunidades totalmente abertas às quais te podes juntar com um toque — as privadas e as só por convite deixam de aparecer aqui, já que não podem ser aderidas de imediato.",
+
+  "changelog.entries.navbar-wordmark-no-wrap.title":
+    "O logótipo da QueerPulse deixa de se empilhar",
+  "changelog.entries.navbar-wordmark-no-wrap.body":
+    "Em alguns tamanhos de ecrã, o nome QueerPulse na barra de topo podia partir-se, deixando cada letra numa linha própria e inchando a barra numa bolha enorme. O logótipo passa agora a manter-se numa única linha em qualquer largura.",
+
+  "changelog.entries.mobile-edit-profile-refresh.title":
+    "Editar o perfil combina com o novo visual",
+  "changelog.entries.mobile-edit-profile-refresh.body":
+    "No telemóvel, editar o teu perfil passa a usar o mesmo layout ao centro do próprio perfil — foto redonda em cima e campos mais arrumados — e as opções de Estado e Visibilidade deixam de passar para uma segunda linha.",
+
+  "changelog.entries.mobile-profile-header-refresh.title":
+    "Um perfil mais limpo no telemóvel",
+  "changelog.entries.mobile-profile-header-refresh.body":
+    "Os perfis passam a começar pela foto e pelo nome ao centro, com uma linha de estatísticas mais folgada e botões mais arrumados — dizer olá e avalizar ficam mais calmos e claros no telemóvel.",
+
+  "changelog.entries.profile-edit-save-bar-mobile.title":
+    "Guardar o teu perfil no telemóvel passa a funcionar",
+  "changelog.entries.profile-edit-save-bar-mobile.body":
+    "Ao editares o teu perfil no telemóvel, os botões Guardar e Descartar deixam de ficar escondidos por trás da barra de navegação inferior. A barra de edição passa a ficar logo acima dela e, em ecrãs estreitos, os dois botões dividem toda a largura para serem fáceis de tocar.",
+
+  "changelog.entries.follow-topics-you-care-about.title":
+    "Segue os temas que te interessam",
+  "changelog.entries.follow-topics-you-care-about.body":
+    "Toca em Seguir em qualquer tema para o manteres por perto. Os teus seguimentos ficam guardados na tua conta, por isso os assuntos que te importam acompanham-te em todos os dispositivos.",
+
+  "changelog.entries.event-change-alerts.title":
+    "Fica a saber quando um evento muda",
+  "changelog.entries.event-change-alerts.body":
+    "Se um evento a que confirmaste presença ou para o qual foste convidade mudar de hora ou de local, recebes uma notificação — para que uma alteração de última hora nunca te apanhe desprevenide.",
+
+  "changelog.entries.forms-that-really-submit.title":
+    "Os formulários da aplicação passam a enviar mesmo",
+  "changelog.entries.forms-that-really-submit.body":
+    "A subscrição da newsletter, os formulários de contacto e de parcerias, as candidaturas a bolsas / painéis / anfitrião sóbrio e as nomeações de espaços seguros passam a ser enviadas de verdade, em vez de mostrarem uma pré-visualização. As tuas predefinições de eventos (visibilidade e email) também ficam guardadas.",
+
+  "changelog.entries.save-events-for-later.title":
+    "Guarda convívios para mais tarde",
+  "changelog.entries.save-events-for-later.body":
+    "Encontraste um convívio para o qual ainda não queres confirmar presença? Toca em Guardar para o marcar. Tudo o que guardas aparece no separador Guardados em Os Meus Eventos, para que nada que te despertou curiosidade se perca.",
+
+  "changelog.entries.collections-are-here.title":
+    "Agrupa o que guardas em coleções",
+  "changelog.entries.collections-are-here.body":
+    "Podes agora reunir as pessoas, lugares e publicações que guardaste nas tuas próprias coleções com nome — uma lista de leitura, uma viagem, uma seleção de espaços. Cria as que quiseres e acrescenta ou remove itens quando te apetecer.",
+
+  "changelog.entries.your-mentions-in-one-place.title":
+    "Todas as menções, num só sítio",
+  "changelog.entries.your-mentions-in-one-place.body":
+    "Quando alguém te menciona com @ num tópico do fórum ou numa publicação de comunidade, isso passa a chegar à tua caixa de Menções, para pores a leitura em dia sem andar à procura nas notificações.",
+
+  "changelog.entries.new-moderation-tools.title":
+    "Mais ferramentas para a equipa de moderação",
+  "changelog.entries.new-moderation-tools.body":
+    "Nos bastidores, a equipa ganhou controlos reais: verificar ou restringir um membro, adicionar e remover moderadores de comunidade, decidir sobre propostas de grupos de leitura e publicar ou exportar registos de governação — tudo ligado à plataforma, em vez de servir apenas de pré-visualização.",
+
+  "changelog.entries.reports-reach-the-team.title":
+    "As denúncias chegam agora à equipa de moderação",
+  "changelog.entries.reports-reach-the-team.body":
+    "Quando denuncias uma publicação do fórum, ela chega agora à moderação de forma fiável — e, se o envio falhar, vês um erro claro e uma forma de tentar de novo, em vez de um falso \"concluído\". Também podes denunciar uma resposta em particular, não só a publicação inicial.",
+
+  "changelog.entries.chat-recovers-after-reconnect.title":
+    "O chat recupera quando voltas a ter ligação",
+  "changelog.entries.chat-recovers-after-reconnect.body":
+    "Se uma mensagem não puder ser enviada por teres perdido a ligação, passa a enviar-se sozinha assim que voltas a estar online — sem precisares de recarregar ou reenviar à mão. Uma pequena faixa indica quando estás offline ou a reconectar, para saberes sempre o estado de uma mensagem.",
+
+  "changelog.entries.honest-live-states.title":
+    "O que vês é real",
+  "changelog.entries.honest-live-states.body":
+    "Revimos a aplicação para que as páginas mostrem apenas pessoas e conteúdos reais. Recortes de imprensa de exemplo, vozes de amostra e inventário de demonstração deixam de aparecer como se fossem reais, e os controlos que ainda não estão ligados passam a estar claramente assinalados em vez de fingirem que guardam.",
+
   "changelog.entries.community-activity-in-your-feed.title":
     "O teu feed mostra agora o que se passa nas tuas comunidades",
   "changelog.entries.community-activity-in-your-feed.body":
@@ -2730,6 +2820,9 @@ export const marketing: Catalog = {
   "pressArchive.loadMoreCta": "Carregar cobertura mais antiga",
   "pressArchive.endOfArchive": "É este o arquivo completo — de 2022 até hoje.",
   "pressArchive.noResults": "Nenhuma cobertura corresponde a esses filtros ainda.",
+  "pressArchive.live.title": "O arquivo de imprensa está a ser reunido",
+  "pressArchive.live.body":
+    "Estamos a reunir a cobertura como deve ser antes de a publicarmos aqui. A preparar um artigo? Fala com a equipa através do kit de imprensa.",
 
   // ── Voluntariado — chrome da página. Nomes/funções/descrições/competências
   //    das organizações vêm da API de oportunidades em direto (ou do seu
@@ -3114,6 +3207,9 @@ export const marketing: Catalog = {
   "contact.form.messagePlaceholder":
     "Escreve com naturalidade. Não há modelo nem limite de palavras.",
   "contact.form.sendCta": "Enviar",
+  "contact.form.sendingCta": "A enviar…",
+  "contact.form.error":
+    "Algo correu mal ao enviar. Tenta novamente ou escreve-nos diretamente.",
   "contact.outro.title": "Construído em Lisboa, <em>com cuidado.</em>",
   "contact.outro.sub":
     "A QueerPulse é uma rede pequena, sustentada pelas pessoas que a usam. O teu feedback ajuda a mantê-la boa.",
@@ -3239,6 +3335,12 @@ export const marketing: Catalog = {
   "forOrgs.form.messageLabel": "O que gostarias de construir, num parágrafo",
   "forOrgs.form.messagePlaceholder": "Temos uma linha de apoio LGBTQ+ e…",
   "forOrgs.form.submitCta": "Enviar à equipa de parcerias",
+  "forOrgs.form.sendingCta": "A enviar…",
+  "forOrgs.form.sent.title": "Enviado à nossa <em>equipa de parcerias.</em>",
+  "forOrgs.form.sent.body":
+    "Obrigade — recebemos a tua mensagem. A nossa equipa de parcerias lê cada uma e responde pessoalmente dentro de 5 dias úteis.",
+  "forOrgs.form.error":
+    "Algo correu mal ao enviar. Tenta novamente ou escreve diretamente à equipa de parcerias.",
   "forOrgs.form.small":
     "Vai diretamente para a nossa equipa de parcerias. Sem funil de vendas, sem sequência de seguimento. Só uma resposta no prazo de 5 dias úteis.",
   "forOrgs.form.toast":

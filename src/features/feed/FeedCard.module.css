@@ -69,6 +69,16 @@
   font-size: 0.86rem;
   color: var(--ink-60);
 }
+/* Pronouns sit inline just after the name — DM Sans, muted, kept together so
+   they never wrap onto their own line. */
+.pronoun {
+  margin-left: 6px;
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 0.86rem;
+  color: var(--ink-60);
+  white-space: nowrap;
+}
 
 /* Gathering date block (replaces the avatar in the lead slot). */
 .dateBlock {

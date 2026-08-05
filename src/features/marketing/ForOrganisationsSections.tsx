@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Button, Reveal } from "../../shared/components/ui";
@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { useOrgTiers } from "./api/useOrgTiers";
+import { useSubmitInquiry } from "./api/useSubmitInquiry";
 import type { OrgTier } from "./orgTiers.data";
 import styles from "./ForOrganisationsPage.module.css";
 
@@ -93,11 +94,48 @@ function OrgTierCtaButton({ cta }: { cta: OrgTier["cta"] }) {
   );
 }
 
+const INTEREST_KEYS = ["operational", "employer", "funding", "other"] as const;
+type InterestKey = (typeof INTEREST_KEYS)[number];
+
 export function PartnerContactForm() {
   const { t } = useTranslation();
   const fieldId = useId();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
+  const submitInquiry = useSubmitInquiry();
+  const [sent, setSent] = useState(false);
+  const [form, setForm] = useState<{
+    name: string;
+    org: string;
+    email: string;
+    interest: InterestKey;
+    message: string;
+  }>({ name: "", org: "", email: "", interest: "operational", message: "" });
+
+  const handleSubmit = () => {
+    if (submitInquiry.isPending) return;
+    // Demo keeps the prototype's toast-only acknowledgement; live persists the
+    // inquiry and then shows an honest success panel.
+    if (demoMode) {
+      showToast(t("marketing:forOrgs.form.toast"), "success", 4500);
+      return;
+    }
+    submitInquiry.mutate(
+      {
+        kind: "partner",
+        name: form.name.trim(),
+        email: form.email.trim(),
+        orgName: form.org.trim() || undefined,
+        subject: t(`marketing:forOrgs.form.interest.${form.interest}`),
+        body: form.message.trim(),
+      },
+      {
+        onSuccess: () => setSent(true),
+        onError: () => showToast(t("marketing:forOrgs.form.error"), "error"),
+      },
+    );
+  };
+
   return (
     <section className={styles.ctaSection} id="start">
       <div className={styles.ctaInner}>
@@ -126,29 +164,22 @@ export function PartnerContactForm() {
             </li>
           </ul>
         </Reveal>
-        {!demoMode ? (
+        {sent ? (
           <div className={styles.partnerForm}>
             <h3>
               <Translation
-                i18nKey="marketing:forOrgs.form.comingSoon.title"
+                i18nKey="marketing:forOrgs.form.sent.title"
                 components={{ em: <em /> }}
               />
             </h3>
-            <p>{t("marketing:forOrgs.form.comingSoon.body")}</p>
-            <Button
-              variant="ghost-dark"
-              className={styles.formBtn}
-              href="mailto:partners@queerpulse.pt"
-            >
-              {t("marketing:forOrgs.form.comingSoon.emailCta")}
-            </Button>
+            <p>{t("marketing:forOrgs.form.sent.body")}</p>
           </div>
         ) : (
         <form
           className={styles.partnerForm}
           onSubmit={(e) => {
             e.preventDefault();
-            showToast(t("marketing:forOrgs.form.toast"), "success", 4500);
+            handleSubmit();
           }}
         >
           <div className={styles.field}>
@@ -159,6 +190,8 @@ export function PartnerContactForm() {
               id={`${fieldId}-name`}
               type="text"
               placeholder={t("marketing:forOrgs.form.namePlaceholder")}
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
             />
           </div>
@@ -170,6 +203,8 @@ export function PartnerContactForm() {
               id={`${fieldId}-org`}
               type="text"
               placeholder={t("marketing:forOrgs.form.orgPlaceholder")}
+              value={form.org}
+              onChange={(e) => setForm({ ...form, org: e.target.value })}
               required
             />
           </div>
@@ -181,6 +216,8 @@ export function PartnerContactForm() {
               id={`${fieldId}-email`}
               type="email"
               placeholder={t("marketing:forOrgs.form.emailPlaceholder")}
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
               required
             />
           </div>
@@ -190,14 +227,16 @@ export function PartnerContactForm() {
             </label>
             <select
               id={`${fieldId}-interest`}
-              defaultValue={t("marketing:forOrgs.form.interest.operational")}
+              value={form.interest}
+              onChange={(e) =>
+                setForm({ ...form, interest: e.target.value as InterestKey })
+              }
             >
-              <option>
-                {t("marketing:forOrgs.form.interest.operational")}
-              </option>
-              <option>{t("marketing:forOrgs.form.interest.employer")}</option>
-              <option>{t("marketing:forOrgs.form.interest.funding")}</option>
-              <option>{t("marketing:forOrgs.form.interest.other")}</option>
+              {INTEREST_KEYS.map((interestKey) => (
+                <option key={interestKey} value={interestKey}>
+                  {t(`marketing:forOrgs.form.interest.${interestKey}`)}
+                </option>
+              ))}
             </select>
           </div>
           <div className={styles.field}>
@@ -207,11 +246,21 @@ export function PartnerContactForm() {
             <textarea
               id={`${fieldId}-message`}
               placeholder={t("marketing:forOrgs.form.messagePlaceholder")}
+              value={form.message}
+              onChange={(e) => setForm({ ...form, message: e.target.value })}
               rows={4}
+              required
             />
           </div>
-          <Button variant="primary" className={styles.formBtn} type="submit">
-            {t("marketing:forOrgs.form.submitCta")}
+          <Button
+            variant="primary"
+            className={styles.formBtn}
+            type="submit"
+            disabled={submitInquiry.isPending}
+          >
+            {submitInquiry.isPending
+              ? t("marketing:forOrgs.form.sendingCta")
+              : t("marketing:forOrgs.form.submitCta")}
           </Button>
           <p className={styles.formSmall}>
             {t("marketing:forOrgs.form.small")}

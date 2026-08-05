@@ -157,6 +157,44 @@ export const patchAdminMemberRole = (memberId: string, role: MemberRole) =>
 export const liftUserSuspension = (userId: string) =>
   apiPatch<void>(`/mod/users/${userId}/suspension`, { action: "lift" });
 
+/** The shape returned after verifying a member. Mirrors the backend
+ *  `VerifiedMemberDTO`. */
+export interface VerifiedMemberDTO {
+  id: string;
+  slug: string;
+  verified: boolean;
+  verifiedAt: string | null;
+}
+
+/** Verify a member (stamps who/when). Moderator/admin-only; the backend 404s an
+ *  unknown member and is idempotent (verifying twice is a no-op). */
+export const verifyMember = (memberId: string) =>
+  apiPost<VerifiedMemberDTO>(`/admin/members/${memberId}/verify`, {});
+
+/** The shape returned after restricting a member. Mirrors the backend
+ *  `RestrictedMemberDTO`. */
+export interface RestrictedMemberDTO {
+  id: string;
+  status: string;
+  /** ISO expiry; `null` = permanent (a ban). */
+  suspendedUntil: string | null;
+}
+
+/** The `POST /admin/members/:id/restrict` body. `duration` omitted = permanent
+ *  (a ban); `"7d"`/`"24h"`/`"30d"` = a time-boxed suspension. `reasonCode` is a
+ *  shared reason-catalogue code; `note` is the member-facing text. */
+export interface RestrictMemberInput {
+  reasonCode: string;
+  note: string;
+  duration?: string;
+}
+
+/** Restrict a member platform-wide. Moderator/admin-only; the backend enforces
+ *  the guardrails (not yourself, not a staff/house account) and 403/404s
+ *  otherwise, surfaced by the global mutation-error toast. */
+export const restrictMember = (memberId: string, input: RestrictMemberInput) =>
+  apiPost<RestrictedMemberDTO>(`/admin/members/${memberId}/restrict`, input);
+
 /** The shape returned after a staff-role grant/revoke, so the roster/drawer
  *  can patch in place. Mirrors the backend's grant/revoke response. */
 export interface AdminStaffRolesDTO {

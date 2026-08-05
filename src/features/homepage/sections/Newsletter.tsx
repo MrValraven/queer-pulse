@@ -5,6 +5,7 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { apiPost } from "../../../shared/api/client";
 import { digestPreview } from "../data/digestPreview";
 import styles from "./Newsletter.module.css";
 
@@ -13,9 +14,12 @@ export function Newsletter() {
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const [email, setEmail] = useState("");
+  // The address shown on the success panel: the demo flow sets this immediately;
+  // the live flow only sets it once the backend has accepted the subscribe.
   const [submitted, setSubmitted] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleDemoSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!email.trim()) {
       showToast(t("homepage:newsletter.emailRequiredToast"), "info");
@@ -24,6 +28,28 @@ export function Newsletter() {
     setSubmitted(email.trim());
     showToast(t("homepage:newsletter.subscribedToast"), "success");
     setEmail("");
+  }
+
+  async function handleLiveSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const trimmed = email.trim();
+    if (!trimmed) {
+      showToast(t("homepage:newsletter.emailRequiredToast"), "info");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      // Double opt-in: the backend never reveals whether the address already
+      // existed, so any 2xx means "we've sent a confirmation link" — show the
+      // honest check-your-inbox state rather than claiming they're subscribed.
+      await apiPost("/newsletter/subscribe", { email: trimmed });
+      setSubmitted(trimmed);
+      setEmail("");
+    } catch {
+      showToast(t("homepage:newsletter.live.errorToast"), "error");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -40,34 +66,39 @@ export function Newsletter() {
             <Reveal as="p" className={styles.sub} delay={60}>
               {t("homepage:newsletter.subtitle")}
             </Reveal>
-            {!demoMode ? (
-              // No subscribe endpoint exists yet, so live mode never fakes a
-              // "you're subscribed" success. Say so plainly instead of taking an
-              // email that goes nowhere. The demo flow below is unchanged.
-              <Reveal as="p" className={styles.sub} delay={120}>
-                {t("homepage:newsletter.comingSoon")}
-              </Reveal>
-            ) : submitted ? (
+            {submitted ? (
               <Reveal className={styles.success}>
                 <span className={styles.successIcon} aria-hidden>
                   <FiCheckCircle />
                 </span>
                 <h3 className={styles.successTitle}>
                   <Translation
-                    i18nKey="homepage:newsletter.success.title"
+                    i18nKey={
+                      demoMode
+                        ? "homepage:newsletter.success.title"
+                        : "homepage:newsletter.live.success.title"
+                    }
                     components={{ em: <em /> }}
                   />
                 </h3>
                 <p className={styles.successBody}>
                   <Translation
-                    i18nKey="homepage:newsletter.success.body"
+                    i18nKey={
+                      demoMode
+                        ? "homepage:newsletter.success.body"
+                        : "homepage:newsletter.live.success.body"
+                    }
                     values={{ email: submitted }}
                     components={{ strong: <strong /> }}
                   />
                 </p>
                 <p className={styles.successNext}>
                   <FiMail aria-hidden />{" "}
-                  {t("homepage:newsletter.success.checkInboxNote")}
+                  {t(
+                    demoMode
+                      ? "homepage:newsletter.success.checkInboxNote"
+                      : "homepage:newsletter.live.success.checkInboxNote",
+                  )}
                 </p>
                 <Button variant="ghost-dark" onClick={() => setSubmitted(null)}>
                   {t("homepage:newsletter.success.useDifferentEmailCta")}
@@ -76,7 +107,10 @@ export function Newsletter() {
             ) : (
               <>
                 <Reveal delay={120}>
-                  <form className={styles.form} onSubmit={handleSubmit}>
+                  <form
+                    className={styles.form}
+                    onSubmit={demoMode ? handleDemoSubmit : handleLiveSubmit}
+                  >
                     <input
                       className={styles.input}
                       type="email"
@@ -85,9 +119,12 @@ export function Newsletter() {
                       autoComplete="email"
                       value={email}
                       onChange={(event) => setEmail(event.target.value)}
+                      disabled={submitting}
                     />
-                    <Button type="submit">
-                      {t("homepage:newsletter.subscribeCta")}
+                    <Button type="submit" disabled={submitting}>
+                      {submitting
+                        ? t("homepage:newsletter.live.submittingCta")
+                        : t("homepage:newsletter.subscribeCta")}
                     </Button>
                   </form>
                 </Reveal>

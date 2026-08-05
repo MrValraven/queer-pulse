@@ -5,7 +5,7 @@ import {
   useState,
   type KeyboardEvent,
 } from "react";
-import { FiMoreHorizontal, FiSlash, FiVolumeX } from "react-icons/fi";
+import { FiMoreHorizontal, FiSlash, FiVolumeX, FiX } from "react-icons/fi";
 import { useSocial } from "../../app/providers/useSocial";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -23,9 +23,11 @@ import styles from "./ProfileSafetyMenu.module.css";
 export function ProfileSafetyMenu({
   slug,
   firstName,
+  onWithdrawVouch,
 }: {
   slug: string;
   firstName: string;
+  onWithdrawVouch?: () => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -79,6 +81,11 @@ export function ProfileSafetyMenu({
       ),
       "success",
     );
+  };
+
+  const handleWithdrawVouch = () => {
+    setOpen(false);
+    onWithdrawVouch?.();
   };
 
   const handleBlockClick = () => {
@@ -162,6 +169,18 @@ export function ProfileSafetyMenu({
           className={styles.menu}
           onKeyDown={onMenuKeyDown}
         >
+          {onWithdrawVouch && (
+            <button
+              type="button"
+              role="menuitem"
+              tabIndex={-1}
+              className={styles.item}
+              onClick={handleWithdrawVouch}
+            >
+              <FiX aria-hidden />
+              {t("members:profile.hero.withdrawVouchCta")}
+            </button>
+          )}
           <button
             type="button"
             role="menuitem"

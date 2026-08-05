@@ -19,15 +19,18 @@ import {
   FeedQuote,
   FeedTagRow,
 } from "./FeedCard";
+import styles from "./FeedCard.module.css";
 
 /**
  * "New member" card for the feed's People tab. With no `item`, renders the
  * demo prototype's scripted `DEMO_MEMBER` (Kai Larsson) mock, including the
  * Follow affordance (demo-only: `useSocial().followEnabled` is false in live
  * — there's no member/author-level follow endpoint there). With a live
- * `FeedItem`, renders straight off its fields — pronouns/neighbourhood/
- * interest chips/common-communities the demo mock shows aren't part of the
- * aggregate, so they're simply omitted rather than guessed at.
+ * `FeedItem`, renders straight off its fields — pronouns come from
+ * `actor.pronouns` (shown next to the name), the visibility-gated
+ * `neighbourhood` becomes the meta line, and public `interests` become chips.
+ * Only the common-communities chips the demo mock shows aren't part of the
+ * aggregate, so they're the sole thing omitted rather than guessed at.
  */
 export function MemberCard({ item }: { item?: FeedItem } = {}) {
   const { t } = useTranslation();
@@ -42,9 +45,17 @@ export function MemberCard({ item }: { item?: FeedItem } = {}) {
     ? relativeTime(item.createdAt, fmt)
     : t("feed:card.newMember.today");
   const quote = item ? item.summary : DEMO_MEMBER.quote;
+  // Pronouns render inline next to the name (both live and demo), so the demo
+  // meta line drops them and keeps just neighbourhood · occupation. Live items
+  // carry a visibility-gated `neighbourhood` (null when the profile isn't
+  // public) as their meta line, and their public tags as interest chips.
+  const pronouns = item ? (item.actor?.pronouns ?? null) : DEMO_MEMBER.pronouns;
   const meta = item
-    ? undefined
-    : `${DEMO_MEMBER.pronouns} · ${DEMO_MEMBER.hood} · ${DEMO_MEMBER.occupation}`;
+    ? (item.neighbourhood ?? undefined)
+    : `${DEMO_MEMBER.hood} · ${DEMO_MEMBER.occupation}`;
+  // Interest chips: the member's public tags, capped so a long list can't
+  // overrun the card (it's a preview, same spirit as the demo's three chips).
+  const interests = item ? (item.interests ?? []).slice(0, 4) : [];
   const avatarSrc = item
     ? (item.actor?.avatarUrl ?? undefined)
     : memberAvatar(DEMO_MEMBER.slug)?.photo;
@@ -93,7 +104,9 @@ export function MemberCard({ item }: { item?: FeedItem } = {}) {
         }
         name={
           <span>
-            {name} <MemberStaffBadge slug={slug || undefined} />
+            {name}
+            {pronouns && <span className={styles.pronoun}>{pronouns}</span>}{" "}
+            <MemberStaffBadge slug={slug || undefined} />
           </span>
         }
         meta={meta}
@@ -101,6 +114,9 @@ export function MemberCard({ item }: { item?: FeedItem } = {}) {
       {quote && <FeedQuote>{quote}</FeedQuote>}
       {!item && (
         <FeedTagRow tags={DEMO_MEMBER.tags.map((label) => ({ label }))} />
+      )}
+      {interests.length > 0 && (
+        <FeedTagRow tags={interests.map((label) => ({ label }))} />
       )}
       {!item && (
         <FeedProofStack

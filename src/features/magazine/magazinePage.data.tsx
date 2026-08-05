@@ -370,7 +370,9 @@ export const ARCHIVE: ArchiveIssue[] = [
     date: new Date(2026, 1, 1),
     issueNumber: 14,
     articleCount: 6,
-    background: "#1E3A5F",
+    // Design-token only (matches the sibling issue backgrounds above, which use
+    // var(--jade) / var(--accent-ink)); was a stray hardcoded navy hex.
+    background: "var(--plum)",
   },
 ];
 

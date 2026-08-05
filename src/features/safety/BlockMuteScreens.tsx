@@ -15,6 +15,50 @@ function durationLabel(t: (key: string) => string, id: MuteDurationId) {
   return t(MUTE_DURATIONS.find((d) => d.id === id)!.labelKey);
 }
 
+/**
+ * Live-mode, target-less explainer. Opened at /block-mute without a real member
+ * (?member=), live mode has nothing to act on — so instead of narrating a fake
+ * block/mute against a fictional person, we describe what each control does and
+ * point people to a profile where the real action lives. The genuine block/mute
+ * (SocialProvider → POST /blocks|/mutes, reached with a real target) stays the
+ * only path that claims success.
+ */
+export function BlockMuteExplainer() {
+  const { t } = useTranslation();
+
+  return (
+    <div className={`${s.card} ${s.screenIn}`}>
+      <div className={s.cardHead}>
+        <Translation
+          i18nKey="safety:blockMute.choose.title"
+          components={{ em: <em /> }}
+        />
+      </div>
+      <div className={s.cardSub}>{t("safety:blockMute.explainer.sub")}</div>
+
+      <div className={s.optionCard}>
+        <div className={s.ocTitle}>
+          {t("safety:blockMute.explainer.muteTitle")}
+        </div>
+        <div className={s.ocDesc}>{t("safety:blockMute.choose.muteDesc")}</div>
+      </div>
+
+      <div className={s.optionCard}>
+        <div className={s.ocTitle}>
+          {t("safety:blockMute.explainer.blockTitle")}
+        </div>
+        <div className={s.ocDesc}>{t("safety:blockMute.choose.blockDesc")}</div>
+      </div>
+
+      <div className={s.actions}>
+        <Button to={routes.members}>
+          {t("safety:blockMute.explainer.membersCta")}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export function BlockMuteChoose({
   target,
   timedMuteAllowed,

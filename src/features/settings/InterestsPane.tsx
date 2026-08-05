@@ -91,12 +91,16 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             <label htmlFor={`${uid}-city`}>
               {t("settings:interests.life.cityLabel")}
             </label>
+            {/* The member's real location (empty if unset) — never a hardcoded
+                "Lisbon, Portugal" that would show as everyone's city in live.
+                The field is coming-soon/disabled (no dedicated city pref yet),
+                so it reflects `draft.hood` read-only rather than persisting. */}
             <input
               id={`${uid}-city`}
               type="text"
-              defaultValue="Lisbon, Portugal"
+              value={draft.hood}
               disabled
-              onChange={onChange}
+              readOnly
             />
           </div>
           <div className={styles.field}>

@@ -5,6 +5,8 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useProfileData } from "../../app/providers/useProfile";
+import { useSaved } from "../../app/providers/useSaved";
+import { thread as threadPath } from "../../app/routeMap";
 import { CATS, type Reply, type ReplySortId } from "./forum.data";
 import { useThread } from "./api/useForum";
 import { useReply, useVotePost } from "./api/useForumMutations";
@@ -47,7 +49,27 @@ export function useThreadPageState() {
   const { vote } = useVotePost();
   const loading = demoMode ? simLoading : threadQuery.isLoading;
 
-  const [bookmarked, setBookmarked] = useState(false);
+  // OP "Save" is a REAL persisted bookmark, not throwaway local state: it goes
+  // through the app-wide saved store (dual-mode — a pure local store in demo, an
+  // optimistic `/me/saved` PUT/DELETE with rollback in live). Keyed on the
+  // thread's stable slug (or its numeric id for demo mock threads, which have
+  // none), so the pressed state survives reloads and syncs with Collections.
+  const { isSaved, toggleSave } = useSaved();
+  const savedId = threadData
+    ? `post:${threadData.slug ?? threadData.id}`
+    : "";
+  const bookmarked = threadData ? isSaved(savedId) : false;
+  const toggleBookmark = () => {
+    if (!threadData) return;
+    toggleSave({
+      id: savedId,
+      kind: "post",
+      title: threadData.title,
+      href: threadPath(threadData.slug ?? threadData.id),
+      meta: threadData.author.name,
+    });
+  };
+
   const [sort, setSort] = useState<ReplySortId>("oldest");
   const [reply, setReply] = useState("");
   // DEMO-ONLY overlay for the OP upvote. LIVE drives the OP vote through the real
@@ -202,7 +224,7 @@ export function useThreadPageState() {
     threadQuery,
     vote,
     bookmarked,
-    setBookmarked,
+    toggleBookmark,
     sort,
     setSort,
     reply,

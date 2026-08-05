@@ -59,6 +59,14 @@ export function SharedEquipmentPage() {
           <Reveal as="p" className={styles.leadP}>
             {t("resources:sharedEquipment.kit.lead")}
           </Reveal>
+          {/* The lending inventory (availability / "on loan" status + request
+              slots) is prototype fiction. Live mode has no equipment registry
+              yet, so it shows an honest coming-soon note instead of fake stock. */}
+          {!demoMode ? (
+            <Reveal as="p" className={styles.leadP}>
+              {t("resources:sharedEquipment.kit.live.body")}
+            </Reveal>
+          ) : (
           <div className={styles.grid}>
             {EQUIPMENT.map((item, i) => {
               const name = t(item.nameKey);
@@ -100,6 +108,7 @@ export function SharedEquipmentPage() {
               );
             })}
           </div>
+          )}
         </div>
       </section>
 

@@ -52,6 +52,11 @@ export const messages: Catalog = {
   "gif.comingSoonTitle": "GIFs are coming soon",
   "gif.comingSoonHint": "We're wiring up GIF search — check back soon to add a little motion to your messages.",
 
+  // Connection status strip (ConnectionStatusBanner) at the top of the open
+  // thread — surfaces when the member is offline or the socket is reconnecting.
+  "connection.offline": "You're offline — messages will send when you reconnect.",
+  "connection.reconnecting": "Reconnecting…",
+
   // Shortcut hint — the "?" affordance in the composer that lists the mention
   // sigils. Tapping a row drops its sigil into the draft so typeahead opens.
   "shortcuts.open": "Shortcuts",

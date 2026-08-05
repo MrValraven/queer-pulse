@@ -1,19 +1,18 @@
-import { Eyebrow, Tag, TagRow } from "../../shared/components/ui";
+import { Tag, TagRow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
-import { PublicProfileBadge } from "./PublicProfileBadge";
 import { SocialLinksRow } from "./SocialLinksRow";
-import { VISIBILITY_LABEL_KEY } from "./profileSections.data";
 import type { MemberProfile } from "./data/memberProfiles";
 import styles from "./MobileProfile.module.css";
 
 /**
- * The full-width identity block of the Instagram-style mobile profile header:
- * visibility eyebrow, name, role/pronouns, location + member-since, the "Here
- * for" intent block, bio, tags and social links. Sits below the avatar+stats
- * top row in `MobileProfileHeader`, split out purely to keep both components
- * under the 200-line component budget — the gating logic mirrors
- * `ProfileHero` in `ProfileSections.tsx` exactly (same data, same rules).
+ * The left-aligned details block of the Instagram-style mobile profile
+ * header: member-since, the "Here for" intent block, bio, tags and social
+ * links. Sits below the centered identity cap and full-width stats row in
+ * `MobileProfileHeader` — the eyebrow, name, role/pronouns and location now
+ * live in `MobileProfileIdentityTop`, split out so the header can center
+ * that block beneath the avatar while this one stays left-aligned. The
+ * gating logic mirrors `ProfileHero` in `ProfileSections.tsx` exactly (same
+ * data, same rules).
  */
 export function MobileProfileIdentity({
   profile,
@@ -27,38 +26,13 @@ export function MobileProfileIdentity({
   const { t } = useTranslation();
   return (
     <div className={styles.identity}>
-      <Eyebrow live className={styles.identityEyebrow}>
-        {t(VISIBILITY_LABEL_KEY[profile.visibility])}
-      </Eyebrow>
-      <div className={styles.identityNameRow}>
-        <h1 className={styles.identityName}>
-          {profile.first} <em>{profile.last}</em>
-        </h1>
-        {isSelf && <PublicProfileBadge />}
-      </div>
-      <div className={styles.identityRole}>
-        <span>
-          {profile.role}
-          {profile.pronouns && (
-            <span className={styles.identityPronoun}>
-              {" "}
-              · {profile.pronouns}
-            </span>
-          )}
-        </span>
-        <MemberStaffBadge slug={profile.slug} size="lg" />
-      </div>
-      <div className={styles.identityWhere}>
-        <span className={styles.identityLoc}>
-          <span className={styles.identityPin} aria-hidden />
-          {t("members:profile.hero.location", { hood: profile.hood })}
-        </span>
-        {profile.since && (
+      {profile.since && (
+        <div className={styles.identityWhere}>
           <span className={styles.identityMuted}>
             {t("members:profile.hero.memberSince", { since: profile.since })}
           </span>
-        )}
-      </div>
+        </div>
+      )}
       {profile.lookingFor &&
         profile.lookingFor.length > 0 &&
         (isSelf || profile.lookingForPublic) && (

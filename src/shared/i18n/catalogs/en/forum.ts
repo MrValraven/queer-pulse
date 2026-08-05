@@ -134,6 +134,10 @@ export const forum: Catalog = {
   "reportReply.cancel": "Cancel",
   "reportReply.sending": "Sending…",
   "reportReply.sendCta": "Send report",
+  "reportReply.errorTitle": "That didn't send",
+  "reportReply.errorBody":
+    "We couldn't send your report just now — nothing was submitted. Check your connection and try again.",
+  "reportReply.retryCta": "Try again",
 
   // ── ThreadComposer ──────────────────────────────────────────────────────
   "threadComposer.replyingTo": "Replying to <strong>{name}</strong>",
@@ -169,6 +173,10 @@ export const forum: Catalog = {
   "threadPage.notFound.description":
     "It may have been removed, or the link might be broken. Head back to the forum to find current conversations.",
   "threadPage.notFound.backCta": "Back to the forum",
+  "threadPage.error.title": "Couldn't load this thread",
+  "threadPage.error.description":
+    "Something went wrong on our end — this isn't your fault. Try again in a moment.",
+  "threadPage.error.retryCta": "Try again",
 
   // ── ThreadReplies / ModeratorByline ─────────────────────────────────────
   "byline.withRole":

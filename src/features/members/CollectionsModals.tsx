@@ -165,15 +165,18 @@ export function NewCollectionModal({
   );
 }
 
-/** Read a collection: list its saved items (live), each linking out. */
+/** Read a collection: list its saved items (live), each linking out. When
+ *  `onRemoveItem` is supplied (live mode), each row gets an unfile control. */
 export function ViewCollectionModal({
   collection,
   items,
   onClose,
+  onRemoveItem,
 }: {
   collection: Collection;
   items: SavedItem[];
   onClose: () => void;
+  onRemoveItem?: (id: string) => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -214,6 +217,16 @@ export function ViewCollectionModal({
                 )}
                 {it.meta && <span className={styles.rowMeta}>{it.meta}</span>}
               </div>
+              {onRemoveItem && (
+                <button
+                  type="button"
+                  className={styles.rowRemove}
+                  onClick={() => onRemoveItem(it.id)}
+                  aria-label={t("members:collections.modal.view.removeItem")}
+                >
+                  <FiX aria-hidden />
+                </button>
+              )}
             </div>
           ))}
         </div>

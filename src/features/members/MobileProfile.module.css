@@ -280,15 +280,55 @@
   padding-top: calc(var(--nav-top) + var(--nav-height) + var(--gap-grid));
 }
 
-.topRow {
+.identityCap {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: var(--gap-sm);
+  text-align: center;
+}
+
+.identityTop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.identityTopEyebrow {
+  margin-bottom: 2px;
+}
+
+.identityTopNameRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.identityTopRole {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 15px;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.identityTopLoc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ink-60);
 }
 
 .statsSlot {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
 }
 
 /* Pride ring — the one sanctioned place to compose pride colour outside the
@@ -346,17 +386,6 @@
   flex-direction: column;
 }
 
-.identityEyebrow {
-  margin-bottom: var(--gap-xs);
-}
-
-.identityNameRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: nowrap;
-}
-
 .identityName {
   font-family: var(--serif);
   font-weight: 400;
@@ -368,17 +397,6 @@
 
 .identityName em {
   font-style: italic;
-}
-
-.identityRole {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  font-size: 15px;
-  color: var(--ink);
-  font-weight: 500;
-  margin-top: 8px;
 }
 
 .identityPronoun {
@@ -394,12 +412,6 @@
   margin-top: 8px;
   font-size: 13px;
   color: var(--ink-60);
-}
-
-.identityLoc {
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
 .identityPin {
@@ -457,12 +469,12 @@
   margin-top: var(--gap-xs);
 }
 
-/* ── Full-width action row (MobileProfileHeader) ─────────────────────────── */
-/* ProfileHeroActions and ProfileSafetyMenu each own their own CSS module, so
-   their internal button row can't be reached by class name from here — the
-   `> div` / `> *` structural selectors target their known DOM shape (one
-   wrapper div of buttons) instead, which is stable because both components
-   are single-purpose and always render that shape. */
+/* ── Owner (self) action row — still ProfileHeroActions ──────────────────── */
+/* ProfileHeroActions owns its own CSS module, so its internal button row
+   can't be reached by class name from here — the `> div` / `> *` structural
+   selectors target its known DOM shape (one wrapper div of buttons) instead,
+   which is stable because it is single-purpose and always renders that
+   shape. */
 .actionRow {
   display: flex;
   align-items: center;
@@ -487,6 +499,54 @@
   justify-content: center;
 }
 
+/* ── Visitor action cluster (MobileProfileActions) ───────────────────────── */
+.actionStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.primaryRow {
+  display: flex;
+}
+
+.primaryRow > * {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+.secondaryRow {
+  display: flex;
+  align-items: stretch;
+  gap: var(--gap-xs);
+}
+
+.secondaryRow > :first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: center;
+}
+
+.vouchedPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: var(--radius-btn, 999px);
+  background: rgba(var(--jade-rgb), 0.14);
+  color: var(--jade-ink);
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* The `…` safety menu's own trigger sizing comes from
+   `ProfileSafetyMenu.module.css`; it sits as the second child of
+   `.secondaryRow` at its natural width. */
+
 /* ── Dark-mode hairline fix ───────────────────────────────────────────────
    .statRow / .statColumn write their border as a literal plum rgba() (the
    pre-token-system convention still used by ProfilePage.module.css's own
@@ -496,8 +556,4 @@
 :global([data-theme="dark"]) .statRow,
 :global([data-theme="dark"]) .statColumn + .statColumn {
   border-color: rgba(var(--cream-rgb), 0.1);
-}
-
-.actionRow > .safetySlot {
-  flex: 0 0 auto;
 }

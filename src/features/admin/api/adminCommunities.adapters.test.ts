@@ -59,6 +59,7 @@ const baseCardDto: AdminCommunityCardDTO = {
 };
 
 const baseModeratorDto: AdminCommunityModeratorDTO = {
+  userId: "00000000-0000-0000-0000-0000000000a1",
   slug: "ines-martins",
   name: "Inês Martins",
   initials: "IM",
@@ -167,6 +168,7 @@ describe("detailDtoToCommunity", () => {
         moderators: [
           baseModeratorDto,
           {
+            userId: "00000000-0000-0000-0000-0000000000a2",
             slug: "sofia-almeida",
             name: "Sofia Almeida",
             initials: "SA",
@@ -185,9 +187,15 @@ describe("detailDtoToCommunity", () => {
       name: "Inês Martins",
       pronouns: "",
       role: "Founded the community",
+      memberId: "00000000-0000-0000-0000-0000000000a1",
+      isOwner: true,
     });
     expect(typeof founder?.tone).toBe("string");
     expect(community.moderators[1]?.role).toBe("Moderator since Jun 2024");
+    expect(community.moderators[1]?.memberId).toBe(
+      "00000000-0000-0000-0000-0000000000a2",
+    );
+    expect(community.moderators[1]?.isOwner).toBe(false);
   });
 
   it("maps the scoped queue onto the QueueItem view shape", () => {

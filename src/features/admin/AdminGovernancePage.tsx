@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FadeIn, Button } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { publishGovernanceOverview } from "../governance/api/governance.api";
 import { AdminPageHeader, AdminTabs, type AdminTab } from "./ui";
 import { AdminGovernanceFinances } from "./AdminGovernanceFinances";
 import { AdminGovernancePolicy } from "./AdminGovernancePolicy";
@@ -15,6 +17,29 @@ export function AdminGovernancePage() {
   const { demoMode } = useDemoMode();
   const [active, setActive] = useState("finances");
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
+
+  // Publish the current governance snapshot (P3-7). Live mutation stamps
+  // `published_at` server-side and invalidates the public overview so its "last
+  // published" line refreshes; demo keeps the prototype's confirmation toast.
+  const publish = useMutation({
+    mutationFn: publishGovernanceOverview,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["governance-overview"] });
+      showToast(t("admin:governance.header.publishedToast"), "success");
+    },
+    onError: () => {
+      showToast(t("admin:governance.header.publishError"), "error");
+    },
+  });
+
+  const handlePublish = () => {
+    if (demoMode) {
+      showToast(t("admin:governance.header.publishToast"), "success");
+      return;
+    }
+    publish.mutate();
+  };
 
   const TABS: AdminTab[] = [
     { id: "finances", label: t("admin:governance.tabs.finances") },
@@ -47,17 +72,8 @@ export function AdminGovernancePage() {
           actions={
             <Button
               variant="ghost"
-              onClick={() =>
-                demoMode
-                  ? showToast(
-                      t("admin:governance.header.publishToast"),
-                      "success",
-                    )
-                  : showToast(
-                      t("admin:governance.header.publishComingSoonToast"),
-                      "info",
-                    )
-              }
+              disabled={publish.isPending}
+              onClick={handlePublish}
             >
               {t("admin:governance.header.publishCta")}
             </Button>

@@ -803,6 +803,16 @@
 .insRowWd {
   opacity: 0.55;
 }
+/* The connection the replay is currently on — kept in sync with the footer label. */
+.insRowActive {
+  background: rgba(var(--accent-rgb), 0.12);
+  box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.4);
+}
+@media (hover: hover) {
+  .insRowActive:hover {
+    background: rgba(var(--accent-rgb), 0.16);
+  }
+}
 .mini {
   width: 30px;
   height: 30px;
@@ -963,6 +973,12 @@
   flex: none;
   border-radius: 2px;
   background: rgba(var(--plum-rgb), 0.55);
+}
+.legLineWithdrawn {
+  width: 18px;
+  height: 0;
+  flex: none;
+  border-top: 2px dashed rgba(var(--danger-rgb), 0.7);
 }
 .legHatch {
   width: 12px;

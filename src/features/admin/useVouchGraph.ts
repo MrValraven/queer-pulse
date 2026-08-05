@@ -24,7 +24,10 @@ export function useVouchGraph(graph: TrustGraph, initialFocus: string) {
   const [focus, setFocus] = useState(initialFocus);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [mode, setMode] = useState<VouchMode>("plain");
-  const [timeCut, setTimeCut] = useState(graph.tMax);
+  // `timeCut` is a *step index* 0…eventCount: how many connection events are
+  // revealed. 0 = just the focus node, before anyone connected; eventCount =
+  // the whole network. Starts fully revealed.
+  const [timeCut, setTimeCut] = useState(graph.edges.length);
   const [sel, setSel] = useState<string | null>(initialFocus);
   const [pathA, setPathA] = useState<string | null>(null);
   const [pathB, setPathB] = useState<string | null>(null);
@@ -36,17 +39,36 @@ export function useVouchGraph(graph: TrustGraph, initialFocus: string) {
   const expandedKey = useMemo(() => [...expanded].sort().join(","), [expanded]);
 
   /**
-   * The distinct months in which a vouch actually appears, ascending. Replay
-   * hops through *these* rather than every calendar month between tMin and
-   * tMax, so the animation is paced by real activity (people joining / getting
-   * vouched for) instead of dwelling on empty months. Edge dates are the only
-   * thing that changes the visible graph, so every step reveals something.
+   * Every connection as its own event, in true chronological order: one entry
+   * per edge (each edge is one real invite/vouch act), sorted by month then by
+   * the edge's original position so same-month connections keep a stable,
+   * deterministic sequence. Replay walks this list one step at a time — evenly
+   * spaced by *event*, not by calendar distance — so people who joined in the
+   * same month appear as separate, ordered steps instead of one lump, and empty
+   * months never stretch the timeline. (In live mode the adapter emits edges
+   * pre-sorted by full `createdAt`, so original order is real within-month
+   * order too.)
    */
-  const eventValues = useMemo(() => {
-    const values = new Set<number>();
-    graph.edges.forEach((e) => values.add(ymValue(e.date)));
-    return [...values].sort((a, b) => a - b);
+  const events = useMemo(() => {
+    return graph.edges
+      .map((edge, index) => ({ edge, index }))
+      .sort((a, b) => {
+        const delta = ymValue(a.edge.date) - ymValue(b.edge.date);
+        return delta !== 0 ? delta : a.index - b.index;
+      })
+      .map((entry) => entry.edge);
   }, [graph]);
+  const eventCount = events.length;
+  const eventIndexById = useMemo(() => {
+    const map = new Map<string, number>();
+    events.forEach((edge, index) => map.set(edge.id, index));
+    return map;
+  }, [events]);
+
+  /** The connection revealed by the current step (the most recent event), or
+   *  null at step 0 (before anyone connected). Drives the footer label and the
+   *  inspector-row highlight. */
+  const currentEvent = timeCut > 0 ? (events[timeCut - 1] ?? null) : null;
 
   const { visIds, visEdges } = useMemo(() => {
     const set = new Set<string>([focus]);
@@ -62,22 +84,23 @@ export function useVouchGraph(graph: TrustGraph, initialFocus: string) {
         graph.neighbors(id, true).forEach((n) => set.add(n)),
       );
     }
-    // time filter: a node stays if it is the focus or has any edge within the cut
+    // time filter: an edge is revealed once its step is reached; a node stays if
+    // it is the focus or has any revealed edge.
+    const isRevealed = (edge: VouchEdge) =>
+      (eventIndexById.get(edge.id) ?? -1) < timeCut;
     const ids = [...set].filter(
       (id) =>
         id === focus ||
-        graph.edges.some(
-          (e) => (e.from === id || e.to === id) && ymValue(e.date) <= timeCut,
-        ),
+        graph.edges.some((e) => (e.from === id || e.to === id) && isRevealed(e)),
     );
     const idSet = new Set(ids);
     const edges: VouchEdge[] = graph.edges.filter(
-      (e) => idSet.has(e.from) && idSet.has(e.to) && ymValue(e.date) <= timeCut,
+      (e) => idSet.has(e.from) && idSet.has(e.to) && isRevealed(e),
     );
     return { visIds: ids, visEdges: edges };
     // expandedKey stands in for the Set's contents
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [graph, focus, expandedKey, mode, timeCut]);
+  }, [graph, focus, expandedKey, mode, timeCut, eventIndexById]);
 
   const { pathNodes, pathEdges } = useMemo(() => {
     const nodes = new Set<string>();
@@ -166,21 +189,16 @@ export function useVouchGraph(graph: TrustGraph, initialFocus: string) {
 
   const replay = useCallback(() => {
     if (replayRef.current !== null) return;
-    if (eventValues.length === 0) return;
+    if (eventCount === 0) return;
     setReplaying(true);
-    setTimeCut(eventValues[0]!);
-    let index = 0;
+    setTimeCut(0); // start before anyone connected
+    let step = 0;
     replayRef.current = window.setInterval(() => {
-      index += 1;
-      const next = eventValues[index];
-      if (next === undefined) {
-        stopReplay();
-        return;
-      }
-      setTimeCut(next);
-      if (index >= eventValues.length - 1) stopReplay();
+      step += 1;
+      setTimeCut(step);
+      if (step >= eventCount) stopReplay();
     }, REPLAY_STEP_MS);
-  }, [eventValues, stopReplay]);
+  }, [eventCount, stopReplay]);
 
   useEffect(() => stopReplay, [stopReplay]);
 
@@ -195,6 +213,9 @@ export function useVouchGraph(graph: TrustGraph, initialFocus: string) {
     crumbs,
     expanded,
     replaying,
+    eventCount,
+    currentEvent,
+    activeEdgeId: currentEvent?.id ?? null,
     visIds,
     visEdges,
     pathNodes,

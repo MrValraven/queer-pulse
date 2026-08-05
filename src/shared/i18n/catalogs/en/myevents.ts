@@ -71,6 +71,12 @@ export const myevents: Catalog = {
   "agenda.otherCommunity": "Other",
   "agenda.showMore_one": "Show {count} more",
   "agenda.showMore_other": "Show {count} more",
+  // Distinct error/retry state when the live events fetch fails (never a false
+  // "no events" — see EventAgenda).
+  "agenda.error.title": "We couldn't load your <em>events</em>",
+  "agenda.error.description":
+    "Something went wrong reaching your calendar. Your events are safe — this is just a hiccup on our side.",
+  "agenda.error.retry": "Try again",
 
   // ── Empty states (empties.data.tsx, Pattern B) ────────────────────────────
   "empties.upcoming.title": "Nothing on the calendar <em>yet</em>",
@@ -176,6 +182,14 @@ export const myevents: Catalog = {
   "side.acceptCta": "Accept",
   "side.declineCta": "Decline",
   "side.manageInviteCta": "Manage",
+
+  // ── Bookmark / save toggle (gathering detail — GatheringBookmarkButton) ────
+  "bookmark.save": "Save",
+  "bookmark.saved": "Saved",
+  "bookmark.saveAria": "Save this event",
+  "bookmark.savedAria": "Saved — remove from your events",
+  "bookmark.savedToast": "Saved to your events",
+  "bookmark.removedToast": "Removed from saved",
 
   // ── Card tools row (EventCardActions EventTools) ──────────────────────────
   "tools.reminderOn": "Reminder on",
@@ -385,9 +399,9 @@ export const myevents: Catalog = {
   "settingsModal.eyebrow": "Preferences",
   "settingsModal.title": "How your events <em>reach you</em>",
   "settingsModal.comingSoonNote":
-    "A preview of what's coming — you'll be able to set these once they're live.",
+    "Calendar sync and tickets are still on the way — you'll be able to connect them once they're live.",
   "settingsModal.pushLiveNote":
-    "Reminder timing and phone push are live — choose when you're reminded and turn on push to get it on your phone. The rest is a preview of what's coming.",
+    "Reminder timing, phone push, your default visibility, and email are all live. Calendar sync and tickets are a preview of what's coming.",
   "settingsModal.pushLiveDesc":
     "On this device — a notification when an event you're going to is about to start.",
   "settingsModal.pushUnsupported":

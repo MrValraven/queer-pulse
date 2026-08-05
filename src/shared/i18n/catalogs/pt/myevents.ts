@@ -69,6 +69,12 @@ export const myevents: Catalog = {
   "agenda.otherCommunity": "Outra",
   "agenda.showMore_one": "Mostrar mais {count}",
   "agenda.showMore_other": "Mostrar mais {count}",
+  // Estado distinto de erro/repetir quando a procura de eventos live falha
+  // (nunca um falso "sem eventos" — ver EventAgenda).
+  "agenda.error.title": "Não conseguimos carregar os teus <em>eventos</em>",
+  "agenda.error.description":
+    "Algo correu mal ao chegar ao teu calendário. Os teus eventos estão seguros — é só um percalço do nosso lado.",
+  "agenda.error.retry": "Tentar de novo",
 
   // ── Empty states (empties.data.tsx, Pattern B) ────────────────────────────
   "empties.upcoming.title": "Ainda nada no calendário <em>por agora</em>",
@@ -175,6 +181,14 @@ export const myevents: Catalog = {
   "side.acceptCta": "Aceitar",
   "side.declineCta": "Recusar",
   "side.manageInviteCta": "Gerir",
+
+  // ── Bookmark / save toggle (gathering detail — GatheringBookmarkButton) ────
+  "bookmark.save": "Guardar",
+  "bookmark.saved": "Guardado",
+  "bookmark.saveAria": "Guardar este evento",
+  "bookmark.savedAria": "Guardado — remover dos teus eventos",
+  "bookmark.savedToast": "Guardado nos teus eventos",
+  "bookmark.removedToast": "Removido dos guardados",
 
   // ── Card tools row (EventCardActions EventTools) ──────────────────────────
   "tools.reminderOn": "Lembrete ativo",
@@ -390,9 +404,9 @@ export const myevents: Catalog = {
   "settingsModal.eyebrow": "Preferências",
   "settingsModal.title": "Como os teus eventos <em>chegam até ti</em>",
   "settingsModal.comingSoonNote":
-    "Uma pré-visualização do que aí vem — vais poder configurar isto assim que estiver disponível.",
+    "A sincronização de calendário e os bilhetes ainda estão a caminho — vais poder ligá-los assim que estiverem disponíveis.",
   "settingsModal.pushLiveNote":
-    "O tempo do lembrete e o push no telemóvel estão ativos — escolhe quando és lembrado e ativa o push para o receberes no telemóvel. O resto é uma pré-visualização do que aí vem.",
+    "O tempo do lembrete, o push no telemóvel, a tua visibilidade padrão e o email estão todos ativos. A sincronização de calendário e os bilhetes são uma pré-visualização do que aí vem.",
   "settingsModal.pushLiveDesc":
     "Neste dispositivo — uma notificação quando um evento a que vais está prestes a começar.",
   "settingsModal.pushUnsupported":

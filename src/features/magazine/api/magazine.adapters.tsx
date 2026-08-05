@@ -349,13 +349,13 @@ export function submissionToPitch(
     type: dto.format,
     meta: [pitchPreview, `Submitted ${formatDayMonthYear(dto.createdAt, fmt)}`],
     stages: stagesFor(dto.status),
-    actions:
-      dto.status === "rejected"
-        ? [{ label: "View pitch", primary: true }]
-        : [
-            { label: "View pitch", primary: true },
-            { label: "Withdraw", withdraw: true },
-          ],
+    // Read-only in live: the story-submissions backend is read + one write —
+    // there's no submission-detail route to open ("View pitch" would route to a
+    // coming-soon stub, P2-17) and no withdraw endpoint (a "Withdraw" would only
+    // mutate local state and reappear on reload, P3-5). So the live card carries
+    // no actions rather than dead affordances. Demo mode keeps its own
+    // action-rich `PITCHES` registry (see `pitchTracker.data`).
+    actions: [],
     dimmed: dto.status === "rejected",
   };
 }

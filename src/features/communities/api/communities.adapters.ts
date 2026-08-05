@@ -106,6 +106,10 @@ export function cardDtoToCommunity(dto: CommunityCardDTO): Community {
     joinLabel: joinLabelFor(dto.accessTier),
     dashed: dto.accessTier === "private",
     privateBadge: dto.accessTier === "private",
+    // Carry the raw tier through so consumers can filter on join policy (e.g.
+    // onboarding only suggests instantly-joinable "public" communities) without
+    // re-deriving it from the presentational flags above.
+    accessTier: dto.accessTier,
     // Carry the viewer's membership through so the discover grid can show the
     // joined state without a second lookup — the detail page reads the same
     // `myRole` off its DTO. Dropping it here is what made the grid always show
@@ -377,6 +381,7 @@ export function applyCommunityOverride(
     next.typeLabel = TYPE_SHORT[patch.type] ?? community.typeLabel;
   }
   if (patch.accessTier !== undefined) {
+    next.accessTier = patch.accessTier;
     next.privateBadge = patch.accessTier === "private";
     next.dashed = patch.accessTier === "private";
     next.joinLabel = joinLabelFor(patch.accessTier);

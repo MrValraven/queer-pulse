@@ -20,6 +20,7 @@ import {
 import {
   BlockMuteBlocked,
   BlockMuteChoose,
+  BlockMuteExplainer,
   BlockMuteMuted,
 } from "./BlockMuteScreens";
 import s from "./flows.module.css";
@@ -47,6 +48,11 @@ export function BlockMutePage() {
     ?.memberSlug;
   const targetSlug = searchParams.get("member") ?? stateSlug ?? null;
   const hasTarget = Boolean(targetSlug);
+
+  // Without a real target there is nothing live to act on, so live mode must not
+  // narrate a fake block/mute against a fictional persona. Show the honest,
+  // non-transactional explainer instead; demo mode keeps the illustrative walk.
+  const showLiveExplainer = !hasTarget && !demoMode;
 
   const { data } = useMemberProfile(targetSlug ?? undefined);
   const targetMember = data?.member ?? null;
@@ -117,29 +123,35 @@ export function BlockMutePage() {
         ])}
       />
       <div className={s.page}>
-        {state === "choose" && (
-          <BlockMuteChoose
-            target={target}
-            timedMuteAllowed={timedMuteAllowed}
-            chosen={chosen}
-            onChoose={setChosen}
-            muteDur={muteDur}
-            onMuteDur={setMuteDur}
-            onContinue={handleContinue}
-            onCancel={() => void navigate(-1)}
-          />
-        )}
+        {showLiveExplainer ? (
+          <BlockMuteExplainer />
+        ) : (
+          <>
+            {state === "choose" && (
+              <BlockMuteChoose
+                target={target}
+                timedMuteAllowed={timedMuteAllowed}
+                chosen={chosen}
+                onChoose={setChosen}
+                muteDur={muteDur}
+                onMuteDur={setMuteDur}
+                onContinue={handleContinue}
+                onCancel={() => void navigate(-1)}
+              />
+            )}
 
-        {state === "muted" && (
-          <BlockMuteMuted
-            target={target}
-            muteDur={effectiveMuteDur}
-            onUndo={handleUndoMute}
-          />
-        )}
+            {state === "muted" && (
+              <BlockMuteMuted
+                target={target}
+                muteDur={effectiveMuteDur}
+                onUndo={handleUndoMute}
+              />
+            )}
 
-        {state === "blocked" && (
-          <BlockMuteBlocked target={target} onUndo={handleUndoBlock} />
+            {state === "blocked" && (
+              <BlockMuteBlocked target={target} onUndo={handleUndoBlock} />
+            )}
+          </>
         )}
       </div>
       <Footer />

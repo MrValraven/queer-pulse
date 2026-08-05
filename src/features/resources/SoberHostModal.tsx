@@ -4,7 +4,9 @@ import { Button, Sending } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { ResourceModal, PlumSuccess, PlumComingSoon } from "./ResourceModal";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { submitIntake } from "../../shared/api/intakes";
+import { ResourceModal, PlumSuccess } from "./ResourceModal";
 import styles from "./ResourceModal.module.css";
 
 type Mode = "host" | "attend";
@@ -12,6 +14,7 @@ type Mode = "host" | "attend";
 export function SoberHostModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
+  const { showToast } = useToast();
   const fieldId = useId();
   const [mode, setMode] = useState<Mode>("host");
   const [name, setName] = useState("");
@@ -20,30 +23,27 @@ export function SoberHostModal({ onClose }: { onClose: () => void }) {
 
   const valid = name.trim().length > 1 && detail.trim().length > 4;
 
-  const submit = () => {
+  // LIVE: record the host/attend intent through the generic intake endpoint;
+  // demo keeps the simulated success.
+  const submit = async () => {
     if (!valid || phase === "loading") return;
     setPhase("loading");
-    setTimeout(() => setPhase("done"), 1100);
+    if (demoMode) {
+      setTimeout(() => setPhase("done"), 1100);
+      return;
+    }
+    try {
+      await submitIntake("sober_host", {
+        mode,
+        name: name.trim(),
+        detail: detail.trim(),
+      });
+      setPhase("done");
+    } catch {
+      setPhase("form");
+      showToast(t("shared:intake.errorToast"), "error");
+    }
   };
-
-  // LIVE: no host/RSVP endpoint exists — show an honest coming-soon panel
-  // instead of a mock form that fakes a "submitted"/"you're in" success.
-  if (!demoMode) {
-    return (
-      <ResourceModal title="" onClose={onClose}>
-        <PlumComingSoon
-          title={
-            <Translation
-              i18nKey="resources:sober.host.comingSoon.title"
-              components={{ em: <em /> }}
-            />
-          }
-          sub={t("resources:sober.host.comingSoon.sub")}
-          onClose={onClose}
-        />
-      </ResourceModal>
-    );
-  }
 
   return (
     <ResourceModal
@@ -156,7 +156,7 @@ export function SoberHostModal({ onClose }: { onClose: () => void }) {
             <Button
               type="button"
               variant="primary"
-              onClick={submit}
+              onClick={() => void submit()}
               disabled={!valid || phase === "loading"}
             >
               {phase === "loading" ? (

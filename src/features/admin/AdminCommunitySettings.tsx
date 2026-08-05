@@ -1,22 +1,14 @@
 import { useState } from "react";
-import { FiX } from "react-icons/fi";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { ModeratorsRow } from "./AdminCommunityModerators";
 import { AdminChip, AdminToggle } from "./ui";
-import {
-  shortName,
-  visLabelKey,
-  type Community,
-  type Moderator,
-} from "./adminCommunities.data";
+import { visLabelKey, type Community } from "./adminCommunities.data";
 import styles from "./AdminCommunitiesPage.module.css";
 
 export function SettingsPane({ community }: { community: Community }) {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
   const { showToast } = useToast();
-  const [moderators, setModerators] = useState<Moderator[]>(community.moderators);
   // Neither `join` nor `code` has a backend field yet (live mode — see
   // adminCommunities.adapters.ts), so both arrive as "". `hasJoinData` also
   // gates the second-vouch toggle below, which otherwise derives its initial
@@ -34,30 +26,6 @@ export function SettingsPane({ community }: { community: Community }) {
   const hasAutoFreezeData = false;
   const [autoFreeze, setAutoFreeze] = useState(hasAutoFreezeData);
 
-  function removeMod(m: Moderator) {
-    // Live mode has no moderator-management endpoint yet (see
-    // adminCommunities.adapters.ts). The roster the drawer shows is real API
-    // data, so mutating it client-side + offering a fake Undo would claim a
-    // removal that never reached the backend. Stay honest until it's wired.
-    if (!demoMode) {
-      showToast(t("admin:communities.settings.comingSoonToast"), "info");
-      return;
-    }
-    setModerators((prev) => prev.filter((x) => x.name !== m.name));
-    showToast(
-      t("admin:communities.settings.modRemovedToast", { name: m.name }),
-      "success",
-      undefined,
-      {
-        label: t("admin:common.undo"),
-        onClick: () =>
-          setModerators((prev) =>
-            prev.some((x) => x.name === m.name) ? prev : [...prev, m],
-          ),
-      },
-    );
-  }
-
   return (
     <div className={styles.pane}>
       {hasJoinData && (
@@ -71,44 +39,7 @@ export function SettingsPane({ community }: { community: Community }) {
         </div>
       )}
 
-      <div className={styles.setRow}>
-        <div className={styles.setLabel}>
-          {t("admin:communities.settings.moderators")}
-        </div>
-        <div className={styles.modChips}>
-          {moderators.map((m) => (
-            <span key={m.name} className={styles.modChip}>
-              {shortName(m.name)}
-              <button
-                type="button"
-                className={styles.modChipX}
-                aria-label={t("admin:communities.settings.removeModAriaLabel", {
-                  name: m.name,
-                })}
-                onClick={() => removeMod(m)}
-              >
-                <FiX />
-              </button>
-            </span>
-          ))}
-          <button
-            type="button"
-            className={styles.addBtn}
-            onClick={() =>
-              showToast(
-                t(
-                  demoMode
-                    ? "admin:communities.settings.addModToast"
-                    : "admin:communities.settings.comingSoonToast",
-                ),
-                "info",
-              )
-            }
-          >
-            {t("admin:communities.settings.addModCta")}
-          </button>
-        </div>
-      </div>
+      <ModeratorsRow community={community} />
 
       <ToggleRow
         title={t("admin:communities.settings.secondVouch.title")}

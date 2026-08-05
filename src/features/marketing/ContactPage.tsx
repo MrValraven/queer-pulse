@@ -9,11 +9,12 @@ import {
 } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FormField, Outro, Reveal } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
+import { useSubmitInquiry } from "./api/useSubmitInquiry";
 import s from "./ContactPage.module.css";
 
 const ROUTES: {
@@ -55,7 +56,8 @@ const ROUTES: {
 
 export function ContactPage() {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
+  const { showToast } = useToast();
+  const submitInquiry = useSubmitInquiry();
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", topic: "", message: "" });
   const valid =
@@ -63,6 +65,23 @@ export function ContactPage() {
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
     form.topic &&
     form.message.trim();
+
+  const handleSubmit = () => {
+    if (!valid || submitInquiry.isPending) return;
+    submitInquiry.mutate(
+      {
+        kind: "contact",
+        name: form.name.trim(),
+        email: form.email.trim(),
+        subject: t(`marketing:contact.form.topic.${form.topic}`),
+        body: form.message.trim(),
+      },
+      {
+        onSuccess: () => setSent(true),
+        onError: () => showToast(t("marketing:contact.form.error"), "error"),
+      },
+    );
+  };
   const pageTitle = t("marketing:contact.meta.title");
   const pageDescription = t("marketing:contact.meta.description");
 
@@ -112,23 +131,7 @@ export function ContactPage() {
           </Reveal>
 
           <Reveal className={s.form} delay={90}>
-            {!demoMode ? (
-              <div className={s.sent}>
-                <div className={s.tyIcon}>
-                  <FiMail size={26} color="var(--jade)" aria-hidden />
-                </div>
-                <h2>
-                  <Translation
-                    i18nKey="marketing:contact.comingSoon.title"
-                    components={{ em: <em /> }}
-                  />
-                </h2>
-                <p>{t("marketing:contact.comingSoon.body")}</p>
-                <Button variant="ghost" href="mailto:hello@queerpulse.pt">
-                  {t("marketing:contact.comingSoon.emailCta")}
-                </Button>
-              </div>
-            ) : sent ? (
+            {sent ? (
               <div className={s.sent}>
                 <div className={s.tyIcon}>
                   <svg viewBox="0 0 24 24" fill="none">
@@ -156,7 +159,7 @@ export function ContactPage() {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  if (valid) setSent(true);
+                  handleSubmit();
                 }}
               >
                 <h2>
@@ -221,10 +224,12 @@ export function ContactPage() {
                 <Button
                   type="submit"
                   size="lg"
-                  disabled={!valid}
+                  disabled={!valid || submitInquiry.isPending}
                   style={{ width: "100%", justifyContent: "center" }}
                 >
-                  {t("marketing:contact.form.sendCta")}{" "}
+                  {submitInquiry.isPending
+                    ? t("marketing:contact.form.sendingCta")
+                    : t("marketing:contact.form.sendCta")}{" "}
                   <FiArrowRight aria-hidden />
                 </Button>
               </form>

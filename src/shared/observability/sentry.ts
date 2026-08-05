@@ -3,18 +3,26 @@
  * codebase never imports a vendor SDK directly — it calls `captureException`
  * and friends here.
  *
- * INTENTIONAL NOT-YET-WIRED STUB. `@sentry/react` is deliberately NOT a
- * dependency yet, so every function below is a total, side-effect-free no-op
- * that can never throw — imports and calls are safe from any entry point today.
- * Consent + gating (DSN present, production build, analytics consent via spec
- * 07's `setMonitoringConsent`) are already tracked here so that, once a real
- * monitor is wired, nothing can run until a member opts in.
+ * Wired to `@sentry/react`. The SDK is initialised at startup ONLY in a
+ * production build that has a DSN configured; otherwise nothing is loaded and
+ * every function is a safe no-op. Even when initialised, no event leaves the
+ * browser until the member grants the `monitoring` consent category — the
+ * `beforeSend` hook drops everything while `enabled` is false, and
+ * `setMonitoringConsent` (called by the ConsentProvider, spec 07) flips it. This
+ * keeps live consent toggles working with no re-init and no page reload.
  *
- * Activating monitoring is a self-contained change: add the SDK, implement
- * these four functions against it (behind the existing `enabled` gate), and add
- * a source-map upload step to the build. No caller needs to change — none of
- * these functions returns a value, so behaviour stays identical when wired.
+ * Errors only: no Session Replay, no performance tracing, no default PII. The
+ * only user context ever attached is an opaque hashed id via `setMonitoringUser`.
+ *
+ * FOLLOW-UP (not done here — needs a build/secrets change, out of scope for a
+ * source edit): add a source-map upload step so minified stack traces resolve.
+ * Use `@sentry/vite-plugin` in `vite.config.ts` gated on an auth token secret
+ * (SENTRY_AUTH_TOKEN) and set `release` to the same value as `VITE_RELEASE`, so
+ * uploaded maps match the `release` tagged on events below. Until then, events
+ * still report but frames stay minified.
  */
+
+import * as Sentry from "@sentry/react";
 
 type Extra = Record<string, unknown>;
 
@@ -25,29 +33,45 @@ const DSN: string | undefined = import.meta.env.VITE_SENTRY_DSN as
 /** Flipped on only when DSN + PROD + analytics consent all hold. */
 let enabled = false;
 
+/** Guards against a double `Sentry.init` (StrictMode / hot reload). */
+let initialised = false;
+
 /** Called by the ConsentProvider (spec 07) once analytics consent is known. */
 export function setMonitoringConsent(granted: boolean): void {
   enabled = granted && Boolean(DSN) && import.meta.env.PROD;
-  // No-op stub: nothing to init/close until a real monitor is wired.
+  // No re-init: `beforeSend` reads `enabled` on every event, so flipping this
+  // is enough to start/stop transmission live.
 }
 
-/** Single init entry point, called from main.tsx before render. No-op stub. */
+/** Single init entry point, called from main.tsx before render. */
 export function initObservability(): void {
-  // No-op stub: intentionally does nothing until a real monitor is wired.
-  void DSN;
+  // Only stand up the SDK in a production build with a DSN. In dev, or with no
+  // DSN, there is nothing to send — never load the transport or global handlers.
+  if (initialised || !DSN || !import.meta.env.PROD) return;
+  initialised = true;
+
+  Sentry.init({
+    dsn: DSN,
+    environment: import.meta.env.MODE,
+    release: import.meta.env.VITE_RELEASE as string | undefined,
+    // Errors only — keep the footprint minimal and consent-friendly.
+    sendDefaultPii: false,
+    tracesSampleRate: 0,
+    // Consent gate: initialised at startup so global handlers are installed, but
+    // every event is dropped until the member grants `monitoring` consent
+    // (setMonitoringConsent flips `enabled`). Returning null discards the event.
+    beforeSend: (event) => (enabled ? event : null),
+  });
 }
 
-/** Report an error to the monitor. No-op stub until wired / until consent. */
+/** Report an error to the monitor. No-op until wired / until consent. */
 export function captureException(error: unknown, extra?: Extra): void {
   if (!enabled) return;
-  // No-op stub: swallow the report until a real monitor is wired.
-  void error;
-  void extra;
+  Sentry.captureException(error, extra ? { extra } : undefined);
 }
 
 /** Attach an opaque, non-PII user id (never email/handle). Null clears it. */
 export function setMonitoringUser(hashedId: string | null): void {
   if (!enabled) return;
-  // No-op stub: intentionally does nothing until a real monitor is wired.
-  void hashedId;
+  Sentry.setUser(hashedId ? { id: hashedId } : null);
 }

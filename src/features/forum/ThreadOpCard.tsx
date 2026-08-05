@@ -18,7 +18,7 @@ export function ThreadOpCard({
   deleted,
   onVote,
   bookmarked,
-  setBookmarked,
+  onToggleBookmark,
   onReport,
   canEdit,
   canDelete,
@@ -39,7 +39,9 @@ export function ThreadOpCard({
    *  which the vote mutation patches in place — no local like state. */
   onVote: () => void;
   bookmarked: boolean;
-  setBookmarked: (fn: (v: boolean) => boolean) => void;
+  /** Toggle whether this thread is in the member's saved items. Persisted via
+   *  the app-wide saved store (real `/me/saved` endpoint, optimistic). */
+  onToggleBookmark: () => void;
   onReport: () => void;
   canEdit: boolean;
   canDelete: boolean;
@@ -184,7 +186,8 @@ export function ThreadOpCard({
             className={[styles.reaction, bookmarked && styles.reactionOn]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => setBookmarked((v) => !v)}
+            aria-pressed={bookmarked}
+            onClick={onToggleBookmark}
           >
             {bookmarked
               ? t("forum:threadOp.saved")

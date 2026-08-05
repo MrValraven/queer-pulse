@@ -2799,6 +2799,8 @@ export const economy: Catalog = {
   "housingCoop.toast.postHelp":
     "We'll help you find your people — check your inbox.",
   "housingCoop.toast.story": "Casa Sambizanga's story is coming soon.",
+  "housingCoop.toast.liveComingSoon":
+    "That's still being built — this action isn't wired up yet.",
 
   // ── JoinCoopModal ────────────────────────────────────────────────────────
   "joinCoop.askToJoinAriaLabel": "Ask to join {name}",

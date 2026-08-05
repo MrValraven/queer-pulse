@@ -32,9 +32,15 @@ import {
  * Two sections (Gatherings, Stories) still have no live-curated equivalent —
  * their rich shapes (event chrome, story deks) come straight from the
  * prototype's static `data/*` registries, so wiring them is a per-section
- * redesign, not a wire. They render ONLY in demo mode. Live mode always keeps
- * the platform-authored sections (value proposition, manifesto, the "gaps we
- * felt" thread, newsletter) — all honest, identical in both modes.
+ * redesign, not a wire. They render ONLY in demo mode (the `{demoMode && …}`
+ * guards below) — verified to simply not render in live, never broken. Live
+ * mode always keeps the platform-authored sections (value proposition,
+ * manifesto, the "gaps we felt" thread, newsletter) — all honest, identical in
+ * both modes.
+ *
+ * DEFERRED (Phase 2): a live Gatherings/Stories discovery surface needs its own
+ * admin-curation endpoint (mirroring `GET /landing/features`) before these can
+ * render real content in live. Until then, hiding them is the honest behaviour.
  */
 export function HomePage() {
   const { t } = useTranslation();

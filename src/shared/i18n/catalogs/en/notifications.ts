@@ -95,6 +95,16 @@ export const notifications: Catalog = {
     "A gathering you're going to has been cancelled.",
   "type.event_cancelled.meta": "Gathering update",
 
+  "type.event_updated.text":
+    "Details changed for a gathering you're going to.",
+  "type.event_updated.meta": "Gathering update",
+  "type.event_updated.time.text":
+    "The start time changed for a gathering you're going to.",
+  "type.event_updated.time.meta": "Gathering update",
+  "type.event_updated.location.text":
+    "The location changed for a gathering you're going to.",
+  "type.event_updated.location.meta": "Gathering update",
+
   // Platform-wide coverage sweep. Personalized kinds carry a
   // `<profile>{name}</profile>` `textNamed` slot; the system-driven ones
   // (join approved/declined, listing approved, report/appeal/roadmap updates)
@@ -263,6 +273,11 @@ export const notifications: Catalog = {
   "mentions.empty.title": "No mentions here",
   "mentions.empty.description":
     "Nothing in this view right now. When someone tags you, it’ll show up here — no need to go looking.",
+  // Live has no mentions inbox endpoint yet — shown instead of a silent empty
+  // list so the surface reads as honestly unfinished, not broken (MentionsPanel).
+  "mentions.comingSoon.title": "Mentions are on the way",
+  "mentions.comingSoon.description":
+    "We’re still building the place where every @-mention lands. Until then, you’ll still be told the moment someone tags you.",
   "mentions.composer.placeholder": "Reply to {name}…",
   "mentions.row.read": "Read",
   "mentions.row.going": "Going",
@@ -283,6 +298,13 @@ export const notifications: Catalog = {
   "mentions.context.thread": "in a thread",
   "mentions.context.eventInvite": "in an event invite",
   "mentions.context.communityReply": "in a {community} reply",
+  // Live inbox (GET /mentions) — day bucket + fallbacks when the backend row
+  // carries no resolved source label / actor (MentionsPanel via mentions.adapters).
+  "mentions.day.earlier": "Earlier",
+  "mentions.liveContext.community": "in a community post",
+  "mentions.liveContext.generic": "mentioned you",
+  "mentions.liveWhere.fallback": "the conversation",
+  "mentions.liveActor.unknown": "Someone",
 
   // Notification deep-link preview (NotificationDeepLinkPage.tsx / Cards.tsx)
   "deepLink.back": "Notifications",

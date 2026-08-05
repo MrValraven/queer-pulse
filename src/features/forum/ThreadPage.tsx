@@ -3,7 +3,7 @@ import { currentUser } from "../members/data/members";
 import { ThreadOpSection } from "./ThreadOpSection";
 import { ThreadReplySection } from "./ThreadReplySection";
 import { ThreadTopbar } from "./ThreadTopbar";
-import { ThreadNotFoundState } from "./ThreadNotFoundState";
+import { ThreadNotFoundState, ThreadErrorState } from "./ThreadNotFoundState";
 import { ThreadPageModals } from "./ThreadPageModals";
 import { deriveOpView } from "./useThreadModeration";
 import { useThreadPageState } from "./useThreadPageState";
@@ -19,14 +19,13 @@ export function ThreadPage() {
     threadQuery,
     vote,
     bookmarked,
-    setBookmarked,
+    toggleBookmark,
     sort,
     setSort,
     reply,
     setReply,
     demoOpVoted,
     setDemoOpVoted,
-    localReplies,
     nestedReplies,
     replyBoxRef,
     replyKey,
@@ -39,8 +38,14 @@ export function ThreadPage() {
   } = useThreadPageState();
 
   // Live mode has no thread until the fetch resolves — skeleton, then a real
-  // "not found" state. Demo always has a thread, so this branch is live-only.
-  if (!threadData) return <ThreadNotFoundState loading={loading} />;
+  // "not found" state. Demo always has a thread, so this branch is live-only. A
+  // retryable failure (500 / network) is surfaced distinctly from a genuine 404
+  // so an outage doesn't masquerade as a deleted thread.
+  if (!threadData) {
+    if (threadQuery.isError)
+      return <ThreadErrorState onRetry={threadQuery.refetch} />;
+    return <ThreadNotFoundState loading={loading} />;
+  }
 
   // Past the guard the thread is resolved — a non-optional alias so the OP
   // permission logic below can use it without optional-chaining.
@@ -89,14 +94,17 @@ export function ThreadPage() {
                   vote(thread.opPostId, thread.myVote ? 0 : 1);
               }}
               bookmarked={bookmarked}
-              setBookmarked={setBookmarked}
+              onToggleBookmark={toggleBookmark}
               moderation={moderation}
             />
 
             <ThreadReplySection
               sort={sort}
               setSort={setSort}
-              count={localReplies.length}
+              // Server-side total reply count (thread.comments), NOT
+              // localReplies.length — the latter only counts pages loaded so far,
+              // so with "Load more" the sort-bar undercounted the real total.
+              count={thread.comments}
               loading={loading}
               isLocked={!!thread.isLocked}
               nodes={replyTree}
@@ -120,9 +128,8 @@ export function ThreadPage() {
         </section>
 
         <ThreadPageModals
-          reportingAuthor={moderation.reportingAuthor}
-          threadId={String(thread.id)}
-          onCloseReport={() => moderation.setReportingAuthor(null)}
+          reportTarget={moderation.reportTarget}
+          onCloseReport={() => moderation.setReportTarget(null)}
           editingOp={moderation.editingOp}
           opTitle={opView.opTitle}
           editingOpInitialBody={moderation.editingOpInitialBody}

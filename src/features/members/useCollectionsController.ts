@@ -1,0 +1,215 @@
+import { useMemo, useState } from "react";
+import { useSimulatedLoad } from "../../shared/hooks";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { formatRelative } from "../../shared/lib/date";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useSaved, type SavedItem } from "../../app/providers/useSaved";
+import { dtoToSavedItem } from "./api/saved.api";
+import {
+  useMyCollections,
+  useCollectionDetail,
+  useCollectionMutations,
+} from "./api/useCollections";
+import type { CollectionDTO } from "./api/collections.api";
+import {
+  COLLECTIONS,
+  RECENT_SAVES,
+  type Collection,
+  type Privacy,
+  type RecentSave,
+} from "./collections.data";
+
+export type ModalState =
+  | { type: "new" }
+  | { type: "view"; id: string }
+  | { type: "add"; save: RecentSave }
+  | null;
+
+/** Map a server collection into the display shape the grid card expects. Live
+ *  collections are owner-private (backend has no privacy/thumb concept), so
+ *  privacy is always "private" and thumbs are empty. */
+function toDisplay(
+  dto: CollectionDTO,
+  t: ReturnType<typeof useTranslation>["t"],
+  fmt: ReturnType<typeof useFormat>,
+): Collection {
+  return {
+    id: dto.id,
+    count: String(dto.itemCount),
+    name: dto.emoji ? `${dto.emoji} ${dto.name}` : dto.name,
+    plainName: dto.name,
+    meta: t("members:collections.live.itemCount", { count: dto.itemCount }),
+    thumbs: [],
+    more: "",
+    privacy: "private",
+    updated: t("members:collections.live.updated", {
+      time: formatRelative(dto.updatedAt, fmt),
+    }),
+  };
+}
+
+/**
+ * All state + handlers for the Collections page, dual-mode. Demo mode runs the
+ * seeded grid and simulates create/add locally; live mode reads/writes
+ * `/me/collections` through react-query (`useCollections`). Keeping this out of
+ * the component keeps the render function under the repo's 200-line rule.
+ */
+export function useCollectionsController() {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const { demoMode } = useDemoMode();
+  const { showToast } = useToast();
+  const { items: savedItems } = useSaved();
+  const simulatedLoad = useSimulatedLoad();
+
+  const [modal, setModal] = useState<ModalState>(null);
+
+  // Live data — both hooks are demo-gated internally, so demo mode never fires
+  // them and the local state below runs the show instead.
+  const liveCollectionsQuery = useMyCollections();
+  const { create, addItem, removeItem } = useCollectionMutations();
+  const liveDetailQuery = useCollectionDetail(
+    !demoMode && modal?.type === "view" ? modal.id : null,
+  );
+
+  // Demo state: seeded grid + local "add" simulation (no persistence).
+  const [localCollections, setLocalCollections] = useState<Collection[]>(
+    demoMode ? COLLECTIONS : [],
+  );
+  const [contents, setContents] = useState<Record<string, SavedItem[]>>({});
+
+  const liveCollections = useMemo<Collection[]>(
+    () => (liveCollectionsQuery.data ?? []).map((dto) => toDisplay(dto, t, fmt)),
+    [liveCollectionsQuery.data, t, fmt],
+  );
+
+  const collections = demoMode ? localCollections : liveCollections;
+  const loading = demoMode ? simulatedLoad : liveCollectionsQuery.isLoading;
+
+  // Recent unfiled saves: demo fiction, or the member's real saved store live —
+  // each row's `id` carries the true `<kind>:<subjectId>` ref so it can be filed.
+  const liveRecent = useMemo<RecentSave[]>(
+    () =>
+      savedItems.map((item) => ({
+        id: item.id,
+        kind: item.kind.slice(0, 3).toUpperCase(),
+        kindVariant: "article",
+        title: item.title,
+        saved: item.meta ?? "",
+      })),
+    [savedItems],
+  );
+  const recentSaves = demoMode ? RECENT_SAVES : liveRecent;
+
+  const contentsFor = (id: string): SavedItem[] =>
+    contents[id] ?? savedItems.slice(0, 3);
+
+  const createCollection = (name: string, privacy: Privacy) => {
+    if (!demoMode) {
+      // Backend has no privacy concept — collections are owner-private; the
+      // picked `privacy` is presentational only and not sent.
+      create.mutate(
+        { name },
+        {
+          onSuccess: () => {
+            setModal(null);
+            showToast(t("members:collections.toast.created"), "success");
+          },
+          onError: () =>
+            showToast(t("members:collections.toast.createError"), "error"),
+        },
+      );
+      return;
+    }
+    setLocalCollections((prev) => [
+      {
+        id: `c-${Date.now()}`,
+        count: "0",
+        name,
+        plainName: name,
+        meta: t("members:collections.newCollection.defaultMeta"),
+        thumbs: ["a", "b", "c"],
+        more: "",
+        privacy,
+        updated: t("members:collections.updatedJustNow"),
+      },
+      ...prev,
+    ]);
+    setModal(null);
+    showToast(t("members:collections.toast.created"), "success");
+  };
+
+  const addSaveToCollection = (collectionId: string, save: RecentSave) => {
+    if (!demoMode) {
+      // `save.id` is the real saved-item ref (`<kind>:<subjectId>`).
+      addItem.mutate(
+        { id: collectionId, ref: save.id },
+        {
+          onError: () =>
+            showToast(t("members:collections.toast.addError"), "error"),
+        },
+      );
+      return;
+    }
+    const item: SavedItem = {
+      id: `recent:${save.id}`,
+      kind: "article",
+      title: save.title,
+      meta: save.saved,
+    };
+    setContents((prev) => {
+      const existing = prev[collectionId] ?? savedItems.slice(0, 3);
+      if (existing.some((entry) => entry.id === item.id)) return prev;
+      return { ...prev, [collectionId]: [item, ...existing] };
+    });
+    setLocalCollections((prev) =>
+      prev.map((collection) =>
+        collection.id === collectionId
+          ? {
+              ...collection,
+              count: String((Number(collection.count) || 0) + 1),
+              updated: t("members:collections.updatedJustNow"),
+            }
+          : collection,
+      ),
+    );
+  };
+
+  const removeSaveFromCollection = (collectionId: string, ref: string) => {
+    removeItem.mutate(
+      { id: collectionId, ref },
+      {
+        onSuccess: () =>
+          showToast(t("members:collections.toast.removed"), "success"),
+        onError: () =>
+          showToast(t("members:collections.toast.removeError"), "error"),
+      },
+    );
+  };
+
+  const viewing =
+    modal?.type === "view"
+      ? (collections.find((collection) => collection.id === modal.id) ?? null)
+      : null;
+  const viewingItems = demoMode
+    ? viewing
+      ? contentsFor(viewing.id)
+      : []
+    : (liveDetailQuery.data?.items ?? []).map(dtoToSavedItem);
+
+  return {
+    demoMode,
+    collections,
+    loading,
+    recentSaves,
+    modal,
+    setModal,
+    createCollection,
+    addSaveToCollection,
+    removeSaveFromCollection,
+    viewing,
+    viewingItems,
+  };
+}

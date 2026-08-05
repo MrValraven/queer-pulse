@@ -1421,7 +1421,6 @@ export const studio: Catalog = {
   "liveChat.tabs.listeners.label": "Listeners",
   "liveChat.inputPlaceholder": "say something to the room…",
   "liveChat.sendAria": "Send",
-  "liveChat.sentToast": "Sent to the room",
   "liveChat.tipPresetCta": "Tip {amount}",
   "liveChat.tipCustomCta": "Tip €__",
 

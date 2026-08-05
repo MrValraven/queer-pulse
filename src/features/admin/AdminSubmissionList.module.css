@@ -63,6 +63,23 @@
   color: var(--ink-60);
 }
 
+/* Decision row-actions column (reading-group proposals): a status chip above
+   the approve/decline/archive buttons. Sits to the right of .rowMain. */
+.rowActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.rowActionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .loadMore {
   display: flex;
   justify-content: center;

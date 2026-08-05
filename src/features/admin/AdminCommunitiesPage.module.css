@@ -622,6 +622,51 @@
   }
 }
 
+/* Add-moderator picker (live mode) — a full-width list of promotable members
+   that drops below the moderator chips. */
+.modPicker {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  padding: 12px;
+  border-radius: var(--radius-card, 22px);
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1px dashed rgba(var(--line-rgb), 0.16);
+}
+.modPickerNote {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+.modPickerItem {
+  padding: 6px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--line-rgb), 0.2);
+  background: var(--paper);
+  color: var(--text-strong);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.16s var(--ease),
+    background 0.16s var(--ease);
+}
+.modPickerItem:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+@media (hover: hover) {
+  .modPickerItem:hover:not(:disabled) {
+    border-color: var(--line-strong);
+    background: rgba(var(--jade-rgb), 0.1);
+  }
+}
+
 /* Toggle setting rows */
 .toggleRow {
   display: flex;

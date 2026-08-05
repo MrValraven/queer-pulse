@@ -11,7 +11,7 @@ import { useVouchGraph, type VouchMode } from "./useVouchGraph";
 import { useTrustNetwork } from "./api/useTrustNetwork";
 import { TrustGraphProvider } from "./trustGraph/TrustGraphContext";
 import { useTrustGraph } from "./trustGraph/useTrustGraph";
-import { monthDateFromValue } from "./trustGraph/trustGraphModel";
+import { monthDate } from "./trustGraph/trustGraphModel";
 import styles from "./AdminVouchGraph.module.css";
 
 /** `admin:vouchGraph.modes.*` catalog keys, resolved with `t()`. */
@@ -135,6 +135,10 @@ function Legend({ mode }: { mode: VouchMode }) {
       <span className={styles.leg}>
         <span className={styles.legLineVouch} />
         {t("admin:vouchGraph.legend.plain.vouched")}
+      </span>
+      <span className={styles.leg}>
+        <span className={styles.legLineWithdrawn} />
+        {t("admin:vouchGraph.legend.plain.withdrawn")}
       </span>
       <span className={styles.leg}>
         <span className={styles.legHatch} />
@@ -294,6 +298,7 @@ function GraphModalInner({
 
           <VouchGraphInspector
             sel={g.sel}
+            activeEdgeId={g.timeCut < g.eventCount ? g.activeEdgeId : null}
             expanded={g.sel ? g.expanded.has(g.sel) : false}
             onGo={g.select}
             onVerify={() =>
@@ -325,17 +330,30 @@ function GraphModalInner({
             </button>
             <input
               type="range"
-              min={graph.tMin}
-              max={graph.tMax}
+              min={0}
+              max={g.eventCount}
+              step={1}
               value={g.timeCut}
               onChange={(e) => g.setTime(Number(e.target.value))}
               aria-label={t("admin:vouchGraph.modal.timeCutAriaLabel")}
+              disabled={g.eventCount === 0}
             />
             <span className={styles.timeLbl}>
-              {fmt.date(monthDateFromValue(g.timeCut), {
-                month: "short",
-                year: "numeric",
-              })}
+              {g.currentEvent ? (
+                <>
+                  <b>{graph.peopleById[g.currentEvent.to]?.name}</b> ·{" "}
+                  {t(
+                    `admin:vouchGraph.edgeKind.${g.currentEvent.kind ?? "vouch"}`,
+                  )}{" "}
+                  ·{" "}
+                  {fmt.date(monthDate(g.currentEvent.date), {
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </>
+              ) : (
+                t("admin:vouchGraph.modal.replayStart")
+              )}
             </span>
           </div>
         </footer>

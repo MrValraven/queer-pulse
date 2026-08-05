@@ -81,7 +81,6 @@ function CommissionCard({ call }: { call: Commission }) {
 }
 
 function SmallCallCard({ call }: { call: SmallCall }) {
-  const { showToast } = useToast();
   const { t } = useTranslation();
   return (
     <article className={styles.sc}>
@@ -104,16 +103,7 @@ function SmallCallCard({ call }: { call: SmallCall }) {
         <Button to={routes.cinemaSubmit}>
           {t("cinema:openCalls.card.applyCta")}
         </Button>
-        <Button
-          variant="ghost"
-          onClick={() =>
-            showToast(
-              t("cinema:openCalls.card.comingSoonToast", {
-                label: call.secondaryLabel,
-              }),
-            )
-          }
-        >
+        <Button variant="ghost" to={call.secondaryTo}>
           {call.secondaryLabel}
         </Button>
       </div>

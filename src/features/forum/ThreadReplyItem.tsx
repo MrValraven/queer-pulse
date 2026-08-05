@@ -37,6 +37,7 @@ export function ThreadReplyItem({
   onRestore,
   onHistory,
   onReply,
+  onReport,
   collapse,
 }: {
   reply: Reply;
@@ -56,6 +57,9 @@ export function ThreadReplyItem({
   /** Nested-replies feature: renders a "Reply" action next to the like button
    *  when provided. Omitted call sites (none left) keep today's behaviour. */
   onReply?: (reply: Reply) => void;
+  /** Renders a "Report" action for this reply, carrying its real `postId` as
+   *  the report subject. Omitted keeps the actions row report-free. */
+  onReport?: (reply: Reply) => void;
   /** Nested-replies feature: renders a compact collapse/expand toggle near the
    *  author line when the reply has descendants. */
   collapse?: ThreadReplyCollapseProps;
@@ -210,6 +214,15 @@ export function ThreadReplyItem({
                   onClick={() => onReply(reply)}
                 >
                   {t("forum:replies.reply")}
+                </button>
+              )}
+              {onReport && (
+                <button
+                  type="button"
+                  className={styles.replyReplyBtn}
+                  onClick={() => onReport(reply)}
+                >
+                  {t("forum:threadOp.report")}
                 </button>
               )}
             </div>

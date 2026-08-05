@@ -15,6 +15,9 @@ export const ADMIN_READING_GROUP_PROPOSALS: AdminReadingGroupProposalDTO[] = [
     format: "In-person",
     maxPeople: 6,
     createdAt: "2026-07-24T11:00:00.000Z",
+    status: "pending",
+    decidedAt: null,
+    decisionNote: null,
   },
   {
     id: "rgp_4002",
@@ -24,6 +27,9 @@ export const ADMIN_READING_GROUP_PROPOSALS: AdminReadingGroupProposalDTO[] = [
     format: "Online",
     maxPeople: 8,
     createdAt: "2026-07-20T19:30:00.000Z",
+    status: "approved",
+    decidedAt: "2026-07-21T09:00:00.000Z",
+    decisionNote: null,
   },
   {
     id: "rgp_4003",
@@ -33,5 +39,8 @@ export const ADMIN_READING_GROUP_PROPOSALS: AdminReadingGroupProposalDTO[] = [
     format: "Either",
     maxPeople: 4,
     createdAt: "2026-07-16T08:20:00.000Z",
+    status: "pending",
+    decidedAt: null,
+    decisionNote: null,
   },
 ];

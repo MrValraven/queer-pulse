@@ -21,6 +21,7 @@ import { EditableProfileHero } from "./EditableProfileHero";
 import { ProfileEditBar } from "./ProfileEditBar";
 import { useProfileEditGuard } from "./useProfileEditGuard";
 import { MobileProfileView } from "./MobileProfileView";
+import { MobileEditableProfileHero } from "./MobileEditableProfileHero";
 import {
   ProfileLoadingState,
   ProfileErrorState,
@@ -98,10 +99,46 @@ export function ProfilePage() {
   // profile is non-null here by the invariant above; assert to satisfy ProfileHero/ProfileContent.
   const resolvedProfile = profile!;
 
-  // Mobile Instagram-style layout for the VIEW state only — editing keeps the
-  // existing inline editor (which is already responsive) regardless of width.
-  const useMobileLayout = isMobile && !(selfView && isEditing);
+  // Mobile Instagram-style layout applies to both the view and edit states —
+  // phone-width editing renders the centered mobile editor instead of the
+  // desktop inline editor.
+  const useMobileLayout = isMobile;
   const ownerSlug = isSelf ? (selfSlug ?? "") : (slug ?? "");
+
+  // Shared below-hero sections — rendered after the hero on both the desktop
+  // layout and the phone-width edit layout, so mobile editing keeps access to
+  // the same work/board/skills/groups editors as desktop.
+  const belowHero = (
+    <>
+      <ProfileSubprofilesSection ownerSlug={ownerSlug} isSelf={selfView} />
+      <ProfileContent
+        profile={resolvedProfile}
+        isSelf={selfView}
+        edit={
+          selfView && isEditing
+            ? {
+                work: draft.work,
+                skills: draft.skills,
+                groups: draft.groups,
+                board: draft.board,
+                update: (patch) => updateDraft(patch),
+              }
+            : undefined
+        }
+      />
+      <ProfileCommunitiesSection
+        isSelf={isSelf}
+        previewing={previewing}
+        otherMember={isSelf ? null : otherMember}
+        firstName={resolvedProfile.first}
+      />
+      <PlacesSection
+        memberSlug={ownerSlug}
+        isSelf={selfView}
+        firstName={resolvedProfile.first}
+      />
+    </>
+  );
 
   return (
     <PageShell>
@@ -112,20 +149,27 @@ export function ProfilePage() {
       </div>
 
       {useMobileLayout ? (
-        <MobileProfileView
-          profile={resolvedProfile}
-          isSelf={isSelf}
-          selfView={selfView}
-          previewing={previewing}
-          otherMember={isSelf ? null : otherMember}
-          ownerSlug={ownerSlug}
-          onEdit={() => enterEdit(false)}
-          onEditLinks={() => enterEdit(true)}
-          onPreview={() => {
-            setPreviewing(true);
-            window.scrollTo({ top: 0 });
-          }}
-        />
+        selfView && isEditing ? (
+          <>
+            <MobileEditableProfileHero focusLinks={focusLinks} />
+            {belowHero}
+          </>
+        ) : (
+          <MobileProfileView
+            profile={resolvedProfile}
+            isSelf={isSelf}
+            selfView={selfView}
+            previewing={previewing}
+            otherMember={isSelf ? null : otherMember}
+            ownerSlug={ownerSlug}
+            onEdit={() => enterEdit(false)}
+            onEditLinks={() => enterEdit(true)}
+            onPreview={() => {
+              setPreviewing(true);
+              window.scrollTo({ top: 0 });
+            }}
+          />
+        )
       ) : (
         <>
           {selfView && isEditing ? (
@@ -148,36 +192,7 @@ export function ProfilePage() {
               after the hero as the second thing on the profile. Public viewers see
               only linked personas (the hook enforces this); self view adds a manage
               link and a create prompt when empty. Preview counts as a public view. */}
-          <ProfileSubprofilesSection ownerSlug={ownerSlug} isSelf={selfView} />
-
-          <ProfileContent
-            profile={resolvedProfile}
-            isSelf={selfView}
-            edit={
-              selfView && isEditing
-                ? {
-                    work: draft.work,
-                    skills: draft.skills,
-                    groups: draft.groups,
-                    board: draft.board,
-                    update: (patch) => updateDraft(patch),
-                  }
-                : undefined
-            }
-          />
-
-          <ProfileCommunitiesSection
-            isSelf={isSelf}
-            previewing={previewing}
-            otherMember={isSelf ? null : otherMember}
-            firstName={resolvedProfile.first}
-          />
-
-          <PlacesSection
-            memberSlug={ownerSlug}
-            isSelf={selfView}
-            firstName={resolvedProfile.first}
-          />
+          {belowHero}
         </>
       )}
 

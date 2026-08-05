@@ -489,6 +489,17 @@ export const admin: Catalog = {
   "adminReadingGroupProposals.row.by": "Proposto por {name}",
   "adminReadingGroupProposals.row.maxPeople": "até {count} pessoas",
   "adminReadingGroupProposals.row.sent": "Enviado {date}",
+  "adminReadingGroupProposals.status.pending": "Pendente",
+  "adminReadingGroupProposals.status.approved": "Aprovada",
+  "adminReadingGroupProposals.status.declined": "Recusada",
+  "adminReadingGroupProposals.status.archived": "Arquivada",
+  "adminReadingGroupProposals.action.approve": "Aprovar",
+  "adminReadingGroupProposals.action.decline": "Recusar",
+  "adminReadingGroupProposals.action.archive": "Arquivar",
+  "adminReadingGroupProposals.toast.approved": "Proposta aprovada.",
+  "adminReadingGroupProposals.toast.declined": "Proposta recusada.",
+  "adminReadingGroupProposals.toast.archived": "Proposta arquivada.",
+  "adminReadingGroupProposals.toast.error": "Não foi possível concluir. Tenta novamente.",
   "adminReadingGroupProposals.loadMore": "Carregar mais",
   "adminReadingGroupProposals.loadingMore": "A carregar…",
 
@@ -949,8 +960,21 @@ export const admin: Catalog = {
   "communities.settings.addModToast":
     "Procurar pessoas para adicionar à moderação",
   "communities.settings.modRemovedToast": "Removemos {name} da moderação",
-  "communities.settings.comingSoonToast":
-    "A gestão de moderação ainda não está disponível.",
+  // Gestão de moderação em modo live (adicionar/remover). O modo demo mantém o
+  // comportamento simulado; o modo live liga ambos os controlos aos endpoints
+  // reais de `/admin/communities/:slug/moderators`.
+  "communities.settings.mod.addPickerTitle": "Adicionar moderação",
+  "communities.settings.mod.pickerLoading": "A carregar pessoas…",
+  "communities.settings.mod.pickerError":
+    "Não foi possível carregar as pessoas. Tenta novamente.",
+  "communities.settings.mod.pickerEmpty":
+    "Todas as pessoas aqui já fazem parte da moderação.",
+  "communities.settings.mod.addedToast": "{name} passou a fazer moderação",
+  "communities.settings.mod.addFailedToast":
+    "Não foi possível adicionar {name} à moderação",
+  "communities.settings.mod.removeFailedToast":
+    "Não foi possível remover {name} da moderação",
+  "communities.settings.mod.cancelCta": "Cancelar",
   "communities.settings.secondVouch.title":
     "Exigir um segundo aval para entrar",
   "communities.settings.secondVouch.sub":
@@ -1044,6 +1068,9 @@ export const admin: Catalog = {
   "governance.header.publishCta": "Publicar relatório",
   "governance.header.publishToast":
     "Relatório de transparência em fila — as pessoas serão notificadas quando for publicado.",
+  "governance.header.publishedToast": "Relatório de transparência publicado.",
+  "governance.header.publishError":
+    "Não foi possível publicar o relatório. Tente novamente.",
   "governance.header.publishComingSoonToast":
     "A publicação de relatórios de transparência ainda não está disponível.",
   "governance.tabs.finances": "Finanças",
@@ -1131,6 +1158,8 @@ export const admin: Catalog = {
   "governance.audit.metaZero": "Nenhuma entrada corresponde a estes filtros.",
   "governance.audit.metaMatch": "{count} entradas",
   "governance.audit.exportToast": "Exportadas {total} entradas em CSV",
+  "governance.audit.exportError":
+    "Não foi possível exportar o registo de auditoria. Tente novamente.",
   "governance.audit.exportComingSoonToast":
     "A exportação do registo de auditoria ainda não está disponível.",
   "governance.audit.exportCta": "Exportar CSV",
@@ -1318,6 +1347,7 @@ export const admin: Catalog = {
   "vouchGraph.legend.plain.mutual": "Aval mútuo",
   "vouchGraph.legend.plain.invited": "Convidou",
   "vouchGraph.legend.plain.vouched": "Avalizou depois",
+  "vouchGraph.legend.plain.withdrawn": "Aval retirado",
   "vouchGraph.legend.plain.anonymous": "Anónima",
   "vouchGraph.legend.plain.private": "Rede privada",
 
@@ -1335,7 +1365,8 @@ export const admin: Catalog = {
   "vouchGraph.modal.searchPlaceholder": "Encontrar uma pessoa…",
   "vouchGraph.modal.searchAriaLabel": "Encontrar uma pessoa",
   "vouchGraph.modal.replayCta": "Rever",
-  "vouchGraph.modal.timeCutAriaLabel": "Corte temporal",
+  "vouchGraph.modal.replayStart": "Antes de qualquer ligação",
+  "vouchGraph.modal.timeCutAriaLabel": "Linha do tempo das ligações",
   "vouchGraph.modal.verifyToast":
     "Base de confiança associada — a abrir verificação",
   "vouchGraph.modal.citeToast":

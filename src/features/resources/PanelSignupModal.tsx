@@ -3,12 +3,15 @@ import { Button, Sending } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { ResourceModal, PlumSuccess, PlumComingSoon } from "./ResourceModal";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { submitIntake } from "../../shared/api/intakes";
+import { ResourceModal, PlumSuccess } from "./ResourceModal";
 import styles from "./ResourceModal.module.css";
 
 export function PanelSignupModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
+  const { showToast } = useToast();
   const fieldId = useId();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,30 +21,27 @@ export function PanelSignupModal({ onClose }: { onClose: () => void }) {
   const valid =
     name.trim().length > 1 && /.+@.+\..+/.test(email) && why.trim().length > 8;
 
-  const submit = () => {
+  // LIVE: record the panel signup through the generic intake endpoint; demo
+  // keeps the simulated success.
+  const submit = async () => {
     if (!valid || phase === "loading") return;
     setPhase("loading");
-    setTimeout(() => setPhase("done"), 1100);
+    if (demoMode) {
+      setTimeout(() => setPhase("done"), 1100);
+      return;
+    }
+    try {
+      await submitIntake("panel_signup", {
+        name: name.trim(),
+        email: email.trim(),
+        why: why.trim(),
+      });
+      setPhase("done");
+    } catch {
+      setPhase("form");
+      showToast(t("shared:intake.errorToast"), "error");
+    }
   };
-
-  // LIVE: no panel-signup endpoint exists — show an honest coming-soon panel
-  // instead of a mock form that fakes a "you're on the list" success.
-  if (!demoMode) {
-    return (
-      <ResourceModal title="" onClose={onClose}>
-        <PlumComingSoon
-          title={
-            <Translation
-              i18nKey="resources:microGrants.panel.comingSoon.title"
-              components={{ em: <em /> }}
-            />
-          }
-          sub={t("resources:microGrants.panel.comingSoon.sub")}
-          onClose={onClose}
-        />
-      </ResourceModal>
-    );
-  }
 
   return (
     <ResourceModal
@@ -112,7 +112,7 @@ export function PanelSignupModal({ onClose }: { onClose: () => void }) {
             <Button
               type="button"
               variant="primary"
-              onClick={submit}
+              onClick={() => void submit()}
               disabled={!valid || phase === "loading"}
             >
               {phase === "loading" ? (

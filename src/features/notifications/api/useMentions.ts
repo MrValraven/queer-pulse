@@ -12,10 +12,11 @@ export interface MentionDay {
 /**
  * @-mention thread source. Demo mode returns the colocated mock, grouped by day
  * (full fidelity: avatars, translated context, relative-time labels). Live mode
- * has no backend endpoint yet, so it returns an empty thread rather than leaking
- * the demo mentions into a real account — the page then shows its empty state.
- * When the backend grows a mentions endpoint, fetch it here and keep the mock as
- * the demo fallback (the dual-mode contract in CLAUDE.md).
+ * fetches `GET /mentions` — the current member's real `@`-mentions, hand-mapped
+ * from the backend `mention` notifications (there is no mentions table; see
+ * `queerpulse-backend/src/mentions`) into the same day-grouped shape, so the
+ * panel renders identically in both modes. The demo mock stays the demo-only
+ * fallback (the dual-mode contract in CLAUDE.md).
  *
  * `language` is part of the queryKey because the built rows carry translated
  * `context` and `when` labels — switching language must rebuild the thread
@@ -33,7 +34,10 @@ export function useMentions() {
         const { buildMentionDays } = await import("../mentions.mock");
         return buildMentionDays(t, fmt);
       }
-      return [];
+      const { getMentions } = await import("./mentions.api");
+      const { buildLiveMentionDays } = await import("./mentions.adapters");
+      const rows = await getMentions();
+      return buildLiveMentionDays(rows, t, fmt);
     },
   });
 }

@@ -55,6 +55,10 @@ export interface GatheringDetail {
   /** Live mode only: true when the viewer is the host or a cohost. Drives
    *  organizer-only affordances (e.g. the photo-album upload control). */
   viewerIsOrganizer?: boolean;
+  /** Live mode only: whether the viewer has bookmarked ("saved") this event.
+   *  Seeds the detail's Save toggle; absent (undefined) in the demo registry,
+   *  where the toggle starts un-saved and lives purely in local state. */
+  bookmarked?: boolean;
 }
 
 export const gatheringDetails: Record<string, GatheringDetail> = {

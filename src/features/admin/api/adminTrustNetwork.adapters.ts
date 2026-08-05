@@ -32,7 +32,14 @@ export function trustNetworkDtoToData(dto: TrustNetworkDTO): TrustGraphData {
   const peopleById: Record<string, VouchPerson> = Object.fromEntries(
     people.map((person) => [person.id, person]),
   );
-  const edges: VouchEdge[] = dto.edges.map((edge) => ({
+  // Sort by the full ISO `createdAt` before truncating to a month, so the
+  // replay timeline (which walks edges in array order within a month) reflects
+  // the real order people connected, not DTO order. ISO strings sort lexically.
+  const edges: VouchEdge[] = [...dto.edges]
+    .sort((a, b) =>
+      a.createdAt < b.createdAt ? -1 : a.createdAt > b.createdAt ? 1 : 0,
+    )
+    .map((edge) => ({
     id: edge.id,
     from: edge.from,
     to: edge.to,

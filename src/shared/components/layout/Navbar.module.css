@@ -127,6 +127,16 @@
   font-size: 23px;
   letter-spacing: -0.01em;
   color: var(--text-strong);
+  /* The wordmark is the fixed anchor of the bar: it never shrinks and never
+     wraps. Without this, a width deficit in the tight desktop band (just above
+     the 860px mobile breakpoint) squeezes the only breakable child — and the
+     inherited `overflow-wrap: anywhere` (base.css, added for long-token wrap)
+     drops its min-content to one character, collapsing "QueerPulse" into
+     vertical letter-columns and ballooning the pill's height. `flex: none`
+     keeps its intrinsic width; `white-space: nowrap` forbids the per-letter
+     break outright. Mirrors the `.pulseDot`/`.signIn` guards already here. */
+  flex: none;
+  white-space: nowrap;
 }
 .brand .brandItalic {
   font-style: italic;

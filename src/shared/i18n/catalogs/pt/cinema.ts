@@ -685,7 +685,6 @@ export const cinema: Catalog = {
   "openCalls.card.downloadToast":
     "Os termos em PDF estão a ser descarregados — verifica os teus ficheiros.",
   "openCalls.card.applyCta": "Candidatar-te",
-  "openCalls.card.comingSoonToast": "{label} — brevemente.",
   "openCalls.outro.title": "Financia a <em>próxima</em> chamada.",
   "openCalls.outro.sub":
     "Os sustentadores financiam as encomendas. Cada novo sustentador faz crescer o fundo da próxima temporada.",

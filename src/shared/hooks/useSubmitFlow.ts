@@ -25,6 +25,21 @@ export function useSubmitFlow() {
       setStatus("done");
     }, ms);
   }, []);
+  /**
+   * The live counterpart of `submit`: drives idle → sending → done around a real
+   * async task (e.g. a POST). On success the panel flips to `done`; on failure
+   * it returns to `idle` and the error is re-thrown so the caller can toast it.
+   */
+  const run = useCallback(async (task: () => Promise<void>) => {
+    setStatus("sending");
+    try {
+      await task();
+      setStatus("done");
+    } catch (error) {
+      setStatus("idle");
+      throw error;
+    }
+  }, []);
   const reset = useCallback(() => {
     window.clearTimeout(timer.current);
     setStatus("idle");
@@ -32,6 +47,7 @@ export function useSubmitFlow() {
   return {
     status,
     submit,
+    run,
     reset,
     idle: status === "idle",
     sending: status === "sending",

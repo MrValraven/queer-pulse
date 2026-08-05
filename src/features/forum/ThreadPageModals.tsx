@@ -2,13 +2,13 @@ import { ReportReplyModal } from "./ReportReplyModal";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
 import { EditOpModal } from "./EditOpModal";
 import { ForumEditHistoryModal } from "./ForumEditHistoryModal";
+import { type ForumReportTarget } from "./useThreadModeration";
 
 /** The four thread-scoped modals (report / edit-OP / confirm-delete / edit
  * history). Each renders only when its state is set, so their local scroll-lock
  * lifecycles stay tied to being mounted — exactly as when they lived inline. */
 export function ThreadPageModals({
-  reportingAuthor,
-  threadId,
+  reportTarget,
   onCloseReport,
   editingOp,
   opTitle,
@@ -23,8 +23,7 @@ export function ThreadPageModals({
   historyPostId,
   onCloseHistory,
 }: {
-  reportingAuthor: string | null;
-  threadId: string;
+  reportTarget: ForumReportTarget | null;
   onCloseReport: () => void;
   editingOp: boolean;
   opTitle: string;
@@ -41,10 +40,11 @@ export function ThreadPageModals({
 }) {
   return (
     <>
-      {reportingAuthor && (
+      {reportTarget && (
         <ReportReplyModal
-          authorName={reportingAuthor}
-          subjectId={threadId}
+          authorName={reportTarget.authorName}
+          subjectId={reportTarget.subjectId}
+          subjectType={reportTarget.subjectType}
           onClose={onCloseReport}
         />
       )}

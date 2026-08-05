@@ -89,6 +89,7 @@ export const members: Catalog = {
   "profile.hero.requestIntroCta": "Request an intro",
   "profile.hero.sayHelloCta": "Say hello",
   "profile.hero.vouchedFor": "Vouched for {first}",
+  "profile.hero.vouchedShort": "Vouched",
   "profile.hero.withdrawVouchCta": "Withdraw vouch",
   "profile.hero.vouchForCta": "Vouch for {first}",
   "profile.hero.levelLabel": "Level {number}",
@@ -816,11 +817,20 @@ export const members: Catalog = {
   "collections.recentSaves.unfiledCount": "+ {count} unfiled",
   "collections.recentSaves.addCta": "+ Add to collection",
   "collections.toast.created": "Collection created",
+  "collections.toast.createError": "Couldn't create that collection. Try again.",
+  "collections.toast.addError":
+    "Couldn't add that to your collection. Try again.",
+  "collections.toast.removed": "Removed from collection",
+  "collections.toast.removeError": "Couldn't remove that item. Try again.",
   "collections.newCollection.defaultMeta": "Just created — start adding saves",
   "collections.updatedJustNow": "Updated just now",
-  "collections.emptyLive.title": "Collections are coming soon",
+  // Live-mode collection card chrome (values come from the server).
+  "collections.live.updated": "Updated {time}",
+  "collections.live.itemCount_one": "{count} saved item",
+  "collections.live.itemCount_other": "{count} saved items",
+  "collections.emptyLive.title": "No collections yet",
   "collections.emptyLive.description":
-    "Soon you'll be able to group the articles, events and places you save into folders. We're still wiring this up — for now, nothing you organise here would be kept.",
+    "Group the articles, events and places you save into folders. Create your first collection to get started.",
 
   // ── Collections modals (CollectionsModals) ──────────────────────────────────
   "collections.modal.defaultDialogLabel": "Dialog",
@@ -841,6 +851,7 @@ export const members: Catalog = {
   "collections.modal.view.emptyText":
     "Nothing in here yet. Add saves from the list below the grid.",
   "collections.modal.view.close": "Close",
+  "collections.modal.view.removeItem": "Remove from collection",
   "collections.modal.add.dialogLabel": "Add to collection",
   "collections.modal.add.eyebrow": "Add to collection",
   "collections.modal.add.title": "Where should this live?",

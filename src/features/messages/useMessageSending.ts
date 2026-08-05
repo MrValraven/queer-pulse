@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, type Dispatch, type SetStateAction } from "react";
 import type { TFunction } from "../../shared/i18n/types";
+import { useRealtime } from "../../shared/api/realtime";
 import type { ChatMessage, Conversation } from "./data";
 import { saveOutbox } from "./outbox";
 import { nextLocalId } from "./useMessagesController.helpers";
@@ -245,23 +246,33 @@ export function useMessageSending({
     saveOutbox(sent);
   }, [sent]);
 
-  // Replay unsent messages once on mount (live mode only): anything left
-  // `sending`/`failed` in the persisted outbox — a send that was in flight or
-  // failed when the tab last closed — is resent. Idempotent, because each still
-  // carries its original `clientMessageId` (== `localId`), so a message the
-  // server already stored is deduped rather than duplicated.
-  const outboxReplayedRef = useRef(false);
+  // Latest `sent`/`deliver` held in refs so the replay loop below — fired from
+  // window/socket events, never from render — always reads the CURRENT outbox
+  // and the current idempotent `deliver`, without those event effects needing to
+  // resubscribe on every keystroke-driven `sent` change.
+  const sentRef = useRef(sent);
   useEffect(() => {
-    if (demoMode || outboxReplayedRef.current) return;
-    outboxReplayedRef.current = true;
-    for (const [conversationId, messages] of Object.entries(sent)) {
+    sentRef.current = sent;
+  }, [sent]);
+  const deliverRef = useRef(deliver);
+  useEffect(() => {
+    deliverRef.current = deliver;
+  }, [deliver]);
+
+  // Resend everything still `sending`/`failed` in the outbox (live mode only).
+  // Idempotent: each entry keeps its original `clientMessageId` (== `localId`),
+  // so a message the server already stored is deduped rather than duplicated —
+  // safe to fire on every connectivity flap. A send that succeeds is cleared
+  // from `sent` by `deliver`'s onSuccess, so a later replay simply skips it.
+  const replayOutbox = useCallback(() => {
+    if (demoMode) return;
+    for (const [conversationId, messages] of Object.entries(sentRef.current)) {
       for (const message of messages) {
         if (
           message.localId &&
           (message.status === "sending" || message.status === "failed")
         ) {
-          // Mount-once replay of the persisted outbox (sending/failed sends).
-          deliver(
+          deliverRef.current(
             conversationId,
             message.text,
             message.localId,
@@ -272,10 +283,37 @@ export function useMessageSending({
         }
       }
     }
-    // Mount-once replay of the hydrated outbox; `deliver`/`sent` are intentionally
-    // read from the first render and must not re-trigger this effect.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [demoMode]);
+
+  // Replay once on mount: the persisted outbox may hold a send that was in
+  // flight or failed when the tab last closed.
+  const outboxReplayedRef = useRef(false);
+  useEffect(() => {
+    if (demoMode || outboxReplayedRef.current) return;
+    outboxReplayedRef.current = true;
+    replayOutbox();
+  }, [demoMode, replayOutbox]);
+
+  // Re-flush whenever the browser regains network. A send that failed while the
+  // tab stayed open (offline) now auto-recovers — WhatsApp/Signal style — instead
+  // of sitting `failed` until a manual retry or reload.
+  useEffect(() => {
+    if (demoMode) return;
+    const onOnline = () => replayOutbox();
+    window.addEventListener("online", onOnline);
+    return () => window.removeEventListener("online", onOnline);
+  }, [demoMode, replayOutbox]);
+
+  // Re-flush on socket reconnect. `connected` flips false→true after a drop; the
+  // socket buffered nothing while it was down (see RealtimeClient), so anything
+  // that failed mid-gap must be resent. Guarded on the false→true transition so
+  // a steady connection never re-fires, and idempotent regardless.
+  const { connected } = useRealtime();
+  const wasConnectedRef = useRef(connected);
+  useEffect(() => {
+    if (!demoMode && connected && !wasConnectedRef.current) replayOutbox();
+    wasConnectedRef.current = connected;
+  }, [connected, demoMode, replayOutbox]);
 
   return { send, retrySend, appendOptimistic, deliver, sendGif };
 }

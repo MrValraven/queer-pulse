@@ -1998,6 +1998,8 @@ export const resources: Catalog = {
     "Thank you — Sofia will reach out gently to talk it through. No commitment.",
 
   "oralHistoryProject.voices.title": "In their <em>words</em>",
+  "oralHistoryProject.voices.live.body":
+    "The first recordings are still being gathered. Once participants have chosen how their words are shared, their voices will appear here — nothing before they're ready.",
 
   "oralHistoryProject.outro.title": "History, <em>kept honest.</em>",
   "oralHistoryProject.outro.sub":
@@ -2223,6 +2225,8 @@ export const resources: Catalog = {
   "sharedEquipment.kit.title": "The <em>kit</em>",
   "sharedEquipment.kit.lead":
     "All of it lives at the atelier. Tap request and a mod confirms your slot.",
+  "sharedEquipment.kit.live.body":
+    "The shared kit and its booking calendar aren't online yet. Once the atelier's inventory is registered you'll see what's free and be able to request a slot here.",
   "sharedEquipment.item1.name": "Two-colour Risograph",
   "sharedEquipment.item1.specs":
     "Reconditioned RZ, A3, currently loaded coral + black. Lives at the atelier for collective use.",

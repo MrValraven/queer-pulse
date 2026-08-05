@@ -347,18 +347,11 @@ export function GuidesTab() {
             </div>
             <div className={styles.infoTitle}>{g.title}</div>
             <div className={styles.infoBody}>{g.body}</div>
-            {g.link &&
-              (g.link.href === "#" ? (
-                <span className={styles.infoLink}>
-                  {g.link.label}{" "}
-                  <FiArrowRight aria-hidden />
-                </span>
-              ) : (
-                <Link to={g.link.href} className={styles.infoLink}>
-                  {g.link.label}{" "}
-                  <FiArrowRight aria-hidden />
-                </Link>
-              ))}
+            {g.link && (
+              <Link to={g.link.href} className={styles.infoLink}>
+                {g.link.label} <FiArrowRight aria-hidden />
+              </Link>
+            )}
           </div>
         ))}
       </div>

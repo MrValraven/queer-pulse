@@ -199,4 +199,9 @@ export const governance: Catalog = {
     "Submetido — entraremos em contacto no prazo de 48 horas",
   "sections.raise.comingSoonToast":
     "A receção de preocupações ainda não está ativa — este formulário não está ligado.",
+  // Mostrado no lugar dos dados de uma secção quando a obtenção falha, para que
+  // um erro da API apareça como um pedido de nova tentativa em vez de uma
+  // grelha vazia sem explicação.
+  "error.body": "Não foi possível carregar esta secção neste momento.",
+  "error.retry": "Tentar novamente",
 };

@@ -1,4 +1,4 @@
-import { FiMessageSquare } from "react-icons/fi";
+import { FiMessageSquare, FiAlertTriangle } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -28,6 +28,30 @@ export function ThreadNotFoundState({ loading }: { loading: boolean }) {
               }}
             />
           )}
+        </div>
+      </section>
+    </PageShell>
+  );
+}
+
+/** Distinct from "not found": a live 500 / network error while loading the
+ * thread. Genuinely retryable (unlike a 404), so it offers a retry instead of
+ * bouncing the member back to the forum as if the thread never existed. */
+export function ThreadErrorState({ onRetry }: { onRetry: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <PageShell>
+      <section className="wrap">
+        <div className={styles.layout}>
+          <EmptyState
+            icon={<FiAlertTriangle />}
+            title={t("forum:threadPage.error.title")}
+            description={t("forum:threadPage.error.description")}
+            action={{
+              label: t("forum:threadPage.error.retryCta"),
+              onClick: onRetry,
+            }}
+          />
         </div>
       </section>
     </PageShell>

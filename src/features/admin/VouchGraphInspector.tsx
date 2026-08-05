@@ -14,6 +14,8 @@ import styles from "./AdminVouchGraph.module.css";
 
 interface Props {
   sel: string | null;
+  /** Edge id of the connection the replay is currently on — its row lights up. */
+  activeEdgeId?: string | null;
   expanded: boolean;
   onGo: (id: string) => void;
   onVerify: (id: string) => void;
@@ -64,11 +66,13 @@ function VouchList({
   title,
   edges,
   selId,
+  activeEdgeId,
   onGo,
 }: {
   title: string;
   edges: VouchEdge[];
   selId: string;
+  activeEdgeId?: string | null;
   onGo: (id: string) => void;
 }) {
   const { t } = useTranslation();
@@ -88,7 +92,7 @@ function VouchList({
             <button
               key={e.id}
               type="button"
-              className={`${styles.insRow}${e.withdrawn ? ` ${styles.insRowWd}` : ""}`}
+              className={`${styles.insRow}${e.withdrawn ? ` ${styles.insRowWd}` : ""}${e.id === activeEdgeId ? ` ${styles.insRowActive}` : ""}`}
               onClick={() => onGo(otherId)}
             >
               <VAvatar
@@ -127,6 +131,7 @@ function VouchList({
 
 export function VouchGraphInspector({
   sel,
+  activeEdgeId,
   expanded,
   onGo,
   onVerify,
@@ -256,12 +261,14 @@ export function VouchGraphInspector({
         title={t("admin:vouchGraph.inspector.vouchedForBy")}
         edges={vouchedBy}
         selId={sel}
+        activeEdgeId={activeEdgeId}
         onGo={onGo}
       />
       <VouchList
         title={t("admin:vouchGraph.inspector.hasVouchedFor")}
         edges={vouchedFor}
         selId={sel}
+        activeEdgeId={activeEdgeId}
         onGo={onGo}
       />
       {withdrawn.length > 0 && (
@@ -269,6 +276,7 @@ export function VouchGraphInspector({
           title={t("admin:vouchGraph.inspector.withdrawn")}
           edges={withdrawn}
           selId={sel}
+          activeEdgeId={activeEdgeId}
           onGo={onGo}
         />
       )}

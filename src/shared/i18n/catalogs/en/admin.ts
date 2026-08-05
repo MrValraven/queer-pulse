@@ -488,6 +488,17 @@ export const admin: Catalog = {
   "adminReadingGroupProposals.row.by": "Proposed by {name}",
   "adminReadingGroupProposals.row.maxPeople": "up to {count} people",
   "adminReadingGroupProposals.row.sent": "Sent {date}",
+  "adminReadingGroupProposals.status.pending": "Pending",
+  "adminReadingGroupProposals.status.approved": "Approved",
+  "adminReadingGroupProposals.status.declined": "Declined",
+  "adminReadingGroupProposals.status.archived": "Archived",
+  "adminReadingGroupProposals.action.approve": "Approve",
+  "adminReadingGroupProposals.action.decline": "Decline",
+  "adminReadingGroupProposals.action.archive": "Archive",
+  "adminReadingGroupProposals.toast.approved": "Proposal approved.",
+  "adminReadingGroupProposals.toast.declined": "Proposal declined.",
+  "adminReadingGroupProposals.toast.archived": "Proposal archived.",
+  "adminReadingGroupProposals.toast.error": "That didn't go through. Please try again.",
   "adminReadingGroupProposals.loadMore": "Load more",
   "adminReadingGroupProposals.loadingMore": "Loading…",
 
@@ -943,11 +954,20 @@ export const admin: Catalog = {
   "communities.settings.addModCta": "+ Add",
   "communities.settings.addModToast": "Search members to add as moderator",
   "communities.settings.modRemovedToast": "Removed {name} as moderator",
-  // Live mode has no moderator-management endpoint yet — adding/removing a mod
-  // stays honest rather than mutating the real roster client-side and offering
-  // a fake Undo (demo keeps the simulated behaviour).
-  "communities.settings.comingSoonToast":
-    "Managing moderators isn't available yet.",
+  // Live moderator management (add/remove). Demo keeps its simulated
+  // local-state behaviour; live wires both controls to the real
+  // `/admin/communities/:slug/moderators` endpoints.
+  "communities.settings.mod.addPickerTitle": "Add a moderator",
+  "communities.settings.mod.pickerLoading": "Loading members…",
+  "communities.settings.mod.pickerError": "Couldn't load members. Try again.",
+  "communities.settings.mod.pickerEmpty":
+    "Every member here is already a moderator.",
+  "communities.settings.mod.addedToast": "{name} is now a moderator",
+  "communities.settings.mod.addFailedToast":
+    "Couldn't add {name} as a moderator",
+  "communities.settings.mod.removeFailedToast":
+    "Couldn't remove {name} as a moderator",
+  "communities.settings.mod.cancelCta": "Cancel",
   "communities.settings.secondVouch.title": "Require a second vouch to join",
   "communities.settings.secondVouch.sub":
     "Slows growth, raises trust. Recommended for support spaces.",
@@ -1043,8 +1063,11 @@ export const admin: Catalog = {
   "governance.header.publishCta": "Publish report",
   "governance.header.publishToast":
     "Transparency report queued — members will be notified when it publishes.",
-  // Live mode: no publish endpoint yet, so stay honest (demo keeps the queued
-  // confirmation above).
+  // Live mode (P3-7): publishing stamps the snapshot server-side.
+  "governance.header.publishedToast": "Transparency report published.",
+  "governance.header.publishError":
+    "Couldn't publish the report. Please try again.",
+  // Retained for compatibility; live no longer disables the publish button.
   "governance.header.publishComingSoonToast":
     "Publishing transparency reports isn't available yet.",
   "governance.tabs.finances": "Finances",
@@ -1129,8 +1152,10 @@ export const admin: Catalog = {
   "governance.audit.metaZero": "No entries match these filters.",
   "governance.audit.metaMatch": "{count} entries",
   "governance.audit.exportToast": "Exported {total} entries as CSV",
-  // Live mode: no export endpoint yet (and only the current page is loaded, so
-  // a client-side dump would be partial). Stay honest; demo keeps the toast.
+  // Live mode (P3-8): export streams a real CSV honouring the current filters.
+  "governance.audit.exportError":
+    "Couldn't export the audit log. Please try again.",
+  // Retained for compatibility; live no longer disables the export button.
   "governance.audit.exportComingSoonToast":
     "Exporting the audit log isn't available yet.",
   "governance.audit.exportCta": "Export CSV",
@@ -1317,6 +1342,7 @@ export const admin: Catalog = {
   "vouchGraph.legend.plain.mutual": "Mutual vouch",
   "vouchGraph.legend.plain.invited": "Invited",
   "vouchGraph.legend.plain.vouched": "Vouched after",
+  "vouchGraph.legend.plain.withdrawn": "Withdrawn vouch",
   "vouchGraph.legend.plain.anonymous": "Anonymous",
   "vouchGraph.legend.plain.private": "Private network",
 
@@ -1334,7 +1360,8 @@ export const admin: Catalog = {
   "vouchGraph.modal.searchPlaceholder": "Find a member…",
   "vouchGraph.modal.searchAriaLabel": "Find a member",
   "vouchGraph.modal.replayCta": "Replay",
-  "vouchGraph.modal.timeCutAriaLabel": "Time cut-off",
+  "vouchGraph.modal.replayStart": "Before anyone connected",
+  "vouchGraph.modal.timeCutAriaLabel": "Connection timeline",
   "vouchGraph.modal.verifyToast": "Trust basis attached — opening verification",
   "vouchGraph.modal.citeToast": "Trust path cited in the audit log",
   "vouchGraph.modal.privateToast": "This member keeps their network private",

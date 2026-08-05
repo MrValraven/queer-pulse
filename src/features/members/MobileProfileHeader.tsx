@@ -1,9 +1,10 @@
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MobileProfileActions } from "./MobileProfileActions";
 import { MobileProfileIdentity } from "./MobileProfileIdentity";
+import { MobileProfileIdentityTop } from "./MobileProfileIdentityTop";
 import { MobileProfileStats } from "./MobileProfileStats";
 import { ProfileHeroActions } from "./ProfileHeroActions";
-import { ProfileSafetyMenu } from "./ProfileSafetyMenu";
 import type { MemberProfile } from "./data/memberProfiles";
 import type { Member } from "./data/members";
 import styles from "./MobileProfile.module.css";
@@ -59,7 +60,7 @@ export function MobileProfileHeader({
 
   return (
     <header className={styles.mheader}>
-      <div className={styles.topRow}>
+      <div className={styles.identityCap}>
         <div className={styles.ringWrap}>
           <div className={styles.prideRing}>
             <div className={styles.ringGap}>
@@ -86,16 +87,18 @@ export function MobileProfileHeader({
             </span>
           )}
         </div>
-        <div className={styles.statsSlot}>
-          <MobileProfileStats
-            profile={profile}
-            isSelf={isSelf}
-            rawIsSelf={realSelf}
-            otherMember={otherMember}
-            previewing={previewing}
-            ownerSlug={ownerSlug}
-          />
-        </div>
+        <MobileProfileIdentityTop profile={profile} isSelf={isSelf} />
+      </div>
+
+      <div className={styles.statsSlot}>
+        <MobileProfileStats
+          profile={profile}
+          isSelf={isSelf}
+          rawIsSelf={realSelf}
+          otherMember={otherMember}
+          previewing={previewing}
+          ownerSlug={ownerSlug}
+        />
       </div>
 
       <MobileProfileIdentity
@@ -104,28 +107,26 @@ export function MobileProfileHeader({
         onEditLinks={onEditLinks}
       />
 
-      <div className={styles.actionRow}>
-        <div className={styles.actionsSlot}>
-          <ProfileHeroActions
-            profile={profile}
-            isSelf={isSelf}
-            asVisitor={asVisitor}
-            realSelf={realSelf}
-            onEdit={onEdit}
-            onPreview={onPreview}
-          />
-        </div>
-        {/* Safety controls only on another member's profile — never your own
-            (realSelf covers both self view and self-as-visitor preview). */}
-        {!realSelf && (
-          <div className={styles.safetySlot}>
-            <ProfileSafetyMenu
-              slug={profile.slug}
-              firstName={profile.first}
+      {isSelf ? (
+        <div className={styles.actionRow}>
+          <div className={styles.actionsSlot}>
+            <ProfileHeroActions
+              profile={profile}
+              isSelf={isSelf}
+              asVisitor={asVisitor}
+              realSelf={realSelf}
+              onEdit={onEdit}
+              onPreview={onPreview}
             />
           </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <MobileProfileActions
+          profile={profile}
+          asVisitor={asVisitor}
+          realSelf={realSelf}
+        />
+      )}
     </header>
   );
 }

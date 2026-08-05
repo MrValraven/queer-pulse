@@ -513,6 +513,11 @@
   min-height: 90px;
   line-height: 1.55;
 }
+.nomError {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--coral);
+}
 .nomBtn {
   font-family: var(--sans);
   font-size: 14px;
@@ -526,6 +531,10 @@
   transition:
     background 0.25s var(--ease),
     transform 0.25s var(--ease);
+}
+.nomBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 @media (hover: hover) {
   .nomBtn:hover {

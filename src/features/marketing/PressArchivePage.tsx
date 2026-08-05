@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from "react";
+import { FiFileText } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import styles from "./PressArchivePage.module.css";
 import {
   Button,
+  EmptyState,
   FadeIn,
   HubBackLink,
   SkeletonLine,
@@ -47,6 +50,7 @@ function searchableText(piece: Piece): string {
 
 export function PressArchivePage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad();
   const { showToast } = useToast();
   const [chipIndex, setChipIndex] = useState(0);
@@ -109,26 +113,40 @@ export function PressArchivePage() {
               />
             </p>
           </div>
-          <div className={styles.stats}>
-            <span>
-              <b>
-                <em>54</em>
-              </b>
-              {t("marketing:pressArchive.stats.allTime")}
-            </span>
-            <span>
-              <b>6</b>
-              {t("marketing:pressArchive.stats.languages")}
-            </span>
-            <span>
-              <b>
-                <em>14</em>
-              </b>
-              {t("marketing:pressArchive.stats.thisYear")}
-            </span>
-          </div>
+          {/* The coverage counts + the archive rows below are prototype
+              fiction (invented outlets, headlines, an interview). There is no
+              live press feed yet, so live mode hides the fabricated stats and
+              renders an honest empty state in place of the archive. */}
+          {demoMode && (
+            <div className={styles.stats}>
+              <span>
+                <b>
+                  <em>54</em>
+                </b>
+                {t("marketing:pressArchive.stats.allTime")}
+              </span>
+              <span>
+                <b>6</b>
+                {t("marketing:pressArchive.stats.languages")}
+              </span>
+              <span>
+                <b>
+                  <em>14</em>
+                </b>
+                {t("marketing:pressArchive.stats.thisYear")}
+              </span>
+            </div>
+          )}
         </header>
 
+        {!demoMode ? (
+          <EmptyState
+            icon={<FiFileText />}
+            title={t("marketing:pressArchive.live.title")}
+            description={t("marketing:pressArchive.live.body")}
+          />
+        ) : (
+          <>
         <div className={styles.controls}>
           <div className={styles.search}>
             <svg viewBox="0 0 24 24" aria-hidden>
@@ -258,6 +276,8 @@ export function PressArchivePage() {
               {t("marketing:pressArchive.endOfArchive")}
             </span>
           </div>
+        )}
+          </>
         )}
       </div>
     </PageShell>

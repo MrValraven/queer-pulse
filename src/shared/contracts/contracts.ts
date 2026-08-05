@@ -107,6 +107,10 @@ export interface CommunitySummary {
 export interface AuthorSummary {
   handle: string;
   displayName: string;
+  /** Optional — only some author contexts carry it (e.g. the feed's
+   *  `new_member` actor, which `MemberCard` renders next to the name).
+   *  Absent/`null` where the producing endpoint doesn't resolve it. */
+  pronouns?: string | null;
   avatarUrl: string | null;
 }
 
@@ -543,9 +547,12 @@ export type FeedItemType =
  * For `type: "new_member"`: `actor` is the member who joined (handle/
  * displayName/avatarUrl), `title` is their display name, `summary` is their
  * tagline/short bio (may be empty), `link` is their profile path, and
- * `createdAt` is when they joined. No dedicated fields were added — pronouns/
- * neighbourhood/interest chips shown by the demo `NewMemberCard` mock aren't
- * part of the aggregate and are simply omitted for live `new_member` items.
+ * `createdAt` is when they joined. `actor.pronouns` carries the member's
+ * pronouns (rendered next to the name by `MemberCard`), and the top-level
+ * `neighbourhood`/`interests` fields enrich the card with a location line and
+ * interest chips (see their notes). The common-communities chips the demo
+ * `NewMemberCard` mock also shows aren't part of the aggregate and are omitted
+ * for live `new_member` items.
  */
 export interface FeedItem {
   id: string;
@@ -555,6 +562,12 @@ export interface FeedItem {
   summary: string;
   link: string;
   actor: AuthorSummary | null;
+  /** `new_member` (People tab) only — extra profile fields the member card
+   *  renders beneath/around the name. `neighbourhood` honours the member's
+   *  visibility (null unless their profile is public); `interests` are their
+   *  public tags. Both absent for every other item type. */
+  neighbourhood?: string | null;
+  interests?: string[];
 }
 
 // --- Media ---

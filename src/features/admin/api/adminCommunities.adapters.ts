@@ -142,6 +142,8 @@ function moderatorDtoToModerator(
     pronouns: "",
     tone: avatarToneForSlug(moderatorDto.slug),
     role: moderatorRoleLine(moderatorDto, translate, fmt),
+    memberId: moderatorDto.userId,
+    isOwner: moderatorDto.role === "owner",
   };
 }
 

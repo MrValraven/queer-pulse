@@ -356,4 +356,9 @@ export const shared: Catalog = {
   "footerData.base.accessibility": "Acessibilidade",
   "footerData.base.security": "Segurança",
   "footerData.base.imprint": "Informação legal",
+
+  // Shown as an error toast when a live intake-form submission
+  // (grant/suggest-edit/sober-host/panel/incubator) fails to reach the backend.
+  "intake.errorToast":
+    "Não foi possível enviar agora. Tenta novamente daqui a instantes.",
 };

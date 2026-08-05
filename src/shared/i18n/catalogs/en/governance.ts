@@ -194,4 +194,8 @@ export const governance: Catalog = {
   // to have received one (demo keeps the simulated confirmation above).
   "sections.raise.comingSoonToast":
     "Concern intake isn't live yet — this form isn't connected.",
+  // Shown in place of a section's figures when its live fetch fails, so an API
+  // error surfaces as a retry prompt rather than a silently-empty grid.
+  "error.body": "We couldn't load this section just now.",
+  "error.retry": "Try again",
 };

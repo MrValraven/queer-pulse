@@ -1,15 +1,24 @@
 import { useState } from "react";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import s from "./live.module.css";
-import { CHAT, TABS } from "./studioLive.data";
+import { CHAT, TABS, type Msg } from "./studioLive.data";
 
 export function StudioLiveChat({ onTip }: { onTip: () => void }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { showToast } = useToast();
   const [tab, setTab] = useState("chat");
+  // Demo-only room chat: a sent line is appended locally so it actually appears
+  // (studio is coming-soon in live). Mirrors cinema's WatchSidePanel.send().
+  const [messages, setMessages] = useState<Msg[]>(CHAT);
+  const [draft, setDraft] = useState("");
+
+  function send() {
+    const body = draft.trim();
+    if (!body) return;
+    setMessages((prev) => [...prev, { av: "·", name: "You", text: body, time: "now" }]);
+    setDraft("");
+  }
 
   return (
     <aside className={s.chat}>
@@ -29,7 +38,7 @@ export function StudioLiveChat({ onTip }: { onTip: () => void }) {
         ))}
       </div>
       <div className={s.chatBody}>
-        {CHAT.map((mAny, i) => {
+        {messages.map((mAny, i) => {
           if ("system" in mAny) {
             return (
               <div
@@ -84,12 +93,21 @@ export function StudioLiveChat({ onTip }: { onTip: () => void }) {
           <input
             aria-label={t("studio:liveChat.inputPlaceholder")}
             placeholder={t("studio:liveChat.inputPlaceholder")}
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                send();
+              }
+            }}
           />
           <button
             type="button"
             aria-label={t("studio:liveChat.sendAria")}
             title={t("studio:liveChat.sendAria")}
-            onClick={() => showToast(t("studio:liveChat.sentToast"), "success")}
+            onClick={send}
+            disabled={!draft.trim()}
           >
             <svg
               aria-hidden="true"

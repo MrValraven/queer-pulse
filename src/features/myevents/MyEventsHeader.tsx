@@ -11,7 +11,13 @@ const HOST = linkToPath("QueerPulse Host.html");
 /** Page header: title, settings gear, notifications bell, and create CTA. */
 export function MyEventsHeader() {
   const { t } = useTranslation();
-  const { openSettings, notifOpen, setNotifOpen, unreadCount } = useMyEvents();
+  const {
+    openSettings,
+    notifOpen,
+    setNotifOpen,
+    unreadCount,
+    notificationsEnabled,
+  } = useMyEvents();
 
   return (
     <div className={sx("ev-head")}>
@@ -48,31 +54,37 @@ export function MyEventsHeader() {
               />
             </svg>
           </button>
-          <button
-            type="button"
-            className={sx("notif-btn")}
-            aria-label={t("myevents:header.notifAria")}
-            aria-haspopup="true"
-            aria-expanded={notifOpen}
-            onClick={() => setNotifOpen(!notifOpen)}
-          >
-            <svg
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.6}
-              aria-hidden
+          {/* Notifications bell + panel are demo-only: live has no notifications
+              contract yet, so rather than surface a permanently-empty "What's
+              changed" panel we hide the affordance entirely.
+              DEFERRED(needs notifications endpoint, Phase 2). */}
+          {notificationsEnabled && (
+            <button
+              type="button"
+              className={sx("notif-btn")}
+              aria-label={t("myevents:header.notifAria")}
+              aria-haspopup="true"
+              aria-expanded={notifOpen}
+              onClick={() => setNotifOpen(!notifOpen)}
             >
-              <path
-                d="M5 8a5 5 0 0 1 10 0c0 3.5 1.3 4.8 1.3 4.8H3.7S5 11.5 5 8Z"
-                strokeLinejoin="round"
-              />
-              <path d="M8 16a2 2 0 0 0 4 0" strokeLinecap="round" />
-            </svg>
-            {unreadCount > 0 && (
-              <span className={sx("notif-count")}>{unreadCount}</span>
-            )}
-          </button>
+              <svg
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.6}
+                aria-hidden
+              >
+                <path
+                  d="M5 8a5 5 0 0 1 10 0c0 3.5 1.3 4.8 1.3 4.8H3.7S5 11.5 5 8Z"
+                  strokeLinejoin="round"
+                />
+                <path d="M8 16a2 2 0 0 0 4 0" strokeLinecap="round" />
+              </svg>
+              {unreadCount > 0 && (
+                <span className={sx("notif-count")}>{unreadCount}</span>
+              )}
+            </button>
+          )}
           <Button variant="primary" size="lg" to={HOST}>
             <svg
               width="16"
@@ -103,7 +115,7 @@ export function MyEventsHeader() {
             </svg>
             {t("myevents:header.createCta")}
           </Button>
-          {notifOpen && <NotifPanel />}
+          {notificationsEnabled && notifOpen && <NotifPanel />}
         </div>
       </div>
     </div>

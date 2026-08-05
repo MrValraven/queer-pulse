@@ -1,14 +1,29 @@
 import { useState, type RefObject } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiCheck } from "react-icons/fi";
-import { Button, ComingSoon } from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { RemovedSpace } from "./safeSpaces";
+import { useSubmitNomination } from "./api/useSubmitNomination";
 import { CRITERIA, HOW, NOMINATE_TYPE_KEYS } from "./safeSpacesPage.data";
 import styles from "./SafeSpacesPage.module.css";
+
+/** The controlled nomination form fields. */
+interface NominateValues {
+  name: string;
+  address: string;
+  placeType: string;
+  reason: string;
+}
+
+const EMPTY_NOMINATION: NominateValues = {
+  name: "",
+  address: "",
+  placeType: "",
+  reason: "",
+};
 
 export function BadgeExplainer() {
   const { t } = useTranslation();
@@ -205,13 +220,17 @@ function NominateThanks({
 }
 
 function NominateForm({
-  nomName,
-  onNomName,
-  onNominate,
+  values,
+  onChange,
+  onSubmit,
+  submitting,
+  errored,
 }: {
-  nomName: string;
-  onNomName: (value: string) => void;
-  onNominate: () => void;
+  values: NominateValues;
+  onChange: (patch: Partial<NominateValues>) => void;
+  onSubmit: () => void;
+  submitting: boolean;
+  errored: boolean;
 }) {
   const { t } = useTranslation();
   return (
@@ -232,7 +251,7 @@ function NominateForm({
         className={styles.nomFields}
         onSubmit={(e) => {
           e.preventDefault();
-          onNominate();
+          onSubmit();
         }}
       >
         <input
@@ -240,8 +259,8 @@ function NominateForm({
           type="text"
           placeholder={t("safety:spaces.nominate.namePlaceholder")}
           aria-label={t("safety:spaces.nominate.namePlaceholder")}
-          value={nomName}
-          onChange={(e) => onNomName(e.target.value)}
+          value={values.name}
+          onChange={(e) => onChange({ name: e.target.value })}
           required
         />
         <input
@@ -249,26 +268,44 @@ function NominateForm({
           type="text"
           placeholder={t("safety:spaces.nominate.addressPlaceholder")}
           aria-label={t("safety:spaces.nominate.addressPlaceholder")}
+          value={values.address}
+          onChange={(e) => onChange({ address: e.target.value })}
         />
         <select
           className={styles.nomSelect}
-          defaultValue=""
+          value={values.placeType}
+          onChange={(e) => onChange({ placeType: e.target.value })}
           aria-label={t("safety:spaces.nominate.typeSelect.placeholder")}
         >
           <option value="">
             {t("safety:spaces.nominate.typeSelect.placeholder")}
           </option>
           {NOMINATE_TYPE_KEYS.map((key) => (
-            <option key={key}>{t(key)}</option>
+            <option key={key} value={t(key)}>
+              {t(key)}
+            </option>
           ))}
         </select>
         <textarea
           className={styles.nomTextarea}
           placeholder={t("safety:spaces.nominate.reasonPlaceholder")}
           aria-label={t("safety:spaces.nominate.reasonPlaceholder")}
+          value={values.reason}
+          onChange={(e) => onChange({ reason: e.target.value })}
         />
-        <button type="submit" className={styles.nomBtn}>
-          {t("safety:spaces.nominate.submitCta")}
+        {errored && (
+          <p className={styles.nomError} role="alert">
+            {t("safety:spaces.nominate.error")}
+          </p>
+        )}
+        <button
+          type="submit"
+          className={styles.nomBtn}
+          disabled={submitting || values.name.trim().length === 0}
+        >
+          {submitting
+            ? t("safety:spaces.nominate.submitting")
+            : t("safety:spaces.nominate.submitCta")}
         </button>
       </form>
     </>
@@ -276,57 +313,56 @@ function NominateForm({
 }
 
 /**
- * Live-mode placeholder for the nomination form — nominating a space has no
- * backend yet, so live mode shows this honest notice instead of a form that
- * would fake a submission. Demo mode still renders the full `NominateForm` /
- * `NominateThanks` flow below.
+ * The "nominate a space" box. Dual-mode: demo keeps the prototype's simulated
+ * submit (a short beat, then the thank-you panel, no network), while live
+ * records the nomination via `POST /safe-space-nominations` — landing it in the
+ * moderation queue as `pending` — before showing the same thank-you panel. Both
+ * modes flow through `useSubmitNomination`, which owns the demo/live branch, so
+ * this component only cares about the form ↔ thanks transition and errors.
  */
-function NominateComingSoon() {
-  const { t } = useTranslation();
-  return (
-    <div className={styles.nomThanks}>
-      <ComingSoon label={t("safety:spaces.nominate.comingSoon.badge")} />
-      <h3 className={styles.nomThanksTitle}>
-        <Translation
-          i18nKey="safety:spaces.nominate.comingSoon.title"
-          components={{ em: <em /> }}
-        />
-      </h3>
-      <p className={styles.nomThanksText}>
-        {t("safety:spaces.nominate.comingSoon.body")}
-      </p>
-    </div>
-  );
-}
-
 export function NominateSection({
   sectionRef,
 }: {
   sectionRef: RefObject<HTMLDivElement | null>;
 }) {
-  const { demoMode } = useDemoMode();
   const [nominated, setNominated] = useState(false);
-  const [nomName, setNomName] = useState("");
+  const [values, setValues] = useState<NominateValues>(EMPTY_NOMINATION);
+  const { mutate, isPending, isError, reset } = useSubmitNomination();
+
+  const submit = () => {
+    const name = values.name.trim();
+    if (name.length === 0 || isPending) return;
+    mutate(
+      {
+        placeName: name,
+        address: values.address.trim() || undefined,
+        placeType: values.placeType.trim() || undefined,
+        reason: values.reason.trim() || undefined,
+      },
+      { onSuccess: () => setNominated(true) },
+    );
+  };
 
   return (
     <div className={styles.nomSection} ref={sectionRef}>
       <div className="wrap">
         <div className={styles.nomBox}>
-          {!demoMode ? (
-            <NominateComingSoon />
-          ) : nominated ? (
+          {nominated ? (
             <NominateThanks
-              nomName={nomName}
+              nomName={values.name}
               onReset={() => {
                 setNominated(false);
-                setNomName("");
+                setValues(EMPTY_NOMINATION);
+                reset();
               }}
             />
           ) : (
             <NominateForm
-              nomName={nomName}
-              onNomName={setNomName}
-              onNominate={() => setNominated(true)}
+              values={values}
+              onChange={(patch) => setValues((prev) => ({ ...prev, ...patch }))}
+              onSubmit={submit}
+              submitting={isPending}
+              errored={isError}
             />
           )}
         </div>

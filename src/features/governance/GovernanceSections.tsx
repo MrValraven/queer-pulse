@@ -16,9 +16,26 @@ import { useGovernanceOverview } from "./api/useGovernanceOverview";
 import { FinanceLines } from "./GovernanceFinance";
 import styles from "./GovernancePage.module.css";
 
+/**
+ * Distinct error/retry state for a governance section. Rendered in place of a
+ * section's figures/list when its live fetch fails, so an API error surfaces as
+ * "we couldn't load this — try again" instead of a silently-empty grid.
+ */
+function SectionError({ onRetry }: { onRetry: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.sectionError} role="alert">
+      <p>{t("governance:error.body")}</p>
+      <Button variant="ghost" size="md" onClick={onRetry}>
+        {t("governance:error.retry")}
+      </Button>
+    </div>
+  );
+}
+
 export function HealthSection() {
   const { t } = useTranslation();
-  const { health, loading } = useGovernanceOverview();
+  const { health, loading, error, retry } = useGovernanceOverview();
   return (
     <Reveal as="section" className={styles.section} id="health">
       <div className={styles.eye}>
@@ -30,6 +47,9 @@ export function HealthSection() {
           components={{ em: <em /> }}
         />
       </h2>
+      {error ? (
+        <SectionError onRetry={retry} />
+      ) : (
       <div className={styles.statGrid}>
         {loading
           ? Array.from({ length: 6 }).map((_, index) => (
@@ -57,6 +77,7 @@ export function HealthSection() {
               </div>
             ))}
       </div>
+      )}
       <div className={styles.prose}>
         <p>{t("governance:sections.health.prose1")}</p>
         <p>{t("governance:sections.health.prose2")}</p>
@@ -67,7 +88,7 @@ export function HealthSection() {
 
 export function ModerationSection() {
   const { t } = useTranslation();
-  const { moderationSteps } = useGovernanceOverview();
+  const { moderationSteps, error, retry } = useGovernanceOverview();
   return (
     <Reveal as="section" className={styles.section} id="moderation">
       <div className={styles.eye}>
@@ -82,6 +103,7 @@ export function ModerationSection() {
       <div className={styles.prose}>
         <p>{t("governance:sections.moderation.intro")}</p>
       </div>
+      {error && <SectionError onRetry={retry} />}
       <div className={styles.steps}>
         {moderationSteps.map((step, index) => (
           <div key={step.titleKey} className={styles.step}>
@@ -107,7 +129,7 @@ export function ModerationSection() {
 
 export function CouncilSection() {
   const { t } = useTranslation();
-  const { council } = useGovernanceOverview();
+  const { council, error, retry } = useGovernanceOverview();
   return (
     <Reveal as="section" className={styles.section} id="council">
       <div className={styles.eye}>
@@ -122,6 +144,7 @@ export function CouncilSection() {
       <div className={styles.prose}>
         <p>{t("governance:sections.council.intro")}</p>
       </div>
+      {error && <SectionError onRetry={retry} />}
       <div className={styles.acList}>
         {council.map((seat) => (
           <div key={seat.name} className={styles.acItem}>
@@ -144,7 +167,7 @@ export function CouncilSection() {
 
 export function PrinciplesSection() {
   const { t } = useTranslation();
-  const { principles } = useGovernanceOverview();
+  const { principles, error, retry } = useGovernanceOverview();
   return (
     <Reveal as="section" className={styles.section} id="principles">
       <div className={styles.eye}>
@@ -156,6 +179,7 @@ export function PrinciplesSection() {
           components={{ em: <em /> }}
         />
       </h2>
+      {error && <SectionError onRetry={retry} />}
       <div className={styles.prinList}>
         {principles.map((principle) => (
           <div key={principle.titleKey} className={styles.prinItem}>
@@ -176,12 +200,32 @@ export function PrinciplesSection() {
 export function FinancesSection() {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { stats, income, expense, eventNotes, reserve, partners, loading } =
-    useGovernanceFinances();
-  const totalIncome = stats.find(
-    (stat) => stat.l === "Total income this quarter",
-  )?.n;
-  const totalExpense = stats.find((stat) => stat.l === "Total expenditure")?.n;
+  const {
+    stats,
+    income,
+    expense,
+    eventNotes,
+    reserve,
+    partners,
+    incomeTotal,
+    expenseTotal,
+    loading,
+    error,
+    retry,
+  } = useGovernanceFinances();
+  // Column totals come from the structured `incomeTotal`/`expenseTotal` DTO
+  // fields, formatted for the active locale — NOT from matching a stat tile's
+  // hardcoded English display label. That old `stat.l === "Total income this
+  // quarter"` match blanked the totals under localisation or any reworded live
+  // report; a stable DTO field can't.
+  const totalIncome =
+    incomeTotal == null
+      ? ""
+      : fmt.currency(incomeTotal, "EUR", { maximumFractionDigits: 0 });
+  const totalExpense =
+    expenseTotal == null
+      ? ""
+      : fmt.currency(expenseTotal, "EUR", { maximumFractionDigits: 0 });
 
   return (
     <Reveal as="section" className={styles.section} id="finances">
@@ -197,6 +241,10 @@ export function FinancesSection() {
       <div className={styles.prose}>
         <p>{t("governance:sections.finances.intro")}</p>
       </div>
+      {error ? (
+        <SectionError onRetry={retry} />
+      ) : (
+      <>
       <div style={{ marginTop: 24 }}>
         <StatGrid columns={2}>
           {loading
@@ -236,7 +284,7 @@ export function FinancesSection() {
               lines={income}
               color="var(--jade)"
               total={t("governance:sections.finances.totalIncome", {
-                amount: totalIncome ?? "",
+                amount: totalIncome,
               })}
             />
           )}
@@ -253,7 +301,7 @@ export function FinancesSection() {
               lines={expense}
               color="var(--accent)"
               total={t("governance:sections.finances.totalExpense", {
-                amount: totalExpense ?? "",
+                amount: totalExpense,
               })}
             />
           )}
@@ -311,13 +359,15 @@ export function FinancesSection() {
       <div className={styles.prose}>
         <p>{t("governance:sections.finances.noCorporateFunding")}</p>
       </div>
+      </>
+      )}
     </Reveal>
   );
 }
 
 export function DecisionsSection() {
   const { t } = useTranslation();
-  const { decisions } = useGovernanceOverview();
+  const { decisions, error, retry } = useGovernanceOverview();
   return (
     <Reveal as="section" className={styles.section} id="decisions">
       <div className={styles.eye}>
@@ -329,6 +379,7 @@ export function DecisionsSection() {
           components={{ em: <em /> }}
         />
       </h2>
+      {error && <SectionError onRetry={retry} />}
       <div className={styles.prose}>
         {decisions.map((decision) => (
           <p key={decision.leadKey}>

@@ -41,7 +41,12 @@ export type NotificationKind =
   // Sent to the member a moderation action lands on (mirrors the backend
   // `notifications_type_enum` value added in
   // `AddModerationOutcomeNotificationType1785900000000`).
-  | "moderation_outcome";
+  | "moderation_outcome"
+  // Sent to an event's RSVP'd + invited members when the organizer makes a
+  // material edit — start time or location (mirrors the backend
+  // `notifications_type_enum` value added in
+  // `AddEventUpdatedNotificationType1786001600000`).
+  | "event_updated";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -62,6 +67,7 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   event_reminder: "events",
   waitlist_promoted: "events",
   event_cancelled: "events",
+  event_updated: "events",
   event_rsvp: "events",
   community_reply: "community",
   forum_thread_reply: "community",
@@ -155,6 +161,26 @@ function moderationKeyFor(type: string, payload: unknown): string {
 }
 
 /**
+ * Resolve the i18n subkey an `event_updated` notification's copy lives under.
+ * The row carries `payload.changes` (a `string[]` of what materially changed,
+ * written by the backend — `startAt` and/or `location`). A change to only the
+ * time or only the place gets its own precise headline
+ * (`event_updated.time` / `event_updated.location`); a change to both — or an
+ * unrecognised/missing `changes` list — falls back to the generic
+ * `event_updated.*` copy. Non-event-updated types pass through unchanged.
+ */
+function eventUpdatedKeyFor(type: string, payload: unknown): string {
+  if (type !== "event_updated") return type;
+  const changes = (payload as { changes?: unknown } | null)?.changes;
+  if (!Array.isArray(changes)) return "event_updated";
+  const changedTime = changes.includes("startAt");
+  const changedLocation = changes.includes("location");
+  if (changedTime && !changedLocation) return "event_updated.time";
+  if (changedLocation && !changedTime) return "event_updated.location";
+  return "event_updated";
+}
+
+/**
  * Render a backend notification (`type` + structured `payload`) into display
  * text, through i18n keys rather than hardcoded English — this is why the
  * formatting lives on the frontend at all: it keeps the API language-neutral
@@ -175,6 +201,8 @@ export function formatNotification(
     key = FALLBACK_KEY;
   } else if (type === "moderation_outcome") {
     key = moderationKeyFor(type, payload);
+  } else if (type === "event_updated") {
+    key = eventUpdatedKeyFor(type, payload);
   } else {
     // `mentionKeyFor` passes every non-`mention` type through unchanged.
     key = mentionKeyFor(type, payload);

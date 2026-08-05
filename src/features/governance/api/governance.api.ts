@@ -1,4 +1,4 @@
-import { apiGet } from "../../../shared/api/client";
+import { apiGet, apiPost } from "../../../shared/api/client";
 import type { FinLine } from "../governance.data";
 
 // ── Backend DTOs ────────────────────────────────────────────────────────────
@@ -42,6 +42,12 @@ export interface GovernanceFinanceResponseDTO {
   eventNotes: FinanceEventNoteDTO[];
   reserve: FinanceReserveDTO | null;
   partners: FinancePartnerDTO[];
+  /** Structured quarter totals in euros. The frontend derives the income /
+   *  expenditure column totals from these fields (formatted with
+   *  `useFormat().currency()`), never from matching a stat tile's display
+   *  label — so localisation or reworded live figures can't break them. */
+  incomeTotal?: number | null;
+  expenseTotal?: number | null;
   publishedAt: string;
 }
 
@@ -92,7 +98,23 @@ export interface GovernanceOverviewResponseDTO {
   council: CouncilSeatDTO[];
   principles: PrincipleDTO[];
   decisions: DecisionDTO[];
+  /** ISO-8601 timestamp of the last publish (P3-7), or `null` if never
+   *  published. Advanced by the admin `POST /governance/admin/publish`. */
+  publishedAt: string | null;
 }
 
 export const getGovernanceOverview = () =>
   apiGet<GovernanceOverviewResponseDTO>("/governance/overview");
+
+// ── Admin publish (P3-7) ─────────────────────────────────────────────────────
+// `POST /governance/admin/publish` — mark the current governance snapshot as
+// published *now* so the public overview can surface a "last published" line.
+// Moderator/admin only (server-guarded); the FE gates the button behind the
+// admin route.
+
+export interface GovernancePublishResponseDTO {
+  publishedAt: string;
+}
+
+export const publishGovernanceOverview = () =>
+  apiPost<GovernancePublishResponseDTO>("/governance/admin/publish");

@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { FiArrowRight, FiFolder } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import {
@@ -7,15 +7,9 @@ import {
   FadeIn,
   SkeletonLine,
 } from "../../shared/components/ui";
-import { useSimulatedLoad } from "../../shared/hooks";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useSaved, type SavedItem } from "../../app/providers/useSaved";
 import {
-  COLLECTIONS,
-  RECENT_SAVES,
   privacyLabel,
   type Collection,
   type Privacy,
@@ -28,13 +22,8 @@ import {
   NewCollectionModal,
   ViewCollectionModal,
 } from "./CollectionsModals";
+import { useCollectionsController } from "./useCollectionsController";
 import styles from "./CollectionsPage.module.css";
-
-type ModalState =
-  | { type: "new" }
-  | { type: "view"; id: string }
-  | { type: "add"; save: RecentSave }
-  | null;
 
 const thumbClass: Record<Thumb, string> = {
   a: styles.thumbA!,
@@ -162,85 +151,19 @@ function RecentSaveRow({ r, onAdd }: { r: RecentSave; onAdd: () => void }) {
 
 export function CollectionsPage() {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
-  const { showToast } = useToast();
-  const { items: savedItems } = useSaved();
-  const loading = useSimulatedLoad();
-
-  // The seeded collections grid + recent unfiled saves are demo fiction; live
-  // mode starts empty and only fills as the member creates collections.
-  const [collections, setCollections] = useState<Collection[]>(
-    demoMode ? COLLECTIONS : [],
-  );
-  const recentSaves = demoMode ? RECENT_SAVES : [];
-  // collectionId -> the saved items inside it. Seeded from live saves so the
-  // view modal has real content to show, then grown via "Add to collection".
-  const [contents, setContents] = useState<Record<string, SavedItem[]>>({});
-  const [modal, setModal] = useState<ModalState>(null);
-
-  // For each collection, blend any seeded saves with items the user has added.
-  const contentsFor = useMemo(() => {
-    return (id: string): SavedItem[] => {
-      if (contents[id]) return contents[id];
-      // Seed deterministically from the live saved store the first time.
-      const seed = savedItems.slice(0, 3);
-      return seed;
-    };
-  }, [contents, savedItems]);
-
-  const createCollection = (name: string, privacy: Privacy) => {
-    // No collections endpoint exists yet — creation lives only in local state and
-    // would vanish on reload. Demo simulates it; live never offers a create that
-    // silently goes nowhere (entry points are demo-gated below).
-    if (!demoMode) return;
-    const id = `c-${Date.now()}`;
-    setCollections((prev) => [
-      {
-        id,
-        count: "0",
-        name,
-        plainName: name,
-        meta: t("members:collections.newCollection.defaultMeta"),
-        thumbs: ["a", "b", "c"],
-        more: "",
-        privacy,
-        updated: t("members:collections.updatedJustNow"),
-      },
-      ...prev,
-    ]);
-    setModal(null);
-    showToast(t("members:collections.toast.created"), "success");
-  };
-
-  const addSaveToCollection = (collectionId: string, save: RecentSave) => {
-    const item: SavedItem = {
-      id: `recent:${save.id}`,
-      kind: "article",
-      title: save.title,
-      meta: save.saved,
-    };
-    setContents((prev) => {
-      const existing = prev[collectionId] ?? savedItems.slice(0, 3);
-      if (existing.some((it) => it.id === item.id)) return prev;
-      return { ...prev, [collectionId]: [item, ...existing] };
-    });
-    setCollections((prev) =>
-      prev.map((c) =>
-        c.id === collectionId
-          ? {
-              ...c,
-              count: String((Number(c.count) || 0) + 1),
-              updated: t("members:collections.updatedJustNow"),
-            }
-          : c,
-      ),
-    );
-  };
-
-  const viewing =
-    modal?.type === "view"
-      ? (collections.find((c) => c.id === modal.id) ?? null)
-      : null;
+  const {
+    demoMode,
+    collections,
+    loading,
+    recentSaves,
+    modal,
+    setModal,
+    createCollection,
+    addSaveToCollection,
+    removeSaveFromCollection,
+    viewing,
+    viewingItems,
+  } = useCollectionsController();
 
   return (
     <AppShell>
@@ -260,11 +183,9 @@ export function CollectionsPage() {
               {t("members:collections.header.lead")}
             </p>
           </div>
-          {demoMode && (
-            <Button variant="primary" onClick={() => setModal({ type: "new" })}>
-              {t("members:collections.header.newCta")}
-            </Button>
-          )}
+          <Button variant="primary" onClick={() => setModal({ type: "new" })}>
+            {t("members:collections.header.newCta")}
+          </Button>
         </header>
 
         <SavedByYou />
@@ -343,8 +264,13 @@ export function CollectionsPage() {
       {viewing && (
         <ViewCollectionModal
           collection={viewing}
-          items={contentsFor(viewing.id)}
+          items={viewingItems}
           onClose={() => setModal(null)}
+          onRemoveItem={
+            demoMode
+              ? undefined
+              : (ref) => removeSaveFromCollection(viewing.id, ref)
+          }
         />
       )}
       {modal?.type === "add" && (

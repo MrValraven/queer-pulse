@@ -26,6 +26,14 @@ export interface MyEventsValue {
   unreadCount: number;
   counts: Record<Pill, number>;
   byId: (id: string) => MyEvent | undefined;
+  /** True once the live fetch has failed — agenda shows an error/retry state
+   *  instead of a false "no events". */
+  hasError: boolean;
+  /** Re-run the live fetch (bound to the agenda's retry button). */
+  retry: () => void;
+  /** Whether the notifications bell + "What's changed" panel are available.
+   *  Demo-only until a notifications endpoint exists (Phase 2). */
+  notificationsEnabled: boolean;
 
   // primary view
   pill: Pill;

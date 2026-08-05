@@ -302,7 +302,9 @@ export const GUIDES: InfoCard[] = [
     icon: FiMessageCircle,
     title: "Talking to partners about testing",
     body: "A practical guide to having the conversation — different scripts for different situations. Written by community members, not clinical guidelines.",
-    link: { label: "Read the guide", href: "#" },
+    // No standalone guide page exists yet, so we render no CTA rather than a
+    // dead "Read the guide →" link (href:"#"). Add a `link` here once the
+    // guide has a real route.
   },
   {
     icon: LuLeaf,

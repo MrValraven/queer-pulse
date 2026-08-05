@@ -21,6 +21,7 @@ export function AvatarEditor({
   name,
   onChange,
   onRemove,
+  variant = "card",
 }: {
   photo?: string;
   initials: string;
@@ -28,6 +29,7 @@ export function AvatarEditor({
   name: string;
   onChange: (key: string) => void;
   onRemove: () => void;
+  variant?: "card" | "circle";
 }) {
   const { t } = useTranslation();
   const fileRef = useRef<HTMLInputElement>(null);
@@ -64,6 +66,85 @@ export function AvatarEditor({
 
   const displayedPhoto = previewUrl ?? photo;
 
+  const actions = (
+    <>
+      <button
+        type="button"
+        className={styles.avatarBtn}
+        onClick={() => fileRef.current?.click()}
+        disabled={uploading}
+      >
+        <FiCamera size={15} />
+        {uploading
+          ? t("members:avatar.uploading", { percent: progress })
+          : displayedPhoto
+            ? t("members:avatar.change")
+            : t("members:avatar.add")}
+      </button>
+      {displayedPhoto && !uploading && (
+        <button
+          type="button"
+          className={`${styles.avatarBtn} ${styles.avatarBtnGhost}`}
+          aria-label={t("members:avatar.remove")}
+          onClick={() => {
+            if (previewUrl) {
+              URL.revokeObjectURL(previewUrl);
+              setPreviewUrl(null);
+            }
+            onRemove();
+          }}
+        >
+          <FiTrash2 size={15} />
+        </button>
+      )}
+    </>
+  );
+
+  const fileInput = (
+    <input
+      ref={fileRef}
+      type="file"
+      accept="image/*"
+      aria-label={t("members:avatar.change")}
+      hidden
+      onChange={(event) => {
+        const file = event.target.files?.[0];
+        if (file) void pick(file);
+        event.target.value = "";
+      }}
+    />
+  );
+
+  const errorNote = error && (
+    <p className={styles.avatarError} role="alert">
+      {error}
+    </p>
+  );
+
+  if (variant === "circle") {
+    return (
+      <div className={styles.avatarCircleWrap}>
+        <div className={styles.avatarPrideRing}>
+          <div className={styles.avatarRingGap}>
+            <ImageSlot
+              tint={tint}
+              src={displayedPhoto}
+              initials={initials}
+              shape="circle"
+              width="100%"
+              height="100%"
+              srcSize={176}
+              placeholder={name}
+            />
+          </div>
+        </div>
+        <div className={styles.avatarCircleActions}>{actions}</div>
+        {errorNote}
+        {fileInput}
+      </div>
+    );
+  }
+
   return (
     <div className={styles.avatarWrap}>
       <ImageSlot
@@ -74,54 +155,9 @@ export function AvatarEditor({
         radius={20}
         placeholder={name}
       />
-      <div className={styles.avatarActions}>
-        <button
-          type="button"
-          className={styles.avatarBtn}
-          onClick={() => fileRef.current?.click()}
-          disabled={uploading}
-        >
-          <FiCamera size={15} />
-          {uploading
-            ? t("members:avatar.uploading", { percent: progress })
-            : displayedPhoto
-              ? t("members:avatar.change")
-              : t("members:avatar.add")}
-        </button>
-        {displayedPhoto && !uploading && (
-          <button
-            type="button"
-            className={`${styles.avatarBtn} ${styles.avatarBtnGhost}`}
-            aria-label={t("members:avatar.remove")}
-            onClick={() => {
-              if (previewUrl) {
-                URL.revokeObjectURL(previewUrl);
-                setPreviewUrl(null);
-              }
-              onRemove();
-            }}
-          >
-            <FiTrash2 size={15} />
-          </button>
-        )}
-      </div>
-      {error && (
-        <p className={styles.avatarError} role="alert">
-          {error}
-        </p>
-      )}
-      <input
-        ref={fileRef}
-        type="file"
-        accept="image/*"
-        aria-label={t("members:avatar.change")}
-        hidden
-        onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) void pick(f);
-          e.target.value = "";
-        }}
-      />
+      <div className={styles.avatarActions}>{actions}</div>
+      {errorNote}
+      {fileInput}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { apiGet } from "../../../shared/api/client";
+import { apiGet, apiPost } from "../../../shared/api/client";
 import type { Category } from "../safeSpaces";
 
 /**
@@ -89,3 +89,31 @@ export const getSafeSpace = (slug: string) =>
   apiGet<AnySafeSpaceDetailDTO>(
     `/directory/safe-spaces/${encodeURIComponent(slug)}`,
   );
+
+/** Body of `POST /safe-space-nominations`. Only `placeName` is required. */
+export interface CreateSafeSpaceNominationBody {
+  placeName: string;
+  address?: string;
+  placeType?: string;
+  listingRef?: string;
+  reason?: string;
+}
+
+/** The recorded nomination echoed back by `POST /safe-space-nominations`. */
+export interface SafeSpaceNominationDTO {
+  id: string;
+  placeName: string;
+  address: string | null;
+  placeType: string | null;
+  listingRef: string | null;
+  reason: string | null;
+  status: string;
+  createdAt: string;
+}
+
+/**
+ * POST /safe-space-nominations — suggest a place be reviewed for the safe-space
+ * badge. Lands in the moderation queue as `pending`; nothing surfaces publicly.
+ */
+export const submitSafeSpaceNomination = (body: CreateSafeSpaceNominationBody) =>
+  apiPost<SafeSpaceNominationDTO>("/safe-space-nominations", body);

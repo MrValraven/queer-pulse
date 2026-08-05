@@ -16,6 +16,16 @@ type OpOverride = {
   editedAt?: string | null;
 };
 
+/** The forum content currently being reported — the opening post (`"post"`) or
+ *  a specific reply (`"reply"`). Carries the REAL backend post id as
+ *  `subjectId` (the OP's `opPostId` / the reply's `postId`), never the
+ *  FE-synthetic numeric thread id, so live reports reach the right subject. */
+export interface ForumReportTarget {
+  authorName: string;
+  subjectId: string;
+  subjectType: "post" | "reply";
+}
+
 /** Resolves the OP card's display + permission view-model. Demo layers the
  * local `opOverride` (and persona ownership) over the thread; live reads the
  * DTO flags straight through. Called after the not-found guard, so `thread` is
@@ -80,7 +90,9 @@ export function useThreadModeration({
     isOp: boolean;
   } | null>(null);
   const [historyPostId, setHistoryPostId] = useState<string | null>(null);
-  const [reportingAuthor, setReportingAuthor] = useState<string | null>(null);
+  const [reportTarget, setReportTarget] = useState<ForumReportTarget | null>(
+    null,
+  );
   // Demo-only local overrides for the OP card (live refetches after mutation).
   const [opOverride, setOpOverride] = useState<{
     title?: string;
@@ -203,8 +215,8 @@ export function useThreadModeration({
     setConfirmDelete,
     historyPostId,
     setHistoryPostId,
-    reportingAuthor,
-    setReportingAuthor,
+    reportTarget,
+    setReportTarget,
     opOverride,
     setOpOverride,
     saveReplyEdit,

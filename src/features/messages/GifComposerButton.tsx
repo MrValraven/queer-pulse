@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { GifAttachment } from "../../shared/api/gifs";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { isGifProviderConfigured, type GifAttachment } from "../../shared/api/gifs";
 import { GifPicker } from "./GifPicker";
 import styles from "./MessagesPage.module.css";
 
@@ -21,7 +22,13 @@ interface GifComposerButtonProps {
  *  with the shortcut popover — the Composer owns outside-click/Esc dismissal. */
 export function GifComposerButton({ onSendGif, open, onToggle, onClose }: GifComposerButtonProps) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Live mode without a configured provider (KLIPY key unset): the picker has no
+  // live source, so hide the affordance entirely rather than render a button that
+  // opens a dead/empty panel. Demo mode always has curated GIFs, so it's exempt.
+  if (!demoMode && !isGifProviderConfigured) return null;
 
   return (
     <div className={styles.gifControl}>

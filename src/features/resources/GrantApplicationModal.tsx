@@ -1,8 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
-import { FiArrowLeft, FiArrowRight, FiClock, FiSun, FiX } from "react-icons/fi";
+import {
+  useEffect,
+  useMemo,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
+import { FiArrowLeft, FiArrowRight, FiSun, FiX } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { submitIntake } from "../../shared/api/intakes";
 import { useScrollLock } from "../../shared/hooks";
 import {
   STEP_LABEL_KEYS,
@@ -18,59 +26,46 @@ import {
 } from "./GrantApplicationSteps";
 import styles from "./MicroGrantsPage.module.css";
 
-/** Honest live-mode panel: the grant wizard has no backing endpoint, so we say
- *  so plainly on the sheet instead of faking an "application submitted" success. */
-function GrantApplicationComingSoon({ onClose }: { onClose: () => void }) {
+/**
+ * The wizard's "next / submit" action. Below the final step it just advances;
+ * on the final step it submits — demo jumps straight to the success screen
+ * (step 6), while live POSTs the application through the generic intake
+ * endpoint first, then shows the same success screen (or toasts and stays put
+ * on failure). Kept out of the component so the component stays small.
+ */
+function useGrantAdvance(args: {
+  step: number;
+  setStep: Dispatch<SetStateAction<number>>;
+  demoMode: boolean;
+  buildPayload: () => Record<string, unknown>;
+}) {
+  const { step, setStep, demoMode, buildPayload } = args;
   const { t } = useTranslation();
-  return (
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div
-        className={styles.sheet}
-        role="dialog"
-        aria-modal="true"
-        aria-label={t("resources:microGrants.apply.modalAriaLabel")}
-      >
-        <div className={styles.sheetHead}>
-          <div className={styles.sheetTitle}>
-            {t("resources:microGrants.apply.modalTitle")}
-          </div>
-          <button
-            type="button"
-            className={styles.close}
-            onClick={onClose}
-            aria-label={t("shared:modal.close")}
-          >
-            <FiX aria-hidden />
-          </button>
-        </div>
-        <div className={styles.modalBody}>
-          <div className={styles.success}>
-            <div className={styles.successIcon}>
-              <FiClock />
-            </div>
-            <div className={styles.successTitle}>
-              <Translation
-                i18nKey="resources:microGrants.apply.comingSoon.title"
-                components={{ em: <em /> }}
-              />
-            </div>
-            <p className={styles.successSub}>
-              {t("resources:microGrants.apply.comingSoon.sub")}
-            </p>
-            <button type="button" className={styles.next} onClick={onClose}>
-              {t("resources:microGrants.apply.success.closeCta")}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  const { showToast } = useToast();
+  const [sending, setSending] = useState(false);
+
+  const advance = async () => {
+    if (step < TOTAL_STEPS) {
+      setStep((s) => s + 1);
+      return;
+    }
+    if (demoMode) {
+      setStep(6);
+      return;
+    }
+    if (sending) return;
+    setSending(true);
+    try {
+      await submitIntake("grant", buildPayload());
+      setStep(6);
+    } catch {
+      showToast(t("shared:intake.errorToast"), "error");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return { sending, advance };
 }
 
 export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
@@ -108,7 +103,21 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
     [rows],
   );
 
-  const next = () => setStep((s) => (s === TOTAL_STEPS ? 6 : s + 1));
+  const { sending, advance } = useGrantAdvance({
+    step,
+    setStep,
+    demoMode,
+    buildPayload: () => ({
+      category: cat,
+      projectName: projName.trim(),
+      projectSummary: projWhat.trim(),
+      applicantName: appName.trim(),
+      budgetTotal: total,
+      budgetItems: rows
+        .filter((r) => r.item.trim() || r.amount.trim())
+        .map((r) => ({ item: r.item.trim(), amount: r.amount.trim() })),
+    }),
+  });
   const back = () => (step === 1 ? onClose() : setStep((s) => s - 1));
 
   const addRow = () =>
@@ -124,12 +133,6 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
       else nx.add(n);
       return nx;
     });
-
-  // LIVE: there is no grant-intake endpoint (resources are read-only + seeded,
-  // see resources.api.ts). Rather than walk someone through a 5-step wizard
-  // that fakes an "application submitted" success reaching no one, show an
-  // honest coming-soon panel. The full mock wizard still runs in demo mode.
-  if (!demoMode) return <GrantApplicationComingSoon onClose={onClose} />;
 
   return (
     <div
@@ -255,7 +258,12 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
                 </>
               )}
             </button>
-            <button type="button" className={styles.next} onClick={next}>
+            <button
+              type="button"
+              className={styles.next}
+              onClick={() => void advance()}
+              disabled={sending}
+            >
               {step === TOTAL_STEPS
                 ? t("resources:microGrants.apply.submitCta")
                 : t("resources:microGrants.apply.continueCta")}{" "}

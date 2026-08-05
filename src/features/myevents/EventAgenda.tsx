@@ -1,7 +1,12 @@
 import { useMemo } from "react";
-import { FadeIn } from "../../shared/components/ui";
-import { Button } from "../../shared/components/ui";
+import { FiAlertTriangle } from "react-icons/fi";
+import {
+  Button,
+  FadeIn,
+  EmptyState as SharedEmptyState,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { buildAgenda } from "./myEvents.agenda";
@@ -66,6 +71,29 @@ export function EventAgenda() {
     return (
       <div className={sx("agenda")}>
         <AgendaSkeleton n={c.pill === "saved" ? 3 : 4} />
+      </div>
+    );
+  }
+
+  // A failed live fetch must not masquerade as an empty calendar — surface a
+  // distinct error state with a retry, never a false "nothing on the calendar".
+  if (c.hasError) {
+    return (
+      <div className={sx("agenda")}>
+        <SharedEmptyState
+          icon={<FiAlertTriangle aria-hidden />}
+          title={
+            <Translation
+              i18nKey="myevents:agenda.error.title"
+              components={{ em: <em /> }}
+            />
+          }
+          description={t("myevents:agenda.error.description")}
+          action={{
+            label: t("myevents:agenda.error.retry"),
+            onClick: c.retry,
+          }}
+        />
       </div>
     );
   }

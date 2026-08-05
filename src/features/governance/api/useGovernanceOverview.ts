@@ -56,6 +56,11 @@ export interface GovernanceOverviewResult {
   decisions: DecisionView[];
   /** True while the initial live fetch is in flight (demo resolves instantly). */
   loading: boolean;
+  /** True when the live fetch failed — sections render a retry state, not a
+   *  silently-empty grid. Always false in demo (mocks never reject). */
+  error: boolean;
+  /** Refetch the overview after an error (wired to the retry affordance). */
+  retry: () => void;
 }
 
 // Icon-key → react-icon, mirroring `governance.data.ts`'s `PRINCIPLES` icons.
@@ -80,7 +85,7 @@ const TINT_BY_KEY = {
 // same demo experience, no network. The `governance.data` mock is imported on
 // demand inside the demo queryFn (see below) so it never ships in the live
 // bundle.
-async function buildDemo(): Promise<Omit<GovernanceOverviewResult, "loading">> {
+async function buildDemo(): Promise<Omit<GovernanceOverviewResult, "loading" | "error" | "retry">> {
   const { COUNCIL, DECISIONS, HEALTH, PRINCIPLES, STEPS } = await import(
     "../governance.data"
   );
@@ -115,7 +120,7 @@ async function buildDemo(): Promise<Omit<GovernanceOverviewResult, "loading">> {
   };
 }
 
-const EMPTY: Omit<GovernanceOverviewResult, "loading"> = {
+const EMPTY: Omit<GovernanceOverviewResult, "loading" | "error" | "retry"> = {
   health: [],
   moderationSteps: [],
   council: [],
@@ -128,7 +133,7 @@ const EMPTY: Omit<GovernanceOverviewResult, "loading"> = {
 // that ``t(`ns:${key}`)`` needs a bare key (no prefix) on the stored side.
 function fromDto(
   dto: GovernanceOverviewResponseDTO,
-): Omit<GovernanceOverviewResult, "loading"> {
+): Omit<GovernanceOverviewResult, "loading" | "error" | "retry"> {
   return {
     health: dto.health.map((stat) => ({
       value: stat.n,
@@ -169,15 +174,24 @@ function fromDto(
 export function useGovernanceOverview(): GovernanceOverviewResult {
   const { demoMode } = useDemoMode();
 
-  const query = useQuery<Omit<GovernanceOverviewResult, "loading">>({
+  const query = useQuery<Omit<GovernanceOverviewResult, "loading" | "error" | "retry">>({
     queryKey: ["governance-overview", demoMode],
     queryFn: async () =>
       demoMode ? buildDemo() : fromDto(await getGovernanceOverview()),
   });
 
+  const retry = () => {
+    void query.refetch();
+  };
+
   if (!query.data) {
-    return { ...EMPTY, loading: query.isPending };
+    return {
+      ...EMPTY,
+      loading: query.isPending,
+      error: query.isError,
+      retry,
+    };
   }
 
-  return { ...query.data, loading: false };
+  return { ...query.data, loading: false, error: false, retry };
 }

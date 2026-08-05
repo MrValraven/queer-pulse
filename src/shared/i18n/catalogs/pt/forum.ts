@@ -141,6 +141,10 @@ export const forum: Catalog = {
   "reportReply.cancel": "Cancelar",
   "reportReply.sending": "A enviar…",
   "reportReply.sendCta": "Enviar denúncia",
+  "reportReply.errorTitle": "Não foi enviada",
+  "reportReply.errorBody":
+    "Não foi possível enviar a tua denúncia agora — nada foi submetido. Verifica a tua ligação e tenta novamente.",
+  "reportReply.retryCta": "Tentar novamente",
 
   // ── ThreadComposer ──────────────────────────────────────────────────────
   "threadComposer.replyingTo": "A responder a <strong>{name}</strong>",
@@ -176,6 +180,10 @@ export const forum: Catalog = {
   "threadPage.notFound.description":
     "Pode ter sido removido ou o link pode estar quebrado. Volta ao fórum para encontrares as conversas atuais.",
   "threadPage.notFound.backCta": "Voltar ao fórum",
+  "threadPage.error.title": "Não foi possível carregar este tópico",
+  "threadPage.error.description":
+    "Algo correu mal do nosso lado — a culpa não é tua. Tenta novamente daqui a pouco.",
+  "threadPage.error.retryCta": "Tentar novamente",
 
   // ── ThreadReplies / ModeratorByline ─────────────────────────────────────
   "byline.withRole":

@@ -7,6 +7,9 @@ import s from "./DirectorySpacePage.module.css";
 export function DirectoryMapPlaceholder() {
   return (
     <>
+      {/* Decorative illustration: the hex fills below are map-tone artwork
+          colours (warm greys + a soft green landmark), not UI-surface chrome, so
+          they are intentional literals rather than design tokens. */}
       <svg
         viewBox="0 0 300 300"
         preserveAspectRatio="xMidYMid slice"

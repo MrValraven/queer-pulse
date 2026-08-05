@@ -380,9 +380,16 @@ export function DataPane({
       </Section>
       <Section label={t("settings:data.section.personalisation")}>
         <ToggleList>
+          {/* No search-personalisation preference exists on the backend (the
+              profile PATCH DTO and notification categories carry no such
+              field), and the Data pane opens no profile edit session — so a
+              live flip would mark the pane dirty and fire a "Saved!" toast
+              while `save()` is never called. Badge it coming-soon (inert) like
+              its siblings so it stops claiming a save it can't perform. */}
           <ToggleRow
             title={t("settings:data.searchPersonalisation.title")}
             description={t("settings:data.searchPersonalisation.desc")}
+            comingSoon
             onChange={onChange}
           />
         </ToggleList>

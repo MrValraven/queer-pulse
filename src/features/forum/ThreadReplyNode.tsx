@@ -38,6 +38,7 @@ interface ThreadReplyNodeProps {
   onStartReply: (reply: Reply) => void;
   onCancelReply: () => void;
   onPostReply: (body: string) => void;
+  onReport: (reply: Reply) => void;
   inlineDraft: string;
   setInlineDraft: (value: string) => void;
 }
@@ -71,6 +72,7 @@ export function ThreadReplyNode({
   onStartReply,
   onCancelReply,
   onPostReply,
+  onReport,
   inlineDraft,
   setInlineDraft,
 }: ThreadReplyNodeProps) {
@@ -121,6 +123,7 @@ export function ThreadReplyNode({
         onRestore={onRestore}
         onHistory={onHistory}
         onReply={isLocked ? undefined : onStartReply}
+        onReport={onReport}
         collapse={
           hasChildren
             ? {
@@ -193,6 +196,7 @@ export function ThreadReplyNode({
             onStartReply={onStartReply}
             onCancelReply={onCancelReply}
             onPostReply={onPostReply}
+            onReport={onReport}
             inlineDraft={inlineDraft}
             setInlineDraft={setInlineDraft}
           />

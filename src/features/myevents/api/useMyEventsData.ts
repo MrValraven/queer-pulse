@@ -13,6 +13,11 @@ export interface MyEventsDataResult {
   notifs: Notif[];
   /** True while the initial fetch is in flight (both modes resolve via the query). */
   loading: boolean;
+  /** True once the live fetch has failed — so the dashboard can surface a
+   *  distinct error/retry state instead of collapsing to a false "no events". */
+  hasError: boolean;
+  /** Re-run the query (bound to the header/agenda retry affordance). */
+  retry: () => void;
 }
 
 /** What the query resolves to in either mode. */
@@ -25,7 +30,13 @@ interface MyEventsPayload {
 const EMPTY_PAYLOAD: MyEventsPayload = { events: [], notifs: [] };
 
 /** Every category-bearing filter the dashboard needs — "upcoming" is a client-derived
- *  pill (see `inPill`), never fetched directly. */
+ *  pill (see `inPill`), never fetched directly.
+ *
+ *  "saved" fetches the member's real bookmarked events (backend BE-3 —
+ *  `GET /events?filter=saved`, now backed by the `event_bookmarks` table). It
+ *  populates the "Saved" tab alongside the pending event invites merged in from
+ *  `getEventInvites()` below. Members bookmark events from the gathering detail's
+ *  "Save" toggle. */
 const LIVE_FILTERS: EventFilter[] = [
   "going",
   "hosting",
@@ -52,6 +63,21 @@ const LIVE_FILTERS: EventFilter[] = [
  * backend contract yet; rather than pass the mock off as real, live mode
  * returns no notifications at all (empty "What's changed" + zero bell badge) —
  * a documented gap rather than a fake success.
+ *
+ * DEFERRED(Phase 2, myevents "What's changed" panel): because this panel has no
+ * dedicated contract, the consumer hides the header bell + "What's changed"
+ * panel entirely in live (see `MyEventsHeader` / `notificationsEnabled`) so a
+ * permanently-empty panel isn't surfaced as if it were a working feature.
+ *
+ * TODO(P2-7 follow-up): event-change notifications now DO exist end-to-end — the
+ * backend emits an `event_updated` notification (start-time / location edits) to
+ * RSVP'd + invited members and it already renders in the MAIN notifications
+ * centre (`formatNotification` → category "events"). To re-light this panel,
+ * feed it the member's `event_updated` (and `event_cancelled` / `waitlist_promoted`)
+ * rows from `GET /notifications`, mapping them into the local `Notif` shape and
+ * flipping `notificationsEnabled` on in live. Deliberately left for a dedicated
+ * pass — mapping the notifications feed into this bespoke panel + re-enabling the
+ * bell is more than this feature's scope.
  */
 export function useMyEventsData(): MyEventsDataResult {
   const { demoMode } = useDemoMode();
@@ -87,5 +113,7 @@ export function useMyEventsData(): MyEventsDataResult {
     events: payload.events,
     notifs: payload.notifs,
     loading: query.isPending,
+    hasError: query.isError,
+    retry: () => void query.refetch(),
   };
 }

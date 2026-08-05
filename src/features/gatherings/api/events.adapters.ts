@@ -102,6 +102,7 @@ export function detailToGathering(dto: EventDetailDTO): GatheringDetail {
     ctaKey: "gatherings:cta.rsvp",
     body: dto.description ?? "",
     viewerIsOrganizer: dto.isOrganizer ?? false,
+    bookmarked: dto.isBookmarked ?? false,
   };
 }
 

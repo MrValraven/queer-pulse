@@ -268,6 +268,18 @@ export const homepage: Catalog = {
     "Só para a comunidade · sem spam · cancela quando quiseres",
   "newsletter.comingSoon":
     "O resumo semanal ainda não está a ser enviado — ainda o estamos a construir. Quando estiver disponível, poderás subscrever aqui mesmo.",
+  // Dupla confirmação em modo live: mensagem honesta de "confirma na tua caixa
+  // de entrada", distinta do fluxo de demonstração acima (que finge uma
+  // subscrição imediata, sem email).
+  "newsletter.live.success.title":
+    "Quase lá — <em>vê a tua caixa de entrada.</em>",
+  "newsletter.live.success.body":
+    "Acabámos de enviar um link de confirmação para <strong>{email}</strong>. Abre-o e começarás a receber o resumo semanal todas as quintas-feiras.",
+  "newsletter.live.success.checkInboxNote":
+    "Não recebeste? Espera um minuto e vê a pasta de spam. Nada é enviado até confirmares.",
+  "newsletter.live.errorToast":
+    "Algo correu mal do nosso lado. Tenta novamente daqui a pouco.",
+  "newsletter.live.submittingCta": "A enviar…",
 
   // ── Outro (chamada final) ──────────────────────────────────────────────────
   "outro.title": "Entra numa sala onde <em>já pertences.</em>",

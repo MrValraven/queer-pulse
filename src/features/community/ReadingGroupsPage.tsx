@@ -84,6 +84,10 @@ export function ReadingGroupsPage() {
   );
 
   function joinWaitlist(id: string, name: string) {
+    // Waitlists have no backend yet (Phase 2). Only the prototype fabricates a
+    // position + success toast; live never calls this (the card hides the
+    // affordance), but we guard here too so a stray call can't fake success.
+    if (!demoMode) return;
     setWaitlist((prev) => {
       if (prev[id]) return prev;
       // Deterministic-but-plausible position for this prototype.
@@ -204,6 +208,7 @@ export function ReadingGroupsPage() {
                     messagesPath={messages}
                     onWaitlist={() => joinWaitlist(g.id, g.name)}
                     waitlistPosition={waitlist[g.id]}
+                    waitlistEnabled={demoMode}
                   />
                 </FadeIn>
               ))}

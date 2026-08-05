@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { QueueRow } from "./adminDashboard.data";
 import styles from "./AdminDashboardPage.module.css";
 
 export function AdminTriageQueue({ queue }: { queue: QueueRow[] }) {
-  const { showToast } = useToast();
   const { t } = useTranslation();
 
+  // The rows are already ordered by triage urgency (safety → reports →
+  // verifications → appeals). The old "Sorted by urgency" control was inert — it
+  // only toasted its own label — so it's removed rather than faking a re-sort.
   return (
     <section className={styles.queueCard}>
       <div className={styles.secHead}>
@@ -19,15 +20,6 @@ export function AdminTriageQueue({ queue }: { queue: QueueRow[] }) {
             components={{ em: <em /> }}
           />
         </h2>
-        <button
-          type="button"
-          className={styles.secLink}
-          onClick={() =>
-            showToast(t("admin:dashboard.triage.sortedToast"), "info")
-          }
-        >
-          {t("admin:dashboard.triage.sortedToast")}
-        </button>
       </div>
 
       <div className={styles.queue}>

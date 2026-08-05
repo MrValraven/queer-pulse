@@ -1,4 +1,4 @@
-import { apiGet } from "../../../shared/api/client";
+import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
 
 /**
  * Admin communities panel (`/admin/communities`, admin-only). Mirrors the
@@ -52,11 +52,21 @@ export interface AdminCommunityCardDTO {
 }
 
 export interface AdminCommunityModeratorDTO {
+  /** The moderator's user id — the roster identity add/remove act on. */
+  userId: string;
   slug: string;
   name: string;
   initials: string;
   role: "owner" | "mod";
   joinedAt: string;
+}
+
+/** A roster member eligible to be promoted to moderator (a plain member). */
+export interface AdminModeratorCandidateDTO {
+  userId: string;
+  slug: string;
+  name: string;
+  initials: string;
 }
 
 export interface AdminCommunityQueueItemDTO {
@@ -85,3 +95,19 @@ export const getAdminCommunities = () =>
 /** One community, with its moderators and scoped report queue. */
 export const getAdminCommunity = (slug: string) =>
   apiGet<AdminCommunityDetailDTO>(`/admin/communities/${slug}`);
+
+/** The roster members eligible to be promoted to moderator (plain members). */
+export const getAdminCommunityModeratorCandidates = (slug: string) =>
+  apiGet<AdminModeratorCandidateDTO[]>(
+    `/admin/communities/${slug}/moderators/candidates`,
+  );
+
+/** Promote a roster member (`memberId` = their user id) to moderator. */
+export const addAdminCommunityModerator = (slug: string, memberId: string) =>
+  apiPost<AdminCommunityModeratorDTO>(`/admin/communities/${slug}/moderators`, {
+    memberId,
+  });
+
+/** Demote a moderator (`memberId` = their user id) back to a plain member. */
+export const removeAdminCommunityModerator = (slug: string, memberId: string) =>
+  apiDelete<void>(`/admin/communities/${slug}/moderators/${memberId}`);

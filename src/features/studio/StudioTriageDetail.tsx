@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -11,6 +12,16 @@ const CURRENT_SUBMISSION_ARTIST_NAME = "Renato";
 export function StudioTriageDetail() {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  // Demo-only triage: the note and decision are held in local state and
+  // reflected below the actions so a decision is visibly recorded, rather than
+  // a bare toast that implies persistence (studio is coming-soon in live).
+  const [note, setNote] = useState("");
+  const [decision, setDecision] = useState<string | null>(null);
+
+  function record(message: string, tone: "info" | "success") {
+    setDecision(message);
+    showToast(message, tone);
+  }
 
   return (
     <aside className={s.aside}>
@@ -92,6 +103,8 @@ export function StudioTriageDetail() {
         <textarea
           aria-label={t("studio:triage.detail.decision.placeholder")}
           placeholder={t("studio:triage.detail.decision.placeholder")}
+          value={note}
+          onChange={(event) => setNote(event.target.value)}
         />
         <div
           className="hint"
@@ -121,7 +134,7 @@ export function StudioTriageDetail() {
             type="button"
             className={s.bt}
             onClick={() =>
-              showToast(t("studio:triage.detail.toast.held"), "info")
+              record(t("studio:triage.detail.toast.held"), "info")
             }
           >
             {t("studio:triage.detail.holdCta")}
@@ -130,7 +143,7 @@ export function StudioTriageDetail() {
             type="button"
             className={s.bt}
             onClick={() =>
-              showToast(
+              record(
                 t("studio:triage.detail.toast.passed", {
                   artistName: CURRENT_SUBMISSION_ARTIST_NAME,
                 }),
@@ -144,12 +157,39 @@ export function StudioTriageDetail() {
             type="button"
             className={`${s.bt} ${s.btP}`}
             onClick={() =>
-              showToast(t("studio:triage.detail.toast.addedToSlate"), "success")
+              record(t("studio:triage.detail.toast.addedToSlate"), "success")
             }
           >
             {t("studio:triage.detail.addToSlateCta")}
           </button>
         </div>
+        {decision && (
+          <div
+            role="status"
+            style={{
+              marginTop: 14,
+              padding: "11px 13px",
+              borderRadius: 10,
+              background: "rgba(var(--jade-rgb), 0.14)",
+              border: "1px solid rgba(var(--jade-rgb), 0.3)",
+              color: "rgba(var(--cream-rgb), 1)",
+              fontSize: 12.5,
+            }}
+          >
+            <b>{decision}</b>
+            {note.trim() && (
+              <div
+                style={{
+                  marginTop: 6,
+                  fontStyle: "italic",
+                  color: "rgba(var(--cream-rgb), 0.7)",
+                }}
+              >
+                &ldquo;{note.trim()}&rdquo;
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </aside>
   );

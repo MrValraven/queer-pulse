@@ -97,10 +97,8 @@ export const communities: Catalog = {
   // ── Pequenos elementos partilhados (tempo relativo, "agora mesmo") ───────
   "common.timeAgo": "há {time}",
   "common.justNow": "agora mesmo",
-  // TODO(i18n-pt): translate — EN placeholder kept for parity-test symmetry.
   "common.error": "Algo correu mal. Tenta de novo daqui a um instante.",
-  // TODO(i18n-pt): translate — EN placeholder kept for parity-test symmetry.
-  "common.loading": "Loading…",
+  "common.loading": "A carregar…",
 
   // ── Página de detalhe da comunidade (hero + sidebar) ──────────────────────
   "detail.breadcrumb": "Comunidades e Coletivos",
@@ -187,8 +185,7 @@ export const communities: Catalog = {
   "detail.discussion.searchScopeNote":
     "A pesquisar apenas as discussões já carregadas — carrega mais para alargar.",
   "detail.discussion.startedToast": "Discussão iniciada.",
-  // TODO(i18n-pt): translate — EN placeholder kept for parity-test symmetry.
-  "detail.discussion.loadMore": "Load more",
+  "detail.discussion.loadMore": "Carregar mais",
 
   // ── Separador Eventos (hub completo) ──────────────────────────────────────
   "detail.events.upcoming": "Próximos convívios",

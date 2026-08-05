@@ -13,12 +13,17 @@ export function ReadingGroupCard({
   messagesPath,
   onWaitlist,
   waitlistPosition,
+  waitlistEnabled = true,
 }: {
   g: Group;
   messagesPath: string;
   onWaitlist: () => void;
   /** The user's position on this group's waitlist, if they've joined. */
   waitlistPosition?: number;
+  /** Whether the waitlist affordance is active. Waitlists have no backend yet,
+   *  so live mode passes `false` and shows a disabled "not open" state instead
+   *  of an active button that would fake a spot. */
+  waitlistEnabled?: boolean;
 }) {
   const { t } = useTranslation();
   const spotsClass =
@@ -82,7 +87,7 @@ export function ReadingGroupCard({
                 position: waitlistPosition,
               })}
             </span>
-          ) : (
+          ) : waitlistEnabled ? (
             <button
               type="button"
               className={styles.gcJoin}
@@ -90,6 +95,13 @@ export function ReadingGroupCard({
             >
               {t("community:readingGroups.card.joinWaitlistCta")}
             </button>
+          ) : (
+            <span
+              className={`${styles.gcJoin} ${styles.gcJoinDisabled}`}
+              aria-disabled="true"
+            >
+              {t("community:readingGroups.card.waitlistUnavailable")}
+            </span>
           )
         ) : (
           <Link to={messagesPath} className={styles.gcJoin}>

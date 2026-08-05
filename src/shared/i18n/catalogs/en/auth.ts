@@ -423,6 +423,7 @@ export const auth: Catalog = {
     "Groups you might like based on your interests.",
   "onboarding.stepCommunities.join": "Join",
   "onboarding.stepCommunities.joined": "Joined",
+  "onboarding.stepCommunities.leave": "Leave community",
   "onboarding.stepCommunities.requested": "Requested",
   "onboarding.stepCommunities.continue": "Continue",
   "onboarding.stepCommunities.skip": "Skip for now — explore and join later",

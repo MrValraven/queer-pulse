@@ -1,4 +1,3 @@
-import { type Dispatch, type SetStateAction } from "react";
 import { type Thread } from "./forum.data";
 import { ThreadOpCard } from "./ThreadOpCard";
 import {
@@ -17,7 +16,7 @@ export function ThreadOpSection({
   opView,
   onVote,
   bookmarked,
-  setBookmarked,
+  onToggleBookmark,
   moderation,
 }: {
   thread: Thread;
@@ -25,7 +24,9 @@ export function ThreadOpSection({
   /** Cast/retract the viewer's vote on the opening post (real backend vote). */
   onVote: () => void;
   bookmarked: boolean;
-  setBookmarked: Dispatch<SetStateAction<boolean>>;
+  /** Persist/unpersist this thread in the member's saved items (real endpoint,
+   *  optimistic + dual-mode via the app-wide saved store). */
+  onToggleBookmark: () => void;
   moderation: ReturnType<typeof useThreadModeration>;
 }) {
   return (
@@ -37,8 +38,17 @@ export function ThreadOpSection({
       deleted={opView.opDeleted}
       onVote={onVote}
       bookmarked={bookmarked}
-      setBookmarked={setBookmarked}
-      onReport={() => moderation.setReportingAuthor(thread.author.name)}
+      onToggleBookmark={onToggleBookmark}
+      onReport={() =>
+        // Report the OP's REAL backend post (`opPostId`), not the FE-synthetic
+        // numeric thread id — the latter targets a non-existent subject and
+        // never reaches moderators. Demo mock threads carry a stub `opPostId`.
+        moderation.setReportTarget({
+          authorName: thread.author.name,
+          subjectId: thread.opPostId ?? String(thread.id),
+          subjectType: "post",
+        })
+      }
       canEdit={opView.opCanEdit}
       canDelete={opView.opCanDelete}
       canRestore={opView.opCanRestore}

@@ -143,6 +143,28 @@ export function useJoinCommunity(slug: string) {
   });
 }
 
+/** DELETE /communities/:slug/members/:memberSlug — the caller leaves a community
+ *  they're on the roster of (the backend's self-leave path: passing your own
+ *  member slug). Demo mode is a no-op (the caller keeps its optimistic local
+ *  state); live mode calls the API then invalidates the membership-derived keys,
+ *  mirroring `useJoinCommunity` in reverse. */
+export function useLeaveCommunity(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, { memberSlug: string }>({
+    mutationFn: async ({ memberSlug }) => {
+      if (demoMode) return;
+      await removeMember(slug, memberSlug);
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["communities"] });
+      void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+    },
+  });
+}
+
 /** PATCH /communities/:slug/join-requests/:id — mod approve / decline. */
 export function useReviewJoinRequest(slug: string) {
   const { demoMode } = useDemoMode();

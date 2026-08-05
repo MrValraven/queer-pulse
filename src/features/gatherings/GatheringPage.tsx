@@ -10,6 +10,7 @@ import { useMemberContact } from "../connect/useMemberContact";
 import { routes } from "../../app/routeMap";
 import { JoinVouchCallout } from "./JoinVouchCallout";
 import { GatheringSidebar } from "./GatheringSidebar";
+import { GatheringBookmarkButton } from "./GatheringBookmarkButton";
 import { GatheringMoreRail } from "./GatheringMoreRail";
 import {
   gatheringDetails,
@@ -155,6 +156,11 @@ export function GatheringPage() {
                     : t(gathering.ctaKey)}{" "}
                   <FiArrowRight aria-hidden />
                 </Button>
+                <GatheringBookmarkButton
+                  slug={gathering.slug}
+                  param={param}
+                  bookmarked={gathering.bookmarked ?? false}
+                />
                 <Button size="lg" variant="ghost" to={routes.calendar}>
                   {t("gatherings:gathering.seeAllCta")}
                 </Button>

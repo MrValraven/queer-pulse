@@ -1,4 +1,4 @@
-import { apiGet } from "../../../shared/api/client";
+import { apiGet, apiPost } from "../../../shared/api/client";
 
 /**
  * Admin oversight of reading-group proposals
@@ -9,6 +9,14 @@ import { apiGet } from "../../../shared/api/client";
  */
 
 export type ReadingGroupFormat = "In-person" | "Online" | "Either";
+
+/** Admin decision lifecycle of a proposal (mirrors the backend enum). A fresh
+ *  proposal is `pending` until an admin/moderator acts on it. */
+export type ReadingGroupProposalStatus =
+  | "pending"
+  | "approved"
+  | "declined"
+  | "archived";
 
 export interface AdminPersonDTO {
   slug: string;
@@ -28,6 +36,12 @@ export interface AdminReadingGroupProposalDTO {
   /** Max people the member picked (4, 6, or 8). */
   maxPeople: number;
   createdAt: string;
+  /** Where the proposal sits in the admin decision lifecycle. */
+  status: ReadingGroupProposalStatus;
+  /** When the current status was decided (null while pending). */
+  decidedAt: string | null;
+  /** Optional note the deciding admin/moderator attached (null while pending). */
+  decisionNote: string | null;
 }
 
 export interface AdminReadingGroupProposalListDTO {
@@ -50,3 +64,30 @@ export const getAdminReadingGroupProposals = (parameters: {
     `/admin/reading-group-proposals${querySuffix ? `?${querySuffix}` : ""}`,
   );
 };
+
+/** The three admin decisions an oversight actor can take on a proposal. */
+export type ReadingGroupProposalDecision = "approve" | "decline" | "archive";
+
+const decisionBody = (note?: string) =>
+  note && note.trim() ? { note: note.trim() } : {};
+
+/** Approve a proposal (admin/moderator). Echoes the updated proposal. */
+export const approveReadingGroupProposal = (id: string, note?: string) =>
+  apiPost<AdminReadingGroupProposalDTO>(
+    `/admin/reading-group-proposals/${id}/approve`,
+    decisionBody(note),
+  );
+
+/** Decline a proposal (admin/moderator). Echoes the updated proposal. */
+export const declineReadingGroupProposal = (id: string, note?: string) =>
+  apiPost<AdminReadingGroupProposalDTO>(
+    `/admin/reading-group-proposals/${id}/decline`,
+    decisionBody(note),
+  );
+
+/** Archive a proposal (admin/moderator). Echoes the updated proposal. */
+export const archiveReadingGroupProposal = (id: string, note?: string) =>
+  apiPost<AdminReadingGroupProposalDTO>(
+    `/admin/reading-group-proposals/${id}/archive`,
+    decisionBody(note),
+  );

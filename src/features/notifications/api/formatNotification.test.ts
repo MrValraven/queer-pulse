@@ -58,6 +58,7 @@ const KINDS: NotificationKind[] = [
   "event_reminder",
   "waitlist_promoted",
   "event_cancelled",
+  "event_updated",
   "introduction_made",
 ];
 

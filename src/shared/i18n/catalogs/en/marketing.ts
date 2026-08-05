@@ -1849,6 +1849,96 @@ export const marketing: Catalog = {
   "changelog.tag.imprint": "Read the legal notice",
   "changelog.tag.feed": "Open your feed",
 
+  "changelog.entries.trust-network-legend-withdrawn.title":
+    "The trust-network legend now explains dashed lines",
+  "changelog.entries.trust-network-legend-withdrawn.body":
+    "On the Trust Network map, a vouch that was later retracted is drawn as a dashed red line. The legend now names it — “Withdrawn vouch” — so the dashed lines are no longer a mystery.",
+
+  "changelog.entries.trust-network-replay-timeline.title":
+    "Trust Network replay now tells the story person by person",
+  "changelog.entries.trust-network-replay-timeline.body":
+    "The Trust Network replay used to scrub month by month, lumping everyone who joined in the same month into one blur. Now it walks the network one connection at a time, in the real order people joined — each step names who connected and when, and the matching row in the side list lights up as it plays.",
+
+  "changelog.entries.pronouns-on-member-cards.title":
+    "Richer new-member cards in the feed",
+  "changelog.entries.pronouns-on-member-cards.body":
+    "New-member cards in your feed now show a member's pronouns right next to their name, plus where they're based and what they're into — so you get a sense of someone before you even open their profile. Location stays hidden for members whose profile isn't public.",
+
+  "changelog.entries.onboarding-join-and-leave.title":
+    "Join — and leave — communities during sign-up",
+  "changelog.entries.onboarding-join-and-leave.body":
+    "In the onboarding step that suggests communities, you can now tap a joined community again to leave it if you change your mind. The suggestions are also limited to fully open communities you can join in one tap — private and invite-only ones no longer appear here, since they can't be joined on the spot.",
+
+  "changelog.entries.navbar-wordmark-no-wrap.title":
+    "The QueerPulse logo no longer stacks up",
+  "changelog.entries.navbar-wordmark-no-wrap.body":
+    "On some screen sizes the QueerPulse wordmark in the top bar could break apart, dropping each letter onto its own line and puffing the bar into an oversized bubble. The logo now stays on a single line at every width.",
+
+  "changelog.entries.mobile-edit-profile-refresh.title":
+    "Editing your profile matches the new look",
+  "changelog.entries.mobile-edit-profile-refresh.body":
+    "On a phone, editing your profile now uses the same centered layout as your profile itself — a round photo up top and tidier fields — and the Status & Visibility options no longer spill onto a second line.",
+
+  "changelog.entries.mobile-profile-header-refresh.title":
+    "A cleaner profile on your phone",
+  "changelog.entries.mobile-profile-header-refresh.body":
+    "Member profiles now lead with a centered photo and name, a roomier stats row, and a tidier set of buttons — so saying hello and vouching feel calmer and clearer on mobile.",
+
+  "changelog.entries.profile-edit-save-bar-mobile.title":
+    "Saving your profile on a phone just works",
+  "changelog.entries.profile-edit-save-bar-mobile.body":
+    "While editing your profile on mobile, the Save and Discard buttons no longer hide behind the bottom navigation bar. The editing bar now sits cleanly above it, and on narrow screens the two buttons share the full width so they're easy to tap.",
+
+  "changelog.entries.follow-topics-you-care-about.title":
+    "Follow the topics you care about",
+  "changelog.entries.follow-topics-you-care-about.body":
+    "Tap Follow on any topic to keep it close. Your follows are saved to your account, so the subjects that matter to you travel with you across devices.",
+
+  "changelog.entries.event-change-alerts.title":
+    "Know when an event changes",
+  "changelog.entries.event-change-alerts.body":
+    "If an event you've RSVP'd to or been invited to moves its time or place, you'll get a notification — so a last-minute change never catches you out.",
+
+  "changelog.entries.forms-that-really-submit.title":
+    "Forms across the app now really submit",
+  "changelog.entries.forms-that-really-submit.body":
+    "Newsletter signup, the contact and partner enquiry forms, grant / panel / sober-host applications, and safe-space nominations now genuinely send instead of showing a preview. Your event defaults (visibility and email) also save for real.",
+
+  "changelog.entries.save-events-for-later.title":
+    "Save events for later",
+  "changelog.entries.save-events-for-later.body":
+    "Found a gathering you're not ready to RSVP to yet? Tap Save to bookmark it. Everything you save shows up under the Saved tab in My Events, so nothing you were curious about slips away.",
+
+  "changelog.entries.collections-are-here.title":
+    "Group your saves into collections",
+  "changelog.entries.collections-are-here.body":
+    "You can now gather the people, places, and posts you've saved into your own named collections — a reading list, a trip, a shortlist of spaces. Create as many as you like and add or remove things whenever you want.",
+
+  "changelog.entries.your-mentions-in-one-place.title":
+    "Every mention, in one place",
+  "changelog.entries.your-mentions-in-one-place.body":
+    "When someone @-mentions you in a forum thread or a community post, it now lands in your Mentions inbox so you can catch up on everything that named you without hunting through notifications.",
+
+  "changelog.entries.new-moderation-tools.title":
+    "More tools for the moderation team",
+  "changelog.entries.new-moderation-tools.body":
+    "Behind the scenes, the team gained real controls: verify or restrict a member, add and remove community moderators, act on reading-group proposals, and publish or export governance records — all wired to the platform instead of standing in as previews.",
+
+  "changelog.entries.reports-reach-the-team.title":
+    "Reports now reach the moderation team",
+  "changelog.entries.reports-reach-the-team.body":
+    "When you report a forum post, it now reaches the moderators reliably — and if sending ever fails, you'll see a clear error and a way to try again, instead of a false \"done\". You can also report an individual reply, not just the opening post.",
+
+  "changelog.entries.chat-recovers-after-reconnect.title":
+    "Chat catches up when you're back online",
+  "changelog.entries.chat-recovers-after-reconnect.body":
+    "If a message can't send because you lost connection, it now sends itself as soon as you're reconnected — no need to reload or resend by hand. A small banner tells you when you're offline or reconnecting so you always know where a message stands.",
+
+  "changelog.entries.honest-live-states.title":
+    "What you see is real",
+  "changelog.entries.honest-live-states.body":
+    "We swept the app so that pages only ever show real people and content. Placeholder press clippings, sample voices, and example inventory no longer appear as if they were real, and controls that aren't wired up yet are clearly marked instead of pretending to save.",
+
   "changelog.entries.community-activity-in-your-feed.title":
     "Your feed now shows what's happening in your communities",
   "changelog.entries.community-activity-in-your-feed.body":
@@ -2678,6 +2768,9 @@ export const marketing: Catalog = {
   "pressArchive.loadMoreCta": "Load older coverage",
   "pressArchive.endOfArchive": "That's the whole archive — 2022 to today.",
   "pressArchive.noResults": "No coverage matches those filters yet.",
+  "pressArchive.live.title": "The press archive is being assembled",
+  "pressArchive.live.body":
+    "We're gathering the coverage properly before we publish it here. Working on a story? Reach the team through the press kit.",
 
   // ── Volunteering — page chrome. Org names/roles/descriptions/skills come
   //    from the live opportunities API (or its demo mock) — left English;
@@ -3050,6 +3143,9 @@ export const marketing: Catalog = {
   "contact.form.messagePlaceholder":
     "Write naturally. There's no template and no word count.",
   "contact.form.sendCta": "Send",
+  "contact.form.sendingCta": "Sending…",
+  "contact.form.error":
+    "Something went wrong sending that. Please try again, or email us directly.",
   "contact.outro.title": "Built in Lisbon, <em>with care.</em>",
   "contact.outro.sub":
     "QueerPulse is a small, member-supported network. Your feedback helps keep it good.",
@@ -3169,6 +3265,12 @@ export const marketing: Catalog = {
   "forOrgs.form.messageLabel": "What you'd like to build, in a paragraph",
   "forOrgs.form.messagePlaceholder": "We run an LGBTQ+ helpline and…",
   "forOrgs.form.submitCta": "Send to partnerships team",
+  "forOrgs.form.sendingCta": "Sending…",
+  "forOrgs.form.sent.title": "Sent to our <em>partnerships team.</em>",
+  "forOrgs.form.sent.body":
+    "Thanks — we've got your message. Our partnerships team reads every one and replies personally within 5 working days.",
+  "forOrgs.form.error":
+    "Something went wrong sending that. Please try again, or email the partnerships team directly.",
   "forOrgs.form.small":
     "Goes directly to our partnerships team. No sales funnel, no follow-up sequence. Just a reply within 5 working days.",
   "forOrgs.form.toast":

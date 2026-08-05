@@ -1,9 +1,11 @@
 import { useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { FiCheck, FiAtSign } from "react-icons/fi";
 import { EmptyState, FadeIn } from "../../shared/components/ui";
 import { useFocusOnMount } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
@@ -14,6 +16,8 @@ import {
   type MentionTabId,
 } from "./mentions.data";
 import { useMentions } from "./api/useMentions";
+import { markNotificationRead } from "./api/notifications.api";
+import { markAllMentionsRead } from "./api/mentions.api";
 import { MentionsListSkeleton } from "./MentionsSkeleton";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./MentionsPanel.module.css";
@@ -214,8 +218,10 @@ function MentionRow({
 export function MentionsPanel() {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const { demoMode } = useDemoMode();
   const { data: mentionDays = [], isLoading: loading } = useMentions();
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
   const [tab, setTab] = useState(0);
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
   let rowIndex = 0;
@@ -252,11 +258,31 @@ export function MentionsPanel() {
 
   function markRead(id: string) {
     setReadIds((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
+    // Live: a mention id is a notification id, so the existing per-notification
+    // read endpoint persists it. Best-effort (local state already gave instant
+    // feedback); refresh the bell badge on success. Demo stays local-only.
+    if (!demoMode) {
+      void markNotificationRead(id)
+        .then(() =>
+          queryClient.invalidateQueries({ queryKey: ["notifications"] }),
+        )
+        .catch(() => {});
+    }
   }
   function markAllRead() {
     if (unreadCount === 0) return;
     setReadIds(new Set(unreadIds));
     showToast(t("notifications:mentions.markAllReadToast"), "success");
+    // Live: scoped to mentions on the server, so it never clears other
+    // notification categories. Refresh both the mentions thread and the bell.
+    if (!demoMode) {
+      void markAllMentionsRead()
+        .then(() => {
+          void queryClient.invalidateQueries({ queryKey: ["mentions"] });
+          void queryClient.invalidateQueries({ queryKey: ["notifications"] });
+        })
+        .catch(() => {});
+    }
   }
 
   const activeTabId = MENTION_TAB_DEFS[tab]?.id ?? "all";
@@ -281,6 +307,10 @@ export function MentionsPanel() {
     }))
     .filter((group) => group.items.length > 0);
 
+  // Live now reads real `@`-mentions from `GET /mentions` (hand-mapped from the
+  // backend `mention` notifications); demo keeps full mock fidelity. Both modes
+  // render the same thread below — an empty result shows the honest EmptyState,
+  // not a coming-soon.
   return (
     <div className={styles.panel}>
       <div className={styles.tabs}>

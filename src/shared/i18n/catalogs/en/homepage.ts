@@ -250,6 +250,16 @@ export const homepage: Catalog = {
   "newsletter.note": "Members only · no spam · unsubscribe anytime",
   "newsletter.comingSoon":
     "The weekly digest isn't sending yet — we're still building it. Once it's live, you'll be able to subscribe right here.",
+  // Live double-opt-in: honest "confirm from your inbox" messaging, distinct from
+  // the demo flow above (which fakes an instant subscribe with no email).
+  "newsletter.live.success.title": "Almost there — <em>check your inbox.</em>",
+  "newsletter.live.success.body":
+    "We just sent a confirmation link to <strong>{email}</strong>. Open it and you'll start getting the Weekly digest every Thursday.",
+  "newsletter.live.success.checkInboxNote":
+    "Didn't get it? Give it a minute, then check your spam folder. Nothing is sent until you confirm.",
+  "newsletter.live.errorToast":
+    "Something went wrong on our end. Please try again in a moment.",
+  "newsletter.live.submittingCta": "Sending…",
 
   // ── Outro (final CTA) ──────────────────────────────────────────────────────
   "outro.title": "Walk into a room where you <em>already belong.</em>",

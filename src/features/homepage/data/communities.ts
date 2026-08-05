@@ -67,6 +67,7 @@ export const communities: Community[] = [
       "A private, low-visibility space for people navigating coming out — at work, to family, or to themselves. Additional privacy controls apply.",
     count: "Members only",
     joinLabel: "Enter",
+    accessTier: "private",
     dashed: true,
     privateBadge: true,
   },

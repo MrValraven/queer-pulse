@@ -12,9 +12,18 @@ import {
   SealedIdentity,
 } from "./AdminMemberDrawerSections";
 import { AdminMemberSuspensionControl } from "./AdminMemberSuspensionControl";
-import { MessageModal, RestrictModal } from "./AdminMemberModals";
+import {
+  MessageModal,
+  RestrictModal,
+  RESTRICT_DURATION_TO_API,
+  RESTRICT_REASON_TO_CODE,
+} from "./AdminMemberModals";
 import { portrait } from "./adminPeople.data";
-import { useAdminMember } from "./api/useAdminMembers";
+import {
+  useAdminMember,
+  useRestrictMember,
+  useVerifyMember,
+} from "./api/useAdminMembers";
 import { type AdminMember } from "./adminMembers.data";
 import styles from "./AdminMembersPage.module.css";
 
@@ -34,6 +43,8 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
     null,
   );
   const { data: detail, isLoading } = useAdminMember(member);
+  const verifyMutation = useVerifyMember();
+  const restrictMutation = useRestrictMember();
   const first = firstName(member.name);
 
   return (
@@ -83,21 +94,28 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
             />
           ) : (
             <div className={styles.dFoot}>
+              {/* Verify + Restrict are wired to real backend endpoints
+                  (`POST /admin/members/:id/verify` · `/restrict`, P2-3) in both
+                  modes via demo-aware mutations. Message has no backend (it just
+                  opens the DM composer) so it stays disabled-with-reason in
+                  live; demo keeps its functional prototype. */}
               <Button
                 variant="jade"
                 size="md"
+                disabled={verifyMutation.isPending || member.verified}
                 onClick={() =>
-                  demoMode
-                    ? showToast(
-                        t("admin:members.drawer.verifiedToast", {
-                          name: member.name,
-                        }),
-                        "success",
-                      )
-                    : showToast(
-                        t("admin:members.drawer.comingSoonToast"),
-                        "info",
-                      )
+                  verifyMutation.mutate(
+                    { memberId: member.id, slug: member.slug },
+                    {
+                      onSuccess: () =>
+                        showToast(
+                          t("admin:members.drawer.verifiedToast", {
+                            name: member.name,
+                          }),
+                          "success",
+                        ),
+                    },
+                  )
                 }
               >
                 {t("admin:members.drawer.verifyCta")}
@@ -105,28 +123,21 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
               <Button
                 variant="ghost"
                 size="md"
-                onClick={() =>
+                disabled={!demoMode}
+                title={
                   demoMode
-                    ? setModal("message")
-                    : showToast(
-                        t("admin:members.drawer.comingSoonToast"),
-                        "info",
-                      )
+                    ? undefined
+                    : t("admin:members.drawer.comingSoonToast")
                 }
+                onClick={() => setModal("message")}
               >
                 {t("admin:members.drawer.messageCta")}
               </Button>
               <Button
                 variant="ghost"
                 size="md"
-                onClick={() =>
-                  demoMode
-                    ? setModal("restrict")
-                    : showToast(
-                        t("admin:members.drawer.comingSoonToast"),
-                        "info",
-                      )
-                }
+                disabled={restrictMutation.isPending}
+                onClick={() => setModal("restrict")}
               >
                 {t("admin:members.drawer.restrictCta")}
               </Button>
@@ -181,6 +192,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
       {modal === "restrict" && (
         <RestrictModal
           name={member.name}
+          platformOnly={!demoMode}
           onClose={() => setModal(null)}
           onMissingReason={() =>
             showToast(
@@ -188,24 +200,57 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
               "error",
             )
           }
-          onApply={(durationLabel, scopeLabel) => {
-            setModal(null);
-            onClose();
-            showToast(
-              t("admin:members.drawer.restrictedToast", {
-                name: first,
-                duration: durationLabel,
-                scope: scopeLabel,
-              }),
-              "success",
-              undefined,
+          onApply={(selection) => {
+            if (demoMode) {
+              // Demo keeps the simulated flow with an Undo affordance — the
+              // roster is regenerated from fixtures, so nothing persists.
+              setModal(null);
+              onClose();
+              showToast(
+                t("admin:members.drawer.restrictedToast", {
+                  name: first,
+                  duration: selection.durationLabel,
+                  scope: selection.scopeLabel,
+                }),
+                "success",
+                undefined,
+                {
+                  label: t("admin:common.undo"),
+                  onClick: () =>
+                    showToast(
+                      t("admin:members.drawer.restrictionUndoneToast"),
+                      "info",
+                    ),
+                },
+              );
+              return;
+            }
+            // Live: a real platform-wide restriction. No Undo affordance — the
+            // drawer's Suspension section (Lift suspension) is the honest way
+            // back, not a toast button. Errors surface via the global
+            // mutation-error toast.
+            restrictMutation.mutate(
               {
-                label: t("admin:common.undo"),
-                onClick: () =>
+                memberId: member.id,
+                input: {
+                  reasonCode: RESTRICT_REASON_TO_CODE[selection.reasonId],
+                  note: selection.note,
+                  duration: RESTRICT_DURATION_TO_API[selection.durationId],
+                },
+              },
+              {
+                onSuccess: () => {
+                  setModal(null);
+                  onClose();
                   showToast(
-                    t("admin:members.drawer.restrictionUndoneToast"),
-                    "info",
-                  ),
+                    t("admin:members.drawer.restrictedToast", {
+                      name: first,
+                      duration: selection.durationLabel,
+                      scope: selection.scopeLabel,
+                    }),
+                    "success",
+                  );
+                },
               },
             );
           }}

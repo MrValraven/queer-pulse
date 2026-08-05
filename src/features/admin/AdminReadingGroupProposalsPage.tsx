@@ -5,14 +5,18 @@ import { AdminPageHeader, AdminTabs, AdminChip, type AdminTone } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import {
   useAdminReadingGroupProposals,
   type AdminReadingGroupFormatFilter,
 } from "./api/useAdminReadingGroupProposals";
+import { useAdminReadingGroupProposalMutations } from "./api/useAdminReadingGroupProposalMutations";
 import type {
   AdminReadingGroupProposalDTO,
   ReadingGroupFormat,
+  ReadingGroupProposalDecision,
+  ReadingGroupProposalStatus,
 } from "./api/adminReadingGroupProposals.api";
 import styles from "./AdminSubmissionList.module.css";
 
@@ -29,6 +33,34 @@ const FORMAT_TONE: Record<ReadingGroupFormat, AdminTone> = {
   Either: "plum",
 };
 
+const STATUS_TONE: Record<ReadingGroupProposalStatus, AdminTone> = {
+  pending: "amber",
+  approved: "jade",
+  declined: "danger",
+  archived: "ghost",
+};
+
+// Each action button, and the status its proposal lands in — used to disable
+// the button that matches the current status (no-op re-decision).
+const ACTIONS: {
+  decision: ReadingGroupProposalDecision;
+  status: ReadingGroupProposalStatus;
+}[] = [
+  { decision: "approve", status: "approved" },
+  { decision: "decline", status: "declined" },
+  { decision: "archive", status: "archived" },
+];
+
+// The status each decision resolves to — for the confirmation toast key.
+const DECISION_STATUS: Record<
+  ReadingGroupProposalDecision,
+  ReadingGroupProposalStatus
+> = {
+  approve: "approved",
+  decline: "declined",
+  archive: "archived",
+};
+
 function shortDate(fmt: Formatters, iso: string): string {
   return fmt.date(new Date(iso), {
     day: "numeric",
@@ -39,8 +71,12 @@ function shortDate(fmt: Formatters, iso: string): string {
 
 function ProposalRow({
   proposal,
+  onDecide,
+  pending,
 }: {
   proposal: AdminReadingGroupProposalDTO;
+  onDecide: (decision: ReadingGroupProposalDecision) => void;
+  pending: boolean;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -72,6 +108,24 @@ function ProposalRow({
           })}
         </div>
       </div>
+      <div className={styles.rowActions}>
+        <AdminChip tone={STATUS_TONE[proposal.status]} dot>
+          {t(`admin:adminReadingGroupProposals.status.${proposal.status}`)}
+        </AdminChip>
+        <div className={styles.rowActionButtons}>
+          {ACTIONS.map(({ decision, status }) => (
+            <Button
+              key={decision}
+              variant="ghost"
+              size="sm"
+              disabled={pending || proposal.status === status}
+              onClick={() => onDecide(decision)}
+            >
+              {t(`admin:adminReadingGroupProposals.action.${decision}`)}
+            </Button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -98,6 +152,7 @@ function RowsSkeleton() {
  */
 export function AdminReadingGroupProposalsPage() {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const [filter, setFilter] = useState<AdminReadingGroupFormatFilter>("all");
   const {
     proposals,
@@ -107,6 +162,28 @@ export function AdminReadingGroupProposalsPage() {
     isFetchingNextPage,
     fetchNextPage,
   } = useAdminReadingGroupProposals(filter);
+  const { decide, pending } = useAdminReadingGroupProposalMutations();
+
+  const handleDecide = (
+    id: string,
+    decision: ReadingGroupProposalDecision,
+  ) => {
+    decide(
+      { id, decision },
+      {
+        onSuccess: () =>
+          showToast(
+            t(`admin:adminReadingGroupProposals.toast.${DECISION_STATUS[decision]}`),
+            "success",
+          ),
+        onError: () =>
+          showToast(
+            t("admin:adminReadingGroupProposals.toast.error"),
+            "error",
+          ),
+      },
+    );
+  };
 
   return (
     <AdminShell
@@ -165,7 +242,13 @@ export function AdminReadingGroupProposalsPage() {
             <div className={styles.rows}>
               {proposals.map((proposal, index) => (
                 <FadeIn key={proposal.id} delay={Math.min(index, 8) * 50}>
-                  <ProposalRow proposal={proposal} />
+                  <ProposalRow
+                    proposal={proposal}
+                    pending={pending}
+                    onDecide={(decision) =>
+                      handleDecide(proposal.id, decision)
+                    }
+                  />
                 </FadeIn>
               ))}
             </div>

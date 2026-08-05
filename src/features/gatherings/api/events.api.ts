@@ -58,6 +58,9 @@ export interface EventCardDTO {
   price?: string;
   /** The viewer's own RSVP state on this event, if any. */
   myRsvp?: RsvpStatus | null;
+  /** Whether the viewer has bookmarked ("saved") this event. Present on every
+   *  summary/detail the backend returns (batch-computed server-side). */
+  isBookmarked?: boolean;
 }
 
 export interface EventsPage {
@@ -170,6 +173,14 @@ export const rsvpEvent = (slug: string, status: "going" | "maybe") =>
 
 export const unrsvpEvent = (slug: string) =>
   apiDelete<{ ok: true }>(`/events/${slug}/rsvp`);
+
+/** POST /events/:slug/bookmark — save the event (idempotent). */
+export const bookmarkEvent = (slug: string) =>
+  apiPost<{ bookmarked: true }>(`/events/${slug}/bookmark`);
+
+/** DELETE /events/:slug/bookmark — remove the bookmark (idempotent). */
+export const unbookmarkEvent = (slug: string) =>
+  apiDelete<{ bookmarked: false }>(`/events/${slug}/bookmark`);
 
 export const addCohost = (slug: string, cohostSlug: string) =>
   apiPost<{ ok: true }>(`/events/${slug}/cohosts`, { slug: cohostSlug });

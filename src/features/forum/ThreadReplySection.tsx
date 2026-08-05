@@ -105,6 +105,15 @@ export function ThreadReplySection({
         onStartReply={(replyItem) => nestedReplies.startReply(replyItem.id)}
         onCancelReply={nestedReplies.cancelReply}
         onPostReply={(body) => onPost(body, nestedReplies.replyTargetId)}
+        onReport={(replyItem) =>
+          // Report the reply's REAL backend post (`postId`); demo replies carry
+          // no postId, so fall back to the local id (demo never hits the network).
+          moderation.setReportTarget({
+            authorName: replyItem.name,
+            subjectId: replyItem.postId ?? replyItem.id,
+            subjectType: "reply",
+          })
+        }
         inlineDraft={nestedReplies.inlineDraft}
         setInlineDraft={nestedReplies.setInlineDraft}
       />

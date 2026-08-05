@@ -1,11 +1,44 @@
 import { useState, type ReactNode } from "react";
 import { Button, FormField } from "../../shared/components/ui";
-import { ComingSoonPanel, ModalShell, Sending, SuccessPanel } from "./ModalKit";
+import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
 import { useSubmitFlow } from "./modalFlow";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { submitIntake, type IntakeKind } from "../../shared/api/intakes";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ApplicationModals.module.css";
+
+/**
+ * Shared submit bridge for the three incubator modals. In demo it runs the
+ * simulated flow (`submit()` → timed success); in live it POSTs the form to the
+ * member-only `POST /intakes/:kind` and flips to the success panel, toasting on
+ * failure. Returns the click handler and the `sending`/`done` flags the modal
+ * renders from.
+ */
+function useIncubatorSubmit(
+  kind: IntakeKind,
+  buildPayload: () => Record<string, unknown>,
+  valid: boolean,
+) {
+  const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  const { showToast } = useToast();
+  const { sending, done, submit, run } = useSubmitFlow();
+
+  const onSubmit = () => {
+    if (!valid || sending) return;
+    if (demoMode) {
+      submit();
+      return;
+    }
+    void run(async () => {
+      await submitIntake(kind, buildPayload());
+    }).catch(() => showToast(t("shared:intake.errorToast"), "error"));
+  };
+
+  return { sending, done, onSubmit };
+}
 
 /** One text/email input or textarea in an incubator contact form. */
 interface IncubatorField {
@@ -59,26 +92,19 @@ function IncubatorContactFields({
 /* ── Apply for cohort 3 ─────────────────────────────────────────────── */
 export function CohortApplyModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pitch, setPitch] = useState("");
-  const { sending, done, submit } = useSubmitFlow();
   const valid =
     name.trim().length > 1 &&
     /.+@.+\..+/.test(email) &&
     pitch.trim().length >= 30;
   const charsLeft = 30 - pitch.trim().length;
-
-  // No cohort-applications endpoint yet — in live, stay honest rather than fake
-  // a "received" success the backend can't record.
-  if (!demoMode) {
-    return (
-      <ModalShell onClose={onClose} success>
-        <ComingSoonPanel onClose={onClose} />
-      </ModalShell>
-    );
-  }
+  const { sending, done, onSubmit } = useIncubatorSubmit(
+    "incubator_cohort",
+    () => ({ name: name.trim(), email: email.trim(), pitch: pitch.trim() }),
+    valid,
+  );
 
   return (
     <ModalShell onClose={onClose} success={done}>
@@ -149,7 +175,7 @@ export function CohortApplyModal({ onClose }: { onClose: () => void }) {
               variant="primary"
               size="lg"
               disabled={!valid || sending}
-              onClick={() => valid && submit()}
+              onClick={onSubmit}
             >
               {sending ? (
                 <Sending label={t("economy:resume.submittingLabel")} />
@@ -167,27 +193,26 @@ export function CohortApplyModal({ onClose }: { onClose: () => void }) {
 /* ── Become a mentor ────────────────────────────────────────────────── */
 export function MentorSignupModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [expertise, setExpertise] = useState("");
   const [why, setWhy] = useState("");
-  const { sending, done, submit } = useSubmitFlow();
   const valid =
     name.trim().length > 1 &&
     /.+@.+\..+/.test(email) &&
     expertise.trim().length > 1 &&
     why.trim().length >= 30;
   const charsLeft = 30 - why.trim().length;
-
-  // No mentor-signup endpoint yet — honest coming-soon in live.
-  if (!demoMode) {
-    return (
-      <ModalShell onClose={onClose} success>
-        <ComingSoonPanel onClose={onClose} />
-      </ModalShell>
-    );
-  }
+  const { sending, done, onSubmit } = useIncubatorSubmit(
+    "incubator_mentor",
+    () => ({
+      name: name.trim(),
+      email: email.trim(),
+      expertise: expertise.trim(),
+      why: why.trim(),
+    }),
+    valid,
+  );
 
   return (
     <ModalShell onClose={onClose} success={done}>
@@ -265,7 +290,7 @@ export function MentorSignupModal({ onClose }: { onClose: () => void }) {
               variant="primary"
               size="lg"
               disabled={!valid || sending}
-              onClick={() => valid && submit()}
+              onClick={onSubmit}
             >
               {sending ? (
                 <Sending label={t("economy:resume.submittingLabel")} />
@@ -291,22 +316,21 @@ export function RequestSessionModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
   const [when, setWhen] = useState("");
   const [message, setMessage] = useState("");
-  const { sending, done, submit } = useSubmitFlow();
   const valid = when.trim().length > 1 && message.trim().length >= 20;
   const charsLeft = 20 - message.trim().length;
   const mentorFirstName = mentorName.split(" ")[0] ?? mentorName;
-
-  // No session-request endpoint yet — honest coming-soon in live.
-  if (!demoMode) {
-    return (
-      <ModalShell onClose={onClose} success>
-        <ComingSoonPanel onClose={onClose} />
-      </ModalShell>
-    );
-  }
+  const { sending, done, onSubmit } = useIncubatorSubmit(
+    "incubator_session",
+    () => ({
+      mentorName,
+      mentorRole,
+      when: when.trim(),
+      message: message.trim(),
+    }),
+    valid,
+  );
 
   return (
     <ModalShell onClose={onClose} success={done}>
@@ -372,7 +396,7 @@ export function RequestSessionModal({
               variant="primary"
               size="lg"
               disabled={!valid || sending}
-              onClick={() => valid && submit()}
+              onClick={onSubmit}
             >
               {sending ? (
                 <Sending label={t("economy:negotiate.sendingLabel")} />
