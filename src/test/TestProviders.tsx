@@ -24,6 +24,7 @@ import { SavedProvider } from "../app/providers/SavedProvider";
 import { DraftsProvider } from "../app/providers/DraftsProvider";
 import { SocialProvider } from "../app/providers/SocialProvider";
 import { CommunityMembershipProvider } from "../app/providers/CommunityMembershipProvider";
+import { CommunityEditsProvider } from "../app/providers/CommunityEditsProvider";
 import { DeletedConversationsProvider } from "../app/providers/DeletedConversationsProvider";
 import { DirectoryListingsProvider } from "../app/providers/DirectoryListingsProvider";
 import { WorkshopsProvider } from "../app/providers/WorkshopsProvider";
@@ -65,6 +66,7 @@ const PROVIDERS: ProviderComponent[] = [
   DraftsProvider,
   SocialProvider,
   CommunityMembershipProvider,
+  CommunityEditsProvider,
   DeletedConversationsProvider,
   DirectoryListingsProvider,
   WorkshopsProvider,

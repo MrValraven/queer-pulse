@@ -73,9 +73,16 @@ describe("DeleteAccountSection", () => {
     );
 
     // The mutation resolves and the section flips to the pending state: a
-    // scheduled, still-cancellable erasure (GDPR Art. 17 grace period).
+    // scheduled, still-cancellable erasure (GDPR Art. 17 grace period). The
+    // demo re-auth + deletion-request each carry a ~900ms simulated delay
+    // (account.api simulateOr), so the flip lands ~1.8s out — past findBy's
+    // default 1s budget. Widen the window rather than shorten the assertion.
     expect(
-      await screen.findByRole("button", { name: "Cancel deletion" }),
+      await screen.findByRole(
+        "button",
+        { name: "Cancel deletion" },
+        { timeout: 4000 },
+      ),
     ).toBeInTheDocument();
     await waitFor(() =>
       expect(

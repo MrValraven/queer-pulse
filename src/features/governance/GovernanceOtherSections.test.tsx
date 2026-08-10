@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import {
@@ -68,6 +68,22 @@ beforeEach(() => {
   overviewState = overviewOk();
 });
 
+/**
+ * `SectionError`'s alert, isolated from `ToastProvider`'s two always-mounted
+ * live regions. Both toast regions render from first paint by design (WCAG
+ * 4.1.3) and the assertive one also carries `role="alert"`, so a bare
+ * `getByRole("alert")` matches multiple / a bare `queryByRole("alert")` is never
+ * null. `SectionError` is the only alert that contains a retry button, so we
+ * key off that. Returns null when no section is in its error state.
+ */
+function querySectionErrorAlert(): HTMLElement | null {
+  return (
+    screen
+      .queryAllByRole("alert")
+      .find((region) => within(region).queryByRole("button") !== null) ?? null
+  );
+}
+
 describe("ModerationSection", () => {
   it("renders the numbered steps on a successful load", () => {
     overviewState = {
@@ -86,7 +102,7 @@ describe("ModerationSection", () => {
     );
     // The step ordinal is plain data (index + 1), not i18n.
     expect(screen.getByText("1")).toBeInTheDocument();
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(querySectionErrorAlert()).toBeNull();
   });
 
   it("shows the retry alert and re-fetches when the overview failed", () => {
@@ -96,8 +112,9 @@ describe("ModerationSection", () => {
         <ModerationSection />
       </TestProviders>,
     );
-    expect(screen.getByRole("alert")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button"));
+    const sectionAlert = querySectionErrorAlert();
+    expect(sectionAlert).not.toBeNull();
+    fireEvent.click(within(sectionAlert!).getByRole("button"));
     expect(retry).toHaveBeenCalledTimes(1);
   });
 });
@@ -122,7 +139,7 @@ describe("CouncilSection", () => {
       </TestProviders>,
     );
     expect(screen.getByText("Alex Rivera")).toBeInTheDocument();
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(querySectionErrorAlert()).toBeNull();
   });
 
   it("shows the retry alert and re-fetches on failure", () => {
@@ -132,8 +149,9 @@ describe("CouncilSection", () => {
         <CouncilSection />
       </TestProviders>,
     );
-    expect(screen.getByRole("alert")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button"));
+    const sectionAlert = querySectionErrorAlert();
+    expect(sectionAlert).not.toBeNull();
+    fireEvent.click(within(sectionAlert!).getByRole("button"));
     expect(retry).toHaveBeenCalledTimes(1);
   });
 });
@@ -146,8 +164,9 @@ describe("PrinciplesSection", () => {
         <PrinciplesSection />
       </TestProviders>,
     );
-    expect(screen.getByRole("alert")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button"));
+    const sectionAlert = querySectionErrorAlert();
+    expect(sectionAlert).not.toBeNull();
+    fireEvent.click(within(sectionAlert!).getByRole("button"));
     expect(retry).toHaveBeenCalledTimes(1);
   });
 });
@@ -160,8 +179,9 @@ describe("DecisionsSection", () => {
         <DecisionsSection />
       </TestProviders>,
     );
-    expect(screen.getByRole("alert")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button"));
+    const sectionAlert = querySectionErrorAlert();
+    expect(sectionAlert).not.toBeNull();
+    fireEvent.click(within(sectionAlert!).getByRole("button"));
     expect(retry).toHaveBeenCalledTimes(1);
   });
 });

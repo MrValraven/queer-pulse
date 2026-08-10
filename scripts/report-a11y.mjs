@@ -23,6 +23,15 @@
  */
 
 import { execFileSync } from "node:child_process";
+import { mkdirSync } from "node:fs";
+
+// A dedicated, fast a11y-only ESLint config (eslint.a11y.config.js) — it keeps
+// the TypeScript parser but omits projectService, so it never boots the type
+// checker the way the main config's recommendedTypeChecked does. That single
+// change takes this pass from ~60s to a few seconds; --cache makes repeat runs
+// near-instant. Both are pure speed: the jsx-a11y rule surface is imported from
+// eslint.config.js, so the warnings counted here are exactly the gate's.
+const CACHE_DIRECTORY = "node_modules/.cache/eslint-a11y";
 
 // The most a11y warnings allowed before this gate fails. Currently 0: the tail
 // is fully cleared. Only ever ratchet this DOWN, never up without a written
@@ -32,11 +41,26 @@ const BUDGET = 0;
 // ESLint exits non-zero whenever any error exists; its JSON report is still on
 // stdout in that case, so read stdout off the thrown error too.
 function runEslintJson() {
+  mkdirSync(CACHE_DIRECTORY, { recursive: true });
   try {
-    return execFileSync("npx", ["eslint", ".", "--format", "json"], {
-      encoding: "utf8",
-      maxBuffer: 128 * 1024 * 1024,
-    });
+    return execFileSync(
+      "npx",
+      [
+        "eslint",
+        ".",
+        "--config",
+        "eslint.a11y.config.js",
+        "--cache",
+        "--cache-location",
+        `${CACHE_DIRECTORY}/`,
+        "--format",
+        "json",
+      ],
+      {
+        encoding: "utf8",
+        maxBuffer: 128 * 1024 * 1024,
+      },
+    );
   } catch (error) {
     if (typeof error.stdout === "string" && error.stdout.length > 0) {
       return error.stdout;
@@ -46,6 +70,31 @@ function runEslintJson() {
 }
 
 const results = JSON.parse(runEslintJson());
+
+// Safety: a file ESLint cannot PARSE emits a fatal message (ruleId: null) and
+// is otherwise absent from the a11y counts below — so a parse break would let a
+// file sail past the ratchet unchecked. Since this pass runs its own parser
+// setup (eslint.a11y.config.js), surface any fatal error loudly and fail rather
+// than silently under-report. Real type errors are still the job of `tsc -b`.
+const fatalErrors = results.flatMap((fileResult) =>
+  fileResult.messages
+    .filter((message) => message.fatal)
+    .map((message) => ({
+      filePath: fileResult.filePath.replace(`${process.cwd()}/`, ""),
+      message: message.message,
+    })),
+);
+
+if (fatalErrors.length > 0) {
+  console.error(
+    `A11Y RATCHET ABORTED: ${fatalErrors.length} file(s) failed to parse, so ` +
+      "they were NOT accessibility-checked. Fix these before trusting the count:",
+  );
+  for (const { filePath, message } of fatalErrors) {
+    console.error(`  ${filePath}: ${message}`);
+  }
+  process.exit(1);
+}
 
 const countByRule = new Map();
 const countByFile = new Map();

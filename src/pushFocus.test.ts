@@ -33,10 +33,16 @@ describe("isViewingTarget", () => {
   });
 
   it("does not match across a different origin", () => {
+    // The push target is the app's own absolute URL; the open window is on a
+    // foreign origin showing the same path. Origins differ → never suppress.
+    // (A *relative* dataUrl has no inherent origin — it resolves against the
+    // client — so an absolute target is how a cross-origin mismatch is
+    // expressed; in the real service worker `clients.matchAll()` only ever
+    // returns same-origin windows, so this is defence-in-depth.)
     expect(
       isViewingTarget(
         "https://evil.example/messages?c=conv-1",
-        "/messages?c=conv-1",
+        "https://app.example.com/messages?c=conv-1",
       ),
     ).toBe(false);
   });

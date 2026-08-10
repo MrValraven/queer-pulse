@@ -57,9 +57,10 @@ describe("UploadMainCol step navigation", () => {
       await screen.findByRole("button", { name: /submit for review/i }),
     );
 
-    // Done step: the payouts CTA renders and the success toast fires.
+    // Done step: the payouts CTA renders and the success toast fires. The CTA
+    // is a <Button to={…}> — react-router Link, so it has role "link".
     expect(
-      await screen.findByRole("button", { name: /view your payouts/i }),
+      await screen.findByRole("link", { name: /view your payouts/i }),
     ).toBeInTheDocument();
     expect(
       await screen.findByText("Release submitted for review"),

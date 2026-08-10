@@ -8,7 +8,11 @@ import { API_BASE_URL } from "./config";
 // their backend controllers are `@Version(VERSION_NEUTRAL)` and keep answering
 // at their original unversioned paths (they're referenced outside this builder,
 // so their URLs are fixed). Bumping the API version = change this one constant.
-const API_VERSION_PREFIX = "/v1";
+//
+// Exported so the rare caller that must build a versioned API URL WITHOUT going
+// through `request()` — e.g. an `<img src>` pointed at the `/files/*` route —
+// prepends the same prefix instead of hand-writing (and forgetting) `/v1`.
+export const API_VERSION_PREFIX = "/v1";
 
 // Fail-fast ceiling for every call made through `request()`. A hung backend must
 // never strand the UI on an infinite skeleton — worst of all a hung

@@ -19,12 +19,30 @@ import { QuickExit } from "./QuickExit";
  */
 const SAFE_DESTINATION = "https://www.google.com";
 
+const realLocation = window.location;
+
 afterEach(() => {
   vi.restoreAllMocks();
+  // Restore the genuine Location after each swap below.
+  Object.defineProperty(window, "location", {
+    configurable: true,
+    writable: true,
+    value: realLocation,
+  });
 });
 
+// jsdom's `window.location.replace` is a non-configurable own property, so
+// `vi.spyOn(window.location, "replace")` throws "Cannot redefine property".
+// Swap the whole Location object for a stand-in whose `replace` is a spy
+// instead (the component only touches `location.replace` and `history`).
 function spyOnReplace() {
-  return vi.spyOn(window.location, "replace").mockImplementation(() => {});
+  const replace = vi.fn();
+  Object.defineProperty(window, "location", {
+    configurable: true,
+    writable: true,
+    value: { ...realLocation, replace },
+  });
+  return replace;
 }
 
 describe("QuickExit", () => {

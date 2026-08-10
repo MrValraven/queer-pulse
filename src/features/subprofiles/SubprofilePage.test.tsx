@@ -35,7 +35,9 @@ describe("SubprofilePage restricted states (demo mode)", () => {
       </TestProviders>,
     );
     await waitForPageLoad();
-    expect(await screen.findByText("This side is private")).toBeInTheDocument();
+    expect(
+      await screen.findByText("This persona is private"),
+    ).toBeInTheDocument();
   });
 
   it("renders the members-only wall for a signed-out visitor on a visibility:network persona", async () => {
@@ -57,7 +59,7 @@ describe("SubprofilePage restricted states (demo mode)", () => {
     );
     await waitForPageLoad();
     expect(
-      await screen.findByText("This side was taken down"),
+      await screen.findByText("This persona was taken down"),
     ).toBeInTheDocument();
   });
 

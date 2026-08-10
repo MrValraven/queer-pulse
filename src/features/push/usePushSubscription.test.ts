@@ -1,5 +1,5 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // `usePushSubscription` reads VITE_VAPID_PUBLIC_KEY at module-eval time into a
 // frozen const, and `enable()` bails early without one. So the module is
@@ -51,10 +51,19 @@ beforeEach(() => {
       ready: Promise.resolve({
         pushManager: { subscribe, getSubscription },
       }),
+      // The subscription-health re-sync effect (live mode) subscribes to the
+      // SW `message` channel to react to `push-subscription-changed`; the mock
+      // must expose the listener pair or the effect throws on mount.
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
     },
   });
 });
-afterEach(() => vi.unstubAllGlobals());
+// NB: no local afterEach unstub. The shared setup (src/test/setup.ts) already
+// runs `cleanup()` THEN `vi.unstubAllGlobals()` after every test. A local
+// afterEach here would run FIRST (hooks are LIFO), tearing down the stubbed
+// `navigator` before React unmounts the hook — whose effect cleanup calls
+// `navigator.serviceWorker.removeEventListener` and would then throw.
 
 describe("usePushSubscription", () => {
   it("reports supported when serviceWorker + PushManager + Notification exist", async () => {

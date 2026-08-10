@@ -101,7 +101,10 @@ export function RosterTab({
                 tint={m.tint}
                 src={photoOf(m, demoMode)}
                 size={48}
-                alt={m.name}
+                // The member's name is rendered as visible text right beside
+                // this avatar (see .rosterName below), so the image is
+                // decorative — omit `alt` (→ alt="") to avoid a screen reader
+                // double-reading the name (axe image-redundant-alt).
                 verified={m.verified}
               />
             </div>

@@ -104,6 +104,7 @@ describe("useAdminMembers (live mode via MSW)", () => {
               avatarUrl: null,
               vouchCount: 6,
               vouchedBy: [],
+              staffRoles: [],
             },
           ],
           total: 1,

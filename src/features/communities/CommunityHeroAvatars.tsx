@@ -39,7 +39,10 @@ export function CommunityHeroAvatars({
                 {photo ? (
                   <img
                     src={resolveAvatarSrc(photo)}
-                    alt={m.name}
+                    // The name is already shown as visible text in the adjacent
+                    // .heroAvTip label (and names the wrapping link), so the
+                    // image is decorative — alt="" avoids axe image-redundant-alt.
+                    alt=""
                     referrerPolicy="no-referrer"
                   />
                 ) : (

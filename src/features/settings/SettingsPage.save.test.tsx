@@ -1,7 +1,18 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { SettingsPage } from "./SettingsPage";
+
+// jsdom has no layout engine, so `Element.prototype.scrollIntoView` is absent
+// (the shared setup stubs the sibling `scrollTo` for the same reason). The
+// mobile-nav scrollspy effect calls it on the active tab during mount, which
+// would otherwise throw and trip the route error boundary. Stub as a no-op,
+// guarded so a real/per-test implementation wins.
+beforeAll(() => {
+  if (!Element.prototype.scrollIntoView) {
+    Element.prototype.scrollIntoView = () => {};
+  }
+});
 
 describe("SettingsPage save bar", () => {
   it("saves profile edits from the unified save bar (demo mode)", async () => {

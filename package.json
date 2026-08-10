@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "pnpm lint:a11y && tsc -b && pnpm sitemap && pnpm og && vite build && pnpm prerender:browser && pnpm prerender",
+    "build": "node scripts/build-gates.mjs && vite build && pnpm prerender",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:a11y": "node scripts/report-a11y.mjs",

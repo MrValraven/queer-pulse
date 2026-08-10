@@ -139,12 +139,12 @@ describe("useSubprofileDirectory (live mode via MSW)", () => {
     const { result } = renderHook(() => useDirectoryLive(), { wrapper });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
-    // Previously "nightform" (musician) and "grain" only turned up under a
-    // narrowing kind/query param — now the fetch is unfiltered, so both are
+    // Previously "nightform" (musician) and "grain-studio" only turned up under
+    // a narrowing kind/query param — now the fetch is unfiltered, so both are
     // present in the same response.
     const handles = result.current.data!.map((card) => card.handle);
     expect(handles).toContain("nightform");
-    expect(handles).toContain("grain");
+    expect(handles).toContain("grain-studio");
   });
 });
 
@@ -156,6 +156,6 @@ describe("useSubprofileDirectory (demo mode)", () => {
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     const handles = result.current.data!.map((card) => card.handle);
     expect(handles).toContain("nightform");
-    expect(handles).toContain("grain");
+    expect(handles).toContain("grain-studio");
   });
 });

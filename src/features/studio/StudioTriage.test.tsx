@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { StudioTriageDetail } from "./StudioTriageDetail";
@@ -28,8 +28,13 @@ describe("StudioTriageDetail", () => {
       </TestProviders>,
     );
 
+    // Scope status queries to the triage panel (an <aside> → role
+    // "complementary"): the always-mounted Toast live region also carries
+    // role="status", so an unscoped query would match it too.
+    const panel = screen.getByRole("complementary");
+
     // No decision recorded yet.
-    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(within(panel).queryByRole("status")).not.toBeInTheDocument();
 
     fireEvent.change(
       await screen.findByLabelText(/a small sentence that explains the no/i),
@@ -38,7 +43,7 @@ describe("StudioTriageDetail", () => {
     fireEvent.click(screen.getByRole("button", { name: /pass · with the sentence/i }));
 
     // The decision and the typed note both land in the live status region.
-    const status = await screen.findByRole("status");
+    const status = await within(panel).findByRole("status");
     expect(status).toHaveTextContent("Passed with your sentence — sent to Renato");
     expect(status).toHaveTextContent("So close — the bridge undoes it.");
   });
@@ -53,7 +58,10 @@ describe("StudioTriageDetail", () => {
     fireEvent.click(
       await screen.findByRole("button", { name: /hold & second-read/i }),
     );
-    expect(await screen.findByRole("status")).toHaveTextContent(
+    // Scope to the triage panel so the assertion targets the decision status
+    // region, not the always-mounted Toast live region (also role="status").
+    const panel = screen.getByRole("complementary");
+    expect(await within(panel).findByRole("status")).toHaveTextContent(
       "Held for a second read",
     );
   });

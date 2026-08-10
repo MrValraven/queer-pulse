@@ -12,13 +12,45 @@ import { defineConfig, globalIgnores } from "eslint/config";
 // would block every build today for problems nobody has had a chance to fix.
 // Promote individual rules to "error" as each is driven to zero.
 // The 3 rules recommended turns off (deprecated/superseded ones) stay off.
-const jsxA11yWarnings = Object.fromEntries(
+export const jsxA11yWarnings = Object.fromEntries(
   Object.entries(jsxA11y.flatConfigs.recommended.rules).map(([id, setting]) => {
     const severity = Array.isArray(setting) ? setting[0] : setting;
     if (severity === "off" || severity === 0) return [id, "off"];
     return [id, Array.isArray(setting) ? ["warn", ...setting.slice(1)] : "warn"];
   }),
 );
+
+// Options for jsx-a11y/control-has-associated-label. This rule is NOT in the
+// recommended set (so it's absent from jsxA11yWarnings above), and its schema
+// default for `ignoreElements` is [] — configuring it as a bare "warn" would
+// silently un-ignore input/textarea and re-introduce the ~550 htmlFor/id false
+// positives described at its use site below. Exported so the fast a11y-only
+// config (eslint.a11y.config.js, used by scripts/report-a11y.mjs) applies the
+// IDENTICAL options and its ratchet count stays in lockstep with this gate.
+export const controlHasAssociatedLabelOptions = {
+  ignoreElements: [
+    "audio",
+    "canvas",
+    "embed",
+    "input",
+    "textarea",
+    "tr",
+    "video",
+  ],
+  ignoreRoles: [
+    "grid",
+    "listbox",
+    "menu",
+    "menubar",
+    "radiogroup",
+    "row",
+    "tablist",
+    "toolbar",
+    "tree",
+    "treegrid",
+  ],
+  includeRoles: ["alert", "dialog"],
+};
 
 // Local rule: ban emoji glyphs in source — the platform uses react-icons instead
 // of emoji (see CLAUDE.md). Country flags have no react-icons equivalent and are
@@ -201,30 +233,7 @@ export default defineConfig([
       // positives described above. The options below are the recommended set.
       "jsx-a11y/control-has-associated-label": [
         "warn",
-        {
-          ignoreElements: [
-            "audio",
-            "canvas",
-            "embed",
-            "input",
-            "textarea",
-            "tr",
-            "video",
-          ],
-          ignoreRoles: [
-            "grid",
-            "listbox",
-            "menu",
-            "menubar",
-            "radiogroup",
-            "row",
-            "tablist",
-            "toolbar",
-            "tree",
-            "treegrid",
-          ],
-          includeRoles: ["alert", "dialog"],
-        },
+        controlHasAssociatedLabelOptions,
       ],
       // --- Type-aware rules (from recommendedTypeChecked) ------------------
       // The two promise-safety rules are the reason type-aware linting was

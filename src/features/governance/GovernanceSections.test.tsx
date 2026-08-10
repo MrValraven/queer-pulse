@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { FinancesSection, HealthSection } from "./GovernanceSections";
@@ -72,6 +72,22 @@ beforeEach(() => {
   financesState = financesOk();
 });
 
+/**
+ * `SectionError`'s alert, isolated from `ToastProvider`'s two always-mounted
+ * live regions. Both toast regions render from first paint by design (WCAG
+ * 4.1.3) and the assertive one also carries `role="alert"`, so a bare
+ * `getByRole("alert")` matches multiple / a bare `queryByRole("alert")` is never
+ * null. `SectionError` is the only alert that contains a retry button, so we
+ * key off that. Returns null when no section is in its error state.
+ */
+function querySectionErrorAlert(): HTMLElement | null {
+  return (
+    screen
+      .queryAllByRole("alert")
+      .find((region) => within(region).queryByRole("button") !== null) ?? null
+  );
+}
+
 describe("HealthSection (governance overview)", () => {
   it("renders the health figures and no error alert on a successful load", () => {
     render(
@@ -81,7 +97,7 @@ describe("HealthSection (governance overview)", () => {
     );
     // Stat value is plain data (not i18n), so it resolves synchronously.
     expect(screen.getByText("247")).toBeInTheDocument();
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(querySectionErrorAlert()).toBeNull();
   });
 
   it("shows the error/retry state — not an empty grid — when the fetch failed", () => {
@@ -91,7 +107,7 @@ describe("HealthSection (governance overview)", () => {
         <HealthSection />
       </TestProviders>,
     );
-    expect(screen.getByRole("alert")).toBeInTheDocument();
+    expect(querySectionErrorAlert()).not.toBeNull();
     // The failed grid is replaced by the alert, so no stat value renders.
     expect(screen.queryByText("247")).not.toBeInTheDocument();
   });
@@ -117,8 +133,9 @@ describe("FinancesSection (governance finances)", () => {
         <FinancesSection />
       </TestProviders>,
     );
-    expect(screen.getByRole("alert")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button"));
+    const sectionAlert = querySectionErrorAlert();
+    expect(sectionAlert).not.toBeNull();
+    fireEvent.click(within(sectionAlert!).getByRole("button"));
     expect(financesRetry).toHaveBeenCalledTimes(1);
     expect(overviewRetry).not.toHaveBeenCalled();
   });

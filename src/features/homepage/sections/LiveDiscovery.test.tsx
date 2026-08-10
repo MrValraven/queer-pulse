@@ -27,7 +27,14 @@ describe("LiveDiscovery", () => {
       wrapper: TestProviders,
     });
 
-    expect(container).toBeEmptyDOMElement();
+    // `LiveDiscovery` returns null on an empty slice, so it contributes no
+    // output of its own. We assert on ITS output (the `#discovery` section and
+    // its member links) rather than an empty `container`, because
+    // `TestProviders` mounts `ToastProvider`, whose two live regions
+    // (role="status"/role="alert") are always present from first paint by
+    // design and would otherwise make the container non-empty.
+    expect(container.querySelector("#discovery")).toBeNull();
+    expect(screen.queryAllByRole("link")).toHaveLength(0);
   });
 
   it("renders nothing while the first fetch is still loading", () => {
@@ -42,7 +49,12 @@ describe("LiveDiscovery", () => {
       wrapper: TestProviders,
     });
 
-    expect(container).toBeEmptyDOMElement();
+    // Same rationale as the empty-slice case above: `LiveDiscovery` renders
+    // null while loading, so assert its `#discovery` section and links never
+    // appear rather than an empty container (ToastProvider's always-mounted
+    // live regions live there too).
+    expect(container.querySelector("#discovery")).toBeNull();
+    expect(screen.queryAllByRole("link")).toHaveLength(0);
   });
 
   it("renders one card per curated member, linking to their public profile", async () => {
