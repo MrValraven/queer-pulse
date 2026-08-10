@@ -21,7 +21,6 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { API_BASE_URL } from "../../shared/api/config";
-import { API_VERSION_PREFIX } from "../../shared/api/client";
 import {
   ADMIN_MEDIA_KINDS,
   getAdminMediaHead,
@@ -35,16 +34,16 @@ import styles from "./AdminMediaPage.module.css";
 /**
  * Absolute URL for a `/files/*` proxy path so `<img>`/new-tab both resolve.
  *
- * The backend returns `fileUrl` RELATIVE (`/files/<key>`), and the `/files/*`
- * route answers under the URI version prefix (`/v1/files/*`) — the same prefix
- * the api client prepends to every `request()` call. Bypassing that client here
- * means we must prepend it ourselves; forgetting it (the original bug) pointed
- * every `<img>` at an unversioned `/files/...` that 404s, so nothing rendered.
+ * The backend returns `fileUrl` RELATIVE (`/files/<key>`). The `/files/*` route
+ * is version-neutral (`FilesController`), so it answers at the bare path WITHOUT
+ * the `/v1` prefix the api client prepends to `request()` calls — matching every
+ * other image URL in the app (avatars via `toImageUrl`, My Uploads). We prepend
+ * only the origin; never `/v1`.
  */
 function absoluteFileUrl(fileUrl: string): string {
   return fileUrl.startsWith("http")
     ? fileUrl
-    : `${API_BASE_URL}${API_VERSION_PREFIX}${fileUrl}`;
+    : `${API_BASE_URL}${fileUrl}`;
 }
 
 function formatBytes(bytes: number): string {
