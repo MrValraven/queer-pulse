@@ -1,5 +1,5 @@
 import { createElement } from "react";
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
@@ -47,14 +47,29 @@ async function loadRealtime(base = "http://api.test"): Promise<RealtimeModule> {
   return import("./realtime");
 }
 
-/** Mount the provider with one consumer holding the connection open. Written
- * with `createElement` (no JSX) since this file is `.ts`, not `.tsx`. */
-function mount({ RealtimeProvider, useRealtimeConnection }: RealtimeModule) {
+/**
+ * Flush the microtask the dynamic `import("socket.io-client")` inside
+ * `connectAsync()` adds, inside `act` — the socket (and its `on("exception", …)`
+ * wiring) is now constructed a microtask past mount, not synchronously.
+ */
+async function settle(): Promise<void> {
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+}
+
+/** Mount the provider with one consumer holding the connection open, then settle.
+ * Written with `createElement` (no JSX) since this file is `.ts`, not `.tsx`. */
+async function mount({ RealtimeProvider, useRealtimeConnection }: RealtimeModule) {
   function Consumer() {
     useRealtimeConnection();
     return null;
   }
-  return render(createElement(RealtimeProvider, null, createElement(Consumer)));
+  const view = render(
+    createElement(RealtimeProvider, null, createElement(Consumer)),
+  );
+  await settle();
+  return view;
 }
 
 /** The handler registered via `socket.on("exception", …)`. */
@@ -77,7 +92,7 @@ beforeEach(() => {
 describe("platform-lockdown exception handling", () => {
   it("disables reconnection when the exception carries PLATFORM_LOCKED", async () => {
     const mod = await loadRealtime();
-    mount(mod);
+    await mount(mod);
     const handler = exceptionHandler();
     handler({ status: "error", message: "platform locked", code: "PLATFORM_LOCKED" });
     expect(socket.io.reconnection).toHaveBeenCalledWith(false);
@@ -85,7 +100,7 @@ describe("platform-lockdown exception handling", () => {
 
   it("leaves reconnection untouched for a generic exception", async () => {
     const mod = await loadRealtime();
-    mount(mod);
+    await mount(mod);
     const handler = exceptionHandler();
     handler({ status: "error", message: "Unauthorized" });
     expect(socket.io.reconnection).not.toHaveBeenCalled();
