@@ -365,6 +365,12 @@
   justify-content: center;
   margin-bottom: 14px;
 }
+.phImg {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
 .phJade {
   background: rgba(var(--jade-rgb), 0.16);
   color: var(--jade);

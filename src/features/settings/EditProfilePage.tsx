@@ -7,6 +7,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { EditProfilePane, type ProfileSection } from "./EditProfilePane";
 import { EditProfileSidebar } from "./EditProfileSidebar";
+import { EditProfileMobileNav } from "./EditProfileMobileNav";
 import { SECTION_LABEL_KEYS } from "./editProfileNav.data";
 import styles from "./EditProfilePage.module.css";
 
@@ -59,6 +60,7 @@ export function EditProfilePage() {
         <EditProfileSidebar />
 
         <div className={styles.main}>
+          <EditProfileMobileNav />
           <EditProfilePane onChange={markChanged} />
           <div style={{ height: "80px" }} />
         </div>

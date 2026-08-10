@@ -41,6 +41,77 @@ export const articles: Record<string, Article> = {
       "A new generation arrived and asked different questions. They wanted to know about structure, consent, how decisions got made. They were not wrong to ask. But they arrived into a community built in the dark, by people who built it because they had nowhere else to be, and some of what looked like chaos to newcomers was accumulated knowledge that had never been written down.",
       "Did we change? I think we became more deliberate. You do not end up in a queer chosen family by accident anymore. You choose it — with the awareness that other things are available, that the choosing has meaning. Whether that is better or worse than the earlier version, when you ended up together because there was no other option, I am not sure. But it is different. And I think it is ours.",
     ],
+    // Block-based body (Phase 3 §7.3) — this is the demo's one block-editor
+    // article, so the public reader exercises the typed-block path (and its
+    // sanitizeArticleHtml() pass over every `html` field) in demo mode, not
+    // only live. Every other demo article still only has `body` and falls
+    // back to the legacy renderer, same as an older live article would.
+    blocks: [
+      {
+        id: "cc-1",
+        kind: "paragraph",
+        lead: true,
+        html: "There is a bar in Cais do Sodré that has had <strong>five names in nine years</strong>. When it was O Farol, you could stay until four in the morning and nobody would ask you to buy another drink.",
+      },
+      {
+        id: "cc-2",
+        kind: "paragraph",
+        html: "The decade between 2016 and 2026 remade the city in ways that feel personal even when they are structural. Rents tripled. Whole neighbourhoods changed texture — see the <a href=\"https://queerpulse.example/magazine\">magazine's ongoing housing coverage</a> for the numbers behind it.",
+      },
+      {
+        id: "cc-3",
+        kind: "pullQuote",
+        html: "We became more <em>deliberate</em> about what we chose to stay for. That is not the same as choosing to stay.",
+      },
+      {
+        id: "cc-4",
+        kind: "heading",
+        html: "What the informal structures kept alive",
+      },
+      {
+        id: "cc-5",
+        kind: "paragraph",
+        html: "What I keep coming back to, talking to people who were here for all of it, is how external pressure accelerated something internal. The <em>informal</em> structures — the kitchens, the group chats, the particular table at the particular café on Sunday — survived better than the formal ones.",
+      },
+      {
+        id: "cc-6",
+        kind: "image",
+        alt: "Friends around a kitchen table in Mouraria, late evening, candles and plates",
+        caption: "The kitchen that outlasted the bar — <em>still meeting every Sunday</em>.",
+        credit: `Photo: ${memberName("andre")}`,
+        rights: "commissioned",
+        tint: "jade",
+        crop: "16:9",
+        focal: { x: 0.5, y: 0.5 },
+      },
+      {
+        id: "cc-7",
+        kind: "qa",
+        who: memberName("ines"),
+        q: "Did the community actually get <strong>smaller</strong>, or just quieter?",
+        html: "Quieter, mostly. The bars closed, but the friendships didn't — they just moved somewhere a landlord can't see them.",
+      },
+      {
+        id: "cc-8",
+        kind: "quote",
+        html: "You do not end up in a queer chosen family by accident anymore. You <em>choose</em> it.",
+        cite: memberName("sofia"),
+      },
+      {
+        id: "cc-9",
+        kind: "stats",
+        items: [
+          { value: "9", label: "years, five names for one bar" },
+          { value: "3×", label: "average rent increase, 2016–2026" },
+          { value: "2", label: "friends lost along the way" },
+        ],
+      },
+      {
+        id: "cc-10",
+        kind: "paragraph",
+        html: "Did we change? I think we became more deliberate. Whether that is better or worse than the earlier version, when you ended up together because there was no other option, I am not sure. But it is different. And I think it is ours.",
+      },
+    ],
   },
   "mouraria-family": {
     id: "mouraria-family",

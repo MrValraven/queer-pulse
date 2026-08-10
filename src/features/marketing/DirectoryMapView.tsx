@@ -2,6 +2,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { FiArrowDown, FiSearch, FiX } from "react-icons/fi";
 import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useMediaQuery, usePrefersReducedMotion } from "../../shared/hooks";
+import { mediaMax } from "../../shared/theme/breakpoints";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { type LocalPlace } from "./localPlaces";
@@ -66,7 +67,9 @@ export function DirectoryMapView({
   onClearFilters: () => void;
 }) {
   const { t } = useTranslation();
-  const isMobile = useMediaQuery("(max-width: 880px)");
+  // The map+sidebar split collapses at 880px (wider than the app mobile
+  // cutover) so the map keeps usable width next to the list; off the ladder.
+  const isMobile = useMediaQuery(mediaMax(880));
   const reducedMotion = usePrefersReducedMotion();
   const sidebarRef = useRef<HTMLElement | null>(null);
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map());

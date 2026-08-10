@@ -1,0 +1,54 @@
+/* "SidesPrompt" — the enhanced self+empty nudge (personas Phase 5 M1).
+   A quieter cousin of EmptyState.module.css's `.empty`: same dashed-card
+   language, but left-aligned with an eyebrow + a dismiss action, since this
+   is a discovery *nudge* (dismissible-for-good), not a neutral empty state. */
+.sidesPrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  padding: var(--card-pad-lg) var(--card-pad-lg) var(--card-pad);
+  background: linear-gradient(
+    180deg,
+    rgba(var(--accent-rgb), 0.06),
+    rgba(var(--plum-rgb), 0.02)
+  );
+  border: 1px dashed rgba(var(--line-rgb), 0.18);
+  border-radius: var(--radius-card);
+}
+/* Matches the tighter page gutter used elsewhere below this breakpoint, so
+   the dashed prompt doesn't read as more cramped than the rest of the page
+   once the viewport narrows. */
+@media (max-width: 480px) {
+  .sidesPrompt {
+    padding: var(--card-pad) var(--gap-sm);
+  }
+}
+
+.heading {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--ink);
+  margin: 0;
+}
+
+.heading em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.description {
+  color: var(--ink-60);
+  max-width: 48ch;
+  margin: 0;
+  line-height: 1.55;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin-top: 6px;
+}

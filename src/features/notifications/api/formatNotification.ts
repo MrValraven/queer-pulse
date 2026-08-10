@@ -46,7 +46,25 @@ export type NotificationKind =
   // material edit — start time or location (mirrors the backend
   // `notifications_type_enum` value added in
   // `AddEventUpdatedNotificationType1786001600000`).
-  | "event_updated";
+  | "event_updated"
+  // Sent to a member the first time a save newly credits their handle as a
+  // collaborator on someone else's persona item (mirrors the backend
+  // `notifications_type_enum` value added in
+  // `AddSubprofileCreditNotificationType1786700100000`, emitted from
+  // `SubprofilesService.replaceSection`'s collaborator diff — Personas
+  // discovery Phase 5, Decision §3). Payload: `{ subprofileName,
+  // subprofileSlugOrHandle, itemTitle, deepLink }`. Carries no `actorId`
+  // (only used for the block/mute gate at emit time), so the row never
+  // resolves a `dto.actor` and stays icon-based. The first live kind whose
+  // `.actions` the adapter populates — see `notificationDtoToView`.
+  | "subprofile_credit"
+  // Sent to a safe space's listing owner when a member vouches for it (mirrors
+  // the backend `notifications_type_enum` value added in
+  // `AddSafeSpaceVouchNotificationType1787500000000`, emitted from
+  // `SafeSpaceVouchesService.createVouch`). Carries the voucher (`voucherId`)
+  // as the actor — omitted for an anonymous vouch, which then reads as
+  // "Someone" — plus `spaceName`/`spaceSlug` on the payload.
+  | "safe_space_vouch";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -82,6 +100,12 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   appeal_resolved: "platform",
   roadmap_status: "platform",
   moderation_outcome: "platform",
+  // A fellow member crediting you is community activity, same tab as
+  // vouch_received/introduction_made.
+  subprofile_credit: "community",
+  // A member vouching for your safe space is community activity, same tab as
+  // vouch_received.
+  safe_space_vouch: "community",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */

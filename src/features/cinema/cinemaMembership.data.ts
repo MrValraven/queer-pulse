@@ -67,7 +67,7 @@ export const TIERS: Tier[] = [
     ],
     ctaKey: "cinema:membership.tier.sustainer.cta",
     ctaVariant: "primary",
-    ctaTo: "/checkout",
+    ctaTo: "/cinema/browse",
     noteKey: "cinema:membership.tier.sustainer.note",
     featured: true,
     badgeKey: "cinema:membership.tier.sustainer.badge",
@@ -90,7 +90,7 @@ export const TIERS: Tier[] = [
     ],
     ctaKey: "cinema:membership.tier.patron.cta",
     ctaVariant: "ghost",
-    ctaTo: "/checkout",
+    ctaTo: "/cinema/browse",
     noteKey: "cinema:membership.tier.patron.note",
   },
 ];

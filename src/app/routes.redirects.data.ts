@@ -135,6 +135,8 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/pending-review", routes.pendingReview],
   ["/verification-needed", routes.verificationNeeded],
   ["/status", routes.status],
+  // Communities (2026-08-10): /communities/home merged into /communities.
+  ["/communities/home", routes.communities],
   // Local / Lisbon
   ["/safe-spaces", routes.safeSpaces],
   ["/visas", routes.visas],

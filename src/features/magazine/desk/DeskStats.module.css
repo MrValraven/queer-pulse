@@ -1,0 +1,41 @@
+/* Ported from the design's `.stats`/`.stat` rules. */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.stat {
+  padding: 18px;
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.stat b {
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--plum);
+}
+
+.warn b {
+  color: var(--accent-ink);
+}
+
+.stat span {
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+@media (max-width: 900px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

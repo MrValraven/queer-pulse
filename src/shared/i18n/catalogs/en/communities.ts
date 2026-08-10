@@ -12,6 +12,12 @@ import type { Catalog } from "../../types";
  * See `docs/i18n/extraction-brief.md` §1.
  */
 export const communities: Catalog = {
+  // ── Merged page shell (CommunitiesHubPage + header + top tabs) ────────────
+  "hubShell.title": "Communities",
+  "topTabs.mine": "My communities",
+  "topTabs.discover": "Discover",
+  "topTabs.ariaLabel": "Communities views",
+
   // ── Shared community category labels ──────────────────────────────────────
   // Used by the discover-grid filter chips and the live adapter's badge map.
   "category.all": "All communities",

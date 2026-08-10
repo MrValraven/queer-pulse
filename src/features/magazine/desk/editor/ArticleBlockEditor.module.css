@@ -1,0 +1,289 @@
+/* Ported from the design prototype's `.blk`/`.blk-p`/`.blk-h`/`.blk-pull`/
+   `.blk-quote`/`.blk-qa`/`.blk-stats`/`.blk-tools`/`.blk-type` (mag-write.css)
+   with real repo tokens in place of the prototype-local --line/--wash/--ink-40
+   placeholders (all already exist as real tokens — see
+   src/styles/tokens/colors.css). Shared by `ArticleBlockEditor.tsx` and
+   `ArticleBlockKindFields.tsx` (the SlideEditorCard/DeckEditorPage.module.css
+   precedent for one editor module shared across sibling components). */
+
+.blk {
+  position: relative;
+  padding: 5px 0;
+  margin: 0 -12px;
+  border-radius: 10px;
+}
+
+.blkIn {
+  padding: 0 12px;
+}
+
+.blk:hover {
+  background: var(--wash);
+}
+
+.blk.sel {
+  background: rgba(var(--accent-rgb), 0.05);
+}
+
+/* block tools (move up/down, remove, drag affordance) */
+.blkTools {
+  position: absolute;
+  left: -84px;
+  top: 6px;
+  display: flex;
+  gap: 3px;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+.blk:hover .blkTools,
+.blk.sel .blkTools {
+  opacity: 1;
+}
+
+.blkTools button {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-40);
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.blkTools button:hover:not(:disabled) {
+  color: var(--ink);
+}
+
+.blkTools button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.grip {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-40);
+}
+
+.blkType {
+  position: absolute;
+  right: -96px;
+  top: 8px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-40);
+  opacity: 0;
+}
+
+.blk:hover .blkType {
+  opacity: 1;
+}
+
+@media (max-width: 1240px) {
+  .blkTools {
+    left: -40px;
+  }
+
+  .blkType {
+    display: none;
+  }
+}
+
+/* per-kind content */
+.paragraph {
+  font-size: 17.5px;
+  line-height: 1.68;
+  color: var(--ink);
+}
+
+.paragraph.lead {
+  font-size: 20px;
+  line-height: 1.55;
+  color: var(--plum);
+}
+
+.heading {
+  font-family: var(--serif);
+  font-size: 27px;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+  margin-top: 16px;
+}
+
+.pullQuote {
+  font-family: var(--serif);
+  font-size: 29px;
+  line-height: 1.2;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--plum);
+  border-left: 2px solid var(--accent);
+  padding-left: 20px;
+  margin: 14px 0;
+}
+
+.quote {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--wash);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+
+.cite {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-top: 9px;
+  font-size: 13px;
+  color: var(--ink-40);
+}
+
+.citeInput {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  outline: none;
+  padding: 2px 0;
+  border-bottom: 1px dashed transparent;
+}
+
+.citeInput:focus {
+  border-bottom-color: var(--line-2);
+}
+
+.qa {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.q {
+  font-weight: 700;
+  font-size: 16.5px;
+  line-height: 1.5;
+  color: var(--plum);
+}
+
+.a {
+  display: flex;
+  gap: 11px;
+  font-size: 16.5px;
+  line-height: 1.6;
+}
+
+.aBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.whoInput {
+  align-self: flex-start;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink-60);
+  outline: none;
+  padding: 2px 0;
+  border-bottom: 1px dashed transparent;
+}
+
+.whoInput:focus {
+  border-bottom-color: var(--line-2);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  padding: 20px;
+  border-radius: 16px;
+  background: var(--wash);
+  margin: 8px 0;
+}
+
+.statItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statValue {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--plum);
+  line-height: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 2px 0;
+  border-bottom: 1px dashed transparent;
+}
+
+.statValue:focus {
+  border-bottom-color: var(--line-2);
+}
+
+.statLabel {
+  font-size: 13px;
+  color: var(--ink-60);
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 2px 0;
+  border-bottom: 1px dashed transparent;
+}
+
+.statLabel:focus {
+  border-bottom-color: var(--line-2);
+}
+
+.statRemove {
+  align-self: flex-end;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  color: var(--ink-40);
+}
+
+.statRemove:hover {
+  color: var(--accent-ink);
+  background: var(--paper);
+}
+
+.statAdd {
+  grid-column: 1 / -1;
+  justify-self: start;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  padding: 6px 2px;
+}
+
+.image {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 10px 0;
+}

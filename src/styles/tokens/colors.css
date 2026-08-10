@@ -100,6 +100,21 @@
      channels in dark mode. --line-rgb preserves the per-border opacity. */
   --line-rgb: var(--plum-rgb); /* border/hairline channels — flips in dark */
   --line-strong: var(--plum); /* solid dividers — flips in dark */
+  /* Generic hairline + subtle-background tokens (added for the Phase-1
+     persona skin CSS, src/features/subprofiles/persona-skins.css — the
+     prototype references bare `--line`/`--wash` that had no repo
+     equivalent). Both are derived from existing channel tokens, so both
+     already flip correctly in dark mode via --line-rgb / --plum-rgb. Values
+     match the opacities already used for the same purpose across
+     src/shared/components/ui (e.g. Avatar.module.css border, 0.14;
+     MemberSelectList.module.css hover wash, 0.05). */
+  --line: rgba(var(--line-rgb), 0.14);
+  --wash: rgba(var(--plum-rgb), 0.05);
+  /* A slightly stronger hairline than --line, for hover/active borders that
+     need to read as a step up (Phase 2 persona create-flow: .fam/.kind/.choice
+     hover states). Derived from the same --line-rgb channel, so it flips
+     correctly in dark mode too. */
+  --line-2: rgba(var(--line-rgb), 0.22);
 
   /* ── Strong text (headings / emphasis) ──
      Was written directly as plum `color` everywhere. Plum is ALSO the

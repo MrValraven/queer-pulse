@@ -699,7 +699,7 @@ export const marketing: Catalog = {
     "Gatherings are Lisbon-based, but membership itself isn't location-locked — plenty of members join remotely for the network and the magazine.",
   "help.qa.free.q": "Is QueerPulse free?",
   "help.qa.free.a":
-    "Yes — membership is free at the solidarity tier. Paid <link>Sustainer tiers</link> exist for anyone who wants to support the platform financially.",
+    "Yes — QueerPulse is free to join and use.",
   "help.qa.changeName.q": "How do I change my name or pronouns?",
   "help.qa.changeName.a":
     "Head to <settingsLink>Settings</settingsLink> → Profile. Changes apply everywhere immediately.",
@@ -736,9 +736,6 @@ export const marketing: Catalog = {
   "help.qa.blockMute.q": "What's the difference between blocking and muting?",
   "help.qa.blockMute.a":
     "<strong>Blocking</strong> removes all contact both ways. <strong>Muting</strong> just hides someone from your feed — they can't tell either has happened.",
-  "help.qa.becomeSupporter.q": "How do I become a Sustainer?",
-  "help.qa.becomeSupporter.a":
-    "Visit the <membershipLink>Sustainer page</membershipLink> to pick a tier — it's entirely optional support, not a requirement to use the platform.",
   "help.qa.invitesWork.q": "How many invites do I get?",
   "help.qa.invitesWork.a":
     "Every member starts with a small pool of invites that refills over time, based on how the community is growing.",
@@ -1215,13 +1212,10 @@ export const marketing: Catalog = {
     "Sourced from the 2025 transparency report. <em>Please link to the transparency page when citing.</em>",
   "pressKit.facts.founded": "Founded · Lisbon",
   "pressKit.facts.activeMembers": "Active members at year-end 2025",
-  "pressKit.facts.toPrograms": "Of every euro goes to programs",
-  "pressKit.facts.totalRaised": "Total raised in 2025",
+  "pressKit.facts.communities": "Communities on the platform",
   "pressKit.facts.gatherings": "Gatherings held in 2025",
-  "pressKit.facts.microGrants": "Micro-grants disbursed in 2025",
   "pressKit.facts.safeSpaces": "Verified safe spaces in Lisbon",
   "pressKit.facts.magazineIssues": "Magazine issues to date",
-  "pressKit.facts.transNonBinary": "Trans / non-binary members",
   "pressKit.coverage.section.title": "Recent <em>coverage</em>",
   "pressKit.coverage.section.lead":
     "Selected English- and Portuguese-language pieces from 2024–2026. <em>Hit-counts welcome but not necessary</em> — link to Press instead.",
@@ -1821,10 +1815,12 @@ export const marketing: Catalog = {
   "changelog.badge.improvement": "Improvement",
   "changelog.badge.infrastructure": "Infrastructure",
   "changelog.badge.fix": "Fix",
+  "changelog.tag.work": "Open your Work hub",
   "changelog.tag.settings": "Notification settings",
   "changelog.tag.messages": "Open messages",
   "changelog.tag.communities": "Browse communities",
   "changelog.tag.subprofiles": "See subprofiles",
+  "changelog.tag.personas": "See personas",
   "changelog.tag.housing": "See housing",
   "changelog.tag.directory": "Open the directory",
   "changelog.tag.cinema": "Visit Cinema",
@@ -1835,6 +1831,7 @@ export const marketing: Catalog = {
   "changelog.tag.events": "Open the Events Hub",
   "changelog.tag.roadmap": "Open the roadmap",
   "changelog.tag.magazine": "Open the magazine",
+  "changelog.tag.magazineWriter": "Open your workspace",
   "changelog.tag.safety": "See our safety approach",
   "changelog.tag.editProfile": "Edit your profile",
   "changelog.tag.employerReviews": "Read employer reviews",
@@ -1848,6 +1845,55 @@ export const marketing: Catalog = {
   "changelog.tag.invite": "Invite someone",
   "changelog.tag.imprint": "Read the legal notice",
   "changelog.tag.feed": "Open your feed",
+  "changelog.tag.myEvents": "Open My Events",
+  "changelog.tag.safeSpaces": "Find a safe space",
+  "changelog.tag.pressKit": "Open the press kit",
+  "changelog.tag.magazineDesk": "Open the desk",
+
+  "changelog.entries.skip-link-keyboard-only.title":
+    "“Skip to main content” now stays out of the way",
+  "changelog.entries.skip-link-keyboard-only.body":
+    "The “Skip to main content” shortcut — there to help keyboard users jump past the navigation — was occasionally flashing into view during ordinary browsing. It now appears only when you actually tab to it with the keyboard, and stays hidden the rest of the time.",
+
+  "changelog.entries.enlarge-profile-photo.title":
+    "Tap a profile photo to see it up close",
+  "changelog.entries.enlarge-profile-photo.body":
+    "On any member's profile, tap their photo to open a large, full version — so you can see exactly who they are before you reach out. Tap anywhere or press Escape to close.",
+
+  "changelog.entries.tap-notification-to-profile.title":
+    "Tap a notification to open the profile",
+  "changelog.entries.tap-notification-to-profile.body":
+    "When someone accepts your invite or your connection, the whole notification is now tappable and takes you straight to their profile — not just the small name link. Notifications that point somewhere more specific, like a thread or an event, still open that instead.",
+
+  "changelog.entries.more-push-notifications.title":
+    "More of what matters now reaches you as a push",
+  "changelog.entries.more-push-notifications.body":
+    "Push used to be just direct messages and event reminders. Now more of the moments that count can reach your lock screen — connection requests and accepts, mentions, replies on threads you're in, and vouches you receive, plus a heads-up whenever an event you're going to changes or is called off. There's a brand-new one for hosts too: a nudge when someone vouches for a safe space you look after. New on/off switches in settings let you keep Mentions and Vouches as loud or as quiet as you like, and a “Send yourself a test” button confirms it all lands on your device.",
+
+  "changelog.entries.localized-push-notifications.title":
+    "Push notifications in your language",
+  "changelog.entries.localized-push-notifications.body":
+    "System push notifications — like an event reminder — now render in Portuguese for members who've set the app to Portuguese, instead of always showing up in English. Direct-message previews were already in your own words; this brings the app's own copy in line with them.",
+
+  "changelog.entries.magazine-desk-workspace-nav.title":
+    "A dedicated workspace for the magazine desk",
+  "changelog.entries.magazine-desk-workspace-nav.body":
+    "The magazine editor now has its own left-hand navigation — Desk, Pitches and Issue, with jump-to (⌘K) and the “Since Friday” activity panel — in place of the general site menu, on every editor screen.",
+  "changelog.entries.richer-push-notifications.title":
+    "Push notifications that show who and what",
+  "changelog.entries.richer-push-notifications.body":
+    "Push notifications got richer — a direct message now shows who it's from, with their photo, and an event reminder shows the event's cover. Both come with a quick tap to jump straight in, and messages group neatly by conversation so your lock screen stays calm.",
+
+  "changelog.entries.admin-uploaded-images.tag": "Open admin",
+  "changelog.entries.admin-uploaded-images.title":
+    "Admins can browse every uploaded image",
+  "changelog.entries.admin-uploaded-images.body":
+    "Admins can now browse every uploaded image stored on the platform, with per-file details — owner, storage metadata, and an on-demand real content-type check — for security review.",
+
+  "changelog.entries.events-and-my-events-merged.title":
+    "Events and Your events are now one page",
+  "changelog.entries.events-and-my-events-merged.body":
+    "Your events dashboard and finding new events now live together at /events, with a My events / Discover switch up top. It opens on your dashboard when you have events on, and on Discover when you don't.",
 
   "changelog.entries.trust-network-legend-withdrawn.title":
     "The trust-network legend now explains dashed lines",
@@ -1868,6 +1914,144 @@ export const marketing: Catalog = {
     "Join — and leave — communities during sign-up",
   "changelog.entries.onboarding-join-and-leave.body":
     "In the onboarding step that suggests communities, you can now tap a joined community again to leave it if you change your mind. The suggestions are also limited to fully open communities you can join in one tap — private and invite-only ones no longer appear here, since they can't be joined on the spot.",
+
+  "changelog.entries.saved-and-searched-lists-load.title":
+    "Saved events and searched lists load again instead of erroring",
+  "changelog.entries.saved-and-searched-lists-load.body":
+    "A handful of lists could fail to load and show an error instead of results: your Saved events tab (and the Going, Waitlisted and Past tabs), searching your messages, filtering the magazine by a single author, and searching the moderation queue. Each of these combined a lookup with paging in a way that tripped up the database query and returned nothing. They now load their results reliably.",
+
+  "changelog.entries.admin-overview-stat-grid-responsive.title":
+    "The admin dashboard stat cards fit the screen on mobile",
+  "changelog.entries.admin-overview-stat-grid-responsive.body":
+    "The four headline stat cards at the top of the admin dashboard used to stay in a fixed four-across row on narrow screens, squeezing each card until its label broke apart and the row ran off the side. They now cap at four across on wide screens and gracefully wrap down to two, then one, as the screen narrows — so every card stays readable on a phone.",
+
+  "changelog.entries.trust-network-mobile-graph-first.title":
+    "The Trust Network opens on the graph on mobile",
+  "changelog.entries.trust-network-mobile-graph-first.body":
+    "Opening a member's Trust Network on a phone now shows the connection graph straight away, instead of springing open a details sheet over it. Tap any person in the graph to slide up their vouch details and actions — and swipe or tap away to get back to the full picture.",
+
+  "changelog.entries.magazine-article-versions.title":
+    "Article drafts now keep a full version history",
+  "changelog.entries.magazine-article-versions.body":
+    "Every filed draft and manual save now keeps a version — editors can compare against the current draft and restore any earlier one without losing work.",
+
+  "changelog.entries.magazine-article-comments.title":
+    "Threaded notes on article drafts",
+  "changelog.entries.magazine-article-comments.body":
+    "Editors can leave threaded notes on an article, reply to each other, and resolve a note once it's handled.",
+
+  "changelog.entries.magazine-desk-live-notifications.title":
+    "The magazine desk's activity panel now shows real editorial events",
+  "changelog.entries.magazine-desk-live-notifications.body":
+    "The magazine desk's activity panel now shows real editorial events — who did what, when — linking straight to the piece, instead of the same fixed demo list every time.",
+
+  "changelog.entries.magazine-desk-wave-b-fixes.title":
+    "Archive search, contents blurbs, and kill-fee terms — now real",
+  "changelog.entries.magazine-desk-wave-b-fixes.body":
+    "Archive search now finds published pieces live, instead of a static demo list. Issue contents blurbs and reader-letter “run in letters” selections now actually save — the letters toggle used to accidentally create a duplicate letter instead of updating the one you clicked. Contributors also see the real kill-fee terms on each commission, not boilerplate.",
+
+  "changelog.entries.magazine-commission-editor-fix.title":
+    "Commissioning a piece works on a brand-new magazine",
+  "changelog.entries.magazine-commission-editor-fix.body":
+    "Commissioning a piece from the editor desk could fail with an “editorId must be a UUID” error — it happened on a fresh magazine that had no pieces assigned to anyone yet. Commissions are now stamped with your own signed-in editor identity, so they go through straight away.",
+
+  "changelog.entries.magazine-issue-production.title":
+    "Issue production",
+  "changelog.entries.magazine-issue-production.body":
+    "Added issue production — arrange the running order, set the cover and coverlines, curate the members' digest and social cards, and ship the whole issue at once with a pre-ship checklist.",
+
+  "changelog.entries.events-page-utility-redesign.title":
+    "A cleaner, faster events page",
+  "changelog.entries.events-page-utility-redesign.body":
+    "Events is now a utility-first page: a compact header with the My events / Discover switch and one place to host, no oversized hero, a small “Next up” highlight when something's on, and search in Browse.",
+
+  "changelog.entries.magazine-writer-workspace.title":
+    "The writer workspace",
+  "changelog.entries.magazine-writer-workspace.body":
+    "Opened the contributor workspace — writers now see their own assignments, pitches and payments, choose their byline, and file drafts, all in one place.",
+
+  "changelog.entries.persona-discovery-nudges.title":
+    "Personas, easier to discover",
+  "changelog.entries.persona-discovery-nudges.body":
+    "A persona of your own is now easier to notice, whenever it's relevant: a quiet suggestion on your profile if you haven't made one yet, a closing nudge at the bottom of the persona directory, a step during onboarding, a prompt after a gathering you performed at, and a highlighted credit when someone credits your work on theirs. Every one of these is dismissible.",
+
+  "changelog.entries.magazine-deck-editor-redesign.title":
+    "The slide-deck editor, redesigned",
+  "changelog.entries.magazine-deck-editor-redesign.body":
+    "Redesigned the slide-deck editor to match the magazine desk — a live slide preview that mirrors exactly what readers see, per-slide character budgets, and a pre-publish checklist.",
+
+  "changelog.entries.magazine-desk-redesign.title":
+    "The magazine editor desk, redesigned",
+  "changelog.entries.magazine-desk-redesign.body":
+    "Redesigned the magazine editor desk — a live editorial dashboard with pipeline, board and issue-plan views, a pitch inbox, saved views, command palette (⌘K) and keyboard shortcuts.",
+
+  "changelog.entries.persona-directory-redesign.title":
+    "The persona directory, redesigned",
+  "changelog.entries.persona-directory-redesign.body":
+    "Browsing personas is now organised by six craft families — Stage, Studio, Page, Workshop, Practice and Table — so you can narrow in on the kind of work you're after before you even search. Cards now show tags and a follower count at a glance, and a lighter \"Also working as\" block on member profiles gives each linked persona the same clearer, richer look.",
+
+  "changelog.entries.persona-editor-redesign.title":
+    "A redesigned editor for your personas",
+  "changelog.entries.persona-editor-redesign.body":
+    "Editing a persona now has its own dedicated space: a section rail on the left, a live preview docked next to your edits, richer fields for gigs, visual work and projects, and a clear heads-up before an already-published address changes.",
+
+  "changelog.entries.magazine-article-editor.title":
+    "The block-based article editor, live",
+  "changelog.entries.magazine-article-editor.body":
+    "Added the block-based article editor — write in paragraphs, headings, pull quotes, images, Q&As and stat rows, with inline emphasis, a slash menu, a live word and read-time count, and a pre-publish checklist.",
+
+  "changelog.entries.magazine-piece-record.title":
+    "The full piece record, opened",
+  "changelog.entries.magazine-piece-record.body":
+    "Opened the full piece record — brief, care & consent, money, history and reader letters — with a publish gate that holds a piece until consent and the sensitivity read are settled.",
+
+  "changelog.entries.persona-dashboard-redesign.title":
+    "Your personas, in one redesigned dashboard",
+  "changelog.entries.persona-dashboard-redesign.body":
+    "Your personas dashboard got a redesign: each card now shows a draft-readiness ring or a live status pill, its tie and availability at a glance, and how many co-owners it has. Starting a new persona is now a guided two-step flow — pick what it's for, then give it a name and choose whether it's linked to your profile or stands on its own.",
+
+  "changelog.entries.persona-pages-redesigned.title":
+    "Persona pages, redesigned for every craft",
+  "changelog.entries.persona-pages-redesigned.body":
+    "Every persona now gets a page built for how that craft actually shows up: performers get a stage marquee with booking details, visual artists get a studio wall with a full-screen work lightbox, writers get a page-like layout with pull-quotes, coders and makers get a workshop sheet, therapists get a calm practice layout with session logistics, and chefs and mixologists get a printed menu card. Reporting a persona and seeing who's endorsed or following them also moved into their own focused screens.",
+
+  "changelog.entries.persona-page-unavailable-reasons.title":
+    "Persona pages now tell you why, not just \"not found\"",
+  "changelog.entries.persona-page-unavailable-reasons.body":
+    "If a persona is private, members-only, or has been removed, its page now says which one instead of a plain \"not found.\" And if you're the owner (or co-owner) of a persona you haven't published yet, its address now shows you a preview of your own draft with a publish-readiness banner, rather than nothing at all.",
+
+  "changelog.entries.meet-the-table.title": "See who's at the table",
+  "changelog.entries.meet-the-table.body":
+    "Supper club pages now show a warm, top-down view of the table — who's hosting, who's already coming, and which seats are still open. Tap someone to read a little about them before you arrive. We also retired an old placeholder ticket-checkout screen that was never a real payment.",
+
+  "changelog.entries.settings-mobile-nav-strips.title":
+    "Easier settings and profile editing on your phone",
+  "changelog.entries.settings-mobile-nav-strips.body":
+    "On a phone, Settings and Edit profile now carry a compact strip of tabs that stays pinned to the top as you scroll, so you can jump straight to a section instead of scrolling past everything. On Edit profile the current section highlights itself as you move down the page.",
+
+  "changelog.entries.places-card-mobile-foot.title":
+    "Tidier “Places you run” cards on mobile",
+  "changelog.entries.places-card-mobile-foot.body":
+    "On a phone, the reference number and the Edit / Delete / View listing actions on your directory-listing cards no longer squeeze onto one cramped line — the reference now sits on its own row above a clean row of actions.",
+
+  "changelog.entries.vouch-for-a-safe-space.title": "Vouch for a safe space",
+  "changelog.entries.vouch-for-a-safe-space.body":
+    "If a venue has been good to you, you can now add your own vouch to its safe-space page — with an optional note and how you know the place, or anonymously. Your vouch joins the ones other members and moderators have left, so newcomers can see who stands behind a space.",
+
+  "changelog.entries.my-events-change-list-live.title":
+    "See what's changed in My Events",
+  "changelog.entries.my-events-change-list-live.body":
+    "The bell on your My Events page now works outside the demo. Open it for a running list of updates to events you've RSVP'd to or been invited to — a changed time, a new place, a cancellation — each one marked unread until you've seen it.",
+
+  "changelog.entries.applications-inside-work-hub.title":
+    "Applications moved into your Work hub",
+  "changelog.entries.applications-inside-work-hub.body":
+    "Applications no longer has its own line in the profile menu — it now lives at the top of your Work hub, alongside mentorship, skills and everything else career-related. Open Work from the profile menu and you'll find your applications waiting there in both demo and live mode.",
+
+  "changelog.entries.invite-only-community-tier.title":
+    "Invite-only communities are gated again",
+  "changelog.entries.invite-only-community-tier.body":
+    "Communities set to invite-only or request-to-join were showing an “Open to all” label and a one-tap Join button — the same as a fully open community. They now display their real join policy everywhere (the directory cards, the community page and the join sheet), so an invite-only space asks for an invite instead of letting anyone straight in.",
 
   "changelog.entries.navbar-wordmark-no-wrap.title":
     "The QueerPulse logo no longer stacks up",
@@ -2281,6 +2465,30 @@ export const marketing: Catalog = {
     "Verified safe spaces now live in the directory",
   "changelog.entries.safe-spaces-in-directory.body":
     "The verified badge now shows right on the card in the local directory, a “Verified safe spaces” filter narrows the list to just the ones that earned it, and verified listings rank first. Open any listing to see the full trust block — what verification means for that space and when it was last reviewed. And /local/safe-spaces is now the verification hub: what the badge means, how the review process actually works, and an honest, public record of every space that's lost it.",
+
+  "changelog.entries.magazine-desk-polish-sweep.title":
+    "Polish across the magazine desk",
+  "changelog.entries.magazine-desk-polish-sweep.body":
+    "Consistent heading colours in dark mode, linked-deck editing from the desk, per-assignment byline control for writers, and assorted cleanups.",
+
+  "changelog.entries.magazine-piece-messaging.title":
+    "Editors and writers can now message each other on the piece",
+  "changelog.entries.magazine-piece-messaging.body":
+    "Editors and writers now message each other on the piece itself — chases and questions live beside the work, not in email, and both sides always see the whole thread.",
+
+  "changelog.entries.live-press-kit-real-data.title":
+    "The press kit now shows real coverage, contacts and figures",
+  "changelog.entries.live-press-kit-real-data.body":
+    "The press kit's coverage and press-desk contacts now come from what the team actually publishes and keeps up to date, and the headline figures are drawn from the platform itself — no invented numbers. Each section simply stays hidden until there's something real to show.",
+  "changelog.entries.communities-and-home-merged.title":
+    "Communities, all in one place",
+  "changelog.entries.communities-and-home-merged.body":
+    "Your community hub and the discovery directory now live on a single /communities page, with a My communities / Discover switch up top. It opens on your hub when you belong to a community, and on Discover when you don't.",
+
+  "changelog.entries.silent-session-recovery.title":
+    "No more “session expired” flash when you come back",
+  "changelog.entries.silent-session-recovery.body":
+    "Returning after a while away, you might have seen a “session expired” error pop up for a moment — and then get signed right back in anyway. That message was misfiring on a session the app was already quietly renewing. Now, when we can restore your session on our own, we do it silently: no error, nothing to read, you just pick up where you left off. You'll only ever be told your session ended when it actually has and you need to sign in again.",
 
   "changelog.entries.session-refresh-csrf-race.title":
     "Smoother session refresh after a token expires",

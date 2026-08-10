@@ -27,7 +27,7 @@ import styles from "./SubprofileShowcase.module.css";
  * `isSelf`/`ownerMetaBySlug` mirror the desktop split path exactly (same
  * props, same source in `SubprofileShowcase`) so a signed-in owner gets the
  * same Edit control, status/visibility badges, disabled Follow/Endorse
- * (`isOwnerViewing`), and "Add another side" affordance on a phone that they
+ * (`isOwnerViewing`), and "Add another persona" affordance on a phone that they
  * get on desktop — the owner invariant is not viewport-scoped.
  */
 export function SubprofileShowcaseMobile({

@@ -99,6 +99,14 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
               setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.connections, next)
             }
           />
+          <ConsentToggleRow
+            title={t("settings:notifications.messages.vouch.title")}
+            description={t("settings:notifications.messages.vouch.desc")}
+            checked={isEnabled(NOTIFICATION_PREFERENCE_CATEGORY.vouches)}
+            onChange={(next) =>
+              setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.vouches, next)
+            }
+          />
           {/* No "wave"/"say hello" notification type exists yet — cosmetic. */}
           <ToggleRow
             title={t("settings:notifications.messages.sayHello.title")}
@@ -129,6 +137,14 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
                 NOTIFICATION_PREFERENCE_CATEGORY.communityReplies,
                 next,
               )
+            }
+          />
+          <ConsentToggleRow
+            title={t("settings:notifications.communities.mention.title")}
+            description={t("settings:notifications.communities.mention.desc")}
+            checked={isEnabled(NOTIFICATION_PREFERENCE_CATEGORY.mentions)}
+            onChange={(next) =>
+              setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.mentions, next)
             }
           />
           {/* No weekly email digest job exists yet — cosmetic. */}

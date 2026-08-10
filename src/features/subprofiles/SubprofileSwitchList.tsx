@@ -55,8 +55,8 @@ export function SubprofileSwitchList({
   /** Derives a row's tab id from its persona slug — shared with the hero's
    *  `aria-labelledby` so the two stay in lockstep. */
   tabId: (slug: string) => string;
-  /** Self view: the header shows a count ("4 sides") instead of the generic
-   *  "More sides" label, gains an "Add another side" link, and each row
+  /** Self view: the header shows a count ("4 personas") instead of the generic
+   *  "More personas" label, gains an "Add another persona" link, and each row
    *  shows its status/visibility. `false` on the public path (the default). */
   isSelf?: boolean;
   /** Per-persona owner-only metadata (status/visibility), keyed by slug —

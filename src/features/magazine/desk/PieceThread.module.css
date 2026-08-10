@@ -1,0 +1,103 @@
+/* The editor↔writer per-piece message thread (Phase 7 Wave F), shared by the
+   desk's Chase modal and the writer workspace's message overlay. */
+
+.thread {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 340px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tiny {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  margin: 0;
+}
+
+.bubbleRow {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.bubbleRowMine {
+  justify-content: flex-end;
+}
+
+.bubble {
+  max-width: 78%;
+  padding: 10px 13px;
+  border-radius: 16px 16px 16px 4px;
+  background: rgba(var(--plum-rgb), 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bubbleMine {
+  background: rgba(var(--accent-rgb), 0.12);
+  border-radius: 16px 16px 4px 16px;
+}
+
+.bubbleMeta {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.bubbleAuthor {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--plum);
+}
+
+.bubbleTime {
+  font-size: 11px;
+  color: var(--ink-40);
+}
+
+.bubbleBody {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink-60);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.composer {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.composer textarea {
+  flex: 1;
+  border: 1.5px solid rgba(var(--line-rgb), 0.2);
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: var(--paper);
+  min-height: 44px;
+  resize: vertical;
+  font: inherit;
+  color: var(--ink);
+}
+
+.composer textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}

@@ -1,0 +1,200 @@
+/* Left rail — fixed dark surface (like AdminSidebar): plum background, cream
+   text. `--cream-rgb`/`--plum` intentionally do NOT flip in dark mode (see
+   colors.css), so cream-on-plum stays legible in both themes. */
+.rail {
+  width: 214px;
+  flex: none;
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 22px 14px;
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 0.9);
+  overflow-y: auto;
+}
+
+.brand {
+  font-family: var(--serif);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  padding: 0 8px 18px;
+  text-decoration: none;
+  color: rgba(var(--cream-rgb), 1);
+}
+.brandName em {
+  font-style: italic;
+  color: var(--accent);
+}
+.brandDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+.eyebrow {
+  padding: 0 12px 8px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 0.4);
+}
+
+/* ── Nav ─────────────────────────────────────────────────────────────────── */
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: rgba(var(--cream-rgb), 0.66);
+  text-decoration: none;
+  transition:
+    background var(--dur, 0.18s) var(--ease, ease),
+    color var(--dur, 0.18s) var(--ease, ease);
+}
+.navItem svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+@media (hover: hover) {
+  .navItem:hover {
+    background: rgba(var(--cream-rgb), 0.08);
+    color: rgba(var(--cream-rgb), 1);
+  }
+}
+.navItemActive {
+  background: rgba(var(--cream-rgb), 0.13);
+  color: rgba(var(--cream-rgb), 1);
+}
+.navLabel {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── "Since Friday" bell ────────────────────────────────────────────────── */
+.bell {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 13.5px;
+  color: rgba(var(--cream-rgb), 0.66);
+  background: transparent;
+  width: 100%;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--dur, 0.18s) var(--ease, ease),
+    color var(--dur, 0.18s) var(--ease, ease);
+}
+.bell svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+}
+@media (hover: hover) {
+  .bell:hover {
+    background: rgba(var(--cream-rgb), 0.08);
+    color: rgba(var(--cream-rgb), 1);
+  }
+}
+.pip {
+  margin-left: auto;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+.railFoot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 6px 0;
+}
+.backToPlatform {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  color: rgba(var(--cream-rgb), 0.6);
+  text-decoration: none;
+  transition:
+    background var(--dur, 0.18s) var(--ease, ease),
+    color var(--dur, 0.18s) var(--ease, ease);
+}
+.backToPlatform svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+@media (hover: hover) {
+  .backToPlatform:hover {
+    background: rgba(var(--cream-rgb), 0.08);
+    color: #f7f3ee;
+  }
+}
+.kbdHint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  color: rgba(var(--cream-rgb), 0.45);
+}
+.kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: 5px;
+  border: 1px solid var(--line-2);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-60);
+  background: var(--paper);
+}
+
+@media (max-width: 900px) {
+  .rail {
+    position: relative;
+    height: 100%;
+    padding-block-start: max(18px, env(safe-area-inset-top));
+    padding-block-end: max(16px, env(safe-area-inset-bottom));
+  }
+}

@@ -1,198 +1,209 @@
-import { FiExternalLink } from "react-icons/fi";
-import { initialsFromName } from "../../shared/lib/initials";
 import { safeHref } from "../../shared/lib/safeHref";
-import { Link } from "react-router-dom";
-import {
-  Avatar,
-  ImageSlot,
-  Reveal,
-  SectionHead,
-  Tag,
-  TagRow,
-} from "../../shared/components/ui";
+import { Reveal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { CollaboratorDTO } from "./api/subprofiles.api";
+import { isUpcoming, sectionShape } from "./personaSkinRender";
+import type { PersonaViewMode } from "./personaSkinRender";
+import { SubprofileItemRow } from "./SubprofileItemRow";
+import { SubprofileItemTile } from "./SubprofileItemTile";
 import type {
+  PublicSubprofileView,
   SubprofileItemView,
   SubprofileSectionView,
 } from "./api/subprofiles.adapters";
-import { collaboratorHref } from "./collaborators.data";
-import styles from "./SubprofileSections.module.css";
+import type { SkinFamily } from "./subprofile-skins";
 
-/** Credit row for an item's collaborators — a small "with" label plus each
- *  collaborator as an avatar+name link (member profile or persona page).
- *  Renders nothing when the item has none. */
-function ItemCollaborators({
-  collaborators,
+/** A `.pp-sec`'s items in `.pp-list`/`.pp-tiles`/upcoming+`.pp-past` shape,
+ *  per `sectionShape()`. Shared by the content-section loop below. */
+function SectionBody({
+  shape,
+  items,
+  skin,
+  interactive,
+  onOpenWork,
 }: {
-  collaborators: CollaboratorDTO[];
+  shape: "list" | "visual" | "stage-split";
+  items: SubprofileItemView[];
+  skin: SkinFamily;
+  interactive: boolean;
+  onOpenWork?: (item: SubprofileItemView) => void;
 }) {
   const { t } = useTranslation();
-  if (collaborators.length === 0) return null;
-  return (
-    <div className={styles.collaborators}>
-      <span className={styles.collabLabel}>{t("subprofiles:collab.with")}</span>
-      <ul className={styles.collabList}>
-        {collaborators.map((collaborator) => (
-          <li key={collaborator.handle}>
-            <Link
-              className={styles.collabLink}
-              to={collaboratorHref(collaborator)}
-            >
-              <Avatar
-                initials={initialsFromName(collaborator.name, "?")}
-                src={collaborator.avatarUrl ?? undefined}
-                alt={collaborator.name}
-                size={22}
-              />
-              <span className={styles.collabName}>{collaborator.name}</span>
-            </Link>
-          </li>
+
+  if (shape === "visual") {
+    return (
+      <div className="pp-tiles">
+        {items.map((item, index) => (
+          <SubprofileItemTile
+            key={`${item.title}::${item.date}::${index}`}
+            item={item}
+            index={index}
+            onOpenWork={interactive && skin === "studio" ? onOpenWork : undefined}
+          />
         ))}
-      </ul>
+      </div>
+    );
+  }
+
+  if (shape === "stage-split") {
+    const upcoming = items.filter((item) => isUpcoming(item.date));
+    const past = items.filter((item) => !isUpcoming(item.date));
+    return (
+      <>
+        <div className="pp-list">
+          {upcoming.map((item, index) => (
+            <SubprofileItemRow
+              key={`${item.title}::${item.date}::${index}`}
+              item={item}
+              skin={skin}
+              interactive={interactive}
+            />
+          ))}
+        </div>
+        {past.length > 0 && (
+          <div className="pp-past">
+            <span className="pp-past-label">{t("subprofiles:row.played")}</span>
+            <div className="pp-list">
+              {past.map((item, index) => (
+                <SubprofileItemRow
+                  key={`${item.title}::${item.date}::${index}`}
+                  item={item}
+                  skin={skin}
+                  interactive={interactive}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  return (
+    <div className="pp-list">
+      {items.map((item, index) => (
+        <SubprofileItemRow
+          key={`${item.title}::${item.date}::${index}`}
+          item={item}
+          skin={skin}
+          interactive={interactive}
+        />
+      ))}
     </div>
   );
 }
 
-/** A field is rendered only when the section's descriptor lists it AND the item
- *  actually carries a value — so each kind shows exactly the shape spec §3.3
- *  gives it, and nothing empty. `tags` counts as present only when non-empty. */
-function shows(
-  section: SubprofileSectionView,
-  item: SubprofileItemView,
-  field: keyof SubprofileItemView,
-): boolean {
-  if (!section.fields.includes(field)) return false;
-  const value = item[field];
-  return Array.isArray(value) ? value.length > 0 : Boolean(value);
-}
-
-function ItemCard({
+/** The universal `links` section — a `.pp-list` of `.pp-row.pp-link` rows
+ *  rather than the shape-dispatched content sections above. In `preview`
+ *  mode (`interactive` false) each row is a non-navigable look-alike (a
+ *  `<div>`, same classes/content) rather than a real `<a>` — a Phase-3
+ *  editor preview must never let a click actually navigate away. */
+function LinksSection({
   section,
-  item,
+  interactive,
 }: {
   section: SubprofileSectionView;
-  item: SubprofileItemView;
+  interactive: boolean;
 }) {
   const { t } = useTranslation();
-  const hasImage = shows(section, item, "imageUrl");
   return (
-    <article className={styles.card}>
-      {hasImage && (
-        <ImageSlot
-          src={item.imageUrl}
-          alt={item.title}
-          tint="plum"
-          height={168}
-          radius={14}
-          className={styles.cardImage}
-        />
-      )}
-      <div className={styles.cardBody}>
-        <h3 className={styles.itemTitle}>{item.title}</h3>
-        {shows(section, item, "subtitle") && (
-          <p className={styles.itemSubtitle}>{item.subtitle}</p>
-        )}
-        {(shows(section, item, "date") || shows(section, item, "meta")) && (
-          <p className={styles.itemMeta}>
-            {shows(section, item, "date") && (
-              <span className={styles.date}>{item.date}</span>
-            )}
-            {shows(section, item, "meta") && <span>{item.meta}</span>}
-          </p>
-        )}
-        {shows(section, item, "description") && (
-          <p className={styles.itemDesc}>{item.description}</p>
-        )}
-        {shows(section, item, "tags") && (
-          <TagRow className={styles.itemTags}>
-            {item.tags.map((tag) => (
-              <Tag key={tag}>{tag}</Tag>
-            ))}
-          </TagRow>
-        )}
-        <ItemCollaborators collaborators={item.collaborators} />
-        {shows(section, item, "url") && safeHref(item.url) && (
-          <a
-            className={styles.visit}
-            href={safeHref(item.url) ?? undefined}
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            {t("subprofiles:page.visit")} <FiExternalLink aria-hidden />
-          </a>
-        )}
-      </div>
-    </article>
-  );
-}
-
-/** The universal `links` section: a compact row of external links rather than
- *  full cards — each item is just a label (title) and a url. */
-function LinksRow({ section }: { section: SubprofileSectionView }) {
-  return (
-    <ul className={styles.linksRow}>
-      {section.items.map((item) => {
-        // Skip any member-supplied link whose scheme isn't safe to render.
-        const linkHref = safeHref(item.url);
-        if (!linkHref) return null;
-        return (
-          <li key={`${item.title}::${item.url}`}>
+    <section className="pp-sec">
+      <header>
+        <h2>{t(section.labelKey)}</h2>
+      </header>
+      <div className="pp-list">
+        {section.items.map((item) => {
+          const linkHref = safeHref(item.url);
+          if (!linkHref) return null;
+          const rowContent = (
+            <>
+              <b>{item.title}</b>
+              <span className="href">{linkHref}</span>
+            </>
+          );
+          if (!interactive) {
+            return (
+              <div
+                key={`${item.title}::${item.url}`}
+                className="pp-row pp-link"
+              >
+                {rowContent}
+              </div>
+            );
+          }
+          return (
             <a
-              className={styles.linkPill}
+              key={`${item.title}::${item.url}`}
+              className="pp-row pp-link"
               href={linkHref}
               target="_blank"
               rel="noreferrer noopener"
             >
-              {item.title} <FiExternalLink aria-hidden />
+              {rowContent}
             </a>
-          </li>
-        );
-      })}
-    </ul>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 
-/** Renders a public persona's sections. `sections` arrives already grouped and
- *  empty-dropped from the adapter (`buildSections`), ordered by `sectionsForKind`.
- *  Each section shows a `SectionHead` (icon + label) then its items. */
+/**
+ * Renders a public persona's sections onto the page host's `.pp-body`. Each
+ * section's shape (`.pp-list` / `.pp-tiles` / upcoming+`.pp-past`) comes from
+ * `sectionShape()` (Task 2) — same markup for every skin, `data-skin` on the
+ * page's `.pp` ancestor decides how it looks. The universal `links` section
+ * renders separately, last, as plain link rows rather than shape-dispatched.
+ * `featuredHidden` drops the item already shown in the page's Spotlight (or,
+ * for the table skin, its `MenuCard`) from its own section list.
+ */
 export function SubprofileSections({
-  sections,
+  persona,
+  skin,
+  mode,
+  featuredHidden,
+  onOpenWork,
 }: {
-  sections: SubprofileSectionView[];
+  persona: PublicSubprofileView;
+  skin: SkinFamily;
+  mode: PersonaViewMode;
+  featuredHidden: boolean;
+  /** Opens the studio lightbox on a clicked tile — only meaningful (and only
+   *  read) for `skin === "studio"`'s visual sections; see
+   *  `SubprofileItemTile`. */
+  onOpenWork?: (item: SubprofileItemView) => void;
 }) {
   const { t } = useTranslation();
-  if (sections.length === 0) return null;
+  const interactive = mode !== "preview";
+  const linksSection = persona.sections.find((s) => s.section === "links");
+  const contentSections = persona.sections.filter((s) => s.section !== "links");
+
   return (
-    <div className={styles.sections}>
-      {sections.map((section) => {
-        const Icon = section.icon;
+    <>
+      {contentSections.map((section) => {
+        const items = featuredHidden
+          ? section.items.filter((item) => !item.isFeatured)
+          : section.items;
+        if (items.length === 0) return null;
+        const shape = sectionShape(section.section, skin, items);
         return (
-          <Reveal as="section" key={section.section} className={styles.section}>
-            <SectionHead
-              title={
-                <span className={styles.headTitle}>
-                  <Icon aria-hidden className={styles.headIcon} />
-                  {t(section.labelKey)}
-                </span>
-              }
+          <Reveal as="section" key={section.section} className="pp-sec">
+            <header>
+              <h2>{t(section.labelKey)}</h2>
+              {items.length > 1 && <span className="count">{items.length}</span>}
+            </header>
+            <SectionBody
+              shape={shape}
+              items={items}
+              skin={skin}
+              interactive={interactive}
+              onOpenWork={onOpenWork}
             />
-            {section.section === "links" ? (
-              <LinksRow section={section} />
-            ) : (
-              <div className={styles.grid}>
-                {section.items.map((item) => (
-                  <ItemCard
-                    key={`${item.title}::${item.url}::${item.date}`}
-                    section={section}
-                    item={item}
-                  />
-                ))}
-              </div>
-            )}
           </Reveal>
         );
       })}
-    </div>
+      {linksSection && linksSection.items.length > 0 && (
+        <LinksSection section={linksSection} interactive={interactive} />
+      )}
+    </>
   );
 }

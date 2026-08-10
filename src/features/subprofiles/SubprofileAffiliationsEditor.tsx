@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiPlus, FiUsers } from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -30,7 +30,11 @@ const emptyRow = (): AffiliationInputDTO => ({
  * save — a rejected save surfaces the backend's message (which names the
  * offending entry) as an error toast rather than a generic failure. Saves the
  * whole list in one PUT via `useAffiliations().replace`. Mirrors
- * `SubprofileSocialLinksEditor`'s replace-all add/remove UX.
+ * `SubprofileSocialLinksEditor`'s replace-all add/remove UX. No outer card/
+ * title of its own — the editor's pane router (`EditorPaneRouter`, Task 4)
+ * already renders the "Part of" h2 + lede above whichever pane is active,
+ * reusing this component's own `affiliationsEditor.title`/`.note` copy, so a
+ * second heading here would just repeat it.
  */
 export function SubprofileAffiliationsEditor({
   subprofile,
@@ -88,19 +92,7 @@ export function SubprofileAffiliationsEditor({
   }
 
   return (
-    <section className={sharedStyles.card}>
-      <div className={sharedStyles.cardHead}>
-        <span className={sharedStyles.cardIcon}>
-          <FiUsers size={20} aria-hidden />
-        </span>
-        <h2 className={sharedStyles.cardTitle}>
-          {t("subprofiles:affiliationsEditor.title")}
-        </h2>
-      </div>
-      <p className={sharedStyles.cardNote}>
-        {t("subprofiles:affiliationsEditor.note")}
-      </p>
-
+    <div className="ed-grid">
       {rows.length === 0 && (
         <p className={sharedStyles.emptySection}>
           {t("subprofiles:affiliationsEditor.empty")}
@@ -142,6 +134,6 @@ export function SubprofileAffiliationsEditor({
             : t("subprofiles:affiliationsEditor.save")}
         </Button>
       </div>
-    </section>
+    </div>
   );
 }

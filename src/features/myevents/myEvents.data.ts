@@ -1,4 +1,4 @@
-import type { Recommendation, Prefs, Pill } from "./myEvents.types";
+import type { Prefs, Pill } from "./myEvents.types";
 
 /** Pill buckets, in display order. */
 export const PILLS: Pill[] = [
@@ -45,29 +45,4 @@ export const DEFAULT_PREFS: Prefs = {
   email: true,
   push: true,
 };
-
-
-export const RECOMMENDATIONS: Recommendation[] = [
-  {
-    id: "rec1",
-    title: "Reading Group #9 — “Giovanni’s Room”",
-    date: "Tue 28 Jul · 19:00",
-    venue: "Mouraria Community Centre",
-    reason: "Because you went to Reading Group #8",
-  },
-  {
-    id: "rec2",
-    title: "Trans Masc Brunch",
-    date: "Sun 13 Jul · 11:30",
-    venue: "Café Janis, Cais do Sodré",
-    reason: "Popular in Trans Lisbon, a circle you’re in",
-  },
-  {
-    id: "rec3",
-    title: "Queer Swimming Social",
-    date: "Sat 19 Jul · 10:00",
-    venue: "Oeiras beach",
-    reason: "3 of your connections are going",
-  },
-];
 

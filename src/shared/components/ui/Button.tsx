@@ -3,7 +3,7 @@ import { Link, type LinkProps } from "react-router-dom";
 import styles from "./Button.module.css";
 
 export type ButtonVariant =
-  "primary" | "ghost" | "ghost-dark" | "jade" | "danger";
+  "primary" | "ghost" | "ghost-dark" | "jade" | "plum" | "danger";
 export type ButtonSize = "sm" | "md" | "lg";
 
 const variantClass: Record<ButtonVariant, string | undefined> = {
@@ -11,6 +11,7 @@ const variantClass: Record<ButtonVariant, string | undefined> = {
   ghost: styles.ghost,
   "ghost-dark": styles.ghostDark,
   jade: styles.jade,
+  plum: styles.plum,
   danger: styles.danger,
 };
 

@@ -5,17 +5,7 @@
 }
 
 .head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
   margin-bottom: 36px;
-}
-.headActions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
 }
 .eyebrow {
   font-size: 11px;

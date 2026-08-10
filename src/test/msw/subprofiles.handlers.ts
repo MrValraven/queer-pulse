@@ -5,27 +5,87 @@ import type {
   CreateSubprofileDTO,
   SocialLinkDTO,
   SubprofileDTO,
+  SubprofileItemDTO,
   SubprofileItemInputDTO,
   SubprofileSection,
   UpdateSubprofileDTO,
 } from "../../features/subprofiles/api/subprofiles.api";
 import {
+  findDemoSubprofileByHandle,
+  findDemoSubprofileByOwnerSlug,
   mockDirectory,
   mockEndorsersById,
   mockMineSubprofiles,
-  mockPublicByHandle,
   mockSetEndorsed,
   mockSetFollowing,
   mockSubprofileById,
   mockSubprofilesForProfile,
   resolveCollaboratorsDemo,
+  resolvePublicAccessDemo,
   validatePublishDemo,
+  type DemoPublicAccessResult,
 } from "../../features/subprofiles/data/subprofiles.data";
 import {
   KIND_LABELS,
   defaultSlugForKind,
   slugify,
 } from "../../features/subprofiles/subprofile-kinds";
+
+/** Map incoming section-replace input items to full wire items (mirrors the
+ *  real service's field defaulting + collaborator resolution): `links` items
+ *  can never be featured, and every new/optional scalar defaults to `null`.
+ *  Pulled out of `subprofileHandlers` to keep that function under the
+ *  repo's line cap. */
+function buildReplacedSectionItems(
+  section: SubprofileSection,
+  items: SubprofileItemInputDTO[],
+): SubprofileItemDTO[] {
+  const isLinksSection = section === "links";
+  return items.map((item) => ({
+    section,
+    title: item.title,
+    subtitle: item.subtitle ?? null,
+    description: item.description ?? null,
+    url: item.url ?? null,
+    imageUrl: item.imageUrl ?? null,
+    date: item.date ?? null,
+    meta: item.meta ?? null,
+    tags: item.tags ?? [],
+    isFeatured: isLinksSection ? false : (item.isFeatured ?? false),
+    collaborators: resolveCollaboratorsDemo(item.collaborators),
+    venue: item.venue ?? null,
+    doors: item.doors ?? null,
+    ticketUrl: item.ticketUrl ?? null,
+    gigState: item.gigState ?? null,
+    medium: item.medium ?? null,
+    dimensions: item.dimensions ?? null,
+    edition: item.edition ?? null,
+    workState: item.workState ?? null,
+    structured: item.structured ?? null,
+  }));
+}
+
+/**
+ * Turn a `resolvePublicAccessDemo` outcome into the exact live-wire shape the
+ * Shared Contract (Phase 1b) promises: 200 the DTO / 403 `{restrictedState}`
+ * / 404 empty. Used by both single-item public-read handlers below so they
+ * stay byte-for-byte in sync with `usePublicSubprofile`'s demo branch — the
+ * same resolver, just rendered as an HTTP response instead of a hook result.
+ * MSW has no real signed-in-cookie context, so these handlers always resolve
+ * as an anonymous (signed-out) viewer; a suite exercising the owner-preview
+ * path calls `resolvePublicAccessDemo` directly instead (see
+ * `usePublicSubprofile.live.test.tsx`).
+ */
+function publicAccessResponse(result: DemoPublicAccessResult) {
+  if (result.kind === "ok") return HttpResponse.json(result.dto);
+  if (result.kind === "restricted") {
+    return HttpResponse.json(
+      { restrictedState: result.restricted },
+      { status: 403 },
+    );
+  }
+  return new HttpResponse(null, { status: 404 });
+}
 
 /**
  * MSW handlers for the subprofiles C4 endpoints. They double as executable
@@ -39,12 +99,28 @@ export function subprofileHandlers(api: string) {
     http.get(`${api}/profiles/:slug/subprofiles`, ({ params }) =>
       HttpResponse.json(mockSubprofilesForProfile(String(params.slug))),
     ),
-    http.get(`${api}/subprofiles/by-handle/:handle`, ({ params }) => {
-      const dto = mockPublicByHandle(String(params.handle));
-      return dto
-        ? HttpResponse.json(dto)
-        : new HttpResponse(null, { status: 404 });
-    }),
+    // Phase 1b: single-item nested-linked read — same restricted-state
+    // contract as the by-handle route below (200/403/404), unlike the bulk
+    // list above (which can only ever return already-viewable personas).
+    http.get(`${api}/profiles/:slug/subprofiles/:subslug`, ({ params }) =>
+      publicAccessResponse(
+        resolvePublicAccessDemo(
+          findDemoSubprofileByOwnerSlug(
+            String(params.slug),
+            String(params.subslug),
+          ),
+          null,
+        ),
+      ),
+    ),
+    http.get(`${api}/subprofiles/by-handle/:handle`, ({ params }) =>
+      publicAccessResponse(
+        resolvePublicAccessDemo(
+          findDemoSubprofileByHandle(String(params.handle)),
+          null,
+        ),
+      ),
+    ),
     http.get(`${api}/subprofiles/directory`, ({ request }) => {
       const url = new URL(request.url);
       return HttpResponse.json({
@@ -88,6 +164,7 @@ export function subprofileHandlers(api: string) {
         endorsementCount: 0,
         followerCount: 0,
         affiliations: [],
+        skinData: null,
       };
       return HttpResponse.json(created, { status: 201 });
     }),
@@ -115,20 +192,7 @@ export function subprofileHandlers(api: string) {
         // Mirrors the demo mutation path: `links` items can never be featured,
         // and a featured item arriving in this section clears `isFeatured` on
         // every other section's items (single spotlight per persona).
-        const isLinksSection = section === "links";
-        const replacedItems = body.items.map((item) => ({
-          section,
-          title: item.title,
-          subtitle: item.subtitle ?? null,
-          description: item.description ?? null,
-          url: item.url ?? null,
-          imageUrl: item.imageUrl ?? null,
-          date: item.date ?? null,
-          meta: item.meta ?? null,
-          tags: item.tags ?? [],
-          isFeatured: isLinksSection ? false : (item.isFeatured ?? false),
-          collaborators: resolveCollaboratorsDemo(item.collaborators),
-        }));
+        const replacedItems = buildReplacedSectionItems(section, body.items);
         const incomingHasFeaturedItem = replacedItems.some(
           (item) => item.isFeatured,
         );

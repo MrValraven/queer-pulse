@@ -25,8 +25,8 @@ export interface WithdrawVariables {
  * routes key on the non-identifying persona id, never slug/handle). Mirrors
  * the demo/live branch in `useSubprofileMutations`: live calls the API; demo
  * flips the shared in-memory `DEMO_SUBPROFILES` state via `mockSetEndorsed`,
- * so it stays consistent with `mockPublicByHandle`/`mockEndorsersById` reads
- * (a purely local count nudge here would get overwritten by the very
+ * so it stays consistent with `resolvePublicAccessDemo`/`mockEndorsersById`
+ * reads (a purely local count nudge here would get overwritten by the very
  * invalidate-triggered refetch below). Both branches invalidate the persona
  * public query + this persona's endorsers list on success so the hero control
  * and avatar cluster refetch.

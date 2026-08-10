@@ -1,5 +1,5 @@
 /* Shared offline banner — a fixed, top-of-viewport plum bar that slides down
-   when the device drops offline. Unifies the myevents + checkout copies. */
+   when the device drops offline. Unifies the per-feature myevents copy. */
 .banner {
   position: fixed;
   top: 0;

@@ -1,5 +1,6 @@
 import { apiDelete, apiGet, apiPatch, apiPost } from "../../../shared/api/client";
 import type { Slide } from "../data/decks";
+import type { ArticleBlock } from "./pieces.api";
 
 // ── Backend DTOs ───────────────────────────────────────────────────────────
 // Shapes the NestJS magazine domain returns (mirrors
@@ -38,6 +39,15 @@ export interface ArticleListItemDTO {
 export interface ArticleDTO extends ArticleListItemDTO {
   /** Plain text, paragraphs separated by blank lines. */
   body: string;
+  /**
+   * Block-based body (Phase 3 §7.3), sourced from the block editor's jsonb
+   * `blocks` column. Empty on articles that predate the block editor — the
+   * reader falls back to `body` in that case (see `ArticlePage.tsx`).
+   */
+  blocks: ArticleBlock[];
+  standfirst: string;
+  kicker: string;
+  section: string;
 }
 
 export interface ArticlesPage {

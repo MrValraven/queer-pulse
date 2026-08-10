@@ -20,6 +20,12 @@
   place-items: center;
   background: rgba(var(--jade-rgb), 0.2);
 }
+.icon[data-tone="coral"] {
+  background: rgba(var(--accent-rgb), 0.2);
+}
+.icon[data-tone="plum"] {
+  background: rgba(var(--plum-rgb), 0.25);
+}
 
 .title {
   font-family: var(--serif);

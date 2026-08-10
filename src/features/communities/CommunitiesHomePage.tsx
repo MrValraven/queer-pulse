@@ -1,6 +1,5 @@
 import { FiUsers } from "react-icons/fi";
-import { AppShell } from "../../shared/components/layout";
-import { Button, EmptyState } from "../../shared/components/ui";
+import { EmptyState } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -16,7 +15,7 @@ import {
 import { useCommunitiesHomeData } from "./useCommunitiesHomeData";
 import styles from "./CommunitiesHomePage.module.css";
 
-export function CommunitiesHomePage() {
+export function CommunitiesHome() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const loading = useSimulatedLoad(500);
@@ -27,7 +26,7 @@ export function CommunitiesHomePage() {
     useCommunitiesHomeData();
 
   return (
-    <AppShell>
+    <>
       <div className={styles.page}>
         <div className="wrap">
           <div className={styles.head}>
@@ -35,24 +34,16 @@ export function CommunitiesHomePage() {
               <div className={styles.eyebrow}>
                 {t("communities:hub.eyebrow")}
               </div>
-              <h1 className={styles.h1}>
+              <h2 className={styles.h1}>
                 <Translation
                   i18nKey="communities:hub.welcome"
                   values={{ name: firstName }}
                   components={{ em: <em /> }}
                 />
-              </h1>
+              </h2>
               <p className={styles.sub}>
                 {t("communities:hub.sub", { count: myCommunities.length })}
               </p>
-            </div>
-            <div className={styles.headActions}>
-              <Button variant="ghost" to={routes.communities}>
-                {t("communities:hub.discoverCta")}
-              </Button>
-              <Button variant="primary" to={routes.startCommunity}>
-                {t("communities:hub.startCta")}
-              </Button>
             </div>
           </div>
 
@@ -89,6 +80,6 @@ export function CommunitiesHomePage() {
           )}
         </div>
       </div>
-    </AppShell>
+    </>
   );
 }

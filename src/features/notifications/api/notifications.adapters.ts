@@ -60,6 +60,9 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   "job_application",
   "invite_accepted",
   "listing_review",
+  // A named safe-space vouch resolves the voucher as the actor; an anonymous one
+  // carries no `voucherId`, so `dto.actor` is null and the generic `.text` shows.
+  "safe_space_vouch",
 ]);
 
 export function notificationDtoToView(
@@ -124,6 +127,35 @@ export function notificationDtoToView(
   }
 
   view.sourceHref = sourceHrefFromPayload(dto.payload);
+
+  // `subprofile_credit` (Personas discovery Phase 5, Decision §3): the FIRST
+  // live notification kind to populate `.actions` — every other kind above
+  // leaves it `undefined`, which `NotificationItem` already renders fine
+  // (its `{notification.actions && …}` guard has no demo-only condition, it
+  // was simply never given a live value before this). The deep link comes
+  // straight from `payload.deepLink` (the persona's own page, resolved
+  // server-side); a missing/malformed one just drops the second action
+  // rather than risk a broken href.
+  if (dto.type === "subprofile_credit") {
+    const deepLink = (dto.payload as { deepLink?: unknown } | null)
+      ?.deepLink;
+    view.actions = [
+      {
+        label: t("notifications:actions.makePersona"),
+        variant: "primary",
+        href: `${routes.subprofilesDashboard}?create=1`,
+      },
+      ...(typeof deepLink === "string" && deepLink
+        ? [
+            {
+              label: t("notifications:actions.seeTheWork"),
+              variant: "ghost" as const,
+              href: deepLink,
+            },
+          ]
+        : []),
+    ];
+  }
 
   return view;
 }

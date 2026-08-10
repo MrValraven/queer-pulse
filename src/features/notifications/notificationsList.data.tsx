@@ -1,4 +1,5 @@
 import {
+  FiAward,
   FiBookOpen,
   FiClipboard,
   FiClock,
@@ -94,6 +95,41 @@ function buildUnreadNotifications(
           variant: "ghost",
           href: "#",
           resolve: { toast: t("notifications:list.3.declinedToast") },
+        },
+      ],
+    },
+    {
+      // The demo counterpart of the live `subprofile_credit` row — the FIRST
+      // notification kind with a real `.actions` CTA (see
+      // `notifications.adapters.ts`). Mirrors the backend payload shape
+      // (`subprofileName`/`itemTitle`/a deep link to the persona's page)
+      // with flavour a real payload can't carry a display name for yet.
+      id: 13,
+      type: "community",
+      unread: true,
+      icon: { Glyph: FiAward, background: "rgba(45,27,61,.07)" },
+      text: (
+        <Translation
+          i18nKey="notifications:list.13.text"
+          components={{ strong: <strong /> }}
+          values={{
+            subprofileName: "Nightform",
+            itemTitle: "Collab track — Static Bloom",
+          }}
+        />
+      ),
+      meta: t("notifications:list.13.meta"),
+      time: fmt.relativeTime(-2, "hour"),
+      actions: [
+        {
+          label: t("notifications:actions.makePersona"),
+          variant: "primary",
+          href: `${routes.subprofilesDashboard}?create=1`,
+        },
+        {
+          label: t("notifications:actions.seeTheWork"),
+          variant: "ghost",
+          href: "/p/nightform",
         },
       ],
     },
@@ -296,7 +332,7 @@ function buildReadNotifications(
 
 /**
  * Composes the demo feed from its two order-preserving sections — the unread
- * rows (ids 2–7) followed by the already-read rows (ids 8, 9, 11, 12).
+ * rows (ids 2–7, 13) followed by the already-read rows (ids 8, 9, 11, 12).
  * Splitting the builder by read-state keeps each section small. (Ids 1 and 10
  * were private-message rows, removed when the "messages" category was retired.)
  */
@@ -312,4 +348,4 @@ export function buildNotifications(
 
 /** Ids of demo rows that start unread — used for the bell badge count without
  * needing `t`/`fmt` (the count only depends on the `unread` flag, not copy). */
-export const DEMO_UNREAD_IDS = [2, 3, 4, 5, 6, 7];
+export const DEMO_UNREAD_IDS = [2, 3, 13, 4, 5, 6, 7];

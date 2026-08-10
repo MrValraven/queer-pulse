@@ -167,6 +167,7 @@ export function articleListItemToArticle(
     tags: dto.tags,
     related: [],
     body: [],
+    blocks: [],
   };
 }
 
@@ -183,6 +184,9 @@ export function articleResponseToArticle(
       .split(/\n{2,}/)
       .map((block) => block.trim())
       .filter(Boolean),
+    // Non-empty on articles authored/edited via the block editor — the
+    // reader (`ArticlePage.tsx`) prefers these over `body` when present.
+    blocks: dto.blocks,
   };
 }
 

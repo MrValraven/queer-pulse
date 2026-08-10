@@ -3,7 +3,7 @@ import type { Catalog } from "../../types";
 /**
  * Gatherings — the events/meetups domain: the landing page, the events board
  * and calendar, event + RSVP pages, the host guide, the create wizard, the
- * host's manage/day-of dashboards, the photo album, and ticket checkout.
+ * host's manage/day-of dashboards, the photo album, and the "meet the table" view.
  *
  * Scope: platform chrome only. Mock event titles/descriptions, fictional host
  * and guest bios, and people's names + pronouns stay in English — in live mode
@@ -1053,398 +1053,23 @@ export const gatherings: Catalog = {
   "album.success.meta_other": "album.zip · {count} photos",
   "album.success.doneCta": "Done",
 
-  // ── Checkout — payment, summary, hold ─────────────────────────────────────
-  // Progress
-  "checkout.progress.ariaLabel": "Checkout progress",
-  "checkout.progress.review": "Review",
-  "checkout.progress.payment": "Payment",
-  "checkout.progress.confirm": "Confirm",
-
-  // Summary (sidebar + price summary + mobile bar)
-  "checkout.summary.tier.solidarity": "Solidarity",
-  "checkout.summary.tier.standard": "Standard",
-  "checkout.summary.tier.supporter": "Supporter",
-  "checkout.summary.lineItem_one": "{count} × {tier} seat",
-  "checkout.summary.lineItem_other": "{count} × {tier} seats",
-  "checkout.summary.memberDiscount": "Member discount",
-  "checkout.summary.percentOff": "{percent} off",
-  "checkout.summary.promoLabel": "Promo · {code}",
-  "checkout.summary.total": "Total",
-  "checkout.summary.feesNote":
-    "Includes all fees. Processed securely by Stripe.",
-  "checkout.summary.priceNote":
-    "Includes all fees. No booking surcharge. Secure payment via Stripe.",
-  "checkout.summary.paidLabel": "Paid · {amount}",
-  "checkout.summary.editOrderCta": "Edit order",
-  "checkout.summary.hostingLine": "<name>{hostName}</name> is hosting",
-  "checkout.summary.guestsConfirmed_one": "{count} guest confirmed so far",
-  "checkout.summary.guestsConfirmed_other": "{count} guests confirmed so far",
-  "checkout.summary.safetyNote":
-    "Invite-only · every member is verified before they can book.",
-  "checkout.summary.visibilityPrivateToast":
-    "You'll attend privately — hidden from the guest list.",
-  "checkout.summary.visibilityPublicToast": "You'll appear on the guest list.",
-
-  // Mobile bar
-  "checkout.mobileBar.continueCta": "Continue",
-  "checkout.mobileBar.payCta": "Pay {amount}",
-
-  // Payment step + tabs + express/alt-pay copy
-  "checkout.payment.title": "Payment <em>details</em>",
-  "checkout.payment.lede":
-    "Encrypted and processed by Stripe. QueerPulse never sees or stores your card number.",
-  "checkout.payment.methodTabsAriaLabel": "Payment method",
-  "checkout.payment.tabCardTitle": "Card",
-  "checkout.payment.tabCardSub": "Visa, Mastercard, Amex",
-  "checkout.payment.tabMbwayTitle": "MB WAY",
-  "checkout.payment.tabMbwaySub": "Approve in your app",
-  "checkout.payment.tabMultibancoTitle": "Multibanco",
-  "checkout.payment.tabMultibancoSub": "Reference / ATM",
-  "checkout.payment.payCtaCard": "Pay {amount}",
-  "checkout.payment.payCtaMbway": "Send request for {amount}",
-  "checkout.payment.payCtaMultibanco": "Confirm booking · {amount}",
-  "checkout.payment.processingLabel": "Processing…",
-  "checkout.payment.trustLock": "256-bit encrypted",
-  "checkout.payment.viaStripe": "via <strong>Stripe</strong>",
-  "checkout.payment.termsNotice":
-    "By paying you agree to our <terms>terms of service</terms> and <privacy>privacy policy</privacy>. You can cancel for a full refund up to 48h before.",
-  "checkout.payment.demoHint":
-    "Demo: use card <strong>4000 0000 0000 0002</strong> to see a declined-payment flow.",
-  "checkout.payment.backToReviewCta": "Back to review",
-  "checkout.payment.mbwayPhoneLabel": "MB WAY phone number",
-  "checkout.payment.mbwayError": "Enter your 9-digit MB WAY number.",
-  "checkout.payment.mbwayNote":
-    "Tap pay and we'll send a request to your MB WAY app. You have 4 minutes to approve it — your seat is held until then.",
-  "checkout.payment.multibancoEntityLabel": "Entity",
-  "checkout.payment.multibancoReferenceLabel": "Reference",
-  "checkout.payment.multibancoAmountLabel": "Amount",
-  "checkout.payment.multibancoHint":
-    "Pay this reference at any ATM or through home banking within <strong>3 days</strong>. We'll hold your seat and email your ticket the moment it clears.",
-  "checkout.payment.confirmedToast": "Payment confirmed — see you on {date}!",
-
-  // Card
-  "checkout.card.savedHeading": "Saved card",
-  "checkout.card.savedExpiry": "Expires {expiry}",
-  "checkout.card.removeSavedCta": "Remove",
-  "checkout.card.orNewCard": "or use a new card",
-  "checkout.card.numberLabel": "Card number",
-  "checkout.card.numberPlaceholder": "1234 5678 9012 3456",
-  "checkout.card.numberError": "Enter a valid 16-digit card number.",
-  "checkout.card.expiryLabel": "Expiry",
-  "checkout.card.expiryPlaceholder": "MM / YY",
-  "checkout.card.expiryError": "Check the expiry date.",
-  "checkout.card.cvcLabel": "CVC",
-  "checkout.card.cvcError": "3 or 4 digits.",
-  "checkout.card.nameLabel": "Name on card",
-  "checkout.card.namePlaceholder": "Full name",
-  "checkout.card.nameError": "Enter the name on the card.",
-  "checkout.card.saveCardLabel": "Save this card securely for next time",
-  "checkout.card.removedToast": "Saved card removed.",
-
-  // Billing
-  "checkout.billing.heading": "Billing",
-  "checkout.billing.countryLabel": "Country",
-  "checkout.billing.postalLabel": "Postal code",
-  "checkout.billing.postalError": "Enter your postal code.",
-  "checkout.billing.vatCheckbox":
-    "I need a <strong>VAT invoice</strong> for a business",
-  "checkout.billing.companyLabel": "Company name",
-  "checkout.billing.companyPlaceholder": "Company, Lda.",
-  "checkout.billing.vatNumberLabel": "VAT / NIF number",
-  "checkout.billing.vatNumberPlaceholder": "PT123456789",
-  "checkout.billing.country.pt": "Portugal",
-  "checkout.billing.country.es": "Spain",
-  "checkout.billing.country.fr": "France",
-  "checkout.billing.country.de": "Germany",
-  "checkout.billing.country.it": "Italy",
-  "checkout.billing.country.nl": "Netherlands",
-  "checkout.billing.country.ie": "Ireland",
-  "checkout.billing.country.gb": "United Kingdom",
-  "checkout.billing.country.us": "United States",
-  "checkout.billing.country.other": "Somewhere else",
-
-  // Express checkout
-  "checkout.express.heading": "Express checkout",
-  "checkout.express.orPayByCard": "or pay by card",
-  "checkout.express.confirmingToast": "Confirming with {label}…",
-  "checkout.express.payWithPaypal": "Pay with PayPal",
-
-  // Promo code
-  "checkout.promo.invalidError": "That code isn't valid or has expired.",
-  "checkout.promo.appliedLabel": "Code <code>{code}</code> applied",
-  "checkout.promo.removeCta": "Remove",
-  "checkout.promo.inputPlaceholder": "Enter code",
-  "checkout.promo.inputAriaLabel": "Promo code",
-  "checkout.promo.applyCta": "Apply",
-  "checkout.promo.appliedToast": "Code applied — extra {percent} off.",
-
-  // Offline banner
-  "checkout.offline.backOnlineToast": "Back online — you're all set.",
-  "checkout.offline.bannerText":
-    "You're offline — your progress is saved. We'll reconnect automatically.",
-
-  // Seat hold
-  "checkout.hold.expiredText":
-    "Your seat hold expired — <retry>hold it again</retry>",
-  "checkout.hold.activeText": "Seat held for you · <time>{clock}</time>",
-  "checkout.hold.spotsLeft_one": "Only <strong>{count}</strong> seat left",
-  "checkout.hold.spotsLeft_other": "Only <strong>{count}</strong> seats left",
-
-  // Validation / payment-form toasts
-  "checkout.validation.cocRequired":
-    "Please agree to the Code of Care to continue.",
-  "checkout.validation.declinedError":
-    "Your card was declined. No money has left your account. Try another card or an express option above.",
-  "checkout.validation.paymentDeclinedToast":
-    "Payment declined — please try again.",
-  "checkout.validation.fieldsError":
-    "Please check the highlighted fields and try again.",
-  "checkout.validation.guestEmailRequired":
-    "Add an email so we can send your ticket.",
-
-  // ── Checkout — review, confirmation, table, code of care ──────────────────
-  // ReviewStep
-  "checkout.review.title": "Reserve your <em>seat</em>",
-  "checkout.review.lede":
-    "Pick what works for your budget — every seat at the table is the same welcome.",
-  "checkout.review.hostedBy_one": "Hosted by {host} · {count} seat total",
-  "checkout.review.hostedBy_other": "Hosted by {host} · {count} seats total",
-  "checkout.review.promoLabel": "Promo code",
-  "checkout.review.promoOptional": "optional",
-  "checkout.review.policySummary": "Cancellation & refund policy",
-  "checkout.review.policyBody":
-    "Full refund if you cancel up to <strong>48 hours</strong> before the gathering. Within 48 hours we can transfer your seat to a future supper, since ingredients are already bought. Life happens — if something urgent comes up, <strong>just message the host</strong> and we'll sort it out.",
-  "checkout.review.continueCta": "Continue to payment",
-
-  // TierSelect
-  "checkout.tiers.sectionTitle": "Choose your ticket",
-  "checkout.tiers.fieldsetAria": "Ticket type",
-  "checkout.tiers.solidarity.name": "Solidarity",
-  "checkout.tiers.solidarity.desc":
-    "If money's tight right now. No questions, no proof — same seat, same welcome.",
-  "checkout.tiers.standard.name": "Standard",
-  "checkout.tiers.standard.desc":
-    "Covers your meal, ingredients, and the host's time.",
-  "checkout.tiers.standard.tag": "Most pick this",
-  "checkout.tiers.supporter.name": "Supporter",
-  "checkout.tiers.supporter.desc":
-    "Pays it forward — you quietly cover a solidarity seat for someone else.",
-
-  // SeatQuantity
-  "checkout.seats.sectionTitle": "How many seats?",
-  "checkout.seats.label": "Seats",
-  "checkout.seats.sub_one": "Bringing a +1? Add their details below.",
-  "checkout.seats.sub_other":
-    "You'll add each guest's name & dietary needs below.",
-  "checkout.seats.stepperAria": "Number of seats",
-  "checkout.seats.removeAria": "Remove a seat",
-  "checkout.seats.addAria": "Add a seat",
-  "checkout.seats.waitlistPrompt":
-    "Want more than {maxSeats} seats, or a future date?",
-  "checkout.seats.joinWaitlistCta": "Join the waitlist",
-  "checkout.seats.waitlistHeading": "Join the waitlist",
-  "checkout.seats.waitlistBody":
-    "We'll email you the moment a seat opens here — or when {host} schedules the next supper. No payment now.",
-  "checkout.seats.emailLabel": "Email",
-  "checkout.seats.emailPlaceholder": "you@example.com",
-  "checkout.seats.partySizeLabel": "Party size",
-  "checkout.seats.partySizeOption_one": "{count} seat",
-  "checkout.seats.partySizeOption_other": "{count} seats",
-  "checkout.seats.waitlistSubmitCta": "Add me to the list",
-  "checkout.seats.waitlistSuccessToast":
-    "You're on the waitlist — we'll email you the moment a seat opens.",
-
-  // TableSeat / MeetTheTable / AttendeeCard
-  "checkout.table.title": "Meet the table",
-  "checkout.table.atTableCount_one": "{count} at the table",
-  "checkout.table.atTableCount_other": "{count} at the table",
-  "checkout.table.youCount_one": "you",
-  "checkout.table.youCount_other": "you +{extra}",
-  "checkout.table.openCount_one": "{count} open",
-  "checkout.table.openCount_other": "{count} open",
-  "checkout.table.visibilityGroupAria": "Your visibility",
-  "checkout.table.onListLabel": "On the list",
-  "checkout.table.attendPrivatelyLabel": "Attend privately",
-  "checkout.table.chooseSeatAria": "Choose this seat",
-  "checkout.table.aboutSeatAria": "About {name}",
-  "checkout.table.yourSeatAria": "Your seat",
-  "checkout.table.sitHereLabel": "Sit here",
-  "checkout.table.guestNumberFallback": "Guest {number}",
-  "checkout.table.youLabel": "You",
-  "checkout.table.emptySeatLabel": "Empty",
-  "checkout.table.youPrivateLabel": "You (private)",
-  "checkout.table.privateLabel": "Private",
-  "checkout.table.giftLabel": "Gift",
-  "checkout.table.legendBetween":
-    "You're sitting between {left} and {right} — tap another empty place to move.",
-  "checkout.table.legendDefault": "Tap an empty place to choose your seat.",
-
-  // GuestDetails
-  "checkout.guest.sectionTitle": "Who's joining you",
-  "checkout.guest.guestNumberLabel": "Guest {number}",
-  "checkout.guest.giftToggleLabel": "Gift this seat",
-  "checkout.guest.emailLabel": "Their email",
-  "checkout.guest.emailPlaceholder": "they@example.com",
-  "checkout.guest.noteLabel": "A note",
-  "checkout.guest.optionalTag": "optional",
-  "checkout.guest.notePlaceholder": "See you Saturday!",
-  "checkout.guest.giftNote":
-    "We'll email a claimable ticket — they add their own name & dietary needs.",
-  "checkout.guest.nameLabel": "Name",
-  "checkout.guest.namePlaceholder": "Their name",
-  "checkout.guest.pronounsLabel": "Pronouns",
-  "checkout.guest.pronounsPlaceholder": "Select…",
-  "checkout.guest.dietaryLabel": "Dietary needs",
-  "checkout.guest.dietaryPlaceholder": "e.g. vegan, no shellfish",
-
-  // AttendeeDetails
-  "checkout.attendee.sectionTitle": "Your details",
-  "checkout.attendee.emailLabel": "Email for your ticket & receipt",
-  "checkout.attendee.emailPlaceholder": "you@example.com",
-  "checkout.attendee.emailError":
-    "Enter a valid email so we can send your ticket.",
-  "checkout.attendee.dietaryLabel":
-    "Dietary needs or allergies <opt>— it's a shared meal</opt>",
-  "checkout.attendee.dietaryPlaceholder": "e.g. vegetarian, no nuts, coeliac…",
-  "checkout.attendee.accessLabel": "Access needs",
-  "checkout.attendee.optionalTag": "optional",
-  "checkout.attendee.accessPlaceholder":
-    "Anything the host should know to make the space work for you (steps, quiet space, etc.)",
-
-  // WhoAmI
-  "checkout.whoami.guestTitle": "Checking out as a <strong>guest</strong>",
-  "checkout.whoami.memberTitle": "Signed in as <strong>{name}</strong>",
-  "checkout.whoami.memberDiscountNote":
-    "Members get {rate}% off — sign in to save it",
-  "checkout.whoami.memberEmailLine": "{email} · Member",
-  "checkout.whoami.signBackInCta": "Sign back in",
-  "checkout.whoami.asNameCta": "as {name}",
-  "checkout.whoami.notYouCta": "Not you?",
-  "checkout.whoami.checkoutAsGuestCta": "Check out as guest",
-
-  // HostCard
-  "checkout.host.verifiedBadge": "Verified host",
-  "checkout.host.statsLineBeforeStar_one":
-    "Hosting since {year} · {count} supper · {rating}",
-  "checkout.host.statsLineBeforeStar_other":
-    "Hosting since {year} · {count} suppers · {rating}",
-  "checkout.host.statsLineAfterStar": "from {guestCount} guests",
-  "checkout.host.askQuestionCta": "Ask a question",
-  "checkout.host.messageLabel": "Message {host} before you book",
-  "checkout.host.messagePlaceholder":
-    "e.g. Is the space step-free? Can I come solo?",
-  "checkout.host.sendCta": "Send to host",
-  "checkout.host.messageSentToast":
-    "Sent to {host} — you'll get a reply by email.",
-
-  // FirstTimerCard
-  "checkout.firstTimer.dismissAria": "Dismiss",
-  "checkout.firstTimer.badge": "First supper?",
-  "checkout.firstTimer.heading": "Here's how the night flows",
-  "checkout.firstTimer.seeLess": "See less",
-  "checkout.firstTimer.seeMore": "See more",
-  "checkout.firstTimer.step1.title": "You arrive",
-  "checkout.firstTimer.step1.body":
-    "Doors at {time}. Come as you are — no dress code, no small-talk pressure.",
-  "checkout.firstTimer.step2.title": "We share a meal",
-  "checkout.firstTimer.step2.body":
-    "A home-cooked dinner around one table, eight of us, three unhurried hours.",
-  "checkout.firstTimer.step3.title": "You leave full",
-  "checkout.firstTimer.step3.body":
-    "Of food, and usually a few new numbers in your phone. Leave whenever you like.",
-
-  // CodeOfCare
-  "checkout.coc.agreementLabel":
-    "I've read the <strong>Code of Care</strong> and I'm coming ready to look out for the people at this table.",
-  "checkout.coc.whatsThat": "What's that?",
-  "checkout.coc.hide": "Hide",
-  "checkout.coc.item1":
-    "Consent first — ask before photos, and take a no gracefully.",
-  "checkout.coc.item2": "What's shared at the table stays at the table.",
-  "checkout.coc.item3": "Respect names and pronouns, always.",
-  "checkout.coc.item4":
-    "If something feels off, tell the host — we've got you.",
-
-  // ConfirmationStep
-  "checkout.confirm.refCopiedToast": "Booking reference copied.",
-  "checkout.confirm.copyRefAria": "Copy booking reference",
-  "checkout.confirm.title": "You're <em>confirmed.</em>",
-  "checkout.confirm.subtitle_one":
-    "A confirmation and ticket is on the way to {email}. See you on {date}.",
-  "checkout.confirm.subtitle_other":
-    "A confirmation and {count} tickets are on the way to {email}. See you on {date}.",
-  "checkout.confirm.inboxFallback": "your inbox",
-  "checkout.confirm.bookingRefLabel": "Booking ref",
-  "checkout.confirm.dateLabel": "Date",
-  "checkout.confirm.locationLabel": "Location",
-  "checkout.confirm.locationValue":
-    "{neighbourhood} — exact address shared on the day",
-  "checkout.confirm.hostGuestsLabel": "Host · Guests",
-  "checkout.confirm.seatsCount_one": "{count} seat",
-  "checkout.confirm.seatsCount_other": "{count} seats",
-  "checkout.confirm.hostNotesHeading": "The host has your notes",
-  "checkout.confirm.dietaryLabel": "Dietary:",
-  "checkout.confirm.accessLabel": "Access:",
-
-  // ConfirmationNext
-  "checkout.confirm.mapSectionTitle": "Roughly where",
-  "checkout.confirm.mapAriaLabel": "Approximate location in {place}",
-  "checkout.confirm.mapNote": "Exact spot revealed morning of the supper",
-  "checkout.confirm.mapLabel": "{neighbourhood} · 5 min from {landmark}",
-  "checkout.confirm.addressCardTitle": "How you'll get the address",
-  "checkout.confirm.addressCardBody":
-    "We keep supper spots private for safety. The exact door, buzzer code and directions land in your inbox at <strong>{time} on {date}</strong>.",
-  "checkout.confirm.bringCardTitle": "What to bring",
-  "checkout.confirm.bringCardBody":
-    "Just yourself. If you'd like, a bottle to share is always welcome — the host cooks everything else.",
-  "checkout.confirm.remindSectionTitle": "Remind me",
-  "checkout.confirm.reminderGroupAria": "Reminder preferences",
-  "checkout.confirm.reminderEmail": "Email",
-  "checkout.confirm.reminderSms": "SMS",
-  "checkout.confirm.reminderNone": "No reminders",
-  "checkout.confirm.calendarSectionTitle": "Add to your calendar",
-  "checkout.confirm.googleCalendarCta": "Google Calendar",
-  "checkout.confirm.appleIcsCta": "Apple / .ics",
-  "checkout.confirm.addToWalletCta": "Add to Wallet",
-  "checkout.confirm.icsDescription":
-    "QueerPulse gathering. Hosted by {host}. Ref {ref}",
-  "checkout.confirm.calendarDownloadedToast": "Calendar file downloaded.",
-  "checkout.confirm.walletAddedToast": "Ticket added to your wallet.",
-  "checkout.confirm.viewGatheringCta": "View gathering details",
-  "checkout.confirm.tellFriendCta": "Tell a friend",
-  "checkout.confirm.shareLinkToast": "Link copied — share it with a friend.",
-  "checkout.confirm.transferSeatCta": "Transfer my seat",
-  "checkout.confirm.transferSentToast": "Transfer link sent to your email.",
-  "checkout.confirm.addGuestCta": "Add a guest",
-  "checkout.confirm.addGuestSentToast": "Add-a-guest link sent to your email.",
-
-  // Timeline (Pattern B — buildTimeline)
-  "checkout.timeline.sectionTitle": "What happens next",
-  "checkout.timeline.now": "Right now",
-  "checkout.timeline.ticket.title": "Ticket in your inbox",
-  "checkout.timeline.ticket.body":
-    "Your confirmation and QR ticket are already on their way.",
-  "checkout.timeline.address.title": "The address unlocks",
-  "checkout.timeline.address.body":
-    "Exact door, buzzer code and directions to {neighbourhood} arrive the morning of.",
-  "checkout.timeline.arrive.title": "You arrive & we eat",
-  "checkout.timeline.arrive.body":
-    "Come as you are. {host} handles the rest — three unhurried hours together.",
+  // ── Meet the table (MeetTheTable / TableSeat / AttendeeCard) ──────────────
+  "table.title": "Meet the table",
+  "table.atTableCount_one": "{count} at the table",
+  "table.atTableCount_other": "{count} at the table",
+  "table.openCount_one": "{count} open",
+  "table.openCount_other": "{count} open",
+  "table.aboutSeatAria": "About {name}",
+  "table.emptySeatLabel": "Empty",
+  "table.emptySeatAria": "Empty seat",
+  "table.legend": "Seats fill as more people reserve.",
 
   // ── Events Hub (EventsHubPage + hub/*) ────────────────────────────────────
   "hub.tabs.highlights": "Highlights",
   "hub.tabs.browse": "Browse",
   "hub.tabs.calendar": "Calendar",
-  "hub.hero.eyebrow": "What's on",
-  "hub.hero.title": "Find your people this week",
-  "hub.hero.subtitle":
-    "Every gathering, event, and reason to leave the house — all in one place.",
-  "hub.hero.tagline.0": "Your people are already here.",
-  "hub.hero.tagline.1": "There's always someone new to meet.",
-  "hub.hero.tagline.2": "Come as you are.",
-  "hub.hero.tagline.3": "Small rooms, big welcomes.",
-  "hub.hero.seeAll": "See everything",
   "hub.hero.rsvp": "Take a look",
+  "hub.featured.eyebrow": "Next up",
   "hub.bucket.tonight": "Tonight",
   "hub.bucket.weekend": "This weekend",
   "hub.bucket.week": "This week",
@@ -1453,6 +1078,9 @@ export const gatherings: Catalog = {
   "hub.browse.heading": "Everything that's on",
   "hub.browse.loadMore": "Show more",
   "hub.browse.empty": "Nothing matches that filter — try another.",
+  "hub.browse.searchLabel": "Search events",
+  "hub.browse.searchPlaceholder": "Search by name or neighbourhood",
+  "hub.browse.searchEmpty": "No events match your search.",
   "hub.calendar.heading": "The month at a glance",
   "hub.host.title": "Hosting <em>something</em>?",
   "hub.host.body":
@@ -1463,4 +1091,26 @@ export const gatherings: Catalog = {
   "hub.empty.body": "New gatherings turn up here all the time — you could host the first.",
   "hub.card.cta": "See it",
   "hub.loading": "Finding what's on…",
+
+  // ── Lineup editor (GatheringLineupEditor + GatheringLineupRow, on
+  // GatheringPage) — host/co-host tagging who's on the bill, plus the
+  // post-gathering persona nudge (GatheringPerformerNudge). Personas
+  // discovery Phase 5, Moment 5.
+  "lineup.title": "Lineup",
+  "lineup.description": "Tag who's performing, hosting or working this gathering.",
+  "lineup.empty": "Nobody's tagged yet.",
+  "lineup.addCta": "Tag someone",
+  "lineup.roleLabel": "Their role",
+  "lineup.removeAria": "Remove {name} from the lineup",
+  "lineup.pickerTitle": "Tag someone",
+  "lineup.pickerSearchPlaceholder": "Search people who are going",
+  "lineup.saveCta": "Save lineup",
+  "lineup.saving": "Saving…",
+  "lineup.savedToast": "Lineup saved",
+  "lineup.errorToast": "We couldn't save that just now — try again.",
+
+  "performerNudge.body":
+    "You performed as {name} — {craft}. Want a page for that?",
+  "performerNudge.startCta": "Start it",
+  "performerNudge.dismissCta": "Not now",
 };

@@ -10,6 +10,7 @@ import {
   useMediaQuery,
   useSimulatedLoad,
 } from "../../shared/hooks";
+import { mediaMax } from "../../shared/theme/breakpoints";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -49,7 +50,7 @@ export function MemberDirectoryFilterPage() {
   // Below the grid's single-column breakpoint the filter sidebar would stack as a
   // tall wall above the results; there it collapses into a bottom-sheet opened
   // from a "Filters" button instead. Matches the 860px grid breakpoint below.
-  const isMobile = useMediaQuery("(max-width: 860px)");
+  const isMobile = useMediaQuery(mediaMax("mobile"));
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   // View-only preferences (which sections are open, whether the whole desktop

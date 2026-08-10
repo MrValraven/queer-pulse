@@ -29,8 +29,9 @@ interface SubprofilePresenceFieldsProps {
 /**
  * The persona's "presence" controls: cover image, a curated accent colour, an
  * availability status, and an optional contact CTA (label + URL, saved
- * together). Extracted from `SubprofileMetaForm` so both stay under the
- * 200-line cap. Purely controlled — the parent owns state and the PATCH.
+ * together). Renders the editor's "Presence" rail pane body, fed by
+ * `useSubprofileMetaEditor`'s state (via `EditorPaneRouter`). Purely
+ * controlled — the parent owns state and the PATCH.
  */
 export function SubprofilePresenceFields({
   coverUrl,

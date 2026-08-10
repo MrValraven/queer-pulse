@@ -1088,413 +1088,23 @@ export const gatherings: Catalog = {
   "album.success.meta_other": "album.zip · {count} fotografias",
   "album.success.doneCta": "Concluído",
 
-  // ── Checkout — payment, summary, hold ─────────────────────────────────────
-  // Progress
-  "checkout.progress.ariaLabel": "Progresso da reserva",
-  "checkout.progress.review": "Revisão",
-  "checkout.progress.payment": "Pagamento",
-  "checkout.progress.confirm": "Confirmação",
-
-  // Summary (sidebar + price summary + mobile bar)
-  "checkout.summary.tier.solidarity": "Solidariedade",
-  "checkout.summary.tier.standard": "Padrão",
-  "checkout.summary.tier.supporter": "Apoiante",
-  "checkout.summary.lineItem_one": "{count} × {tier} lugar",
-  "checkout.summary.lineItem_other": "{count} × {tier} lugares",
-  "checkout.summary.memberDiscount": "Desconto de comunidade",
-  "checkout.summary.percentOff": "{percent} de desconto",
-  "checkout.summary.promoLabel": "Promoção · {code}",
-  "checkout.summary.total": "Total",
-  "checkout.summary.feesNote":
-    "Inclui todas as taxas. Processado com segurança pela Stripe.",
-  "checkout.summary.priceNote":
-    "Inclui todas as taxas. Sem sobretaxa de reserva. Pagamento seguro via Stripe.",
-  "checkout.summary.paidLabel": "Pago · {amount}",
-  "checkout.summary.editOrderCta": "Editar reserva",
-  "checkout.summary.hostingLine": "<name>{hostName}</name> está a receber",
-  "checkout.summary.guestsConfirmed_one": "{count} pessoa confirmada até agora",
-  "checkout.summary.guestsConfirmed_other":
-    "{count} pessoas confirmadas até agora",
-  "checkout.summary.safetyNote":
-    "Só por convite · todas as pessoas são verificadas antes de poderem reservar.",
-  "checkout.summary.visibilityPrivateToast":
-    "Vais participar em privado — não apareces na lista de pessoas confirmadas.",
-  "checkout.summary.visibilityPublicToast":
-    "Vais aparecer na lista de pessoas confirmadas.",
-
-  // Mobile bar
-  "checkout.mobileBar.continueCta": "Continuar",
-  "checkout.mobileBar.payCta": "Pagar {amount}",
-
-  // Payment step + tabs + express/alt-pay copy
-  "checkout.payment.title": "Detalhes do <em>pagamento</em>",
-  "checkout.payment.lede":
-    "Encriptado e processado pela Stripe. A QueerPulse nunca vê nem guarda o número do teu cartão.",
-  "checkout.payment.methodTabsAriaLabel": "Método de pagamento",
-  "checkout.payment.tabCardTitle": "Cartão",
-  "checkout.payment.tabCardSub": "Visa, Mastercard, Amex",
-  "checkout.payment.tabMbwayTitle": "MB WAY",
-  "checkout.payment.tabMbwaySub": "Aprova na tua app",
-  "checkout.payment.tabMultibancoTitle": "Multibanco",
-  "checkout.payment.tabMultibancoSub": "Referência / Multibanco",
-  "checkout.payment.payCtaCard": "Pagar {amount}",
-  "checkout.payment.payCtaMbway": "Enviar pedido de {amount}",
-  "checkout.payment.payCtaMultibanco": "Confirmar reserva · {amount}",
-  "checkout.payment.processingLabel": "A processar…",
-  "checkout.payment.trustLock": "Encriptação de 256 bits",
-  "checkout.payment.viaStripe": "via <strong>Stripe</strong>",
-  "checkout.payment.termsNotice":
-    "Ao pagar, aceitas os nossos <terms>termos de serviço</terms> e a <privacy>política de privacidade</privacy>. Podes cancelar com reembolso total até 48h antes.",
-  "checkout.payment.demoHint":
-    "Demo: usa o cartão <strong>4000 0000 0000 0002</strong> para ver um pagamento recusado.",
-  "checkout.payment.backToReviewCta": "Voltar à revisão",
-  "checkout.payment.mbwayPhoneLabel": "Número de telemóvel MB WAY",
-  "checkout.payment.mbwayError": "Introduz o teu número MB WAY de 9 dígitos.",
-  "checkout.payment.mbwayNote":
-    "Toca em pagar e enviamos um pedido para a tua app MB WAY. Tens 4 minutos para aprovar — o teu lugar fica reservado até lá.",
-  "checkout.payment.multibancoEntityLabel": "Entidade",
-  "checkout.payment.multibancoReferenceLabel": "Referência",
-  "checkout.payment.multibancoAmountLabel": "Montante",
-  "checkout.payment.multibancoHint":
-    "Paga esta referência em qualquer Multibanco ou homebanking no prazo de <strong>3 dias</strong>. Reservamos o teu lugar e enviamos o bilhete por email assim que for confirmado.",
-  "checkout.payment.confirmedToast": "Pagamento confirmado — até {date}!",
-
-  // Card
-  "checkout.card.savedHeading": "Cartão guardado",
-  "checkout.card.savedExpiry": "Expira em {expiry}",
-  "checkout.card.removeSavedCta": "Remover",
-  "checkout.card.orNewCard": "ou usa um cartão novo",
-  "checkout.card.numberLabel": "Número do cartão",
-  "checkout.card.numberPlaceholder": "1234 5678 9012 3456",
-  "checkout.card.numberError":
-    "Introduz um número de cartão válido com 16 dígitos.",
-  "checkout.card.expiryLabel": "Validade",
-  "checkout.card.expiryPlaceholder": "MM / AA",
-  "checkout.card.expiryError": "Verifica a data de validade.",
-  "checkout.card.cvcLabel": "CVC",
-  "checkout.card.cvcError": "3 ou 4 dígitos.",
-  "checkout.card.nameLabel": "Nome no cartão",
-  "checkout.card.namePlaceholder": "Nome completo",
-  "checkout.card.nameError": "Introduz o nome que consta no cartão.",
-  "checkout.card.saveCardLabel":
-    "Guardar este cartão com segurança para a próxima vez",
-  "checkout.card.removedToast": "Cartão guardado removido.",
-
-  // Billing
-  "checkout.billing.heading": "Faturação",
-  "checkout.billing.countryLabel": "País",
-  "checkout.billing.postalLabel": "Código postal",
-  "checkout.billing.postalError": "Introduz o teu código postal.",
-  "checkout.billing.vatCheckbox":
-    "Preciso de uma <strong>fatura com IVA</strong> para uma empresa",
-  "checkout.billing.companyLabel": "Nome da empresa",
-  "checkout.billing.companyPlaceholder": "Empresa, Lda.",
-  "checkout.billing.vatNumberLabel": "Número de contribuinte / NIF",
-  "checkout.billing.vatNumberPlaceholder": "PT123456789",
-  "checkout.billing.country.pt": "Portugal",
-  "checkout.billing.country.es": "Espanha",
-  "checkout.billing.country.fr": "França",
-  "checkout.billing.country.de": "Alemanha",
-  "checkout.billing.country.it": "Itália",
-  "checkout.billing.country.nl": "Países Baixos",
-  "checkout.billing.country.ie": "Irlanda",
-  "checkout.billing.country.gb": "Reino Unido",
-  "checkout.billing.country.us": "Estados Unidos",
-  "checkout.billing.country.other": "Outro país",
-
-  // Express checkout
-  "checkout.express.heading": "Pagamento expresso",
-  "checkout.express.orPayByCard": "ou paga com cartão",
-  "checkout.express.confirmingToast": "A confirmar com {label}…",
-  "checkout.express.payWithPaypal": "Pagar com PayPal",
-
-  // Promo code
-  "checkout.promo.invalidError": "Esse código não é válido ou expirou.",
-  "checkout.promo.appliedLabel": "Código <code>{code}</code> aplicado",
-  "checkout.promo.removeCta": "Remover",
-  "checkout.promo.inputPlaceholder": "Introduz o código",
-  "checkout.promo.inputAriaLabel": "Código promocional",
-  "checkout.promo.applyCta": "Aplicar",
-  "checkout.promo.appliedToast":
-    "Código aplicado — mais {percent} de desconto.",
-
-  // Offline banner
-  "checkout.offline.backOnlineToast": "De volta à ligação — está tudo pronto.",
-  "checkout.offline.bannerText":
-    "Estás offline — o teu progresso está guardado. Vamos voltar a ligar automaticamente.",
-
-  // Seat hold
-  "checkout.hold.expiredText":
-    "A tua reserva do lugar expirou — <retry>reserva outra vez</retry>",
-  "checkout.hold.activeText": "Lugar reservado para ti · <time>{clock}</time>",
-  "checkout.hold.spotsLeft_one": "Só resta <strong>{count}</strong> lugar",
-  "checkout.hold.spotsLeft_other": "Só restam <strong>{count}</strong> lugares",
-
-  // Validation / payment-form toasts
-  "checkout.validation.cocRequired":
-    "Aceita o Código de Cuidado para continuar.",
-  "checkout.validation.declinedError":
-    "O teu cartão foi recusado. Não saiu dinheiro da tua conta. Experimenta outro cartão ou uma opção expresso acima.",
-  "checkout.validation.paymentDeclinedToast":
-    "Pagamento recusado — tenta novamente.",
-  "checkout.validation.fieldsError":
-    "Verifica os campos destacados e tenta novamente.",
-  "checkout.validation.guestEmailRequired":
-    "Adiciona um email para podermos enviar o teu bilhete.",
-
-  // ── Checkout — review, confirmation, table, code of care ──────────────────
-  // ReviewStep
-  "checkout.review.title": "Reserva o teu <em>lugar</em>",
-  "checkout.review.lede":
-    "Escolhe o que funciona para o teu orçamento — todos os lugares à mesa têm as mesmas boas-vindas.",
-  "checkout.review.hostedBy_one":
-    "Quem recebe: {host} · {count} lugar no total",
-  "checkout.review.hostedBy_other":
-    "Quem recebe: {host} · {count} lugares no total",
-  "checkout.review.promoLabel": "Código promocional",
-  "checkout.review.promoOptional": "opcional",
-  "checkout.review.policySummary": "Política de cancelamento e reembolso",
-  "checkout.review.policyBody":
-    "Reembolso total se cancelares até <strong>48 horas</strong> antes do convívio. Dentro das 48 horas podemos transferir o teu lugar para um jantar futuro, já que os ingredientes já foram comprados. A vida acontece — se surgir algo urgente, <strong>basta enviares uma mensagem à pessoa anfitriã</strong> e resolvemos tudo.",
-  "checkout.review.continueCta": "Continuar para o pagamento",
-
-  // TierSelect
-  "checkout.tiers.sectionTitle": "Escolhe o teu bilhete",
-  "checkout.tiers.fieldsetAria": "Tipo de bilhete",
-  "checkout.tiers.solidarity.name": "Solidariedade",
-  "checkout.tiers.solidarity.desc":
-    "Se o dinheiro está apertado agora. Sem perguntas, sem provas — o mesmo lugar, as mesmas boas-vindas.",
-  "checkout.tiers.standard.name": "Padrão",
-  "checkout.tiers.standard.desc":
-    "Cobre a tua refeição, os ingredientes e o tempo da pessoa anfitriã.",
-  "checkout.tiers.standard.tag": "A escolha mais comum",
-  "checkout.tiers.supporter.name": "Apoiante",
-  "checkout.tiers.supporter.desc":
-    "Paga adiante — cobres discretamente um lugar solidário para outra pessoa.",
-
-  // SeatQuantity
-  "checkout.seats.sectionTitle": "Quantos lugares?",
-  "checkout.seats.label": "Lugares",
-  "checkout.seats.sub_one":
-    "Vais trazer alguém? Adiciona os dados dessa pessoa abaixo.",
-  "checkout.seats.sub_other":
-    "Vais adicionar o nome e as necessidades alimentares de cada pessoa convidada abaixo.",
-  "checkout.seats.stepperAria": "Número de lugares",
-  "checkout.seats.removeAria": "Remover um lugar",
-  "checkout.seats.addAria": "Adicionar um lugar",
-  "checkout.seats.waitlistPrompt":
-    "Queres mais de {maxSeats} lugares, ou uma data futura?",
-  "checkout.seats.joinWaitlistCta": "Entra na lista de espera",
-  "checkout.seats.waitlistHeading": "Entra na lista de espera",
-  "checkout.seats.waitlistBody":
-    "Enviamos um email assim que abrir um lugar aqui — ou quando {host} marcar o próximo jantar. Sem pagamento agora.",
-  "checkout.seats.emailLabel": "Email",
-  "checkout.seats.emailPlaceholder": "you@example.com",
-  "checkout.seats.partySizeLabel": "Tamanho do grupo",
-  "checkout.seats.partySizeOption_one": "{count} lugar",
-  "checkout.seats.partySizeOption_other": "{count} lugares",
-  "checkout.seats.waitlistSubmitCta": "Adicionar-me à lista",
-  "checkout.seats.waitlistSuccessToast":
-    "Estás na lista de espera — enviamos um email assim que abrir um lugar.",
-
-  // TableSeat / MeetTheTable / AttendeeCard
-  "checkout.table.title": "Conhece a mesa",
-  "checkout.table.atTableCount_one": "{count} pessoa à mesa",
-  "checkout.table.atTableCount_other": "{count} pessoas à mesa",
-  "checkout.table.youCount_one": "tu",
-  "checkout.table.youCount_other": "tu +{extra}",
-  "checkout.table.openCount_one": "{count} lugar livre",
-  "checkout.table.openCount_other": "{count} lugares livres",
-  "checkout.table.visibilityGroupAria": "A tua visibilidade",
-  "checkout.table.onListLabel": "Na lista",
-  "checkout.table.attendPrivatelyLabel": "Participar em privado",
-  "checkout.table.chooseSeatAria": "Escolhe este lugar",
-  "checkout.table.aboutSeatAria": "Sobre {name}",
-  "checkout.table.yourSeatAria": "O teu lugar",
-  "checkout.table.sitHereLabel": "Senta-te aqui",
-  "checkout.table.guestNumberFallback": "Pessoa convidada {number}",
-  "checkout.table.youLabel": "Tu",
-  "checkout.table.emptySeatLabel": "Vazio",
-  "checkout.table.youPrivateLabel": "Tu (em privado)",
-  "checkout.table.privateLabel": "Em privado",
-  "checkout.table.giftLabel": "Oferta",
-  "checkout.table.legendBetween":
-    "Estás sentade entre {left} e {right} — toca noutro lugar vazio para mudar.",
-  "checkout.table.legendDefault":
-    "Toca num lugar vazio para escolher o teu lugar.",
-
-  // GuestDetails
-  "checkout.guest.sectionTitle": "Quem se junta a ti",
-  "checkout.guest.guestNumberLabel": "Pessoa convidada {number}",
-  "checkout.guest.giftToggleLabel": "Oferecer este lugar",
-  "checkout.guest.emailLabel": "O email desta pessoa",
-  "checkout.guest.emailPlaceholder": "they@example.com",
-  "checkout.guest.noteLabel": "Uma nota",
-  "checkout.guest.optionalTag": "opcional",
-  "checkout.guest.notePlaceholder": "Vemo-nos no sábado!",
-  "checkout.guest.giftNote":
-    "Enviamos um bilhete resgatável por email — a pessoa adiciona o próprio nome e as necessidades alimentares.",
-  "checkout.guest.nameLabel": "Nome",
-  "checkout.guest.namePlaceholder": "O nome desta pessoa",
-  "checkout.guest.pronounsLabel": "Pronomes",
-  "checkout.guest.pronounsPlaceholder": "Seleciona…",
-  "checkout.guest.dietaryLabel": "Necessidades alimentares",
-  "checkout.guest.dietaryPlaceholder": "ex.: vegan, sem marisco",
-
-  // AttendeeDetails
-  "checkout.attendee.sectionTitle": "Os teus dados",
-  "checkout.attendee.emailLabel": "Email para o teu bilhete e recibo",
-  "checkout.attendee.emailPlaceholder": "you@example.com",
-  "checkout.attendee.emailError":
-    "Indica um email válido para enviarmos o teu bilhete.",
-  "checkout.attendee.dietaryLabel":
-    "Necessidades alimentares ou alergias <opt>— é uma refeição partilhada</opt>",
-  "checkout.attendee.dietaryPlaceholder":
-    "ex.: dieta vegetariana, sem frutos secos, doença celíaca…",
-  "checkout.attendee.accessLabel": "Necessidades de acessibilidade",
-  "checkout.attendee.optionalTag": "opcional",
-  "checkout.attendee.accessPlaceholder":
-    "Tudo o que a pessoa anfitriã deva saber para tornar o espaço acessível para ti (escadas, espaço tranquilo, etc.)",
-
-  // WhoAmI
-  "checkout.whoami.guestTitle": "A finalizar como <strong>convidade</strong>",
-  "checkout.whoami.memberTitle": "Sessão iniciada como <strong>{name}</strong>",
-  // "Members" → neutral rephrasing ("quem é da comunidade"), nunca *Membros*.
-  "checkout.whoami.memberDiscountNote":
-    "Quem é da comunidade tem {rate}% de desconto — entra para o aproveitares",
-  "checkout.whoami.memberEmailLine": "{email} · Pessoa da comunidade",
-  "checkout.whoami.signBackInCta": "Entra novamente",
-  "checkout.whoami.asNameCta": "como {name}",
-  "checkout.whoami.notYouCta": "Não és tu?",
-  "checkout.whoami.checkoutAsGuestCta": "Finalizar como convidade",
-
-  // HostCard
-  "checkout.host.verifiedBadge": "Perfil verificado",
-  "checkout.host.statsLineBeforeStar_one":
-    "A receber desde {year} · {count} jantar · {rating}",
-  "checkout.host.statsLineBeforeStar_other":
-    "A receber desde {year} · {count} jantares · {rating}",
-  "checkout.host.statsLineAfterStar": "de {guestCount} pessoas",
-  "checkout.host.askQuestionCta": "Fazer uma pergunta",
-  "checkout.host.messageLabel":
-    "Envia uma mensagem a {host} antes de reservares",
-  "checkout.host.messagePlaceholder":
-    "ex.: O espaço tem acesso sem degraus? Posso ir sem companhia?",
-  "checkout.host.sendCta": "Enviar mensagem",
-  "checkout.host.messageSentToast":
-    "Mensagem enviada a {host} — vais receber uma resposta por email.",
-
-  // FirstTimerCard
-  "checkout.firstTimer.dismissAria": "Fechar",
-  "checkout.firstTimer.badge": "Primeiro jantar?",
-  "checkout.firstTimer.heading": "Como vai ser a noite",
-  "checkout.firstTimer.seeLess": "Ver menos",
-  "checkout.firstTimer.seeMore": "Ver mais",
-  "checkout.firstTimer.step1.title": "Chegas",
-  "checkout.firstTimer.step1.body":
-    "Portas às {time}. Vem como és — sem código de vestuário, sem pressão para conversa de circunstância.",
-  "checkout.firstTimer.step2.title": "Partilhamos uma refeição",
-  "checkout.firstTimer.step2.body":
-    "Um jantar caseiro à volta de uma só mesa, oito pessoas, três horas sem pressa.",
-  "checkout.firstTimer.step3.title": "Sais de barriga cheia",
-  "checkout.firstTimer.step3.body":
-    "De comida boa e, normalmente, com alguns contactos novos no telemóvel. Sai quando quiseres.",
-
-  // CodeOfCare
-  "checkout.coc.agreementLabel":
-    "Li o <strong>Código de Cuidado</strong> e venho pronte para cuidar das pessoas nesta mesa.",
-  "checkout.coc.whatsThat": "O que é isso?",
-  "checkout.coc.hide": "Esconder",
-  "checkout.coc.item1":
-    "Consentimento primeiro — pede autorização antes de tirar fotos, e aceita um não com elegância.",
-  "checkout.coc.item2": "O que se partilha à mesa fica à mesa.",
-  "checkout.coc.item3": "Respeita sempre os nomes e os pronomes.",
-  "checkout.coc.item4":
-    "Se algo não parecer bem, avisa a pessoa anfitriã — estamos aqui para ti.",
-
-  // ConfirmationStep
-  "checkout.confirm.refCopiedToast": "Referência da reserva copiada.",
-  "checkout.confirm.copyRefAria": "Copiar referência da reserva",
-  "checkout.confirm.title": "Estás <em>confirmade.</em>",
-  "checkout.confirm.subtitle_one":
-    "A confirmação e o teu bilhete estão a caminho de {email}. Vemo-nos no dia {date}.",
-  "checkout.confirm.subtitle_other":
-    "A confirmação e os teus {count} bilhetes estão a caminho de {email}. Vemo-nos no dia {date}.",
-  "checkout.confirm.inboxFallback": "a tua caixa de entrada",
-  "checkout.confirm.bookingRefLabel": "Referência da reserva",
-  "checkout.confirm.dateLabel": "Data",
-  "checkout.confirm.locationLabel": "Localização",
-  "checkout.confirm.locationValue":
-    "{neighbourhood} — morada exata partilhada no dia",
-  "checkout.confirm.hostGuestsLabel": "Quem recebe · Pessoas",
-  "checkout.confirm.seatsCount_one": "{count} lugar",
-  "checkout.confirm.seatsCount_other": "{count} lugares",
-  "checkout.confirm.hostNotesHeading": "A pessoa anfitriã tem as tuas notas",
-  "checkout.confirm.dietaryLabel": "Dieta:",
-  "checkout.confirm.accessLabel": "Acesso:",
-
-  // ConfirmationNext
-  "checkout.confirm.mapSectionTitle": "Mais ou menos onde",
-  "checkout.confirm.mapAriaLabel": "Localização aproximada em {place}",
-  "checkout.confirm.mapNote": "O local exato é revelado na manhã do jantar",
-  "checkout.confirm.mapLabel": "{neighbourhood} · 5 min de {landmark}",
-  "checkout.confirm.addressCardTitle": "Como vais receber a morada",
-  "checkout.confirm.addressCardBody":
-    "Mantemos os lugares privados por segurança. A porta exata, o código do intercomunicador e as indicações chegam à tua caixa de entrada às <strong>{time} do dia {date}</strong>.",
-  "checkout.confirm.bringCardTitle": "O que trazer",
-  "checkout.confirm.bringCardBody":
-    "Só tu. Se quiseres, uma garrafa para partilhar é sempre bem-vinda — a pessoa anfitriã trata do resto.",
-  "checkout.confirm.remindSectionTitle": "Lembra-me",
-  "checkout.confirm.reminderGroupAria": "Preferências de lembrete",
-  "checkout.confirm.reminderEmail": "Email",
-  "checkout.confirm.reminderSms": "SMS",
-  "checkout.confirm.reminderNone": "Sem lembretes",
-  "checkout.confirm.calendarSectionTitle": "Adicionar ao teu calendário",
-  "checkout.confirm.googleCalendarCta": "Google Calendar",
-  "checkout.confirm.appleIcsCta": "Apple / .ics",
-  "checkout.confirm.addToWalletCta": "Adicionar à Wallet",
-  "checkout.confirm.icsDescription":
-    "Convívio QueerPulse. Recebido por {host}. Ref. {ref}",
-  "checkout.confirm.calendarDownloadedToast":
-    "Ficheiro de calendário descarregado.",
-  "checkout.confirm.walletAddedToast": "Bilhete adicionado à tua wallet.",
-  "checkout.confirm.viewGatheringCta": "Ver detalhes do convívio",
-  "checkout.confirm.tellFriendCta": "Conta a uma pessoa amiga",
-  "checkout.confirm.shareLinkToast": "Link copiado — partilha-o com alguém.",
-  "checkout.confirm.transferSeatCta": "Transferir o meu lugar",
-  "checkout.confirm.transferSentToast":
-    "Link de transferência enviado para o teu email.",
-  "checkout.confirm.addGuestCta": "Adicionar uma pessoa convidada",
-  "checkout.confirm.addGuestSentToast":
-    "Link para adicionar uma pessoa convidada enviado para o teu email.",
-
-  // Timeline (Pattern B — buildTimeline)
-  "checkout.timeline.sectionTitle": "O que acontece a seguir",
-  "checkout.timeline.now": "Agora mesmo",
-  "checkout.timeline.ticket.title": "Bilhete na tua caixa de entrada",
-  "checkout.timeline.ticket.body":
-    "A tua confirmação e o bilhete QR já estão a caminho.",
-  "checkout.timeline.address.title": "A morada é revelada",
-  "checkout.timeline.address.body":
-    "A porta exata, o código do intercomunicador e as indicações para {neighbourhood} chegam na manhã desse dia.",
-  "checkout.timeline.arrive.title": "Chegas e comemos",
-  "checkout.timeline.arrive.body":
-    "Vem como és. {host} trata do resto — três horas sem pressa, juntos.",
+  // ── Meet the table (MeetTheTable / TableSeat / AttendeeCard) ──────────────
+  "table.title": "Conhece a mesa",
+  "table.atTableCount_one": "{count} pessoa à mesa",
+  "table.atTableCount_other": "{count} pessoas à mesa",
+  "table.openCount_one": "{count} lugar livre",
+  "table.openCount_other": "{count} lugares livres",
+  "table.aboutSeatAria": "Sobre {name}",
+  "table.emptySeatLabel": "Livre",
+  "table.emptySeatAria": "Lugar livre",
+  "table.legend": "Os lugares enchem à medida que mais pessoas reservam.",
 
   // ── Events Hub (EventsHubPage + hub/*) ────────────────────────────────────
   "hub.tabs.highlights": "Destaques",
   "hub.tabs.browse": "Explorar",
   "hub.tabs.calendar": "Calendário",
-  "hub.hero.eyebrow": "O que há",
-  "hub.hero.title": "Encontra a tua gente esta semana",
-  "hub.hero.subtitle":
-    "Cada convívio, evento e motivo para saíres de casa — tudo num só lugar.",
-  "hub.hero.tagline.0": "A tua gente já está aqui.",
-  "hub.hero.tagline.1": "Há sempre alguém novo para conhecer.",
-  "hub.hero.tagline.2": "Vem como és.",
-  "hub.hero.tagline.3": "Salas pequenas, grandes boas-vindas.",
-  "hub.hero.seeAll": "Vê tudo",
   "hub.hero.rsvp": "Dá uma vista de olhos",
+  "hub.featured.eyebrow": "A seguir",
   "hub.bucket.tonight": "Hoje à noite",
   "hub.bucket.weekend": "Este fim de semana",
   "hub.bucket.week": "Esta semana",
@@ -1503,6 +1113,9 @@ export const gatherings: Catalog = {
   "hub.browse.heading": "Tudo o que há",
   "hub.browse.loadMore": "Mostrar mais",
   "hub.browse.empty": "Nada com esse filtro — experimenta outro.",
+  "hub.browse.searchLabel": "Procurar eventos",
+  "hub.browse.searchPlaceholder": "Procura por nome ou zona",
+  "hub.browse.searchEmpty": "Nenhum evento corresponde à tua procura.",
   "hub.calendar.heading": "O mês de relance",
   "hub.host.title": "Estás a <em>organizar</em> algo?",
   "hub.host.body":
@@ -1513,4 +1126,26 @@ export const gatherings: Catalog = {
   "hub.empty.body": "Aparecem coisas novas por aqui a toda a hora — podias organizar a primeira.",
   "hub.card.cta": "Vê",
   "hub.loading": "A ver o que há…",
+
+  // ── Editor de lineup (GatheringLineupEditor + GatheringLineupRow, na
+  // GatheringPage) — quem organiza marca quem atua, organiza ou trabalha no
+  // convívio, mais o lembrete pós-convívio de persona (GatheringPerformerNudge).
+  // Descoberta de personas, Fase 5, Momento 5.
+  "lineup.title": "Lineup",
+  "lineup.description": "Marca quem vai atuar, organizar ou trabalhar neste convívio.",
+  "lineup.empty": "Ainda ninguém foi marcado.",
+  "lineup.addCta": "Marcar alguém",
+  "lineup.roleLabel": "O papel da pessoa",
+  "lineup.removeAria": "Remover {name} do lineup",
+  "lineup.pickerTitle": "Marcar alguém",
+  "lineup.pickerSearchPlaceholder": "Procura entre quem vai",
+  "lineup.saveCta": "Guardar lineup",
+  "lineup.saving": "A guardar…",
+  "lineup.savedToast": "Lineup guardado",
+  "lineup.errorToast": "Não conseguimos guardar isso agora — tenta outra vez.",
+
+  "performerNudge.body":
+    "Atuaste como {name} — {craft}. Queres uma página para isso?",
+  "performerNudge.startCta": "Começar",
+  "performerNudge.dismissCta": "Agora não",
 };

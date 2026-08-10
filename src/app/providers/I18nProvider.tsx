@@ -18,6 +18,7 @@ import {
   detectLanguage,
   intlLocale,
 } from "../../shared/i18n/locale";
+import { writePushLang } from "../../pushLang";
 import {
   LANGUAGES,
   type Catalog,
@@ -59,6 +60,12 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEY, language);
     document.documentElement.lang = language;
+    // Mirror the active language into IndexedDB for the service worker's push
+    // handler (see pushLang.ts) — runs on boot (initial state) and every
+    // switch, same as the localStorage write above. Best-effort/fire-and-
+    // forget: a failure here must never block rendering or the language
+    // switch it's piggybacking on.
+    void writePushLang(language);
   }, [language]);
 
   const setLanguage = useCallback(

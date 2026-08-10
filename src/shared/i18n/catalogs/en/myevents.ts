@@ -19,6 +19,16 @@ export const myevents: Catalog = {
   "header.notifAria": "Notifications",
   "header.createCta": "Create a gathering",
 
+  // ── Global events header (EventsHeader) ───────────────────────────────────
+  "eventsHeader.title": "Events",
+  "eventsHeader.searchAria": "Search events",
+  "eventsHeader.hostCta": "Host a gathering",
+
+  // ── Top-level My events | Discover switch (EventsTopTabs) ─────────────────
+  "topTabs.mine": "My events",
+  "topTabs.discover": "Discover",
+  "topTabs.ariaLabel": "Events views",
+
   // ── Primary bucket pills (EventPills) ─────────────────────────────────────
   "pills.upcoming": "All upcoming",
   "pills.going": "Going",

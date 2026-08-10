@@ -1,0 +1,35 @@
+/* Ported from the design prototype's `.seltool` (mag-write.css). The
+   toolbar's own surface is a fixed dark chip (var(--plum)) regardless of
+   theme, so its text uses --cream-rgb — per colors.css, that channel is
+   intentionally NOT theme-switched ("cream-on-plum stays light in dark
+   mode"), which is exactly this surface. */
+
+.seltool {
+  position: fixed;
+  z-index: 80;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--plum);
+  box-shadow: var(--shadow-toast);
+  transform: translate(-50%, -100%);
+}
+
+.seltool button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: rgba(var(--cream-rgb), 0.8);
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.seltool button:hover,
+.seltool button:focus-visible {
+  background: rgba(var(--cream-rgb), 0.14);
+  color: rgba(var(--cream-rgb), 1);
+}

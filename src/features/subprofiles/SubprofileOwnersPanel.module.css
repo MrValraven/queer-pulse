@@ -8,14 +8,15 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 6px;
 }
 
 .row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
-  padding: 8px 4px;
+  gap: var(--gap-xs);
+  padding: 10px 4px;
 }
 
 .rowName {

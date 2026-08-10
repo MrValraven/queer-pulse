@@ -5,6 +5,7 @@ import { canGoBack } from "./SwipeBackShell";
 import { tabOf } from "./tabRoots";
 import { useScrolled } from "../../hooks/useScrolled";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
+import { mediaMax } from "../../theme/breakpoints";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useAuth } from "../../../app/providers/authContext";
 import { useNavMode } from "../../../app/providers/navModeContext";
@@ -107,7 +108,7 @@ function MessagesLink() {
  */
 export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
   const scrolled = useScrolled(8);
-  const isMobile = useMediaQuery("(max-width: 860px)");
+  const isMobile = useMediaQuery(mediaMax("mobile"));
   const { theme, toggleTheme } = useTheme();
   const { loggedIn } = useAuth();
   const { navMode } = useNavMode();

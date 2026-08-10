@@ -1,0 +1,60 @@
+/* Swatch-button tint picker (design's `.tints`/`.sw-*`). Declares its own
+   `--desk-violet` local var rather than the global `--violet` token — same
+   pattern as `desk/StagePill.module.css` — because the repo `--violet` hue
+   doesn't match the design's swatch and this is the only place it's used. */
+.field {
+  --desk-violet: #5c3e92;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.tints {
+  display: flex;
+  gap: 7px;
+}
+
+.swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 9px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.2);
+  cursor: pointer;
+  padding: 0;
+  transition: outline-color 0.18s var(--ease);
+}
+
+.swatch[aria-pressed="true"] {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+}
+
+.swatch:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.swPlum {
+  background: var(--plum);
+}
+
+.swCoral {
+  background: var(--accent);
+}
+
+.swJade {
+  background: var(--jade);
+}
+
+.swViolet {
+  background: var(--desk-violet);
+}

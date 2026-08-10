@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import {
-  FiBriefcase,
+  FiFileText,
   FiAward,
   FiBookOpen,
   FiBookmark,
@@ -31,6 +31,31 @@ export function workStatusLine(t: TFunction): string {
     ? t("economy:workHub.statusLine.offers", { count: offers })
     : t("economy:workHub.statusLine.noOffers");
   return `${apps} · ${offerPart} · ${t("economy:workHub.statusLine.mentorThreads")}`;
+}
+
+/**
+ * The Applications entry point, surfaced persistently at the top of the Work hub
+ * in both demo and live mode (it replaced the standalone "Applications" link in
+ * the account menu). In demo the subtitle carries the mock counts; live mode has
+ * no aggregate backend yet, so it shows neutral "track everything" chrome.
+ */
+export function applicationsHubCard(demoMode: boolean): StatusCard {
+  return {
+    key: "apps",
+    icon: <FiFileText />,
+    labelKey: "economy:workHub.card.apps.label",
+    primaryKey: demoMode
+      ? "economy:workHub.card.apps.primary"
+      : "economy:workHub.card.apps.trackAll",
+    primaryValues: demoMode ? { active: activeApps, sent: sentApps } : undefined,
+    nextKey: demoMode
+      ? offers
+        ? "economy:workHub.statusLine.offers"
+        : "economy:workHub.card.apps.noOffers"
+      : "economy:workHub.card.apps.viewAll",
+    nextValues: demoMode && offers ? { count: offers } : undefined,
+    to: routes.applicationStatus,
+  };
 }
 
 export interface NextAction {
@@ -113,18 +138,6 @@ export interface StatusCard {
  * `{token}` next to a chrome phrase, same idiom as `NEXT_ACTIONS` above.
  */
 export const STATUS_CARDS: StatusCard[] = [
-  {
-    key: "apps",
-    icon: <FiBriefcase />,
-    labelKey: "economy:workHub.card.apps.label",
-    primaryKey: "economy:workHub.card.apps.primary",
-    primaryValues: { active: activeApps, sent: sentApps },
-    nextKey: offers
-      ? "economy:workHub.statusLine.offers"
-      : "economy:workHub.card.apps.noOffers",
-    nextValues: offers ? { count: offers } : undefined,
-    to: routes.applicationStatus,
-  },
   {
     key: "mentor",
     icon: <FiAward />,

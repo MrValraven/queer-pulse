@@ -1,11 +1,9 @@
-import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { draftToCreateDto, type DeckDraft } from "./deckDraft";
 import { useCreateDeck, useDeleteDeck, useUpdateDeck } from "./api/useDeckMutations";
-import styles from "./DeckEditorPage.module.css";
 
-interface DeckEditorActionsProps {
+export interface UseDeckEditorActionsArgs {
   /** Server id once the deck has been saved at least once; `null` for a
    *  brand-new, never-saved draft (publish/delete are disabled until then). */
   id: string | null;
@@ -21,12 +19,19 @@ interface DeckEditorActionsProps {
 }
 
 /**
- * Save / publish-unpublish / delete action bar for the deck editor, wired to
- * the dual-mode deck mutations (`api/useDeckMutations.ts`). Every mutation is
- * silent by contract (`meta.silentError`), so this component — not the
- * mutation hooks — owns the success/failure toast on each `.mutateAsync` call.
+ * Save / publish-unpublish / delete action handlers for the deck editor,
+ * wired to the dual-mode deck mutations (`api/useDeckMutations.ts`). Every
+ * mutation is silent by contract (`meta.silentError`), so this hook — not the
+ * mutation hooks themselves — owns the success/failure toast on each
+ * `.mutateAsync` call.
+ *
+ * Previously this file rendered its own action bar; the Phase-4 Task-3
+ * restyle moved those buttons into the new `.ebar` header (Save/Publish),
+ * `DeckPublishRail` (Publish), and `DeckDangerCard`/`DeckModals` (Delete), so
+ * this is now a logic-only hook the page and its sub-components share — the
+ * mutation/toast behavior itself is unchanged from before the restyle.
  */
-export function DeckEditorActions({
+export function useDeckEditorActions({
   id,
   draft,
   published,
@@ -34,7 +39,7 @@ export function DeckEditorActions({
   onSaved,
   onPublishedChange,
   onDeleted,
-}: DeckEditorActionsProps) {
+}: UseDeckEditorActionsArgs) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const createDeck = useCreateDeck();
@@ -75,7 +80,6 @@ export function DeckEditorActions({
 
   async function handleDelete() {
     if (!id) return;
-    if (!window.confirm(t("magazine:deck.editor.deleteConfirm"))) return;
     try {
       await deleteDeck.mutateAsync(id);
       showToast(t("magazine:deck.editor.deletedToast"), "success");
@@ -85,35 +89,12 @@ export function DeckEditorActions({
     }
   }
 
-  return (
-    <div className={styles.actions}>
-      <Button
-        type="button"
-        variant="primary"
-        onClick={() => void handleSave()}
-        disabled={isSaving}
-        aria-busy={isSaving}
-      >
-        {t("magazine:deck.editor.saveDraft")}
-      </Button>
-      <Button
-        type="button"
-        variant="ghost"
-        onClick={() => void handleTogglePublish()}
-        disabled={!id || updateDeck.isPending}
-      >
-        {published
-          ? t("magazine:deck.editor.unpublish")
-          : t("magazine:deck.editor.publish")}
-      </Button>
-      <Button
-        type="button"
-        variant="danger"
-        onClick={() => void handleDelete()}
-        disabled={!id || deleteDeck.isPending}
-      >
-        {t("magazine:deck.editor.delete")}
-      </Button>
-    </div>
-  );
+  return {
+    handleSave: () => void handleSave(),
+    handleTogglePublish: () => void handleTogglePublish(),
+    handleDelete: () => void handleDelete(),
+    isSaving,
+    isPublishPending: updateDeck.isPending,
+    isDeletePending: deleteDeck.isPending,
+  };
 }

@@ -365,6 +365,24 @@
   background: var(--cream);
 }
 
+/* Tap-to-enlarge trigger wrapping the avatar — visually inert, just a bigger
+   hit target with a zoom cursor. */
+.photoButton {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: zoom-in;
+}
+
+.photoButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .verifiedBadge {
   position: absolute;
   right: -2px;

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MobileProfileActions } from "./MobileProfileActions";
@@ -5,6 +6,7 @@ import { MobileProfileIdentity } from "./MobileProfileIdentity";
 import { MobileProfileIdentityTop } from "./MobileProfileIdentityTop";
 import { MobileProfileStats } from "./MobileProfileStats";
 import { ProfileHeroActions } from "./ProfileHeroActions";
+import { ProfilePhotoViewer } from "./ProfilePhotoViewer";
 import type { MemberProfile } from "./data/memberProfiles";
 import type { Member } from "./data/members";
 import styles from "./MobileProfile.module.css";
@@ -57,6 +59,22 @@ export function MobileProfileHeader({
   // affordances without changing whose data is shown.
   const realSelf = self;
   const isSelf = realSelf && !asVisitor;
+  const [photoOpen, setPhotoOpen] = useState(false);
+  const fullName = `${profile.first} ${profile.last}`;
+  const avatarTint = profile.tint === "auth" ? "plum" : profile.tint;
+  const avatar = (
+    <ImageSlot
+      tint={avatarTint}
+      src={profile.photo}
+      initials={profile.initials}
+      shape="circle"
+      width="100%"
+      height="100%"
+      srcSize={176}
+      placeholder={fullName}
+      alt={fullName}
+    />
+  );
 
   return (
     <header className={styles.mheader}>
@@ -64,17 +82,20 @@ export function MobileProfileHeader({
         <div className={styles.ringWrap}>
           <div className={styles.prideRing}>
             <div className={styles.ringGap}>
-              <ImageSlot
-                tint={profile.tint === "auth" ? "plum" : profile.tint}
-                src={profile.photo}
-                initials={profile.initials}
-                shape="circle"
-                width="100%"
-                height="100%"
-                srcSize={176}
-                placeholder={`${profile.first} ${profile.last}`}
-                alt={`${profile.first} ${profile.last}`}
-              />
+              {profile.photo ? (
+                <button
+                  type="button"
+                  className={styles.photoButton}
+                  onClick={() => setPhotoOpen(true)}
+                  aria-label={t("members:profile.hero.viewPhotoAria", {
+                    name: fullName,
+                  })}
+                >
+                  {avatar}
+                </button>
+              ) : (
+                avatar
+              )}
             </div>
           </div>
           {profile.verified && (
@@ -125,6 +146,15 @@ export function MobileProfileHeader({
           profile={profile}
           asVisitor={asVisitor}
           realSelf={realSelf}
+        />
+      )}
+
+      {photoOpen && profile.photo && (
+        <ProfilePhotoViewer
+          src={profile.photo}
+          name={fullName}
+          tint={avatarTint}
+          onClose={() => setPhotoOpen(false)}
         />
       )}
     </header>

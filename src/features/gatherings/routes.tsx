@@ -3,7 +3,6 @@ import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
 import { GatheringComingSoon } from "./GatheringComingSoon";
 
-const EventsHubPage = lazyNamed(() => import("./EventsHubPage"), "EventsHubPage");
 const GatheringPage = lazyNamed(() => import("./GatheringPage"), "GatheringPage");
 const GatheringRecapPage = lazyNamed(() => import("./GatheringRecapPage"), "GatheringRecapPage");
 const GatheringCancelledPage = lazyNamed(() => import("./GatheringCancelledPage"), "GatheringCancelledPage");
@@ -14,12 +13,11 @@ const GatheringPhotosPage = lazyNamed(() => import("./GatheringPhotosPage"), "Ga
 const CoHostInvitePage = lazyNamed(() => import("./CoHostInvitePage"), "CoHostInvitePage");
 const EventPage = lazyNamed(() => import("./EventPage"), "EventPage");
 const RsvpPage = lazyNamed(() => import("./RsvpPage"), "RsvpPage");
-const CheckoutPage = lazyNamed(() => import("./checkout/CheckoutPage"), "CheckoutPage");
 const HostPage = lazyNamed(() => import("./HostPage"), "HostPage");
 const CreateGatheringPage = lazyNamed(() => import("./CreateGatheringPage"), "CreateGatheringPage");
 
 /** The gatherings surface: calendar, events, a gathering's detail + management
- *  sub-pages, RSVP/checkout, hosting, and the gatherings index.
+ *  sub-pages, RSVP, hosting, and the gatherings index.
  *
  *  Several routes here are demo-only prototypes each fixed to a single mock
  *  gathering — the `/manage` dashboard, the standalone `/event` detail, the
@@ -34,9 +32,13 @@ export function gatheringRoutes(demoMode: boolean) {
     <>
       <Route
         path={routes.calendar}
-        element={<Navigate to={`${routes.events}?view=calendar`} replace />}
+        element={
+          <Navigate
+            to={`${routes.events}?tab=discover&view=calendar`}
+            replace
+          />
+        }
       />
-      <Route path={routes.events} element={<EventsHubPage />} />
       {/* `/gathering/:slug` (singular) and the flat `/gathering-*` routes were
           unified under `/gatherings/:slug/...`. Hard cutover — no redirect shims. */}
       <Route path={`${routes.gatherings}/:slug`} element={<GatheringPage />} />
@@ -86,7 +88,6 @@ export function gatheringRoutes(demoMode: boolean) {
         path={routes.rsvpTicket}
         element={demoMode ? <RsvpPage /> : <GatheringComingSoon variant="rsvp" />}
       />
-      <Route path={routes.checkout} element={<CheckoutPage />} />
       <Route path={routes.host} element={<HostPage />} />
       <Route path={routes.createGathering} element={<CreateGatheringPage />} />
       <Route path={routes.gatherings} element={<Navigate to={routes.events} replace />} />

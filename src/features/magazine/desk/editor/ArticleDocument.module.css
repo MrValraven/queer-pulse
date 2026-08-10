@@ -1,0 +1,91 @@
+/* The article document surface — ported from the design prototype's
+   `.doc`/`.docwrap`/`.doc-title`/`.doc-stand`/`.doc-byline`/`.addbar`
+   (mag-write.css), with real repo tokens in place of the prototype-local
+   --line/--wash placeholders (both already real tokens, see
+   src/styles/tokens/colors.css). Shared by `ArticleDocument.tsx` (the
+   editable Draft/Shape surface) and `ArticleReaderPreview.tsx` (the
+   read-only Read-mode surface, via the `.reader` variant below). */
+
+.doc {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 52px 0 60px;
+  position: relative;
+}
+
+.docwrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 34px;
+}
+
+.kicker {
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--accent-ink);
+  margin-bottom: 14px;
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: 44px;
+  line-height: 1.03;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  color: var(--text-strong);
+  margin-bottom: 16px;
+}
+
+.standfirst {
+  font-family: var(--serif);
+  font-size: 21px;
+  line-height: 1.4;
+  font-weight: 300;
+  color: var(--ink-60);
+  margin-bottom: 30px;
+}
+
+.byline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 26px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13.5px;
+  color: var(--ink-60);
+}
+
+.blockList {
+  display: flex;
+  flex-direction: column;
+}
+
+/* add bar */
+.addbar {
+  max-width: 640px;
+  margin: 26px auto 0;
+  padding: 0 34px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--ink-40);
+}
+
+/* reader mode (Read-mode preview + the public reader share this look) */
+.reader {
+  padding: 44px 0 70px;
+}
+
+.reader .docwrap {
+  max-width: 660px;
+}

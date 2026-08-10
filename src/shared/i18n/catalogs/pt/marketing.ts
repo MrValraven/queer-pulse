@@ -719,7 +719,7 @@ export const marketing: Catalog = {
     "Os convívios são em Lisboa, mas a adesão em si não está limitada por localização — muitas pessoas participam à distância pela rede e pela revista.",
   "help.qa.free.q": "A QueerPulse é gratuita?",
   "help.qa.free.a":
-    "Sim — a adesão é gratuita no escalão solidário. Existem <link>escalões de Apoiante</link> pagos para quem quiser apoiar a plataforma financeiramente.",
+    "Sim — a QueerPulse é gratuita para aderir e usar.",
   "help.qa.changeName.q": "Como mudo o meu nome ou pronomes?",
   "help.qa.changeName.a":
     "Vai a <settingsLink>Definições</settingsLink> → Perfil. As alterações aplicam-se em todo o lado de imediato.",
@@ -758,9 +758,6 @@ export const marketing: Catalog = {
   "help.qa.blockMute.q": "Qual a diferença entre bloquear e silenciar?",
   "help.qa.blockMute.a":
     "<strong>Bloquear</strong> remove todo o contacto nos dois sentidos. <strong>Silenciar</strong> só esconde alguém do teu feed — a outra pessoa não sabe que aconteceu nenhum dos dois.",
-  "help.qa.becomeSupporter.q": "Como me torno Apoiante?",
-  "help.qa.becomeSupporter.a":
-    "Visita a <membershipLink>página de Apoiante</membershipLink> para escolher um escalão — é um apoio inteiramente opcional, não um requisito para usar a plataforma.",
   "help.qa.invitesWork.q": "Quantos convites tenho?",
   "help.qa.invitesWork.a":
     "Cada pessoa começa com uma pequena reserva de convites que se renova com o tempo, consoante o crescimento da comunidade.",
@@ -1252,13 +1249,10 @@ export const marketing: Catalog = {
     "Fonte: relatório de transparência de 2025. <em>Por favor liga à página de transparência quando citares.</em>",
   "pressKit.facts.founded": "Fundada · Lisboa",
   "pressKit.facts.activeMembers": "Pessoas ativas no final de 2025",
-  "pressKit.facts.toPrograms": "De cada euro vai para programas",
-  "pressKit.facts.totalRaised": "Total angariado em 2025",
+  "pressKit.facts.communities": "Comunidades na plataforma",
   "pressKit.facts.gatherings": "Convívios realizados em 2025",
-  "pressKit.facts.microGrants": "Microapoios distribuídos em 2025",
   "pressKit.facts.safeSpaces": "Espaços seguros verificados em Lisboa",
   "pressKit.facts.magazineIssues": "Edições da revista até hoje",
-  "pressKit.facts.transNonBinary": "Pessoas trans / não-bináries",
   "pressKit.coverage.section.title": "<em>Cobertura</em> recente",
   "pressKit.coverage.section.lead":
     "Peças selecionadas em inglês e português, de 2024 a 2026. <em>Contagens de visitas são bem-vindas mas não necessárias</em> — liga antes à página de Imprensa.",
@@ -1873,10 +1867,12 @@ export const marketing: Catalog = {
   "changelog.badge.improvement": "Melhoria",
   "changelog.badge.infrastructure": "Infraestrutura",
   "changelog.badge.fix": "Correção",
+  "changelog.tag.work": "Abrir o teu Trabalho",
   "changelog.tag.settings": "Definições de notificações",
   "changelog.tag.messages": "Abrir mensagens",
   "changelog.tag.communities": "Ver comunidades",
   "changelog.tag.subprofiles": "Ver subperfis",
+  "changelog.tag.personas": "Ver personas",
   "changelog.tag.housing": "Ver habitação",
   "changelog.tag.directory": "Abrir o diretório",
   "changelog.tag.cinema": "Visitar o Cinema",
@@ -1887,6 +1883,7 @@ export const marketing: Catalog = {
   "changelog.tag.events": "Abrir o Events Hub",
   "changelog.tag.roadmap": "Abrir o roteiro",
   "changelog.tag.magazine": "Abrir a revista",
+  "changelog.tag.magazineWriter": "Abrir o teu espaço",
   "changelog.tag.safety": "Ver a nossa abordagem à segurança",
   "changelog.tag.editProfile": "Editar o teu perfil",
   "changelog.tag.employerReviews": "Ler avaliações de empregadores",
@@ -1900,6 +1897,55 @@ export const marketing: Catalog = {
   "changelog.tag.invite": "Convidar alguém",
   "changelog.tag.imprint": "Ler o aviso legal",
   "changelog.tag.feed": "Abrir o teu feed",
+  "changelog.tag.myEvents": "Abrir Meus Eventos",
+  "changelog.tag.safeSpaces": "Encontrar um espaço seguro",
+  "changelog.tag.pressKit": "Abrir o kit de imprensa",
+  "changelog.tag.magazineDesk": "Abrir a redação",
+
+  "changelog.entries.skip-link-keyboard-only.title":
+    "O atalho “Saltar para o conteúdo” deixou de aparecer sem razão",
+  "changelog.entries.skip-link-keyboard-only.body":
+    "O atalho “Saltar para o conteúdo” — que ajuda quem navega pelo teclado a passar à frente da navegação — aparecia por vezes durante a navegação normal. Agora só surge quando chegas mesmo a ele com o teclado (tecla Tab) e mantém-se escondido o resto do tempo.",
+
+  "changelog.entries.enlarge-profile-photo.title":
+    "Toca na foto de perfil para a ver de perto",
+  "changelog.entries.enlarge-profile-photo.body":
+    "No perfil de qualquer pessoa, toca na foto para a abrir em grande, na versão completa — para veres exatamente quem é antes de a contactares. Toca em qualquer sítio ou carrega em Escape para fechar.",
+
+  "changelog.entries.tap-notification-to-profile.title":
+    "Toca numa notificação para abrir o perfil",
+  "changelog.entries.tap-notification-to-profile.body":
+    "Quando alguém aceita o teu convite ou a tua ligação, toda a notificação passa a ser tocável e leva-te diretamente ao perfil dessa pessoa — não só a pequena ligação do nome. As notificações que apontam para algo mais específico, como uma conversa ou um convívio, continuam a abrir isso.",
+
+  "changelog.entries.more-push-notifications.title":
+    "Mais do que te importa chega agora como notificação push",
+  "changelog.entries.more-push-notifications.body":
+    "As notificações push eram só mensagens diretas e lembretes de eventos. Agora chegam mais momentos que contam ao teu ecrã de bloqueio — pedidos e aceitações de ligação, menções, respostas em conversas em que estás, e avais que recebes, além de um aviso sempre que um evento a que vais muda ou é cancelado. Há também uma novidade para quem acolhe: um toque quando alguém avaliza um espaço seguro que cuidas. Novos botões em definições deixam-te manter as Menções e os Avais tão presentes ou discretos quanto quiseres, e um botão “Enviar um teste a ti” confirma que tudo chega ao teu dispositivo.",
+
+  "changelog.entries.localized-push-notifications.title":
+    "Notificações push no teu idioma",
+  "changelog.entries.localized-push-notifications.body":
+    "As notificações push do sistema — como o lembrete de um convívio — passam a aparecer em português para quem tem a app definida em português, em vez de virem sempre em inglês. As pré-visualizações de mensagens diretas já apareciam nas tuas próprias palavras; isto alinha o texto da própria app com elas.",
+
+  "changelog.entries.magazine-desk-workspace-nav.title":
+    "Um espaço próprio para a redação da revista",
+  "changelog.entries.magazine-desk-workspace-nav.body":
+    "Quem edita a revista passa a ter uma navegação própria à esquerda — Redação, Propostas e Edição, com salto rápido (⌘K) e o painel “Desde sexta” — em vez do menu geral do site, em todos os ecrãs de edição.",
+  "changelog.entries.richer-push-notifications.title":
+    "Notificações push que mostram quem e o quê",
+  "changelog.entries.richer-push-notifications.body":
+    "As notificações push ficaram mais ricas — uma mensagem direta passa a mostrar de quem é, com a foto de quem escreveu, e um lembrete de evento mostra a capa do evento. Ambas trazem um toque rápido para entrares logo, e as mensagens agrupam-se por conversa para o teu ecrã de bloqueio ficar tranquilo.",
+
+  "changelog.entries.admin-uploaded-images.tag": "Abrir admin",
+  "changelog.entries.admin-uploaded-images.title":
+    "As administradoras podem ver todas as imagens enviadas",
+  "changelog.entries.admin-uploaded-images.body":
+    "As administradoras podem agora ver todas as imagens enviadas guardadas na plataforma, com detalhes por ficheiro — dono, metadados de armazenamento e uma verificação do tipo real de conteúdo — para revisão de segurança.",
+
+  "changelog.entries.events-and-my-events-merged.title":
+    "Os eventos e Os meus eventos são agora uma só página",
+  "changelog.entries.events-and-my-events-merged.body":
+    "O painel dos teus eventos e a descoberta de novos eventos passam a viver juntos em /events, com um interruptor My events / Descobrir no topo. Abre no teu painel quando tens eventos marcados e em Descobrir quando não tens.",
 
   "changelog.entries.trust-network-legend-withdrawn.title":
     "A legenda da rede de confiança já explica as linhas tracejadas",
@@ -1920,6 +1966,145 @@ export const marketing: Catalog = {
     "Junta-te — e sai — de comunidades durante o registo",
   "changelog.entries.onboarding-join-and-leave.body":
     "No passo de registo que sugere comunidades, agora podes tocar novamente numa comunidade a que já te juntaste para sair, caso mudes de ideias. As sugestões passam também a mostrar apenas comunidades totalmente abertas às quais te podes juntar com um toque — as privadas e as só por convite deixam de aparecer aqui, já que não podem ser aderidas de imediato.",
+
+  "changelog.entries.saved-and-searched-lists-load.title":
+    "Os eventos guardados e as listas pesquisadas voltam a carregar em vez de dar erro",
+  "changelog.entries.saved-and-searched-lists-load.body":
+    "Algumas listas podiam falhar ao carregar e mostrar um erro em vez de resultados: o separador de eventos guardados (e os separadores Vou, Lista de espera e Passados), a pesquisa nas tuas mensagens, filtrar a revista por um único autor e pesquisar na fila de moderação. Cada uma destas combinava uma consulta com paginação de uma forma que baralhava a consulta à base de dados e não devolvia nada. Agora carregam os resultados de forma fiável.",
+
+  "changelog.entries.admin-overview-stat-grid-responsive.title":
+    "Os cartões de estatísticas do painel de administração ajustam-se ao ecrã no telemóvel",
+  "changelog.entries.admin-overview-stat-grid-responsive.body":
+    "Os quatro cartões de destaque no topo do painel de administração mantinham-se numa linha fixa de quatro em ecrãs estreitos, espremendo cada cartão até a etiqueta se partir e a linha transbordar para fora. Agora limitam-se a quatro por linha em ecrãs largos e reduzem-se com suavidade para dois e depois um à medida que o ecrã estreita — para que cada cartão continue legível no telemóvel.",
+
+  "changelog.entries.trust-network-mobile-graph-first.title":
+    "A Rede de Confiança abre no grafo no telemóvel",
+  "changelog.entries.trust-network-mobile-graph-first.body":
+    "Abrir a Rede de Confiança de um membro no telemóvel passa a mostrar logo o grafo de ligações, em vez de fazer surgir uma folha de detalhes por cima. Toca em qualquer pessoa no grafo para deslizar os detalhes das suas vouches e as respetivas ações — e desliza ou toca fora para voltares à vista completa.",
+
+  "changelog.entries.magazine-article-versions.title":
+    "Os rascunhos de artigos passam a guardar um histórico completo de versões",
+  "changelog.entries.magazine-article-versions.body":
+    "Cada rascunho enviado e cada gravação manual passam a guardar uma versão — a equipa editorial pode comparar com o rascunho atual e restaurar qualquer versão anterior sem perder trabalho.",
+
+  "changelog.entries.magazine-article-comments.title":
+    "Notas encadeadas nos rascunhos de artigos",
+  "changelog.entries.magazine-article-comments.body":
+    "A equipa editorial já pode deixar notas encadeadas num artigo, responder entre si e resolver uma nota depois de tratada.",
+
+  "changelog.entries.magazine-desk-live-notifications.title":
+    "O painel de atividade da mesa editorial passa a mostrar eventos reais",
+  "changelog.entries.magazine-desk-live-notifications.body":
+    "O painel de atividade da mesa editorial passa a mostrar eventos editoriais reais — quem fez o quê, e quando — com ligação direta à peça, em vez da mesma lista fixa de demonstração de sempre.",
+
+  "changelog.entries.magazine-desk-wave-b-fixes.title":
+    "Pesquisa no arquivo, resumos do índice e valores de cancelamento — agora reais",
+  "changelog.entries.magazine-desk-wave-b-fixes.body":
+    "A pesquisa no arquivo passa a encontrar peças publicadas em tempo real, em vez de uma lista de demonstração estática. Os resumos do índice da edição e a seleção “publicar nas cartas” das cartas das pessoas leitoras passam a guardar-se corretamente — essa opção criava por engano uma carta duplicada em vez de atualizar a que clicaste. Quem colabora também passa a ver o valor de cancelamento real de cada encomenda, em vez de um valor genérico.",
+
+  "changelog.entries.magazine-commission-editor-fix.title":
+    "Encomendar um artigo funciona numa revista nova",
+  "changelog.entries.magazine-commission-editor-fix.body":
+    "Encomendar um artigo a partir da mesa editorial podia falhar com um erro “editorId must be a UUID” — acontecia numa revista nova, ainda sem artigos atribuídos a ninguém. As encomendas passam a ficar associadas à tua própria identidade de editor com sessão iniciada, por isso são criadas de imediato.",
+
+  "changelog.entries.magazine-issue-production.title":
+    "Produção da edição",
+  "changelog.entries.magazine-issue-production.body":
+    "Adicionámos a produção da edição — organiza o alinhamento, define a capa e as chamadas, escolhe o resumo para membros e os cartões sociais, e publica a edição inteira de uma vez com uma lista de verificação.",
+
+  "changelog.entries.events-page-utility-redesign.title":
+    "Uma página de eventos mais limpa e rápida",
+  "changelog.entries.events-page-utility-redesign.body":
+    "Os eventos passam a ser uma página mais funcional: um cabeçalho compacto com o interruptor Os meus eventos / Descobrir e um único sítio para organizar, sem herói gigante, um pequeno destaque “A seguir” quando há algo a acontecer, e procura em Explorar.",
+
+  "changelog.entries.magazine-writer-workspace.title":
+    "O espaço de quem escreve",
+  "changelog.entries.magazine-writer-workspace.body":
+    "Abrimos o espaço de quem escreve — quem escreve vê agora as suas próprias atribuições, propostas e pagamentos, escolhe a sua assinatura e entrega textos, tudo num só lugar.",
+
+  "changelog.entries.persona-discovery-nudges.title":
+    "Personas, mais fáceis de descobrir",
+  "changelog.entries.persona-discovery-nudges.body":
+    "Uma persona tua passa a ser mais fácil de notar, sempre que faz sentido: uma sugestão discreta no teu perfil se ainda não tens nenhuma, um lembrete no fundo do diretório de personas, um passo durante o acolhimento, um convite depois de um convívio onde atuaste, e um crédito em destaque quando alguém credita o teu trabalho no dela. Todos estes lembretes podem ser dispensados.",
+
+  "changelog.entries.magazine-deck-editor-redesign.title":
+    "O editor de decks de slides, redesenhado",
+  "changelog.entries.magazine-deck-editor-redesign.body":
+    "Redesenhámos o editor de decks de slides para combinar com a redação da revista — uma pré-visualização ao vivo que espelha exatamente o que os leitores veem, limites de caracteres por slide e uma lista de verificação antes de publicar.",
+
+  "changelog.entries.magazine-desk-redesign.title":
+    "A redação da revista, redesenhada",
+  "changelog.entries.magazine-desk-redesign.body":
+    "Redesenhámos a redação da revista — um painel editorial ao vivo com vistas de fluxo, quadro e plano da edição, caixa de propostas, vistas guardadas, paleta de comandos (⌘K) e atalhos de teclado.",
+
+  "changelog.entries.persona-directory-redesign.title":
+    "O diretório de personas, redesenhado",
+  "changelog.entries.persona-directory-redesign.body":
+    "Explorar personas passa a estar organizado em seis famílias de ofício — Palco, Estúdio, Página, Oficina, Consultório e Mesa — para chegares mais depressa ao tipo de trabalho que procuras, mesmo antes de pesquisares. Os cartões mostram agora tags e o número de seguidores num relance, e o bloco «Também a trabalhar como» no perfil dos membros ganhou um visual mais leve e completo para cada persona ligada.",
+
+  "changelog.entries.persona-editor-redesign.title":
+    "Um editor redesenhado para as tuas personas",
+  "changelog.entries.persona-editor-redesign.body":
+    "Editar uma persona tem agora o seu próprio espaço dedicado: uma barra de secções à esquerda, uma pré-visualização ao vivo encostada às tuas edições, campos mais completos para concertos, trabalho visual e projetos, e um aviso claro antes de mudares um endereço já publicado.",
+
+  "changelog.entries.magazine-article-editor.title":
+    "O editor de artigos por blocos, no ar",
+  "changelog.entries.magazine-article-editor.body":
+    "Adicionámos o editor de artigos por blocos — escreve em parágrafos, títulos, citações em destaque, imagens, perguntas e respostas e linhas de estatística, com ênfase em linha, um menu de barra, contagem de palavras e tempo de leitura ao vivo, e uma lista de verificação antes de publicar.",
+
+  "changelog.entries.magazine-piece-record.title":
+    "O registo completo da peça, aberto",
+  "changelog.entries.magazine-piece-record.body":
+    "Abrimos o registo completo da peça — encomenda, cuidado e consentimento, dinheiro, histórico e cartas de leitores — com um bloqueio de publicação que retém a peça até o consentimento e a leitura sensível estarem resolvidos.",
+
+  "changelog.entries.persona-dashboard-redesign.title":
+    "As tuas personas, num painel redesenhado",
+  "changelog.entries.persona-dashboard-redesign.body":
+    "O teu painel de personas foi redesenhado: cada cartão mostra agora um anel de progresso de rascunho ou um selo de estado ao vivo, a ligação e a disponibilidade num relance, e quantas pessoas coproprietárias tem. Criar uma nova persona passa a ser um fluxo guiado em dois passos — escolhe primeiro para que serve, depois dá-lhe um nome e escolhe se fica ligada ao teu perfil ou por si só.",
+
+  "changelog.entries.persona-pages-redesigned.title":
+    "Páginas de persona, redesenhadas para cada ofício",
+  "changelog.entries.persona-pages-redesigned.body":
+    "Cada persona passa a ter uma página pensada para a forma como esse ofício realmente se apresenta: artistas de palco ganham uma faixa de destaque com dados de contratação, artistas visuais ganham uma parede de estúdio com uma caixa de luz de ecrã inteiro para o trabalho, quem escreve ganha um layout ao estilo de página com citações em destaque, programadoras e criadores ganham uma folha de oficina, terapeutas ganham um layout de consultório calmo com a logística das sessões, e cozinheiros e mixologistas ganham um cartão de menu impresso. Denunciar uma persona e ver quem a apoia ou segue também passaram a ter os seus próprios ecrãs dedicados.",
+
+  "changelog.entries.persona-page-unavailable-reasons.title":
+    "As páginas de persona já dizem porquê, não só \"não encontrada\"",
+  "changelog.entries.persona-page-unavailable-reasons.body":
+    "Se uma persona é privada, só para membros, ou foi retirada, a página passa a dizer-te qual das três, em vez de um simples \"não encontrada\". E se és dona ou co-dona de uma persona que ainda não publicaste, o respetivo endereço mostra-te agora uma pré-visualização do teu rascunho, com uma barra a indicar o que falta para publicar — em vez de nada.",
+
+  "changelog.entries.meet-the-table.title": "Vê quem está à mesa",
+  "changelog.entries.meet-the-table.body":
+    "As páginas dos jantares de grupo passam a mostrar uma vista acolhedora da mesa vista de cima — quem recebe, quem já vem e que lugares ainda estão livres. Toca em alguém para saber um pouco sobre essa pessoa antes de chegares. Também retirámos um antigo ecrã de pagamento de bilhetes que nunca foi um pagamento real.",
+
+  "changelog.entries.settings-mobile-nav-strips.title":
+    "Definições e edição de perfil mais fáceis no telemóvel",
+  "changelog.entries.settings-mobile-nav-strips.body":
+    "No telemóvel, as Definições e a edição de perfil passam a ter uma faixa compacta de separadores que fica fixa no topo enquanto percorres a página, para saltares diretamente para uma secção em vez de percorreres tudo. Na edição de perfil, a secção atual destaca-se sozinha à medida que desces na página.",
+
+  "changelog.entries.places-card-mobile-foot.title":
+    "Cartões “Espaços que geres” mais arrumados no telemóvel",
+  "changelog.entries.places-card-mobile-foot.body":
+    "No telemóvel, o número de referência e as ações Editar / Eliminar / Ver anúncio dos cartões dos teus anúncios do diretório deixam de se apertar numa única linha — a referência fica agora na sua própria linha, por cima de uma linha de ações mais folgada.",
+
+  "changelog.entries.vouch-for-a-safe-space.title":
+    "Deixa o teu testemunho por um espaço seguro",
+  "changelog.entries.vouch-for-a-safe-space.body":
+    "Se um espaço te tratou bem, podes agora juntar o teu próprio testemunho à sua página de espaço seguro — com uma nota opcional e como conheces o lugar, ou de forma anónima. O teu testemunho junta-se aos que outros membros e moderadores deixaram, para que quem chega veja quem confia num espaço.",
+
+  "changelog.entries.my-events-change-list-live.title":
+    "Vê o que mudou nos Meus Eventos",
+  "changelog.entries.my-events-change-list-live.body":
+    "O sino na tua página de Meus Eventos já funciona fora da demonstração. Abre-o para veres uma lista das atualizações aos eventos a que respondeste ou para que foste convidado — uma hora alterada, um novo local, um cancelamento — cada uma marcada como não lida até a veres.",
+
+  "changelog.entries.applications-inside-work-hub.title":
+    "As Candidaturas passaram para o teu Trabalho",
+  "changelog.entries.applications-inside-work-hub.body":
+    "As Candidaturas deixam de ter uma linha própria no menu de perfil — passam a estar no topo do teu Trabalho, ao lado da mentoria, das competências e de tudo o resto ligado à carreira. Abre o Trabalho a partir do menu de perfil e encontras lá as tuas candidaturas, tanto em modo demonstração como em modo real.",
+
+  "changelog.entries.invite-only-community-tier.title":
+    "Comunidades só por convite voltam a ser restritas",
+  "changelog.entries.invite-only-community-tier.body":
+    "As comunidades definidas como só por convite ou com pedido de adesão apareciam com a etiqueta “Aberta a todes” e um botão de aderir com um toque — igual a uma comunidade totalmente aberta. Passam agora a mostrar a sua política de adesão real em todo o lado (nos cartões do diretório, na página da comunidade e na folha de adesão), por isso um espaço só por convite pede um convite em vez de deixar entrar qualquer pessoa.",
 
   "changelog.entries.navbar-wordmark-no-wrap.title":
     "O logótipo da QueerPulse deixa de se empilhar",
@@ -2329,6 +2514,30 @@ export const marketing: Catalog = {
     "Espaços seguros verificados, agora dentro do diretório",
   "changelog.entries.safe-spaces-in-directory.body":
     "O emblema de verificação aparece agora diretamente no cartão, dentro do diretório local, um filtro de “Espaços seguros verificados” mostra só os que o conquistaram, e os espaços verificados aparecem sempre primeiro na lista. Abre qualquer ficha para veres o bloco de confiança completo — o que a verificação significa para aquele espaço e quando foi avaliado pela última vez. E o /local/safe-spaces é agora o centro da verificação: o que o emblema significa, como funciona mesmo o processo de avaliação, e um registo honesto e público de todos os espaços que o perderam.",
+
+  "changelog.entries.magazine-desk-polish-sweep.title":
+    "Afinações na redação da revista",
+  "changelog.entries.magazine-desk-polish-sweep.body":
+    "Cores dos títulos agora consistentes no modo escuro, edição do deck certo diretamente a partir da redação, controlo da assinatura por atribuição para quem escreve, e outras pequenas limpezas.",
+
+  "changelog.entries.magazine-piece-messaging.title":
+    "Pessoas editoras e quem escreve já podem trocar mensagens diretamente na peça",
+  "changelog.entries.magazine-piece-messaging.body":
+    "Pessoas editoras e quem escreve trocam agora mensagens diretamente na peça — insistências e perguntas vivem ao lado do trabalho, não no email, e os dois lados veem sempre a conversa toda.",
+
+  "changelog.entries.live-press-kit-real-data.title":
+    "O kit de imprensa passa a mostrar cobertura, contactos e números reais",
+  "changelog.entries.live-press-kit-real-data.body":
+    "A cobertura e os contactos de imprensa do kit passam a vir do que a equipa realmente publica e mantém atualizado, e os números em destaque são retirados da própria plataforma — sem números inventados. Cada secção fica simplesmente escondida até haver algo real para mostrar.",
+  "changelog.entries.communities-and-home-merged.title":
+    "Comunidades, tudo num só lugar",
+  "changelog.entries.communities-and-home-merged.body":
+    "O teu hub de comunidades e o diretório de descoberta passam a viver juntos numa só página, /communities, com um interruptor Minhas comunidades / Descobrir no topo. Abre no teu hub quando já fazes parte de alguma comunidade, e em Descobrir quando ainda não fazes parte de nenhuma.",
+
+  "changelog.entries.silent-session-recovery.title":
+    "Sem o aviso de “sessão expirada” quando voltas",
+  "changelog.entries.silent-session-recovery.body":
+    "Ao voltares depois de algum tempo, podias ver aparecer por um momento um erro de “sessão expirada” — e mesmo assim ficares logo de novo autenticado. Essa mensagem estava a disparar sobre uma sessão que a app já estava a renovar em silêncio. Agora, quando conseguimos restaurar a tua sessão sozinhos, fazemo-lo em silêncio: sem erro, sem nada para ler, retomas simplesmente onde estavas. Só te diremos que a sessão terminou quando isso acontecer mesmo e tiveres de entrar de novo.",
 
   "changelog.entries.session-refresh-csrf-race.title":
     "Renovação de sessão mais suave quando o acesso expira",

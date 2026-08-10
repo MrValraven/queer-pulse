@@ -53,7 +53,7 @@
   position: relative;
   z-index: 1;
   margin-block-start: -34px;
-  margin-inline-start: 20px;
+  margin-inline-start: var(--card-pad);
   border-radius: 50%;
   box-shadow:
     0 0 0 3px var(--paper),
@@ -64,12 +64,12 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--gap-xs);
   min-width: 0;
-  padding: 10px 20px 18px;
+  padding: 12px var(--card-pad) 20px;
 }
 
-.kindBadge {
+.familyPill {
   align-self: flex-start;
   padding: 3px 10px;
   border-radius: var(--radius-pill);
@@ -101,20 +101,29 @@
   overflow: hidden;
 }
 
-/* Anchored to the card foot so footers line up across a row. */
+.tags {
+  margin-block-start: 2px;
+}
+
+/* Anchored to the card foot so footers line up across a row. Wraps rather
+   than clipping: on a narrow card (single-column phone width) the meta
+   chips + "Open this persona" CTA can't always share one line. */
 .footer {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--gap-xs);
   margin-block-start: auto;
-  padding-block-start: 12px;
+  padding-block-start: var(--gap-xs);
 }
 
 .meta {
   display: flex;
   align-items: center;
-  gap: 12px;
+  flex-wrap: wrap;
+  row-gap: 4px;
+  column-gap: var(--gap-sm);
   min-width: 0;
 }
 

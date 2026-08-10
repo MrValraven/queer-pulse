@@ -1,16 +1,12 @@
 import { useMemo, useState } from "react";
-import { FiArrowRight, FiUsers } from "react-icons/fi";
-import { PageShell } from "../../shared/components/layout";
+import { FiUsers } from "react-icons/fi";
 import {
   Button,
   EmptyState,
   FadeIn,
-  FeatureHelp,
-  Outro,
   Reveal,
   SkeletonLine,
 } from "../../shared/components/ui";
-import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
@@ -49,7 +45,7 @@ function CommunityCardSkeleton() {
   );
 }
 
-export function CommunitiesPage() {
+export function CommunitiesDiscover() {
   const { t } = useTranslation();
   const {
     items: communities,
@@ -67,6 +63,7 @@ export function CommunitiesPage() {
 
   const joiningTier = joining
     ? (getLiving(joining.slug)?.accessTier ??
+      joining.accessTier ??
       (joining.privateBadge ? "private" : "public"))
     : "public";
 
@@ -79,30 +76,7 @@ export function CommunitiesPage() {
   );
 
   return (
-    <PageShell>
-      <div className={styles.hero}>
-        <div className="wrap">
-          <Reveal as="div" className={styles.eyebrow}>
-            {t("communities:discover.hero.eyebrow")}
-          </Reveal>
-          <Reveal as="h1" className={styles.title} delay={60}>
-            <Translation
-              i18nKey="communities:discover.hero.title"
-              components={{ em: <em /> }}
-            />{" "}
-            <FeatureHelp id="communities.hub" />
-          </Reveal>
-          <Reveal as="p" className={styles.lede} delay={120}>
-            {t("communities:discover.hero.lead")}
-          </Reveal>
-          <Reveal delay={180} className={styles.heroCta}>
-            <Button to={routes.communitiesHome} variant="primary">
-              {t("communities:discover.hero.cta")}
-            </Button>
-          </Reveal>
-        </div>
-      </div>
-
+    <>
       <div className={styles.body}>
         <div className="wrap">
           <Reveal className={styles.filters}>
@@ -191,21 +165,6 @@ export function CommunitiesPage() {
         </div>
       </div>
 
-      <Outro
-        title={
-          <Translation
-            i18nKey="communities:discover.outro.title"
-            components={{ em: <em /> }}
-          />
-        }
-        sub={t("communities:discover.outro.sub")}
-      >
-        <Button to="/#board" size="lg">
-          {t("communities:discover.outro.cta")}{" "}
-          <FiArrowRight aria-hidden />
-        </Button>
-      </Outro>
-
       {joining && (
         <JoinModal
           community={{
@@ -226,6 +185,6 @@ export function CommunitiesPage() {
           }}
         />
       )}
-    </PageShell>
+    </>
   );
 }

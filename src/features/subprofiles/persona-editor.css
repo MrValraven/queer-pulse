@@ -1,0 +1,769 @@
+/* QueerPulse personas — owner EDITOR chrome (Phase 3 Task 1: Editor A —
+   rail + pane + docked live preview). Global, not a CSS module — the rail,
+   pane router, item-row list, and item drawer (Phase 3 Tasks 4-7) target
+   these class names directly, the same reasoning as persona-dashboard.css
+   and persona-skins.css sitting outside the module system. Ported from the
+   staged prototype base stylesheet
+   (scratchpad/personas-base-design/personas.css), mapped to repo tokens —
+   no bare hex. See the Task 1 report for the full prototype-var/hex →
+   repo-token mapping table.
+
+   Scope-out: the prototype's co-editing affordances (`.presence`/
+   `.conflict`/`.dragging`/`.dropline` and the disabled/[draggable] states
+   that live under its "co-editing (editor)" heading) are OMITTED — no
+   backend presence channel exists, out of scope for this phase (see the
+   Phase 3 plan's Decisions §4). */
+
+/* ── editor shell: rail + pane + docked preview (direction A) ───────────
+   `.ed-shell` is a DEDICATED wrapper (not `.ed` itself, and never the
+   global `.wrap`) that establishes the containment context every
+   `@container` rule below queries against. A container query can't target
+   the same element that establishes containment, so `.ed`'s own
+   grid-template-columns swap needs an ANCESTOR container — hence the
+   separate shell class. Task 4 (SubprofileEditorPage) wraps `.ed` in an
+   element carrying this class; nothing here renders a portal (drawer/
+   modals already `createPortal` to `document.body` per their own CSS), so
+   containment never clips an overlay. */
+.ed-shell {
+  container-type: inline-size;
+}
+.ed {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr) minmax(360px, 0.85fr);
+  gap: 0;
+  align-items: start;
+  /* Task 4: replaced the prototype's own qnav-footprint literal (100vh-90px)
+     with this repo's real convention — SettingsPage.module.css's sticky
+     sidebar sticks at `top: 96px` under the same floating AppNav this editor
+     also renders under, so `.ed-rail`/`.ed-preview` below match that same
+     96px (offset by a few px, mirroring the prototype's own rail/preview
+     stagger) rather than inventing a new number. */
+  min-height: calc(100vh - 96px);
+}
+.ed[data-preview="off"] {
+  grid-template-columns: 230px minmax(0, 1fr);
+}
+.ed[data-preview="off"] .ed-preview {
+  display: none;
+}
+/* Tablet: the docked preview no longer fits alongside the rail + pane at a
+   readable width, so it's dropped — the pane takes the rest of the row.
+   The selector list repeats `[data-preview="off"]` at the SAME
+   specificity as the desktop-only rule above (0,2,0 attribute selector)
+   so this always wins here regardless of the toggle's state; a plain
+   `.ed { … }` override (0,1,0) would otherwise lose that specificity
+   fight to `.ed[data-preview="off"]` by the cascade, leaving the rail
+   pinned at its full 230px desktop width — and, one step down, never
+   collapsing to one column — whenever an owner had toggled the preview
+   off before landing on a narrow viewport. Repo breakpoint ladder
+   (`src/styles/tokens/breakpoints.css`): 860 replaces the prototype's
+   bespoke 1080. */
+@container (max-width: 860px) {
+  .ed,
+  .ed[data-preview="off"] {
+    grid-template-columns: 210px minmax(0, 1fr);
+  }
+  .ed .ed-preview {
+    display: none;
+  }
+}
+/* Phone / narrow tablet: single column. The rail becomes a horizontal
+   top strip (same specificity guard as above); the pane runs full width
+   beneath it. Padding/gap here move onto the spacing scale (was a bare
+   10px/16px) for a bit more breathing room in the scroller. */
+@container (max-width: 760px) {
+  .ed,
+  .ed[data-preview="off"] {
+    grid-template-columns: 1fr;
+  }
+  .ed .ed-rail {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--gap-xs);
+    overflow-x: auto;
+    overflow-y: visible;
+    max-height: none;
+    -webkit-overflow-scrolling: touch;
+    padding: var(--gap-sm) var(--wrap-px);
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+    align-self: auto;
+  }
+  .ed .ed-rail button {
+    padding: var(--gap-xs) var(--gap-sm);
+    flex: none;
+  }
+  .ed .ed-rail .rail-head {
+    white-space: nowrap;
+    flex: none;
+  }
+}
+
+.ed-rail {
+  position: sticky;
+  top: 96px;
+  /* Only as tall as its own content — NOT `align-self: stretch`. In this grid
+     (`.ed` has `align-items: start`) a stretched rail fills the full row height
+     (as tall as the scrolling `.ed-main`), which leaves `position: sticky` no
+     travel: the element is already as tall as its scroll area, so it just
+     scrolls off with the page instead of sticking. `start` lets it stay put
+     under the nav while the pane scrolls. */
+  align-self: start;
+  /* Never let a short pane clip a tall rail; scroll the rail itself if it ever
+     exceeds the viewport height below the nav. */
+  max-height: calc(100vh - 96px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 24px 14px 24px 0;
+  border-right: 1px solid var(--line);
+}
+/* Rail head: "‹ Your personas" back to the dashboard (design's rail-top link).
+   Muted until hover, sits above the first group with a little breathing room. */
+.ed-rail .rail-back {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 12px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink-40);
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease);
+}
+.ed-rail .rail-back svg {
+  flex: none;
+}
+@media (hover: hover) {
+  .ed-rail .rail-back:hover {
+    color: var(--ink);
+  }
+}
+.ed-rail button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  /* This repo has no global <button> reset (the convention is the <Button>
+     component); these ported plain <button>s must zero the native UA chrome
+     themselves, or every rail row shows a grey border + button-face fill —
+     the design's rows are borderless, only the active row gets the dark pill. */
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-60);
+  text-align: left;
+  white-space: nowrap;
+  transition: all var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .ed-rail button:hover {
+    background: var(--wash);
+    color: var(--ink);
+  }
+}
+.ed-rail button[aria-current="true"] {
+  background: var(--plum);
+  color: var(--cream);
+  font-weight: 600;
+}
+.ed-rail .rail-n {
+  margin-left: auto;
+  font-size: 12px;
+  opacity: 0.6;
+}
+.ed-rail .rail-head {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  padding: 16px 12px 6px;
+  font-weight: 700;
+}
+
+.ed-main {
+  padding: 34px 34px 90px;
+  min-width: 0;
+}
+@container (max-width: 760px) {
+  .ed-main {
+    padding: 24px 20px 90px;
+  }
+}
+.ed-main h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+  line-height: 1.1;
+}
+.ed-main .lede {
+  color: var(--ink-60);
+  margin: 8px 0 26px;
+  max-width: 58ch;
+  line-height: 1.55;
+}
+/* Pane visibility. EditorPaneRouter toggles panes with the native `hidden`
+   attribute, but this repo ships no global `[hidden]{display:none}` normalize
+   rule — so an author `display` on a toggle div (the Identity/Address panes
+   carry `.ed-grid` below, `display:grid`) out-specifies the UA `[hidden]` rule
+   and the pane never hides. The result: Identity stays painted under whatever
+   tab you pick, so the rail looks like it does nothing. Force hidden panes off
+   regardless of their display class — scoped to the editor body. */
+.ed-main [hidden] {
+  display: none !important;
+}
+.ed-grid {
+  display: grid;
+  gap: 18px;
+  max-width: 620px;
+}
+.ed-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@container (max-width: 760px) {
+  .ed-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── docked live preview (Task 6 — EditorPreview) ────────────────────── */
+.ed-preview {
+  position: sticky;
+  top: 92px;
+  height: calc(100vh - 112px);
+  border-left: 1px solid var(--line);
+  background: var(--wash);
+  display: flex;
+  flex-direction: column;
+}
+.ed-prev-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.ed-prev-scroll {
+  flex: 1;
+  overflow: auto;
+  padding: 14px;
+}
+.ed-prev-frame {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--cream);
+  box-shadow: 0 18px 40px -28px rgba(var(--plum-rgb), 0.6);
+}
+/* Shrinks the real persona page tree to fit the dock without a second,
+   drifting layout — the prototype's own approach (see Task 6: the docked
+   preview renders the SAME `SubprofilePageBody` the public page uses). */
+.zoom {
+  zoom: 0.62;
+}
+
+/* ── section pane: collapsed item-row list (Task 5) ──────────────────── */
+.itemrow {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+  transition: border-color var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  .itemrow:hover {
+    border-color: var(--line-2);
+  }
+}
+.itemrow .grip {
+  color: var(--ink-40);
+  cursor: grab;
+  padding-top: 2px;
+  flex: none;
+}
+.itemrow b {
+  font-size: 15px;
+  font-weight: 600;
+  display: block;
+}
+.itemrow small {
+  color: var(--ink-40);
+  font-size: 13px;
+}
+.itemacts {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+  flex: none;
+}
+.iact {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-40);
+  /* No global <button> reset in this repo — zero the native chrome (see
+     `.ed-rail button`), else every item-row action icon shows a grey box. */
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+/* Smallest phones: the row's grip + up-to-5 action icons + padding can
+   otherwise eat most of a 360-480px viewport, squeezing the title down
+   to a sliver before it even gets to ellipsize. `.itemrow`'s own
+   `.content` already guards against real overflow (`min-width: 0` +
+   text-overflow: ellipsis — EditorItemRow.module.css), this just gives
+   the title more of the row back. */
+@container (max-width: 480px) {
+  .itemrow {
+    gap: var(--gap-xs);
+  }
+  .itemacts {
+    gap: 0;
+  }
+  .iact {
+    width: 28px;
+    height: 28px;
+  }
+}
+@media (hover: hover) {
+  .iact:hover {
+    background: var(--wash);
+    color: var(--ink);
+  }
+}
+.iact[aria-pressed="true"] {
+  color: var(--accent-ink);
+}
+
+/* ── savebar (Task 4 — EditorSavebar) ────────────────────────────────── */
+.savebar {
+  position: sticky;
+  bottom: 0;
+  margin-top: 26px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  /* Same floating-glass idiom as the app nav bar: cream-tinted glass in
+     light mode, paper-tinted in dark (the two surfaces the prototype's
+     literal rgba pair actually resolved to — see the Task 1 report). */
+  background: color-mix(in srgb, var(--cream) 86%, transparent);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  box-shadow: 0 -6px 24px -18px rgba(var(--plum-rgb), 0.6);
+}
+[data-theme="dark"] .savebar {
+  background: color-mix(in srgb, var(--paper) 86%, transparent);
+}
+.savebar span {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  flex: 1;
+}
+/* Narrow phones: the status line + preview-toggle button no longer sit
+   comfortably on one row. Wrap instead of squeezing the button — the
+   status text takes its own full-width line, the button gets the next,
+   both stay easily tappable rather than crowding into a single row. */
+@container (max-width: 560px) {
+  .savebar {
+    flex-wrap: wrap;
+    padding: var(--gap-sm);
+  }
+  .savebar span {
+    flex: 1 1 100%;
+  }
+}
+
+/* ── publish readiness (Task 7 — PublishChecklist restyle) ───────────── */
+.ready {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ready-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 14.5px;
+  color: var(--ink-60);
+}
+.ready-item i {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-2);
+  display: grid;
+  place-items: center;
+  flex: none;
+  font-style: normal;
+}
+.ready-item.done {
+  color: var(--ink);
+}
+/* --jade-fill (not bare --jade): a filled circle carrying a small check
+   icon in --paper needs the AA-on-white-content jade, per colors.css'
+   own documented reasoning for filled jade surfaces. */
+.ready-item.done i {
+  background: var(--jade-fill);
+  border-color: var(--jade-fill);
+  color: var(--paper);
+}
+.meter {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+.meter i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.5s var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .meter i {
+    transition: none;
+  }
+}
+
+/* ── choice cards (Task 7 — address linked/unlinked picker) ─────────────
+   Shared with the create-flow craft picker (NewSideModal has its own
+   CSS-Modules re-implementation of the same shape — these are global
+   siblings, not a collision: module class names are hashed). */
+.choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@container (max-width: 760px) {
+  .choices {
+    grid-template-columns: 1fr;
+  }
+}
+.choice {
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  padding: 18px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* Explicit paper fill so the UNSELECTED card doesn't fall back to native
+     button-face grey (the accent tint is added by `[aria-pressed="true"]`). */
+  background: var(--paper);
+  cursor: pointer;
+  transition: all var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  .choice:hover {
+    border-color: var(--line-2);
+  }
+}
+.choice[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.05);
+}
+.choice b {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+}
+.choice p {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+.choice code {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  background: var(--wash);
+  padding: 3px 7px;
+  border-radius: 6px;
+  align-self: flex-start;
+}
+
+/* ── item drawer (Task 5 — SubprofileItemDrawer) ─────────────────────────
+   A right-anchored full-height panel: a different shape than either of the
+   shared `<Modal>` primitive's two variants (centered dialog / bottom
+   sheet), so it needs its own scrim. `.scrim` (base) is included here even
+   though the Phase 3 plan's quoted class list only names `.scrim.right` —
+   the modifier is meaningless without the base full-screen overlay it
+   modifies, and the shared Modal.module.css's own `.scrim` is a
+   CSS-Modules-hashed class this global drawer can't reference. */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(var(--plum-rgb), 0.42);
+  backdrop-filter: blur(5px);
+  animation: qpDrawerScrimIn 0.2s var(--ease);
+}
+.scrim.right {
+  place-items: stretch;
+  justify-content: flex-end;
+  padding: 0;
+}
+@keyframes qpDrawerScrimIn {
+  from {
+    opacity: 0;
+  }
+}
+.drawer {
+  background: var(--paper);
+  width: min(520px, 100%);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-panel);
+  animation: qpDrawerSlideIn 0.34s var(--ease);
+}
+@keyframes qpDrawerSlideIn {
+  from {
+    transform: translateX(28px);
+    opacity: 0;
+  }
+}
+.drawer-head {
+  padding: 24px 26px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.drawer-head h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 27px;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+  margin-top: 4px;
+}
+.drawer-body {
+  flex: 1;
+  overflow: auto;
+  padding: 22px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.drawer-foot {
+  padding: 16px 26px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-top: 1px solid var(--line);
+}
+/* `@media`, NOT `@container`: `SubprofileItemDrawer` portals `.scrim`/
+   `.drawer` straight to `document.body` (see its own file), so it never
+   sits inside `.ed-shell`'s DOM subtree — there is no qualifying
+   container-type ancestor for a container query to resolve against here,
+   so a `@container` rule at this selector silently never matches. The
+   viewport is the only sizing signal available for a body-level portal. */
+@media (max-width: 760px) {
+  .drawer {
+    width: 100%;
+    height: 88%;
+    margin-top: auto;
+    border-radius: 26px 26px 0 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scrim,
+  .drawer {
+    animation: none;
+  }
+}
+
+/* ── image upload widget (Task 5 — ImageUploadField inside the drawer) ── */
+.upload {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  border: 1.5px dashed var(--line-2);
+  border-radius: 16px;
+}
+.upload.done,
+.upload.failed {
+  border-style: solid;
+}
+.upload.failed {
+  border-color: rgba(var(--danger-rgb), 0.4);
+  color: var(--danger);
+}
+.upload b {
+  font-size: 14.5px;
+  font-weight: 600;
+  display: block;
+}
+.upload small {
+  font-size: 13px;
+  color: var(--ink-40);
+  display: block;
+}
+
+/* ── collaborator handle chip input (Task 5 — HandleChipInput) ──────────── */
+.chipinput {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  padding: 8px 10px;
+  background: var(--paper);
+  min-height: 46px;
+}
+.chipinput:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.16);
+}
+.chipinput input {
+  flex: 1;
+  min-width: 110px;
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 14.5px;
+}
+.hchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px 3px 3px;
+  border-radius: 999px;
+  background: var(--wash);
+  font-size: 13px;
+  font-weight: 500;
+}
+.hchip button {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--ink-40);
+}
+@media (hover: hover) {
+  .hchip button:hover {
+    background: var(--line);
+    color: var(--ink);
+  }
+}
+
+/* ── notices + "what breaks" list (Task 7 — AddressChangeWarningModal) ── */
+.notice {
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--wash);
+  align-items: flex-start;
+  line-height: 1.6;
+  font-size: 14.5px;
+}
+.notice.warn {
+  background: rgba(var(--accent-rgb), 0.08);
+  color: var(--accent-ink);
+}
+.notice b {
+  display: block;
+  margin-bottom: 3px;
+}
+.notice p {
+  color: var(--ink-60);
+  font-size: 14px;
+}
+.notice.warn p {
+  color: inherit;
+  opacity: 0.85;
+}
+/* Multi-paragraph body inside a `.notice` (the address-warning copy runs
+   more than one <p>). */
+.warnbody p + p {
+  margin-top: 8px;
+}
+.losing {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 14.5px;
+  color: var(--ink-60);
+}
+.losing li {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.losing svg {
+  color: var(--ink-40);
+  flex: none;
+}
+
+/* ── switch row (Task 7 — address link-mode radio-as-card rows) ──────── */
+.switchrow {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  cursor: pointer;
+}
+.switchrow input {
+  margin-top: 3px;
+  accent-color: var(--accent);
+  width: 17px;
+  height: 17px;
+}
+.switchrow b {
+  font-size: 14.5px;
+  display: block;
+}
+.switchrow small {
+  font-size: 13px;
+  color: var(--ink-40);
+}
+
+/* ── handle availability state (Task 7 — HandleAvailability reuse) ──────
+   Same colour mapping NewSideModal.module.css already established for its
+   own scoped `.handlestateGood/Bad/Idle` re-implementation of this exact
+   prototype rule. */
+.handlestate {
+  font-size: 12.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.handlestate.good {
+  color: var(--jade-ink);
+}
+.handlestate.bad {
+  color: var(--danger);
+}
+.handlestate.idle {
+  color: var(--ink-40);
+}

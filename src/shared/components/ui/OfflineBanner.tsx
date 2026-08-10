@@ -15,8 +15,8 @@ export interface OfflineBannerProps {
 }
 
 /**
- * Presentational top-of-viewport "you're offline" banner, extracted from the
- * near-identical per-feature copies in `myevents` and `gatherings/checkout`.
+ * Presentational top-of-viewport "you're offline" banner, extracted from a
+ * near-identical per-feature copy in `myevents`.
  * It only renders the fixed plum bar and its slide-in transition — detecting
  * connectivity (context flag vs `useOnlineStatus`) and any reconnect toast stay
  * in each feature's thin wrapper, which passes the result down as `offline`.

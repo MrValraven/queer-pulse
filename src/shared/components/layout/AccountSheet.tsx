@@ -15,6 +15,7 @@ import { useTranslation } from "../../i18n/useTranslation";
 import { ACCOUNT_GROUPS, HEADER_ACTIONS } from "./accountMenu.data";
 import { useAccountIdentity } from "./useAccountIdentity";
 import { RoleLinks, AccountMenuControls } from "./accountMenuShared";
+import { usePersonaBadge } from "./usePersonaBadge";
 import { useNavDrawerFocus } from "./useNavDrawerFocus";
 import menu from "./AccountMenu.module.css";
 import styles from "./AccountSheet.module.css";
@@ -178,6 +179,7 @@ function AccountSheetBody({
   onSignOut: () => void;
 }) {
   const { t } = useTranslation();
+  const personaBadge = usePersonaBadge();
   return (
     <div className={menu.scroll}>
       <div className={styles.header}>
@@ -208,6 +210,11 @@ function AccountSheetBody({
             .filter((item) => item.to !== routes.accountProfile)
             .map((item) => {
               const ItemIcon = item.icon;
+              const badge =
+                item.badge ??
+                (item.to === routes.subprofilesDashboard
+                  ? personaBadge
+                  : undefined);
               return (
                 <Link
                   key={item.to}
@@ -218,6 +225,9 @@ function AccountSheetBody({
                 >
                   <ItemIcon aria-hidden className={menu.itemIcon} />
                   <span className={menu.itemLabel}>{t(item.labelKey)}</span>
+                  {badge && (
+                    <span className={menu.badgeSlot}>{badge}</span>
+                  )}
                 </Link>
               );
             })}

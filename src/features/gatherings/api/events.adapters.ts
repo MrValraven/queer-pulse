@@ -103,6 +103,7 @@ export function detailToGathering(dto: EventDetailDTO): GatheringDetail {
     body: dto.description ?? "",
     viewerIsOrganizer: dto.isOrganizer ?? false,
     bookmarked: dto.isBookmarked ?? false,
+    endAt: dto.endAt ? new Date(dto.endAt) : undefined,
   };
 }
 

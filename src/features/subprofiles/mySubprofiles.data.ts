@@ -3,7 +3,7 @@ import type { LinkVisibility, SubprofileStatus } from "./api/subprofiles.api";
 
 /** i18n label-key indirection: `status`/`linkVisibility` are PERSISTED fields,
  *  so the Record key is the stable canonical id; `labelKey` resolves via
- *  `t()` at render (MySubprofileRow.tsx, SubprofileEditorPage.tsx). */
+ *  `t()` at render (SideCard.tsx, SubprofileEditorPage.tsx). */
 export const STATUS_BADGE: Record<
   SubprofileStatus,
   { tone: BadgeTone; labelKey: string }

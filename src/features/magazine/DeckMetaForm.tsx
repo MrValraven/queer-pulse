@@ -42,7 +42,8 @@ interface DeckMetaFormProps {
   onChange: (patch: Partial<DeckDraft>) => void;
 }
 
-/** Deck-level metadata fields for the deck-authoring editor. */
+/** Deck-level metadata fields for the deck-authoring editor, in a `.metaCard`
+ *  matching the `.ework` left column's other cards. */
 export function DeckMetaForm({ draft, onChange }: DeckMetaFormProps) {
   const { t } = useTranslation();
   const idPrefix = useId();
@@ -63,83 +64,76 @@ export function DeckMetaForm({ draft, onChange }: DeckMetaFormProps) {
   ];
 
   return (
-    <div className={styles.form}>
-      <div className={styles.row}>
-        {textFields.slice(0, 4).map(({ field, labelKey }) => (
-          <Field key={field} label={t(labelKey)} htmlFor={id(field)}>
+    <div className={styles.metaCard}>
+      <h3>{t("magazine:deck.editor.metaTitle")}</h3>
+      <div className={styles.form}>
+        <div className={styles.row}>
+          {textFields.slice(0, 4).map(({ field, labelKey }) => (
+            <Field key={field} label={t(labelKey)} htmlFor={id(field)}>
+              <input
+                id={id(field)}
+                className={styles.input}
+                type="text"
+                value={draft[field] as string}
+                onChange={(event) => onChange({ [field]: event.target.value })}
+              />
+            </Field>
+          ))}
+        </div>
+
+        <div className={styles.row}>
+          {textFields.slice(4).map(({ field, labelKey }) => (
+            <Field key={field} label={t(labelKey)} htmlFor={id(field)}>
+              <input
+                id={id(field)}
+                className={styles.input}
+                type="text"
+                value={draft[field] as string}
+                onChange={(event) => onChange({ [field]: event.target.value })}
+              />
+            </Field>
+          ))}
+        </div>
+
+        <Field label={t("magazine:deck.editor.authorBio")} htmlFor={id("authorBio")}>
+          <textarea
+            id={id("authorBio")}
+            className={styles.textarea}
+            value={draft.authorBio}
+            onChange={(event) => onChange({ authorBio: event.target.value })}
+          />
+        </Field>
+
+        <div className={styles.row}>
+          <Field label={t("magazine:deck.editor.tags")} htmlFor={id("tags")}>
             <input
-              id={id(field)}
+              id={id("tags")}
               className={styles.input}
               type="text"
-              value={draft[field] as string}
-              onChange={(event) => onChange({ [field]: event.target.value })}
+              value={joinCsv(draft.tags)}
+              onChange={(event) => onChange({ tags: splitCsv(event.target.value) })}
             />
           </Field>
-        ))}
-      </div>
-
-      <div className={styles.row}>
-        {textFields.slice(4).map(({ field, labelKey }) => (
-          <Field key={field} label={t(labelKey)} htmlFor={id(field)}>
+          <Field label={t("magazine:deck.editor.related")} htmlFor={id("related")}>
             <input
-              id={id(field)}
+              id={id("related")}
               className={styles.input}
               type="text"
-              value={draft[field] as string}
-              onChange={(event) => onChange({ [field]: event.target.value })}
+              value={joinCsv(draft.related)}
+              onChange={(event) => onChange({ related: splitCsv(event.target.value) })}
             />
           </Field>
-        ))}
-      </div>
+        </div>
 
-      <Field
-        label={t("magazine:deck.editor.authorBio")}
-        htmlFor={id("authorBio")}
-      >
-        <textarea
-          id={id("authorBio")}
-          className={styles.textarea}
-          value={draft.authorBio}
-          onChange={(event) => onChange({ authorBio: event.target.value })}
+        <ImageUrlField
+          id={id("cover")}
+          label={t("magazine:deck.editor.cover")}
+          value={draft.cover}
+          onChange={(url) => onChange({ cover: url })}
+          alt={draft.coverDesc}
+          tint={COVER_TINT}
         />
-      </Field>
-
-      <div className={styles.row}>
-        <Field label={t("magazine:deck.editor.tags")} htmlFor={id("tags")}>
-          <input
-            id={id("tags")}
-            className={styles.input}
-            type="text"
-            value={joinCsv(draft.tags)}
-            onChange={(event) =>
-              onChange({ tags: splitCsv(event.target.value) })
-            }
-          />
-        </Field>
-        <Field
-          label={t("magazine:deck.editor.related")}
-          htmlFor={id("related")}
-        >
-          <input
-            id={id("related")}
-            className={styles.input}
-            type="text"
-            value={joinCsv(draft.related)}
-            onChange={(event) =>
-              onChange({ related: splitCsv(event.target.value) })
-            }
-          />
-        </Field>
       </div>
-
-      <ImageUrlField
-        id={id("cover")}
-        label={t("magazine:deck.editor.cover")}
-        value={draft.cover}
-        onChange={(url) => onChange({ cover: url })}
-        alt={draft.coverDesc}
-        tint={COVER_TINT}
-      />
     </div>
   );
 }

@@ -4,7 +4,7 @@
 .linksEditor {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--gap-sm);
 }
 
 .linkGroup {
@@ -124,5 +124,33 @@
   .inlineInput,
   .linkRemove {
     transition: none;
+  }
+}
+
+/* Below 560px the platform select + handle input no longer fit one row
+   comfortably. Regroup into two lines — chrome (icon, select, remove) on top,
+   the full-width handle/URL field below — via `order`, no DOM change needed. */
+@media (max-width: 560px) {
+  .linkRow {
+    flex-wrap: wrap;
+    row-gap: var(--gap-xs);
+  }
+  .linkIcon {
+    order: 1;
+  }
+  .linkSelect {
+    order: 2;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .linkRemove {
+    order: 3;
+  }
+  .linkInput {
+    order: 4;
+    flex: 1 1 100%;
+  }
+  .preview {
+    padding-left: 0;
   }
 }

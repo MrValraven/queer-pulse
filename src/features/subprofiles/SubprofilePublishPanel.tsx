@@ -9,8 +9,12 @@ import {
   PublishUnmetError,
   useSubprofileMutations,
 } from "./api/useSubprofileMutations";
+import { estimateDraftReadiness } from "./subprofileDraftReadiness";
+import { SideReadinessRing } from "./SideReadinessRing";
 import { PublishChecklist, SubprofilePolishList } from "./PublishChecklist";
-import styles from "./SubprofileEditor.module.css";
+import { SubprofileDeleteModal } from "./SubprofileDeleteModal";
+import sharedStyles from "./SubprofileEditor.module.css";
+import styles from "./SubprofilePublishPanel.module.css";
 
 interface ChecklistState {
   unmet: string[];
@@ -18,11 +22,17 @@ interface ChecklistState {
 }
 
 /**
- * The publish surface: a Publish action that, on a rejected completeness check,
- * feeds the unmet codes to `PublishChecklist`; on success, the plum success
- * panel. Published personas get an Unpublish action to return to draft. Live
- * mode may not surface the 422 `{unmet}` body, so a non-`PublishUnmetError`
- * rejection renders the checklist in its "still to check" state.
+ * The publish surface: a quick client-only readiness ring (honest estimate,
+ * `estimateDraftReadiness` — no blocked-language check, no network) above the
+ * Publish action; on a rejected completeness check, the real server-verified
+ * `PublishChecklist`; on success, the plum success panel. Published personas
+ * get an Unpublish action to return to draft. Live mode may not surface the
+ * 422 `{unmet}` body, so a non-`PublishUnmetError` rejection renders the
+ * checklist in its "still to check" state. Below all of that, a type-to-
+ * confirm delete (`SubprofileDeleteModal`) — this pane's Publish/Unpublish
+ * mutations and the delete mutation are siblings on the same persona, so
+ * pairing "make it live" with "get rid of it entirely" here (rather than only
+ * on the dashboard) keeps every persona-lifecycle action in one place.
  */
 export function SubprofilePublishPanel({
   subprofile,
@@ -35,9 +45,11 @@ export function SubprofilePublishPanel({
   const { user } = useAuth();
   const [checklist, setChecklist] = useState<ChecklistState | null>(null);
   const [justPublished, setJustPublished] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const isPublished = subprofile.status === "published";
   const isLinked = subprofile.linkVisibility === "linked";
+  const readiness = estimateDraftReadiness(subprofile);
 
   // Where the now-live persona can be viewed: a linked persona nests under the
   // owner's main profile; an unlinked one stands on its own handle.
@@ -100,16 +112,31 @@ export function SubprofilePublishPanel({
   }
 
   return (
-    <div className={styles.card}>
-      <div className={styles.publishBar}>
-        <p className={styles.publishCopy}>
+    <div className="ed-grid">
+      <div className={styles.readinessRow}>
+        <SideReadinessRing
+          readyCount={readiness.readyCount}
+          totalCount={readiness.totalCount}
+        />
+        <div className={styles.readinessText}>
+          <p className={styles.readinessTitle}>
+            {t("subprofiles:publishPanel.estimateTitle")}
+          </p>
+          <p className={styles.readinessNote}>
+            {t("subprofiles:publishPanel.estimateNote")}
+          </p>
+        </div>
+      </div>
+
+      <div className={sharedStyles.publishBar}>
+        <p className={sharedStyles.publishCopy}>
           {isPublished
             ? t("subprofiles:publishPanel.copyPublished")
             : isLinked
               ? t("subprofiles:publishPanel.copyLinkedUnpublished")
               : t("subprofiles:publishPanel.copyUnlinkedUnpublished")}
         </p>
-        <div className={styles.publishActions}>
+        <div className={sharedStyles.publishActions}>
           {isPublished && (
             <Button
               variant="ghost"
@@ -134,15 +161,33 @@ export function SubprofilePublishPanel({
           </Button>
         </div>
       </div>
+
       {checklist && (
-        <div className={styles.checklistWrap}>
+        <div className={sharedStyles.checklistWrap}>
           <PublishChecklist
             unmet={checklist.unmet}
             unknown={checklist.unknown}
           />
         </div>
       )}
+
       <SubprofilePolishList subprofile={subprofile} />
+
+      <div className={styles.dangerZone}>
+        <p className={styles.dangerCopy}>
+          {t("subprofiles:publishPanel.deleteCopy")}
+        </p>
+        <Button variant="danger" onClick={() => setDeleting(true)}>
+          {t("subprofiles:publishPanel.deleteCta")}
+        </Button>
+      </div>
+
+      {deleting && (
+        <SubprofileDeleteModal
+          subprofile={subprofile}
+          onClose={() => setDeleting(false)}
+        />
+      )}
     </div>
   );
 }

@@ -11,6 +11,13 @@ import {
   setCatchHandler,
 } from "workbox-routing";
 import { CacheFirst, NetworkFirst, StaleWhileRevalidate } from "workbox-strategies";
+import { urlBase64ToUint8Array } from "./features/push/urlBase64ToUint8Array";
+import { decideCoalesce } from "./pushCoalesce";
+import { isViewingTarget } from "./pushFocus";
+import { readPushLang } from "./pushLang";
+import { formatPushCopy } from "./pushMessages";
+import { type DirectMessagePush, toDirectMessagePush } from "./pushPayload";
+import { writePendingSubscription } from "./pushSubStore";
 
 declare const self: ServiceWorkerGlobalScope & typeof globalThis;
 
@@ -103,47 +110,19 @@ setCatchHandler(async ({ request }) => {
   return Response.error();
 });
 
-interface DirectMessagePush {
-  title: string;
-  body: string;
-  tag?: string;
-  data?: { conversationId?: string; url?: string };
-}
-
-/** True for a non-null, non-array plain object we can safely index into. */
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-/**
- * Validate a raw push payload before it reaches showNotification(). The bytes
- * come off the wire and are handed straight to the notification UI, so a
- * malformed or shape-drifted payload (a backend field rename, a truncated body)
- * must not throw here or render garbage like "undefined" in the notification.
- * We only assert the fields we actually use, and only their primitive shape;
- * a body that fails returns null and the caller drops the push silently.
- */
-function toDirectMessagePush(raw: unknown): DirectMessagePush | null {
-  if (!isRecord(raw)) return null;
-  if (typeof raw.title !== "string" || raw.title.length === 0) return null;
-  if (typeof raw.body !== "string") return null;
-  if (raw.tag !== undefined && typeof raw.tag !== "string") return null;
-  if (raw.data !== undefined && !isRecord(raw.data)) return null;
-  return {
-    title: raw.title,
-    body: raw.body,
-    tag: typeof raw.tag === "string" ? raw.tag : undefined,
-    data: isRecord(raw.data)
-      ? {
-          conversationId:
-            typeof raw.data.conversationId === "string"
-              ? raw.data.conversationId
-              : undefined,
-          url: typeof raw.data.url === "string" ? raw.data.url : undefined,
-        }
-      : undefined,
-  };
-}
+// lib.dom.d.ts's NotificationOptions only models the fields TypeScript's DOM
+// lib has caught up with (body/tag/data/icon/requireInteraction/silent). The
+// Notification API additionally defines image/actions/vibrate/renotify, which
+// Chrome/Android implement at runtime — widen locally rather than casting or
+// suppressing so this object literal is still checked against everything
+// TypeScript *does* know.
+type RichNotificationOptions = NotificationOptions & {
+  image?: string;
+  actions?: { action: string; title: string }[];
+  vibrate?: number[];
+  renotify?: boolean;
+  timestamp?: number;
+};
 
 self.addEventListener("push", (event) => {
   if (!event.data) return;
@@ -153,22 +132,132 @@ self.addEventListener("push", (event) => {
   } catch {
     return;
   }
-  const payload = toDirectMessagePush(raw);
+  const payload: DirectMessagePush | null = toDirectMessagePush(raw);
   if (!payload) return;
   event.waitUntil(
-    self.registration.showNotification(payload.title, {
-      body: payload.body,
-      tag: payload.tag,
-      data: payload.data,
-      icon: "/icons/icon-192-v2.png",
-      // Android/Chrome renders `badge` as a small monochrome status-bar glyph
-      // and hard-masks it to a single colour: a full-colour app icon here comes
-      // out as a grey blob. Point at a dedicated transparent, single-colour
-      // (white-on-transparent) 96×96 mark. ASSET TO PRODUCE:
-      // public/icons/badge-monochrome-96.png (see generate-icons.mjs). Falls
-      // back gracefully to the app icon on engines that ignore `badge`.
-      badge: "/icons/badge-monochrome-96.png",
-    }),
+    (async () => {
+      // Focus-aware suppression: a push for a conversation the recipient is
+      // ALREADY looking at, in a focused window, is noise (Signal/WhatsApp/
+      // Telegram all do this). Conservative by design — isViewingTarget only
+      // matches the exact conversation URL, so a focused window on a
+      // different conversation, the bare list view, or any unfocused window
+      // never suppresses. Checked before the localization read below so a
+      // suppressed push skips that work entirely.
+      const targetUrl = payload.data?.url;
+      if (targetUrl) {
+        const windows = await self.clients.matchAll({ type: "window" });
+        for (const win of windows) {
+          const windowClient = win as WindowClient;
+          if (windowClient.focused && isViewingTarget(windowClient.url, targetUrl)) {
+            return;
+          }
+        }
+      }
+      // The recipient's language lives in IndexedDB (written by the app on
+      // boot/language-switch — see pushLang.ts), never in the payload itself:
+      // the backend stays language-neutral and does not know the recipient's
+      // locale. formatPushCopy resolves payload.l10n's key(s) in that
+      // language, falling back to the payload's plain English title/body when
+      // there's no l10n block or the key/lang can't be resolved (also what
+      // iOS renders — it never runs this handler's JS).
+      const lang = await readPushLang();
+
+      // Message coalescing: a DM push (identified by data.conversationId)
+      // checks for an already-showing notification on the SAME tag (every DM
+      // push tags itself with its conversationId, and sets renotify: true, so
+      // at most one live notification per conversation exists at a time). If
+      // one is found, this is a burst — fold it into "{count} new messages
+      // from {name}" instead of stacking a second notification, and carry the
+      // running count forward in `data` so the NEXT message in the burst can
+      // read it back. `decideCoalesce` holds the pure count/label decision so
+      // it's unit-testable without the unmockable `getNotifications()` call.
+      // Require a tag too (every real DM push sets one to its conversationId):
+      // without it, `getNotifications({ tag: undefined })` would return EVERY
+      // live notification across the whole origin, not just this conversation's.
+      const isDirectMessagePush = Boolean(payload.data?.conversationId && payload.tag);
+      const existingNotifications = isDirectMessagePush
+        ? await self.registration.getNotifications({ tag: payload.tag })
+        : [];
+      const { count, coalesced } = decideCoalesce(existingNotifications);
+      const { title, body } = coalesced
+        ? formatPushCopy(
+            {
+              title: payload.title,
+              body: payload.body,
+              l10n: {
+                titleKey: payload.l10n?.titleKey,
+                bodyKey: "push:messages.coalesced",
+                params: { count: String(count), name: payload.title },
+              },
+            },
+            lang,
+          )
+        : formatPushCopy(payload, lang);
+      const options: RichNotificationOptions = {
+        body,
+        tag: payload.tag,
+        data: isDirectMessagePush ? { ...payload.data, count } : payload.data,
+        icon: payload.icon ?? "/icons/icon-192-v2.png",
+        // Android/Chrome renders `badge` as a small monochrome status-bar glyph
+        // and hard-masks it to a single colour: a full-colour app icon here comes
+        // out as a grey blob. Point at a dedicated transparent, single-colour
+        // (white-on-transparent) 96×96 mark. ASSET TO PRODUCE:
+        // public/icons/badge-monochrome-96.png (see generate-icons.mjs). Falls
+        // back gracefully to the app icon on engines that ignore `badge`.
+        badge: "/icons/badge-monochrome-96.png",
+        image: payload.image,
+        actions: payload.actions,
+        renotify: payload.renotify,
+        // Per the Notifications spec, `silent` and a vibration pattern conflict;
+        // silent wins, so suppress vibrate when the payload asked for silent.
+        vibrate: payload.silent ? undefined : payload.vibrate,
+        requireInteraction: payload.requireInteraction,
+        silent: payload.silent,
+        // The true event time (message createdAt / event start / notification
+        // createdAt), not delivery time — every sender now sets this.
+        timestamp: payload.timestamp,
+      };
+      await self.registration.showNotification(title, options);
+    })(),
+  );
+});
+
+const vapidPublicKey = (import.meta.env.VITE_VAPID_PUBLIC_KEY ?? "").trim();
+
+// Fires when the browser rotates the push subscription out from under us
+// (key expiry, browser-initiated refresh) — greenfield without this handler:
+// the old subscription silently stops receiving pushes and nothing ever
+// re-subscribes. We re-subscribe immediately so delivery keeps working, but
+// we do NOT POST the new subscription to /push/subscribe from here — that
+// route is CSRF-guarded (double-submit cookie) and the SW has no clean way to
+// read the app's CSRF token. Instead: stash the new subscription as "pending"
+// in IndexedDB (pushSubStore.ts) and best-effort postMessage any open client
+// so it can flush it through the normal API client right away. If no client
+// is open, the app's boot health re-sync (usePushSubscription) picks up the
+// pending subscription the next time it loads.
+self.addEventListener("pushsubscriptionchange", (event) => {
+  event.waitUntil(
+    (async () => {
+      if (!vapidPublicKey) return;
+      try {
+        const subscription = await self.registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+        });
+        await writePendingSubscription(subscription.toJSON());
+        const windows = await self.clients.matchAll({
+          type: "window",
+          includeUncontrolled: true,
+        });
+        for (const win of windows) {
+          win.postMessage({ type: "push-subscription-changed" });
+        }
+      } catch {
+        // Best-effort: if re-subscribing here fails, the app's boot health
+        // re-sync still detects the missing/stale subscription on next
+        // load/focus and repairs it through the normal API path.
+      }
+    })(),
   );
 });
 
@@ -185,6 +274,11 @@ function safeNotificationPath(raw: unknown): string {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
+  // Every action ("view") and a plain body tap deep-link to the same safe
+  // conversation/event path via safeNotificationPath below — there is only one
+  // destination today, so we don't need to branch on event.action. A future
+  // multi-destination action (e.g. "mark as read" vs. "view") would read
+  // event.action here and choose a different target/behaviour per action id.
   const targetUrl = safeNotificationPath(event.notification.data?.url);
   event.waitUntil(
     self.clients

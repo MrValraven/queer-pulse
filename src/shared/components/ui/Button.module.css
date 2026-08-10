@@ -118,6 +118,20 @@
   }
 }
 
+/* Plum — irreversible, high-stakes actions (Publish) */
+.plum {
+  background: var(--plum);
+  color: #fff;
+  box-shadow: 0 8px 22px -10px rgba(var(--plum-rgb), 0.6);
+}
+@media (hover: hover) {
+  .plum:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--plum-deep);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 26px -10px rgba(var(--plum-rgb), 0.7);
+  }
+}
+
 /* Danger — destructive (remove, ban) */
 .danger {
   background: var(--danger);

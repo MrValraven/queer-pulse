@@ -288,10 +288,11 @@ export function useMyEventsState(): MyEventsValue {
     byId,
     hasError,
     retry,
-    // Live has no notifications contract yet, so the header bell + "What's
-    // changed" panel are demo-only — see MyEventsHeader. DEFERRED(needs
-    // notifications endpoint, Phase 2).
-    notificationsEnabled: demoMode,
+    // Bell + "What's changed" panel are live in both modes now that event-change
+    // notifications exist end-to-end (P2-7): demo reads the mock registry, live
+    // reads GET /notifications (see `useMyEventsData`). No changes → honest empty
+    // state + zero badge, not a hidden feature.
+    notificationsEnabled: true,
     pill,
     selectedDate,
     loading,

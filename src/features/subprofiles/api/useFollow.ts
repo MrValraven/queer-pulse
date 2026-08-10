@@ -24,8 +24,8 @@ export interface UnfollowVariables {
  * routes key on the non-identifying persona id, never slug/handle — mirrors
  * the endorse routes). Mirrors the demo/live branch in `useEndorsement`: live
  * calls the API; demo flips the shared in-memory `DEMO_SUBPROFILES` state via
- * `mockSetFollowing`, so it stays consistent with `mockPublicByHandle` reads
- * (a purely local count nudge here would get overwritten by the very
+ * `mockSetFollowing`, so it stays consistent with `resolvePublicAccessDemo`
+ * reads (a purely local count nudge here would get overwritten by the very
  * invalidate-triggered refetch below). Unlike endorsements, followers are
  * never listed (count-only, anonymity-preserving), so there is no separate
  * "followers" query to invalidate — only the persona public query.

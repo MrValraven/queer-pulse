@@ -47,7 +47,6 @@ const CATEGORIES: Category[] = [
       {
         qKey: "marketing:help.qa.free.q",
         aKey: "marketing:help.qa.free.a",
-        aComponents: { link: <Link to={routes.cinemaMembership} /> },
       },
     ],
   },
@@ -139,11 +138,6 @@ const CATEGORIES: Category[] = [
     labelKey: "marketing:help.category.membership.label",
     headKey: "marketing:help.category.membership.head",
     qa: [
-      {
-        qKey: "marketing:help.qa.becomeSupporter.q",
-        aKey: "marketing:help.qa.becomeSupporter.a",
-        aComponents: { membershipLink: <Link to={routes.cinemaMembership} /> },
-      },
       {
         qKey: "marketing:help.qa.invitesWork.q",
         aKey: "marketing:help.qa.invitesWork.a",

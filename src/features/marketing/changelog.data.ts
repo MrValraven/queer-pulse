@@ -93,6 +93,398 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "skip-link-keyboard-only",
+        category: "fix",
+        date: "10 Aug 2026",
+        ...entryKeys("skip-link-keyboard-only"),
+      },
+      {
+        id: "enlarge-profile-photo",
+        category: "improvement",
+        date: "10 Aug 2026",
+        ...entryKeys("enlarge-profile-photo"),
+      },
+      {
+        id: "tap-notification-to-profile",
+        category: "improvement",
+        date: "10 Aug 2026",
+        ...entryKeys("tap-notification-to-profile"),
+        tag: {
+          labelKey: "marketing:changelog.tag.notifications",
+          to: routes.notifications,
+        },
+      },
+      {
+        id: "more-push-notifications",
+        category: "improvement",
+        date: "10 Aug 2026",
+        ...entryKeys("more-push-notifications"),
+        tag: {
+          labelKey: "marketing:changelog.tag.settings",
+          to: routes.settings,
+        },
+      },
+      {
+        id: "localized-push-notifications",
+        category: "improvement",
+        date: "10 Aug 2026",
+        ...entryKeys("localized-push-notifications"),
+        tag: {
+          labelKey: "marketing:changelog.tag.settings",
+          to: routes.settings,
+        },
+      },
+      {
+        id: "magazine-desk-workspace-nav",
+        category: "improvement",
+        date: "10 Aug 2026",
+        ...entryKeys("magazine-desk-workspace-nav"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineDesk",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "richer-push-notifications",
+        category: "improvement",
+        date: "10 Aug 2026",
+        ...entryKeys("richer-push-notifications"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "admin-uploaded-images",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("admin-uploaded-images"),
+        tag: {
+          labelKey: "marketing:changelog.entries.admin-uploaded-images.tag",
+          to: routes.adminMedia,
+        },
+      },
+      {
+        id: "magazine-desk-polish-sweep",
+        category: "improvement",
+        date: "10 Aug 2026",
+        ...entryKeys("magazine-desk-polish-sweep"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "magazine-piece-messaging",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("magazine-piece-messaging"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "live-press-kit-real-data",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("live-press-kit-real-data"),
+        tag: {
+          labelKey: "marketing:changelog.tag.pressKit",
+          to: routes.pressKit,
+        },
+      },
+      {
+        id: "communities-and-home-merged",
+        category: "improvement",
+        date: "10 Aug 2026",
+        ...entryKeys("communities-and-home-merged"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "silent-session-recovery",
+        category: "fix",
+        date: "10 Aug 2026",
+        ...entryKeys("silent-session-recovery"),
+      },
+      {
+        id: "magazine-article-versions",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("magazine-article-versions"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "magazine-article-comments",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("magazine-article-comments"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "magazine-desk-live-notifications",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("magazine-desk-live-notifications"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "magazine-desk-wave-b-fixes",
+        category: "fix",
+        date: "10 Aug 2026",
+        ...entryKeys("magazine-desk-wave-b-fixes"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "magazine-commission-editor-fix",
+        category: "fix",
+        date: "10 Aug 2026",
+        ...entryKeys("magazine-commission-editor-fix"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "events-page-utility-redesign",
+        category: "improvement",
+        date: "10 Aug 2026",
+        ...entryKeys("events-page-utility-redesign"),
+        tag: {
+          labelKey: "marketing:changelog.tag.events",
+          to: routes.events,
+        },
+      },
+      {
+        id: "magazine-writer-workspace",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("magazine-writer-workspace"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineWriter",
+          to: routes.magazineWriter,
+        },
+      },
+      {
+        id: "magazine-issue-production",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("magazine-issue-production"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "persona-discovery-nudges",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("persona-discovery-nudges"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "magazine-deck-editor-redesign",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("magazine-deck-editor-redesign"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "persona-directory-redesign",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("persona-directory-redesign"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "persona-editor-redesign",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("persona-editor-redesign"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "magazine-article-editor",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("magazine-article-editor"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "events-and-my-events-merged",
+        category: "improvement",
+        date: "10 Aug 2026",
+        ...entryKeys("events-and-my-events-merged"),
+        tag: {
+          labelKey: "marketing:changelog.tag.events",
+          to: routes.events,
+        },
+      },
+      {
+        id: "persona-dashboard-redesign",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("persona-dashboard-redesign"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "magazine-piece-record",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("magazine-piece-record"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "persona-page-unavailable-reasons",
+        category: "improvement",
+        date: "10 Aug 2026",
+        ...entryKeys("persona-page-unavailable-reasons"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "saved-and-searched-lists-load",
+        category: "fix",
+        date: "10 Aug 2026",
+        ...entryKeys("saved-and-searched-lists-load"),
+      },
+      {
+        id: "magazine-desk-redesign",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("magazine-desk-redesign"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "admin-overview-stat-grid-responsive",
+        category: "fix",
+        date: "10 Aug 2026",
+        ...entryKeys("admin-overview-stat-grid-responsive"),
+      },
+      {
+        id: "trust-network-mobile-graph-first",
+        category: "fix",
+        date: "10 Aug 2026",
+        ...entryKeys("trust-network-mobile-graph-first"),
+      },
+      {
+        id: "persona-pages-redesigned",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("persona-pages-redesigned"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "meet-the-table",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("meet-the-table"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "settings-mobile-nav-strips",
+        category: "improvement",
+        date: "9 Aug 2026",
+        ...entryKeys("settings-mobile-nav-strips"),
+        tag: {
+          labelKey: "marketing:changelog.tag.editProfile",
+          to: routes.editProfile,
+        },
+      },
+      {
+        id: "places-card-mobile-foot",
+        category: "fix",
+        date: "9 Aug 2026",
+        ...entryKeys("places-card-mobile-foot"),
+      },
+      {
+        id: "vouch-for-a-safe-space",
+        category: "feature",
+        date: "9 Aug 2026",
+        ...entryKeys("vouch-for-a-safe-space"),
+        tag: {
+          labelKey: "marketing:changelog.tag.safeSpaces",
+          to: routes.safeSpaces,
+        },
+      },
+      {
+        id: "my-events-change-list-live",
+        category: "improvement",
+        date: "9 Aug 2026",
+        ...entryKeys("my-events-change-list-live"),
+        tag: {
+          labelKey: "marketing:changelog.tag.myEvents",
+          to: routes.myEvents,
+        },
+      },
+      {
+        id: "applications-inside-work-hub",
+        category: "improvement",
+        date: "9 Aug 2026",
+        ...entryKeys("applications-inside-work-hub"),
+        tag: {
+          labelKey: "marketing:changelog.tag.work",
+          to: routes.work,
+        },
+      },
+      {
+        id: "invite-only-community-tier",
+        category: "fix",
+        date: "9 Aug 2026",
+        ...entryKeys("invite-only-community-tier"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
         id: "navbar-wordmark-no-wrap",
         category: "fix",
         date: "5 Aug 2026",

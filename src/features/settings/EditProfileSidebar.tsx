@@ -1,42 +1,14 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment } from "react";
 import { Link } from "react-router-dom";
-import { usePrefersReducedMotion } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PROFILE_NAV } from "./editProfileNav.data";
+import { useProfileScrollSpy } from "./useProfileScrollSpy";
 import styles from "./EditProfilePage.module.css";
-
-/** Sticky header offset so a scrolled-to section clears the AppNav. */
-const SCROLL_OFFSET = 100;
 
 export function EditProfileSidebar() {
   const { t } = useTranslation();
-  const reduced = usePrefersReducedMotion();
-  const [active, setActive] = useState(PROFILE_NAV[0]!.id);
-
-  // Scroll-spy: the section whose top is nearest the offset line wins.
-  useEffect(() => {
-    function onScroll() {
-      let current = PROFILE_NAV[0]!.id;
-      for (const item of PROFILE_NAV) {
-        const el = document.getElementById(item.id);
-        if (el && el.getBoundingClientRect().top - SCROLL_OFFSET <= 1)
-          current = item.id;
-      }
-      setActive(current);
-    }
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  function goTo(id: string) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    setActive(id);
-    const top = el.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET;
-    window.scrollTo({ top, behavior: reduced ? "auto" : "smooth" });
-  }
+  const { active, goTo } = useProfileScrollSpy();
 
   return (
     <aside className={styles.nav}>

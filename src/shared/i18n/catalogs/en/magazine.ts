@@ -149,9 +149,12 @@ export const magazine: Catalog = {
   "deck.editor.slideNumber": "Slide {n}",
   "deck.editor.addSlide": "Add slide",
   "deck.editor.addSlideLayout": "Layout",
+  "deck.editor.addSlideHint":
+    "Every slide is the reader's real component — this preview cannot drift.",
   "deck.editor.moveUp": "Move up",
   "deck.editor.moveDown": "Move down",
   "deck.editor.removeSlide": "Remove slide",
+  "deck.editor.summaryEmpty": "Empty slide",
   "deck.editor.layout.text": "Text",
   "deck.editor.layout.image": "Image",
   "deck.editor.layout.stat": "Stat",
@@ -177,7 +180,6 @@ export const magazine: Catalog = {
   "deck.editor.field.after": "After",
   "deck.editor.field.prompt": "Prompt",
   "deck.editor.field.hidden": "Hidden until tapped",
-  "deck.editor.tint.default": "Default",
   "deck.editor.tint.coral": "Coral",
   "deck.editor.tint.jade": "Jade",
   "deck.editor.tint.plum": "Plum",
@@ -188,15 +190,48 @@ export const magazine: Catalog = {
   "deck.editor.publish": "Publish",
   "deck.editor.unpublish": "Unpublish",
   "deck.editor.delete": "Delete",
-  "deck.editor.deleteConfirm": "Delete this deck? This can't be undone.",
   "deck.editor.leaveConfirm":
     "You have unsaved changes. Leave without saving?",
   "deck.editor.previewEmpty": "Add a slide to preview",
+  "deck.editor.preview.title": "Preview",
+  "deck.editor.preview.emptySlide": "Start filling in this slide to see it here.",
+  "deck.editor.budget.headingOver": "Too long — it will clip on a phone",
+  "deck.editor.budget.headingOk": "Fits on the narrowest phone",
+  "deck.editor.budget.bodyOver": "A slide is not a paragraph",
+  "deck.editor.budget.bodyOk": "Short enough to read at a glance",
+  "deck.editor.budget.count": "{count} / {max} characters",
   "deck.editor.saved": "Draft saved",
   "deck.editor.publishedToast": "Deck published",
   "deck.editor.deletedToast": "Deck deleted",
   "deck.editor.saveError": "We couldn't save your deck — please try again.",
   "deck.editor.backToDashboard": "Back to dashboard",
+  "deck.editor.metaTitle": "Deck details",
+  "deck.editor.untitled": "Untitled deck",
+  "deck.editor.header.subtitle": "Deck · {count} slides",
+  "deck.editor.unsavedChanges": "Unsaved changes",
+  "deck.editor.convert": "Make it prose",
+  "deck.editor.slidesHeading": "Slides",
+  "deck.editor.slidesCount": "{count} of {max} · click a slide to edit",
+  "deck.editor.slidesCapped": "40-slide maximum reached",
+  "deck.editor.publish.notNowNote":
+    "This ships as soon as you press Publish — deck scheduling isn't wired up yet.",
+  "deck.editor.publish.checklist.cover": "Cover slide set",
+  "deck.editor.publish.checklist.source":
+    "Source line on every stat slide (optional)",
+  "deck.editor.publish.checklist.sourcePending":
+    "Source line on every stat slide (optional, none yet)",
+  "deck.editor.danger.title": "Danger zone",
+  "deck.editor.danger.body":
+    "Deleting a deck removes it everywhere it's linked. This can't be undone.",
+  "deck.editor.danger.cta": "Delete this deck",
+  "deck.editor.deleteModal.title": "Delete this deck?",
+  "deck.editor.deleteModal.body":
+    "This removes the deck and every slide in it. Readers who already have the link will see a 404.",
+  "deck.editor.convertModal.title": "Turn this into prose?",
+  "deck.editor.convertModal.body":
+    "Converting a slide deck into a full article isn't built yet. When it ships, this will hand the deck's content to the article editor as a starting draft.",
+  "deck.editor.convertModal.cta": "Convert to article",
+  "deck.editor.convertModal.toast": "Deck-to-article conversion isn't wired up yet.",
 
   // ── Issue chrome — shared by IssueCover, IssueContents, IssuesPage ────────
   "issue.backToAllIssues": "All issues",
@@ -530,6 +565,360 @@ export const magazine: Catalog = {
     "Drafting reminders to {count} contributors",
   "editor.toast.contributorListExported": "Contributor list exported (CSV)",
 
+  // ══════════════════ Editor desk (Phase 1 redesign) ═══════════════════════
+  // The desk/* components render a newer, more detailed dashboard than the
+  // `editor.*` section above (a different Stage set, different composition)
+  // — these `desk.*` keys are that dashboard's own chrome. Raw `Stage`
+  // strings echoed directly as display text (StagePill, FormatBadge,
+  // PiecesBoard's column headings/stage-select options, IssuePlan's slot
+  // caption) are left unswept here, same as `pitchTracker.stage.*`'s note
+  // above — a literal stage id doubling as display text is a bigger
+  // label-key project, out of this pass's scope.
+
+  // ── DeskHeader ───────────────────────────────────────────────────────────
+  "desk.header.layout.pipeline": "Pipeline",
+  "desk.header.layout.board": "Board",
+  "desk.header.layout.issuePlan": "Issue plan",
+  "desk.header.eyebrow": "Issue {number} · {theme}",
+  "desk.header.title": "The desk",
+  "desk.header.meta": "Closes {closes} · publishes {publishes}",
+  "desk.header.daysLeft": "{days} days",
+  "desk.header.toClose": "to close",
+  "desk.header.slotsFilled": "{filled} of {slots} slots filled",
+  "desk.header.viewingAs": "Viewing as",
+  "desk.header.viewingAsEditorAria": "Viewing as editor",
+  "desk.header.commissionCta": "Commission",
+  "desk.header.produce": "Issue production",
+  "desk.header.slotsFilledAria": "Issue slots filled",
+  "desk.header.layoutAria": "Desk layout",
+
+  // ── NeedsStrip ───────────────────────────────────────────────────────────
+  "desk.needsStrip.lateDue": "Late · due {due}",
+  "desk.needsStrip.waitingOnYou": "Waiting on you",
+  "desk.needsStrip.chase": "Chase",
+  "desk.needsStrip.pickUp": "Pick it up",
+  "desk.needsStrip.open": "Open",
+
+  // ── DeskStats ────────────────────────────────────────────────────────────
+  "desk.stats.inFlight": "in flight",
+  "desk.stats.readyToLayOut": "ready to lay out",
+  "desk.stats.behindSchedule": "behind schedule",
+  "desk.stats.pitchesWaiting": "pitches waiting",
+
+  // ── DeskToolbar ──────────────────────────────────────────────────────────
+  "desk.toolbar.searchPlaceholder": "Search pieces, authors, sections…",
+  "desk.toolbar.searchAria": "Search",
+  "desk.toolbar.formatAria": "Format",
+  "desk.toolbar.format.everything": "Everything",
+  "desk.toolbar.format.articles": "Articles",
+  "desk.toolbar.format.decks": "Decks",
+  "desk.toolbar.myQueue": "My queue",
+  "desk.toolbar.sortAria": "Sort",
+  "desk.toolbar.sort.due": "Sort · due date",
+  "desk.toolbar.sort.stage": "Sort · stage",
+  "desk.toolbar.sort.section": "Sort · section",
+  "desk.toolbar.shortcuts": "Shortcuts",
+
+  // ── SavedViews ───────────────────────────────────────────────────────────
+  "desk.savedViews.saveThisView": "Save this view",
+
+  // ── PiecesPipeline ───────────────────────────────────────────────────────
+  "desk.pipeline.emptyTitle": "The desk is clear",
+  "desk.pipeline.emptyDescription": "Nothing matches that filter right now.",
+  "desk.pipeline.columnPiece": "Piece",
+  "desk.pipeline.columnStage": "Stage",
+  "desk.pipeline.columnWaitingOn": "Waiting on",
+  "desk.pipeline.columnDue": "Due",
+
+  // ── PieceRow ─────────────────────────────────────────────────────────────
+  "desk.pieceRow.newVoice": "New voice",
+  "desk.pieceRow.writer": "Writer",
+  "desk.pieceRow.you": "You",
+  "desk.pieceRow.nobody": "Nobody",
+  "desk.pieceRow.edit": "Edit",
+  "desk.pieceRow.chase": "Chase",
+  "desk.pieceRow.handOff": "Hand off",
+
+  // ── PiecesBoard ──────────────────────────────────────────────────────────
+  "desk.board.columnEmpty": "Empty",
+  "desk.board.moveStageAria": "Move stage",
+
+  // ── IssuePlan ────────────────────────────────────────────────────────────
+  "desk.issuePlan.slotsFilled": "{filled} of {target} · {note}",
+  "desk.issuePlan.slotsOpen_one": "{count} slot open",
+  "desk.issuePlan.slotsOpen_other": "{count} slots open",
+  "desk.issuePlan.full": "Full",
+  "desk.issuePlan.commissionFor": "Commission for {section}",
+  "desk.issuePlan.slidesCount_one": "{count} slide",
+  "desk.issuePlan.slidesCount_other": "{count} slides",
+  "desk.issuePlan.lateSuffix": " · late",
+
+  // ── PitchInbox ───────────────────────────────────────────────────────────
+  "desk.pitchInbox.emptyTitle": "Inbox empty",
+
+  // ── PitchRow ─────────────────────────────────────────────────────────────
+  "desk.pitchRow.selectAria": "Select {title}",
+  "desk.pitchRow.firstPitchSuffix": " · first pitch",
+  "desk.pitchRow.betterAsDeck": "Better as a deck",
+  "desk.pitchRow.commission": "Commission",
+  "desk.pitchRow.maybe": "Maybe",
+  "desk.pitchRow.pass": "Pass",
+
+  // ── BulkTriageBar ────────────────────────────────────────────────────────
+  "desk.bulkTriage.selected_one": "{count} pitch selected",
+  "desk.bulkTriage.selected_other": "{count} pitches selected",
+  "desk.bulkTriage.ariaLabel": "Bulk pitch triage",
+  "desk.bulkTriage.clearSelection": "Clear selection",
+  "desk.bulkTriage.maybe": "Maybe",
+  "desk.bulkTriage.passKindly": "Pass, kindly",
+
+  // ── DeskSidebar ──────────────────────────────────────────────────────────
+  "desk.sidebar.issueStanding": "Where the issue stands",
+  "desk.sidebar.noPiecesYet": "No pieces in the pipeline yet.",
+  "desk.sidebar.editorLoad": "Editor load",
+  "desk.sidebar.noEditorsYet": "No editors assigned yet.",
+  "desk.sidebar.activity": "Activity",
+  "desk.sidebar.nothingHereYet": "Nothing here yet.",
+  "desk.sidebar.someone": "Someone",
+
+  // ── DeskStates ───────────────────────────────────────────────────────────
+  "desk.states.emptyIssueTitle": "Issue {number} is empty",
+  "desk.states.emptyIssueDescription":
+    "Nothing has been commissioned yet. Start the pipeline with your first piece.",
+  "desk.states.commissionPiece": "Commission a piece",
+  "desk.states.errorBand":
+    "Could not reach the pipeline — showing what we last had.",
+  "desk.states.tryAgain": "Try again",
+
+  // ── CommandPalette ───────────────────────────────────────────────────────
+  "desk.palette.kindArticle": "Article",
+  "desk.palette.kindDeck": "Deck",
+  "desk.palette.kindAction": "Action",
+  "desk.palette.newPiece": "New piece",
+  "desk.palette.goToDesk": "Go to the desk",
+  "desk.palette.ariaLabel": "Command palette",
+  "desk.palette.searchPlaceholder": "Jump to a piece, or start a new one…",
+  "desk.palette.searchAria": "Search the desk",
+  "desk.palette.commandsAria": "Commands",
+  "desk.palette.noResults": "Nothing matches “{query}”.",
+
+  // ── DeskNotifications ────────────────────────────────────────────────────
+  "desk.notifications.ariaLabel": "Desk notifications",
+  "desk.notifications.sinceFriday": "Since Friday",
+  "desk.notifications.subhead":
+    "What happened on the desk while you were away.",
+  "desk.notifications.empty":
+    "You're all caught up — nothing new since you last looked.",
+  "desk.notifications.markAllRead": "Mark all as read",
+
+  // ── MagazineDeskShell (the editor's left rail) ───────────────────────────
+  "deskShell.issueEyebrow": "Issue {number} · {theme}",
+  "deskShell.menuAria": "Magazine desk sections",
+  "deskShell.nav.desk": "Desk",
+  "deskShell.nav.pitches": "Pitches",
+  "deskShell.nav.issue": "Issue",
+  "deskShell.bellCountAria": "Since Friday — {count} new",
+  "deskShell.openNow": "Open now",
+  "deskShell.newPiece": "New piece",
+  "deskShell.kbdHintSuffix": "to jump · ? for keys",
+  "deskShell.backToPlatform": "Back to QueerPulse",
+
+  // ── DeskModals (shared chrome across Commission/Pass/Chase/Handoff/Shortcuts) ──
+  "desk.modals.cancel": "Cancel",
+  "desk.modals.noteLabel": "Your note",
+  "desk.modals.shortcuts.title": "Keyboard",
+  "desk.modals.shortcuts.gotIt": "Got it",
+
+  // ── CommissionModal ──────────────────────────────────────────────────────
+  "desk.modals.commission.titleFromPitch": "Commission this pitch",
+  "desk.modals.commission.titleFromScratch": "Write the brief",
+  "desk.modals.commission.sendBrief": "Send the brief",
+  "desk.modals.commission.bodyFromPitch":
+    "You're commissioning {byline}'s pitch — set the essentials below, and the brief goes straight to them.",
+  "desk.modals.commission.bodyFromScratch":
+    "Set the essentials below, and we'll get a brief in front of a writer.",
+  "desk.modals.commission.angleLabel": "The angle",
+  "desk.modals.commission.sectionLabel": "Section",
+  "desk.modals.commission.wordsLabel": "Words",
+  "desk.modals.commission.dueDateLabel": "Due date",
+  "desk.modals.commission.feeLabel": "Fee",
+  "desk.modals.commission.feePlaceholder": "e.g. €150",
+
+  // ── PassModal ────────────────────────────────────────────────────────────
+  "desk.modals.pass.title": "Pass on “{title}”",
+  "desk.modals.pass.send": "Send it",
+  "desk.modals.pass.body":
+    "A pass lands easier with a real reason. Pick a starting point below, or write your own — either way, the writer hears from you, not a form.",
+  "desk.modals.pass.startingPoints": "Starting points",
+
+  // ── ChaseModal (Phase 7 Wave F: embeds PieceThread, no separate compose step) ─
+  "desk.modals.chase.title": "Chase {name}",
+  "desk.modals.chase.body": "A quick, human nudge — not a deadline threat.",
+
+  // ── HandoffModal ─────────────────────────────────────────────────────────
+  "desk.modals.handoff.title": "Hand off",
+  "desk.modals.handoff.cta": "Hand off",
+  "desk.modals.handoff.body":
+    "Hand “{title}” to another editor — they pick up right where you left off.",
+  "desk.modals.handoff.toLabel": "To",
+
+  // ── DeskView ─────────────────────────────────────────────────────────────
+  "desk.view.notificationsAria": "Notifications",
+
+  // ── EditorDashboardPage ──────────────────────────────────────────────────
+  "desk.page.stubOpensLater": "Opens in a later release.",
+  "desk.page.savingViewsUnavailable":
+    "Saving custom views isn't available yet.",
+  "desk.page.notificationsNotWired":
+    "Notifications aren't wired to real navigation yet.",
+
+  // ══════════════════ Piece record (Phase 2) ═══════════════════════════════
+  // Brief/Care/Money/History/After. Record content (audit `what` text, letter
+  // bodies, correction text, brief angle/wants/avoid/art, care subject notes,
+  // safety-flag notes, sensitivity-read checklist labels, stage names) comes
+  // from `record`/`DEMO_RECORD` — editorial-database content, not chrome — and
+  // is deliberately left untranslated. Only platform-authored chrome (labels,
+  // buttons, section titles, static copy) is translated below.
+
+  // ── PieceRecordPage ──────────────────────────────────────────────────────
+  "piece.header.backToDesk": "Back to the desk",
+  "piece.header.openDraft": "Open the draft",
+  "piece.header.publish": "Publish",
+  "piece.header.publishToast": "Publishing arrives with issue production",
+  "piece.header.formatArticle": "Article",
+  "piece.header.formatDeck": "Deck",
+  "piece.header.inAnIssue": "In an issue",
+  "piece.header.notScheduled": "Not yet scheduled",
+  "piece.header.notFoundTitle": "We couldn't open this piece",
+  "piece.header.notFoundDescription":
+    "It may have been removed, or the link is out of date.",
+
+  // ── PieceTabsNav ─────────────────────────────────────────────────────────
+  "piece.tabs.ariaLabel": "Piece record sections",
+  "piece.tabs.brief": "Brief",
+  "piece.tabs.care": "Care",
+  "piece.tabs.money": "Money",
+  "piece.tabs.history": "History",
+  "piece.tabs.after": "After",
+
+  // ── StageStepper ─────────────────────────────────────────────────────────
+  "piece.stageStepper.heading": "Where it is",
+
+  // ── PublishGateCard ──────────────────────────────────────────────────────
+  "piece.gate.heading": "Publish gate",
+  "piece.gate.notAdvisory":
+    "The gate is not advisory. Nothing here can be overridden by one person alone.",
+  "piece.gate.publish": "Publish",
+
+  // ── MoneyMiniCard ────────────────────────────────────────────────────────
+  "piece.moneyMini.heading": "Money",
+  "piece.moneyMini.noFeeYet": "No fee agreed yet",
+  "piece.moneyMini.statusAgreed": "Fee agreed",
+  "piece.moneyMini.statusApprovedUnpaid": "Approved, unpaid",
+  "piece.moneyMini.statusPaid": "Paid",
+  "piece.moneyMini.openMoney": "Open money",
+
+  // ── BriefTab ─────────────────────────────────────────────────────────────
+  "piece.brief.noBriefYet": "No brief recorded yet.",
+  "piece.brief.commissionHeading": "The commission",
+  "piece.brief.commissioned": "Commissioned",
+  "piece.brief.due": "Due",
+  "piece.brief.noDateSet": "No date set",
+  "piece.brief.length": "Length",
+  "piece.brief.noTargetSet": "No target set",
+  "piece.brief.filedAt": "Filed at",
+  "piece.brief.notFiledYet": "Not filed yet",
+  "piece.brief.fee": "Fee",
+  "piece.brief.killFee": "Kill fee",
+  "piece.brief.overWordsWarning":
+    "Filed {count} words over the brief. Cut before layout, or move a section to the deck.",
+  "piece.brief.whatWeAskedFor": "What we asked for",
+  "piece.brief.avoidLabel": "Avoid.",
+  "piece.brief.artLabel": "Art.",
+  "piece.brief.sendToWriter": "Send to writer",
+  "piece.brief.saveAsTemplate": "Save as template",
+  "piece.brief.similarHeading": "We have run this before",
+  "piece.brief.similarIssueBy": "· issue {issue} · {by}",
+  "piece.brief.readButton": "Read",
+
+  // ── MoneyTab ─────────────────────────────────────────────────────────────
+  "piece.money.noPaymentYet": "No payment recorded yet.",
+  "piece.money.feeHeading": "Fee",
+  "piece.money.agreedFee": "Agreed fee",
+  "piece.money.expenses": "Expenses",
+  "piece.money.noneFiled": "None filed",
+  "piece.money.invoice": "Invoice",
+  "piece.money.notReceived": "Not received",
+  "piece.money.filed": "Filed",
+  "piece.money.notFiled": "Not filed",
+  "piece.money.terms": "Terms",
+  "piece.money.payBy": "Pay by",
+  "piece.money.noDateSet": "No date set",
+  "piece.money.unpaidWarning":
+    "Approved but unpaid. Paying on time is the part of this job the community actually judges us on.",
+  "piece.money.markForPayment": "Mark for payment",
+  "piece.money.tellTheWriter": "Tell the writer",
+
+  // ── CareTab + CareSubjectRow ─────────────────────────────────────────────
+  "piece.care.heading": "Care and consent",
+  "piece.care.noCareRecordYet":
+    "No care record has been started for this piece yet.",
+  "piece.care.sensitivityReadHeading": "Sensitivity read",
+  "piece.care.readerMeta": "{role} · asked {askedOn} · due {dueOn}",
+  "piece.care.readProgress":
+    "{done} of {total} · a read is not a rubber stamp. {reader} can send it back at any point.",
+  "piece.care.nudgeReader": "Nudge the reader",
+  "piece.care.nudgedToast": "Nudged {reader}.",
+  "piece.care.askSecondReader": "Ask a second reader",
+  "piece.care.secondReaderToast": "Asked for a second reader.",
+  "piece.care.noReadRequestedYet":
+    "No sensitivity read has been requested yet.",
+  "piece.care.askForRead": "Ask for a sensitivity read",
+  "piece.care.askForReadToast": "Asked for a sensitivity read.",
+  "piece.care.peopleHeading": "People in this piece",
+  "piece.care.peopleSubline":
+    "Consent is per person, not per piece. Publish is blocked until every row is settled.",
+  "piece.care.contentNotesHeading": "Content notes",
+  "piece.care.contentNotesSubline":
+    "Shown to readers above the piece. Written by the author, checked by you.",
+  "piece.care.addContentNote": "Add",
+  "piece.care.contentNoteAddedToast": "Content note added.",
+  "piece.care.safetyFlagsHeading": "Safety flags",
+  "piece.care.flagged": "Flagged",
+  "piece.care.clear": "Clear",
+  "piece.care.consentGiven": "Consented",
+  "piece.care.consentPending": "Consent pending",
+  "piece.care.consentPseudonym": "Pseudonym",
+  "piece.care.rightOfReply": "Right of reply · {reply}",
+  "piece.care.named": "Named",
+  "piece.care.outPublicly": "Out publicly",
+  "piece.care.quotesReadBack": "Quotes read back",
+  "piece.care.sendConsentForm": "Send consent form",
+  "piece.care.consentFormSentToast": "Sent a consent form to {name}.",
+
+  // ── HistoryTab ───────────────────────────────────────────────────────────
+  "piece.history.heading": "Everything that happened",
+  "piece.history.unknownActor": "Unknown",
+  "piece.history.footer":
+    "State changes, publishes and restores are kept for the life of the magazine.",
+
+  // ── AfterTab ─────────────────────────────────────────────────────────────
+  "piece.after.lettersHeading": "Letters",
+  "piece.after.noLettersYet": "No letters from readers yet.",
+  "piece.after.sendToAuthor": "Send to author",
+  "piece.after.sendToAuthorToast": "Messaging your author isn't wired up yet.",
+  "piece.after.runInLetters": "Run in letters",
+  "piece.after.removeFromLetters": "Remove from letters",
+  "piece.after.correctionsHeading": "Corrections",
+  "piece.after.correctionPublished": "Published {date}",
+  "piece.after.correctionFiled": "Filed {date}",
+  "piece.after.correctionsFooter":
+    "A correction is published as a dated note at the foot of the piece. We never edit silently.",
+  "piece.after.correctionAriaLabel": "Correction text",
+  "piece.after.correctionPlaceholder": "What was wrong, and what is right.",
+  "piece.after.publishCorrection": "Publish correction",
+  "piece.after.notifyPeopleNamed": "Notify the people named",
+
   // ══════════════════ Submit Story wizard ══════════════════════════════════
   // `INITIAL_DRAFT` (the example headline/byline/deck/body) is left as
   // English mock content — a first-person example essay, not chrome.
@@ -793,4 +1182,396 @@ export const magazine: Catalog = {
   // Byline author for the safety piece — the platform team, not an individual
   // writer, so it is chrome and translated (read time and date stay editorial).
   "story.safety.byline": "The QueerPulse team",
+
+  // ══════════════════ Article editor (ArticleEditorPage + desk/editor/*) ═══
+  // Chrome for the block-based article-writing surface. The headline/
+  // standfirst RichText content, every block's own html (paragraph/heading/
+  // pullQuote/quote/image caption/qa/stats), and the DEMO_ARTICLE fixture
+  // (blocks, versions, comments) are editorial CONTENT — deliberately left
+  // untranslated, same treatment as the rest of this file. Only the editor's
+  // own UI — labels, buttons, placeholders, empty states, aria-labels,
+  // block-kind names, and toast stubs — is translated below.
+
+  // ── ArticleEditorHeader / ArticleEditorPage ──────────────────────────────
+  "write.header.backAria": "Back to the piece record",
+  "write.header.untitled": "Untitled draft",
+  "write.header.unsectioned": "Unsectioned",
+  "write.header.subtitle": "Article · {section} · {issue} · {saved}",
+  "write.header.viewLabel": "View",
+  "write.header.sendOn": "Send on",
+  "write.header.publish": "Publish",
+  "write.header.sendOnToast": "Sending isn't wired up yet.",
+  "write.header.publishToast": "Publishing isn't wired up yet.",
+  "write.header.savedSaving": "Saving…",
+  "write.header.savedError": "Couldn't save — will retry",
+  "write.header.savedOk": "All changes saved",
+  "write.header.issueScheduled": "Scheduled in an issue",
+
+  // ── Draft/Shape/Read mode seg (editorMode.ts) ────────────────────────────
+  "write.mode.draft": "Draft",
+  "write.mode.shape": "Shape",
+  "write.mode.read": "Read",
+
+  // ── ArticleEditorStatus ───────────────────────────────────────────────────
+  "write.status.notFoundTitle": "This draft couldn't be found",
+
+  // ── ArticleDocument ───────────────────────────────────────────────────────
+  "write.document.headlinePlaceholder": "Headline",
+  "write.document.standfirstPlaceholder":
+    "Standfirst — the one or two sentences under the headline",
+  "write.document.addBlockHint": "or type / in an empty paragraph",
+
+  // ── Block kinds (blockKinds.ts is not a component — these are translated
+  // at each render site: SlashMenu, ArticleDocument's add-bar, and the block
+  // type tag in ArticleBlockEditor) ────────────────────────────────────────
+  "write.blockKind.paragraph.label": "Paragraph",
+  "write.blockKind.paragraph.hint": "Text",
+  "write.blockKind.heading.label": "Section heading",
+  "write.blockKind.heading.hint": "H2",
+  "write.blockKind.pullQuote.label": "Pull quote",
+  "write.blockKind.pullQuote.hint": "Display",
+  "write.blockKind.quote.label": "Attributed quote",
+  "write.blockKind.quote.hint": "Cited",
+  "write.blockKind.image.label": "Image",
+  "write.blockKind.image.hint": "Upload",
+  "write.blockKind.qa.label": "Interview Q&A",
+  "write.blockKind.qa.hint": "Pair",
+  "write.blockKind.stats.label": "Stat row",
+  "write.blockKind.stats.hint": "Numbers",
+
+  // ── ArticleBlockEditor ────────────────────────────────────────────────────
+  "write.block.moveUpAria": "Move block up",
+  "write.block.moveDownAria": "Move block down",
+  "write.block.removeAria": "Remove block",
+  "write.block.paragraphPlaceholder": "Write, or press / for a block",
+  "write.block.headingPlaceholder": "Section heading",
+  "write.block.pullQuotePlaceholder": "Pull quote",
+
+  // ── ArticleBlockKindFields ────────────────────────────────────────────────
+  "write.block.quotePlaceholder": "Quoted speech",
+  "write.block.attributionPlaceholder": "Attribution",
+  "write.block.attributionAria": "Quote attribution",
+  "write.block.questionPlaceholder": "Question",
+  "write.block.whoPlaceholder": "Who's answering",
+  "write.block.whoAria": "Interview subject name",
+  "write.block.answerPlaceholder": "Answer",
+  "write.block.statValuePlaceholder": "61%",
+  "write.block.statLabelPlaceholder": "Label",
+  "write.block.statValueAria": "Stat {number} value",
+  "write.block.statLabelAria": "Stat {number} label",
+  "write.block.statRemoveAria": "Remove stat {number}",
+  "write.block.addStat": "Add stat",
+  "write.block.imageUrlLabel": "Image URL",
+
+  // ── ImageBlockControls ────────────────────────────────────────────────────
+  "write.image.altLabel": "Alt text",
+  "write.image.altError": "Required for screen readers and captions.",
+  "write.image.tintLabel": "Tint",
+  "write.image.tintAria": "Tint: {tint}",
+  "write.image.tint.coral": "Coral",
+  "write.image.tint.jade": "Jade",
+  "write.image.tint.plum": "Plum",
+  "write.image.tint.violet": "Violet",
+  "write.image.creditLabel": "Credit",
+  "write.image.creditError": "Required before this ships.",
+  "write.image.rightsLabel": "Rights",
+  "write.image.rights.commissioned": "Commissioned",
+  "write.image.rights.licensed": "Licensed",
+  "write.image.rights.courtesy": "Courtesy",
+  "write.image.rights.cc": "Creative Commons",
+  "write.image.cropAria": "Crop ratio",
+  "write.image.focalAria": "Focal point: {x}% horizontal, {y}% vertical",
+  "write.image.captionPlaceholder": "Caption",
+
+  // ── SelectionToolbar ──────────────────────────────────────────────────────
+  "write.selection.toolbarAria": "Text formatting",
+  "write.selection.emphasis": "Emphasis",
+  "write.selection.strong": "Strong",
+  "write.selection.link": "Link",
+
+  // ── PublishRail ────────────────────────────────────────────────────────────
+  "write.publish.title": "Publish",
+  "write.publish.whenLabel": "When it ships",
+  "write.publish.now": "Now",
+  "write.publish.schedule": "Schedule",
+  "write.publish.withIssue": "With issue",
+  "write.publish.scheduleNote":
+    "Scheduling a date and time is coming soon — ships as a draft for now.",
+  "write.publish.issueNote": "Ships automatically when its issue goes out.",
+  "write.publish.checklistHeading": "Before it ships · {done}/{total}",
+  "write.publish.cta": "Publish",
+  "write.publish.checklist.standfirst": "Standfirst written",
+  "write.publish.checklist.alts": "Alt text on every image",
+  "write.publish.checklist.altsPending": "Alt text on every image (none yet)",
+  "write.publish.checklist.sensitivity":
+    "Sensitivity read — handled in the piece record",
+  "write.publish.checklist.source": "Source line on the stat row (optional)",
+
+  // ── ArticleMetaRail ────────────────────────────────────────────────────────
+  "write.meta.title": "Piece meta",
+  "write.meta.sectionLabel": "Section",
+  "write.meta.bylineLabel": "Byline",
+  "write.meta.bylineHelper": "Set on the piece record's Brief tab.",
+  "write.meta.roleLabel": "Role",
+  "write.meta.roleHelper": "A credit-line qualifier, e.g. “Contributing editor”.",
+  "write.meta.tagsLabel": "Tags",
+  "write.meta.tagsHelper": "Comma-separated.",
+  "write.meta.slugLabel": "Slug",
+  "write.meta.slugHelper": "Server-generated.",
+  "write.meta.wordCountLabel": "Word count",
+  "write.meta.readTimeLabel": "Read time",
+
+  // ── NotesRail ────────────────────────────────────────────────────────────
+  "write.notes.title": "Notes",
+  "write.notes.loading": "Loading notes…",
+  "write.notes.empty": "No notes on this draft.",
+  "write.notes.you": "You",
+  "write.notes.reply": "Reply",
+  "write.notes.resolve": "Resolve",
+  "write.notes.reopen": "Reopen",
+  "write.notes.resolvedChip": "Resolved",
+  "write.notes.addAria": "Add a note",
+  "write.notes.addPlaceholder": "Leave a note on this draft…",
+  "write.notes.addCta": "Add note",
+  "write.notes.addToast": "Note added.",
+  "write.notes.replyAria": "Reply to {who}",
+  "write.notes.replyPlaceholder": "Write a reply…",
+  "write.notes.replySend": "Send reply",
+  "write.notes.replyToast": "Reply added.",
+  "write.notes.resolveToast": "Marked as resolved.",
+  "write.notes.reopenToast": "Reopened.",
+
+  // ── VersionsRail (Phase 7 Wave E — snapshot + restore + diff) ─────────────
+  "write.versions.title": "History",
+  "write.versions.loading": "Loading versions…",
+  "write.versions.empty": "No earlier versions recorded.",
+  "write.versions.you": "You",
+  "write.versions.saveCta": "Save a version",
+  "write.versions.saveToast": "Version saved.",
+  "write.versions.manualSaveLabel": "Saved manually",
+  "write.versions.compare": "Compare",
+  "write.versions.restore": "Restore",
+  "write.versions.restoreToast": "Restored \"{label}\".",
+  "write.versions.restoredFromLabel": "Restored from {label}",
+  "write.versions.restoreModal.title": "Restore \"{label}\"?",
+  "write.versions.restoreModal.body":
+    "Restore this version? Your current draft is saved first, so nothing is lost.",
+  "write.versions.restoreModal.cancel": "Cancel",
+  "write.versions.restoreModal.confirm": "Restore this version",
+  "write.versions.restoreModal.restoring": "Restoring…",
+  "write.versions.diff.title": "Compare versions",
+  "write.versions.diff.sub": "\"{label}\" by {author} · {when}",
+  "write.versions.diff.loading": "Loading version…",
+  "write.versions.diff.error": "Couldn't load this version.",
+  "write.versions.diff.empty": "Nothing to compare — this version has no blocks.",
+  "write.versions.diff.before": "This version",
+  "write.versions.diff.now": "Current draft",
+  "write.versions.diff.status.unchanged": "Unchanged",
+  "write.versions.diff.status.changed": "Changed",
+  "write.versions.diff.status.added": "Added since",
+  "write.versions.diff.status.removed": "Removed since",
+
+  // ══════════════════ Issue production (Phase 5) ═══════════════════════════
+  // IssueProductionPage + desk/issue/* — running order, cover & contents,
+  // digest & social, ship checklist/modal, archive search. Piece titles,
+  // sections, blurbs and archive rows are data, not chrome, and are left
+  // untranslated same as the rest of the desk.
+
+  // ── IssueProductionPage header + not-found state ────────────────────────
+  "issue.header.backToDesk": "Back to the desk",
+  "issue.header.notFoundTitle": "Issue not found",
+  "issue.header.notFoundDescription":
+    "This issue isn't in production yet, or the number doesn't match one on the desk.",
+  "issue.header.title": "Issue {number} · {theme}",
+  "issue.header.laidOut": "{ready} of {total} laid out",
+  "issue.header.proof": "Proof",
+  "issue.header.proofToast": "Proof PDF generated for the printer",
+
+  // ── ShipChecklistCard + ShipIssueModal ──────────────────────────────────
+  "issue.ship.cta": "Ship the issue",
+  "issue.ship.checklistHeading": "Ship checklist",
+  "issue.ship.modalTitle": "Ship issue {number}?",
+  "issue.ship.modalSubWithDate":
+    "Pieces publish together at 09:00 on {date}, in the running order you set. The digest goes at the same moment.",
+  "issue.ship.modalSubNoDate":
+    "Pieces publish together at 09:00, in the running order you set. The digest goes at the same moment.",
+  "issue.ship.notYet": "Not yet",
+  "issue.ship.shipIt": "Ship it",
+  "issue.ship.warnNote":
+    "Pieces still behind the publish gate will hold and publish later — the issue does not wait for them.",
+
+  // ── IssueTabsNav ─────────────────────────────────────────────────────────
+  "issue.tabs.ariaLabel": "Issue production sections",
+  "issue.tabs.runningOrder": "Running order",
+  "issue.tabs.coverContents": "Cover & contents",
+  "issue.tabs.digestSocial": "Digest & social",
+  "issue.tabs.archive": "Archive",
+
+  // ── PagesCard ────────────────────────────────────────────────────────────
+  "issue.pages.heading": "Pages",
+  "issue.pages.editorial": "Editorial",
+  "issue.pages.total": "Total",
+  "issue.pages.spare_one": "{count} page spare",
+  "issue.pages.spare_other": "{count} pages spare",
+
+  // ── RunningOrderTab ──────────────────────────────────────────────────────
+  "issue.runOrder.deckNoPageCount": "Deck — no page count",
+  "issue.runOrder.pagesPrefix": "pp. {pages}",
+  "issue.runOrder.laidOut": "Laid out",
+  "issue.runOrder.inLayout": "In layout",
+  "issue.runOrder.moveEarlierAria":
+    "Move “{title}” earlier in the running order",
+  "issue.runOrder.moveLaterAria": "Move “{title}” later in the running order",
+  "issue.runOrder.open": "Open",
+
+  // ── CoverContentsTab ─────────────────────────────────────────────────────
+  "issue.cover.heading": "Cover",
+  "issue.cover.artPlaceholder": "Cover art",
+  "issue.cover.imageUrlLabel": "Cover image URL",
+  "issue.cover.imageUrlPlaceholder": "https://…",
+  "issue.cover.coverlineLabel": "Coverline {n}",
+  "issue.cover.hint": "Coverlines are not headlines. Shorter, flatter, no puns.",
+  "issue.contents.heading": "Contents",
+  "issue.contents.blurbLabel": "Contents blurb",
+  "issue.contents.blurbPlaceholder": "One sentence, written by the desk.",
+
+  // ── DigestSocialTab ──────────────────────────────────────────────────────
+  "issue.digest.heading": "Members' digest",
+  "issue.digest.hint":
+    "Goes out at 09:00 on the day the issue publishes. Order here is the order in the email.",
+  "issue.digest.includeAria": "Include “{title}” in the members' digest",
+  "issue.digest.editBlurbAria": "Edit digest blurb for “{title}”",
+  "issue.digest.save": "Save",
+  "issue.digest.cancel": "Cancel",
+  "issue.digest.edit": "Edit",
+  "issue.digest.sendTest": "Send me a test",
+  "issue.digest.sendTestToast": "A test digest is on its way to your inbox.",
+  "issue.digest.scheduleWithIssue": "Schedule with the issue",
+  "issue.digest.scheduleToast": "The digest will go out with the issue.",
+  "issue.digest.socialHeading": "Social out",
+  "issue.digest.socialAltHint":
+    "Alt text is copied from the image, never left empty.",
+
+  // ── ArchiveTab ───────────────────────────────────────────────────────────
+  "issue.archive.heading": "Archive",
+  "issue.archive.emptyTitle": "No archive to search yet",
+  "issue.archive.emptyDescription":
+    "Past issues will show up here once they're indexed. Checked automatically at commission time.",
+  "issue.archive.searchPlaceholder": "Have we run this before?",
+  "issue.archive.searchAria":
+    "Search the magazine archive by title, byline or tag",
+  "issue.archive.noMatches": "Nothing matches “{query}”.",
+  "issue.archive.entryMeta": "issue {issue} · {by} · {tags}",
+  "issue.archive.read": "Read",
+  "issue.archive.readToast": "Opening “{title}” isn't wired up yet.",
+  "issue.archive.checkedAutomatically": "Checked automatically at commission time.",
+
+  // ══════════════════ Writer workspace (Phase 6) ═══════════════════════════
+  // `/magazine/writer` — a contributor's own scoped view of their
+  // assignments, pitches and payments. Record content (assignment titles,
+  // notes, section names, stage/state labels, pitch and payment status text)
+  // arrives from the API as editorial-database prose and is deliberately
+  // left untranslated, same judgement as the editor desk above. Only
+  // platform-authored chrome is translated below.
+
+  // ── WriterWorkspacePage ──────────────────────────────────────────────────
+  "writer.tabs.work": "Your work",
+  "writer.tabs.pitches": "Your pitches",
+  "writer.tabs.payments": "Payments",
+  "writer.tabs.ariaLabel": "Writer workspace tabs",
+  "writer.page.errorTitle": "Your workspace didn't load",
+  "writer.page.errorDescription":
+    "Something went wrong fetching your assignments — try refreshing the page.",
+
+  // ── AssignmentCard ───────────────────────────────────────────────────────
+  "writer.work.emptyTitle": "No assignments yet",
+  "writer.work.emptyDescription":
+    "When an editor commissions you, it shows up here.",
+  "writer.work.dueLabel": "Due",
+  "writer.work.noDateSet": "No date set",
+  "writer.work.lengthLabel": "Length",
+  "writer.work.length": "{words} / {target} words",
+  "writer.work.notFiledYet": "Not filed yet",
+  "writer.work.feeLabel": "Fee",
+  "writer.work.paymentLabel": "Payment",
+  "writer.work.fileDraft": "File a draft",
+  "writer.work.readBrief": "Read the brief",
+  "writer.work.readBriefToast":
+    "The full brief lives on the piece record — coming soon here.",
+  "writer.work.messageEditor": "Message editor",
+  "writer.work.activeBadge": "Active",
+  "writer.work.setActive": "Use for byline & terms",
+
+  // ── WriterPitchesTab ─────────────────────────────────────────────────────
+  "writer.pitches.emptyTitle": "No pitches yet",
+  "writer.pitches.emptyDescription":
+    "Send one below — a person reads every pitch, and answers within 5 days.",
+  "writer.pitches.sentMeta": "Sent {sent} · answered within 5 days",
+  "writer.pitches.formHeading": "Pitch something",
+  "writer.pitches.titleLabel": "Working title",
+  "writer.pitches.titlePlaceholder": "What's the piece called, roughly?",
+  "writer.pitches.noteLabel": "What it is",
+  "writer.pitches.notePlaceholder": "The idea, why now, and who it's for.",
+  "writer.pitches.send": "Send it",
+
+  // ── WriterPaymentsTab ────────────────────────────────────────────────────
+  "writer.payments.emptyTitle": "No payments yet",
+  "writer.payments.emptyDescription":
+    "Once a piece is filed and approved, its payment shows up here.",
+  "writer.payments.issueLabel": "Issue {issue}",
+  "writer.payments.unscheduled": "Unscheduled",
+  "writer.payments.terms":
+    "21-day terms. If we're late, it says so here before you have to ask.",
+
+  // ── AgreedTermsCard ──────────────────────────────────────────────────────
+  "writer.terms.heading": "What you agreed to",
+  "writer.terms.body":
+    "Every commission carries the same terms — fee, kill fee, deadline, and what happens if the piece changes shape.",
+  "writer.terms.killFeeLabel": "Kill fee",
+  "writer.terms.rightsLabel": "Rights",
+  "writer.terms.editsLabel": "Edits",
+  "writer.terms.emptyState": "No active commission yet — terms show up once you have one.",
+
+  // ── BylineSafetyCard ─────────────────────────────────────────────────────
+  "writer.byline.heading": "Your safety",
+  "writer.byline.body":
+    "You choose the byline on every piece, and can change it up to the moment it publishes.",
+  "writer.byline.fieldLabel": "Byline for “{title}”",
+  "writer.byline.anonymous": "Anonymous",
+  "writer.byline.emptyState": "No active assignment to set a byline for yet.",
+
+  // ── FileDraftModal ───────────────────────────────────────────────────────
+  "writer.fileDraft.title": "File “{title}”",
+  "writer.fileDraft.cancel": "Cancel",
+  "writer.fileDraft.submit": "File it",
+  "writer.fileDraft.body":
+    "Paste it, drop a document, or write it here. It arrives on the desk as blocks, not as a wall of formatting.",
+  "writer.fileDraft.fieldLabel": "Draft",
+  "writer.fileDraft.fieldHelper":
+    "Uploading a document is coming soon — pasting works today.",
+  "writer.fileDraft.placeholder": "Paste your draft here…",
+  "writer.fileDraft.wordCountWithTarget":
+    "Word count is checked against your brief ({target} words). Over is fine.",
+  "writer.fileDraft.wordCountNoTarget":
+    "Word count is checked against your brief. Over is fine.",
+
+  // ── MessageEditorModal (Phase 7 Wave F) ─────────────────────────────────
+  "writer.messages.title": "Messages · {title}",
+
+  // ── EditorMessageCard ("From your editor" rail card, Phase 7 Wave F) ───
+  "writer.editorMessage.heading": "From your editor",
+  "writer.editorMessage.fromLabel": "{name}",
+  "writer.editorMessage.loading": "Loading…",
+  "writer.editorMessage.noMessagesYet": "No messages yet — say hello.",
+  "writer.editorMessage.emptyState": "No active commission yet.",
+
+  // ── PieceThread (shared editor↔writer message thread, Phase 7 Wave F) ──
+  "pieceThread.you": "You",
+  "pieceThread.emptyTitle": "No messages yet",
+  "pieceThread.emptyDescription": "Say hello — chases and questions live here now, not in email.",
+  "pieceThread.errorState": "Couldn't load this thread — try again in a moment.",
+  "pieceThread.composerAria": "Message",
+  "pieceThread.composerPlaceholder": "Write a message…",
+  "pieceThread.send": "Send",
+  "pieceThread.sentToast": "Message sent.",
 };

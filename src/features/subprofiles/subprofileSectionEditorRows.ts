@@ -28,4 +28,63 @@ export const emptyItem = (section: SubprofileSection): SubprofileItemView => ({
   tags: [],
   isFeatured: false,
   collaborators: [],
+  venue: null,
+  doors: null,
+  ticketUrl: null,
+  gigState: null,
+  medium: null,
+  dimensions: null,
+  edition: null,
+  workState: null,
+  structured: null,
 });
+
+// ── Pure working-list transforms (Task 5) ────────────────────────────────
+// Extracted so `SubprofileSectionEditor` only wires these into `setRows` +
+// `touch()`, keeping the component's own body under the line cap.
+
+/** Swap a row with its neighbor in the given direction; a no-op past either end. */
+export function moveRow(
+  rows: SubprofileEditorRow[],
+  uid: string,
+  dir: -1 | 1,
+): SubprofileEditorRow[] {
+  const i = rows.findIndex((r) => r._uid === uid);
+  const j = i + dir;
+  if (i < 0 || j < 0 || j >= rows.length) return rows;
+  const next = [...rows];
+  [next[i], next[j]] = [next[j]!, next[i]!];
+  return next;
+}
+
+/** Toggle one row's spotlight, single-select within this working list only —
+ *  the backend enforces the cross-section, persona-wide spotlight on save,
+ *  clearing any featured item left in other sections. */
+export function toggleRowFeature(
+  rows: SubprofileEditorRow[],
+  uid: string,
+): SubprofileEditorRow[] {
+  const target = rows.find((r) => r._uid === uid);
+  if (!target) return rows;
+  const turningOn = !target.isFeatured;
+  return rows.map((r) => ({
+    ...r,
+    isFeatured: r._uid === uid ? turningOn : turningOn ? false : r.isFeatured,
+  }));
+}
+
+/** Commit an item drawer's draft into the working list: appends for a new
+ *  item (`editingUid === null`), replaces in place for an edit — applying
+ *  the same single-select feature exclusivity as `toggleRowFeature`. */
+export function commitDraftRow(
+  rows: SubprofileEditorRow[],
+  draft: SubprofileItemView,
+  editingUid: string | null,
+): SubprofileEditorRow[] {
+  const cleared = draft.isFeatured
+    ? rows.map((r) => (r._uid === editingUid ? r : { ...r, isFeatured: false }))
+    : rows;
+  return editingUid
+    ? cleared.map((r) => (r._uid === editingUid ? { ...draft, _uid: r._uid } : r))
+    : [...cleared, withUid(draft)];
+}

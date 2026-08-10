@@ -11,6 +11,7 @@ import { useAuth } from "../../app/providers/authContext";
 import { useSocial } from "../../app/providers/useSocial";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMediaQuery } from "../../shared/hooks";
+import { mediaMax } from "../../shared/theme/breakpoints";
 import { currentUserSlug } from "./data/memberProfiles";
 import { useMemberProfile } from "./api/useMemberProfile";
 import { ProfileHero, ProfileContent } from "./ProfileSections";
@@ -81,7 +82,7 @@ export function ProfilePage() {
   // Hooks must run unconditionally on every render, so this is read here —
   // above the early-return guards below — even though it's only consumed
   // after them.
-  const isMobile = useMediaQuery("(max-width: 640px)");
+  const isMobile = useMediaQuery(mediaMax("md"));
 
   if (isSelf && isProfileLoading) return <ProfileLoadingState />;
   if (isSelf && isProfileError) {

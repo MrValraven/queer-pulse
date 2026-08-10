@@ -38,6 +38,7 @@ export function SettingsPage() {
   const [pane, setPane] = useState<PaneId>(initialPane);
   const [dirty, setDirty] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const sidebarRef = useRef<HTMLElement>(null);
   const openedRef = useRef(false);
   const cancelEditingRef = useRef(cancelEditing);
   useScrollLock(showDelete);
@@ -53,6 +54,15 @@ export function SettingsPage() {
   useEffect(() => {
     discardTheme();
   }, [discardTheme]);
+
+  // On the mobile horizontal nav strip, keep the selected tab in view when the
+  // pane changes (a pane can be picked from off-screen, e.g. the delete modal).
+  useEffect(() => {
+    const active = sidebarRef.current?.querySelector<HTMLElement>(
+      '[aria-current="page"]',
+    );
+    active?.scrollIntoView({ block: "nearest", inline: "center" });
+  }, [pane]);
 
   // Open a profile edit session once when a profile-editing pane is active and
   // none is already open. Track that WE opened it, so we only ever tear down our
@@ -99,7 +109,7 @@ export function SettingsPage() {
   return (
     <AppShell>
       <div className={`wrap ${styles.page}`}>
-        <aside className={styles.sidebar}>
+        <aside className={styles.sidebar} ref={sidebarRef}>
           {NAV.map((g) => (
             <div key={g.groupKey}>
               <h3>{t(g.groupKey)}</h3>
@@ -114,6 +124,7 @@ export function SettingsPage() {
                   ]
                     .filter(Boolean)
                     .join(" ")}
+                  aria-current={pane === item.id ? "page" : undefined}
                   onClick={() => setPane(item.id)}
                 >
                   <span className={styles.icon}>

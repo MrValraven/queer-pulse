@@ -4,7 +4,10 @@ import type {
   AffiliationDTO,
   AvailabilityKey,
   CollaboratorDTO,
+  GigState,
+  ItemStructured,
   LinkVisibility,
+  SkinData,
   SocialLinkDTO,
   SubprofileDTO,
   SubprofileItemDTO,
@@ -14,6 +17,7 @@ import type {
   SubprofileSection,
   SubprofileStatus,
   Visibility,
+  WorkState,
 } from "./subprofiles.api";
 import { SECTION_META, sectionsForKind } from "../subprofile-kinds";
 
@@ -32,6 +36,15 @@ export interface SubprofileItemView {
   tags: string[];
   isFeatured: boolean;
   collaborators: CollaboratorDTO[];
+  venue: string | null;
+  doors: string | null;
+  ticketUrl: string | null;
+  gigState: GigState | null;
+  medium: string | null;
+  dimensions: string | null;
+  edition: string | null;
+  workState: WorkState | null;
+  structured: ItemStructured | null;
 }
 
 /** A section grouped for rendering/editing: its metadata + ordered items.
@@ -71,6 +84,11 @@ export interface SubprofileView {
   affiliations: AffiliationDTO[];
   endorsementCount: number;
   followerCount: number;
+  skinData: SkinData | null;
+  /** Co-owner headcount (creator + accepted invitees) — see `SubprofileDTO.memberCount`.
+   *  Never less than 1. Drives the dashboard `SideCard`'s co-owner meta, shown
+   *  only when greater than 1. */
+  memberCount: number;
 }
 
 /** Public view model (from SubprofilePublicDTO); owner fields only when linked. */
@@ -90,6 +108,12 @@ export interface PublicSubprofileView {
   ctaUrl: string;
   socialLinks: SocialLinkDTO[];
   linkVisibility: LinkVisibility;
+  /** Phase 1b: present on every public view now (mirrors the wire DTO).
+   *  Only ever `"draft"` when the viewer is the owner/co-owner previewing
+   *  their own unpublished persona — every other viewer only ever reaches
+   *  an `"ok"` result with `status: "published"` (see `usePublicSubprofile`'s
+   *  `resolvePublicAccess` mirroring). Drives `SubprofileDraftBanner`. */
+  status: SubprofileStatus;
   ownerSlug?: string;
   ownerName?: string;
   sections: SubprofileSectionView[];
@@ -103,6 +127,7 @@ export interface PublicSubprofileView {
    *  persona? Drives the "edit" affordance on a nested persona shown on a
    *  co-owner's profile (in addition to the owner's own `isSelf` view). */
   viewerIsMember: boolean;
+  skinData: SkinData | null;
 }
 
 /** Per-persona owner-only metadata (status/visibility/position/id), threaded
@@ -133,6 +158,15 @@ function itemToView(dto: SubprofileItemDTO): SubprofileItemView {
     tags: dto.tags ?? [],
     isFeatured: dto.isFeatured ?? false,
     collaborators: dto.collaborators ?? [],
+    venue: dto.venue ?? null,
+    doors: dto.doors ?? null,
+    ticketUrl: dto.ticketUrl ?? null,
+    gigState: dto.gigState ?? null,
+    medium: dto.medium ?? null,
+    dimensions: dto.dimensions ?? null,
+    edition: dto.edition ?? null,
+    workState: dto.workState ?? null,
+    structured: dto.structured ?? null,
   };
 }
 
@@ -195,6 +229,8 @@ export function subprofileToView(dto: SubprofileDTO): SubprofileView {
     affiliations: dto.affiliations ?? [],
     endorsementCount: dto.endorsementCount,
     followerCount: dto.followerCount,
+    skinData: dto.skinData ?? null,
+    memberCount: dto.memberCount ?? 1,
   };
 }
 
@@ -218,6 +254,7 @@ export function publicSubprofileToView(
     ctaUrl: dto.ctaUrl ?? "",
     socialLinks: dto.socialLinks,
     linkVisibility: dto.linkVisibility,
+    status: dto.status,
     ...(dto.ownerSlug !== undefined ? { ownerSlug: dto.ownerSlug } : {}),
     ...(dto.ownerName !== undefined ? { ownerName: dto.ownerName } : {}),
     sections: buildSections(dto.items, dto.kind),
@@ -228,6 +265,7 @@ export function publicSubprofileToView(
     followerCount: dto.followerCount,
     viewerFollowing: dto.viewerFollowing,
     viewerIsMember: dto.viewerIsMember,
+    skinData: dto.skinData ?? null,
   };
 }
 
@@ -259,6 +297,7 @@ export function ownerViewToShowcaseView(
     ctaUrl: view.ctaUrl,
     socialLinks: view.socialLinks,
     linkVisibility: view.linkVisibility,
+    status: view.status,
     ownerSlug: selfOwnerSlug,
     sections: view.sections,
     featured: view.featured,
@@ -271,6 +310,7 @@ export function ownerViewToShowcaseView(
     // showcase already renders edit controls via `isSelf` here, but keeping
     // this accurate avoids a silently-wrong flag on the shared view model.
     viewerIsMember: true,
+    skinData: view.skinData,
   };
 }
 
@@ -278,7 +318,12 @@ export function ownerViewToShowcaseView(
 
 /** Map one section's edited items to the `PUT /subprofiles/:id/sections/:section`
  *  `items` payload. `section` travels in the URL, not the body; empty optional
- *  fields are omitted (mirrors `workToDto`). */
+ *  fields are omitted (mirrors `workToDto`). Forwards the Phase-0 rich fields
+ *  (venue/doors/ticketUrl/gigState/medium/dimensions/edition/workState/
+ *  structured) unchanged so a section resave never silently drops them —
+ *  the editor drawer (Phase 3) only sets a subset per section via
+ *  `richFields.data.ts`, but every rich field a view item carries (incl. the
+ *  nested `structured.courses`, not yet editable) round-trips here. */
 export function itemsToInputDto(
   items: SubprofileItemView[],
 ): SubprofileItemInputDTO[] {
@@ -295,5 +340,14 @@ export function itemsToInputDto(
     ...(i.collaborators.length
       ? { collaborators: i.collaborators.map((collaborator) => collaborator.handle) }
       : {}),
+    ...(i.venue ? { venue: i.venue } : {}),
+    ...(i.doors ? { doors: i.doors } : {}),
+    ...(i.ticketUrl ? { ticketUrl: i.ticketUrl } : {}),
+    ...(i.gigState ? { gigState: i.gigState } : {}),
+    ...(i.medium ? { medium: i.medium } : {}),
+    ...(i.dimensions ? { dimensions: i.dimensions } : {}),
+    ...(i.edition ? { edition: i.edition } : {}),
+    ...(i.workState ? { workState: i.workState } : {}),
+    ...(i.structured ? { structured: i.structured } : {}),
   }));
 }

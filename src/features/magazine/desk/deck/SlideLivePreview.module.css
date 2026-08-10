@@ -1,0 +1,119 @@
+/* Deck editor rail card: live slide preview + dot navigation.
+   Design tokens only — no hex. Mirrors the `.card` rail pattern shared by
+   the desk's other rail cards (see `desk/pieceTabs.module.css`). */
+
+.card {
+  padding: 18px;
+  border-radius: 18px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card h3 {
+  font-size: 12px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-40);
+  margin: 0;
+}
+
+/* 4:5 "phone" frame — narrower and taller than the reader's own 16:9 stage
+   (`DeckPage.module.css` `.stage`) on purpose: the rail is a narrow column,
+   and the budget hints (Task 2) are framed around "does this fit on a
+   phone", which a portrait frame communicates better than a wide one.
+   `overflow: hidden` is still the last-resort backstop for anything not
+   covered by the sizing below, but it's no longer doing the main work: the
+   reader's own type sizes are viewport-width `clamp()`s (see
+   `DeckSlides.module.css`'s header comment) sized for a full-bleed stage —
+   in this ~300px column they'd render near their vw-clamp MAX and visibly
+   clip. `container-type: inline-size` turns this frame into a query
+   container, and the `--deck-slide-*` custom properties below (read by
+   `DeckSlides.module.css` in preference to its own hardcoded vw-clamps)
+   rescale every reader slide's type to the container's actual width
+   (`cqw`) instead of the viewport's — so headings/body/stat/reveal text
+   fits the narrow rail on any viewport, without touching the reader. */
+.frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  container-type: inline-size;
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  background: var(--paper);
+  box-shadow: var(--shadow-card);
+  --deck-slide-pad: clamp(14px, 6cqw, 28px);
+  --deck-slide-heading-size: clamp(18px, 9cqw, 30px);
+  --deck-slide-body-size: clamp(11px, 3.6cqw, 14px);
+  --deck-slide-pull-size: clamp(15px, 7cqw, 22px);
+  --deck-slide-overlay-size: clamp(12px, 4.5cqw, 17px);
+  --deck-slide-stat-value-size: clamp(32px, 20cqw, 58px);
+  --deck-slide-stat-unit-size: clamp(12px, 4.5cqw, 17px);
+  --deck-slide-reveal-prompt-size: clamp(15px, 6.5cqw, 22px);
+}
+
+.frameEmpty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  margin: 0;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+
+/* ── Prev/Next + dot navigation ── the dots mirror DeckControls' dot pattern
+   (44px tap target around an 8px visual mark); the flanking Prev/Next
+   buttons are a quicker way to step through than hunting for a dot on a
+   40-slide deck. */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.dot::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-avatar);
+  background: rgba(var(--plum-rgb), 0.25);
+  transition: background var(--dur-fast) var(--ease-std);
+}
+.dot:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-avatar);
+}
+.dotOn::before {
+  background: var(--plum);
+}

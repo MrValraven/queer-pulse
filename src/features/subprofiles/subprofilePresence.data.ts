@@ -21,3 +21,15 @@ export const AVAILABILITY_OPTIONS: { value: AvailabilityKey; labelKey: string }[
   { value: "booking", labelKey: "subprofiles:availability.booking" },
   { value: "not_available", labelKey: "subprofiles:availability.notAvailable" },
 ];
+
+/** `.pill` colour modifier per availability state, for the dashboard
+ *  `SideCard`'s compact avail pill (a `.pill`-shaped alternative to
+ *  `SubprofileAvailability`'s dot+label, sized for the card's tight footer
+ *  row). Open reads positive (jade), booking reads as an active call-to-action
+ *  (coral), and not-available stays neutral (muted) — never colour-only, the
+ *  pill always carries its `AVAILABILITY_OPTIONS` label text too. */
+export const AVAILABILITY_PILL_TONE: Record<AvailabilityKey, "jade" | "coral" | "muted"> = {
+  open_to_collabs: "jade",
+  booking: "coral",
+  not_available: "muted",
+};

@@ -1,0 +1,27 @@
+/* Small bespoke styles shared by the writer-workspace cards (AssignmentCard,
+   WriterPitchesTab, WriterPaymentsTab) that `desk/pieceTabs.module.css`
+   doesn't already provide — a space-between head row and its eyebrow label.
+   Card/kv/simrow/progress-bar styles are reused directly from
+   `pieceTabs.module.css`, not duplicated here. */
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-40);
+}
+
+.badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

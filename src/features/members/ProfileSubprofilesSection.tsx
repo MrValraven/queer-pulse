@@ -1,6 +1,7 @@
 import { FiLayers } from "react-icons/fi";
-import { EmptyState } from "../../shared/components/ui";
+import { Button, EmptyState, Eyebrow } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { useNudges } from "../../app/providers/useNudges";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useProfileSubprofiles } from "../subprofiles/api/usePublicSubprofile";
@@ -11,6 +12,7 @@ import {
 } from "../subprofiles/api/subprofiles.adapters";
 import { SubprofileShowcase } from "../subprofiles/SubprofileShowcase";
 import { Section } from "./ProfileSections";
+import styles from "./ProfileSubprofilesSection.module.css";
 
 /**
  * The main profile's "Also as…" block. Shows the owner's LINKED + published
@@ -20,7 +22,7 @@ import { Section } from "./ProfileSections";
  * The personas render as a featured-hero + switch list ({@link SubprofileShowcase})
  * that collapses into a filterable index once there are many. Public view with
  * none → renders nothing. Self view's dashboard link lives in the switch
- * list's own header ("Add another side" — {@link SubprofileSwitchHeader}), so
+ * list's own header ("Add another persona" — `SubprofileSwitchHeader`), so
  * this section doesn't repeat a second link to the same destination. When
  * empty, shows a gentle prompt to create one.
  */
@@ -92,23 +94,73 @@ export function ProfileSubprofilesSection({
             ownerMetaBySlug={isSelf ? ownerMetaBySlug : undefined}
           />
         ) : (
-          <EmptyState
-            compact
-            icon={<FiLayers />}
-            title={
-              <Translation
-                i18nKey="subprofiles:alsoAs.empty.title"
-                components={{ em: <em /> }}
-              />
-            }
-            description={t("subprofiles:alsoAs.empty.description")}
-            action={{
-              label: t("subprofiles:alsoAs.empty.cta"),
-              to: routes.subprofilesDashboard,
-            }}
-          />
+          // isSelf is guaranteed here: the early return above already sent a
+          // visitor viewing an empty profile to `null`.
+          <SidesPrompt />
         )}
       </Section>
+    </div>
+  );
+}
+
+/**
+ * The self+empty "SidesPrompt" nudge (personas Phase 5, Decision §5): a
+ * stronger, more inviting treatment than a neutral empty state — inviting
+ * the owner to give a second craft its own persona page. Dismissible for
+ * good (`nudge_key: "profile_empty"`) via the shared discovery-moment store;
+ * once dismissed, or once the member has dismissed 2 other discovery
+ * moments (the shared cap), it quietly degrades back to the original plain
+ * `EmptyState` — still a working path to create a persona, just without the
+ * nudge framing.
+ */
+function SidesPrompt() {
+  const { t } = useTranslation();
+  const { isDismissed, isCapped, dismiss } = useNudges();
+
+  if (isDismissed("profile_empty") || isCapped) {
+    return (
+      <EmptyState
+        compact
+        icon={<FiLayers />}
+        title={
+          <Translation
+            i18nKey="subprofiles:alsoAs.empty.title"
+            components={{ em: <em /> }}
+          />
+        }
+        description={t("subprofiles:alsoAs.empty.description")}
+        action={{
+          label: t("subprofiles:alsoAs.empty.cta"),
+          to: routes.subprofilesDashboard,
+        }}
+      />
+    );
+  }
+
+  return (
+    <div className={styles.sidesPrompt}>
+      <Eyebrow>{t("subprofiles:alsoAs.sidesPrompt.eyebrow")}</Eyebrow>
+      <h3 className={styles.heading}>
+        <Translation
+          i18nKey="subprofiles:alsoAs.sidesPrompt.heading"
+          components={{ em: <em /> }}
+        />
+      </h3>
+      <p className={styles.description}>
+        {t("subprofiles:alsoAs.sidesPrompt.description")}
+      </p>
+      <div className={styles.actions}>
+        <Button variant="primary" size="sm" to={routes.subprofilesDashboard}>
+          {t("subprofiles:alsoAs.sidesPrompt.cta")}
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => dismiss("profile_empty")}
+        >
+          {t("subprofiles:alsoAs.sidesPrompt.notNow")}
+        </Button>
+      </div>
     </div>
   );
 }

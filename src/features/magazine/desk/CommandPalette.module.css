@@ -1,0 +1,127 @@
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  display: flex;
+  justify-content: center;
+  padding: 14vh 24px 24px;
+  background: rgba(var(--plum-rgb), 0.42);
+  backdrop-filter: blur(2px);
+  animation: paletteScrimIn 0.2s var(--ease, ease);
+}
+
+@keyframes paletteScrimIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.palette {
+  width: 100%;
+  max-width: 560px;
+  max-height: min(60svh, 520px);
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-toast);
+  overflow: hidden;
+  animation: paletteIn 0.22s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
+}
+
+@keyframes paletteIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrim,
+  .palette {
+    animation: none;
+  }
+}
+
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-40);
+  flex: none;
+}
+
+.searchRow input {
+  flex: 1;
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 16px;
+  color: var(--ink);
+}
+
+.list {
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 12px;
+  color: var(--ink);
+  font-size: 14.5px;
+  text-align: left;
+  transition: background var(--dur-fast) var(--ease);
+}
+
+.row:hover,
+.row:focus-visible {
+  background: var(--wash);
+}
+
+.rowIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--wash);
+  color: var(--plum);
+}
+
+.rowLabel {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowKind {
+  flex: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-40);
+}
+
+.noResults {
+  padding: 24px 12px;
+  text-align: center;
+  color: var(--ink-60);
+  font-size: 14px;
+}

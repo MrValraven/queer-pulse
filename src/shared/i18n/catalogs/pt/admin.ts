@@ -273,9 +273,9 @@ export const admin: Catalog = {
   "members.timeline.auditLinkCta": "Todas as entradas no registo de auditoria",
 
   "members.sealed.sectionTitle": "Identidade e privacidade",
-  "members.sealed.title": "A identidade anterior está selada",
+  "members.sealed.title": "Nenhum nome anterior é guardado",
   "members.sealed.body":
-    "Qualquer nome anterior é encriptado e não é mostrado a ninguém — nem em denúncias, nem aqui, nem à administração. Só a pessoa controla o nome escolhido.",
+    "A QueerPulse não guarda registo do nome anterior de ninguém — é por isso que nada aparece aqui. Nunca surge numa denúncia, nesta vista, nem para a administração. A própria pessoa decide como é conhecida.",
 
   "members.message.eyebrow": "A entrar em contacto",
   "members.message.title": "Mensagem para <em>{name}</em>",
@@ -647,6 +647,41 @@ export const admin: Catalog = {
   "adminListings.history.event.answered": "{actor} respondeu a uma pergunta.",
   "adminListings.history.askedBy": "Perguntado por {actor}",
   "adminListings.history.awaitingReply": "A aguardar resposta",
+
+  // ── Imagens enviadas (consola de media do admin) ─────────────────────────
+  "media.title": "Imagens <em>enviadas</em>",
+  "media.header.eyebrow": "Ferramenta de segurança",
+  "media.header.title": "Imagens <em>enviadas</em>",
+  "media.header.sub":
+    "Todos os objetos guardados no bucket de uploads da plataforma, com dono e detalhes de armazenamento por ficheiro para revisão de segurança.",
+  "media.filterAriaLabel": "Filtrar por tipo de upload",
+  "media.kinds.all": "Tudo",
+  "media.kinds.avatars": "Avatares",
+  "media.kinds.work": "Imagens de trabalho",
+  "media.kinds.story-covers": "Capas de história",
+  "media.kinds.gathering-photos": "Fotos de encontros",
+  "media.kinds.group-avatars": "Avatares de grupo",
+  "media.kinds.listing-photos": "Fotos de espaços",
+  "media.unowned": "Sem dono",
+  "media.unknown": "Desconhecido",
+  "media.loadMore": "Ver mais",
+  "media.openFile": "Abrir URL do ficheiro",
+  "media.copyPresigned": "Copiar URL assinado",
+  "media.copyKey": "Copiar chave",
+  "media.copiedPresigned": "URL assinado copiado",
+  "media.copiedKey": "Chave copiada",
+  "media.inspectRealType": "Inspecionar tipo real",
+  "media.spoofWarning": "não corresponde à extensão",
+  "media.field.key": "Chave de armazenamento",
+  "media.field.uploader": "Quem enviou",
+  "media.field.declaredType": "Tipo declarado (pela extensão)",
+  "media.field.realType": "Tipo real guardado",
+  "media.drawer.ariaLabel": "Detalhes do objeto",
+  "media.empty.title": "Sem objetos",
+  "media.empty.body": "Ainda não há nada guardado neste tipo.",
+  "media.demo.title": "Disponível apenas no modo ao vivo",
+  "media.demo.body":
+    "As imagens enviadas vêm do bucket de armazenamento ao vivo, por isso não há nada para mostrar no modo de demonstração.",
 
   // ── Sugestões de edição ──────────────────────────────────────────────────────
   "editSuggestions.empty": "Sem correções neste filtro, por agora.",
@@ -2500,4 +2535,87 @@ export const admin: Catalog = {
   "landing.hidden.unpublished": "Oculto — despublicado",
   "landing.hidden.not_public": "Oculto — já não é público",
   "landing.hidden.deleted": "Oculto — perfil eliminado",
+
+  // ── Kit de imprensa (/admin/press-kit) ────────────────────────────────────
+  "pressKit.header.eyebrow": "Site público",
+  "pressKit.header.sub":
+    "Faz a curadoria da cobertura de imprensa e dos contactos mostrados no kit de imprensa público.",
+
+  "pressKit.tabs.coverage": "Cobertura",
+  "pressKit.tabs.team": "Equipa",
+
+  "pressKit.fields.source": "Publicação",
+  "pressKit.fields.sourcePlaceholder": "ex.: Público",
+  "pressKit.fields.publishedOn": "Publicado",
+  "pressKit.fields.publishedOnPlaceholder": "ex.: 4 mar 2026",
+  "pressKit.fields.title": "Título",
+  "pressKit.fields.titlePlaceholder": "O título da peça, tal como publicado.",
+  "pressKit.fields.meta": "Detalhe",
+  "pressKit.fields.metaHelper":
+    "Autoria, extensão ou formato — mostrado sob o título.",
+  "pressKit.fields.metaPlaceholder": "ex.: Reportagem longa · por Ana Sá Lopes",
+  "pressKit.fields.url": "Ligação",
+  "pressKit.fields.urlHelper":
+    "Opcional — deixa em branco se não houver versão online.",
+  "pressKit.fields.urlPlaceholder": "https://…",
+  "pressKit.fields.name": "Nome",
+  "pressKit.fields.namePlaceholder": "ex.: Marta Reis",
+  "pressKit.fields.role": "Função",
+  "pressKit.fields.rolePlaceholder": "ex.: Fundadora e diretora",
+  "pressKit.fields.description": "Sobre o que fala",
+  "pressKit.fields.descriptionPlaceholder":
+    "ex.: Fala sobre estratégia, financiamento e a história da plataforma.",
+  "pressKit.fields.email": "Email",
+  "pressKit.fields.emailPlaceholder": "nome@queerpulse.app",
+  "pressKit.fields.languages": "Línguas",
+  "pressKit.fields.languagesPlaceholder": "ex.: EN / PT",
+  "pressKit.fields.avatarUrl": "Foto",
+  "pressKit.fields.avatarUrlHelper": "Opcional — uma ligação para a fotografia.",
+  "pressKit.fields.avatarUrlPlaceholder": "https://…",
+
+  "pressKit.add.coverage.cta": "Adicionar cobertura",
+  "pressKit.add.coverage.submit": "Adicionar ao kit",
+  "pressKit.add.coverage.toast": "Cobertura adicionada",
+  "pressKit.add.coverage.error": "Não foi possível adicionar — tenta de novo",
+  "pressKit.add.team.cta": "Adicionar contacto",
+  "pressKit.add.team.submit": "Adicionar ao kit",
+  "pressKit.add.team.toast": "Contacto adicionado",
+  "pressKit.add.team.error": "Não foi possível adicionar — tenta de novo",
+
+  "pressKit.list.inactivePill": "Oculto por ti",
+  "pressKit.list.previewEmpty": "Ainda sem detalhe.",
+  "pressKit.list.moveUpAria": "Mover {name} para cima",
+  "pressKit.list.moveDownAria": "Mover {name} para baixo",
+  "pressKit.list.activeToggleAria": "Mostrar {name} no kit de imprensa público",
+  "pressKit.list.activeToggleLabel": "Visível",
+  "pressKit.list.activeToggleError": "Não foi possível atualizar — tenta de novo",
+  "pressKit.list.reorderError": "Não foi possível reordenar — tenta de novo",
+  "pressKit.list.empty.coverage.title": "Ainda sem cobertura em destaque",
+  "pressKit.list.empty.coverage.body":
+    "Adiciona uma peça de imprensa acima para a mostrar no kit público.",
+  "pressKit.list.empty.team.title": "Ainda sem contactos listados",
+  "pressKit.list.empty.team.body":
+    "Adiciona um contacto de imprensa acima para as jornalistas saberem a quem chegar.",
+
+  "pressKit.editor.edit": "Editar",
+  "pressKit.editor.close": "Fechar",
+  "pressKit.editor.save": "Guardar",
+  "pressKit.editor.savedToast": "Guardado",
+  "pressKit.editor.saveError": "Não foi possível guardar — tenta de novo",
+
+  "pressKit.remove.cta": "Remover",
+  "pressKit.remove.confirm": "Remover",
+  "pressKit.remove.toast": "Removido do kit de imprensa",
+  "pressKit.remove.error": "Não foi possível remover — tenta de novo",
+  "pressKit.remove.coverage.title": "Remover esta cobertura?",
+  "pressKit.remove.coverage.body":
+    "Deixará de aparecer no kit de imprensa público. Podes voltar a adicioná-la mais tarde.",
+  "pressKit.remove.team.title": "Remover este contacto?",
+  "pressKit.remove.team.body":
+    "Deixará de aparecer no kit de imprensa público. Podes voltar a adicioná-lo mais tarde.",
+
+  "pressKit.facts.title": "Factos (auto)",
+  "pressKit.facts.sub":
+    "Derivados dos dados da plataforma — mostrados no kit público, não editáveis aqui.",
+  "pressKit.facts.empty": "Ainda sem factos disponíveis.",
 };

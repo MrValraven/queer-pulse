@@ -1,8 +1,10 @@
 /*
- * Shared styles for the deck-authoring editor (DeckEditorPage + its
- * sub-components: DeckMetaForm now, DeckSlidesEditor / SlideEditorCard /
- * DeckEditorPreview in a later task). Keep this file appendable — later
- * tasks add classes here rather than opening a second module.
+ * Shared styles for the deck-authoring editor: the generic meta-form
+ * control styles (`DeckMetaForm`) and the page-shell chrome (`.ebar`/
+ * `.ework`/`.erail`, `DeckEditorPage`'s own `.metaCard`) below. Slide-card
+ * styling lives in `DeckSlidesEditor.module.css`/`SlideEditorCard.module.css`/
+ * `desk/deck/SlideFields.module.css`, and the live preview + publish rail +
+ * danger card each own their module under `desk/deck/`.
  */
 
 .form {
@@ -103,190 +105,126 @@
   }
 }
 
-/* ── Slides editor (DeckSlidesEditor + SlideEditorCard) ──────────────── */
+/* Slide-list / slide-card styling used to live here (DeckSlidesEditor +
+   SlideEditorCard) — Phase-4 Task 2 gave both their own dedicated modules
+   (DeckSlidesEditor.module.css, SlideEditorCard.module.css,
+   desk/deck/SlideFields.module.css) as part of the restyle+split, so this
+   file only carries the generic meta-form control styles (still used by
+   DeckMetaForm) and the page-shell styles below. */
 
-.slideList {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+/* ── Editor page shell (DeckEditorPage) ───────────────────────────────────
+   Ported from `ArticleEditorPage.module.css`'s `.ebar`/`.ework`/`.erail`
+   chrome (Phase 4 Task 3 restyle) — same chrome family across the desk's
+   editors, using repo design tokens. */
+
+.page {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 0 80px;
 }
 
-.slideCard {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  background: color-mix(in srgb, var(--plum) 2.5%, var(--cream));
-  border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 16px;
-  padding: 18px;
-}
-
-.slideHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.slideName {
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--ink);
-}
-
-.slideControls {
+.ebar {
+  position: sticky;
+  top: 76px;
+  z-index: 20;
   display: flex;
   align-items: center;
-  gap: 6px;
-}
-
-.moveBtn,
-.removeBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  font-size: 16px;
-  line-height: 1;
-  border-radius: 9px;
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  background: var(--paper);
-  color: var(--ink-60);
-  cursor: pointer;
-  transition: border-color 0.2s var(--ease);
-}
-
-.removeBtn {
-  color: var(--accent-ink);
-}
-
-.moveBtn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-@media (hover: hover) {
-  .moveBtn:not(:disabled):hover,
-  .removeBtn:hover {
-    border-color: var(--line-strong);
-    color: var(--ink);
-  }
-}
-
-.moveBtn:focus-visible,
-.removeBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.slideBody {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.slideGroup {
-  display: flex;
-  flex-direction: column;
   gap: 12px;
-  padding: 14px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  padding: 12px 26px;
+  background: rgba(var(--cream-rgb), 0.9);
+  backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }
 
-.slideGroupTitle {
-  margin: 0;
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--ink-60);
-}
-
-.addSlide {
+.title {
   display: flex;
-  align-items: flex-end;
-  gap: 16px;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.title b {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.titleSub {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.right {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex: none;
   flex-wrap: wrap;
 }
 
-.addSlide .field {
-  min-width: 220px;
-}
-
-/* ── Editor page shell (DeckEditorPage) ───────────────────────────────── */
-
-.page {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 40px 28px 120px;
-}
-
-.editorHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding-bottom: 20px;
-  margin-bottom: 24px;
-  border-bottom: 2px solid var(--line-strong);
-}
-
-.editorHead h1 {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: 26px;
-  color: var(--ink);
-}
-
-.editorGrid {
+.ework {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 330px;
   gap: 28px;
   align-items: start;
+  padding: 30px 26px 0;
 }
 
-@media (max-width: 900px) {
-  .editorGrid {
+@media (max-width: 1100px) {
+  .ework {
     grid-template-columns: 1fr;
   }
 }
 
-.pane {
+.left {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 20px;
 }
 
-.preview {
-  position: sticky;
-  top: 24px;
-}
-
-.actions {
+.erail {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  flex-direction: column;
+  gap: 14px;
+  position: sticky;
+  top: 150px;
 }
 
-.previewFrame {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow-card);
+@media (max-width: 700px) {
+  .ebar {
+    top: 64px;
+    flex-wrap: wrap;
+  }
+
+  .erail {
+    position: static;
+  }
+}
+
+.metaCard {
   padding: 18px;
+  border-radius: 18px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.previewEmpty {
+.metaCard h3 {
   margin: 0;
-  padding: 40px 20px;
-  text-align: center;
-  font-size: 13.5px;
+  font-size: 12px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 700;
   color: var(--ink-40);
 }

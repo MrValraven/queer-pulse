@@ -14,6 +14,60 @@
   margin-block: 0 24px;
 }
 
+/* ── Text search ──
+   Labelled search field above the org chips, filtering the already-loaded
+   `events` client-side (see BrowseView's `filtered` memo). Label/input sizing
+   mirrors the shared FormField pattern (uppercase caption label, 16px input
+   text to avoid iOS zoom-on-focus) so it reads as the same form language as
+   the rest of the app. */
+.search {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-block-end: 20px;
+  max-width: 420px;
+}
+
+.searchLabel {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.searchInput {
+  font-family: var(--sans);
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-panel);
+  padding-block: 11px;
+  padding-inline: 16px;
+  min-block-size: 44px;
+  width: 100%;
+  outline: none;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+
+.searchInput::placeholder {
+  color: var(--ink-40);
+}
+
+.searchInput:focus {
+  border-color: var(--line-strong);
+  background: var(--paper);
+}
+
+.searchInput:focus-visible {
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.25);
+}
+
 /* ── Filter chips ── */
 .filters {
   display: flex;
@@ -126,7 +180,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .chip {
+  .chip,
+  .searchInput {
     transition: none;
   }
 }

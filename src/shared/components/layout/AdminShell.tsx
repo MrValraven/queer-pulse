@@ -5,6 +5,7 @@ import { useTheme } from "../../../app/providers/themeContext";
 import { useToast } from "../feedback/useToast";
 import { useTranslation } from "../../i18n/useTranslation";
 import { useMediaQuery, useScrollLock } from "../../hooks";
+import { mediaMax } from "../../theme/breakpoints";
 import { AdminSidebar } from "./AdminSidebar";
 import { useNavDrawerFocus } from "./useNavDrawerFocus";
 import styles from "./AdminShell.module.css";
@@ -15,7 +16,7 @@ export { ADMIN_NAV } from "./adminNav.data";
 const SIDEBAR_DRAWER_ID = "admin-sidebar-drawer";
 
 /** Mirrors the CSS `@media (max-width: 900px)` where the sidebar goes off-canvas. */
-const MOBILE_QUERY = "(max-width: 900px)";
+const MOBILE_QUERY = mediaMax("wide");
 
 interface Crumb {
   label: string;

@@ -18,6 +18,14 @@
   gap: 28px;
 }
 
+/* Wraps the Editor A `.ed-shell` (Task 4): full `wrap`-width, unlike the
+   760px-capped `.container` above (still used for the narrower back-link +
+   title header). Just spacing — the shell's own width/columns come from
+   `persona-editor.css`. */
+.shellWrap {
+  margin-top: 28px;
+}
+
 .backLink {
   display: inline-flex;
   align-items: center;
@@ -72,13 +80,13 @@
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card, 22px);
-  padding: clamp(18px, 3vw, 28px);
+  padding: clamp(var(--card-pad), 3vw, var(--card-pad-lg));
 }
 .cardHead {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 18px;
+  margin-bottom: var(--gap-grid);
 }
 .cardIcon {
   display: inline-flex;
@@ -113,15 +121,15 @@
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 20px;
+  margin-top: var(--gap-grid);
 }
 
 /* ── Image / avatar upload field ─────────────────────────────────────────── */
 .imgField {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 16px;
+  gap: var(--gap-sm);
+  margin-bottom: var(--gap-grid);
 }
 .avatarField {
   align-items: flex-start;
@@ -170,7 +178,7 @@
 .itemsWrap {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--gap-grid);
 }
 .sectionFoot {
   display: flex;
@@ -178,7 +186,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-top: 18px;
+  margin-top: var(--gap-grid);
 }
 .addBtn {
   display: inline-flex;
@@ -227,14 +235,14 @@
   background: color-mix(in srgb, var(--plum) 2.5%, var(--cream));
   border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 16px;
-  padding: 16px;
+  padding: var(--card-pad);
 }
 .itemHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin-bottom: 12px;
+  margin-bottom: var(--gap-sm);
 }
 .itemNum {
   font-size: 12px;
@@ -349,7 +357,7 @@
   flex-wrap: wrap;
 }
 .checklistWrap {
-  margin-top: 20px;
+  margin-top: var(--gap-grid);
 }
 
 /* ── Loading / not-found states ──────────────────────────────────────────── */

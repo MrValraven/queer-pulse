@@ -12,6 +12,16 @@ const SubmitStoryPage = lazyNamed(() => import("./SubmitStoryPage"), "SubmitStor
 const PitchTrackerPage = lazyNamed(() => import("./PitchTrackerPage"), "PitchTrackerPage");
 const EditorDashboardPage = lazyNamed(() => import("./EditorDashboardPage"), "EditorDashboardPage");
 const DeckEditorPage = lazyNamed(() => import("./DeckEditorPage"), "DeckEditorPage");
+const PieceRecordPage = lazyNamed(() => import("./PieceRecordPage"), "PieceRecordPage");
+const WriterWorkspacePage = lazyNamed(
+  () => import("./WriterWorkspacePage"),
+  "WriterWorkspacePage",
+);
+const IssueProductionPage = lazyNamed(
+  () => import("./IssueProductionPage"),
+  "IssueProductionPage",
+);
+const ArticleEditorPage = lazyNamed(() => import("./ArticleEditorPage"), "ArticleEditorPage");
 
 // The three first-person stories are now regular data-driven articles in the
 // article registry; their legacy paths resolve to the generic ArticlePage.
@@ -54,7 +64,11 @@ export function magazineRoutes() {
       <Route path={routes.submitStory} element={<SubmitStoryPage />} />
       <Route path={routes.pitchTracker} element={<PitchTrackerPage />} />
       <Route path={routes.magazineEditor} element={<EditorDashboardPage />} />
+      <Route path={routes.magazineWriter} element={<WriterWorkspacePage />} />
       <Route path={routes.deckEditor} element={<DeckEditorPage />} />
+      <Route path={routes.magazinePiece} element={<PieceRecordPage />} />
+      <Route path={routes.magazineIssueProd} element={<IssueProductionPage />} />
+      <Route path={routes.magazineWrite} element={<ArticleEditorPage />} />
     </>
   );
 }

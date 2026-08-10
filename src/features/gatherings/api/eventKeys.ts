@@ -29,4 +29,9 @@ export const eventKeys = {
   attendeesRoot: ["attendees"] as const,
   attendees: (slug: string | undefined, demoMode: boolean) =>
     ["attendees", slug, demoMode] as const,
+
+  /** Prefix matching every event-lineup query (any slug, any mode). */
+  lineupRoot: ["event-lineup"] as const,
+  lineup: (slug: string | undefined, demoMode: boolean) =>
+    ["event-lineup", slug, demoMode] as const,
 };

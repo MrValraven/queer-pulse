@@ -1446,6 +1446,7 @@ export const resources: Catalog = {
   "microGrants.apply.budget.stepSub":
     "Break your budget into line items. Be realistic — the panel prefers honest estimates to optimistic ones. Maximum €2,000 this round.",
   "microGrants.apply.budget.itemPlaceholder": "Line item (e.g. Print costs)",
+  "microGrants.apply.budget.amountLabel": "Amount in euros",
   "microGrants.apply.budget.addItemCta": "+ Add line item",
   "microGrants.apply.budget.totalLabel": "Total requested",
   "microGrants.apply.budget.hint":

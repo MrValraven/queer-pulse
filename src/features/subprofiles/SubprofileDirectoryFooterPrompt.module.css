@@ -1,0 +1,67 @@
+.prompt {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+  margin-block-start: var(--gap-grid);
+  padding: var(--gap-sm) 20px;
+  border-radius: var(--radius-panel);
+  border: 1px solid rgba(var(--accent-rgb), 0.2);
+  background: rgba(var(--accent-rgb), 0.05);
+}
+
+.icon {
+  flex: none;
+  font-size: 18px;
+  color: var(--accent);
+}
+
+.message {
+  flex: 1;
+  min-width: 220px;
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.message em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
+}
+
+.dismiss {
+  background: none;
+  border: none;
+  padding: 6px 4px;
+  font-size: 13px;
+  color: var(--ink-40);
+  cursor: pointer;
+}
+.dismiss:hover {
+  color: var(--ink-60);
+}
+
+/* Below the point where the icon + message no longer share a first line
+   comfortably, drop the vertical centering so the icon aligns with the
+   message's first line instead of the whole wrapped block, and let the
+   actions row take the full width rather than hugging the right edge. */
+@media (max-width: 480px) {
+  .prompt {
+    align-items: flex-start;
+  }
+  .icon {
+    margin-block-start: 2px;
+  }
+  .actions {
+    flex-basis: 100%;
+    justify-content: flex-start;
+  }
+}

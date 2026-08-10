@@ -4,8 +4,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./SubprofileShowcase.module.css";
 
 /**
- * The switch list's header row: a generic "More sides" label for a visitor,
- * or (self view) a live persona count plus an "Add another side" link to
+ * The switch list's header row: a generic "More personas" label for a visitor,
+ * or (self view) a live persona count plus an "Add another persona" link to
  * the dashboard. Extracted from `SubprofileSwitchList` to keep it under the
  * 200-line cap.
  */

@@ -9,9 +9,11 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { useMemberContact } from "../connect/useMemberContact";
 import { routes } from "../../app/routeMap";
 import { JoinVouchCallout } from "./JoinVouchCallout";
+import { MeetTheTable } from "./table/MeetTheTable";
 import { GatheringSidebar } from "./GatheringSidebar";
 import { GatheringBookmarkButton } from "./GatheringBookmarkButton";
 import { GatheringMoreRail } from "./GatheringMoreRail";
+import { GatheringLineupSection } from "./GatheringLineupSection";
 import {
   gatheringDetails,
   gatheringKind,
@@ -166,9 +168,21 @@ export function GatheringPage() {
                 </Button>
               </div>
 
+              {/* "Meet the table" is demo-only: the backend exposes no seat /
+                  attendee data yet, so live mode omits it rather than leak the
+                  mock seats into production. */}
+              {demoMode && gathering.type === "Supper Club" && (
+                <MeetTheTable
+                  title={gathering.title}
+                  neighbourhood={gathering.hood}
+                />
+              )}
+
               <div className={styles.calloutWrap}>
                 <JoinVouchCallout />
               </div>
+
+              <GatheringLineupSection gathering={gathering} />
             </div>
 
             <GatheringSidebar

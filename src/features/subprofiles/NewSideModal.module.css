@@ -1,0 +1,308 @@
+/* Create-flow wizard (NewSideModal + NewSideStepCraft + NewSideStepIdentity +
+   StartMethodPicker + CopySourcePicker + CopyModePreview). Ported from the
+   design prototype's `.seg`/`.fams`/`.fam`/`.kinds`/`.kind`/`.choices`/
+   `.choice`/`.handlestate` (see personas-base-design/personas.css) — class
+   names here are camelCased for the CSS Module but the shapes match 1:1. */
+
+/* Wraps each step's content inside the shared `<Modal>`'s body. The shared
+   `.modalBody` (Modal.module.css, owned elsewhere) is the single scroll
+   surface but isn't itself a flex column with a gap — the ground-truth
+   `.modal-body` is (`display:flex;flex-direction:column;gap:22px`, see
+   personas.css:129). This wrapper reproduces that rhythm between the
+   craft/blank/copy picker, the family list (or copy pickers), and the live
+   summary line — otherwise those blocks sit flush against each other. */
+.stepBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+}
+
+.stepLabel {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  /* Breathing room to the control below (`.seg` / `.choices`) — the ground-truth
+     modal-body relies on a flex `gap` between siblings for this; `.stepBody`
+     below provides that rhythm between top-level blocks, but the label sits
+     directly above its own control *inside* one of those blocks, so it needs
+     its own small gap (matches FormField's label→control gap). */
+  margin-bottom: var(--gap-xs);
+}
+
+/* ── seg: By craft / Blank / Copy one ───────────────────────────────────── */
+.seg {
+  display: flex;
+  background: var(--wash);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+  border: 1px solid var(--line);
+}
+.segBtn {
+  flex: 1;
+  white-space: nowrap;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 8px 15px;
+  border-radius: 999px;
+  color: var(--ink-60);
+  /* Transparent over the `.seg` wash track — without this the two unselected
+     segments show native button chrome (no global <button> reset in this repo). */
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+.segBtn[aria-pressed="true"] {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 1px 3px rgba(var(--plum-rgb), 0.12);
+}
+.segBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.segBtn[disabled] {
+  opacity: 0.42;
+  pointer-events: none;
+}
+
+/* ── craft picker: family-grouped kinds ─────────────────────────────────── */
+/* No max-height/overflow here on purpose — the ground-truth prototype scrolls
+   the whole `.modal-body`, not this list separately (see personas.css:129,135).
+   A capped, independently-scrolling `.fams` nested inside the modal body (which
+   *also* scrolls) is a double-scroll trap: because `.fam` below needs
+   `overflow: hidden` to clip its header's background to the rounded corners,
+   giving `.fams` its own height cap made its flex column treat each `.fam`'s
+   automatic minimum size as 0 (the flexbox rule for non-visible-overflow flex
+   items) and shrink the cards below their content height instead of scrolling
+   — clipping the `.kinds` grid inside. Letting `.fams` grow to its natural
+   content height and leaving the scrolling to `.modalBody` (flex:1;
+   overflow-y:auto) removes the cap that triggered the shrink, so every family
+   card renders (and its kind chips stay clickable) and the whole step scrolls
+   as one surface, exactly like the design. */
+.fams {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+.fam {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  overflow: hidden;
+  /* Belt-and-braces: never let this card be shrunk below its content height by
+     an ancestor flex column, whatever height constraint it ends up under —
+     `overflow: hidden` above already makes it a shrink target (see note on
+     `.fams`), so pin it back to its natural size explicitly. */
+  flex-shrink: 0;
+}
+.famHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--wash);
+}
+.famHead b {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.famHead span {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  flex: 1;
+  /* Lets the note text wrap/shrink instead of forcing the row wider than the
+     card at narrow widths (default min-width:auto on a flex child blocks that). */
+  min-width: 0;
+}
+.kinds {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+  padding: 12px;
+}
+.kindBtn {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: start;
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .kindBtn:hover {
+    border-color: var(--line-2);
+    background: var(--wash);
+  }
+}
+.kindBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.kindBtn svg {
+  flex: none;
+  color: var(--ink-40);
+}
+.kindBtnOn {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+.kindBtnOn svg {
+  color: var(--accent-ink);
+}
+
+/* ── live "what you get" summary line ───────────────────────────────────── */
+.craftSummary {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── copy-source picker + copy-mode preview (unchanged logic, restyled) ──── */
+.sourceList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.sourceBtn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--sans);
+  text-align: start;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 14px;
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .sourceBtn:hover {
+    border-color: var(--line-2);
+  }
+}
+.sourceBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.sourceBtnOn {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.sourceMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.sourceEmpty {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink-40);
+  margin: 0;
+}
+.copySummary {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  margin: 8px 0 0;
+}
+
+/* ── identity step: linked/unlinked choice cards ────────────────────────── */
+.choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 480px) {
+  .choices {
+    grid-template-columns: 1fr;
+  }
+}
+.choice {
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  padding: 18px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--paper);
+  transition: border-color 0.2s var(--ease);
+  width: 100%;
+}
+@media (hover: hover) {
+  .choice:hover {
+    border-color: var(--line-2);
+  }
+}
+.choice[aria-checked="true"] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+.choiceTitle {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--ink);
+}
+.choiceDesc {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+.choiceCode {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  background: var(--wash);
+  padding: 3px 7px;
+  border-radius: 6px;
+  align-self: flex-start;
+}
+
+/* ── live handle-check line ──────────────────────────────────────────────── */
+.handlestate {
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.handlestateGood {
+  color: var(--jade-ink);
+}
+.handlestateBad {
+  color: var(--danger);
+}
+.handlestateIdle {
+  color: var(--ink-40);
+}

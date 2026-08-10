@@ -25,7 +25,7 @@ export function personaShareUrl(view: PublicSubprofileView): string {
 /**
  * Owner-dashboard variant: `SubprofileView` (the "my subprofiles" list) never
  * carries `ownerSlug` — every row is implicitly owned by the signed-in
- * member, so the caller (`MySubprofileRow`) passes that member's slug in from
+ * member, so the caller (`SideCard`) passes that member's slug in from
  * `useProfile()` rather than reading it off the row.
  */
 export function personaPublicPathForOwner(

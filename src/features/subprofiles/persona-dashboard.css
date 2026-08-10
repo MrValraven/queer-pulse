@@ -1,0 +1,475 @@
+/* QueerPulse personas — dashboard state chrome (Phase 2 Task 2).
+   Global, not a CSS module: `.sides`/`.side` are the shared card-grid
+   vocabulary later Phase-2 tasks (SideCard, dashboard assembly) build on
+   top of — same reasoning as persona-skins.css sitting outside the module
+   system. Ported from the staged prototype base stylesheet
+   (scratchpad/personas-base-design/personas.css), mapped to repo tokens —
+   no bare hex, no invented skin colours (the empty-card skin-hint grounds
+   reuse the --skin-*-ground custom props hoisted once in persona-skins.css). */
+
+/* ── dashboard page header (Phase 2 Task 6 — MySubprofilesPage) ─────────
+   Sits at the top of the page's `.wrap`: serif h1 + sub on the left, the
+   "N of 12" count + primary "New persona" CTA on the right (that column's own
+   layout lives in `MySubprofilesPage.module.css`, scoped to this one page).
+   Global (not a module) so any future subprofiles surface reusing the same
+   header shape doesn't have to re-derive it. */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  flex-wrap: wrap;
+  /* Reserve the floating pill Navbar's band (--nav-top + --nav-height = 80px)
+     plus breathing room — otherwise the serif h1 renders clipped UNDER the
+     fixed nav (52px alone sat inside the 80px band). Matches the peer
+     AppShell convention (DirectorySpacePage/MobileProfile/ProfileEdit). On
+     mobile the slim app-bar swap in standalone.css pulls `main` up by the
+     difference, so reserving the full band here is correct at every width. */
+  padding: calc(var(--nav-top) + var(--nav-height) + var(--gap-grid)) 0 26px;
+}
+/* Below phone width the title block and the count/CTA column no longer sit
+   comfortably side by side — stack them so the title reads first and the
+   "New persona" CTA becomes a full-width, easy-to-hit thumb target (the
+   right-aligned column also stops looking orphaned once it's the only thing
+   on its row). `--bp-md` (640px) — the shared phone/single-column cutover. */
+@media (max-width: 640px) {
+  .page-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--gap-sm);
+    /* Still reserve the nav band (standalone.css compensates for the mobile
+       app-bar); only the breathing room + bottom padding tighten on phones. */
+    padding: calc(var(--nav-top) + var(--nav-height) + var(--gap-sm)) 0 20px;
+  }
+}
+.page-head h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--plum);
+}
+[data-theme="dark"] .page-head h1 {
+  color: var(--ink);
+}
+.page-head h1 em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+.page-head p {
+  color: var(--ink-60);
+  max-width: 46ch;
+  margin-top: 10px;
+  line-height: 1.55;
+}
+
+/* ── card grid + shell (LoadingSides skeletons sit inside this today; the
+   populated SideCard grid reuses the same `.sides`/`.side`/`.side-top`/
+   `.side-body`/`.side-av` shell later) ───────────────────────────────── */
+.sides {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--gap-grid);
+}
+@container (max-width: 760px) {
+  .sides {
+    grid-template-columns: 1fr;
+  }
+}
+
+.side {
+  /* Own containment context (nested inside `.dashboardContainer`'s, which
+     sizes `.sides`/`.empty-hero` off the page's own width): a card's action
+     row needs to react to the CARD's width, not the viewport or the grid
+     track — the same card is comfortably wide in a 2-up desktop grid and
+     uncomfortably narrow once the grid collapses to one column on a phone.
+     Scoped to this class only, never the shared global `.wrap`. */
+  container-type: inline-size;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  transition:
+    transform var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  .side:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .side {
+    transition: box-shadow var(--dur-base) var(--ease);
+  }
+  .side:hover {
+    transform: none;
+  }
+}
+.side-top {
+  height: 104px;
+  position: relative;
+  padding: var(--gap-sm) var(--card-pad);
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  /* Soft accent wash (never a fill — see the `SubprofileCard` `.header`
+     precedent) built from `--accent-tint`, set inline by `SideCard` from
+     `ACCENT_TOKENS[view.accent]`. `.side-draft` below
+     overrides this with the hatch pattern via selector specificity, so a
+     draft card never needs to skip setting these props itself. */
+  background:
+    radial-gradient(
+      120px 90px at 85% -20%,
+      color-mix(in srgb, var(--accent-tint, var(--plum)) 30%, transparent),
+      transparent 70%
+    ),
+    color-mix(in srgb, var(--accent-tint, var(--plum)) 10%, var(--paper));
+}
+.side-body {
+  padding: var(--card-pad-lg) var(--card-pad) var(--card-pad);
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+.side-av {
+  position: absolute;
+  top: -30px;
+  left: var(--card-pad);
+  width: 58px;
+  height: 58px;
+  border: 3px solid var(--paper);
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(var(--plum-rgb), 0.14);
+}
+.side-name {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--plum);
+  line-height: 1.1;
+  margin-top: 2px;
+}
+[data-theme="dark"] .side-name {
+  color: var(--ink);
+}
+.side-tag {
+  color: var(--ink-60);
+  font-size: 14px;
+  line-height: 1.45;
+}
+.side-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+.side-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+  align-items: center;
+  font-size: 12.5px;
+  color: var(--ink-40);
+  margin-top: auto;
+  padding-top: var(--gap-sm);
+}
+.side-acts {
+  display: flex;
+  gap: 6px;
+  padding: var(--gap-sm) var(--card-pad);
+  border-top: 1px solid var(--line);
+  background: var(--wash);
+}
+.side-acts > * {
+  flex: 1;
+  min-width: 0;
+}
+.side-acts .side-acts-quiet {
+  flex: none;
+}
+/* Crowding fix: Edit / View / Share (each a `min-width:0` flex-shrunk,
+   `white-space:nowrap` `<Button>`) plus the quiet delete icon have no room
+   left to breathe once the card itself narrows past ~340px — which is
+   exactly what happens on a phone once `.sides` collapses to one column
+   (a single-column card can be narrower than the grid's own 320px `minmax`
+   floor once `--wrap-px` is subtracted from a ~360px viewport). Query the
+   CARD's own width (`.side`'s containment above), not the viewport, since
+   the same crowding can happen in any narrow drop-in context: past that
+   point, wrap onto two rows of two equal-width buttons instead of letting
+   four items fight for a handful of shrunk pixels each. */
+@container (max-width: 340px) {
+  .side-acts {
+    flex-wrap: wrap;
+  }
+  .side-acts > * {
+    flex: 1 1 calc(50% - 3px);
+  }
+  .side-acts .side-acts-quiet {
+    flex: 1 1 calc(50% - 3px);
+  }
+}
+/* Draft cards swap the accent wash for a hatch pattern — beats `.side-top`'s
+   own background rule on specificity (0,2,0 vs 0,1,0) regardless of source
+   order, so `SideCard` can always set the accent custom props and let this
+   class decide whether they're actually used. */
+.side-draft .side-top {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--wash) 0 10px,
+    transparent 10px 20px
+  );
+}
+
+/* ── trailing "add" tile (Phase 2 Task 6 — MySubprofilesPage) ────────────
+   Sits as the last cell of the `.sides` grid, same footprint as a `.side`
+   card, opening `NewSideModal` like the header's primary CTA. A real
+   `<button>` (not a card-shaped link) since it's a same-page action. */
+.new-side {
+  border: 1.5px dashed var(--line-2);
+  border-radius: var(--radius-card);
+  min-height: 230px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-60);
+  gap: var(--gap-xs);
+  background: transparent;
+  transition: all var(--dur-base) var(--ease);
+}
+.new-side:hover {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.04);
+}
+@media (prefers-reduced-motion: reduce) {
+  .new-side {
+    transition: border-color var(--dur-base) var(--ease), color var(--dur-base) var(--ease);
+  }
+}
+.new-side b {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  display: block;
+}
+
+/* ── compact invite row (Phase 2 Task 6 — PersonaInvitesBanner) ─────────
+   One accent-tinted row per pending co-owner invite — a call-to-action
+   nudge, deliberately NOT the plum-panel success-surface treatment (that's
+   reserved for confirmations). Multiple invites stack as separate `.banner`
+   rows (`PersonaInvitesBanner.module.css` owns the list gap). */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: var(--gap-sm) var(--card-pad);
+  border-radius: var(--radius-panel);
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
+  background: rgba(var(--accent-rgb), 0.07);
+  flex-wrap: wrap;
+}
+.banner p {
+  font-size: 14.5px;
+  flex: 1;
+  min-width: 220px;
+  line-height: 1.5;
+  margin: 0;
+}
+.banner p em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+
+/* ── skeleton variant (LoadingSides) ─────────────────────────────────── */
+.side.sk {
+  pointer-events: none;
+}
+.side.sk .side-top {
+  background: var(--wash);
+}
+.sk-b {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--line-rgb), 0.06) 25%,
+    rgba(var(--line-rgb), 0.11) 50%,
+    rgba(var(--line-rgb), 0.06) 75%
+  );
+  background-size: 200% 100%;
+  animation: qpShimmer 1.5s ease infinite;
+  border-radius: 8px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-b {
+    animation: none;
+  }
+}
+
+/* ── first-run empty state (EmptySides) ──────────────────────────────── */
+.empty-hero {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 48px;
+  align-items: center;
+  padding: 70px 0 100px;
+}
+@container (max-width: 860px) {
+  .empty-hero {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding: 44px 0 70px;
+  }
+}
+.empty-copy h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(38px, 5.4cqw, 64px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: var(--text-strong);
+  margin: 12px 0 16px;
+}
+.empty-copy h1 em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+.empty-copy p {
+  color: var(--ink-60);
+  line-height: 1.7;
+  max-width: 48ch;
+  font-size: 16.5px;
+  margin-bottom: 24px;
+}
+.empty-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.empty-samples {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+.empty-card {
+  --i: 1;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-card);
+  transform: rotate(calc((var(--i) - 1) * 0.9deg))
+    translateX(calc(var(--i) * 10px));
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+.empty-card b {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 21px;
+  letter-spacing: -0.01em;
+}
+.empty-card small {
+  color: var(--ink-60);
+  font-size: 13.5px;
+}
+/* Skin-hint sample grounds reuse the hoisted --skin-*-ground vars declared
+   once in persona-skins.css — never invented hex here. */
+.empty-card[data-skin-hint="stage"] {
+  background: var(--skin-stage-ground);
+  color: rgba(var(--cream-rgb), 0.9);
+  border-color: transparent;
+}
+.empty-card[data-skin-hint="stage"] b {
+  font-family: "Anton", var(--sans);
+  text-transform: uppercase;
+}
+.empty-card[data-skin-hint="stage"] small {
+  color: rgba(var(--cream-rgb), 0.6);
+}
+.empty-card[data-skin-hint="practice"] {
+  background: var(--skin-practice-ground);
+}
+.empty-card[data-skin-hint="practice"] b {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 19px;
+}
+.empty-card[data-skin-hint="table"] {
+  background: var(--skin-table-ground);
+  text-align: center;
+  align-items: center;
+}
+
+/* ── draft-readiness ring (Phase 2 Task 1 — SideReadinessRing) ──────────
+   36px conic-gradient percentage ring: `--p` drives how much of the circle
+   is filled with `--accent`, and the inner `<i>` punches a `--paper` hole
+   showing the bare number (never a glyph — see `icons-not-glyphs`). Sits in
+   the `.side-top` corner as the draft card's readiness indicator. */
+.ring {
+  --p: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--plum);
+  background: conic-gradient(var(--accent) calc(var(--p) * 1%), var(--line) 0);
+}
+[data-theme="dark"] .ring {
+  color: var(--ink);
+}
+.ring i {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--paper);
+  display: grid;
+  place-items: center;
+  font-style: normal;
+}
+
+/* ── compact status/meta pill (Phase 2 Task 5 — SideStatusPill + SideCard's
+   tie/avail row) ─────────────────────────────────────────────────────────
+   Base = neutral outline (used bare for the tie pill: "Linked"/"Standalone",
+   which has no colour-coded meaning of its own). `.jade`/`.coral`/`.muted`
+   tone the same shape via `--jade-rgb`/`--accent-rgb`/`--wash` — the repo's
+   token equivalents of the prototype's own literal jade/coral hex. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--ink-60);
+}
+.pill.jade {
+  color: var(--jade-ink);
+  border-color: rgba(var(--jade-rgb), 0.3);
+  background: rgba(var(--jade-rgb), 0.08);
+}
+.pill.coral {
+  color: var(--accent-ink);
+  border-color: rgba(var(--accent-rgb), 0.32);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+.pill.muted {
+  background: var(--wash);
+}

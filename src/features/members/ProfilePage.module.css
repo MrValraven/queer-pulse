@@ -81,6 +81,21 @@ div.backBar {
   position: relative;
   width: 100%;
 }
+/* Tap-to-enlarge trigger wrapping the hero portrait — visually inert, just a
+   zoom cursor and a focus ring. */
+.portraitButton {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 20px;
+  background: none;
+  cursor: zoom-in;
+}
+.portraitButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
 .vbadgeLg {
   position: absolute;
   left: 16px;

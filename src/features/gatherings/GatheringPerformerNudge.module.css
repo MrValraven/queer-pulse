@@ -1,0 +1,46 @@
+/* Post-gathering persona nudge (Personas Phase 5, Moment 5). */
+
+.nudge {
+  margin-top: 20px;
+  padding: 18px 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: rgba(var(--jade-rgb), 0.08);
+  border: 1px solid rgba(var(--jade-rgb), 0.25);
+  border-radius: 16px;
+}
+.icon {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  color: var(--jade);
+  margin-top: 2px;
+}
+.body {
+  min-width: 0;
+}
+.text {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.55;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.dismissBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  color: var(--ink-60);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.dismissBtn:hover {
+  color: var(--ink);
+}

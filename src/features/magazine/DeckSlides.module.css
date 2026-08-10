@@ -2,6 +2,18 @@
    Slides fill their parent stage (built in a later task); no fixed sizing
    here beyond 100% width/height. Design tokens only — no hex. */
 
+/*
+ * Several sizes below use viewport-width (`vw`) clamps sized for the reader's
+ * full-bleed stage (`DeckPage.module.css`), which renders near their MAX
+ * whenever the surrounding box is narrower than the viewport — e.g. the deck
+ * editor's ~300px `.erail` preview frame (`desk/deck/SlideLivePreview.tsx`),
+ * where 5.5vw of a normal desktop viewport is still ~50-70px, clipping in a
+ * narrow column. Every such property reads a `--deck-slide-*` custom
+ * property first, falling back to the original reader value — the reader
+ * itself is unaffected (no ancestor sets these vars), while a narrow host
+ * like the live-preview frame can override them with container-relative
+ * (`cqw`) sizes instead. See `SlideLivePreview.module.css`'s `.frame`.
+ */
 .slide {
   width: 100%;
   height: 100%;
@@ -11,7 +23,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: clamp(28px, 6vw, 64px);
+  padding: var(--deck-slide-pad, clamp(28px, 6vw, 64px));
   text-align: center;
 }
 
@@ -42,7 +54,7 @@
 .heading {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 5.5vw, 56px);
+  font-size: var(--deck-slide-heading-size, clamp(28px, 5.5vw, 56px));
   line-height: 1.05;
   letter-spacing: -0.02em;
   color: var(--text-strong);
@@ -55,7 +67,7 @@
 
 .body {
   font-family: var(--sans);
-  font-size: 17px;
+  font-size: var(--deck-slide-body-size, 17px);
   line-height: 1.7;
   color: var(--ink);
   margin: 0;
@@ -66,7 +78,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-style: italic;
-  font-size: clamp(24px, 4.5vw, 42px);
+  font-size: var(--deck-slide-pull-size, clamp(24px, 4.5vw, 42px));
   line-height: 1.3;
   letter-spacing: -0.01em;
   color: var(--text-strong);
@@ -98,7 +110,7 @@
   color: var(--cream);
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(20px, 3vw, 32px);
+  font-size: var(--deck-slide-overlay-size, clamp(20px, 3vw, 32px));
   line-height: 1.2;
   text-align: left;
 }
@@ -127,7 +139,7 @@
   gap: 10px;
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(64px, 14vw, 160px);
+  font-size: var(--deck-slide-stat-value-size, clamp(64px, 14vw, 160px));
   line-height: 1;
   letter-spacing: -0.02em;
   color: var(--text-strong);
@@ -136,7 +148,7 @@
 .statUnit {
   font-family: var(--sans);
   font-weight: 600;
-  font-size: clamp(20px, 3vw, 32px);
+  font-size: var(--deck-slide-stat-unit-size, clamp(20px, 3vw, 32px));
   color: var(--accent);
 }
 
@@ -294,7 +306,7 @@
 .revealPrompt {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(24px, 4.5vw, 40px);
+  font-size: var(--deck-slide-reveal-prompt-size, clamp(24px, 4.5vw, 40px));
   line-height: 1.25;
   letter-spacing: -0.01em;
   color: var(--text-strong);

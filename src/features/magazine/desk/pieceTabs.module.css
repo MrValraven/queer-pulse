@@ -1,0 +1,423 @@
+/* Shared styles for the piece-record tabs (Brief/Care/Money/History/After) + gate/stepper.
+   Ported from the magazine desk prototype, using repo design tokens. */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card {
+  padding: 18px;
+  border-radius: 18px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card h3 {
+  font-size: 12px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-40);
+  margin: 0;
+}
+
+.kvs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px 18px;
+}
+
+.kv {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+}
+
+.kv span {
+  color: var(--ink-40);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.kv b {
+  font-size: 15px;
+  color: var(--plum);
+  font-weight: 600;
+}
+
+.kv b.warn {
+  color: var(--accent-ink);
+}
+
+.lede {
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.45;
+  font-weight: 300;
+  color: var(--plum);
+  margin: 0;
+}
+
+.note {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(45, 27, 61, 0.035);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.note b {
+  color: var(--plum);
+}
+
+.note.warn {
+  background: rgba(var(--accent-rgb), 0.09);
+  color: var(--accent-ink);
+}
+
+.note.warn b {
+  color: var(--accent-ink);
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ticks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+.ticks li {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.ticks li svg {
+  margin-top: 3px;
+  color: var(--jade);
+  flex: none;
+}
+
+.ticks li.open {
+  color: var(--accent-ink);
+}
+
+.ticks li.open svg {
+  color: var(--accent);
+}
+
+.simrow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+}
+
+.simrow:last-child {
+  border-bottom: none;
+}
+
+.simrow b {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--plum);
+}
+
+.subj {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  background: rgba(45, 27, 61, 0.035);
+}
+
+.subjHead {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.subjHead b {
+  font-size: 15px;
+  color: var(--plum);
+}
+
+.chips {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.chip {
+  padding: 5px 11px;
+  font-size: 12.5px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(45, 27, 61, 0.2);
+  background: var(--paper);
+  color: var(--ink-60);
+}
+
+.chip[aria-pressed="true"],
+.chip[data-active="true"] {
+  border-color: var(--plum);
+  color: var(--plum);
+  background: rgba(45, 27, 61, 0.035);
+}
+
+.readHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.readHead b {
+  font-size: 15px;
+  color: var(--plum);
+}
+
+.flagrow {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+}
+
+.flagrow:last-child {
+  border-bottom: none;
+}
+
+.flagrow b {
+  font-size: 14px;
+  color: var(--plum);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--jade);
+  flex: none;
+}
+
+.dotAmber {
+  background: var(--amber);
+}
+
+.dotMuted {
+  background: rgba(45, 27, 61, 0.2);
+}
+
+.prog {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(45, 27, 61, 0.06);
+  overflow: hidden;
+}
+
+.prog i {
+  display: block;
+  height: 100%;
+  background: var(--jade);
+  border-radius: 999px;
+  transition: width 0.2s linear;
+}
+
+.trail {
+  display: flex;
+  flex-direction: column;
+}
+
+.trailrow {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  padding: 11px 0;
+  border-left: 1.5px solid rgba(45, 27, 61, 0.09);
+  margin-left: 4px;
+  padding-left: 16px;
+  position: relative;
+  font-size: 13.5px;
+  color: var(--ink-60);
+}
+
+.trailrow .dot {
+  position: absolute;
+  left: -4px;
+  top: 16px;
+}
+
+.trailrow b {
+  color: var(--plum);
+}
+
+.letter {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(45, 27, 61, 0.035);
+  font-size: 13.5px;
+}
+
+.letterHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.letterHead b {
+  font-size: 13px;
+  color: var(--plum);
+}
+
+.letter p {
+  color: var(--ink-60);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* NotesRail threading (Phase 7 Wave D) */
+.thread {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.replies {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-left: 20px;
+  padding-left: 12px;
+  border-left: 1.5px solid rgba(45, 27, 61, 0.09);
+}
+
+.letterResolved {
+  opacity: 0.62;
+}
+
+.resolvedChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--jade-ink);
+  background: rgba(var(--jade-rgb), 0.12);
+}
+
+.resolvedChip svg {
+  flex: none;
+}
+
+.field textarea {
+  border: 1.5px solid rgba(45, 27, 61, 0.09);
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: var(--paper);
+  width: 100%;
+  min-height: 70px;
+  resize: vertical;
+  font: inherit;
+  color: var(--ink);
+}
+
+.tiny {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  line-height: 1.5;
+}
+
+.spacer {
+  margin-left: auto;
+}
+
+/* publish gate / stage stepper (erail) */
+.gaterow {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+.gaterow svg {
+  margin-top: 2px;
+  flex: none;
+}
+
+.gaterow svg.doneIcon {
+  color: var(--jade);
+}
+
+.gaterow svg.openIcon {
+  color: var(--accent);
+}
+
+.gaterow.open {
+  color: var(--accent-ink);
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.step {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  font-size: 13.5px;
+  color: var(--ink-40);
+}
+
+.step .dot {
+  background: rgba(45, 27, 61, 0.2);
+}
+
+.stepOn {
+  color: var(--plum);
+  font-weight: 600;
+}
+
+.stepOn .dot {
+  background: var(--plum);
+}

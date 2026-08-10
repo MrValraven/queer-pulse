@@ -187,6 +187,8 @@ export const economy: Catalog = {
   "workHub.card.apps.label": "Candidaturas",
   "workHub.card.apps.primary": "{active} ativas / {sent} enviadas",
   "workHub.card.apps.noOffers": "Ainda sem propostas",
+  "workHub.card.apps.trackAll": "Acompanha todas as vagas a que te candidataste",
+  "workHub.card.apps.viewAll": "Ver todas as candidaturas",
   "workHub.card.mentor.label": "Mentoria",
   "workHub.card.mentor.primary": "1 mentoria ativa",
   "workHub.card.mentor.next": "{count} pessoas mentoras com vagas abertas",

@@ -2,7 +2,7 @@ import { FormField, SegmentedControl } from "../../shared/components/ui";
 import type { Translation as TranslationApi } from "../../shared/i18n/useTranslation";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { duplicatePreview, type CopyMode } from "./subprofileDuplicate";
-import styles from "./MySubprofilesPage.module.css";
+import styles from "./NewSideModal.module.css";
 
 /** Choose full-config vs content-only, with a summary of exactly what will be
  *  copied from the selected source (real counts, not placeholders). This

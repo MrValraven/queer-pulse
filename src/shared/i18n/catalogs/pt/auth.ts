@@ -432,6 +432,28 @@ export const auth: Catalog = {
   "onboarding.stepCommunities.empty":
     "Sem sugestões de momento — podes explorar e juntar-te a comunidades quando quiseres.",
 
+  // Momento 4 — "também fazes outra coisa?" passo de chips transitório
+  // (StepSideWork). A escolha só decide para onde "Criar uma" leva; nada
+  // aqui fica guardado (ver Decisão §4 nas notas de construção da Tarefa 3).
+  "onboarding.stepSideWork.heading": "Tens um ofício <em>à parte</em>?",
+  "onboarding.stepSideWork.hint":
+    "Escolhe aquele para o qual queres uma página própria — podes sempre acrescentar mais depois.",
+  "onboarding.stepSideWork.cta": "Criar uma",
+  "onboarding.stepSideWork.skip": "Saltar por agora",
+  "onboarding.stepSideWork.back": "Voltar",
+
+  "onboarding.sideWork.music": "Música",
+  "onboarding.sideWork.drag": "Drag",
+  "onboarding.sideWork.code": "Código",
+  "onboarding.sideWork.photography": "Fotografia",
+  "onboarding.sideWork.food": "Culinária",
+  "onboarding.sideWork.therapy": "Terapia",
+  "onboarding.sideWork.writing": "Escrita",
+  "onboarding.sideWork.art": "Arte",
+  "onboarding.sideWork.dj": "DJing",
+  "onboarding.sideWork.dance": "Dança",
+  "onboarding.sideWork.somethingElse": "Outra coisa",
+
   "onboarding.stepDone.heading": "Já fazes <em>parte disto</em>",
   "onboarding.stepDone.cta": "Ir para o meu início",
   "onboarding.quickStart.browseDirectory.title":

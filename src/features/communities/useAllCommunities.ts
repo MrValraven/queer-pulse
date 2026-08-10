@@ -22,6 +22,12 @@ export function createdToCommunity(c: CreatedCommunity): Community {
     count: "1 member",
     joinLabel: "Join",
     privateBadge: c.accessTier === "private",
+    // Carry the founder's chosen join policy through so gated (invite/request)
+    // communities render their real tier — without this the card/detail tier
+    // falls back to `privateBadge`, which only knows "private" and collapses
+    // "invite"/"request" into "public" (a public "Join" CTA on an invite-only
+    // community).
+    accessTier: c.accessTier,
   };
 }
 

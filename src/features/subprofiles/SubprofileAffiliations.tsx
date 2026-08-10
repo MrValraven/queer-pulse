@@ -1,66 +1,160 @@
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { initialsFromName } from "../../shared/lib/initials";
-import { Avatar, Reveal, SectionHead } from "../../shared/components/ui";
+import { Avatar, Eyebrow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { routes } from "../../app/routeMap";
+import { getEndorsers, type AffiliationDTO } from "./api/subprofiles.api";
 import { AFFILIATION_ROLE_KEYS, affiliationHref } from "./affiliations.data";
-import type { AffiliationDTO } from "./api/subprofiles.api";
+import { PracticeReferrals } from "./skins/PracticeBlocks";
+import type { PersonaViewMode } from "./personaSkinRender";
+import type { PublicSubprofileView } from "./api/subprofiles.adapters";
+import type { SkinFamily } from "./subprofile-skins";
 import styles from "./SubprofileAffiliations.module.css";
 
-function AffiliationCard({ affiliation }: { affiliation: AffiliationDTO }) {
+/** Up to this many endorser quotes preview in the foot before "See all N"
+ *  hands off to the full list (`SubprofilePeopleModal`). */
+const MAX_QUOTES = 2;
+
+/** In `mode="preview"` this renders as a `<div>` look-alike instead of a
+ *  `Link` — same content, no `to` — so a click in the Phase-3 editor's
+ *  docked preview never leaves for the affiliated member/community/venue.
+ *  `.partof>*` (persona-skins.css) styles either tag identically. */
+function AffiliationRow({
+  affiliation,
+  interactive,
+}: {
+  affiliation: AffiliationDTO;
+  interactive: boolean;
+}) {
   const { t } = useTranslation();
   const roleKey = AFFILIATION_ROLE_KEYS[affiliation.role];
-
-  return (
-    <Link className={styles.card} to={affiliationHref(affiliation)}>
+  const content = (
+    <>
       <Avatar
         initials={initialsFromName(affiliation.name, "?")}
         src={affiliation.imageUrl ?? undefined}
-        alt={affiliation.name}
+        alt=""
         tint="plum"
-        size={52}
-        className={styles.avatar}
+        size={30}
       />
-      <div className={styles.body}>
-        <span className={styles.typeBadge}>
-          {t(`subprofiles:affiliation.type.${affiliation.targetType}`)}
-        </span>
-        <span className={styles.name}>{affiliation.name}</span>
-        <span className={styles.role}>
-          {roleKey ? t(roleKey) : affiliation.role}
-        </span>
-      </div>
-    </Link>
+      {affiliation.name}
+      <span>{roleKey ? t(roleKey) : affiliation.role}</span>
+    </>
   );
+  if (!interactive) return <div>{content}</div>;
+  return <Link to={affiliationHref(affiliation)}>{content}</Link>;
 }
 
 /**
- * "Part of" — the persona's owner-chosen event/community links (spec 3c).
- * Existence, visibility and block-filtering are all validated server-side, so
- * every affiliation here is safe to show as-is. Renders nothing when there
- * are none — callers gate on `data.affiliations.length`, but this also
- * guards itself for any other caller.
+ * The skin-aware persona-page foot (`.pp-foot`, per the Phase-1 design tree).
+ * The practice skin swaps in `PracticeReferrals` (its fixed "we don't collect
+ * public testimonials" boundary note) where every other skin shows up to two
+ * endorser quotes (`.endo`) with a "See all N" trigger that opens the people
+ * modal; the owner-chosen "Part of" affiliations (`.partof`) always render
+ * alongside when present. Renders nothing when there's no content at all —
+ * the practice skin always has content (its disclaimer is fixed), so it
+ * never hits that early return.
  */
 export function SubprofileAffiliations({
-  affiliations,
+  persona,
+  skin,
+  mode,
+  onAction,
 }: {
-  affiliations: AffiliationDTO[];
+  persona: PublicSubprofileView;
+  skin: SkinFamily;
+  mode: PersonaViewMode;
+  onAction: (action: string) => void;
 }) {
   const { t } = useTranslation();
-  if (affiliations.length === 0) return null;
+  const { demoMode } = useDemoMode();
+  const interactive = mode !== "preview";
+  const showEndo = skin !== "practice";
+
+  const { data: endorsersResult } = useQuery({
+    queryKey: ["subprofile", "endorsers", persona.id],
+    queryFn: async () => {
+      if (!demoMode) return getEndorsers(persona.id);
+      const { mockEndorsersById } = await import("./data/subprofiles.data");
+      return mockEndorsersById(persona.id) ?? { count: 0, endorsers: [] };
+    },
+    enabled: showEndo && persona.endorsementCount > 0 && Boolean(persona.id),
+  });
+  const endorsers = endorsersResult?.endorsers ?? [];
+  const hasEndo = showEndo && endorsers.length > 0;
+  const hasAffiliations = persona.affiliations.length > 0;
+
+  if (skin !== "practice" && !hasEndo && !hasAffiliations) return null;
 
   return (
-    <div className={`wrap ${styles.wrap}`}>
-      <Reveal as="section" className={styles.section}>
-        <SectionHead title={t("subprofiles:affiliation.heading")} />
-        <div className={styles.grid}>
-          {affiliations.map((affiliation) => (
-            <AffiliationCard
-              key={`${affiliation.targetType}::${affiliation.targetSlug}`}
-              affiliation={affiliation}
-            />
-          ))}
+    <div className="pp-foot">
+      {skin === "practice" ? (
+        <PracticeReferrals persona={persona} />
+      ) : hasEndo ? (
+        <div className="endo">
+          {endorsers.slice(0, MAX_QUOTES).map((endorser) => {
+            const who = (
+              <>
+                <Avatar
+                  initials={initialsFromName(endorser.name, "?")}
+                  src={endorser.avatarUrl ?? undefined}
+                  alt=""
+                  tint="plum"
+                  size={26}
+                />
+                {endorser.name}
+              </>
+            );
+            return (
+              <div key={endorser.slug}>
+                <p className="endo-q">
+                  “{endorser.note || t("subprofiles:peopleModal.noNote")}”
+                </p>
+                {interactive ? (
+                  <Link className="endo-who" to={`${routes.members}/${endorser.slug}`}>
+                    {who}
+                  </Link>
+                ) : (
+                  <span className="endo-who">{who}</span>
+                )}
+              </div>
+            );
+          })}
+          {persona.endorsementCount > MAX_QUOTES && (
+            <button
+              type="button"
+              className={styles.seeAll}
+              disabled={!interactive}
+              onClick={
+                interactive ? () => onAction("people:endorsers") : undefined
+              }
+            >
+              {t("subprofiles:foot.seeAllEndorsements", {
+                count: persona.endorsementCount,
+              })}
+            </button>
+          )}
         </div>
-      </Reveal>
+      ) : (
+        <div />
+      )}
+
+      {hasAffiliations && (
+        <div>
+          <Eyebrow>{t("subprofiles:affiliation.heading")}</Eyebrow>
+          <div className="partof">
+            {persona.affiliations.map((affiliation) => (
+              <AffiliationRow
+                key={`${affiliation.targetType}::${affiliation.targetSlug}`}
+                affiliation={affiliation}
+                interactive={interactive}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

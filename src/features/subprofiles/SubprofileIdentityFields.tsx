@@ -17,9 +17,10 @@ interface SubprofileIdentityFieldsProps {
 
 /**
  * The persona's core identity controls: avatar, display name, tagline, and
- * bio (with a live count against the 80-char publish minimum). Extracted
- * from `SubprofileMetaForm` to keep both components under the 200-line cap.
- * Purely controlled — the parent owns state and the PATCH.
+ * bio (with a live count against the 80-char publish minimum). Renders the
+ * editor's "Identity" rail pane body, fed by `useSubprofileMetaEditor`'s
+ * state (via `EditorPaneRouter`). Purely controlled — the parent owns state
+ * and the PATCH.
  */
 export function SubprofileIdentityFields({
   avatarUrl,

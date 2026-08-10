@@ -152,9 +152,12 @@ export const magazine: Catalog = {
   "deck.editor.slideNumber": "Slide {n}",
   "deck.editor.addSlide": "Adicionar slide",
   "deck.editor.addSlideLayout": "Modelo",
+  "deck.editor.addSlideHint":
+    "Cada slide é o verdadeiro componente do leitor — esta pré-visualização não pode divergir.",
   "deck.editor.moveUp": "Mover para cima",
   "deck.editor.moveDown": "Mover para baixo",
   "deck.editor.removeSlide": "Remover slide",
+  "deck.editor.summaryEmpty": "Slide vazio",
   "deck.editor.layout.text": "Texto",
   "deck.editor.layout.image": "Imagem",
   "deck.editor.layout.stat": "Estatística",
@@ -180,7 +183,6 @@ export const magazine: Catalog = {
   "deck.editor.field.after": "Depois",
   "deck.editor.field.prompt": "Instrução",
   "deck.editor.field.hidden": "Escondido até tocar",
-  "deck.editor.tint.default": "Predefinida",
   "deck.editor.tint.coral": "Coral",
   "deck.editor.tint.jade": "Jade",
   "deck.editor.tint.plum": "Ameixa",
@@ -191,17 +193,50 @@ export const magazine: Catalog = {
   "deck.editor.publish": "Publicar",
   "deck.editor.unpublish": "Despublicar",
   "deck.editor.delete": "Eliminar",
-  "deck.editor.deleteConfirm":
-    "Eliminar este deck? Não é possível desfazer.",
   "deck.editor.leaveConfirm":
     "Tens alterações por guardar. Sair sem guardar?",
   "deck.editor.previewEmpty": "Adiciona um slide para pré-visualizar",
+  "deck.editor.preview.title": "Pré-visualização",
+  "deck.editor.preview.emptySlide": "Começa a preencher este slide para o veres aqui.",
+  "deck.editor.budget.headingOver": "Demasiado longo — vai cortar num telemóvel",
+  "deck.editor.budget.headingOk": "Cabe no telemóvel mais estreito",
+  "deck.editor.budget.bodyOver": "Um slide não é um parágrafo",
+  "deck.editor.budget.bodyOk": "Curto o suficiente para ler de relance",
+  "deck.editor.budget.count": "{count} / {max} caracteres",
   "deck.editor.saved": "Rascunho guardado",
   "deck.editor.publishedToast": "Deck publicado",
   "deck.editor.deletedToast": "Deck eliminado",
   "deck.editor.saveError":
     "Não foi possível guardar o teu deck — tenta de novo.",
   "deck.editor.backToDashboard": "Voltar ao painel",
+  "deck.editor.metaTitle": "Detalhes do deck",
+  "deck.editor.untitled": "Deck sem título",
+  "deck.editor.header.subtitle": "Deck · {count} slides",
+  "deck.editor.unsavedChanges": "Alterações por guardar",
+  "deck.editor.convert": "Transformar em texto",
+  "deck.editor.slidesHeading": "Slides",
+  "deck.editor.slidesCount": "{count} de {max} · clica num slide para editar",
+  "deck.editor.slidesCapped": "Limite de 40 slides atingido",
+  "deck.editor.publish.notNowNote":
+    "Isto publica-se assim que carregares em Publicar — o agendamento de decks ainda não está disponível.",
+  "deck.editor.publish.checklist.cover": "Slide de capa definido",
+  "deck.editor.publish.checklist.source":
+    "Fonte em todos os slides de estatística (opcional)",
+  "deck.editor.publish.checklist.sourcePending":
+    "Fonte em todos os slides de estatística (opcional, ainda nenhum)",
+  "deck.editor.danger.title": "Zona de perigo",
+  "deck.editor.danger.body":
+    "Eliminar um deck remove-o de todos os sítios onde está ligado. Não é possível desfazer.",
+  "deck.editor.danger.cta": "Eliminar este deck",
+  "deck.editor.deleteModal.title": "Eliminar este deck?",
+  "deck.editor.deleteModal.body":
+    "Isto remove o deck e todos os seus slides. Quem já tiver o link vai ver um erro 404.",
+  "deck.editor.convertModal.title": "Transformar isto em texto corrido?",
+  "deck.editor.convertModal.body":
+    "Converter um deck de slides num artigo completo ainda não está disponível. Quando estiver, isto vai passar o conteúdo do deck para o editor de artigos como rascunho inicial.",
+  "deck.editor.convertModal.cta": "Converter em artigo",
+  "deck.editor.convertModal.toast":
+    "A conversão de deck para artigo ainda não está disponível.",
 
   // ── Issue chrome — partilhado por IssueCover, IssueContents, IssuesPage ──
   "issue.backToAllIssues": "Todas as edições",
@@ -548,6 +583,362 @@ export const magazine: Catalog = {
   "editor.toast.contributorListExported":
     "Lista de pessoas colaboradoras exportada (CSV)",
 
+  // ══════════════════ Redação (redesenho Fase 1) ═══════════════════════════
+  // Os componentes desk/* mostram um painel mais recente e detalhado do que a
+  // secção `editor.*` acima (outro conjunto de Stage, outra composição) —
+  // estas chaves `desk.*` são o chrome desse painel. As strings de `Stage`
+  // mostradas em bruto como texto (StagePill, FormatBadge, os cabeçalhos de
+  // coluna/opções do select em PiecesBoard, a legenda de vaga em IssuePlan)
+  // ficam por traduzir aqui, tal como a nota de `pitchTracker.stage.*` acima
+  // — um id de fase que também serve de texto apresentado é um projeto maior
+  // de indireção por chave, fora do âmbito desta ronda.
+
+  // ── DeskHeader ───────────────────────────────────────────────────────────
+  "desk.header.layout.pipeline": "Fluxo",
+  "desk.header.layout.board": "Quadro",
+  "desk.header.layout.issuePlan": "Plano da edição",
+  "desk.header.eyebrow": "Edição {number} · {theme}",
+  "desk.header.title": "A redação",
+  "desk.header.meta": "Fecha a {closes} · publica a {publishes}",
+  "desk.header.daysLeft": "{days} dias",
+  "desk.header.toClose": "até fechar",
+  "desk.header.slotsFilled": "{filled} de {slots} vagas preenchidas",
+  "desk.header.viewingAs": "A ver como",
+  "desk.header.viewingAsEditorAria": "Ver como esta pessoa editora",
+  "desk.header.commissionCta": "Encomendar",
+  "desk.header.produce": "Produção da edição",
+  "desk.header.slotsFilledAria": "Vagas da edição preenchidas",
+  "desk.header.layoutAria": "Esquema da redação",
+
+  // ── NeedsStrip ───────────────────────────────────────────────────────────
+  "desk.needsStrip.lateDue": "Atrasada · prazo {due}",
+  "desk.needsStrip.waitingOnYou": "À tua espera",
+  "desk.needsStrip.chase": "Insistir",
+  "desk.needsStrip.pickUp": "Assumir",
+  "desk.needsStrip.open": "Abrir",
+
+  // ── DeskStats ────────────────────────────────────────────────────────────
+  "desk.stats.inFlight": "em curso",
+  "desk.stats.readyToLayOut": "prontas para paginar",
+  "desk.stats.behindSchedule": "atrasadas",
+  "desk.stats.pitchesWaiting": "propostas à espera",
+
+  // ── DeskToolbar ──────────────────────────────────────────────────────────
+  "desk.toolbar.searchPlaceholder": "Pesquisar peças, autoria, secções…",
+  "desk.toolbar.searchAria": "Pesquisar",
+  "desk.toolbar.formatAria": "Formato",
+  "desk.toolbar.format.everything": "Tudo",
+  "desk.toolbar.format.articles": "Artigos",
+  "desk.toolbar.format.decks": "Decks",
+  "desk.toolbar.myQueue": "A minha fila",
+  "desk.toolbar.sortAria": "Ordenar",
+  "desk.toolbar.sort.due": "Ordenar · prazo",
+  "desk.toolbar.sort.stage": "Ordenar · estado",
+  "desk.toolbar.sort.section": "Ordenar · secção",
+  "desk.toolbar.shortcuts": "Atalhos",
+
+  // ── SavedViews ───────────────────────────────────────────────────────────
+  "desk.savedViews.saveThisView": "Guardar esta vista",
+
+  // ── PiecesPipeline ───────────────────────────────────────────────────────
+  "desk.pipeline.emptyTitle": "A secretária está livre",
+  "desk.pipeline.emptyDescription": "Nada corresponde a este filtro agora.",
+  "desk.pipeline.columnPiece": "Peça",
+  "desk.pipeline.columnStage": "Estado",
+  "desk.pipeline.columnWaitingOn": "À espera de",
+  "desk.pipeline.columnDue": "Prazo",
+
+  // ── PieceRow ─────────────────────────────────────────────────────────────
+  "desk.pieceRow.newVoice": "Voz nova",
+  "desk.pieceRow.writer": "Autor",
+  "desk.pieceRow.you": "Tu",
+  "desk.pieceRow.nobody": "Ninguém",
+  "desk.pieceRow.edit": "Edição",
+  "desk.pieceRow.chase": "Insistir",
+  "desk.pieceRow.handOff": "Passar",
+
+  // ── PiecesBoard ──────────────────────────────────────────────────────────
+  "desk.board.columnEmpty": "Vazia",
+  "desk.board.moveStageAria": "Mudar de estado",
+
+  // ── IssuePlan ────────────────────────────────────────────────────────────
+  "desk.issuePlan.slotsFilled": "{filled} de {target} · {note}",
+  "desk.issuePlan.slotsOpen_one": "{count} vaga por preencher",
+  "desk.issuePlan.slotsOpen_other": "{count} vagas por preencher",
+  "desk.issuePlan.full": "Completa",
+  "desk.issuePlan.commissionFor": "Encomendar para {section}",
+  "desk.issuePlan.slidesCount_one": "{count} slide",
+  "desk.issuePlan.slidesCount_other": "{count} slides",
+  "desk.issuePlan.lateSuffix": " · atrasada",
+
+  // ── PitchInbox ───────────────────────────────────────────────────────────
+  "desk.pitchInbox.emptyTitle": "Caixa vazia",
+
+  // ── PitchRow ─────────────────────────────────────────────────────────────
+  "desk.pitchRow.selectAria": "Selecionar {title}",
+  "desk.pitchRow.firstPitchSuffix": " · primeira proposta",
+  "desk.pitchRow.betterAsDeck": "Melhor como deck",
+  "desk.pitchRow.commission": "Encomendar",
+  "desk.pitchRow.maybe": "Talvez",
+  "desk.pitchRow.pass": "Recusar",
+
+  // ── BulkTriageBar ────────────────────────────────────────────────────────
+  "desk.bulkTriage.selected_one": "{count} proposta selecionada",
+  "desk.bulkTriage.selected_other": "{count} propostas selecionadas",
+  "desk.bulkTriage.ariaLabel": "Triagem de propostas em lote",
+  "desk.bulkTriage.clearSelection": "Limpar seleção",
+  "desk.bulkTriage.maybe": "Talvez",
+  "desk.bulkTriage.passKindly": "Recusar com delicadeza",
+
+  // ── DeskSidebar ──────────────────────────────────────────────────────────
+  "desk.sidebar.issueStanding": "Como está a edição",
+  "desk.sidebar.noPiecesYet": "Ainda não há peças no fluxo.",
+  "desk.sidebar.editorLoad": "Carga dos editores",
+  "desk.sidebar.noEditorsYet": "Ainda não há editores atribuídos.",
+  "desk.sidebar.activity": "Atividade",
+  "desk.sidebar.nothingHereYet": "Ainda não há nada aqui.",
+  "desk.sidebar.someone": "Alguém",
+
+  // ── DeskStates ───────────────────────────────────────────────────────────
+  "desk.states.emptyIssueTitle": "A Edição {number} está vazia",
+  "desk.states.emptyIssueDescription":
+    "Ainda não foi encomendada nenhuma peça. Começa o fluxo com a tua primeira peça.",
+  "desk.states.commissionPiece": "Encomendar uma peça",
+  "desk.states.errorBand":
+    "Não conseguimos aceder ao fluxo — a mostrar os últimos dados que tínhamos.",
+  "desk.states.tryAgain": "Tentar novamente",
+
+  // ── CommandPalette ───────────────────────────────────────────────────────
+  "desk.palette.kindArticle": "Artigo",
+  "desk.palette.kindDeck": "Deck",
+  "desk.palette.kindAction": "Ação",
+  "desk.palette.newPiece": "Nova peça",
+  "desk.palette.goToDesk": "Ir para a redação",
+  "desk.palette.ariaLabel": "Paleta de comandos",
+  "desk.palette.searchPlaceholder": "Ir diretamente a uma peça, ou começar uma nova…",
+  "desk.palette.searchAria": "Pesquisar na redação",
+  "desk.palette.commandsAria": "Comandos",
+  "desk.palette.noResults": "Nada corresponde a “{query}”.",
+
+  // ── DeskNotifications ────────────────────────────────────────────────────
+  "desk.notifications.ariaLabel": "Notificações da redação",
+  "desk.notifications.sinceFriday": "Desde sexta",
+  "desk.notifications.subhead":
+    "O que aconteceu na redação enquanto estiveste fora.",
+  "desk.notifications.empty":
+    "Estás em dia — nada de novo desde a última vez que viste.",
+  "desk.notifications.markAllRead": "Marcar tudo como lido",
+
+  // ── MagazineDeskShell (o painel lateral de quem edita) ───────────────────
+  "deskShell.issueEyebrow": "Edição {number} · {theme}",
+  "deskShell.menuAria": "Secções da redação",
+  "deskShell.nav.desk": "Redação",
+  "deskShell.nav.pitches": "Propostas",
+  "deskShell.nav.issue": "Edição",
+  "deskShell.bellCountAria": "Desde sexta — {count} novidades",
+  "deskShell.openNow": "Abertos agora",
+  "deskShell.newPiece": "Novo texto",
+  "deskShell.kbdHintSuffix": "para saltar · ? para atalhos",
+  "deskShell.backToPlatform": "Voltar ao QueerPulse",
+
+  // ── DeskModals (chrome partilhado por Commission/Pass/Chase/Handoff/Shortcuts) ──
+  "desk.modals.cancel": "Cancelar",
+  "desk.modals.noteLabel": "A tua nota",
+  "desk.modals.shortcuts.title": "Teclado",
+  "desk.modals.shortcuts.gotIt": "Percebido",
+
+  // ── CommissionModal ──────────────────────────────────────────────────────
+  "desk.modals.commission.titleFromPitch": "Encomendar esta proposta",
+  "desk.modals.commission.titleFromScratch": "Escrever o briefing",
+  "desk.modals.commission.sendBrief": "Enviar o briefing",
+  "desk.modals.commission.bodyFromPitch":
+    "Estás a encomendar a proposta de {byline} — define o essencial abaixo, e o briefing segue diretamente para essa pessoa.",
+  "desk.modals.commission.bodyFromScratch":
+    "Define o essencial abaixo, e levamos um briefing a quem escreve.",
+  "desk.modals.commission.angleLabel": "O ângulo",
+  "desk.modals.commission.sectionLabel": "Secção",
+  "desk.modals.commission.wordsLabel": "Palavras",
+  "desk.modals.commission.dueDateLabel": "Prazo",
+  "desk.modals.commission.feeLabel": "Valor",
+  "desk.modals.commission.feePlaceholder": "ex.: 150 €",
+
+  // ── PassModal ────────────────────────────────────────────────────────────
+  "desk.modals.pass.title": "Recusar “{title}”",
+  "desk.modals.pass.send": "Enviar",
+  "desk.modals.pass.body":
+    "Uma recusa cai melhor com um motivo genuíno. Escolhe um ponto de partida abaixo, ou escreve o teu próprio — de qualquer forma, quem escreveu ouve de ti, não de um formulário.",
+  "desk.modals.pass.startingPoints": "Pontos de partida",
+
+  // ── ChaseModal (Phase 7 Wave F: incorpora o PieceThread, sem passo de composição à parte) ─
+  "desk.modals.chase.title": "Insistir com {name}",
+  "desk.modals.chase.body": "Um lembrete rápido e humano — não uma ameaça de prazo.",
+
+  // ── HandoffModal ─────────────────────────────────────────────────────────
+  "desk.modals.handoff.title": "Passar",
+  "desk.modals.handoff.cta": "Passar",
+  "desk.modals.handoff.body":
+    "Passa “{title}” a outra pessoa editora — ela continua exatamente onde ficaste.",
+  "desk.modals.handoff.toLabel": "Para",
+
+  // ── DeskView ─────────────────────────────────────────────────────────────
+  "desk.view.notificationsAria": "Notificações",
+
+  // ── EditorDashboardPage ──────────────────────────────────────────────────
+  "desk.page.stubOpensLater": "Abre numa versão futura.",
+  "desk.page.savingViewsUnavailable":
+    "Ainda não é possível guardar vistas personalizadas.",
+  "desk.page.notificationsNotWired":
+    "As notificações ainda não estão ligadas à navegação real.",
+
+  // ══════════════════ Ficha da peça (Fase 2) ════════════════════════════════
+  // Briefing/Cuidado/Dinheiro/Histórico/Depois. O conteúdo do registo (texto
+  // "what" do histórico, corpo das cartas, texto das correções, ângulo/pedidos
+  // /evitar/imagem do briefing, notas por pessoa, notas de sinalização,
+  // etiquetas da checklist de sensibilidade, nomes de estados) vem de
+  // `record`/`DEMO_RECORD` — conteúdo editorial, não chrome — e fica
+  // deliberadamente por traduzir. Só o chrome de plataforma (etiquetas,
+  // botões, títulos de secção, texto estático) é traduzido abaixo.
+
+  // ── PieceRecordPage ──────────────────────────────────────────────────────
+  "piece.header.backToDesk": "Voltar à redação",
+  "piece.header.openDraft": "Abrir o rascunho",
+  "piece.header.publish": "Publicar",
+  "piece.header.publishToast": "A publicação chega com a produção da edição",
+  "piece.header.formatArticle": "Artigo",
+  "piece.header.formatDeck": "Deck",
+  "piece.header.inAnIssue": "Numa edição",
+  "piece.header.notScheduled": "Ainda não agendada",
+  "piece.header.notFoundTitle": "Não conseguimos abrir esta peça",
+  "piece.header.notFoundDescription":
+    "Pode ter sido removida, ou a ligação está desatualizada.",
+
+  // ── PieceTabsNav ─────────────────────────────────────────────────────────
+  "piece.tabs.ariaLabel": "Secções da ficha da peça",
+  "piece.tabs.brief": "Briefing",
+  "piece.tabs.care": "Cuidado",
+  "piece.tabs.money": "Dinheiro",
+  "piece.tabs.history": "Histórico",
+  "piece.tabs.after": "Depois",
+
+  // ── StageStepper ─────────────────────────────────────────────────────────
+  "piece.stageStepper.heading": "Em que ponto está",
+
+  // ── PublishGateCard ──────────────────────────────────────────────────────
+  "piece.gate.heading": "Portão de publicação",
+  "piece.gate.notAdvisory":
+    "O portão não é uma sugestão. Nada aqui pode ser ultrapassado por uma só pessoa.",
+  "piece.gate.publish": "Publicar",
+
+  // ── MoneyMiniCard ────────────────────────────────────────────────────────
+  "piece.moneyMini.heading": "Dinheiro",
+  "piece.moneyMini.noFeeYet": "Ainda sem valor acordado",
+  "piece.moneyMini.statusAgreed": "Valor acordado",
+  "piece.moneyMini.statusApprovedUnpaid": "Aprovado, por pagar",
+  "piece.moneyMini.statusPaid": "Pago",
+  "piece.moneyMini.openMoney": "Abrir dinheiro",
+
+  // ── BriefTab ─────────────────────────────────────────────────────────────
+  "piece.brief.noBriefYet": "Ainda não há briefing registado.",
+  "piece.brief.commissionHeading": "A encomenda",
+  "piece.brief.commissioned": "Encomendada",
+  "piece.brief.due": "Prazo",
+  "piece.brief.noDateSet": "Sem data definida",
+  "piece.brief.length": "Extensão",
+  "piece.brief.noTargetSet": "Sem alvo definido",
+  "piece.brief.filedAt": "Entregue",
+  "piece.brief.notFiledYet": "Ainda não entregue",
+  "piece.brief.fee": "Valor",
+  "piece.brief.killFee": "Valor de cancelamento",
+  "piece.brief.overWordsWarning":
+    "Entregou {count} palavras acima do briefing. Corta antes da paginação, ou move uma secção para o deck.",
+  "piece.brief.whatWeAskedFor": "O que pedimos",
+  "piece.brief.avoidLabel": "Evitar.",
+  "piece.brief.artLabel": "Imagem.",
+  "piece.brief.sendToWriter": "Enviar à autoria",
+  "piece.brief.saveAsTemplate": "Guardar como modelo",
+  "piece.brief.similarHeading": "Já publicámos algo assim",
+  "piece.brief.similarIssueBy": "· edição {issue} · {by}",
+  "piece.brief.readButton": "Ler",
+
+  // ── MoneyTab ─────────────────────────────────────────────────────────────
+  "piece.money.noPaymentYet": "Ainda não há pagamento registado.",
+  "piece.money.feeHeading": "Valor",
+  "piece.money.agreedFee": "Valor acordado",
+  "piece.money.expenses": "Despesas",
+  "piece.money.noneFiled": "Nenhuma entregue",
+  "piece.money.invoice": "Fatura",
+  "piece.money.notReceived": "Não recebida",
+  "piece.money.filed": "Entregue",
+  "piece.money.notFiled": "Não entregue",
+  "piece.money.terms": "Prazo de pagamento",
+  "piece.money.payBy": "Pagar até",
+  "piece.money.noDateSet": "Sem data definida",
+  "piece.money.unpaidWarning":
+    "Aprovado mas por pagar. Pagar a tempo é a parte deste trabalho pela qual a comunidade realmente nos avalia.",
+  "piece.money.markForPayment": "Marcar para pagamento",
+  "piece.money.tellTheWriter": "Avisar a autoria",
+
+  // ── CareTab + CareSubjectRow ─────────────────────────────────────────────
+  "piece.care.heading": "Cuidado e consentimento",
+  "piece.care.noCareRecordYet":
+    "Ainda não foi iniciado um registo de cuidado para esta peça.",
+  "piece.care.sensitivityReadHeading": "Leitura de sensibilidade",
+  "piece.care.readerMeta": "{role} · pedida a {askedOn} · prazo a {dueOn}",
+  "piece.care.readProgress":
+    "{done} de {total} · uma leitura não é um carimbo automático. {reader} pode devolvê-la a qualquer momento.",
+  "piece.care.nudgeReader": "Insistir com a pessoa leitora",
+  "piece.care.nudgedToast": "Insististe com {reader}.",
+  "piece.care.askSecondReader": "Pedir uma segunda leitura",
+  "piece.care.secondReaderToast": "Pedida uma segunda leitura.",
+  "piece.care.noReadRequestedYet":
+    "Ainda não foi pedida uma leitura de sensibilidade.",
+  "piece.care.askForRead": "Pedir uma leitura de sensibilidade",
+  "piece.care.askForReadToast": "Pedida uma leitura de sensibilidade.",
+  "piece.care.peopleHeading": "Pessoas nesta peça",
+  "piece.care.peopleSubline":
+    "O consentimento é por pessoa, não por peça. A publicação fica bloqueada até todas as linhas estarem resolvidas.",
+  "piece.care.contentNotesHeading": "Notas de conteúdo",
+  "piece.care.contentNotesSubline":
+    "Mostradas às pessoas leitoras acima da peça. Escritas pela autoria, verificadas por ti.",
+  "piece.care.addContentNote": "Adicionar",
+  "piece.care.contentNoteAddedToast": "Nota de conteúdo adicionada.",
+  "piece.care.safetyFlagsHeading": "Sinalizações de segurança",
+  "piece.care.flagged": "Sinalizado",
+  "piece.care.clear": "Sem sinalização",
+  "piece.care.consentGiven": "Consentiu",
+  "piece.care.consentPending": "Consentimento pendente",
+  "piece.care.consentPseudonym": "Pseudónimo",
+  "piece.care.rightOfReply": "Direito de resposta · {reply}",
+  "piece.care.named": "Com nome",
+  "piece.care.outPublicly": "Fora do armário",
+  "piece.care.quotesReadBack": "Citações confirmadas",
+  "piece.care.sendConsentForm": "Enviar formulário de consentimento",
+  "piece.care.consentFormSentToast":
+    "Formulário de consentimento enviado a {name}.",
+
+  // ── HistoryTab ───────────────────────────────────────────────────────────
+  "piece.history.heading": "Tudo o que aconteceu",
+  "piece.history.unknownActor": "Desconhecido",
+  "piece.history.footer":
+    "As mudanças de estado, publicações e restauros são guardados durante toda a vida da revista.",
+
+  // ── AfterTab ─────────────────────────────────────────────────────────────
+  "piece.after.lettersHeading": "Cartas",
+  "piece.after.noLettersYet": "Ainda sem cartas de leitores.",
+  "piece.after.sendToAuthor": "Enviar à autoria",
+  "piece.after.sendToAuthorToast": "O envio de mensagens à autoria ainda não está disponível.",
+  "piece.after.runInLetters": "Publicar nas cartas",
+  "piece.after.removeFromLetters": "Remover das cartas",
+  "piece.after.correctionsHeading": "Correções",
+  "piece.after.correctionPublished": "Publicada a {date}",
+  "piece.after.correctionFiled": "Registada a {date}",
+  "piece.after.correctionsFooter":
+    "Uma correção é publicada como uma nota datada no rodapé da peça. Nunca corrigimos em silêncio.",
+  "piece.after.correctionAriaLabel": "Texto da correção",
+  "piece.after.correctionPlaceholder": "O que estava errado, e o que está certo.",
+  "piece.after.publishCorrection": "Publicar correção",
+  "piece.after.notifyPeopleNamed": "Avisar as pessoas identificadas",
+
   // ══════════════════ Assistente de Propor um Texto ════════════════════════
   // `INITIAL_DRAFT` (o exemplo de título/assinatura/resumo/corpo) fica como
   // conteúdo em inglês — um ensaio de exemplo, não chrome.
@@ -803,4 +1194,406 @@ export const magazine: Catalog = {
   "story.outro.safety.sub":
     "Não somos para todas as pessoas. Mas se isto faz sentido para ti, talvez sejas para nós.",
   "story.safety.byline": "A equipa da QueerPulse",
+
+  // ══════════════════ Editor de artigos (ArticleEditorPage + desk/editor/*) ═
+  // Chrome da superfície de escrita por blocos. O conteúdo do RichText do
+  // título/resumo, o html de cada bloco (parágrafo/subtítulo/citação em
+  // destaque/citação atribuída/legenda de imagem/P&R/estatísticas) e os
+  // dados de exemplo DEMO_ARTICLE (blocos, versões, notas) são conteúdo
+  // editorial — deliberadamente não traduzidos, o mesmo tratamento do resto
+  // deste ficheiro. Só o chrome do próprio editor — etiquetas, botões,
+  // marcadores de posição, estados vazios, aria-labels, nomes dos tipos de
+  // bloco e mensagens de aviso — é traduzido abaixo.
+
+  // ── ArticleEditorHeader / ArticleEditorPage ──────────────────────────────
+  "write.header.backAria": "Voltar à ficha da peça",
+  "write.header.untitled": "Rascunho sem título",
+  "write.header.unsectioned": "Sem secção",
+  "write.header.subtitle": "Artigo · {section} · {issue} · {saved}",
+  "write.header.viewLabel": "Vista",
+  "write.header.sendOn": "Enviar",
+  "write.header.publish": "Publicar",
+  "write.header.sendOnToast": "O envio ainda não está disponível.",
+  "write.header.publishToast": "A publicação ainda não está disponível.",
+  "write.header.savedSaving": "A guardar…",
+  "write.header.savedError": "Não foi possível guardar — vamos tentar de novo",
+  "write.header.savedOk": "Todas as alterações guardadas",
+  "write.header.issueScheduled": "Agendado numa edição",
+
+  // ── Alternador Rascunho/Composição/Leitura (editorMode.ts) ───────────────
+  "write.mode.draft": "Rascunho",
+  "write.mode.shape": "Composição",
+  "write.mode.read": "Leitura",
+
+  // ── ArticleEditorStatus ───────────────────────────────────────────────────
+  "write.status.notFoundTitle": "Não conseguimos encontrar este rascunho",
+
+  // ── ArticleDocument ───────────────────────────────────────────────────────
+  "write.document.headlinePlaceholder": "Título",
+  "write.document.standfirstPlaceholder":
+    "Resumo — uma ou duas frases sob o título",
+  "write.document.addBlockHint": "ou escreve / num parágrafo vazio",
+
+  // ── Tipos de bloco (blockKinds.ts não é um componente — traduzidos em
+  // cada local de apresentação: SlashMenu, a barra de adição do
+  // ArticleDocument, e a etiqueta de tipo no ArticleBlockEditor) ──────────
+  "write.blockKind.paragraph.label": "Parágrafo",
+  "write.blockKind.paragraph.hint": "Texto",
+  "write.blockKind.heading.label": "Subtítulo de secção",
+  "write.blockKind.heading.hint": "H2",
+  "write.blockKind.pullQuote.label": "Citação em destaque",
+  "write.blockKind.pullQuote.hint": "Destaque",
+  "write.blockKind.quote.label": "Citação atribuída",
+  "write.blockKind.quote.hint": "Citada",
+  "write.blockKind.image.label": "Imagem",
+  "write.blockKind.image.hint": "Carregar",
+  "write.blockKind.qa.label": "Entrevista P&R",
+  "write.blockKind.qa.hint": "Par",
+  "write.blockKind.stats.label": "Linha de estatísticas",
+  "write.blockKind.stats.hint": "Números",
+
+  // ── ArticleBlockEditor ────────────────────────────────────────────────────
+  "write.block.moveUpAria": "Mover bloco para cima",
+  "write.block.moveDownAria": "Mover bloco para baixo",
+  "write.block.removeAria": "Remover bloco",
+  "write.block.paragraphPlaceholder": "Escreve, ou prime / para um bloco",
+  "write.block.headingPlaceholder": "Subtítulo de secção",
+  "write.block.pullQuotePlaceholder": "Citação em destaque",
+
+  // ── ArticleBlockKindFields ────────────────────────────────────────────────
+  "write.block.quotePlaceholder": "Discurso citado",
+  "write.block.attributionPlaceholder": "Atribuição",
+  "write.block.attributionAria": "Atribuição da citação",
+  "write.block.questionPlaceholder": "Pergunta",
+  "write.block.whoPlaceholder": "Quem está a responder",
+  "write.block.whoAria": "Nome da pessoa entrevistada",
+  "write.block.answerPlaceholder": "Resposta",
+  "write.block.statValuePlaceholder": "61%",
+  "write.block.statLabelPlaceholder": "Etiqueta",
+  "write.block.statValueAria": "Valor da estatística {number}",
+  "write.block.statLabelAria": "Etiqueta da estatística {number}",
+  "write.block.statRemoveAria": "Remover estatística {number}",
+  "write.block.addStat": "Adicionar estatística",
+  "write.block.imageUrlLabel": "URL da imagem",
+
+  // ── ImageBlockControls ────────────────────────────────────────────────────
+  "write.image.altLabel": "Texto alternativo",
+  "write.image.altError": "Obrigatório para leitores de ecrã e legendas.",
+  "write.image.tintLabel": "Cor",
+  "write.image.tintAria": "Cor: {tint}",
+  "write.image.tint.coral": "Coral",
+  "write.image.tint.jade": "Jade",
+  "write.image.tint.plum": "Ameixa",
+  "write.image.tint.violet": "Violeta",
+  "write.image.creditLabel": "Crédito",
+  "write.image.creditError": "Obrigatório antes de publicar.",
+  "write.image.rightsLabel": "Direitos",
+  "write.image.rights.commissioned": "Encomendada",
+  "write.image.rights.licensed": "Licenciada",
+  "write.image.rights.courtesy": "Cortesia",
+  "write.image.rights.cc": "Creative Commons",
+  "write.image.cropAria": "Proporção de corte",
+  "write.image.focalAria": "Ponto focal: {x}% horizontal, {y}% vertical",
+  "write.image.captionPlaceholder": "Legenda",
+
+  // ── SelectionToolbar ──────────────────────────────────────────────────────
+  "write.selection.toolbarAria": "Formatação de texto",
+  "write.selection.emphasis": "Ênfase",
+  "write.selection.strong": "Negrito",
+  "write.selection.link": "Hiperligação",
+
+  // ── PublishRail ────────────────────────────────────────────────────────────
+  "write.publish.title": "Publicar",
+  "write.publish.whenLabel": "Quando é publicado",
+  "write.publish.now": "Agora",
+  "write.publish.schedule": "Agendar",
+  "write.publish.withIssue": "Com a edição",
+  "write.publish.scheduleNote":
+    "O agendamento de data e hora chega em breve — por agora, fica como rascunho.",
+  "write.publish.issueNote": "Publica-se automaticamente quando a edição sai.",
+  "write.publish.checklistHeading": "Antes de publicar · {done}/{total}",
+  "write.publish.cta": "Publicar",
+  "write.publish.checklist.standfirst": "Resumo escrito",
+  "write.publish.checklist.alts": "Texto alternativo em todas as imagens",
+  "write.publish.checklist.altsPending":
+    "Texto alternativo em todas as imagens (ainda nenhuma)",
+  "write.publish.checklist.sensitivity":
+    "Leitura de sensibilidade — tratada na ficha da peça",
+  "write.publish.checklist.source": "Fonte na linha de estatísticas (opcional)",
+
+  // ── ArticleMetaRail ────────────────────────────────────────────────────────
+  "write.meta.title": "Metadados da peça",
+  "write.meta.sectionLabel": "Secção",
+  "write.meta.bylineLabel": "Assinatura",
+  "write.meta.bylineHelper": "Definida no separador Resumo da ficha da peça.",
+  "write.meta.roleLabel": "Função",
+  "write.meta.roleHelper":
+    "Um qualificador da assinatura, por exemplo “Editora convidada”.",
+  "write.meta.tagsLabel": "Etiquetas",
+  "write.meta.tagsHelper": "Separadas por vírgulas.",
+  "write.meta.slugLabel": "Slug",
+  "write.meta.slugHelper": "Gerado pelo servidor.",
+  "write.meta.wordCountLabel": "Contagem de palavras",
+  "write.meta.readTimeLabel": "Tempo de leitura",
+
+  // ── NotesRail ────────────────────────────────────────────────────────────
+  "write.notes.title": "Notas",
+  "write.notes.loading": "A carregar notas…",
+  "write.notes.empty": "Sem notas neste rascunho.",
+  "write.notes.you": "Tu",
+  "write.notes.reply": "Responder",
+  "write.notes.resolve": "Resolver",
+  "write.notes.reopen": "Reabrir",
+  "write.notes.resolvedChip": "Resolvida",
+  "write.notes.addAria": "Adicionar uma nota",
+  "write.notes.addPlaceholder": "Deixa uma nota neste rascunho…",
+  "write.notes.addCta": "Adicionar nota",
+  "write.notes.addToast": "Nota adicionada.",
+  "write.notes.replyAria": "Responder a {who}",
+  "write.notes.replyPlaceholder": "Escreve uma resposta…",
+  "write.notes.replySend": "Enviar resposta",
+  "write.notes.replyToast": "Resposta adicionada.",
+  "write.notes.resolveToast": "Marcada como resolvida.",
+  "write.notes.reopenToast": "Reaberta.",
+
+  // ── VersionsRail (Fase 7 Onda E — captura + restauro + comparação) ────────
+  "write.versions.title": "Histórico",
+  "write.versions.loading": "A carregar versões…",
+  "write.versions.empty": "Sem versões anteriores registadas.",
+  "write.versions.you": "Tu",
+  "write.versions.saveCta": "Guardar uma versão",
+  "write.versions.saveToast": "Versão guardada.",
+  "write.versions.manualSaveLabel": "Guardada manualmente",
+  "write.versions.compare": "Comparar",
+  "write.versions.restore": "Restaurar",
+  "write.versions.restoreToast": "Versão \"{label}\" restaurada.",
+  "write.versions.restoredFromLabel": "Restaurada a partir de {label}",
+  "write.versions.restoreModal.title": "Restaurar \"{label}\"?",
+  "write.versions.restoreModal.body":
+    "Restaurar esta versão? O teu rascunho atual é guardado primeiro, por isso nada se perde.",
+  "write.versions.restoreModal.cancel": "Cancelar",
+  "write.versions.restoreModal.confirm": "Restaurar esta versão",
+  "write.versions.restoreModal.restoring": "A restaurar…",
+  "write.versions.diff.title": "Comparar versões",
+  "write.versions.diff.sub": "\"{label}\" por {author} · {when}",
+  "write.versions.diff.loading": "A carregar versão…",
+  "write.versions.diff.error": "Não foi possível carregar esta versão.",
+  "write.versions.diff.empty": "Nada para comparar — esta versão não tem blocos.",
+  "write.versions.diff.before": "Esta versão",
+  "write.versions.diff.now": "Rascunho atual",
+  "write.versions.diff.status.unchanged": "Sem alterações",
+  "write.versions.diff.status.changed": "Alterado",
+  "write.versions.diff.status.added": "Adicionado depois",
+  "write.versions.diff.status.removed": "Removido depois",
+
+  // ══════════════════ Produção da edição (Fase 5) ══════════════════════════
+  // IssueProductionPage + desk/issue/* — ordem de publicação, capa e índice,
+  // digest e redes, checklist/modal de lançamento, pesquisa no arquivo.
+  // Títulos de peças, secções, resumos e linhas do arquivo são dados, não
+  // chrome, e ficam por traduzir tal como no resto da redação.
+
+  // ── Cabeçalho da IssueProductionPage + estado "não encontrada" ──────────
+  "issue.header.backToDesk": "Voltar à redação",
+  "issue.header.notFoundTitle": "Edição não encontrada",
+  "issue.header.notFoundDescription":
+    "Esta edição ainda não está em produção, ou o número não corresponde a nenhuma na redação.",
+  "issue.header.title": "Edição {number} · {theme}",
+  "issue.header.laidOut": "{ready} de {total} paginadas",
+  "issue.header.proof": "Prova",
+  "issue.header.proofToast": "Prova em PDF gerada para a gráfica",
+
+  // ── ShipChecklistCard + ShipIssueModal ──────────────────────────────────
+  "issue.ship.cta": "Lançar a edição",
+  "issue.ship.checklistHeading": "Lista de lançamento",
+  "issue.ship.modalTitle": "Lançar a edição {number}?",
+  "issue.ship.modalSubWithDate":
+    "As peças publicam-se todas juntas às 09:00 de {date}, pela ordem que definiste. O digest sai no mesmo momento.",
+  "issue.ship.modalSubNoDate":
+    "As peças publicam-se todas juntas às 09:00, pela ordem que definiste. O digest sai no mesmo momento.",
+  "issue.ship.notYet": "Ainda não",
+  "issue.ship.shipIt": "Lançar",
+  "issue.ship.warnNote":
+    "As peças que ainda estão atrás do portão de publicação ficam em espera e publicam-se mais tarde — a edição não espera por elas.",
+
+  // ── IssueTabsNav ─────────────────────────────────────────────────────────
+  "issue.tabs.ariaLabel": "Secções da produção da edição",
+  "issue.tabs.runningOrder": "Ordem de publicação",
+  "issue.tabs.coverContents": "Capa e índice",
+  "issue.tabs.digestSocial": "Digest e redes",
+  "issue.tabs.archive": "Arquivo",
+
+  // ── PagesCard ────────────────────────────────────────────────────────────
+  "issue.pages.heading": "Páginas",
+  "issue.pages.editorial": "Editorial",
+  "issue.pages.total": "Total",
+  "issue.pages.spare_one": "{count} página de folga",
+  "issue.pages.spare_other": "{count} páginas de folga",
+
+  // ── RunningOrderTab ──────────────────────────────────────────────────────
+  "issue.runOrder.deckNoPageCount": "Deck — sem contagem de páginas",
+  "issue.runOrder.pagesPrefix": "pp. {pages}",
+  "issue.runOrder.laidOut": "Paginada",
+  "issue.runOrder.inLayout": "Em paginação",
+  "issue.runOrder.moveEarlierAria":
+    "Mover “{title}” para mais cedo na ordem de publicação",
+  "issue.runOrder.moveLaterAria":
+    "Mover “{title}” para mais tarde na ordem de publicação",
+  "issue.runOrder.open": "Abrir",
+
+  // ── CoverContentsTab ─────────────────────────────────────────────────────
+  "issue.cover.heading": "Capa",
+  "issue.cover.artPlaceholder": "Imagem de capa",
+  "issue.cover.imageUrlLabel": "URL da imagem de capa",
+  "issue.cover.imageUrlPlaceholder": "https://…",
+  "issue.cover.coverlineLabel": "Frase de capa {n}",
+  "issue.cover.hint":
+    "As frases de capa não são títulos. Mais curtas, mais diretas, sem trocadilhos.",
+  "issue.contents.heading": "Índice",
+  "issue.contents.blurbLabel": "Resumo do índice",
+  "issue.contents.blurbPlaceholder": "Uma frase, escrita pela redação.",
+
+  // ── DigestSocialTab ──────────────────────────────────────────────────────
+  "issue.digest.heading": "Digest para a comunidade",
+  "issue.digest.hint":
+    "Sai às 09:00 no dia em que a edição é publicada. A ordem aqui é a ordem no email.",
+  "issue.digest.includeAria": "Incluir “{title}” no digest para a comunidade",
+  "issue.digest.editBlurbAria": "Editar o resumo do digest de “{title}”",
+  "issue.digest.save": "Guardar",
+  "issue.digest.cancel": "Cancelar",
+  "issue.digest.edit": "Editar",
+  "issue.digest.sendTest": "Enviar-me um teste",
+  "issue.digest.sendTestToast":
+    "Um digest de teste está a caminho da tua caixa de entrada.",
+  "issue.digest.scheduleWithIssue": "Agendar com a edição",
+  "issue.digest.scheduleToast": "O digest sai junto com a edição.",
+  "issue.digest.socialHeading": "Redes sociais",
+  "issue.digest.socialAltHint":
+    "O texto alternativo é copiado da imagem, nunca fica vazio.",
+
+  // ── ArchiveTab ───────────────────────────────────────────────────────────
+  "issue.archive.heading": "Arquivo",
+  "issue.archive.emptyTitle": "Ainda não há arquivo para pesquisar",
+  "issue.archive.emptyDescription":
+    "As edições anteriores aparecem aqui assim que forem indexadas. Verificado automaticamente no momento da encomenda.",
+  "issue.archive.searchPlaceholder": "Já publicámos algo assim?",
+  "issue.archive.searchAria":
+    "Pesquisar no arquivo da revista por título, autoria ou etiqueta",
+  "issue.archive.noMatches": "Nada corresponde a “{query}”.",
+  "issue.archive.entryMeta": "edição {issue} · {by} · {tags}",
+  "issue.archive.read": "Ler",
+  "issue.archive.readToast": "Abrir “{title}” ainda não está disponível.",
+  "issue.archive.checkedAutomatically":
+    "Verificado automaticamente no momento da encomenda.",
+
+  // ══════════════════ Espaço de trabalho da autoria (Fase 6) ═══════════════
+  // `/magazine/writer` — a vista de uma pessoa colaboradora sobre as suas
+  // próprias atribuições, propostas e pagamentos. O conteúdo dos registos
+  // (títulos e notas de atribuições, nomes de secções, etiquetas de fase e
+  // estado, texto de estado de propostas e pagamentos) vem da API como
+  // conteúdo editorial e fica deliberadamente por traduzir, tal como no
+  // painel de edição acima. Só o chrome autorado pela plataforma é traduzido
+  // abaixo.
+
+  // ── WriterWorkspacePage ──────────────────────────────────────────────────
+  "writer.tabs.work": "O teu trabalho",
+  "writer.tabs.pitches": "As tuas propostas",
+  "writer.tabs.payments": "Pagamentos",
+  "writer.tabs.ariaLabel": "Separadores do espaço de trabalho",
+  "writer.page.errorTitle": "O teu espaço de trabalho não carregou",
+  "writer.page.errorDescription":
+    "Algo correu mal ao carregar as tuas atribuições — tenta atualizar a página.",
+
+  // ── AssignmentCard ───────────────────────────────────────────────────────
+  "writer.work.emptyTitle": "Ainda não tens atribuições",
+  "writer.work.emptyDescription":
+    "Quando uma pessoa editora te encomendar algo, aparece aqui.",
+  "writer.work.dueLabel": "Prazo",
+  "writer.work.noDateSet": "Sem data definida",
+  "writer.work.lengthLabel": "Extensão",
+  "writer.work.length": "{words} / {target} palavras",
+  "writer.work.notFiledYet": "Ainda não entregue",
+  "writer.work.feeLabel": "Valor",
+  "writer.work.paymentLabel": "Pagamento",
+  "writer.work.fileDraft": "Entregar um rascunho",
+  "writer.work.readBrief": "Ler o briefing",
+  "writer.work.readBriefToast":
+    "O briefing completo está na ficha da peça — brevemente aqui.",
+  "writer.work.messageEditor": "Mensagem à pessoa editora",
+  "writer.work.activeBadge": "Ativa",
+  "writer.work.setActive": "Usar para assinatura e termos",
+
+  // ── WriterPitchesTab ─────────────────────────────────────────────────────
+  "writer.pitches.emptyTitle": "Ainda não tens propostas",
+  "writer.pitches.emptyDescription":
+    "Envia uma abaixo — uma pessoa lê todas as propostas, e responde em 5 dias.",
+  "writer.pitches.sentMeta": "Enviada a {sent} · resposta em 5 dias",
+  "writer.pitches.formHeading": "Propor um texto",
+  "writer.pitches.titleLabel": "Título de trabalho",
+  "writer.pitches.titlePlaceholder": "Como se chama a peça, mais ou menos?",
+  "writer.pitches.noteLabel": "Do que se trata",
+  "writer.pitches.notePlaceholder": "A ideia, porquê agora, e para quem é.",
+  "writer.pitches.send": "Enviar",
+
+  // ── WriterPaymentsTab ────────────────────────────────────────────────────
+  "writer.payments.emptyTitle": "Ainda não tens pagamentos",
+  "writer.payments.emptyDescription":
+    "Assim que uma peça for entregue e aprovada, o pagamento aparece aqui.",
+  "writer.payments.issueLabel": "Edição {issue}",
+  "writer.payments.unscheduled": "Sem edição agendada",
+  "writer.payments.terms":
+    "Prazo de pagamento de 21 dias. Se estivermos atrasados, isso fica registado aqui antes de teres de perguntar.",
+
+  // ── AgreedTermsCard ──────────────────────────────────────────────────────
+  "writer.terms.heading": "O que acordaste",
+  "writer.terms.body":
+    "Toda a encomenda tem os mesmos termos — valor, valor de cancelamento, prazo, e o que acontece se a peça mudar de forma.",
+  "writer.terms.killFeeLabel": "Valor de cancelamento",
+  "writer.terms.rightsLabel": "Direitos",
+  "writer.terms.editsLabel": "Edições",
+  "writer.terms.emptyState": "Ainda sem nenhuma encomenda ativa — os termos aparecem assim que houver uma.",
+
+  // ── BylineSafetyCard ─────────────────────────────────────────────────────
+  "writer.byline.heading": "A tua segurança",
+  "writer.byline.body":
+    "Escolhes a assinatura em cada peça, e podes alterá-la até ao momento em que é publicada.",
+  "writer.byline.fieldLabel": "Assinatura para “{title}”",
+  "writer.byline.anonymous": "Anónime",
+  "writer.byline.emptyState":
+    "Ainda não tens nenhuma atribuição ativa para definir uma assinatura.",
+
+  // ── FileDraftModal ───────────────────────────────────────────────────────
+  "writer.fileDraft.title": "Entregar “{title}”",
+  "writer.fileDraft.cancel": "Cancelar",
+  "writer.fileDraft.submit": "Entregar",
+  "writer.fileDraft.body":
+    "Cola o texto, arrasta um documento, ou escreve aqui. Chega à redação em blocos, não como um bloco de formatação.",
+  "writer.fileDraft.fieldLabel": "Rascunho",
+  "writer.fileDraft.fieldHelper":
+    "Enviar um documento chega em breve — colar o texto já funciona.",
+  "writer.fileDraft.placeholder": "Cola aqui o teu rascunho…",
+  "writer.fileDraft.wordCountWithTarget":
+    "A contagem de palavras é comparada com o teu briefing ({target} palavras). Passar do valor não é problema.",
+  "writer.fileDraft.wordCountNoTarget":
+    "A contagem de palavras é comparada com o teu briefing. Passar do valor não é problema.",
+
+  // ── MessageEditorModal (Fase 7 Vaga F) ──────────────────────────────────
+  "writer.messages.title": "Mensagens · {title}",
+
+  // ── EditorMessageCard (cartão "Da tua pessoa editora", Fase 7 Vaga F) ──
+  "writer.editorMessage.heading": "Da tua pessoa editora",
+  "writer.editorMessage.fromLabel": "{name}",
+  "writer.editorMessage.loading": "A carregar…",
+  "writer.editorMessage.noMessagesYet": "Ainda sem mensagens — diz olá.",
+  "writer.editorMessage.emptyState": "Ainda sem nenhuma encomenda ativa.",
+
+  // ── PieceThread (conversa partilhada pessoa editora↔quem escreve, Fase 7 Vaga F) ─
+  "pieceThread.you": "Tu",
+  "pieceThread.emptyTitle": "Ainda sem mensagens",
+  "pieceThread.emptyDescription":
+    "Diz olá — insistências e perguntas vivem aqui agora, não no email.",
+  "pieceThread.errorState": "Não foi possível carregar esta conversa — tenta de novo daqui a pouco.",
+  "pieceThread.composerAria": "Mensagem",
+  "pieceThread.composerPlaceholder": "Escreve uma mensagem…",
+  "pieceThread.send": "Enviar",
+  "pieceThread.sentToast": "Mensagem enviada.",
 };

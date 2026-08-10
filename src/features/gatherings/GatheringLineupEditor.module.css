@@ -1,0 +1,93 @@
+/* Host lineup ("who performed") editor — mounted on the gathering detail page. */
+
+.panel {
+  margin-top: var(--wrap-px);
+  padding: var(--card-pad);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-panel);
+}
+.panelHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  margin-bottom: var(--gap-sm);
+}
+.panelTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 17px;
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+}
+.panelDesc {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.5;
+  max-width: 46ch;
+  margin-top: 4px;
+}
+.empty {
+  font-size: 13.5px;
+  color: var(--ink-60);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs) var(--gap-sm);
+  padding: var(--gap-xs) var(--gap-sm);
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: var(--radius-badge);
+}
+.roleSelect {
+  margin-left: auto;
+  font-size: 13px;
+}
+.removeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--ink-60);
+  cursor: pointer;
+  flex: none;
+}
+.removeBtn:hover {
+  background: rgba(var(--line-rgb), 0.08);
+  color: var(--ink);
+}
+
+.saveRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--gap-sm);
+}
+
+/* Below 560px the identity + role select + remove button no longer fit one
+   line. Give the identity its own full-width row, and share the second row
+   between the select (grows) and the remove control (fixed). */
+@media (max-width: 560px) {
+  .row > :first-child {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  .roleSelect {
+    margin-left: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}

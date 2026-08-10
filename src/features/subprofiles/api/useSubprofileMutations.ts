@@ -146,7 +146,7 @@ export function useSubprofileMutations() {
   };
 
   const create = useMutation<SubprofileDTO, Error, CreateSubprofileDTO>({
-    // NewSubprofileModal toasts its own error, so silence the global duplicate.
+    // NewSideModal toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
     mutationFn: async (dto) => {
       if (!demoMode) return createSubprofile(dto);
@@ -161,8 +161,8 @@ export function useSubprofileMutations() {
     Error,
     { id: string; dto: UpdateSubprofileDTO }
   >({
-    // SubprofileMetaForm / NewSubprofileModal toast their own error, so silence
-    // the global duplicate.
+    // useSubprofileMetaEditor / NewSideModal toast their own error, so
+    // silence the global duplicate.
     meta: { silentError: true },
     mutationFn: async ({ id, dto }) => {
       if (!demoMode) return updateSubprofile(id, dto);
@@ -179,7 +179,7 @@ export function useSubprofileMutations() {
     Error,
     { id: string; section: SubprofileSection; items: SubprofileItemInputDTO[] }
   >({
-    // SubprofileSectionEditor / NewSubprofileModal toast their own error, so
+    // SubprofileSectionEditor / NewSideModal toast their own error, so
     // silence the global duplicate.
     meta: { silentError: true },
     mutationFn: async ({ id, section, items }) => {

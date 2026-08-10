@@ -1,22 +1,16 @@
 import { useMemo, useState } from "react";
-import { FiFileText } from "react-icons/fi";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useClipboard } from "../../shared/hooks";
-import { EmptyState } from "../../shared/components/ui";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   buildBoiler,
   buildDownloads,
-  buildFacts,
   buildImages,
   buildLogos,
   buildSwatches,
-  buildTeam,
-  COVERAGE,
 } from "./pressKit.data";
+import { usePressKit } from "./api/usePressKit";
 import { PressKitDownloadModal } from "./PressKitDownloadModal";
 import { assetFor, logoSvg, type PressAsset } from "./pressKitAssets.data";
 import logoStyles from "./MarketingModal.module.css";
@@ -241,9 +235,23 @@ export function PhotographySection() {
   );
 }
 
+/** Cosmetic placeholder-avatar tints, cycled by row index (purely presentational
+ *  — the live contact data carries no colour). */
+const TEAM_PLACEHOLDER_TINTS = ["", "phJade", "phPlum"];
+
+/** Up-to-two-letter initials for the placeholder avatar when no photo exists. */
+function teamInitials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
 export function TeamSection() {
-  const { t } = useTranslation();
-  const team = useMemo(() => buildTeam(t), [t]);
+  const { contacts } = usePressKit();
+  if (contacts.length === 0) return null;
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
@@ -262,24 +270,32 @@ export function TeamSection() {
         />
       </p>
       <div className={styles.teamGrid}>
-        {team.map((member) => (
-          <div className={styles.teamCard} key={member.email}>
-            <div
-              className={[styles.ph, member.phCls && styles[member.phCls]]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              {member.ph}
+        {contacts.map((contact, index) => {
+          const tint =
+            TEAM_PLACEHOLDER_TINTS[index % TEAM_PLACEHOLDER_TINTS.length];
+          return (
+            <div className={styles.teamCard} key={contact.id}>
+              <div
+                className={[styles.ph, tint && styles[tint]]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                {contact.avatarUrl ? (
+                  <img className={styles.phImg} src={contact.avatarUrl} alt="" />
+                ) : (
+                  teamInitials(contact.name)
+                )}
+              </div>
+              <h4>{contact.name}</h4>
+              <div className={styles.teamRole}>{contact.role}</div>
+              <p>{contact.description}</p>
+              <div className={styles.teamLangs}>{contact.languages}</div>
+              <div className={styles.teamContact}>
+                <a href={`mailto:${contact.email}`}>{contact.email}</a>
+              </div>
             </div>
-            <h4>{member.name}</h4>
-            <div className={styles.teamRole}>{member.role}</div>
-            <p>{member.description}</p>
-            <div className={styles.teamLangs}>{member.langs}</div>
-            <div className={styles.teamContact}>
-              <a href={`mailto:${member.email}`}>{member.email}</a>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
@@ -288,7 +304,8 @@ export function TeamSection() {
 export function FactsSection() {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const facts = useMemo(() => buildFacts(t), [t]);
+  const { facts } = usePressKit();
+  if (facts.length === 0) return null;
   const asOf = fmt.date(FACTS_AS_OF, {
     day: "numeric",
     month: "long",
@@ -313,10 +330,10 @@ export function FactsSection() {
         />
       </p>
       <div className={styles.factsGrid}>
-        {facts.map((f, i) => (
-          <div className={styles.fact} key={i}>
-            <b>{f.b}</b>
-            <span>{f.s}</span>
+        {facts.map((fact) => (
+          <div className={styles.fact} key={fact.key}>
+            <b>{fact.value}</b>
+            <span>{t(`marketing:pressKit.facts.${fact.key}`)}</span>
           </div>
         ))}
       </div>
@@ -325,9 +342,8 @@ export function FactsSection() {
 }
 
 export function CoverageSection() {
-  const { t } = useTranslation();
-  const { showToast } = useToast();
-  const { demoMode } = useDemoMode();
+  const { coverage } = usePressKit();
+  if (coverage.length === 0) return null;
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
@@ -345,41 +361,35 @@ export function CoverageSection() {
           components={{ em: <em /> }}
         />
       </p>
-      {demoMode ? (
-        <div className={styles.covList}>
-          {COVERAGE.map((c, i) => (
-            <button
-              type="button"
-              className={styles.covRow}
-              key={i}
-              onClick={() => {
-                showToast(
-                  t("marketing:pressKit.coverage.openingToast", {
-                    source: c.source.split(" · ")[0] ?? c.source,
-                  }),
-                  "info",
-                );
-              }}
-            >
+      <div className={styles.covList}>
+        {coverage.map((item) => {
+          const body = (
+            <>
               <div>
-                <div className={styles.covSource}>{c.source}</div>
-                <div className={styles.covTitle}>{c.title}</div>
-                <div className={styles.covMeta}>{c.meta}</div>
+                <div className={styles.covSource}>{item.source}</div>
+                <div className={styles.covTitle}>{item.title}</div>
+                <div className={styles.covMeta}>{item.meta}</div>
               </div>
-              <div className={styles.covDate}>
-                {c.day}
-                <em>{c.month}</em>
-              </div>
-            </button>
-          ))}
-        </div>
-      ) : (
-        <EmptyState
-          icon={<FiFileText />}
-          title={t("marketing:pressKit.coverage.emptyLive.title")}
-          description={t("marketing:pressKit.coverage.emptyLive.description")}
-        />
-      )}
+              <div className={styles.covDate}>{item.publishedOn}</div>
+            </>
+          );
+          return item.url ? (
+            <a
+              className={styles.covRow}
+              key={item.id}
+              href={item.url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {body}
+            </a>
+          ) : (
+            <div className={styles.covRow} key={item.id}>
+              {body}
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 }

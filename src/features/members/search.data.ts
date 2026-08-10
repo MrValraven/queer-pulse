@@ -191,7 +191,7 @@ export const PAGE_SEARCH_ITEMS: SearchItem[] = [
     t: "page",
     name: "My events",
     sub: "What you're going to",
-    href: routes.myEvents,
+    href: routes.events,
     icon: FiCalendar,
     kw: "my events rsvps going tickets attending",
   },

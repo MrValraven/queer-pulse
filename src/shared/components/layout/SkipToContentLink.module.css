@@ -20,13 +20,14 @@
   transition: transform 0.2s var(--ease);
 }
 
+/* Reveal ONLY on genuine keyboard focus. A plain `:focus` fallback used to sit
+   below this, but it also fired on programmatic focus — a modal/drawer close
+   handler restoring focus lands on this link (it's the first focusable node in
+   the document), which flashed the pill into view for mouse/touch users who
+   never asked for it. `:focus-visible` is universally supported on anchors, so
+   the fallback is gone and only true keyboard traversal brings the pill in. */
 .link:focus-visible {
   transform: translateY(0);
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-}
-
-/* Fallback for engines without :focus-visible on anchors. */
-.link:focus {
-  transform: translateY(0);
 }

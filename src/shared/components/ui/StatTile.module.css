@@ -4,6 +4,30 @@
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 16px;
 }
+/* Fixed-count grids (`<StatGrid columns={N} />`) cap at N columns on wide
+   screens but wrap down to fewer — never overflowing — as the viewport
+   narrows. The track's min is the larger of a comfortable tile width and the
+   ideal 1/N share of the row, so auto-fit yields exactly N columns until a
+   tile would drop below `--sg-min`, then it packs as many as fit. Double
+   class = higher specificity than a consumer's single-class override, so this
+   stays authoritative regardless of stylesheet order. */
+.gridFixed.gridFixed {
+  --sg-min: 150px;
+  --sg-gap: 16px;
+  gap: var(--sg-gap);
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(
+      max(
+        var(--sg-min),
+        calc(
+          (100% - (var(--sg-cols) - 1) * var(--sg-gap)) / var(--sg-cols)
+        )
+      ),
+      1fr
+    )
+  );
+}
 .tile {
   display: flex;
   flex-direction: column;

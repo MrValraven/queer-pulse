@@ -24,7 +24,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { MagazineMasthead } from "./MagazineMasthead";
 import { defaultArticleId, firstPlainText, relationReason } from "./data/articles";
-import { ArticleBody } from "./ArticleBody";
+import { ArticleReaderBody } from "./ArticleReaderBody";
 import { ArticleToolbar, type TextSize } from "./ArticleToolbar";
 import { AuthorLink } from "./AuthorLink";
 import { useArticle } from "./api/useArticle";
@@ -188,7 +188,7 @@ export function ArticlePage() {
               } as CSSProperties
             }
           >
-            <ArticleBody blocks={article.body} />
+            <ArticleReaderBody article={article} />
           </div>
 
           <div className={styles.bio}>

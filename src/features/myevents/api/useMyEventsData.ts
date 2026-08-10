@@ -1,12 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useFormat } from "../../../shared/i18n/format";
 import {
   getEventInvites,
   getEvents,
   type EventFilter,
 } from "../../gatherings/api/events.api";
+import { getNotifications } from "../../notifications/api/notifications.api";
 import type { MyEvent, Notif } from "../myEvents.types";
-import { eventCardToMyEvent, eventInviteToMyEvent } from "./myEvents.adapters";
+import {
+  EVENT_PANEL_NOTIF_KINDS,
+  eventCardToMyEvent,
+  eventInviteToMyEvent,
+  eventNotificationToNotif,
+} from "./myEvents.adapters";
 
 export interface MyEventsDataResult {
   events: MyEvent[];
@@ -59,31 +67,30 @@ const LIVE_FILTERS: EventFilter[] = [
  * the dashboard's `category` buckets — see `myEvents.adapters.ts`) plus
  * GET /event-invites for pending invitations, and merges everything into the
  * same flat `MyEvent[]` shape `useMyEventsState` already filters/mutates
- * locally. Notifications and "sent" (outgoing invites you sent) have no
- * backend contract yet; rather than pass the mock off as real, live mode
- * returns no notifications at all (empty "What's changed" + zero bell badge) —
- * a documented gap rather than a fake success.
+ * locally. "Sent" (outgoing invites you sent) still has no backend contract and
+ * is simply absent in live rather than faked.
  *
- * DEFERRED(Phase 2, myevents "What's changed" panel): because this panel has no
- * dedicated contract, the consumer hides the header bell + "What's changed"
- * panel entirely in live (see `MyEventsHeader` / `notificationsEnabled`) so a
- * permanently-empty panel isn't surfaced as if it were a working feature.
- *
- * TODO(P2-7 follow-up): event-change notifications now DO exist end-to-end — the
- * backend emits an `event_updated` notification (start-time / location edits) to
- * RSVP'd + invited members and it already renders in the MAIN notifications
- * centre (`formatNotification` → category "events"). To re-light this panel,
- * feed it the member's `event_updated` (and `event_cancelled` / `waitlist_promoted`)
- * rows from `GET /notifications`, mapping them into the local `Notif` shape and
- * flipping `notificationsEnabled` on in live. Deliberately left for a dedicated
- * pass — mapping the notifications feed into this bespoke panel + re-enabling the
- * bell is more than this feature's scope.
+ * The "What's changed" panel is now live (tracker P2-7): the backend emits
+ * event-change notifications (`event_updated` / `event_cancelled` /
+ * `waitlist_promoted`) to members with a stake in the event, so live mode reads
+ * GET /notifications, keeps only those event kinds (see
+ * `EVENT_PANEL_NOTIF_KINDS`), and maps each into the local `Notif` shape via
+ * `eventNotificationToNotif`. The copy is rendered through the shared
+ * `formatNotification` i18n keys, which is why `language` is part of the
+ * queryKey — a language switch must re-render the panel in the new language
+ * rather than serve a stale cache entry. Demo mode is unchanged: it resolves the
+ * page's own `INITIAL_NOTIFS` registry.
  */
-export function useMyEventsData(): MyEventsDataResult {
+export function useMyEventsData(options?: {
+  enabled?: boolean;
+}): MyEventsDataResult {
   const { demoMode } = useDemoMode();
+  const { t, language } = useTranslation();
+  const fmt = useFormat();
 
   const query = useQuery<MyEventsPayload>({
-    queryKey: ["my-events", demoMode],
+    queryKey: ["my-events", demoMode, language],
+    enabled: options?.enabled ?? true,
     queryFn: async () => {
       if (demoMode) {
         // Demo mock is code-split: the registry loads only when the demo
@@ -93,18 +100,23 @@ export function useMyEventsData(): MyEventsDataResult {
         );
         return { events: INITIAL_EVENTS, notifs: INITIAL_NOTIFS };
       }
-      const [pages, invites] = await Promise.all([
+      const [pages, invites, notifications] = await Promise.all([
         Promise.all(LIVE_FILTERS.map((filter) => getEvents({ filter }))),
         getEventInvites(),
+        getNotifications(),
       ]);
-      const fromFilters = pages.flatMap((page, i) =>
-        page.items.map((dto) => eventCardToMyEvent(dto, LIVE_FILTERS[i]!)),
+      const fromFilters = pages.flatMap((page, filterIndex) =>
+        page.items.map((dto) =>
+          eventCardToMyEvent(dto, LIVE_FILTERS[filterIndex]!),
+        ),
       );
       const fromInvites = invites.map(eventInviteToMyEvent);
-      // Notifications have no backend contract yet, so rather than surface the
-      // mock "What's changed" list as if it were real, live mode returns none —
-      // the panel renders its "all caught up" empty state and the bell reads zero.
-      return { events: [...fromFilters, ...fromInvites], notifs: [] };
+      // Keep only the event-change kinds the "What's changed" panel is about;
+      // every other notification stays in the main notifications centre.
+      const notifs = notifications
+        .filter((notification) => EVENT_PANEL_NOTIF_KINDS.has(notification.type))
+        .map((notification) => eventNotificationToNotif(notification, t, fmt));
+      return { events: [...fromFilters, ...fromInvites], notifs };
     },
   });
 

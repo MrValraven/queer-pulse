@@ -25,6 +25,13 @@ export const notifications: Catalog = {
   "type.vouch_received.textNamed": "<profile>{name}</profile> avalizou-te.",
   "type.vouch_received.meta": "Aval",
 
+  // Enviada a quem gere o espaço quando alguém o avaliza. Um aval anónimo não
+  // resolve autor e mantém o `.text` genérico (nunca o nomeia).
+  "type.safe_space_vouch.text": "Alguém avalizou o teu espaço seguro.",
+  "type.safe_space_vouch.textNamed":
+    "<profile>{name}</profile> avalizou o teu espaço seguro.",
+  "type.safe_space_vouch.meta": "Espaço seguro",
+
   "type.promoted_to_member.text": "Já fazes parte da comunidade. Bem-vinde.",
   "type.promoted_to_member.meta": "Adesão",
 
@@ -177,6 +184,12 @@ export const notifications: Catalog = {
     "A tua conta foi suspensa permanentemente.",
   "type.moderation_outcome.ban.meta": "{note}",
 
+  // Outro membro creditou uma persona tua como colaboradora num item dele
+  // (descoberta de personas, Fase 5, Momento 6). O primeiro tipo ao vivo cujo
+  // `.actions` o adaptador preenche — ver `notificationDtoToView`.
+  "type.subprofile_credit.text": "{subprofileName} creditou-te em {itemTitle}.",
+  "type.subprofile_credit.meta": "Crédito de persona",
+
   "type.unknown.text": "Tens uma nova notificação.",
   "type.unknown.meta": "Notificação",
 
@@ -202,6 +215,7 @@ export const notifications: Catalog = {
   // Rótulos de ação partilhados pela lista de notificações de demonstração
   "actions.viewThread": "Ver conversa",
   "actions.viewEvent": "Ver encontro",
+  "actions.viewProfile": "Ver perfil",
   "actions.accept": "Aceitar",
   "actions.decline": "Recusar",
   "actions.readNow": "Ler agora",
@@ -209,6 +223,10 @@ export const notifications: Catalog = {
   "actions.seeBarterBoard": "Ver quadro de trocas",
   "actions.viewReplies": "Ver respostas",
   "actions.readReport": "Ler relatório",
+  // Ações numa notificação subprofile_credit (descoberta de personas, Fase 5,
+  // Momento 6) — o primeiro tipo ao vivo com ações.
+  "actions.makePersona": "Cria uma persona para isto",
+  "actions.seeTheWork": "Ver o trabalho",
 
   // Lista de notificações de demonstração (notificationsList.data.tsx)
   "list.2.text":
@@ -246,6 +264,9 @@ export const notifications: Catalog = {
   "list.12.text":
     "O <strong>{report}</strong> já foi publicado. As estatísticas de moderação e as contas já estão disponíveis.",
   "list.12.meta": "Governação · Relatório trimestral",
+  "list.13.text":
+    "<strong>{subprofileName}</strong> creditou-te em {itemTitle}.",
+  "list.13.meta": "Crédito de persona",
 
   // Conversa de menções (MentionsPanel.tsx / mentions.data.tsx)
   "mentions.day.today": "Hoje",

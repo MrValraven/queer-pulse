@@ -1,0 +1,148 @@
+/* Pitch inbox — shared by PitchInbox.tsx (wrap/empty) and PitchRow.tsx (row).
+   Ported from the mag.css `.pitch`/`.ck` prototype rules onto repo tokens;
+   there is no `--line-2` token, so the checkbox border is a local rgba. */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.pitch {
+  display: flex;
+  gap: 14px;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--line);
+  align-items: flex-start;
+  transition:
+    opacity var(--dur-base) var(--ease),
+    transform var(--dur-base) var(--ease);
+}
+
+.pitch:last-child {
+  border-bottom: none;
+}
+
+.pitch[data-leaving="true"] {
+  opacity: 0;
+  transform: translateX(26px);
+  pointer-events: none;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.6px solid rgba(var(--plum-rgb), 0.24);
+  flex: none;
+  margin-top: 3px;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  color: var(--ink-40);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.checkbox[aria-pressed="true"] {
+  background: var(--plum);
+  border-color: var(--plum);
+  color: #fff;
+}
+
+.checkbox:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.body h4 {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--plum);
+  line-height: 1.2;
+}
+
+.byline {
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+
+.note {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+
+.tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: var(--radius-tag);
+  background: var(--wash);
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+
+.tagPlum {
+  background: rgba(var(--plum-rgb), 0.09);
+  color: var(--plum);
+}
+
+.actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex: none;
+}
+
+.empty {
+  padding: 60px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  color: var(--ink-60);
+}
+
+.empty h3 {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--plum);
+}
+
+@media (max-width: 640px) {
+  .pitch {
+    flex-wrap: wrap;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

@@ -1,0 +1,97 @@
+/* Desk sidebar — ported from the mag.css `.side`/`.scard`/`.load`/`.feed`
+   prototype rules onto repo tokens. `.side` itself is unpositioned here;
+   the page assembling the two-column desk grid owns the sticky offset. */
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card {
+  padding: 18px;
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card h3 {
+  font-size: 12px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-40);
+}
+
+.load {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: var(--ink-60);
+}
+
+.rowLabel {
+  min-width: 52px;
+  flex: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bar {
+  flex: 1;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.1);
+  overflow: hidden;
+}
+
+.bar i {
+  display: block;
+  height: 100%;
+  background: var(--plum);
+  border-radius: var(--radius-pill);
+}
+
+.bar i.over {
+  background: var(--accent);
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.feedRow {
+  display: flex;
+  gap: 9px;
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.45;
+}
+
+.feedRow time {
+  color: var(--ink-40);
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.actor {
+  color: var(--plum);
+}
+
+.emptyNote {
+  font-size: 13px;
+  color: var(--ink-40);
+}

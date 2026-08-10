@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Button, Reveal } from "../../../shared/components/ui";
 import { useFormat, type Formatters } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -110,14 +111,47 @@ export function BrowseView({
   const fmt = useFormat();
   const [active, setActive] = useState("all");
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const [params, setParams] = useSearchParams();
+  const query = params.get("q") ?? "";
+
+  const setQuery = (value: string) =>
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (value) next.set("q", value);
+        else next.delete("q");
+        return next;
+      },
+      { replace: true },
+    );
 
   const filtered = useMemo(() => {
     const cat = EVENT_CATEGORIES.find((c) => c.key === active);
-    if (!cat?.colors) return events;
-    return events.filter((e) => cat.colors!.includes(e.orgColor));
-  }, [active, events]);
+    const byOrg = !cat?.colors ? events : events.filter((e) => cat.colors!.includes(e.orgColor));
+    const q = query.trim().toLowerCase();
+    if (!q) return byOrg;
+    // Client-side filter over the ALREADY-LOADED events (the infinite-scroll
+    // page set) — not a backend search. Honest for a small/loaded list.
+    return byOrg.filter(
+      (e) => e.title.toLowerCase().includes(q) || e.hood.toLowerCase().includes(q),
+    );
+  }, [active, events, query]);
 
   const months = useMemo(() => groupByMonth(filtered, fmt), [filtered, fmt]);
+
+  useEffect(() => {
+    if (params.get("focus") !== "1") return;
+    searchRef.current?.focus();
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete("focus");
+        return next;
+      },
+      { replace: true },
+    );
+  }, [params, setParams]);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -139,6 +173,21 @@ export function BrowseView({
       <div className="wrap">
         <h2 className={styles.heading}>{t("gatherings:hub.browse.heading")}</h2>
 
+        <div className={styles.search}>
+          <label className={styles.searchLabel} htmlFor="events-browse-search">
+            {t("gatherings:hub.browse.searchLabel")}
+          </label>
+          <input
+            id="events-browse-search"
+            ref={searchRef}
+            type="search"
+            className={styles.searchInput}
+            placeholder={t("gatherings:hub.browse.searchPlaceholder")}
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+        </div>
+
         <FilterChips active={active} onChange={setActive} />
 
         {isLoading ? (
@@ -153,7 +202,12 @@ export function BrowseView({
             ))}
 
             {!isLoading && filtered.length === 0 && (
-              <HubEmptyState titleKey="gatherings:hub.browse.empty" compact />
+              <HubEmptyState
+                titleKey={
+                  query.trim() ? "gatherings:hub.browse.searchEmpty" : "gatherings:hub.browse.empty"
+                }
+                compact
+              />
             )}
 
             {isFetchingNextPage && <SkeletonRows count={3} />}

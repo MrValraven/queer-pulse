@@ -48,7 +48,7 @@ export function BudgetStep({
               className={styles.input}
               type="number"
               placeholder="€"
-              aria-label={t("gatherings:checkout.payment.multibancoAmountLabel")}
+              aria-label={t("resources:microGrants.apply.budget.amountLabel")}
               min={0}
               max={2000}
               value={r.amount}

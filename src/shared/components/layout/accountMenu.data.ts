@@ -1,20 +1,32 @@
+import type { ReactNode } from "react";
 import type { IconType } from "react-icons";
 import {
   FiUser,
   FiUserPlus,
-  FiFileText,
   FiEdit3,
   FiSend,
   FiBriefcase,
   FiBookmark,
   FiCalendar,
   FiUsers,
+  FiLayers,
   FiSettings,
   FiHelpCircle,
 } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 
-export type AccountItem = { labelKey: string; to: string; icon: IconType };
+export type AccountItem = {
+  labelKey: string;
+  to: string;
+  icon: IconType;
+  /**
+   * Optional trailing badge (a persona count pill / pending-invite dot,
+   * personas Phase 5 M3). Never set in this static array — counts need
+   * live hooks, so `AccountMenuPanel`/`AccountSheetBody` compute it and
+   * attach it per-row (matched by `to`) when rendering.
+   */
+  badge?: ReactNode;
+};
 
 /**
  * The canonical account links, grouped by type. Each inner array renders as its
@@ -32,24 +44,24 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       icon: FiUser,
     },
     {
+      labelKey: "shared:accountMenu.items.personas",
+      to: routes.subprofilesDashboard,
+      icon: FiLayers,
+    },
+    {
       labelKey: "shared:accountMenu.items.connections",
       to: routes.connections,
       icon: FiUserPlus,
     },
-    { labelKey: "nav:communities", to: routes.communitiesHome, icon: FiUsers },
+    { labelKey: "nav:communities", to: routes.communities, icon: FiUsers },
     {
       labelKey: "shared:accountMenu.items.events",
-      to: routes.myEvents,
+      to: routes.events,
       icon: FiCalendar,
     },
   ],
-  // Career
+  // Career — Applications now lives inside the Work hub, not as its own link.
   [
-    {
-      labelKey: "shared:accountMenu.items.applications",
-      to: routes.applicationStatus,
-      icon: FiFileText,
-    },
     {
       labelKey: "shared:accountMenu.items.work",
       to: routes.work,

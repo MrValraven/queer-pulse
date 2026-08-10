@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiUserPlus, FiUsers, FiX } from "react-icons/fi";
+import { FiUserPlus, FiX } from "react-icons/fi";
 import { Avatar, Badge, Button, Modal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -10,15 +10,19 @@ import { initialsFromName } from "../../shared/lib/initials";
 import { useSubprofileMembers } from "./api/useSubprofileMembers";
 import { useSubprofileInvites } from "./api/useSubprofileInvites";
 import { InviteCoOwnerModal } from "./InviteCoOwnerModal";
-import sharedStyles from "./SubprofileEditor.module.css";
 import styles from "./SubprofileOwnersPanel.module.css";
 
 /**
- * Owner-facing "Co-owners" card: everyone who can currently edit this persona,
- * outstanding invites (with revoke), an entry point to invite someone new, and
- * — once there's more than one member — a way for the signed-in member to
- * leave. `subprofileId` drives both the members and invites hooks, which
- * branch demo/live internally (this component just consumes them).
+ * Owner-facing "Co-owners" pane body: everyone who can currently edit this
+ * persona, outstanding invites (with revoke), an entry point to invite
+ * someone new, and — once there's more than one member — a way for the
+ * signed-in member to leave. `subprofileId` drives both the members and
+ * invites hooks, which branch demo/live internally (this component just
+ * consumes them). No outer card/title of its own — the editor's pane router
+ * (`EditorPaneRouter`, Task 4) already renders the "Co-owners" h2 + lede
+ * above whichever pane is active, reusing this component's own
+ * `owners.title`/`owners.note` copy, so a second heading here would just
+ * repeat it.
  */
 export function SubprofileOwnersPanel({
   subprofileId,
@@ -82,15 +86,7 @@ export function SubprofileOwnersPanel({
   }
 
   return (
-    <section className={sharedStyles.card}>
-      <div className={sharedStyles.cardHead}>
-        <span className={sharedStyles.cardIcon}>
-          <FiUsers size={20} aria-hidden />
-        </span>
-        <h2 className={sharedStyles.cardTitle}>{t("subprofiles:owners.title")}</h2>
-      </div>
-      <p className={sharedStyles.cardNote}>{t("subprofiles:owners.note")}</p>
-
+    <div className="ed-grid">
       <ul className={styles.list}>
         {memberList.map((member) => (
           <li key={member.userId} className={styles.row}>
@@ -187,6 +183,6 @@ export function SubprofileOwnersPanel({
           <p>{t("subprofiles:owners.leaveModalBody")}</p>
         </Modal>
       )}
-    </section>
+    </div>
   );
 }

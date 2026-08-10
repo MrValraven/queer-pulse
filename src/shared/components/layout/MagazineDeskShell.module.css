@@ -1,0 +1,112 @@
+.app {
+  display: flex;
+  min-height: 100svh;
+  background: var(--cream);
+}
+
+/* Wraps the rail. On desktop it is `display: contents`, so the <aside> stays
+   a direct flex child exactly as before. Below the mobile breakpoint it turns
+   into a fixed, slide-in off-canvas panel (see the media query below). */
+.sidebarDock {
+  display: contents;
+}
+
+/* Backdrop behind the mobile off-canvas panel. Only rendered while the
+   drawer is open on mobile, so no desktop guard is needed. */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  background: rgba(0, 0, 0, 0.44);
+  animation: axScrimIn 0.2s var(--ease, ease);
+}
+@keyframes axScrimIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scrim {
+    animation: none;
+  }
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobileBar {
+  display: none;
+  align-items: center;
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--cream);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.menuBtn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 11px;
+  background: var(--paper);
+  color: var(--ink-60);
+  cursor: pointer;
+  transition:
+    background var(--dur, 0.18s) var(--ease, ease),
+    color var(--dur, 0.18s) var(--ease, ease);
+}
+.menuBtn svg {
+  width: 20px;
+  height: 20px;
+}
+@media (hover: hover) {
+  .menuBtn:hover {
+    background: var(--cream);
+    color: var(--text-strong);
+  }
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  /* The dock leaves `display: contents` and becomes a fixed slide-in panel
+     off the left edge, above the mobile bar (z-50) and the scrim (z-65). */
+  .sidebarDock {
+    display: block;
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: 70;
+    width: min(84vw, 300px);
+    transform: translateX(-100%);
+    transition: transform var(--dur, 0.24s) var(--ease, ease);
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.32);
+  }
+  .sidebarDockOpen {
+    transform: translateX(0);
+  }
+
+  .mobileBar {
+    display: flex;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebarDock {
+    transition: none;
+  }
+}

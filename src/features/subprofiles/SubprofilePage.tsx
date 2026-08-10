@@ -1,44 +1,86 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
+import { useState, type CSSProperties } from "react";
+import { useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { EmptyState, Spinner } from "../../shared/components/ui";
+import { Spinner } from "../../shared/components/ui";
 import { PageMeta } from "../../shared/seo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   usePublicSubprofile,
   type PublicSubprofileArgs,
+  type RestrictedState,
 } from "./api/usePublicSubprofile";
-import { SubprofileHero } from "./SubprofileHero";
-import { SubprofileSections } from "./SubprofileSections";
-import { SubprofileSpotlight } from "./SubprofileSpotlight";
-import { SubprofileAffiliations } from "./SubprofileAffiliations";
-import { SubprofileNotFoundArt } from "./SubprofileNotFoundArt";
-import { NOT_FOUND } from "./subprofilePage.data";
+import { SubprofilePageBody } from "./SubprofilePageBody";
+import { SubprofilePageStates } from "./SubprofilePageStates";
+import { SubprofileDraftBanner } from "./SubprofileDraftBanner";
+import { SubprofileReportModal } from "./SubprofileReportModal";
+import { SubprofilePeopleModal } from "./SubprofilePeopleModal";
+import { StudioLightbox } from "./skins/StudioLightbox";
+import { useStudioLightbox } from "./useStudioLightbox";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { personaPublicPath } from "./personaLinks.data";
-import { DEFAULT_ACCENT } from "./subprofilePresence.data";
+import { ACCENT_TOKENS, DEFAULT_ACCENT } from "./subprofilePresence.data";
+import { skinFor } from "./subprofile-skins";
+import { estimateDraftReadiness } from "./subprofileDraftReadiness";
+import type { PersonaViewMode } from "./personaSkinRender";
+import { PAGE_STATE_COPY, type PersonaPageState } from "./subprofilePageStates.data";
 import styles from "./SubprofilePage.module.css";
+
+type PeopleModalMode = "followers" | "endorsements";
+
+/** The Shared Contract's `RestrictedState` ("members_only", underscore) maps
+ *  1:1 onto `SubprofilePageStates`' pre-existing `PersonaPageState` keys
+ *  ("members-only", hyphen) — same three states, named before this contract
+ *  existed (Phase 1 built the wall copy off the design ground truth's
+ *  `personas-states.jsx`, which used hyphens). */
+const RESTRICTED_TO_PAGE_STATE: Record<RestrictedState, PersonaPageState> = {
+  private: "private",
+  members_only: "members-only",
+  removed: "removed",
+};
 
 /**
  * Public persona page — serves both the standalone `/p/:handle` route and the
- * nested `/members/:slug/:subslug` linked-persona route. The owner tie is shown
- * ONLY for linked personas (spec §4): an unlinked, pseudonymous persona never
- * reveals who is behind it.
+ * nested `/members/:slug/:subslug` linked-persona route. Composes the full
+ * skinned tree (`data-skin={skinFor(kind)}`, built in `SubprofilePageBody`):
+ * cover, per-slot `SkinExtras`, hero, spotlight/sections, the endorsers+
+ * affiliations foot, the studio lightbox, and the report/people modals — one
+ * renderer for every craft family, styled entirely through
+ * `persona-skins.css`'s global `.pp*` classes (see that file +
+ * `subprofile-skins.ts`).
+ *
+ * Mode is co-ownership aware: `viewerIsMember` covers the creator AND any
+ * invited co-owner (not just "am I the creator"), so an invited co-owner
+ * sees the same "owner" actions the creator does. This page only ever
+ * renders `"public"` or `"owner"` — `"preview"` is the Phase-3 editor's
+ * concern, reusing the same components with a different `mode`, never
+ * mounted here.
  */
 export function SubprofilePage() {
   const { t } = useTranslation();
   const { handle, slug, subslug } = useParams();
-  const navigate = useNavigate();
 
   const args: PublicSubprofileArgs = handle
     ? { handle }
     : { ownerSlug: slug ?? "", subslug: subslug ?? "" };
-  const { data, isLoading } = usePublicSubprofile(args);
+  const result = usePublicSubprofile(args);
+  const lightbox = useStudioLightbox(
+    result.state === "ok" ? result.data.sections : undefined,
+  );
+  const [reportOpen, setReportOpen] = useState(false);
+  const [peopleModalMode, setPeopleModalMode] = useState<PeopleModalMode | null>(
+    null,
+  );
 
-  if (isLoading) {
+  function handleAction(action: string) {
+    if (action === "report") setReportOpen(true);
+    else if (action === "people:endorsers") setPeopleModalMode("endorsements");
+    else if (action === "people:followers") setPeopleModalMode("followers");
+  }
+
+  if (result.state === "loading") {
     return (
       <PageShell>
-        <div className={styles.stateWrap} role="status" aria-live="polite">
+        <div className={styles.loadingWrap} role="status" aria-live="polite">
           <Spinner />
           <span>{t("subprofiles:page.loading")}</span>
         </div>
@@ -46,33 +88,38 @@ export function SubprofilePage() {
     );
   }
 
-  if (!data) {
+  if (result.state === "not-found") {
     return (
       <PageShell>
         <PageMeta title={t("subprofiles:page.notFoundMetaTitle")} noIndex />
-        <div className={styles.stateWrap}>
-          <SubprofileNotFoundArt />
-          <EmptyState
-            className={styles.stateEmpty}
-            title={t(NOT_FOUND.titleKey)}
-            description={t(NOT_FOUND.descriptionKey)}
-            action={{
-              label: t(NOT_FOUND.actionLabelKey),
-              to: NOT_FOUND.actionTo,
-            }}
-            secondaryAction={{
-              label: (
-                <>
-                  <FiArrowLeft aria-hidden /> {t(NOT_FOUND.backLabelKey)}
-                </>
-              ),
-              onClick: () => void navigate(-1),
-            }}
-          />
-        </div>
+        <SubprofilePageStates state="not-found" />
       </PageShell>
     );
   }
+
+  if (result.state === "restricted") {
+    const pageState = RESTRICTED_TO_PAGE_STATE[result.restricted];
+    return (
+      <PageShell>
+        <PageMeta
+          title={`${t(PAGE_STATE_COPY[pageState].titleKey)} — QueerPulse`}
+          noIndex
+        />
+        <SubprofilePageStates state={pageState} />
+      </PageShell>
+    );
+  }
+
+  // result.state === "ok" from here on — every other branch returned above.
+  const { data } = result;
+  const skin = skinFor(data.kind);
+  const mode: PersonaViewMode = data.viewerIsMember ? "owner" : "public";
+  const isOwnerDraftPreview = data.status === "draft" && data.viewerIsMember;
+  const accentTokens = ACCENT_TOKENS[data.accent ?? DEFAULT_ACCENT];
+  const skinVars = {
+    "--sk-tint": accentTokens.tint,
+    "--sk-on": accentTokens.on,
+  } as CSSProperties;
 
   return (
     <PageShell>
@@ -81,26 +128,52 @@ export function SubprofilePage() {
         description={(data.tagline || data.bio || "").slice(0, 160) || undefined}
         image={data.coverUrl ?? data.avatarUrl ?? undefined}
         canonical={personaPublicPath(data)}
+        // An owner's own unpublished draft preview must never index — only a
+        // published persona is meant to be publicly discoverable.
+        noIndex={isOwnerDraftPreview || undefined}
         type="profile"
       />
-      <SubprofileHero
-        view={data}
-        canMessage={data.linkVisibility === "linked" && Boolean(data.ownerSlug)}
-      />
 
-      {data.featured && (
-        <SubprofileSpotlight
-          item={data.featured}
-          accent={data.accent ?? DEFAULT_ACCENT}
+      {isOwnerDraftPreview && (
+        <SubprofileDraftBanner
+          subprofileId={data.id}
+          {...estimateDraftReadiness(data)}
         />
       )}
 
-      <div className={`wrap ${styles.body}`}>
-        <SubprofileSections sections={data.sections} />
-      </div>
+      <SubprofilePageBody
+        data={data}
+        skin={skin}
+        mode={mode}
+        skinVars={skinVars}
+        onAction={handleAction}
+        onOpenWorkAt={lightbox.openAt}
+        onOpenWorkItem={lightbox.openItem}
+      />
 
-      {data.affiliations.length > 0 && (
-        <SubprofileAffiliations affiliations={data.affiliations} />
+      {lightbox.index !== null && lightbox.works.length > 0 && (
+        <StudioLightbox
+          items={lightbox.works}
+          index={lightbox.index}
+          onClose={lightbox.close}
+          onMove={lightbox.move}
+        />
+      )}
+
+      {reportOpen && (
+        <SubprofileReportModal
+          subjectId={data.slug}
+          subjectName={data.displayName}
+          onClose={() => setReportOpen(false)}
+        />
+      )}
+
+      {peopleModalMode && (
+        <SubprofilePeopleModal
+          persona={data}
+          mode={peopleModalMode}
+          onClose={() => setPeopleModalMode(null)}
+        />
       )}
     </PageShell>
   );

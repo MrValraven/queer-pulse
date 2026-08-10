@@ -1,0 +1,16 @@
+/* Uncontrolled contentEditable surface. Ported from the design prototype's
+   `.rich` (mag-write.css) with repo tokens in place of the prototype-local
+   --ink-40/--wash placeholders (both already exist as real repo tokens). */
+
+.rich {
+  outline: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.rich[data-empty="true"]::before {
+  content: attr(data-ph);
+  color: var(--ink-40);
+  pointer-events: none;
+  font-style: normal;
+}

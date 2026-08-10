@@ -27,14 +27,21 @@ export function NotificationItem({
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  // Where the whole row navigates on click/keypress. A specific source
+  // deep-link (thread/post/event) wins; otherwise an actor-driven row
+  // (invite accepted, connection accepted, …) falls back to the actor's
+  // profile so tapping anywhere on the row reaches the person.
+  const rowHref = notification.sourceHref ?? notification.actor?.href;
+  const rowGoesToProfile = !notification.sourceHref && Boolean(rowHref);
+
   // A click/keypress that landed on the avatar or the inline profile link
   // (both render as <a>) is that link's own navigation — the actor
-  // profile — and must not be overridden by the row's source deep-link.
+  // profile — and must not be overridden by the row's own navigation.
   function activateRow(target: EventTarget | null) {
     onMarkRead(notification.id);
     const clickedLink = (target as HTMLElement).closest?.("a");
-    if (notification.sourceHref && !clickedLink) {
-      void navigate(linkToPath(notification.sourceHref));
+    if (rowHref && !clickedLink) {
+      void navigate(linkToPath(rowHref));
     }
   }
   return (
@@ -45,22 +52,26 @@ export function NotificationItem({
         .filter(Boolean)
         .join(" ")}
       onClick={(event: MouseEvent<HTMLElement>) => activateRow(event.target)}
-      // Only a row with a source deep-link is keyboard-operable — a row
-      // with none stays a plain (mark-read-on-click) div, same as before
-      // this field existed.
-      role={notification.sourceHref ? "button" : undefined}
-      tabIndex={notification.sourceHref ? 0 : undefined}
+      // Only a row with somewhere to go (a source deep-link, or an actor
+      // profile to fall back to) is keyboard-operable — a row with neither
+      // stays a plain (mark-read-on-click) div.
+      role={rowHref ? "button" : undefined}
+      tabIndex={rowHref ? 0 : undefined}
       aria-label={
-        notification.sourceHref
+        rowHref
           ? `${
               typeof notification.text === "string"
                 ? notification.text
                 : notification.meta
-            } — ${t("notifications:actions.viewThread")}`
+            } — ${t(
+              rowGoesToProfile
+                ? "notifications:actions.viewProfile"
+                : "notifications:actions.viewThread",
+            )}`
           : undefined
       }
       onKeyDown={
-        notification.sourceHref
+        rowHref
           ? (event: KeyboardEvent<HTMLElement>) => {
               if (event.key !== "Enter" && event.key !== " ") return;
               // Space's default is page scroll; Enter has no default to guard

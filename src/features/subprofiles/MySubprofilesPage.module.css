@@ -1,102 +1,31 @@
-.page {
-  background: var(--cream);
-  min-height: 60svh;
-  /* Top pad clears the fixed floating Navbar (--nav-top + --nav-height = 80px);
-     in sidebar mode nav-mode.css pulls main up by that same 80px. */
-  padding: 108px 0 clamp(48px, 6vw, 96px);
+/* Dashboard page chrome that sits inside the global `.page-head` (ported in
+   `persona-dashboard.css`): `.page-head` itself, its `h1`/`p`, `.sides`,
+   `.side*`, and `.new-side` are all global classes — this module only
+   covers the bits specific to this page's own header layout (the
+   count-over-CTA column) and the create-flow modal
+   (NewSideModal.module.css) is separate. */
+
+/* Establishes the containment context `.sides`/`.empty-hero`'s `@container`
+   queries (persona-dashboard.css) query against — scoped to THIS page's
+   `.wrap` instance only (an extra class alongside the global `wrap`, not a
+   change to `.wrap` itself, which is shared app-wide and must not gain
+   containment everywhere). Safe: every modal this page renders (NewSideModal,
+   SubprofileShareCard, the inline delete Modal) goes through the shared
+   `Modal` primitive, which `createPortal`s to `document.body` — none of them
+   are DOM descendants of this wrapper. */
+.dashboardContainer {
+  container-type: inline-size;
 }
 
-.container {
-  width: min(760px, 100% - 40px);
-  margin-inline: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 14px;
-}
 .headText {
   min-width: 0;
 }
-.title {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(28px, 4vw, 42px);
-  letter-spacing: -0.02em;
-  line-height: 1.08;
-  color: var(--text-strong);
-  margin: 0;
-}
-.title em {
-  font-style: italic;
-  color: var(--accent);
-}
-.sub {
-  font-size: 15px;
-  color: var(--ink-60);
-  line-height: 1.55;
-  margin: 8px 0 0;
-  max-width: 52ch;
-}
 
-.list {
+.headActions {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-}
-
-/* ── Row card ────────────────────────────────────────────────────────────── */
-.row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
-  padding: 16px 18px;
-}
-.rowMain {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.rowName {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 20px;
-  color: var(--text-strong);
-  margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.rowBadges {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-.rowActions {
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-@media (max-width: 560px) {
-  .row {
-    flex-wrap: wrap;
-  }
-  .rowActions {
-    width: 100%;
-  }
+  align-items: flex-end;
+  gap: var(--gap-xs);
 }
 
 .count {
@@ -104,115 +33,28 @@
   color: var(--ink-40);
 }
 
-/* ── New-subprofile modal ────────────────────────────────────────────────── */
-.kindGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.kindBtn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink);
-  text-align: start;
-  background: var(--cream);
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 14px;
-  padding: 13px 14px;
-  cursor: pointer;
-  transition:
-    border-color 0.2s var(--ease),
-    background 0.2s var(--ease);
-}
-.kindBtn svg {
-  color: var(--ink-40);
-  flex-shrink: 0;
-}
-@media (hover: hover) {
-  .kindBtn:hover {
-    border-color: var(--line-strong);
-  }
-}
-.kindBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-.kindBtnOn {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
-}
-.kindBtnOn svg {
-  color: var(--accent-ink);
-}
-.pathPreview {
-  font-family: var(--sans);
-  color: var(--ink-40);
-}
-
-/* ── Copy-source picker (New-subprofile modal, copy flow) ───────────────────── */
-.sourceList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 320px;
-  overflow-y: auto;
-  margin-bottom: 20px;
-}
-.sourceBtn {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-family: var(--sans);
-  text-align: start;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
-  padding: 10px 14px;
-  cursor: pointer;
-  transition:
-    border-color 0.2s var(--ease),
-    background 0.2s var(--ease);
-}
-@media (hover: hover) {
-  .sourceBtn:hover {
-    border-color: var(--line-strong);
-  }
-}
-.sourceBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-.sourceBtnOn {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
-}
-.sourceMeta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-  min-width: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink);
-}
-.sourceEmpty {
-  font-family: var(--sans);
-  font-size: 14px;
-  color: var(--ink-40);
-  margin: 0 0 20px;
-}
-
-/* ── Copy-mode preview (New-subprofile modal, copy flow) ─────────────────── */
-.copySummary {
-  font-family: var(--sans);
+.atCapNote {
   font-size: 13px;
-  line-height: 1.5;
-  color: var(--ink-40);
-  margin: 8px 0 0;
+  color: var(--accent-ink);
+  text-align: right;
+  max-width: 32ch;
+}
+
+/* Mirrors `.page-head`'s own stack-on-mobile breakpoint (persona-dashboard.css):
+   once the header is a single column, right-aligning this column against a
+   left-aligned title reads as orphaned, and the "New persona" CTA is worth
+   making a full-width, easy-to-hit thumb target rather than a small
+   right-hugging pill. */
+@media (max-width: 640px) {
+  .headActions {
+    align-items: stretch;
+    width: 100%;
+  }
+  .headActions button {
+    width: 100%;
+  }
+  .count,
+  .atCapNote {
+    text-align: left;
+  }
 }

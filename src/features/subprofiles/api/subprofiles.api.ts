@@ -14,6 +14,15 @@ export type Visibility = "open" | "network" | "private";
 export type LinkVisibility = "linked" | "unlinked";
 export type SubprofileStatus = "draft" | "published";
 
+/** Phase 1b Shared Contract: why a public read is unreachable for THIS
+ *  viewer, distinct from a genuine 404. Carried on a 403 response body as
+ *  `{ restrictedState }` — see `usePublicSubprofile`'s `PublicSubprofileResult`
+ *  and the demo mirror `resolvePublicAccessDemo` (`data/subprofiles.data.ts`).
+ *  Declared here (the wire-contract file) rather than in either consumer, so
+ *  the live hook and the demo resolver both import ONE definition instead of
+ *  drifting apart. */
+export type RestrictedState = "private" | "members_only" | "removed";
+
 export type AccentKey = "plum" | "coral" | "jade" | "amber" | "violet";
 export type AvailabilityKey = "open_to_collabs" | "booking" | "not_available";
 
@@ -108,6 +117,45 @@ export type SubprofileSection =
   | "showcase" // generic
   | "links"; // every kind
 
+export type GigState = "sold_out" | "cancelled" | "guest";
+export type WorkState = "shipped" | "archived" | "in_progress";
+
+export interface MenuDish {
+  title: string;
+  note?: string | null;
+  marks?: string[] | null;
+}
+export interface MenuCourse {
+  n: string;
+  name: string;
+  dishes: MenuDish[];
+}
+/** Nested per-item data that doesn't fit flat columns (subprofile_items.structured). */
+export interface ItemStructured {
+  courses?: MenuCourse[] | null;
+  snippet?: string[] | null;
+}
+
+/** Persona-level skin blocks (subprofiles.skin_data). Only the keys relevant to the
+ *  persona's derived skin are populated. Display data — present on the public view too. */
+export interface SkinData {
+  booker?: { fee: string; rider: string; press: string; contact: string } | null;
+  excerpt?: { from: string; lines: string[] } | null;
+  colophon?: string | null;
+  menuMeta?: { no: string; when: string; practical: string[] } | null;
+  practical?: {
+    fee: string;
+    sliding: string;
+    length: string;
+    languages: string;
+    mode: string;
+    next: string;
+  } | null;
+  firstSession?: { title: string; body: string }[] | null;
+  access?: string[] | null;
+  referrals?: { name: string; note: string }[] | null;
+}
+
 export interface SubprofileItemDTO {
   section: SubprofileSection;
   title: string;
@@ -120,6 +168,15 @@ export interface SubprofileItemDTO {
   tags: string[];
   isFeatured: boolean;
   collaborators: CollaboratorDTO[];
+  venue?: string | null;
+  doors?: string | null;
+  ticketUrl?: string | null;
+  gigState?: GigState | null;
+  medium?: string | null;
+  dimensions?: string | null;
+  edition?: string | null;
+  workState?: WorkState | null;
+  structured?: ItemStructured | null;
 }
 
 /** Owner-facing (full), returned by GET /subprofiles/mine, GET /subprofiles/:id,
@@ -147,10 +204,32 @@ export interface SubprofileDTO {
   affiliations: AffiliationDTO[]; // event/community links ("Part of")
   endorsementCount: number;
   followerCount: number;
+  skinData?: SkinData | null;
+  // Phase 1b: a moderator takedown timestamp. Nullable/optional — additive,
+  // set by a separate (not-yet-built) admin moderation action; this column
+  // only makes the resulting "removed" state display-ready end to end.
+  removedAt?: string | null;
+  // Personas redesign Phase 2 (dashboard plan Decision §5): the persona's
+  // co-owner headcount (creator + accepted invitees), for the dashboard
+  // `SideCard`'s "co-owned by N" meta line without an N+1 members fetch per
+  // card. Optional (mirrors `skinData`'s pattern) so demo fixtures/tests that
+  // predate this field keep compiling — `subprofileToView` defaults an absent
+  // value to 1, same as the backend's own default.
+  memberCount?: number;
 }
 
 /** Public view: owner-stripped when linkVisibility === 'unlinked'.
- *  ownerSlug/ownerName present only when linkVisibility === 'linked'. */
+ *  ownerSlug/ownerName present only when linkVisibility === 'linked'.
+ *
+ *  Phase 1b (Shared Contract): the public single-fetch routes
+ *  (`GET /subprofiles/by-handle/:handle` and the nested owner-slug+subslug
+ *  read) now resolve regardless of status/visibility and apply
+ *  `resolvePublicAccess` — owner/co-owner always gets the full DTO (so
+ *  `status` may legitimately be `"draft"` here, unlike every other public
+ *  read which only ever returns `published`); everyone else gets either the
+ *  full DTO (open, or network+authenticated) or a 403
+ *  `{ restrictedState }` the caller never sees as a DTO at all (see
+ *  `usePublicSubprofile`'s `PublicSubprofileResult`). */
 export interface SubprofilePublicDTO {
   id: string;
   kind: SubprofileKind;
@@ -167,6 +246,7 @@ export interface SubprofilePublicDTO {
   ctaUrl: string | null;
   socialLinks: SocialLinkDTO[];
   linkVisibility: LinkVisibility;
+  status: SubprofileStatus;
   items: SubprofileItemDTO[];
   affiliations: AffiliationDTO[]; // event/community links ("Part of")
   ownerSlug?: string; // linked only
@@ -179,6 +259,11 @@ export interface SubprofilePublicDTO {
   // persona? Drives the "edit" affordance on a nested persona shown on a
   // co-owner's profile.
   viewerIsMember: boolean;
+  skinData?: SkinData | null;
+  // Phase 1b: mirrors `SubprofileDTO.removedAt`. Only ever populated for an
+  // owner/co-owner viewing their own removed persona (a non-owner gets the
+  // 403 `{restrictedState:"removed"}` instead of a DTO at all).
+  removedAt?: string | null;
 }
 
 /** Directory / list card. */
@@ -192,6 +277,11 @@ export interface SubprofileCardDTO {
   availability: string | null;
   socialCount: number;
   tags: string[];
+  // Personas redesign Phase 4 (design plan Decision §3): batched from the
+  // backend's `SubprofileFollowersService.loadFollowerCountsFor` in the
+  // directory list path (ONE grouped query, never per-card) — mirrors
+  // `socialCount`/`tags`.
+  followerCount: number;
 }
 
 /** Publish failure body (HTTP 422). */
@@ -236,6 +326,15 @@ export interface SubprofileItemInputDTO {
   tags?: string[];
   isFeatured?: boolean;
   collaborators?: string[]; // handles, resolved server-side on read
+  venue?: string;
+  doors?: string;
+  ticketUrl?: string;
+  gigState?: GigState;
+  medium?: string;
+  dimensions?: string;
+  edition?: string;
+  workState?: WorkState;
+  structured?: ItemStructured;
 }
 
 /** One co-owner of a shared persona. Identical to the backend `MemberView`
@@ -280,6 +379,15 @@ export interface MyInviteDTO {
 /** Linked + published personas of a member (their public main-profile "Also as…"). */
 export const getProfileSubprofiles = (slug: string) =>
   apiGet<SubprofilePublicDTO[]>(`/profiles/${slug}/subprofiles`);
+
+/** Single-item public fetch of a linked persona by owner slug + persona slug
+ *  (the nested `/members/:slug/:subslug` route) — Phase 1b. Unlike the bulk
+ *  `getProfileSubprofiles` list above (which can only ever return personas
+ *  that are already viewable, with no room to carry one item's restricted
+ *  signal), this resolves the SAME `resolvePublicAccess` contract as
+ *  `getSubprofileByHandle`: 200 full DTO / 403 `{restrictedState}` / 404. */
+export const getSubprofileBySlugForProfile = (slug: string, subslug: string) =>
+  apiGet<SubprofilePublicDTO>(`/profiles/${slug}/subprofiles/${subslug}`);
 
 /** The current owner's subprofiles, all statuses. */
 export const getMySubprofiles = () =>

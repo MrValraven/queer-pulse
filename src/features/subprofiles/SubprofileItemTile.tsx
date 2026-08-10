@@ -1,0 +1,107 @@
+import type { CSSProperties } from "react";
+import { ImageSlot } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  GIG_STATE_LABEL,
+  WORK_STATE_CLASS,
+  WORK_STATE_LABEL,
+} from "./personaSkinRender";
+import type { SubprofileItemView } from "./api/subprofiles.adapters";
+
+/** Resets `<button>` chrome so an interactive (studio) tile looks identical
+ *  to the plain `<div>` tile every other skin renders — mirrors the
+ *  `METABTN_STYLE` pattern already used in `SubprofileHero`. */
+const TILE_BUTTON_STYLE: CSSProperties = {
+  background: "none",
+  border: "none",
+  padding: 0,
+  margin: 0,
+  font: "inherit",
+  color: "inherit",
+  textAlign: "left",
+  width: "100%",
+  cursor: "pointer",
+};
+
+/**
+ * One `.pp-tile` in a `.pp-tiles` grid (visual sections — portfolio, looks,
+ * discography, projects, menus…). The plate number (`Pl. 01`) is studio-skin
+ * decoration, CSS-hidden (`.plate{display:none}`) everywhere else — rendered
+ * unconditionally so the same markup works for every skin. A gig/work-state
+ * chip appears when the item carries one (e.g. a `projects` tile's
+ * `workState`), reusing the row chip's `.gigstate` styling and class map.
+ *
+ * `onOpenWork`, when passed (studio skin only — see `SubprofileSections`),
+ * turns the tile into a button that opens the studio lightbox on this exact
+ * item; CSS alone gives it `cursor:zoom-in` on that skin
+ * (`.pp[data-skin="studio"] .pp-tile{cursor:zoom-in}`). Every other skin
+ * keeps the plain, non-interactive `<div>`.
+ */
+export function SubprofileItemTile({
+  item,
+  index,
+  onOpenWork,
+}: {
+  item: SubprofileItemView;
+  index: number;
+  /** Opens the studio lightbox on this item — passed only for studio-skin
+   *  visual tiles; the caller resolves the flattened lightbox index via
+   *  `getStudioWorks(...).indexOf(item)` (see `skins/studioWorks.ts`). */
+  onOpenWork?: (item: SubprofileItemView) => void;
+}) {
+  const { t } = useTranslation();
+  const plateNumber = String(index + 1).padStart(2, "0");
+  const studioMeta = [item.medium, item.dimensions, item.edition]
+    .filter(Boolean)
+    .join(" · ");
+
+  const content = (
+    <>
+      <div className="art">
+        <ImageSlot
+          src={item.imageUrl || undefined}
+          alt={item.title}
+          tint="plum"
+          radius={0}
+          height="100%"
+          // `.ph` is the skin-specific placeholder pattern class (a hatched
+          // texture per skin, e.g. stage's diagonal dashes) from the ported
+          // design stylesheet — merges alongside ImageSlot's own tint styling.
+          className="ph"
+        />
+      </div>
+      <div>
+        <span className="plate">
+          {t("subprofiles:tile.plate", { number: plateNumber })}
+        </span>
+        {item.gigState && (
+          <span className={`gigstate ${item.gigState}`}>
+            {t(GIG_STATE_LABEL[item.gigState])}
+          </span>
+        )}
+        {item.workState && (
+          <span className={`gigstate ${WORK_STATE_CLASS[item.workState]}`}>
+            {t(WORK_STATE_LABEL[item.workState])}
+          </span>
+        )}
+        <b>{item.title}</b>
+        {studioMeta && <small className="tile-meta">{studioMeta}</small>}
+      </div>
+    </>
+  );
+
+  if (onOpenWork) {
+    return (
+      <button
+        type="button"
+        className="pp-tile"
+        style={TILE_BUTTON_STYLE}
+        onClick={() => onOpenWork(item)}
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return <div className="pp-tile">{content}</div>;
+}

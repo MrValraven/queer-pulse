@@ -51,7 +51,7 @@ export function StartCommunitySuccess({
       ]}
       footer={
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <Button variant="ghost-dark" to={routes.communitiesHome}>
+          <Button variant="ghost-dark" to={routes.communities}>
             {t("communities:start.success.backToHub")}
           </Button>
           <Button variant="ghost-dark" onClick={onAnother}>

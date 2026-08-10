@@ -22,7 +22,6 @@ export interface AgendaState {
 export interface AgendaResult {
   groups: AgendaGroup[];
   emptyKey: string | null;
-  showDiscovery: boolean;
   loadMoreCount: number;
 }
 
@@ -72,7 +71,6 @@ export function buildAgenda(
   const empty: AgendaResult = {
     groups: [],
     emptyKey: null,
-    showDiscovery: false,
     loadMoreCount: 0,
   };
   if (!list.length) {
@@ -164,6 +162,5 @@ export function buildAgenda(
   return {
     ...empty,
     groups,
-    showDiscovery: st.pill === "upcoming" && !st.hasSecondary,
   };
 }

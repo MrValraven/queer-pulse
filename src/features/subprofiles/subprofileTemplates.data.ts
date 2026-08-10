@@ -312,6 +312,15 @@ export function buildTemplateItems(
     tags: templateItem.tags ?? [],
     isFeatured: false,
     collaborators: [],
+    venue: null,
+    doors: null,
+    ticketUrl: null,
+    gigState: null,
+    medium: null,
+    dimensions: null,
+    edition: null,
+    workState: null,
+    structured: null,
   }));
 }
 

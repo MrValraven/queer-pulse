@@ -11,9 +11,11 @@ import styles from "./PersonaInvitesBanner.module.css";
 
 /**
  * "You've been invited" surface, sat above the persona grid on the owner
- * dashboard: one plum-panel card per incoming co-owner invite, with Accept /
- * Decline. Renders nothing when there are no pending invites — this is a
- * celebratory add-on, never an empty-state placeholder. Each card tracks its
+ * dashboard: one compact accent-tinted `.banner` row (global class, ported
+ * in `persona-dashboard.css`) per incoming co-owner invite — a call-to-action
+ * nudge, not the plum-panel confirmation treatment — with Accept / Decline
+ * inline. Renders nothing when there are no pending invites — this is a
+ * celebratory add-on, never an empty-state placeholder. Each row tracks its
  * own in-flight mutation by `invite.id` so accepting one invite never
  * disables the buttons on another.
  */
@@ -67,7 +69,7 @@ export function PersonaInvitesBanner() {
 
   return (
     <div
-      className={styles.banner}
+      className={styles.list}
       role="region"
       aria-label={t("subprofiles:invites.regionLabel")}
     >
@@ -76,15 +78,15 @@ export function PersonaInvitesBanner() {
         const isAccepting = isBusy && busy?.action === "accept";
         const isDeclining = isBusy && busy?.action === "decline";
         return (
-          <div key={invite.id} className={styles.card}>
+          <div key={invite.id} className="banner">
             <Avatar
               initials={initialsFromName(invite.personaName, "?")}
               src={invite.personaAvatarUrl ?? undefined}
               name={invite.personaName}
-              size={48}
+              size={40}
               tint="jade"
             />
-            <p className={styles.message}>
+            <p>
               <Translation
                 i18nKey="subprofiles:invites.message"
                 components={{ em: <em /> }}
@@ -97,6 +99,7 @@ export function PersonaInvitesBanner() {
             <div className={styles.actions}>
               <Button
                 variant="jade"
+                size="sm"
                 onClick={() => void handleAccept(invite)}
                 disabled={isBusy}
               >
@@ -105,7 +108,8 @@ export function PersonaInvitesBanner() {
                   : t("subprofiles:invites.accept")}
               </Button>
               <Button
-                variant="ghost-dark"
+                variant="ghost"
+                size="sm"
                 onClick={() => void handleDecline(invite)}
                 disabled={isBusy}
               >

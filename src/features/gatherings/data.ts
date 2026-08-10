@@ -59,6 +59,12 @@ export interface GatheringDetail {
    *  Seeds the detail's Save toggle; absent (undefined) in the demo registry,
    *  where the toggle starts un-saved and lives purely in local state. */
   bookmarked?: boolean;
+  /** Live mode only: the event's end instant, when the organizer set one.
+   *  Absent in the demo registry (every mock gathering is a single `date`
+   *  with no separate end). `GatheringPerformerNudge` treats "has the
+   *  gathering ended" as `endAt ?? date` in the past, so a demo gathering
+   *  with a past `date` still counts as ended. */
+  endAt?: Date;
 }
 
 export const gatheringDetails: Record<string, GatheringDetail> = {
@@ -495,6 +501,14 @@ export function gatheringKind(g: GatheringDetail): "event" | "gathering" {
   return g.host === "QueerPulse" ? "event" : "gathering";
 }
 
+/** Has this gathering ended? Prefers the real end instant when the live API
+ *  provided one, falling back to the start `date` — every demo mock only has
+ *  a `date`, so a past-dated demo gathering still counts as ended. Backs
+ *  `GatheringPerformerNudge` (Personas Phase 5, Moment 5). */
+export function gatheringHasEnded(g: GatheringDetail, now: Date = new Date()): boolean {
+  return (g.endAt ?? g.date).getTime() < now.getTime();
+}
+
 // ── Community calendar events (month is 0-indexed) ──
 export interface CalendarEvent {
   /** Start instant, including the clock time — rendered via `useFormat()`. */
@@ -506,7 +520,7 @@ export interface CalendarEvent {
   to: string;
   /** Official QueerPulse event vs member/community-created gathering. */
   kind: "event" | "gathering";
-  /** Paid events show a "Buy ticket" action straight to checkout. */
+  /** Paid events surface a sliding-scale / price pill. */
   ticketed?: boolean;
   /** Sliding-scale floor, in euros. Formatted at render, never baked. */
   priceMin?: number;

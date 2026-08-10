@@ -2,6 +2,11 @@ import { isValidElement, type ReactNode } from "react";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { ImageSlotTint } from "../../../shared/components/ui/ImageSlot";
 import type { TFunction } from "../../../shared/i18n/types";
+// The block-editor's typed block union (Phase 3 §7.3) — distinct from the
+// legacy `ArticleBlock` below (a `ReactNode`/`{ pull }`/`TypedArticleBlock`),
+// which predates the block editor and stays supported for back-compat.
+// Aliased to avoid colliding with this file's own `ArticleBlock` export.
+import type { ArticleBlock as TypedReadBlock } from "../api/pieces.api";
 
 /**
  * A rich body block. The model is a discriminated union (each variant carries a
@@ -91,6 +96,13 @@ export interface Article {
   tags: string[];
   related: string[];
   body: ArticleBlock[];
+  /**
+   * Block-based body (Phase 3 / spec §7.3), sourced from the block editor's
+   * jsonb `blocks` column. Empty on articles that predate the block editor
+   * (or on the list-item adapter, which never fetches the full body) — the
+   * reader (`ArticlePage.tsx`) falls back to `body` in that case.
+   */
+  blocks?: TypedReadBlock[];
   /**
    * Optional closing plum CTA band (the shared `Outro`). Fields are i18n keys so
    * the band's copy stays translated — the title is rendered through

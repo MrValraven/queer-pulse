@@ -37,6 +37,9 @@ const GATED_PATTERNS: string[] = [
   // Magazine editorial tools (dashboard + deck authoring) — staff-only
   "/magazine/editor",
   "/magazine/editor/*",
+  // Magazine writer workspace (assignments/pitches/payments) — staff-only
+  "/magazine/writer",
+  "/magazine/writer/*",
   // Personal member surfaces
   "/feed",
   "/search",
@@ -60,8 +63,6 @@ const GATED_PATTERNS: string[] = [
   "/gatherings/*",
   "/rsvp",
   "/rsvp-ticket",
-  // Ticket checkout for a gathering — a member-only purchase flow.
-  "/checkout",
   "/host",
   "/create-gathering",
   // Forum
@@ -143,6 +144,7 @@ const MOD_PATTERNS: string[] = ["/mod/*"];
  */
 const CAPABILITY_PATTERNS: { patterns: string[]; capability: StaffRoleId }[] = [
   { patterns: ["/magazine/editor", "/magazine/editor/*"], capability: "magazine_editor" },
+  { patterns: ["/magazine/writer", "/magazine/writer/*"], capability: "magazine_writer" },
 ];
 
 /**

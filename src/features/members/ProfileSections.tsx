@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import {
@@ -17,6 +17,7 @@ import { currentUserSlug, type MemberProfile } from "./data/memberProfiles";
 import { useRecognition } from "./api/useRecognition";
 import { HeroVouchRow } from "./HeroVouchRow";
 import { ProfileHeroActions } from "./ProfileHeroActions";
+import { ProfilePhotoViewer } from "./ProfilePhotoViewer";
 import { ProfileSafetyMenu } from "./ProfileSafetyMenu";
 import { PublicProfileBadge } from "./PublicProfileBadge";
 import { VISIBILITY_LABEL_KEY } from "./profileSections.data";
@@ -106,21 +107,40 @@ export function ProfileHero({
   const realSelf = self ?? (demoMode && profile.slug === currentUserSlug);
   const isSelf = realSelf && !asVisitor;
   const curatorSlug = curatorSlugForName(`${profile.first} ${profile.last}`);
+  const [photoOpen, setPhotoOpen] = useState(false);
+  const fullName = `${profile.first} ${profile.last}`;
+  const portraitTint = profile.tint === "auth" ? "plum" : profile.tint;
+  const portrait = (
+    <ImageSlot
+      tint={portraitTint}
+      src={profile.photo}
+      initials={profile.initials}
+      height={430}
+      srcSize={900}
+      radius={20}
+      placeholder={fullName}
+      alt={fullName}
+    />
+  );
   return (
     <header className={styles.phero}>
       <div className="wrap">
         <div className={styles.pheroGrid}>
           <Reveal className={styles.portraitWrap}>
-            <ImageSlot
-              tint={profile.tint === "auth" ? "plum" : profile.tint}
-              src={profile.photo}
-              initials={profile.initials}
-              height={430}
-              srcSize={900}
-              radius={20}
-              placeholder={`${profile.first} ${profile.last}`}
-              alt={`${profile.first} ${profile.last}`}
-            />
+            {profile.photo ? (
+              <button
+                type="button"
+                className={styles.portraitButton}
+                onClick={() => setPhotoOpen(true)}
+                aria-label={t("members:profile.hero.viewPhotoAria", {
+                  name: fullName,
+                })}
+              >
+                {portrait}
+              </button>
+            ) : (
+              portrait
+            )}
             {profile.verified && (
               <span className={styles.vbadgeLg}>
                 <CheckIcon />
@@ -229,6 +249,14 @@ export function ProfileHero({
           </Reveal>
         </div>
       </div>
+      {photoOpen && profile.photo && (
+        <ProfilePhotoViewer
+          src={profile.photo}
+          name={fullName}
+          tint={portraitTint}
+          onClose={() => setPhotoOpen(false)}
+        />
+      )}
     </header>
   );
 }

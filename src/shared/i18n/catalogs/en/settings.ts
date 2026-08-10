@@ -229,6 +229,8 @@ export const settings: Catalog = {
     "When someone asks to connect with you",
   "notifications.messages.sayHello.title": '"Say hello" received',
   "notifications.messages.sayHello.desc": "When someone waves at your profile",
+  "notifications.messages.vouch.title": "Vouches",
+  "notifications.messages.vouch.desc": "When someone vouches for you",
   "notifications.phonePush.title": "Phone notifications",
   "notifications.phonePush.desc":
     "Get a nudge on your phone when someone messages you — even when QueerPulse is closed. Add QueerPulse to your home screen first.",
@@ -236,12 +238,22 @@ export const settings: Catalog = {
     "Your browser can’t show phone notifications yet.",
   "notifications.phonePush.blocked":
     "Notifications are blocked. Turn them back on in your browser settings, then try again.",
+  "notifications.phonePush.test.title": "Send yourself a test",
+  "notifications.phonePush.test.desc":
+    "Send a notification to your own devices to check everything's working.",
+  "notifications.phonePush.test.action": "Send test",
+  "notifications.phonePush.test.sent": "Test sent — check your device",
+  "notifications.phonePush.test.error":
+    "Couldn't send the test — try again in a moment",
   "notifications.communities.newPost.title": "New post in my communities",
   "notifications.communities.newPost.desc":
     "Activity in communities you've joined",
   "notifications.communities.threadReply.title": "Reply to a thread I'm in",
   "notifications.communities.threadReply.desc":
     "When someone responds to a thread you've participated in",
+  "notifications.communities.mention.title": "Mentions",
+  "notifications.communities.mention.desc":
+    "When someone mentions you in a post or discussion",
   "notifications.communities.weeklyDigest.title": "Weekly community digest",
   "notifications.communities.weeklyDigest.desc":
     "A quiet summary of what's happening — one email, once a week",

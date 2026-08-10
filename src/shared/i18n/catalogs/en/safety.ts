@@ -663,6 +663,7 @@ export const safety: Catalog = {
   "vouchModal.form.cancelCta": "Cancel",
   "vouchModal.form.submitting": "Submitting…",
   "vouchModal.form.submitCta": "Add my vouch",
+  "vouchModal.form.error": "That didn't go through. Please try again.",
   "vouchModal.comingSoon.badge": "Coming soon",
   "vouchModal.comingSoon.title": "Vouches are <em>coming soon.</em>",
   "vouchModal.comingSoon.body":

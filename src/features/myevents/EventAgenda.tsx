@@ -12,7 +12,6 @@ import { useMyEvents } from "./MyEventsContext";
 import { buildAgenda } from "./myEvents.agenda";
 import { EventCard } from "./EventCard";
 import { EmptyState } from "./EmptyState";
-import { Discovery } from "./Discovery";
 
 function AgendaSkeleton({ n = 4 }: { n?: number }) {
   return (
@@ -128,7 +127,6 @@ export function EventAgenda() {
           </Button>
         </div>
       )}
-      {result.showDiscovery && <Discovery />}
     </div>
   );
 }

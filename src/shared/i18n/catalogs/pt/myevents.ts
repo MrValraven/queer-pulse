@@ -17,6 +17,16 @@ export const myevents: Catalog = {
   "header.notifAria": "Notificações",
   "header.createCta": "Criar um convívio",
 
+  // ── Cabeçalho global de eventos (EventsHeader) ────────────────────────────
+  "eventsHeader.title": "Eventos",
+  "eventsHeader.searchAria": "Pesquisar eventos",
+  "eventsHeader.hostCta": "Organizar um convívio",
+
+  // ── Interruptor de topo My events | Discover (EventsTopTabs) ──────────────
+  "topTabs.mine": "Os meus eventos",
+  "topTabs.discover": "Descobrir",
+  "topTabs.ariaLabel": "Vistas de eventos",
+
   // ── Primary bucket pills (EventPills) ─────────────────────────────────────
   "pills.upcoming": "Todos os próximos",
   "pills.going": "Vais",

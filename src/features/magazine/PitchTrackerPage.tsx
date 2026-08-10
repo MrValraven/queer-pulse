@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AppShell } from "../../shared/components/layout";
+import { MagazineDeskShell } from "../../shared/components/layout/MagazineDeskShell";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -70,7 +70,7 @@ export function PitchTrackerPage() {
   }
 
   return (
-    <AppShell>
+    <MagazineDeskShell>
       <div className={styles.page}>
         <PitchTrackerHeader />
         <PitchTabs
@@ -95,6 +95,6 @@ export function PitchTrackerPage() {
           ))
         )}
       </div>
-    </AppShell>
+    </MagazineDeskShell>
   );
 }

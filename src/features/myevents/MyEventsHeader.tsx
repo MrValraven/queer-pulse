@@ -1,12 +1,9 @@
-import { Button, FeatureHelp } from "../../shared/components/ui";
+import { FeatureHelp } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { linkToPath } from "../../app/routeMap";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { NotifPanel } from "./NotifPanel";
-
-const HOST = linkToPath("QueerPulse Host.html");
 
 /** Page header: title, settings gear, notifications bell, and create CTA. */
 export function MyEventsHeader() {
@@ -24,13 +21,13 @@ export function MyEventsHeader() {
       <div className={sx("ev-eyebrow")}>{t("myevents:page.eyebrow")}</div>
       <div className={sx("ev-head-row")}>
         <div>
-          <h1 className={sx("ev-title")}>
+          <h2 className={sx("ev-title")}>
             <Translation
               i18nKey="myevents:page.title"
               components={{ em: <em /> }}
             />{" "}
             <FeatureHelp id="myevents.hub" />
-          </h1>
+          </h2>
           <p className={sx("ev-sub")}>{t("myevents:page.sub")}</p>
         </div>
         <div className={sx("ev-head-actions")}>
@@ -54,10 +51,10 @@ export function MyEventsHeader() {
               />
             </svg>
           </button>
-          {/* Notifications bell + panel are demo-only: live has no notifications
-              contract yet, so rather than surface a permanently-empty "What's
-              changed" panel we hide the affordance entirely.
-              DEFERRED(needs notifications endpoint, Phase 2). */}
+          {/* Notifications bell + panel now render in both modes:
+              `notificationsEnabled` is always on since event-change
+              notifications exist end-to-end (P2-7). The guard stays so the
+              affordance can still be centrally switched off if needed. */}
           {notificationsEnabled && (
             <button
               type="button"
@@ -85,36 +82,6 @@ export function MyEventsHeader() {
               )}
             </button>
           )}
-          <Button variant="primary" size="lg" to={HOST}>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              aria-hidden
-              style={{ marginRight: "0.375rem" }}
-            >
-              <line
-                x1="8"
-                y1="3"
-                x2="8"
-                y2="13"
-                stroke="currentColor"
-                strokeWidth={1.8}
-                strokeLinecap="round"
-              />
-              <line
-                x1="3"
-                y1="8"
-                x2="13"
-                y2="8"
-                stroke="currentColor"
-                strokeWidth={1.8}
-                strokeLinecap="round"
-              />
-            </svg>
-            {t("myevents:header.createCta")}
-          </Button>
           {notificationsEnabled && notifOpen && <NotifPanel />}
         </div>
       </div>

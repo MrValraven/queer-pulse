@@ -682,6 +682,7 @@ export const safety: Catalog = {
   "vouchModal.form.cancelCta": "Cancelar",
   "vouchModal.form.submitting": "A submeter…",
   "vouchModal.form.submitCta": "Adicionar o meu aval",
+  "vouchModal.form.error": "Não foi possível submeter. Tenta novamente.",
   "vouchModal.comingSoon.badge": "Brevemente",
   "vouchModal.comingSoon.title": "Os avais estão <em>a chegar em breve.</em>",
   "vouchModal.comingSoon.body":

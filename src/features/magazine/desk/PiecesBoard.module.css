@@ -1,0 +1,118 @@
+/* Editor desk — board layout (one horizontally-scrolling column per stage).
+   Ported from the design's `.board`/`.bcol`/`.bcard` (`mag.css`) onto repo
+   tokens. */
+
+.board {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 264px;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 14px;
+  scroll-snap-type: x proximity;
+}
+
+.bcol {
+  background: var(--wash);
+  border-radius: 20px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scroll-snap-align: start;
+  min-height: 220px;
+}
+
+.colHead {
+  font-size: 12px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-40);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 2px 4px;
+}
+
+.colCount {
+  margin-left: auto;
+  color: var(--ink-60);
+}
+
+.bcard {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  cursor: pointer;
+  transition:
+    transform var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .bcard:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card-hover);
+  }
+}
+
+.cardLate {
+  border-color: rgba(var(--accent-rgb), 0.42);
+}
+
+.cardTitle {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  font-weight: 400;
+  line-height: 1.18;
+  color: var(--text-strong);
+}
+
+.cardFoot {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--ink-40);
+}
+
+.cardDue {
+  margin-left: auto;
+}
+
+.late {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.selectRow {
+  display: flex;
+  gap: 6px;
+}
+
+.stageSelect {
+  padding: 5px 9px;
+  font-size: 12.5px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--line);
+  background: var(--paper);
+  color: var(--ink-60);
+  font-weight: 500;
+}
+
+.emptyCol {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  padding: 8px 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bcard {
+    transition: none;
+  }
+}

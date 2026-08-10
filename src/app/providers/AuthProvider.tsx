@@ -2,6 +2,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -104,6 +105,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
   const [user, setUser] = useState<AuthUser | null>(null);
   const [authError, setAuthError] = useState<AuthErrorCode | null>(null);
+  // Single-flights the authoritative recovery kicked off by `onAuthLost`, so a
+  // storm of 401s (e.g. a tabful of queries refetching on focus) triggers ONE
+  // reconcile rather than one per failed request.
+  const reconciling = useRef<Promise<void> | null>(null);
+
+  // A request's on-401 refresh coming back false is NOT authoritative proof the
+  // session is gone. It routinely happens on a transient/racing refresh — a
+  // sibling tab rotated the refresh token, or an in-flight request lagged behind
+  // a refresh that already succeeded — that the very next refresh recovers from.
+  // That's why a returning member sees the app repopulate in place. So rather
+  // than declaring the session expired on the spot (and flashing a "session
+  // expired" toast over an app that's about to come back), reconcile once,
+  // authoritatively: try a fresh refresh + /auth/me, and only surface `expired`
+  // if THAT round trip also fails. On the happy path nothing changes on screen —
+  // the recovery is fully silent.
+  const reconcileSession = useCallback((): Promise<void> => {
+    if (reconciling.current) return reconciling.current;
+    const run = (async () => {
+      const ok = await refreshSession();
+      if (ok) {
+        try {
+          const freshUser = await fetchMe();
+          setUser(freshUser);
+          setLoggedIn(true);
+          setAuthError(null);
+          return;
+        } catch {
+          // Refresh rotated a token but /auth/me still refused it — fall through
+          // and treat it as a genuine loss, same as a failed refresh.
+        }
+      }
+      setUser(null);
+      setLoggedIn(false);
+      setAuthError({ kind: "expired" });
+    })().finally(() => {
+      reconciling.current = null;
+    });
+    reconciling.current = run;
+    return run;
+  }, []);
 
   // Demo mode: mirror the prototype's localStorage-driven mock session. The
   // session is known synchronously, so there's nothing to "check".
@@ -125,13 +166,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (demoMode) return;
     let active = true;
     setOnAuthLost(() => {
-      setUser(null);
-      setLoggedIn(false);
-      // An involuntary sign-out mid-visit (refresh failed after a 401). Surface
-      // it so the member hears "your session expired" rather than silently
-      // finding themselves logged out. A user-initiated signOut() never sets
-      // this, so the two stay distinct.
-      setAuthError({ kind: "expired" });
+      // Don't declare defeat on a single failed refresh — reconcile once and
+      // stay silent if the session comes back (the common returning-member
+      // case). Only a failed reconcile logs out and surfaces `expired`, so a
+      // user-initiated signOut() and a genuine involuntary loss stay distinct.
+      void reconcileSession();
     });
     // Reset before the async /auth/me bootstrap round trip resolves below.
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -143,6 +182,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!active) return;
         setUser(u);
         setLoggedIn(true);
+        // A confirmed live session clears any stale error left by an earlier
+        // recovered blip, so a "session expired" toast can never linger over it.
+        setAuthError(null);
       })
       .catch((err: unknown) => {
         if (!active) return;
@@ -167,7 +209,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       active = false;
     };
-  }, [demoMode]);
+  }, [demoMode, reconcileSession]);
 
   const signIn = useCallback(
     (redirectTo?: string, invite?: string, ageAttested?: boolean) => {
@@ -220,6 +262,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const u = await fetchMe();
       setUser(u);
       setLoggedIn(true);
+      setAuthError(null);
     } catch {
       setUser(null);
       setLoggedIn(false);

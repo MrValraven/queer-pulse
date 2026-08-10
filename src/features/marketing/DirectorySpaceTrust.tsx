@@ -82,6 +82,7 @@ export function DirectorySpaceTrust({ place }: { place: DirectoryPlace }) {
 
       {vouchOpen && (
         <VouchModal
+          spaceSlug={place.slug}
           spaceName={place.name}
           onClose={() => setVouchOpen(false)}
         />

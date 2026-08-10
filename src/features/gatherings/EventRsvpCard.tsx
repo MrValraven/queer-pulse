@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
-import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
@@ -14,7 +12,6 @@ import styles from "./EventPage.module.css";
 /** The static EventPage has no live id, so a stable placeholder slug keeps the
  *  demo no-op path working and gives live mode a slug to target. */
 export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const fmt = useFormat();
   const rsvp = useRsvp(slug);
@@ -180,7 +177,7 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
                   joinWaitlist();
                 } else {
                   rsvp.mutate("going");
-                  void navigate(routes.checkout);
+                  setReserved(true);
                 }
               }}
               disabled={!canSubmit}

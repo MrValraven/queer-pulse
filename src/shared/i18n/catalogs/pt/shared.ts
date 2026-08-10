@@ -79,6 +79,10 @@ export const shared: Catalog = {
   "accountMenu.items.applications": "Candidaturas",
   "accountMenu.items.work": "Trabalho",
   "accountMenu.items.subprofiles": "Subperfis",
+  // Descoberta de personas, Fase 5, Momento 3 — a linha "As tuas personas"
+  // (badge via usePersonaBadge). Separado de `accountMenu.items.subprofiles`
+  // acima, uma entrada pré-existente com outro texto.
+  "accountMenu.items.personas": "As tuas personas",
   "accountMenu.items.events": "Eventos",
   "accountMenu.items.feed": "Feed",
   "accountMenu.items.drafts": "Rascunhos",
@@ -91,6 +95,7 @@ export const shared: Catalog = {
   "accountSheet.title": "A sua conta",
   "accountSheet.viewProfile": "Ver perfil",
   "accountMenu.staff.magazineEditor": "Editor da revista",
+  "accountMenu.staff.magazineWriter": "Espaço de quem escreve",
   "accountMenu.staff.admin": "Admin",
   "accountMenu.mod.modTools": "Ferramentas de moderação",
   "accountMenu.controls.populatePlatform": "Preencher a plataforma",
@@ -134,9 +139,11 @@ export const shared: Catalog = {
   // adminNav.data.ts
   "adminNav.items.overview": "Visão geral",
   "adminNav.items.landing": "Página inicial",
+  "adminNav.items.pressKit": "Kit de imprensa",
   "adminNav.items.moderation": "Moderação",
   "adminNav.items.safeSpaces": "Espaços seguros",
   "adminNav.items.listings": "Espaços",
+  "adminNav.items.media": "Imagens enviadas",
   "adminNav.items.invites": "Convites",
   "adminNav.items.changemakerNominations": "Nomeações",
   "adminNav.items.commissionInterests": "Encomendas",

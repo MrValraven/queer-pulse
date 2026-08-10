@@ -76,14 +76,6 @@ export interface MyEvent {
   noShow?: boolean;
 }
 
-export interface Recommendation {
-  id: string;
-  title: string;
-  date: string;
-  venue: string;
-  reason: string;
-}
-
 export interface Notif {
   id: string;
   lead?: string;

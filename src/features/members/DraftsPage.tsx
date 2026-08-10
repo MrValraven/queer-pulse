@@ -251,7 +251,7 @@ function EmptyState({
       </div>
       <h3>{title}</h3>
       <p>{text}</p>
-      <Button variant="primary" to={routes.communitiesHome}>
+      <Button variant="primary" to={routes.communities}>
         {t("members:drafts.empty.startCta")}
       </Button>
     </div>

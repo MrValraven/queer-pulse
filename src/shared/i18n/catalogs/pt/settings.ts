@@ -230,6 +230,8 @@ export const settings: Catalog = {
     "Quando alguém te pede para se ligar a ti",
   "notifications.messages.sayHello.title": "Recebeste um «Olá»",
   "notifications.messages.sayHello.desc": "Quando alguém te acena no perfil",
+  "notifications.messages.vouch.title": "Avais",
+  "notifications.messages.vouch.desc": "Quando alguém te avaliza",
   "notifications.phonePush.title": "Notificações no telemóvel",
   "notifications.phonePush.desc":
     "Recebe um aviso no telemóvel quando alguém te envia mensagem — mesmo com o QueerPulse fechado. Adiciona primeiro o QueerPulse ao ecrã principal.",
@@ -237,6 +239,13 @@ export const settings: Catalog = {
     "O teu navegador ainda não consegue mostrar notificações no telemóvel.",
   "notifications.phonePush.blocked":
     "As notificações estão bloqueadas. Volta a ativá-las nas definições do navegador e tenta de novo.",
+  "notifications.phonePush.test.title": "Envia um teste a ti",
+  "notifications.phonePush.test.desc":
+    "Envia uma notificação para os teus dispositivos para confirmar que está tudo a funcionar.",
+  "notifications.phonePush.test.action": "Enviar teste",
+  "notifications.phonePush.test.sent": "Teste enviado — confirma no teu dispositivo",
+  "notifications.phonePush.test.error":
+    "Não foi possível enviar o teste — tenta daqui a pouco",
   "notifications.communities.newPost.title":
     "Nova publicação nas minhas comunidades",
   "notifications.communities.newPost.desc":
@@ -245,6 +254,9 @@ export const settings: Catalog = {
     "Resposta a um tópico em que participo",
   "notifications.communities.threadReply.desc":
     "Quando alguém responde a um tópico em que participaste",
+  "notifications.communities.mention.title": "Menções",
+  "notifications.communities.mention.desc":
+    "Quando alguém te menciona numa publicação ou discussão",
   "notifications.communities.weeklyDigest.title":
     "Resumo semanal da comunidade",
   "notifications.communities.weeklyDigest.desc":

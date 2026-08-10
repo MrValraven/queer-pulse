@@ -83,6 +83,7 @@ export const members: Catalog = {
 
   // ── Cabeçalho do perfil (ProfileSections) ──────────────────────────────────
   "profile.hero.verifiedBadge": "Pessoa verificada",
+  "profile.hero.viewPhotoAria": "Ver foto de {name}",
   "profile.hero.curatorLink":
     "Curadoria do Cinema — ver perfil de programação",
   "profile.hero.memberSince": "Nesta comunidade desde {since}",

@@ -1,3 +1,4 @@
+import type { IconType } from "react-icons";
 import { FiAlertCircle, FiCheck, FiClock, FiStar } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -26,19 +27,43 @@ const STATE_LABEL_KEY: Record<RowState, string> = {
   unknown: "subprofiles:checklist.stateUnknown",
 };
 
+const STATE_ICON: Record<RowState, IconType> = {
+  pass: FiCheck,
+  fail: FiAlertCircle,
+  unknown: FiClock,
+};
+
 /**
  * The completeness requirements an unlinked persona must meet to publish, each
  * with a pass / fail (or unknown) state and warm, actionable copy. Shown when a
  * publish attempt is rejected; the editor page renders the plum success panel
  * instead once every requirement is met.
+ *
+ * Visual: the global `.ready`/`.ready-item` icon-circle rows (Task 1's editor
+ * CSS port) plus a `.meter` progress bar for passed/total — this is still the
+ * SAME server-authoritative data (real `unmet` codes from a publish attempt),
+ * only restyled. It's deliberately a different widget from the Publish pane's
+ * `SideReadinessRing` above it (client-only estimate, no blocked-language
+ * check) — see that component's usage in `SubprofilePublishPanel`.
  */
 export function PublishChecklist({
   unmet,
   unknown = false,
 }: PublishChecklistProps) {
   const { t } = useTranslation();
+  const rows = PUBLISH_REQUIREMENTS.map((req) => {
+    const failedCode = unknown
+      ? null
+      : (req.codes.find((code) => unmet.includes(code)) ?? null);
+    const state: RowState = unknown ? "unknown" : failedCode ? "fail" : "pass";
+    const detailKey = failedCode ? req.failKey[failedCode] : req.metKey;
+    return { ...req, state, detailKey };
+  });
+  const passedCount = rows.filter((row) => row.state === "pass").length;
+  const meterPct = Math.round((passedCount / rows.length) * 100);
+
   return (
-    <div className={styles.card} role="status" aria-live="polite">
+    <div role="status" aria-live="polite">
       <h3 className={styles.title}>
         <Translation
           i18nKey="subprofiles:checklist.title"
@@ -50,35 +75,51 @@ export function PublishChecklist({
           ? t("subprofiles:checklist.ledeUnknown")
           : t("subprofiles:checklist.ledeDefault")}
       </p>
-      <ul className={styles.list}>
-        {PUBLISH_REQUIREMENTS.map((req) => {
-          const failedCode = unknown
-            ? null
-            : (req.codes.find((c) => unmet.includes(c)) ?? null);
-          const state: RowState = unknown
-            ? "unknown"
-            : failedCode
-              ? "fail"
-              : "pass";
-          const detailKey = failedCode ? req.failKey[failedCode] : req.metKey;
+
+      <div className={styles.meterRow}>
+        <div
+          className={`meter ${styles.meterBar}`}
+          role="progressbar"
+          aria-valuenow={meterPct}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={t("subprofiles:checklist.meterAria", {
+            passed: passedCount,
+            total: rows.length,
+          })}
+        >
+          <i style={{ width: `${meterPct}%` }} />
+        </div>
+        <span className={styles.meterLabel}>
+          {t("subprofiles:checklist.meterLabel", {
+            passed: passedCount,
+            total: rows.length,
+          })}
+        </span>
+      </div>
+
+      <ul className={`ready ${styles.list}`}>
+        {rows.map((row) => {
+          const Icon = STATE_ICON[row.state];
           return (
-            <li key={req.key} className={styles.row} data-state={state}>
-              <span className={styles.icon} aria-hidden>
-                {state === "pass" ? (
-                  <FiCheck size={15} />
-                ) : state === "fail" ? (
-                  <FiAlertCircle size={15} />
-                ) : (
-                  <FiClock size={15} />
-                )}
-              </span>
+            <li
+              key={row.key}
+              className={
+                row.state === "pass" ? "ready-item done" : "ready-item"
+              }
+            >
+              <i aria-hidden>
+                <Icon size={11} />
+              </i>
               <span className={styles.text}>
-                <span className={styles.rowTitle}>{t(req.titleKey)}</span>
+                <span className={styles.rowTitle}>{t(row.titleKey)}</span>
                 <span className={styles.rowHelp}>
-                  {detailKey && t(detailKey)}
+                  {row.detailKey && t(row.detailKey)}
                 </span>
               </span>
-              <span className={styles.srOnly}>{t(STATE_LABEL_KEY[state])}</span>
+              <span className={styles.srOnly}>
+                {t(STATE_LABEL_KEY[row.state])}
+              </span>
             </li>
           );
         })}

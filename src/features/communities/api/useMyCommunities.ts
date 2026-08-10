@@ -23,28 +23,16 @@ function joinedLabel(iso: string, locale: string): string {
 }
 
 /**
- * The viewer's complete membership map, keyed by community slug.
- *
- * Surfaces that aggregate across *all* your communities (the communities home,
- * the feed's cross-community pulse) need the whole map, not a page of it. In
- * live mode that comes from `GET /me/communities`, which returns a bare array
- * for exactly this reason — reconstructing it by filtering paginated
- * `GET /communities?filter=mine` pages is incomplete by construction, since only
- * the pages already fetched would ever be counted.
- *
- * Demo mode reads the session membership store (`CommunityMembershipProvider`),
- * which seeds the mock flagships and records demo joins — unchanged behaviour,
- * and no network.
+ * Shared react-query definition behind both `useMyCommunities` and
+ * `useMyCommunitiesResolving` — same `["my-communities", language]` key and
+ * live-only `enabled` gate, so the two hooks always agree on cache identity
+ * and neither can drift from the other's fetch behaviour.
  */
-export function useMyCommunities(
-  options: { enabled?: boolean } = {},
-): Record<string, Membership> {
-  const { enabled = true } = options;
+function useMyCommunitiesQuery(enabled: boolean) {
   const { demoMode } = useDemoMode();
-  const { memberships } = useCommunityMembership();
   const { language } = useTranslation();
 
-  const query = useQuery<Record<string, Membership>>({
+  return useQuery<Record<string, Membership>>({
     // `language` is in the key because the joined labels below are locale-
     // formatted — switching language must re-derive them.
     queryKey: ["my-communities", language],
@@ -65,7 +53,49 @@ export function useMyCommunities(
       );
     },
   });
+}
+
+/**
+ * The viewer's complete membership map, keyed by community slug.
+ *
+ * Surfaces that aggregate across *all* your communities (the communities home,
+ * the feed's cross-community pulse) need the whole map, not a page of it. In
+ * live mode that comes from `GET /me/communities`, which returns a bare array
+ * for exactly this reason — reconstructing it by filtering paginated
+ * `GET /communities?filter=mine` pages is incomplete by construction, since only
+ * the pages already fetched would ever be counted.
+ *
+ * Demo mode reads the session membership store (`CommunityMembershipProvider`),
+ * which seeds the mock flagships and records demo joins — unchanged behaviour,
+ * and no network.
+ */
+export function useMyCommunities(
+  options: { enabled?: boolean } = {},
+): Record<string, Membership> {
+  const { enabled = true } = options;
+  const { demoMode } = useDemoMode();
+  const { memberships } = useCommunityMembership();
+  const query = useMyCommunitiesQuery(enabled);
 
   if (demoMode) return memberships;
   return query.data ?? EMPTY;
+}
+
+/**
+ * Whether the membership map is still being fetched — `false` in demo mode
+ * (the membership store reads synchronously) and, in live mode, `true` while
+ * `GET /me/communities` is in flight. Exists so the merged `/communities`
+ * page's smart-default tab logic can hold on the "My communities" body
+ * instead of flashing "Discover" first for a live member who turns out to
+ * have communities once the fetch lands.
+ */
+export function useMyCommunitiesResolving(
+  options: { enabled?: boolean } = {},
+): boolean {
+  const { enabled = true } = options;
+  const { demoMode } = useDemoMode();
+  const query = useMyCommunitiesQuery(enabled);
+
+  if (demoMode) return false;
+  return enabled && query.isLoading;
 }

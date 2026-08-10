@@ -13,17 +13,26 @@ import { useSubprofileMutations } from "./api/useSubprofileMutations";
 import { MAX_ITEMS_PER_SECTION } from "./subprofileEditor.data";
 import { TEMPLATE_ITEMS, buildTemplateItems } from "./subprofileTemplates.data";
 import {
+  commitDraftRow,
   emptyItem,
+  moveRow,
+  toggleRowFeature,
   withUid,
   type SubprofileEditorRow,
 } from "./subprofileSectionEditorRows";
-import { SubprofileItemEditor } from "./SubprofileItemEditor";
+import { EditorItemRow } from "./EditorItemRow";
+import { SubprofileItemDrawer } from "./SubprofileItemDrawer";
 import styles from "./SubprofileEditor.module.css";
 
+type DrawerState = { mode: "add" } | { mode: "edit"; uid: string };
+
 /**
- * Edits one section of a subprofile: a list of items with add / remove / reorder,
- * each edited by `SubprofileItemEditor`. Saves the whole section in one PUT via
- * `replaceSection`. Enforces the `MAX_ITEMS_PER_SECTION` cap on the Add button.
+ * Edits one section: a collapsed `.itemrow` list (`EditorItemRow`) with
+ * add/remove/reorder/feature-toggle; each item's full field set (base +
+ * rich) is edited in the `SubprofileItemDrawer`. Saves the whole section in
+ * one PUT via `replaceSection`; enforces `MAX_ITEMS_PER_SECTION` on Add.
+ * Renders WITHOUT its own card chrome/header — `EditorPaneRouter` already
+ * renders the active pane's `<h2>`/lede above this.
  */
 export function SubprofileSectionEditor({
   subprofileId,
@@ -39,11 +48,12 @@ export function SubprofileSectionEditor({
     section.items.map(withUid),
   );
   const [dirty, setDirty] = useState(false);
+  const [drawerState, setDrawerState] = useState<DrawerState | null>(null);
 
-  const Icon = section.icon;
   const label = t(section.labelKey);
   const atMax = rows.length >= MAX_ITEMS_PER_SECTION;
   const saving = replaceSection.isPending;
+  const canFeature = section.section !== "links";
   const canInsertExamples =
     section.section !== "links" &&
     rows.length === 0 &&
@@ -52,28 +62,12 @@ export function SubprofileSectionEditor({
   function touch() {
     setDirty(true);
   }
-  function patch(uid: string, p: Partial<SubprofileItemView>) {
-    setRows((cur) => cur.map((r) => (r._uid === uid ? { ...r, ...p } : r)));
-    touch();
-  }
   function remove(uid: string) {
     setRows((cur) => cur.filter((r) => r._uid !== uid));
     touch();
   }
   function move(uid: string, dir: -1 | 1) {
-    setRows((cur) => {
-      const i = cur.findIndex((r) => r._uid === uid);
-      const j = i + dir;
-      if (i < 0 || j < 0 || j >= cur.length) return cur;
-      const next = [...cur];
-      [next[i], next[j]] = [next[j]!, next[i]!];
-      return next;
-    });
-    touch();
-  }
-  function add() {
-    if (atMax) return;
-    setRows((cur) => [...cur, withUid(emptyItem(section.section))]);
+    setRows((cur) => moveRow(cur, uid, dir));
     touch();
   }
   function insertExamples() {
@@ -81,19 +75,20 @@ export function SubprofileSectionEditor({
     touch();
   }
   function toggleFeatured(uid: string) {
-    setRows((cur) => {
-      const target = cur.find((r) => r._uid === uid);
-      if (!target) return cur;
-      const turningOn = !target.isFeatured;
-      // Single-select within THIS section's working list only — the backend
-      // enforces the cross-section, persona-wide spotlight on save, clearing
-      // any featured item left in other sections.
-      return cur.map((r) => ({
-        ...r,
-        isFeatured: r._uid === uid ? turningOn : turningOn ? false : r.isFeatured,
-      }));
-    });
+    setRows((cur) => toggleRowFeature(cur, uid));
     touch();
+  }
+
+  function closeDrawer() {
+    setDrawerState(null);
+  }
+
+  /** Commits the drawer's draft back into `rows` (see `commitDraftRow`). */
+  function saveDraft(draft: SubprofileItemView) {
+    const editingUid = drawerState?.mode === "edit" ? drawerState.uid : null;
+    setRows((cur) => commitDraftRow(cur, draft, editingUid));
+    touch();
+    closeDrawer();
   }
 
   async function save() {
@@ -121,15 +116,14 @@ export function SubprofileSectionEditor({
     }
   }
 
-  return (
-    <section className={styles.card}>
-      <div className={styles.cardHead}>
-        <span className={styles.cardIcon}>
-          <Icon size={20} aria-hidden />
-        </span>
-        <h2 className={styles.cardTitle}>{label}</h2>
-      </div>
+  const editingRow =
+    drawerState?.mode === "edit"
+      ? rows.find((r) => r._uid === drawerState.uid)
+      : undefined;
+  const drawerItem = drawerState?.mode === "add" ? emptyItem(section.section) : editingRow;
 
+  return (
+    <>
       {rows.length === 0 && (
         <p className={styles.emptySection}>
           {t("subprofiles:sectionEditor.empty")}
@@ -143,18 +137,17 @@ export function SubprofileSectionEditor({
 
       <div className={styles.itemsWrap}>
         {rows.map((row, index) => (
-          <SubprofileItemEditor
+          <EditorItemRow
             key={row._uid}
             item={row}
-            index={index}
-            fields={section.fields}
-            canMoveUp={index > 0}
-            canMoveDown={index < rows.length - 1}
-            canFeature={section.section !== "links"}
-            onChange={(p) => patch(row._uid, p)}
+            canFeature={canFeature}
+            isFirst={index === 0}
+            isLast={index === rows.length - 1}
+            onEdit={() => setDrawerState({ mode: "edit", uid: row._uid })}
+            onMoveUp={() => move(row._uid, -1)}
+            onMoveDown={() => move(row._uid, 1)}
+            onToggleFeature={() => toggleFeatured(row._uid)}
             onRemove={() => remove(row._uid)}
-            onMove={(dir) => move(row._uid, dir)}
-            onToggleFeatured={() => toggleFeatured(row._uid)}
           />
         ))}
       </div>
@@ -164,7 +157,7 @@ export function SubprofileSectionEditor({
           <button
             type="button"
             className={styles.addBtn}
-            onClick={add}
+            onClick={() => setDrawerState({ mode: "add" })}
             disabled={atMax}
           >
             <FiPlus size={18} aria-hidden />{" "}
@@ -184,6 +177,17 @@ export function SubprofileSectionEditor({
             : t("subprofiles:sectionEditor.save")}
         </Button>
       </div>
-    </section>
+
+      {drawerState && drawerItem && (
+        <SubprofileItemDrawer
+          section={section}
+          item={drawerItem}
+          isNew={drawerState.mode === "add"}
+          canFeature={canFeature}
+          onSave={saveDraft}
+          onClose={closeDrawer}
+        />
+      )}
+    </>
   );
 }

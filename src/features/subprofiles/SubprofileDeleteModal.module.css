@@ -1,0 +1,14 @@
+/* SubprofileDeleteModal — the modal chrome itself is the shared `<Modal>`
+   primitive; `.losing` is the global "what breaks" list (persona-editor.css,
+   Task 1). This just spaces the modal body's stacked children (intro
+   paragraph / losing list / type-to-confirm field). */
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.losing {
+  margin: 0;
+}

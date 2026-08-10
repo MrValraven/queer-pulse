@@ -8,15 +8,24 @@
 }
 
 .container {
-  width: min(1080px, 100% - 40px);
+  width: min(1080px, 100% - (var(--wrap-px) * 2));
   margin-inline: auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--gap-grid);
+}
+/* Narrower gutter once the full --wrap-px pair would eat too much of a
+   phone's width — matches the ground-truth `.wrap` mobile treatment. */
+@media (max-width: 560px) {
+  .container {
+    width: min(1080px, 100% - 40px);
+    gap: var(--gap-sm);
+  }
 }
 
 .header {
   max-width: 60ch;
+  padding-block-end: 4px;
 }
 .eyebrow {
   display: block;
@@ -29,9 +38,9 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 4vw, 44px);
-  letter-spacing: -0.02em;
-  line-height: 1.08;
+  font-size: clamp(32px, 5vw, 52px);
+  letter-spacing: -0.025em;
+  line-height: 1.04;
   color: var(--text-strong);
   margin: 10px 0 0;
 }
@@ -50,12 +59,12 @@
 .filters {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--gap-sm);
 }
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--gap-xs);
 }
 .chip {
   font-family: var(--sans);
@@ -95,10 +104,19 @@
   max-width: 420px;
 }
 
+/* The note computed from the current family/craft counts ("Six kinds of page
+   across N crafts") — sits directly under the family chip row, ahead of the
+   search field. */
+.filtersNote {
+  font-size: 13.5px;
+  color: var(--ink-40);
+  margin: 0;
+}
+
 .tagFilter {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--gap-xs);
 }
 .tagFilterHeading {
   font-size: 0.72rem;
@@ -107,16 +125,30 @@
   text-transform: uppercase;
   color: var(--ink-60);
 }
-.tagChip {
+/* Visually distinct from a family chip: lighter weight, quieter colour, so
+   the two facets (craft family vs. tag) read as separate filters. */
+.chipTag {
   font-size: 12px;
+  font-weight: 500;
   padding: 6px 12px;
+  color: var(--ink-40);
 }
 
 /* ── Results grid ────────────────────────────────────────────────────────── */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--gap-grid);
+}
+/* A 300px column min is wider than some phones' full content width once the
+   page gutter is subtracted (e.g. a 320px viewport) — force a single column
+   below this breakpoint so the grid reflows cleanly instead of relying on
+   auto-fill to happen to fit, which would otherwise overflow horizontally. */
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--gap-sm);
+  }
 }
 
 .stateWrap {
@@ -125,5 +157,21 @@
   gap: 12px;
   padding-block: 48px;
   justify-content: center;
+  color: var(--ink-60);
+}
+
+/* ── "Show more" pager ───────────────────────────────────────────────────── */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-block-start: 20px;
+  margin-block-start: 4px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.12);
+}
+.pagerCount {
+  font-size: 13px;
   color: var(--ink-60);
 }

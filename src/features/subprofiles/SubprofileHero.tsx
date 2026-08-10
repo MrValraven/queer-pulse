@@ -1,214 +1,147 @@
-import { useState } from "react";
-import { initialsFromName } from "../../shared/lib/initials";
-import { safeHref } from "../../shared/lib/safeHref";
+import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowUpRight } from "react-icons/fi";
-import { HiOutlineQrCode } from "react-icons/hi2";
-import { Avatar, Button, FeatureHelp, Reveal } from "../../shared/components/ui";
+import { initialsFromName } from "../../shared/lib/initials";
+import { Avatar, FeatureHelp } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes, subprofileEditPath } from "../../app/routeMap";
-import { useProfileData } from "../../app/providers/useProfile";
-import { useAuth } from "../../app/providers/authContext";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useMemberContact } from "../connect/useMemberContact";
+import { routes } from "../../app/routeMap";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
-import { ACCENT_TOKENS, DEFAULT_ACCENT } from "./subprofilePresence.data";
+import { DEFAULT_ACCENT } from "./subprofilePresence.data";
+import { personaPublicPath } from "./personaLinks.data";
 import { SubprofileSocialRow } from "./SubprofileSocialRow";
-import { SubprofileAvailability } from "./SubprofileAvailability";
-import { SubprofileEndorse } from "./SubprofileEndorse";
-import { SubprofileFollow } from "./SubprofileFollow";
-import { SubprofileShare } from "./SubprofileShare";
-import { SubprofileShareCard } from "./SubprofileShareCard";
-import { ReportSubjectControl } from "../safety/ReportSubjectControl";
+import { SubprofileHeroActions } from "./SubprofileHeroActions";
+import { SubprofileTitleBlock } from "./SubprofileTitleBlock";
+import type { PersonaViewMode } from "./personaSkinRender";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
-import styles from "./SubprofileHero.module.css";
+
+/** The design ground truth's `.pp-meta` count buttons carry a bare
+ *  `class="metabtn"` that isn't in the ported `persona-skins.css` (only the
+ *  prototype's separate, un-staged base/buttons stylesheet defined it — see
+ *  `phase1-design/README.md`: map to the repo's own primitives, don't invent
+ *  undefined classes). `.pp-meta`'s own quiet grey text styling already
+ *  applies via inheritance; this only resets browser button chrome. */
+const METABTN_STYLE: CSSProperties = {
+  background: "none",
+  border: "none",
+  padding: 0,
+  margin: 0,
+  font: "inherit",
+  color: "inherit",
+  cursor: "pointer",
+};
 
 /**
- * Rich public persona hero: cover banner, accent-tinted identity, structured
- * social row, availability + contact CTA. The owner tie and the in-app
- * Message button are shown ONLY for linked personas (`canMessage`) — an
- * unlinked, pseudonymous persona never reveals who is behind it (spec §4).
+ * The persona page's `.pp-hero` — avatar, name, tagline, social row, actions
+ * (delegated to `SubprofileHeroActions`), the endorsement/follower meta line,
+ * the workshop-only title block (`SubprofileTitleBlock`, CSS-gated to that
+ * one skin), and the bio. The owner tie / standalone address is shown here
+ * (not the old `.ownerTie` block) — an unlinked, pseudonymous persona never
+ * reveals who is behind it (spec §4).
+ *
+ * Same markup for every skin family — `data-skin` on the ancestor `.pp`
+ * (set by the page host, Task 5) decides how it looks; this component never
+ * branches on skin itself. `.pp-cover`/`.pp-runhead`/the article wrapper are
+ * owned by the page host too, not this component.
  */
 export function SubprofileHero({
   view,
-  canMessage,
+  mode,
+  onAction,
 }: {
   view: PublicSubprofileView;
-  canMessage: boolean;
+  mode: PersonaViewMode;
+  onAction: (action: string) => void;
 }) {
   const { t } = useTranslation();
-  const { contact } = useMemberContact(view.ownerSlug ?? "");
-  const { profile } = useProfileData();
-  const { user } = useAuth();
-  const { demoMode } = useDemoMode();
-  const [shareCardOpen, setShareCardOpen] = useState(false);
-
   const accent = view.accent ?? DEFAULT_ACCENT;
-  const { tint, on } = ACCENT_TOKENS[accent];
-  // Guard the member-supplied CTA URL: React won't strip a `javascript:` scheme,
-  // so only render the link when it's a safe http(s)/mailto target.
-  const ctaHref = safeHref(view.ctaUrl);
-  const ctaVariant = canMessage ? "ghost" : "primary";
 
   const linkedToOwner =
     view.linkVisibility === "linked" &&
     Boolean(view.ownerName) &&
     Boolean(view.ownerSlug);
-
-  // Live's `useProfileData()` falls back to the demo mock persona when there's no
-  // authenticated user (see ProfileProvider), so `profile.slug` is only a
-  // trustworthy "who's viewing" signal in demo mode or when live mode actually
-  // has a signed-in user — otherwise a logged-out visitor could spuriously
-  // match a real persona's owner and see the endorse control disappear.
-  const viewerSlug = demoMode || user ? profile.slug : undefined;
-  const isOwnerViewing = Boolean(
-    linkedToOwner && viewerSlug && viewerSlug === view.ownerSlug,
-  );
-
-  // Guard the member-supplied cover URL the same way as the CTA link. Beyond
-  // the http(s) scheme check, reject anything containing `)` or whitespace so a
-  // crafted value can't break out of the CSS `url(...)` and inject styling. An
-  // off-origin image would otherwise let a persona owner harvest the IP and
-  // User-Agent of everyone who views the subprofile. Fall back to the gradient.
-  const safeCoverUrl = safeHref(view.coverUrl);
-  const coverUrl =
-    safeCoverUrl && !/[)\s]/.test(safeCoverUrl) ? safeCoverUrl : null;
-  const coverStyle = coverUrl
-    ? { backgroundImage: `url(${coverUrl})` }
-    : undefined;
+  const interactive = mode !== "preview";
 
   return (
-    <>
-      <header
-        className={styles.hero}
-        style={{
-          ["--accent-tint" as string]: tint,
-          ["--accent-on" as string]: on,
-        }}
-      >
-        <div
-          className={`${styles.cover} ${coverUrl ? "" : styles.coverGradient}`}
-          style={coverStyle}
+    <div className="pp-hero">
+      <div className="pp-id">
+        <Avatar
+          className="pp-av"
+          initials={initialsFromName(view.displayName, "?")}
+          src={view.avatarUrl ?? undefined}
+          tint="plum"
+          size={112}
         />
-        <div className="wrap">
-          <Reveal className={styles.heroInner}>
-            <div className={styles.avatarRing}>
-              <Avatar
-                initials={initialsFromName(view.displayName, "?")}
-                src={view.avatarUrl ?? undefined}
-                tint="plum"
-                size={104}
-              />
-            </div>
 
-            <div className={styles.heroText}>
-              <span className={styles.kindBadge}>{t(KIND_LABEL_KEYS[view.kind])}</span>
-              <h1 className={styles.name}>
-                {view.displayName} <FeatureHelp id="subprofiles.detail" />
-              </h1>
-              {view.tagline && <p className={styles.tagline}>{view.tagline}</p>}
+        <div className="pp-text">
+          <span className="pp-kind">{t(KIND_LABEL_KEYS[view.kind])}</span>
+          <h1 className="pp-name">
+            {view.displayName} <FeatureHelp id="subprofiles.detail" />
+          </h1>
+          {view.tagline && <p className="pp-tagline">{view.tagline}</p>}
 
-              <SubprofileSocialRow links={view.socialLinks} accent={accent} />
+          <SubprofileSocialRow
+            links={view.socialLinks}
+            accent={accent}
+            interactive={interactive}
+          />
 
-              <div className={styles.actions}>
-                <SubprofileAvailability value={view.availability} accent={accent} />
-                {isOwnerViewing ? (
-                  // Viewing your own persona behaves like your own profile: no
-                  // "Message" (you can't message yourself) — offer to edit it.
-                  <Button variant="primary" size="md" to={subprofileEditPath(view.id)}>
-                    {t("subprofiles:hero.edit")}
-                  </Button>
-                ) : (
-                  canMessage && (
-                    <Button
-                      variant="primary"
-                      size="md"
-                      onClick={() =>
-                        contact({
-                          slug: view.ownerSlug ?? "",
-                          name: view.ownerName ?? view.displayName,
-                        })
-                      }
-                    >
-                      {t("subprofiles:hero.message")}
-                    </Button>
-                  )
-                )}
-                {ctaHref && view.ctaLabel && (
-                  <Button
-                    variant={ctaVariant}
-                    size="md"
-                    href={ctaHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {view.ctaLabel}
-                  </Button>
-                )}
-                <SubprofileShare view={view} />
-                <Button
-                  variant="ghost"
-                  size="md"
-                  onClick={() => setShareCardOpen(true)}
-                >
-                  <HiOutlineQrCode aria-hidden /> {t("subprofiles:shareCard.cta")}
-                </Button>
-              </div>
+          <SubprofileHeroActions view={view} mode={mode} onAction={onAction} />
 
-              <div className={styles.socialProofRow}>
-                <SubprofileEndorse
-                  subprofileId={view.id}
-                  endorsementCount={view.endorsementCount}
-                  viewerEndorsed={view.viewerEndorsed}
-                  isOwnerViewing={isOwnerViewing}
+          <div className="pp-meta">
+            {view.endorsementCount > 0 && (
+              <button
+                type="button"
+                style={METABTN_STYLE}
+                disabled={!interactive}
+                onClick={
+                  interactive ? () => onAction("people:endorsers") : undefined
+                }
+              >
+                {t("subprofiles:hero.endorse.count", {
+                  count: view.endorsementCount,
+                })}
+              </button>
+            )}
+            <button
+              type="button"
+              style={METABTN_STYLE}
+              disabled={!interactive}
+              onClick={
+                interactive ? () => onAction("people:followers") : undefined
+              }
+            >
+              {t("subprofiles:hero.follow.count", { count: view.followerCount })}
+            </button>
+            {linkedToOwner && interactive ? (
+              <Link className="pp-owner" to={`${routes.members}/${view.ownerSlug}`}>
+                <Translation
+                  i18nKey="subprofiles:page.ownerTie"
+                  components={{ em: <em /> }}
+                  values={{ name: view.ownerName ?? "" }}
                 />
-                <SubprofileFollow
-                  subprofileId={view.id}
-                  followerCount={view.followerCount}
-                  viewerFollowing={view.viewerFollowing}
-                  isOwnerViewing={isOwnerViewing}
+              </Link>
+            ) : linkedToOwner ? (
+              <span className="pp-owner">
+                <Translation
+                  i18nKey="subprofiles:page.ownerTie"
+                  components={{ em: <em /> }}
+                  values={{ name: view.ownerName ?? "" }}
                 />
-              </div>
-
-              {linkedToOwner && (
-                <Link
-                  className={styles.ownerTie}
-                  to={`${routes.members}/${view.ownerSlug}`}
-                >
-                  <Translation
-                    i18nKey="subprofiles:page.ownerTie"
-                    components={{ em: <em /> }}
-                    values={{ name: view.ownerName ?? "" }}
-                  />
-                  <FiArrowUpRight aria-hidden />
-                </Link>
-              )}
-
-              {view.bio && <p className={styles.bio}>{view.bio}</p>}
-
-              {!isOwnerViewing && (
-                <ReportSubjectControl
-                  subjectType="subprofile"
-                  subjectId={view.slug}
-                  subjectName={view.displayName}
-                  label={t("subprofiles:hero.report.cta")}
-                  ariaLabel={t("subprofiles:hero.report.ariaLabel", {
-                    name: view.displayName,
-                  })}
-                />
-              )}
-            </div>
-          </Reveal>
+              </span>
+            ) : (
+              <span className="pp-owner">
+                {t("subprofiles:hero.standalone", {
+                  address: personaPublicPath(view),
+                })}
+              </span>
+            )}
+          </div>
         </div>
-      </header>
 
-      {shareCardOpen && (
-        <SubprofileShareCard
-          view={view}
-          onClose={() => setShareCardOpen(false)}
-        />
-      )}
-    </>
+        <SubprofileTitleBlock view={view} mode={mode} />
+      </div>
+
+      {view.bio && <p className="pp-bio">{view.bio}</p>}
+    </div>
   );
 }

@@ -17,6 +17,7 @@ import { useTranslation } from "../../i18n/useTranslation";
 import { ACCOUNT_GROUPS, HEADER_ACTIONS } from "./accountMenu.data";
 import { useAccountIdentity } from "./useAccountIdentity";
 import { RoleLinks, AccountMenuControls } from "./accountMenuShared";
+import { usePersonaBadge } from "./usePersonaBadge";
 import styles from "./AccountMenu.module.css";
 
 /** Profile chip in the logged-in nav that opens a menu: profile, settings, sign out. */
@@ -192,6 +193,7 @@ function AccountMenuPanel({
   onSignOut: () => void;
 }) {
   const { t } = useTranslation();
+  const personaBadge = usePersonaBadge();
   return (
     <div
       className={[styles.menu, placement === "rail" && styles.menuRail]
@@ -239,6 +241,11 @@ function AccountMenuPanel({
             <div className={styles.grid}>
               {group.map((item) => {
                 const Icon = item.icon;
+                const badge =
+                  item.badge ??
+                  (item.to === routes.subprofilesDashboard
+                    ? personaBadge
+                    : undefined);
                 return (
                   <Link
                     key={item.to}
@@ -250,6 +257,9 @@ function AccountMenuPanel({
                     <span className={styles.itemLabel}>
                       {t(item.labelKey)}
                     </span>
+                    {badge && (
+                      <span className={styles.badgeSlot}>{badge}</span>
+                    )}
                   </Link>
                 );
               })}

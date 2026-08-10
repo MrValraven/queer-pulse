@@ -1,72 +1,23 @@
-/* "You've been invited" plum-panel cards — the repo's celebratory
-   confirmation surface (background: var(--plum), cream text, coral <em>,
-   ghost-dark actions), laid out as a compact row per invite instead of the
-   centered SuccessPanel treatment. */
+/* "You've been invited" rows — the shared `.banner` accent-tinted row
+   (persona-dashboard.css) restyled from the earlier plum-panel treatment.
+   This module only owns the list wrapper (stacking multiple invite rows)
+   and each row's action-button gap; the row itself is the global class. */
 
-.banner {
+.list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 28px;
-}
-
-.card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-  border-radius: var(--radius-card, 22px);
-  padding: 18px 22px;
-  animation: cardIn 0.3s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
-}
-
-.message {
-  flex: 1;
-  min-width: 0;
-  font-family: var(--serif);
-  font-size: 17px;
-  font-weight: 400;
-  line-height: 1.4;
-  letter-spacing: -0.01em;
-  margin: 0;
-  color: rgba(var(--cream-rgb), 1);
-}
-.message em {
-  font-style: italic;
-  color: var(--accent);
+  gap: var(--gap-sm);
+  margin-bottom: var(--card-pad-lg);
 }
 
 .actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--gap-xs);
   flex-shrink: 0;
 }
 
-@keyframes cardIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .card {
-    animation: none;
-  }
-}
-
 @media (max-width: 640px) {
-  .card {
-    flex-wrap: wrap;
-  }
-  .message {
-    flex-basis: 100%;
-  }
   .actions {
     flex-basis: 100%;
   }

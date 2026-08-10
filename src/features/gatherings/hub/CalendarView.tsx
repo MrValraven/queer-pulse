@@ -10,8 +10,8 @@ import styles from "./CalendarView.module.css";
 /**
  * The Calendar tab of the Events Hub. Lifted straight out of the old
  * `CalendarPage` composition (month grid + selected-day sidebar + upcoming
- * list + legend) — only the page-level hero chrome was dropped, since
- * `EventsHubHero` + `EventsHubTabs` already own that above this view.
+ * list + legend) — only the page-level hero chrome was dropped, since the
+ * featured card + `EventsHubTabs` already own that above this view.
  * `now` replaces the old page's hardcoded `CALENDAR_TODAY` for the initial
  * month and the "upcoming" cutoff, so the hub's one shared clock wins.
  */

@@ -10,7 +10,7 @@ import type { SubprofileStatus, Visibility } from "./api/subprofiles.api";
  *
  * In `compact` mode (the switch-list row, which has far less horizontal
  * room than the hero) a `"published"` status renders nothing — the same
- * "exceptional state only" convention `MySubprofileRow`/GitHub PR badges
+ * "exceptional state only" convention `SideCard`/GitHub PR badges
  * use — while the hero (`compact` unset) always shows a present `status`.
  * This is never a color-only signal: the absent case is an absent badge,
  * not a same-color badge with different meaning, and `Badge`/`VisibilityBadge`

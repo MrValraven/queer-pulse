@@ -6,6 +6,7 @@ import {
   SegmentedControl,
 } from "../../shared/components/ui";
 import { useMediaQuery } from "../../shared/hooks";
+import { mediaMax } from "../../shared/theme/breakpoints";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   LocalFilterFields,
@@ -37,7 +38,7 @@ export function LocalFilterBar({
   const { t } = useTranslation();
   // On phones the full filter set lives in a bottom sheet so the sticky bar
   // stays a compact one-row toolbar instead of eating 200–260px of viewport.
-  const isMobile = useMediaQuery("(max-width: 860px)");
+  const isMobile = useMediaQuery(mediaMax("mobile"));
   const [sheetOpen, setSheetOpen] = useState(false);
 
   const viewSwitcher = (

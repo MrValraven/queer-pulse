@@ -114,6 +114,32 @@ summary,
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Plain-<button> reset. This project styles buttons through the <Button>
+   component and never shipped a CSS-reset dependency, so bare/ported
+   <button>s fell back to native UA chrome — grey border, button-face fill,
+   platform appearance. Zero that here so an unstyled button is invisible
+   chrome by default. Any button with its own class-level background/border
+   still wins (a class is 0,1,0 vs this element rule's 0,0,1), so the
+   <Button> component and every purpose-styled button are unaffected; only
+   the previously-leaking bare buttons change. */
+button {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* Standard `[hidden]` rule — also absent without a normalize dependency.
+   Without it, any element with a class setting `display:` out-specifies the
+   UA `[hidden]` rule and the `hidden` attribute silently stops working (this
+   is what broke the editor's pane tabs). `!important` guarantees the attribute
+   wins over any author `display`. */
+[hidden] {
+  display: none !important;
+}
+
 /* Centered content wrapper used by every section */
 .wrap {
   max-width: var(--maxw);

@@ -1,0 +1,147 @@
+import { useState } from "react";
+import { FiCheck } from "react-icons/fi";
+import { Button, ImageSlot } from "../../../../shared/components/ui";
+import { useToast } from "../../../../shared/components/feedback/useToast";
+import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import type { IssueDigestItemDto } from "../../api/issueProduction.api";
+import type { PieceListItemDto } from "../../api/pieces.api";
+import styles from "./issueTabs.module.css";
+
+export interface DigestSocialTabProps {
+  digest: IssueDigestItemDto[];
+  pieces: PieceListItemDto[];
+  onSaveDigest: (nextDigest: IssueDigestItemDto[]) => void;
+}
+
+/**
+ * Issue production — Digest & social tab. The members' digest card lists
+ * every curated piece in email order (a checkbox to include/exclude it, its
+ * blurb, and an inline editor); the social-out card turns the same curated
+ * set into one card per piece for posting elsewhere. Every edit is an
+ * immutable rewrite of the `digest` array handed back through `onSaveDigest`
+ * — this tab holds no server state of its own.
+ */
+export function DigestSocialTab({ digest, pieces, onSaveDigest }: DigestSocialTabProps) {
+  const { showToast } = useToast();
+  const { t } = useTranslation();
+  const [editingPieceId, setEditingPieceId] = useState<string | null>(null);
+  const [draftBlurb, setDraftBlurb] = useState("");
+
+  function findPieceTitle(pieceId: string): string {
+    return pieces.find((piece) => piece.id === pieceId)?.title ?? pieceId;
+  }
+
+  function toggleOn(pieceId: string) {
+    onSaveDigest(
+      digest.map((item) => (item.pieceId === pieceId ? { ...item, on: !item.on } : item)),
+    );
+  }
+
+  function startEdit(item: IssueDigestItemDto) {
+    setEditingPieceId(item.pieceId);
+    setDraftBlurb(item.blurb);
+  }
+
+  function cancelEdit() {
+    setEditingPieceId(null);
+    setDraftBlurb("");
+  }
+
+  function saveEdit(pieceId: string) {
+    const trimmedBlurb = draftBlurb.trim();
+    onSaveDigest(
+      digest.map((item) => (item.pieceId === pieceId ? { ...item, blurb: trimmedBlurb } : item)),
+    );
+    setEditingPieceId(null);
+    setDraftBlurb("");
+  }
+
+  return (
+    <div className={styles.stack}>
+      <div className={styles.card}>
+        <h3>{t("magazine:issue.digest.heading")}</h3>
+        <p className={styles.hint}>{t("magazine:issue.digest.hint")}</p>
+        {digest.map((item) => {
+          const pieceTitle = findPieceTitle(item.pieceId);
+          const isEditing = editingPieceId === item.pieceId;
+          return (
+            <div key={item.pieceId} className={styles.digrow}>
+              <button
+                type="button"
+                role="checkbox"
+                aria-checked={item.on}
+                aria-label={t("magazine:issue.digest.includeAria", { title: pieceTitle })}
+                className={styles.ck}
+                onClick={() => toggleOn(item.pieceId)}
+              >
+                {item.on && <FiCheck aria-hidden />}
+              </button>
+              <div className={styles.digBody}>
+                <h4>{pieceTitle}</h4>
+                {isEditing ? (
+                  <div className={styles.editField}>
+                    <textarea
+                      value={draftBlurb}
+                      aria-label={t("magazine:issue.digest.editBlurbAria", { title: pieceTitle })}
+                      onChange={(event) => setDraftBlurb(event.target.value)}
+                    />
+                    <div className={styles.row}>
+                      <Button size="sm" onClick={() => saveEdit(item.pieceId)}>
+                        {t("magazine:issue.digest.save")}
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={cancelEdit}>
+                        {t("magazine:issue.digest.cancel")}
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <p>{item.blurb}</p>
+                )}
+              </div>
+              {!isEditing && (
+                <div className={styles.digActions}>
+                  <Button size="sm" variant="ghost" onClick={() => startEdit(item)}>
+                    {t("magazine:issue.digest.edit")}
+                  </Button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+        <div className={styles.row}>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => showToast(t("magazine:issue.digest.sendTestToast"))}
+          >
+            {t("magazine:issue.digest.sendTest")}
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => showToast(t("magazine:issue.digest.scheduleToast"))}
+          >
+            {t("magazine:issue.digest.scheduleWithIssue")}
+          </Button>
+        </div>
+      </div>
+
+      <div className={styles.card}>
+        <h3>{t("magazine:issue.digest.socialHeading")}</h3>
+        <div className={styles.socialrow}>
+          {digest.map((item) => {
+            const pieceTitle = findPieceTitle(item.pieceId);
+            return (
+              <div key={item.pieceId} className={styles.socialcard}>
+                <ImageSlot alt={pieceTitle} placeholder={pieceTitle} tint="plum" height={110} />
+                <b>{pieceTitle}</b>
+                <p>{item.blurb}</p>
+              </div>
+            );
+          })}
+        </div>
+        <p className={styles.hint}>{t("magazine:issue.digest.socialAltHint")}</p>
+      </div>
+    </div>
+  );
+}

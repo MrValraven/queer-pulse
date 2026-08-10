@@ -1456,6 +1456,7 @@ export const resources: Catalog = {
     "Divide o teu orçamento em rubricas. Sê realista — o painel prefere estimativas honestas a otimistas. Máximo de 2000 € nesta ronda.",
   "microGrants.apply.budget.itemPlaceholder":
     "Rubrica (ex.: custos de impressão)",
+  "microGrants.apply.budget.amountLabel": "Montante em euros",
   "microGrants.apply.budget.addItemCta": "+ Adicionar rubrica",
   "microGrants.apply.budget.totalLabel": "Total pedido",
   "microGrants.apply.budget.hint":

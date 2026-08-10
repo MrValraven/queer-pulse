@@ -274,9 +274,9 @@ export const admin: Catalog = {
   "members.timeline.auditLinkCta": "Every entry in the audit log",
 
   "members.sealed.sectionTitle": "Identity & privacy",
-  "members.sealed.title": "Legacy identity is sealed",
+  "members.sealed.title": "No prior name is stored",
   "members.sealed.body":
-    "Any prior name is encrypted and shown to no one — not in reports, not here, not to admins. Only the member controls their chosen name.",
+    "QueerPulse keeps no record of anyone's earlier name — that's why nothing shows here. It never appears in a report, in this view, or to any admin. The member alone decides how they're known.",
 
   "members.message.eyebrow": "Reaching out",
   "members.message.title": "Message <em>{name}</em>",
@@ -645,6 +645,41 @@ export const admin: Catalog = {
   "adminListings.history.event.answered": "{actor} replied to a question.",
   "adminListings.history.askedBy": "Asked by {actor}",
   "adminListings.history.awaitingReply": "Awaiting reply",
+
+  // ── Uploaded images (admin media console) ────────────────────────────────
+  "media.title": "Uploaded <em>images</em>",
+  "media.header.eyebrow": "Security tooling",
+  "media.header.title": "Uploaded <em>images</em>",
+  "media.header.sub":
+    "Every object stored in the platform's upload bucket, with per-file owner and storage details for security review.",
+  "media.filterAriaLabel": "Filter by upload kind",
+  "media.kinds.all": "All",
+  "media.kinds.avatars": "Avatars",
+  "media.kinds.work": "Work images",
+  "media.kinds.story-covers": "Story covers",
+  "media.kinds.gathering-photos": "Gathering photos",
+  "media.kinds.group-avatars": "Group avatars",
+  "media.kinds.listing-photos": "Listing photos",
+  "media.unowned": "Unowned",
+  "media.unknown": "Unknown",
+  "media.loadMore": "Load more",
+  "media.openFile": "Open file URL",
+  "media.copyPresigned": "Copy presigned URL",
+  "media.copyKey": "Copy key",
+  "media.copiedPresigned": "Presigned URL copied",
+  "media.copiedKey": "Key copied",
+  "media.inspectRealType": "Inspect real content type",
+  "media.spoofWarning": "does not match extension",
+  "media.field.key": "Storage key",
+  "media.field.uploader": "Uploader",
+  "media.field.declaredType": "Declared type (from extension)",
+  "media.field.realType": "Real stored type",
+  "media.drawer.ariaLabel": "Object details",
+  "media.empty.title": "No objects",
+  "media.empty.body": "Nothing is stored under this kind yet.",
+  "media.demo.title": "Available in live mode only",
+  "media.demo.body":
+    "Uploaded images come from the live storage bucket, so there is nothing to show in demo mode.",
 
   // ── Edit suggestions ─────────────────────────────────────────────────────────
   "editSuggestions.empty": "No corrections in this filter right now.",
@@ -2476,4 +2511,85 @@ export const admin: Catalog = {
   "landing.hidden.unpublished": "Hidden — unpublished",
   "landing.hidden.not_public": "Hidden — no longer public",
   "landing.hidden.deleted": "Hidden — profile deleted",
+
+  // ── Press kit (/admin/press-kit) ──────────────────────────────────────────
+  "pressKit.header.eyebrow": "Public site",
+  "pressKit.header.sub":
+    "Curate the press coverage and contacts shown on the public press kit.",
+
+  "pressKit.tabs.coverage": "Coverage",
+  "pressKit.tabs.team": "Team",
+
+  "pressKit.fields.source": "Outlet",
+  "pressKit.fields.sourcePlaceholder": "e.g. Público",
+  "pressKit.fields.publishedOn": "Published",
+  "pressKit.fields.publishedOnPlaceholder": "e.g. 4 Mar 2026",
+  "pressKit.fields.title": "Headline",
+  "pressKit.fields.titlePlaceholder": "The piece's headline, as published.",
+  "pressKit.fields.meta": "Detail",
+  "pressKit.fields.metaHelper": "Byline, length or format — shown under the headline.",
+  "pressKit.fields.metaPlaceholder": "e.g. Long-form feature · by Ana Sá Lopes",
+  "pressKit.fields.url": "Link",
+  "pressKit.fields.urlHelper": "Optional — leave blank if there's no online version.",
+  "pressKit.fields.urlPlaceholder": "https://…",
+  "pressKit.fields.name": "Name",
+  "pressKit.fields.namePlaceholder": "e.g. Marta Reis",
+  "pressKit.fields.role": "Role",
+  "pressKit.fields.rolePlaceholder": "e.g. Founder & director",
+  "pressKit.fields.description": "What they speak to",
+  "pressKit.fields.descriptionPlaceholder":
+    "e.g. Speaks to strategy, funding and the platform's story.",
+  "pressKit.fields.email": "Email",
+  "pressKit.fields.emailPlaceholder": "name@queerpulse.app",
+  "pressKit.fields.languages": "Languages",
+  "pressKit.fields.languagesPlaceholder": "e.g. EN / PT",
+  "pressKit.fields.avatarUrl": "Photo",
+  "pressKit.fields.avatarUrlHelper": "Optional — a link to their headshot.",
+  "pressKit.fields.avatarUrlPlaceholder": "https://…",
+
+  "pressKit.add.coverage.cta": "Add coverage",
+  "pressKit.add.coverage.submit": "Add to press kit",
+  "pressKit.add.coverage.toast": "Coverage added",
+  "pressKit.add.coverage.error": "Couldn't add — try again",
+  "pressKit.add.team.cta": "Add contact",
+  "pressKit.add.team.submit": "Add to press kit",
+  "pressKit.add.team.toast": "Contact added",
+  "pressKit.add.team.error": "Couldn't add — try again",
+
+  "pressKit.list.inactivePill": "Hidden by you",
+  "pressKit.list.previewEmpty": "No detail yet.",
+  "pressKit.list.moveUpAria": "Move {name} up",
+  "pressKit.list.moveDownAria": "Move {name} down",
+  "pressKit.list.activeToggleAria": "Show {name} on the public press kit",
+  "pressKit.list.activeToggleLabel": "Live",
+  "pressKit.list.activeToggleError": "Couldn't update — try again",
+  "pressKit.list.reorderError": "Couldn't reorder — try again",
+  "pressKit.list.empty.coverage.title": "No coverage featured yet",
+  "pressKit.list.empty.coverage.body":
+    "Add a press piece above to show it on the public press kit.",
+  "pressKit.list.empty.team.title": "No contacts listed yet",
+  "pressKit.list.empty.team.body":
+    "Add a press-desk contact above so journalists know who to reach.",
+
+  "pressKit.editor.edit": "Edit",
+  "pressKit.editor.close": "Close",
+  "pressKit.editor.save": "Save",
+  "pressKit.editor.savedToast": "Saved",
+  "pressKit.editor.saveError": "Couldn't save — try again",
+
+  "pressKit.remove.cta": "Remove",
+  "pressKit.remove.confirm": "Remove",
+  "pressKit.remove.toast": "Removed from the press kit",
+  "pressKit.remove.error": "Couldn't remove — try again",
+  "pressKit.remove.coverage.title": "Remove this coverage?",
+  "pressKit.remove.coverage.body":
+    "It will no longer appear on the public press kit. You can add it back later.",
+  "pressKit.remove.team.title": "Remove this contact?",
+  "pressKit.remove.team.body":
+    "They will no longer appear on the public press kit. You can add them back later.",
+
+  "pressKit.facts.title": "Facts (auto)",
+  "pressKit.facts.sub":
+    "Derived from platform data — shown on the public press kit, not editable here.",
+  "pressKit.facts.empty": "No facts available yet.",
 };

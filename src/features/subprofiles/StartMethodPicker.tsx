@@ -1,11 +1,17 @@
-import { FormField, SegmentedControl } from "../../shared/components/ui";
 import type { Translation as TranslationApi } from "../../shared/i18n/useTranslation";
+import styles from "./NewSideModal.module.css";
 
 /** Top-level start method: seed from a kind template, start blank, or copy one
  *  of the owner's existing personas. "Copy" is disabled when the owner has no
  *  personas yet (nothing to copy). */
 export type StartMethod = "template" | "blank" | "copy";
 
+const METHODS: StartMethod[] = ["template", "blank", "copy"];
+
+/** The design's `.seg` segmented control: three plain toggle buttons in a
+ *  pill track, `aria-pressed` marking the active one. A single-select toggle
+ *  group of this size doesn't need full radiogroup semantics — the pressed
+ *  state alone is enough for assistive tech to track which method is active. */
 export function StartMethodPicker({
   method,
   onChange,
@@ -17,32 +23,43 @@ export function StartMethodPicker({
   copyDisabled: boolean;
   t: TranslationApi["t"];
 }) {
-  const choices: Array<{ value: StartMethod; label: string; disabled?: boolean }> = [
-    { value: "template", label: t("subprofiles:start.template") },
-    { value: "blank", label: t("subprofiles:start.blank") },
-    { value: "copy", label: t("subprofiles:start.copy"), disabled: copyDisabled },
-  ];
-  const current = choices.find((choice) => choice.value === method)!;
-  const disabledLabels = choices
-    .filter((choice) => choice.disabled)
-    .map((choice) => choice.label);
+  const labelKeys: Record<StartMethod, string> = {
+    template: "subprofiles:start.template",
+    blank: "subprofiles:start.blank",
+    copy: "subprofiles:start.copy",
+  };
+
   return (
-    <FormField
-      label={t("subprofiles:start.label")}
-      helper={
-        copyDisabled ? t("subprofiles:start.copyDisabledHelper") : t("subprofiles:start.helper")
-      }
-    >
-      <SegmentedControl
-        fullWidth
-        options={choices.map((choice) => choice.label)}
-        disabledOptions={disabledLabels}
-        value={current.label}
-        onChange={(value) => {
-          const match = choices.find((choice) => choice.label === value);
-          if (match && !match.disabled) onChange(match.value);
-        }}
-      />
-    </FormField>
+    <div>
+      <span id="new-side-start-label" className={styles.stepLabel}>
+        {t("subprofiles:start.label")}
+      </span>
+      <div
+        className={styles.seg}
+        role="group"
+        aria-labelledby="new-side-start-label"
+      >
+        {METHODS.map((candidate) => {
+          const disabled = candidate === "copy" && copyDisabled;
+          return (
+            <button
+              key={candidate}
+              type="button"
+              className={styles.segBtn}
+              aria-pressed={method === candidate}
+              disabled={disabled}
+              onClick={() => onChange(candidate)}
+            >
+              {t(labelKeys[candidate])}
+            </button>
+          );
+        })}
+      </div>
+      <p className={styles.craftSummary}>
+        {copyDisabled
+          ? t("subprofiles:start.copyDisabledHelper")
+          : t("subprofiles:start.helper")}
+      </p>
+    </div>
   );
 }

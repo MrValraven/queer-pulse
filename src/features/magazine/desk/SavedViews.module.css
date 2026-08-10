@@ -1,0 +1,35 @@
+/* Ported from the design's `.views` rule. */
+
+.views {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.chip {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  padding: 7px 13px;
+  border-radius: var(--radius-pill);
+  border: 1.5px dashed rgba(var(--line-rgb), 0.2);
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  cursor: pointer;
+}
+
+.chipOn {
+  border-style: solid;
+  border-color: var(--plum);
+  color: var(--plum);
+  background: var(--wash);
+}
+
+.chip span {
+  color: var(--ink-40);
+  font-weight: 500;
+}

@@ -431,6 +431,28 @@ export const auth: Catalog = {
   "onboarding.stepCommunities.empty":
     "No suggestions right now — you can explore and join communities anytime.",
 
+  // Moment 4 — "do you also work as something else?" transient chip step
+  // (StepSideWork). The pick decides where "Set one up" deep-links; nothing
+  // here is persisted (see Decision §4 in the Task 3 build notes).
+  "onboarding.stepSideWork.heading": "Got a craft <em>of your own</em>?",
+  "onboarding.stepSideWork.hint":
+    "Pick the one you'd want its own page for — you can always add more later.",
+  "onboarding.stepSideWork.cta": "Set one up",
+  "onboarding.stepSideWork.skip": "Skip for now",
+  "onboarding.stepSideWork.back": "Back",
+
+  "onboarding.sideWork.music": "Music",
+  "onboarding.sideWork.drag": "Drag",
+  "onboarding.sideWork.code": "Code",
+  "onboarding.sideWork.photography": "Photography",
+  "onboarding.sideWork.food": "Food",
+  "onboarding.sideWork.therapy": "Therapy",
+  "onboarding.sideWork.writing": "Writing",
+  "onboarding.sideWork.art": "Art",
+  "onboarding.sideWork.dj": "DJing",
+  "onboarding.sideWork.dance": "Dance",
+  "onboarding.sideWork.somethingElse": "Something else",
+
   "onboarding.stepDone.heading": "You're <em>part of it</em> now",
   "onboarding.stepDone.cta": "Go to my home",
   "onboarding.quickStart.browseDirectory.title": "Browse the member directory",

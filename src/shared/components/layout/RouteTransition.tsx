@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import { AnimatePresence, m } from "motion/react";
 import type { ReactNode } from "react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
+import { mediaMax } from "../../theme/breakpoints";
 import { useMotionPrefs } from "../../../app/providers/MotionProvider";
 import { useNavDirection } from "../../../app/providers/NavDirectionProvider";
 
@@ -16,7 +17,7 @@ export function RouteTransition({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
   const direction = useNavDirection();
   const { reducedMotion } = useMotionPrefs();
-  const isMobile = useMediaQuery("(max-width: 860px)");
+  const isMobile = useMediaQuery(mediaMax("mobile"));
 
   // Desktop = opacity-only polish; reduced-motion = opacity snap; mobile = slide.
   const slide = isMobile && !reducedMotion && (direction === "push" || direction === "pop");

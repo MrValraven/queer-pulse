@@ -12,3 +12,6 @@ export const subscribePush = (payload: PushSubscribePayload) =>
 /** POST /push/unsubscribe — drop this device's subscription. */
 export const unsubscribePush = (endpoint: string) =>
   apiPost<{ ok: true }>("/push/unsubscribe", { endpoint });
+
+/** POST /push/test — send this member a single test push to their devices. */
+export const testPush = () => apiPost<{ ok: true }>("/push/test", {});

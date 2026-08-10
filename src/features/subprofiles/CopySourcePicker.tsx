@@ -4,7 +4,7 @@ import type { Translation as TranslationApi } from "../../shared/i18n/useTransla
 import { initialsFromName } from "../../shared/lib/initials";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
-import styles from "./MySubprofilesPage.module.css";
+import styles from "./NewSideModal.module.css";
 
 /** Pick which of the owner's existing personas to copy. Renders an empty state
  *  when the owner has none (the caller also disables the Copy method, so this

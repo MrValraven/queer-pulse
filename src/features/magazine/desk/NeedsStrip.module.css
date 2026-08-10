@@ -1,0 +1,74 @@
+/* Ported from the design's `.needs`/`.needs-card`/`.needs-row` rules. */
+
+.needs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.needsCard {
+  padding: 16px 18px;
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .needsCard:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card-hover);
+  }
+}
+
+.urgent {
+  border-color: rgba(var(--accent-rgb), 0.4);
+  background:
+    linear-gradient(180deg, rgba(var(--accent-rgb), 0.06), transparent 60%),
+    var(--paper);
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ink-40);
+}
+
+.eyebrowLate {
+  color: var(--accent-ink);
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--text-strong);
+}
+
+.tiny {
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+
+.needsRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .needsCard {
+    transition: none;
+  }
+}

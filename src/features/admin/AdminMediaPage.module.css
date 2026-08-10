@@ -1,0 +1,82 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
+  overflow: hidden;
+  background: var(--paper);
+  cursor: pointer;
+  text-align: left;
+}
+
+.thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background: rgba(var(--line-rgb), 0.06);
+}
+
+.kindBadge {
+  align-self: flex-start;
+  margin: 8px 10px 0;
+  padding: 2px 8px;
+  font-size: 12px;
+  border-radius: 999px;
+  background: rgba(var(--violet-rgb), 0.18);
+  color: var(--violet);
+}
+
+.meta {
+  margin: 0 10px 10px;
+  font-size: 12px;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.drawerImage {
+  width: 100%;
+  border-radius: var(--radius-card, 22px);
+  margin-bottom: 4px;
+}
+
+.mismatch {
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.actionLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.actionLink:hover {
+  border-color: rgba(var(--line-rgb), 0.32);
+}

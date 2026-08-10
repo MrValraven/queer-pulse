@@ -180,6 +180,8 @@ export const economy: Catalog = {
   "workHub.card.apps.label": "Applications",
   "workHub.card.apps.primary": "{active} active / {sent} sent",
   "workHub.card.apps.noOffers": "No offers yet",
+  "workHub.card.apps.trackAll": "Track every role you've applied to",
+  "workHub.card.apps.viewAll": "View all applications",
   "workHub.card.mentor.label": "Mentorship",
   "workHub.card.mentor.primary": "1 active mentorship",
   "workHub.card.mentor.next": "{count} mentors with open spots",

@@ -23,25 +23,40 @@ export const subprofiles: Catalog = {
   "directory.tagFilterHeading": "Tags",
   "directory.tagFilterLabel": "Filtrar por tag",
 
+  "directory.filtersNote_one": "{count} ofício para explorar.",
+  "directory.filtersNote_other": "{count} ofícios para explorar.",
+  "directory.showMore": "Ver mais",
+  "directory.shownOfTotal": "{shown} de {total}",
+
+  // Lembrete final do diretório (SubprofileDirectoryFooterPrompt — descoberta
+  // de personas, Fase 5, Momento 2). Dispensável; texto estático, sem dados ao vivo.
+  "directory.footerPrompt.message":
+    "Cada persona aqui foi criada por alguém que se juntou por outra razão. <em>A tua também pode ser.</em>",
+  "directory.footerPrompt.cta": "Cria a tua",
+  "directory.footerPrompt.notNow": "Agora não",
+
   // Afinidades do cartão do diretório (SubprofileCard)
   "card.openToCollabs": "Aberto a colaborar",
   "card.linkCount_one": "{count} link",
   "card.linkCount_other": "{count} links",
+  "card.followerCount_one": "{count} seguidor",
+  "card.followerCount_other": "{count} seguidores",
+  "card.openPersona": "Abrir esta persona",
   "card.view": "Ver",
 
   // Bloco "Também como…" no perfil principal (ProfileSubprofilesSection)
   "alsoAs.title": "Também a trabalhar como",
   "alsoAs.subtitlePublic": "Personas profissionais ligadas a este perfil.",
   "alsoAs.subtitleSelf": "As personas profissionais que ligaste aqui.",
-  "alsoAs.subtitleEmpty": "Outro lado do teu trabalho pode viver aqui.",
+  "alsoAs.subtitleEmpty": "Outra persona do teu trabalho pode viver aqui.",
   "alsoAs.viewPersona": "Visitar",
-  "alsoAs.switchLabel": "Outros lados",
-  "alsoAs.previewLabel": "Ver outro lado",
-  "alsoAs.count_one": "{count} lado",
-  "alsoAs.count_other": "{count} lados",
+  "alsoAs.switchLabel": "Mais personas",
+  "alsoAs.previewLabel": "Ver outra persona",
+  "alsoAs.count_one": "{count} persona",
+  "alsoAs.count_other": "{count} personas",
   "alsoAs.announce": "A mostrar {name}",
   "alsoAs.featuredEyebrow": "Destaque",
-  "alsoAs.addAnother": "Adicionar outro lado",
+  "alsoAs.addAnother": "Adicionar outra persona",
   "alsoAs.edit": "Editar",
   "alsoAs.moveUp": "Mover para cima",
   "alsoAs.moveDown": "Mover para baixo",
@@ -53,7 +68,18 @@ export const subprofiles: Catalog = {
   "alsoAs.empty.title": "Mostra mais do que <em>fazes</em>",
   "alsoAs.empty.description":
     "A tua música, o teu código, a tua escrita — ligado aqui ou por si só.",
-  "alsoAs.empty.cta": "Criar um subperfil",
+  "alsoAs.empty.cta": "Criar uma persona",
+
+  // Sugestão mais forte para quem vê o próprio perfil vazio (SidesPrompt, em
+  // ProfileSubprofilesSection — descoberta de personas, Fase 5, Momento 1).
+  // Mostrada até este lembrete ser dispensado ou o limite partilhado ser
+  // atingido; depois disso, volta ao texto simples de `alsoAs.empty.*` acima.
+  "alsoAs.sidesPrompt.eyebrow": "Uma sugestão discreta",
+  "alsoAs.sidesPrompt.heading": "Fazes mais do que <em>uma coisa</em>.",
+  "alsoAs.sidesPrompt.description":
+    "Uma persona dá a esse outro ofício a sua própria página — ligada aqui, ou totalmente independente.",
+  "alsoAs.sidesPrompt.cta": "Criar uma persona",
+  "alsoAs.sidesPrompt.notNow": "Agora não",
 
   // Navegação + paleta de comandos
   "nav.browse": "Subperfis",
@@ -127,11 +153,25 @@ export const subprofiles: Catalog = {
   "link.linked": "Ligado",
   "link.standalone": "Autónomo",
   "link.help.linked":
-    "Aparece no teu perfil principal como outro lado teu — as pessoas conseguem ver que é a mesma pessoa.",
+    "Aparece no teu perfil principal como outra persona tua — as pessoas conseguem ver que é a mesma pessoa.",
   "link.help.unlinked":
     "Existe por si só, sem ligação visível ao teu perfil principal. Ganha um identificador público assim que passa a verificação de completude.",
 
-  // Opções de visibilidade (SubprofileMetaForm) — campo `visibility` persistido.
+  // Chips de estado de concerto/projeto (ItemRow, skins stage + studio/workshop)
+  // e legenda de marcas dietéticas (skin Table) — campos persistidos
+  // `gigState`/`workState` e marcas estruturadas dos pratos (`v`/`ve`/`gf`).
+  "gigState.sold_out": "Esgotado",
+  "gigState.cancelled": "Cancelado",
+  "gigState.guest": "Set convidado",
+  "workState.shipped": "Lançado",
+  "workState.archived": "Arquivado",
+  "workState.in_progress": "Em curso",
+  "dietary.v": "vegetariano",
+  "dietary.ve": "vegano",
+  "dietary.gf": "sem glúten",
+
+  // Opções de visibilidade (useSubprofileMetaEditor, mostradas por
+  // SubprofileLinkFields) — campo `visibility` persistido.
   "visibility.open.label": "Aberto a todas as pessoas",
   "visibility.open.help":
     "Qualquer pessoa da comunidade pode encontrar e ver esta persona.",
@@ -153,7 +193,8 @@ export const subprofiles: Catalog = {
   "availability.booking": "A aceitar marcações",
   "availability.notAvailable": "Sem disponibilidade agora",
 
-  // Rótulos/placeholders dos campos do editor de itens (SubprofileItemEditor)
+  // Rótulos/placeholders dos campos do editor de itens
+  // (SubprofileItemDrawerFields, na SubprofileItemDrawer)
   "field.title.label": "Título",
   "field.title.placeholder": "Como se chama?",
   "field.subtitle.label": "Subtítulo",
@@ -213,16 +254,14 @@ export const subprofiles: Catalog = {
   "checklist.polishAvailability": "A tua disponibilidade",
   "checklist.polishDone": "Página cuidada",
 
-  // Painel de gestão (MySubprofilesPage + MySubprofileRow)
-  "mine.title": "Os teus <em>subperfis</em>",
+  // Painel de gestão (MySubprofilesPage + SideCard)
+  "mine.title": "As tuas outras <em>personas</em>",
   "mine.sub":
-    "Um lado profissional teu para cada coisa que fazes — ligado ao teu perfil principal, ou por si só.",
-  "mine.newCta": "Novo subperfil",
+    "Uma persona profissional tua para cada coisa que fazes — ligada ao teu perfil principal, ou por si só.",
+  "mine.newCta": "Nova persona",
+  "mine.newSideTile": "Nova persona",
+  "mine.count": "{n} de {max}",
   "mine.atCap": "Chegaste ao máximo de personas que uma conta pode ter.",
-  "mine.emptyTitle": "Ainda sem subperfis",
-  "mine.emptyDescription":
-    "Cria um para cada ofício que queiras partilhar — a tua música, o teu código, a tua escrita — e escolhe se fica associado ao teu nome.",
-  "mine.emptyCta": "Criar o primeiro",
   "mine.untitled": "Persona sem nome",
   "mine.defaultName": "Essa persona",
   "mine.toastDeleted": "{name} eliminada",
@@ -245,6 +284,27 @@ export const subprofiles: Catalog = {
   "mine.followerCount_one": "{count} seguidor",
   "mine.followerCount_other": "{count} seguidores",
 
+  // Estados de carregamento / vazio / erro do painel (SubprofileDashboardStates,
+  // Fase 2 Tarefa 2) — construídos isoladamente, ligados à página mais tarde.
+  "mine.loadingAria": "A carregar as tuas personas…",
+  "mine.empty.eyebrow": "As tuas personas",
+  "mine.empty.title": "Tens um perfil. <em>Não és uma coisa só.</em>",
+  "mine.empty.sub":
+    "Cada ofício que praticas pode ter a sua própria página — ligada ao teu nome, ou totalmente independente. Começa pelo primeiro.",
+  "mine.empty.newCta": "Cria a tua primeira persona",
+  "mine.empty.browseCta": "Vê o que outras pessoas criaram",
+  "mine.emptySamples.stage.name": "Hot Mess Express",
+  "mine.emptySamples.stage.line": "Dupla de DJs · festas queer",
+  "mine.emptySamples.practice.name": "Sofia Neves",
+  "mine.emptySamples.practice.line": "Psicoterapia para pessoas adultas LGBTQ+ · PT / EN",
+  "mine.emptySamples.table.name": "Casa Corvo",
+  "mine.emptySamples.table.line": "Clube de jantar para quem chega com fome e sai tarde",
+  "mine.error.title": "Não conseguimos carregar as tuas",
+  "mine.error.em": "personas",
+  "mine.error.description":
+    "Algo correu mal ao contactar o servidor. Nada aqui se perdeu — tenta novamente daqui a pouco.",
+  "mine.error.retry": "Tentar novamente",
+
   // Página do editor (SubprofileEditorPage)
   "editor.loading": "A carregar a tua persona…",
   "editor.notFoundTitle": "Não encontrámos essa persona",
@@ -253,7 +313,8 @@ export const subprofiles: Catalog = {
   "editor.notFoundAction": "Voltar aos teus subperfis",
   "editor.backLink": "Os teus subperfis",
 
-  // Formulário base (SubprofileMetaForm)
+  // Editor base (useSubprofileMetaEditor, usado pelos painéis Identidade/
+  // Presença/Endereço)
   "metaForm.sectionTitle": "O essencial",
   "metaForm.avatarLabel": "Avatar",
   "metaForm.avatarPlaceholder": "Avatar",
@@ -299,7 +360,7 @@ export const subprofiles: Catalog = {
   "metaForm.toastError":
     "Não conseguimos guardar isso agora — tenta outra vez.",
 
-  // Editor de item (SubprofileItemEditor)
+  // Gaveta de item (SubprofileItemDrawerFields, aberta pela SubprofileItemDrawer)
   "itemEditor.itemNumber": "Item {n}",
   "itemEditor.moveUp": "Mover para cima",
   "itemEditor.moveDown": "Mover para baixo",
@@ -309,7 +370,7 @@ export const subprofiles: Catalog = {
   "itemEditor.unfeature": "Remover do destaque",
   "itemEditor.featuredBadge": "Destaque",
 
-  // Editor de chips de colaboração (HandleChipInput, dentro de SubprofileItemEditor)
+  // Editor de chips de colaboração (HandleChipInput, dentro de SubprofileItemDrawerFields)
   "itemEditor.collaboratorsLabel": "Pessoas colaboradoras",
   "itemEditor.collaboratorsPlaceholder": "@identificador",
   "itemEditor.collaboratorsHelper":
@@ -348,7 +409,7 @@ export const subprofiles: Catalog = {
   "publishPanel.closeLabel": "Continuar a editar",
   "publishPanel.viewLive": "Ver ao vivo",
   "publishPanel.successLinked":
-    "Esta persona já aparece no teu perfil principal como outro lado teu.",
+    "Esta persona já aparece no teu perfil principal como mais uma das tuas personas.",
   "publishPanel.successUnlinked":
     "Esta persona já existe por si só — as pessoas conseguem encontrá-la pelo identificador e no diretório.",
   "publishPanel.copyPublished":
@@ -370,20 +431,32 @@ export const subprofiles: Catalog = {
   "publishPanel.toastError":
     "Não conseguimos fazer isso agora — tenta outra vez.",
 
-  // Modal de novo subperfil (NewSubprofileModal)
-  "newModal.title": "Começar uma nova <em>persona</em>",
+  // Assistente de nova persona, dois passos (NewSideModal + NewSideStepCraft
+  // + NewSideStepIdentity). Passo 1 escolhe o ofício; passo 2 dá-lhe nome e
+  // escolhe ligada-vs-autónoma.
+  "newModal.stepCraftTitle": "Começar uma nova <em>persona</em>",
   "newModal.sub":
-    "Cada uma é um lado profissional teu — escolhe para que serve.",
+    "Cada uma é uma persona profissional tua — escolhe para que serve.",
+  "newModal.stepIdentityTitle": "Dá-lhe um <em>nome</em>",
+  "newModal.stepIdentitySub":
+    "Como é conhecida, e se dá para ver que és tu.",
+  "newModal.stepOf": "Passo {step} de {total}",
   "newModal.cancel": "Cancelar",
+  "newModal.back": "Voltar",
+  "newModal.continue": "Continuar",
   "newModal.create": "Criar rascunho",
   "newModal.creating": "A criar…",
+  "newModal.craftSummary":
+    "Uma persona de {kind} tem uma página {skin} com {sections}.",
   "newModal.displayNameLabel": "Nome apresentado",
   "newModal.displayNameHelper":
     "Opcional — deixa em branco para a persona ser conhecida pelo ofício.",
   "newModal.displayNamePlaceholderDefault": "Como esta persona é conhecida",
   "newModal.displayNamePlaceholderExample": "por ex. {kind}",
-  "newModal.addressLabel": "Endereço do perfil",
-  "newModal.addressPlaceholder": "por ex. poesia",
+  "newModal.linkChoiceLabel": "Ligada ao teu perfil, ou com endereço próprio?",
+  "newModal.linkedAddressNote": "Sempre tua — nada a reclamar.",
+  "newModal.handleStateClaim":
+    "É teu se publicares primeiro — identificadores são por ordem de chegada.",
   "newModal.toastError":
     "Não conseguimos começar essa agora — tenta outra vez.",
 
@@ -394,9 +467,9 @@ export const subprofiles: Catalog = {
   "start.helper": "Escolhe um ponto de partida — depois podes mudar tudo.",
   "start.copyDisabledHelper":
     "Cria primeiro uma persona para depois a poderes copiar aqui.",
-  "start.template": "A partir de um modelo",
+  "start.template": "Por ofício",
   "start.blank": "Em branco",
-  "start.copy": "Copiar uma existente",
+  "start.copy": "Copiar uma",
   "copy.noSources": "Ainda não tens nenhuma persona para copiar.",
   "copy.sourceLabel": "Escolhe uma persona para copiar",
   "copy.modeLabel": "O que copiar",
@@ -407,8 +480,23 @@ export const subprofiles: Catalog = {
   "copy.summaryIdentity": "· mais nome, biografia e estilo",
   "copy.summaryNoIdentity": "· identidade em branco",
 
+  // Ofícios agrupados por família (kindFamilies.data.ts) — o passo "Por
+  // ofício" agrupa os 17 ofícios sob estas seis famílias de página.
+  "family.stage.label": "Palco",
+  "family.stage.note": "Para ofícios que acontecem à frente de uma sala.",
+  "family.studio.label": "Estúdio",
+  "family.studio.note": "O trabalho primeiro, as legendas depois.",
+  "family.page.label": "Página",
+  "family.page.note": "Uma coluna de livro — as palavras é que contam.",
+  "family.workshop.label": "Oficina",
+  "family.workshop.note": "Coisas feitas, listadas sem rodeios.",
+  "family.practice.label": "Consultório",
+  "family.practice.note": "Calmo, credível, sem tipografia de destaque.",
+  "family.table.label": "Mesa",
+  "family.table.note": "Uma ementa para o que fazes e serves.",
+
   // Modelos iniciais (Fase 4a) — seletor no momento de criação
-  // (NewSubprofileModal) e o botão "Inserir exemplos" no editor
+  // (NewSideModal) e o botão "Inserir exemplos" no editor
   // (SubprofileSectionEditor). O texto dos exemplos lê-se como um
   // preenchimento simpático e editável — a ideia é que a pessoa o substitua
   // pelo seu próprio trabalho, não que o mantenha tal como está.
@@ -550,6 +638,17 @@ export const subprofiles: Catalog = {
   "hero.edit": "Editar persona",
   "hero.report.cta": "Denunciar esta persona",
   "hero.report.ariaLabel": "Denunciar {name}",
+  "hero.standalone": "Independente · {address}",
+
+  // Bloco de título do skin oficina (SubprofileTitleBlock) — dl decorativo
+  // mostrado apenas no skin oficina (controlado por CSS); "state" mostra
+  // "Rascunho" no modo de pré-visualização (editor da Fase 3), "Publicada"
+  // em todos os outros casos — a página de uma persona só é acessível depois
+  // de publicada.
+  "hero.titleblock.craft": "Ofício",
+  "hero.titleblock.address": "Endereço",
+  "hero.titleblock.sections": "Secções",
+  "hero.titleblock.state": "Estado",
 
   // Controlo de endosso (SubprofileEndorse)
   "hero.endorse.cta": "Endossar",
@@ -569,14 +668,14 @@ export const subprofiles: Catalog = {
   "hero.follow.count_other": "{count} seguidores",
   "hero.follow.error": "Não conseguimos guardar isso agora — tenta outra vez.",
 
-  // Controlo de partilha (SubprofileShare, MySubprofileRow)
+  // Controlo de partilha (SubprofileShare, MySubprofilesPage)
   "share.cta": "Partilhar",
   "share.ariaLabel": "Partilhar esta persona",
   "share.copied": "Link copiado",
 
   // Modal de cartão de partilha (SubprofileShareCard) + código QR
   // (SubprofileQR) — pontos de entrada no SubprofileHero (público) e no
-  // MySubprofileRow (responsável).
+  // MySubprofilesPage (responsável).
   "shareCard.cta": "Código QR",
   "shareCard.title": "Leva contigo",
   "shareCard.subtitle":
@@ -588,15 +687,28 @@ export const subprofiles: Catalog = {
   "qr.error": "Não conseguimos gerar o código QR — aqui tens o link em alternativa.",
 
   // Destaque do item em foco (SubprofileSpotlight)
-  "spotlight.eyebrow": "Destaque",
-  "spotlight.visit": "Visitar",
+  "spotlight.eyebrow": "Comece aqui",
+  "spotlight.open": "Abrir",
 
-  // Créditos de colaboração num item público (ItemCollaborators, em SubprofileSections)
+  // Créditos de colaboração num item público (ItemCollaborators, em
+  // SubprofileSections; também os créditos do item em destaque no
+  // SubprofileSpotlight)
   "collab.with": "com",
 
-  // Página pública da persona (SubprofilePage + subprofilePage.data.ts)
+  // Linhas de item de secção (SubprofileItemRow) — detalhes de concerto do
+  // skin palco.
+  "row.doors": "Portas {doors}",
+  "row.ticketAria": "Comprar bilhetes para {title}",
+  "row.played": "Já realizados",
+
+  // Blocos de item de secção (SubprofileItemTile) — grelha de secção visual;
+  // o número de "prancha" é decoração do skin estúdio (escondido por CSS
+  // nos outros skins).
+  "tile.plate": "Nº {number}",
+
+  // Página pública da persona (SubprofilePage.tsx)
   "page.loading": "A carregar persona…",
-  "page.ownerTie": "Parte de <em>{name}</em>",
+  "page.ownerTie": "Outra persona de <em>{name}</em>",
   "page.visit": "Visitar",
   "page.notFoundTitle": "Esta persona não está aqui",
   "page.notFoundMetaTitle": "Persona não encontrada — QueerPulse",
@@ -605,10 +717,57 @@ export const subprofiles: Catalog = {
   "page.notFoundAction": "Explorar personas",
   "page.notFoundBack": "Voltar atrás",
 
+  // As outras três páginas de "não podemos mostrar isto" (SubprofilePageStates)
+  // — já construídas, ainda não alcançáveis pelos dados atuais (ver
+  // subprofilePageStates.data.ts para o porquê).
+  "pageState.private.title": "Esta persona é privada",
+  "pageState.private.description":
+    "A pessoa responsável guarda esta persona só para si, por agora. Não há nada de errado do teu lado.",
+  "pageState.private.action": "Explorar o diretório",
+  "pageState.membersOnly.title": "Só para membros",
+  "pageState.membersOnly.description":
+    "Esta persona é visível para membros da comunidade com sessão iniciada.",
+  "pageState.membersOnly.action": "Iniciar sessão",
+  "pageState.membersOnly.secondaryAction": "Pedir um convite",
+  "pageState.removed.title": "Esta persona foi retirada",
+  "pageState.removed.description":
+    "Já não cumpre as nossas diretrizes de comunidade e deixou de estar visível.",
+  "pageState.removed.action": "Ler as diretrizes",
+
+  // Barra de rascunho quando a pessoa responsável vê a sua própria persona por
+  // publicar (SubprofileDraftBanner) — construída, ainda não ligada (ver o
+  // comentário do próprio componente para o porquê).
+  "draftBanner.message": "Rascunho — mais ninguém consegue abrir este endereço ainda.",
+  "draftBanner.readiness": "{ready} de {total} prontos para publicar",
+  "draftBanner.edit": "Editar",
+  "draftBanner.publish": "Publicar",
+
+  // Anel de progresso de publicação do painel (SideReadinessRing, Fase 2) —
+  // nome acessível do `.ring`; o `<i>` visível mostra só o número, isto
+  // explica o que ele significa.
+  "ring.ariaLabel": "{pct}% pronto para publicar",
+
+  // Cartão do painel (SideCard, Fase 2 Tarefa 5) — textos ainda não cobertos
+  // por `mine.*` (nome por defeito, contagens de apoios/seguidores,
+  // Editar/Eliminar), `share.*` (Partilhar), `status.*` (Rascunho), ou
+  // `link.*`/`availability.*` (as legendas dos pills de ligação/disponibilidade).
+  "side.noTagline": "Ainda sem linha",
+  "side.statusLive": "Ativo",
+  "side.viewCta": "Ver",
+  "side.thingsLeft_one": "Falta {count} coisa",
+  "side.thingsLeft_other": "Faltam {count} coisas",
+  "side.readyToPublish": "Pronto para publicar",
+  "side.coOwners": "{count} coproprietários",
+
   // Afiliações ("Parte de") — secção pública (SubprofileAffiliations) e editor
   // do responsável (SubprofileAffiliationsEditor, SubprofileAffiliationRow).
   // `role` é um campo predefinido e PERSISTIDO (AFFILIATION_ROLE_KEYS em
   // affiliations.data.ts) — indireção por chave, tal como em `kind`.
+  // Pré-visualização de citações de apoio no rodapé (SubprofileAffiliations)
+  // — "Ver todos N" abre o SubprofilePeopleModal no modo de apoios.
+  "foot.seeAllEndorsements_one": "Ver todo {count} apoio",
+  "foot.seeAllEndorsements_other": "Ver todos os {count} apoios",
+
   "affiliation.heading": "Parte de",
   "affiliation.type.event": "Evento",
   "affiliation.type.community": "Comunidade",
@@ -685,4 +844,205 @@ export const subprofiles: Catalog = {
   "invites.toastAcceptError": "Não conseguimos aceitar esse convite — tenta outra vez.",
   "invites.toastDeclined": "Convite recusado",
   "invites.toastDeclineError": "Não conseguimos recusar esse convite — tenta outra vez.",
+
+  // Modal de denúncia (SubprofileReportModal) + motivos específicos de
+  // persona (subprofileReportModal.data.ts) — cada motivo continua a mapear
+  // para um ReasonCode estável e já existente (ver o comentário do próprio
+  // ficheiro), portanto isto é só texto sobre a mesma taxonomia partilhada
+  // de /reports.
+  "reportModal.title": "Denunciar {name}?",
+  "reportModal.lead":
+    "As denúncias são revistas pela nossa equipa de moderação — o teu nome nunca é partilhado com a pessoa que denuncias.",
+  "reportModal.reasonLabel": "Qual é o problema?",
+  "reportModal.reasons.impersonating": "A fingir ser outra pessoa",
+  "reportModal.reasons.hateOrHarassment": "Discurso de ódio ou assédio",
+  "reportModal.reasons.notReal": "Não é uma prática ou serviço real",
+  "reportModal.reasons.sexualContent": "Conteúdo sexual sem aviso",
+  "reportModal.reasons.spam": "Spam",
+  "reportModal.reasons.somethingElse": "Outra coisa",
+  "reportModal.noteLabel": "Mais alguma coisa? (opcional)",
+  "reportModal.notePlaceholder":
+    "Acrescenta qualquer detalhe que possa ajudar quem modera a rever isto.",
+  "reportModal.cancelCta": "Cancelar",
+  "reportModal.submitCta": "Enviar denúncia",
+  "reportModal.submitting": "A enviar…",
+  "reportModal.error": "Não conseguimos enviar essa denúncia — tenta outra vez.",
+  "reportModal.success.title": "Denúncia enviada",
+  "reportModal.success.body":
+    "Obrigado. Uma pessoa moderadora vai rever esta persona. Podemos contactar-te para mais detalhes, mas nunca partilhamos a tua denúncia com quem denunciaste.",
+  "reportModal.success.doneCta": "Concluído",
+
+  // Modal de pessoas (SubprofilePeopleModal) — lista de seguidores/apoios,
+  // aberta a partir dos botões ".pp-meta" do cabeçalho e do "Ver todos N" do
+  // rodapé.
+  "peopleModal.followersTitle_one": "{count} seguidor",
+  "peopleModal.followersTitle_other": "{count} seguidores",
+  "peopleModal.endorsementsTitle_one": "{count} apoio",
+  "peopleModal.endorsementsTitle_other": "{count} apoios",
+  "peopleModal.loading": "A carregar…",
+  "peopleModal.noEndorsements": "Ainda sem apoios",
+  "peopleModal.noFollowers": "Ainda sem seguidores",
+  "peopleModal.noNote": "Apoiou sem deixar nota",
+  "peopleModal.removeAriaLabel": "Remover o teu apoio a {name}",
+  "peopleModal.removeCta": "Remover",
+  "peopleModal.removeError": "Não conseguimos remover isso agora — tenta outra vez.",
+  "peopleModal.followersPrivateTitle": "Os seguidores mantêm-se privados",
+  "peopleModal.followersPrivateBody":
+    "Seguir é anónimo por definição — não mostramos quem segue, nem à própria persona seguida.",
+
+  // Extras específicos de cada skin (SubprofileSkinExtras + skins/*.tsx) —
+  // os blocos por família que a árvore de design da Fase 1 chama SkinExtras.
+  "skinExtras.stage.nextUpLabel": "A seguir",
+  "skinExtras.stage.bookerTitle": "Para quem contrata",
+  "skinExtras.stage.bookerFee": "Cachê",
+  "skinExtras.stage.bookerRider": "Rider técnico",
+  "skinExtras.stage.bookerPress": "Imprensa",
+  "skinExtras.stage.bookerContact": "Contacto",
+
+  "skinExtras.studio.checklistTitle": "Checklist",
+  "skinExtras.studio.plateLabel": "Prancha {n}",
+  "skinExtras.studio.previous": "Trabalho anterior",
+  "skinExtras.studio.next": "Trabalho seguinte",
+
+  "skinExtras.page.excerptFrom": "De",
+
+  "skinExtras.workshop.scaleLabel": "Sem escala",
+
+  "skinExtras.practice.fee": "Valor",
+  "skinExtras.practice.sliding": "Escala variável",
+  "skinExtras.practice.length": "Duração da sessão",
+  "skinExtras.practice.languages": "Idiomas",
+  "skinExtras.practice.mode": "Formato",
+  "skinExtras.practice.next": "Próxima disponibilidade",
+  "skinExtras.practice.firstSessionTitle": "Como é uma primeira sessão",
+  "skinExtras.practice.accessTitle": "O espaço em si",
+  "skinExtras.practice.referralsNote":
+    "Sem testemunhos públicos — a confidencialidade de quem é acompanhado vem primeiro. São apenas pessoas que já recomendaram este espaço a outras.",
+
+  // Navegação lateral do editor (EditorRail, editorRail.data.ts) — os grupos
+  // Este lado / Conteúdo / Pessoas / Publicar.
+  "editorRail.navLabel": "Navegação do editor de persona",
+  "editorRail.backLink": "As tuas personas",
+  "editorRail.thisSide": "Esta persona",
+  "editorRail.identity": "Identidade",
+  "editorRail.presence": "Presença e contacto",
+  "editorRail.address": "Endereço e alcance",
+  "editorRail.content": "Conteúdo",
+  "editorRail.people": "Pessoas",
+  "editorRail.publishGroup": "Publicar",
+  "editorRail.publish": "Publicar",
+  "editorRail.getItLive": "Pôr no ar",
+
+  // Cabeçalhos dos painéis do editor (EditorPaneRouter, editorPaneHeaders.data.ts)
+  // — o h2 + subtítulo mostrados acima de cada painel, exceto os painéis de
+  // Conteúdo por secção, que usam o próprio rótulo `section.*` da secção.
+  "editorPane.identity.title": "Identidade",
+  "editorPane.identity.lede":
+    "O nome, avatar, frase de apresentação e biografia que apresentam esta persona.",
+  "editorPane.presence.title": "Presença",
+  "editorPane.presence.lede":
+    "Imagem de capa, cor de destaque, disponibilidade e links sociais.",
+  "editorPane.address.title": "Endereço",
+  "editorPane.address.lede":
+    "Escolhe como as pessoas encontram esta persona, e quem a pode ver.",
+  "editorPane.content.lede":
+    "Acrescenta as peças de trabalho que compõem esta secção.",
+  "editorPane.publish.title": "Publicar",
+  "editorPane.publish.lede": "Vê o que falta e depois publica esta persona.",
+
+  // Pré-visualização ao vivo (EditorPreview) — mostra a página pública da
+  // persona dentro do próprio editor.
+  "editorPreview.label": "Pré-visualização ao vivo",
+  "editorPreview.openLive": "Abrir ao vivo",
+
+  // Barra fixa de guardar (EditorSavebar) — só é dona do interruptor de
+  // pré-visualização; cada painel continua a guardar-se com o seu próprio
+  // botão (ver o comentário do componente).
+  "editorSavebar.status": "Cada secção guarda-se sozinha",
+  "editorSavebar.hidePreview": "Esconder pré-visualização",
+  "editorSavebar.showPreview": "Mostrar pré-visualização",
+
+  // Gaveta de itens (SubprofileItemDrawer, EditorItemRow) — a lista de linhas
+  // fechadas + a gaveta lateral que substituiu os antigos cartões de item
+  // sempre abertos (antes `SubprofileItemEditor`, agora descontinuado).
+  "itemDrawer.addTitle": "Acrescentar a {section}",
+  "itemDrawer.editTitle": "Editar este item de {section}",
+  "itemDrawer.cancel": "Cancelar",
+  "itemDrawer.saveItem": "Guardar item",
+  "itemRow.edit": "Editar",
+
+  // Campos ricos por secção (richFields.data.ts, mostrados por
+  // SubprofileItemDrawerFields) — detalhes de concertos, suporte/edição de
+  // trabalho visual, e estado/trecho de código de projetos, sobre o conjunto
+  // base `field.*`.
+  "richField.gigState.label": "Estado",
+  "richField.gigState.option.none": "Normal",
+  "richField.gigState.option.sold_out": "Esgotado",
+  "richField.gigState.option.cancelled": "Cancelado",
+  "richField.gigState.option.guest": "Set convidado",
+  "richField.venue.label": "Local",
+  "richField.venue.placeholder": "por ex. O Pátio",
+  "richField.doors.label": "Abertura de portas",
+  "richField.doors.placeholder": "por ex. 21h",
+  "richField.ticketUrl.label": "Link de bilhetes",
+  "richField.ticketUrl.placeholder": "https://",
+  "richField.medium.label": "Suporte",
+  "richField.medium.placeholder": "por ex. Óleo sobre tela",
+  "richField.dimensions.label": "Dimensões",
+  "richField.dimensions.placeholder": "por ex. 40 × 60 cm",
+  "richField.edition.label": "Edição",
+  "richField.edition.placeholder": "por ex. 3 de 10",
+  "richField.workState.label": "Estado",
+  "richField.workState.option.none": "Normal",
+  "richField.workState.option.shipped": "Lançado",
+  "richField.workState.option.archived": "Arquivado",
+  "richField.workState.option.in_progress": "Em curso",
+  "richField.snippet.label": "Trecho de código",
+  "richField.snippet.placeholder": "Uma linha por trecho",
+
+  // Aviso de mudança de endereço (AddressChangeWarningModal) — mostrado antes
+  // de o endereço de uma persona PUBLICADA mudar mesmo: ao trocar entre
+  // ligada/autónoma, ou ao editar um slug/identificador já ao vivo.
+  "addressWarning.switchTitle": "Mudar onde esta persona é encontrada?",
+  "addressWarning.editTitle": "Mudar o endereço desta persona?",
+  "addressWarning.noticeTitle": "Este endereço está no ar",
+  "addressWarning.noticeBody":
+    "Já há pessoas com links para {from}. Depois de confirmares, esta persona passa a {to}.",
+  "addressWarning.oldLinksDie": "Os links antigos para {path} deixam de funcionar",
+  "addressWarning.handleReleased":
+    "O teu identificador volta a ficar disponível — qualquer pessoa o pode reclamar",
+  "addressWarning.followersKept":
+    "Os teus seguidores e endossos mantêm-se exatamente como estão",
+  "addressWarning.cancel": "Manter o endereço atual",
+  "addressWarning.confirm": "Mudar endereço",
+
+  // Painel de publicação — extras (SubprofilePublishPanel) — uma estimativa
+  // rápida, feita no cliente, mostrada antes de tentares publicar (separada
+  // da lista de verificação oficial `checklist.*` abaixo), e a linha de
+  // eliminar na zona de perigo.
+  "publishPanel.estimateTitle": "Estimativa rápida",
+  "publishPanel.estimateNote":
+    "Uma ideia rápida de como estás — a lista de verificação abaixo é que decide mesmo se podes publicar.",
+  "publishPanel.deleteCopy":
+    "Eliminar esta persona remove-a, e tudo o que está nela, para sempre.",
+  "publishPanel.deleteCta": "Eliminar esta persona",
+
+  // Medidor da lista de verificação (PublishChecklist) — a barra `.meter`
+  // ao lado das linhas de passa/falha acima.
+  "checklist.meterAria": "{passed} de {total} requisitos cumpridos",
+  "checklist.meterLabel": "{passed}/{total}",
+
+  // Eliminar com confirmação escrita (SubprofileDeleteModal, zona de perigo
+  // do editor) — a lista "o que vais perder" mais a confirmação por nome
+  // escrito.
+  "deleteConfirm.losingItems_one": "{count} item nas tuas secções",
+  "deleteConfirm.losingItems_other": "{count} itens nas tuas secções",
+  "deleteConfirm.losingEndorsements_one": "{count} endosso",
+  "deleteConfirm.losingEndorsements_other": "{count} endossos",
+  "deleteConfirm.losingFollowers_one": "{count} seguidor",
+  "deleteConfirm.losingFollowers_other": "{count} seguidores",
+  "deleteConfirm.losingHandle":
+    "O teu identificador, @{handle}, volta a ficar disponível",
+  "deleteConfirm.typeLabel": 'Escreve "{name}" para confirmar',
+  "deleteConfirm.typeHelper": "Isto garante que tens mesmo a certeza.",
 };

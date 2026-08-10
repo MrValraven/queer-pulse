@@ -53,7 +53,7 @@ function StartCommunityHero() {
   return (
     <header className={styles.hero}>
       <div className={`${styles.heroInner} wrap`}>
-        <Link to={routes.communitiesHome} className={styles.back}>
+        <Link to={routes.communities} className={styles.back}>
           <FiArrowLeft size={14} /> {t("communities:start.hero.back")}
         </Link>
         <div className={styles.eyebrow}>
@@ -150,7 +150,7 @@ export function StartCommunityPage() {
   };
 
   const back = () => {
-    if (step === 0) void navigate(routes.communitiesHome);
+    if (step === 0) void navigate(routes.communities);
     else goToStep(step - 1);
   };
 

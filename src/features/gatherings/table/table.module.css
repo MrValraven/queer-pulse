@@ -1,0 +1,446 @@
+/* "Meet the table" — a top-down view of who's sitting where at a supper club.
+   Extracted from the (deleted) checkout flow; read-only, so the seat-pick /
+   "you" / visibility-toggle rules are intentionally gone. */
+
+.co-tablecard {
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 18px;
+  padding: 20px 22px 8px;
+  margin-bottom: 16px;
+}
+.co-tc-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.co-tc-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 20px;
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+}
+.co-tc-sub {
+  font-size: 12.5px;
+  color: var(--ink-60);
+  margin-top: 2px;
+}
+.co-tc-sub b {
+  color: var(--text-strong);
+  font-weight: 700;
+}
+.co-table-wrap {
+  position: relative;
+  height: 324px;
+  margin: 12px auto 6px;
+  max-width: 470px;
+}
+
+/* Table surface (top-down) */
+.tbl-surface {
+  position: absolute;
+  left: 21%;
+  right: 21%;
+  top: 25%;
+  bottom: 25%;
+  border-radius: 90px;
+  background:
+    radial-gradient(
+      120% 120% at 50% 50%,
+      rgba(var(--accent-rgb), 0.07),
+      transparent 62%
+    ),
+    var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  box-shadow:
+    inset 0 2px 16px rgba(45, 27, 61, 0.06),
+    0 10px 26px -20px rgba(45, 27, 61, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tbl-candle {
+  position: absolute;
+  width: 48%;
+  height: 60%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.22),
+    transparent 60%
+  );
+  animation: tblCandle 4s var(--ease) infinite;
+  pointer-events: none;
+}
+.tbl-engrave {
+  position: relative;
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-40);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.tbl-engrave b {
+  display: block;
+  font-style: normal;
+  color: var(--ink-60);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+/* A place setting */
+.tbl-seat {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 66px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  animation: tblSeatIn 0.5s var(--ease) both;
+  animation-delay: var(--d, 0ms);
+}
+.tbl-setting {
+  all: unset;
+  position: relative;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  transition: transform 0.22s var(--ease);
+}
+button.tbl-setting {
+  cursor: pointer;
+}
+@media (hover: hover) {
+  button.tbl-setting:hover {
+    transform: translateY(-2px) scale(1.05);
+  }
+}
+.tbl-setting:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 4px;
+}
+
+/* Rotated decor: chair (outer) + cutlery (toward centre). Avatar stays upright. */
+.tbl-decor {
+  position: absolute;
+  inset: -8px;
+  transform: rotate(var(--a, 0deg));
+  pointer-events: none;
+}
+.tbl-chair {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, 24px);
+  width: 34px;
+  height: 20px;
+  border-radius: 0 0 18px 18px;
+  background: rgba(45, 27, 61, 0.07);
+}
+.tbl-cutlery {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -34px);
+  width: 18px;
+  height: 14px;
+}
+.tbl-cutlery::before,
+.tbl-cutlery::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 14px;
+  border-radius: 2px;
+  background: rgba(45, 27, 61, 0.16);
+}
+.tbl-cutlery::before {
+  left: 4px;
+}
+.tbl-cutlery::after {
+  right: 4px;
+}
+
+/* Plate + avatar */
+.tbl-plate {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(45, 27, 61, 0.1);
+  background: var(--cream);
+  display: grid;
+  place-items: center;
+  transition: border-color 0.2s var(--ease);
+}
+.tbl-av {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 15px;
+  border: 2px solid var(--paper);
+  box-shadow: 0 3px 10px -4px rgba(45, 27, 61, 0.4);
+}
+.tbl-av svg {
+  width: 16px;
+  height: 16px;
+}
+.tbl-host-badge {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--jade);
+  border: 2px solid var(--paper);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 15 15'%3E%3Cpath d='M4 7.8l2.2 2.2L11 5' stroke='white' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Tints */
+.tbl-seat.jade .tbl-av {
+  background: rgba(var(--jade-rgb), 0.16);
+  color: var(--jade);
+}
+.tbl-seat.coral .tbl-av {
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--accent-ink);
+}
+.tbl-seat.plum .tbl-av {
+  background: rgba(45, 27, 61, 0.1);
+  color: var(--text-strong);
+}
+
+/* Host */
+.tbl-seat.host .tbl-av {
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+}
+.tbl-seat.host .tbl-plate {
+  border-color: rgba(45, 27, 61, 0.18);
+}
+
+/* Open setting — an empty place */
+.tbl-seat.open .tbl-plate {
+  border-style: dashed;
+  border-color: rgba(45, 27, 61, 0.22);
+  background: transparent;
+}
+.tbl-seat.open .tbl-av {
+  background: transparent;
+  border: 2px dashed rgba(45, 27, 61, 0.22);
+  color: var(--ink-40);
+  box-shadow: none;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+/* Labels */
+.tbl-label {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tbl-name {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.tbl-pron {
+  font-size: 10px;
+  color: var(--ink-40);
+}
+.tbl-joined {
+  font-size: 10px;
+  color: var(--jade);
+  font-weight: 600;
+  margin-top: 1px;
+}
+.tbl-legend {
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink-60);
+  margin: 2px 0 10px;
+}
+
+/* Attendee popover card (plum-panel pattern) */
+.tbl-card {
+  position: absolute;
+  left: 50%;
+  width: 196px;
+  transform: translateX(-50%);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-radius: 14px;
+  padding: 13px 14px;
+  z-index: 20;
+  box-shadow: 0 16px 36px -14px rgba(45, 27, 61, 0.7);
+  animation: tblCardIn 0.16s var(--ease) both;
+  text-align: left;
+}
+.tbl-card.below {
+  top: calc(100% + 10px);
+}
+.tbl-card.above {
+  bottom: calc(100% + 10px);
+}
+/* Horizontal alignment — edge seats open inward so the card never clips. */
+.tbl-card.start {
+  left: 0;
+  transform: none;
+}
+.tbl-card.end {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+.tbl-card::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: var(--plum);
+  transform: translateX(-50%) rotate(45deg);
+}
+.tbl-card.start::after {
+  left: 33px;
+}
+.tbl-card.end::after {
+  left: auto;
+  right: 33px;
+  transform: translateX(50%) rotate(45deg);
+}
+.tbl-card.below::after {
+  top: -5px;
+}
+.tbl-card.above::after {
+  bottom: -5px;
+}
+.tbl-card-name {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.1;
+}
+.tbl-card-pron {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.75);
+  margin-top: 1px;
+}
+.tbl-card-intro {
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 8px 0 0;
+}
+.tbl-card-tags {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 9px;
+}
+.tbl-card-tag {
+  font-size: 10.5px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+}
+.tbl-card-conn {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--jade);
+  margin-top: 9px;
+}
+
+@keyframes tblSeatIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+@keyframes tblCandle {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+@keyframes tblCardIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tbl-seat,
+  .tbl-setting,
+  .tbl-candle,
+  .tbl-card {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Compact the table on small screens */
+@media (max-width: 480px) {
+  .co-table-wrap {
+    height: 292px;
+    max-width: 100%;
+  }
+  .tbl-cutlery {
+    display: none;
+  }
+  .tbl-joined {
+    display: none;
+  }
+  .tbl-seat {
+    width: 58px;
+  }
+  .tbl-setting {
+    width: 50px;
+    height: 50px;
+  }
+  .tbl-plate {
+    width: 48px;
+    height: 48px;
+  }
+  .tbl-av {
+    width: 38px;
+    height: 38px;
+    font-size: 14px;
+  }
+  .tbl-card {
+    width: 170px;
+  }
+}

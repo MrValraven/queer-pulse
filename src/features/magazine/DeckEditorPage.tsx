@@ -1,82 +1,24 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { AppShell } from "../../shared/components/layout";
-import { Button } from "../../shared/components/ui";
+import { MagazineDeskShell } from "../../shared/components/layout/MagazineDeskShell";
 import { useUnsavedChangesGuard } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
-import { emptyDraft, deckDtoToDraft, type DeckDraft } from "./deckDraft";
+import { emptyDraft, deckDtoToDraft, draftToDeck, type DeckDraft } from "./deckDraft";
+import { type DeckLoad, loadMockDraft, draftsEqual } from "./deckEditorLoad";
 import { DeckMetaForm } from "./DeckMetaForm";
 import { DeckSlidesEditor } from "./DeckSlidesEditor";
-import { DeckEditorPreview } from "./DeckEditorPreview";
-import { DeckEditorActions } from "./DeckEditorActions";
+import { useDeckEditorActions } from "./DeckEditorActions";
 import { getAdminDeck } from "./api/magazine.api";
+import { DeckEditorHeader } from "./desk/deck/DeckEditorHeader";
+import { SlideLivePreview } from "./desk/deck/SlideLivePreview";
+import { DeckPublishRail, type DeckPublishStatus } from "./desk/deck/DeckPublishRail";
+import { DeckDangerCard } from "./desk/deck/DeckDangerCard";
+import { DeckModals, type DeckModal } from "./desk/deck/DeckModals";
+import { buildDeckPublishChecklist, isDeckPublishReady } from "./desk/deck/deckPublishChecklist";
 import styles from "./DeckEditorPage.module.css";
-
-interface DeckLoad {
-  draft: DeckDraft;
-  published: boolean;
-}
-
-/** A `Slide`'s text-ish fields (and the mock deck registry's `title`) are
- *  typed `ReactNode` because the reader renders `<em>` emphasis, but the
- *  editor only ever needs a plain string to seed a controlled input —
- *  mirrors `SlideEditorCard`'s `asText`. */
-function asPlainText(value: ReactNode): string {
-  return typeof value === "string" ? value : "";
-}
-
-/** Demo-only load: the mock deck registry, keyed by id (dynamically
- *  imported so it never ships in the live bundle). Every mock deck is
- *  treated as already published, mirroring `useEditorDecks`. */
-async function loadMockDraft(id: string): Promise<DeckLoad | null> {
-  const { decks } = await import("./data/decks.mock");
-  const deck = decks[id];
-  if (!deck) return null;
-  return {
-    published: true,
-    draft: {
-      slug: deck.id,
-      title: asPlainText(deck.title),
-      kicker: deck.kicker,
-      section: deck.section,
-      byline: deck.byline,
-      role: deck.role ?? "",
-      authorBio: deck.authorBio,
-      cover: deck.cover,
-      coverDesc: deck.coverDesc,
-      readTime: deck.readTime,
-      tags: deck.tags,
-      related: deck.related,
-      slides: deck.slides,
-    },
-  };
-}
-
-/** Every field the mutation forms can produce is a fresh string/array/object
- *  on edit, so reference equality per field is enough to detect a real
- *  change — and unlike `JSON.stringify`, it can't choke on a demo deck's
- *  still-unedited `ReactNode` slide fields (which may carry dev-only
- *  circular internals React attaches to elements). */
-function draftsEqual(a: DeckDraft, b: DeckDraft): boolean {
-  return (
-    a.slug === b.slug &&
-    a.title === b.title &&
-    a.kicker === b.kicker &&
-    a.section === b.section &&
-    a.byline === b.byline &&
-    a.role === b.role &&
-    a.authorBio === b.authorBio &&
-    a.cover === b.cover &&
-    a.coverDesc === b.coverDesc &&
-    a.readTime === b.readTime &&
-    a.tags === b.tags &&
-    a.related === b.related &&
-    a.slides === b.slides
-  );
-}
 
 export function DeckEditorPage() {
   const { t } = useTranslation();
@@ -108,6 +50,13 @@ export function DeckEditorPage() {
   const [pendingNavigateTo, setPendingNavigateTo] = useState<string | null>(null);
   const seededForRef = useRef<string | null>(null);
   const effectiveId = id ?? createdId;
+
+  // Local-only UI state for the new chrome: which slide the rail preview /
+  // Present overlay is showing, the publish-timing segment, and which modal
+  // (delete/convert) is open. None of this is part of the persisted draft.
+  const [previewIndex, setPreviewIndex] = useState(0);
+  const [publishStatus, setPublishStatus] = useState<DeckPublishStatus>("now");
+  const [modal, setModal] = useState<DeckModal>(null);
 
   useEffect(() => {
     if (!deckQuery.data) return;
@@ -143,22 +92,59 @@ export function DeckEditorPage() {
     setPendingNavigateTo(null);
   }, [pendingNavigateTo, navigate]);
 
-  return (
-    <AppShell>
-      <div className={styles.page}>
-        <div className={styles.editorHead}>
-          <h1>
-            {effectiveId
-              ? t("magazine:deck.editor.editTitle")
-              : t("magazine:deck.editor.newTitle")}
-          </h1>
-          <Button variant="ghost" to={routes.magazineEditor}>
-            {t("magazine:deck.editor.backToDashboard")}
-          </Button>
-        </div>
+  const { handleSave, handleTogglePublish, handleDelete, isSaving, isPublishPending, isDeletePending } =
+    useDeckEditorActions({
+      id: effectiveId,
+      draft,
+      published,
+      onCreated: (newId) => {
+        setLastSaved(draft);
+        setCreatedId(newId);
+        seededForRef.current = newId;
+        setPendingNavigateTo(`${routes.deckEditor}?id=${newId}`);
+      },
+      onSaved: () => setLastSaved(draft),
+      onPublishedChange: setPublished,
+      onDeleted: () => {
+        setLastSaved(draft);
+        setPendingNavigateTo(routes.magazineEditor);
+      },
+    });
 
-        <div className={styles.editorGrid}>
-          <div className={styles.pane}>
+  const deck = draftToDeck(draft);
+  const clampedIndex = deck.slides.length === 0 ? 0 : Math.min(previewIndex, deck.slides.length - 1);
+  const currentSlide = deck.slides[clampedIndex];
+
+  const canPublish = Boolean(effectiveId);
+  const checklistBlocksPublish = !published && !isDeckPublishReady(buildDeckPublishChecklist(draft, t));
+  const publishDisabled = !canPublish || checklistBlocksPublish;
+
+  const savedLabel = isSaving
+    ? t("magazine:write.header.savedSaving")
+    : dirty
+      ? t("magazine:deck.editor.unsavedChanges")
+      : t("magazine:write.header.savedOk");
+
+  return (
+    <MagazineDeskShell>
+      <div className={styles.page}>
+        <DeckEditorHeader
+          title={draft.title}
+          published={published}
+          savedLabel={savedLabel}
+          deck={deck}
+          index={clampedIndex}
+          onIndex={setPreviewIndex}
+          onSave={handleSave}
+          savePending={isSaving}
+          onConvert={() => setModal({ kind: "convert" })}
+          publishPending={isPublishPending}
+          publishDisabled={publishDisabled}
+          onPublish={handleTogglePublish}
+        />
+
+        <div className={styles.ework}>
+          <div className={styles.left}>
             <DeckMetaForm
               draft={draft}
               onChange={(patch) => setDraft((d) => ({ ...d, ...patch }))}
@@ -169,28 +155,33 @@ export function DeckEditorPage() {
             />
           </div>
 
-          <div className={`${styles.pane} ${styles.preview}`}>
-            <DeckEditorActions
-              id={effectiveId}
+          <aside className={styles.erail}>
+            <SlideLivePreview
+              slide={currentSlide}
+              index={clampedIndex}
+              total={deck.slides.length}
+              onGo={setPreviewIndex}
+            />
+            <DeckPublishRail
               draft={draft}
               published={published}
-              onCreated={(newId) => {
-                setLastSaved(draft);
-                setCreatedId(newId);
-                seededForRef.current = newId;
-                setPendingNavigateTo(`${routes.deckEditor}?id=${newId}`);
-              }}
-              onSaved={() => setLastSaved(draft)}
-              onPublishedChange={setPublished}
-              onDeleted={() => {
-                setLastSaved(draft);
-                setPendingNavigateTo(routes.magazineEditor);
-              }}
+              canPublish={canPublish}
+              publishPending={isPublishPending}
+              publishStatus={publishStatus}
+              onPublishStatusChange={setPublishStatus}
+              onPublish={handleTogglePublish}
             />
-            <DeckEditorPreview draft={draft} />
-          </div>
+            <DeckDangerCard onDelete={() => setModal({ kind: "delete" })} disabled={!effectiveId} />
+          </aside>
         </div>
       </div>
-    </AppShell>
+
+      <DeckModals
+        modal={modal}
+        onClose={() => setModal(null)}
+        onConfirmDelete={handleDelete}
+        deletePending={isDeletePending}
+      />
+    </MagazineDeskShell>
   );
 }

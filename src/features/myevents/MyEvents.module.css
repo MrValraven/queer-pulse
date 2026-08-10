@@ -5,7 +5,7 @@
    helper in myEvents.styles.ts (styles['ev-card'] etc.).
    ============================================================ */
 .ev-page {
-  padding: 120px 0 110px;
+  padding: 12px 0 110px;
 }
 
 /* shared keyframes (were global in the prototype) */
@@ -1604,81 +1604,6 @@ button.cal-cell.has {
   height: 1px;
   background: rgba(var(--plum-rgb), 0.08);
   margin: 5px 8px;
-}
-
-/* ---------- Discovery module ---------- */
-.disco {
-  margin-top: 34px;
-  padding-top: 26px;
-  border-top: 1px solid rgba(var(--line-rgb), 0.09);
-}
-.disco-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.disco-title {
-  font-family: var(--serif);
-  font-size: 23px;
-  color: var(--text-strong);
-  letter-spacing: -0.01em;
-}
-.disco-title em {
-  font-style: italic;
-  color: var(--accent);
-}
-.disco-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 12px;
-}
-.disco-card {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
-  padding: 16px 17px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-.disco-reason {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--jade);
-  margin-bottom: 9px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.disco-reason svg {
-  width: 12px;
-  height: 12px;
-}
-.disco-name {
-  font-family: var(--serif);
-  font-size: 17px;
-  color: var(--text-strong);
-  line-height: 1.22;
-  margin-bottom: 5px;
-}
-.disco-meta {
-  font-size: 12.5px;
-  color: var(--ink-40);
-  margin-bottom: 13px;
-  line-height: 1.5;
-}
-.disco-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: auto;
-}
-.disco-actions .btn {
-  font-size: 12.5px;
-  padding: 7px 14px;
 }
 
 /* ---------- Empty states ---------- */

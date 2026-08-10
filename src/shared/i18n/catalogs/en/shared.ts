@@ -88,6 +88,10 @@ export const shared: Catalog = {
   "accountMenu.items.applications": "Applications",
   "accountMenu.items.work": "Work",
   "accountMenu.items.subprofiles": "Subprofiles",
+  // Personas discovery Phase 5, Moment 3 — the "Your personas" row (badge via
+  // usePersonaBadge). Separate from `accountMenu.items.subprofiles` above,
+  // which is a pre-existing, differently-worded entry.
+  "accountMenu.items.personas": "Your personas",
   "accountMenu.items.events": "Events",
   "accountMenu.items.feed": "Feed",
   "accountMenu.items.drafts": "Drafts",
@@ -100,6 +104,7 @@ export const shared: Catalog = {
   "accountSheet.title": "Your account",
   "accountSheet.viewProfile": "View profile",
   "accountMenu.staff.magazineEditor": "Magazine editor",
+  "accountMenu.staff.magazineWriter": "Writer workspace",
   "accountMenu.staff.admin": "Admin",
   "accountMenu.mod.modTools": "Mod tools",
   "accountMenu.controls.populatePlatform": "Populate platform",
@@ -145,9 +150,11 @@ export const shared: Catalog = {
   // fetched data, not platform chrome).
   "adminNav.items.overview": "Overview",
   "adminNav.items.landing": "Landing page",
+  "adminNav.items.pressKit": "Press kit",
   "adminNav.items.moderation": "Moderation",
   "adminNav.items.safeSpaces": "Safe spaces",
   "adminNav.items.listings": "Listings",
+  "adminNav.items.media": "Uploaded images",
   "adminNav.items.invites": "Invites",
   "adminNav.items.changemakerNominations": "Nominations",
   "adminNav.items.commissionInterests": "Commissions",

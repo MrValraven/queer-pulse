@@ -8,6 +8,7 @@ const AdminMembersPage = lazyNamed(() => import("./AdminMembersPage"), "AdminMem
 const AdminBotsPage = lazyNamed(() => import("./AdminBotsPage"), "AdminBotsPage");
 const AdminSafeSpacesPage = lazyNamed(() => import("./AdminSafeSpacesPage"), "AdminSafeSpacesPage");
 const AdminListingsPage = lazyNamed(() => import("./AdminListingsPage"), "AdminListingsPage");
+const AdminMediaPage = lazyNamed(() => import("./AdminMediaPage"), "AdminMediaPage");
 const AdminInvitesPage = lazyNamed(() => import("./AdminInvitesPage"), "AdminInvitesPage");
 const AdminChangemakersPage = lazyNamed(() => import("./AdminChangemakersPage"), "AdminChangemakersPage");
 const AdminChangemakerNominationsPage = lazyNamed(() => import("./AdminChangemakerNominationsPage"), "AdminChangemakerNominationsPage");
@@ -16,6 +17,7 @@ const AdminReadingGroupProposalsPage = lazyNamed(() => import("./AdminReadingGro
 const AdminMagazineSubmissionsPage = lazyNamed(() => import("./AdminMagazineSubmissionsPage"), "AdminMagazineSubmissionsPage");
 const AdminCommunitiesPage = lazyNamed(() => import("./AdminCommunitiesPage"), "AdminCommunitiesPage");
 const AdminLandingPage = lazyNamed(() => import("./AdminLandingPage"), "AdminLandingPage");
+const AdminPressKitPage = lazyNamed(() => import("./AdminPressKitPage"), "AdminPressKitPage");
 const AdminCommunityModPage = lazyNamed(() => import("./AdminCommunityModPage"), "AdminCommunityModPage");
 const AdminGovernancePage = lazyNamed(() => import("./AdminGovernancePage"), "AdminGovernancePage");
 const AdminRoadmapPage = lazyNamed(() => import("./AdminRoadmapPage"), "AdminRoadmapPage");
@@ -35,6 +37,7 @@ export function adminRoutes() {
       <Route path={routes.adminBots} element={<AdminBotsPage />} />
       <Route path={routes.adminSafeSpaces} element={<AdminSafeSpacesPage />} />
       <Route path={routes.adminListings} element={<AdminListingsPage />} />
+      <Route path={routes.adminMedia} element={<AdminMediaPage />} />
       <Route path={routes.adminInvites} element={<AdminInvitesPage />} />
       <Route
         path={routes.adminChangemakers}
@@ -61,6 +64,7 @@ export function adminRoutes() {
         element={<AdminCommunitiesPage />}
       />
       <Route path={routes.adminLanding} element={<AdminLandingPage />} />
+      <Route path={routes.adminPressKit} element={<AdminPressKitPage />} />
       <Route
         path={routes.adminPartnerApplications}
         element={<AdminPartnerApplicationsPage />}

@@ -173,6 +173,12 @@
   margin-bottom: 18px;
 }
 
+.error {
+  font-size: 13px;
+  color: var(--danger);
+  margin: 0 0 14px;
+}
+
 .actions {
   display: flex;
   gap: 10px;

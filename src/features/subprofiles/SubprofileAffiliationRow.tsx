@@ -26,7 +26,8 @@ interface SubprofileAffiliationRowProps {
  * plain field, not a live-resolved picker, since neither `useEvents()` nor
  * `useCommunities()` exposes a stable slug in demo mode), and a role select
  * scoped to the current type. Extracted from `SubprofileAffiliationsEditor` to
- * keep both components under the 200-line cap; mirrors `SubprofileItemEditor`.
+ * keep both components under the 200-line cap; mirrors the same field-split
+ * pattern `SubprofileItemDrawerFields` uses for the item drawer.
  */
 export function SubprofileAffiliationRow({
   row,

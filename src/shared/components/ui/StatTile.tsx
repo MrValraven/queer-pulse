@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { type CSSProperties, type ReactNode } from "react";
 import styles from "./StatTile.module.css";
 
 export interface StatTileProps {
@@ -44,14 +44,19 @@ export function StatGrid({
     <div
       className={[
         styles.grid,
+        columns && styles.gridFixed,
         tone === "contrast" && styles.gridContrast,
         className,
       ]
         .filter(Boolean)
         .join(" ")}
+      // The column count drives a CSS custom property rather than an inline
+      // `grid-template-columns`. An inline value would beat every responsive
+      // rule, pinning N columns at any width and overflowing on mobile; the
+      // `.gridFixed` track formula caps at N wide and wraps down gracefully.
       style={
         columns
-          ? ({ gridTemplateColumns: `repeat(${columns}, 1fr)` })
+          ? ({ "--sg-cols": columns } as CSSProperties)
           : undefined
       }
     >

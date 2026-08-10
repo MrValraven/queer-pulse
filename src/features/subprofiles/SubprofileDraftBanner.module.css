@@ -1,0 +1,59 @@
+/* Owner-viewing-own-draft bar — a slim plum banner (mirrors the shared
+   OfflineBanner's dot + plum treatment) sitting above the page content rather
+   than fixed to the viewport. */
+.bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-radius: var(--radius-card);
+  padding: 14px 20px;
+  margin: 16px auto 0;
+  max-width: 1080px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+  animation: draftPulse 1.6s ease infinite;
+}
+
+.message {
+  flex: 1 1 220px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.readiness {
+  font-size: 13px;
+  color: rgba(var(--cream-rgb), 0.75);
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+@keyframes draftPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    animation: none;
+  }
+}

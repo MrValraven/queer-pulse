@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiShield, FiTool, FiLayout, FiDatabase } from "react-icons/fi";
+import { FiShield, FiTool, FiLayout, FiEdit3, FiDatabase } from "react-icons/fi";
 import { useTranslation } from "../../i18n/useTranslation";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useMyCommunities } from "../../../features/communities/api/useMyCommunities";
@@ -18,11 +18,12 @@ import styles from "./AccountMenu.module.css";
  * the people the route gate and the backend RolesGuard will actually let through —
  * previously every member saw them and every one of them bounced to the homepage.
  *
- * The magazine-editor link is gated separately on the `magazine_editor` staff-role
- * *capability* (`useHasStaffRole`), not on `role`, since granting that capability
- * to a non-admin member (via `AdminMembersService.grantStaffRole`) already gives
- * them backend access and passes the `/magazine/editor` authGate — the menu just
- * needs to surface a link to it. Admins remain covered because `useHasStaffRole`
+ * The magazine-editor and magazine-writer links are gated separately on their
+ * `magazine_editor`/`magazine_writer` staff-role *capabilities*
+ * (`useHasStaffRole`), not on `role`, since granting either capability to a
+ * non-admin member (via `AdminMembersService.grantStaffRole`) already gives
+ * them backend access and passes the matching authGate — the menu just needs
+ * to surface a link to it. Admins remain covered because `useHasStaffRole`
  * treats them as a superset, and demo mode grants every staff role so the
  * sandbox stays explorable.
  */
@@ -37,6 +38,7 @@ export function RoleLinks({
   const { demoMode } = useDemoMode();
   const memberships = useMyCommunities();
   const canEditMagazine = useHasStaffRole("magazine_editor");
+  const canWriteForMagazine = useHasStaffRole("magazine_writer");
   // The community the "Mod tools" link opens. Demo deep-links into the mock
   // flagship; live resolves the moderator's OWN first owned/moderated community
   // from their real memberships (previously hardcoded to the demo slug, which
@@ -59,10 +61,23 @@ export function RoleLinks({
       </span>
     </Link>
   ) : null;
+  const magazineWriterLink = canWriteForMagazine ? (
+    <Link
+      to={routes.magazineWriter}
+      className={styles.item}
+      onClick={onNavigate}
+    >
+      <FiEdit3 aria-hidden className={styles.itemIcon} />
+      <span className={styles.itemLabel}>
+        {t("shared:accountMenu.staff.magazineWriter")}
+      </span>
+    </Link>
+  ) : null;
   if (role === "admin") {
     return (
       <>
         {magazineEditorLink}
+        {magazineWriterLink}
         <Link
           to={routes.admin}
           className={styles.item}
@@ -78,12 +93,20 @@ export function RoleLinks({
   }
   if (role === "moderator") {
     // No owned/moderated community resolved (live) → nothing to moderate, so
-    // don't surface a link that dead-ends. The magazine-editor link (if any)
-    // is independent of this and still renders.
-    if (!modSlug) return magazineEditorLink;
+    // don't surface a link that dead-ends. The magazine-editor/writer links
+    // (if any) are independent of this and still render.
+    if (!modSlug) {
+      return (
+        <>
+          {magazineEditorLink}
+          {magazineWriterLink}
+        </>
+      );
+    }
     return (
       <>
         {magazineEditorLink}
+        {magazineWriterLink}
         <Link
           to={modPanel(modSlug)}
           className={styles.item}
@@ -97,7 +120,12 @@ export function RoleLinks({
       </>
     );
   }
-  return magazineEditorLink;
+  return (
+    <>
+      {magazineEditorLink}
+      {magazineWriterLink}
+    </>
+  );
 }
 
 /** Controls at the foot of the menu: the demo data toggle, the navigation-layout

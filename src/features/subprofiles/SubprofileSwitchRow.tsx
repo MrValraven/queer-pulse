@@ -1,3 +1,4 @@
+import { FiChevronRight } from "react-icons/fi";
 import { MemberIdentity } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
@@ -52,19 +53,23 @@ export function SubprofileSwitchRow({
   const { t } = useTranslation();
   const accent = persona.accent ?? DEFAULT_ACCENT;
   const { tint, on } = ACCENT_TOKENS[accent];
+  // "kind · tagline" — the aka-card secondary line. Falls back to the kind
+  // alone when the persona has no tagline set.
+  const kindLabel = t(KIND_LABEL_KEYS[persona.kind]);
+  const secondary = persona.tagline ? `${kindLabel} · ${persona.tagline}` : kindLabel;
 
   const rowContent = (
     <>
-      {/* Avatar + display name + kind line reuse the shared identity block
-          (fixed persona plum tint). No `to` — this row is itself a
-          `<button role="tab">`, so a nested link is disallowed; the kind label
-          is the single-line secondary. The owner badges and the active-state
-          indicator stay row-local siblings around it. */}
+      {/* Avatar + display name + "kind · tagline" line reuse the shared
+          identity block (fixed persona plum tint). No `to` — this row is
+          itself a `<button role="tab">`, so a nested link is disallowed. The
+          owner badges and the trailing active-state/chevron indicators stay
+          row-local siblings around it. */}
       <MemberIdentity
         person={{ name: persona.displayName, avatarUrl: persona.avatarUrl ?? undefined }}
         tint="plum"
         size={38}
-        secondary={t(KIND_LABEL_KEYS[persona.kind])}
+        secondary={secondary}
       />
       <SubprofileOwnerBadges
         status={status}
@@ -72,7 +77,10 @@ export function SubprofileSwitchRow({
         compact
         className={styles.rowBadges}
       />
-      <span className={styles.rowActive} data-active={isSelected} aria-hidden />
+      <span className={styles.rowTrailing}>
+        <span className={styles.rowActive} data-active={isSelected} aria-hidden />
+        <FiChevronRight className={styles.rowChevron} aria-hidden />
+      </span>
     </>
   );
 

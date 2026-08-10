@@ -17,6 +17,12 @@ import type { Catalog } from "../../types";
  *   traduzidos — em modo live vêm da API como texto de quem os escreveu.
  */
 export const communities: Catalog = {
+  // ── Merged page shell (CommunitiesHubPage + header + top tabs) ────────────
+  "hubShell.title": "Comunidades",
+  "topTabs.mine": "Minhas comunidades",
+  "topTabs.discover": "Descobrir",
+  "topTabs.ariaLabel": "Vistas de comunidades",
+
   // ── Categorias de comunidade partilhadas ──────────────────────────────────
   "category.all": "Todas as comunidades",
   "category.social": "Social",

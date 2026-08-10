@@ -1,14 +1,19 @@
-import { Route } from "react-router-dom";
+import { Navigate, Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
 
-const MyEventsPage = lazyNamed(() => import("./MyEventsPage"), "MyEventsPage");
+const EventsPage = lazyNamed(() => import("./EventsPage"), "EventsPage");
 
-/** The member's personal events list. */
+/** The merged events surface: the personal dashboard + discovery under one
+ *  `/events` route, with `/account/events` redirecting in. */
 export function myEventsRoutes() {
   return (
     <>
-      <Route path={routes.myEvents} element={<MyEventsPage />} />
+      <Route path={routes.events} element={<EventsPage />} />
+      <Route
+        path={routes.myEvents}
+        element={<Navigate to={routes.events} replace />}
+      />
     </>
   );
 }

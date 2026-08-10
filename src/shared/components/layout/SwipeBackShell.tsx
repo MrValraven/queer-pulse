@@ -6,6 +6,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { m, useDragControls, type PanInfo } from "motion/react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
+import { mediaMax } from "../../theme/breakpoints";
 import { useMotionPrefs } from "../../../app/providers/MotionProvider";
 import styles from "./SwipeBackShell.module.css";
 
@@ -69,7 +70,7 @@ function currentHistoryIdx(): number {
  * the non-gesture equivalent regardless of any of this.
  */
 export function SwipeBackShell({ children }: { children: ReactNode }) {
-  const isMobile = useMediaQuery("(max-width: 860px)");
+  const isMobile = useMediaQuery(mediaMax("mobile"));
   const { reducedMotion } = useMotionPrefs();
   const navigate = useNavigate();
   const dragControls = useDragControls();

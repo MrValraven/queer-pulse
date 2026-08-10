@@ -1,280 +1,224 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { FiInbox } from "react-icons/fi";
-import { AppShell } from "../../shared/components/layout";
-import { EmptyState, FadeIn, SkeletonLine } from "../../shared/components/ui";
-import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useSimulatedLoad, usePrefersReducedMotion } from "../../shared/hooks";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { MagazineDeskShell, useMagazineShellOverlay } from "../../shared/components/layout";
+import { routes } from "../../app/routeMap";
+import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  visiblePieces,
-  filterPitches,
-  PITCHES,
-  PITCH_TOTAL,
+  DEMO_SECTIONS,
+  DEMO_STAGES,
+  type Issue,
   type Piece,
-  type Editor,
-} from "./editorDashboard.data";
-import { useEditorDashboard, type TriageVerdict } from "./useEditorDashboard";
-import { useEditorKeyboard } from "./useEditorKeyboard";
-import { EditorDashboardHeader } from "./EditorDashboardHeader";
-import { EditorNeedsStrip } from "./EditorNeedsStrip";
-import { EditorStats } from "./EditorStats";
-import { EditorToolbar } from "./EditorToolbar";
-import { EditorPiecesTable } from "./EditorPiecesTable";
-import { EditorDecksSection } from "./EditorDecksSection";
-import { EditorPitchInbox } from "./EditorPitchInbox";
-import { EditorBulkBar } from "./EditorBulkBar";
-import { EditorSidebar } from "./EditorSidebar";
-import type { PieceRowHandlers } from "./EditorPieceRow";
-import { ChaseModal, HandoffModal, ShortcutsModal } from "./EditorModals";
-import styles from "./EditorDashboardPage.module.css";
+  type Stage,
+} from "./data/desk.data";
+import { usePieces } from "./api/usePieces";
+import { usePitches } from "./api/usePitches";
+import { useDeskSummary } from "./api/useDeskSummary";
+import { useMagazineEditors } from "./api/useMagazineEditors";
+import { useCurrentIssue } from "./api/useCurrentIssue";
+import { usePieceMutations } from "./api/usePieceMutations";
+import { usePitchMutations } from "./api/usePitchMutations";
+import { STAGE_VIEW_TO_DTO } from "./api/pieces.adapters";
+import type { DeskLayout } from "./desk/DeskHeader";
+import { useDeskState } from "./desk/useDeskState";
+import { useDeskKeyboard } from "./desk/useDeskKeyboard";
+import { useDeskModals } from "./desk/useDeskModals";
+import { usePitchTriageActions } from "./desk/usePitchTriageActions";
+import { DeskView } from "./desk/DeskView";
+import { DeskModals } from "./desk/DeskModals";
 
-type ModalState =
-  | { kind: "chase"; piece: Piece }
-  | { kind: "handoff"; piece: Piece }
-  | { kind: "shortcuts" }
-  | null;
-
-const HIDDEN_PITCHES = PITCH_TOTAL - PITCHES.length;
-
+/**
+ * The magazine editor desk. Thin by design: owns the page shell, dual-mode
+ * data hooks, local filter/sort/selection state, and overlay state (the
+ * commission/pass/chase/handoff modal) — the visible layout lives in
+ * `DeskView`. The ⌘K command palette and the "Since Friday" notifications
+ * panel are now hoisted into `MagazineDeskShell` (they run on every editor
+ * surface, not just this one) — `useMagazineShellOverlay` reads their open
+ * state so this page's own j/k/o/c/y/n shortcuts stay disabled while either
+ * is open.
+ */
 export function EditorDashboardPage() {
   const { t } = useTranslation();
-  const loading = useSimulatedLoad();
-  const reduced = usePrefersReducedMotion();
   const { demoMode } = useDemoMode();
+  const { user } = useAuth();
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const dash = useEditorDashboard();
-  const { state } = dash;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { isPaletteOpen, isNotificationsOpen } = useMagazineShellOverlay();
 
-  const [focusedId, setFocusedId] = useState<string | null>(null);
-  const [leaving, setLeaving] = useState<Set<string>>(new Set());
-  const [modal, setModal] = useState<ModalState>(null);
+  const { pieces, isLoading: piecesLoading, isError: piecesError } = usePieces({});
+  const { pitches, isLoading: pitchesLoading } = usePitches();
+  const { summary } = useDeskSummary();
+  const pieceMutations = usePieceMutations();
+  const pitchMutations = usePitchMutations();
 
-  const visible = useMemo(
+  // The editor directory backs both the "Viewing as" picker and the
+  // sidebar's editor-load names — real names in live mode, not editorIds.
+  const { editors } = useMagazineEditors();
+
+  // Live mode's current-issue lookup is `null` until an issue exists — keep
+  // the honest-blank header (no fabricated theme/dates, no Produce button)
+  // in that case rather than deriving a fake issue from the piece count.
+  const { issue: currentIssue } = useCurrentIssue();
+  const issue: Issue = useMemo(
     () =>
-      visiblePieces(state.pieces, {
-        q: state.q,
-        fEditor: state.fEditor,
-        fStatus: state.fStatus,
-        fSection: state.fSection,
-        sort: state.sort,
-        myQueue: state.myQueue,
-        me: state.me,
-      }),
-    [state],
+      currentIssue ?? {
+        number: "",
+        theme: "",
+        closes: "",
+        publishes: "",
+        daysLeft: 0,
+        filled: 0,
+        slots: 0,
+      },
+    [currentIssue],
   );
-  const pieceIds = useMemo(() => visible.map((p) => p.id), [visible]);
-  const visiblePitches = useMemo(
-    () => filterPitches(state.pitches, state.q),
-    [state.pitches, state.q],
-  );
-  const loads = useMemo<Record<Editor, number>>(
-    () => ({
-      Marta: state.pieces.filter((p) => p.editor === "Marta").length,
-      Sara: state.pieces.filter((p) => p.editor === "Sara").length,
-    }),
-    [state.pieces],
-  );
-  // `HIDDEN_PITCHES` is mock-only backlog — only real in demo mode.
-  const pitchesInInbox = demoMode
-    ? HIDDEN_PITCHES + state.pitches.length
-    : state.pitches.length;
-  const isEmpty = state.pieces.length === 0 && state.pitches.length === 0;
 
-  function runTriage(ids: string[], commit: () => void) {
-    if (reduced || !ids.length) {
-      commit();
-      return;
-    }
-    setLeaving((prev) => new Set([...prev, ...ids]));
-    window.setTimeout(() => {
-      commit();
-      setLeaving((prev) => {
-        const next = new Set(prev);
-        ids.forEach((id) => next.delete(id));
-        return next;
-      });
-    }, 220);
-  }
-  const handleTriage = (id: string, verdict: TriageVerdict) =>
-    runTriage([id], () => dash.triage(id, verdict));
-  const handleBulk = (verdict: TriageVerdict) =>
-    runTriage([...state.selPitches], () => dash.bulkTriage(verdict));
+  // The `editorId` stamped on new commissions must be a real user UUID. In live
+  // mode that's the signed-in editor (this desk is `magazine_editor`-guarded);
+  // the "Viewing as" picker (`meState`) can override it. It must NOT fall back to
+  // `editors[0]?.id` in live mode — the directory can be empty (or ordered
+  // differently than "me") and stamping the wrong editor would misattribute
+  // the commission. Demo mode keeps its slug identity (it never hits the API).
+  const [meState, setMeState] = useState("");
+  const activeMe = meState || (demoMode ? editors[0]?.id : user?.id) || "";
+  const deskState = useDeskState(pieces, activeMe);
 
-  const stub = (message: string) => showToast(message, "info");
-  const openChase = (piece: Piece) => setModal({ kind: "chase", piece });
+  const [layout, setLayout] = useState<DeskLayout>("list");
 
-  const handlers: PieceRowHandlers = {
-    loads,
-    onSetStage: dash.setStage,
-    onAssign: dash.assign,
-    onHandoff: (piece) => setModal({ kind: "handoff", piece }),
-    onChase: openChase,
-    onDuplicate: () =>
-      showToast(t("magazine:editor.toast.briefDuplicated"), "info"),
-  };
-
-  useEditorKeyboard({
-    enabled: modal === null,
-    pieceIds,
-    focusedId,
-    setFocusedId,
-    onOpen: () => void navigate(routes.issue),
-    onChase: (id) => {
-      const piece = state.pieces.find((p) => p.id === id);
-      if (piece) openChase(piece);
-    },
-    topPitchId: visiblePitches[0]?.id ?? null,
-    onTriage: handleTriage,
-    onShortcuts: () => setModal({ kind: "shortcuts" }),
+  const modals = useDeskModals({ activeMe, pieceMutations, pitchMutations });
+  const triage = usePitchTriageActions({
+    pitchMutations,
+    selectedPitchIds: deskState.selected,
+    clearSelectedPitchIds: deskState.clearSelected,
   });
 
-  return (
-    <AppShell>
-      <div className={styles.page}>
-        {loading ? (
-          <EditorDashboardSkeleton />
-        ) : isEmpty ? (
-          <EmptyState
-            icon={<FiInbox />}
-            title={t("magazine:editor.page.emptyTitle")}
-            description={t("magazine:editor.page.emptyDescription")}
-          />
-        ) : (
-          <>
-            <FadeIn>
-              <EditorDashboardHeader me={state.me} onMeChange={dash.setMe} />
-            </FadeIn>
-            <FadeIn delay={60}>
-              <EditorNeedsStrip
-                pieces={state.pieces}
-                me={state.me}
-                onOpen={() => void navigate(routes.issue)}
-                onChase={openChase}
-              />
-            </FadeIn>
-            <FadeIn delay={120}>
-              <EditorStats
-                pieces={state.pieces}
-                pitchesInInbox={pitchesInInbox}
-              />
-            </FadeIn>
-            <FadeIn delay={180}>
-              <EditorToolbar
-                q={state.q}
-                fEditor={state.fEditor}
-                fStatus={state.fStatus}
-                fSection={state.fSection}
-                sort={state.sort}
-                myQueue={state.myQueue}
-                onQuery={dash.setQuery}
-                onFilter={dash.setFilter}
-                onToggleMyQueue={dash.toggleMyQueue}
-                onShortcuts={() => setModal({ kind: "shortcuts" })}
-              />
-            </FadeIn>
-            <FadeIn delay={220}>
-              <EditorDecksSection />
-            </FadeIn>
-            <div className={styles.edGrid}>
-              <div>
-                <EditorPiecesTable
-                  pieces={visible}
-                  totalPieces={state.pieces.length}
-                  me={state.me}
-                  sort={state.sort}
-                  focusedId={focusedId}
-                  handlers={handlers}
-                  onReset={dash.reset}
-                />
-                <EditorPitchInbox
-                  pitches={visiblePitches}
-                  query={state.q}
-                  selected={new Set(state.selPitches)}
-                  leaving={leaving}
-                  onToggleSelect={dash.toggleSelect}
-                  onTriage={handleTriage}
-                  onShowMore={() =>
-                    stub(t("magazine:editor.page.everyPitchLoaded"))
-                  }
-                />
-              </div>
-              <EditorSidebar
-                pieces={state.pieces}
-                me={state.me}
-                query={state.q}
-                onStub={stub}
-              />
-            </div>
-          </>
-        )}
-      </div>
+  // The shell's global "New piece" (rail button + ⌘K palette row) reaches
+  // this page's own commission modal via a `?commission=new` flag rather
+  // than a shared modal instance — the modal needs this page's `editors`/
+  // `sections` data, which only exists here. Consumed once, then stripped so
+  // navigating back doesn't reopen it.
+  useEffect(() => {
+    if (searchParams.get("commission") !== "new") return;
+    modals.openCommission();
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete("commission");
+    setSearchParams(nextParams, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
-      <EditorBulkBar
-        count={state.selPitches.length}
-        onBulk={handleBulk}
-        onClear={dash.clearSelect}
+  // The piece record now exists (Phase 2). Live mode routes by the real
+  // piece id; demo mode's record page ignores the id and always shows
+  // DEMO_RECORD. "Open" always lands on the record. "Edit" is
+  // format-aware: article-format pieces jump straight to the block-based
+  // article editor (Phase 3, `routes.magazineWrite`); deck-format pieces
+  // jump to the deck editor (Phase 4, `routes.deckEditor`) — the linked
+  // deck when `piece.deckId` is set (live mode; `pieceDtoToView` now
+  // projects `PieceListItemDto.deckId`), otherwise a fresh deck, same as
+  // the "New deck" entry point in `EditorDecksSection`. Mirrors
+  // `PieceRecordPage.handleOpenDraft`.
+  const goToPieceRecord = (piece: Piece) =>
+    void navigate(routes.magazinePiece.replace(":id", piece.id));
+  const handleOpenPiece = (piece: Piece) => goToPieceRecord(piece);
+  const handleEditPiece = (piece: Piece) => {
+    if (piece.format === "article") {
+      void navigate(routes.magazineWrite.replace(":id", piece.id));
+      return;
+    }
+    void navigate(piece.deckId ? `${routes.deckEditor}?id=${piece.deckId}` : routes.deckEditor);
+  };
+  const handleMovePiece = (piece: Piece, stage: Stage) =>
+    pieceMutations.moveStage.mutate({ id: piece.id, stage: STAGE_VIEW_TO_DTO[stage] });
+  const handleProduceIssue = () =>
+    void navigate(routes.magazineIssueProd.replace(":number", issue.number));
+
+  useDeskKeyboard({
+    visiblePieces: deskState.visiblePieces,
+    focusId: deskState.focusId,
+    setFocusId: deskState.setFocusId,
+    onOpen: handleOpenPiece,
+    onChase: modals.openChase,
+    onShortcuts: modals.openShortcuts,
+    topPitchId: pitches[0]?.id ?? null,
+    onTriageTop: (verdict) => {
+      const topPitch = pitches[0];
+      if (!topPitch) return;
+      if (verdict === "maybe") triage.maybe(topPitch.id);
+      else triage.pass(topPitch.id);
+    },
+    enabled: modals.modal === null && !isPaletteOpen && !isNotificationsOpen,
+  });
+
+  const isLoading = piecesLoading || pitchesLoading;
+  const isEmpty = !demoMode && !isLoading && !piecesError && pieces.length === 0 && pitches.length === 0;
+
+  return (
+    <MagazineDeskShell>
+      <DeskView
+        loading={isLoading}
+        showError={piecesError}
+        onRetry={() => void queryClient.invalidateQueries({ queryKey: ["magazine-pieces"] })}
+        isEmpty={isEmpty}
+        issue={issue}
+        editors={editors}
+        me={activeMe}
+        onMe={setMeState}
+        layout={layout}
+        onLayout={setLayout}
+        onCommission={modals.openCommission}
+        onProduce={handleProduceIssue}
+        pieces={pieces}
+        visiblePieces={deskState.visiblePieces}
+        focusId={deskState.focusId}
+        pitches={pitches}
+        pitchCount={pitches.length}
+        stages={DEMO_STAGES}
+        sections={DEMO_SECTIONS}
+        q={deskState.q}
+        onQ={deskState.setQ}
+        fmt={deskState.fmt}
+        onFmt={deskState.setFmt}
+        mine={deskState.mine}
+        onMine={deskState.setMine}
+        sort={deskState.sort}
+        onSort={deskState.setSort}
+        onShortcuts={modals.openShortcuts}
+        activeView={deskState.view}
+        onToggleView={(id) => deskState.setView(deskState.view === id ? null : id)}
+        onSaveView={() =>
+          showToast(t("magazine:desk.page.savingViewsUnavailable"), "info")
+        }
+        onOpenPiece={handleOpenPiece}
+        onEditPiece={handleEditPiece}
+        onChasePiece={modals.openChase}
+        onHandoffPiece={modals.openHandoff}
+        onMovePiece={handleMovePiece}
+        onCommissionSection={modals.openCommissionForSection}
+        selectedPitchIds={deskState.selected}
+        onTogglePitchSelect={deskState.toggleSelect}
+        onCommissionPitch={modals.openCommissionFromPitch}
+        onMaybePitch={triage.maybe}
+        onPassPitch={modals.openPassFromPitch}
+        leavingPitchIds={[...triage.leavingIds]}
+        onBulkMaybe={triage.bulkMaybe}
+        onBulkPass={triage.bulkPass}
+        onClearBulkSelection={deskState.clearSelected}
+        summary={summary}
       />
 
-      {modal?.kind === "chase" && (
-        <ChaseModal
-          piece={modal.piece}
-          onClose={() => setModal(null)}
-          onSend={dash.chaseSent}
-        />
-      )}
-      {modal?.kind === "handoff" && (
-        <HandoffModal
-          piece={modal.piece}
-          onClose={() => setModal(null)}
-          onHandoff={(editor) => dash.handoff(modal.piece, editor)}
-        />
-      )}
-      {modal?.kind === "shortcuts" && (
-        <ShortcutsModal onClose={() => setModal(null)} />
-      )}
-    </AppShell>
-  );
-}
-
-function EditorDashboardSkeleton() {
-  return (
-    <div aria-hidden>
-      <SkeletonLine width="42%" height={44} />
-      <SkeletonLine width="60%" height={16} style={{ marginTop: 14 }} />
-      <div className={styles.edStats} style={{ marginTop: 28 }}>
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className={styles.skelCard}>
-            <SkeletonLine width="40%" height={30} />
-            <SkeletonLine width="70%" height={12} style={{ marginTop: 10 }} />
-          </div>
-        ))}
-      </div>
-      <div className={styles.skelGrid} style={{ marginTop: 22 }}>
-        <div>
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className={styles.skelCard}>
-              <SkeletonLine width="55%" height={18} />
-              <SkeletonLine width="35%" height={12} style={{ marginTop: 10 }} />
-            </div>
-          ))}
-        </div>
-        <div>
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className={styles.skelCard}>
-              <SkeletonLine width="50%" height={14} />
-              <SkeletonLine
-                width="100%"
-                height={8}
-                style={{ marginTop: 12, borderRadius: 4 }}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+      <DeskModals
+        modal={modals.modal}
+        editors={editors}
+        sections={DEMO_SECTIONS}
+        onClose={modals.close}
+        onCommission={modals.submitCommission}
+        onPass={modals.submitPass}
+        onHandoff={modals.confirmHandoff}
+      />
+    </MagazineDeskShell>
   );
 }

@@ -476,7 +476,7 @@
 }
 
 /* Sticky RSVP reach bar — only ≤860px, where the aside drops below a long
-   description; mirrors the checkout .co-mobile-bar pattern (safe-area + tab-bar). */
+   description; a fixed bottom bar respecting safe-area + the mobile tab-bar. */
 .rsvpStickyBar {
   display: none;
 }

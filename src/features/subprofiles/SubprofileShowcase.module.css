@@ -42,7 +42,7 @@
   }
 }
 
-/* "Add another side", shown under a lone hero in self view (there's no
+/* "Add another persona", shown under a lone hero in self view (there's no
    switch-list header to host it next to — see `.addAnother` below for the
    equivalent when a switch list exists). */
 .soloAddAnother {
@@ -52,6 +52,7 @@
 /* ── Featured hero (SubprofileFeatureCard) ─────────────────────────────────── */
 
 .feature {
+  position: relative;
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: clamp(20px, 3vw, 30px);
@@ -73,10 +74,23 @@
     --accent-tint var(--dur-base) var(--ease-std),
     --accent-on var(--dur-base) var(--ease-std);
 }
+/* Accent left-border strip — the same treatment as the switch list's `.row`/
+   `.mobileSummary` (and the design reference's `.aka-card::before`), so the
+   hero and the rows beside it read as one accent system rather than two. */
+.feature::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  border-radius: var(--radius-card) 0 0 var(--radius-card);
+  background: var(--accent-tint);
+}
 @media (hover: hover) {
   .feature:hover {
     border-color: color-mix(in srgb, var(--accent-tint) 45%, transparent);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     box-shadow: 0 12px 30px -20px rgba(var(--line-rgb), 0.5);
   }
 }
@@ -324,7 +338,7 @@ a.featuredStripLink:focus-visible {
   min-width: 0;
 }
 
-/* Header row: the count/label on the left, self view's "Add another side"
+/* Header row: the count/label on the left, self view's "Add another persona"
    link on the right — wraps rather than clipping on narrow split columns. */
 .switchHeadRow {
   display: flex;
@@ -413,7 +427,7 @@ a.featuredStripLink:focus-visible {
   align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 8px 12px 8px 10px;
+  padding: 8px 12px 8px 14px;
   text-align: left;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
@@ -431,6 +445,18 @@ a.featuredStripLink:focus-visible {
     transform var(--dur-base) var(--ease),
     --accent-tint var(--dur-base) var(--ease-std),
     --accent-on var(--dur-base) var(--ease-std);
+}
+/* Accent left-border strip — the `.aka-card`-style identity mark for this
+   persona's own accent, echoed on the hero (`.feature::before`) above. */
+.row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 12px 0 0 12px;
+  background: var(--accent-tint);
 }
 @media (hover: hover) {
   .row:hover {
@@ -480,7 +506,7 @@ a.featuredStripLink:focus-visible {
   }
 }
 
-/* The row's avatar + name + kind line now come from the shared
+/* The row's avatar + name + "kind · tagline" line now come from the shared
    `MemberIdentity` block (SubprofileSwitchRow); its identity CSS lives in
    `MemberIdentity.module.css`, so the former `.rowAvatar/.rowMain/.rowName/
    .rowKind` classes were removed here. */
@@ -494,6 +520,17 @@ a.featuredStripLink:focus-visible {
   margin-top: 1px;
 }
 
+/* Groups the selected-state dot and the trailing chevron at the row's far
+   end — a single auto-margined flex group, rather than each indicator
+   fighting for its own alignment. */
+.rowTrailing {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex: none;
+}
+
 /* Always rendered (not conditional on selection) so it can animate between
    states rather than pop in/out — a plain opacity/scale tween, no FLIP
    needed for a handful of rows. `aria-selected` on the row itself is the
@@ -501,7 +538,6 @@ a.featuredStripLink:focus-visible {
    decorative reinforcement (`aria-hidden`), never the only signal. */
 .rowActive {
   flex: none;
-  margin-left: auto;
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -519,6 +555,25 @@ a.featuredStripLink:focus-visible {
     transition:
       opacity var(--dur-base) var(--ease),
       transform var(--dur-base) var(--ease);
+  }
+}
+
+/* Trailing "open this persona" affordance — the `.aka-card` chevron. This
+   row never navigates itself (it's a tab that previews into the hero), but
+   the chevron still communicates "there's more here to see" consistently
+   with the rest of the accent system. */
+.rowChevron {
+  flex: none;
+  color: var(--ink-40);
+  font-size: 1rem;
+  transition: color var(--dur-base) var(--ease);
+}
+.row[aria-selected="true"] .rowChevron {
+  color: var(--accent-ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rowChevron {
+    transition: none;
   }
 }
 
@@ -581,12 +636,13 @@ a.featuredStripLink:focus-visible {
 }
 
 .mobileSummary {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
   width: 100%;
   min-height: 44px;
-  padding: 10px 14px;
+  padding: 10px 14px 10px 18px;
   text-align: left;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
@@ -603,6 +659,17 @@ a.featuredStripLink:focus-visible {
     transform var(--dur-fast) var(--ease),
     --accent-tint var(--dur-base) var(--ease-std),
     --accent-on var(--dur-base) var(--ease-std);
+}
+/* Accent left-border strip — same treatment as `.row`/`.feature` above. */
+.mobileSummary::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: var(--radius-card) 0 0 var(--radius-card);
+  background: var(--accent-tint);
 }
 @media (hover: hover) {
   .mobileSummary:hover {
@@ -630,10 +697,10 @@ a.featuredStripLink:focus-visible {
   }
 }
 
-/* The summary's avatar + name + kind line now come from the shared
-   `MemberIdentity` block (SubprofileMobileRow); its identity CSS lives in
-   `MemberIdentity.module.css`, so the former `.mobileSummaryAvatar/Main/Name/
-   Kind/Meta` classes were removed here. */
+/* The summary's avatar + name + "kind · tagline" line now come from the
+   shared `MemberIdentity` block (SubprofileMobileRow); its identity CSS
+   lives in `MemberIdentity.module.css`, so the former
+   `.mobileSummaryAvatar/Main/Name/Kind/Meta` classes were removed here. */
 
 /* Self-view status/visibility, shown compact right in the collapsed summary
    (SubprofileOwnerBadges) — same pattern as `.rowBadges` on desktop. */
@@ -643,6 +710,27 @@ a.featuredStripLink:focus-visible {
   gap: 4px;
   flex-wrap: wrap;
   margin-top: 2px;
+}
+
+/* Trailing expand/collapse chevron — the `.aka-card` chevron, rotated to
+   read as "expanded" once the row's detail panel is open (a purely visual
+   cue layered on top of the already-programmatic `aria-expanded`). */
+.mobileChevron {
+  flex: none;
+  margin-left: auto;
+  color: var(--ink-40);
+  transition:
+    transform var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+.mobileRow[data-expanded="true"] .mobileChevron {
+  transform: rotate(90deg);
+  color: var(--accent-ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobileChevron {
+    transition: none;
+  }
 }
 
 /* Detail region: mounted only while expanded (see SubprofileMobileRow), so

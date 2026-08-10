@@ -6,6 +6,7 @@ import { useIsLinkVisible } from "../../../app/authGate";
 import { linkToPath } from "../../../app/routeMap";
 import { scrollBus } from "../../../app/scrollBus";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
+import { mediaMax } from "../../theme/breakpoints";
 import { useTranslation } from "../../i18n/useTranslation";
 import { Avatar } from "../ui";
 import { MEMBER_TABS, PUBLIC_TABS, activeTabKey } from "./bottomTabs";
@@ -24,7 +25,7 @@ import styles from "./BottomTabBar.module.css";
  * panel association that don't exist here.
  */
 export function BottomTabBar() {
-  const isMobile = useMediaQuery("(max-width: 860px)");
+  const isMobile = useMediaQuery(mediaMax("mobile"));
   const { loggedIn } = useAuth();
   const { t } = useTranslation();
   const { pathname } = useLocation();

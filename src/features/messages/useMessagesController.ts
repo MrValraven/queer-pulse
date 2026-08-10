@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useMediaQuery, useSimulatedLoad } from "../../shared/hooks";
+import { mediaMax } from "../../shared/theme/breakpoints";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSocial } from "../../app/providers/useSocial";
@@ -55,7 +56,9 @@ export function useMessagesController() {
   const { user } = useAuth();
   const myUserId = user?.id ?? null;
   const simLoading = useSimulatedLoad();
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  // Messaging uses a 768px tablet cutover (list vs thread split), intentionally
+  // off the shared ladder — the two-pane layout needs the extra width.
+  const isMobile = useMediaQuery(mediaMax(768));
   const [view, setView] = useState<"list" | "thread">("list");
 
   // Open the realtime socket only while this page is mounted — live DMs/read

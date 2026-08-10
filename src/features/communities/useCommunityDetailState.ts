@@ -95,8 +95,15 @@ export function useCommunityDetailState() {
   const role = demoMode ? (slug ? roleIn(slug) : null) : myRole;
   const canEdit = role === "owner" || role === "mod";
 
+  // Precedence: the enriched living data (flagship/live) → the community's own
+  // join policy (created + live-card DTOs carry it) → the legacy `privateBadge`
+  // heuristic. Skipping `community.accessTier` here is what made invite/request
+  // communities show a public "Join" CTA, since `privateBadge` only knows
+  // "private".
   const tier =
-    living?.accessTier ?? (community.privateBadge ? "private" : "public");
+    living?.accessTier ??
+    community.accessTier ??
+    (community.privateBadge ? "private" : "public");
   const joinLabel =
     tier === "invite"
       ? t("communities:detail.join.invite")

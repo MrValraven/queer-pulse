@@ -7,7 +7,12 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useProfileData } from "../../app/providers/useProfile";
 import { routes } from "../../app/routeMap";
-import { NEXT_ACTIONS, STATUS_CARDS, workStatusLine } from "./work.data";
+import {
+  NEXT_ACTIONS,
+  STATUS_CARDS,
+  workStatusLine,
+  applicationsHubCard,
+} from "./work.data";
 import { WorkNextActions } from "./WorkNextActions";
 import { WorkHubCards } from "./WorkHubCards";
 import { WorkProfileCard } from "./WorkProfileCard";
@@ -40,6 +45,13 @@ export function WorkHubPage() {
             {demoMode ? statusLine : t("economy:workHub.status.live")}
           </Reveal>
         </header>
+
+        <section className={styles.band}>
+          <h2 className={styles.sectionTitle}>
+            {t("economy:workHub.card.apps.label")}
+          </h2>
+          <WorkHubCards cards={[applicationsHubCard(demoMode)]} />
+        </section>
 
         {demoMode ? (
           <>

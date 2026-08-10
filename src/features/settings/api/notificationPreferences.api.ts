@@ -11,6 +11,8 @@ export const NOTIFICATION_PREFERENCE_CATEGORY = {
   newMessages: "new_messages",
   connections: "connections",
   communityReplies: "community_replies",
+  mentions: "mentions",
+  vouches: "vouches",
 } as const;
 
 export type NotificationPreferenceCategory =

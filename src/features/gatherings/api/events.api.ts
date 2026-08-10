@@ -2,6 +2,7 @@ import {
   apiGet,
   apiPost,
   apiPatch,
+  apiPut,
   apiDelete,
 } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
@@ -248,4 +249,39 @@ export const attachEventPhoto = (
   slug: string,
   body: { key: string; caption?: string },
 ) => apiPost<EventPhotoDTO>(`/events/${slug}/photos`, body);
+
+// ── Event lineup ("who performed") ──────────────────────────────────────────
+// Backend `EventLineupEntryView`/`EventLineupDTO` (Personas Phase 5, Moment 5).
+
+/** One resolved row of an event's lineup. */
+export interface EventLineupEntryDTO {
+  slug: string;
+  name: string;
+  avatarUrl: string | null;
+  /** Free-ish craft/role label the host assigned — not backend-enum-
+   *  constrained, see `PutLineupDto`. The FE only ever writes one of
+   *  `LINEUP_ROLES` (`eventLineup.data.ts`). */
+  role: string;
+}
+
+/** GET/PUT `/events/:slug/lineup` response. `viewerEntry` is the caller's
+ *  own row, or `null` if they're not on the bill. */
+export interface EventLineupDTO {
+  entries: EventLineupEntryDTO[];
+  viewerEntry: EventLineupEntryDTO | null;
+}
+
+export interface LineupEntryInput {
+  memberSlug: string;
+  role: string;
+}
+
+/** GET /events/:slug/lineup — participant/organizer visibility (mirrors
+ *  attendee visibility; 404s for a non-visible event). */
+export const getEventLineup = (slug: string) =>
+  apiGet<EventLineupDTO>(`/events/${slug}/lineup`);
+
+/** PUT /events/:slug/lineup — host/co-host only, replace-all. */
+export const replaceEventLineup = (slug: string, entries: LineupEntryInput[]) =>
+  apiPut<EventLineupDTO>(`/events/${slug}/lineup`, { entries });
 

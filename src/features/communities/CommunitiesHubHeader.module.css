@@ -1,0 +1,81 @@
+/* Reserves the top nav band (--nav-top + --nav-height = 80px, plus breathing
+   room) so the header clears the fixed floating nav — the job the old hero did.
+   Sidebar nav mode clips this band via main[data-page-main]'s negative margin,
+   same as heroes (see src/styles/nav-mode.css). Not sticky; the Discover
+   sub-tabs keep their own sticky behaviour further down the page. */
+.header {
+  padding-block: clamp(88px, 12vw, 116px) var(--gap-grid);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm) var(--gap-grid);
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-heading);
+  line-height: var(--lh-title);
+  color: var(--text-strong);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+
+/* Mirrors FeatureHelp's `.iconTrigger` — a plain 44px round icon button so it
+   reads as one set with sibling icon buttons rather than a bordered chip. */
+.searchBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.06);
+  color: var(--ink-60);
+  cursor: pointer;
+  transition:
+    color var(--dur-fast, 0.15s) var(--ease),
+    background var(--dur-fast, 0.15s) var(--ease);
+}
+
+.searchBtn svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .searchBtn:hover {
+    color: var(--text-strong);
+    background: rgba(var(--plum-rgb), 0.12);
+  }
+}
+
+.searchBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .searchBtn {
+    transition: none;
+  }
+}

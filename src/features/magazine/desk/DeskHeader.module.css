@@ -1,0 +1,117 @@
+/* Ported from the design's `.desk-head`/`.issue-bar`/`.track`/`.picker`/
+   `.eyebrow` rules. `--wash-2`/`--line-2` have no repo token — the local
+   equivalents (rgba(--plum-rgb, .06) / rgba(--line-rgb, .2)) match the
+   opacities already used for the same purpose elsewhere in the app. */
+
+.deskHead {
+  display: flex;
+  align-items: flex-end;
+  gap: 26px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: var(--text-title);
+  font-weight: 400;
+  line-height: 1.02;
+  color: var(--text-strong);
+  letter-spacing: -0.02em;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.metaTight {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-bottom: 4px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ink-40);
+}
+
+.tiny {
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+
+.muted {
+  color: var(--ink-60);
+  font-size: 13.5px;
+}
+
+.actions {
+  margin-left: auto;
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+
+.picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.2);
+  border-radius: var(--radius-pill);
+  padding: 5px 6px 5px 12px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink-60);
+}
+
+.picker select {
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--plum);
+  padding-right: 2px;
+}
+
+.issueBar {
+  margin: 22px 0 30px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.track {
+  flex: 1;
+  height: 7px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.trackFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: var(--radius-pill);
+  background: var(--plum);
+  display: block;
+  transition: width var(--dur-slow) var(--ease);
+}
+
+@media (max-width: 700px) {
+  .deskHead {
+    align-items: flex-start;
+  }
+
+  .actions {
+    margin-left: 0;
+    width: 100%;
+  }
+}

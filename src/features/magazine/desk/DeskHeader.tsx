@@ -1,0 +1,151 @@
+import { FiCalendar, FiFileText, FiGrid, FiList, FiPlus, FiUser } from "react-icons/fi";
+import { Button, SegmentedControl } from "../../../shared/components/ui";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import type { Editor, Issue } from "../data/desk.data";
+import styles from "./DeskHeader.module.css";
+
+/** The three desk layouts a piece pipeline can render in. */
+export type DeskLayout = "list" | "board" | "plan";
+
+/**
+ * Desk page header: the issue eyebrow + title, close/publish meta, the
+ * "Viewing as" editor picker, the Commission action, the issue progress
+ * track, and the 3-way layout switch (Pipeline / Board / Issue plan).
+ */
+export function DeskHeader({
+  issue,
+  editors,
+  me,
+  onMe,
+  layout,
+  onLayout,
+  onCommission,
+  onProduce,
+}: {
+  issue: Issue;
+  editors: Editor[];
+  me: string;
+  onMe: (editorId: string) => void;
+  layout: DeskLayout;
+  onLayout: (layout: DeskLayout) => void;
+  onCommission: () => void;
+  onProduce: () => void;
+}) {
+  const { t } = useTranslation();
+  const filledPercent =
+    issue.slots > 0 ? (issue.filled / issue.slots) * 100 : 0;
+  // The backend doesn't model an editorial calendar yet, so live issues carry
+  // a real number/theme/filled/slots but blanked-out closes/publishes/
+  // daysLeft. Only render the eyebrow + close/publish meta line when there's
+  // real calendar data (i.e. demo mode) to show.
+  const hasIssueCalendar = Boolean(issue.theme && issue.closes && issue.publishes);
+  // The Produce button only needs a real issue to link to — gate it on the
+  // issue existing at all, not on the (live-mode-absent) calendar fields.
+  const hasIssue = issue.number !== "";
+
+  const layoutOptions = [
+    {
+      value: "list",
+      label: t("magazine:desk.header.layout.pipeline"),
+      icon: <FiList aria-hidden />,
+    },
+    {
+      value: "board",
+      label: t("magazine:desk.header.layout.board"),
+      icon: <FiGrid aria-hidden />,
+    },
+    {
+      value: "plan",
+      label: t("magazine:desk.header.layout.issuePlan"),
+      icon: <FiFileText aria-hidden />,
+    },
+  ];
+
+  return (
+    <>
+      <div className={styles.deskHead}>
+        <div className={styles.meta}>
+          {hasIssueCalendar && (
+            <span className={styles.eyebrow}>
+              {t("magazine:desk.header.eyebrow", {
+                number: issue.number,
+                theme: issue.theme,
+              })}
+            </span>
+          )}
+          <h1 className={styles.title}>{t("magazine:desk.header.title")}</h1>
+        </div>
+        <div className={styles.metaTight}>
+          {hasIssueCalendar && (
+            <span className={styles.tiny}>
+              {t("magazine:desk.header.meta", {
+                closes: issue.closes,
+                publishes: issue.publishes,
+              })}
+            </span>
+          )}
+          <span className={styles.muted}>
+            {hasIssueCalendar && (
+              <>
+                <b>{t("magazine:desk.header.daysLeft", { days: issue.daysLeft })}</b>{" "}
+                {t("magazine:desk.header.toClose")} ·{" "}
+              </>
+            )}
+            {t("magazine:desk.header.slotsFilled", {
+              filled: issue.filled,
+              slots: issue.slots,
+            })}
+          </span>
+        </div>
+        <div className={styles.actions}>
+          <span className={styles.picker}>
+            <FiUser aria-hidden />
+            {t("magazine:desk.header.viewingAs")}
+            <select
+              value={me}
+              onChange={(event) => onMe(event.target.value)}
+              aria-label={t("magazine:desk.header.viewingAsEditorAria")}
+            >
+              {editors.map((editor) => (
+                <option key={editor.id} value={editor.id}>
+                  {editor.name.split(" ")[0]}
+                </option>
+              ))}
+            </select>
+          </span>
+          {hasIssue && (
+            <Button variant="ghost" onClick={onProduce}>
+              <FiCalendar aria-hidden />
+              {t("magazine:desk.header.produce")}
+            </Button>
+          )}
+          <Button variant="primary" onClick={onCommission}>
+            <FiPlus aria-hidden />
+            {t("magazine:desk.header.commissionCta")}
+          </Button>
+        </div>
+      </div>
+      <div className={styles.issueBar}>
+        <div
+          className={styles.track}
+          role="progressbar"
+          aria-valuenow={issue.filled}
+          aria-valuemin={0}
+          aria-valuemax={issue.slots}
+          aria-label={t("magazine:desk.header.slotsFilledAria")}
+        >
+          <span
+            className={styles.trackFill}
+            style={{ width: `${filledPercent}%` }}
+          />
+        </div>
+        <SegmentedControl
+          label={t("magazine:desk.header.layoutAria")}
+          value={layout}
+          onChange={(value) => onLayout(value as DeskLayout)}
+          options={layoutOptions}
+        />
+      </div>
+    </>
+  );
+}

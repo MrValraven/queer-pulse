@@ -461,25 +461,71 @@
   line-height: 1.65;
   margin: 14px 0 24px;
 }
-@media (max-width: 880px) {
+@media (max-width: 860px) {
   .page {
     grid-template-columns: 1fr;
-    gap: 28px;
-  }
-  .sidebar {
-    position: static;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .sidebar h3 {
-    width: 100%;
-  }
-  .navItem {
-    width: auto;
   }
   .fieldRow2 {
     grid-template-columns: 1fr;
+  }
+}
+
+/* On a phone the vertical nav becomes a sticky horizontal pill strip that sits
+   flush under the fixed app bar, so pane content stays near the top instead of
+   being pushed below a wrapped 11-item menu. Mirrors the Forum category
+   chip-scroller. Scoped to 860px — where Navbar swaps to the slim `.appBar`
+   (see standalone.css) — so the sticky offset below is always correct. */
+@media (max-width: 860px) {
+  .page {
+    gap: 20px;
+  }
+  .sidebar {
+    position: sticky;
+    top: calc(var(--app-bar-h) + env(safe-area-inset-top));
+    z-index: 40;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    /* Opaque, column-wide background so scrolled pane content clears cleanly
+       under the sticky strip. */
+    padding: 10px 0;
+    background: var(--cream);
+    border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+  }
+  .sidebar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Group headers (PREFERENCES, PRIVACY & DATA, …) don't fit a single row — the
+     icon + label pills carry the meaning on their own. */
+  .sidebar h3,
+  .sidebar > div > h3 {
+    display: none;
+  }
+  /* Each group is a plain <div>; flatten it so its buttons flow into the row. */
+  .sidebar > div {
+    display: contents;
+  }
+  .navItem {
+    width: auto;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    border: 1px solid rgba(var(--line-rgb), 0.14);
+    border-radius: 999px;
+    padding: 9px 14px;
+    scroll-snap-align: start;
+    touch-action: manipulation;
+  }
+  .navItemActive {
+    border-color: var(--accent);
+  }
+  .navItemDanger {
+    border-color: rgba(var(--danger-rgb), 0.28);
   }
 }
 

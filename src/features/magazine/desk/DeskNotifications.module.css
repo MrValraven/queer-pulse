@@ -1,0 +1,127 @@
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  background: rgba(var(--plum-rgb), 0.42);
+  backdrop-filter: blur(2px);
+  animation: notifScrimIn 0.2s var(--ease, ease);
+}
+
+@keyframes notifScrimIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 230;
+  width: min(400px, 94vw);
+  display: flex;
+  flex-direction: column;
+  padding-block-start: max(0px, env(safe-area-inset-top));
+  padding-block-end: max(0px, env(safe-area-inset-bottom));
+  background: var(--cream);
+  box-shadow: var(--shadow-toast);
+  animation: notifPanelIn 0.28s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
+}
+
+@keyframes notifPanelIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrim,
+  .panel {
+    animation: none;
+  }
+}
+
+.head {
+  padding: 22px 22px 16px;
+  border-bottom: 1px solid var(--line);
+  flex: none;
+}
+
+.head h3 {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-strong);
+  margin: 0 0 4px;
+}
+
+.sub {
+  font-size: 13px;
+  color: var(--ink-60);
+  margin: 0;
+}
+
+.list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  width: 100%;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  transition: background var(--dur-fast) var(--ease);
+}
+
+.row:hover,
+.row:focus-visible {
+  background: var(--wash);
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.body b {
+  color: var(--plum);
+}
+
+.empty {
+  padding: 22px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+
+.time {
+  flex: none;
+  font-size: 12px;
+  color: var(--ink-40);
+  margin-top: 2px;
+}
+
+.foot {
+  flex: none;
+  padding: 14px 22px;
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+  display: flex;
+  justify-content: flex-end;
+}

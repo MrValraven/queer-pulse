@@ -1,0 +1,372 @@
+/* Shared styles for the issue-production tabs (Running order / Cover & contents).
+   Ported from the design prototype's `.plan`/`.ordrow`/`.ordn`/`.grab`/`.coverwrap`/
+   `.coverart`/`.coverlines` (mag-issue.jsx / mag-issue.css) with real repo tokens
+   in place of the prototype-local --line/--wash/--wash-2 placeholders (all
+   already exist as real tokens — see src/styles/tokens/colors.css). */
+
+/* running order */
+.plan {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.ordrow {
+  display: grid;
+  grid-template-columns: 30px 24px minmax(0, 1fr) 100px auto;
+  gap: 12px;
+  align-items: center;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.ordrow:last-child {
+  border-bottom: none;
+}
+
+.ordrow[data-drag="true"] {
+  opacity: 0.4;
+}
+
+.ordn {
+  font-family: var(--serif);
+  font-size: 20px;
+  color: var(--ink-40);
+}
+
+.grab {
+  display: grid;
+  place-items: center;
+  color: var(--ink-40);
+  cursor: grab;
+}
+
+.grab:hover {
+  color: var(--plum);
+}
+
+.pt {
+  min-width: 0;
+}
+
+.pt h4 {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--plum);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sub {
+  display: flex;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+
+.tagJade {
+  color: var(--jade-ink);
+  background: rgba(var(--jade-rgb), 0.13);
+}
+
+.tagAmber {
+  color: var(--amber-ink);
+  background: rgba(var(--amber-rgb), 0.16);
+}
+
+.rowActs {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.iconButton {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-40);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  flex: none;
+}
+
+.iconButton:hover:not(:disabled) {
+  color: var(--plum);
+}
+
+.iconButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* cover & contents */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card {
+  padding: 18px;
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: var(--shadow-card);
+}
+
+.card h3 {
+  font-size: 12px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-40);
+  margin: 0;
+}
+
+.coverwrap {
+  display: grid;
+  grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 820px) {
+  .coverwrap {
+    grid-template-columns: 1fr;
+  }
+}
+
+.coverart {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  height: 340px;
+}
+
+.coverlines {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: linear-gradient(transparent, rgba(var(--plum-rgb), 0.86) 42%);
+  color: var(--cream);
+}
+
+.coverlines .ct {
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+.coverlines b {
+  font-size: 38px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-family: var(--serif);
+}
+
+.coverlines .cl {
+  font-size: 13px;
+  opacity: 0.82;
+  line-height: 1.35;
+}
+
+.coverFields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.hint {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  line-height: 1.5;
+}
+
+.contentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contentsRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.contentsRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.contentsRow b {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--plum);
+}
+
+/* digest & social, archive (Task 7: DigestSocialTab / ArchiveTab) — added
+   alongside the running-order/cover styles above; `.stack`/`.card`/`.hint`
+   are shared as-is. */
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.digrow {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.digrow:last-child {
+  border-bottom: none;
+}
+
+.digrow h4 {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--plum);
+  margin: 0 0 2px;
+}
+
+.digrow p {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.digBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.digActions {
+  flex: none;
+}
+
+.ck {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.6px solid var(--line);
+  flex: none;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  color: transparent;
+  cursor: pointer;
+  margin-top: 2px;
+  padding: 0;
+}
+
+.ck[aria-checked="true"] {
+  background: var(--plum);
+  border-color: var(--plum);
+  color: var(--cream);
+}
+
+.ck svg {
+  width: 12px;
+  height: 12px;
+}
+
+.editField textarea {
+  width: 100%;
+  min-height: 56px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 10px;
+  background: var(--paper);
+  font: inherit;
+  color: var(--ink);
+  resize: vertical;
+}
+
+.socialrow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.socialcard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+}
+
+.socialcard b {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--plum);
+  line-height: 1.2;
+  font-family: var(--serif);
+}
+
+.socialcard p {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.simrow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.simrow:last-child {
+  border-bottom: none;
+}
+
+.simrow b {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--plum);
+}
+
+.simBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}

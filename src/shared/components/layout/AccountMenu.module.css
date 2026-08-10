@@ -280,6 +280,13 @@
   text-overflow: ellipsis;
 }
 
+/* Trailing badge slot (persona count / pending-invite dot, M3) — pinned to
+   the row's right edge rather than crowding the label. */
+.badgeSlot {
+  flex: none;
+  margin-left: auto;
+}
+
 .divider {
   height: 1px;
   margin: 6px 4px;

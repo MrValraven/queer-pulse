@@ -1,0 +1,23 @@
+/* Layout-only additions on top of the global `.itemrow` (persona-editor.css)
+   — that stylesheet's `.itemrow b`/`.itemrow small` rules already cover this
+   row's typography via descendant selectors, so this module only needs the
+   text column's flex sizing (a plain `<div>` would otherwise refuse to
+   shrink next to the fixed-width grip + action buttons) and a touch of
+   breathing room between the title and its subtitle line. `min-width: 0`
+   is what actually keeps this row from ever forcing horizontal scroll on
+   narrow phones — it lets the title/subtitle ellipsize instead of pushing
+   the fixed-width grip/action buttons out of the row. */
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 2px;
+}
+.content b,
+.content small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

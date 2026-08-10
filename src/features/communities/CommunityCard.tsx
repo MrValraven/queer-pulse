@@ -21,8 +21,13 @@ export function CommunityCard({
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const living = getLiving(community.slug);
+  // living data (flagship demo) → the card DTO's join policy (live + created) →
+  // legacy `privateBadge` fallback. Consulting `community.accessTier` is what
+  // keeps invite/request cards from showing an "Open to all" badge + public join.
   const tier =
-    living?.accessTier ?? (community.privateBadge ? "private" : "public");
+    living?.accessTier ??
+    community.accessTier ??
+    (community.privateBadge ? "private" : "public");
   const roster = living?.roster.slice(0, 4) ?? [];
   const joinLabel =
     tier === "public"

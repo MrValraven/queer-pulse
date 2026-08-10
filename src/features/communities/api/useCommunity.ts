@@ -82,7 +82,9 @@ function demoEditableFields(
     whoFor: typeof detail.whoFor[0] === "string" ? detail.whoFor[0] : "",
     purpose: typeof detail.about[0] === "string" ? detail.about[0] : "",
     accessTier:
-      living?.accessTier ?? (community.privateBadge ? "private" : "public"),
+      living?.accessTier ??
+      community.accessTier ??
+      (community.privateBadge ? "private" : "public"),
     rosterVisible: true,
     features: ["discussion"],
     rules: living?.rules ?? [],

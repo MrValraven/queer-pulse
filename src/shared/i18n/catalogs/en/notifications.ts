@@ -31,6 +31,13 @@ export const notifications: Catalog = {
   "type.vouch_received.textNamed": "<profile>{name}</profile> vouched for you.",
   "type.vouch_received.meta": "Vouch",
 
+  // Sent to the space's owner when a member vouches for it. An anonymous vouch
+  // resolves no actor and keeps the generic `.text` (never names them).
+  "type.safe_space_vouch.text": "Someone vouched for your safe space.",
+  "type.safe_space_vouch.textNamed":
+    "<profile>{name}</profile> vouched for your safe space.",
+  "type.safe_space_vouch.meta": "Safe space",
+
   "type.promoted_to_member.text": "You're a full member now. Welcome in.",
   "type.promoted_to_member.meta": "Membership",
 
@@ -178,6 +185,12 @@ export const notifications: Catalog = {
     "Your account has been permanently suspended.",
   "type.moderation_outcome.ban.meta": "{note}",
 
+  // A fellow member credited a persona of yours as a collaborator on one of
+  // their items (personas discovery Phase 5, Moment 6). The first live kind
+  // whose `.actions` the adapter populates — see `notificationDtoToView`.
+  "type.subprofile_credit.text": "{subprofileName} credited you on {itemTitle}.",
+  "type.subprofile_credit.meta": "Persona credit",
+
   "type.unknown.text": "You have a new notification.",
   "type.unknown.meta": "Notification",
 
@@ -203,6 +216,7 @@ export const notifications: Catalog = {
   // Shared action-button labels across the demo notification list
   "actions.viewThread": "View thread",
   "actions.viewEvent": "View event",
+  "actions.viewProfile": "View profile",
   "actions.accept": "Accept",
   "actions.decline": "Decline",
   "actions.readNow": "Read now",
@@ -210,6 +224,10 @@ export const notifications: Catalog = {
   "actions.seeBarterBoard": "See barter board",
   "actions.viewReplies": "View replies",
   "actions.readReport": "Read report",
+  // Actions on a subprofile_credit notification (personas discovery Phase 5,
+  // Moment 6) — the first live kind with actions at all.
+  "actions.makePersona": "Make a persona for this",
+  "actions.seeTheWork": "See the work",
 
   // Demo notification list (notificationsList.data.tsx) — mirrors, per row,
   // what `formatNotification` produces for the analogous live `type`, but with
@@ -250,6 +268,9 @@ export const notifications: Catalog = {
   "list.12.text":
     "The <strong>{report}</strong> has been published. Moderation stats and finances are now live.",
   "list.12.meta": "Governance · Quarterly report",
+  "list.13.text":
+    "<strong>{subprofileName}</strong> credited you on {itemTitle}.",
+  "list.13.meta": "Persona credit",
 
   // Mentions thread (MentionsPanel.tsx / mentions.data.tsx)
   "mentions.day.today": "Today",

@@ -1,0 +1,25 @@
+/* QueerPulse — persona-page display fonts (Phase 1 of the personas redesign).
+   Self-hosted via Fontsource, same policy as src/styles/fonts.css (Fraunces +
+   DM Sans): no Google Fonts <link>, no third-party stylesheet/font host — the
+   app's CSP ships `style-src 'self'`, and self-hosting also avoids handing the
+   visitor's IP to a third party on first paint and drops a render-blocking
+   cross-origin round-trip.
+
+   Three families, minimal weights, used ONLY inside the skinned persona page
+   (`.pp[data-skin="…"]`, see persona-skins.css) — never elsewhere in the app:
+     - Anton (400)                       — Stage skin headings
+     - Instrument Serif (400 + italic)   — Studio skin display type
+     - DM Mono (400, 500)                — Workshop skin labels/metadata ONLY
+                                            (never body/headings — see the
+                                            Phase-1 plan's Global Constraints)
+
+   Unlike Fraunces/DM Sans, these three don't have variable-axis Fontsource
+   builds, so each weight/style is its own static @font-face (registered
+   under the bare family name — "Anton" / "Instrument Serif" / "DM Mono",
+   matching the family strings used in persona-skins.css). */
+
+@import "@fontsource/anton/latin-400.css";
+@import "@fontsource/instrument-serif/latin-400.css";
+@import "@fontsource/instrument-serif/latin-400-italic.css";
+@import "@fontsource/dm-mono/latin-400.css";
+@import "@fontsource/dm-mono/latin-500.css";

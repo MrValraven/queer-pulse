@@ -1,0 +1,29 @@
+/**
+ * Canonical responsive breakpoint scale (documentation + non-media tokens).
+ *
+ * This is the CSS-side companion to `src/shared/theme/breakpoints.ts` — the two
+ * must stay in lock-step. The values below are the de-facto load-bearing
+ * breakpoints already used across the ~386 `*.module.css` files.
+ *
+ * IMPORTANT: CSS `@media` conditions CANNOT reference custom properties
+ * (`@media (max-width: var(--bp-mobile))` does not work), so these tokens are
+ * NOT usable inside media queries as-is. They are exposed for non-media
+ * responsive contexts (e.g. `clamp()`, container sizing) and as the documented
+ * source of truth authors should match when hand-writing `@media` literals.
+ *
+ * Migrating the literal `@media` values across the codebase onto this ladder is
+ * a tracked mechanical follow-up (tracker X-8): it requires adding
+ * `postcss-custom-media` (there is no PostCSS in the toolchain today) so that
+ * `@custom-media --bp-mobile (max-width: 860px);` can be authored and
+ * referenced as `@media (--bp-mobile) { … }`. Do that as its own reviewed pass
+ * with the plugin installed — do not introduce `@custom-media` syntax before
+ * the plugin exists or the build will break.
+ */
+:root {
+  --bp-xs: 480px; /* small phones */
+  --bp-sm: 560px; /* large phones */
+  --bp-md: 640px; /* phone / single-column profile */
+  --bp-lg: 760px; /* tablet portrait; complements min-width desktop rules */
+  --bp-mobile: 860px; /* primary app mobile cutover (tab bar, mobile nav) */
+  --bp-wide: 900px; /* admin sidebar off-canvas */
+}

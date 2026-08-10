@@ -17,7 +17,17 @@ interface SuccessPanelProps {
   footer?: ReactNode;
   /** Override the default jade check glyph. */
   icon?: ReactNode;
+  /** Tint of the icon circle. Defaults to "jade" (success). Use "coral" for
+   *  an error/warning icon so it isn't shown on a success-green backdrop,
+   *  or "plum" for a neutral tone. */
+  iconTone?: "jade" | "coral" | "plum";
 }
+
+const ICON_TONE_COLOR: Record<NonNullable<SuccessPanelProps["iconTone"]>, string> = {
+  jade: "var(--jade)",
+  coral: "var(--accent)",
+  plum: "var(--plum)",
+};
 
 /**
  * Plum-panel confirmation shown after a flow completes: jade tick, serif title
@@ -33,12 +43,15 @@ export function SuccessPanel({
   steps,
   footer,
   icon,
+  iconTone = "jade",
 }: SuccessPanelProps) {
   const { t } = useTranslation();
   return (
     <div className={styles.panel}>
-      <div className={styles.icon}>
-        {icon ?? <FiCheck size={26} color="var(--jade)" aria-hidden />}
+      <div className={styles.icon} data-tone={iconTone}>
+        {icon ?? (
+          <FiCheck size={26} color={ICON_TONE_COLOR[iconTone]} aria-hidden />
+        )}
       </div>
       <h2 className={styles.title}>
         {title} {em && <em>{em}</em>}

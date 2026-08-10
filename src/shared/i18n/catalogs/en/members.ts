@@ -81,6 +81,7 @@ export const members: Catalog = {
 
   // ── Profile hero (ProfileSections) ─────────────────────────────────────────
   "profile.hero.verifiedBadge": "Verified member",
+  "profile.hero.viewPhotoAria": "View photo of {name}",
   "profile.hero.curatorLink": "Cinema curator — view programming profile",
   "profile.hero.memberSince": "Member since {since}",
   "profile.hero.location": "{hood}, Lisbon",

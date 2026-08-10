@@ -17,6 +17,7 @@ import { NavDrawerProvider } from "./providers/NavDrawerProvider";
 import { DemoModeProvider } from "./providers/DemoModeProvider";
 import { AuthProvider } from "./providers/AuthProvider";
 import { ConsentProvider } from "./providers/ConsentProvider";
+import { NudgesProvider } from "./providers/NudgesProvider";
 import { RealtimeProvider } from "../shared/api/realtime";
 import { I18nProvider } from "./providers/I18nProvider";
 import { ToastProvider } from "../shared/components/feedback/ToastProvider";
@@ -110,6 +111,12 @@ const RootProviders = composeProviders([
   // auth + demo state above it; wraps everything below so the banner/preferences
   // are reachable app-wide.
   ConsentProvider,
+  // Persona-discovery dismissal store (personas Phase 5): same needs as
+  // ConsentProvider above it (auth + demo state, to read/reconcile the
+  // signed-in member's session) and used by nudges mounted across many
+  // features (profile, directory, account menu, onboarding, gatherings,
+  // notifications), so it belongs app-wide rather than scoped to one feature.
+  NudgesProvider,
   // Inside AuthProvider: the sidebar is a signed-in-only affordance, so nav mode
   // is derived from the auth state (signed-out visitors always get the MegaNav).
   NavModeProvider,

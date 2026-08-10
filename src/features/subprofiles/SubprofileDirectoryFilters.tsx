@@ -1,33 +1,39 @@
 import { SearchInput } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { KIND_LABEL_KEYS } from "./subprofile-kinds";
-import { DIRECTORY_KINDS } from "./subprofileDirectory.data";
-import type { SubprofileKind } from "./api/subprofiles.api";
+import { DIRECTORY_FAMILIES } from "./subprofileDirectory.data";
+import type { SkinFamily } from "./subprofile-skins";
 import styles from "./SubprofileDirectoryPage.module.css";
 
 interface FiltersProps {
-  /** The active kind filter, or undefined for "All". */
-  activeKind: SubprofileKind | undefined;
-  onKind: (kind: SubprofileKind | undefined) => void;
+  /** The active skin-family filter, or undefined for "All". Personas
+   *  redesign Phase 4: replaces the old raw-kind filter — every kind maps to
+   *  exactly one family via `SKIN_OF`. */
+  activeFamily: SkinFamily | undefined;
+  onFamily: (family: SkinFamily | undefined) => void;
   query: string;
   onQuery: (query: string) => void;
-  /** Union of tags across the currently loaded result set (deduped, capped,
-   *  most-common first) — computed by the page, purely client-side. */
+  /** Union of `card.tags` across the currently family-filtered result set
+   *  (deduped, capped, most-common first) — computed by the page, purely
+   *  client-side. */
   availableTags: string[];
   activeTags: string[];
   onToggleTag: (tag: string) => void;
   openToCollabs: boolean;
   onToggleOpenToCollabs: () => void;
+  /** "Six kinds of page across {n} crafts" — computed by the page from the
+   *  currently family-filtered set, already translated. */
+  filtersNote: string;
 }
 
-/** Kind-filter chips ("All" + every kind), a free-text search, an "open to
- *  collabs" toggle, and a tag-chip group. Kind + query re-query the
- *  directory; the collabs toggle and tags filter the already-fetched cards
- *  client-side. Chips are toggle controls, so they're bare buttons with
- *  `aria-pressed` and visible focus — not pill actions. */
+/** Skin-family chips ("All" + one per `KIND_FAMILIES` entry), a free-text
+ *  search, an "open to collabs" toggle, a computed note line, and a tag-chip
+ *  group. Family + query + collabs + tags all filter the already-fetched
+ *  cards client-side (Personas redesign Phase 4, Decision §2) — nothing here
+ *  re-queries the network. Chips are toggle controls, so they're bare buttons
+ *  with `aria-pressed` and visible focus — not pill actions. */
 export function SubprofileDirectoryFilters({
-  activeKind,
-  onKind,
+  activeFamily,
+  onFamily,
   query,
   onQuery,
   availableTags,
@@ -35,6 +41,7 @@ export function SubprofileDirectoryFilters({
   onToggleTag,
   openToCollabs,
   onToggleOpenToCollabs,
+  filtersNote,
 }: FiltersProps) {
   const { t } = useTranslation();
   return (
@@ -46,25 +53,25 @@ export function SubprofileDirectoryFilters({
       >
         <button
           type="button"
-          className={[styles.chip, activeKind === undefined && styles.chipOn]
+          className={[styles.chip, activeFamily === undefined && styles.chipOn]
             .filter(Boolean)
             .join(" ")}
-          aria-pressed={activeKind === undefined}
-          onClick={() => onKind(undefined)}
+          aria-pressed={activeFamily === undefined}
+          onClick={() => onFamily(undefined)}
         >
           {t("subprofiles:directory.filterAll")}
         </button>
-        {DIRECTORY_KINDS.map((kind) => (
+        {DIRECTORY_FAMILIES.map(({ family, labelKey }) => (
           <button
-            key={kind}
+            key={family}
             type="button"
-            className={[styles.chip, activeKind === kind && styles.chipOn]
+            className={[styles.chip, activeFamily === family && styles.chipOn]
               .filter(Boolean)
               .join(" ")}
-            aria-pressed={activeKind === kind}
-            onClick={() => onKind(kind)}
+            aria-pressed={activeFamily === family}
+            onClick={() => onFamily(family)}
           >
-            {t(KIND_LABEL_KEYS[kind])}
+            {t(labelKey)}
           </button>
         ))}
         <button
@@ -78,6 +85,7 @@ export function SubprofileDirectoryFilters({
           {t("subprofiles:directory.openToCollabsChip")}
         </button>
       </div>
+      <p className={styles.filtersNote}>{filtersNote}</p>
       <SearchInput
         value={query}
         onChange={onQuery}
@@ -103,8 +111,10 @@ interface TagFilterRowProps {
 }
 
 /** The tag-chip row: a small heading plus one toggle chip per tag present in
- *  the currently loaded result set. Extracted so the parent stays well under
- *  the 200-line component limit. */
+ *  the currently family-filtered result set, styled distinctly (lighter
+ *  weight, muted colour) from the family chips above so the two facets read
+ *  as separate filters. Extracted so the parent stays well under the
+ *  200-line component limit. */
 function SubprofileTagFilterRow({
   availableTags,
   activeTags,
@@ -127,7 +137,7 @@ function SubprofileTagFilterRow({
             type="button"
             className={[
               styles.chip,
-              styles.tagChip,
+              styles.chipTag,
               activeTags.includes(tag) && styles.chipOn,
             ]
               .filter(Boolean)

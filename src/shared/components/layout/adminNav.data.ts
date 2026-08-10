@@ -18,6 +18,8 @@ import {
   FiFeather,
   FiBookOpen,
   FiEdit3,
+  FiRadio,
+  FiImage,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
@@ -64,6 +66,11 @@ export const ADMIN_NAV: AdminNavItem[] = [
     to: routes.adminLanding,
     icon: FiHome,
   },
+  {
+    labelKey: "shared:adminNav.items.pressKit",
+    to: routes.adminPressKit,
+    icon: FiRadio,
+  },
   { labelKey: "nav:communities", to: routes.adminCommunities, icon: FiGlobe },
   {
     labelKey: "shared:adminNav.items.safeSpaces",
@@ -74,6 +81,11 @@ export const ADMIN_NAV: AdminNavItem[] = [
     labelKey: "shared:adminNav.items.listings",
     to: routes.adminListings,
     icon: FiFileText,
+  },
+  {
+    labelKey: "shared:adminNav.items.media",
+    to: routes.adminMedia,
+    icon: FiImage,
   },
   {
     labelKey: "shared:adminNav.items.invites",

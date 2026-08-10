@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMediaQuery } from "../../shared/hooks/useMediaQuery";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -21,6 +22,14 @@ export function useVouchGraph(graph: TrustGraph, initialFocus: string) {
   const { t } = useTranslation();
   const { showToast } = useToast();
 
+  // On a phone the inspector is a bottom sheet (see the `@media (max-width:
+  // 920px)` block in AdminVouchGraph.module.css), so pre-selecting the focus
+  // node would open that sheet over the whole graph the moment the modal opens.
+  // Start with nothing selected on narrow viewports so the graph is visible and
+  // the sheet only surfaces once a node is tapped; keep the desktop right rail
+  // pre-focused on the member the modal was opened for.
+  const isNarrow = useMediaQuery("(max-width: 920px)");
+
   const [focus, setFocus] = useState(initialFocus);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [mode, setMode] = useState<VouchMode>("plain");
@@ -28,7 +37,7 @@ export function useVouchGraph(graph: TrustGraph, initialFocus: string) {
   // revealed. 0 = just the focus node, before anyone connected; eventCount =
   // the whole network. Starts fully revealed.
   const [timeCut, setTimeCut] = useState(graph.edges.length);
-  const [sel, setSel] = useState<string | null>(initialFocus);
+  const [sel, setSel] = useState<string | null>(isNarrow ? null : initialFocus);
   const [pathA, setPathA] = useState<string | null>(null);
   const [pathB, setPathB] = useState<string | null>(null);
   const [search, setSearch] = useState("");

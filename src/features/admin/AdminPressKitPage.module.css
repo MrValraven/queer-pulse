@@ -1,0 +1,263 @@
+/* Shared layout for the /admin/press-kit curation page — imported by
+   AdminPressKitPage, AdminPressKitList, AdminPressKitFields and
+   AdminPressFactsPanel so the list/editor/facts panel read as one system.
+   Adapted from AdminLandingPage.module.css. */
+
+.tabs {
+  margin-top: 20px;
+}
+
+.layout {
+  display: grid;
+  gap: 20px;
+  margin-top: 16px;
+  align-items: start;
+}
+@media (min-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr minmax(240px, 320px);
+  }
+}
+
+.editorColumn {
+  min-width: 0;
+}
+
+/* ── Ordered list + add form ──────────────────────────────────────────────── */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.addBar {
+  display: flex;
+}
+
+.addCard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
+}
+
+.featureRow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
+}
+
+.featureRowMain {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.featureRowText {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.featureRowTop {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.featureRowName {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.featureRowPreview {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.featureRowActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.orderBtns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+
+.orderBtn {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink-60);
+  cursor: pointer;
+  transition:
+    background 0.16s var(--ease),
+    color 0.16s var(--ease);
+}
+.orderBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .orderBtn:hover:not(:disabled) {
+    background: var(--cream);
+    color: var(--text-strong);
+  }
+}
+.orderBtn:focus-visible {
+  outline: 2px solid var(--jade);
+  outline-offset: 2px;
+}
+
+.rowRightActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.activeToggleGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+
+.editorWrap {
+  padding-top: 14px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Field group ──────────────────────────────────────────────────────────── */
+.fieldRow {
+  display: grid;
+  gap: 14px;
+}
+@media (min-width: 560px) {
+  .fieldRow {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.editorField textarea,
+.editorField input[type="text"],
+.editorField input[type="url"],
+.editorField input[type="email"] {
+  width: 100%;
+  resize: vertical;
+}
+
+.editorActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* ── Facts (auto) preview panel ───────────────────────────────────────────── */
+.factsPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
+}
+
+.factsTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.factsSub {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.factsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+
+.factRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.factLabel {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-60);
+  min-width: 0;
+}
+
+.factValue {
+  margin: 0;
+  flex: none;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.factsEmpty {
+  margin: 2px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+
+@media (max-width: 640px) {
+  .featureRowActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .rowRightActions {
+    justify-content: space-between;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orderBtn {
+    transition: none;
+  }
+}
