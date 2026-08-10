@@ -88,6 +88,7 @@ export function PieceRow({
       <div className={cx(styles.due, piece.late && styles.late)}>
         {piece.due === "ready" ? "—" : piece.due}
       </div>
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- onClick only stops the inner action Buttons' clicks from bubbling to the row's open handler; this wrapper is not an interactive control and the Buttons own their own focus/keys. */}
       <div className={styles.rowActs} onClick={stopRowActionsClick}>
         <Button variant="ghost" size="sm" onClick={() => onEdit(piece)}>
           {t("magazine:desk.pieceRow.edit")}

@@ -63,6 +63,7 @@ export function PiecesBoard({ pieces, stages, onOpen, onMove }: PiecesBoardProps
                       {piece.due === "ready" ? "—" : piece.due}
                     </span>
                   </div>
+                  {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- onClick only stops the stage <select>'s clicks from bubbling to the card's open handler; this wrapper is not an interactive control and the <select> owns its own focus/keys. */}
                   <div className={styles.selectRow} onClick={stopSelectRowClick}>
                     <select
                       className={styles.stageSelect}
