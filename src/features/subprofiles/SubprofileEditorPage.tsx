@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
 import { Badge, EmptyState, Spinner } from "../../shared/components/ui";
@@ -6,31 +5,23 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { useSubprofile } from "./api/useSubprofile";
 import { STATUS_BADGE } from "./mySubprofiles.data";
-import type { EditorPaneKey } from "./editorRail.data";
-import { EditorRail } from "./EditorRail";
-import { EditorPaneRouter } from "./EditorPaneRouter";
-import { EditorSavebar } from "./EditorSavebar";
-import { EditorPreview } from "./EditorPreview";
+import { SubprofileEditorShell } from "./SubprofileEditorShell";
 import styles from "./SubprofileEditor.module.css";
 
 const DASHBOARD = "/account/subprofiles";
 
 /**
  * The owner editor for one subprofile — "Editor A": a left section rail, a
- * routed pane per rail entry, and a docked preview slot (mounted by Task 6).
- * This component stays a thin orchestrator: fetch + loading/not-found states,
- * `activePane`/`previewOpen` state, and the `.ed-shell` > `.ed` layout skeleton.
- * All pane-selection/rendering logic lives in `EditorRail`/`EditorPaneRouter`;
- * every reparented panel (meta form, socials, section editors, affiliations,
- * owners, publish) is unchanged from before this rewrite — only WHERE they
- * mount changed, not what they do.
+ * routed pane per rail entry, and a docked live preview. This component stays
+ * a thin orchestrator: fetch + loading/not-found states and the page header;
+ * the `.ed` grid interior (rail/panes/savebar/preview) plus its per-persona
+ * `activePane`/`previewOpen`/editor state all live in `SubprofileEditorShell`,
+ * mounted `key`ed on the persona id so it re-initializes across personas.
  */
 export function SubprofileEditorPage() {
   const { t } = useTranslation();
   const { id } = useParams();
   const { data: subprofile, isLoading } = useSubprofile(id);
-  const [activePane, setActivePane] = useState<EditorPaneKey>("identity");
-  const [previewOpen, setPreviewOpen] = useState(true);
 
   if (isLoading) {
     return (
@@ -84,32 +75,11 @@ export function SubprofileEditorPage() {
 
           <div className={styles.shellWrap}>
             <div className="ed-shell">
-              <div className="ed" data-preview={previewOpen ? "on" : "off"}>
-                <EditorRail
-                  subprofile={subprofile}
-                  activePane={activePane}
-                  backTo={DASHBOARD}
-                  onSelect={setActivePane}
-                />
-
-                <div className="ed-main">
-                  {/* Keyed on the persona id (not just `activePane`) so the
-                      shared `useSubprofileMetaEditor` instance inside
-                      `EditorPaneRouter` re-initializes when the route lands
-                      on a DIFFERENT persona without a full page remount —
-                      mirrors the old `SubprofileMetaForm key={subprofile.id}`
-                      this replaced. */}
-                  <EditorPaneRouter key={subprofile.id} pane={activePane} subprofile={subprofile} />
-                  <EditorSavebar
-                    previewOpen={previewOpen}
-                    onTogglePreview={() => setPreviewOpen((open) => !open)}
-                  />
-                </div>
-
-                <div className="ed-preview">
-                  {previewOpen && <EditorPreview subprofile={subprofile} />}
-                </div>
-              </div>
+              {/* Keyed on the persona id so the shell's `useSubprofileMetaEditor`
+                  instance (shared between the form panes and the preview) and
+                  its `activePane`/`previewOpen` state re-initialize when the
+                  route lands on a DIFFERENT persona without a full page remount. */}
+              <SubprofileEditorShell key={subprofile.id} subprofile={subprofile} backTo={DASHBOARD} />
             </div>
           </div>
         </div>

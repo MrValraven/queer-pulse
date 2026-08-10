@@ -1,21 +1,22 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
-import { FcGoogle } from "react-icons/fc";
 import { ImageSlot, type ImageSlotTint } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { ImageProcessingError } from "./api/uploadProcessing";
-import { useUploadImage } from "./api/useUploadImage";
+import { PhotoPickerModal } from "./PhotoPickerModal";
 import styles from "./ProfileEdit.module.css";
 
 /**
  * The hero portrait in edit mode: shows the current photo (or initials) with a
- * "Change photo" action and, when a photo is set, a "Remove" action. A freshly
- * picked photo shows instantly via a local preview URL (this component's own
- * state, revoked on replace/remove); `onChange` is called with the persistable
- * storage key, not the preview URL — the parent's `photo` prop stays the value
- * to submit and is what renders once it's a real, saved image.
+ * "Change photo" action and, when a photo is set, a "Remove" action. Choosing
+ * a source (device upload, Google photo, or a past upload) happens in the
+ * `PhotoPickerModal`; this component only opens it and applies the result.
+ * A freshly picked photo shows instantly via a local preview URL (this
+ * component's own state, revoked on replace/remove); `onChange` is called
+ * with the persistable storage key or URL, not the preview URL — the
+ * parent's `photo` prop stays the value to submit and is what renders once
+ * it's a real, saved image.
  */
 export function AvatarEditor({
   photo,
@@ -37,91 +38,65 @@ export function AvatarEditor({
   const { t } = useTranslation();
   const { user } = useAuth();
   const { showToast } = useToast();
-  const fileRef = useRef<HTMLInputElement>(null);
-  const uploadAvatar = useUploadImage("avatar");
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [error, setError] = useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  // A `blob:` URL from a device upload — must be revoked when replaced/removed.
+  const [localPreview, setLocalPreview] = useState<string | null>(null);
+  // The URL currently shown in the hero: blob OR an absolute gallery/Google
+  // URL. Only ever revoked when it equals `localPreview` (a blob).
+  const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
+  // The value most recently handed to `onChange` this session (key or URL) —
+  // used to tell the picker which gallery item is "currently applied", so
+  // deleting it can also clear the hero. Falls back to `photo` (the value
+  // already saved/applied before this editor session touched anything).
+  const [appliedValue, setAppliedValue] = useState<string | undefined>();
 
-  // The avatar captured from the member's Google sign-in, offered as a one-tap
-  // fill whenever they have no photo set yet.
+  // The avatar captured from the member's Google sign-in, offered as a
+  // one-tap fill in the picker whenever the member has one on file.
   const googlePhoto = user?.profile.avatarUrl ?? undefined;
 
-  function applyGooglePhoto() {
-    if (!googlePhoto) return;
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-      setPreviewUrl(null);
-    }
-    onChange(googlePhoto);
+  function handlePick(value: string, previewUrl: string) {
+    if (localPreview) URL.revokeObjectURL(localPreview); // only revoke blob previews
+    setLocalPreview(previewUrl.startsWith("blob:") ? previewUrl : null);
+    setSelectedUrl(previewUrl); // absolute URL to show immediately for gallery picks
+    setAppliedValue(value);
+    onChange(value);
+  }
+
+  function handlePickGoogle(url: string) {
+    if (localPreview) URL.revokeObjectURL(localPreview);
+    setLocalPreview(null);
+    setSelectedUrl(url);
+    setAppliedValue(url);
+    onChange(url);
     showToast(t("members:avatar.googleAdded"), "success");
   }
 
-  async function pick(file: File) {
-    setError(null);
-    setProgress(0);
-    setUploading(true);
-    try {
-      const { key, previewUrl: newPreviewUrl } = await uploadAvatar(file, {
-        onProgress: (p) => setProgress(p),
-      });
-      // This editor shows one photo at a time, so the previous local preview
-      // (if any) is now stale — revoke it ourselves rather than waiting for
-      // the hook's unmount sweep to hold onto it for the rest of the session.
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-      setPreviewUrl(newPreviewUrl);
-      onChange(key);
-    } catch (err) {
-      setError(
-        err instanceof ImageProcessingError
-          ? t(err.i18nKey, err.values)
-          : t("members:avatar.error.generic"),
-      );
-    } finally {
-      setUploading(false);
-    }
+  function handleRemove() {
+    if (localPreview) URL.revokeObjectURL(localPreview);
+    setLocalPreview(null);
+    setSelectedUrl(null);
+    setAppliedValue(undefined);
+    onRemove();
   }
 
-  const displayedPhoto = previewUrl ?? photo;
+  const displayedPhoto = selectedUrl ?? photo;
 
   const actions = (
     <>
       <button
         type="button"
         className={styles.avatarBtn}
-        onClick={() => fileRef.current?.click()}
-        disabled={uploading}
+        onClick={() => setPickerOpen(true)}
       >
         <FiCamera size={15} />
-        {uploading
-          ? t("members:avatar.uploading", { percent: progress })
-          : displayedPhoto
-            ? t("members:avatar.change")
-            : t("members:avatar.add")}
+        {displayedPhoto ? t("members:avatar.change") : t("members:avatar.add")}
       </button>
-      {!displayedPhoto && googlePhoto && !uploading && (
-        <button
-          type="button"
-          className={styles.avatarBtn}
-          onClick={applyGooglePhoto}
-        >
-          <FcGoogle size={15} />
-          {t("members:avatar.useGoogle")}
-        </button>
-      )}
-      {displayedPhoto && !uploading && (
+      {displayedPhoto && (
         <button
           type="button"
           className={`${styles.avatarBtn} ${styles.avatarBtnGhost}`}
           aria-label={t("members:avatar.remove")}
-          onClick={() => {
-            if (previewUrl) {
-              URL.revokeObjectURL(previewUrl);
-              setPreviewUrl(null);
-            }
-            onRemove();
-          }}
+          onClick={handleRemove}
         >
           <FiTrash2 size={15} />
         </button>
@@ -129,25 +104,15 @@ export function AvatarEditor({
     </>
   );
 
-  const fileInput = (
-    <input
-      ref={fileRef}
-      type="file"
-      accept="image/*"
-      aria-label={t("members:avatar.change")}
-      hidden
-      onChange={(event) => {
-        const file = event.target.files?.[0];
-        if (file) void pick(file);
-        event.target.value = "";
-      }}
+  const picker = pickerOpen && (
+    <PhotoPickerModal
+      onClose={() => setPickerOpen(false)}
+      googlePhoto={googlePhoto}
+      currentValue={appliedValue ?? photo}
+      onPick={handlePick}
+      onPickGoogle={handlePickGoogle}
+      onDeletedCurrent={handleRemove}
     />
-  );
-
-  const errorNote = error && (
-    <p className={styles.avatarError} role="alert">
-      {error}
-    </p>
   );
 
   if (variant === "circle") {
@@ -168,8 +133,7 @@ export function AvatarEditor({
           </div>
         </div>
         <div className={styles.avatarCircleActions}>{actions}</div>
-        {errorNote}
-        {fileInput}
+        {picker}
       </div>
     );
   }
@@ -185,8 +149,7 @@ export function AvatarEditor({
         placeholder={name}
       />
       <div className={styles.avatarActions}>{actions}</div>
-      {errorNote}
-      {fileInput}
+      {picker}
     </div>
   );
 }

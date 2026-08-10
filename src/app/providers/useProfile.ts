@@ -96,11 +96,23 @@ export function isDraftDirty(draft: ProfileDraft, committed: Member): boolean {
   return JSON.stringify(draft) !== JSON.stringify(toDraft(committed));
 }
 
-/** Map the editable draft to the backend's PATCH /profiles/me payload. `d.photo`
- *  is the storage key from `AvatarEditor`'s upload (or `undefined` after a
- *  removal); sending `d.photo || null` lets a removal clear the stored avatar
- *  the same way `SubprofileMetaForm` does for a subprofile's `avatarUrl`. */
-export function draftToUpdateDto(d: ProfileDraft): UpdateProfileDTO {
+/** Map the editable draft to the backend's PATCH /profiles/me payload.
+ *
+ *  `avatarUrl` is only sent when `d.photo` actually changed from the committed
+ *  value (`committedPhoto`). On load `d.photo` is the backend-RESOLVED display
+ *  URL (`toImageUrl` turned the stored storage key into `<api>/files/<key>`),
+ *  NOT the raw key — re-sending an untouched one would persist that derived URL
+ *  over the clean key, and since a dev API base is `http://…` the next read
+ *  fails `toImageUrl`'s `https://`-only check and blanks the avatar. So an
+ *  unchanged photo is omitted (PATCH leaves the stored key intact); a fresh
+ *  upload sets `d.photo` to a new storage key (sent), and a removal sets it to
+ *  `undefined`/`""` (sent as `null` to clear). Mirrors the persona meta-editor
+ *  fix in `useSubprofileMetaEditor.ts`. */
+export function draftToUpdateDto(
+  d: ProfileDraft,
+  committedPhoto?: string,
+): UpdateProfileDTO {
+  const photoChanged = (d.photo ?? "") !== (committedPhoto ?? "");
   return {
     firstName: d.first.trim(),
     lastName: d.last.trim(),
@@ -108,7 +120,7 @@ export function draftToUpdateDto(d: ProfileDraft): UpdateProfileDTO {
     tagline: d.role.trim(),
     bio: d.bio.trim(),
     location: d.hood.trim(),
-    avatarUrl: d.photo || null,
+    ...(photoChanged ? { avatarUrl: d.photo || null } : {}),
     visibility: d.visibility,
     now: d.now.trim(),
     // `OpenToEntry` is structurally the wire shape (OpenToId ⊆ string), so the

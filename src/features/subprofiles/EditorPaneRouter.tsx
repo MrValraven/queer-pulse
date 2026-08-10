@@ -3,7 +3,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { CONTENT_PANE_LEDE_KEY, PANE_HEADER } from "./editorPaneHeaders.data";
 import { sectionPaneKey, type EditorPaneKey } from "./editorRail.data";
-import { useSubprofileMetaEditor, type SubprofileMetaEditor } from "./useSubprofileMetaEditor";
+import type { SubprofileMetaEditor } from "./useSubprofileMetaEditor";
 import { SubprofileIdentityFields } from "./SubprofileIdentityFields";
 import { SubprofilePresenceFields } from "./SubprofilePresenceFields";
 import { SubprofileLinkFields } from "./SubprofileLinkFields";
@@ -58,23 +58,24 @@ function MetaPaneSave({
  * keep mounted.
  *
  * `identity`/`presence`/`address` are three DISTINCT rail entries that each
- * get their own pane here, but all three read/write the SAME
- * `useSubprofileMetaEditor(subprofile)` instance — called once, at this
- * shared parent, so the in-progress edits on one pane survive switching to
- * another (the hook itself never unmounts, only which pane's `hidden`
- * attribute is false changes) and one explicit save still covers all of
- * them together, exactly like the single `SubprofileMetaForm` this replaces
- * used to.
+ * get their own pane here, but all three read/write the SAME `editor`
+ * (`useSubprofileMetaEditor`) instance — created one level up in
+ * `SubprofileEditorShell` and passed in as a prop, so the in-progress edits
+ * on one pane survive switching to another and the docked preview (which is
+ * handed that same instance) reflects them live, while one explicit save
+ * still covers all of them together, exactly like the single
+ * `SubprofileMetaForm` this replaces used to.
  */
 export function EditorPaneRouter({
   pane,
   subprofile,
+  editor,
 }: {
   pane: EditorPaneKey;
   subprofile: SubprofileView;
+  editor: SubprofileMetaEditor;
 }) {
   const { t } = useTranslation();
-  const editor = useSubprofileMetaEditor(subprofile);
   const header = PANE_HEADER[pane];
   const activeSection = subprofile.sections.find(
     (section) => sectionPaneKey(section.section) === pane,

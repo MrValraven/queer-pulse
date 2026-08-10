@@ -135,6 +135,17 @@ export function useSubprofileMetaEditor(
       showToast(t("subprofiles:metaForm.ctaMismatch"), "error");
       return;
     }
+    // The loaded `avatarUrl`/`coverUrl` are the backend-RESOLVED display URLs
+    // (`toImageUrl` turned the stored storage key into `<api>/files/<key>`), not
+    // the raw key. Sending an untouched one back would persist that derived URL
+    // in place of the clean key — and since a dev API base is `http://…`, the
+    // next read fails `toImageUrl`'s `https://`-only check and resolves to
+    // `null`, blanking the image. So only send an image field when the user
+    // actually changed it: a fresh pick sets it to a new storage key, and a
+    // clear sets it to `""` (→ `null`); an untouched field is omitted, leaving
+    // the stored key intact under PATCH semantics.
+    const avatarChanged = avatarUrl !== (subprofile.avatarUrl ?? "");
+    const coverChanged = coverUrl !== (subprofile.coverUrl ?? "");
     try {
       await update.mutateAsync({
         id: subprofile.id,
@@ -142,8 +153,8 @@ export function useSubprofileMetaEditor(
           displayName: displayName.trim(),
           tagline: tagline.trim() || null,
           bio: bio.trim() || null,
-          avatarUrl: avatarUrl || null,
-          coverUrl: coverUrl || null,
+          ...(avatarChanged ? { avatarUrl: avatarUrl || null } : {}),
+          ...(coverChanged ? { coverUrl: coverUrl || null } : {}),
           accent: accent || null,
           availability: availability || null,
           ctaLabel: ctaLabel.trim() || null,

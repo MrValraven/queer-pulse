@@ -9,6 +9,7 @@ import { personaPublicPathForOwner } from "./personaLinks.data";
 import { skinFor, SKIN_META } from "./subprofile-skins";
 import { ACCENT_TOKENS, DEFAULT_ACCENT } from "./subprofilePresence.data";
 import type { PersonaViewMode } from "./personaSkinRender";
+import type { SubprofileMetaEditor } from "./useSubprofileMetaEditor";
 
 /** No-op — the tree is fully inert in `mode="preview"` (Task 3), so these
  *  handlers exist only to satisfy `SubprofilePageBody`'s prop contract and
@@ -24,23 +25,54 @@ const PREVIEW_MODE: PersonaViewMode = "preview";
  * `.ed-prev-scroll` below are its flex children, per `persona-editor.css`).
  *
  * Reuses the exact same `SubprofilePageBody` tree the public persona page
- * renders — "never lies" because it's the same renderer, just fed the
- * signed-in owner's SAVED draft (`subprofile`, the editor's query-cache
- * value) adapted to the public-view shape via `ownerViewToShowcaseView`. It
- * refreshes whenever that cache value changes after a pane save; there is no
- * live-keystroke wiring here by design (documented follow-up).
+ * renders — "never lies" because it's the same renderer. It's fed the saved
+ * persona (`subprofile`, the editor's query-cache value) OVERLAID with the
+ * live `editor` state, so identity/presence/address edits show up in the card
+ * as you type, before any save. Content the meta editor doesn't own
+ * (sections/gigs/social links, edited by their own panels with their own
+ * local state) still comes straight from the saved `subprofile` and only
+ * refreshes after those panels save.
  */
-export function EditorPreview({ subprofile }: { subprofile: SubprofileView }) {
+export function EditorPreview({
+  subprofile,
+  editor,
+}: {
+  subprofile: SubprofileView;
+  editor: SubprofileMetaEditor;
+}) {
   const { t } = useTranslation();
   const { profile } = useProfileData();
 
-  const skin = skinFor(subprofile.kind);
-  const data = ownerViewToShowcaseView(subprofile, profile.slug);
-  const accentTokens = ACCENT_TOKENS[subprofile.accent ?? DEFAULT_ACCENT];
+  // Overlay the in-progress meta-editor fields onto the saved persona, coerced
+  // back to the persisted view shape (empty string → null where the model is
+  // nullable). This is what makes the card update live per keystroke.
+  const liveView: SubprofileView = {
+    ...subprofile,
+    displayName: editor.displayName,
+    tagline: editor.tagline,
+    bio: editor.bio,
+    avatarUrl: editor.avatarUrl || null,
+    coverUrl: editor.coverUrl || null,
+    accent: editor.accent || null,
+    availability: editor.availability || null,
+    ctaLabel: editor.ctaLabel,
+    ctaUrl: editor.ctaUrl,
+    linkVisibility: editor.link,
+    visibility: editor.visibility,
+    slug: editor.slug,
+    handle: editor.handle || null,
+  };
+
+  const skin = skinFor(liveView.kind);
+  const data = ownerViewToShowcaseView(liveView, profile.slug);
+  const accentTokens = ACCENT_TOKENS[liveView.accent ?? DEFAULT_ACCENT];
   const skinVars = {
     "--sk-tint": accentTokens.tint,
     "--sk-on": accentTokens.on,
   } as CSSProperties;
+  // "Open live" always points at the SAVED persona's public URL — it opens
+  // what is actually live, which unsaved slug/handle edits haven't changed
+  // yet, so it must NOT follow the live-edited slug.
   const liveHref = personaPublicPathForOwner(subprofile, profile.slug);
 
   return (

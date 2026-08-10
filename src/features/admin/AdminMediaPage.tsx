@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { FiExternalLink, FiCopy, FiSearch, FiX } from "react-icons/fi";
+import {
+  FiExternalLink,
+  FiCopy,
+  FiSearch,
+  FiTrash2,
+  FiX,
+} from "react-icons/fi";
 import {
   Button,
   DetailRows,
@@ -9,7 +15,7 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminDrawer, AdminPageHeader } from "./ui";
+import { AdminDrawer, AdminModal, AdminPageHeader } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -23,7 +29,7 @@ import {
   type AdminMediaKind,
   type AdminMediaObject,
 } from "./api/adminMedia.api";
-import { useAdminMedia } from "./api/useAdminMedia";
+import { useAdminMedia, useDeleteAdminMedia } from "./api/useAdminMedia";
 import styles from "./AdminMediaPage.module.css";
 
 /**
@@ -202,8 +208,11 @@ function AdminMediaDrawer({
   onCopy: (value: string, confirmationLabel: string) => Promise<void>;
 }) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const [head, setHead] = useState<AdminMediaHead | null>(null);
   const [isChecking, setIsChecking] = useState(false);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const deleteMedia = useDeleteAdminMedia();
 
   async function inspectRealContentType() {
     setIsChecking(true);
@@ -214,12 +223,23 @@ function AdminMediaDrawer({
     }
   }
 
+  function confirmDelete() {
+    deleteMedia.mutate(object.key, {
+      onSuccess: () => {
+        showToast(t("admin:media.delete.success"));
+        setIsConfirmingDelete(false);
+        onClose();
+      },
+    });
+  }
+
   const declaredContentType = object.contentType ?? t("admin:media.unknown");
   const realContentType = head?.contentType ?? null;
   const contentTypeMismatch =
     realContentType !== null && realContentType !== object.contentType;
 
   return (
+    <>
     <AdminDrawer
       label={t("admin:media.drawer.ariaLabel")}
       onClose={onClose}
@@ -263,6 +283,13 @@ function AdminMediaDrawer({
               ? t("shared:loading.label")
               : t("admin:media.inspectRealType")}
           </Button>
+          <Button
+            variant="danger"
+            disabled={deleteMedia.isPending}
+            onClick={() => setIsConfirmingDelete(true)}
+          >
+            <FiTrash2 aria-hidden /> {t("admin:media.deleteFile")}
+          </Button>
         </div>
       }
     >
@@ -297,5 +324,39 @@ function AdminMediaDrawer({
         ]}
       />
     </AdminDrawer>
+    {isConfirmingDelete && (
+      <AdminModal
+        eyebrow={t("admin:media.delete.eyebrow")}
+        title={t("admin:media.delete.confirmTitle")}
+        onClose={() =>
+          deleteMedia.isPending ? undefined : setIsConfirmingDelete(false)
+        }
+        footer={
+          <>
+            <Button
+              variant="ghost"
+              type="button"
+              disabled={deleteMedia.isPending}
+              onClick={() => setIsConfirmingDelete(false)}
+            >
+              {t("admin:common.cancel")}
+            </Button>
+            <Button
+              variant="danger"
+              type="button"
+              disabled={deleteMedia.isPending}
+              onClick={confirmDelete}
+            >
+              {deleteMedia.isPending
+                ? t("admin:media.delete.pending")
+                : t("admin:media.delete.confirm")}
+            </Button>
+          </>
+        }
+      >
+        <p>{t("admin:media.delete.confirmBody")}</p>
+      </AdminModal>
+    )}
+    </>
   );
 }

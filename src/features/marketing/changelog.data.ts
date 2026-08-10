@@ -93,6 +93,42 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "my-uploads",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("my-uploads"),
+      },
+      {
+        id: "profile-photo-picker",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("profile-photo-picker"),
+      },
+      {
+        id: "fix-persona-image-persistence",
+        category: "fix",
+        date: "10 Aug 2026",
+        ...entryKeys("fix-persona-image-persistence"),
+      },
+      {
+        id: "dark-ghost-button-contrast",
+        category: "fix",
+        date: "10 Aug 2026",
+        ...entryKeys("dark-ghost-button-contrast"),
+      },
+      {
+        id: "admin-media-delete-and-preview-fix",
+        category: "improvement",
+        date: "10 Aug 2026",
+        ...entryKeys("admin-media-delete-and-preview-fix"),
+      },
+      {
+        id: "persona-editor-live-preview",
+        category: "improvement",
+        date: "10 Aug 2026",
+        ...entryKeys("persona-editor-live-preview"),
+      },
+      {
         id: "fix-uploaded-avatar-not-showing",
         category: "fix",
         date: "10 Aug 2026",

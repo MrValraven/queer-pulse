@@ -43,6 +43,28 @@ export const members: Catalog = {
   "avatar.useGoogle": "Use Google photo",
   "avatar.googleAdded": "Added your Google photo.",
 
+  // ── AvatarEditor · photo picker modal (PhotoPickerModal) ───────────────────
+  "avatar.picker.title": "Choose a photo",
+  "avatar.picker.upload": "Upload from device",
+  "avatar.picker.retry": "Try again",
+  "avatar.picker.yourPhotos": "Your photos",
+  "avatar.picker.empty":
+    "No uploads yet. Upload one from your device or use your Google photo.",
+  "avatar.picker.loadError":
+    "We couldn't load your photos. Please try again.",
+  "avatar.picker.inUse": "In use",
+  "avatar.picker.useThis": "Use this photo",
+  "avatar.picker.delete": "Delete photo",
+  "avatar.picker.deleteConfirmTitle": "Delete this photo?",
+  "avatar.picker.deleteConfirmBody":
+    "This removes the upload for good. This can't be undone.",
+  "avatar.picker.deleteConfirmBodyInUse":
+    "This photo is currently used as your {usedAs}. Deleting it removes it there too. This can't be undone.",
+  "avatar.picker.deleteConfirmCta": "Delete photo",
+  "avatar.picker.deleted": "Photo deleted.",
+  "avatar.picker.deleteError":
+    "We couldn't delete that photo. Please try again.",
+
   // ── WorkItemEditor ─────────────────────────────────────────────────────────
   "workItem.error.generic": "We couldn't add that image. Please try again.",
   "workItem.imagePlaceholder": "Work",

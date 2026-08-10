@@ -186,7 +186,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       if (!sameAsCommitted(draft.socials ?? [], profile.socials ?? []))
         changedLists.socials = draft.socials;
 
-      savedProfile = await persistProfile(draftToUpdateDto(draft));
+      savedProfile = await persistProfile(draftToUpdateDto(draft, profile.photo));
       await persistLists(changedLists);
     } catch (err) {
       setSaveError(

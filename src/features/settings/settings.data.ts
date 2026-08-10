@@ -6,6 +6,7 @@ import {
   FiEdit2,
   FiEye,
   FiHeart,
+  FiImage,
   FiLock,
   FiMessageCircle,
   FiPlayCircle,
@@ -23,6 +24,7 @@ export type PaneId =
   | "accessibility"
   | "interests"
   | "account"
+  | "uploads"
   | "simulations"
   | "delete";
 
@@ -83,6 +85,7 @@ export const NAV: { groupKey: string; items: NavItem[] }[] = [
         icon: FiSettings,
         labelKey: "settings:nav.item.account",
       },
+      { id: "uploads", icon: FiImage, labelKey: "settings:nav.item.uploads" },
     ],
   },
   {

@@ -1850,6 +1850,35 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Open the press kit",
   "changelog.tag.magazineDesk": "Open the desk",
 
+  "changelog.entries.my-uploads.title": "See and manage everything you've uploaded",
+  "changelog.entries.my-uploads.body":
+    "A new My uploads screen in Settings shows every picture you've uploaded, so you can spot and delete accidental double-uploads. It flags any picture that's still in use before you remove it.",
+
+  "changelog.entries.profile-photo-picker.title":
+    "Reuse a photo you've already uploaded",
+  "changelog.entries.profile-photo-picker.body":
+    "The new photo picker lets you set your profile photo from your past uploads, your device, or your Google photo — and tidy up old uploads you no longer need.",
+
+  "changelog.entries.fix-persona-image-persistence.title":
+    "Uploaded photos stay put after editing",
+  "changelog.entries.fix-persona-image-persistence.body":
+    "Fixed a bug where an uploaded photo could vanish after you edited something and reloaded — it showed at first, then reverted to the placeholder. This affected persona covers and avatars, your profile photo and work images, and business-listing photos. Saving no longer overwrites an untouched image, so your photos stick.",
+
+  "changelog.entries.dark-ghost-button-contrast.title":
+    "Outlined buttons are legible in dark mode",
+  "changelog.entries.dark-ghost-button-contrast.body":
+    "Secondary outlined buttons — like Share on a persona — were nearly invisible against dark backgrounds. Their outline and label now meet contrast guidelines, so they're clearly readable while staying subordinate to the primary action.",
+
+  "changelog.entries.admin-media-delete-and-preview-fix.title":
+    "Admins can delete stored files, and large previews no longer hide the controls",
+  "changelog.entries.admin-media-delete-and-preview-fix.body":
+    "In the admin media console, tall image previews used to push the file actions off the bottom of the screen — previews are now capped so every control stays reachable. Admins can also permanently delete a stored file straight from its details panel, with a confirmation step that warns when something still references it.",
+
+  "changelog.entries.persona-editor-live-preview.title":
+    "The persona editor preview updates as you type",
+  "changelog.entries.persona-editor-live-preview.body":
+    "The live preview beside the persona editor now reflects your changes to name, tagline, bio, avatar, cover, accent and call-to-action instantly — before you save — so you can see exactly how your persona will look while you edit.",
+
   "changelog.entries.fix-uploaded-avatar-not-showing.title":
     "Uploaded profile photos now show after saving",
   "changelog.entries.fix-uploaded-avatar-not-showing.body":

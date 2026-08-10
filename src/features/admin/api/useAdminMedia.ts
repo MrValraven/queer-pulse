@@ -1,6 +1,11 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
+  deleteAdminMediaObject,
   getAdminMediaPage,
   type AdminMediaKind,
   type AdminMediaPageVM,
@@ -37,4 +42,20 @@ export function useAdminMedia({ kind }: { kind: AdminMediaKind }) {
     objects,
     isDemo: demoMode,
   };
+}
+
+/**
+ * Permanently delete one stored bucket object (admin-only, live-only). On
+ * success every kind-filtered media page is invalidated so the deleted row
+ * disappears from the console. Deletes the raw object only — the backend does
+ * not clear DB references, so the caller must confirm the warning first.
+ */
+export function useDeleteAdminMedia() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (key: string) => deleteAdminMediaObject(key),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: [ADMIN_MEDIA_KEY] }),
+  });
 }

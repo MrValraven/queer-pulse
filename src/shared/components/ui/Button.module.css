@@ -147,13 +147,18 @@
 }
 
 :global([data-theme="dark"]) .ghost {
-  color: rgba(var(--cream-rgb), 0.75);
-  border-color: rgba(var(--cream-rgb), 0.22);
+  /* Same rule as the light ghost above: a ghost button's border is its only
+     boundary, so it must clear 3:1 (WCAG 1.4.11). On a dark surface 0.22 was
+     the same near-invisible ~1.5:1 the light mode flags — cream at 0.45 clears
+     3:1 against the dark plum grounds, and text at 0.9 stays comfortably
+     legible while keeping the button subordinate to a coral primary. */
+  color: rgba(var(--cream-rgb), 0.9);
+  border-color: rgba(var(--cream-rgb), 0.45);
 }
 @media (hover: hover) {
   :global([data-theme="dark"]) .ghost:hover {
-    background: rgba(var(--cream-rgb), 0.08);
-    border-color: rgba(var(--cream-rgb), 0.42);
+    background: rgba(var(--cream-rgb), 0.1);
+    border-color: rgba(var(--cream-rgb), 0.7);
     color: rgba(var(--cream-rgb), 1);
   }
 }

@@ -43,6 +43,28 @@ export const members: Catalog = {
   "avatar.useGoogle": "Usar fotografia da Google",
   "avatar.googleAdded": "Adicionámos a tua fotografia da Google.",
 
+  // ── AvatarEditor · modal de escolha de fotografia (PhotoPickerModal) ───────
+  "avatar.picker.title": "Escolher uma foto",
+  "avatar.picker.upload": "Carregar do dispositivo",
+  "avatar.picker.retry": "Tentar novamente",
+  "avatar.picker.yourPhotos": "As tuas fotos",
+  "avatar.picker.empty":
+    "Ainda não carregaste fotos. Carrega uma do teu dispositivo ou usa a tua foto da Google.",
+  "avatar.picker.loadError":
+    "Não foi possível carregar as tuas fotos. Tenta novamente.",
+  "avatar.picker.inUse": "Em uso",
+  "avatar.picker.useThis": "Usar esta foto",
+  "avatar.picker.delete": "Eliminar foto",
+  "avatar.picker.deleteConfirmTitle": "Eliminar esta foto?",
+  "avatar.picker.deleteConfirmBody":
+    "Isto remove o carregamento definitivamente. Não é possível anular.",
+  "avatar.picker.deleteConfirmBodyInUse":
+    "Esta foto está a ser usada como a tua {usedAs}. Ao eliminá-la, também é removida daí. Não é possível anular.",
+  "avatar.picker.deleteConfirmCta": "Eliminar foto",
+  "avatar.picker.deleted": "Foto eliminada.",
+  "avatar.picker.deleteError":
+    "Não foi possível eliminar essa foto. Tenta novamente.",
+
   // ── WorkItemEditor ─────────────────────────────────────────────────────────
   "workItem.error.generic":
     "Não conseguimos adicionar essa imagem. Tenta novamente.",

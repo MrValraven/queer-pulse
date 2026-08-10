@@ -1,4 +1,4 @@
-import { apiGet } from "../../../shared/api/client";
+import { apiGet, apiDelete } from "../../../shared/api/client";
 
 /** Upload-kind prefixes the console can filter by — mirrors the backend
  *  `UPLOAD_KIND_SPECS` prefixes. `"all"` is the synthetic unfiltered tab. */
@@ -75,4 +75,11 @@ export function getAdminMediaHead(key: string): Promise<AdminMediaHead> {
   return apiGet<AdminMediaHead>(
     `/admin/media/head?key=${encodeURIComponent(key)}`,
   );
+}
+
+/** `DELETE /admin/media` — permanently remove one stored object from the
+ *  bucket. Deletes the raw object only; any DB row still referencing the key is
+ *  left as-is (that image simply stops loading), so the caller warns first. */
+export function deleteAdminMediaObject(key: string): Promise<void> {
+  return apiDelete<void>(`/admin/media?key=${encodeURIComponent(key)}`);
 }

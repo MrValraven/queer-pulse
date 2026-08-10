@@ -10,6 +10,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { NAV, type PaneId } from "./settings.data";
 import { DeleteAccountSection } from "./DeleteAccountSection";
 import { EditProfilePane } from "./EditProfilePane";
+import { MyUploadsPane } from "./MyUploadsPane";
 import { ProfileThemePane, AccessibilityPane } from "./SettingsPersonalisation";
 import { InterestsPane } from "./InterestsPane";
 import { DeleteAccountModal } from "./SettingsControls";
@@ -159,6 +160,7 @@ export function SettingsPage() {
             )}
             {pane === "interests" && <InterestsPane onChange={markChanged} />}
             {pane === "account" && <AccountPane onChange={markChanged} />}
+            {pane === "uploads" && <MyUploadsPane />}
             {pane === "simulations" && <SimulationsPane />}
             {pane === "delete" && <DeleteAccountSection />}
           </FadeIn>

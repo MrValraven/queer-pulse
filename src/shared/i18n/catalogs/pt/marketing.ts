@@ -1902,6 +1902,35 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Abrir o kit de imprensa",
   "changelog.tag.magazineDesk": "Abrir a redação",
 
+  "changelog.entries.my-uploads.title": "Vê e faz a gestão de tudo o que enviaste",
+  "changelog.entries.my-uploads.body":
+    "Um novo ecrã As minhas imagens nas Definições mostra todas as imagens que enviaste, para encontrares e apagares envios duplicados sem querer. Avisa-te se uma imagem ainda está a ser usada antes de a removeres.",
+
+  "changelog.entries.profile-photo-picker.title":
+    "Reutiliza uma foto que já carregaste",
+  "changelog.entries.profile-photo-picker.body":
+    "O novo seletor de fotos permite definir a tua foto de perfil a partir de carregamentos anteriores, do teu dispositivo ou da tua foto da Google — e arrumar carregamentos antigos de que já não precisas.",
+
+  "changelog.entries.fix-persona-image-persistence.title":
+    "As fotos carregadas mantêm-se depois de editar",
+  "changelog.entries.fix-persona-image-persistence.body":
+    "Corrigimos um erro em que uma foto carregada podia desaparecer depois de editares algo e recarregar — aparecia ao início e depois voltava ao marcador de posição. Afetava as capas e os avatares das personas, a tua foto de perfil e as imagens de trabalho, e as fotos dos negócios no diretório. Guardar já não substitui uma imagem que não mexeste, por isso as tuas fotos ficam.",
+
+  "changelog.entries.dark-ghost-button-contrast.title":
+    "Os botões delineados ficam legíveis no modo escuro",
+  "changelog.entries.dark-ghost-button-contrast.body":
+    "Os botões secundários delineados — como o Partilhar numa persona — ficavam quase invisíveis sobre fundos escuros. O contorno e o texto passam a cumprir as diretrizes de contraste, por isso ficam claramente legíveis mantendo-se secundários face à ação principal.",
+
+  "changelog.entries.admin-media-delete-and-preview-fix.title":
+    "As administradoras podem eliminar ficheiros guardados, e as pré-visualizações grandes já não escondem os controlos",
+  "changelog.entries.admin-media-delete-and-preview-fix.body":
+    "Na consola de media de administração, as pré-visualizações de imagens altas empurravam as ações do ficheiro para fora do ecrã — agora as pré-visualizações têm um limite de altura para que todos os controlos fiquem acessíveis. As administradoras podem também eliminar definitivamente um ficheiro guardado a partir do painel de detalhes, com um passo de confirmação que avisa quando algo ainda o referencia.",
+
+  "changelog.entries.persona-editor-live-preview.title":
+    "A pré-visualização do editor de persona atualiza-se enquanto escreves",
+  "changelog.entries.persona-editor-live-preview.body":
+    "A pré-visualização ao vivo ao lado do editor de persona passa a refletir de imediato as tuas alterações ao nome, à frase de destaque, à bio, ao avatar, à capa, ao acento e à chamada para ação — antes de guardares — para veres exatamente como a tua persona vai ficar enquanto editas.",
+
   "changelog.entries.fix-uploaded-avatar-not-showing.title":
     "As fotografias de perfil carregadas passam a aparecer depois de guardar",
   "changelog.entries.fix-uploaded-avatar-not-showing.body":

@@ -50,6 +50,13 @@
 
 .drawerImage {
   width: 100%;
+  /* Cap the preview so a tall portrait can't balloon the drawer's fixed head
+   * and shove the scrollable body + footer controls off the bottom of the
+   * viewport. `contain` letterboxes it against the neutral backing rather than
+   * cropping or stretching, so the whole object stays visible and inspectable. */
+  max-height: 40vh;
+  object-fit: contain;
+  background: rgba(var(--line-rgb), 0.06);
   border-radius: var(--radius-card, 22px);
   margin-bottom: 4px;
 }

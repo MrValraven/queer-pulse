@@ -29,6 +29,7 @@ export const settings: Catalog = {
   "nav.item.profileTheme": "Profile theme",
   "nav.item.accessibility": "Accessibility",
   "nav.item.interests": "Interests",
+  "nav.item.uploads": "My uploads",
   "nav.item.simulations": "Simulations",
   "nav.item.deleteAccount": "Delete account",
 
@@ -387,6 +388,38 @@ export const settings: Catalog = {
   "account.disclosure.desc":
     "Found a bug or a weakness in QueerPulse? Our disclosure policy explains how to report it and what happens next.",
   "account.disclosure.cta": "Read the policy",
+
+  // ── MyUploadsPane.tsx — signed-in member's own uploaded images ──────────
+  "uploads.title": "My uploads",
+  "uploads.intro":
+    "Every picture you’ve uploaded. Delete any you don’t need — including accidental double-uploads.",
+  "uploads.demoOnly":
+    "Your uploads appear here when you’re signed in to the live app.",
+  "uploads.loading": "Loading your uploads…",
+  "uploads.error": "We couldn’t load your uploads. Try again in a moment.",
+  "uploads.empty": "You haven’t uploaded any pictures yet.",
+  "uploads.inUse": "In use",
+  "uploads.kind.avatar": "Profile photo",
+  "uploads.kind.work-image": "Showcase image",
+  "uploads.kind.story-cover": "Story cover",
+  "uploads.kind.gathering-photo": "Event photo",
+  "uploads.kind.group-avatar": "Group photo",
+  "uploads.kind.listing-photo": "Listing photo",
+  "uploads.usedAs.profile-photo": "your current profile photo",
+  "uploads.usedAs.showcase": "your profile showcase",
+  "uploads.usedAs.story-cover": "a story cover",
+  "uploads.usedAs.event": "an event you host",
+  "uploads.usedAs.group": "a group chat photo",
+  "uploads.usedAs.listing": "a business listing",
+  "uploads.delete.button": "Delete",
+  "uploads.delete.title": "Delete this picture?",
+  "uploads.delete.confirm": "This can’t be undone.",
+  "uploads.delete.warnInUse":
+    "This picture is still in use ({where}). Deleting it will remove it there too, and can’t be undone.",
+  "uploads.delete.cta": "Delete picture",
+  "uploads.delete.cancel": "Cancel",
+  "uploads.delete.toast.success": "Picture deleted.",
+  "uploads.delete.toast.error": "We couldn’t delete that picture. Try again.",
 
   // ── EditProfileSidebar.tsx / editProfileNav.data.tsx ─────────────────────
   "editProfile.nav.group.profile": "Profile",

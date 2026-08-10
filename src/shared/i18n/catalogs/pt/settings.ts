@@ -25,6 +25,7 @@ export const settings: Catalog = {
   "nav.item.profileTheme": "Tema do perfil",
   "nav.item.accessibility": "Acessibilidade",
   "nav.item.interests": "Interesses",
+  "nav.item.uploads": "As minhas imagens",
   "nav.item.simulations": "Simulações",
   "nav.item.deleteAccount": "Eliminar conta",
 
@@ -393,6 +394,39 @@ export const settings: Catalog = {
   "account.disclosure.desc":
     "Encontraste uma falha ou uma fragilidade no QueerPulse? A nossa política de divulgação explica como comunicá-la e o que acontece a seguir.",
   "account.disclosure.cta": "Ler a política",
+
+  // ── MyUploadsPane.tsx — imagens que a própria pessoa enviou ──────────────
+  "uploads.title": "As tuas imagens",
+  "uploads.intro":
+    "Todas as imagens que enviaste. Apaga as que não precisares — incluindo envios duplicados sem querer.",
+  "uploads.demoOnly":
+    "As tuas imagens aparecem aqui quando tens sessão iniciada na app em direto.",
+  "uploads.loading": "A carregar as tuas imagens…",
+  "uploads.error":
+    "Não conseguimos carregar as tuas imagens. Tenta novamente dentro de momentos.",
+  "uploads.empty": "Ainda não enviaste nenhuma imagem.",
+  "uploads.inUse": "Em uso",
+  "uploads.kind.avatar": "Foto de perfil",
+  "uploads.kind.work-image": "Imagem de destaque",
+  "uploads.kind.story-cover": "Capa de matéria",
+  "uploads.kind.gathering-photo": "Foto de convívio",
+  "uploads.kind.group-avatar": "Foto de grupo",
+  "uploads.kind.listing-photo": "Foto do estabelecimento",
+  "uploads.usedAs.profile-photo": "a tua foto de perfil atual",
+  "uploads.usedAs.showcase": "o teu destaque de perfil",
+  "uploads.usedAs.story-cover": "uma capa de matéria",
+  "uploads.usedAs.event": "um evento que organizas",
+  "uploads.usedAs.group": "uma foto de grupo",
+  "uploads.usedAs.listing": "um estabelecimento",
+  "uploads.delete.button": "Apagar",
+  "uploads.delete.title": "Apagar esta imagem?",
+  "uploads.delete.confirm": "Esta ação não pode ser anulada.",
+  "uploads.delete.warnInUse":
+    "Esta imagem ainda está a ser usada ({where}). Apagá-la vai removê-la também daí, e não pode ser anulado.",
+  "uploads.delete.cta": "Apagar imagem",
+  "uploads.delete.cancel": "Cancelar",
+  "uploads.delete.toast.success": "Imagem apagada.",
+  "uploads.delete.toast.error": "Não conseguimos apagar essa imagem. Tenta novamente.",
 
   // ── EditProfileSidebar.tsx / editProfileNav.data.tsx ─────────────────────
   "editProfile.nav.group.profile": "Perfil",
