@@ -93,6 +93,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "fix-uploaded-avatar-not-showing",
+        category: "fix",
+        date: "10 Aug 2026",
+        ...entryKeys("fix-uploaded-avatar-not-showing"),
+      },
+      {
         id: "fix-image-preview-csp",
         category: "fix",
         date: "10 Aug 2026",

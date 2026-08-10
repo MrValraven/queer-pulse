@@ -1902,6 +1902,11 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Abrir o kit de imprensa",
   "changelog.tag.magazineDesk": "Abrir a redação",
 
+  "changelog.entries.fix-uploaded-avatar-not-showing.title":
+    "As fotografias de perfil carregadas passam a aparecer depois de guardar",
+  "changelog.entries.fix-uploaded-avatar-not-showing.body":
+    "Corrigimos um erro em que uma fotografia de perfil que tinhas carregado e guardado aparecia como imagem partida ao recarregar a página. O teu retrato guardado passa a aparecer de forma fiável em todo o lado.",
+
   "changelog.entries.fix-image-preview-csp.title":
     "A pré-visualização da imagem volta a aparecer ao carregar",
   "changelog.entries.fix-image-preview-csp.body":

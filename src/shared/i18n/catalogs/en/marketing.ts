@@ -1850,6 +1850,11 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Open the press kit",
   "changelog.tag.magazineDesk": "Open the desk",
 
+  "changelog.entries.fix-uploaded-avatar-not-showing.title":
+    "Uploaded profile photos now show after saving",
+  "changelog.entries.fix-uploaded-avatar-not-showing.body":
+    "Fixed a bug where a profile photo you'd uploaded and saved appeared as a broken image once the page reloaded. Your saved portrait now displays reliably everywhere.",
+
   "changelog.entries.fix-image-preview-csp.title":
     "Image previews show again when uploading",
   "changelog.entries.fix-image-preview-csp.body":
