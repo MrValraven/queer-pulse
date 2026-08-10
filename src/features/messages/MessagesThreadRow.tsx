@@ -7,6 +7,14 @@ import { ThreadRowMenu } from "./ThreadRowMenu";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
+interface MessagesThreadRowProps {
+  thread: Conversation;
+  activeId: string;
+  readIds: Set<string>;
+  onOpen: (id: string) => void;
+  onRequestDelete: (thread: Conversation) => void;
+}
+
 /**
  * One inbox row: the row `<button>` (avatar + body, unchanged markup) plus a
  * sibling `<ThreadRowMenu>` — split out of `MessagesThreadList` to keep each
@@ -24,13 +32,7 @@ function MessagesThreadRowImpl({
   readIds,
   onOpen,
   onRequestDelete,
-}: {
-  thread: Conversation;
-  activeId: string;
-  readIds: Set<string>;
-  onOpen: (id: string) => void;
-  onRequestDelete: (thread: Conversation) => void;
-}) {
+}: MessagesThreadRowProps) {
   const { t } = useTranslation();
   const isUnread =
     thread.unread && !readIds.has(thread.id) && thread.id !== activeId;
@@ -97,4 +99,31 @@ function MessagesThreadRowImpl({
   );
 }
 
-export const MessagesThreadRow = memo(MessagesThreadRowImpl);
+/**
+ * Every row in the list is handed the SAME `activeId` string and the SAME
+ * `readIds` Set reference — switching the open thread, or marking any ONE
+ * thread read, hands every row a new `readIds` Set identity, which the
+ * default shallow-props memo comparator would see as "changed" for every
+ * row, not just the one whose own state actually flipped. Compare the two
+ * DERIVED booleans this row actually renders from instead of the raw
+ * props, so a row only re-renders when its OWN active/read state changes
+ * (or its own `thread`/callback identities do) — not on every other row's.
+ * (Not a prop-shape refactor — `activeId`/`readIds` stay as-is so this
+ * doesn't ripple into `MessagesSearchResults.tsx`'s call site.)
+ */
+function areRowPropsEqual(
+  previous: MessagesThreadRowProps,
+  next: MessagesThreadRowProps,
+): boolean {
+  if (previous.thread !== next.thread) return false;
+  if (previous.onOpen !== next.onOpen) return false;
+  if (previous.onRequestDelete !== next.onRequestDelete) return false;
+  const wasActive = previous.thread.id === previous.activeId;
+  const isActive = next.thread.id === next.activeId;
+  if (wasActive !== isActive) return false;
+  const wasRead = previous.readIds.has(previous.thread.id);
+  const isRead = next.readIds.has(next.thread.id);
+  return wasRead === isRead;
+}
+
+export const MessagesThreadRow = memo(MessagesThreadRowImpl, areRowPropsEqual);

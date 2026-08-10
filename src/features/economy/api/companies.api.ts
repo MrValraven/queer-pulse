@@ -107,8 +107,11 @@ export async function getCompanies(params: { page?: number } = {}) {
   return toItemsPage(res);
 }
 
-export const getCompany = (slug: string) =>
-  apiGet<CompanyDetailDTO>(`/companies/${slug}`);
+/** GET /companies/:slug — accepts an `AbortSignal` (react-query forwards its
+ *  `queryFn` signal here) so navigating away from a company page mid-fetch
+ *  cancels the underlying request instead of letting it run to completion. */
+export const getCompany = (slug: string, signal?: AbortSignal) =>
+  apiGet<CompanyDetailDTO>(`/companies/${slug}`, undefined, undefined, signal);
 
 export const createCompany = (dto: CreateCompanyDto) =>
   apiPost<CompanyDetailDTO>("/companies", dto);

@@ -140,9 +140,18 @@ export default defineConfig({
         ],
       },
       injectManifest: {
-        // The main entry chunk (~2.77 MB) exceeds Workbox's default 2 MiB
-        // precache cap; `pnpm build` fails without this. (Was under
-        // `workbox.maximumFileSizeToCacheInBytes` in generateSW mode.)
+        // Each precached file (see globPatterns below) must stay under
+        // Workbox's default 2 MiB cap or `pnpm build` fails. (Was under
+        // `workbox.maximumFileSizeToCacheInBytes` in generateSW mode.) This
+        // comment previously claimed the main entry chunk was ~2.77 MB and
+        // drove the override — that's stale: per `pnpm build`'s own chunk
+        // table, the entry chunk is ~433 KB raw / ~126 KB gzip, and no
+        // currently-precached file (entry chunk, vendor-react/-query, CSS,
+        // fonts) comes close to 2 MiB either — the largest today is
+        // vendor-react at ~409 KB raw. Leaving the override in place as
+        // headroom for whichever precached file grows next, not a value
+        // that's load-bearing against today's build; re-check `pnpm build`'s
+        // chunk table before assuming a specific file justifies it.
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
         // Precache diet. The default globs would precache all ~470 built chunks
         // on the first visit (the whole app, ~13 MB). Instead precache only the

@@ -1850,6 +1850,16 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Open the press kit",
   "changelog.tag.magazineDesk": "Open the desk",
 
+  "changelog.entries.fix-image-preview-csp.title":
+    "Image previews show again when uploading",
+  "changelog.entries.fix-image-preview-csp.body":
+    "Fixed a bug where the preview of a photo you'd just picked wouldn't appear while uploading — a security policy was blocking the local preview image. Your selected photo now shows immediately as it uploads.",
+
+  "changelog.entries.use-google-profile-photo.title":
+    "Use your Google photo on your profile",
+  "changelog.entries.use-google-profile-photo.body":
+    "If you signed in with Google and haven't set a profile photo yet, the profile editor now offers a one-tap “Use Google photo” button — so you can fill in your portrait from your Google account without hunting for a file to upload.",
+
   "changelog.entries.skip-link-keyboard-only.title":
     "“Skip to main content” now stays out of the way",
   "changelog.entries.skip-link-keyboard-only.body":

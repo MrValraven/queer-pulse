@@ -452,6 +452,26 @@
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 14px;
 }
+/* The virtualized results grid (`MemberResultsGrid`): a position:relative
+   sizer whose height is the virtualizer's running total, with each row
+   absolutely positioned inside it by its own `top` offset — only the rows
+   near the viewport actually mount, however long the filtered directory
+   gets. `.mGridRow`'s column count is set inline per-render (it tracks the
+   container's measured width, mirroring `.mGrid`'s own auto-fill behavior —
+   see `useMemberDirectoryVirtualizer`). */
+.mGridSizer {
+  position: relative;
+  width: 100%;
+}
+.mGridRow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: grid;
+  gap: 14px;
+  padding-bottom: 14px;
+}
 .mCard {
   padding: 18px 20px;
   background: var(--paper);
@@ -624,10 +644,4 @@
 .loadMore {
   text-align: center;
   padding: 24px 0;
-}
-
-/* Zero-height scroll marker for progressive windowing — reveals the next batch
-   of member cards as it nears the viewport. Never occupies visual space. */
-.sentinel {
-  height: 1px;
 }

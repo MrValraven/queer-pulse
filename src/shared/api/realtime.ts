@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import type { QueryClient } from "@tanstack/react-query";
-import { io, type Socket } from "socket.io-client";
+import type { Socket } from "socket.io-client";
 import { queryClient } from "./queryClient";
 import {
   patchConversationPreview,
@@ -71,6 +71,11 @@ function realtimeUrl(): string | null {
  */
 class RealtimeClient {
   private socket: Socket<ServerListeners, ClientEmitters> | null = null;
+  /** True while the dynamic `import("socket.io-client")` inside `connect()` is
+   *  in flight — guards the gap where `this.socket` is still null so a second
+   *  `connect()` call during that gap doesn't kick off a duplicate import/socket,
+   *  and lets `dispose()` cancel a connect that hasn't resolved yet. */
+  private connecting = false;
   private listeners = new Set<(connected: boolean) => void>();
   private url: string;
   private qc: QueryClient;
@@ -177,8 +182,27 @@ class RealtimeClient {
     this.socket?.emit("typing", { conversationId, isTyping });
   }
 
+  /**
+   * Opens the socket. Fire-and-forget (the caller — the provider's connect
+   * effect — isn't async): the actual work is in `connectAsync`, which
+   * dynamically imports `socket.io-client` first so that ~12.7KB gzip module
+   * is only ever pulled into the bundle for a page that's actually going to
+   * open a socket (signed-in, live mode, a consumer has called `request()`) —
+   * not preloaded for every logged-out/demo/marketing visitor.
+   */
   connect(): void {
-    if (this.socket) return;
+    if (this.socket || this.connecting) return;
+    this.connecting = true;
+    void this.connectAsync();
+  }
+
+  private async connectAsync(): Promise<void> {
+    const { io } = await import("socket.io-client");
+    // `dispose()` may have run while the import was in flight (e.g. a sign-out
+    // that unmounts every socket consumer mid-load) — bail rather than opening
+    // a socket nobody wants anymore.
+    if (!this.connecting) return;
+    this.connecting = false;
     const socket: Socket<ServerListeners, ClientEmitters> = io(this.url, {
       withCredentials: true,
       transports: ["websocket"],
@@ -285,8 +309,31 @@ class RealtimeClient {
     // to patch into `["conversations"]` for either side of this frame —
     // deliberately no handler here (was a redundant blanket invalidate that
     // doubled the GET /conversations fired by useMarkRead's own mutation).
-    socket.on("notification:new", () => {
-      void this.qc.invalidateQueries({ queryKey: ["notifications"] });
+    // A notification arrived for us. This used to be a single blanket
+    // `invalidateQueries(["notifications"])` — a PREFIX match that ALSO caught
+    // (and refetched) the nav bell's isolated unread-count query, doubling the
+    // network cost of every single notification. Split instead: the frame
+    // already carries the full notification (and a freshly-created one is
+    // always unread — see `RealtimeNotification`'s note in contracts/realtime.ts),
+    // so bump the badge's cache LOCALLY with no network; only the feed (which
+    // needs `t`/`fmt` translation this class can't supply) genuinely needs a
+    // refetch, scoped to its OWN key prefix.
+    socket.on("notification:new", ({ notification }) => {
+      if (!notification.read) {
+        // Matches useUnreadCount.ts's `["notifications", "unread-count",
+        // demoMode]` key exactly. The socket only ever exists when
+        // `!demoMode` (RealtimeProvider's `active` gate), so `demoMode` is
+        // always `false` here.
+        this.qc.setQueryData<number>(
+          ["notifications", "unread-count", false],
+          (previous) => (previous ?? 0) + 1,
+        );
+      }
+      // Matches useNotifications.ts's `["notifications", demoMode, unreadOnly,
+      // language]` key as a PREFIX, scoped to `demoMode: false` — this can
+      // never also match (and re-fetch) the unread-count key above, whose
+      // second element is the string `"unread-count"`, not `false`.
+      void this.qc.invalidateQueries({ queryKey: ["notifications", false] });
     });
     // A new conversation (a group) the member was just added to — their inbox
     // doesn't know about it yet, so refetch the list. The member isn't in the
@@ -407,6 +454,9 @@ class RealtimeClient {
   }
 
   dispose(): void {
+    // Cancel a `connect()` whose dynamic import hasn't resolved yet — see the
+    // guard at the top of `connectAsync`.
+    this.connecting = false;
     this.listeners.clear();
     this.activeConversationId = null;
     this.typingHandlers.clear();

@@ -33,8 +33,11 @@ export function useSimilarListings(
     enabled: enabled && !demoMode,
     // A stale look-alike list is harmless; don't refetch aggressively.
     staleTime: 60_000,
-    queryFn: () =>
-      getSimilarListings(debouncedName, coords ?? undefined),
+    // Forward react-query's own cancellation signal into the fetch — a fast
+    // retype (new `debouncedName` → new queryKey) cancels the previous
+    // keystroke's request at the network layer, not just in the query cache.
+    queryFn: ({ signal }) =>
+      getSimilarListings(debouncedName, coords ?? undefined, signal),
   });
 
   if (!enabled) return [];

@@ -93,6 +93,18 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "fix-image-preview-csp",
+        category: "fix",
+        date: "10 Aug 2026",
+        ...entryKeys("fix-image-preview-csp"),
+      },
+      {
+        id: "use-google-profile-photo",
+        category: "feature",
+        date: "10 Aug 2026",
+        ...entryKeys("use-google-profile-photo"),
+      },
+      {
         id: "skip-link-keyboard-only",
         category: "fix",
         date: "10 Aug 2026",

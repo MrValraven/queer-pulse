@@ -4,7 +4,9 @@ import "./styles/index.css";
 import { App } from "./app/App.tsx";
 import { initObservability } from "./shared/observability/sentry";
 
-initObservability();
+// Fire-and-forget: the dynamic `@sentry/react` import inside only resolves
+// when a DSN + prod build both hold, and must never block first paint.
+void initObservability();
 
 // Stale-deploy recovery. After a new build ships, the hashed filenames of the
 // old lazy-route chunks no longer exist, so a dynamic import 404s and the app

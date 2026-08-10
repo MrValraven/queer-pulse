@@ -142,7 +142,11 @@ export async function getJobs(
   return toItemsPage(res);
 }
 
-export const getJob = (slug: string) => apiGet<JobDetailDTO>(`/jobs/${slug}`);
+/** GET /jobs/:slug — accepts an `AbortSignal` (react-query forwards its
+ *  `queryFn` signal here) so navigating away from a job detail page mid-fetch
+ *  cancels the underlying request instead of letting it run to completion. */
+export const getJob = (slug: string, signal?: AbortSignal) =>
+  apiGet<JobDetailDTO>(`/jobs/${slug}`, undefined, undefined, signal);
 
 export const createJob = (dto: CreateJobDto) =>
   apiPost<JobDetailDTO>("/jobs", dto);

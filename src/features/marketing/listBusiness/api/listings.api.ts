@@ -85,16 +85,26 @@ export interface SimilarListing {
  * by name (fuzzy) and/or proximity to the given coordinates. Replaces the old
  * hardcoded 6-place seed match. Returns at most five.
  */
+/** GET /listings/similar?name=&lat=&lng= — accepts an `AbortSignal` (react-query
+ *  forwards its `queryFn` signal here) so a fast retype in the wizard's name
+ *  field cancels the previous keystroke's still-in-flight request instead of
+ *  letting it run to completion. */
 export function getSimilarListings(
   name: string,
   coords?: { latitude: number; longitude: number },
+  signal?: AbortSignal,
 ): Promise<SimilarListing[]> {
   const params = new URLSearchParams({ name });
   if (coords) {
     params.set("lat", String(coords.latitude));
     params.set("lng", String(coords.longitude));
   }
-  return apiGet<SimilarListing[]>(`/listings/similar?${params.toString()}`);
+  return apiGet<SimilarListing[]>(
+    `/listings/similar?${params.toString()}`,
+    undefined,
+    undefined,
+    signal,
+  );
 }
 
 /** GET /listings/mine?page= — the caller's own submitted listings. */

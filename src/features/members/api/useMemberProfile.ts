@@ -16,13 +16,16 @@ export function useMemberProfile(slug: string | undefined) {
   return useQuery<MemberProfileResult>({
     queryKey: ["profile", demoMode, slug],
     enabled: Boolean(slug),
-    queryFn: async () => {
+    // Forward react-query's own cancellation signal into the fetch — navigating
+    // away from the profile page mid-fetch cancels the request at the network
+    // layer, not just in the query cache.
+    queryFn: async ({ signal }) => {
       if (!slug) return { member: null, limited: false };
       if (demoMode) {
         const { MEMBERS } = await import("../data/members");
         return { member: MEMBERS[slug] ?? null, limited: false };
       }
-      const dto = await getProfile(slug);
+      const dto = await getProfile(slug, signal);
       return { member: profileToMember(dto), limited: dto.limited };
     },
   });

@@ -106,6 +106,13 @@ export function GifPicker({ onPick, onClose }: GifPickerProps) {
   );
 }
 
+/** Fallback intrinsic size for a GIF result whose provider payload omits
+ *  width/height — matches `.tile`'s own `aspect-ratio: 1 / 1` (GifPicker.module.css)
+ *  so the `<img>` always carries a concrete, correctly-proportioned intrinsic
+ *  size instead of `undefined`, which would otherwise let the browser's
+ *  default (no-ratio) box reflow once the image loads. */
+const FALLBACK_TILE_DIMENSION = 160;
+
 /** The 2-column grid of GIF thumbnails. Each tile is a real button with the
  *  GIF's description as its accessible name; intrinsic width/height are set so
  *  the grid reserves space (no layout shift). */
@@ -129,8 +136,8 @@ function GifGrid({
           <img
             className={styles.tileImage}
             src={result.attachment.previewUrl}
-            width={result.attachment.width || undefined}
-            height={result.attachment.height || undefined}
+            width={result.attachment.width || FALLBACK_TILE_DIMENSION}
+            height={result.attachment.height || FALLBACK_TILE_DIMENSION}
             loading="lazy"
             alt=""
           />

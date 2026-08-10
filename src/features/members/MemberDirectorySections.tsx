@@ -20,11 +20,8 @@ import {
   type MemberCard,
 } from "./memberDirectoryFilter.data";
 import { type SectionKey } from "./FilterSection";
-import {
-  FiltersSidebar,
-  MemberResultCard,
-  MemberResultSkeleton,
-} from "./MemberFilterCards";
+import { FiltersSidebar, MemberResultSkeleton } from "./MemberFilterCards";
+import { MemberResultsGrid } from "./MemberResultsGrid";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 /** Remove one value from whichever filter group a chip belongs to. */
@@ -109,9 +106,6 @@ export interface MemberResultsColumnProps {
   onOpenFilters: () => void;
   loading: boolean;
   shown: MemberCard[];
-  shownWindowed: MemberCard[];
-  sentinelRef: React.RefObject<HTMLDivElement | null>;
-  hasMoreWindowed: boolean;
   hasActiveFilters: boolean;
   totalMembers: number;
   filteredCount: number;
@@ -135,9 +129,6 @@ export function MemberResultsColumn({
   onOpenFilters,
   loading,
   shown,
-  shownWindowed,
-  sentinelRef,
-  hasMoreWindowed,
   hasActiveFilters,
   totalMembers,
   filteredCount,
@@ -243,25 +234,7 @@ export function MemberResultsColumn({
           />
         )
       ) : (
-        <>
-          <div className={styles.mGrid}>
-            {shownWindowed.map((member, index) => (
-              <FadeIn
-                key={`${member.slug}-${index}`}
-                delay={Math.min(index, 9) * 85}
-              >
-                <MemberResultCard member={member} />
-              </FadeIn>
-            ))}
-          </div>
-          {hasMoreWindowed && (
-            <div
-              ref={sentinelRef}
-              className={styles.sentinel}
-              aria-hidden="true"
-            />
-          )}
-        </>
+        <MemberResultsGrid members={shown} />
       )}
 
       {hasNextPage && (

@@ -104,6 +104,14 @@ export function GatheringPhotosLive({
                 src={photo.url}
                 alt={photo.caption ?? ""}
                 loading="lazy"
+                // The API never returns intrinsic dimensions for an uploaded
+                // photo, so this is a fallback intrinsic-size hint (matches
+                // the tile's 1:1 `.pic` aspect-ratio in the CSS module) —
+                // belt-and-suspenders on top of the real CLS guard, which is
+                // `.pic`'s CSS `aspect-ratio` reserving the box before the
+                // absolutely-positioned (IMG_FILL) image ever paints.
+                width={400}
+                height={400}
                 style={IMG_FILL}
               />
             </a>

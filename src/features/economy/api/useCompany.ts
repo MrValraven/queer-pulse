@@ -29,7 +29,10 @@ export function useCompany(slug: string | undefined) {
   return useQuery<CompanyResult>({
     queryKey: economyKeys.company(slug, demoMode, language),
     enabled: Boolean(slug),
-    queryFn: async () => {
+    // Forward react-query's own cancellation signal into the fetch — navigating
+    // away from the company page mid-fetch cancels the request at the network
+    // layer, not just in the query cache.
+    queryFn: async ({ signal }) => {
       if (!slug) return { profile: null, openRoles: null, isOwner: false };
       if (demoMode) {
         // Demo-only mock — loaded on demand so it never ships in the live bundle.
@@ -40,7 +43,7 @@ export function useCompany(slug: string | undefined) {
           isOwner: false,
         };
       }
-      const dto = await getCompany(slug);
+      const dto = await getCompany(slug, signal);
       return {
         profile: companyDetailToProfile(dto),
         openRoles: dto.openRoles.map((jobCard) =>

@@ -22,14 +22,17 @@ export function useJob(slug: string | undefined) {
   return useQuery<Job | null>({
     queryKey: economyKeys.job(slug, demoMode, language),
     enabled: Boolean(slug),
-    queryFn: async () => {
+    // Forward react-query's own cancellation signal into the fetch — navigating
+    // away from the job page mid-fetch cancels the request at the network
+    // layer, not just in the query cache.
+    queryFn: async ({ signal }) => {
       if (!slug) return null;
       if (demoMode) {
         // Demo-only mock — loaded on demand so it never ships in the live bundle.
         const { JOBS } = await import("../jobs.data");
         return JOBS.find((j) => j.slug === slug) ?? null;
       }
-      return jobDetailToJob(await getJob(slug), t, fmt);
+      return jobDetailToJob(await getJob(slug, signal), t, fmt);
     },
   });
 }

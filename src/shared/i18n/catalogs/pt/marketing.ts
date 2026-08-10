@@ -1902,6 +1902,16 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Abrir o kit de imprensa",
   "changelog.tag.magazineDesk": "Abrir a redação",
 
+  "changelog.entries.fix-image-preview-csp.title":
+    "A pré-visualização da imagem volta a aparecer ao carregar",
+  "changelog.entries.fix-image-preview-csp.body":
+    "Corrigimos um erro em que a pré-visualização de uma fotografia acabada de escolher não aparecia durante o carregamento — uma política de segurança estava a bloquear a imagem de pré-visualização local. A fotografia escolhida passa a aparecer de imediato enquanto carrega.",
+
+  "changelog.entries.use-google-profile-photo.title":
+    "Usa a tua fotografia da Google no teu perfil",
+  "changelog.entries.use-google-profile-photo.body":
+    "Se entraste com a Google e ainda não escolheste uma fotografia de perfil, o editor de perfil passa a mostrar um botão “Usar fotografia da Google” — para preencheres o teu retrato a partir da conta Google com um só toque, sem teres de procurar um ficheiro para carregar.",
+
   "changelog.entries.skip-link-keyboard-only.title":
     "O atalho “Saltar para o conteúdo” deixou de aparecer sem razão",
   "changelog.entries.skip-link-keyboard-only.body":

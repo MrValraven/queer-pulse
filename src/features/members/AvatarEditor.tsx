@@ -1,7 +1,10 @@
 import { useRef, useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
+import { FcGoogle } from "react-icons/fc";
 import { ImageSlot, type ImageSlotTint } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useAuth } from "../../app/providers/authContext";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { ImageProcessingError } from "./api/uploadProcessing";
 import { useUploadImage } from "./api/useUploadImage";
 import styles from "./ProfileEdit.module.css";
@@ -32,12 +35,28 @@ export function AvatarEditor({
   variant?: "card" | "circle";
 }) {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const { showToast } = useToast();
   const fileRef = useRef<HTMLInputElement>(null);
   const uploadAvatar = useUploadImage("avatar");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
+
+  // The avatar captured from the member's Google sign-in, offered as a one-tap
+  // fill whenever they have no photo set yet.
+  const googlePhoto = user?.profile.avatarUrl ?? undefined;
+
+  function applyGooglePhoto() {
+    if (!googlePhoto) return;
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+    }
+    onChange(googlePhoto);
+    showToast(t("members:avatar.googleAdded"), "success");
+  }
 
   async function pick(file: File) {
     setError(null);
@@ -81,6 +100,16 @@ export function AvatarEditor({
             ? t("members:avatar.change")
             : t("members:avatar.add")}
       </button>
+      {!displayedPhoto && googlePhoto && !uploading && (
+        <button
+          type="button"
+          className={styles.avatarBtn}
+          onClick={applyGooglePhoto}
+        >
+          <FcGoogle size={15} />
+          {t("members:avatar.useGoogle")}
+        </button>
+      )}
       {displayedPhoto && !uploading && (
         <button
           type="button"

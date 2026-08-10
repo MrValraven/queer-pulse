@@ -2,10 +2,9 @@ import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiAlertTriangle } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { EmptyState, PullToRefresh } from "../../shared/components/ui";
+import { EmptyState } from "../../shared/components/ui";
 import {
   useCountUp,
-  useIncrementalList,
   useLocalStorage,
   useMediaQuery,
   useSimulatedLoad,
@@ -25,7 +24,6 @@ import {
 } from "./memberDirectoryFilter.data";
 import { useMembers } from "./api/useMembers";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { FiltersSidebar } from "./MemberFilterCards";
 import {
   ALL_SECTIONS_COLLAPSED,
   isSectionOpenMap,
@@ -35,8 +33,8 @@ import {
   MemberDirectoryHeader,
   MemberFiltersSheet,
   MemberHeaderSkeleton,
-  MemberResultsColumn,
 } from "./MemberDirectorySections";
+import { MemberDirectoryLayout } from "./MemberDirectoryLayout";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 export function MemberDirectoryFilterPage() {
@@ -131,18 +129,13 @@ export function MemberDirectoryFilterPage() {
   // Server pagination drives "load more" now; client-side filtering/sorting runs
   // over every page fetched so far. Demo mode returns the whole MEMBERS list as a
   // single page, so `hasNextPage` is false and the full mock list renders.
+  // A filter run can hold every fetched page's cards at once; `MemberResultsGrid`
+  // (via `useMemberDirectoryVirtualizer`) mounts only the rows near the
+  // viewport regardless of how long `shown` is, so no client-side windowing is
+  // needed here — this used to cap an initial slice with `useIncrementalList`
+  // and grow it via a scroll sentinel, which only capped the *initial* mount,
+  // not the steady-state DOM size once fully scrolled.
   const shown = filtered;
-
-  // Window the client-rendered slice: a filter run can hold every fetched page
-  // at once, so render a capped batch and reveal more as a sentinel nears the
-  // viewport instead of mounting hundreds of cards up front. The cap resets
-  // whenever `shown` changes identity (any filter/search/sort), so a new result
-  // always starts at the top.
-  const {
-    visible: shownWindowed,
-    sentinelRef,
-    hasMore: hasMoreWindowed,
-  } = useIncrementalList(shown, { initial: 18, step: 18 });
 
   // Keep the profession selection coherent with the chosen fields.
   const applyFilters = (next: FilterState) => {
@@ -194,70 +187,31 @@ export function MemberDirectoryFilterPage() {
           />
         )}
 
-        <div
-          className={[styles.grid, !isMobile && !panelOpen && styles.gridFull]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          {!isMobile && (
-            /* Kept mounted so the sidebar can slide/fade out rather than pop.
-               The column is the sticky, clipping container (grid track eases to
-               0), and `inert` drops the hidden filters from tab/AT reach. */
-            <div
-              className={[
-                styles.filtersCol,
-                !panelOpen && styles.filtersColHidden,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              inert={!panelOpen || undefined}
-            >
-              <FiltersSidebar
-                filters={filters}
-                members={sourceMembers}
-                appliedCount={chips.length}
-                onChange={applyFilters}
-                onClearAll={clearAllFilters}
-                sectionsOpen={sectionsOpen}
-                onToggleSection={toggleSection}
-              />
-            </div>
-          )}
-
-          {/* `queryKey: ["members"]` matches useMembers' inline
-              `["members", demoMode, params]` as a prefix — invalidates every
-              filter/sort/mode variant, so a pull refresh refetches the
-              directory as currently filtered. */}
-          <PullToRefresh
-            onRefresh={() =>
-              queryClient.invalidateQueries({ queryKey: ["members"] })
-            }
-          >
-            <MemberResultsColumn
-              filters={filters}
-              sort={sort}
-              onSort={setSort}
-              chips={chips}
-              onApplyFilters={applyFilters}
-              onResetAll={resetAll}
-              isMobile={isMobile}
-              panelOpen={panelOpen}
-              onTogglePanel={() => setPanelOpen((prev) => !prev)}
-              onOpenFilters={() => setFiltersOpen(true)}
-              loading={loading}
-              shown={shown}
-              shownWindowed={shownWindowed}
-              sentinelRef={sentinelRef}
-              hasMoreWindowed={hasMoreWindowed}
-              hasActiveFilters={hasActiveFilters}
-              totalMembers={totalMembers}
-              filteredCount={filtered.length}
-              hasNextPage={hasNextPage}
-              isFetchingNextPage={isFetchingNextPage}
-              onFetchNextPage={fetchNextPage}
-            />
-          </PullToRefresh>
-        </div>
+        <MemberDirectoryLayout
+          filters={filters}
+          sourceMembers={sourceMembers}
+          sort={sort}
+          onSort={setSort}
+          chips={chips}
+          onApplyFilters={applyFilters}
+          onClearAllFilters={clearAllFilters}
+          onResetAll={resetAll}
+          isMobile={isMobile}
+          panelOpen={panelOpen}
+          onTogglePanel={() => setPanelOpen((prev) => !prev)}
+          onOpenFilters={() => setFiltersOpen(true)}
+          sectionsOpen={sectionsOpen}
+          onToggleSection={toggleSection}
+          loading={loading}
+          shown={shown}
+          hasActiveFilters={hasActiveFilters}
+          totalMembers={totalMembers}
+          filteredCount={filtered.length}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          onFetchNextPage={fetchNextPage}
+          onRefresh={() => queryClient.invalidateQueries({ queryKey: ["members"] })}
+        />
       </div>
 
       {isMobile && filtersOpen && (

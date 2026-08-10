@@ -3,13 +3,17 @@
  * codebase never imports a vendor SDK directly — it calls `captureException`
  * and friends here.
  *
- * Wired to `@sentry/react`. The SDK is initialised at startup ONLY in a
- * production build that has a DSN configured; otherwise nothing is loaded and
- * every function is a safe no-op. Even when initialised, no event leaves the
- * browser until the member grants the `monitoring` consent category — the
- * `beforeSend` hook drops everything while `enabled` is false, and
- * `setMonitoringConsent` (called by the ConsentProvider, spec 07) flips it. This
- * keeps live consent toggles working with no re-init and no page reload.
+ * Wired to `@sentry/react`. The SDK module itself is only fetched/parsed via a
+ * dynamic `import("@sentry/react")` inside the guarded `initObservability()`
+ * path — never at module scope — so dev builds and prod builds with no DSN
+ * configured never pay for downloading or parsing the SDK at all. It is
+ * initialised at startup ONLY in a production build that has a DSN
+ * configured; otherwise nothing is loaded and every function is a safe
+ * no-op. Even when initialised, no event leaves the browser until the member
+ * grants the `monitoring` consent category — the `beforeSend` hook drops
+ * everything while `enabled` is false, and `setMonitoringConsent` (called by
+ * the ConsentProvider, spec 07) flips it. This keeps live consent toggles
+ * working with no re-init and no page reload.
  *
  * Errors only: no Session Replay, no performance tracing, no default PII. The
  * only user context ever attached is an opaque hashed id via `setMonitoringUser`.
@@ -22,9 +26,17 @@
  * still report but frames stay minified.
  */
 
-import * as Sentry from "@sentry/react";
+import type * as Sentry from "@sentry/react";
 
 type Extra = Record<string, unknown>;
+
+/**
+ * Holds the resolved SDK module once `initObservability()` has dynamically
+ * imported it. Every other exported function reads through this instead of a
+ * static binding, so nothing here forces the module to be fetched/parsed
+ * outside the guarded (DSN + PROD) path.
+ */
+let sentryModule: typeof Sentry | null = null;
 
 const DSN: string | undefined = import.meta.env.VITE_SENTRY_DSN as
   | string
@@ -43,12 +55,20 @@ export function setMonitoringConsent(granted: boolean): void {
   // is enough to start/stop transmission live.
 }
 
-/** Single init entry point, called from main.tsx before render. */
-export function initObservability(): void {
+/**
+ * Single init entry point, called from main.tsx before render. Async so the
+ * `@sentry/react` module is only fetched once the DSN+PROD guard passes —
+ * the call site fires this without awaiting it, so first paint never blocks
+ * on the dynamic import.
+ */
+export async function initObservability(): Promise<void> {
   // Only stand up the SDK in a production build with a DSN. In dev, or with no
   // DSN, there is nothing to send — never load the transport or global handlers.
   if (initialised || !DSN || !import.meta.env.PROD) return;
   initialised = true;
+
+  const Sentry = await import("@sentry/react");
+  sentryModule = Sentry;
 
   Sentry.init({
     dsn: DSN,
@@ -66,12 +86,12 @@ export function initObservability(): void {
 
 /** Report an error to the monitor. No-op until wired / until consent. */
 export function captureException(error: unknown, extra?: Extra): void {
-  if (!enabled) return;
-  Sentry.captureException(error, extra ? { extra } : undefined);
+  if (!enabled || !sentryModule) return;
+  sentryModule.captureException(error, extra ? { extra } : undefined);
 }
 
 /** Attach an opaque, non-PII user id (never email/handle). Null clears it. */
 export function setMonitoringUser(hashedId: string | null): void {
-  if (!enabled) return;
-  Sentry.setUser(hashedId ? { id: hashedId } : null);
+  if (!enabled || !sentryModule) return;
+  sentryModule.setUser(hashedId ? { id: hashedId } : null);
 }

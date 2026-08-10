@@ -201,8 +201,11 @@ export function getMembers(
   return apiGet<MembersPage>(`/members${qs ? `?${qs}` : ""}`);
 }
 
-export const getProfile = (slug: string) =>
-  apiGet<ProfileDTO>(`/profiles/${slug}`, undefined, validateProfile);
+/** GET /profiles/:slug — accepts an `AbortSignal` (react-query forwards its
+ *  `queryFn` signal here) so navigating away from a member profile mid-fetch
+ *  cancels the underlying request instead of letting it run to completion. */
+export const getProfile = (slug: string, signal?: AbortSignal) =>
+  apiGet<ProfileDTO>(`/profiles/${slug}`, undefined, validateProfile, signal);
 
 /** Fields the current member can edit on their own profile (PATCH /profiles/me). */
 export interface UpdateProfileDTO {

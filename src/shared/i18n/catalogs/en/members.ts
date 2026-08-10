@@ -40,6 +40,8 @@ export const members: Catalog = {
   "avatar.change": "Change photo",
   "avatar.add": "Add photo",
   "avatar.remove": "Remove photo",
+  "avatar.useGoogle": "Use Google photo",
+  "avatar.googleAdded": "Added your Google photo.",
 
   // ── WorkItemEditor ─────────────────────────────────────────────────────────
   "workItem.error.generic": "We couldn't add that image. Please try again.",

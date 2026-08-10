@@ -1,4 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  type QueryClient,
+} from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   patchConversationPreview,
@@ -142,14 +146,31 @@ export function useLeaveGroup() {
   });
 }
 
+/** Patch the returned, already-fresh group `Conversation` into every cached
+ *  `["conversations"]` list in place — instead of `invalidateQueries`, which
+ *  would throw the returned DTO away and pay for a full `GET /conversations`
+ *  round-trip the mutation's own response already made unnecessary. A no-op if
+ *  the row isn't cached yet (falls back to the next real fetch). */
+function patchConversationInList(
+  queryClient: QueryClient,
+  updated: Conversation,
+): void {
+  queryClient.setQueriesData<Conversation[]>(
+    { queryKey: ["conversations"] },
+    (previous) =>
+      previous?.map((conversation) =>
+        conversation.id === updated.id ? updated : conversation,
+      ),
+  );
+}
+
 /**
  * Group management (feature #17 Phase 2). Each live mutation calls the API — the
  * SERVER re-checks the caller's role on every one, so the client's can-flags are
- * only a UI hint — then invalidates `["conversations"]` (the realtime layer also
- * fans a refetch to affected members). Demo mode is a local no-op: the returned
- * null tells the controller to simulate the change on the in-memory mock group.
- * Live mutations return the updated group view so the controller patches it in
- * without waiting for the refetch.
+ * only a UI hint — then patches the returned group `Conversation` straight into
+ * the cached `["conversations"]` list (the realtime layer also fans the same
+ * frame to affected members). Demo mode is a local no-op: the returned null
+ * tells the controller to simulate the change on the in-memory mock group.
  */
 export function useAddGroupMembers() {
   const { demoMode } = useDemoMode();
@@ -163,9 +184,9 @@ export function useAddGroupMembers() {
       if (demoMode) return null;
       return conversationToView(await addGroupMembers(conversationId, memberHandles));
     },
-    onSuccess: () => {
-      if (demoMode) return;
-      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    onSuccess: (updated) => {
+      if (demoMode || !updated) return;
+      patchConversationInList(queryClient, updated);
     },
   });
 }
@@ -182,9 +203,9 @@ export function useRemoveGroupMember() {
       if (demoMode) return null;
       return conversationToView(await removeGroupMember(conversationId, userId));
     },
-    onSuccess: () => {
-      if (demoMode) return;
-      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    onSuccess: (updated) => {
+      if (demoMode || !updated) return;
+      patchConversationInList(queryClient, updated);
     },
   });
 }
@@ -203,9 +224,9 @@ export function useChangeGroupMemberRole() {
         await changeGroupMemberRole(conversationId, userId, role),
       );
     },
-    onSuccess: () => {
-      if (demoMode) return;
-      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    onSuccess: (updated) => {
+      if (demoMode || !updated) return;
+      patchConversationInList(queryClient, updated);
     },
   });
 }
@@ -224,9 +245,9 @@ export function useUpdateGroup() {
         await updateGroup(conversationId, { title, avatarUrl }),
       );
     },
-    onSuccess: () => {
-      if (demoMode) return;
-      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    onSuccess: (updated) => {
+      if (demoMode || !updated) return;
+      patchConversationInList(queryClient, updated);
     },
   });
 }
