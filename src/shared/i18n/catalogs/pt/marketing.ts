@@ -2710,10 +2710,6 @@ export const marketing: Catalog = {
     "Ajuda “Sobre este ecrã” em cada funcionalidade",
   "changelog.entries.screen-help-signs.body":
     "Novo numa parte da QueerPulse? Procura o pequeno botão de informação ⓘ ao lado do título do ecrã. Toca nele e um cartão curto e amigável explica para que serve o ecrã, como o usar e dá um exemplo concreto — para teres sempre a noção de como cada funcionalidade encaixa na plataforma. Está presente nos ecrãs principais (Membros, Comunidades, Fórum, Eventos, Mensagens, o diretório local, alojamento, trabalho, cultura, definições e mais), em português e inglês, e nunca atrapalha — abre-o quando quiseres, ignora-o quando não precisares.",
-  "changelog.entries.crisp-profile-photos.title":
-    "Fotos de perfil mais nítidas",
-  "changelog.entries.crisp-profile-photos.body":
-    "As fotos de perfil na página de um membro estavam a ser carregadas num tamanho pequeno e depois esticadas para preencher o retrato grande, o que deixava algumas com um aspeto suave ou desfocado. Agora pedimos a foto na resolução que a página realmente mostra, por isso as fotos de perfil aparecem nítidas.",
   "changelog.entries.performance-cost-hardening.title":
     "Pesquisa mais rápida, uploads mais leves e páginas movimentadas mais estáveis",
   "changelog.entries.performance-cost-hardening.body":

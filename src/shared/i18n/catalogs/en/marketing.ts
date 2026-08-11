@@ -2657,10 +2657,6 @@ export const marketing: Catalog = {
     "“About this screen” help on every feature",
   "changelog.entries.screen-help-signs.body":
     "New to a part of QueerPulse? Look for the small ⓘ info button next to a screen's title. Tap it and a short, friendly card explains what the screen is for, how to use it, and gives one concrete example — so you always have a sense of how each feature fits into the platform. It's there across the main screens (Members, Communities, Forum, Events, Messages, the local directory, housing, work, culture, settings and more), in both English and Portuguese, and it never gets in the way — open it when you want it, ignore it when you don't.",
-  "changelog.entries.crisp-profile-photos.title":
-    "Sharper profile photos",
-  "changelog.entries.crisp-profile-photos.body":
-    "Profile pictures on a member's page were being fetched at a small size and then stretched to fill the big portrait, which left some looking soft or blurry. We now request the photo at the resolution the page actually shows, so profile pictures render crisp.",
   "changelog.entries.performance-cost-hardening.title":
     "Faster search, lighter uploads and steadier busy pages",
   "changelog.entries.performance-cost-hardening.body":
