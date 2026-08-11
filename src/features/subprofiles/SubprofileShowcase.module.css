@@ -62,9 +62,16 @@
 
 .feature {
   position: relative;
+  /* Single source for the card's inset — the bleeding cover cancels exactly
+     this much on each side (see `.coverBleed`), so they can never drift apart. */
+  --feature-pad: clamp(20px, 3vw, 30px);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
-  padding: clamp(20px, 3vw, 30px);
+  /* Clip a full-bleed cover into the card's rounded top corners. Safe: the
+     hover lift/shadow live on `.feature` itself (not descendants), and the
+     switch list is a separate grid item, so nothing else is affected. */
+  overflow: hidden;
+  padding: var(--feature-pad);
   background:
     radial-gradient(
       140px 140px at 88% 4%,

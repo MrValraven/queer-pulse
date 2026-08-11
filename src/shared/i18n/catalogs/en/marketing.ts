@@ -1850,6 +1850,11 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Open the press kit",
   "changelog.tag.magazineDesk": "Open the desk",
 
+  "changelog.entries.persona-preview-banner-bleed.title":
+    "Persona banners now run edge-to-edge on your profile",
+  "changelog.entries.persona-preview-banner-bleed.body":
+    "The cover on the “Also working as” card now fills the card edge-to-edge, the same full-bleed look your personas already have on their own pages — so your profile and each persona page feel like one piece.",
+
   "changelog.entries.magazine-archive-truthful-hero.title":
     "The magazine archive shows only real editions now",
   "changelog.entries.magazine-archive-truthful-hero.body":

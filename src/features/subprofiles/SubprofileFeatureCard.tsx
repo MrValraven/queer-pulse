@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Avatar, ImageSlot, Tag, TagRow } from "../../shared/components/ui";
 import { initialsFromName } from "../../shared/lib/initials";
@@ -92,6 +92,23 @@ export function SubprofileFeatureCard({
   // The landscape layout only makes sense with a cover to anchor the side
   // panel — a "wide" persona with no cover quietly reads as compact.
   const isWide = variant === "wide" && Boolean(coverHref);
+  // The compact hero's cover always runs edge-to-edge, cancelling the card
+  // padding and squaring its corners (clipped back into the card's rounded top
+  // by `.feature`'s overflow) — the same full-bleed band as the persona page.
+  // Only the wide/landscape layout opts out, where the cover is a full-height
+  // side panel rather than a top band.
+  const coverBleed = !isWide;
+  // Cancel exactly `.feature`'s padding on three sides so the band reaches the
+  // card edge. `align-self: stretch` + `width: auto` (below) lets the cover
+  // fill the padding box; the shared `--feature-pad` var keeps this in lockstep
+  // with the card's actual inset.
+  const bleedStyle: CSSProperties | undefined = coverBleed
+    ? {
+        alignSelf: "stretch",
+        marginTop: "calc(-1 * var(--feature-pad))",
+        marginInline: "calc(-1 * var(--feature-pad))",
+      }
+    : undefined;
 
   return (
     <article
@@ -112,11 +129,19 @@ export function SubprofileFeatureCard({
             src={coverHref}
             alt=""
             tint="plum"
-            radius={14}
+            // Bleed squares the corners (the card's rounded top re-clips it);
+            // contained keeps the inset rounded strip.
+            radius={coverBleed ? 0 : 14}
+            // Bleed drops `width: 100%` (which negative margins would only
+            // offset, not widen) in favour of `align-self: stretch` + auto,
+            // set together in `bleedStyle`.
+            width={coverBleed ? "auto" : "100%"}
             // Wide: fill the grid cell's height as a side panel (the details
-            // column sets the height, the stretched cell matches it). Compact:
-            // the original fixed strip on top.
-            height={isWide ? "100%" : 110}
+            // column sets the height, the stretched cell matches it). A bled
+            // band gets a touch more height for presence; contained keeps the
+            // original fixed strip.
+            height={isWide ? "100%" : coverBleed ? 150 : 110}
+            style={bleedStyle}
             className={styles.cover}
           />
         )}

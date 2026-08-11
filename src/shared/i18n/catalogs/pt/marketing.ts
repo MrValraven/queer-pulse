@@ -1902,6 +1902,11 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Abrir o kit de imprensa",
   "changelog.tag.magazineDesk": "Abrir a redação",
 
+  "changelog.entries.persona-preview-banner-bleed.title":
+    "As capas das personas vão agora de ponta a ponta no teu perfil",
+  "changelog.entries.persona-preview-banner-bleed.body":
+    "A capa no cartão “Também a trabalhar como” passa a preencher o cartão de ponta a ponta, o mesmo visual sem margens que as tuas personas já têm nas páginas próprias — para que o teu perfil e cada página de persona pareçam uma só peça.",
+
   "changelog.entries.magazine-archive-truthful-hero.title":
     "O arquivo da revista mostra agora só edições reais",
   "changelog.entries.magazine-archive-truthful-hero.body":
