@@ -1850,6 +1850,11 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Open the press kit",
   "changelog.tag.magazineDesk": "Open the desk",
 
+  "changelog.entries.astrologer-persona.title":
+    "New astrologer personas, with their own celestial page",
+  "changelog.entries.astrologer-persona.body":
+    "You can now make an astrologer persona. It gets its own “chart” page — an indigo, star-flecked ephemeris with your readings numbered like houses, the sky today, what you need from a querent before a reading, and a plain statement of what a reading is not.",
+
   "changelog.entries.crisp-profile-photos.title":
     "Profile photos are sharper on member pages",
   "changelog.entries.crisp-profile-photos.body":

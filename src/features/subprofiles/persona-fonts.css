@@ -12,6 +12,7 @@
      - DM Mono (400, 500)                — Workshop skin labels/metadata ONLY
                                             (never body/headings — see the
                                             Phase-1 plan's Global Constraints)
+     - Cormorant (300, 400 + italics)    — Chart skin (astrologer) display type
 
    Unlike Fraunces/DM Sans, these three don't have variable-axis Fontsource
    builds, so each weight/style is its own static @font-face (registered
@@ -23,3 +24,7 @@
 @import "@fontsource/instrument-serif/latin-400-italic.css";
 @import "@fontsource/dm-mono/latin-400.css";
 @import "@fontsource/dm-mono/latin-500.css";
+@import "@fontsource/cormorant/latin-300.css";
+@import "@fontsource/cormorant/latin-300-italic.css";
+@import "@fontsource/cormorant/latin-400.css";
+@import "@fontsource/cormorant/latin-400-italic.css";

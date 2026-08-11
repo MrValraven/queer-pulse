@@ -114,6 +114,7 @@ export const subprofiles: Catalog = {
   "kind.chef": "Cozinha",
   "kind.mixologist": "Coquetelaria",
   "kind.therapist": "Terapia",
+  "kind.astrologer": "Astrologia",
   "kind.generic": "Generalista",
 
   // Rótulos de secção — `section` também é persistido (SubprofileItemDTO.section).
@@ -144,6 +145,8 @@ export const subprofiles: Catalog = {
   "section.cocktails": "Cocktails",
   "section.specialisms": "Especialidades",
   "section.credentials": "Credenciais",
+  "section.charts": "Leituras de mapas",
+  "section.sky": "No céu",
   "section.showcase": "Mostra",
   "section.links": "Links",
   "section.gallery": "Galeria de fotos",
@@ -507,6 +510,8 @@ export const subprofiles: Catalog = {
   "family.practice.note": "Calmo, credível, sem tipografia de destaque.",
   "family.table.label": "Mesa",
   "family.table.note": "Uma ementa para o que fazes e serves.",
+  "family.chart.label": "Mapa",
+  "family.chart.note": "Uma página de efemérides, lida pelo céu.",
 
   // Modelos iniciais (Fase 4a) — seletor no momento de criação
   // (NewSideModal) e o botão "Inserir exemplos" no editor
@@ -544,6 +549,8 @@ export const subprofiles: Catalog = {
   "template.tagline.mixologist": "Bebidas preparadas para a noite que vem aí.",
   "template.tagline.therapist":
     "Um espaço afirmativo para pensar as coisas com calma.",
+  "template.tagline.astrologer":
+    "Mapas lidos com calma, para a vida que estás a viver.",
   "template.tagline.generic": "Umas quantas coisas que fiz, reunidas aqui.",
 
   // Exemplos por secção (usados tanto pelo modelo inicial como pelo botão
@@ -636,6 +643,13 @@ export const subprofiles: Catalog = {
     "Para quem é e como a abordas.",
   "template.section.credentials.item1.title": "Uma qualificação ou formação",
   "template.section.credentials.item1.subtitle": "A entidade que a atribui",
+  "template.section.charts.item1.title": "Uma leitura que ofereces",
+  "template.section.charts.item1.subtitle": "Duração · preço",
+  "template.section.charts.item1.desc": "O que abrange, e para quem é.",
+  "template.section.sky.item1.title": "Um círculo ou workshop",
+  "template.section.sky.item1.subtitle": "Onde acontece",
+  "template.section.sky.item1.desc":
+    "O que esperar — sem conhecimento prévio assumido.",
 
   // Campo de imagem (ImageUploadField)
   "imageUpload.defaultPlaceholder": "Imagem",
@@ -994,6 +1008,13 @@ export const subprofiles: Catalog = {
   "skinExtras.practice.accessTitle": "O espaço em si",
   "skinExtras.practice.referralsNote":
     "Sem testemunhos públicos — a confidencialidade de quem é acompanhado vem primeiro. São apenas pessoas que já recomendaram este espaço a outras.",
+
+  "skinExtras.chart.skyNowLabel": "O céu hoje",
+  "skinExtras.chart.birthDataTitle": "O que preciso de ti",
+  "skinExtras.chart.birthDate": "Data",
+  "skinExtras.chart.birthTime": "Hora",
+  "skinExtras.chart.birthPlace": "Local",
+  "skinExtras.chart.ethicsTitle": "O que uma leitura não é",
 
   // Navegação lateral do editor (EditorRail, editorRail.data.ts) — os grupos
   // Este lado / Conteúdo / Pessoas / Publicar.

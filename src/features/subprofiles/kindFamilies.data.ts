@@ -28,6 +28,7 @@ const FAMILY_ORDER: SkinFamily[] = [
   "workshop",
   "practice",
   "table",
+  "chart",
 ];
 
 const FAMILY_COPY_KEYS: Record<
@@ -57,6 +58,10 @@ const FAMILY_COPY_KEYS: Record<
   table: {
     labelKey: "subprofiles:family.table.label",
     noteKey: "subprofiles:family.table.note",
+  },
+  chart: {
+    labelKey: "subprofiles:family.chart.label",
+    noteKey: "subprofiles:family.chart.note",
   },
 };
 

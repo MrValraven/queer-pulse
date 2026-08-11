@@ -93,6 +93,16 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "astrologer-persona",
+        category: "feature",
+        date: "11 Aug 2026",
+        ...entryKeys("astrologer-persona"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
         id: "crisp-profile-photos",
         category: "fix",
         date: "11 Aug 2026",

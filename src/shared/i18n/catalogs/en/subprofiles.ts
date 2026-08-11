@@ -116,6 +116,7 @@ export const subprofiles: Catalog = {
   "kind.chef": "Chef",
   "kind.mixologist": "Mixologist",
   "kind.therapist": "Therapist",
+  "kind.astrologer": "Astrologer",
   "kind.generic": "Other",
 
   // Section display labels — `section` is also persisted (SubprofileItemDTO.section).
@@ -146,6 +147,8 @@ export const subprofiles: Catalog = {
   "section.cocktails": "Cocktails",
   "section.specialisms": "Specialisms",
   "section.credentials": "Credentials",
+  "section.charts": "Chart work",
+  "section.sky": "In the sky",
   "section.showcase": "Showcase",
   "section.links": "Links",
   "section.gallery": "Photo gallery",
@@ -495,6 +498,8 @@ export const subprofiles: Catalog = {
   "family.practice.note": "Calm, credible, no display type.",
   "family.table.label": "Table",
   "family.table.note": "A menu sheet for what you make and pour.",
+  "family.chart.label": "Chart",
+  "family.chart.note": "An ephemeris page, read by the sky.",
 
   // Starter templates (Phase 4a) — create-time picker (NewSideModal)
   // and the in-editor "Insert examples" affordance (SubprofileSectionEditor).
@@ -525,6 +530,7 @@ export const subprofiles: Catalog = {
   "template.tagline.chef": "Cooking for queer tables, one plate at a time.",
   "template.tagline.mixologist": "Drinks mixed for the night ahead.",
   "template.tagline.therapist": "An affirming space to think things through.",
+  "template.tagline.astrologer": "Charts read slowly, for the life you're living.",
   "template.tagline.generic": "A few things I've made, gathered here.",
 
   // Per-section example items (used by both the create-time template and
@@ -613,6 +619,13 @@ export const subprofiles: Catalog = {
     "Who it's for and how you approach it.",
   "template.section.credentials.item1.title": "A qualification or training",
   "template.section.credentials.item1.subtitle": "The awarding body",
+  "template.section.charts.item1.title": "A reading you offer",
+  "template.section.charts.item1.subtitle": "Length · price",
+  "template.section.charts.item1.desc": "What it covers, and who it's for.",
+  "template.section.sky.item1.title": "A circle or workshop",
+  "template.section.sky.item1.subtitle": "Where it happens",
+  "template.section.sky.item1.desc":
+    "What to expect — no prior knowledge assumed.",
 
   // Image upload field (ImageUploadField)
   "imageUpload.defaultPlaceholder": "Image",
@@ -955,6 +968,13 @@ export const subprofiles: Catalog = {
   "skinExtras.practice.accessTitle": "The room itself",
   "skinExtras.practice.referralsNote":
     "No public testimonials — client confidentiality comes first. These are simply people who've referred others here.",
+
+  "skinExtras.chart.skyNowLabel": "The sky today",
+  "skinExtras.chart.birthDataTitle": "What I need from you",
+  "skinExtras.chart.birthDate": "Date",
+  "skinExtras.chart.birthTime": "Time",
+  "skinExtras.chart.birthPlace": "Place",
+  "skinExtras.chart.ethicsTitle": "What a reading is not",
 
   // Editor rail (EditorRail, editorRail.data.ts) — Phase 3's grouped left
   // nav: This side / Content / People / Publish.

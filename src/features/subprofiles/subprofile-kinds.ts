@@ -19,6 +19,7 @@ import {
   FiLink,
   FiMapPin,
   FiMic,
+  FiMoon,
   FiStar,
   FiTool,
   FiUsers,
@@ -50,6 +51,7 @@ export const KIND_SECTIONS: Record<SubprofileKind, SubprofileSection[]> = {
   chef: ["menus", "residencies"],
   mixologist: ["cocktails", "residencies"],
   therapist: ["specialisms", "credentials"],
+  astrologer: ["charts", "sky"],
   generic: ["showcase"],
 };
 
@@ -234,6 +236,17 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
     icon: FiAward,
     fields: ["title", "subtitle", "date"],
   },
+  // astrologer
+  charts: {
+    labelKey: "subprofiles:section.charts",
+    icon: FiStar,
+    fields: ["title", "subtitle", "description"],
+  },
+  sky: {
+    labelKey: "subprofiles:section.sky",
+    icon: FiMoon,
+    fields: ["title", "subtitle", "description", "date", "url"],
+  },
   // generic
   showcase: {
     labelKey: "subprofiles:section.showcase",
@@ -283,6 +296,7 @@ export const KIND_LABEL_KEYS: Record<SubprofileKind, string> = {
   chef: "subprofiles:kind.chef",
   mixologist: "subprofiles:kind.mixologist",
   therapist: "subprofiles:kind.therapist",
+  astrologer: "subprofiles:kind.astrologer",
   generic: "subprofiles:kind.generic",
 };
 
@@ -314,6 +328,7 @@ export const KIND_LABELS: Record<SubprofileKind, string> = {
   chef: "Chef",
   mixologist: "Mixologist",
   therapist: "Therapist",
+  astrologer: "Astrologer",
   generic: "Other",
 };
 
@@ -372,6 +387,7 @@ const KIND_SLUG: Record<SubprofileKind, string> = {
   chef: "chef",
   mixologist: "mixologist",
   therapist: "therapist",
+  astrologer: "astrologer",
   generic: "other",
 };
 

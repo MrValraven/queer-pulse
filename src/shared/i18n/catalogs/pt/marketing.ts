@@ -1902,6 +1902,11 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Abrir o kit de imprensa",
   "changelog.tag.magazineDesk": "Abrir a redação",
 
+  "changelog.entries.astrologer-persona.title":
+    "Novas personas de astrologia, com a sua própria página celeste",
+  "changelog.entries.astrologer-persona.body":
+    "Já podes criar uma persona de astrologia. Ganha a sua própria página “mapa” — uma efeméride índigo, salpicada de estrelas, com as tuas leituras numeradas como casas, o céu de hoje, o que precisas de quem te procura antes de uma leitura, e uma declaração clara do que uma leitura não é.",
+
   "changelog.entries.crisp-profile-photos.title":
     "As fotos de perfil estão mais nítidas nas páginas de membros",
   "changelog.entries.crisp-profile-photos.body":

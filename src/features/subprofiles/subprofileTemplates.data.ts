@@ -257,6 +257,22 @@ export const TEMPLATE_ITEMS: Partial<Record<SubprofileSection, TemplateItem[]>> 
       date: "2025",
     },
   ],
+  // astrologer
+  charts: [
+    {
+      titleKey: "subprofiles:template.section.charts.item1.title",
+      subtitleKey: "subprofiles:template.section.charts.item1.subtitle",
+      descriptionKey: "subprofiles:template.section.charts.item1.desc",
+    },
+  ],
+  sky: [
+    {
+      titleKey: "subprofiles:template.section.sky.item1.title",
+      subtitleKey: "subprofiles:template.section.sky.item1.subtitle",
+      descriptionKey: "subprofiles:template.section.sky.item1.desc",
+      date: "2025",
+    },
+  ],
   // generic
   showcase: [
     {
@@ -287,6 +303,7 @@ export const TEMPLATE_TAGLINE: Partial<Record<SubprofileKind, string>> = {
   chef: "subprofiles:template.tagline.chef",
   mixologist: "subprofiles:template.tagline.mixologist",
   therapist: "subprofiles:template.tagline.therapist",
+  astrologer: "subprofiles:template.tagline.astrologer",
   generic: "subprofiles:template.tagline.generic",
 };
 

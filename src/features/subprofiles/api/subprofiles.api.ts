@@ -93,6 +93,7 @@ export type SubprofileKind =
   | "chef"
   | "mixologist"
   | "therapist"
+  | "astrologer"
   | "generic";
 
 export type SubprofileSection =
@@ -123,6 +124,8 @@ export type SubprofileSection =
   | "cocktails" // mixologist
   | "specialisms"
   | "credentials" // therapist
+  | "charts"
+  | "sky" // astrologer
   | "showcase" // generic
   | "gallery" // every kind
   | "links"; // every kind
@@ -173,6 +176,12 @@ export interface SkinData {
   firstSession?: { title: string; body: string }[] | null;
   access?: string[] | null;
   referrals?: { name: string; note: string }[] | null;
+  /** Chart skin (astrologer): the live sky band shown in the hero. */
+  sky?: { moon: string; phase: string; note: string } | null;
+  /** Chart skin: what the astrologer needs from a querent before a reading. */
+  birthData?: { date: string; time: string; place: string; note: string } | null;
+  /** Chart skin: the "what a reading is not" boundary list. */
+  ethics?: string[] | null;
 }
 
 export interface SubprofileItemDTO {

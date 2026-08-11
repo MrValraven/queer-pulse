@@ -19,6 +19,7 @@ import {
   TableMenuCard,
   TableMenuHeader,
 } from "./skins/TableBlocks";
+import { ChartBirthData, ChartEthics, ChartSkyNow } from "./skins/ChartBlocks";
 
 export type SkinExtrasSlot = "top" | "afterBio" | "spotlight" | "end";
 
@@ -80,10 +81,12 @@ export function SubprofileSkinExtras({
       if (skin === "stage") return <StageNextUp persona={persona} />;
       if (skin === "workshop") return <WorkshopSheetMarks />;
       if (skin === "table") return <TableMenuHeader persona={persona} />;
+      if (skin === "chart") return <ChartSkyNow persona={persona} />;
       return null;
     case "afterBio":
       if (skin === "page") return <PageExcerpt persona={persona} />;
       if (skin === "practice") return <PracticePractical persona={persona} />;
+      if (skin === "chart") return <ChartBirthData persona={persona} />;
       return null;
     case "spotlight":
       // Every other skin's featured item renders through the generic
@@ -109,6 +112,7 @@ export function SubprofileSkinExtras({
           </>
         );
       if (skin === "table") return <TableDietaryLegend persona={persona} />;
+      if (skin === "chart") return <ChartEthics persona={persona} />;
       return null;
     default:
       return null;

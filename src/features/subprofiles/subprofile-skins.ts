@@ -1,7 +1,14 @@
 import type { SubprofileKind, SubprofileSection } from "./api/subprofiles.api";
 
-/** The six page families. A member never picks one — it is derived from `kind`. */
-export type SkinFamily = "stage" | "studio" | "page" | "workshop" | "practice" | "table";
+/** The seven page families. A member never picks one — it is derived from `kind`. */
+export type SkinFamily =
+  | "stage"
+  | "studio"
+  | "page"
+  | "workshop"
+  | "practice"
+  | "table"
+  | "chart";
 
 /** kind → skin family. Total over SubprofileKind. Mirrors the design prototype's SKIN_OF. */
 export const SKIN_OF: Record<SubprofileKind, SkinFamily> = {
@@ -22,6 +29,7 @@ export const SKIN_OF: Record<SubprofileKind, SkinFamily> = {
   therapist: "practice",
   chef: "table",
   mixologist: "table",
+  astrologer: "chart",
 };
 
 /** The page family for a persona kind. */
@@ -101,5 +109,11 @@ export const SKIN_META: Record<SkinFamily, SkinMeta> = {
     face: "Fraunces + leaders",
     note: "A menu sheet. Centred headings, dotted leaders, warm paper.",
     kinds: ["Chef", "Mixologist"],
+  },
+  chart: {
+    name: "Chart",
+    face: "Cormorant Light",
+    note: "An ephemeris page. Indigo ground, house numerals down the gutter, everything centred on an axis.",
+    kinds: ["Astrologer"],
   },
 };
