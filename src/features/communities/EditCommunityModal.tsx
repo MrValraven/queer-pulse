@@ -19,6 +19,7 @@ import {
 import { useUpdateCommunity } from "./api/useCommunityMutations";
 import { useCommunityForm } from "./startCommunity/useCommunityForm";
 import { EditCommunityRules } from "./EditCommunityRules";
+import { ImageUploadField } from "../subprofiles/ImageUploadField";
 import styles from "./EditCommunityModal.module.css";
 
 const FORM_ID = "edit-community-form";
@@ -64,8 +65,18 @@ export function EditCommunityModal({
     event.preventDefault();
     if (missingRequired || updateCommunity.isPending) return;
     setError(false);
+    const dto = draftToUpdateDto(draft);
+    // Only send the cover when it actually changed. Re-sending an UNCHANGED
+    // cover would replay the original uploader's storage key — and the backend's
+    // StorageKeyOwnershipInterceptor 403s a PATCH that references someone else's
+    // key, so a mod (who didn't upload the owner's cover) saving any other edit
+    // would fail. A freshly picked cover is a new key the editor owns, so
+    // sending that is fine; clearing sends "".
+    if (draft.coverImageUrl === initialDraft.coverImageUrl) {
+      delete dto.coverImageUrl;
+    }
     updateCommunity.mutate(
-      { slug, dto: draftToUpdateDto(draft) },
+      { slug, dto },
       {
         onSuccess: () => {
           showToast(t("communities:edit.toast.saved"), "success");
@@ -148,6 +159,19 @@ function EditCommunityFields({
           type="text"
           value={draft.tagline}
           onChange={(event) => set({ tagline: event.target.value })}
+        />
+      </FormField>
+
+      <FormField
+        label={t("communities:edit.field.cover")}
+        helper={t("communities:edit.field.coverHint")}
+      >
+        <ImageUploadField
+          kind="community-cover"
+          value={draft.coverImageUrl}
+          onChange={(coverImageUrl) => set({ coverImageUrl })}
+          size={150}
+          placeholder={draft.name || t("communities:edit.field.cover")}
         />
       </FormField>
 

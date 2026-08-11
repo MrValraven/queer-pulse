@@ -1850,6 +1850,50 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Open the press kit",
   "changelog.tag.magazineDesk": "Open the desk",
 
+  "changelog.entries.meganav-highlight-illustrations.title":
+    "Illustrated menus in the top navigation",
+  "changelog.entries.meganav-highlight-illustrations.body":
+    "Each menu in the top navigation now opens with a hand-drawn illustration of its highlight — people gathering, the city, support, culture, work — instead of a plain placeholder.",
+
+  "changelog.entries.poet-rich-poems.title": "Write and read poems in full",
+  "changelog.entries.poet-rich-poems.body":
+    "Poet profiles now have a proper poem editor — stanzas, section breaks, and notes, with italics and bold — and readers can tap any poem to open it in a spacious reading view.",
+
+  "changelog.entries.persona-editor-drag-reorder.title":
+    "Drag to reorder items on a persona",
+  "changelog.entries.persona-editor-drag-reorder.body":
+    "The grip handle on each item in a persona section (projects, roles, links…) now actually drags. Grab it and drop the item where you want it — on a phone with your finger, or with a mouse — and the list reshuffles live. The up and down arrows are still there for keyboard use, so nothing changed for that.",
+
+  "changelog.entries.persona-item-link-picker-size.title":
+    "Fixed oversized inline fields in a few editors",
+  "changelog.entries.persona-item-link-picker-size.body":
+    "A handful of compact side-by-side fields had quietly ballooned to full size — the link-type picker when adding a link to a persona project (which was crowding out the address field next to it), the content-note rows in the film submission form, and the photo-link boxes when listing a business. They now sit at their intended size, so each row lines up the way it was designed.",
+
+  "changelog.entries.persona-editor-wide-sheet.title":
+    "Editing a persona section now opens a roomy sheet from the bottom",
+  "changelog.entries.persona-editor-wide-sheet.body":
+    "When you edit an item in one of your persona's sections — a project, a role, a photo — the editor now rises from the bottom of the screen as a wide sheet instead of a narrow panel pinned to the side. The fields sit two side by side, so titles, descriptions and links have room to breathe instead of feeling crammed. On phones it stays the familiar full-width sheet.",
+
+  "changelog.entries.community-featured-cards.title":
+    "Featured communities get the full spotlight card — plus cover photos",
+  "changelog.entries.community-featured-cards.body":
+    "Communities featured on the homepage now show the same rich card the showcase uses — a cover image, category, who keeps the space, how you join, the year it started, what you get inside, and real member faces — instead of a bare name and headcount. Community owners can now add a cover photo when starting a community or from its edit panel, and it greets people on the card.",
+
+  "changelog.entries.media-in-use-references.title":
+    "See where each uploaded image is used — and what's safe to delete",
+  "changelog.entries.media-in-use-references.body":
+    "Your uploads — and the admin images console — now show every place a picture is still in use, with a link straight to each one. Anything with no references left is flagged as safe to remove, so you can clear out old duplicates without worrying you'll break a live page.",
+
+  "changelog.entries.homepage-featured-photo-fix.title":
+    "Featured members' photos show on the homepage again",
+  "changelog.entries.homepage-featured-photo-fix.body":
+    "The curated “Real people, not a directory” spotlight was serving each featured member's uploaded portrait as an unresolved link, so it rendered as a broken image. The homepage now resolves those photos the same way every other avatar is, and the portraits load correctly.",
+
+  "changelog.entries.admin-media-filter-by-uploader.title":
+    "Admins can filter uploaded images by who sent them",
+  "changelog.entries.admin-media-filter-by-uploader.body":
+    "The uploaded-images console now lets an admin narrow the whole grid to a single member — search by name or handle, or tap an uploader's name on any file — to review everything one person has put into storage in one place.",
+
   "changelog.entries.persona-preview-banner-bleed.title":
     "Persona banners now run edge-to-edge on your profile",
   "changelog.entries.persona-preview-banner-bleed.body":
@@ -1864,6 +1908,10 @@ export const marketing: Catalog = {
     "Personas now fit many more crafts",
   "changelog.entries.persona-families-expansion.body":
     "Personas reach well beyond the stage now. There are six new page styles — a salon chair, a runway, a gallery, an oral-history record, a movement poster, and a classroom — plus dozens of new professions, each with a look built for the work you actually do.",
+
+  "changelog.entries.pole-dancer-persona.title": "Pole dancer personas",
+  "changelog.entries.pole-dancer-persona.body":
+    "Pole dancers can now build a persona that shows both sides of the craft — the shows they perform and the classes they teach.",
 
   "changelog.entries.astrologer-persona.title":
     "New astrologer personas, with their own celestial page",

@@ -6,16 +6,30 @@ import {
   FiStar,
   FiTrash2,
 } from "react-icons/fi";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 import styles from "./EditorItemRow.module.css";
 
+interface GripDragHandlers {
+  onPointerDown: (event: ReactPointerEvent) => void;
+  onPointerMove: (event: ReactPointerEvent) => void;
+  onPointerUp: (event: ReactPointerEvent) => void;
+  onPointerCancel: (event: ReactPointerEvent) => void;
+}
+
 interface EditorItemRowProps {
   item: SubprofileItemView;
+  /** Stable per-row id used as the FLIP key for reorder animation. */
+  flipKey: string;
   /** Whether this section supports a spotlight item at all (false for `links`). */
   canFeature: boolean;
   isFirst: boolean;
   isLast: boolean;
+  /** Pointer handlers that turn the grip into a real drag handle. */
+  gripHandlers: GripDragHandlers;
+  /** True while this row is the one being dragged (lifts it visually). */
+  isDragging: boolean;
   onEdit: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
@@ -29,14 +43,19 @@ interface EditorItemRowProps {
  * buttons: feature-star toggle, move up/down, edit (opens the item drawer),
  * remove. Distinct from the PUBLIC `SubprofileItemRow` (which renders a
  * published item on the live persona page). Presentational only — all state
- * lives in `SubprofileSectionEditor`. Keyboard-only reorder: the up/down
- * buttons are the accessible path (native drag is optional, not built here).
+ * lives in `SubprofileSectionEditor`. Two reorder paths: pointer drag via the
+ * grip handle (`gripHandlers`, mouse/touch/pen — see `useRowDragReorder`) and
+ * the up/down buttons (the keyboard/assistive-tech path, so the grip can stay
+ * `aria-hidden`).
  */
 export function EditorItemRow({
   item,
+  flipKey,
   canFeature,
   isFirst,
   isLast,
+  gripHandlers,
+  isDragging,
   onEdit,
   onMoveUp,
   onMoveDown,
@@ -49,8 +68,16 @@ export function EditorItemRow({
     .join(" · ");
 
   return (
-    <div className="itemrow">
-      <span className="grip" aria-hidden>
+    <div
+      className={isDragging ? `itemrow ${styles.dragging}` : "itemrow"}
+      data-flip-key={flipKey}
+    >
+      <span
+        className="grip"
+        aria-hidden
+        title={t("subprofiles:itemEditor.dragToReorder")}
+        {...gripHandlers}
+      >
         <FiMoreVertical size={16} />
       </span>
       <div className={styles.content}>

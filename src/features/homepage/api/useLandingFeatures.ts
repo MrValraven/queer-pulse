@@ -8,8 +8,32 @@ import {
   type LandingMemberFeatureDTO,
 } from "../../admin/api/landingFeatures.api";
 import { spotlights } from "../sections/Discovery.data";
-import { spotlightCommunities } from "../sections/Communities.data";
+import {
+  type CommunityAccess,
+  type RoomKey,
+  spotlightCommunities,
+} from "../sections/Communities.data";
+import type {
+  AccessTier,
+  CommunityType,
+} from "../../communities/api/communities.api";
 import { changemakers } from "../data/changemakers";
+
+// Demo fixtures speak the prototype's vocabulary; the public DTO speaks the
+// backend's. These two maps translate a demo community into the same rich shape
+// the live `/landing/features` endpoint returns, so the demo showcase could
+// render through the live card unchanged.
+const DEMO_ACCESS_TO_TIER: Record<CommunityAccess, AccessTier> = {
+  open: "public",
+  request: "request",
+  private: "private",
+};
+const DEMO_ROOM_TO_FEATURE: Record<RoomKey, string> = {
+  Pulse: "rooms",
+  Discussions: "discussion",
+  Events: "events",
+  Resources: "library",
+};
 
 export interface LandingFeaturesResult {
   members: LandingMemberFeatureDTO[];
@@ -35,13 +59,42 @@ function demoLandingFeatures(): LandingFeaturesResponseDTO {
       quote,
       tags: member.tags,
     })),
-    communities: spotlightCommunities.map((community) => ({
-      id: community.anchor,
-      slug: community.anchor,
-      name: community.name,
-      memberCount: community.members,
-      blurb: community.desc,
-    })),
+    communities: spotlightCommunities.map((community) => {
+      const shared = {
+        id: community.anchor,
+        slug: community.anchor,
+        name: community.name,
+        memberCount: community.members,
+        blurb: community.desc,
+        accessTier: DEMO_ACCESS_TO_TIER[community.access],
+        foundedYear: community.founded,
+      };
+      // A quiet (members-only) community carries none of the rich fields — map
+      // it to the honest minimum, same as a real private community.
+      if (community.quiet) {
+        return {
+          ...shared,
+          coverImageUrl: null,
+          category: "support" as CommunityType,
+          features: [],
+          owner: null,
+          faces: [],
+        };
+      }
+      return {
+        ...shared,
+        coverImageUrl: community.photoSrc ?? null,
+        category: community.category,
+        features: community.rooms.map((room) => DEMO_ROOM_TO_FEATURE[room]),
+        owner: { name: community.host.name, avatarUrl: null },
+        // Demo faces are initials-only; spacing the letters makes the view's
+        // `initialsFromName` reproduce the same mark (e.g. "RM" → "R M" → "RM").
+        faces: community.faces.map((face) => ({
+          name: face.initials.split("").join(" "),
+          avatarUrl: null,
+        })),
+      };
+    }),
     changemakers: changemakers.map((person) => ({
       id: person.key,
       slug: person.key,

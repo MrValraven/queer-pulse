@@ -677,6 +677,10 @@ export const admin: Catalog = {
   "media.delete.confirmTitle": "Eliminar este ficheiro definitivamente?",
   "media.delete.confirmBody":
     "Isto remove o ficheiro do armazenamento de forma permanente. Se um perfil, anúncio ou publicação ainda apontar para ele, essa imagem deixa de carregar. Não é possível anular.",
+  "media.delete.confirmBodyInUse_one":
+    "Este ficheiro ainda está referenciado num local, listado abaixo. Ao eliminá-lo agora, essa imagem deixa de carregar. Não é possível anular.",
+  "media.delete.confirmBodyInUse_other":
+    "Este ficheiro ainda está referenciado em {count} locais, listados abaixo. Ao eliminá-lo agora, essas imagens deixam de carregar. Não é possível anular.",
   "media.delete.confirm": "Eliminar ficheiro",
   "media.delete.pending": "A eliminar…",
   "media.delete.success": "Ficheiro eliminado",
@@ -690,6 +694,23 @@ export const admin: Catalog = {
   "media.demo.title": "Disponível apenas no modo ao vivo",
   "media.demo.body":
     "As imagens enviadas vêm do bucket de armazenamento ao vivo, por isso não há nada para mostrar no modo de demonstração.",
+  "media.filterByUploader.searchPlaceholder": "Filtrar por quem enviou…",
+  "media.filterByUploader.searchAriaLabel":
+    "Procurar membros para filtrar os envios",
+  "media.filterByUploader.noResults": "Nenhum membro corresponde a “{search}”.",
+  "media.filterByUploader.activePill": "A filtrar por <strong>{name}</strong>",
+  "media.filterByUploader.clearAria": "Limpar filtro de quem enviou",
+  "media.filterByUploader.showAll": "Tudo deste membro",
+  "media.filterByUploader.emptyForUser":
+    "{name} não enviou nada para o bucket.",
+  "media.references.inUseBadge": "Em uso ({count})",
+  "media.references.orphanBadge": "Sem referências",
+  "media.references.heading": "Referenciado em",
+  "media.references.empty": "Nenhuma referência encontrada — seguro eliminar.",
+  "media.references.unverified":
+    "Por verificar — algumas verificações de referência não correram, por isso isto pode ainda estar em uso. Recarrega antes de eliminar.",
+  "media.references.degradedBanner":
+    "Algumas verificações de referência não correram, por isso um “Sem referências” vazio fica por verificar nesta página. Recarrega antes de tratar qualquer ficheiro como órfão.",
 
   // ── Sugestões de edição ──────────────────────────────────────────────────────
   "editSuggestions.empty": "Sem correções neste filtro, por agora.",

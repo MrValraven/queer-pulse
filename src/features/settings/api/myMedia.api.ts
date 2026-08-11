@@ -1,5 +1,6 @@
 import { apiDelete, apiGet } from "../../../shared/api/client";
 import { API_BASE_URL } from "../../../shared/api/config";
+import type { MediaReference } from "../../../shared/media/mediaReferences";
 
 export type MyMediaKind =
   | "avatar"
@@ -9,33 +10,34 @@ export type MyMediaKind =
   | "group-avatar"
   | "listing-photo";
 
-/** Language-neutral slug for WHERE a still-referenced upload is used. Mirrors
- *  the backend `MyMediaUsage`; the UI renders it via `settings:uploads.usedAs.<slug>`. */
-export type MyMediaUsage =
-  | "profile-photo"
-  | "showcase"
-  | "story-cover"
-  | "event"
-  | "group"
-  | "listing";
-
 export interface MyMediaItem {
   key: string;
   kind: MyMediaKind;
   size: number;
   lastModified: string | null;
   fileUrl: string;
-  inUse: boolean;
-  usedAs: MyMediaUsage | null;
+  /** Every place this upload is still referenced, from the backend's
+   *  `MediaReferenceResolver`. Empty = not referenced = safe to delete. */
+  references: MediaReference[];
 }
 
 interface MyMediaListResponse {
   items: MyMediaItem[];
+  /** True when some reference checks failed server-side; an item's empty
+   *  `references` is then unverified, not a confirmed "safe to delete". */
+  degraded: boolean;
 }
 
-export async function getMyMedia(): Promise<MyMediaItem[]> {
+/** The my-media list plus the resolver's degraded flag, so the UI can tell
+ *  "no references" (authoritative) apart from "some checks couldn't run". */
+export interface MyMediaListResult {
+  items: MyMediaItem[];
+  degraded: boolean;
+}
+
+export async function getMyMedia(): Promise<MyMediaListResult> {
   const response = await apiGet<MyMediaListResponse>("/me/media");
-  return response.items;
+  return { items: response.items, degraded: response.degraded };
 }
 
 export async function deleteMyMedia(key: string): Promise<void> {

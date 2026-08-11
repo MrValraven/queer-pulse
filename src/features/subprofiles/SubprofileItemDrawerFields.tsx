@@ -7,6 +7,8 @@ import { ImageUploadField } from "./ImageUploadField";
 import { HandleChipInput } from "./HandleChipInput";
 import { SubprofileItemLinksField } from "./SubprofileItemLinksField";
 import { RICH_FIELDS_FOR_SECTION, type RichFieldDescriptor } from "./richFields.data";
+import { PoemBodyEditor } from "./poem/PoemBodyEditor";
+import { poemHasContent } from "./poem/poemBlocks";
 
 type Field = keyof SubprofileItemDTO;
 
@@ -112,19 +114,26 @@ export function SubprofileItemDrawerFields({
   onPatch: (patch: Partial<SubprofileItemView>) => void;
 }) {
   const { t } = useTranslation();
+  const isPoems = draft.section === "poems";
   const textFields = fields.filter(
-    (f) => f !== "imageUrl" && f !== "tags" && f !== "section",
+    (field) =>
+      field !== "imageUrl" &&
+      field !== "tags" &&
+      field !== "section" &&
+      !(isPoems && field === "description"),
   );
   const richFields = RICH_FIELDS_FOR_SECTION[draft.section] ?? [];
 
   return (
     <>
       {fields.includes("imageUrl") && (
-        <ImageUploadField
-          value={draft.imageUrl}
-          kind="work-image"
-          onChange={(imageUrl) => onPatch({ imageUrl })}
-        />
+        <div className="pe-field-wide">
+          <ImageUploadField
+            value={draft.imageUrl}
+            kind="work-image"
+            onChange={(imageUrl) => onPatch({ imageUrl })}
+          />
+        </div>
       )}
 
       {textFields.map((field) => {
@@ -153,6 +162,23 @@ export function SubprofileItemDrawerFields({
           </FormField>
         );
       })}
+
+      {isPoems && (
+        <div className="pe-field-wide">
+          <PoemBodyEditor
+            value={draft.structured?.poem ?? null}
+            description={draft.description}
+            onChange={(poem) =>
+              onPatch({
+                // Poem body becomes the single source of truth: clear the legacy
+                // `description` once real blocks exist so we don't persist two.
+                description: poemHasContent(poem) ? "" : draft.description,
+                structured: { ...(draft.structured ?? {}), poem },
+              })
+            }
+          />
+        </div>
+      )}
 
       {fields.includes("tags") && (
         <FormField
@@ -184,24 +210,28 @@ export function SubprofileItemDrawerFields({
       ))}
 
       {draft.section !== "gallery" && (
-        <HandleChipInput
-          collaborators={draft.collaborators}
-          onChange={(collaborators) => onPatch({ collaborators })}
-        />
+        <div className="pe-field-wide">
+          <HandleChipInput
+            collaborators={draft.collaborators}
+            onChange={(collaborators) => onPatch({ collaborators })}
+          />
+        </div>
       )}
 
       {ITEM_LINKS_SECTIONS.has(draft.section) && (
-        <SubprofileItemLinksField
-          links={draft.structured?.links ?? []}
-          onChange={(links) =>
-            onPatch({
-              structured: {
-                ...(draft.structured ?? {}),
-                links: links.length ? links : null,
-              },
-            })
-          }
-        />
+        <div className="pe-field-wide">
+          <SubprofileItemLinksField
+            links={draft.structured?.links ?? []}
+            onChange={(links) =>
+              onPatch({
+                structured: {
+                  ...(draft.structured ?? {}),
+                  links: links.length ? links : null,
+                },
+              })
+            }
+          />
+        </div>
       )}
     </>
   );

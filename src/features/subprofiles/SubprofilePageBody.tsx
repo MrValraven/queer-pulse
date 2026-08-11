@@ -35,6 +35,7 @@ export function SubprofilePageBody({
   onOpenWorkAt,
   onOpenWorkItem,
   onOpenGalleryPhoto,
+  onOpenPoem,
 }: {
   data: PublicSubprofileView;
   skin: SkinFamily;
@@ -44,6 +45,7 @@ export function SubprofilePageBody({
   onOpenWorkAt: (index: number) => void;
   onOpenWorkItem: (item: SubprofileItemView) => void;
   onOpenGalleryPhoto: (item: SubprofileItemView) => void;
+  onOpenPoem: (item: SubprofileItemView) => void;
 }) {
   const { t } = useTranslation();
   const rootRef = usePersonaMotion();
@@ -120,6 +122,7 @@ export function SubprofilePageBody({
             featuredHidden={Boolean(data.featured)}
             onOpenWork={onOpenWorkItem}
             onOpenGalleryPhoto={onOpenGalleryPhoto}
+            onOpenPoem={onOpenPoem}
           />
 
           <SubprofileSkinExtras

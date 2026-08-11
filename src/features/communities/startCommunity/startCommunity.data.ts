@@ -42,6 +42,9 @@ export interface CommunityDraft {
   rules: string[];
   /** Chapter 6 — feeling */
   tint: TintKey;
+  /** Optional cover image — a `community-cover` storage key (or resolved URL
+   *  when seeded from an existing community's detail DTO); "" means none. */
+  coverImageUrl: string;
   tagline: string;
   /** Chapter 7 — people */
   invites: string[]; // member slugs of connections you're inviting

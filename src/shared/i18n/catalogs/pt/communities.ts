@@ -538,6 +538,9 @@ export const communities: Catalog = {
   "start.tint.coral": "Coral quente",
   "start.tint.jade": "Jade calmo",
   "start.tint.plum": "Ameixa profundo",
+  "start.feeling.coverLabel": "Uma imagem de capa",
+  "start.feeling.coverHint":
+    "Opcional — uma foto larga que recebe as pessoas no cartão da tua comunidade. Pelo menos 1200 × 600px.",
   "start.feeling.taglineLabel": "Uma frase de assinatura",
   "start.feeling.taglinePlaceholder": "Uma linha que capta a sensação do lugar",
   "start.feeling.taglineHint":
@@ -665,6 +668,8 @@ export const communities: Catalog = {
   "edit.cancel": "Cancelar",
   "edit.field.name": "Nome",
   "edit.field.tagline": "Frase de assinatura",
+  "edit.field.cover": "Imagem de capa",
+  "edit.field.coverHint": "Uma foto larga mostrada no cartão da tua comunidade. Pelo menos 1200 × 600px.",
   "edit.field.type": "Que tipo de espaço",
   "edit.field.whoFor": "Para quem é",
   "edit.field.purpose": "Para que serve",

@@ -57,6 +57,29 @@ export function moveRow(
   return next;
 }
 
+/** Move a row from one index to another (pointer drag-reorder). A no-op when
+ *  the indices are equal or either is out of range. `moveRow` above is the
+ *  neighbour-swap the up/down arrows use; this is the free-form splice the
+ *  grip's drag handle needs when the pointer crosses several rows at once. */
+export function reorderRow(
+  rows: SubprofileEditorRow[],
+  from: number,
+  to: number,
+): SubprofileEditorRow[] {
+  if (
+    from === to ||
+    from < 0 ||
+    to < 0 ||
+    from >= rows.length ||
+    to >= rows.length
+  )
+    return rows;
+  const next = [...rows];
+  const [moved] = next.splice(from, 1);
+  next.splice(to, 0, moved!);
+  return next;
+}
+
 /** Toggle one row's spotlight, single-select within this working list only —
  *  the backend enforces the cross-section, persona-wide spotlight on save,
  *  clearing any featured item left in other sections. */

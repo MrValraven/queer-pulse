@@ -22,8 +22,14 @@ export const DEMO_MY_MEDIA: MyMediaItem[] = [
     lastModified: "2026-08-09T10:00:00.000Z",
     fileUrl:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=800&auto=format&fit=crop",
-    inUse: true,
-    usedAs: "profile-photo",
+    references: [
+      {
+        type: "profile-photo",
+        entityId: "demo-member",
+        label: "Tiago",
+        slug: "tiago",
+      },
+    ],
   },
   {
     key: "demo-work-1",
@@ -32,8 +38,14 @@ export const DEMO_MY_MEDIA: MyMediaItem[] = [
     lastModified: "2026-08-07T10:00:00.000Z",
     fileUrl:
       "https://images.unsplash.com/photo-1463453091185-61582044d556?q=80&w=800&auto=format&fit=crop",
-    inUse: false,
-    usedAs: null,
+    references: [
+      {
+        type: "persona-avatar",
+        entityId: "demo-persona",
+        label: "Décima Casa",
+        slug: "decima-casa",
+      },
+    ],
   },
   {
     key: "demo-listing-1",
@@ -42,8 +54,7 @@ export const DEMO_MY_MEDIA: MyMediaItem[] = [
     lastModified: "2026-08-05T10:00:00.000Z",
     fileUrl:
       "https://images.unsplash.com/photo-1485893086445-ed75865251e0?q=80&w=800&auto=format&fit=crop",
-    inUse: false,
-    usedAs: null,
+    references: [],
   },
 ];
 

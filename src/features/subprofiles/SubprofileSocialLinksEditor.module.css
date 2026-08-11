@@ -1,6 +1,31 @@
 /* Row layout for SubprofileSocialLinksEditor. Tokens only; mirrors the
    main-profile social editor (members/ProfileEdit.module.css). */
 
+/* Inline field scaffold for `SubprofileItemLinksField` (per-item links inside
+   the item drawer). Deliberately NOT `<FormField>`: FormField's `.field select`
+   / `.field input` descendant rules out-specify this module's `.linkSelect` /
+   `.inlineInput` and blow the platform picker up to full width. Mirrors the
+   neighbouring `HandleChipInput` label/helper instead. */
+.fieldWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.fieldLabel {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.fieldHelper {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  line-height: 1.5;
+}
+
 .linksEditor {
   display: flex;
   flex-direction: column;

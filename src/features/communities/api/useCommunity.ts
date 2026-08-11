@@ -88,6 +88,9 @@ function demoEditableFields(
     rosterVisible: true,
     features: ["discussion"],
     rules: living?.rules ?? [],
+    // The demo mock view-models carry no cover image; the edit form starts empty
+    // and an override can set one (demo covers are held in the session store).
+    coverImageUrl: "",
   };
   if (!override) return base;
   return {
@@ -100,6 +103,7 @@ function demoEditableFields(
     rosterVisible: override.rosterVisible ?? base.rosterVisible,
     features: override.features ?? base.features,
     rules: override.rules ?? base.rules,
+    coverImageUrl: override.coverImageUrl ?? base.coverImageUrl,
   };
 }
 

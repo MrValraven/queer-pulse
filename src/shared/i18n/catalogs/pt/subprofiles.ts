@@ -192,6 +192,7 @@ export const subprofiles: Catalog = {
   "kind.facilitator": "Facilitação",
   "kind.tutor": "Explicações",
   "kind.lecturer": "Docência universitária",
+  "kind.pole_dancer": "Pole dance",
 
   // Rótulos de secção — `section` também é persistido (SubprofileItemDTO.section).
   "section.projects": "Projetos",
@@ -531,6 +532,7 @@ export const subprofiles: Catalog = {
   "itemEditor.itemNumber": "Item {n}",
   "itemEditor.moveUp": "Mover para cima",
   "itemEditor.moveDown": "Mover para baixo",
+  "itemEditor.dragToReorder": "Arrasta para reordenar",
   "itemEditor.remove": "Remover",
   "itemEditor.tagsHelper": "Separa com vírgulas",
   "itemEditor.feature": "Tornar isto o destaque",
@@ -722,6 +724,7 @@ export const subprofiles: Catalog = {
     "Um espaço afirmativo para pensar as coisas com calma.",
   "template.tagline.astrologer":
     "Mapas lidos com calma, para a vida que estás a viver.",
+  "template.tagline.pole_dancer": "No varão e na sala — atuo e ensino.",
   "template.tagline.generic": "Umas quantas coisas que fiz, reunidas aqui.",
 
   // Exemplos por secção (usados tanto pelo modelo inicial como pelo botão
@@ -784,6 +787,9 @@ export const subprofiles: Catalog = {
   "template.section.mixes.item2.subtitle": "Um segundo exemplo para trocares",
   "template.section.performances.item1.title": "Uma atuação",
   "template.section.performances.item1.subtitle": "Onde aconteceu",
+  "template.section.classes.item1.title": "Uma aula que dou",
+  "template.section.classes.item1.subtitle": "Nível · estúdio",
+  "template.section.classes.item1.desc": "O que cobre e para quem é.",
   "template.section.reel.item1.title": "O meu reel",
   "template.section.reel.item1.desc": "O que mostra e de onde é.",
   "template.section.appearances.item1.title": "Uma aparição",
@@ -1215,6 +1221,23 @@ export const subprofiles: Catalog = {
   "skinExtras.classroom.where": "Onde e quando",
   "skinExtras.classroom.extras": "Também",
   "skinExtras.classroom.promisesTitle": "O que levas contigo",
+
+  // Editor e leitor de poema com formatação (ofício poesia, skin página) —
+  // blocos estruturados de estrofe/separador/nota com formatação em itálico/negrito.
+  "poem.editor.label": "Poema",
+  "poem.editor.stanzaPlaceholder": "Escreve uma estrofe — Enter para uma nova linha",
+  "poem.editor.notePlaceholder": "Uma epígrafe ou dedicatória",
+  "poem.editor.addStanza": "Estrofe",
+  "poem.editor.addBreak": "Separador",
+  "poem.editor.addNote": "Nota",
+  "poem.editor.moveUp": "Mover bloco para cima",
+  "poem.editor.moveDown": "Mover bloco para baixo",
+  "poem.editor.remove": "Remover bloco",
+  "poem.editor.italic": "Itálico",
+  "poem.editor.bold": "Negrito",
+  "poem.editor.toolbarAria": "Formatação de texto",
+  "poem.row.openAria": "Ler o poema “{title}”",
+  "poem.reader.withLabel": "Com {names}",
 
   // Skin-blocks editor (personas expansion — page-block editor pane, rail entry & field labels)
   "editorRail.skinBlocks": "Blocos da página",

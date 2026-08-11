@@ -73,6 +73,7 @@ export const KIND_SECTIONS: Record<SubprofileKind, SubprofileSection[]> = {
   spoken_word: ["pieces", "readings"],
   host: ["hosted", "appearances"],
   voguer: ["balls", "reel"],
+  pole_dancer: ["performances", "classes", "reel", "workshops"],
   // studio (new kinds)
   illustrator: ["portfolio", "clients"],
   tattoo_artist: ["flash", "healed"],
@@ -811,6 +812,7 @@ export const KIND_LABEL_KEYS: Record<SubprofileKind, string> = {
   spoken_word: "subprofiles:kind.spoken_word",
   host: "subprofiles:kind.host",
   voguer: "subprofiles:kind.voguer",
+  pole_dancer: "subprofiles:kind.pole_dancer",
   // studio (new kinds)
   illustrator: "subprofiles:kind.illustrator",
   tattoo_artist: "subprofiles:kind.tattoo_artist",
@@ -930,6 +932,7 @@ export const KIND_LABELS: Record<SubprofileKind, string> = {
   spoken_word: "Spoken word artist",
   host: "Host & emcee",
   voguer: "Ballroom & vogue",
+  pole_dancer: "Pole dancer",
   // studio (new kinds)
   illustrator: "Illustrator",
   tattoo_artist: "Tattoo artist",
@@ -1076,6 +1079,7 @@ const KIND_SLUG: Record<SubprofileKind, string> = {
   spoken_word: "spoken-word",
   host: "host",
   voguer: "voguer",
+  pole_dancer: "pole-dancer",
   // studio (new kinds)
   illustrator: "illustrator",
   tattoo_artist: "tattoo-artist",

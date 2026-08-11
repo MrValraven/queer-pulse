@@ -1,4 +1,5 @@
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { ImageUploadField } from "../../subprofiles/ImageUploadField";
 import { TINT_OPTIONS, type TintKey } from "./startCommunity.data";
 import type { CommunityForm } from "./useCommunityForm";
 import styles from "./StartCommunityPage.module.css";
@@ -36,6 +37,20 @@ export function StepFeeling({ form }: { form: CommunityForm }) {
             </button>
           ))}
         </div>
+      </div>
+
+      <div className={styles.field}>
+        <label>{t("communities:start.feeling.coverLabel")}</label>
+        <ImageUploadField
+          kind="community-cover"
+          value={draft.coverImageUrl}
+          onChange={(coverImageUrl) => set({ coverImageUrl })}
+          size={150}
+          placeholder={draft.name || t("communities:start.feeling.coverLabel")}
+        />
+        <span className={styles.hint}>
+          {t("communities:start.feeling.coverHint")}
+        </span>
       </div>
 
       <div className={styles.field}>

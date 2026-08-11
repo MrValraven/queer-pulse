@@ -20,6 +20,7 @@ import { GalleryLightbox } from "./skins/GalleryLightbox";
 import { getGalleryWorks } from "./skins/galleryWorks";
 import { useStudioLightbox } from "./useStudioLightbox";
 import { useImageLightbox } from "./useImageLightbox";
+import { PoemReaderModal } from "./poem/PoemReaderModal";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { personaPublicPath } from "./personaLinks.data";
 import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
@@ -27,6 +28,7 @@ import { skinFor } from "./subprofile-skins";
 import { estimateDraftReadiness } from "./subprofileDraftReadiness";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import { PAGE_STATE_COPY, type PersonaPageState } from "./subprofilePageStates.data";
+import type { SubprofileItemView } from "./api/subprofiles.adapters";
 import styles from "./SubprofilePage.module.css";
 
 type PeopleModalMode = "followers" | "endorsements";
@@ -82,6 +84,7 @@ export function SubprofilePage() {
   const [peopleModalMode, setPeopleModalMode] = useState<PeopleModalMode | null>(
     null,
   );
+  const [poemItem, setPoemItem] = useState<SubprofileItemView | null>(null);
 
   function handleAction(action: PersonaAction) {
     if (action === "report") setReportOpen(true);
@@ -211,7 +214,12 @@ export function SubprofilePage() {
         onOpenWorkAt={lightbox.openAt}
         onOpenWorkItem={lightbox.openItem}
         onOpenGalleryPhoto={galleryLightbox.openItem}
+        onOpenPoem={setPoemItem}
       />
+
+      {poemItem && (
+        <PoemReaderModal item={poemItem} onClose={() => setPoemItem(null)} />
+      )}
 
       {lightbox.index !== null && lightbox.works.length > 0 && (
         <StudioLightbox

@@ -80,6 +80,14 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
     minWidth: 1200,
     minHeight: 600,
   },
+  // A community's cover banner — full-bleed hero on the homepage featured card,
+  // same constraints as a story cover (min 1200 × 600px, under 10 MB).
+  "community-cover": {
+    maxBytes: 10 * MB,
+    maxLabel: "10 MB",
+    minWidth: 1200,
+    minHeight: 600,
+  },
 };
 
 /** Type + size guards. Throws a human-readable `Error` the UI shows in role="alert". */
@@ -126,6 +134,7 @@ const MAX_DIMENSION_PX: Record<UploadKind, number> = {
   "work-image": 1600,
   "story-cover": 2560,
   "listing-photo": 2560,
+  "community-cover": 2560,
 };
 
 /** Re-encode quality used once an image is actually being downscaled — a

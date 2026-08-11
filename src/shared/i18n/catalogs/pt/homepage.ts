@@ -217,9 +217,12 @@ export const homepage: Catalog = {
   "communities.category.arts": "Artes",
   "communities.category.support": "Apoio",
   "communities.category.activism": "Ativismo",
+  "communities.category.sports": "Desporto",
+  "communities.category.professional": "Profissional",
 
   "communities.access.open": "Adesão aberta",
   "communities.access.request": "Adesão por pedido",
+  "communities.access.invite": "Só por convite",
   "communities.access.private": "Privada",
 
   "communities.rail.showingCount": "A mostrar · {count}",
@@ -241,6 +244,7 @@ export const homepage: Catalog = {
   "communities.spotlight.whatHappensHere": "O que acontece aqui",
   "communities.spotlight.whatYouGet": "O que ganhas ao entrar",
   "communities.spotlight.keptBy": "Mantida por <b>{name}</b> e {extra}",
+  "communities.spotlight.keptByName": "Mantida por <b>{name}</b>",
   "communities.spotlight.sinceLabel": "Desde {year}",
   "communities.spotlight.peekInsideCta": "Espreitar lá dentro",
   "communities.spotlight.joinCta": "Junta-te",

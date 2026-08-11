@@ -273,6 +273,14 @@ export const TEMPLATE_ITEMS: Partial<Record<SubprofileSection, TemplateItem[]>> 
       date: "2025",
     },
   ],
+  // yoga_teacher + pole_dancer
+  classes: [
+    {
+      titleKey: "subprofiles:template.section.classes.item1.title",
+      subtitleKey: "subprofiles:template.section.classes.item1.subtitle",
+      descriptionKey: "subprofiles:template.section.classes.item1.desc",
+    },
+  ],
   // generic
   showcase: [
     {
@@ -304,6 +312,7 @@ export const TEMPLATE_TAGLINE: Partial<Record<SubprofileKind, string>> = {
   mixologist: "subprofiles:template.tagline.mixologist",
   therapist: "subprofiles:template.tagline.therapist",
   astrologer: "subprofiles:template.tagline.astrologer",
+  pole_dancer: "subprofiles:template.tagline.pole_dancer",
   generic: "subprofiles:template.tagline.generic",
 };
 

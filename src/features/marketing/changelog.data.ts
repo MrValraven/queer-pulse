@@ -93,6 +93,80 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "meganav-highlight-illustrations",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("meganav-highlight-illustrations"),
+      },
+      {
+        id: "poet-rich-poems",
+        category: "feature",
+        date: "11 Aug 2026",
+        ...entryKeys("poet-rich-poems"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "persona-editor-drag-reorder",
+        category: "feature",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-editor-drag-reorder"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "persona-item-link-picker-size",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-item-link-picker-size"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "persona-editor-wide-sheet",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-editor-wide-sheet"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "community-featured-cards",
+        category: "feature",
+        date: "11 Aug 2026",
+        ...entryKeys("community-featured-cards"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "media-in-use-references",
+        category: "feature",
+        date: "11 Aug 2026",
+        ...entryKeys("media-in-use-references"),
+      },
+      {
+        id: "homepage-featured-photo-fix",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("homepage-featured-photo-fix"),
+      },
+      {
+        id: "admin-media-filter-by-uploader",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("admin-media-filter-by-uploader"),
+      },
+      {
         id: "persona-preview-banner-bleed",
         category: "improvement",
         date: "11 Aug 2026",
@@ -120,6 +194,16 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         tag: {
           labelKey: "marketing:changelog.tag.subprofiles",
           to: routes.subprofiles,
+        },
+      },
+      {
+        id: "pole-dancer-persona",
+        category: "feature",
+        date: "11 Aug 2026",
+        ...entryKeys("pole-dancer-persona"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
         },
       },
       {

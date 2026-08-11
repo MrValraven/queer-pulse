@@ -32,7 +32,18 @@
 }
 
 /* The control styling applies to any input/textarea/select dropped in as a
-   child, so callers don't need to add a className. */
+   child, so callers don't need to add a className.
+
+   GOTCHA — these are DESCENDANT selectors at specificity (0,1,1), so they also
+   reach into any native control nested inside a *custom editor* passed as the
+   field's child, out-specifying that control's own (0,1,0) module class and
+   blowing it up to full-width / 16px padding. If you drop a component with its
+   OWN compact/inline controls into a FormField (a row of selects, a photo-tile
+   URL input), scope that control's class ABOVE (0,1,1) so it wins — see
+   `.cnEntry .cnInput` (cinema) and `.photoField .photoUrlInput` (list-business).
+   These selectors are deliberately NOT narrowed to `.field input`: several
+   callers rely on them styling a bare, class-less control nested a wrapper div
+   deep (e.g. ListBusinessLocationField's address input). */
 .field input,
 .field textarea,
 .field select {

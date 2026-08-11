@@ -242,7 +242,6 @@ export const shared: Catalog = {
   // MegaNav — Community
   "megaNav.community.title": "Community",
   "megaNav.community.subtitle": "People & gathering",
-  "megaNav.community.previewCaption": "Gathering photo — supper club, Mouraria",
   "megaNav.community.feature.eyebrow": "Community",
   "megaNav.community.feature.title": "Find your people.",
   "megaNav.community.feature.body":
@@ -268,7 +267,6 @@ export const shared: Catalog = {
   // MegaNav — Lisbon
   "megaNav.lisbon.title": "Lisbon",
   "megaNav.lisbon.subtitle": "Discover & living here",
-  "megaNav.lisbon.previewCaption": "Map of verified local spaces",
   "megaNav.lisbon.feature.eyebrow": "Lisbon",
   // Reframed (Task 11): the directory is the single browse surface for local
   // spaces (verified badge + `?safe=verified` filter live there now), so this
@@ -300,7 +298,6 @@ export const shared: Catalog = {
   // MegaNav — Resources
   "megaNav.resources.title": "Resources",
   "megaNav.resources.subtitle": "Health, safety, library",
-  "megaNav.resources.previewCaption": "A quiet place to find support",
   "megaNav.resources.feature.eyebrow": "Support",
   "megaNav.resources.feature.title": "Help when you need it.",
   "megaNav.resources.feature.body":
@@ -322,7 +319,6 @@ export const shared: Catalog = {
   // MegaNav — Culture
   "megaNav.culture.title": "Culture",
   "megaNav.culture.subtitle": "Read, watch, create",
-  "megaNav.culture.previewCaption": "The current issue, cover to cover",
   "megaNav.culture.feature.eyebrow": "The Magazine",
   "megaNav.culture.feature.title": "Read the new issue.",
   "megaNav.culture.feature.body":
@@ -343,7 +339,6 @@ export const shared: Catalog = {
   // MegaNav — Work
   "megaNav.work.title": "Work",
   "megaNav.work.subtitle": "Career & economy",
-  "megaNav.work.previewCaption": "Skills, jobs & solidarity economy",
   "megaNav.work.feature.eyebrow": "Your workspace",
   "megaNav.work.feature.title": "Your Work, in one place.",
   "megaNav.work.feature.body":
@@ -365,7 +360,6 @@ export const shared: Catalog = {
   // MegaNav — About
   "megaNav.about.title": "About",
   "megaNav.about.subtitle": "The platform & legal",
-  "megaNav.about.previewCaption": "How QueerPulse works",
   "megaNav.about.feature.eyebrow": "About",
   "megaNav.about.feature.title": "What QueerPulse is.",
   "megaNav.about.feature.body":
@@ -405,4 +399,28 @@ export const shared: Catalog = {
   // (grant/suggest-edit/sober-host/panel/incubator) fails to reach the backend.
   "intake.errorToast":
     "We couldn't send that just now. Please try again in a moment.",
+
+  // mediaRef.* — category labels for a `MediaReference.type`
+  // (shared/media/mediaReferences.ts), read by both the My-uploads pane
+  // and the admin media console to describe where an uploaded image is
+  // in use.
+  "mediaRef.profile-photo": "Profile photo",
+  "mediaRef.showcase": "Showcase",
+  "mediaRef.story-cover": "Story cover",
+  "mediaRef.event-photo": "Event",
+  "mediaRef.event-cover": "Event",
+  "mediaRef.group-avatar": "Group chat",
+  "mediaRef.listing": "Listing",
+  "mediaRef.persona-avatar": "Persona",
+  "mediaRef.persona-cover": "Persona",
+  "mediaRef.persona-item": "Persona",
+  "mediaRef.community-post": "Community post",
+  "mediaRef.community-cover": "Community",
+  "mediaRef.cinema-cover": "Cinema title",
+  "mediaRef.landlord": "Landlord",
+  "mediaRef.company-work": "Company",
+  "mediaRef.housing": "Housing",
+  "mediaRef.magazine-author": "Magazine author",
+  "mediaRef.changemaker": "Changemaker",
+  "mediaRef.collection": "Collection",
 };

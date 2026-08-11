@@ -194,6 +194,7 @@ export const subprofiles: Catalog = {
   "kind.facilitator": "Workshop facilitator",
   "kind.tutor": "Tutor",
   "kind.lecturer": "Lecturer",
+  "kind.pole_dancer": "Pole dancer",
 
   // Section display labels — `section` is also persisted (SubprofileItemDTO.section).
   "section.projects": "Projects",
@@ -526,6 +527,7 @@ export const subprofiles: Catalog = {
   "itemEditor.itemNumber": "Item {n}",
   "itemEditor.moveUp": "Move up",
   "itemEditor.moveDown": "Move down",
+  "itemEditor.dragToReorder": "Drag to reorder",
   "itemEditor.remove": "Remove",
   "itemEditor.tagsHelper": "Separate with commas",
   "itemEditor.feature": "Make this the spotlight",
@@ -702,6 +704,8 @@ export const subprofiles: Catalog = {
   "template.tagline.mixologist": "Drinks mixed for the night ahead.",
   "template.tagline.therapist": "An affirming space to think things through.",
   "template.tagline.astrologer": "Charts read slowly, for the life you're living.",
+  "template.tagline.pole_dancer":
+    "On the pole and in the room — I perform, and I teach.",
   "template.tagline.generic": "A few things I've made, gathered here.",
 
   // Per-section example items (used by both the create-time template and
@@ -761,6 +765,9 @@ export const subprofiles: Catalog = {
   "template.section.mixes.item2.subtitle": "A second example to swap in",
   "template.section.performances.item1.title": "A performance",
   "template.section.performances.item1.subtitle": "Where it happened",
+  "template.section.classes.item1.title": "A class I teach",
+  "template.section.classes.item1.subtitle": "Level · studio",
+  "template.section.classes.item1.desc": "What it covers and who it's for.",
   "template.section.reel.item1.title": "My reel",
   "template.section.reel.item1.desc": "What it shows and where it's from.",
   "template.section.appearances.item1.title": "An appearance",
@@ -1175,6 +1182,23 @@ export const subprofiles: Catalog = {
   "skinExtras.classroom.where": "Where & when",
   "skinExtras.classroom.extras": "Also",
   "skinExtras.classroom.promisesTitle": "What you leave with",
+
+  // Rich poem editor + reader (poet kind, page skin) — structured stanza/
+  // break/note blocks with inline italic/bold formatting.
+  "poem.editor.label": "Poem",
+  "poem.editor.stanzaPlaceholder": "Write a stanza — press Enter for a new line",
+  "poem.editor.notePlaceholder": "An epigraph or dedication",
+  "poem.editor.addStanza": "Stanza",
+  "poem.editor.addBreak": "Section break",
+  "poem.editor.addNote": "Note",
+  "poem.editor.moveUp": "Move block up",
+  "poem.editor.moveDown": "Move block down",
+  "poem.editor.remove": "Remove block",
+  "poem.editor.italic": "Italic",
+  "poem.editor.bold": "Bold",
+  "poem.editor.toolbarAria": "Text formatting",
+  "poem.row.openAria": "Read the poem “{title}”",
+  "poem.reader.withLabel": "With {names}",
 
   // Skin-blocks editor (personas expansion — page-block editor pane, rail entry & field labels)
   "editorRail.skinBlocks": "Page blocks",

@@ -104,6 +104,7 @@ export function EditorPreview({
             onOpenWorkAt={noop}
             onOpenWorkItem={noop}
             onOpenGalleryPhoto={noop}
+            onOpenPoem={noop}
           />
         </div>
       </div>

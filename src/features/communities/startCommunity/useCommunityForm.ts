@@ -41,6 +41,7 @@ export function emptyDraft(owner: Steward): CommunityDraft {
     features: ["discussion"],
     rules: [...RULE_PRESET_KEYS],
     tint: "coral",
+    coverImageUrl: "",
     tagline: "",
     invites: [],
     handle: "",

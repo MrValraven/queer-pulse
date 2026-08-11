@@ -1,0 +1,86 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.label {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 60%, transparent);
+}
+.blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.block {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  align-items: start;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 10px;
+  background: var(--paper);
+}
+.block[data-kind="break"] {
+  background: transparent;
+  border-style: dashed;
+}
+.blockMain {
+  min-width: 0;
+}
+.breakRow {
+  text-align: center;
+  letter-spacing: 0.5em;
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
+  padding: 0.3rem 0;
+}
+.note {
+  font-style: italic;
+  color: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+.blockOps {
+  display: inline-flex;
+  gap: 0.15rem;
+}
+.blockOps button {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+.blockOps button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+}
+.blockOps button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.addBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.addBar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.addBar button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}

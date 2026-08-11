@@ -675,6 +675,10 @@ export const admin: Catalog = {
   "media.delete.confirmTitle": "Permanently delete this file?",
   "media.delete.confirmBody":
     "This removes the stored file from the bucket for good. If a profile, listing, or post still points at it, that image will stop loading. This can't be undone.",
+  "media.delete.confirmBodyInUse_one":
+    "This file is still referenced in {count} place, listed below. Deleting it now will break that image — it'll stop loading. This can't be undone.",
+  "media.delete.confirmBodyInUse_other":
+    "This file is still referenced in {count} places, listed below. Deleting it now will break those images — they'll stop loading. This can't be undone.",
   "media.delete.confirm": "Delete file",
   "media.delete.pending": "Deleting…",
   "media.delete.success": "File deleted",
@@ -688,6 +692,22 @@ export const admin: Catalog = {
   "media.demo.title": "Available in live mode only",
   "media.demo.body":
     "Uploaded images come from the live storage bucket, so there is nothing to show in demo mode.",
+  "media.filterByUploader.searchPlaceholder": "Filter by who uploaded it…",
+  "media.filterByUploader.searchAriaLabel": "Search members to filter uploads",
+  "media.filterByUploader.noResults": "No members match “{search}”.",
+  "media.filterByUploader.activePill": "Filtering by <strong>{name}</strong>",
+  "media.filterByUploader.clearAria": "Clear uploader filter",
+  "media.filterByUploader.showAll": "All from this member",
+  "media.filterByUploader.emptyForUser":
+    "{name} hasn't uploaded anything to the bucket.",
+  "media.references.inUseBadge": "In use ({count})",
+  "media.references.orphanBadge": "No references",
+  "media.references.heading": "Referenced in",
+  "media.references.empty": "No references found — safe to delete.",
+  "media.references.unverified":
+    "Unverified — some reference checks couldn’t run, so this may still be in use. Reload before deleting.",
+  "media.references.degradedBanner":
+    "Some reference checks couldn’t run, so an empty “No references” is unverified for this page. Reload before treating any file as an orphan.",
 
   // ── Edit suggestions ─────────────────────────────────────────────────────────
   "editSuggestions.empty": "No corrections in this filter right now.",

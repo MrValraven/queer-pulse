@@ -1,3 +1,69 @@
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 420px;
+}
+
+.activeFilter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px 8px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 999px;
+  background: var(--paper);
+}
+
+.activeFilterLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--ink-70, var(--ink-60));
+  overflow-wrap: anywhere;
+}
+
+.activeFilterLabel strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.activeFilterClear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  margin-left: auto;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(var(--line-rgb), 0.1);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.activeFilterClear:hover,
+.activeFilterClear:focus-visible {
+  background: rgba(var(--line-rgb), 0.2);
+}
+
+.uploaderChip {
+  color: var(--violet);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 4px;
+  text-underline-offset: 2px;
+}
+
+.uploaderChip:hover,
+.uploaderChip:focus-visible {
+  text-decoration: underline;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
@@ -25,9 +91,16 @@
   background: rgba(var(--line-rgb), 0.06);
 }
 
+.badgeRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 10px 0;
+}
+
 .kindBadge {
   align-self: flex-start;
-  margin: 8px 10px 0;
   padding: 2px 8px;
   font-size: 12px;
   border-radius: 999px;
@@ -86,4 +159,84 @@
 
 .actionLink:hover {
   border-color: rgba(var(--line-rgb), 0.32);
+}
+
+.referencesSection {
+  margin-top: 20px;
+}
+
+.referencesHeading {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-60);
+}
+
+.referencesEmpty {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ink-60);
+}
+
+.referencesList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.referenceItem {
+  font-size: 13.5px;
+}
+
+.referenceLink {
+  color: var(--violet);
+  text-underline-offset: 2px;
+}
+
+.referenceLink:hover,
+.referenceLink:focus-visible {
+  text-decoration: underline;
+}
+
+.referenceLabel {
+  color: var(--text-strong);
+}
+
+.referenceWarning {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 14px;
+  color: var(--amber-ink);
+  font-weight: 600;
+}
+
+.referenceWarning svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Console-level caution when the resolver reported degraded (some reference
+   checks failed), so an object's empty reference set is unverified. */
+.degradedBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(var(--amber-rgb), 0.5);
+  background: rgba(var(--amber-rgb), 0.1);
+  color: var(--amber-ink);
+  font-size: 13.5px;
+}
+
+.degradedBanner svg {
+  flex-shrink: 0;
+  margin-top: 2px;
 }

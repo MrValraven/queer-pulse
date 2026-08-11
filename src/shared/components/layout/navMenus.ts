@@ -47,8 +47,6 @@ export interface MegaMenu {
   titleKey: string;
   /** Catalog key for the rail subtitle shown under the title in the new mega panel. */
   subtitleKey: string;
-  /** Catalog key for the ImageSlot placeholder caption in the panel's preview card. */
-  previewCaptionKey: string;
   /** Rail icon for the sidebar nav; the top MegaNav ignores it. */
   icon?: IconType;
   feature?: MegaFeature;
@@ -105,7 +103,6 @@ export const NAV_MENUS: MegaMenu[] = [
     key: "Community",
     titleKey: "shared:megaNav.community.title",
     subtitleKey: "shared:megaNav.community.subtitle",
-    previewCaptionKey: "shared:megaNav.community.previewCaption",
     icon: FiUsers,
     feature: {
       eyebrowKey: "shared:megaNav.community.feature.eyebrow",
@@ -158,7 +155,6 @@ export const NAV_MENUS: MegaMenu[] = [
     key: "Lisbon",
     titleKey: "shared:megaNav.lisbon.title",
     subtitleKey: "shared:megaNav.lisbon.subtitle",
-    previewCaptionKey: "shared:megaNav.lisbon.previewCaption",
     icon: FiMapPin,
     feature: {
       eyebrowKey: "shared:megaNav.lisbon.feature.eyebrow",
@@ -217,7 +213,6 @@ export const NAV_MENUS: MegaMenu[] = [
     key: "Resources",
     titleKey: "shared:megaNav.resources.title",
     subtitleKey: "shared:megaNav.resources.subtitle",
-    previewCaptionKey: "shared:megaNav.resources.previewCaption",
     icon: FiLifeBuoy,
     feature: {
       eyebrowKey: "shared:megaNav.resources.feature.eyebrow",
@@ -288,7 +283,6 @@ export const NAV_MENUS: MegaMenu[] = [
     key: "Culture",
     titleKey: "shared:megaNav.culture.title",
     subtitleKey: "shared:megaNav.culture.subtitle",
-    previewCaptionKey: "shared:megaNav.culture.previewCaption",
     icon: FiBookOpen,
     feature: {
       eyebrowKey: "shared:megaNav.culture.feature.eyebrow",
@@ -353,7 +347,6 @@ export const NAV_MENUS: MegaMenu[] = [
     key: "Work",
     titleKey: "shared:megaNav.work.title",
     subtitleKey: "shared:megaNav.work.subtitle",
-    previewCaptionKey: "shared:megaNav.work.previewCaption",
     icon: FiBriefcase,
     feature: {
       eyebrowKey: "shared:megaNav.work.feature.eyebrow",
@@ -421,7 +414,6 @@ export const NAV_MENUS: MegaMenu[] = [
     key: "About",
     titleKey: "shared:megaNav.about.title",
     subtitleKey: "shared:megaNav.about.subtitle",
-    previewCaptionKey: "shared:megaNav.about.previewCaption",
     icon: FiInfo,
     feature: {
       eyebrowKey: "shared:megaNav.about.feature.eyebrow",

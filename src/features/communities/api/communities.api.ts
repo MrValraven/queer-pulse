@@ -38,6 +38,9 @@ export interface CommunityDetailDTO extends CommunityCardDTO {
   rosterVisible: boolean;
   features: string[]; // ⊆ "discussion"|"events"|"rooms"|"roster"|"library"
   rules: string[];
+  /** Resolved cover-image URL, or null when the community has no cover. The
+   *  owner's edit modal seeds its `ImageUploadField` from this. */
+  coverImageUrl: string | null;
   owner: MemberRefDTO | null;
   createdAt: string;
   /** True once an owner has archived the community. Only ever present for the
@@ -138,6 +141,9 @@ export interface CreateCommunityDto {
   features: string[];
   rules: string[];
   tagline: string;
+  /** Cover image — a storage key from the `community-cover` upload, an https
+   *  URL, or "" / null to clear. Optional; omit to leave unchanged on PATCH. */
+  coverImageUrl?: string | null;
   handle: string; // desired slug
   stewards?: string[]; // member slugs → seeded as "mod"
   invites?: string[]; // ⚠ accepted but NOT persisted yet

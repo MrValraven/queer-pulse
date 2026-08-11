@@ -34,6 +34,43 @@
   padding: 2px 6px;
   border-radius: 999px;
   border: 1px solid rgba(var(--line-rgb), 0.6);
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+.notReferenced {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px dashed rgba(var(--line-rgb), 0.4);
+  color: var(--ink-40);
+  white-space: nowrap;
+}
+/* Shown in place of "Not referenced" when a reference check failed: the empty
+   result is unverified, so it must not read as a reassuring green light. */
+.unverified {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--amber-rgb), 0.5);
+  color: var(--amber-ink);
+  white-space: nowrap;
+}
+/* Page-level caution when the resolver reported degraded (some checks failed). */
+.degradedBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(var(--amber-rgb), 0.5);
+  background: rgba(var(--amber-rgb), 0.1);
+  color: var(--amber-ink);
+  font-size: 13px;
+}
+.degradedBanner svg {
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 .actions {
   padding: 8px 10px;
@@ -44,4 +81,29 @@
 .deleteBtn {
   width: 100%;
   gap: 6px;
+}
+
+/* Reference list rendered inside the pre-delete ConfirmDialog's body (its
+   `children` slot, not `description` — a `<ul>` can't nest inside the
+   dialog's own `<p>`). */
+.referenceList {
+  margin-top: 12px;
+}
+.referenceListHeading {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.referenceItems {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+.referenceItems a {
+  color: var(--accent);
 }

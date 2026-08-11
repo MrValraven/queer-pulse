@@ -181,7 +181,8 @@ export type SubprofileKind =
   | "teacher"
   | "facilitator"
   | "tutor"
-  | "lecturer";
+  | "lecturer"
+  | "pole_dancer";
 
 export type SubprofileSection =
   | "projects"
@@ -312,6 +313,33 @@ export interface MenuCourse {
   name: string;
   dishes: MenuDish[];
 }
+/** One block of a poem body (poet `poems` section). Stored in the item's
+ *  `structured` jsonb blob — no dedicated columns, no migration; round-trips
+ *  untouched via `itemToView`/`itemsToInputDto` like `structured.snippet`.
+ *  `html` carries inline emphasis + `<br>` line breaks ONLY (allowlist
+ *  `em`/`strong`/`br` — see `sanitizePoemHtml`). */
+export type PoemBlock = PoemStanzaBlock | PoemBreakBlock | PoemNoteBlock;
+
+/** A run of verse lines; `<br>`-separated lines preserved verbatim. */
+export interface PoemStanzaBlock {
+  kind: "stanza";
+  id: string;
+  html: string;
+}
+
+/** A stanza/section divider (rendered as an asterism). No text of its own. */
+export interface PoemBreakBlock {
+  kind: "break";
+  id: string;
+}
+
+/** An epigraph / dedication, set in italic and slightly recessed. */
+export interface PoemNoteBlock {
+  kind: "note";
+  id: string;
+  html: string;
+}
+
 /** Nested per-item data that doesn't fit flat columns (subprofile_items.structured). */
 export interface ItemStructured {
   courses?: MenuCourse[] | null;
@@ -322,6 +350,9 @@ export interface ItemStructured {
    *  the persona-level `SocialLinkDTO` shape so the icon row + platform picker
    *  are shared. Round-trips untouched via `itemToView`/`itemsToInputDto`. */
   links?: SocialLinkDTO[] | null;
+  /** Poet `poems` section only: the poem body as an ordered block list.
+   *  See `PoemBlock`. Absent on every other section/kind. */
+  poem?: PoemBlock[] | null;
 }
 
 /** Persona-level skin blocks (subprofiles.skin_data). Only the keys relevant to the

@@ -397,7 +397,11 @@
 .cnEntry:last-of-type {
   border-bottom: none;
 }
-.cnInput {
+/* Scoped `.cnEntry .cnInput` (0,2,0), NOT bare `.cnInput` (0,1,0): this compact
+   grid input sits inside a `<FormField>` (CinemaSubmitStep1), whose descendant
+   `.field input` (0,1,1) would otherwise override it to full 16px/13-15px chrome
+   and break the 1fr 1fr 130px row. See FormField.module.css's GOTCHA note. */
+.cnEntry .cnInput {
   width: 100%;
   padding: 9px 12px;
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
@@ -409,7 +413,7 @@
   outline: none;
   transition: border-color var(--dur-base) var(--ease);
 }
-.cnInput:focus {
+.cnEntry .cnInput:focus {
   border-color: var(--line-strong);
 }
 .cnRemove {

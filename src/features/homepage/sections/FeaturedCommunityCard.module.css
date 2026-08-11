@@ -1,0 +1,64 @@
+/* Live-mode extras layered on top of the reused `.spot*` classes from
+   Communities.module.css. The demo card carries its own polished styling; this
+   module only adds what the live card needs that the demo one doesn't:
+   a stacked list of standalone cards, avatar images inside face circles, a
+   category badge that covers all six community types, and a member-count line. */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+/* The reused `.spot` is built to sit beside a rail in a two-column layout;
+   standalone it simply fills the constrained list column. */
+.card {
+  width: 100%;
+}
+
+.nameLink {
+  color: inherit;
+  text-decoration: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .nameLink:hover {
+    text-decoration: underline;
+  }
+}
+
+/* An uploaded avatar filling a `.face` circle; falls back to initials text when
+   the member has no photo (handled in the component). */
+.faceImg {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* One consistent category badge for every community type — calmer than
+   colour-coding six categories, and self-contained so it never depends on the
+   demo's four-category colour map. Positioned inside `.spotMedia`
+   (which is already `position: relative`). */
+.badge {
+  position: absolute;
+  inset-block-start: var(--gap-sm);
+  inset-inline-start: var(--gap-sm);
+  z-index: 1;
+  padding-block: 4px;
+  padding-inline: 10px;
+  border-radius: var(--radius-pill, 999px);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background: color-mix(in srgb, var(--plum) 82%, transparent);
+  color: var(--cream);
+  backdrop-filter: blur(4px);
+}
+
+.memberCount {
+  font-weight: 600;
+  color: var(--ink-60);
+}

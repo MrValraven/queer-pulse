@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { deleteMyMedia, getMyMedia, type MyMediaItem } from "./myMedia.api";
+import {
+  deleteMyMedia,
+  getMyMedia,
+  type MyMediaListResult,
+} from "./myMedia.api";
 import { getDemoMyMedia, removeDemoMedia } from "./myMedia.demo";
 
 export const MY_MEDIA_KEY = "my-media";
@@ -11,12 +15,21 @@ export const MY_MEDIA_KEY = "my-media";
  *  short-circuit on demo instead of rendering the stand-in data. */
 export function useMyMedia() {
   const { demoMode } = useDemoMode();
-  const query = useQuery<MyMediaItem[]>({
+  const query = useQuery<MyMediaListResult>({
     queryKey: [MY_MEDIA_KEY],
     enabled: true,
-    queryFn: () => (demoMode ? Promise.resolve(getDemoMyMedia()) : getMyMedia()),
+    queryFn: () =>
+      demoMode
+        ? // Demo data is fully known, so its reference checks never fail.
+          Promise.resolve({ items: getDemoMyMedia(), degraded: false })
+        : getMyMedia(),
   });
-  return { ...query, items: query.data ?? [], isDemo: demoMode };
+  return {
+    ...query,
+    items: query.data?.items ?? [],
+    degraded: query.data?.degraded ?? false,
+    isDemo: demoMode,
+  };
 }
 
 export function useDeleteMyMedia() {
@@ -31,8 +44,10 @@ export function useDeleteMyMedia() {
       await deleteMyMedia(key);
     },
     onSuccess: (_result, key) => {
-      queryClient.setQueryData<MyMediaItem[]>([MY_MEDIA_KEY], (current) =>
-        (current ?? []).filter((item) => item.key !== key),
+      queryClient.setQueryData<MyMediaListResult>([MY_MEDIA_KEY], (current) =>
+        current
+          ? { ...current, items: current.items.filter((item) => item.key !== key) }
+          : current,
       );
     },
   });

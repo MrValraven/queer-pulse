@@ -44,6 +44,7 @@ export const SKIN_OF: Record<SubprofileKind, SkinFamily> = {
   spoken_word: "stage",
   host: "stage",
   voguer: "stage",
+  pole_dancer: "stage",
   // studio (new kinds)
   illustrator: "studio",
   tattoo_artist: "studio",
@@ -191,7 +192,7 @@ export const SKIN_META: Record<SkinFamily, SkinMeta> = {
     name: "Stage",
     face: "Anton",
     note: "Poster type, dark ground, marquee rules. For the crafts that happen in front of a room.",
-    kinds: ["Drag", "DJ", "Musician", "Dancer", "Performer"],
+    kinds: ["Drag", "DJ", "Musician", "Dancer", "Performer", "Pole dancer"],
   },
   studio: {
     name: "Studio",

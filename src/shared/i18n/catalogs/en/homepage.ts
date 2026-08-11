@@ -202,9 +202,12 @@ export const homepage: Catalog = {
   "communities.category.arts": "Arts",
   "communities.category.support": "Support",
   "communities.category.activism": "Activism",
+  "communities.category.sports": "Sports",
+  "communities.category.professional": "Professional",
 
   "communities.access.open": "Open to join",
   "communities.access.request": "Request to join",
+  "communities.access.invite": "Invite only",
   "communities.access.private": "Private",
 
   "communities.rail.showingCount": "Showing · {count}",
@@ -224,6 +227,7 @@ export const homepage: Catalog = {
   "communities.spotlight.whatHappensHere": "What happens here",
   "communities.spotlight.whatYouGet": "What you get when you join",
   "communities.spotlight.keptBy": "Kept by <b>{name}</b> & {extra}",
+  "communities.spotlight.keptByName": "Kept by <b>{name}</b>",
   "communities.spotlight.sinceLabel": "Since {year}",
   "communities.spotlight.peekInsideCta": "Peek inside",
   "communities.spotlight.joinCta": "Join",

@@ -86,6 +86,7 @@ export function MobilePersonaPreview({ onClose }: { onClose: () => void }) {
           onOpenWorkAt={noop}
           onOpenWorkItem={noop}
           onOpenGalleryPhoto={noop}
+          onOpenPoem={noop}
         />
       </div>
     </ModalSheet>

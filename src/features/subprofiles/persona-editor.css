@@ -345,6 +345,13 @@
   cursor: grab;
   padding-top: 2px;
   flex: none;
+  /* The grip is a pointer drag handle (useRowDragReorder). `none` stops the
+     browser claiming the gesture for scroll/zoom so a touch drag actually
+     reorders instead of panning the page. */
+  touch-action: none;
+}
+.itemrow .grip:active {
+  cursor: grabbing;
 }
 .itemrow b {
   font-size: 15px;
@@ -609,12 +616,13 @@
 }
 
 /* ── item drawer (Task 5 — SubprofileItemDrawer) ─────────────────────────
-   A right-anchored full-height panel: a different shape than either of the
-   shared `<Modal>` primitive's two variants (centered dialog / bottom
-   sheet), so it needs its own scrim. `.scrim` (base) is included here even
-   though the Phase 3 plan's quoted class list only names `.scrim.right` —
-   the modifier is meaningless without the base full-screen overlay it
-   modifies, and the shared Modal.module.css's own `.scrim` is a
+   A wide bottom-anchored sheet: rises from the bottom edge and spans a
+   generous width so the fields lay out two-up instead of cramming into a
+   narrow side rail. A different shape than either of the shared `<Modal>`
+   primitive's two variants, so it keeps its own scrim. `.scrim` (base) is
+   included here even though the Phase 3 plan's quoted class list only names
+   the modifier — the modifier is meaningless without the base full-screen
+   overlay it modifies, and the shared Modal.module.css's own `.scrim` is a
    CSS-Modules-hashed class this global drawer can't reference. */
 .scrim {
   position: fixed;
@@ -627,9 +635,9 @@
   backdrop-filter: blur(5px);
   animation: qpDrawerScrimIn 0.2s var(--ease);
 }
-.scrim.right {
-  place-items: stretch;
-  justify-content: flex-end;
+.scrim.bottom {
+  /* anchor to the bottom edge, centered horizontally */
+  place-items: end center;
   padding: 0;
 }
 @keyframes qpDrawerScrimIn {
@@ -639,26 +647,26 @@
 }
 .drawer {
   background: var(--paper);
-  width: min(520px, 100%);
-  /* svh, not vh/100%: a `position: fixed; inset: 0` scrim resolves its height
-     against the LARGE viewport, so `height: 100%` overshoots the visible area
-     on mobile — the footer + lower fields run under the browser chrome and the
-     `.drawer-body` flex child never overflows, so it never scrolls. `svh` pins
-     the panel to the visible viewport so its body scroll engages. Mirrors the
-     shared `<Modal>` (`Modal.module.css`), which hit the same trap. The `vh`
-     line is a fallback for browsers without `svh`. The `--keyboard-inset`
-     (published app-wide by `useVisualViewportKeyboard`) shrinks the panel while
-     the iOS soft keyboard is up, so `.drawer-foot` stays above it. */
-  height: 100vh;
-  height: calc(100svh - var(--keyboard-inset, 0px));
+  width: min(960px, 100%);
+  /* Bottom-sheet: sizes to its content, capped at the visible viewport so a
+     long form scrolls its `.drawer-body` rather than pushing `.drawer-foot`
+     under the browser chrome. svh (not vh/%) pins to the SMALL viewport — a
+     `position: fixed; inset: 0` scrim otherwise resolves height against the
+     LARGE viewport and overshoots on mobile. The `vh` line is a fallback for
+     browsers without `svh`. `--keyboard-inset` (published app-wide by
+     `useVisualViewportKeyboard`) shrinks the panel while the iOS soft keyboard
+     is up, so `.drawer-foot` stays above it. */
+  max-height: 90vh;
+  max-height: calc(90svh - var(--keyboard-inset, 0px));
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-panel);
+  border-radius: 26px 26px 0 0;
   animation: qpDrawerSlideIn 0.34s var(--ease);
 }
 @keyframes qpDrawerSlideIn {
   from {
-    transform: translateX(28px);
+    transform: translateY(40px);
     opacity: 0;
   }
 }
@@ -698,16 +706,32 @@
    sits inside `.ed-shell`'s DOM subtree — there is no qualifying
    container-type ancestor for a container query to resolve against here,
    so a `@container` rule at this selector silently never matches. The
-   viewport is the only sizing signal available for a body-level portal. */
-@media (max-width: 760px) {
-  .drawer {
-    width: 100%;
-    /* svh, not %: same large-viewport overshoot as above — an 88%-of-large
-       sheet anchored to the bottom pushes its footer under the mobile chrome. */
-    height: 88vh;
-    height: calc(88svh - var(--keyboard-inset, 0px));
-    margin-top: auto;
-    border-radius: 26px 26px 0 0;
+   viewport is the only sizing signal available for a body-level portal.
+
+   Above the mobile breakpoint the wide sheet lays its fields two-up. Below
+   it, `.drawer-body` stays the single-column flex stack declared above — a
+   phone is too narrow for two field columns. */
+@media (min-width: 761px) {
+  .drawer-body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 22px;
+    row-gap: 18px;
+    align-content: start;
+    /* short field next to a tall description textarea: keep each field at its
+       own height instead of stretching the short one to match. */
+    align-items: start;
+  }
+  /* Full-bleed rows within the two-column form: the image, the collaborator
+     and per-item-link editors, and the feature toggle each span both columns;
+     the short text fields (title/description/link/…) flow two-up between them. */
+  .drawer-body > .pe-field-wide {
+    grid-column: 1 / -1;
+  }
+  /* On the wide sheet the actions read better anchored to the trailing edge,
+     under the last field column, rather than floating at the far left. */
+  .drawer-foot {
+    justify-content: flex-end;
   }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -329,6 +329,7 @@ export function draftToCreateDto(draft: CommunityDraft): CreateCommunityDto {
     features: draft.features,
     rules: draft.rules,
     tagline: draft.tagline.trim(),
+    coverImageUrl: draft.coverImageUrl || null,
     handle: draft.handle.trim(),
     stewards: draft.stewards
       .filter((s) => s.role !== "owner" && s.key !== "owner")
@@ -349,6 +350,9 @@ export interface EditableCommunityFields {
   rosterVisible: boolean;
   features: string[];
   rules: string[];
+  /** Resolved cover URL (or "" for none) — round-trips through the edit modal's
+   *  `ImageUploadField`; the backend rewrites the `/files/*` URL back to a key. */
+  coverImageUrl: string;
 }
 
 /** Live seed: the authoritative current values straight off the detail DTO. */
@@ -363,6 +367,7 @@ export function dtoToEditable(dto: CommunityDetailDTO): EditableCommunityFields 
     rosterVisible: dto.rosterVisible,
     features: dto.features,
     rules: dto.rules,
+    coverImageUrl: dto.coverImageUrl ?? "",
   };
 }
 
@@ -436,6 +441,7 @@ export function editableToDraft(
     features: editable.features,
     rules: editable.rules,
     tint: "coral",
+    coverImageUrl: editable.coverImageUrl,
     tagline: editable.tagline,
     invites: [],
     handle: "",
@@ -456,5 +462,8 @@ export function draftToUpdateDto(draft: CommunityDraft): UpdateCommunityDto {
     features: draft.features,
     rules: draft.rules,
     tagline: draft.tagline.trim(),
+    // "" clears the cover; a resolved URL round-trips (the backend's ownership
+    // interceptor rewrites our own `/files/*` URL back to the stored key).
+    coverImageUrl: draft.coverImageUrl || null,
   };
 }

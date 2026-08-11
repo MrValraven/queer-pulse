@@ -2,6 +2,7 @@ import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { isUpcoming, sectionShape } from "./personaSkinRender";
 import type { PersonaViewMode } from "./personaSkinRender";
+import { poemPlainFirstLine } from "./poem/poemBlocks";
 import { SubprofileItemRow } from "./SubprofileItemRow";
 import { SubprofileItemTile } from "./SubprofileItemTile";
 import type {
@@ -20,6 +21,7 @@ function SectionBody({
   interactive,
   onOpenWork,
   onOpenGalleryPhoto,
+  onOpenPoem,
   displayName,
   accent,
 }: {
@@ -32,6 +34,9 @@ function SectionBody({
    *  `interactive` (never in the editor preview); carries the item so the
    *  lightbox resolves it into its own flat index space (`getGalleryWorks`). */
   onOpenGalleryPhoto?: (item: SubprofileItemView) => void;
+  /** Opens the poem reader modal on a clicked `poems` row. Only wired when
+   *  `interactive` (never in the editor preview). */
+  onOpenPoem?: (item: SubprofileItemView) => void;
   /** The persona's display name — used to derive per-photo alt text for the
    *  caption-less `gallery` section (`subprofiles:galleryPhotoAlt`). */
   displayName: string;
@@ -140,15 +145,28 @@ function SectionBody({
 
   return (
     <div className="pp-list">
-      {items.map((item, index) => (
-        <SubprofileItemRow
-          key={`${item.title}::${item.date}::${index}`}
-          item={item}
-          skin={skin}
-          interactive={interactive}
-          accent={accent}
-        />
-      ))}
+      {items.map((item, index) => {
+        const poemOpen =
+          interactive && item.section === "poems" && onOpenPoem
+            ? onOpenPoem
+            : undefined;
+        return (
+          <SubprofileItemRow
+            key={`${item.title}::${item.date}::${index}`}
+            item={item}
+            skin={skin}
+            interactive={interactive}
+            accent={accent}
+            onOpen={poemOpen}
+            teaser={
+              poemOpen
+                ? poemPlainFirstLine(item.structured?.poem ?? null) ||
+                  item.description
+                : undefined
+            }
+          />
+        );
+      })}
     </div>
   );
 }
@@ -169,6 +187,7 @@ export function SubprofileSections({
   featuredHidden,
   onOpenWork,
   onOpenGalleryPhoto,
+  onOpenPoem,
 }: {
   persona: PublicSubprofileView;
   skin: SkinFamily;
@@ -181,6 +200,9 @@ export function SubprofileSections({
   /** Opens the gallery lightbox on a clicked `gallery` photo — universal
    *  across every skin (see `SectionBody`'s `gallery` branch). */
   onOpenGalleryPhoto?: (item: SubprofileItemView) => void;
+  /** Opens the poem reader modal on a clicked `poems` row — see
+   *  `SectionBody`'s default `list` branch. */
+  onOpenPoem?: (item: SubprofileItemView) => void;
 }) {
   const { t } = useTranslation();
   const interactive = mode !== "preview";
@@ -215,6 +237,7 @@ export function SubprofileSections({
               interactive={interactive}
               onOpenWork={onOpenWork}
               onOpenGalleryPhoto={onOpenGalleryPhoto}
+              onOpenPoem={onOpenPoem}
               displayName={persona.displayName}
               accent={persona.accent ?? undefined}
             />

@@ -1,17 +1,24 @@
 import {
   useInfiniteQuery,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   deleteAdminMediaObject,
   getAdminMediaPage,
+  searchAdminMediaUploaders,
   type AdminMediaKind,
   type AdminMediaPageVM,
+  type AdminMediaUploaderResult,
 } from "./adminMedia.api";
 
 export const ADMIN_MEDIA_KEY = "admin-media";
+
+/** Shortest term the uploader typeahead fires on — matches the backend's
+ *  `MIN_UPLOADER_SEARCH_LENGTH` (a 1-char `ILIKE` would match almost everyone). */
+const MIN_UPLOADER_SEARCH_LENGTH = 2;
 
 /**
  * Raw storage-bucket objects for the admin media console, paginated on the S3
@@ -20,28 +27,63 @@ export const ADMIN_MEDIA_KEY = "admin-media";
  * render its "available in live mode only" state. This endpoint is Admin-only
  * (403s otherwise), so no fabricated data may stand in for it.
  */
-export function useAdminMedia({ kind }: { kind: AdminMediaKind }) {
+export function useAdminMedia({
+  kind,
+  uploaderId,
+}: {
+  kind: AdminMediaKind;
+  /** When set, the query lists this member's uploads across all kinds in one
+   *  page (no continuation token) and `kind` is ignored. */
+  uploaderId?: string;
+}) {
   const { demoMode } = useDemoMode();
 
   const query = useInfiniteQuery<AdminMediaPageVM>({
-    queryKey: [ADMIN_MEDIA_KEY, kind],
+    queryKey: [ADMIN_MEDIA_KEY, kind, uploaderId ?? null],
     enabled: !demoMode,
     initialPageParam: undefined as string | undefined,
     queryFn: ({ pageParam }) =>
       getAdminMediaPage({
         kind,
+        uploaderId,
         continuationToken: pageParam as string | undefined,
       }),
     getNextPageParam: (lastPage) => lastPage.nextContinuationToken ?? undefined,
   });
 
   const objects = query.data?.pages.flatMap((page) => page.objects) ?? [];
+  // Any degraded page taints the whole console: some reference checks failed,
+  // so an object's empty `references` can't be presented as "safe to delete".
+  const degraded = query.data?.pages.some((page) => page.degraded) ?? false;
 
   return {
     ...query,
     objects,
+    degraded,
     isDemo: demoMode,
   };
+}
+
+/**
+ * Member typeahead for the media console's "filter by uploader" search box.
+ * Live-only (like the console itself) and disabled until the term reaches
+ * `MIN_UPLOADER_SEARCH_LENGTH`, mirroring the backend's short-term guard so a
+ * one-character query never fires. `keepPreviousData` keeps the last results
+ * on screen while the next keystroke's request is in flight.
+ */
+export function useAdminMediaUploaders(term: string) {
+  const { demoMode } = useDemoMode();
+  const trimmed = term.trim();
+  const enabled = !demoMode && trimmed.length >= MIN_UPLOADER_SEARCH_LENGTH;
+
+  const query = useQuery<AdminMediaUploaderResult[]>({
+    queryKey: [ADMIN_MEDIA_KEY, "uploaders", trimmed],
+    enabled,
+    queryFn: () => searchAdminMediaUploaders(trimmed),
+    placeholderData: (previous) => previous,
+  });
+
+  return { ...query, uploaders: query.data ?? [] };
 }
 
 /**

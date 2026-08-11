@@ -16,8 +16,8 @@ const FOCUSABLE =
  *
  * Mirrors the shared `<Modal>`'s private `useDismiss` (`shared/components/
  * ui/Modal.tsx`) almost verbatim — duplicated rather than imported because
- * that hook isn't exported, and the drawer's shape (a right-anchored
- * `.drawer` panel with its own `.scrim.right` classes from
+ * that hook isn't exported, and the drawer's shape (a wide bottom-anchored
+ * `.drawer` sheet with its own `.scrim.bottom` classes from
  * `persona-editor.css`) doesn't fit either of `Modal`'s two portal variants.
  */
 export function useDrawerDismiss(onClose: () => void) {

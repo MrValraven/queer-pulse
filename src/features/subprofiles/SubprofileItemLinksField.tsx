@@ -1,5 +1,4 @@
 import { FiPlus, FiX } from "react-icons/fi";
-import { FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   SOCIAL_PLATFORMS,
@@ -56,10 +55,8 @@ export function SubprofileItemLinksField({
   }
 
   return (
-    <FormField
-      label={t("subprofiles:itemLinks.label")}
-      helper={t("subprofiles:itemLinks.helper")}
-    >
+    <div className={styles.fieldWrap}>
+      <span className={styles.fieldLabel}>{t("subprofiles:itemLinks.label")}</span>
       <div className={styles.linksEditor}>
         {links.map((link, index) => {
           const meta = socialPlatform(link.platform);
@@ -129,6 +126,10 @@ export function SubprofileItemLinksField({
           </p>
         )}
       </div>
-    </FormField>
+
+      <span className={styles.fieldHelper}>
+        {t("subprofiles:itemLinks.helper")}
+      </span>
+    </div>
   );
 }

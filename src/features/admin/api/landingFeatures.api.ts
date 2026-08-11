@@ -4,6 +4,7 @@ import {
   apiPatch,
   apiPost,
 } from "../../../shared/api/client";
+import type { AccessTier, CommunityType } from "../../communities/api/communities.api";
 
 export type LandingSection = "member" | "community" | "changemaker";
 
@@ -49,12 +50,34 @@ export interface LandingMemberFeatureDTO {
   tags: string[];
 }
 
+/** A single roster face on a featured-community card — the owner ("kept by") or
+ *  a member. Name (for the initials fallback) + a resolved avatar URL. */
+export interface LandingCommunityFaceDTO {
+  name: string;
+  avatarUrl: string | null;
+}
+
 export interface LandingCommunityFeatureDTO {
   id: string;
   slug: string;
   name: string;
   memberCount: number;
   blurb: string | null;
+  /** Resolved cover image, or null → the card shows a tinted placeholder. */
+  coverImageUrl: string | null;
+  /** The 6-value community `type`, shown as the card's category badge. */
+  category: CommunityType;
+  /** Access level → an "open / request / private" chip. */
+  accessTier: AccessTier;
+  /** Year the community was created → "since ‹year›". */
+  foundedYear: number;
+  /** The community's `features` slugs → the card's "what you get" chips. */
+  features: string[];
+  /** The owner, rendered as "kept by ‹name›". */
+  owner: LandingCommunityFaceDTO | null;
+  /** Capped member avatars for the roster strip. Empty when the community hides
+   *  its roster — the card then leans on `memberCount` alone. */
+  faces: LandingCommunityFaceDTO[];
 }
 
 export interface LandingChangemakerFeatureDTO {

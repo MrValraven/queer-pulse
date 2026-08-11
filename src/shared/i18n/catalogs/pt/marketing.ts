@@ -1902,6 +1902,50 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Abrir o kit de imprensa",
   "changelog.tag.magazineDesk": "Abrir a redação",
 
+  "changelog.entries.meganav-highlight-illustrations.title":
+    "Menus ilustrados na navegação de topo",
+  "changelog.entries.meganav-highlight-illustrations.body":
+    "Cada menu na navegação de topo passa a abrir com uma ilustração desenhada à mão do seu destaque — pessoas a reunir-se, a cidade, apoio, cultura, trabalho — em vez de um marcador simples.",
+
+  "changelog.entries.poet-rich-poems.title": "Escreve e lê poemas na íntegra",
+  "changelog.entries.poet-rich-poems.body":
+    "Os perfis de poeta passam a ter um editor de poemas — estrofes, separadores e notas, com itálico e negrito — e quem lê pode tocar num poema para o abrir numa vista de leitura ampla.",
+
+  "changelog.entries.persona-editor-drag-reorder.title":
+    "Arrasta para reordenar itens numa persona",
+  "changelog.entries.persona-editor-drag-reorder.body":
+    "A pega de cada item numa secção da persona (projetos, papéis, ligações…) agora arrasta mesmo. Agarra-a e larga o item onde quiseres — no telemóvel com o dedo ou com o rato — e a lista reorganiza-se ao vivo. As setas para cima e para baixo continuam lá para uso com teclado, por isso nada mudou nesse aspeto.",
+
+  "changelog.entries.persona-item-link-picker-size.title":
+    "Corrigidos campos em linha sobredimensionados em alguns editores",
+  "changelog.entries.persona-item-link-picker-size.body":
+    "Alguns campos compactos lado a lado tinham inchado até ao tamanho total — o seletor de tipo de ligação ao adicionar uma ligação a um projeto de persona (que estava a espremer o campo do endereço ao lado), as linhas de notas de conteúdo no formulário de submissão de filmes e as caixas de ligação de fotografias ao listar um negócio. Agora ficam no tamanho pretendido, por isso cada linha alinha como foi desenhada.",
+
+  "changelog.entries.persona-editor-wide-sheet.title":
+    "Editar uma secção da tua persona abre agora um painel amplo a partir de baixo",
+  "changelog.entries.persona-editor-wide-sheet.body":
+    "Quando editas um item numa das secções da tua persona — um projeto, um papel, uma fotografia — o editor sobe agora a partir do fundo do ecrã como um painel largo, em vez de ficar preso numa faixa estreita ao lado. Os campos ficam dois lado a lado, por isso títulos, descrições e ligações têm espaço para respirar em vez de parecerem apertados. No telemóvel mantém-se o painel de largura total de sempre.",
+
+  "changelog.entries.community-featured-cards.title":
+    "As comunidades em destaque ganham o cartão completo — com fotografias de capa",
+  "changelog.entries.community-featured-cards.body":
+    "As comunidades em destaque na página inicial passam a mostrar o mesmo cartão rico da montra — imagem de capa, categoria, quem mantém o espaço, como entrar, o ano em que começou, o que ganhas lá dentro e rostos reais de membros — em vez de apenas um nome e a contagem de pessoas. Quem cria comunidades pode agora adicionar uma fotografia de capa ao começar uma comunidade ou no painel de edição, e ela recebe as pessoas no cartão.",
+
+  "changelog.entries.media-in-use-references.title":
+    "Vê onde cada imagem enviada está a ser usada — e o que podes eliminar em segurança",
+  "changelog.entries.media-in-use-references.body":
+    "Os teus envios — e a consola de imagens da administração — mostram agora todos os sítios onde cada imagem ainda está a ser usada, com uma ligação direta para cada um. Tudo o que já não tem referências fica assinalado como seguro para remover, para limpares duplicados antigos sem receio de partires uma página ativa.",
+
+  "changelog.entries.homepage-featured-photo-fix.title":
+    "As fotografias dos membros em destaque voltam a aparecer na página inicial",
+  "changelog.entries.homepage-featured-photo-fix.body":
+    "O destaque curado “Pessoas reais, não um diretório” estava a servir a fotografia enviada de cada membro em destaque como uma ligação por resolver, pelo que aparecia como imagem partida. A página inicial passa a resolver essas fotografias tal como todos os outros avatares, e os retratos carregam corretamente.",
+
+  "changelog.entries.admin-media-filter-by-uploader.title":
+    "As administrações podem filtrar as imagens enviadas por quem as enviou",
+  "changelog.entries.admin-media-filter-by-uploader.body":
+    "A consola de imagens enviadas passa a deixar uma administração restringir toda a grelha a um único membro — procurar por nome ou identificador, ou tocar no nome de quem enviou em qualquer ficheiro — para rever num só lugar tudo o que uma pessoa colocou no armazenamento.",
+
   "changelog.entries.persona-preview-banner-bleed.title":
     "As capas das personas vão agora de ponta a ponta no teu perfil",
   "changelog.entries.persona-preview-banner-bleed.body":
@@ -1916,6 +1960,10 @@ export const marketing: Catalog = {
     "As personas já servem muito mais ofícios",
   "changelog.entries.persona-families-expansion.body":
     "As personas vão agora muito para lá do palco. Há seis novos estilos de página — uma cadeira de salão, uma passerelle, uma galeria, um registo de história oral, um cartaz de movimento e uma sala de aula — e dezenas de novas profissões, cada uma com um aspeto pensado para o trabalho que fazes mesmo.",
+
+  "changelog.entries.pole-dancer-persona.title": "Personas de pole dance",
+  "changelog.entries.pole-dancer-persona.body":
+    "Quem faz pole dance pode agora criar uma persona que mostra os dois lados da arte — os espetáculos que apresenta e as aulas que dá.",
 
   "changelog.entries.astrologer-persona.title":
     "Novas personas de astrologia, com a sua própria página celeste",

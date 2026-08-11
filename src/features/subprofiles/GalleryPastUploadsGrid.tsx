@@ -94,7 +94,7 @@ export function GalleryPastUploadsGrid({
                 </span>
               )}
             </button>
-            {item.inUse && (
+            {item.references.length > 0 && (
               <span className={styles.inUse}>
                 {t("subprofiles:gallery.inUse")}
               </span>

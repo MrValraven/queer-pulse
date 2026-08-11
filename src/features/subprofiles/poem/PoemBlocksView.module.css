@@ -1,0 +1,21 @@
+.poem {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  color: var(--ink);
+  line-height: 1.7;
+}
+.stanza {
+  margin: 0;
+  white-space: pre-line;
+}
+.note {
+  margin: 0;
+  font-style: italic;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+.break {
+  text-align: center;
+  letter-spacing: 0.6em;
+  color: color-mix(in srgb, var(--ink) 40%, transparent);
+}

@@ -16,6 +16,7 @@ import {
   resolveMyMediaUrl,
   type MyMediaItem,
 } from "../settings/api/myMedia.api";
+import { mediaReferenceLabelKey } from "../../shared/media/mediaReferences";
 import styles from "./PhotoPickerModal.module.css";
 
 const LOADING_SKELETON_CELLS = 6;
@@ -97,7 +98,7 @@ function PastUploadsSection({
                   srcSize={220}
                 />
               </button>
-              {item.inUse && (
+              {item.references.length > 0 && (
                 <span className={styles.inUse}>
                   {t("members:avatar.picker.inUse")}
                 </span>
@@ -274,9 +275,11 @@ export function PhotoPickerModal({
           onConfirm={confirmDelete}
           title={t("members:avatar.picker.deleteConfirmTitle")}
           description={
-            pendingDelete.usedAs
+            pendingDelete.references.length > 0
               ? t("members:avatar.picker.deleteConfirmBodyInUse", {
-                  usedAs: t(`settings:uploads.usedAs.${pendingDelete.usedAs}`),
+                  usedAs: pendingDelete.references
+                    .map((reference) => t(mediaReferenceLabelKey(reference.type)))
+                    .join(", "),
                 })
               : t("members:avatar.picker.deleteConfirmBody")
           }

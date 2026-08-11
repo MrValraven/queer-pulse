@@ -20,6 +20,8 @@ export function SubprofileItemRow({
   skin,
   interactive,
   accent,
+  onOpen,
+  teaser,
 }: {
   item: SubprofileItemView;
   skin: SkinFamily;
@@ -27,6 +29,11 @@ export function SubprofileItemRow({
   /** The persona's accent, used to tint per-item social-link icons.
    *  Falls back to `DEFAULT_ACCENT` when the persona has none. */
   accent?: AccentKey;
+  /** When set, the whole row becomes a button that opens a reader (poems).
+   *  Mutually exclusive with the stage-skin ticket `<a>` in practice. */
+  onOpen?: (item: SubprofileItemView) => void;
+  /** Overrides the inline `<p>` body with a one-line teaser (poems). */
+  teaser?: string;
 }) {
   const { t } = useTranslation();
   const isOff = item.gigState === "cancelled";
@@ -57,11 +64,15 @@ export function SubprofileItemRow({
           <FiArrowRight aria-hidden />
         </span>
       )}
-      {item.description && <p>{item.description}</p>}
+      {teaser ? (
+        <p className="pp-row-teaser">{teaser}</p>
+      ) : (
+        item.description && <p>{item.description}</p>
+      )}
       <SubprofileSocialRow
         links={item.structured?.links ?? []}
         accent={accent ?? DEFAULT_ACCENT}
-        interactive={interactive}
+        interactive={interactive && !onOpen}
       />
     </>
   );
@@ -77,6 +88,19 @@ export function SubprofileItemRow({
       >
         {content}
       </a>
+    );
+  }
+
+  if (onOpen) {
+    return (
+      <button
+        type="button"
+        className={rowClassName}
+        onClick={() => onOpen(item)}
+        aria-label={t("subprofiles:poem.row.openAria", { title: item.title })}
+      >
+        {content}
+      </button>
     );
   }
 

@@ -230,7 +230,6 @@ export const shared: Catalog = {
   // MegaNav — Community
   "megaNav.community.title": "Comunidade",
   "megaNav.community.subtitle": "Pessoas & encontros",
-  "megaNav.community.previewCaption": "Foto de encontro — clube de jantar, Mouraria",
   "megaNav.community.feature.eyebrow": "Comunidade",
   "megaNav.community.feature.title": "Encontra a tua gente.",
   "megaNav.community.feature.body":
@@ -258,7 +257,6 @@ export const shared: Catalog = {
   // MegaNav — Lisbon
   "megaNav.lisbon.title": "Lisboa",
   "megaNav.lisbon.subtitle": "Descobrir & viver aqui",
-  "megaNav.lisbon.previewCaption": "Mapa de espaços locais verificados",
   "megaNav.lisbon.feature.eyebrow": "Lisboa",
   "megaNav.lisbon.feature.title": "Encontra os teus espaços locais.",
   "megaNav.lisbon.feature.body":
@@ -279,7 +277,6 @@ export const shared: Catalog = {
   // MegaNav — Resources
   "megaNav.resources.title": "Recursos",
   "megaNav.resources.subtitle": "Saúde, segurança, biblioteca",
-  "megaNav.resources.previewCaption": "Um lugar tranquilo para encontrar apoio",
   "megaNav.resources.feature.eyebrow": "Apoio",
   "megaNav.resources.feature.title": "Ajuda quando precisares.",
   "megaNav.resources.feature.body":
@@ -301,7 +298,6 @@ export const shared: Catalog = {
   // MegaNav — Culture
   "megaNav.culture.title": "Cultura",
   "megaNav.culture.subtitle": "Ler, ver, criar",
-  "megaNav.culture.previewCaption": "A edição atual, de capa a capa",
   "megaNav.culture.feature.eyebrow": "A Revista",
   "megaNav.culture.feature.title": "Lê a nova edição.",
   "megaNav.culture.feature.body":
@@ -322,7 +318,6 @@ export const shared: Catalog = {
   // MegaNav — Work
   "megaNav.work.title": "Trabalho",
   "megaNav.work.subtitle": "Carreira & economia",
-  "megaNav.work.previewCaption": "Competências, empregos & economia solidária",
   "megaNav.work.feature.eyebrow": "O teu espaço de trabalho",
   "megaNav.work.feature.title": "O teu Trabalho, num só lugar.",
   "megaNav.work.feature.body":
@@ -345,7 +340,6 @@ export const shared: Catalog = {
   // MegaNav — About
   "megaNav.about.title": "Sobre",
   "megaNav.about.subtitle": "A plataforma & legal",
-  "megaNav.about.previewCaption": "Como funciona a QueerPulse",
   "megaNav.about.feature.eyebrow": "Sobre",
   "megaNav.about.feature.title": "O que é a QueerPulse.",
   "megaNav.about.feature.body":
@@ -382,4 +376,28 @@ export const shared: Catalog = {
   // (grant/suggest-edit/sober-host/panel/incubator) fails to reach the backend.
   "intake.errorToast":
     "Não foi possível enviar agora. Tenta novamente daqui a instantes.",
+
+  // mediaRef.* — category labels for a `MediaReference.type`
+  // (shared/media/mediaReferences.ts), read by both the My-uploads pane
+  // and the admin media console to describe where an uploaded image is
+  // in use.
+  "mediaRef.profile-photo": "Foto de perfil",
+  "mediaRef.showcase": "Destaque",
+  "mediaRef.story-cover": "Capa de matéria",
+  "mediaRef.event-photo": "Evento",
+  "mediaRef.event-cover": "Evento",
+  "mediaRef.group-avatar": "Grupo de conversa",
+  "mediaRef.listing": "Estabelecimento",
+  "mediaRef.persona-avatar": "Persona",
+  "mediaRef.persona-cover": "Persona",
+  "mediaRef.persona-item": "Persona",
+  "mediaRef.community-post": "Publicação da comunidade",
+  "mediaRef.community-cover": "Comunidade",
+  "mediaRef.cinema-cover": "Título de cinema",
+  "mediaRef.landlord": "Senhorio",
+  "mediaRef.company-work": "Empresa",
+  "mediaRef.housing": "Habitação",
+  "mediaRef.magazine-author": "Pessoa autora",
+  "mediaRef.changemaker": "Agente de mudança",
+  "mediaRef.collection": "Coleção",
 };

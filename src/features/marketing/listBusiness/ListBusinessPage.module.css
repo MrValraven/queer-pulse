@@ -1124,7 +1124,12 @@
   opacity: 0.6;
   cursor: default;
 }
-.photoUrlInput {
+/* Scoped `.photoField .photoUrlInput` (0,2,0), NOT bare `.photoUrlInput`
+   (0,1,0): each gallery tile's URL input lives under a `<FormField>` (the photos
+   step), whose descendant `.field input` (0,1,1) would otherwise inflate it to
+   16px / 13-15px padding with a heavier border and cream background, out of step
+   with the tiles. See FormField.module.css's GOTCHA note. */
+.photoField .photoUrlInput {
   width: 100%;
   padding: 8px 11px;
   font: inherit;

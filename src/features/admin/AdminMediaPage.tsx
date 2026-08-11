@@ -1,9 +1,11 @@
 import { useState } from "react";
 import {
+  FiAlertTriangle,
   FiExternalLink,
   FiCopy,
   FiSearch,
   FiTrash2,
+  FiUser,
   FiX,
 } from "react-icons/fi";
 import {
@@ -15,42 +17,26 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminDrawer, AdminModal, AdminPageHeader } from "./ui";
+import { AdminDrawer, AdminPageHeader } from "./ui";
+import { AdminMediaCard } from "./AdminMediaCard";
+import { AdminMediaDeleteConfirm } from "./AdminMediaDeleteConfirm";
+import { AdminMediaReferenceList } from "./AdminMediaReferences";
+import { AdminMediaUploaderPicker } from "./AdminMediaUploaderPicker";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
-import { API_BASE_URL } from "../../shared/api/config";
+import { absoluteFileUrl } from "./adminMedia.format";
 import {
   ADMIN_MEDIA_KINDS,
   getAdminMediaHead,
   type AdminMediaHead,
   type AdminMediaKind,
   type AdminMediaObject,
+  type AdminMediaUploader,
 } from "./api/adminMedia.api";
 import { useAdminMedia, useDeleteAdminMedia } from "./api/useAdminMedia";
 import styles from "./AdminMediaPage.module.css";
-
-/**
- * Absolute URL for a `/files/*` proxy path so `<img>`/new-tab both resolve.
- *
- * The backend returns `fileUrl` RELATIVE (`/files/<key>`). The `/files/*` route
- * is version-neutral (`FilesController`), so it answers at the bare path WITHOUT
- * the `/v1` prefix the api client prepends to `request()` calls — matching every
- * other image URL in the app (avatars via `toImageUrl`, My Uploads). We prepend
- * only the origin; never `/v1`.
- */
-function absoluteFileUrl(fileUrl: string): string {
-  return fileUrl.startsWith("http")
-    ? fileUrl
-    : `${API_BASE_URL}${fileUrl}`;
-}
-
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
 
 /**
  * Admin-only console listing every object actually stored in the platform's
@@ -64,6 +50,8 @@ export function AdminMediaPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [kind, setKind] = useState<AdminMediaKind>("all");
+  const [uploaderFilter, setUploaderFilter] =
+    useState<AdminMediaUploader | null>(null);
   const [openObject, setOpenObject] = useState<AdminMediaObject | null>(null);
   const {
     objects,
@@ -74,7 +62,8 @@ export function AdminMediaPage() {
     hasNextPage,
     isFetchingNextPage,
     isDemo,
-  } = useAdminMedia({ kind });
+    degraded,
+  } = useAdminMedia({ kind, uploaderId: uploaderFilter?.id });
 
   async function copyToClipboard(value: string, confirmationLabel: string) {
     await navigator.clipboard.writeText(value);
@@ -100,16 +89,50 @@ export function AdminMediaPage() {
       </FadeIn>
 
       <FadeIn delay={60}>
-        <SegmentedControl
-          label={t("admin:media.filterAriaLabel")}
-          value={kind}
-          onChange={(next) => setKind(next as AdminMediaKind)}
-          options={ADMIN_MEDIA_KINDS.map((kindValue) => ({
-            value: kindValue,
-            label: t(`admin:media.kinds.${kindValue}`),
-          }))}
-        />
+        <div className={styles.filters}>
+          <SegmentedControl
+            label={t("admin:media.filterAriaLabel")}
+            value={kind}
+            onChange={(next) => setKind(next as AdminMediaKind)}
+            options={ADMIN_MEDIA_KINDS.map((kindValue) => ({
+              value: kindValue,
+              label: t(`admin:media.kinds.${kindValue}`),
+            }))}
+            // While filtering by uploader, kind tabs are inert — the uploader
+            // view spans every kind (the backend ignores `prefix`).
+            disabledOptions={uploaderFilter ? ADMIN_MEDIA_KINDS : undefined}
+          />
+          {uploaderFilter ? (
+            <div className={styles.activeFilter}>
+              <span className={styles.activeFilterLabel}>
+                <FiUser aria-hidden />
+                <Translation
+                  i18nKey="admin:media.filterByUploader.activePill"
+                  values={{ name: uploaderFilter.displayName }}
+                  components={{ strong: <strong /> }}
+                />
+              </span>
+              <button
+                type="button"
+                className={styles.activeFilterClear}
+                onClick={() => setUploaderFilter(null)}
+                aria-label={t("admin:media.filterByUploader.clearAria")}
+              >
+                <FiX aria-hidden />
+              </button>
+            </div>
+          ) : (
+            <AdminMediaUploaderPicker onPick={setUploaderFilter} />
+          )}
+        </div>
       </FadeIn>
+
+      {!isDemo && degraded && (
+        <p className={styles.degradedBanner} role="status">
+          <FiAlertTriangle aria-hidden />
+          {t("admin:media.references.degradedBanner")}
+        </p>
+      )}
 
       {isDemo ? (
         <EmptyState
@@ -134,38 +157,24 @@ export function AdminMediaPage() {
         <EmptyState
           icon={<FiSearch />}
           title={t("admin:media.empty.title")}
-          description={t("admin:media.empty.body")}
+          description={
+            uploaderFilter
+              ? t("admin:media.filterByUploader.emptyForUser", {
+                  name: uploaderFilter.displayName,
+                })
+              : t("admin:media.empty.body")
+          }
         />
       ) : (
         <>
           <div className={styles.grid}>
             {objects.map((object) => (
-              <FadeIn key={object.key}>
-                <button
-                  type="button"
-                  className={styles.card}
-                  onClick={() => setOpenObject(object)}
-                >
-                  <img
-                    className={styles.thumb}
-                    src={absoluteFileUrl(object.fileUrl)}
-                    alt=""
-                    loading="lazy"
-                  />
-                  <span className={styles.kindBadge}>
-                    {ADMIN_MEDIA_KINDS.includes(object.kind as AdminMediaKind)
-                      ? t(`admin:media.kinds.${object.kind}`)
-                      : object.kind}
-                  </span>
-                  <span className={styles.meta}>
-                    {formatBytes(object.size)}
-                    {" · "}
-                    {object.uploader
-                      ? object.uploader.displayName
-                      : t("admin:media.unowned")}
-                  </span>
-                </button>
-              </FadeIn>
+              <AdminMediaCard
+                key={object.key}
+                object={object}
+                onOpen={setOpenObject}
+                onFilterByUploader={setUploaderFilter}
+              />
             ))}
           </div>
           {hasNextPage && (
@@ -187,8 +196,13 @@ export function AdminMediaPage() {
       {openObject && (
         <AdminMediaDrawer
           object={openObject}
+          degraded={degraded}
           onClose={() => setOpenObject(null)}
           onCopy={copyToClipboard}
+          onFilterByUploader={(uploader) => {
+            setUploaderFilter(uploader);
+            setOpenObject(null);
+          }}
         />
       )}
     </AdminShell>
@@ -199,12 +213,16 @@ export function AdminMediaPage() {
  *  and an on-demand real-content-type check. */
 function AdminMediaDrawer({
   object,
+  degraded,
   onClose,
   onCopy,
+  onFilterByUploader,
 }: {
   object: AdminMediaObject;
+  degraded: boolean;
   onClose: () => void;
   onCopy: (value: string, confirmationLabel: string) => Promise<void>;
+  onFilterByUploader: (uploader: AdminMediaUploader) => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -212,6 +230,7 @@ function AdminMediaDrawer({
   const [isChecking, setIsChecking] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const deleteMedia = useDeleteAdminMedia();
+  const uploader = object.uploader;
 
   async function inspectRealContentType() {
     setIsChecking(true);
@@ -273,6 +292,12 @@ function AdminMediaDrawer({
           >
             <FiCopy aria-hidden /> {t("admin:media.copyKey")}
           </Button>
+          {uploader && (
+            <Button variant="ghost" onClick={() => onFilterByUploader(uploader)}>
+              <FiUser aria-hidden />{" "}
+              {t("admin:media.filterByUploader.showAll")}
+            </Button>
+          )}
           <Button
             variant="ghost"
             disabled={isChecking}
@@ -322,39 +347,24 @@ function AdminMediaDrawer({
             : []),
         ]}
       />
+      <section className={styles.referencesSection}>
+        <h3 className={styles.referencesHeading}>
+          {t("admin:media.references.heading")}
+        </h3>
+        <AdminMediaReferenceList
+          references={object.references}
+          degraded={degraded}
+        />
+      </section>
     </AdminDrawer>
     {isConfirmingDelete && (
-      <AdminModal
-        eyebrow={t("admin:media.delete.eyebrow")}
-        title={t("admin:media.delete.confirmTitle")}
-        onClose={() =>
-          deleteMedia.isPending ? undefined : setIsConfirmingDelete(false)
-        }
-        footer={
-          <>
-            <Button
-              variant="ghost"
-              type="button"
-              disabled={deleteMedia.isPending}
-              onClick={() => setIsConfirmingDelete(false)}
-            >
-              {t("admin:common.cancel")}
-            </Button>
-            <Button
-              variant="danger"
-              type="button"
-              disabled={deleteMedia.isPending}
-              onClick={confirmDelete}
-            >
-              {deleteMedia.isPending
-                ? t("admin:media.delete.pending")
-                : t("admin:media.delete.confirm")}
-            </Button>
-          </>
-        }
-      >
-        <p>{t("admin:media.delete.confirmBody")}</p>
-      </AdminModal>
+      <AdminMediaDeleteConfirm
+        references={object.references}
+        degraded={degraded}
+        isPending={deleteMedia.isPending}
+        onCancel={() => setIsConfirmingDelete(false)}
+        onConfirm={confirmDelete}
+      />
     )}
     </>
   );

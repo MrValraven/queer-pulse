@@ -24,9 +24,10 @@ interface SubprofileItemDrawerProps {
 }
 
 /**
- * The item drawer (Task 5): a right-anchored `.drawer` panel (global classes
- * from `persona-editor.css`, portaled to `document.body`) that finally
- * exposes the Phase-0 rich fields per section on top of the base
+ * The item drawer (Task 5): a wide bottom-anchored `.drawer` sheet (global
+ * classes from `persona-editor.css`, portaled to `document.body`) that rises
+ * from the bottom edge and lays its fields two-up on desktop, finally
+ * exposing the Phase-0 rich fields per section on top of the base
  * `SECTION_META` fields every section already showed. Field rendering lives
  * in `SubprofileItemDrawerFields` (moved here from the retired
  * `SubprofileItemEditor`) to keep this shell under the line cap.
@@ -61,7 +62,7 @@ export function SubprofileItemDrawer({
 
   return createPortal(
     <div
-      className="scrim right"
+      className="scrim bottom"
       role="presentation"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -96,11 +97,11 @@ export function SubprofileItemDrawer({
           {canFeature && (
             <button
               type="button"
-              className={
+              className={`${
                 draft.isFeatured
                   ? `${styles.featureBtn} ${styles.featureBtnActive}`
                   : styles.featureBtn
-              }
+              } pe-field-wide`}
               onClick={toggleFeature}
               aria-pressed={draft.isFeatured}
             >
