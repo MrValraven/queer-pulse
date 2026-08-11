@@ -65,8 +65,13 @@ function release() {
     body.style.width = savedWidth;
     body.style.paddingRight = savedPaddingRight;
     // Restore the scroll position the lock froze — `position: fixed` reset it
-    // to the top. Skips the browser's smooth-scroll so it's instant.
-    window.scrollTo(0, savedScrollY);
+    // to the top. `behavior: "instant"` is REQUIRED: the two-argument
+    // `scrollTo(x, y)` form defers to the element's CSS `scroll-behavior`, which
+    // is globally `smooth` (base.css), so it would ANIMATE the restore —
+    // visibly snapping the page to the top, then smooth-scrolling back to the
+    // saved offset on every modal/sheet close. Forcing "instant" overrides the
+    // CSS so the restore is a single imperceptible jump.
+    window.scrollTo({ top: savedScrollY, left: 0, behavior: "instant" });
   }
 }
 

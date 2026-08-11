@@ -1850,6 +1850,16 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Open the press kit",
   "changelog.tag.magazineDesk": "Open the desk",
 
+  "changelog.entries.persona-banner-quality.title":
+    "Crisper persona banners",
+  "changelog.entries.persona-banner-quality.body":
+    "Persona banner images now keep more of their detail, so a full-width cover stays sharp instead of looking soft on larger screens. We've also added a little breathing room between a bled banner and your name and photo. Re-upload an existing banner to pick up the higher quality.",
+
+  "changelog.entries.modal-close-scroll-jump.title":
+    "No more page jump when closing a dialog",
+  "changelog.entries.modal-close-scroll-jump.body":
+    "Closing a pop-up such as a persona's info card no longer snaps the page to the top and scrolls back down. Your scroll position is restored instantly, exactly where you left it.",
+
   "changelog.entries.persona-gallery-multi-add.title":
     "Add several photos to your gallery at once",
   "changelog.entries.persona-gallery-multi-add.body":

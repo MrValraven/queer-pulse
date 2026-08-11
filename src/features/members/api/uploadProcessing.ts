@@ -105,14 +105,28 @@ interface Decoded {
 /**
  * Longest-edge cap applied to every upload kind before it ever reaches the
  * network — a listing/story photo picked straight off a modern phone camera
- * is routinely 3000-4000px on its long edge, but no upload slot in the app
- * (gallery hero, avatar, work image) ever displays wider than ~1600px. Without
- * this, full-resolution originals are what gets stored AND re-served into
- * those tiny slots forever after — the cost compounds with every photo a
- * member ever uploads. Skipped entirely when the source is already at or
- * under the cap (no upscaling, no wasted re-encode for an already-small file).
+ * is routinely 3000-4000px on its long edge. Without a cap, full-resolution
+ * originals are what gets stored AND re-served forever after — the cost
+ * compounds with every photo a member ever uploads. Skipped entirely when the
+ * source is already at or under the cap (no upscaling, no wasted re-encode for
+ * an already-small file).
+ *
+ * The cap is per-kind. Most slots (avatar, work image, gathering photo) never
+ * render wider than ~1600px, so 1600 keeps them crisp without paying for
+ * pixels no slot ever shows. The persona/story COVER and the listing photo are
+ * the exception: they paint a FULL-BLEED hero banner that on a 2× desktop
+ * display spans ~2560px across, so a 1600px cap forces the browser to upscale
+ * the stored image — which reads as the soft, blurry banner we're avoiding.
+ * Give those wide heroes a larger cap so they stay sharp edge-to-edge.
  */
-const MAX_DIMENSION_PX = 1600;
+const MAX_DIMENSION_PX: Record<UploadKind, number> = {
+  avatar: 1600,
+  "group-avatar": 1600,
+  "gathering-photo": 1600,
+  "work-image": 1600,
+  "story-cover": 2560,
+  "listing-photo": 2560,
+};
 
 /** Re-encode quality used once an image is actually being downscaled — a
  *  smaller canvas can afford more compression than the pass-through case
@@ -125,20 +139,21 @@ const DOWNSCALE_QUALITY = 0.8;
 const PASSTHROUGH_QUALITY = 0.92;
 
 /**
- * Scale `width`×`height` down so its longest edge is at most
- * `MAX_DIMENSION_PX`, preserving aspect ratio. Returns the original
- * dimensions unchanged (and `scaled: false`) when already within the cap —
- * this function only ever shrinks, never enlarges.
+ * Scale `width`×`height` down so its longest edge is at most `maxDimension`,
+ * preserving aspect ratio. Returns the original dimensions unchanged (and
+ * `scaled: false`) when already within the cap — this function only ever
+ * shrinks, never enlarges.
  */
 function capDimensions(
   width: number,
   height: number,
+  maxDimension: number,
 ): { width: number; height: number; scaled: boolean } {
   const longestEdge = Math.max(width, height);
-  if (longestEdge <= MAX_DIMENSION_PX) {
+  if (longestEdge <= maxDimension) {
     return { width, height, scaled: false };
   }
-  const scaleFactor = MAX_DIMENSION_PX / longestEdge;
+  const scaleFactor = maxDimension / longestEdge;
   return {
     width: Math.round(width * scaleFactor),
     height: Math.round(height * scaleFactor),
@@ -290,18 +305,22 @@ function sanitizeGif(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
  * image whose metadata we can't remove is blocked, not uploaded raw.
  *   - GIFs are sanitized in place (`sanitizeGif`) so animation survives.
  *   - JPEG/PNG/WebP are re-encoded through a `<canvas>`, which drops metadata
- *     AND downscales to `MAX_DIMENSION_PX` on the longest edge (no upload slot
- *     in the app displays wider than ~1600px, so full-res originals only cost
- *     storage/bandwidth forever after). Lossy re-encode uses quality 0.92 when
- *     passed through unscaled, 0.8 when actually downscaled.
+ *     AND downscales to the per-kind `MAX_DIMENSION_PX` cap on the longest edge
+ *     (full-res originals only cost storage/bandwidth forever after). Lossy
+ *     re-encode uses quality 0.92 when passed through unscaled, 0.8 when
+ *     actually downscaled.
  */
-async function stripMetadata(file: File, decoded: Decoded): Promise<Blob> {
+async function stripMetadata(
+  file: File,
+  decoded: Decoded,
+  kind: UploadKind,
+): Promise<Blob> {
   try {
     if (file.type === "image/gif") {
       const cleaned = sanitizeGif(new Uint8Array(await file.arrayBuffer()));
       return new Blob([cleaned], { type: "image/gif" });
     }
-    const target = capDimensions(decoded.width, decoded.height);
+    const target = capDimensions(decoded.width, decoded.height, MAX_DIMENSION_PX[kind]);
     const canvas = document.createElement("canvas");
     canvas.width = target.width;
     canvas.height = target.height;
@@ -350,7 +369,7 @@ export async function processImage(
         minHeight: limit.minHeight,
       });
     }
-    return await stripMetadata(file, decoded);
+    return await stripMetadata(file, decoded, kind);
   } finally {
     decoded.cleanup();
   }

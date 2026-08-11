@@ -153,10 +153,14 @@ export function ScrollManager() {
     }
 
     // Back/forward: restore where the visitor left this entry, instantly.
+    // `behavior: "instant"`, not "auto": the "auto" value defers to the global
+    // `html { scroll-behavior: smooth }` (base.css), which would ANIMATE the
+    // restore — a visible glide from the top down to the saved offset on every
+    // Back. Forcing "instant" overrides that CSS so the landing is immediate.
     if (navigationType === NavigationType.Pop) {
       const savedPosition = scrollPositions.get(scrollKeyForPath(pathname, key));
       if (savedPosition !== undefined) {
-        window.scrollTo({ top: savedPosition, behavior: "auto" });
+        window.scrollTo({ top: savedPosition, behavior: "instant" });
         return;
       }
     }

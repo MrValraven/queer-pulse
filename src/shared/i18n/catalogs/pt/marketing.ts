@@ -1902,6 +1902,16 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Abrir o kit de imprensa",
   "changelog.tag.magazineDesk": "Abrir a redação",
 
+  "changelog.entries.persona-banner-quality.title":
+    "Banners de persona mais nítidos",
+  "changelog.entries.persona-banner-quality.body":
+    "As imagens de banner das personas mantêm agora mais detalhe, por isso uma capa de largura total fica nítida em vez de parecer desfocada em ecrãs maiores. Adicionámos também um pouco de espaço entre um banner que sangra e o teu nome e foto. Volta a carregar um banner existente para obteres a qualidade superior.",
+
+  "changelog.entries.modal-close-scroll-jump.title":
+    "Adeus ao salto da página ao fechar um diálogo",
+  "changelog.entries.modal-close-scroll-jump.body":
+    "Fechar uma janela — como o cartão de informação de uma persona — já não faz a página saltar para o topo e voltar a descer. A tua posição é restaurada de imediato, exatamente onde a deixaste.",
+
   "changelog.entries.persona-gallery-multi-add.title":
     "Adiciona várias fotos à galeria de uma vez",
   "changelog.entries.persona-gallery-multi-add.body":

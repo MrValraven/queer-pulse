@@ -47,17 +47,21 @@ export type UploadKind =
  *      EVERY kind including avatars. This is the authoritative defence against
  *      the geolocation-outing risk; the client-side strip in `uploadProcessing`
  *      is only best-effort defence-in-depth.
- *   4. Resize / re-encode per kind (avatar 1024², cover 1600px) to WebP/AVIF with
- *      a JPEG fallback. NOTE: avatars are displayed in a ~430px-tall profile
- *      hero, so on a 2×/3× retina screen they need ~860-1290px — do NOT cap the
- *      server avatar resize below ~1024² or the hero renders visibly soft. (The
- *      client already downscales every kind to a 1600px longest edge, so this
- *      server step only re-crops/formats; keep it at or above 1024².)
+ *   4. Resize / re-encode per kind to WebP/AVIF with a JPEG fallback. Targets:
+ *      avatar ≥1024², but the full-bleed COVER + LISTING heroes need ~2560px on
+ *      the long edge — they paint edge-to-edge and a lower cap renders a visibly
+ *      soft banner. NOTE: avatars are displayed in a ~430px-tall profile hero,
+ *      so on a 2×/3× retina screen they need ~860-1290px — do NOT cap the server
+ *      avatar resize below ~1024² or the hero renders soft. (The client already
+ *      downscales each kind to its longest-edge cap — 1600px for most, 2560px
+ *      for cover/listing — so this server step only re-crops/formats; keep each
+ *      kind's server target at or above the matching client cap.)
  *   5. Private-by-default bucket; presign grants write to a single key only.
  *
  *   NOTE: `listing-photo` is a new kind (added 2026-07-30) — same presign flow,
  *   EXIF strip, virus scan, and private bucket as the others; cap 5 MB, min
- *   1200×600. Resize target: 1600px wide WebP/AVIF.
+ *   1200×600. Resize target: ~2560px wide WebP/AVIF (full-bleed hero — match
+ *   the client cover/listing cap so the banner stays crisp).
  */
 export interface PresignRequest {
   kind: UploadKind;

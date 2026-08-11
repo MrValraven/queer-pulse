@@ -122,7 +122,8 @@ async function putWithRetry(
  * already has in hand — zero extra network cost.
  *
  * Validation (type, size, dimensions), a client-side EXIF/GPS strip, and a
- * longest-edge downscale (cap ~1600px, re-encoded at quality 0.8 when actually
+ * longest-edge downscale (per-kind cap: ~1600px for most slots, ~2560px for
+ * the full-bleed cover/listing heroes, re-encoded at quality 0.8 when actually
  * shrunk) all run in BOTH modes — see `uploadProcessing.ts`. This is the one
  * shared path every `UploadKind` funnels through, so a full-resolution phone
  * photo picked for an avatar, a listing photo, or a gathering photo is never

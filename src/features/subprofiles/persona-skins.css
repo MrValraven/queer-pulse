@@ -62,16 +62,38 @@
      as siblings of `.pp` in `SubprofilePage.tsx`, never inside it. */
   container-type: inline-size;
 }
-.pp-cover{height:clamp(150px,22cqw,230px);position:relative;overflow:hidden}
+/* The gradient stop that drives the cover's bottom fade (see `.pp-cover`
+   below). Registered so it can be *transitioned* — a bare custom property is
+   not interpolatable, so animating this value is what lets the Banner-edge
+   toggle glide between Contained and Bleed instead of snapping. Where
+   `@property` is unsupported the value simply jumps (same as before). */
+@property --pp-cover-fade{syntax:"<percentage>";inherits:false;initial-value:100%}
 /* Owner opt-in (persona settings → Presence → Banner edge): fade the cover
    out at its bottom edge so it dissolves into the page background below
    instead of ending on a hard seam. Masking the container melts the cover
    image into whatever ground the active skin sits on — cream on the base
-   skins, plum on the stage skin — with no per-skin colour wiring. */
-.pp[data-cover-bleed="true"] .pp-cover{
-  -webkit-mask-image:linear-gradient(to bottom,#000 62%,transparent 100%);
-          mask-image:linear-gradient(to bottom,#000 62%,transparent 100%);
+   skins, plum on the stage skin — with no per-skin colour wiring.
+
+   The mask is applied UNCONDITIONALLY (not just when bleeding): at the
+   default 100% stop the black covers the whole image, so "Contained" looks
+   identical to no mask. Toggling only moves `--pp-cover-fade` (100% ↔ 62%),
+   and that single animatable value is what the transition tweens. */
+.pp-cover{
+  height:clamp(150px,22cqw,230px);position:relative;overflow:hidden;
+  --pp-cover-fade:100%;
+  -webkit-mask-image:linear-gradient(to bottom,#000 var(--pp-cover-fade),transparent 100%);
+          mask-image:linear-gradient(to bottom,#000 var(--pp-cover-fade),transparent 100%);
+  transition:--pp-cover-fade .5s cubic-bezier(.16,1,.3,1);
 }
+.pp[data-cover-bleed="true"] .pp-cover{--pp-cover-fade:62%}
+/* When the banner bleeds, its faded bottom edge sits closer to the identity
+   block; nudge the whole content column down a touch so the photo + name keep
+   a little breathing room from the dissolving banner instead of crowding it.
+   Applied on `.wrap` (not per-skin `.pp-id`) so it stays layout-agnostic —
+   every skin's header sits inside `.wrap`, and `margin:0 auto` there only sets
+   the horizontal centring this overrides on top. */
+.pp[data-cover-bleed="true"] .wrap{margin-top:clamp(16px,2.4cqw,30px)}
+@media (prefers-reduced-motion:reduce){.pp-cover{transition:none}}
 .pp-hero{position:relative}
 .pp-runhead,.pp-titleblock{display:none}
 .pp-id{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;padding-top:18px}
@@ -133,18 +155,40 @@
     align-self:center
   }
   /* Stretch the text column full-width (so the action row can fill it) while
-     centering its own children; a touch more gap evens the vertical rhythm so
-     a lone social chip groups with the identity block instead of floating. */
+     centering its own children. Tighten the base rhythm to 10px so the identity
+     cluster (kind → name → tagline → social) reads as ONE group; the action row
+     and stat line below reopen their own space (padding-top) so grouping shows
+     through as graduated spacing rather than one flat, ungrouped gap. */
   .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-text{
-    align-self:stretch;align-items:center;gap:12px
+    align-self:stretch;align-items:center;gap:10px
+  }
+  /* Centered display names carry an inline help chip (`FeatureHelp`, rendered
+     inside the h1); on a centered headline it hangs off the right edge and pulls
+     the title's optical centre leftwards (the stray dot beside the name). Mirror
+     the chip's right-hand footprint (1.5em @ .9rem + its .5rem margin ≈ 1.85rem)
+     as an invisible LEADING spacer — only when the chip is actually present
+     (`:has(> button)`, so a persona with no authored help content isn't nudged)
+     — so the name text sits truly centred, the marker balanced by equal space
+     on its left instead of dangling. */
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-name:has(> button)::before{
+    content:"";display:inline-block;width:1.85rem
   }
   .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-social-row{
     justify-content:center
   }
-  /* Meta stacks into a centered column so the long standalone address wraps
-     naturally instead of being forced onto one cramped line. */
+  /* The two counts read as a stat PAIR on one centred line (split by a mid-dot),
+     with the longer standalone/owner address wrapping to its own quieter line
+     beneath (`flex-basis:100%`) instead of being forced onto a cramped single
+     row — far stronger than the old thin three-line column. The padding-top
+     sets the whole stat line apart from the action group above it. */
   .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-meta{
-    flex-direction:column;gap:6px;justify-content:center;padding-top:2px
+    flex-flow:row wrap;justify-content:center;column-gap:14px;row-gap:6px;padding-top:14px
+  }
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-meta > .pp-owner{
+    flex-basis:100%
+  }
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-meta > button + button::before{
+    content:"·";margin-inline-end:8px;opacity:.55
   }
   .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-owner{
     white-space:normal;overflow-wrap:anywhere;text-align:center
@@ -153,7 +197,7 @@
      availability status is lifted onto its own centered full-width line (with
      real row-gap) so it stops colliding with the meta row below it. */
   .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-acts{
-    width:100%;justify-content:center;row-gap:12px
+    width:100%;justify-content:center;row-gap:12px;padding-top:12px
   }
   .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-acts > :not(.pp-avail){
     flex:1 1 auto;min-width:0;justify-content:center
@@ -167,6 +211,13 @@
     text-align:center;margin-inline:auto;max-width:52ch
   }
 }
+
+/* Page & Table centre their display name at EVERY width, so the inline help-chip
+   imbalance (see the mobile `.pp-name:has(> button)` rule above) applies to them
+   unconditionally — give them the matching leading spacer so the name stays
+   optically centred, not shifted left by the trailing marker. */
+.pp[data-skin="page"] .pp-name:has(> button)::before,
+.pp[data-skin="table"] .pp-name:has(> button)::before{content:"";display:inline-block;width:1.85rem}
 
 .pp-body{display:flex;flex-direction:column;gap:clamp(44px,6cqw,72px);padding-top:clamp(40px,5cqw,64px)}
 .pp-sec > header{display:flex;align-items:baseline;gap:14px;padding-bottom:20px}

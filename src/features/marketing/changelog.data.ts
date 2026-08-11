@@ -93,6 +93,22 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "persona-banner-quality",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-banner-quality"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "modal-close-scroll-jump",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("modal-close-scroll-jump"),
+      },
+      {
         id: "persona-gallery-multi-add",
         category: "feature",
         date: "11 Aug 2026",
