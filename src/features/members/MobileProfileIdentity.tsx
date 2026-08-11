@@ -1,5 +1,6 @@
 import { Tag, TagRow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { ProfileNetworkStats } from "./ProfileNetworkStats";
 import { SocialLinksRow } from "./SocialLinksRow";
 import type { MemberProfile } from "./data/memberProfiles";
 import styles from "./MobileProfile.module.css";
@@ -60,6 +61,9 @@ export function MobileProfileIdentity({
           <Tag key={tag}>{tag}</Tag>
         ))}
       </TagRow>
+      {/* Private "Your network" chips — owner-only, mirroring the desktop hero.
+          `isSelf` here already excludes the visitor-preview state. */}
+      {isSelf && <ProfileNetworkStats ownerSlug={profile.slug} />}
       <SocialLinksRow
         links={profile.socials}
         self={isSelf}

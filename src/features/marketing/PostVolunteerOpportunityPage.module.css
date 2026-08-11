@@ -1,5 +1,6 @@
 .section {
-  padding: 108px 0 90px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 28px 0 90px;
   background: var(--cream);
 }
 

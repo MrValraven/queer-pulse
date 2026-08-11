@@ -3,16 +3,27 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
 import { getGivenVouches } from "./members.api";
 
+/** A vouch the signed-in member has given, resolved for display. */
+export interface GivenVouchFace {
+  /** The vouched member's slug (`/members/:slug`). */
+  slug: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl?: string;
+  /** ISO timestamp the vouch was given. */
+  createdAt: string;
+}
+
 /**
- * Slugs the signed-in member has vouched for (`GET /me/vouches/given`).
+ * The vouches the signed-in member has given (`GET /me/vouches/given`).
  *
  * Was a keyless `useEffect` + promise in `VouchProvider` firing on every route.
  * As a query it fires on first subscribe — i.e. when `useVouch()` mounts on a
  * profile or the connections page — and never for `useVouchActions()` callers.
  *
- * Returns bare slugs rather than `{ slug }` rows so the shape matches
- * `VouchProvider`'s `vouched: string[]` store exactly, keeping the hydration in
- * `useVouch()` a straight assignment.
+ * Returns rich `GivenVouchFace` rows (slug + name + avatar + `createdAt`) so both
+ * `useVouch()` (which maps them back to `vouched: string[]`) and the profile
+ * "Your network" section (which needs the name and timestamp) share one fetch.
  *
  * `staleTime: Infinity` and no invalidation of this key anywhere is deliberate:
  * `useVouchMutations` optimistically mutates the provider's `vouched` list, and
@@ -28,7 +39,7 @@ export function useGivenVouches() {
   const { demoMode } = useDemoMode();
   const { loggedIn } = useAuth();
 
-  return useQuery<string[]>({
+  return useQuery<GivenVouchFace[]>({
     queryKey: ["givenVouches", demoMode],
     enabled: !demoMode && loggedIn,
     staleTime: Infinity,
@@ -40,7 +51,13 @@ export function useGivenVouches() {
     queryFn: async () => {
       if (demoMode) return [];
       const rows = await getGivenVouches();
-      return rows.map((r) => r.slug);
+      return rows.map((row) => ({
+        slug: row.slug,
+        firstName: row.firstName,
+        lastName: row.lastName,
+        avatarUrl: row.avatarUrl ?? undefined,
+        createdAt: row.createdAt,
+      }));
     },
   });
 }

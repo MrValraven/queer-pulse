@@ -1,5 +1,6 @@
 .page {
-  padding: 120px 0 100px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 40px 0 100px;
 }
 .inner {
   max-width: 780px;

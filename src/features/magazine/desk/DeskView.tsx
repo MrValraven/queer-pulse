@@ -1,4 +1,5 @@
 import { DeskHeader, type DeskLayout } from "./DeskHeader";
+import { DeskTrackTabs, type DeskTrack } from "./DeskTrackTabs";
 import { NeedsStrip } from "./NeedsStrip";
 import { DeskStats } from "./DeskStats";
 import { DeskToolbar, type DeskFormatFilter, type DeskSortKey } from "./DeskToolbar";
@@ -21,6 +22,14 @@ export interface DeskViewProps {
   onRetry: () => void;
   isEmpty: boolean;
   issue: Issue;
+  /** The active editorial track — partitions the pipeline into Highlights vs. Issue. */
+  track: DeskTrack;
+  onTrack: (track: DeskTrack) => void;
+  /** Whether a current issue exists (drives the Issue tab number + reassignment). */
+  hasCurrentIssue: boolean;
+  /** Piece counts per track, for the tab badges. */
+  highlightsCount: number;
+  issueCount: number;
   editors: Editor[];
   me: string;
   onMe: (editorId: string) => void;
@@ -51,6 +60,7 @@ export interface DeskViewProps {
   onEditPiece: (piece: Piece) => void;
   onChasePiece: (piece: Piece) => void;
   onHandoffPiece: (piece: Piece) => void;
+  onReassignPiece: (piece: Piece) => void;
   onMovePiece: (piece: Piece, stage: Stage) => void;
   onCommissionSection: (sectionName: string) => void;
   selectedPitchIds: string[];
@@ -84,8 +94,17 @@ export function DeskView(props: DeskViewProps) {
   return (
     <div className={styles.page}>
       {props.showError && <DeskErrorBand onRetry={props.onRetry} />}
+      <DeskTrackTabs
+        track={props.track}
+        onTrack={props.onTrack}
+        issueNumber={props.issue.number}
+        hasCurrentIssue={props.hasCurrentIssue}
+        highlightsCount={props.highlightsCount}
+        issueCount={props.issueCount}
+      />
       <DeskHeader
         issue={props.issue}
+        track={props.track}
         editors={props.editors}
         me={props.me}
         onMe={props.onMe}
@@ -130,10 +149,14 @@ export function DeskView(props: DeskViewProps) {
                 <PiecesPipeline
                   pieces={props.visiblePieces}
                   focusId={props.focusId}
+                  track={props.track}
+                  hasCurrentIssue={props.hasCurrentIssue}
+                  issueNumber={props.issue.number}
                   onOpen={props.onOpenPiece}
                   onEdit={props.onEditPiece}
                   onChase={props.onChasePiece}
                   onHandoff={props.onHandoffPiece}
+                  onReassign={props.onReassignPiece}
                 />
               )}
               {props.layout === "board" && (

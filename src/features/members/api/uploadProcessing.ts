@@ -178,36 +178,146 @@ async function decode(file: File): Promise<Decoded> {
 }
 
 /**
- * Re-encode the decoded pixels through a `<canvas>`, which DROPS all EXIF/GPS
- * metadata (defence-in-depth for the outing risk — the server strip stays
- * authoritative) AND downscales to `MAX_DIMENSION_PX` on the longest edge —
- * the client-side half of "never store/re-serve a full-res original that no
- * upload slot ever displays at that size." Tradeoffs, so we only do it for
- * still raster types:
- *   - JPEG/WebP re-encode is lossy → quality 0.92 when passed through
- *     unscaled, 0.8 when actually downscaled (see `DOWNSCALE_QUALITY`/
- *     `PASSTHROUGH_QUALITY` above).
- *   - Animated GIFs would be flattened to one frame, so we SKIP them entirely
- *     (no resize, no re-encode) and let the server strip do the work.
- *   - On any failure we fall back to the original file (server strip covers us).
+ * Walk a set of GIF sub-blocks (`[size][…size bytes]` repeated, terminated by a
+ * zero-length block) starting at `pos`, returning the index just past the
+ * terminator. Throws on a truncated stream so the caller can fail closed.
+ */
+function skipSubBlocks(bytes: Uint8Array, pos: number): number {
+  while (pos < bytes.length) {
+    const size = bytes[pos] ?? 0; // bounded by the while guard; `?? 0` appeases noUncheckedIndexedAccess
+    pos += 1;
+    if (size === 0) return pos;
+    pos += size;
+  }
+  throw new Error("gif-truncated");
+}
+
+/**
+ * Strip metadata from an (animated) GIF *without* re-encoding its frames, so
+ * the animation survives. A canvas round-trip would flatten a GIF to one
+ * frame, so instead we parse the block structure and copy everything through
+ * EXCEPT the blocks that can carry personal data:
+ *   - Comment Extensions (`0x21 0xFE`) — dropped unconditionally.
+ *   - Application Extensions (`0x21 0xFF`) — dropped UNLESS they're the
+ *     NETSCAPE/ANIMEXTS loop-count block (needed for animation). This is where
+ *     an "XMP Data" packet (which can embed GPS) lives, so it gets removed.
+ * Graphic-control, plain-text, image-descriptor and colour-table blocks are
+ * preserved byte-for-byte. Throws on any structural surprise — the caller
+ * turns that into a blocked upload rather than shipping the original.
+ */
+function sanitizeGif(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
+  // `read` returns the byte at `index`, or 0 past the end; every read below is
+  // either length-checked or followed by a `skipSubBlocks` that throws on a
+  // truncated stream, so a bogus 0 can never smuggle raw metadata through.
+  const read = (index: number): number => bytes[index] ?? 0;
+  // Header (6) + Logical Screen Descriptor (7) = 13 bytes minimum.
+  if (bytes.length < 13 || String.fromCharCode(read(0), read(1), read(2)) !== "GIF") {
+    throw new Error("gif-bad-header");
+  }
+  const chunks: Uint8Array[] = [];
+  const packed = read(10);
+  let pos = 13;
+  if ((packed & 0x80) !== 0) {
+    // Global Colour Table: 3 × 2^(size+1) bytes.
+    pos += 3 * (1 << ((packed & 0x07) + 1));
+  }
+  // Header + Logical Screen Descriptor + Global Colour Table pass through.
+  chunks.push(bytes.subarray(0, pos));
+
+  while (pos < bytes.length) {
+    const marker = read(pos);
+    if (marker === 0x3b) {
+      // Trailer — end of stream.
+      chunks.push(bytes.subarray(pos, pos + 1));
+      break;
+    }
+    if (marker === 0x2c) {
+      // Image Descriptor: 10-byte header, optional Local Colour Table,
+      // LZW min-code-size byte, then image-data sub-blocks.
+      const start = pos;
+      const imagePacked = read(pos + 9);
+      pos += 10;
+      if ((imagePacked & 0x80) !== 0) {
+        pos += 3 * (1 << ((imagePacked & 0x07) + 1));
+      }
+      pos += 1; // LZW minimum code size
+      pos = skipSubBlocks(bytes, pos);
+      chunks.push(bytes.subarray(start, pos));
+      continue;
+    }
+    if (marker === 0x21) {
+      const label = read(pos + 1);
+      const blockStart = pos;
+      const dataStart = pos + 2;
+      const end = skipSubBlocks(bytes, dataStart);
+      if (label === 0xfe) {
+        // Comment Extension — drop.
+        pos = end;
+        continue;
+      }
+      if (label === 0xff) {
+        // Application Extension — keep only the animation loop-count block.
+        const identifier = String.fromCharCode(...bytes.subarray(dataStart + 1, dataStart + 9));
+        if (identifier === "NETSCAPE" || identifier === "ANIMEXTS") {
+          chunks.push(bytes.subarray(blockStart, end));
+        }
+        pos = end;
+        continue;
+      }
+      // Graphic Control (0xF9), Plain Text (0x01), etc. — preserve.
+      chunks.push(bytes.subarray(blockStart, end));
+      pos = end;
+      continue;
+    }
+    throw new Error("gif-unknown-block");
+  }
+
+  const total = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+  const out = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    out.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return out;
+}
+
+/**
+ * Produce an EXIF/GPS-free upload blob — the CLIENT is the authoritative strip
+ * (the presigned-upload backend never sees the bytes), so this MUST fail closed:
+ * every path either returns metadata-free bytes or throws
+ * `members:upload.error.stripFailed`. It NEVER returns the original file — an
+ * image whose metadata we can't remove is blocked, not uploaded raw.
+ *   - GIFs are sanitized in place (`sanitizeGif`) so animation survives.
+ *   - JPEG/PNG/WebP are re-encoded through a `<canvas>`, which drops metadata
+ *     AND downscales to `MAX_DIMENSION_PX` on the longest edge (no upload slot
+ *     in the app displays wider than ~1600px, so full-res originals only cost
+ *     storage/bandwidth forever after). Lossy re-encode uses quality 0.92 when
+ *     passed through unscaled, 0.8 when actually downscaled.
  */
 async function stripMetadata(file: File, decoded: Decoded): Promise<Blob> {
-  if (file.type === "image/gif") return file; // preserve animation
   try {
+    if (file.type === "image/gif") {
+      const cleaned = sanitizeGif(new Uint8Array(await file.arrayBuffer()));
+      return new Blob([cleaned], { type: "image/gif" });
+    }
     const target = capDimensions(decoded.width, decoded.height);
     const canvas = document.createElement("canvas");
     canvas.width = target.width;
     canvas.height = target.height;
     const ctx = canvas.getContext("2d");
-    if (!ctx) return file;
+    if (!ctx) throw new Error("no-2d-context");
     ctx.drawImage(decoded.source, 0, 0, target.width, target.height);
     const quality = target.scaled ? DOWNSCALE_QUALITY : PASSTHROUGH_QUALITY;
     const blob = await new Promise<Blob | null>((resolve) =>
       canvas.toBlob(resolve, file.type, quality),
     );
-    return blob ?? file;
-  } catch {
-    return file; // server strip remains the source of truth
+    if (!blob) throw new Error("encode-failed");
+    return blob;
+  } catch (err) {
+    if (err instanceof ImageProcessingError) throw err;
+    // Fail CLOSED: never ship the un-stripped original.
+    throw new ImageProcessingError("members:upload.error.stripFailed");
   }
 }
 
@@ -216,7 +326,8 @@ async function stripMetadata(file: File, decoded: Decoded): Promise<Blob> {
  * (`MAX_DIMENSION_PX`) `Blob` ready to upload. Runs in BOTH demo and live
  * mode, for every `UploadKind` (avatar, listing photo, gathering photo,
  * story cover, work image, group avatar) since they all funnel through here.
- * Throws a human message on a too-small image or an undecodable file.
+ * Throws a human message on a too-small image, an undecodable file, or an
+ * image whose metadata can't be stripped (fail closed — see `stripMetadata`).
  */
 export async function processImage(
   file: File,

@@ -79,6 +79,7 @@ export const DIETARY: Record<string, string> = {
 
 /**
  * How a section's items should render on the persona page.
+ * - "gallery": the universal `gallery` section — an image-only grid.
  * - "visual": an image-tile grid (`VISUAL_SECTIONS`, e.g. portfolio, menus).
  * - "stage-split": stage-skin sections with at least one upcoming item —
  *   upcoming rows first, then a "Played" block for the rest.
@@ -88,7 +89,8 @@ export function sectionShape(
   section: SubprofileSection,
   skin: SkinFamily,
   items: SubprofileItemDTO[],
-): "list" | "visual" | "stage-split" {
+): "list" | "visual" | "gallery" | "stage-split" {
+  if (section === "gallery") return "gallery";
   if (VISUAL_SECTIONS.includes(section)) return "visual";
   if (skin === "stage" && items.some((item) => isUpcoming(item.date))) {
     return "stage-split";

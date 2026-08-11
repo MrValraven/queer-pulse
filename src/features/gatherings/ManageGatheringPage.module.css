@@ -1,5 +1,6 @@
 .page {
-  padding: 100px 0 100px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 20px 0 100px;
 }
 .header {
   padding-bottom: 32px;

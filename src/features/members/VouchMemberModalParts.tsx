@@ -1,8 +1,11 @@
 import { useId } from "react";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useAuth } from "../../app/providers/authContext";
 import { Avatar, Button, Toggle } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { initialsOf, tintForSlug } from "./api/members.adapters";
 import { currentUser, type MemberProfile } from "./data/memberProfiles";
 import {
   RELATIONSHIPS,
@@ -25,6 +28,23 @@ export function VouchSuccess({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  const { user } = useAuth();
+  // The viewer's own "+ you" face. Demo uses the mock persona; live builds it
+  // from the real authenticated user so production never renders the demo
+  // "Tiago Costa" persona (see the demo-persona-leak guard on live paths).
+  const you =
+    demoMode || !user
+      ? {
+          initials: currentUser.initials,
+          tint: currentUser.tint,
+          photo: currentUser.photo,
+        }
+      : {
+          initials: initialsOf(user.profile.firstName, user.profile.lastName),
+          tint: tintForSlug(user.profile.slug),
+          photo: user.profile.avatarUrl ?? undefined,
+        };
   return (
     <div className={styles.success}>
       <div className={styles.facePair}>
@@ -40,10 +60,10 @@ export function VouchSuccess({
         </span>
         <span className={styles.faceB}>
           <Avatar
-            initials={currentUser.initials}
-            tint={currentUser.tint}
+            initials={you.initials}
+            tint={you.tint}
             size={74}
-            src={currentUser.photo}
+            src={you.photo}
             alt={t("members:card.you")}
           />
           <span className={styles.faceCheck} aria-hidden>

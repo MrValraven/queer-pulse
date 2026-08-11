@@ -202,6 +202,7 @@ export interface MagazineEditorDto {
  * before any issue exists yet.
  */
 export interface CurrentIssueDto {
+  id: string;
   number: string;
   theme: string;
   filled: number;
@@ -367,13 +368,18 @@ export interface CreatePieceDto {
  * Body of `PATCH /magazine/admin/pieces/:id` — every creation field
  * patchable, plus workflow fields that only make sense post-commission.
  */
-export type UpdatePieceDto = Partial<CreatePieceDto> & {
+export type UpdatePieceDto = Omit<Partial<CreatePieceDto>, "issueId"> & {
   stage?: PieceStage;
   brief?: unknown;
   care?: unknown;
   orderIndex?: number;
   pages?: string;
   laidOut?: boolean;
+  /** Widened from the inherited `issueId?: string` (via `Omit` — an
+   *  intersection alone can't loosen `Partial<CreatePieceDto>`'s `string`) so
+   *  the desk can detach a piece back to a standalone highlight by sending
+   *  `{ issueId: null }` (mirrors backend B2 — accepts a UUID or null). */
+  issueId?: string | null;
 };
 
 /** Body of `PATCH /magazine/admin/pieces/:id/payment` — every field patchable. */

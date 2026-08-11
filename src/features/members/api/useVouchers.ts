@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getVouchers } from "./members.api";
 import { initialsOf, tintForSlug } from "./members.adapters";
+import { demoNetworkTimestamp } from "./networkTimestamps";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 
 /** A single voucher face rendered on a profile's "Vouched for by…" row. */
@@ -17,6 +18,13 @@ export interface VoucherFace {
   avatarUrl?: string;
   /** The voucher vouched anonymously; render an un-linked, un-named face. */
   anonymous?: boolean;
+  /**
+   * ISO timestamp the vouch was made. Kept from `VoucherDTO.createdAt` (and a
+   * plausible mock value in demo) so the profile "Your network" section can sort
+   * and label received vouches by recency. Optional: the face row that first
+   * consumed this type never needed it.
+   */
+  createdAt?: string;
 }
 
 /**
@@ -42,7 +50,7 @@ export function useVouchers(slug: string | undefined) {
         const { MEMBERS } = await import("../data/members");
         const member = MEMBERS[slug];
         if (!member) return [];
-        return member.vouchers.flatMap((voucherSlug) => {
+        return member.vouchers.flatMap((voucherSlug, voucherIndex) => {
           const v = MEMBERS[voucherSlug];
           if (!v) return [];
           return [
@@ -52,6 +60,7 @@ export function useVouchers(slug: string | undefined) {
               initials: v.initials,
               tint: v.tint,
               avatarUrl: v.photo,
+              createdAt: demoNetworkTimestamp(voucherIndex),
             },
           ];
         });
@@ -67,6 +76,7 @@ export function useVouchers(slug: string | undefined) {
             initials: "?",
             tint: "plum" as AvatarTint,
             anonymous: true,
+            createdAt: v.createdAt,
           };
         }
         return {
@@ -75,6 +85,7 @@ export function useVouchers(slug: string | undefined) {
           initials: initialsOf(v.firstName, v.lastName),
           tint: tintForSlug(v.slug),
           avatarUrl: v.avatarUrl ?? undefined,
+          createdAt: v.createdAt,
         };
       });
     },

@@ -1,6 +1,7 @@
 .hero {
   background: var(--plum);
-  padding: 120px 0 0;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 40px 0 0;
   position: relative;
   overflow: hidden;
 }
@@ -498,9 +499,8 @@
 
 @media (max-width: 860px) {
   .hero {
-    /* The floating nav band is ~80px (--nav-top + --nav-height); 120px left too
-       much dead plum above the fold on phones. Clear the nav + a little air. */
-    padding-top: 88px;
+    /* nav band reserved by shell (base.css); this is only breathing room */
+    padding-top: 8px;
   }
   .layout {
     grid-template-columns: 1fr;

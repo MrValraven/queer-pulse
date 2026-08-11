@@ -148,6 +148,7 @@ export const subprofiles: Catalog = {
   "section.credentials": "Credentials",
   "section.showcase": "Showcase",
   "section.links": "Links",
+  "section.gallery": "Photo gallery",
 
   // Status / link-visibility badges — also persisted fields.
   "status.draft": "Draft",
@@ -614,6 +615,7 @@ export const subprofiles: Catalog = {
   "hero.edit": "Edit persona",
   "hero.report.cta": "Report this persona",
   "hero.report.ariaLabel": "Report {name}",
+  "hero.viewPhotoAria": "View photo of {name}",
   "hero.standalone": "Standalone · {address}",
 
   // Workshop-skin title block (SubprofileTitleBlock) — decorative dl shown
@@ -677,6 +679,14 @@ export const subprofiles: Catalog = {
   // "plate" number is studio-skin decoration (CSS-hidden elsewhere).
   "tile.plate": "Pl. {number}",
 
+  // Caption-less gallery section (SubprofileSections) — per-photo alt text,
+  // since these tiles carry no title/subtitle of their own.
+  "galleryPhotoAlt": "{name} — gallery photo {number}",
+
+  // Gallery-section editor cap (SubprofileSectionEditor) — shown in place of
+  // the Add affordance once the universal gallery section hits its 6-photo max.
+  "galleryFull": "6 photos maximum",
+
   // Public persona page (SubprofilePage.tsx)
   "page.loading": "Loading persona…",
   "page.ownerTie": "Another persona from <em>{name}</em>",
@@ -715,7 +725,7 @@ export const subprofiles: Catalog = {
   // Dashboard card's draft-readiness ring (SideReadinessRing, Phase 2) —
   // accessible name for the `.ring`; the visible `<i>` shows the bare
   // number, this spells out what it means.
-  "ring.ariaLabel": "{pct}% ready to publish",
+  "ring.ariaLabel": "{pct}% complete",
 
   // Dashboard card (SideCard, Phase 2 Task 5) — copy not already covered by
   // `mine.*` (name fallback, endorsement/follower counts, Edit/Delete),

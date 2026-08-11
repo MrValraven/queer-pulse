@@ -6,6 +6,7 @@ import { MIN_BIO } from "./subprofileEditor.data";
 interface SubprofileIdentityFieldsProps {
   avatarUrl: string;
   onAvatarUrlChange: (value: string) => void;
+  onAvatarPreviewChange: (value: string | null) => void;
   displayName: string;
   onDisplayNameChange: (value: string) => void;
   nameMissing: boolean;
@@ -25,6 +26,7 @@ interface SubprofileIdentityFieldsProps {
 export function SubprofileIdentityFields({
   avatarUrl,
   onAvatarUrlChange,
+  onAvatarPreviewChange,
   displayName,
   onDisplayNameChange,
   nameMissing,
@@ -45,6 +47,7 @@ export function SubprofileIdentityFields({
           size={120}
           placeholder={t("subprofiles:metaForm.avatarPlaceholder")}
           onChange={onAvatarUrlChange}
+          onPreviewChange={onAvatarPreviewChange}
         />
       </FormField>
 

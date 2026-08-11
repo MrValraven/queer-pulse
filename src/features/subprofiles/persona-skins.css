@@ -66,7 +66,20 @@
 .pp-hero{position:relative}
 .pp-runhead,.pp-titleblock{display:none}
 .pp-id{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;padding-top:18px}
-.pp-av{width:112px;height:112px;font-size:34px;margin-top:-58px;border:5px solid var(--cream);box-shadow:0 3px 14px rgba(var(--plum-rgb),.16)}
+/* `.pp-av` lands on the `Avatar` primitive's OUTER wrapper (`Avatar.module.css`
+   `.wrap`), which is a plain square `inline-flex` box — only the inner `.avatar`
+   circle is rounded. Without this `border-radius`, the frame styling below
+   (border, box-shadow, and the stage skin's `--sk-tint` background) paints a
+   SQUARE around the round avatar — the stray coral corners + square shadow. */
+.pp-av{width:112px;height:112px;font-size:34px;margin-top:-58px;border:5px solid var(--cream);box-shadow:0 3px 14px rgba(var(--plum-rgb),.16);border-radius:50%}
+/* Tap-to-enlarge trigger wrapping the avatar. `display:contents` keeps the
+   button out of layout entirely, so `.pp-av` stays the box every skin's CSS
+   targets (incl. the skins that `display:none` it — the hidden avatar means
+   nothing renders to tap). Focus ring + pointer land on the inner `.pp-av`. */
+.pp-avButton{display:contents;cursor:pointer}
+.pp-avButton .pp-av{cursor:pointer}
+.pp-avButton:focus-visible{outline:none}
+.pp-avButton:focus-visible .pp-av{outline:2px solid var(--accent);outline-offset:3px}
 .pp-text{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:9px}
 .pp-kind{align-self:flex-start;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;border-radius:999px;background:var(--sk-tint);color:var(--sk-on)}
 .pp-name{font-family:var(--serif);font-weight:400;font-size:clamp(38px,6.4cqw,64px);line-height:1.02;letter-spacing:-.03em;color:var(--plum)}
@@ -81,6 +94,55 @@
 .pp-social{display:flex;gap:7px;flex-wrap:wrap}
 .pp-social a{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-60)}
 .pp-social a:hover{border-color:var(--sk-tint);color:var(--sk-tint)}
+
+/* ── Mobile hero — match the member profile's centered, app-like column ──
+   The base hero is left-aligned with a fixed 112px avatar and a wrapping
+   button row (fine on desktop, cramped on a phone — the top-left pile in the
+   screenshot). Below the member profile's own `md` (640px) cut, restructure it
+   into the SAME single centered column the mobile member profile uses
+   (`MobileProfileHeader`/`.identityCap`/`.actionRow`): a centered avatar and
+   identity block over a full-width action row.
+
+   Two deliberate scoping choices:
+   • `@container`, not `@media` — the whole persona system is driven by the
+     `.pp` inline-size container (see `.pp` above), so its mobile treatment
+     belongs in the same query system the skins already use (760/700px below).
+   • `:where(:not(studio):not(workshop))` keeps this at low specificity so every
+     skin-specific `.pp[data-skin=…] .pp-*` rule still wins where it sets the
+     same property, AND excludes the two skins that intentionally rebuild the
+     hero — studio's gallery grid and workshop's drawing-sheet card (both have
+     their own narrow-width rules). page/table already center, so this is a
+     harmless reinforcement there; stage and practice gain the centered layout. */
+@container (max-width:640px){
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-id{
+    flex-direction:column;align-items:center;text-align:center;gap:16px
+  }
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-av{
+    width:96px;height:96px;margin-top:-48px
+  }
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-kind{
+    align-self:center
+  }
+  /* Stretch the text column full-width (so the action row can fill it) while
+     centering its own children (name, tagline, social, meta). */
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-text{
+    align-self:stretch;align-items:center
+  }
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-social{
+    justify-content:center
+  }
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-meta{
+    justify-content:center
+  }
+  /* Full-width, equal-growing buttons — mirrors the member profile's
+     `.actionsSlot > div > *{flex:1 1 auto;justify-content:center}`. */
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-acts{
+    width:100%;justify-content:center
+  }
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-acts > *{
+    flex:1 1 auto;min-width:0;justify-content:center
+  }
+}
 
 .pp-body{display:flex;flex-direction:column;gap:clamp(44px,6cqw,72px);padding-top:clamp(40px,5cqw,64px)}
 .pp-sec > header{display:flex;align-items:baseline;gap:14px;padding-bottom:20px}
@@ -103,6 +165,11 @@
 .pp-tile .gigstate{align-self:flex-start}
 .pp-tile small{color:var(--ink-60);font-size:13.5px;line-height:1.45}
 .plate{display:none}
+/* `.pp-gallery` — the universal caption-less `gallery` section: a plain
+   image-only grid, no title/subtitle/date (unlike `.pp-tiles`). */
+.pp-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.pp-gallery-cell{margin:0;aspect-ratio:1;border-radius:10px;overflow:hidden;min-width:0}
+@media (max-width:560px){.pp-gallery{grid-template-columns:repeat(2,1fr);gap:8px}}
 .pp-spot{border-radius:22px;padding:clamp(24px,3.4cqw,38px);background:color-mix(in srgb,var(--sk-tint) 9%,var(--paper));border:1px solid color-mix(in srgb,var(--sk-tint) 22%,transparent);display:flex;gap:26px;align-items:center;flex-wrap:wrap}
 .pp-spot .art{width:150px;height:150px;border-radius:14px;flex:none;overflow:hidden}
 /* `min-width:0` overrides the flex default (`min-width:auto`), which lets an
@@ -132,38 +199,68 @@
 
 /* ═══════════ STAGE — a poster on a wall at 2am ═══════════
    Signature: date-first ticket rows under marquee rules. */
-.pp[data-skin="stage"]{background:var(--skin-stage-ground);color:rgba(var(--cream-rgb),.9);--sk-ink:var(--cream)}
-.pp[data-skin="stage"] .pp-cover{height:clamp(180px,26cqw,300px);background:linear-gradient(160deg,color-mix(in srgb,var(--sk-tint) 70%,var(--skin-stage-ground)),var(--skin-stage-ground))}
-.pp[data-skin="stage"] .pp-cover::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(var(--cream-rgb),.06) 0 2px,transparent 2px 26px)}
+/* The stage ground is dark in BOTH app themes, so the app's LIGHT-theme text/
+   line/muted tokens (dark plum on cream) paint dark-on-dark here — that is why
+   the action row (Message/Follow/Endorse/Share/Report ghost buttons and the
+   follower/endorsement `.count` + "Add a note" text, all styled from CSS-module
+   classes this global file can't reach) went invisible in light theme. Adopt
+   the app's dark-surface values for those tokens locally so the module-scoped
+   controls inherit legible cream via the normal cascade. Mirrors the
+   `[data-theme="dark"]` block in tokens/colors.css. */
+.pp[data-skin="stage"]{
+  background:var(--skin-stage-ground);
+  color:rgba(var(--cream-rgb),.9);
+  --sk-ink:rgb(var(--cream-rgb));
+  --text-strong:rgba(var(--cream-rgb),.92);
+  --line-rgb:var(--cream-rgb);
+  --line-strong:rgba(var(--cream-rgb),.45);
+  --ink-60:rgba(var(--cream-rgb),.62);
+  --ink-40:rgba(var(--cream-rgb),.61);
+  /* Accent-AS-TEXT on the dark ground. The raw accent is safe as a FILL (paired
+     with --sk-on) but fails as text: a dark accent (plum) vanishes and a mid
+     one (violet #7a52b8 → 3.2:1 in light theme) is barely legible. Lift it
+     toward cream so any accent stays readable while keeping its hue — the same
+     mix `.gigstate.guest` already used, hoisted here so every accent-text hit
+     shares it. Fills below keep using raw --sk-tint. */
+  --sk-text:color-mix(in srgb,var(--sk-tint) 65%,rgb(var(--cream-rgb)));
+}
+.pp[data-skin="stage"] .pp-cover{height:clamp(180px,26cqw,300px)}
+/* The tinted poster gradient + the marquee/dot texture (`::after`, below and
+   at the STAGE content block) are the EMPTY-STATE decoration for a coverless
+   poster. Gate them on `:not([data-has-cover])` (set in SubprofilePageBody
+   when `coverUrl` exists) so they don't paint over a real banner image — the
+   `::after` sits at `inset:0` above the `<img>`, so ungated it dims/textures
+   every uploaded cover. */
+.pp[data-skin="stage"] .pp-cover:not([data-has-cover]){background:linear-gradient(160deg,color-mix(in srgb,var(--sk-tint) 70%,var(--skin-stage-ground)),var(--skin-stage-ground))}
+.pp[data-skin="stage"] .pp-cover:not([data-has-cover])::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(var(--cream-rgb),.06) 0 2px,transparent 2px 26px)}
 .pp[data-skin="stage"] .pp-av{border-color:var(--skin-stage-ground);background:var(--sk-tint);color:var(--paper);margin-top:0}
 .pp[data-skin="stage"] .pp-id{padding-top:28px}
 .pp[data-skin="stage"] .nextup{position:relative;z-index:2}
-.pp[data-skin="stage"] .pp-name{font-family:"Anton",var(--sans);font-weight:400;text-transform:uppercase;letter-spacing:-.005em;line-height:.9;font-size:clamp(48px,10cqw,110px);color:var(--cream)}
+.pp[data-skin="stage"] .pp-name{font-family:"Anton",var(--sans);font-weight:400;text-transform:uppercase;letter-spacing:-.005em;line-height:.9;font-size:clamp(48px,10cqw,110px);color:rgb(var(--cream-rgb))}
 .pp[data-skin="stage"] .pp-tagline,.pp[data-skin="stage"] .pp-bio{color:rgba(var(--cream-rgb),.72)}
 .pp[data-skin="stage"] .pp-bio{font-size:17px}
 .pp[data-skin="stage"] .pp-meta,.pp[data-skin="stage"] .pp-owner{color:rgba(var(--cream-rgb),.5)}
-.pp[data-skin="stage"] .pp-meta b,.pp[data-skin="stage"] .pp-owner em{color:var(--cream)}
-.pp[data-skin="stage"] .pp-sec h2{font-family:"Anton",var(--sans);text-transform:uppercase;color:var(--cream);letter-spacing:.01em;font-size:clamp(24px,3.2cqw,40px)}
+.pp[data-skin="stage"] .pp-meta b,.pp[data-skin="stage"] .pp-owner em{color:rgb(var(--cream-rgb))}
+.pp[data-skin="stage"] .pp-sec h2{font-family:"Anton",var(--sans);text-transform:uppercase;color:rgb(var(--cream-rgb));letter-spacing:.01em;font-size:clamp(24px,3.2cqw,40px)}
 .pp[data-skin="stage"] .pp-sec > header{border-bottom:2px solid rgba(var(--cream-rgb),.16);align-items:center}
 .pp[data-skin="stage"] .pp-row{border-color:rgba(var(--cream-rgb),.12);align-items:center;gap:22px}
 .pp[data-skin="stage"] .pp-row:last-child{border-bottom-color:rgba(var(--cream-rgb),.12)}
-.pp[data-skin="stage"] .pp-row .when{order:-1;font-family:"Anton",var(--sans);font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--sk-tint);width:96px}
-.pp[data-skin="stage"] .pp-row b{font-size:20px;font-weight:500;color:var(--cream)}
+.pp[data-skin="stage"] .pp-row .when{order:-1;font-family:"Anton",var(--sans);font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--sk-text);width:96px}
+.pp[data-skin="stage"] .pp-row b{font-size:20px;font-weight:500;color:rgb(var(--cream-rgb))}
 .pp[data-skin="stage"] .pp-row small{color:rgba(var(--cream-rgb),.55)}
 .pp[data-skin="stage"] .pp-tile .art{border-radius:4px}
-.pp[data-skin="stage"] .pp-tile b{color:var(--cream);text-transform:uppercase;font-family:"Anton",var(--sans);font-weight:400;letter-spacing:.02em}
+.pp[data-skin="stage"] .pp-gallery-cell{border-radius:4px}
+.pp[data-skin="stage"] .pp-tile b{color:rgb(var(--cream-rgb));text-transform:uppercase;font-family:"Anton",var(--sans);font-weight:400;letter-spacing:.02em}
 .pp[data-skin="stage"] .pp-tile small{color:rgba(var(--cream-rgb),.55)}
 .pp[data-skin="stage"] .pp-spot{background:var(--sk-tint);border:none;color:var(--sk-on);border-radius:4px}
 .pp[data-skin="stage"] .pp-spot h3{font-family:"Anton",var(--sans);text-transform:uppercase;color:var(--sk-on);letter-spacing:0;font-size:clamp(28px,4.4cqw,48px);line-height:.95}
 .pp[data-skin="stage"] .pp-spot .art{border-radius:2px}
 .pp[data-skin="stage"] .endo,.pp[data-skin="stage"] .partof>*{background:rgba(var(--cream-rgb),.05);border-color:rgba(var(--cream-rgb),.14)}
-.pp[data-skin="stage"] .endo-q{color:var(--cream)}
+.pp[data-skin="stage"] .endo-q{color:rgb(var(--cream-rgb))}
 .pp[data-skin="stage"] .partof>*{color:rgba(var(--cream-rgb),.85)}
 .pp[data-skin="stage"] .ph{background:repeating-linear-gradient(135deg,rgba(var(--cream-rgb),.07) 0 6px,transparent 6px 13px),color-mix(in srgb,var(--sk-tint) 40%,var(--skin-stage-ground));color:rgba(var(--cream-rgb),.5)}
-.pp[data-skin="stage"] .btn-ghost{color:var(--cream);border-color:rgba(var(--cream-rgb),.3)}
-.pp[data-skin="stage"] .btn-ghost:hover{border-color:var(--cream);background:rgba(var(--cream-rgb),.09)}
 .pp[data-skin="stage"] .pp-social a{border-color:rgba(var(--cream-rgb),.22);color:rgba(var(--cream-rgb),.7)}
-.pp[data-skin="stage"] .pp-kind{background:var(--cream);color:var(--skin-stage-ground)}
+.pp[data-skin="stage"] .pp-kind{background:rgb(var(--cream-rgb));color:var(--skin-stage-ground)}
 .pp[data-skin="stage"] .tag{background:rgba(var(--cream-rgb),.1);color:rgba(var(--cream-rgb),.7)}
 .pp[data-skin="stage"] .pp-link .href{color:rgba(var(--cream-rgb),.5)}
 
@@ -188,6 +285,7 @@
 @container (max-width:700px){.pp[data-skin="studio"] .pp-tiles{grid-template-columns:1fr}}
 .pp[data-skin="studio"] .pp-tile:nth-child(even){margin-top:clamp(24px,6cqw,78px)}
 .pp[data-skin="studio"] .pp-tile .art{aspect-ratio:4/5;border-radius:0;border:1px solid rgba(var(--plum-rgb),.22);padding:0}
+.pp[data-skin="studio"] .pp-gallery-cell{border-radius:0;border:1px solid rgba(var(--plum-rgb),.22)}
 .pp[data-skin="studio"] .pp-tile > div{display:grid;grid-template-columns:auto 1fr;gap:2px 14px}
 .pp[data-skin="studio"] .plate{display:block;grid-row:span 2;font-size:10.5px;font-weight:700;letter-spacing:.14em;color:var(--ink-40);padding-top:4px}
 .pp[data-skin="studio"] .pp-tile b{font-family:"Instrument Serif",var(--serif);font-size:23px;font-weight:400}
@@ -358,7 +456,13 @@
 [data-theme="dark"] .pp[data-skin="studio"] .pp-cover,[data-theme="dark"] .pp[data-skin="studio"] .pp-id,[data-theme="dark"] .pp[data-skin="studio"] .pp-sec > header{border-color:rgba(var(--cream-rgb),.45)}
 [data-theme="dark"] .pp[data-skin="studio"] .pp-spot,[data-theme="dark"] .pp[data-skin="studio"] .pp-spot .art{border-color:rgba(var(--cream-rgb),.35)}
 [data-theme="dark"] .pp[data-skin="studio"] .pp-tile .art{border-color:rgba(var(--cream-rgb),.2)}
-[data-theme="dark"] .pp[data-skin="page"]{--skin-page-ground:#120c1e}
+[data-theme="dark"] .pp[data-skin="studio"] .pp-gallery-cell{border-color:rgba(var(--cream-rgb),.2)}
+/* The page skin remaps --ink/--ink-60/--ink-40 to its warm newsprint ink
+   (--skin-page-ink) for BOTH themes (see the [data-skin="page"] --ink block
+   below). Flipping only the ground here would strand that dark-brown ink on
+   the near-black dark ground — so flip the ink to a warm off-white too, and
+   its -rgb triplet so the derived rgba() hairlines/opacities flip with it. */
+[data-theme="dark"] .pp[data-skin="page"]{--skin-page-ground:#120c1e;--skin-page-ink:#ece3d6;--skin-page-ink-rgb:236,227,214}
 [data-theme="dark"] .pp[data-skin="page"] .pp-runhead,[data-theme="dark"] .pp[data-skin="page"] .pp-foot{border-color:rgba(var(--cream-rgb),.4)}
 [data-theme="dark"] .pp[data-skin="page"] .pp-spot{border-color:rgba(var(--cream-rgb),.6)}
 [data-theme="dark"] .pp[data-skin="workshop"]{--skin-workshop-ground:#0f0a1c;background-image:linear-gradient(rgba(var(--cream-rgb),.05) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--cream-rgb),.05) 1px,transparent 1px)}
@@ -377,7 +481,7 @@
 .pp[data-skin="stage"] .nextup-label{font-family:"Anton",var(--sans);text-transform:uppercase;letter-spacing:.08em;font-size:13px;opacity:.8}
 .pp[data-skin="stage"] .nextup b{font-family:"Anton",var(--sans);text-transform:uppercase;font-size:22px;font-weight:400;letter-spacing:.01em}
 .pp[data-skin="stage"] .nextup-when{font-size:14px;opacity:.85;margin-right:auto}
-.pp[data-skin="stage"] .pp-cover::after{background:radial-gradient(rgba(var(--cream-rgb),.16) 1px,transparent 1.4px);background-size:6px 6px}
+.pp[data-skin="stage"] .pp-cover:not([data-has-cover])::after{background:radial-gradient(rgba(var(--cream-rgb),.16) 1px,transparent 1.4px);background-size:6px 6px}
 .pp[data-skin="stage"] .pp-name{text-wrap:balance}
 .gigstate{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:2px;border:1px solid currentColor;white-space:nowrap}
 .gigstate.sold_out,.gigstate.sold{color:var(--accent)}
@@ -386,12 +490,12 @@
 .gigstate.shipped{color:var(--jade)}
 .gigstate.archived{color:var(--ink-40)}
 .gigstate.in-progress{color:var(--amber-ink)}
-.pp[data-skin="stage"] .gigstate.guest{color:color-mix(in srgb,var(--sk-tint) 65%,var(--cream))}
+.pp[data-skin="stage"] .gigstate.guest{color:var(--sk-text)}
 .pp-row.is-off b{text-decoration:line-through;opacity:.5}
 .pp[data-skin="stage"] .pp-row.is-ticket{cursor:pointer;transition:background .12s linear,padding-left .12s linear}
 .pp[data-skin="stage"] .pp-row.is-ticket:hover{background:rgba(var(--cream-rgb),.05);padding-left:14px}
 .pp[data-skin="stage"] .doors{font-size:13px;color:rgba(var(--cream-rgb),.45)}
-.pp[data-skin="stage"] .ticketgo{color:var(--sk-tint);display:flex}
+.pp[data-skin="stage"] .ticketgo{color:var(--sk-text);display:flex}
 .pp-past{padding-top:26px}
 .pp-past-label{display:block;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-40);padding-bottom:6px}
 .pp[data-skin="stage"] .pp-past{opacity:.55}

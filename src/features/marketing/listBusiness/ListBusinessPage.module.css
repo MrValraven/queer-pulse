@@ -1,12 +1,14 @@
 /* ===== Hero ===== */
 .hero {
   position: relative;
-  padding: 132px 0 12px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 52px 0 12px;
   overflow: hidden;
 }
 @media (max-width: 720px) {
   .hero {
-    padding: 108px 0 12px;
+    /* nav band reserved by shell (base.css); this is only breathing room */
+    padding: 28px 0 12px;
   }
 }
 .hero::before {

@@ -52,14 +52,15 @@
     padding-bottom: calc(var(--tab-bar-h) + env(safe-area-inset-bottom));
   }
 
-  /* Every page hero reserves a top band (--nav-top + --nav-height = 80px) to
-     clear the ordinary floating pill Navbar. In app-bar mode the pill is
-     replaced by the slim `.appBar` strip (Navbar.module.css) — which Navbar
-     now swaps to on any mobile view (`isAppBar = isMobile`, not gated on
-     install), so this offset can no longer be standalone-only either. The
-     strip's real height is `var(--app-bar-h) + env(safe-area-inset-top)` —
-     smaller than the reserved band on most devices, so the difference sat as
-     dead whitespace above every hero. Pull `main` by exactly that difference —
+  /* `main[data-page-main]` reserves the nav band (--nav-top + --nav-height =
+     80px) once (base.css, `padding-top: var(--nav-band)`) to clear the ordinary
+     floating pill Navbar. In app-bar mode the pill is replaced by the slim
+     `.appBar` strip (Navbar.module.css) — which Navbar now swaps to on any
+     mobile view (`isAppBar = isMobile`, not gated on install), so this offset
+     can no longer be standalone-only either. The strip's real height is
+     `var(--app-bar-h) + env(safe-area-inset-top)` — smaller than the reserved
+     band on most devices, so the difference sat as dead whitespace above every
+     hero. Pull `main` by exactly that difference —
      same technique as nav-mode.css's sidebar `margin-top`, generalised to a
      variable app-bar height so a device with a large top safe-area inset
      pushes `main` back down instead of tucking the hero under the notch. The

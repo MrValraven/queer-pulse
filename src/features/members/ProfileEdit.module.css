@@ -1034,7 +1034,9 @@
   margin-inline: auto;
   padding-left: calc(var(--wrap-px, 28px) + env(safe-area-inset-left));
   padding-right: calc(var(--wrap-px, 28px) + env(safe-area-inset-right));
-  padding-top: calc(var(--nav-top) + var(--nav-height) + var(--gap-grid));
+  /* Nav band reserved by the shell (base.css); this adds only breathing room.
+     On mobile the shell's band padding cancels standalone.css's app-bar pull. */
+  padding-top: var(--gap-grid);
 }
 .mEditAvatar {
   display: flex;

@@ -1,7 +1,8 @@
 .page {
   background: var(--cream);
   min-height: 100svh;
-  padding: 100px 0 80px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 20px 0 80px;
 }
 
 .back {

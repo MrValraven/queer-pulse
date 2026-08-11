@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Modal, Button, FormField } from "../../../shared/components/ui";
+import { Modal, Button, FormField, SegmentedControl } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import type { DeskTrack } from "./DeskTrackTabs";
 import styles from "./DeskModals.module.css";
 
 export interface CommissionPayload {
@@ -9,12 +10,21 @@ export interface CommissionPayload {
   words: number | null;
   dueDate: string;
   fee: string;
+  /** Which editorial track the new piece lands in — `issue` stamps the current
+   *  issue's id, `highlights` leaves it standalone (`issueId: null`). */
+  track: DeskTrack;
 }
 
 interface CommissionModalProps {
   pitch?: { title: string; byline: string; note: string };
   sectionName?: string;
   sections: { name: string }[];
+  /** Track pre-selected to match the desk's active tab. */
+  defaultTrack: DeskTrack;
+  /** Whether a current issue exists — the Issue choice is disabled without one. */
+  hasCurrentIssue: boolean;
+  /** The current issue's display number, for the Issue choice label. */
+  issueNumber: string;
   onClose: () => void;
   onCommission: (payload: CommissionPayload) => void;
 }
@@ -28,6 +38,9 @@ export function CommissionModal({
   pitch,
   sectionName,
   sections,
+  defaultTrack,
+  hasCurrentIssue,
+  issueNumber,
   onClose,
   onCommission,
 }: CommissionModalProps) {
@@ -37,6 +50,11 @@ export function CommissionModal({
   const [words, setWords] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [fee, setFee] = useState("");
+  // Without a current issue there's nowhere to bind an issue piece, so a
+  // commission can only land as a standalone highlight.
+  const [track, setTrack] = useState<DeskTrack>(
+    hasCurrentIssue ? defaultTrack : "highlights",
+  );
 
   const send = () => {
     onCommission({
@@ -45,6 +63,7 @@ export function CommissionModal({
       words: words.trim() ? Number(words) : null,
       dueDate,
       fee: fee.trim(),
+      track,
     });
     onClose();
   };
@@ -75,6 +94,28 @@ export function CommissionModal({
             })
           : t("magazine:desk.modals.commission.bodyFromScratch")}
       </p>
+      {!pitch && (
+        <FormField label={t("magazine:desk.modals.commission.trackLabel")}>
+          <SegmentedControl
+            label={t("magazine:desk.modals.commission.trackLabel")}
+            value={track}
+            onChange={(value) => setTrack(value as DeskTrack)}
+            options={[
+              {
+                value: "highlights",
+                label: t("magazine:desk.modals.commission.trackHighlights"),
+              },
+              {
+                value: "issue",
+                label: t("magazine:desk.modals.commission.trackIssue", {
+                  number: issueNumber,
+                }),
+              },
+            ]}
+            disabledOptions={hasCurrentIssue ? undefined : ["issue"]}
+          />
+        </FormField>
+      )}
       <FormField label={t("magazine:desk.modals.commission.angleLabel")}>
         <textarea
           rows={4}

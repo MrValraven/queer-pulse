@@ -1,5 +1,6 @@
 .page {
-  padding: 120px 0 100px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 40px 0 100px;
 }
 /* When a custom hero is supplied it owns the nav clearance, so the doc body
    drops its top padding and sits directly beneath the hero. */

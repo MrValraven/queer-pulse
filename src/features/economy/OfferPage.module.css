@@ -1,6 +1,7 @@
 .page {
   min-height: 100svh;
-  padding: 148px 0 100px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 68px 0 100px;
 }
 .backLink {
   margin-bottom: 32px;

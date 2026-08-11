@@ -27,7 +27,11 @@
   background: rgba(var(--plum-rgb), 0.25);
 }
 
-.title {
+/* Selectors are scoped under `.panel` so the plum surface's own cream text
+   always wins over any page-level heading rule the panel is nested inside
+   (e.g. the persona editor's `.ed-main h2`, which would otherwise darken the
+   title to near-invisibility on plum). */
+.panel .title {
   font-family: var(--serif);
   font-size: clamp(24px, 3vw, 30px);
   font-weight: 400;
@@ -36,12 +40,12 @@
   margin: 0 0 12px;
   color: rgba(var(--cream-rgb), 1);
 }
-.title em {
+.panel .title em {
   color: var(--accent);
   font-style: italic;
 }
 
-.body {
+.panel .body {
   font-size: 15px;
   line-height: 1.6;
   color: rgba(var(--cream-rgb), 0.82);

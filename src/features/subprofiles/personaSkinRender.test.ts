@@ -57,4 +57,9 @@ describe("sectionShape", () => {
     const items = [makeItem({ section: "gigs", date: "1 Jan 2000" })];
     expect(sectionShape("gigs", "stage", items)).toBe("list");
   });
+
+  it("is gallery for the universal gallery section", () => {
+    const items = [makeItem({ section: "gallery", imageUrl: "/a.jpg" })];
+    expect(sectionShape("gallery", "studio", items)).toBe("gallery");
+  });
 });

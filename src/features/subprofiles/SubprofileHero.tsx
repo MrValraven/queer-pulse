@@ -1,7 +1,8 @@
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { initialsFromName } from "../../shared/lib/initials";
 import { Avatar, FeatureHelp } from "../../shared/components/ui";
+import { ProfilePhotoViewer } from "../members/ProfilePhotoViewer";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -53,6 +54,7 @@ export function SubprofileHero({
   onAction: (action: string) => void;
 }) {
   const { t } = useTranslation();
+  const [photoOpen, setPhotoOpen] = useState(false);
   const accent = view.accent ?? DEFAULT_ACCENT;
 
   const linkedToOwner =
@@ -60,17 +62,37 @@ export function SubprofileHero({
     Boolean(view.ownerName) &&
     Boolean(view.ownerSlug);
   const interactive = mode !== "preview";
+  // Only a real uploaded photo is worth enlarging — an initials fallback has
+  // nothing more to show. Preview mode stays non-interactive like the meta row.
+  const canViewPhoto = interactive && Boolean(view.avatarUrl);
+
+  const avatar = (
+    <Avatar
+      className="pp-av"
+      initials={initialsFromName(view.displayName, "?")}
+      src={view.avatarUrl ?? undefined}
+      tint="plum"
+      size={112}
+    />
+  );
 
   return (
     <div className="pp-hero">
       <div className="pp-id">
-        <Avatar
-          className="pp-av"
-          initials={initialsFromName(view.displayName, "?")}
-          src={view.avatarUrl ?? undefined}
-          tint="plum"
-          size={112}
-        />
+        {canViewPhoto ? (
+          <button
+            type="button"
+            className="pp-avButton"
+            onClick={() => setPhotoOpen(true)}
+            aria-label={t("subprofiles:hero.viewPhotoAria", {
+              name: view.displayName,
+            })}
+          >
+            {avatar}
+          </button>
+        ) : (
+          avatar
+        )}
 
         <div className="pp-text">
           <span className="pp-kind">{t(KIND_LABEL_KEYS[view.kind])}</span>
@@ -142,6 +164,15 @@ export function SubprofileHero({
       </div>
 
       {view.bio && <p className="pp-bio">{view.bio}</p>}
+
+      {photoOpen && view.avatarUrl && (
+        <ProfilePhotoViewer
+          src={view.avatarUrl}
+          name={view.displayName}
+          tint="plum"
+          onClose={() => setPhotoOpen(false)}
+        />
+      )}
     </div>
   );
 }

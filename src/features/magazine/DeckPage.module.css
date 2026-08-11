@@ -221,7 +221,8 @@
 }
 
 .notFound {
-  padding: 140px 0 100px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 60px 0 100px;
   text-align: center;
 }
 .notFound h2 {

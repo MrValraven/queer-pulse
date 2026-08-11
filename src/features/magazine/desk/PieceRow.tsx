@@ -5,16 +5,25 @@ import { StagePill } from "./StagePill";
 import { cx } from "../../../shared/lib/cx";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Piece } from "../data/desk.data";
+import type { DeskTrack } from "./DeskTrackTabs";
 import styles from "./PiecesPipeline.module.css";
 
 interface PieceRowProps {
   piece: Piece;
   /** Whether this is the keyboard-navigated "current" row (inset accent shadow). */
   focused: boolean;
+  /** The track this row is rendered under, so the reassignment action points
+   *  the other way (Issue → standalone, Highlights → into the issue). */
+  track: DeskTrack;
+  /** Whether a current issue exists — the "Add to issue" action is hidden without one. */
+  hasCurrentIssue: boolean;
+  /** The current issue's display number, for the "Add to issue N" label. */
+  issueNumber: string;
   onOpen: (piece: Piece) => void;
   onEdit: (piece: Piece) => void;
   onChase: (piece: Piece) => void;
   onHandoff: (piece: Piece) => void;
+  onReassign: (piece: Piece) => void;
 }
 
 /**
@@ -26,12 +35,20 @@ interface PieceRowProps {
 export function PieceRow({
   piece,
   focused,
+  track,
+  hasCurrentIssue,
+  issueNumber,
   onOpen,
   onEdit,
   onChase,
   onHandoff,
+  onReassign,
 }: PieceRowProps) {
   const { t } = useTranslation();
+  // Reassignment points the opposite way to the current track. On the Issue
+  // track any piece can be lifted back out to stand alone; on the Highlights
+  // track it can be pulled into the current issue — but only when one exists.
+  const showReassign = track === "issue" || hasCurrentIssue;
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key === "Enter") onOpen(piece);
@@ -99,6 +116,13 @@ export function PieceRow({
         <Button variant="ghost" size="sm" onClick={() => onHandoff(piece)}>
           {t("magazine:desk.pieceRow.handOff")}
         </Button>
+        {showReassign && (
+          <Button variant="ghost" size="sm" onClick={() => onReassign(piece)}>
+            {track === "issue"
+              ? t("magazine:desk.reassign.makeStandalone")
+              : t("magazine:desk.reassign.addToIssue", { number: issueNumber })}
+          </Button>
+        )}
       </div>
     </div>
   );

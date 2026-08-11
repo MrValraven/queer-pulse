@@ -26,6 +26,11 @@ import styles from "./SubprofileEditor.module.css";
 
 type DrawerState = { mode: "add" } | { mode: "edit"; uid: string };
 
+/** Cap on the universal `gallery` section — matches the 6-photo grid
+ *  `SubprofileSections` renders on the public persona page (`items.slice(0, 6)`),
+ *  so the editor never lets an owner add a photo that would never show. */
+const MAX_GALLERY_PHOTOS = 6;
+
 /**
  * Edits one section: a collapsed `.itemrow` list (`EditorItemRow`) with
  * add/remove/reorder/feature-toggle; each item's full field set (base +
@@ -52,8 +57,11 @@ export function SubprofileSectionEditor({
 
   const label = t(section.labelKey);
   const atMax = rows.length >= MAX_ITEMS_PER_SECTION;
+  const isGalleryFull =
+    section.section === "gallery" && rows.length >= MAX_GALLERY_PHOTOS;
   const saving = replaceSection.isPending;
-  const canFeature = section.section !== "links";
+  const canFeature =
+    section.section !== "links" && section.section !== "gallery";
   const canInsertExamples =
     section.section !== "links" &&
     rows.length === 0 &&
@@ -154,21 +162,27 @@ export function SubprofileSectionEditor({
 
       <div className={styles.sectionFoot}>
         <div>
-          <button
-            type="button"
-            className={styles.addBtn}
-            onClick={() => setDrawerState({ mode: "add" })}
-            disabled={atMax}
-          >
-            <FiPlus size={18} aria-hidden />{" "}
-            {t("subprofiles:sectionEditor.addTo", {
-              section: label.toLowerCase(),
-            })}
-          </button>
-          {atMax && (
-            <p className={styles.capHint}>
-              {t("subprofiles:sectionEditor.capHint")}
-            </p>
+          {!isGalleryFull && (
+            <button
+              type="button"
+              className={styles.addBtn}
+              onClick={() => setDrawerState({ mode: "add" })}
+              disabled={atMax}
+            >
+              <FiPlus size={18} aria-hidden />{" "}
+              {t("subprofiles:sectionEditor.addTo", {
+                section: label.toLowerCase(),
+              })}
+            </button>
+          )}
+          {isGalleryFull ? (
+            <p className={styles.capHint}>{t("subprofiles:galleryFull")}</p>
+          ) : (
+            atMax && (
+              <p className={styles.capHint}>
+                {t("subprofiles:sectionEditor.capHint")}
+              </p>
+            )
           )}
         </div>
         <Button variant="primary" onClick={() => void save()} disabled={saving || !dirty}>

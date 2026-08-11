@@ -53,13 +53,16 @@ export const KIND_SECTIONS: Record<SubprofileKind, SubprofileSection[]> = {
   generic: ["showcase"],
 };
 
-/** The content sections of a kind, plus the universal 'links' section. */
+/** The content sections of a kind, plus the universal 'gallery' and 'links' sections. */
 export const sectionsForKind = (k: SubprofileKind): SubprofileSection[] => [
   ...KIND_SECTIONS[k],
+  "gallery",
   "links",
 ];
 
-/** 'links' is universal but not a "content" section (excluded from the ≥3 check). */
+/** 'links' is universal but not a "content" section (excluded from the ≥3
+ *  check / MIN_CONTENT_ITEMS). The other universal section, 'gallery', IS a
+ *  content section — its items count toward that same readiness check. */
 export const isContentSection = (s: SubprofileSection): boolean =>
   s !== "links";
 
@@ -247,6 +250,11 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
     ],
   },
   // universal
+  gallery: {
+    labelKey: "subprofiles:section.gallery",
+    icon: FiImage,
+    fields: ["imageUrl"],
+  },
   links: {
     labelKey: "subprofiles:section.links",
     icon: FiLink,

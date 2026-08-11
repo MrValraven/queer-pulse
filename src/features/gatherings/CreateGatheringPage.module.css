@@ -1,5 +1,6 @@
 .section {
-  padding: 120px 0 100px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 40px 0 100px;
   background: var(--paper);
   border-top: 2px solid var(--line-strong);
   min-height: 100svh;

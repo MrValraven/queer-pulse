@@ -71,9 +71,10 @@ export function useVouch(): VouchContextValue {
 
   useEffect(() => {
     // `undefined` covers demo, logged out, in-flight and failed — the four
-    // cases where the old effect left the persisted list alone.
+    // cases where the old effect left the persisted list alone. The query now
+    // returns rich faces; the local store only needs the slugs.
     if (!serverVouched) return;
-    setVouched(serverVouched);
+    setVouched(serverVouched.map((givenVouch) => givenVouch.slug));
   }, [serverVouched, setVouched]);
 
   return store;

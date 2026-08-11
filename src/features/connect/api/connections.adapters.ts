@@ -73,6 +73,9 @@ export function dtoToMeta(dto: ConnectionDTO): ConnectionMeta {
     // Accepted connections show when they were accepted; pending ones fall back
     // to when the request was sent (only the accepted tabs render "since").
     since: connectedAt(dto.respondedAt ?? dto.createdAt),
+    // The raw ISO behind `since`, so the profile "Your network" section can sort
+    // connections by recency without re-parsing the display string.
+    connectedAtIso: dto.respondedAt ?? dto.createdAt,
     requestMessage: dto.requestMessage ?? undefined,
     requestReason: dto.requestReason ?? undefined,
     sentAgo: relativeAgo(dto.createdAt),

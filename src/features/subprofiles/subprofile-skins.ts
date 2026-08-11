@@ -27,7 +27,16 @@ export const SKIN_OF: Record<SubprofileKind, SkinFamily> = {
 /** The page family for a persona kind. */
 export const skinFor = (kind: SubprofileKind): SkinFamily => SKIN_OF[kind];
 
-/** Sections that render as an image grid rather than a list. */
+/**
+ * Sections that render as an image grid rather than a list. Excludes the
+ * universal `gallery` section on purpose: `sectionShape()` in
+ * `personaSkinRender.ts` already resolves `gallery` to its own `"gallery"`
+ * shape via an explicit check that runs before this list is consulted, so
+ * gallery's membership here would be inert for rendering — but
+ * `getStudioWorks()` (`skins/studioWorks.ts`) filters on this same array to
+ * build the studio lightbox/checklist, and gallery items carry no `title`,
+ * so including "gallery" here leaked blank-titled items into that flow.
+ */
 export const VISUAL_SECTIONS: readonly SubprofileSection[] = [
   "portfolio",
   "looks",

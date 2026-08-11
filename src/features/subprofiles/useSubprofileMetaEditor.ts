@@ -21,6 +21,14 @@ export interface SubprofileMetaEditor {
   setBio: (value: string) => void;
   avatarUrl: string;
   setAvatarUrl: (value: string) => void;
+  /**
+   * Local `blob:` URL for a freshly picked avatar/cover, or `null`. `avatarUrl`/
+   * `coverUrl` hold the storage KEY once picked, which isn't fetchable, so these
+   * let the docked live preview render the pick instantly. Display-only — never
+   * part of `dirty` or the save payload.
+   */
+  avatarPreview: string | null;
+  setAvatarPreview: (value: string | null) => void;
   link: LinkVisibility;
   setLink: (value: LinkVisibility) => void;
   visibility: Visibility;
@@ -33,6 +41,8 @@ export interface SubprofileMetaEditor {
   setHandleStatus: (status: HandleAvailability) => void;
   coverUrl: string;
   setCoverUrl: (value: string) => void;
+  coverPreview: string | null;
+  setCoverPreview: (value: string | null) => void;
   accent: AccentKey | "";
   setAccent: (value: AccentKey) => void;
   availability: AvailabilityKey | "";
@@ -71,6 +81,7 @@ export function useSubprofileMetaEditor(
   const [tagline, setTagline] = useState(subprofile.tagline);
   const [bio, setBio] = useState(subprofile.bio);
   const [avatarUrl, setAvatarUrl] = useState(subprofile.avatarUrl ?? "");
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [link, setLink] = useState<LinkVisibility>(subprofile.linkVisibility);
   const [visibility, setVisibility] = useState<Visibility>(
     subprofile.visibility,
@@ -82,6 +93,7 @@ export function useSubprofileMetaEditor(
     reason: null,
   });
   const [coverUrl, setCoverUrl] = useState(subprofile.coverUrl ?? "");
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [accent, setAccent] = useState<AccentKey | "">(
     subprofile.accent ?? "",
   );
@@ -146,6 +158,15 @@ export function useSubprofileMetaEditor(
     // the stored key intact under PATCH semantics.
     const avatarChanged = avatarUrl !== (subprofile.avatarUrl ?? "");
     const coverChanged = coverUrl !== (subprofile.coverUrl ?? "");
+    // slug (the address) and handle live on the Address pane, not Identity. Only
+    // send them when the user actually changed them: an Identity-only edit must
+    // never touch the address/handle. Critically this stops a nested persona
+    // (whose handle is null → local state "") from PATCHing handle: "" on every
+    // save — the empty string is NOT null, so it lands in the partial-unique
+    // handle index and two of an owner's personas collide on the global handle
+    // namespace. A cleared handle is sent as null (never ""), so it stays exempt.
+    const slugChanged = slug !== subprofile.slug;
+    const handleChanged = handle !== (subprofile.handle ?? "");
     try {
       await update.mutateAsync({
         id: subprofile.id,
@@ -161,8 +182,8 @@ export function useSubprofileMetaEditor(
           ctaUrl: ctaUrl.trim() || null,
           linkVisibility: link,
           visibility,
-          slug: slug.trim(),
-          handle: handle.trim(),
+          ...(slugChanged ? { slug: slug.trim() } : {}),
+          ...(handleChanged ? { handle: handle.trim() || null } : {}),
         },
       });
       showToast(t("subprofiles:metaForm.toastSaved"), "success");
@@ -180,6 +201,8 @@ export function useSubprofileMetaEditor(
     setBio,
     avatarUrl,
     setAvatarUrl,
+    avatarPreview,
+    setAvatarPreview,
     link,
     setLink,
     visibility,
@@ -192,6 +215,8 @@ export function useSubprofileMetaEditor(
     setHandleStatus,
     coverUrl,
     setCoverUrl,
+    coverPreview,
+    setCoverPreview,
     accent,
     setAccent,
     availability,

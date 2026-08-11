@@ -1,7 +1,8 @@
 .page {
   max-width: var(--maxw-page);
   margin: 0 auto;
-  padding: 108px 28px 80px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 28px 28px 80px;
 }
 .head {
   padding-bottom: 24px;

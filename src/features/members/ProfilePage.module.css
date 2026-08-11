@@ -7,7 +7,8 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  padding: 148px 28px 80px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 68px 28px 80px;
   text-align: center;
   color: var(--ink-60);
 }
@@ -22,7 +23,8 @@
    selector keeps this top padding ahead of the shared `.wrap` padding
    shorthand regardless of stylesheet order; it also clears the fixed Navbar. */
 div.backBar {
-  padding-top: 104px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding-top: 24px;
 }
 /* Beside the Sidebar (desktop) there's no fixed top Navbar to clear, so drop
    the tall clearance for a tighter top. Mobile sidebar mode still shows the

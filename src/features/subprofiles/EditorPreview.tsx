@@ -51,8 +51,11 @@ export function EditorPreview({
     displayName: editor.displayName,
     tagline: editor.tagline,
     bio: editor.bio,
-    avatarUrl: editor.avatarUrl || null,
-    coverUrl: editor.coverUrl || null,
+    // Prefer the local `blob:` preview of a freshly picked image: `avatarUrl`/
+    // `coverUrl` hold the (un-fetchable) storage KEY until save, so without this
+    // the pick can't render here and falls back to initials / the "Image" slot.
+    avatarUrl: editor.avatarPreview || editor.avatarUrl || null,
+    coverUrl: editor.coverPreview || editor.coverUrl || null,
     accent: editor.accent || null,
     availability: editor.availability || null,
     ctaLabel: editor.ctaLabel,

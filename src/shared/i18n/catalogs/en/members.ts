@@ -32,6 +32,8 @@ export const members: Catalog = {
     "We couldn't read that image. Try a different file.",
   "upload.error.tooSmall":
     "This image is too small — it needs to be at least {minWidth} × {minHeight}px.",
+  "upload.error.stripFailed":
+    "We couldn't safely process that image, so we didn't upload it. Try a different file.",
   "upload.error.retry": "We couldn't upload that image. Please try again.",
 
   // ── AvatarEditor ───────────────────────────────────────────────────────────
@@ -999,4 +1001,22 @@ export const members: Catalog = {
   "perks.claim.claimed": "Claimed",
   "perks.claim.unavailableToast":
     "Claiming perks isn't available yet — we're still wiring this up.",
+
+  // ── Your network (ProfileNetworkStats chips + NetworkListModal) — owner-only ─
+  "network.title": "Your network",
+  "network.subtitle":
+    "Who you're connected with, and the trust you've built together.",
+  "network.group.connected": "Connected",
+  "network.group.vouchedGiven": "You vouched for",
+  "network.group.vouchedReceived": "Vouched for you",
+  "network.row.connected": "connected {time}",
+  "network.row.connectedNoTime": "connected",
+  "network.row.vouchedGiven": "you vouched {time}",
+  "network.row.vouchedGivenNoTime": "you vouched",
+  "network.row.vouchedReceived": "vouched for you {time}",
+  "network.row.vouchedReceivedNoTime": "vouched for you",
+  "network.viewAll": "View all {count}",
+  "network.viewAllAria": "View all {count} in {group}",
+  "network.modalSub_one": "{count} person",
+  "network.modalSub_other": "{count} people",
 };

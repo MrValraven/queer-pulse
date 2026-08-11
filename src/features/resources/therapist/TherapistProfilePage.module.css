@@ -1,7 +1,8 @@
 .page {
   max-width: 1080px;
   margin-inline: auto;
-  padding: 128px 28px 80px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 48px 28px 80px;
 }
 
 /* Back link */

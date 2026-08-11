@@ -15,10 +15,9 @@ export function MegaNav() {
   const { t } = useTranslation();
   const isLinkVisible = useIsLinkVisible();
   const menus = filterMenus(NAV_MENUS, isLinkVisible);
+  // `openKey` doubles as the panel's active section: which section the rail
+  // highlights and the columns/preview render. `null` means the panel is closed.
   const [openKey, setOpenKey] = useState<string | null>(null);
-  const [nudgeX, setNudgeX] = useState(0);
-  const [direction, setDirection] = useState(0);
-  const itemsRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const closeTimer = useRef<number | undefined>(undefined);
   // The trigger that opened the menu, so focus can be restored when it closes.
@@ -26,29 +25,17 @@ export function MegaNav() {
 
   const cancelClose = () => window.clearTimeout(closeTimer.current);
 
+  // Open the panel from a top-bar trigger with THAT section active.
   const openMenu = (key: string) => {
     cancelClose();
     triggerKey.current = key;
-    setOpenKey((current) => {
-      if (current === key) return current;
-      if (current === null) {
-        const row = itemsRef.current;
-        const btn = buttonRefs.current[key];
-        if (row && btn) {
-          const rowRect = row.getBoundingClientRect();
-          const btnRect = btn.getBoundingClientRect();
-          const rowCx = rowRect.left + rowRect.width / 2;
-          const btnCx = btnRect.left + btnRect.width / 2;
-          setNudgeX((btnCx - rowCx) * 0.22);
-        }
-        setDirection(0);
-      } else {
-        const currentIdx = menus.findIndex((m) => m.key === current);
-        const nextIdx = menus.findIndex((m) => m.key === key);
-        setDirection(nextIdx > currentIdx ? 1 : -1);
-      }
-      return key;
-    });
+    setOpenKey(key);
+  };
+
+  // Rail hover/focus/click: swap the active section without closing the panel.
+  const selectSection = (key: string) => {
+    cancelClose();
+    setOpenKey(key);
   };
 
   const closeMenu = () => {
@@ -108,11 +95,10 @@ export function MegaNav() {
   }, [openKey]);
 
   const activeMenu = menus.find((menu) => menu.key === openKey) ?? null;
-  const enterX = direction > 0 ? "26px" : direction < 0 ? "-26px" : "0px";
 
   return (
     <>
-      <div className={styles.items} ref={itemsRef}>
+      <div className={styles.items}>
         {menus.map((menu, index) => (
           <button
             key={menu.key}
@@ -120,10 +106,7 @@ export function MegaNav() {
             ref={(el) => {
               buttonRefs.current[menu.key] = el;
             }}
-            className={[
-              styles.button,
-              openKey === menu.key && styles.buttonOpen,
-            ]
+            className={[styles.button, openKey === menu.key && styles.buttonOpen]
               .filter(Boolean)
               .join(" ")}
             aria-haspopup="true"
@@ -144,9 +127,10 @@ export function MegaNav() {
 
       {activeMenu && (
         <MegaNavPanel
+          menus={menus}
           activeMenu={activeMenu}
-          nudgeX={nudgeX}
-          enterX={enterX}
+          activeKey={activeMenu.key}
+          onSelect={selectSection}
           onClose={closeMenu}
           onPanelMouseEnter={cancelClose}
           onPanelMouseLeave={scheduleClose}

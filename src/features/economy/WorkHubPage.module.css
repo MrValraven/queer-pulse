@@ -1,7 +1,8 @@
 .page {
   max-width: var(--maxw-page);
   margin: 0 auto;
-  padding: 108px 28px 96px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 28px 28px 96px;
   background: var(--cream);
 }
 
@@ -277,7 +278,8 @@
 
 @media (max-width: 640px) {
   .page {
-    padding: 92px 18px 72px;
+    /* nav band reserved by shell (base.css); this is only breathing room */
+    padding: 12px 18px 72px;
   }
   .row {
     flex-wrap: wrap;

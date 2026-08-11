@@ -30,6 +30,12 @@
   /* ── Navbar ── */
   --nav-top: 18px;
   --nav-height: 62px;
+  /* The vertical band the floating pill Navbar occupies (top offset + height =
+     80px). The single source of truth for how far page content must clear the
+     fixed nav: base.css reserves it once on `main[data-page-main]` so pages no
+     longer each hardcode it. nav-mode.css (sidebar) and standalone.css (mobile
+     app bar) reconcile against this same value with a negative margin-top. */
+  --nav-band: calc(var(--nav-top) + var(--nav-height));
   /* Installed-PWA top app bar. Published here so Navbar.module.css and
      standalone.css read one value. */
   --app-bar-h: 48px;

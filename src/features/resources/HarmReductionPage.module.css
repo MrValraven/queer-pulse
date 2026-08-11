@@ -1,6 +1,7 @@
 .hero {
   background: var(--plum-deep);
-  padding: 128px 0 56px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 48px 0 56px;
   position: relative;
   overflow: hidden;
 }

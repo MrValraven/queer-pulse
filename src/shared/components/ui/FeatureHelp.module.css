@@ -11,9 +11,16 @@
   margin-left: 0.5rem;
   padding: 0;
   font-size: 0.9rem;
-  color: rgba(var(--plum-rgb), 0.62);
-  background: rgba(var(--plum-rgb), 0.06);
-  border: 1px solid rgba(var(--line-rgb), 0.9);
+  /* Derive every colour from `currentColor` — the adjacent heading's text
+     colour, which is always legible on whatever surface it sits on. A fixed
+     token (the old --plum-rgb) can't know it's on a dark-ground skin (stage,
+     studio) or the dark theme, so the "i" went dark-on-dark and the chip read
+     as an empty ring. currentColor tracks the heading in every skin + theme.
+     (In the `color` shorthand currentColor resolves to the *inherited* colour;
+     border/background then track this element's own resolved colour.) */
+  color: color-mix(in srgb, currentColor 66%, transparent);
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 34%, transparent);
   border-radius: 50%;
   cursor: pointer;
   transition:

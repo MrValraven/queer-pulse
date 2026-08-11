@@ -9,6 +9,15 @@ import styles from "./SubprofileEditor.module.css";
 interface ImageUploadFieldProps {
   value: string;
   onChange: (key: string) => void;
+  /**
+   * Optional: report the local, immediately-renderable `blob:` preview URL to
+   * the parent (or `null` on clear). `onChange` only surfaces the storage `key`,
+   * which is NOT fetchable — so a live preview elsewhere (e.g. the persona
+   * editor's docked card) has nothing to show for a freshly picked image until
+   * it's saved and the backend resolves a display URL. Wire this to render the
+   * pick instantly there too.
+   */
+  onPreviewChange?: (previewUrl: string | null) => void;
   /** Which upload surface — sets size/dimension limits (avatar vs work image). */
   kind: UploadKind;
   circle?: boolean;
@@ -26,6 +35,7 @@ interface ImageUploadFieldProps {
 export function ImageUploadField({
   value,
   onChange,
+  onPreviewChange,
   kind,
   circle = false,
   size = 150,
@@ -51,6 +61,7 @@ export function ImageUploadField({
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       setPreviewUrl(newPreviewUrl);
       onChange(key);
+      onPreviewChange?.(newPreviewUrl);
     } catch (uploadFailure) {
       // `ImageProcessingError.message` IS the raw catalog key (its constructor
       // does `super(i18nKey)`), so resolve it through `t()` rather than dumping
@@ -71,6 +82,7 @@ export function ImageUploadField({
       setPreviewUrl(null);
     }
     onChange("");
+    onPreviewChange?.(null);
   }
 
   const displayedValue = previewUrl ?? value;

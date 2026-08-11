@@ -96,7 +96,9 @@ function RichFieldControl({
  * `SECTION_META[section].fields` (image / text / tags — moved here verbatim
  * from the retired `SubprofileItemEditor`), then the section's rich-field
  * overlay from `richFields.data.ts` (Task 2), then the universal collaborator
- * chip input. `structured.courses` is intentionally never rendered — it
+ * chip input — except for the `gallery` section (image-only: a gallery photo
+ * has no collaborators and the public view never shows them).
+ * `structured.courses` is intentionally never rendered — it
  * round-trips untouched via `itemsToInputDto` (deferred, see the Phase 3 plan).
  */
 export function SubprofileItemDrawerFields({
@@ -180,10 +182,12 @@ export function SubprofileItemDrawerFields({
         />
       ))}
 
-      <HandleChipInput
-        collaborators={draft.collaborators}
-        onChange={(collaborators) => onPatch({ collaborators })}
-      />
+      {draft.section !== "gallery" && (
+        <HandleChipInput
+          collaborators={draft.collaborators}
+          onChange={(collaborators) => onPatch({ collaborators })}
+        />
+      )}
     </>
   );
 }

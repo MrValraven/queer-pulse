@@ -2,18 +2,22 @@ import { FiCalendar, FiFileText, FiGrid, FiList, FiPlus, FiUser } from "react-ic
 import { Button, SegmentedControl } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Editor, Issue } from "../data/desk.data";
+import type { DeskTrack } from "./DeskTrackTabs";
 import styles from "./DeskHeader.module.css";
 
 /** The three desk layouts a piece pipeline can render in. */
 export type DeskLayout = "list" | "board" | "plan";
 
 /**
- * Desk page header: the issue eyebrow + title, close/publish meta, the
- * "Viewing as" editor picker, the Commission action, the issue progress
- * track, and the 3-way layout switch (Pipeline / Board / Issue plan).
+ * Desk page header. On the Issue track it shows the issue eyebrow + title,
+ * close/publish meta and the slot-progress track. On the Highlights track it
+ * drops the slot progress and the Produce button (highlights aren't an
+ * assembled release) and swaps in highlight-oriented copy. Both tracks keep
+ * the "Viewing as" picker, the Commission action, and the 3-way layout switch.
  */
 export function DeskHeader({
   issue,
+  track,
   editors,
   me,
   onMe,
@@ -23,6 +27,7 @@ export function DeskHeader({
   onProduce,
 }: {
   issue: Issue;
+  track: DeskTrack;
   editors: Editor[];
   me: string;
   onMe: (editorId: string) => void;
@@ -32,6 +37,7 @@ export function DeskHeader({
   onProduce: () => void;
 }) {
   const { t } = useTranslation();
+  const isIssueTrack = track === "issue";
   const filledPercent =
     issue.slots > 0 ? (issue.filled / issue.slots) * 100 : 0;
   // The backend doesn't model an editorial calendar yet, so live issues carry
@@ -65,37 +71,51 @@ export function DeskHeader({
     <>
       <div className={styles.deskHead}>
         <div className={styles.meta}>
-          {hasIssueCalendar && (
+          {isIssueTrack ? (
+            hasIssueCalendar && (
+              <span className={styles.eyebrow}>
+                {t("magazine:desk.header.eyebrow", {
+                  number: issue.number,
+                  theme: issue.theme,
+                })}
+              </span>
+            )
+          ) : (
             <span className={styles.eyebrow}>
-              {t("magazine:desk.header.eyebrow", {
-                number: issue.number,
-                theme: issue.theme,
-              })}
+              {t("magazine:desk.header.highlightsEyebrow")}
             </span>
           )}
           <h1 className={styles.title}>{t("magazine:desk.header.title")}</h1>
         </div>
         <div className={styles.metaTight}>
-          {hasIssueCalendar && (
-            <span className={styles.tiny}>
-              {t("magazine:desk.header.meta", {
-                closes: issue.closes,
-                publishes: issue.publishes,
-              })}
+          {isIssueTrack ? (
+            <>
+              {hasIssueCalendar && (
+                <span className={styles.tiny}>
+                  {t("magazine:desk.header.meta", {
+                    closes: issue.closes,
+                    publishes: issue.publishes,
+                  })}
+                </span>
+              )}
+              <span className={styles.muted}>
+                {hasIssueCalendar && (
+                  <>
+                    <b>{t("magazine:desk.header.daysLeft", { days: issue.daysLeft })}</b>{" "}
+                    {t("magazine:desk.header.toClose")} ·{" "}
+                  </>
+                )}
+                {t("magazine:desk.header.slotsFilled", {
+                  filled: issue.filled,
+                  slots: issue.slots,
+                })}
+              </span>
+            </>
+          ) : (
+            <span className={styles.muted}>
+              {t("magazine:desk.header.highlightsMeta")}
             </span>
           )}
-          <span className={styles.muted}>
-            {hasIssueCalendar && (
-              <>
-                <b>{t("magazine:desk.header.daysLeft", { days: issue.daysLeft })}</b>{" "}
-                {t("magazine:desk.header.toClose")} ·{" "}
-              </>
-            )}
-            {t("magazine:desk.header.slotsFilled", {
-              filled: issue.filled,
-              slots: issue.slots,
-            })}
-          </span>
         </div>
         <div className={styles.actions}>
           <span className={styles.picker}>
@@ -113,7 +133,7 @@ export function DeskHeader({
               ))}
             </select>
           </span>
-          {hasIssue && (
+          {isIssueTrack && hasIssue && (
             <Button variant="ghost" onClick={onProduce}>
               <FiCalendar aria-hidden />
               {t("magazine:desk.header.produce")}
@@ -126,19 +146,23 @@ export function DeskHeader({
         </div>
       </div>
       <div className={styles.issueBar}>
-        <div
-          className={styles.track}
-          role="progressbar"
-          aria-valuenow={issue.filled}
-          aria-valuemin={0}
-          aria-valuemax={issue.slots}
-          aria-label={t("magazine:desk.header.slotsFilledAria")}
-        >
-          <span
-            className={styles.trackFill}
-            style={{ width: `${filledPercent}%` }}
-          />
-        </div>
+        {isIssueTrack ? (
+          <div
+            className={styles.track}
+            role="progressbar"
+            aria-valuenow={issue.filled}
+            aria-valuemin={0}
+            aria-valuemax={issue.slots}
+            aria-label={t("magazine:desk.header.slotsFilledAria")}
+          >
+            <span
+              className={styles.trackFill}
+              style={{ width: `${filledPercent}%` }}
+            />
+          </div>
+        ) : (
+          <div className={styles.spacer} />
+        )}
         <SegmentedControl
           label={t("magazine:desk.header.layoutAria")}
           value={layout}

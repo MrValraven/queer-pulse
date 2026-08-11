@@ -1,5 +1,6 @@
 .hero {
-  padding: 108px 0 32px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 28px 0 32px;
 }
 .heroInner {
   max-width: 1180px;

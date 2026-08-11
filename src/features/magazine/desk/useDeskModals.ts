@@ -17,11 +17,19 @@ import type { PassPayload } from "./PassModal";
 export interface UseDeskModalsParams {
   /** Currently-viewing editor id, stamped as `editorId` on new commissions. */
   activeMe: string;
+  /** The current issue's id (or `""` when none), stamped on issue-track
+   *  commissions. */
+  currentIssueId: string;
   pieceMutations: ReturnType<typeof usePieceMutations>;
   pitchMutations: ReturnType<typeof usePitchMutations>;
 }
 
-export function useDeskModals({ activeMe, pieceMutations, pitchMutations }: UseDeskModalsParams) {
+export function useDeskModals({
+  activeMe,
+  currentIssueId,
+  pieceMutations,
+  pitchMutations,
+}: UseDeskModalsParams) {
   const { showToast } = useToast();
   const [modal, setModal] = useState<DeskModal>(null);
   const [contextId, setContextId] = useState<string | null>(null);
@@ -99,6 +107,10 @@ export function useDeskModals({ activeMe, pieceMutations, pitchMutations }: UseD
       editorId: activeMe,
       dueOn: payload.dueDate || undefined,
       wordTarget: payload.words ?? undefined,
+      // Issue-track commissions bind to the current issue; highlights stay
+      // standalone (`issueId` omitted → null). Guard the id so an "issue"
+      // choice can never send an empty string the backend would reject.
+      issueId: payload.track === "issue" && currentIssueId ? currentIssueId : undefined,
     });
   }
 

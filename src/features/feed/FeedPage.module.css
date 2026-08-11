@@ -1,5 +1,6 @@
 .page {
-  padding: 96px 0 100px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 16px 0 100px;
 }
 .greetingRow {
   display: flex;

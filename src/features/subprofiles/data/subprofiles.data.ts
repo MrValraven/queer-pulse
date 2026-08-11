@@ -878,6 +878,48 @@ const SOFIA_NEVES: DemoSubprofile = {
       isFeatured: false,
       collaborators: [],
     },
+    {
+      section: "gallery",
+      title: "",
+      subtitle: null,
+      description: null,
+      url: null,
+      imageUrl:
+        "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop",
+      date: null,
+      meta: null,
+      tags: [],
+      isFeatured: false,
+      collaborators: [],
+    },
+    {
+      section: "gallery",
+      title: "",
+      subtitle: null,
+      description: null,
+      url: null,
+      imageUrl:
+        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=600&auto=format&fit=crop",
+      date: null,
+      meta: null,
+      tags: [],
+      isFeatured: false,
+      collaborators: [],
+    },
+    {
+      section: "gallery",
+      title: "",
+      subtitle: null,
+      description: null,
+      url: null,
+      imageUrl:
+        "https://images.unsplash.com/photo-1506863530036-1efeddceb993?q=80&w=600&auto=format&fit=crop",
+      date: null,
+      meta: null,
+      tags: [],
+      isFeatured: false,
+      collaborators: [],
+    },
   ],
 };
 

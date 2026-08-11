@@ -1,7 +1,8 @@
 .page {
   max-width: 760px;
   margin: 0 auto;
-  padding: 108px 28px 96px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 28px 28px 96px;
   background: var(--cream);
 }
 
@@ -272,7 +273,8 @@
 .successWrap {
   max-width: 760px;
   margin: 0 auto;
-  padding: 132px 28px 110px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 52px 28px 110px;
 }
 .success {
   background: var(--plum);
@@ -319,7 +321,8 @@
 
 @media (max-width: 640px) {
   .page {
-    padding: 92px 18px 72px;
+    /* nav band reserved by shell (base.css); this is only breathing room */
+    padding: 12px 18px 72px;
   }
   .fieldRow {
     grid-template-columns: 1fr;

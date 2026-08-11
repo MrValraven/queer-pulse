@@ -1902,6 +1902,85 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Abrir o kit de imprensa",
   "changelog.tag.magazineDesk": "Abrir a redação",
 
+  "changelog.entries.persona-photo-gallery.title":
+    "Adiciona uma galeria de fotos à tua persona",
+  "changelog.entries.persona-photo-gallery.body":
+    "As personas agora podem exibir uma galeria de até 6 fotos.",
+
+  "changelog.entries.profile-your-network.title":
+    "Vê a tua rede no teu próprio perfil",
+  "changelog.entries.profile-your-network.body":
+    "O cabeçalho do teu perfil passa a mostrar uma linha privada de atalhos \"A tua rede\", só para ti: quantas pessoas tens ligadas, quem avalizaste e quem te avalizou. Toca num atalho para veres a lista completa, do mais recente para o mais antigo, com a altura em que cada coisa aconteceu. Só tu a vês, e fica escondida quando pré-visualizas o teu perfil como visitante.",
+
+  "changelog.entries.fix-page-top-nav-overlap.title":
+    "O conteúdo das páginas já não fica escondido por baixo do menu do topo",
+  "changelog.entries.fix-page-top-nav-overlap.body":
+    "O menu flutuante do topo sobrepunha-se ao início de algumas páginas, cortando um título ou botão por baixo. Agora todas as páginas reservam esse espaço num único sítio partilhado, por isso nada fica por baixo do menu — e cada página mantém o seu próprio espaçamento.",
+
+  "changelog.entries.nav-rail-redesign.title": "Um menu principal mais claro",
+  "changelog.entries.nav-rail-redesign.body":
+    "O menu no computador mantém agora todas as secções à vista — escolhes uma na coluna e as suas ligações, com uma pré-visualização ao lado, aparecem logo. Os mesmos destinos, com menos procura.",
+
+  "changelog.entries.persona-photo-enlarge.title":
+    "Toca na foto de uma persona para a ver em tamanho grande",
+  "changelog.entries.persona-photo-enlarge.body":
+    "Tal como num perfil normal, podes agora tocar no avatar de uma persona para abrir a foto em ecrã inteiro — um olhar em condições sobre quem está por trás da persona. Toca fora, usa o botão de fechar ou carrega em Esc para sair.",
+
+  "changelog.entries.persona-mobile-hero.title":
+    "As personas ficam bem no teu telemóvel",
+  "changelog.entries.persona-mobile-hero.body":
+    "O cabeçalho de uma persona passa a assentar na mesma coluna limpa e centrada que o teu próprio perfil usa no telemóvel — o avatar, o nome, a frase e as ligações empilhados ao centro, com os botões de ação a ocupar toda a largura e fáceis de alcançar com um só polegar. Fim do amontoado apertado no canto superior esquerdo num ecrã estreito.",
+
+  "changelog.entries.fix-persona-save-conflict.title":
+    "Guardar uma segunda persona já não dá erro",
+  "changelog.entries.fix-persona-save-conflict.body":
+    "Editar e guardar uma persona podia falhar com um erro de “endereço já em uso” assim que tinhas mais do que uma — mesmo quando nunca tinhas definido um identificador público em nenhuma delas. Um identificador em branco passa agora a ser tratado como “nenhum”, em vez de um valor vazio que colidia em silêncio com as tuas outras personas, por isso as alterações guardam sem problemas. E se duas personas partilharem mesmo o mesmo endereço, passamos a dizer-te exatamente que campo mudar.",
+
+  "changelog.entries.magazine-desk-two-tracks.title":
+    "Duas vias na redação da revista: Destaques e Edição",
+  "changelog.entries.magazine-desk-two-tracks.body":
+    "Quem edita pode agora manter os destaques autónomos da plataforma separados das peças que estão a ser reunidas numa edição completa. Alterna entre as duas vias com um toque e move qualquer peça de uma para a outra — envia um destaque para a edição atual, ou tira uma peça da edição para ela seguir por conta própria. A pesquisa, os filtros e as vistas guardadas funcionam dentro da via em que estás, e as novas encomendas entram na via que escolheres.",
+
+  "changelog.entries.photo-metadata-strip-hardening.title":
+    "Remoção mais forte dos dados de localização escondidos nas tuas fotos",
+  "changelog.entries.photo-metadata-strip-hardening.body":
+    "Todas as fotos que carregas têm os metadados escondidos — incluindo a localização GPS que muitos telemóveis gravam na imagem — removidos no teu navegador antes de saírem do teu dispositivo. Fechámos as falhas: se essa remoção não conseguir completar-se por algum motivo, o carregamento passa a ser bloqueado em vez de enviado como está, e os GIFs animados são limpos sem perderem a animação. A tua localização continua a ser tua.",
+
+  "changelog.entries.fix-persona-cover-overlay-leak.title":
+    "As capas dos perfis aparecem limpas depois de as carregares",
+  "changelog.entries.fix-persona-cover-overlay-leak.body":
+    "Nos perfis de músico e DJ, a textura decorativa pensada para o estado vazio, sem capa, continuava a pintar por cima da tua imagem depois de a carregares — escurecendo e granulando a foto. Passa a desaparecer assim que defines uma imagem de capa, para que a tua capa apareça exatamente como a escolheste.",
+
+  "changelog.entries.members-filter-panel-polish.title":
+    "Um painel de filtros mais calmo no diretório de membros",
+  "changelog.entries.members-filter-panel-polish.body":
+    "Os filtros do diretório de membros apareciam como sete caixas flutuantes quase idênticas que, quando fechadas, criavam ruído visual. Passam a ser um único painel arrumado, com separadores discretos entre cada grupo, e cada cabeçalho de filtro reage ao rato e ao foco do teclado, deixando claro que pode ser aberto.",
+
+  "changelog.entries.fix-persona-stage-dark-legibility.title":
+    "As páginas de persona continuam legíveis no modo escuro",
+  "changelog.entries.fix-persona-stage-dark-legibility.body":
+    "Dois estilos de persona ficavam ilegíveis no modo escuro — sobretudo na pré-visualização do editor. No estilo palco (músicos e DJ), o nome, os títulos das secções e a etiqueta de tipo ficavam escuros sobre escuro e quase desapareciam; o estilo de escritor ficava quase totalmente ilegível, com o texto de tinta quente perdido sobre uma página quase preta. Ambos passam a manter-se claros e legíveis em qualquer tema, e o pequeno ícone de ajuda ⓘ ao lado do nome da persona deixa de parecer um círculo vazio em superfícies escuras.",
+
+  "changelog.entries.fix-persona-preview-avatar.title":
+    "As fotos da persona aparecem agora na pré-visualização — e o avatar voltou a ser redondo",
+  "changelog.entries.fix-persona-preview-avatar.body":
+    "No editor de personas, um avatar ou capa acabados de escolher mostravam só um marcador de posição na pré-visualização até guardares. Passam a aparecer no momento em que os escolhes. Corrigimos também um quadrado indevido que emoldurava o avatar circular na pré-visualização e na página pública da persona.",
+
+  "changelog.entries.fix-vouch-success-self-face.title":
+    "A confirmação do teu voto mostra agora a tua cara, não um marcador de posição",
+  "changelog.entries.fix-vouch-success-self-face.body":
+    "Ao votar por alguém, o painel de confirmação podia juntar a foto do membro a um perfil de demonstração em vez da tua. Passa a mostrar sempre o teu avatar e as tuas iniciais reais ao lado das dessa pessoa, para que o momento \"confirmado\" reflita quem está mesmo a votar.",
+
+  "changelog.entries.persona-readiness-estimate.title":
+    "A estimativa de prontidão da persona reflete agora o que falta mesmo",
+  "changelog.entries.persona-readiness-estimate.body":
+    "A \"Estimativa rápida\" na página Publicar de uma persona passa a contar tudo o que ainda vale a pena acrescentar — uma imagem de capa, a tua disponibilidade, um link social e conteúdo suficiente — em vez de saltar para 100 assim que já dava para publicar. O número só enche quando não falta mesmo nada por afinar.",
+
+  "changelog.entries.fix-persona-item-drawer-scroll.title":
+    "Percorre todos os campos ao editar um item da montra",
+  "changelog.entries.fix-persona-item-drawer-scroll.body":
+    "O painel de edição de um item da montra (como um concerto ou um projeto) já não fica cortado no fundo do ecrã no telemóvel — agora consegues percorrer todos os campos e chegar ao Guardar.",
+
   "changelog.entries.my-uploads.title": "Vê e faz a gestão de tudo o que enviaste",
   "changelog.entries.my-uploads.body":
     "Um novo ecrã As minhas imagens nas Definições mostra todas as imagens que enviaste, para encontrares e apagares envios duplicados sem querer. Avisa-te se uma imagem ainda está a ser usada antes de a removeres.",

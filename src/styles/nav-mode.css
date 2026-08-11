@@ -21,12 +21,13 @@
     padding-left: var(--rail-w);
     transition: padding-left 220ms var(--ease, ease);
   }
-  /* Every page hero reserves a top band (~108–148px) to clear the fixed top
-     Navbar. In sidebar mode the top bar is swapped for the left rail, so that
-     band is dead space at the top of the page. Pull `main` up by exactly the
-     height the Navbar would have occupied (`--nav-top` + `--nav-height`) so the
-     hero keeps only its intended breathing room. The clipped strip is empty
-     padding, never content. */
+  /* `main[data-page-main]` reserves the nav band once (base.css,
+     `padding-top: var(--nav-band)`) to clear the fixed top Navbar. In sidebar
+     mode the top bar is swapped for the left rail, so that band is dead space
+     at the top of the page. Pull the same `main` box up by exactly the band
+     height (`--nav-top` + `--nav-height`), cancelling the padding so the hero
+     keeps only its intended breathing room. The clipped strip is empty padding,
+     never content. */
   html[data-nav-mode="sidebar"] main[data-page-main] {
     margin-top: calc(-1 * (var(--nav-top) + var(--nav-height)));
   }

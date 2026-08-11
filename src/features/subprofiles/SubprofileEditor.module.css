@@ -4,10 +4,8 @@
 .page {
   background: var(--cream);
   min-height: 60svh;
-  /* Reserve the standard top band so the back-link clears the fixed MegaNav
-     (matches MySubprofilesPage/Settings). Sidebar mode pulls this back up via
-     nav-mode.css, so the band is only spent under the top nav. */
-  padding: 108px 0 clamp(48px, 6vw, 96px);
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 28px 0 clamp(48px, 6vw, 96px);
 }
 
 .container {

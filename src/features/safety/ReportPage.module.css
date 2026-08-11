@@ -1,5 +1,6 @@
 .hero {
-  padding: 140px 0 48px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 60px 0 48px;
 }
 .eyebrow {
   display: inline-flex;

@@ -10,6 +10,7 @@ import {
   type UpdatePieceDto,
 } from "./pieces.api";
 import { STAGE_DTO_TO_VIEW } from "./pieces.adapters";
+import { DEMO_PIECES } from "../data/desk.data";
 
 /**
  * Editor desk piece mutations, dual-mode. Demo never touches the network —
@@ -59,7 +60,22 @@ export function usePieceMutations() {
   >({
     mutationFn: async ({ id, body }) => {
       if (demoMode) {
-        showToast("Saved", "success");
+        // Demo never hits the network. Patch the in-memory piece so a track
+        // reassignment (an `issueId` change) hops tabs on the next refetch —
+        // replace the object (don't mutate in place) so react-query's
+        // structural sharing sees a fresh reference and re-renders. This
+        // mutation stays quiet on its own; the caller owns the toast
+        // (`onSuccess`), so a reassignment can show track-aware copy in both
+        // demo and live without double-toasting.
+        if (body.issueId !== undefined) {
+          const targetPiece = DEMO_PIECES.find((piece) => piece.id === id);
+          if (targetPiece) {
+            DEMO_PIECES[DEMO_PIECES.indexOf(targetPiece)] = {
+              ...targetPiece,
+              issueId: body.issueId,
+            };
+          }
+        }
         return { id };
       }
       const piece = await sendUpdatePiece(id, body);

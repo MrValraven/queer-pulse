@@ -1,6 +1,7 @@
 /* ── Hero ── */
 .hero {
-  padding: 140px 0 60px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 60px 0 60px;
   text-align: center;
 }
 
@@ -390,7 +391,8 @@
 
 @media (max-width: 640px) {
   .hero {
-    padding: 110px 0 44px;
+    /* nav band reserved by shell (base.css); this is only breathing room */
+    padding: 30px 0 44px;
   }
   .incItem {
     gap: 14px;

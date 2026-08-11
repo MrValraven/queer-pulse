@@ -1,5 +1,7 @@
 .hero {
-  padding: 140px 0 56px;
+  /* The nav band (80px) is now reserved once by `main[data-page-main]` in
+     base.css; this padding is only the hero's own breathing room below it. */
+  padding: 60px 0 56px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .plum {

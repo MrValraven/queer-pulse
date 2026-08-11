@@ -1,8 +1,6 @@
-/* Top padding clears the fixed floating Navbar band (--nav-top 18px +
-   --nav-height 62px = 80px); 96px leaves breathing room, matching sibling
-   AppShell pages. Too small and the LevelCard header collides with the nav. */
+/* nav band reserved by shell (base.css); this is only breathing room */
 .page {
-  padding: 96px 0 120px;
+  padding: 16px 0 120px;
 }
 
 /* Header */

@@ -55,6 +55,7 @@ export function pieceDtoToView(pieceDto: PieceListItemDto): Piece {
     fresh: pieceDto.fresh,
     contentsBlurb: pieceDto.contentsBlurb,
     deckId: pieceDto.deckId ?? undefined,
+    issueId: pieceDto.issueId,
   };
 }
 

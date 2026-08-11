@@ -2,16 +2,22 @@ import { EmptyState } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { PieceRow } from "./PieceRow";
 import type { Piece } from "../data/desk.data";
+import type { DeskTrack } from "./DeskTrackTabs";
 import styles from "./PiecesPipeline.module.css";
 
 export interface PiecesPipelineProps {
   pieces: Piece[];
   /** Id of the keyboard-navigated "current" row, or null when none. */
   focusId: string | null;
+  /** Active track — drives each row's reassignment action direction/label. */
+  track: DeskTrack;
+  hasCurrentIssue: boolean;
+  issueNumber: string;
   onOpen: (piece: Piece) => void;
   onEdit: (piece: Piece) => void;
   onChase: (piece: Piece) => void;
   onHandoff: (piece: Piece) => void;
+  onReassign: (piece: Piece) => void;
 }
 
 /**
@@ -23,10 +29,14 @@ export interface PiecesPipelineProps {
 export function PiecesPipeline({
   pieces,
   focusId,
+  track,
+  hasCurrentIssue,
+  issueNumber,
   onOpen,
   onEdit,
   onChase,
   onHandoff,
+  onReassign,
 }: PiecesPipelineProps) {
   const { t } = useTranslation();
 
@@ -56,10 +66,14 @@ export function PiecesPipeline({
           key={piece.id}
           piece={piece}
           focused={focusId === piece.id}
+          track={track}
+          hasCurrentIssue={hasCurrentIssue}
+          issueNumber={issueNumber}
           onOpen={onOpen}
           onEdit={onEdit}
           onChase={onChase}
           onHandoff={onHandoff}
+          onReassign={onReassign}
         />
       ))}
     </div>

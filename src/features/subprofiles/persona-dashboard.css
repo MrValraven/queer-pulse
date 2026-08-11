@@ -19,13 +19,10 @@
   justify-content: space-between;
   gap: 28px;
   flex-wrap: wrap;
-  /* Reserve the floating pill Navbar's band (--nav-top + --nav-height = 80px)
-     plus breathing room — otherwise the serif h1 renders clipped UNDER the
-     fixed nav (52px alone sat inside the 80px band). Matches the peer
-     AppShell convention (DirectorySpacePage/MobileProfile/ProfileEdit). On
-     mobile the slim app-bar swap in standalone.css pulls `main` up by the
-     difference, so reserving the full band here is correct at every width. */
-  padding: calc(var(--nav-top) + var(--nav-height) + var(--gap-grid)) 0 26px;
+  /* The nav band is reserved once by `main[data-page-main]` (base.css); this is
+     only the head's breathing room below it. On mobile the slim app-bar swap in
+     standalone.css pulls `main` up so the band still resolves correctly. */
+  padding: var(--gap-grid) 0 26px;
 }
 /* Below phone width the title block and the count/CTA column no longer sit
    comfortably side by side — stack them so the title reads first and the
@@ -37,9 +34,9 @@
     flex-direction: column;
     align-items: stretch;
     gap: var(--gap-sm);
-    /* Still reserve the nav band (standalone.css compensates for the mobile
-       app-bar); only the breathing room + bottom padding tighten on phones. */
-    padding: calc(var(--nav-top) + var(--nav-height) + var(--gap-sm)) 0 20px;
+    /* Band reserved by the shell (base.css); only the breathing room + bottom
+       padding tighten on phones. */
+    padding: var(--gap-sm) 0 20px;
   }
 }
 .page-head h1 {

@@ -3,7 +3,8 @@
 /* Hero */
 .hero {
   background: var(--plum);
-  padding: 140px 0 90px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 60px 0 90px;
   position: relative;
   overflow: hidden;
 }

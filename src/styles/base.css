@@ -172,6 +172,30 @@ button {
   padding-right: calc(var(--wrap-px, 28px) + env(safe-area-inset-right));
 }
 
+/* Reserve the floating pill Navbar's band once, on the single <main> that
+   PageShell/AppShell render (`data-page-main`). This is the single source of
+   truth for clearing the fixed nav — individual pages no longer hardcode it.
+   Self-contained frames (Cinema's CinemaShell, Studio's StudioLandingShell)
+   render their own <main> WITHOUT this attribute, so they keep owning their own
+   nav clearance and are untouched.
+
+   The two alternate nav layouts reconcile against this by pulling the SAME box
+   up with a negative margin-top, so content lands in the identical place:
+   nav-mode.css (sidebar rail — no top bar, pulls up the full band) and
+   standalone.css (mobile app bar — pulls up to the slimmer strip height). The
+   `full-height` route (Messages) resets both in standalone.css. */
+main[data-page-main] {
+  padding-top: var(--nav-band);
+}
+/* The `full-height` route (Messages, AppShell `fullHeight`) sizes its own
+   top offset off the nav tokens (MessagesPage.module.css `--messages-top-offset`)
+   and must NOT also carry the band as padding — that would push its 100svh
+   layout down and overflow the viewport. Reset at every width (standalone.css
+   only resets the mobile margin/padding-bottom for this route). */
+main[data-page-main][data-shell="full-height"] {
+  padding-top: 0;
+}
+
 /* Visually-hidden helper for accessible labels */
 .visuallyHidden {
   position: absolute;

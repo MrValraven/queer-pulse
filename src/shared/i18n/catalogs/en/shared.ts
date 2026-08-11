@@ -236,9 +236,13 @@ export const shared: Catalog = {
 
   // MegaNav / MegaNavDrawer / Sidebar — accessible name for the open flyout panel
   "megaNav.panelAria": "{menu} menu",
+  "megaNav.footer.accessibility": "Accessibility",
+  "megaNav.footer.emergency": "Emergency resources",
 
   // MegaNav — Community
   "megaNav.community.title": "Community",
+  "megaNav.community.subtitle": "People & gathering",
+  "megaNav.community.previewCaption": "Gathering photo — supper club, Mouraria",
   "megaNav.community.feature.eyebrow": "Community",
   "megaNav.community.feature.title": "Find your people.",
   "megaNav.community.feature.body":
@@ -263,6 +267,8 @@ export const shared: Catalog = {
 
   // MegaNav — Lisbon
   "megaNav.lisbon.title": "Lisbon",
+  "megaNav.lisbon.subtitle": "Discover & living here",
+  "megaNav.lisbon.previewCaption": "Map of verified local spaces",
   "megaNav.lisbon.feature.eyebrow": "Lisbon",
   // Reframed (Task 11): the directory is the single browse surface for local
   // spaces (verified badge + `?safe=verified` filter live there now), so this
@@ -293,6 +299,8 @@ export const shared: Catalog = {
 
   // MegaNav — Resources
   "megaNav.resources.title": "Resources",
+  "megaNav.resources.subtitle": "Health, safety, library",
+  "megaNav.resources.previewCaption": "A quiet place to find support",
   "megaNav.resources.feature.eyebrow": "Support",
   "megaNav.resources.feature.title": "Help when you need it.",
   "megaNav.resources.feature.body":
@@ -313,6 +321,8 @@ export const shared: Catalog = {
 
   // MegaNav — Culture
   "megaNav.culture.title": "Culture",
+  "megaNav.culture.subtitle": "Read, watch, create",
+  "megaNav.culture.previewCaption": "The current issue, cover to cover",
   "megaNav.culture.feature.eyebrow": "The Magazine",
   "megaNav.culture.feature.title": "Read the new issue.",
   "megaNav.culture.feature.body":
@@ -332,6 +342,8 @@ export const shared: Catalog = {
 
   // MegaNav — Work
   "megaNav.work.title": "Work",
+  "megaNav.work.subtitle": "Career & economy",
+  "megaNav.work.previewCaption": "Skills, jobs & solidarity economy",
   "megaNav.work.feature.eyebrow": "Your workspace",
   "megaNav.work.feature.title": "Your Work, in one place.",
   "megaNav.work.feature.body":
@@ -352,6 +364,8 @@ export const shared: Catalog = {
 
   // MegaNav — About
   "megaNav.about.title": "About",
+  "megaNav.about.subtitle": "The platform & legal",
+  "megaNav.about.previewCaption": "How QueerPulse works",
   "megaNav.about.feature.eyebrow": "About",
   "megaNav.about.feature.title": "What QueerPulse is.",
   "megaNav.about.feature.body":

@@ -46,6 +46,9 @@ export interface Piece {
    *  have no draft-deck registry to link to, so this is left undefined —
    *  the desk falls back to opening a fresh deck, same as today. */
   deckId?: string;
+  /** Editorial-track linkage (mirrors backend `MagazinePiece.issueId`):
+   *  `null` = standalone platform highlight; a value = bound to that issue. */
+  issueId: string | null;
 }
 
 export interface Pitch {
@@ -79,6 +82,7 @@ export interface Activity {
 }
 
 export interface Issue {
+  id: string;
   number: string;
   theme: string;
   closes: string;
@@ -89,6 +93,7 @@ export interface Issue {
 }
 
 export const DEMO_ISSUE: Issue = {
+  id: "demo-issue-14",
   number: "14",
   theme: "Aftercare",
   closes: "12 Aug",
@@ -117,6 +122,7 @@ export const DEMO_PIECES: Piece[] = [
   {
     id: "p1",
     title: "What we owe old friends",
+    issueId: DEMO_ISSUE.id,
     format: "article",
     section: "Cover",
     kind: "Long read",
@@ -133,6 +139,7 @@ export const DEMO_PIECES: Piece[] = [
   {
     id: "p2",
     title: "The pharmacist who fills every prescription",
+    issueId: DEMO_ISSUE.id,
     format: "article",
     section: "Features",
     kind: "Profile",
@@ -148,6 +155,7 @@ export const DEMO_PIECES: Piece[] = [
   {
     id: "p3",
     title: "Care work, undercounted",
+    issueId: DEMO_ISSUE.id,
     format: "deck",
     section: "Reported",
     kind: "Data deck",
@@ -162,6 +170,7 @@ export const DEMO_PIECES: Piece[] = [
   {
     id: "p4",
     title: "Dra. Mariza Câmara on the long wait",
+    issueId: DEMO_ISSUE.id,
     format: "article",
     section: "Interview",
     kind: "Interview",
@@ -175,6 +184,7 @@ export const DEMO_PIECES: Piece[] = [
   {
     id: "p5",
     title: "On the bus to Faro",
+    issueId: null,
     format: "article",
     section: "Essays",
     kind: "Essay",
@@ -189,6 +199,7 @@ export const DEMO_PIECES: Piece[] = [
   {
     id: "p6",
     title: "A reading list, by the therapist who wrote it",
+    issueId: DEMO_ISSUE.id,
     format: "article",
     section: "Service",
     kind: "Service",
@@ -204,6 +215,7 @@ export const DEMO_PIECES: Piece[] = [
   {
     id: "p7",
     title: "Quick exit",
+    issueId: DEMO_ISSUE.id,
     format: "article",
     section: "Column",
     kind: "Column",
@@ -220,6 +232,7 @@ export const DEMO_PIECES: Piece[] = [
   {
     id: "p8",
     title: "Nine rooms in Arroios",
+    issueId: DEMO_ISSUE.id,
     format: "deck",
     section: "Photo",
     kind: "Photo deck",
@@ -234,6 +247,7 @@ export const DEMO_PIECES: Piece[] = [
   {
     id: "p9",
     title: "The chosen-family budget",
+    issueId: DEMO_ISSUE.id,
     format: "deck",
     section: "Reported",
     kind: "Data deck",
@@ -248,6 +262,7 @@ export const DEMO_PIECES: Piece[] = [
   {
     id: "p10",
     title: "Sick Woman Theory, revisited",
+    issueId: null,
     format: "article",
     section: "Review",
     kind: "Book review",
@@ -261,6 +276,7 @@ export const DEMO_PIECES: Piece[] = [
   {
     id: "p11",
     title: "Notes from a waiting room",
+    issueId: null,
     format: "article",
     section: "Essays",
     kind: "Essay",
@@ -275,6 +291,7 @@ export const DEMO_PIECES: Piece[] = [
   {
     id: "p12",
     title: "Take care",
+    issueId: DEMO_ISSUE.id,
     format: "article",
     section: "Last word",
     kind: "Column",

@@ -24,6 +24,7 @@ export function useCurrentIssue() {
       if (!currentIssueDto) return null;
 
       return {
+        id: currentIssueDto.id,
         number: currentIssueDto.number,
         theme: currentIssueDto.theme,
         closes: "",

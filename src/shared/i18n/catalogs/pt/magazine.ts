@@ -609,6 +609,21 @@ export const magazine: Catalog = {
   "desk.header.produce": "Produção da edição",
   "desk.header.slotsFilledAria": "Vagas da edição preenchidas",
   "desk.header.layoutAria": "Esquema da redação",
+  "desk.header.highlightsEyebrow": "Destaques autónomos",
+  "desk.header.highlightsMeta":
+    "Peças que saem por conta própria na plataforma — sem estarem presas a nenhuma edição.",
+
+  // ── DeskTrackTabs (Destaques ⇄ Edição) ───────────────────────────────────
+  "desk.trackTabs.highlights": "Destaques",
+  "desk.trackTabs.issue": "Edição {number}",
+  "desk.trackTabs.issueNoNumber": "Edição",
+
+  // ── Reatribuição de via (ação na linha da peça) ──────────────────────────
+  "desk.reassign.addToIssue": "Juntar à edição {number}",
+  "desk.reassign.makeStandalone": "Tornar autónoma",
+  "desk.reassign.addedToIssueToast": "Juntámos à edição {number}.",
+  "desk.reassign.madeStandaloneToast": "Agora é um destaque autónomo.",
+  "desk.reassign.failedToast": "Não deu para guardar — tenta outra vez.",
 
   // ── NeedsStrip ───────────────────────────────────────────────────────────
   "desk.needsStrip.lateDue": "Atrasada · prazo {due}",
@@ -761,6 +776,9 @@ export const magazine: Catalog = {
   "desk.modals.commission.dueDateLabel": "Prazo",
   "desk.modals.commission.feeLabel": "Valor",
   "desk.modals.commission.feePlaceholder": "ex.: 150 €",
+  "desk.modals.commission.trackLabel": "Onde sai",
+  "desk.modals.commission.trackHighlights": "Autónoma",
+  "desk.modals.commission.trackIssue": "Edição {number}",
 
   // ── PassModal ────────────────────────────────────────────────────────────
   "desk.modals.pass.title": "Recusar “{title}”",

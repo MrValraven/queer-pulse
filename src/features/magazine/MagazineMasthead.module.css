@@ -1,7 +1,10 @@
 .masthead {
   background: var(--cream);
   border-bottom: 2px solid var(--line-strong);
-  padding: 128px 0 0;
+  /* Masthead is the first child inside PageShell/AppShell on the magazine
+     pages, so the nav band is reserved once by `main[data-page-main]`
+     (base.css); this is only its own breathing room below the band. */
+  padding: 48px 0 0;
 }
 .mmTop {
   display: flex;

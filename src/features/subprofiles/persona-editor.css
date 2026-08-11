@@ -39,12 +39,24 @@
      96px (offset by a few px, mirroring the prototype's own rail/preview
      stagger) rather than inventing a new number. */
   min-height: calc(100vh - 96px);
+  /* Smoothly slide the docked preview open/closed on toggle instead of a hard
+     column snap. Interpolable ONLY because the `off` state below keeps the
+     SAME three tracks and merely shrinks the third to zero — a change in track
+     COUNT (e.g. dropping to two columns) can't animate and would snap. */
+  transition: grid-template-columns var(--dur-slow) var(--ease);
 }
+/* Preview hidden: collapse the third column to nothing (same 3-track shape,
+   so the grid animates). The panel is NOT `display: none` — it stays in flow
+   at zero width, clipped by its own `overflow: hidden`, and fades/slides out
+   via the `.ed-preview` rules below, so the exit is animated rather than a pop.
+   Keyboard/AT reachability is handled by the `inert` attribute in the shell. */
 .ed[data-preview="off"] {
-  grid-template-columns: 230px minmax(0, 1fr);
+  grid-template-columns: 230px minmax(0, 1fr) minmax(0px, 0fr);
 }
 .ed[data-preview="off"] .ed-preview {
-  display: none;
+  opacity: 0;
+  transform: translateX(20px);
+  pointer-events: none;
 }
 /* Tablet: the docked preview no longer fits alongside the rail + pane at a
    readable width, so it's dropped — the pane takes the rest of the row.
@@ -220,6 +232,32 @@
 .ed-main [hidden] {
   display: none !important;
 }
+/* Fade + rise the active pane in on every rail switch. The panes stay MOUNTED
+   (toggled with `hidden`/`display:none`, never re-created — see the router's
+   note on preserving each pane's in-progress edits), and a CSS animation does
+   not run while an element is `display: none`, so it replays from the start
+   each time a pane flips back to shown — an entrance on switch without a
+   remount. `> div:not(.savebar)` targets exactly the pane wrappers: the header
+   `<h2>`/`.lede` aren't divs, and the savebar is excluded so it never flickers
+   on navigation. Also gives Identity a gentle load-in on first paint. */
+.ed-main > div:not(.savebar) {
+  animation: qpTabIn var(--dur-base) var(--ease-out);
+}
+/* Reduced motion: keep the information (column collapses, pane changes) but
+   drop the movement — no sliding column, no translate. End states stay
+   correct and visible; nothing is left mid-animation or hidden. */
+@media (prefers-reduced-motion: reduce) {
+  .ed,
+  .ed-preview {
+    transition: none;
+  }
+  .ed[data-preview="off"] .ed-preview {
+    transform: none;
+  }
+  .ed-main > div:not(.savebar) {
+    animation: none;
+  }
+}
 .ed-grid {
   display: grid;
   gap: 18px;
@@ -245,6 +283,12 @@
   background: var(--wash);
   display: flex;
   flex-direction: column;
+  /* Clip the fixed-width bar/frame while the grid column shrinks to zero, so
+     the contents slide away cleanly instead of squashing or spilling. */
+  overflow: hidden;
+  transition:
+    opacity var(--dur-base) var(--ease),
+    transform var(--dur-base) var(--ease);
 }
 .ed-prev-bar {
   display: flex;
@@ -532,7 +576,15 @@
 .drawer {
   background: var(--paper);
   width: min(520px, 100%);
-  height: 100%;
+  /* svh, not vh/100%: a `position: fixed; inset: 0` scrim resolves its height
+     against the LARGE viewport, so `height: 100%` overshoots the visible area
+     on mobile — the footer + lower fields run under the browser chrome and the
+     `.drawer-body` flex child never overflows, so it never scrolls. `svh` pins
+     the panel to the visible viewport so its body scroll engages. Mirrors the
+     shared `<Modal>` (`Modal.module.css`), which hit the same trap. The `vh`
+     line is a fallback for browsers without `svh`. */
+  height: 100vh;
+  height: 100svh;
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-panel);
@@ -584,7 +636,10 @@
 @media (max-width: 760px) {
   .drawer {
     width: 100%;
-    height: 88%;
+    /* svh, not %: same large-viewport overshoot as above — an 88%-of-large
+       sheet anchored to the bottom pushes its footer under the mobile chrome. */
+    height: 88vh;
+    height: 88svh;
     margin-top: auto;
     border-radius: 26px 26px 0 0;
   }

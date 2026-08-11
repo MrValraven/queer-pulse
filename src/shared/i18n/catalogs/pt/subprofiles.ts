@@ -146,6 +146,7 @@ export const subprofiles: Catalog = {
   "section.credentials": "Credenciais",
   "section.showcase": "Mostra",
   "section.links": "Links",
+  "section.gallery": "Galeria de fotos",
 
   // Estado / visibilidade de ligação — também campos persistidos.
   "status.draft": "Rascunho",
@@ -638,6 +639,7 @@ export const subprofiles: Catalog = {
   "hero.edit": "Editar persona",
   "hero.report.cta": "Denunciar esta persona",
   "hero.report.ariaLabel": "Denunciar {name}",
+  "hero.viewPhotoAria": "Ver foto de {name}",
   "hero.standalone": "Independente · {address}",
 
   // Bloco de título do skin oficina (SubprofileTitleBlock) — dl decorativo
@@ -706,6 +708,15 @@ export const subprofiles: Catalog = {
   // nos outros skins).
   "tile.plate": "Nº {number}",
 
+  // Secção de galeria sem legendas (SubprofileSections) — texto alternativo
+  // por foto, já que estes blocos não têm título/subtítulo próprio.
+  "galleryPhotoAlt": "{name} — foto {number} da galeria",
+
+  // Limite da secção de galeria no editor (SubprofileSectionEditor) — mostrado
+  // no lugar do botão de acrescentar quando a galeria universal atinge o
+  // máximo de 6 fotos.
+  "galleryFull": "Máximo de 6 fotos",
+
   // Página pública da persona (SubprofilePage.tsx)
   "page.loading": "A carregar persona…",
   "page.ownerTie": "Outra persona de <em>{name}</em>",
@@ -745,7 +756,7 @@ export const subprofiles: Catalog = {
   // Anel de progresso de publicação do painel (SideReadinessRing, Fase 2) —
   // nome acessível do `.ring`; o `<i>` visível mostra só o número, isto
   // explica o que ele significa.
-  "ring.ariaLabel": "{pct}% pronto para publicar",
+  "ring.ariaLabel": "{pct}% completo",
 
   // Cartão do painel (SideCard, Fase 2 Tarefa 5) — textos ainda não cobertos
   // por `mine.*` (nome por defeito, contagens de apoios/seguidores,

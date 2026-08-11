@@ -15,6 +15,11 @@
    are DOM descendants of this wrapper. */
 .dashboardContainer {
   container-type: inline-size;
+  /* Clear the plum footer: the `.sides` grid (or its trailing "New persona"
+     tile) is the page's last element and otherwise sits flush against the
+     footer band. 72px matches the page-bottom rhythm used across the other
+     dashboard/app surfaces (e.g. GovernancePage, AuthorPage). */
+  padding-bottom: 72px;
 }
 
 .headText {

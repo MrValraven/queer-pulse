@@ -1,5 +1,5 @@
 import { safeHref } from "../../shared/lib/safeHref";
-import { Reveal } from "../../shared/components/ui";
+import { ImageSlot, Reveal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { isUpcoming, sectionShape } from "./personaSkinRender";
 import type { PersonaViewMode } from "./personaSkinRender";
@@ -12,22 +12,49 @@ import type {
 } from "./api/subprofiles.adapters";
 import type { SkinFamily } from "./subprofile-skins";
 
-/** A `.pp-sec`'s items in `.pp-list`/`.pp-tiles`/upcoming+`.pp-past` shape,
- *  per `sectionShape()`. Shared by the content-section loop below. */
+/** A `.pp-sec`'s items in `.pp-list`/`.pp-tiles`/`.pp-gallery`/upcoming+`.pp-past`
+ *  shape, per `sectionShape()`. Shared by the content-section loop below. */
 function SectionBody({
   shape,
   items,
   skin,
   interactive,
   onOpenWork,
+  displayName,
 }: {
-  shape: "list" | "visual" | "stage-split";
+  shape: "list" | "visual" | "gallery" | "stage-split";
   items: SubprofileItemView[];
   skin: SkinFamily;
   interactive: boolean;
   onOpenWork?: (item: SubprofileItemView) => void;
+  /** The persona's display name — used to derive per-photo alt text for the
+   *  caption-less `gallery` section (`subprofiles:galleryPhotoAlt`). */
+  displayName: string;
 }) {
   const { t } = useTranslation();
+
+  if (shape === "gallery") {
+    return (
+      <div className="pp-gallery" data-skin={skin}>
+        {items.slice(0, 6).map((galleryItem, photoIndex) => (
+          <figure
+            className="pp-gallery-cell"
+            key={`${galleryItem.imageUrl}::${photoIndex}`}
+          >
+            <ImageSlot
+              src={galleryItem.imageUrl || undefined}
+              alt={t("subprofiles:galleryPhotoAlt", {
+                name: displayName,
+                number: String(photoIndex + 1),
+              })}
+              radius={0}
+              height="100%"
+            />
+          </figure>
+        ))}
+      </div>
+    );
+  }
 
   if (shape === "visual") {
     return (
@@ -149,7 +176,8 @@ function LinksSection({
 
 /**
  * Renders a public persona's sections onto the page host's `.pp-body`. Each
- * section's shape (`.pp-list` / `.pp-tiles` / upcoming+`.pp-past`) comes from
+ * section's shape (`.pp-list` / `.pp-tiles` / `.pp-gallery` /
+ * upcoming+`.pp-past`) comes from
  * `sectionShape()` (Task 2) — same markup for every skin, `data-skin` on the
  * page's `.pp` ancestor decides how it looks. The universal `links` section
  * renders separately, last, as plain link rows rather than shape-dispatched.
@@ -197,6 +225,7 @@ export function SubprofileSections({
               skin={skin}
               interactive={interactive}
               onOpenWork={onOpenWork}
+              displayName={persona.displayName}
             />
           </Reveal>
         );

@@ -1,6 +1,7 @@
 .page {
   background: var(--cream);
-  padding: 140px 0 100px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 60px 0 100px;
 }
 .doc .wrap {
   max-width: 720px;

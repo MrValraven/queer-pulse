@@ -1,7 +1,8 @@
 .page {
   max-width: 760px;
   margin: 0 auto;
-  padding: 108px 24px 80px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 28px 24px 80px;
 }
 .back {
   font-size: 13px;

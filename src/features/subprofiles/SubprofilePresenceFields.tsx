@@ -16,6 +16,7 @@ const MAX_CTA_LABEL = 40;
 interface SubprofilePresenceFieldsProps {
   coverUrl: string;
   onCoverUrlChange: (value: string) => void;
+  onCoverPreviewChange: (value: string | null) => void;
   accent: AccentKey | "";
   onAccentChange: (value: AccentKey) => void;
   availability: AvailabilityKey | "";
@@ -36,6 +37,7 @@ interface SubprofilePresenceFieldsProps {
 export function SubprofilePresenceFields({
   coverUrl,
   onCoverUrlChange,
+  onCoverPreviewChange,
   accent,
   onAccentChange,
   availability,
@@ -56,6 +58,7 @@ export function SubprofilePresenceFields({
           size={160}
           placeholder={t("subprofiles:metaForm.coverPlaceholder")}
           onChange={onCoverUrlChange}
+          onPreviewChange={onCoverPreviewChange}
         />
       </FormField>
 

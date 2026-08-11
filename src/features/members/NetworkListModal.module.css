@@ -1,0 +1,10 @@
+/* The scrollable person list inside the network group modal. Tokens only. */
+
+.modalRows {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+}

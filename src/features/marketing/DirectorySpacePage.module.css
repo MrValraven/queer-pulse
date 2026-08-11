@@ -2,13 +2,11 @@
   padding-top: 24px;
 }
 /* The page's top cover (breadcrumb + owner "edit" action) is the first thing in
-   <main>, so it must reserve the floating Navbar's band (--nav-top +
-   --nav-height ≈ 80px) itself — otherwise the breadcrumb and the EDIT THIS
-   LISTING button render underneath the fixed pill nav. Every other page hero
-   reserves this band the same way (see PageHero / standalone.css). The gallery
+   <main>. The floating Navbar's band is reserved once by `main[data-page-main]`
+   (base.css); this is just the cover's own breathing room below it. The gallery
    cover below keeps the small `.cover` padding. */
 .coverHead {
-  padding-top: calc(var(--nav-top) + var(--nav-height) + 24px);
+  padding-top: 24px;
 }
 .coverInner {
   max-width: 1180px;

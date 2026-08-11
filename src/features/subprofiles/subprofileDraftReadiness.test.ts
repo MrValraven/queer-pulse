@@ -51,70 +51,104 @@ function makeSection(
 const READY_BIO =
   "A bio that is long enough to clear the eighty character minimum readiness threshold easily.";
 
-describe("estimateDraftReadiness", () => {
-  it("reports a 1-requirement checklist for a linked persona (displayName only)", () => {
-    expect(
-      estimateDraftReadiness({
-        linkVisibility: "linked",
-        displayName: "Kai",
-        handle: null,
-        avatarUrl: null,
-        bio: "",
-        sections: [],
-      }),
-    ).toEqual({ readyCount: 1, totalCount: 1 });
+const SOCIAL_LINK = {
+  platform: "instagram",
+  urlOrHandle: "@kai",
+};
 
+describe("estimateDraftReadiness", () => {
+  it("does not give a linked persona a free full ring — it counts real completeness (no handle requirement)", () => {
+    // A brand-new linked persona (only a display name) is 0% complete, not 100%.
     expect(
       estimateDraftReadiness({
         linkVisibility: "linked",
-        displayName: "   ",
         handle: null,
         avatarUrl: null,
         bio: "",
+        coverUrl: null,
+        availability: null,
+        socialLinks: [],
         sections: [],
       }),
-    ).toEqual({ readyCount: 0, totalCount: 1 });
+    ).toEqual({ readyCount: 0, totalCount: 6 });
+
+    // Fully filled out, a linked persona reaches 100% without needing a handle.
+    expect(
+      estimateDraftReadiness({
+        linkVisibility: "linked",
+        handle: null,
+        avatarUrl: "https://cdn.example.com/avatar.png",
+        bio: READY_BIO,
+        coverUrl: "https://cdn.example.com/cover.png",
+        availability: "open_to_collabs",
+        socialLinks: [SOCIAL_LINK],
+        sections: [makeSection(3)],
+      }),
+    ).toEqual({ readyCount: 6, totalCount: 6 });
   });
 
-  it("reports every client-checkable requirement met for an unlinked persona (owner SubprofileView shape)", () => {
+  it("reports a full ring for an unlinked persona only when every signal — including polish — is met", () => {
     expect(
       estimateDraftReadiness({
         linkVisibility: "unlinked",
-        displayName: "Kai's Studio",
         handle: "kai-studio",
         avatarUrl: "https://cdn.example.com/avatar.png",
         bio: READY_BIO,
+        coverUrl: "https://cdn.example.com/cover.png",
+        availability: "open_to_collabs",
+        socialLinks: [SOCIAL_LINK],
         sections: [makeSection(3)],
       }),
-    ).toEqual({ readyCount: 4, totalCount: 4 });
+    ).toEqual({ readyCount: 7, totalCount: 7 });
   });
 
-  it("reports partial readiness for an unlinked persona (public PublicSubprofileView shape, the existing draft-banner callsite)", () => {
+  it("counts polish signals (cover, availability, socials) as part of the estimate", () => {
+    // Publish-ready on the blocking requirements (handle/avatar/bio/items), but
+    // missing all three polish items — so the ring must sit below 100.
     expect(
       estimateDraftReadiness({
         linkVisibility: "unlinked",
-        displayName: "Kai's Studio",
+        handle: "kai-studio",
+        avatarUrl: "https://cdn.example.com/avatar.png",
+        bio: READY_BIO,
+        coverUrl: null,
+        availability: null,
+        socialLinks: [],
+        sections: [makeSection(3)],
+      }),
+    ).toEqual({ readyCount: 4, totalCount: 7 });
+  });
+
+  it("reports partial readiness for an unlinked persona (public PublicSubprofileView shape, the draft-banner callsite)", () => {
+    expect(
+      estimateDraftReadiness({
+        linkVisibility: "unlinked",
         handle: null,
         avatarUrl: "https://cdn.example.com/avatar.png",
         bio: "Too short.",
+        coverUrl: null,
+        availability: null,
+        socialLinks: [],
         sections: [makeSection(1)],
       }),
-    ).toEqual({ readyCount: 1, totalCount: 4 });
+    ).toEqual({ readyCount: 1, totalCount: 7 });
   });
 
   it("excludes the universal 'links' section from the content-item count", () => {
     expect(
       estimateDraftReadiness({
         linkVisibility: "unlinked",
-        displayName: "Kai's Studio",
         handle: "kai-studio",
         avatarUrl: "https://cdn.example.com/avatar.png",
         bio: READY_BIO,
+        coverUrl: null,
+        availability: null,
+        socialLinks: [],
         sections: [
           makeSection(0, { section: "showcase" }),
           makeSection(3, { section: "links" }),
         ],
       }),
-    ).toEqual({ readyCount: 3, totalCount: 4 });
+    ).toEqual({ readyCount: 3, totalCount: 7 });
   });
 });

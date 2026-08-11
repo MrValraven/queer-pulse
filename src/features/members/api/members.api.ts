@@ -297,6 +297,21 @@ export const unvouch = (slug: string) =>
 export const getVouchers = (slug: string) =>
   apiGet<VouchersResponse>(`/members/${slug}/vouchers`);
 
-/** Vouches the current user has given. Shape assumed `{ slug }[]`; adjust if the API differs. */
+/**
+ * One vouch the current user has given, as `GET /me/vouches/given` returns it
+ * (`GivenVouchView`). Carries the vouched member's identity plus `createdAt`, so
+ * callers can render a named/dated row — not just a bare slug.
+ */
+export interface GivenVouchDTO {
+  slug: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl?: string | null;
+  note?: string;
+  createdAt: string;
+  anonymous?: boolean;
+}
+
+/** Vouches the current user has given, newest-first. */
 export const getGivenVouches = () =>
-  apiGet<{ slug: string }[]>("/me/vouches/given");
+  apiGet<GivenVouchDTO[]>("/me/vouches/given");

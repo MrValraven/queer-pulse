@@ -591,6 +591,21 @@ export const magazine: Catalog = {
   "desk.header.produce": "Issue production",
   "desk.header.slotsFilledAria": "Issue slots filled",
   "desk.header.layoutAria": "Desk layout",
+  "desk.header.highlightsEyebrow": "Standalone highlights",
+  "desk.header.highlightsMeta":
+    "Pieces that run on their own across the platform — not tied to any one issue.",
+
+  // ── DeskTrackTabs (Highlights ⇄ Issue) ───────────────────────────────────
+  "desk.trackTabs.highlights": "Highlights",
+  "desk.trackTabs.issue": "Issue {number}",
+  "desk.trackTabs.issueNoNumber": "Issue",
+
+  // ── Track reassignment (piece row action) ────────────────────────────────
+  "desk.reassign.addToIssue": "Add to issue {number}",
+  "desk.reassign.makeStandalone": "Make standalone",
+  "desk.reassign.addedToIssueToast": "Added to issue {number}.",
+  "desk.reassign.madeStandaloneToast": "Now a standalone highlight.",
+  "desk.reassign.failedToast": "That didn't save — give it another try.",
 
   // ── NeedsStrip ───────────────────────────────────────────────────────────
   "desk.needsStrip.lateDue": "Late · due {due}",
@@ -743,6 +758,9 @@ export const magazine: Catalog = {
   "desk.modals.commission.dueDateLabel": "Due date",
   "desk.modals.commission.feeLabel": "Fee",
   "desk.modals.commission.feePlaceholder": "e.g. €150",
+  "desk.modals.commission.trackLabel": "Where it runs",
+  "desk.modals.commission.trackHighlights": "Standalone",
+  "desk.modals.commission.trackIssue": "Issue {number}",
 
   // ── PassModal ────────────────────────────────────────────────────────────
   "desk.modals.pass.title": "Pass on “{title}”",

@@ -1,6 +1,7 @@
 import { Modal, Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { CommissionModal, type CommissionPayload } from "./CommissionModal";
+import type { DeskTrack } from "./DeskTrackTabs";
 import { PassModal, type PassPayload } from "./PassModal";
 import { ChaseModal } from "./ChaseModal";
 import { HandoffModal } from "./HandoffModal";
@@ -26,6 +27,12 @@ export interface DeskModalsProps {
   modal: DeskModal;
   editors: { id: string; name: string }[];
   sections: { name: string }[];
+  /** Track pre-selected in the commission modal, matching the active desk tab. */
+  commissionTrack: DeskTrack;
+  /** Whether a current issue exists — disables the commission's Issue choice. */
+  hasCurrentIssue: boolean;
+  /** The current issue's display number, for the commission's Issue choice label. */
+  issueNumber: string;
   onClose: () => void;
   onCommission: (payload: CommissionPayload) => void;
   onPass: (payload: PassPayload) => void;
@@ -68,6 +75,9 @@ export function DeskModals({
   modal,
   editors,
   sections,
+  commissionTrack,
+  hasCurrentIssue,
+  issueNumber,
   onClose,
   onCommission,
   onPass,
@@ -82,6 +92,9 @@ export function DeskModals({
           pitch={modal.pitch}
           sectionName={modal.sectionName}
           sections={sections}
+          defaultTrack={commissionTrack}
+          hasCurrentIssue={hasCurrentIssue}
+          issueNumber={issueNumber}
           onClose={onClose}
           onCommission={onCommission}
         />

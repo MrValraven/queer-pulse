@@ -30,6 +30,8 @@ export const members: Catalog = {
     "Não conseguimos ler essa imagem. Tenta um ficheiro diferente.",
   "upload.error.tooSmall":
     "Essa imagem é demasiado pequena — precisa de ter pelo menos {minWidth} × {minHeight}px.",
+  "upload.error.stripFailed":
+    "Não conseguimos processar essa imagem em segurança, por isso não a carregámos. Tenta um ficheiro diferente.",
   "upload.error.retry":
     "Não conseguimos carregar essa imagem. Tenta novamente.",
 
@@ -1016,4 +1018,22 @@ export const members: Catalog = {
   "perks.claim.claimed": "Resgatado",
   "perks.claim.unavailableToast":
     "Resgatar vantagens ainda não está disponível — ainda estamos a preparar isto.",
+
+  // ── A tua rede (ProfileNetworkStats + NetworkListModal) — só do dono ─────────
+  "network.title": "A tua rede",
+  "network.subtitle":
+    "Com quem estás ligade e a confiança que construíram juntes.",
+  "network.group.connected": "Ligações",
+  "network.group.vouchedGiven": "Avalizaste",
+  "network.group.vouchedReceived": "Avalizaram-te",
+  "network.row.connected": "ligade {time}",
+  "network.row.connectedNoTime": "ligade",
+  "network.row.vouchedGiven": "avalizaste {time}",
+  "network.row.vouchedGivenNoTime": "avalizaste",
+  "network.row.vouchedReceived": "avalizou-te {time}",
+  "network.row.vouchedReceivedNoTime": "avalizou-te",
+  "network.viewAll": "Ver todas {count}",
+  "network.viewAllAria": "Ver todas as {count} em {group}",
+  "network.modalSub_one": "{count} pessoa",
+  "network.modalSub_other": "{count} pessoas",
 };

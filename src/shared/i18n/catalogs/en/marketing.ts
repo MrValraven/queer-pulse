@@ -1850,6 +1850,85 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Open the press kit",
   "changelog.tag.magazineDesk": "Open the desk",
 
+  "changelog.entries.persona-photo-gallery.title":
+    "Add a photo gallery to your persona",
+  "changelog.entries.persona-photo-gallery.body":
+    "Personas can now show a photo gallery of up to 6 photos.",
+
+  "changelog.entries.profile-your-network.title":
+    "See your network on your own profile",
+  "changelog.entries.profile-your-network.body":
+    "Your profile hero now shows a private row of \"Your network\" chips, just for you: how many people you're connected with, who you've vouched for, and who's vouched for you. Tap a chip to see the full list, newest first, with when each happened. Only you can see it, and it stays hidden when you preview your profile as a visitor.",
+
+  "changelog.entries.fix-page-top-nav-overlap.title":
+    "Page content no longer hides under the top menu",
+  "changelog.entries.fix-page-top-nav-overlap.body":
+    "The floating top menu used to overlap the very top of some pages, clipping a heading or button beneath it. Every page now reserves that space in one shared place, so nothing sits under the menu — and each page keeps its own breathing room.",
+
+  "changelog.entries.nav-rail-redesign.title": "A clearer main menu",
+  "changelog.entries.nav-rail-redesign.body":
+    "The desktop menu now keeps every section in view — pick one from the rail and its links, plus a little preview, appear beside it. Same destinations, less hunting.",
+
+  "changelog.entries.persona-photo-enlarge.title":
+    "Tap a persona's photo to see it full-size",
+  "changelog.entries.persona-photo-enlarge.body":
+    "Just like on a regular profile, you can now tap a persona's avatar to open the photo full-screen — a proper look at who's behind the persona. Tap outside, hit the close button, or press Esc to dismiss it.",
+
+  "changelog.entries.persona-mobile-hero.title":
+    "Personas look at home on your phone",
+  "changelog.entries.persona-mobile-hero.body":
+    "A persona's header now settles into the same clean, centred column your own profile uses on a phone — the avatar, name, tagline and links stacked in the middle, with the action buttons stretched full-width and easy to reach with one thumb. No more cramped top-left pile on a narrow screen.",
+
+  "changelog.entries.fix-persona-save-conflict.title":
+    "Saving a second persona no longer throws an error",
+  "changelog.entries.fix-persona-save-conflict.body":
+    "Editing and saving a persona could fail with an “address already in use” error once you had more than one — even when you'd never set a public handle on either. A blank handle is now treated as “none” rather than an empty value that quietly collided with your other personas, so your changes save cleanly. If two personas ever do share the same address, we now tell you exactly which field to change.",
+
+  "changelog.entries.magazine-desk-two-tracks.title":
+    "Two tracks on the magazine desk: Highlights and Issue",
+  "changelog.entries.magazine-desk-two-tracks.body":
+    "Editors can now keep standalone platform highlights separate from the pieces being assembled into a full issue. Switch between the two tracks with a tap, and move any piece from one to the other — send a highlight into the current issue, or lift an issue piece back out to stand on its own. Search, filters and saved views all work within whichever track you're in, and new commissions land in the track you choose.",
+
+  "changelog.entries.photo-metadata-strip-hardening.title":
+    "Stronger removal of hidden location data from your photos",
+  "changelog.entries.photo-metadata-strip-hardening.body":
+    "Every photo you upload has its hidden metadata — including the GPS location many phones bake into a picture — removed in your browser before it ever leaves your device. We closed the gaps: if that removal can't complete for any reason, the upload is now blocked rather than sent as-is, and animated GIFs are cleaned in place without losing their animation. Your location stays yours.",
+
+  "changelog.entries.fix-persona-cover-overlay-leak.title":
+    "Persona banners show cleanly once you upload one",
+  "changelog.entries.fix-persona-cover-overlay-leak.body":
+    "On musician & DJ personas, the textured overlay meant for the empty, no-banner state was still painting over your banner after you'd uploaded one — dimming and speckling the photo. It now clears the moment a banner image is set, so your cover shows exactly as chosen.",
+
+  "changelog.entries.members-filter-panel-polish.title":
+    "A calmer member-directory filter panel",
+  "changelog.entries.members-filter-panel-polish.body":
+    "The filters on the member directory used to sit as seven near-identical floating boxes that read as visual clutter when collapsed. They're now one tidy panel with clean dividers between each group, and every filter header responds to hover and keyboard focus so it's clear you can open it.",
+
+  "changelog.entries.fix-persona-stage-dark-legibility.title":
+    "Persona pages stay readable in dark mode",
+  "changelog.entries.fix-persona-stage-dark-legibility.body":
+    "Two persona styles broke in dark mode — most visible in the editor's live preview. On the stage layout (musicians and DJs) the name, section headings and type pill turned dark-on-dark and all but vanished; the writer layout went almost entirely unreadable, its warm-ink text stranded on a near-black page. Both now stay light and legible in either theme, and the small ⓘ help icon beside a persona's name no longer reads as an empty ring on dark surfaces.",
+
+  "changelog.entries.fix-persona-preview-avatar.title":
+    "Persona photos now appear in the live preview — and the avatar is round again",
+  "changelog.entries.fix-persona-preview-avatar.body":
+    "In the persona editor, a freshly picked avatar or cover showed only a placeholder in the live preview until you saved. It now renders the moment you choose it. We also fixed a stray square that framed the circular avatar on the preview and the public persona page.",
+
+  "changelog.entries.fix-vouch-success-self-face.title":
+    "Your vouch confirmation now shows your face, not a placeholder",
+  "changelog.entries.fix-vouch-success-self-face.body":
+    "When you vouched for someone, the confirmation panel could pair the member's photo with a demo profile instead of yours. It now always shows your real avatar and initials beside theirs, so the \"backed\" moment reflects the actual person doing the vouching.",
+
+  "changelog.entries.persona-readiness-estimate.title":
+    "The persona readiness estimate now reflects what's really left",
+  "changelog.entries.persona-readiness-estimate.body":
+    "The \"Quick estimate\" on a persona's Get it live page now counts everything that's still worth adding — a cover image, your availability, a social link and enough content — instead of jumping to 100 the moment you could technically publish. The number only fills up once there's genuinely nothing left to polish.",
+
+  "changelog.entries.fix-persona-item-drawer-scroll.title":
+    "Scroll to every field when editing a showcase item",
+  "changelog.entries.fix-persona-item-drawer-scroll.body":
+    "The edit panel for a showcase item (like a gig or a project) no longer ran off the bottom of the screen on phones — you can now scroll through every field and reach Save.",
+
   "changelog.entries.my-uploads.title": "See and manage everything you've uploaded",
   "changelog.entries.my-uploads.body":
     "A new My uploads screen in Settings shows every picture you've uploaded, so you can spot and delete accidental double-uploads. It flags any picture that's still in use before you remove it.",

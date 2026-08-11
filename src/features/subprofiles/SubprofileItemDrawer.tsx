@@ -120,7 +120,11 @@ export function SubprofileItemDrawer({
           <Button
             variant="primary"
             onClick={() => onSave(draft)}
-            disabled={!draft.title.trim()}
+            disabled={
+              section.section === "gallery"
+                ? !draft.imageUrl?.trim()
+                : !draft.title.trim()
+            }
           >
             {t("subprofiles:itemDrawer.saveItem")}
           </Button>

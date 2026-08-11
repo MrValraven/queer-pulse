@@ -115,6 +115,7 @@ export type SubprofileSection =
   | "specialisms"
   | "credentials" // therapist
   | "showcase" // generic
+  | "gallery" // every kind
   | "links"; // every kind
 
 export type GigState = "sold_out" | "cancelled" | "guest";
@@ -300,7 +301,7 @@ export interface UpdateSubprofileDTO {
   // all optional; PATCH semantics
   displayName?: string;
   slug?: string; // per-owner unique (linked URL)
-  handle?: string; // desired handle (validated on publish)
+  handle?: string | null; // desired handle, or null to clear (validated on publish)
   avatarUrl?: string | null;
   tagline?: string | null;
   bio?: string | null;

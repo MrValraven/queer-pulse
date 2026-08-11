@@ -87,6 +87,10 @@
   gap: 16px;
 }
 
+.spacer {
+  flex: 1;
+}
+
 .track {
   flex: 1;
   height: 7px;

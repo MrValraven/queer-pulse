@@ -1,6 +1,7 @@
 /* ===== Cover band ===== */
 .cover {
-  padding-top: 128px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding-top: 48px;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   position: relative;

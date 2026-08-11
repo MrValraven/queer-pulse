@@ -24,6 +24,10 @@ export interface ConnectionMeta {
   pron?: string;
   mutuals?: number;
   since?: string;
+  /** Raw ISO timestamp the connection was accepted (or, while pending, when the
+   *  request was created). `since` is the human-readable display string; this is
+   *  the machine value the profile "Your network" section sorts by. */
+  connectedAtIso?: string;
   vouchBadge?: "vouched-for-you" | "you-vouched" | "mutual";
   requestMessage?: string;
   /** Why they reached out: `open:<id>` | `custom:<label>` | a REASONS id. */
@@ -39,20 +43,53 @@ export const CONNECTION_META: Record<string, ConnectionMeta> = {
     pron: "she/her",
     mutuals: 11,
     since: "Mar 2025",
+    connectedAtIso: "2025-03-14T10:15:00.000Z",
     vouchBadge: "vouched-for-you",
   },
-  jonas: { pron: "he/him", mutuals: 8, since: "Dec 2024" },
-  luisa: { pron: "she/her", mutuals: 14, vouchBadge: "you-vouched" },
-  anika: { pron: "she/her", mutuals: 6, since: "Jan 2026" },
+  jonas: {
+    pron: "he/him",
+    mutuals: 8,
+    since: "Dec 2024",
+    connectedAtIso: "2024-12-05T18:40:00.000Z",
+  },
+  luisa: {
+    pron: "she/her",
+    mutuals: 14,
+    since: "Jun 2025",
+    connectedAtIso: "2025-06-20T09:05:00.000Z",
+    vouchBadge: "you-vouched",
+  },
+  anika: {
+    pron: "she/her",
+    mutuals: 6,
+    since: "Jan 2026",
+    connectedAtIso: "2026-01-12T14:20:00.000Z",
+  },
   rita: {
     pron: "they/them",
     mutuals: 9,
     since: "Nov 2024",
+    connectedAtIso: "2024-11-03T11:30:00.000Z",
     vouchBadge: "mutual",
   },
-  nuno: { pron: "he/him", mutuals: 11, since: "Feb 2025" },
-  "sofia-castano": { pron: "she/her", mutuals: 4, since: "Apr 2026" },
-  "sara-pinheiro": { pron: "she/her", mutuals: 13, since: "Sep 2025" },
+  nuno: {
+    pron: "he/him",
+    mutuals: 11,
+    since: "Feb 2025",
+    connectedAtIso: "2025-02-18T16:50:00.000Z",
+  },
+  "sofia-castano": {
+    pron: "she/her",
+    mutuals: 4,
+    since: "Apr 2026",
+    connectedAtIso: "2026-04-09T08:25:00.000Z",
+  },
+  "sara-pinheiro": {
+    pron: "she/her",
+    mutuals: 13,
+    since: "Sep 2025",
+    connectedAtIso: "2025-09-22T13:10:00.000Z",
+  },
   // — incoming requests —
   "daniel-oliveira": {
     pron: "he/him",
@@ -68,15 +105,60 @@ export const CONNECTION_META: Record<string, ConnectionMeta> = {
   "raquel-baptista": { pron: "she/her", sentAgo: "2 days ago" },
   "catarina-melo": { pron: "she/her", sentAgo: "5 days ago" },
   // — "Load more" pool —
-  beatriz: { pron: "she/her", mutuals: 3, since: "2025" },
-  kai: { pron: "they/them", mutuals: 5, since: "2025" },
-  monica: { pron: "she/her", mutuals: 4, since: "2025" },
-  andre: { pron: "he/him", mutuals: 6, since: "2025" },
-  carla: { pron: "she/her", mutuals: 7, since: "2025" },
-  diogo: { pron: "he/him", mutuals: 2, since: "2025" },
-  jordan: { pron: "they/them", mutuals: 8, since: "2025" },
-  fatima: { pron: "she/her", mutuals: 5, since: "2025" },
-  "rui-fernandes": { pron: "he/him", mutuals: 4, since: "2025" },
+  beatriz: {
+    pron: "she/her",
+    mutuals: 3,
+    since: "2025",
+    connectedAtIso: "2025-01-24T10:00:00.000Z",
+  },
+  kai: {
+    pron: "they/them",
+    mutuals: 5,
+    since: "2025",
+    connectedAtIso: "2025-02-11T10:00:00.000Z",
+  },
+  monica: {
+    pron: "she/her",
+    mutuals: 4,
+    since: "2025",
+    connectedAtIso: "2025-03-30T10:00:00.000Z",
+  },
+  andre: {
+    pron: "he/him",
+    mutuals: 6,
+    since: "2025",
+    connectedAtIso: "2025-05-08T10:00:00.000Z",
+  },
+  carla: {
+    pron: "she/her",
+    mutuals: 7,
+    since: "2025",
+    connectedAtIso: "2025-06-17T10:00:00.000Z",
+  },
+  diogo: {
+    pron: "he/him",
+    mutuals: 2,
+    since: "2025",
+    connectedAtIso: "2025-07-26T10:00:00.000Z",
+  },
+  jordan: {
+    pron: "they/them",
+    mutuals: 8,
+    since: "2025",
+    connectedAtIso: "2025-09-04T10:00:00.000Z",
+  },
+  fatima: {
+    pron: "she/her",
+    mutuals: 5,
+    since: "2025",
+    connectedAtIso: "2025-10-13T10:00:00.000Z",
+  },
+  "rui-fernandes": {
+    pron: "he/him",
+    mutuals: 4,
+    since: "2025",
+    connectedAtIso: "2025-11-21T10:00:00.000Z",
+  },
 };
 
 /** Initial buckets (real member slugs). The ConnectionsProvider seeds from these. */

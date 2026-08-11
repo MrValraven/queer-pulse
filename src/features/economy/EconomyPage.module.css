@@ -1,6 +1,7 @@
 .hero {
   background: var(--plum);
-  padding: 148px 0 0;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 68px 0 0;
   position: relative;
   overflow: hidden;
 }
@@ -792,7 +793,8 @@
 
 @media (max-width: 640px) {
   .hero {
-    padding: 116px 0 0;
+    /* nav band reserved by shell (base.css); this is only breathing room */
+    padding: 36px 0 0;
   }
   .body {
     padding: 56px 0 72px;

@@ -39,7 +39,7 @@ export function SubprofilePageBody({
 
   return (
     <article className="pp" data-skin={skin} style={skinVars}>
-      <div className="pp-cover">
+      <div className="pp-cover" data-has-cover={data.coverUrl ? "" : undefined}>
         <ImageSlot
           src={data.coverUrl || undefined}
           alt=""

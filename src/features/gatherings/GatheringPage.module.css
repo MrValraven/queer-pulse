@@ -1,5 +1,6 @@
 .page {
-  padding: 148px 0 100px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 68px 0 100px;
 }
 .back {
   margin-bottom: 32px;
@@ -304,9 +305,8 @@
 
 @media (max-width: 860px) {
   .page {
-    /* The floating nav band is ~80px (--nav-top + --nav-height); 148px left a
-       big dead zone above the fold on phones. Clear the nav + a little air. */
-    padding-top: 96px;
+    /* nav band reserved by shell (base.css); this is only breathing room */
+    padding-top: 16px;
   }
   .grid {
     grid-template-columns: 1fr;

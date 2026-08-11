@@ -92,6 +92,7 @@ export function EditorPaneRouter({
         <SubprofileIdentityFields
           avatarUrl={editor.avatarUrl}
           onAvatarUrlChange={editor.setAvatarUrl}
+          onAvatarPreviewChange={editor.setAvatarPreview}
           displayName={editor.displayName}
           onDisplayNameChange={editor.setDisplayName}
           nameMissing={editor.nameMissing}
@@ -108,6 +109,7 @@ export function EditorPaneRouter({
           <SubprofilePresenceFields
             coverUrl={editor.coverUrl}
             onCoverUrlChange={editor.setCoverUrl}
+            onCoverPreviewChange={editor.setCoverPreview}
             accent={editor.accent}
             onAccentChange={editor.setAccent}
             availability={editor.availability}

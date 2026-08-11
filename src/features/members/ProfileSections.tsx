@@ -16,6 +16,7 @@ import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { currentUserSlug, type MemberProfile } from "./data/memberProfiles";
 import { useRecognition } from "./api/useRecognition";
 import { HeroVouchRow } from "./HeroVouchRow";
+import { ProfileNetworkStats } from "./ProfileNetworkStats";
 import { ProfileHeroActions } from "./ProfileHeroActions";
 import { ProfilePhotoViewer } from "./ProfilePhotoViewer";
 import { ProfileSafetyMenu } from "./ProfileSafetyMenu";
@@ -218,6 +219,10 @@ export function ProfileHero({
                 <Tag key={tag}>{tag}</Tag>
               ))}
             </TagRow>
+            {/* Private "Your network" chips — owner-only. `isSelf` here already
+                folds in the visitor-preview gate (asVisitor), so it matches the
+                old below-hero section's `isSelf && selfView` guard exactly. */}
+            {isSelf && <ProfileNetworkStats ownerSlug={profile.slug} />}
             <SocialLinksRow
               links={profile.socials}
               self={isSelf}

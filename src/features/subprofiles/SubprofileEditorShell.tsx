@@ -50,8 +50,14 @@ export function SubprofileEditorShell({
         />
       </div>
 
-      <div className="ed-preview">
-        {previewOpen && <EditorPreview subprofile={subprofile} editor={editor} />}
+      {/* Kept MOUNTED regardless of `previewOpen` so the panel can animate OUT
+          (a conditional unmount would pop it away with no exit). While hidden
+          it's `inert` — pulled out of the tab order and the a11y tree, and its
+          in-flight "Open live" link made unfocusable — so the collapsed column
+          is truly gone to keyboard/AT users even though it's still in the DOM.
+          The visual collapse itself is driven by `data-preview` in CSS. */}
+      <div className="ed-preview" inert={!previewOpen}>
+        <EditorPreview subprofile={subprofile} editor={editor} />
       </div>
     </div>
   );

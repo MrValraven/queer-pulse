@@ -1,19 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { MagazineDeskShell, useMagazineShellOverlay } from "../../shared/components/layout";
-import { routes } from "../../app/routeMap";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  DEMO_SECTIONS,
-  DEMO_STAGES,
-  type Issue,
-  type Piece,
-  type Stage,
-} from "./data/desk.data";
+import { DEMO_SECTIONS, DEMO_STAGES, type Issue } from "./data/desk.data";
 import { usePieces } from "./api/usePieces";
 import { usePitches } from "./api/usePitches";
 import { useDeskSummary } from "./api/useDeskSummary";
@@ -21,9 +14,10 @@ import { useMagazineEditors } from "./api/useMagazineEditors";
 import { useCurrentIssue } from "./api/useCurrentIssue";
 import { usePieceMutations } from "./api/usePieceMutations";
 import { usePitchMutations } from "./api/usePitchMutations";
-import { STAGE_VIEW_TO_DTO } from "./api/pieces.adapters";
 import type { DeskLayout } from "./desk/DeskHeader";
 import { useDeskState } from "./desk/useDeskState";
+import { useDeskTracks } from "./desk/useDeskTracks";
+import { useDeskPieceActions } from "./desk/useDeskPieceActions";
 import { useDeskKeyboard } from "./desk/useDeskKeyboard";
 import { useDeskModals } from "./desk/useDeskModals";
 import { usePitchTriageActions } from "./desk/usePitchTriageActions";
@@ -46,7 +40,6 @@ export function EditorDashboardPage() {
   const { user } = useAuth();
   const { showToast } = useToast();
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isPaletteOpen, isNotificationsOpen } = useMagazineShellOverlay();
 
@@ -67,6 +60,7 @@ export function EditorDashboardPage() {
   const issue: Issue = useMemo(
     () =>
       currentIssue ?? {
+        id: "",
         number: "",
         theme: "",
         closes: "",
@@ -86,11 +80,30 @@ export function EditorDashboardPage() {
   // the commission. Demo mode keeps its slug identity (it never hits the API).
   const [meState, setMeState] = useState("");
   const activeMe = meState || (demoMode ? editors[0]?.id : user?.id) || "";
-  const deskState = useDeskState(pieces, activeMe);
+
+  // The desk splits into two editorial tracks (Highlights vs. Issue). The
+  // partition, the URL-persisted active track, and the cross-track reassignment
+  // all live in `useDeskTracks`; only the active track feeds the existing
+  // filter/sort/saved-view pipeline (`useDeskState`).
+  const tracks = useDeskTracks({
+    pieces,
+    issue,
+    searchParams,
+    setSearchParams,
+    pieceMutations,
+    showToast,
+    translate: t,
+  });
+  const deskState = useDeskState(tracks.activePieces, activeMe);
 
   const [layout, setLayout] = useState<DeskLayout>("list");
 
-  const modals = useDeskModals({ activeMe, pieceMutations, pitchMutations });
+  const modals = useDeskModals({
+    activeMe,
+    currentIssueId: issue.id,
+    pieceMutations,
+    pitchMutations,
+  });
   const triage = usePitchTriageActions({
     pitchMutations,
     selectedPitchIds: deskState.selected,
@@ -111,36 +124,13 @@ export function EditorDashboardPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
-  // The piece record now exists (Phase 2). Live mode routes by the real
-  // piece id; demo mode's record page ignores the id and always shows
-  // DEMO_RECORD. "Open" always lands on the record. "Edit" is
-  // format-aware: article-format pieces jump straight to the block-based
-  // article editor (Phase 3, `routes.magazineWrite`); deck-format pieces
-  // jump to the deck editor (Phase 4, `routes.deckEditor`) — the linked
-  // deck when `piece.deckId` is set (live mode; `pieceDtoToView` now
-  // projects `PieceListItemDto.deckId`), otherwise a fresh deck, same as
-  // the "New deck" entry point in `EditorDecksSection`. Mirrors
-  // `PieceRecordPage.handleOpenDraft`.
-  const goToPieceRecord = (piece: Piece) =>
-    void navigate(routes.magazinePiece.replace(":id", piece.id));
-  const handleOpenPiece = (piece: Piece) => goToPieceRecord(piece);
-  const handleEditPiece = (piece: Piece) => {
-    if (piece.format === "article") {
-      void navigate(routes.magazineWrite.replace(":id", piece.id));
-      return;
-    }
-    void navigate(piece.deckId ? `${routes.deckEditor}?id=${piece.deckId}` : routes.deckEditor);
-  };
-  const handleMovePiece = (piece: Piece, stage: Stage) =>
-    pieceMutations.moveStage.mutate({ id: piece.id, stage: STAGE_VIEW_TO_DTO[stage] });
-  const handleProduceIssue = () =>
-    void navigate(routes.magazineIssueProd.replace(":number", issue.number));
+  const pieceActions = useDeskPieceActions({ issue, pieceMutations });
 
   useDeskKeyboard({
     visiblePieces: deskState.visiblePieces,
     focusId: deskState.focusId,
     setFocusId: deskState.setFocusId,
-    onOpen: handleOpenPiece,
+    onOpen: pieceActions.openPiece,
     onChase: modals.openChase,
     onShortcuts: modals.openShortcuts,
     topPitchId: pitches[0]?.id ?? null,
@@ -164,14 +154,19 @@ export function EditorDashboardPage() {
         onRetry={() => void queryClient.invalidateQueries({ queryKey: ["magazine-pieces"] })}
         isEmpty={isEmpty}
         issue={issue}
+        track={tracks.track}
+        onTrack={tracks.setTrack}
+        hasCurrentIssue={tracks.hasCurrentIssue}
+        highlightsCount={tracks.highlightsPieces.length}
+        issueCount={tracks.issuePieces.length}
         editors={editors}
         me={activeMe}
         onMe={setMeState}
         layout={layout}
         onLayout={setLayout}
         onCommission={modals.openCommission}
-        onProduce={handleProduceIssue}
-        pieces={pieces}
+        onProduce={pieceActions.produceIssue}
+        pieces={tracks.activePieces}
         visiblePieces={deskState.visiblePieces}
         focusId={deskState.focusId}
         pitches={pitches}
@@ -192,11 +187,12 @@ export function EditorDashboardPage() {
         onSaveView={() =>
           showToast(t("magazine:desk.page.savingViewsUnavailable"), "info")
         }
-        onOpenPiece={handleOpenPiece}
-        onEditPiece={handleEditPiece}
+        onOpenPiece={pieceActions.openPiece}
+        onEditPiece={pieceActions.editPiece}
         onChasePiece={modals.openChase}
         onHandoffPiece={modals.openHandoff}
-        onMovePiece={handleMovePiece}
+        onReassignPiece={tracks.reassignPiece}
+        onMovePiece={pieceActions.movePiece}
         onCommissionSection={modals.openCommissionForSection}
         selectedPitchIds={deskState.selected}
         onTogglePitchSelect={deskState.toggleSelect}
@@ -214,6 +210,9 @@ export function EditorDashboardPage() {
         modal={modals.modal}
         editors={editors}
         sections={DEMO_SECTIONS}
+        commissionTrack={tracks.track}
+        hasCurrentIssue={tracks.hasCurrentIssue}
+        issueNumber={issue.number}
         onClose={modals.close}
         onCommission={modals.submitCommission}
         onPass={modals.submitPass}

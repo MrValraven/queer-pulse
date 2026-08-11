@@ -5,7 +5,8 @@
 /* ---- hero ---- */
 .hero {
   position: relative;
-  padding: 96px 0 46px;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 16px 0 46px;
   overflow: hidden;
 }
 .hero::before {
