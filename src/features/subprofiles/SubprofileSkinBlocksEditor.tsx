@@ -1,0 +1,293 @@
+import { FiArrowDown, FiArrowUp, FiPlus, FiX } from "react-icons/fi";
+import { FormField } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useSubprofileEditorContext } from "./subprofileEditorContext";
+import type {
+  SkinBlockControl,
+  SkinBlockDescriptor,
+  SkinItemFieldDescriptor,
+} from "./skinBlockFields.data";
+import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
+import styles from "./SubprofileEditor.module.css";
+
+/** A single-line / multi-line text sub-field of an object block. */
+function SkinTextControl({
+  control,
+  editor,
+}: {
+  control: SkinBlockControl;
+  editor: SubprofileSkinBlocksEditor;
+}) {
+  const { t } = useTranslation();
+  const raw = editor.getValue(control.path);
+  const value = typeof raw === "string" ? raw : "";
+  const placeholder = control.placeholderKey ? t(control.placeholderKey) : undefined;
+
+  return (
+    <FormField label={t(control.labelKey)}>
+      {control.kind === "textarea" ? (
+        <textarea
+          value={value}
+          placeholder={placeholder}
+          onChange={(event) => editor.setValue(control.path, event.target.value)}
+        />
+      ) : (
+        <input
+          value={value}
+          placeholder={placeholder}
+          onChange={(event) => editor.setValue(control.path, event.target.value)}
+        />
+      )}
+    </FormField>
+  );
+}
+
+/** An ordered `string[]` list: add / remove / reorder single-line entries. */
+function SkinStringListControl({
+  control,
+  editor,
+}: {
+  control: SkinBlockControl;
+  editor: SubprofileSkinBlocksEditor;
+}) {
+  const { t } = useTranslation();
+  const lines = (editor.getValue(control.path) as string[] | undefined) ?? [];
+  const label = t(control.labelKey);
+
+  const commit = (next: string[]) => editor.setValue(control.path, next);
+  const swap = (index: number, delta: number) => {
+    const target = index + delta;
+    if (target < 0 || target >= lines.length) return;
+    const next = [...lines];
+    [next[index], next[target]] = [next[target]!, next[index]!];
+    commit(next);
+  };
+
+  return (
+    <div className={styles.itemsWrap}>
+      <span className={styles.itemNum}>{label}</span>
+      {lines.map((line, index) => (
+        <div key={index} className={styles.itemHead}>
+          <input
+            value={line}
+            aria-label={t("subprofiles:skinBlock.lineLabel", {
+              label,
+              index: index + 1,
+            })}
+            onChange={(event) =>
+              commit(lines.map((entry, entryIndex) =>
+                entryIndex === index ? event.target.value : entry,
+              ))
+            }
+          />
+          <div className={styles.itemTools}>
+            <button
+              type="button"
+              className={styles.toolBtn}
+              disabled={index === 0}
+              aria-label={t("subprofiles:skinBlock.moveUp")}
+              onClick={() => swap(index, -1)}
+            >
+              <FiArrowUp size={15} />
+            </button>
+            <button
+              type="button"
+              className={styles.toolBtn}
+              disabled={index === lines.length - 1}
+              aria-label={t("subprofiles:skinBlock.moveDown")}
+              onClick={() => swap(index, 1)}
+            >
+              <FiArrowDown size={15} />
+            </button>
+            <button
+              type="button"
+              className={styles.toolBtn}
+              aria-label={t("subprofiles:skinBlock.removeItem")}
+              onClick={() =>
+                commit(lines.filter((_, entryIndex) => entryIndex !== index))
+              }
+            >
+              <FiX size={15} />
+            </button>
+          </div>
+        </div>
+      ))}
+      <div>
+        <button
+          type="button"
+          className={styles.addBtn}
+          onClick={() => commit([...lines, ""])}
+        >
+          <FiPlus size={15} aria-hidden />
+          {t("subprofiles:skinBlock.addItem")}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/** An ordered array of small objects (e.g. first-session steps, referrals),
+ *  each editing its own `itemFields`. */
+function SkinObjectListControl({
+  control,
+  editor,
+}: {
+  control: SkinBlockControl;
+  editor: SubprofileSkinBlocksEditor;
+}) {
+  const { t } = useTranslation();
+  const itemFields = control.itemFields ?? [];
+  const entries =
+    (editor.getValue(control.path) as Record<string, string>[] | undefined) ?? [];
+  const label = t(control.labelKey);
+
+  const commit = (next: Record<string, string>[]) =>
+    editor.setValue(control.path, next);
+  const emptyEntry = (): Record<string, string> =>
+    Object.fromEntries(itemFields.map((field) => [field.key, ""]));
+  const swap = (index: number, delta: number) => {
+    const target = index + delta;
+    if (target < 0 || target >= entries.length) return;
+    const next = [...entries];
+    [next[index], next[target]] = [next[target]!, next[index]!];
+    commit(next);
+  };
+  const patchField = (index: number, key: string, value: string) =>
+    commit(
+      entries.map((entry, entryIndex) =>
+        entryIndex === index ? { ...entry, [key]: value } : entry,
+      ),
+    );
+
+  return (
+    <div className={styles.itemsWrap}>
+      <span className={styles.itemNum}>{label}</span>
+      {entries.map((entry, index) => (
+        <div key={index} className={styles.itemCard}>
+          <div className={styles.itemHead}>
+            <span className={styles.itemNum}>
+              {t("subprofiles:skinBlock.entryLabel", { index: index + 1 })}
+            </span>
+            <div className={styles.itemTools}>
+              <button
+                type="button"
+                className={styles.toolBtn}
+                disabled={index === 0}
+                aria-label={t("subprofiles:skinBlock.moveUp")}
+                onClick={() => swap(index, -1)}
+              >
+                <FiArrowUp size={15} />
+              </button>
+              <button
+                type="button"
+                className={styles.toolBtn}
+                disabled={index === entries.length - 1}
+                aria-label={t("subprofiles:skinBlock.moveDown")}
+                onClick={() => swap(index, 1)}
+              >
+                <FiArrowDown size={15} />
+              </button>
+              <button
+                type="button"
+                className={styles.toolBtn}
+                aria-label={t("subprofiles:skinBlock.removeItem")}
+                onClick={() =>
+                  commit(entries.filter((_, entryIndex) => entryIndex !== index))
+                }
+              >
+                <FiX size={15} />
+              </button>
+            </div>
+          </div>
+          {itemFields.map((field: SkinItemFieldDescriptor) => (
+            <FormField key={field.key} label={t(field.labelKey)}>
+              {field.multiline ? (
+                <textarea
+                  value={entry[field.key] ?? ""}
+                  placeholder={field.placeholderKey ? t(field.placeholderKey) : undefined}
+                  onChange={(event) => patchField(index, field.key, event.target.value)}
+                />
+              ) : (
+                <input
+                  value={entry[field.key] ?? ""}
+                  placeholder={field.placeholderKey ? t(field.placeholderKey) : undefined}
+                  onChange={(event) => patchField(index, field.key, event.target.value)}
+                />
+              )}
+            </FormField>
+          ))}
+        </div>
+      ))}
+      <div>
+        <button
+          type="button"
+          className={styles.addBtn}
+          onClick={() => commit([...entries, emptyEntry()])}
+        >
+          <FiPlus size={15} aria-hidden />
+          {t("subprofiles:skinBlock.addItem")}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function SkinBlockControlField({
+  control,
+  editor,
+}: {
+  control: SkinBlockControl;
+  editor: SubprofileSkinBlocksEditor;
+}) {
+  if (control.kind === "stringList") {
+    return <SkinStringListControl control={control} editor={editor} />;
+  }
+  if (control.kind === "objectList") {
+    return <SkinObjectListControl control={control} editor={editor} />;
+  }
+  return <SkinTextControl control={control} editor={editor} />;
+}
+
+/** One `SkinData` block as a card: its heading (only when it groups more than
+ *  one control) plus each labelled control. */
+function SkinBlockCard({
+  block,
+  editor,
+}: {
+  block: SkinBlockDescriptor;
+  editor: SubprofileSkinBlocksEditor;
+}) {
+  const { t } = useTranslation();
+  const showHeading = block.controls.length > 1;
+
+  return (
+    <section className={styles.card}>
+      {showHeading && <h3 className={styles.cardTitle}>{t(block.titleKey)}</h3>}
+      {block.helperKey && <p className={styles.cardNote}>{t(block.helperKey)}</p>}
+      {block.controls.map((control) => (
+        <SkinBlockControlField key={control.path} control={control} editor={editor} />
+      ))}
+    </section>
+  );
+}
+
+/**
+ * The "Page blocks" pane: renders the persona's editable `SkinData` blocks (its
+ * derived skin family only) as labelled inputs / list editors. Controlled by
+ * `useSubprofileSkinBlocksEditor` off the shared editor context — no local save;
+ * edits ride the single global "Save all" (folded into the meta `skinData`
+ * PATCH). Only mounted for families that have editable blocks (rail-gated), but
+ * renders nothing gracefully if it ever mounts for one that doesn't.
+ */
+export function SubprofileSkinBlocksEditor() {
+  const { skinBlocks } = useSubprofileEditorContext();
+  if (!skinBlocks.hasBlocks) return null;
+
+  return (
+    <div className="ed-grid">
+      {skinBlocks.descriptors.map((block) => (
+        <SkinBlockCard key={block.blockKey} block={block} editor={skinBlocks} />
+      ))}
+    </div>
+  );
+}

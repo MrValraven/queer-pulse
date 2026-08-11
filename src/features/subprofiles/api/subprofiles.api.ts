@@ -94,7 +94,94 @@ export type SubprofileKind =
   | "mixologist"
   | "therapist"
   | "astrologer"
-  | "generic";
+  | "generic"
+  // Personas expansion — stage (new kinds)
+  | "comedian"
+  | "vocalist"
+  | "burlesque"
+  | "circus"
+  | "spoken_word"
+  | "host"
+  | "voguer"
+  // studio (new kinds)
+  | "illustrator"
+  | "tattoo_artist"
+  | "animator"
+  | "comic_artist"
+  | "game_designer"
+  | "artist_3d"
+  | "printmaker"
+  // page (new kinds)
+  | "journalist"
+  | "poet"
+  | "editor"
+  | "screenwriter"
+  | "translator"
+  | "zinester"
+  | "academic"
+  // workshop (new kinds)
+  | "ceramicist"
+  | "jeweler"
+  | "textile_artist"
+  | "woodworker"
+  | "florist"
+  | "data_scientist"
+  // practice (new kinds)
+  | "coach"
+  | "bodyworker"
+  | "yoga_teacher"
+  | "nutritionist"
+  | "doula"
+  | "personal_trainer"
+  | "sex_educator"
+  | "peer_support"
+  // table (new kinds)
+  | "baker"
+  | "barista"
+  | "brewer"
+  | "sommelier"
+  | "caterer"
+  // chair (new family)
+  | "hair_stylist"
+  | "barber"
+  | "makeup_artist"
+  | "nail_artist"
+  | "esthetician"
+  | "piercer"
+  // runway (new family)
+  | "fashion_designer"
+  | "stylist"
+  | "model"
+  | "costume_designer"
+  // gallery (new family)
+  | "curator"
+  | "gallerist"
+  | "art_dealer"
+  | "archivist"
+  | "conservator"
+  | "registrar"
+  | "exhibition_designer"
+  | "art_critic"
+  | "docent"
+  | "preparator"
+  // history (new family — display name "Record")
+  | "historian"
+  | "art_historian"
+  | "oral_historian"
+  | "genealogist"
+  | "heritage"
+  | "archival_researcher"
+  | "memory_keeper"
+  // collective (new family — display name "Poster")
+  | "organizer"
+  | "activist"
+  | "event_producer"
+  | "promoter"
+  // classroom (new family)
+  | "teacher"
+  | "facilitator"
+  | "tutor"
+  | "lecturer";
 
 export type SubprofileSection =
   | "projects"
@@ -128,7 +215,89 @@ export type SubprofileSection =
   | "sky" // astrologer
   | "showcase" // generic
   | "gallery" // every kind
-  | "links"; // every kind
+  | "links" // every kind
+  // Personas expansion — new content sections (shared ids listed once)
+  | "sets"
+  | "tour"
+  | "recordings"
+  | "acts"
+  | "pieces"
+  | "hosted"
+  | "balls"
+  | "flash"
+  | "healed"
+  | "books"
+  | "strips"
+  | "games"
+  | "jams"
+  | "models"
+  | "editions"
+  | "reporting"
+  | "bylines"
+  | "poems"
+  | "edited"
+  | "scripts"
+  | "productions"
+  | "translations"
+  | "languages"
+  | "zines"
+  | "distros"
+  | "papers"
+  | "teaching"
+  | "wares"
+  | "firings"
+  | "commissions"
+  | "builds"
+  | "arrangements"
+  | "events"
+  | "analyses"
+  | "programmes"
+  | "treatments"
+  | "classes"
+  | "trainings"
+  | "support"
+  | "training"
+  | "resources"
+  | "groups"
+  | "bakes"
+  | "markets"
+  | "brews"
+  | "releases"
+  | "taprooms"
+  | "lists"
+  | "pairings"
+  | "services"
+  | "cuts"
+  | "nail_sets"
+  | "aftercare"
+  | "piercings"
+  | "editorials"
+  | "book"
+  | "campaigns"
+  | "sketches"
+  | "texts"
+  | "programme"
+  | "artists"
+  | "available"
+  | "advisory"
+  | "finding_aids"
+  | "loans"
+  | "installations"
+  | "reviews"
+  | "tours"
+  | "talks"
+  | "installs"
+  | "research"
+  | "lectures"
+  | "testimonies"
+  | "findings"
+  | "sites"
+  | "actions"
+  | "writing"
+  | "nights"
+  | "roster"
+  | "courses"
+  | "subjects";
 
 export type GigState = "sold_out" | "cancelled" | "guest";
 export type WorkState = "shipped" | "archived" | "in_progress";
@@ -182,6 +351,32 @@ export interface SkinData {
   birthData?: { date: string; time: string; place: string; note: string } | null;
   /** Chart skin: the "what a reading is not" boundary list. */
   ethics?: string[] | null;
+  /** Chair skin: the price/booking band shown after the bio. */
+  chair?: { rate: string; walkins: string; where: string; quiet: string } | null;
+  /** Chair skin: the "before you sit down" list at the foot. */
+  beforeYouSit?: string[] | null;
+  /** Runway skin: the credits dl at the foot (press / stockists / made / direct). */
+  credits?: { press: string; stockists: string; made: string; contact: string } | null;
+  /** Gallery skin: the "now on view" band in the hero. */
+  onView?: { title: string; artist: string; dates: string; room: string } | null;
+  /** Gallery skin: the "visiting" dl at the foot (hours / address / access / admission). */
+  visit?: { hours: string; address: string; access: string; admission: string } | null;
+  /** Record (history) skin: "the record itself" dl + a gaps note at the foot. */
+  record?: { held: string; access: string; consent: string; gaps: string } | null;
+  /** Poster (collective) skin: the "next" action band in the hero. */
+  nextAction?: { what: string; when: string; where: string } | null;
+  /** Poster (collective) skin: the "how we work" ordered principles list at the foot. */
+  principles?: string[] | null;
+  /** Classroom skin: the fees dl after the bio (cost / materials / where / extras + note). */
+  fees?: {
+    cost: string;
+    materials: string;
+    where: string;
+    extras: string;
+    note?: string | null;
+  } | null;
+  /** Classroom skin: the "what you leave with" promises list at the foot. */
+  promises?: string[] | null;
 }
 
 export interface SubprofileItemDTO {

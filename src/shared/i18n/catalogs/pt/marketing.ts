@@ -1902,6 +1902,16 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Abrir o kit de imprensa",
   "changelog.tag.magazineDesk": "Abrir a redação",
 
+  "changelog.entries.magazine-archive-truthful-hero.title":
+    "O arquivo da revista mostra agora só edições reais",
+  "changelog.entries.magazine-archive-truthful-hero.body":
+    "A página de todas as edições abria com um título e uma contagem fixos — “nove edições desde 2024” e números de artigos, colaboradores e línguas — que eram valores de exemplo, não o teu arquivo. Esses passam a existir só na pré-visualização; a página real leva-te direto às edições anteriores verdadeiras.",
+
+  "changelog.entries.persona-families-expansion.title":
+    "As personas já servem muito mais ofícios",
+  "changelog.entries.persona-families-expansion.body":
+    "As personas vão agora muito para lá do palco. Há seis novos estilos de página — uma cadeira de salão, uma passerelle, uma galeria, um registo de história oral, um cartaz de movimento e uma sala de aula — e dezenas de novas profissões, cada uma com um aspeto pensado para o trabalho que fazes mesmo.",
+
   "changelog.entries.astrologer-persona.title":
     "Novas personas de astrologia, com a sua própria página celeste",
   "changelog.entries.astrologer-persona.body":

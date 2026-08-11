@@ -7,6 +7,7 @@ import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { SubprofileIdentityFields } from "./SubprofileIdentityFields";
 import { SubprofilePresenceFields } from "./SubprofilePresenceFields";
 import { SubprofileLinkFields } from "./SubprofileLinkFields";
+import { SubprofileSkinBlocksEditor } from "./SubprofileSkinBlocksEditor";
 import { SubprofileSocialLinksEditor } from "./SubprofileSocialLinksEditor";
 import { SubprofileSectionEditor } from "./SubprofileSectionEditor";
 import { SubprofileAffiliationsEditor } from "./SubprofileAffiliationsEditor";
@@ -115,6 +116,13 @@ export function EditorPaneRouter({
 
       <div hidden={pane !== "address"} className="ed-grid">
         <SubprofileLinkFields editor={meta} subprofile={subprofile} />
+      </div>
+
+      {/* Only rendered when the persona's skin has editable SkinData blocks —
+          the rail entry is likewise skin-gated (`hasSkinBlocks`). Mounted like
+          every other pane so its in-progress edits survive rail navigation. */}
+      <div hidden={pane !== "skinBlocks"}>
+        <SubprofileSkinBlocksEditor />
       </div>
 
       {subprofile.sections.map((section) => (

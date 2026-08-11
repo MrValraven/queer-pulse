@@ -1850,6 +1850,16 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Open the press kit",
   "changelog.tag.magazineDesk": "Open the desk",
 
+  "changelog.entries.magazine-archive-truthful-hero.title":
+    "The magazine archive shows only real editions now",
+  "changelog.entries.magazine-archive-truthful-hero.body":
+    "The all-editions page opened with a fixed headline and tally — “nine issues since 2024” and counts of articles, contributors and languages — that were placeholder figures, not your archive. Those now stay in the preview only; the live page leads straight into the real back issues.",
+
+  "changelog.entries.persona-families-expansion.title":
+    "Personas now fit many more crafts",
+  "changelog.entries.persona-families-expansion.body":
+    "Personas reach well beyond the stage now. There are six new page styles — a salon chair, a runway, a gallery, an oral-history record, a movement poster, and a classroom — plus dozens of new professions, each with a look built for the work you actually do.",
+
   "changelog.entries.astrologer-persona.title":
     "New astrologer personas, with their own celestial page",
   "changelog.entries.astrologer-persona.body":

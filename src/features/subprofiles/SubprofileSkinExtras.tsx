@@ -20,6 +20,12 @@ import {
   TableMenuHeader,
 } from "./skins/TableBlocks";
 import { ChartBirthData, ChartEthics, ChartSkyNow } from "./skins/ChartBlocks";
+import { BeforeYouSit, ChairCard } from "./skins/ChairBlocks";
+import { CreditsBlock } from "./skins/RunwayBlocks";
+import { OnView, VisitBlock } from "./skins/GalleryBlocks";
+import { RecordBlock } from "./skins/HistoryBlocks";
+import { NextAction, Principles } from "./skins/CollectiveBlocks";
+import { FeesBlock, Promises } from "./skins/ClassroomBlocks";
 
 export type SkinExtrasSlot = "top" | "afterBio" | "spotlight" | "end";
 
@@ -82,11 +88,15 @@ export function SubprofileSkinExtras({
       if (skin === "workshop") return <WorkshopSheetMarks />;
       if (skin === "table") return <TableMenuHeader persona={persona} />;
       if (skin === "chart") return <ChartSkyNow persona={persona} />;
+      if (skin === "gallery") return <OnView persona={persona} />;
+      if (skin === "collective") return <NextAction persona={persona} />;
       return null;
     case "afterBio":
       if (skin === "page") return <PageExcerpt persona={persona} />;
       if (skin === "practice") return <PracticePractical persona={persona} />;
       if (skin === "chart") return <ChartBirthData persona={persona} />;
+      if (skin === "chair") return <ChairCard persona={persona} />;
+      if (skin === "classroom") return <FeesBlock persona={persona} />;
       return null;
     case "spotlight":
       // Every other skin's featured item renders through the generic
@@ -113,6 +123,12 @@ export function SubprofileSkinExtras({
         );
       if (skin === "table") return <TableDietaryLegend persona={persona} />;
       if (skin === "chart") return <ChartEthics persona={persona} />;
+      if (skin === "chair") return <BeforeYouSit persona={persona} />;
+      if (skin === "runway") return <CreditsBlock persona={persona} />;
+      if (skin === "gallery") return <VisitBlock persona={persona} />;
+      if (skin === "history") return <RecordBlock persona={persona} />;
+      if (skin === "collective") return <Principles persona={persona} />;
+      if (skin === "classroom") return <Promises persona={persona} />;
       return null;
     default:
       return null;

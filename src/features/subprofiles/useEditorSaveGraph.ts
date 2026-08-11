@@ -1,13 +1,14 @@
 import { ApiError } from "../../shared/api/client";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { SubprofileSection } from "./api/subprofiles.api";
+import type { SubprofileSection, UpdateSubprofileDTO } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { itemsToInputDto } from "./api/subprofiles.adapters";
 import { useSubprofileMutations } from "./api/useSubprofileMutations";
 import { useAffiliations } from "./api/useAffiliations";
 import type { AffiliationRow } from "./SubprofileAffiliationRow";
 import type { SubprofileMetaEditor } from "./useSubprofileMetaEditor";
+import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
 import type { EditorRowsState } from "./useEditorRowsState";
 import type { SocialRow } from "./subprofileEditorContext";
 import {
@@ -15,6 +16,7 @@ import {
   diffRows,
   diffRowsBy,
   rowDiffToChange,
+  skinChangesToPending,
   type PendingChange,
   type RowDiffCounts,
 } from "./subprofileEditorDiff";
@@ -62,6 +64,7 @@ export interface EditorSaveGraph {
 export function useEditorSaveGraph(
   subprofile: SubprofileView,
   meta: SubprofileMetaEditor,
+  skinBlocks: SubprofileSkinBlocksEditor,
   rows: EditorRowsState,
 ): EditorSaveGraph {
   const { t } = useTranslation();
@@ -85,6 +88,7 @@ export function useEditorSaveGraph(
   // Live itemized diff, recomputed each render (arrays are small).
   const pending: PendingChange[] = [];
   pending.push(...diffMeta(meta.metaSnapshot(), meta.baselineSnapshot()));
+  pending.push(...skinChangesToPending(skinBlocks.changes));
   for (const section of Object.keys(sectionRows)) {
     const change = rowDiffToChange(
       { kind: "section", section },
@@ -133,16 +137,39 @@ export function useEditorSaveGraph(
     type SaveTask = { labelKey: string; run: () => Promise<unknown>; commit: () => void };
     const tasks: SaveTask[] = [];
 
-    const patch = meta.buildMetaPatch();
-    if (patch) {
+    // The persona PATCH carries meta fields AND the whole `skinData` column
+    // (coverBleed + every editable skin block). The backend REPLACES `skin_data`
+    // wholesale, so we send ONE merged object — never a second concurrent
+    // skinData PATCH that would clobber the bleed flag. Fire this task when
+    // either the meta fields OR any skin block changed.
+    const metaPatch = meta.buildMetaPatch(); // null when no meta field changed
+    const skinDirty = skinBlocks.dirty;
+    const coverBleedChanged =
+      meta.metaSnapshot().coverBleed !== meta.baselineSnapshot().coverBleed;
+    if (metaPatch || skinDirty) {
+      const dto: UpdateSubprofileDTO = { ...(metaPatch ?? {}) };
+      // Attach the merged skinData only when a skin-relevant field changed, so a
+      // pure identity/text edit doesn't needlessly rewrite the column. The merge
+      // is authoritative: loaded skinData, then the current coverBleed, then the
+      // current block values (each key disjoint, later spreads win their own).
+      if (coverBleedChanged || skinDirty) {
+        dto.skinData = {
+          ...(subprofile.skinData ?? {}),
+          coverBleed: meta.metaSnapshot().coverBleed,
+          ...skinBlocks.buildSkinBlocks(),
+        };
+      }
       // Snapshot the meta values NOW, alongside the patch we're about to send,
       // so `markSaved` advances the baseline to exactly what was PATCHed — not
       // to whatever the user has typed by the time the request resolves.
       const savedMetaSnapshot = meta.metaSnapshot();
       tasks.push({
         labelKey: "subprofiles:pending.area.meta",
-        run: () => update.mutateAsync({ id: subprofile.id, dto: patch }),
-        commit: () => meta.markSaved(savedMetaSnapshot), // demo-safe baseline advance
+        run: () => update.mutateAsync({ id: subprofile.id, dto }),
+        commit: () => {
+          if (metaPatch) meta.markSaved(savedMetaSnapshot); // demo-safe baseline advance
+          if (skinDirty) skinBlocks.markSaved();
+        },
       });
     }
     for (const section of Object.keys(sectionRows)) {

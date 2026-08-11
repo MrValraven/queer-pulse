@@ -3,6 +3,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUnsavedChangesGuard } from "../../shared/hooks";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { useSubprofileMetaEditor } from "./useSubprofileMetaEditor";
+import { useSubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
 import { useEditorRowsState } from "./useEditorRowsState";
 import { useEditorSaveGraph } from "./useEditorSaveGraph";
 import {
@@ -35,10 +36,12 @@ export function SubprofileEditorProvider({
 }) {
   const { t } = useTranslation();
   const meta = useSubprofileMetaEditor(subprofile);
+  const skinBlocks = useSubprofileSkinBlocksEditor(subprofile);
   const rows = useEditorRowsState(subprofile);
   const { pending, dirty, canSave, saving, saveAll } = useEditorSaveGraph(
     subprofile,
     meta,
+    skinBlocks,
     rows,
   );
 
@@ -50,11 +53,13 @@ export function SubprofileEditorProvider({
 
   const discardAll = useCallback(() => {
     meta.reset();
+    skinBlocks.reset();
     rows.resetRows();
-  }, [meta, rows]);
+  }, [meta, skinBlocks, rows]);
 
   const value: SubprofileEditorContextValue = {
     meta,
+    skinBlocks,
     sectionRows: rows.sectionRows,
     setSectionRows: rows.setSectionRows,
     socialRows: rows.socialRows,

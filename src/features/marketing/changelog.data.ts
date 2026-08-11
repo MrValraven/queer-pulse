@@ -93,6 +93,26 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "magazine-archive-truthful-hero",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("magazine-archive-truthful-hero"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.issues,
+        },
+      },
+      {
+        id: "persona-families-expansion",
+        category: "feature",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-families-expansion"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofiles,
+        },
+      },
+      {
         id: "astrologer-persona",
         category: "feature",
         date: "11 Aug 2026",

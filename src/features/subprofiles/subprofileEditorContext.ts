@@ -3,6 +3,7 @@ import type { AffiliationInputDTO, SocialLinkDTO } from "./api/subprofiles.api";
 import type { SubprofileEditorRow } from "./subprofileSectionEditorRows";
 import type { AffiliationRow } from "./SubprofileAffiliationRow";
 import type { SubprofileMetaEditor } from "./useSubprofileMetaEditor";
+import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
 import type { PendingChange } from "./subprofileEditorDiff";
 
 /**
@@ -35,6 +36,8 @@ export const withAffiliationUid = (item: AffiliationInputDTO): AffiliationRow =>
 export interface SubprofileEditorContextValue {
   /** The meta-field editor (identity/presence/address) — its own hook. */
   meta: SubprofileMetaEditor;
+  /** The persona-level `SkinData` block editor ("Page blocks" pane). */
+  skinBlocks: SubprofileSkinBlocksEditor;
   /** Working rows per content section, keyed by `SubprofileSection`. */
   sectionRows: Record<string, SubprofileEditorRow[]>;
   setSectionRows: (section: string, rows: SubprofileEditorRow[]) => void;

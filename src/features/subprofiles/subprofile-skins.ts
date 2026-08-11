@@ -8,7 +8,13 @@ export type SkinFamily =
   | "workshop"
   | "practice"
   | "table"
-  | "chart";
+  | "chart"
+  | "chair"
+  | "runway"
+  | "gallery"
+  | "history"
+  | "collective"
+  | "classroom";
 
 /** kind → skin family. Total over SubprofileKind. Mirrors the design prototype's SKIN_OF. */
 export const SKIN_OF: Record<SubprofileKind, SkinFamily> = {
@@ -30,6 +36,93 @@ export const SKIN_OF: Record<SubprofileKind, SkinFamily> = {
   chef: "table",
   mixologist: "table",
   astrologer: "chart",
+  // stage (new kinds)
+  comedian: "stage",
+  vocalist: "stage",
+  burlesque: "stage",
+  circus: "stage",
+  spoken_word: "stage",
+  host: "stage",
+  voguer: "stage",
+  // studio (new kinds)
+  illustrator: "studio",
+  tattoo_artist: "studio",
+  animator: "studio",
+  comic_artist: "studio",
+  game_designer: "studio",
+  artist_3d: "studio",
+  printmaker: "studio",
+  // page (new kinds)
+  journalist: "page",
+  poet: "page",
+  editor: "page",
+  screenwriter: "page",
+  translator: "page",
+  zinester: "page",
+  academic: "page",
+  // workshop (new kinds)
+  ceramicist: "workshop",
+  jeweler: "workshop",
+  textile_artist: "workshop",
+  woodworker: "workshop",
+  florist: "workshop",
+  data_scientist: "workshop",
+  // practice (new kinds)
+  coach: "practice",
+  bodyworker: "practice",
+  yoga_teacher: "practice",
+  nutritionist: "practice",
+  doula: "practice",
+  personal_trainer: "practice",
+  sex_educator: "practice",
+  peer_support: "practice",
+  // table (new kinds)
+  baker: "table",
+  barista: "table",
+  brewer: "table",
+  sommelier: "table",
+  caterer: "table",
+  // chair (new family)
+  hair_stylist: "chair",
+  barber: "chair",
+  makeup_artist: "chair",
+  nail_artist: "chair",
+  esthetician: "chair",
+  piercer: "chair",
+  // runway (new family)
+  fashion_designer: "runway",
+  stylist: "runway",
+  model: "runway",
+  costume_designer: "runway",
+  // gallery (new family)
+  curator: "gallery",
+  gallerist: "gallery",
+  art_dealer: "gallery",
+  archivist: "gallery",
+  conservator: "gallery",
+  registrar: "gallery",
+  exhibition_designer: "gallery",
+  art_critic: "gallery",
+  docent: "gallery",
+  preparator: "gallery",
+  // history (new family — "Record")
+  historian: "history",
+  art_historian: "history",
+  oral_historian: "history",
+  genealogist: "history",
+  heritage: "history",
+  archival_researcher: "history",
+  memory_keeper: "history",
+  // collective (new family — "Poster")
+  organizer: "collective",
+  activist: "collective",
+  event_producer: "collective",
+  promoter: "collective",
+  // classroom (new family)
+  teacher: "classroom",
+  facilitator: "classroom",
+  tutor: "classroom",
+  lecturer: "classroom",
 };
 
 /** The page family for a persona kind. */
@@ -58,6 +151,26 @@ export const VISUAL_SECTIONS: readonly SubprofileSection[] = [
   "menus",
   "cocktails",
   "projects",
+  // Personas expansion — new visual (image-grid) sections
+  "pieces",
+  "flash",
+  "healed",
+  "strips",
+  "games",
+  "models",
+  "editions",
+  "wares",
+  "builds",
+  "arrangements",
+  "bakes",
+  "cuts",
+  "nail_sets",
+  "piercings",
+  "editorials",
+  "book",
+  "sketches",
+  "available",
+  "installations",
 ];
 
 export interface SkinMeta {
@@ -115,5 +228,62 @@ export const SKIN_META: Record<SkinFamily, SkinMeta> = {
     face: "Cormorant Light",
     note: "An ephemeris page. Indigo ground, house numerals down the gutter, everything centred on an axis.",
     kinds: ["Astrologer"],
+  },
+  chair: {
+    name: "Chair",
+    face: "Bodoni Moda",
+    note: "A lit mirror. Bulbs across the top, high-contrast type, a price list that never asks your gender.",
+    kinds: [
+      "Hair stylist",
+      "Barber",
+      "Makeup artist",
+      "Nail artist",
+      "Esthetician",
+      "Piercer",
+    ],
+  },
+  runway: {
+    name: "Runway",
+    face: "Syne Extrabold",
+    note: "A lookbook spread. Enormous name, tiny credits, tall images walking down the page.",
+    kinds: ["Fashion designer", "Stylist", "Model", "Costume designer"],
+  },
+  gallery: {
+    name: "Gallery",
+    face: "EB Garamond",
+    note: "Museum-grade air. Every item is a wall label — title, date, medium, accession number.",
+    kinds: [
+      "Curator",
+      "Gallerist",
+      "Archivist",
+      "Conservator",
+      "Registrar",
+      "Art critic",
+      "Docent",
+    ],
+  },
+  history: {
+    name: "Record",
+    face: "Libre Caslon",
+    note: "Aged paper and a timeline. Dates live in the margin, sources are named, gaps are admitted.",
+    kinds: [
+      "Historian",
+      "Oral historian",
+      "Genealogist",
+      "Heritage",
+      "Memory keeper",
+    ],
+  },
+  collective: {
+    name: "Poster",
+    face: "Archivo Black",
+    note: "Riso ink on cheap paper. Stacked caps, a demand at the top, dates you can read across a room.",
+    kinds: ["Organiser", "Activist", "Event producer", "Promoter"],
+  },
+  classroom: {
+    name: "Classroom",
+    face: "Newsreader",
+    note: "A board and a handout. Numbered weeks, plain promises, fees stated before you ask.",
+    kinds: ["Teacher", "Workshop facilitator", "Tutor", "Lecturer"],
   },
 };

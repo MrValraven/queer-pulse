@@ -1,8 +1,17 @@
 import type { IconType } from "react-icons";
-import { FiCheckCircle, FiGlobe, FiImage, FiMapPin, FiUser, FiUsers } from "react-icons/fi";
+import {
+  FiCheckCircle,
+  FiGlobe,
+  FiImage,
+  FiLayout,
+  FiMapPin,
+  FiUser,
+  FiUsers,
+} from "react-icons/fi";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import type { SubprofileSection } from "./api/subprofiles.api";
 import { estimateDraftReadiness } from "./subprofileDraftReadiness";
+import { hasSkinBlocks } from "./skinBlockFields.data";
 
 /**
  * Every rail-selectable pane. `identity`/`presence`/`address` are three
@@ -18,6 +27,7 @@ export type EditorPaneKey =
   | "identity"
   | "presence"
   | "address"
+  | "skinBlocks"
   | `section:${SubprofileSection}`
   | "affiliations"
   | "owners"
@@ -64,6 +74,17 @@ export function buildEditorRailGroups(subprofile: SubprofileView): EditorRailGro
         { key: "identity", labelKey: "subprofiles:editorRail.identity", icon: FiUser },
         { key: "presence", labelKey: "subprofiles:editorRail.presence", icon: FiImage },
         { key: "address", labelKey: "subprofiles:editorRail.address", icon: FiGlobe },
+        // Only when this persona's derived skin has owner-editable SkinData
+        // blocks (studio/workshop have none) — see `hasSkinBlocks`.
+        ...(hasSkinBlocks(subprofile.kind)
+          ? [
+              {
+                key: "skinBlocks" as const,
+                labelKey: "subprofiles:editorRail.skinBlocks",
+                icon: FiLayout,
+              },
+            ]
+          : []),
       ],
     },
     {

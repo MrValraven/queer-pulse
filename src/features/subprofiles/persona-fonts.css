@@ -5,7 +5,7 @@
    visitor's IP to a third party on first paint and drops a render-blocking
    cross-origin round-trip.
 
-   Three families, minimal weights, used ONLY inside the skinned persona page
+   Minimal weights, used ONLY inside the skinned persona page
    (`.pp[data-skin="…"]`, see persona-skins.css) — never elsewhere in the app:
      - Anton (400)                       — Stage skin headings
      - Instrument Serif (400 + italic)   — Studio skin display type
@@ -13,10 +13,16 @@
                                             (never body/headings — see the
                                             Phase-1 plan's Global Constraints)
      - Cormorant (300, 400 + italics)    — Chart skin (astrologer) display type
+     - Bodoni Moda (400 + italic)        — Chair skin display type
+     - Syne (500, 700, 800)              — Runway skin display type (extrabold)
+     - EB Garamond (400 + italic)        — Gallery skin display type
+     - Libre Caslon Text (400 + italic)  — Record (history) skin display type
+     - Archivo Black (400)               — Poster (collective) skin display type
+     - Newsreader (400 + italic)         — Classroom skin display type
 
-   Unlike Fraunces/DM Sans, these three don't have variable-axis Fontsource
+   Unlike Fraunces/DM Sans, these don't have variable-axis Fontsource
    builds, so each weight/style is its own static @font-face (registered
-   under the bare family name — "Anton" / "Instrument Serif" / "DM Mono",
+   under the bare family name — "Anton" / "Bodoni Moda" / "Syne" / … ,
    matching the family strings used in persona-skins.css). */
 
 @import "@fontsource/anton/latin-400.css";
@@ -28,3 +34,16 @@
 @import "@fontsource/cormorant/latin-300-italic.css";
 @import "@fontsource/cormorant/latin-400.css";
 @import "@fontsource/cormorant/latin-400-italic.css";
+/* Second-set craft skins (chair · runway · gallery · record · poster · classroom). */
+@import "@fontsource/bodoni-moda/latin-400.css";
+@import "@fontsource/bodoni-moda/latin-400-italic.css";
+@import "@fontsource/syne/latin-500.css";
+@import "@fontsource/syne/latin-700.css";
+@import "@fontsource/syne/latin-800.css";
+@import "@fontsource/eb-garamond/latin-400.css";
+@import "@fontsource/eb-garamond/latin-400-italic.css";
+@import "@fontsource/libre-caslon-text/latin-400.css";
+@import "@fontsource/libre-caslon-text/latin-400-italic.css";
+@import "@fontsource/archivo-black/latin-400.css";
+@import "@fontsource/newsreader/latin-400.css";
+@import "@fontsource/newsreader/latin-400-italic.css";

@@ -16,7 +16,8 @@ export type PendingArea =
   | { kind: "meta" }
   | { kind: "section"; section: string }
   | { kind: "socials" }
-  | { kind: "affiliations" };
+  | { kind: "affiliations" }
+  | { kind: "skin" };
 
 export interface PendingChange {
   area: PendingArea;
@@ -212,4 +213,24 @@ export function diffMeta(
   }
 
   return changes;
+}
+
+// ── Skin-block diff ──────────────────────────────────────────────────────
+
+const SKIN_AREA_LABEL_KEY = "subprofiles:pending.area.skin";
+
+/** Turn the skin-block editor's already-computed per-block changes (each
+ *  carrying the block's human `titleKey`) into itemized `PendingChange`s — one
+ *  "{block} updated" row per changed block, matching the meta pending style.
+ *  The block-vs-baseline comparison itself lives in the skin-blocks hook
+ *  (its values are nested objects/arrays, unlike the flat `MetaSnapshot`). */
+export function skinChangesToPending(
+  changes: { blockKey: string; titleKey: string }[],
+): PendingChange[] {
+  return changes.map((change) => ({
+    area: { kind: "skin" },
+    areaLabelKey: SKIN_AREA_LABEL_KEY,
+    summaryKey: "subprofiles:pending.skinEdited",
+    params: { field: change.titleKey },
+  }));
 }

@@ -29,6 +29,12 @@ const FAMILY_ORDER: SkinFamily[] = [
   "practice",
   "table",
   "chart",
+  "chair",
+  "runway",
+  "gallery",
+  "history",
+  "collective",
+  "classroom",
 ];
 
 const FAMILY_COPY_KEYS: Record<
@@ -62,6 +68,30 @@ const FAMILY_COPY_KEYS: Record<
   chart: {
     labelKey: "subprofiles:family.chart.label",
     noteKey: "subprofiles:family.chart.note",
+  },
+  chair: {
+    labelKey: "subprofiles:family.chair.label",
+    noteKey: "subprofiles:family.chair.note",
+  },
+  runway: {
+    labelKey: "subprofiles:family.runway.label",
+    noteKey: "subprofiles:family.runway.note",
+  },
+  gallery: {
+    labelKey: "subprofiles:family.gallery.label",
+    noteKey: "subprofiles:family.gallery.note",
+  },
+  history: {
+    labelKey: "subprofiles:family.history.label",
+    noteKey: "subprofiles:family.history.note",
+  },
+  collective: {
+    labelKey: "subprofiles:family.collective.label",
+    noteKey: "subprofiles:family.collective.note",
+  },
+  classroom: {
+    labelKey: "subprofiles:family.classroom.label",
+    noteKey: "subprofiles:family.classroom.note",
   },
 };
 
