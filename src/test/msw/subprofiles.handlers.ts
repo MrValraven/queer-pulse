@@ -16,6 +16,7 @@ import {
   mockDirectory,
   mockEndorsersById,
   mockMineSubprofiles,
+  mockMyEndorsement,
   mockSetEndorsed,
   mockSetFollowing,
   mockSubprofileById,
@@ -63,6 +64,40 @@ function buildReplacedSectionItems(
     workState: item.workState ?? null,
     structured: item.structured ?? null,
   }));
+}
+
+/** Build the freshly-created draft DTO for the `POST /subprofiles` echo, mirroring
+ *  the backend: `displayName` is required and the slug is derived server-side
+ *  (create rejects a client slug; rename via PATCH). Pulled out of
+ *  `subprofileHandlers` to keep that function under the repo's line cap. */
+function buildCreatedSubprofile(body: CreateSubprofileDTO): SubprofileDTO {
+  const displayName = body.displayName?.trim() || KIND_LABELS[body.kind];
+  const slug = slugify(displayName) || defaultSlugForKind(body.kind);
+  return {
+    id: `sp-msw-${Date.now()}`,
+    kind: body.kind,
+    slug,
+    handle: null,
+    displayName,
+    avatarUrl: null,
+    tagline: null,
+    bio: null,
+    coverUrl: null,
+    accent: null,
+    availability: null,
+    ctaLabel: null,
+    ctaUrl: null,
+    socialLinks: [],
+    linkVisibility: "linked",
+    visibility: "open",
+    status: "draft",
+    position: 0,
+    items: [],
+    endorsementCount: 0,
+    followerCount: 0,
+    affiliations: [],
+    skinData: null,
+  };
 }
 
 /**
@@ -137,36 +172,7 @@ export function subprofileHandlers(api: string) {
     ),
     http.post(`${api}/subprofiles`, async ({ request }) => {
       const body = (await request.json()) as CreateSubprofileDTO;
-      // Mirrors the backend: displayName is required and the slug is derived
-      // server-side (create rejects a client slug; rename via PATCH).
-      const displayName = body.displayName?.trim() || KIND_LABELS[body.kind];
-      const slug = slugify(displayName) || defaultSlugForKind(body.kind);
-      const created: SubprofileDTO = {
-        id: `sp-msw-${Date.now()}`,
-        kind: body.kind,
-        slug,
-        handle: null,
-        displayName,
-        avatarUrl: null,
-        tagline: null,
-        bio: null,
-        coverUrl: null,
-        accent: null,
-        availability: null,
-        ctaLabel: null,
-        ctaUrl: null,
-        socialLinks: [],
-        linkVisibility: "linked",
-        visibility: "open",
-        status: "draft",
-        position: 0,
-        items: [],
-        endorsementCount: 0,
-        followerCount: 0,
-        affiliations: [],
-        skinData: null,
-      };
-      return HttpResponse.json(created, { status: 201 });
+      return HttpResponse.json(buildCreatedSubprofile(body), { status: 201 });
     }),
     http.get(`${api}/subprofiles/:id`, ({ params }) => {
       const dto = mockSubprofileById(String(params.id));
@@ -273,14 +279,23 @@ export function subprofileHandlers(api: string) {
     ),
 
     // ── Endorsements ─────────────────────────────────────────────────────────
-    http.post(`${api}/subprofiles/:id/endorse`, ({ params }) => {
-      const result = mockSetEndorsed(String(params.id), true);
+    http.post(`${api}/subprofiles/:id/endorse`, async ({ params, request }) => {
+      const body = (await request.json().catch(() => ({}))) as {
+        note?: string;
+      };
+      const result = mockSetEndorsed(String(params.id), true, body.note);
       return result
         ? HttpResponse.json(result)
         : new HttpResponse(null, { status: 404 });
     }),
     http.delete(`${api}/subprofiles/:id/endorse`, ({ params }) => {
       const result = mockSetEndorsed(String(params.id), false);
+      return result
+        ? HttpResponse.json(result)
+        : new HttpResponse(null, { status: 404 });
+    }),
+    http.get(`${api}/subprofiles/:id/endorsement/mine`, ({ params }) => {
+      const result = mockMyEndorsement(String(params.id));
       return result
         ? HttpResponse.json(result)
         : new HttpResponse(null, { status: 404 });

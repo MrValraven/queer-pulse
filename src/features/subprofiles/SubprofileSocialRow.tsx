@@ -34,7 +34,10 @@ export function SubprofileSocialRow({
   const tint = ACCENT_TOKENS[accent].tint;
 
   return (
-    <div className={styles.row} style={{ ["--accent-tint" as string]: tint }}>
+    <div
+      className={`${styles.row} pp-social-row`}
+      style={{ ["--accent-tint" as string]: tint }}
+    >
       {items.map((link, index) => {
         const meta = socialPlatform(link.platform);
         const Icon = meta.icon;

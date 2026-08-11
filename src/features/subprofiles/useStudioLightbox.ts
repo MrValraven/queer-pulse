@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { getStudioWorks } from "./skins/studioWorks";
+import { useImageLightbox } from "./useImageLightbox";
 import type {
   SubprofileItemView,
   SubprofileSectionView,
@@ -11,35 +12,14 @@ import type {
  * `getStudioWorks`): `SkinExtras`' `StudioChecklist` already enumerates this
  * exact array, so `openAt` takes its click index directly; a studio
  * `ItemTile` click carries the item instead, so `openItem` resolves it via
- * `works.indexOf(item)` — both land on the same picture.
+ * `works.indexOf(item)` — both land on the same picture. The open/move state
+ * itself is the generic `useImageLightbox`, shared with the gallery lightbox.
  */
 export function useStudioLightbox(sections: SubprofileSectionView[] | undefined) {
-  const [index, setIndex] = useState<number | null>(null);
-
   const works = useMemo<SubprofileItemView[]>(
     () => (sections ? getStudioWorks(sections) : []),
     [sections],
   );
-
-  function openAt(nextIndex: number) {
-    if (nextIndex >= 0) setIndex(nextIndex);
-  }
-
-  function openItem(item: SubprofileItemView) {
-    const nextIndex = works.indexOf(item);
-    if (nextIndex >= 0) setIndex(nextIndex);
-  }
-
-  function close() {
-    setIndex(null);
-  }
-
-  function move(delta: number) {
-    setIndex((current) => {
-      if (current === null || works.length === 0) return current;
-      return (current + delta + works.length) % works.length;
-    });
-  }
-
-  return { works, index, openAt, openItem, close, move };
+  const lightbox = useImageLightbox(works);
+  return { works, ...lightbox };
 }

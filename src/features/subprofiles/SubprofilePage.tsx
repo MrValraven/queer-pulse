@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import { useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Spinner } from "../../shared/components/ui";
@@ -15,7 +15,10 @@ import { SubprofileDraftBanner } from "./SubprofileDraftBanner";
 import { SubprofileReportModal } from "./SubprofileReportModal";
 import { SubprofilePeopleModal } from "./SubprofilePeopleModal";
 import { StudioLightbox } from "./skins/StudioLightbox";
+import { GalleryLightbox } from "./skins/GalleryLightbox";
+import { getGalleryWorks } from "./skins/galleryWorks";
 import { useStudioLightbox } from "./useStudioLightbox";
+import { useImageLightbox } from "./useImageLightbox";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { personaPublicPath } from "./personaLinks.data";
 import { ACCENT_TOKENS, DEFAULT_ACCENT } from "./subprofilePresence.data";
@@ -66,6 +69,11 @@ export function SubprofilePage() {
   const lightbox = useStudioLightbox(
     result.state === "ok" ? result.data.sections : undefined,
   );
+  const galleryPhotos = useMemo(
+    () => (result.state === "ok" ? getGalleryWorks(result.data.sections) : []),
+    [result],
+  );
+  const galleryLightbox = useImageLightbox(galleryPhotos);
   const [reportOpen, setReportOpen] = useState(false);
   const [peopleModalMode, setPeopleModalMode] = useState<PeopleModalMode | null>(
     null,
@@ -149,6 +157,7 @@ export function SubprofilePage() {
         onAction={handleAction}
         onOpenWorkAt={lightbox.openAt}
         onOpenWorkItem={lightbox.openItem}
+        onOpenGalleryPhoto={galleryLightbox.openItem}
       />
 
       {lightbox.index !== null && lightbox.works.length > 0 && (
@@ -157,6 +166,16 @@ export function SubprofilePage() {
           index={lightbox.index}
           onClose={lightbox.close}
           onMove={lightbox.move}
+        />
+      )}
+
+      {galleryLightbox.index !== null && galleryPhotos.length > 0 && (
+        <GalleryLightbox
+          items={galleryPhotos}
+          index={galleryLightbox.index}
+          name={data.displayName}
+          onClose={galleryLightbox.close}
+          onMove={galleryLightbox.move}
         />
       )}
 

@@ -53,11 +53,10 @@ export const KIND_SECTIONS: Record<SubprofileKind, SubprofileSection[]> = {
   generic: ["showcase"],
 };
 
-/** The content sections of a kind, plus the universal 'gallery' and 'links' sections. */
+/** The content sections of a kind, plus the universal 'gallery' section. */
 export const sectionsForKind = (k: SubprofileKind): SubprofileSection[] => [
   ...KIND_SECTIONS[k],
   "gallery",
-  "links",
 ];
 
 /** 'links' is universal but not a "content" section (excluded from the ≥3
@@ -114,7 +113,7 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
   gigs: {
     labelKey: "subprofiles:section.gigs",
     icon: FiMapPin,
-    fields: ["title", "subtitle", "date", "url"],
+    fields: ["title", "subtitle", "imageUrl", "date", "url"],
   },
   // visual_artist
   portfolio: {

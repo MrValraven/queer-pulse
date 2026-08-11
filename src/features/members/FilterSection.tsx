@@ -105,7 +105,11 @@ export function FilterSection({
           className={styles.sectionBody}
           inert={!open || undefined}
         >
-          {children}
+          {/* Padding lives on this inner element, NOT the collapsing grid item.
+              A padded grid item keeps a non-zero minimum, so the 0fr track can't
+              reach true zero and a sliver of the body peeks under the header;
+              padding-free item + padded inner collapses cleanly. */}
+          <div className={styles.sectionBodyInner}>{children}</div>
         </div>
       </div>
     </div>

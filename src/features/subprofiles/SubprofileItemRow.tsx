@@ -6,7 +6,10 @@ import {
   WORK_STATE_CLASS,
   WORK_STATE_LABEL,
 } from "./personaSkinRender";
+import { SubprofileSocialRow } from "./SubprofileSocialRow";
+import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
+import type { AccentKey } from "./api/subprofiles.api";
 import type { SkinFamily } from "./subprofile-skins";
 
 /**
@@ -20,10 +23,14 @@ export function SubprofileItemRow({
   item,
   skin,
   interactive,
+  accent,
 }: {
   item: SubprofileItemView;
   skin: SkinFamily;
   interactive: boolean;
+  /** The persona's accent, used to tint per-item social-link icons.
+   *  Falls back to `DEFAULT_ACCENT` when the persona has none. */
+  accent?: AccentKey;
 }) {
   const { t } = useTranslation();
   const isOff = item.gigState === "cancelled";
@@ -64,6 +71,11 @@ export function SubprofileItemRow({
         </span>
       )}
       {item.description && <p>{item.description}</p>}
+      <SubprofileSocialRow
+        links={item.structured?.links ?? []}
+        accent={accent ?? DEFAULT_ACCENT}
+        interactive={interactive}
+      />
     </>
   );
 

@@ -110,20 +110,18 @@ export function SubprofileHero({
           <SubprofileHeroActions view={view} mode={mode} onAction={onAction} />
 
           <div className="pp-meta">
-            {view.endorsementCount > 0 && (
-              <button
-                type="button"
-                style={METABTN_STYLE}
-                disabled={!interactive}
-                onClick={
-                  interactive ? () => onAction("people:endorsers") : undefined
-                }
-              >
-                {t("subprofiles:hero.endorse.count", {
-                  count: view.endorsementCount,
-                })}
-              </button>
-            )}
+            <button
+              type="button"
+              style={METABTN_STYLE}
+              disabled={!interactive}
+              onClick={
+                interactive ? () => onAction("people:endorsers") : undefined
+              }
+            >
+              {t("subprofiles:hero.endorse.count", {
+                count: view.endorsementCount,
+              })}
+            </button>
             <button
               type="button"
               style={METABTN_STYLE}

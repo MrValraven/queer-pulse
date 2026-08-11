@@ -9,7 +9,7 @@ import { personaPublicPathForOwner } from "./personaLinks.data";
 import { skinFor, SKIN_META } from "./subprofile-skins";
 import { ACCENT_TOKENS, DEFAULT_ACCENT } from "./subprofilePresence.data";
 import type { PersonaViewMode } from "./personaSkinRender";
-import type { SubprofileMetaEditor } from "./useSubprofileMetaEditor";
+import { useSubprofileEditorContext } from "./subprofileEditorContext";
 
 /** No-op — the tree is fully inert in `mode="preview"` (Task 3), so these
  *  handlers exist only to satisfy `SubprofilePageBody`'s prop contract and
@@ -35,13 +35,14 @@ const PREVIEW_MODE: PersonaViewMode = "preview";
  */
 export function EditorPreview({
   subprofile,
-  editor,
 }: {
   subprofile: SubprofileView;
-  editor: SubprofileMetaEditor;
 }) {
   const { t } = useTranslation();
   const { profile } = useProfileData();
+  // The meta-editor state lives in the shared editor context now, so the docked
+  // preview reads the same in-progress fields the panes write.
+  const { meta: editor } = useSubprofileEditorContext();
 
   // Overlay the in-progress meta-editor fields onto the saved persona, coerced
   // back to the persisted view shape (empty string → null where the model is
@@ -64,6 +65,9 @@ export function EditorPreview({
     visibility: editor.visibility,
     slug: editor.slug,
     handle: editor.handle || null,
+    // Overlay the in-progress bleed toggle onto the saved skinData so the
+    // preview's `data-cover-bleed` tracks the control live, before save.
+    skinData: { ...(subprofile.skinData ?? {}), coverBleed: editor.coverBleed },
   };
 
   const skin = skinFor(liveView.kind);
@@ -104,6 +108,7 @@ export function EditorPreview({
             onAction={noop}
             onOpenWorkAt={noop}
             onOpenWorkItem={noop}
+            onOpenGalleryPhoto={noop}
           />
         </div>
       </div>

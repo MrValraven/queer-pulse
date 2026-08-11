@@ -31,15 +31,23 @@ export function Avatar({
   name,
   alt,
   className,
+  style,
   ...rest
 }: AvatarProps) {
   const { t } = useTranslation();
   const [imgFailed, setImgFailed] = useState(false);
-  const circleStyle: CSSProperties = {
-    width: size,
-    height: size,
-    fontSize: size * 0.34,
-  };
+  // Size the OUTER wrapper (not the inner circle) via CSS custom properties, so
+  // the inner circle can fill `width:100%` and inherit the wrapper's radius +
+  // font-size. A previous version pinned the inner circle's px size with an
+  // inline style, which no class could override — so any skin that resized the
+  // wrapper via CSS (`.pp-av`: workshop/practice/table) left a full-size circle
+  // overflowing the shrunk wrapper and overlapping neighbouring content. Passing
+  // size as a variable lets those `.pp-av` rules resize the whole avatar cleanly.
+  const wrapStyle = {
+    ...style,
+    "--avatar-size": `${size}px`,
+    "--avatar-font": `${Math.round(size * 0.34)}px`,
+  } as CSSProperties;
 
   const px = Math.round(size * 2);
   // For Unsplash images, request a face-aware crop at 2× the render size
@@ -61,12 +69,10 @@ export function Avatar({
   return (
     <div
       className={[styles.wrap, className].filter(Boolean).join(" ")}
+      style={wrapStyle}
       {...rest}
     >
-      <div
-        className={[styles.avatar, styles[tint]].join(" ")}
-        style={circleStyle}
-      >
+      <div className={[styles.avatar, styles[tint]].join(" ")}>
         {resolvedSrc && !imgFailed ? (
           <img
             src={resolvedSrc}

@@ -93,6 +93,132 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "persona-gallery-multi-add",
+        category: "feature",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-gallery-multi-add"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "persona-gallery-lightbox",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-gallery-lightbox"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "persona-gig-images",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-gig-images"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "persona-save-all-changes",
+        category: "feature",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-save-all-changes"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "persona-project-links",
+        category: "feature",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-project-links"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "fix-persona-avatar-overlap",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("fix-persona-avatar-overlap"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "network-modal-search",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("network-modal-search"),
+      },
+      {
+        id: "persona-page-motion",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-page-motion"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "endorse-with-note",
+        category: "feature",
+        date: "11 Aug 2026",
+        ...entryKeys("endorse-with-note"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "persona-banner-bleed",
+        category: "feature",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-banner-bleed"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "persona-hero-actions-tidy",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-hero-actions-tidy"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "fix-member-filter-collapse",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("fix-member-filter-collapse"),
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
+      },
+      {
+        id: "fix-persona-hero-theme-colors",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("fix-persona-hero-theme-colors"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
         id: "persona-photo-gallery",
         category: "feature",
         date: "11 Aug 2026",

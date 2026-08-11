@@ -435,6 +435,46 @@
   }
 }
 
+/* Dirty state: the pill becomes a column — an itemized list of everything
+   changed across every pane, above a row of Discard/Save-all actions. */
+.savebar-dirty {
+  flex-direction: column;
+  align-items: stretch;
+}
+.savebar-changes {
+  flex: 1 1 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.savebar-heading {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.savebar-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-height: 132px;
+  overflow-y: auto;
+}
+.savebar-list li {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+.savebar-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
 /* ── publish readiness (Task 7 — PublishChecklist restyle) ───────────── */
 .ready {
   display: flex;

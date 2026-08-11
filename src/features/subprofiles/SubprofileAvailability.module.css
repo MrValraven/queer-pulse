@@ -4,7 +4,12 @@
   gap: 8px;
   font-size: 0.92rem;
   font-weight: 600;
-  color: var(--ink);
+  /* Follow the skin's legible foreground (cream on the dark stage ground,
+     ink on the light skins) instead of the fixed app ink, which paints
+     dark-on-dark on stage. The accent stays carried by the dot below, so
+     colour is never the only signal. Falls back to --ink outside `.pp`
+     (e.g. the editor's docked preview doesn't cascade --sk-ink). */
+  color: var(--sk-ink, var(--ink));
 }
 
 .dot {

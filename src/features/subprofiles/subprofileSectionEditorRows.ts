@@ -88,3 +88,15 @@ export function commitDraftRow(
     ? cleared.map((r) => (r._uid === editingUid ? { ...draft, _uid: r._uid } : r))
     : [...cleared, withUid(draft)];
 }
+
+/** Append several new image-only rows to the working list (gallery multi-add):
+ *  each key becomes an `emptyItem("gallery")` carrying just that `imageUrl`. */
+export function appendGalleryRows(
+  rows: SubprofileEditorRow[],
+  imageKeys: string[],
+): SubprofileEditorRow[] {
+  return [
+    ...rows,
+    ...imageKeys.map((imageUrl) => withUid({ ...emptyItem("gallery"), imageUrl })),
+  ];
+}

@@ -6,8 +6,11 @@ import { Avatar, Button, Eyebrow, ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { collaboratorHref } from "./collaborators.data";
 import { WorkshopSnippet } from "./skins/WorkshopBlocks";
+import { SubprofileSocialRow } from "./SubprofileSocialRow";
+import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import type { PersonaViewMode } from "./personaSkinRender";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
+import type { AccentKey } from "./api/subprofiles.api";
 import type { SkinFamily } from "./subprofile-skins";
 
 /**
@@ -28,10 +31,12 @@ export function SubprofileSpotlight({
   item,
   skin,
   mode,
+  accent,
 }: {
   item: SubprofileItemView;
   skin: SkinFamily;
   mode: PersonaViewMode;
+  accent: AccentKey | null;
 }) {
   const { t } = useTranslation();
   const interactive = mode !== "preview";
@@ -105,6 +110,12 @@ export function SubprofileSpotlight({
             </Button>
           )
         )}
+
+        <SubprofileSocialRow
+          links={item.structured?.links ?? []}
+          accent={accent ?? DEFAULT_ACCENT}
+          interactive={interactive}
+        />
       </div>
     </div>
   );

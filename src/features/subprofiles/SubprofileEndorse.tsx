@@ -1,44 +1,48 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { initialsFromName } from "../../shared/lib/initials";
 import { useQuery } from "@tanstack/react-query";
-import { FiCheck, FiPlus } from "react-icons/fi";
+import { FiCheck } from "react-icons/fi";
 import { Avatar, Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { getEndorsers } from "./api/subprofiles.api";
-import { useEndorsement } from "./api/useEndorsement";
+import { EndorseSubprofileModal } from "./EndorseSubprofileModal";
 import styles from "./SubprofileEndorse.module.css";
 
 const MAX_CLUSTER_FACES = 5;
 
 /**
- * The persona's endorse control: a one-tap Endorse/Endorsed toggle, the live
- * count, and a small avatar cluster of endorsers (lazily fetched on mount).
- * Endorsing offers an optional one-line note through an inline reveal — the
- * tap itself never requires one. Owners can't endorse their own persona
- * (`isOwnerViewing`), and a logged-out visitor can't either, so both see the
- * read-only count + cluster instead of the button.
+ * The persona's endorse control: a one-tap Endorse/Endorsed button and a small
+ * avatar cluster of endorsers (lazily fetched on mount). The button opens
+ * `EndorseSubprofileModal` — in create mode when the viewer hasn't endorsed
+ * yet, in edit mode (prefilled note + Save/Withdraw) once they have. Owners
+ * can't endorse their own persona (`isOwnerViewing`), and a logged-out visitor
+ * can't either, so both see the read-only cluster instead of the button. The
+ * numeric endorsement count is surfaced elsewhere (the hero stat line);
+ * `endorsementCount` is still consumed here to seed optimistic cache updates in
+ * `useEndorsement`. `personaName`/`personaAvatarUrl` are threaded through only
+ * so the modal's success panel can show the persona's face.
  */
 export function SubprofileEndorse({
   subprofileId,
   endorsementCount,
   viewerEndorsed,
   isOwnerViewing,
+  personaName,
+  personaAvatarUrl,
 }: {
   subprofileId: string;
   endorsementCount: number;
   viewerEndorsed: boolean;
   isOwnerViewing: boolean;
+  personaName: string;
+  personaAvatarUrl: string | null;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { loggedIn } = useAuth();
-  const { showToast } = useToast();
-  const { endorse, withdraw } = useEndorsement(subprofileId);
-  const [noteOpen, setNoteOpen] = useState(false);
-  const [note, setNote] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
   const { data: endorsersResult } = useQuery({
     queryKey: ["subprofile", "endorsers", subprofileId],
@@ -52,32 +56,6 @@ export function SubprofileEndorse({
   const endorsers = endorsersResult?.endorsers ?? [];
 
   const canEndorse = !isOwnerViewing && (demoMode || loggedIn);
-  const pending = endorse.isPending || withdraw.isPending;
-
-  async function toggle() {
-    if (pending) return;
-    try {
-      if (viewerEndorsed) {
-        await withdraw.mutateAsync({
-          currentEndorsementCount: endorsementCount,
-        });
-      } else {
-        await endorse.mutateAsync({
-          note: note.trim() || undefined,
-          currentEndorsementCount: endorsementCount,
-        });
-        setNote("");
-        setNoteOpen(false);
-      }
-    } catch {
-      showToast(t("subprofiles:hero.endorse.error"), "error");
-    }
-  }
-
-  function submitNote(event: FormEvent) {
-    event.preventDefault();
-    void toggle();
-  }
 
   return (
     <div className={styles.wrap}>
@@ -87,8 +65,7 @@ export function SubprofileEndorse({
             variant={viewerEndorsed ? "jade" : "ghost"}
             size="md"
             aria-pressed={viewerEndorsed}
-            onClick={() => void toggle()}
-            disabled={pending}
+            onClick={() => setModalOpen(true)}
           >
             {viewerEndorsed ? (
               <>
@@ -100,22 +77,6 @@ export function SubprofileEndorse({
             )}
           </Button>
         )}
-
-        {canEndorse && !viewerEndorsed && (
-          <button
-            type="button"
-            className={styles.noteToggle}
-            aria-expanded={noteOpen}
-            onClick={() => setNoteOpen((open) => !open)}
-          >
-            <FiPlus aria-hidden />
-            {t("subprofiles:hero.endorse.addNote")}
-          </button>
-        )}
-
-        <span className={styles.count}>
-          {t("subprofiles:hero.endorse.count", { count: endorsementCount })}
-        </span>
 
         {endorsers.length > 0 && (
           <div className={styles.cluster}>
@@ -140,27 +101,15 @@ export function SubprofileEndorse({
         )}
       </div>
 
-      {canEndorse && !viewerEndorsed && noteOpen && (
-        <form className={styles.noteForm} onSubmit={submitNote}>
-          <label
-            className="visuallyHidden"
-            htmlFor={`endorse-note-${subprofileId}`}
-          >
-            {t("subprofiles:hero.endorse.notePlaceholder")}
-          </label>
-          <input
-            id={`endorse-note-${subprofileId}`}
-            className={styles.noteInput}
-            type="text"
-            maxLength={200}
-            value={note}
-            onChange={(event) => setNote(event.target.value)}
-            placeholder={t("subprofiles:hero.endorse.notePlaceholder")}
-          />
-          <Button variant="primary" size="md" type="submit" disabled={pending}>
-            {t("subprofiles:hero.endorse.send")}
-          </Button>
-        </form>
+      {canEndorse && modalOpen && (
+        <EndorseSubprofileModal
+          subprofileId={subprofileId}
+          endorsementCount={endorsementCount}
+          personaName={personaName}
+          personaAvatarUrl={personaAvatarUrl}
+          viewerEndorsed={viewerEndorsed}
+          onClose={() => setModalOpen(false)}
+        />
       )}
     </div>
   );

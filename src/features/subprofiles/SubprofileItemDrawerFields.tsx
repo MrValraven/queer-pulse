@@ -2,9 +2,10 @@ import { FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileItemDTO } from "./api/subprofiles.api";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
-import { FIELD_META } from "./subprofileEditor.data";
+import { FIELD_META, ITEM_LINKS_SECTIONS } from "./subprofileEditor.data";
 import { ImageUploadField } from "./ImageUploadField";
 import { HandleChipInput } from "./HandleChipInput";
+import { SubprofileItemLinksField } from "./SubprofileItemLinksField";
 import { RICH_FIELDS_FOR_SECTION, type RichFieldDescriptor } from "./richFields.data";
 
 type Field = keyof SubprofileItemDTO;
@@ -186,6 +187,20 @@ export function SubprofileItemDrawerFields({
         <HandleChipInput
           collaborators={draft.collaborators}
           onChange={(collaborators) => onPatch({ collaborators })}
+        />
+      )}
+
+      {ITEM_LINKS_SECTIONS.has(draft.section) && (
+        <SubprofileItemLinksField
+          links={draft.structured?.links ?? []}
+          onChange={(links) =>
+            onPatch({
+              structured: {
+                ...(draft.structured ?? {}),
+                links: links.length ? links : null,
+              },
+            })
+          }
         />
       )}
     </>

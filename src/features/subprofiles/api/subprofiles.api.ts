@@ -135,11 +135,20 @@ export interface MenuCourse {
 export interface ItemStructured {
   courses?: MenuCourse[] | null;
   snippet?: string[] | null;
+  /** Per-item typed social links (e.g. a project's GitHub/website), stored in
+   *  the `structured` jsonb blob — no dedicated column. Only surfaced in the
+   *  editor + public render for the `projects`/`open_source` sections. Reuses
+   *  the persona-level `SocialLinkDTO` shape so the icon row + platform picker
+   *  are shared. Round-trips untouched via `itemToView`/`itemsToInputDto`. */
+  links?: SocialLinkDTO[] | null;
 }
 
 /** Persona-level skin blocks (subprofiles.skin_data). Only the keys relevant to the
  *  persona's derived skin are populated. Display data — present on the public view too. */
 export interface SkinData {
+  /** Owner display preference: fade the cover banner into the page background
+   *  at its bottom edge (see `.pp[data-cover-bleed]` in persona-skins.css). */
+  coverBleed?: boolean;
   booker?: { fee: string; rider: string; press: string; contact: string } | null;
   excerpt?: { from: string; lines: string[] } | null;
   colophon?: string | null;
@@ -306,6 +315,7 @@ export interface UpdateSubprofileDTO {
   tagline?: string | null;
   bio?: string | null;
   coverUrl?: string | null;
+  skinData?: SkinData | null;
   accent?: string | null;
   availability?: string | null;
   ctaLabel?: string | null;
@@ -469,6 +479,16 @@ export const getEndorsers = (id: string) =>
   apiGet<{ count: number; endorsers: EndorserDTO[] }>(
     `/subprofiles/${id}/endorsements`,
   );
+
+/** The current viewer's own endorsement of a persona — the lazy prefill for the
+ *  edit-mode endorse modal (`viewerEndorsed` + the note they last saved). Keyed
+ *  on the persona's non-identifying `id`, never slug/handle. */
+export interface MyEndorsementDTO {
+  viewerEndorsed: boolean;
+  note: string | null;
+}
+export const getMyEndorsement = (id: string) =>
+  apiGet<MyEndorsementDTO>(`/subprofiles/${id}/endorsement/mine`);
 
 /** Follow a published persona (one-way, instant, count-only). Keyed on the
  *  persona's non-identifying `id`, not its slug/handle. */

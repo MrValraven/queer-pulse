@@ -1019,4 +1019,7 @@ export const members: Catalog = {
   "network.viewAllAria": "View all {count} in {group}",
   "network.modalSub_one": "{count} person",
   "network.modalSub_other": "{count} people",
+  "network.searchPlaceholder": "Search by name",
+  "network.searchAria": "Search this list by name",
+  "network.noMatches": "No one here matches “{query}”.",
 };

@@ -26,7 +26,7 @@ export function SubprofileAvailability({
 
   return (
     <span
-      className={styles.availability}
+      className={`${styles.availability} pp-avail`}
       style={{ ["--accent-tint" as string]: tint }}
     >
       <span

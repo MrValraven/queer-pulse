@@ -1,4 +1,5 @@
-import { Modal } from "../../shared/components/ui";
+import { useMemo, useState } from "react";
+import { Modal, SearchInput } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { NetworkGroup } from "./api/profileNetwork.types";
 import { NetworkPersonRow } from "./NetworkPersonRow";
@@ -11,11 +12,14 @@ import styles from "./NetworkListModal.module.css";
  * Escape-to-close, and labelled close button) and the shared `NetworkPersonRow`.
  * People are already sorted newest-first by `useProfileNetwork`.
  *
+ * A frontend-only search field filters the loaded `people` by name (no fetch —
+ * it never reaches beyond what's already listed). The header count and empty
+ * state track the filtered result so the numbers never overstate what's shown.
+ *
  * NOTE: the modal lists the `people` loaded so far. For the `connected` group
  * (paginated) that is the most-recent page, which can be fewer than
- * `group.total` when more than one page exists — the header count uses the loaded
- * `people.length` so it never overstates what's actually listed. Fetching older
- * pages here is deferred (no pagination inside this modal yet).
+ * `group.total` when more than one page exists — so search here matches only the
+ * loaded page. Fetching older pages here is deferred.
  */
 export function NetworkListModal({
   group,
@@ -26,22 +30,47 @@ export function NetworkListModal({
 }) {
   const { t } = useTranslation();
   const meta = NETWORK_GROUP_META[group.key];
+  const [query, setQuery] = useState("");
+
+  const normalized = query.trim().toLowerCase();
+  const filtered = useMemo(
+    () =>
+      normalized
+        ? group.people.filter((person) =>
+            person.name.toLowerCase().includes(normalized),
+          )
+        : group.people,
+    [group.people, normalized],
+  );
 
   return (
     <Modal
       title={t(meta.titleKey)}
-      sub={t("members:network.modalSub", { count: group.people.length })}
+      sub={t("members:network.modalSub", { count: filtered.length })}
       onClose={onClose}
     >
-      <ul className={styles.modalRows}>
-        {group.people.map((person) => (
-          <NetworkPersonRow
-            key={person.slug}
-            person={person}
-            groupKey={group.key}
-          />
-        ))}
-      </ul>
+      <SearchInput
+        value={query}
+        onChange={setQuery}
+        placeholder={t("members:network.searchPlaceholder")}
+        ariaLabel={t("members:network.searchAria")}
+        className={styles.search}
+      />
+      {filtered.length > 0 ? (
+        <ul className={styles.modalRows}>
+          {filtered.map((person) => (
+            <NetworkPersonRow
+              key={person.slug}
+              person={person}
+              groupKey={group.key}
+            />
+          ))}
+        </ul>
+      ) : (
+        <p className={styles.empty}>
+          {t("members:network.noMatches", { query: query.trim() })}
+        </p>
+      )}
     </Modal>
   );
 }

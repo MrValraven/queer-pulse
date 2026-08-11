@@ -1,0 +1,258 @@
+/* QueerPulse — persona page MOTION layer (the animated half of the feature).
+
+   ── The [data-motion] gate contract (mandatory) ──
+   Every rule in this file is scoped under `.pp[data-motion]`. The companion
+   hook adds `data-motion` to the `.pp` article ONLY when motion is safe to
+   run (JS present AND the user has not asked for reduced motion). When the
+   attribute is ABSENT — reduced-motion, no-JS, SSR — NONE of these rules
+   apply, so nothing is hidden and nothing animates: the page paints fully
+   visible and correct. That is the whole safety model; do not add a rule that
+   hides content outside the gate.
+
+   This file is intentionally GLOBAL, not a CSS module — it targets the same
+   semantic `.pp*` class names that `persona-skins.css` owns (mirroring that
+   file's own "intentionally global" note). Load order: after persona-skins.css.
+
+   House rules honoured here:
+   • Animate ONLY `transform` and `opacity` (compositor-only, 60fps).
+   • Design tokens for easing/durations (`--ease-out`, `--dur-fast`); the only
+     literals are the per-skin `--pp-in-dur`/`--pp-in-ease` tuning values.
+   • `prefers-reduced-motion` respected twice over: the [data-motion] gate
+     (primary) AND a reduce media-query safety net + hover/tap rules wrapped in
+     `no-preference` (belt-and-suspenders).
+
+   Per-skin character (mirrors persona-skins.css line ~620 —
+   "stage cuts, studio drifts, page holds still, workshop snaps"): tuned below
+   via `--pp-in-dur` / `--pp-in-ease`, which the hero animation and the section
+   reveal both read.
+
+   ── Shared contract (identical in the hook) ──
+   • Gate attribute on `.pp`            → `data-motion`
+   • Reveal targets                     → `.pp-sec, .pp-spot, .pp-foot`
+   • Revealed class (added on scroll-in)→ `is-in`
+   • Parallax root custom property      → `--pp-cover-shift`
+   • Consumed on                        → `.pp-cover[data-has-cover] img`
+   • Per-skin tuning props              → `--pp-in-dur`, `--pp-in-ease`
+*/
+
+/* ═══════════ keyframes ═══════════ */
+@keyframes ppRise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* opacity-only — for skins that must not travel (page holds still, workshop
+   snaps without a slide). */
+@keyframes ppFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+/* transform-only — for the LCP heading, which must paint at FULL OPACITY from
+   frame 0 (no fade) so it is never delayed on motion-enabled loads. */
+@keyframes ppRiseSolid {
+  from { transform: translateY(16px); }
+  to   { transform: none; }
+}
+
+/* ═══════════ 1. hero entrance ═══════════
+   Each hero element rises + fades in on load; `both` fill-mode holds the
+   opening frame before the (possibly delayed) start so nothing flashes. */
+.pp[data-motion] .pp-av,
+.pp[data-motion] .pp-kind,
+.pp[data-motion] .pp-name,
+.pp[data-motion] .pp-tagline,
+.pp[data-motion] .pp-social-row,
+.pp[data-motion] .pp-acts,
+.pp[data-motion] .pp-meta,
+.pp[data-motion] .pp-bio {
+  animation: ppRise var(--pp-in-dur, .55s)
+    var(--pp-in-ease, cubic-bezier(.16, 1, .3, 1)) both;
+}
+
+/* Stagger in visual reading order (~60ms steps). avatar + kind lead at 0;
+   `.pp-name` is kept early (60ms) so the LCP text paints fast. */
+.pp[data-motion] .pp-name    { animation-delay: 60ms; }
+.pp[data-motion] .pp-tagline { animation-delay: 120ms; }
+.pp[data-motion] .pp-social-row  { animation-delay: 180ms; }
+.pp[data-motion] .pp-acts    { animation-delay: 240ms; }
+.pp[data-motion] .pp-meta    { animation-delay: 300ms; }
+.pp[data-motion] .pp-bio     { animation-delay: 360ms; }
+
+/* LCP guard — the <h1> display heading is the likely Largest Contentful Paint
+   element. It paints at FULL OPACITY from frame 0 via the transform-only
+   `ppRiseSolid`, on a SHORT FIXED duration so the studio skin's .9s
+   `--pp-in-dur` never delays it. Longhands (not the shorthand) so it keeps its
+   60ms stagger + `both` fill-mode from the group rule above. The page-skin
+   override (ppFade, no translate — below) still wins on higher specificity. */
+.pp[data-motion] .pp-name {
+  animation-name: ppRiseSolid;
+  animation-duration: .42s;
+  animation-timing-function: var(--ease-out, cubic-bezier(.16, 1, .3, 1));
+}
+/* A large avatar image can also be the LCP element: cap its entrance to a fixed
+   short duration. It keeps the `ppRise` opacity fade — only the per-skin var is
+   overridden so studio's .9s never applies. */
+.pp[data-motion] .pp-av {
+  animation-duration: .5s;
+}
+
+/* ═══════════ 2. cover parallax ═══════════
+   The hook writes `--pp-cover-shift` on `.pp` as the page scrolls; `scale(1.06)`
+   over-crops so the drift never exposes an edge gap. page/workshop covers are
+   `display:none`, so this is inert there automatically. */
+.pp[data-motion] .pp-cover[data-has-cover] img {
+  transform: translate3d(0, var(--pp-cover-shift, 0), 0) scale(1.06);
+  will-change: transform;
+}
+
+/* ═══════════ 3. section reveal ═══════════
+   Sections start hidden + nudged down; the hook adds `is-in` as each scrolls
+   into view. Uses the same per-skin `--pp-in-dur`/`--pp-in-ease` so the reveal
+   carries each skin's character. */
+.pp[data-motion] :is(.pp-sec, .pp-spot, .pp-foot) {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity var(--pp-in-dur, .6s) var(--pp-in-ease, cubic-bezier(.16, 1, .3, 1)),
+    transform var(--pp-in-dur, .6s) var(--pp-in-ease, cubic-bezier(.16, 1, .3, 1));
+}
+.pp[data-motion] :is(.pp-sec, .pp-spot, .pp-foot).is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ═══════════ 4. count-ups — intentionally dropped ═══════════ */
+
+/* ═══════════ per-skin character ═══════════
+   Only `--pp-in-dur` / `--pp-in-ease` (+ a couple of translate overrides).
+   These cascade to the hero animation and the section-reveal transition. */
+
+/* stage — a fast "cut": short, snappy, punchy. */
+.pp[data-motion][data-skin="stage"] {
+  --pp-in-dur: .35s;
+  --pp-in-ease: cubic-bezier(.2, .9, .2, 1);
+}
+
+/* studio — a slow drift; also gives the parallax the longest, largest feel.
+   (Its tile zoom already lives in persona-skins.css — not duplicated here.) */
+.pp[data-motion][data-skin="studio"] {
+  --pp-in-dur: .9s;
+  --pp-in-ease: cubic-bezier(.16, 1, .3, 1);
+}
+
+/* page — HOLDS STILL: entrance fades only (no travel), and the section reveal
+   drops its translate in both states so nothing moves. Its
+   `transition:none!important` (persona-skins.css) is left intact — the reveal
+   simply appears; the hero fades via keyframe (animations are not blocked by
+   `transition:none`). */
+.pp[data-motion][data-skin="page"] {
+  --pp-in-dur: .5s;
+}
+.pp[data-motion][data-skin="page"] .pp-av,
+.pp[data-motion][data-skin="page"] .pp-kind,
+.pp[data-motion][data-skin="page"] .pp-name,
+.pp[data-motion][data-skin="page"] .pp-tagline,
+.pp[data-motion][data-skin="page"] .pp-social-row,
+.pp[data-motion][data-skin="page"] .pp-acts,
+.pp[data-motion][data-skin="page"] .pp-meta,
+.pp[data-motion][data-skin="page"] .pp-bio {
+  animation-name: ppFade;
+}
+.pp[data-motion][data-skin="page"] :is(.pp-sec, .pp-spot, .pp-foot),
+.pp[data-motion][data-skin="page"] :is(.pp-sec, .pp-spot, .pp-foot).is-in {
+  transform: none;
+}
+
+/* workshop — a snap: near-instant, linear, no slide (hero fades; sections
+   move only a hair). */
+.pp[data-motion][data-skin="workshop"] {
+  --pp-in-dur: .12s;
+  --pp-in-ease: linear;
+}
+.pp[data-motion][data-skin="workshop"] .pp-av,
+.pp[data-motion][data-skin="workshop"] .pp-kind,
+.pp[data-motion][data-skin="workshop"] .pp-name,
+.pp[data-motion][data-skin="workshop"] .pp-tagline,
+.pp[data-motion][data-skin="workshop"] .pp-social-row,
+.pp[data-motion][data-skin="workshop"] .pp-acts,
+.pp[data-motion][data-skin="workshop"] .pp-meta,
+.pp[data-motion][data-skin="workshop"] .pp-bio {
+  animation-name: ppFade;
+}
+.pp[data-motion][data-skin="workshop"] :is(.pp-sec, .pp-spot, .pp-foot) {
+  transform: translateY(6px);
+}
+.pp[data-motion][data-skin="workshop"] :is(.pp-sec, .pp-spot, .pp-foot).is-in {
+  transform: none;
+}
+
+/* practice — a calm, gentle glide (matches its existing row easing). */
+.pp[data-motion][data-skin="practice"] {
+  --pp-in-dur: .6s;
+  --pp-in-ease: cubic-bezier(.22, .68, .16, 1);
+}
+
+/* table — a soft settle. (Tiles stay static — persona-skins.css sets
+   `transition:none` on `.pp[data-skin="table"] .pp-tile`.) */
+.pp[data-motion][data-skin="table"] {
+  --pp-in-dur: .5s;
+  --pp-in-ease: cubic-bezier(.16, 1, .3, 1);
+}
+
+/* ═══════════ 5. hover / tap micro-interactions ═══════════
+   All transform feedback is wrapped in `no-preference` (over and above the
+   [data-motion] gate) and excludes the page skin (`:not([data-skin="page"])`),
+   which holds still. Hover-only motion is further gated behind a real hover +
+   fine pointer so touch devices never get stuck states. */
+@media (prefers-reduced-motion: no-preference) {
+  .pp[data-motion]:not([data-skin="page"]) .pp-avButton .pp-av,
+  .pp[data-motion]:not([data-skin="page"]) .pp-link {
+    transition: transform var(--dur-fast, 150ms) var(--ease-out, ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    /* social icons: the hover lift lives in SubprofileSocialRow.module.css
+       (translateY(-1px)); persona-motion must not duplicate or fight it. */
+    /* avatar — gentle scale up */
+    .pp[data-motion]:not([data-skin="page"]) .pp-avButton:hover .pp-av {
+      transform: scale(1.03);
+    }
+    /* interactive rows/links — a small inline nudge */
+    .pp[data-motion]:not([data-skin="page"]) .pp-link:hover {
+      transform: translateX(2px);
+    }
+  }
+
+  /* press feedback — active works on touch too, so outside the hover query */
+  .pp[data-motion]:not([data-skin="page"]) .pp-avButton:active .pp-av {
+    transform: scale(.98);
+  }
+  /* light press on action buttons — deliberately just a nudge so it doesn't
+     fight the shared <Button> component's own styles */
+  .pp[data-motion]:not([data-skin="page"]) .pp-acts button:active {
+    transform: translateY(1px) scale(.98);
+  }
+}
+
+/* ═══════════ reduced-motion safety net ═══════════
+   The [data-motion] gate is the primary guard, but if the attribute is ever
+   present under reduced motion (e.g. the setting flips at runtime), make sure
+   nothing is left hidden or drifting: land every element visible and static. */
+@media (prefers-reduced-motion: reduce) {
+  .pp[data-motion] .pp-av,
+  .pp[data-motion] .pp-kind,
+  .pp[data-motion] .pp-name,
+  .pp[data-motion] .pp-tagline,
+  .pp[data-motion] .pp-social-row,
+  .pp[data-motion] .pp-acts,
+  .pp[data-motion] .pp-meta,
+  .pp[data-motion] .pp-bio {
+    animation: none;
+  }
+  .pp[data-motion] :is(.pp-sec, .pp-spot, .pp-foot) {
+    opacity: 1;
+    transform: none;
+  }
+  .pp[data-motion] .pp-cover[data-has-cover] img {
+    transform: none;
+  }
+}

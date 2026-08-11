@@ -2,10 +2,23 @@
   position: relative;
   display: inline-flex;
   flex: none;
+  /* The wrapper carries the box: size, shape, and font-scale all come from
+     here (defaults set inline via the `size` prop as `--avatar-*`). This is the
+     element external CSS (e.g. persona skins' `.pp-av`) overrides to resize the
+     whole avatar; the inner circle below simply fills and inherits it. */
+  width: var(--avatar-size, 40px);
+  height: var(--avatar-size, 40px);
+  border-radius: var(--radius-avatar);
+  font-size: var(--avatar-font, 14px);
 }
 
 .avatar {
-  border-radius: var(--radius-avatar);
+  /* Fill the wrapper and inherit its shape + font-scale, so a wrapper resized by
+     an external class shrinks this circle with it instead of overflowing it. */
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  font-size: inherit;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1850,10 +1850,75 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Open the press kit",
   "changelog.tag.magazineDesk": "Open the desk",
 
+  "changelog.entries.persona-gallery-multi-add.title":
+    "Add several photos to your gallery at once",
+  "changelog.entries.persona-gallery-multi-add.body":
+    "Building your persona's photo gallery is quicker now. Pick a batch from your device or your past uploads and they all go in together, up to the six-photo limit.",
+
+  "changelog.entries.persona-gallery-lightbox.title":
+    "Tap a persona photo to see it full-screen",
+  "changelog.entries.persona-gallery-lightbox.body":
+    "Photos in a persona's gallery now open full-screen when you tap them — the whole shot, uncropped, with arrow keys and on-screen arrows to move between them.",
+
+  "changelog.entries.persona-gig-images.title":
+    "Add a photo to your gigs",
+  "changelog.entries.persona-gig-images.body":
+    "Gig and show items in your persona editor now take an image, so your featured set list shines with a real photo instead of an empty slot.",
+
+  "changelog.entries.persona-save-all-changes.title":
+    "Save your persona in one go",
+  "changelog.entries.persona-save-all-changes.body":
+    "Your persona editor now saves everything at once, with a running list that shows exactly what you changed before you hit Save.",
+
+  "changelog.entries.persona-page-motion.title":
+    "Persona pages that move with you",
+  "changelog.entries.persona-page-motion.body":
+    "Persona pages now come alive as you arrive and scroll — the header settles in, and each section eases into view as you reach it. Every persona look keeps its own rhythm: some snap, some drift, and the quiet ones stay calm. It all respects your device's reduced-motion setting, so if you prefer things still, they stay still.",
+
+  "changelog.entries.endorse-with-note.title":
+    "Endorse a persona with a note",
+  "changelog.entries.endorse-with-note.body":
+    "Endorsing someone's persona now opens a proper window where you can add a short note about what makes their work worth backing. Already endorsed? Tap \"Endorsed\" to edit your note or withdraw your endorsement anytime.",
+
+  "changelog.entries.persona-banner-bleed.title":
+    "Let your persona banner bleed into the page",
+  "changelog.entries.persona-banner-bleed.body":
+    "Personas can now soften the seam where the cover photo meets the page. In your persona settings, under Presence, the new “Banner edge” option lets you keep the banner contained (as before) or have it bleed — the cover image fades gently into the page below it. It works on every persona look, dissolving into whatever colour sits beneath the banner.",
+
+  "changelog.entries.persona-hero-actions-tidy.title":
+    "A tidier action row on persona pages",
+  "changelog.entries.persona-hero-actions-tidy.body":
+    "The buttons at the top of a persona now read as a clear menu. Message and Follow lead, and the less-used actions — Share and Report — tuck into a “⋯” menu so the row isn't crowded. Your follower and endorsement counts moved into a single quiet line beneath, instead of being repeated on the buttons themselves.",
+
+  "changelog.entries.fix-member-filter-collapse.title":
+    "Tidier filters on the member directory",
+  "changelog.entries.fix-member-filter-collapse.body":
+    "When a filter group in the member directory was collapsed, a sliver of its contents (a checkbox or a chip) could still peek out beneath the heading. Collapsed groups now show only their heading, so the filter panel reads as a clean menu — and everything slides in as before when you open a group.",
+
+  "changelog.entries.fix-persona-hero-theme-colors.title":
+    "Persona status and social links now match your theme",
+  "changelog.entries.fix-persona-hero-theme-colors.body":
+    "On personas with a dark theme (like the stage look), the availability status and the social-link icons were washed out — dim text and a stark white icon chip. They now follow your persona's colours, so the status label stays readable and each social icon becomes a subtle, accent-tinted button that fits the theme.",
+
   "changelog.entries.persona-photo-gallery.title":
     "Add a photo gallery to your persona",
   "changelog.entries.persona-photo-gallery.body":
     "Personas can now show a photo gallery of up to 6 photos.",
+
+  "changelog.entries.persona-project-links.title":
+    "Add links to individual projects",
+  "changelog.entries.persona-project-links.body":
+    "Add links (like GitHub) to individual projects.",
+
+  "changelog.entries.fix-persona-avatar-overlap.title":
+    "Persona photos no longer overlap the title",
+  "changelog.entries.fix-persona-avatar-overlap.body":
+    "On some persona looks (like the developer and therapist styles), the profile photo could spill out of its frame and overlap the name, tagline, or buttons beside it. The photo now sits neatly inside its frame at the right size for each look, so the top of every persona reads cleanly.",
+
+  "changelog.entries.network-modal-search.title":
+    "Search your network lists",
+  "changelog.entries.network-modal-search.body":
+    "The \"Connected\" and \"Vouched for\" lists on your profile now have a search box, so you can filter a long list down to a name instantly.",
 
   "changelog.entries.profile-your-network.title":
     "See your network on your own profile",

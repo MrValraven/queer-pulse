@@ -1902,10 +1902,75 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Abrir o kit de imprensa",
   "changelog.tag.magazineDesk": "Abrir a redação",
 
+  "changelog.entries.persona-gallery-multi-add.title":
+    "Adiciona várias fotos à galeria de uma vez",
+  "changelog.entries.persona-gallery-multi-add.body":
+    "Montar a galeria de fotos da tua persona é agora mais rápido. Escolhe um conjunto do teu dispositivo ou das tuas fotos anteriores e entram todas juntas, até ao limite de seis fotos.",
+
+  "changelog.entries.persona-gallery-lightbox.title":
+    "Toca numa foto da persona para a veres em ecrã inteiro",
+  "changelog.entries.persona-gallery-lightbox.body":
+    "As fotos da galeria de uma persona abrem agora em ecrã inteiro quando lhes tocas — a foto completa, sem cortes, com as setas do teclado e no ecrã para passar de uma para outra.",
+
+  "changelog.entries.persona-gig-images.title":
+    "Adiciona uma foto aos teus concertos",
+  "changelog.entries.persona-gig-images.body":
+    "Os concertos e atuações no editor de persona já aceitam uma imagem, para o teu destaque brilhar com uma foto real em vez de um espaço vazio.",
+
+  "changelog.entries.persona-save-all-changes.title":
+    "Guarda a tua persona de uma vez só",
+  "changelog.entries.persona-save-all-changes.body":
+    "O editor de persona agora guarda tudo de uma vez, com uma lista sempre atualizada que mostra exatamente o que alteraste antes de tocares em Guardar.",
+
+  "changelog.entries.persona-page-motion.title":
+    "Páginas de persona que se movem contigo",
+  "changelog.entries.persona-page-motion.body":
+    "As páginas de persona agora ganham vida à medida que chegas e percorres — o cabeçalho assenta suavemente e cada secção surge quando lá chegas. Cada visual de persona mantém o seu próprio ritmo: umas são rápidas, outras deslizam devagar e as mais sóbrias ficam calmas. Tudo respeita a definição de movimento reduzido do teu dispositivo — se preferes tudo parado, fica parado.",
+
+  "changelog.entries.endorse-with-note.title":
+    "Endossa uma persona com uma nota",
+  "changelog.entries.endorse-with-note.body":
+    "Endossar a persona de alguém passa a abrir uma janela onde podes acrescentar uma breve nota sobre o que torna o trabalho digno de apoio. Já endossaste? Toca em \"Endossado\" para editar a tua nota ou retirar o endosso quando quiseres.",
+
+  "changelog.entries.persona-banner-bleed.title":
+    "Deixe o banner do seu perfil sangrar na página",
+  "changelog.entries.persona-banner-bleed.body":
+    "Os perfis agora podem suavizar a emenda onde a foto de capa encontra a página. Nas configurações do seu perfil, em Presença, a nova opção “Borda do banner” permite manter o banner contido (como antes) ou deixá-lo sangrar — a imagem de capa desvanece suavemente na página abaixo. Funciona com qualquer visual de perfil, dissolvendo-se na cor que estiver sob o banner.",
+
+  "changelog.entries.persona-hero-actions-tidy.title":
+    "Uma linha de ações mais arrumada nas páginas de persona",
+  "changelog.entries.persona-hero-actions-tidy.body":
+    "Os botões no topo de uma persona passam a ler-se como um menu claro. Mensagem e Seguir ficam à frente, e as ações menos usadas — Partilhar e Denunciar — recolhem-se num menu “⋯” para a linha não ficar apinhada. As contagens de seguidores e apoios passaram para uma única linha discreta por baixo, em vez de se repetirem nos próprios botões.",
+
+  "changelog.entries.fix-member-filter-collapse.title":
+    "Filtros mais arrumados no diretório de membros",
+  "changelog.entries.fix-member-filter-collapse.body":
+    "Quando um grupo de filtros do diretório de membros estava recolhido, ainda espreitava uma fresta do seu conteúdo (uma caixa de seleção ou uma etiqueta) por baixo do título. Os grupos recolhidos passam a mostrar apenas o título, para o painel de filtros ler como um menu limpo — e tudo desliza como antes quando abres um grupo.",
+
+  "changelog.entries.fix-persona-hero-theme-colors.title":
+    "O estado e as redes sociais da persona agora acompanham o tema",
+  "changelog.entries.fix-persona-hero-theme-colors.body":
+    "Nas personas com tema escuro (como o visual de palco), o estado de disponibilidade e os ícones das redes sociais ficavam apagados — texto esbatido e um ícone num círculo branco gritante. Agora seguem as cores da tua persona, mantendo o estado legível e transformando cada ícone social num botão subtil, tingido com o acento, que combina com o tema.",
+
   "changelog.entries.persona-photo-gallery.title":
     "Adiciona uma galeria de fotos à tua persona",
   "changelog.entries.persona-photo-gallery.body":
     "As personas agora podem exibir uma galeria de até 6 fotos.",
+
+  "changelog.entries.persona-project-links.title":
+    "Adiciona links a projetos individuais",
+  "changelog.entries.persona-project-links.body":
+    "Adiciona links (como o GitHub) a projetos individuais.",
+
+  "changelog.entries.fix-persona-avatar-overlap.title":
+    "As fotos das personas já não se sobrepõem ao título",
+  "changelog.entries.fix-persona-avatar-overlap.body":
+    "Em alguns estilos de persona (como os estilos de programador/a e de terapeuta), a foto de perfil podia sair da moldura e sobrepor-se ao nome, à frase ou aos botões ao lado. A foto passa a ficar bem dentro da moldura, no tamanho certo para cada estilo, para que o topo de cada persona se leia com clareza.",
+
+  "changelog.entries.network-modal-search.title":
+    "Procura nas listas da tua rede",
+  "changelog.entries.network-modal-search.body":
+    "As listas \"Ligações\" e \"Avalizaram-te\" no teu perfil passam a ter uma caixa de procura, para filtrares uma lista longa até um nome num instante.",
 
   "changelog.entries.profile-your-network.title":
     "Vê a tua rede no teu próprio perfil",

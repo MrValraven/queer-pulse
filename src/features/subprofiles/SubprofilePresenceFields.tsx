@@ -1,5 +1,5 @@
 import { FiCheck } from "react-icons/fi";
-import { FormField } from "../../shared/components/ui";
+import { FormField, SegmentedControl } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AccentKey, AvailabilityKey } from "./api/subprofiles.api";
 import { ImageUploadField } from "./ImageUploadField";
@@ -17,6 +17,8 @@ interface SubprofilePresenceFieldsProps {
   coverUrl: string;
   onCoverUrlChange: (value: string) => void;
   onCoverPreviewChange: (value: string | null) => void;
+  coverBleed: boolean;
+  onCoverBleedChange: (value: boolean) => void;
   accent: AccentKey | "";
   onAccentChange: (value: AccentKey) => void;
   availability: AvailabilityKey | "";
@@ -38,6 +40,8 @@ export function SubprofilePresenceFields({
   coverUrl,
   onCoverUrlChange,
   onCoverPreviewChange,
+  coverBleed,
+  onCoverBleedChange,
   accent,
   onAccentChange,
   availability,
@@ -59,6 +63,22 @@ export function SubprofilePresenceFields({
           placeholder={t("subprofiles:metaForm.coverPlaceholder")}
           onChange={onCoverUrlChange}
           onPreviewChange={onCoverPreviewChange}
+        />
+      </FormField>
+
+      <FormField
+        label={t("subprofiles:metaForm.bannerEdgeLabel")}
+        helper={t("subprofiles:metaForm.bannerEdgeHelper")}
+      >
+        <SegmentedControl
+          label={t("subprofiles:metaForm.bannerEdgeLabel")}
+          options={[
+            { value: "contained", label: t("subprofiles:metaForm.bannerEdgeContained") },
+            { value: "bleed", label: t("subprofiles:metaForm.bannerEdgeBleed") },
+          ]}
+          value={coverBleed ? "bleed" : "contained"}
+          onChange={(value) => onCoverBleedChange(value === "bleed")}
+          disabledOptions={!coverUrl ? ["contained", "bleed"] : undefined}
         />
       </FormField>
 

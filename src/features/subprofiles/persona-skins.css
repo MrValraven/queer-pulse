@@ -63,6 +63,15 @@
   container-type: inline-size;
 }
 .pp-cover{height:clamp(150px,22cqw,230px);position:relative;overflow:hidden}
+/* Owner opt-in (persona settings → Presence → Banner edge): fade the cover
+   out at its bottom edge so it dissolves into the page background below
+   instead of ending on a hard seam. Masking the container melts the cover
+   image into whatever ground the active skin sits on — cream on the base
+   skins, plum on the stage skin — with no per-skin colour wiring. */
+.pp[data-cover-bleed="true"] .pp-cover{
+  -webkit-mask-image:linear-gradient(to bottom,#000 62%,transparent 100%);
+          mask-image:linear-gradient(to bottom,#000 62%,transparent 100%);
+}
 .pp-hero{position:relative}
 .pp-runhead,.pp-titleblock{display:none}
 .pp-id{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;padding-top:18px}
@@ -124,23 +133,38 @@
     align-self:center
   }
   /* Stretch the text column full-width (so the action row can fill it) while
-     centering its own children (name, tagline, social, meta). */
+     centering its own children; a touch more gap evens the vertical rhythm so
+     a lone social chip groups with the identity block instead of floating. */
   .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-text{
-    align-self:stretch;align-items:center
+    align-self:stretch;align-items:center;gap:12px
   }
-  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-social{
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-social-row{
     justify-content:center
   }
+  /* Meta stacks into a centered column so the long standalone address wraps
+     naturally instead of being forced onto one cramped line. */
   .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-meta{
-    justify-content:center
+    flex-direction:column;gap:6px;justify-content:center;padding-top:2px
   }
-  /* Full-width, equal-growing buttons — mirrors the member profile's
-     `.actionsSlot > div > *{flex:1 1 auto;justify-content:center}`. */
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-owner{
+    white-space:normal;overflow-wrap:anywhere;text-align:center
+  }
+  /* Full-width, equal-growing buttons — but only the buttons grow; the
+     availability status is lifted onto its own centered full-width line (with
+     real row-gap) so it stops colliding with the meta row below it. */
   .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-acts{
-    width:100%;justify-content:center
+    width:100%;justify-content:center;row-gap:12px
   }
-  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-acts > *{
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-acts > :not(.pp-avail){
     flex:1 1 auto;min-width:0;justify-content:center
+  }
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-acts > .pp-avail{
+    flex:0 0 100%;justify-content:center
+  }
+  /* Bio was a sibling of the identity block, so it never inherited the centered
+     column — center it explicitly so alignment no longer breaks mid-hero. */
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-bio{
+    text-align:center;margin-inline:auto;max-width:52ch
   }
 }
 
@@ -169,6 +193,13 @@
    image-only grid, no title/subtitle/date (unlike `.pp-tiles`). */
 .pp-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .pp-gallery-cell{margin:0;aspect-ratio:1;border-radius:10px;overflow:hidden;min-width:0}
+/* Clickable gallery cell — a plain button that fills the figure and opens the
+   gallery lightbox; the enclosed ImageSlot already handles the image. */
+.pp-gallery-btn{display:block;width:100%;height:100%;padding:0;border:0;background:none;cursor:zoom-in;border-radius:inherit;overflow:hidden}
+.pp-gallery-btn img{transition:transform .8s cubic-bezier(.16,1,.3,1)}
+.pp-gallery-btn:hover img{transform:scale(1.04)}
+.pp-gallery-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.pp-gallery-btn img{transition:none}.pp-gallery-btn:hover img{transform:none}}
 @media (max-width:560px){.pp-gallery{grid-template-columns:repeat(2,1fr);gap:8px}}
 .pp-spot{border-radius:22px;padding:clamp(24px,3.4cqw,38px);background:color-mix(in srgb,var(--sk-tint) 9%,var(--paper));border:1px solid color-mix(in srgb,var(--sk-tint) 22%,transparent);display:flex;gap:26px;align-items:center;flex-wrap:wrap}
 .pp-spot .art{width:150px;height:150px;border-radius:14px;flex:none;overflow:hidden}
@@ -343,11 +374,25 @@
 .pp[data-skin="workshop"]{background-color:var(--skin-workshop-ground);background-image:linear-gradient(rgba(var(--plum-rgb),.045) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--plum-rgb),.045) 1px,transparent 1px);background-size:26px 26px}
 .pp[data-skin="workshop"] .pp-cover{display:none}
 .pp[data-skin="workshop"] .pp-hero{padding-top:34px}
-.pp[data-skin="workshop"] .pp-id{border:1px solid rgba(var(--plum-rgb),.28);background:color-mix(in srgb,var(--paper) 72%,transparent);padding:22px;gap:20px;align-items:center}
-.pp[data-skin="workshop"] .pp-av{border-radius:6px;width:76px;height:76px;font-size:22px;margin-top:0;border:1px solid rgba(var(--plum-rgb),.28);box-shadow:none;font-family:"DM Mono",monospace;background:none;color:var(--ink-60)}
+.pp[data-skin="workshop"] .pp-id{border:1px solid rgba(var(--plum-rgb),.28);background:color-mix(in srgb,var(--paper) 72%,transparent);padding:24px;gap:22px;align-items:flex-start}
+.pp[data-skin="workshop"] .pp-av{border-radius:6px;width:76px;height:76px;font-size:22px;margin-top:2px;border:1px solid rgba(var(--plum-rgb),.28);box-shadow:none;font-family:"DM Mono",monospace;background:none;color:var(--ink-60)}
+/* Spec-sheet hero: the identity column (kind → name → tagline → social → the
+   action row → meta) is tall, so the old `align-items:center` floated the small
+   square avatar down beside the tagline/buttons — reading as overlapping
+   elements with the social glyph pinned to its edge. Top-align it with the
+   identity instead, and give the action row + meta line their own quiet dashed
+   rule (echoing `.pp-row`) so the card stacks as a clean datasheet: identity,
+   then what you can do, then the counts. `.pp-acts`/`.pp-meta` live inside the
+   flex `.pp-text` column, so `width:100%` makes the divider span it. */
+.pp[data-skin="workshop"] .pp-acts{width:100%;margin-top:4px;padding-top:16px;border-top:1px dashed rgba(var(--plum-rgb),.24)}
+.pp[data-skin="workshop"] .pp-meta{width:100%;padding-top:2px}
 .pp[data-skin="workshop"] .pp-kind,.pp[data-skin="workshop"] .pp-meta,.pp[data-skin="workshop"] .pp-row .when,.pp[data-skin="workshop"] .pp-sec .count,.pp[data-skin="workshop"] .tag,.pp[data-skin="workshop"] .pp-titleblock,.pp[data-skin="workshop"] .pp-link .href{font-family:"DM Mono",ui-monospace,monospace}
 .pp[data-skin="workshop"] .pp-kind{background:none;border:1px solid var(--sk-tint);color:var(--sk-tint);border-radius:0;letter-spacing:.08em;font-weight:500;font-size:10.5px}
 .pp[data-skin="workshop"] .pp-name{font-weight:500;letter-spacing:-.02em;font-size:clamp(30px,4.4cqw,46px)}
+/* Square the social glyphs to sit with the skin's boxed chips/tags, and hang
+   them on the same plum hairline as the rest of the card (was a round grey
+   pill — the odd one out that looked pinned to the avatar). */
+.pp[data-skin="workshop"] .pp-social a{border-radius:2px;border-color:rgba(var(--plum-rgb),.28)}
 .pp[data-skin="workshop"] .pp-titleblock{display:grid;grid-template-columns:auto auto;gap:2px 18px;align-self:stretch;align-content:center;border-left:1px solid rgba(var(--plum-rgb),.22);padding-left:20px;font-size:11.5px;color:var(--ink-40)}
 .pp[data-skin="workshop"] .pp-titleblock dt{letter-spacing:.08em;text-transform:uppercase}
 .pp[data-skin="workshop"] .pp-titleblock dd{color:var(--ink)}
@@ -630,7 +675,7 @@
 .pp[data-skin="stage"] .art img{filter:contrast(1.15) saturate(.6) brightness(.92)}
 .pp[data-skin="studio"] .art img{filter:grayscale(1) contrast(1.06)}
 .pp[data-skin="page"] .art img{filter:grayscale(1) opacity(.9)}
-.pp[data-skin="workshop"] .art img{filter:grayscale(.85) contrast(1.05)}
+.pp[data-skin="workshop"] .art img{filter:contrast(1.05)}
 .pp[data-skin="practice"] .art img{filter:saturate(.75) brightness(1.03)}
 .pp[data-skin="table"] .art img{filter:sepia(.22) saturate(1.05)}
 @media print{

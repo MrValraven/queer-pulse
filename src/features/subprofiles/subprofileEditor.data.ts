@@ -1,4 +1,8 @@
-import type { LinkVisibility, Visibility } from "./api/subprofiles.api";
+import type {
+  LinkVisibility,
+  SubprofileSection,
+  Visibility,
+} from "./api/subprofiles.api";
 
 // ── Publish thresholds (mirror contract C5) ──────────────────────────────────
 
@@ -6,6 +10,16 @@ import type { LinkVisibility, Visibility } from "./api/subprofiles.api";
 export const MIN_BIO = 80;
 /** Server-side cap, surfaced here as a friendly limit on the Add affordance. */
 export const MAX_ITEMS_PER_SECTION = 100;
+
+/** Sections whose items support per-item typed social links (stored in each
+ *  item's `structured.links`). Kept narrow: only project-shaped sections where
+ *  a GitHub / demo / docs link per entry makes sense. */
+export const ITEM_LINKS_SECTIONS = new Set<SubprofileSection>([
+  "projects",
+  "open_source",
+]);
+/** Friendly per-item link cap surfaced on the Add affordance. */
+export const MAX_ITEM_LINKS = 6;
 
 // ── Meta-form options + copy ─────────────────────────────────────────────────
 // i18n label-key indirection throughout this section: `value`/the Record key

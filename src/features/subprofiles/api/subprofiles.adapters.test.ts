@@ -41,9 +41,10 @@ function makeItem(
   };
 }
 
-/** A musician DTO (sections: discography, gigs, links) with a single featured
- *  discography track, no gig rows, and one link — plus null identity fields so
- *  the "" normalization is exercised. */
+/** A musician DTO (sections: discography, gigs) with a single featured
+ *  discography track, no gig rows, and one stray `links` item (no longer a
+ *  produced section, so it is dropped) — plus null identity fields so the ""
+ *  normalization is exercised. */
 function makeMusicianDto(overrides: Partial<SubprofileDTO> = {}): SubprofileDTO {
   return {
     id: "sp-test-musician",
@@ -87,11 +88,9 @@ describe("buildSections", () => {
       makeItem({ section: "links", title: "Bandcamp" }),
     ];
     const sections = buildSections(items, "musician");
-    // discography + links present; the empty `gigs` section is dropped.
-    expect(sections.map((section) => section.section)).toEqual([
-      "discography",
-      "links",
-    ]);
+    // Only discography is present; the stray `links` item is dropped (`links`
+    // is no longer a produced section) and the empty `gigs` section is dropped.
+    expect(sections.map((section) => section.section)).toEqual(["discography"]);
   });
 
   it("keeps every allowed section (in kind order) with includeEmpty for the editor", () => {
@@ -100,7 +99,6 @@ describe("buildSections", () => {
     expect(sections.map((section) => section.section)).toEqual([
       "discography",
       "gigs",
-      "links",
     ]);
     // The empty section still surfaces its metadata (label key + no items).
     const gigs = sections.find((section) => section.section === "gigs");
@@ -123,7 +121,6 @@ describe("subprofileToView", () => {
     expect(view.sections.map((section) => section.section)).toEqual([
       "discography",
       "gigs",
-      "links",
     ]);
   });
 

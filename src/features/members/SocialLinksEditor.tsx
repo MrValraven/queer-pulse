@@ -1,4 +1,5 @@
 import { FiPlus, FiX } from "react-icons/fi";
+import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SocialLink } from "./data/members";
 import { SOCIAL_PLATFORMS, socialHref, socialPlatform } from "./socialLinks.data";
@@ -75,7 +76,7 @@ export function SocialLinksEditor({
         const isInvalid = !looksLikeLinkOrHandle(link.platform, link.urlOrHandle);
         const errorId = `${rowKey}-error`;
         return (
-          <div
+          <FadeIn
             key={rowKey}
             className={styles.linkRow}
             // Allow the advisory hint (below) to wrap onto its own line without
@@ -136,7 +137,7 @@ export function SocialLinksEditor({
                 {t("members:profileEdit.validation.invalidUrl")}
               </span>
             )}
-          </div>
+          </FadeIn>
         );
       })}
       <button type="button" className={styles.addRowBtn} onClick={add}>

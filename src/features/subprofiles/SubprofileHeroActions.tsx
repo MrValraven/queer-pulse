@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { FiCheck, FiEdit2, FiFlag, FiShare2, FiUserCheck, FiUserPlus } from "react-icons/fi";
+import { FiCheck, FiEdit2, FiUserCheck, FiUserPlus } from "react-icons/fi";
 import { safeHref } from "../../shared/lib/safeHref";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -8,6 +8,7 @@ import { useMemberContact } from "../connect/useMemberContact";
 import { SubprofileAvailability } from "./SubprofileAvailability";
 import { SubprofileEndorse } from "./SubprofileEndorse";
 import { SubprofileFollow } from "./SubprofileFollow";
+import { SubprofileMoreMenu } from "./SubprofileMoreMenu";
 import { SubprofileShare } from "./SubprofileShare";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import type { PersonaViewMode } from "./personaSkinRender";
@@ -55,6 +56,7 @@ export function SubprofileHeroActions({
   const { contact } = useMemberContact(view.ownerSlug ?? "");
   const accent = view.accent ?? DEFAULT_ACCENT;
   const ctaHref = safeHref(view.ctaUrl);
+  const hasCta = Boolean(ctaHref && view.ctaLabel);
   const canMessage = view.linkVisibility === "linked" && Boolean(view.ownerSlug);
 
   if (mode === "owner") {
@@ -101,7 +103,6 @@ export function SubprofileHeroActions({
               : "subprofiles:hero.endorse.cta",
           )}
         />
-        <InertAction icon={<FiShare2 aria-hidden />} label={t("subprofiles:share.cta")} />
         <SubprofileAvailability value={view.availability} accent={accent} />
       </div>
     );
@@ -124,7 +125,7 @@ export function SubprofileHeroActions({
       )}
       {canMessage && (
         <Button
-          variant="ghost"
+          variant={hasCta ? "ghost" : "primary"}
           size="md"
           onClick={() => {
             onAction("message");
@@ -148,18 +149,10 @@ export function SubprofileHeroActions({
         endorsementCount={view.endorsementCount}
         viewerEndorsed={view.viewerEndorsed}
         isOwnerViewing={false}
+        personaName={view.displayName}
+        personaAvatarUrl={view.avatarUrl}
       />
-      <SubprofileShare view={view} />
-      <Button
-        variant="ghost"
-        size="md"
-        onClick={() => onAction("report")}
-        aria-label={t("subprofiles:hero.report.ariaLabel", {
-          name: view.displayName,
-        })}
-      >
-        <FiFlag aria-hidden /> {t("subprofiles:hero.report.cta")}
-      </Button>
+      <SubprofileMoreMenu view={view} onAction={onAction} />
       <SubprofileAvailability value={view.availability} accent={accent} />
     </div>
   );

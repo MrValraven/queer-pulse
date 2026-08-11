@@ -137,12 +137,10 @@ export function SubprofileAffiliations({
             </button>
           )}
         </div>
-      ) : (
-        <div />
-      )}
+      ) : null}
 
       {hasAffiliations && (
-        <div>
+        <div className={styles.affiliations}>
           <Eyebrow>{t("subprofiles:affiliation.heading")}</Eyebrow>
           <div className="partof">
             {persona.affiliations.map((affiliation) => (

@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { FiLink, FiPlus, FiX } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   SOCIAL_PLATFORMS,
@@ -10,17 +8,15 @@ import {
 } from "../../shared/social/socialPlatforms";
 import type { SocialLinkDTO } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
-import { useSubprofileMutations } from "./api/useSubprofileMutations";
+import {
+  useSubprofileEditorContext,
+  withSocialUid,
+} from "./subprofileEditorContext";
 import sharedStyles from "./SubprofileEditor.module.css";
 import styles from "./SubprofileSocialLinksEditor.module.css";
 
 /** Mirrors the backend `MAX_SOCIAL_LINKS` validator. */
 const MAX_SOCIAL_LINKS = 20;
-
-type Row = SocialLinkDTO & { _uid: string };
-
-let seq = 0;
-const withUid = (link: SocialLinkDTO): Row => ({ ...link, _uid: `social-${seq++}` });
 
 /** Every named platform is a brand noun and stays untranslated in every
  *  locale; only the generic "Other link" fallback is platform chrome —
@@ -36,55 +32,32 @@ function platformLabel(
 /**
  * Owner editor for a persona's social links: add/remove rows, each a platform
  * select plus a handle/URL field with a live icon + resolved-href preview via
- * `socialHref`, capped at `MAX_SOCIAL_LINKS`. Saves the whole list in one PUT
- * via `replaceSocials`. Mirrors `members/SocialLinksEditor`'s add/remove UX.
+ * `socialHref`, capped at `MAX_SOCIAL_LINKS`. Rows are CONTROLLED by
+ * `SubprofileEditorContext` (`socialRows`/`setSocialRows`) — no local state
+ * and no Save button; the global savebar's `saveAll()` PUTs the whole list.
+ * Mirrors `members/SocialLinksEditor`'s add/remove UX.
  */
 export function SubprofileSocialLinksEditor({
-  subprofile,
+  subprofile: _subprofile,
 }: {
   subprofile: SubprofileView;
 }) {
-  const { replaceSocials } = useSubprofileMutations();
-  const { showToast } = useToast();
   const { t } = useTranslation();
-  const [rows, setRows] = useState<Row[]>(() =>
-    subprofile.socialLinks.map(withUid),
-  );
-  const [dirty, setDirty] = useState(false);
+  const { socialRows: rows, setSocialRows } = useSubprofileEditorContext();
 
   const atMax = rows.length >= MAX_SOCIAL_LINKS;
-  const saving = replaceSocials.isPending;
 
   function patch(uid: string, patchValue: Partial<SocialLinkDTO>) {
-    setRows((cur) =>
-      cur.map((row) => (row._uid === uid ? { ...row, ...patchValue } : row)),
+    setSocialRows(
+      rows.map((row) => (row._uid === uid ? { ...row, ...patchValue } : row)),
     );
-    setDirty(true);
   }
   function remove(uid: string) {
-    setRows((cur) => cur.filter((row) => row._uid !== uid));
-    setDirty(true);
+    setSocialRows(rows.filter((row) => row._uid !== uid));
   }
   function add() {
     if (atMax) return;
-    setRows((cur) => [...cur, withUid({ platform: "website", urlOrHandle: "" })]);
-    setDirty(true);
-  }
-
-  async function save() {
-    try {
-      const items = rows
-        .filter((row) => row.urlOrHandle.trim())
-        .map(({ platform, urlOrHandle }) => ({
-          platform,
-          urlOrHandle: urlOrHandle.trim(),
-        }));
-      await replaceSocials.mutateAsync({ id: subprofile.id, items });
-      setDirty(false);
-      showToast(t("subprofiles:socialEditor.saved"), "success");
-    } catch {
-      showToast(t("subprofiles:socialEditor.error"), "error");
-    }
+    setSocialRows([...rows, withSocialUid({ platform: "website", urlOrHandle: "" })]);
   }
 
   return (
@@ -105,7 +78,7 @@ export function SubprofileSocialLinksEditor({
           const href = socialHref(row.platform, row.urlOrHandle);
           const label = platformLabel(meta.key, meta.label, t);
           return (
-            <div key={row._uid} className={styles.linkGroup}>
+            <FadeIn key={row._uid} className={styles.linkGroup}>
               <div className={styles.linkRow}>
                 <span className={styles.linkIcon} aria-hidden>
                   <Icon size={16} />
@@ -147,7 +120,7 @@ export function SubprofileSocialLinksEditor({
                 </button>
               </div>
               {href && <p className={styles.preview}>{href}</p>}
-            </div>
+            </FadeIn>
           );
         })}
       </div>
@@ -168,11 +141,6 @@ export function SubprofileSocialLinksEditor({
             </p>
           )}
         </div>
-        <Button variant="primary" onClick={() => void save()} disabled={saving || !dirty}>
-          {saving
-            ? t("subprofiles:socialEditor.saving")
-            : t("subprofiles:socialEditor.save")}
-        </Button>
       </div>
     </section>
   );

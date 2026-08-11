@@ -11,9 +11,13 @@
   width: 40px;
   height: 40px;
   border-radius: 999px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  color: var(--ink-60);
+  /* Theme-responsive chip: a faint accent wash + accent hairline over the
+     skin's own ground (not a solid white circle, which clashed on the dark
+     stage skin), with the icon in the skin's legible foreground. --accent-tint
+     is set on `.row`; --sk-ink cascades from `.pp` (falls back to --ink). */
+  background: color-mix(in srgb, var(--accent-tint) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-tint) 28%, transparent);
+  color: var(--sk-ink, var(--ink));
   font-size: 1.05rem;
   text-decoration: none;
   transition:
@@ -29,7 +33,10 @@
 
 @media (hover: hover) and (pointer: fine) {
   a.iconLink:hover {
-    color: color-mix(in srgb, var(--accent-tint) 70%, var(--ink));
+    /* Mix toward the skin foreground (not the fixed --ink) so the glyph stays
+       legible on the dark stage ground, and lift the wash for press feedback. */
+    color: color-mix(in srgb, var(--accent-tint) 55%, var(--sk-ink, var(--ink)));
+    background: color-mix(in srgb, var(--accent-tint) 18%, transparent);
     border-color: color-mix(in srgb, var(--accent-tint) 45%, transparent);
     transform: translateY(-1px);
   }

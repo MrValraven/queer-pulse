@@ -342,6 +342,11 @@ export const subprofiles: Catalog = {
   "metaForm.coverLabel": "Imagem de capa",
   "metaForm.coverPlaceholder": "Imagem de capa",
   "metaForm.accentLabel": "Cor de destaque",
+  "metaForm.bannerEdgeLabel": "Borda do banner",
+  "metaForm.bannerEdgeHelper":
+    "Escolha como a capa encontra a página. Adicione uma imagem de capa para ativar.",
+  "metaForm.bannerEdgeContained": "Contida",
+  "metaForm.bannerEdgeBleed": "Sangrar na página",
   "metaForm.availabilityLabel": "Disponibilidade",
   "metaForm.availabilityUnset": "Não definida",
   "metaForm.ctaLabelLabel": "Texto do botão",
@@ -392,6 +397,11 @@ export const subprofiles: Catalog = {
   "socialEditor.saved": "Links guardados",
   "socialEditor.error": "Não conseguimos guardar isso agora — tenta outra vez.",
   "socialEditor.capHint": "É o máximo de links que podes acrescentar.",
+
+  // Editor de links por item (projetos / código aberto)
+  "itemLinks.label": "Links",
+  "itemLinks.helper": "Adiciona um link do repositório, demo ou documentação.",
+  "itemLinks.add": "Adicionar link",
 
   // Editor de secção (SubprofileSectionEditor)
   "sectionEditor.empty":
@@ -638,7 +648,7 @@ export const subprofiles: Catalog = {
   "hero.message": "Mensagem",
   "hero.edit": "Editar persona",
   "hero.report.cta": "Denunciar esta persona",
-  "hero.report.ariaLabel": "Denunciar {name}",
+  "hero.more.ariaLabel": "Mais ações para {name}",
   "hero.viewPhotoAria": "Ver foto de {name}",
   "hero.standalone": "Independente · {address}",
 
@@ -662,6 +672,32 @@ export const subprofiles: Catalog = {
   "hero.endorse.send": "Enviar",
   "hero.endorse.error": "Não conseguimos guardar isso agora — tenta outra vez.",
   "hero.endorse.endorsedByNames": "Endossado por {names}",
+
+  // Endorse-with-note modal (EndorseSubprofileModal, EndorseSubprofileModalParts)
+  "hero.endorse.modal.ariaLabel": "Endossar {name}",
+  "hero.endorse.modal.close": "Fechar",
+  "hero.endorse.modal.eyebrow": "Adiciona o teu endosso",
+  "hero.endorse.modal.title": "Endossar <em>{name}</em>",
+  "hero.endorse.modal.sub":
+    "Um endosso és tu, publicamente, a apoiar o trabalho de {name}. Se quiseres, deixa uma nota — uma palavra sobre o que fazem bem vale mais do que o número sozinho.",
+  "hero.endorse.modal.noteLabel": "A tua nota",
+  "hero.endorse.modal.optional": "opcional",
+  "hero.endorse.modal.notePlaceholder":
+    "Porque vale a pena endossar {name}? O que devem os outros saber?",
+  "hero.endorse.modal.noteOptional": "Opcional — mas uma nota diz mais",
+  "hero.endorse.modal.charsCount_one": "{count} caráter",
+  "hero.endorse.modal.charsCount_other": "{count} carateres",
+  "hero.endorse.modal.cancel": "Cancelar",
+  "hero.endorse.modal.save": "Guardar nota",
+  "hero.endorse.modal.withdraw": "Retirar endosso",
+  "hero.endorse.modal.sending": "A guardar…",
+  "hero.endorse.modal.you": "Tu",
+  "hero.endorse.modal.savedToast": "A tua nota foi guardada.",
+  "hero.endorse.modal.withdrawnToast": "O teu endosso foi retirado.",
+  "hero.endorse.modal.success.title": "É <em>{name}</em>, endossado.",
+  "hero.endorse.modal.success.body":
+    "A tua cara acabou de se juntar a quem endossa <b>{name}</b> — é assim que o bom trabalho viaja por aqui. Pessoa a pessoa, nome a nome.",
+  "hero.endorse.modal.success.doneCta": "Concluído",
 
   // Controlo de seguir (SubprofileFollow)
   "hero.follow.cta": "Seguir",
@@ -711,11 +747,34 @@ export const subprofiles: Catalog = {
   // Secção de galeria sem legendas (SubprofileSections) — texto alternativo
   // por foto, já que estes blocos não têm título/subtítulo próprio.
   "galleryPhotoAlt": "{name} — foto {number} da galeria",
+  // Célula de galeria clicável + a lightbox de galeria em ecrã inteiro
+  // (GalleryLightbox).
+  "galleryPhotoOpen": "Abrir a foto {number} de {name} em ecrã inteiro",
+  "galleryLightboxLabel": "Fotos de {name}",
 
   // Limite da secção de galeria no editor (SubprofileSectionEditor) — mostrado
   // no lugar do botão de acrescentar quando a galeria universal atinge o
   // máximo de 6 fotos.
   "galleryFull": "Máximo de 6 fotos",
+
+  // Modal de adicionar fotos à galeria (várias de uma vez) — carregamento do
+  // dispositivo + seletor de fotos anteriores, aberto pelo botão de acrescentar
+  // da secção de galeria.
+  "gallery.addTitle": "Adicionar fotos",
+  "gallery.remaining": "Adiciona até mais {count}",
+  "gallery.fromDevice": "Carregar do dispositivo",
+  "gallery.uploading": "A carregar… {percent}%",
+  "gallery.pastUploads": "As tuas fotos anteriores",
+  "gallery.empty":
+    "Ainda não carregaste nada — adiciona do teu dispositivo aqui em cima.",
+  "gallery.loadError": "Não conseguimos carregar as tuas fotos.",
+  "gallery.retry": "Tentar novamente",
+  "gallery.selectPhoto": "Adicionar esta foto",
+  "gallery.deselectPhoto": "Remover esta foto",
+  "gallery.inUse": "Em uso",
+  "gallery.addCta": "Adicionar {count} à galeria",
+  "gallery.someSkipped":
+    "Só {count} puderam ser adicionadas — a galeria comporta 6.",
 
   // Página pública da persona (SubprofilePage.tsx)
   "page.loading": "A carregar persona…",
@@ -972,6 +1031,44 @@ export const subprofiles: Catalog = {
   "editorSavebar.status": "Cada secção guarda-se sozinha",
   "editorSavebar.hidePreview": "Esconder pré-visualização",
   "editorSavebar.showPreview": "Mostrar pré-visualização",
+
+  // Lista global de alterações por guardar, "Guardar tudo" (EditorSavebar) —
+  // substitui os botões de guardar por secção por uma única lista do que
+  // está por guardar em todo o editor, agrupada por área da barra lateral,
+  // mais um único par guardar/descartar.
+  "pending.area.meta": "Este lado",
+  "pending.area.socials": "Links sociais",
+  "pending.area.affiliations": "Parte de",
+  "pending.metaEdited": "Alteração em {field}",
+  "pending.metaSet": "{field} → {value}",
+  "pending.metaImage": "Atualização em {field}",
+  "pending.metaImageRemoved": "Remoção de {field}",
+  "pending.rowSummary": "{area}: {summary}",
+  "pending.count.added": "{count} adicionados",
+  "pending.count.removed": "{count} removidos",
+  "pending.count.edited": "{count} editados",
+  "pending.count.reordered": "reordenado",
+  "pending.more": "+{count} mais",
+  "pending.savedToast": "Guardadas {count} alterações",
+  "pending.saveAll": "Guardar todas as alterações ({count})",
+  "pending.saving": "A guardar…",
+  "pending.discardAll": "Descartar tudo",
+  "pending.saveError": "Não conseguimos guardar {areas}",
+  "pending.heading": "Alterações por guardar",
+  "pending.field.displayName": "Nome",
+  "pending.field.tagline": "Frase de apresentação",
+  "pending.field.bio": "Biografia",
+  "pending.field.avatarUrl": "Avatar",
+  "pending.field.coverUrl": "Imagem de capa",
+  "pending.field.slug": "Endereço",
+  "pending.field.handle": "Identificador",
+  "pending.field.link": "Visibilidade (ligada)",
+  "pending.field.visibility": "Quem pode ver",
+  "pending.field.accent": "Cor de destaque",
+  "pending.field.availability": "Disponibilidade",
+  "pending.field.ctaLabel": "Texto do botão",
+  "pending.field.ctaUrl": "Link do botão",
+  "pending.field.coverBleed": "Borda do banner",
 
   // Gaveta de itens (SubprofileItemDrawer, EditorItemRow) — a lista de linhas
   // fechadas + a gaveta lateral que substituiu os antigos cartões de item

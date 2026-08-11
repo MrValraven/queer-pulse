@@ -1,0 +1,140 @@
+.sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.sourceBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  background: var(--paper);
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.sourceBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.sourceBtn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.sectionTitle {
+  margin: 16px 0 12px;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(120px, 100%), 1fr));
+  gap: 10px;
+  min-height: 120px;
+}
+
+.cell {
+  position: relative;
+  aspect-ratio: 1 / 1;
+}
+
+.thumbBtn {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  background: transparent;
+  transition: box-shadow var(--dur-fast, 0.15s) var(--ease);
+}
+
+.thumbBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.thumbBtn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Selected state carries a colour ring AND the check badge below, so it never
+   relies on colour alone; aria-pressed carries it for assistive tech. */
+.thumbSelected {
+  box-shadow: 0 0 0 3px var(--accent);
+}
+
+.check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  color: var(--cream);
+  background: var(--accent);
+}
+
+.inUse {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--cream);
+  background: rgba(45, 27, 61, 0.72);
+  pointer-events: none;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  color: var(--ink-60);
+  padding: 12px 0 4px;
+}
+
+.error {
+  color: var(--danger);
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+}
+
+.note {
+  color: var(--ink-60);
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumbBtn {
+    transition: none;
+  }
+}

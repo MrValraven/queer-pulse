@@ -1,27 +1,25 @@
 import { useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { ApiError } from "../../shared/api/client";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  itemsToInputDto,
   type SubprofileItemView,
   type SubprofileSectionView,
 } from "./api/subprofiles.adapters";
-import { useSubprofileMutations } from "./api/useSubprofileMutations";
+import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { MAX_ITEMS_PER_SECTION } from "./subprofileEditor.data";
 import { TEMPLATE_ITEMS, buildTemplateItems } from "./subprofileTemplates.data";
 import {
+  appendGalleryRows,
   commitDraftRow,
   emptyItem,
   moveRow,
   toggleRowFeature,
   withUid,
-  type SubprofileEditorRow,
 } from "./subprofileSectionEditorRows";
 import { EditorItemRow } from "./EditorItemRow";
 import { SubprofileItemDrawer } from "./SubprofileItemDrawer";
+import { AddGalleryPhotosModal } from "./AddGalleryPhotosModal";
 import styles from "./SubprofileEditor.module.css";
 
 type DrawerState = { mode: "add" } | { mode: "edit"; uid: string };
@@ -34,32 +32,30 @@ const MAX_GALLERY_PHOTOS = 6;
 /**
  * Edits one section: a collapsed `.itemrow` list (`EditorItemRow`) with
  * add/remove/reorder/feature-toggle; each item's full field set (base +
- * rich) is edited in the `SubprofileItemDrawer`. Saves the whole section in
- * one PUT via `replaceSection`; enforces `MAX_ITEMS_PER_SECTION` on Add.
+ * rich) is edited in the `SubprofileItemDrawer`. Rows are CONTROLLED by
+ * `SubprofileEditorContext` (`sectionRows`/`setSectionRows`) — this pane has
+ * no local state and no Save button; the global savebar's `saveAll()` PUTs
+ * the whole section. Enforces `MAX_ITEMS_PER_SECTION` on Add.
  * Renders WITHOUT its own card chrome/header — `EditorPaneRouter` already
  * renders the active pane's `<h2>`/lede above this.
  */
 export function SubprofileSectionEditor({
-  subprofileId,
+  subprofileId: _subprofileId,
   section,
 }: {
   subprofileId: string;
   section: SubprofileSectionView;
 }) {
-  const { replaceSection } = useSubprofileMutations();
-  const { showToast } = useToast();
   const { t } = useTranslation();
-  const [rows, setRows] = useState<SubprofileEditorRow[]>(() =>
-    section.items.map(withUid),
-  );
-  const [dirty, setDirty] = useState(false);
+  const { sectionRows, setSectionRows } = useSubprofileEditorContext();
+  const rows = sectionRows[section.section] ?? [];
   const [drawerState, setDrawerState] = useState<DrawerState | null>(null);
+  const [galleryPickerOpen, setGalleryPickerOpen] = useState(false);
 
   const label = t(section.labelKey);
   const atMax = rows.length >= MAX_ITEMS_PER_SECTION;
   const isGalleryFull =
     section.section === "gallery" && rows.length >= MAX_GALLERY_PHOTOS;
-  const saving = replaceSection.isPending;
   const canFeature =
     section.section !== "links" && section.section !== "gallery";
   const canInsertExamples =
@@ -67,24 +63,17 @@ export function SubprofileSectionEditor({
     rows.length === 0 &&
     TEMPLATE_ITEMS[section.section] !== undefined;
 
-  function touch() {
-    setDirty(true);
-  }
   function remove(uid: string) {
-    setRows((cur) => cur.filter((r) => r._uid !== uid));
-    touch();
+    setSectionRows(section.section, rows.filter((r) => r._uid !== uid));
   }
   function move(uid: string, dir: -1 | 1) {
-    setRows((cur) => moveRow(cur, uid, dir));
-    touch();
+    setSectionRows(section.section, moveRow(rows, uid, dir));
   }
   function insertExamples() {
-    setRows(buildTemplateItems(section.section, t).map(withUid));
-    touch();
+    setSectionRows(section.section, buildTemplateItems(section.section, t).map(withUid));
   }
   function toggleFeatured(uid: string) {
-    setRows((cur) => toggleRowFeature(cur, uid));
-    touch();
+    setSectionRows(section.section, toggleRowFeature(rows, uid));
   }
 
   function closeDrawer() {
@@ -94,34 +83,8 @@ export function SubprofileSectionEditor({
   /** Commits the drawer's draft back into `rows` (see `commitDraftRow`). */
   function saveDraft(draft: SubprofileItemView) {
     const editingUid = drawerState?.mode === "edit" ? drawerState.uid : null;
-    setRows((cur) => commitDraftRow(cur, draft, editingUid));
-    touch();
+    setSectionRows(section.section, commitDraftRow(rows, draft, editingUid));
     closeDrawer();
-  }
-
-  async function save() {
-    try {
-      await replaceSection.mutateAsync({
-        id: subprofileId,
-        section: section.section,
-        items: itemsToInputDto(rows),
-      });
-      setDirty(false);
-      showToast(
-        t("subprofiles:sectionEditor.toastSaved", { section: label }),
-        "success",
-      );
-    } catch (err) {
-      // A 400 names the exact problem (e.g. an unknown/blocked collaborator
-      // handle) — surface that instead of the generic fallback so the owner
-      // knows which chip to fix. Any other failure keeps the generic message.
-      const detailedMessage =
-        err instanceof ApiError && err.status === 400 ? err.message : null;
-      showToast(
-        detailedMessage ?? t("subprofiles:sectionEditor.toastError"),
-        "error",
-      );
-    }
   }
 
   const editingRow =
@@ -166,7 +129,11 @@ export function SubprofileSectionEditor({
             <button
               type="button"
               className={styles.addBtn}
-              onClick={() => setDrawerState({ mode: "add" })}
+              onClick={() =>
+                section.section === "gallery"
+                  ? setGalleryPickerOpen(true)
+                  : setDrawerState({ mode: "add" })
+              }
               disabled={atMax}
             >
               <FiPlus size={18} aria-hidden />{" "}
@@ -185,11 +152,6 @@ export function SubprofileSectionEditor({
             )
           )}
         </div>
-        <Button variant="primary" onClick={() => void save()} disabled={saving || !dirty}>
-          {saving
-            ? t("subprofiles:sectionEditor.saving")
-            : t("subprofiles:sectionEditor.save")}
-        </Button>
       </div>
 
       {drawerState && drawerItem && (
@@ -200,6 +162,16 @@ export function SubprofileSectionEditor({
           canFeature={canFeature}
           onSave={saveDraft}
           onClose={closeDrawer}
+        />
+      )}
+
+      {galleryPickerOpen && (
+        <AddGalleryPhotosModal
+          remaining={MAX_GALLERY_PHOTOS - rows.length}
+          onClose={() => setGalleryPickerOpen(false)}
+          onAdd={(imageKeys) =>
+            setSectionRows(section.section, appendGalleryRows(rows, imageKeys))
+          }
         />
       )}
     </>

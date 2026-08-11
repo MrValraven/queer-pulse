@@ -37,8 +37,9 @@ function makeItem(
   };
 }
 
-/** A source view with two discography rows, an empty gigs section, one link,
- *  two social links and one affiliation — enough to exercise every branch. */
+/** A source view with two discography rows, an empty gigs section, one stray
+ *  `links` item (no longer a produced section, so it is dropped), two social
+ *  links and one affiliation — enough to exercise every branch. */
 function makeSourceView() {
   const dto: SubprofileDTO = {
     id: "sp-source",
@@ -89,10 +90,10 @@ describe("buildDuplicatePlan", () => {
     expect(plan.meta).not.toBeNull();
     expect(plan.meta?.tagline).toBe("After-hours electronics");
     expect(plan.affiliations).toHaveLength(1);
-    // The empty `gigs` section is filtered out; discography + links remain.
+    // The empty `gigs` section is filtered out; only discography remains
+    // (`links` is no longer a produced section).
     expect(plan.sections.map((section) => section.section)).toEqual([
       "discography",
-      "links",
     ]);
     // Featured/tags travel via itemsToInputDto (2 discography rows preserved).
     const discography = plan.sections.find((s) => s.section === "discography");
@@ -100,14 +101,13 @@ describe("buildDuplicatePlan", () => {
     expect(discography?.items[0]?.isFeatured).toBe(true);
   });
 
-  it("omits identity + affiliations in content mode, keeping links and items", () => {
+  it("omits identity + affiliations in content mode, keeping items", () => {
     const plan = buildDuplicatePlan(makeSourceView(), "content");
     expect(plan.meta).toBeNull();
     expect(plan.affiliations).toBeNull();
     expect(plan.socialLinks).toHaveLength(2);
     expect(plan.sections.map((section) => section.section)).toEqual([
       "discography",
-      "links",
     ]);
   });
 
@@ -125,13 +125,13 @@ describe("duplicatePreview", () => {
     const source = makeSourceView();
     expect(duplicatePreview(source, "full")).toEqual({
       linkCount: 2,
-      itemCount: 3,
+      itemCount: 2,
       affiliationCount: 1,
       includesIdentity: true,
     });
     expect(duplicatePreview(source, "content")).toEqual({
       linkCount: 2,
-      itemCount: 3,
+      itemCount: 2,
       affiliationCount: 0,
       includesIdentity: false,
     });
@@ -167,8 +167,9 @@ describe("applyDuplicatePlan", () => {
       id: "new-id",
       items: plan.socialLinks,
     });
-    // One call per non-empty section (discography + links).
-    expect(mutations.replaceSection.mutateAsync).toHaveBeenCalledTimes(2);
+    // One call per non-empty section (discography only; `links` is no longer a
+    // produced section).
+    expect(mutations.replaceSection.mutateAsync).toHaveBeenCalledTimes(1);
     expect(mutations.replaceAffiliations.mutateAsync).toHaveBeenCalledWith({
       id: "new-id",
       items: plan.affiliations,

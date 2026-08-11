@@ -1,16 +1,14 @@
 import { useState } from "react";
-import { useToast } from "../../shared/components/feedback/useToast";
-import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useUnsavedChangesGuard } from "../../shared/hooks";
 import type {
   AccentKey,
   AvailabilityKey,
   LinkVisibility,
+  UpdateSubprofileDTO,
   Visibility,
 } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
-import { useSubprofileMutations } from "./api/useSubprofileMutations";
 import type { HandleAvailability } from "../settings/api/useHandleAvailability";
+import type { MetaSnapshot } from "./subprofileEditorDiff";
 
 export interface SubprofileMetaEditor {
   displayName: string;
@@ -43,6 +41,8 @@ export interface SubprofileMetaEditor {
   setCoverUrl: (value: string) => void;
   coverPreview: string | null;
   setCoverPreview: (value: string | null) => void;
+  coverBleed: boolean;
+  setCoverBleed: (value: boolean) => void;
   accent: AccentKey | "";
   setAccent: (value: AccentKey) => void;
   availability: AvailabilityKey | "";
@@ -53,9 +53,26 @@ export interface SubprofileMetaEditor {
   setCtaUrl: (value: string) => void;
   nameMissing: boolean;
   handleBlocked: boolean;
+  /** True when the CTA label and URL are out of sync (one set, one blank). */
+  ctaMismatch: boolean;
   dirty: boolean;
-  saving: boolean;
-  save: () => Promise<void>;
+  /**
+   * Builds the exact partial PATCH the old in-hook `save()` sent — every
+   * always-present field plus the conditionally-included ones (avatar/cover/
+   * slug/handle/coverBleed, only when actually changed). Pure: no mutation,
+   * no toast. Returns `null` when nothing is dirty.
+   */
+  buildMetaPatch: () => UpdateSubprofileDTO | null;
+  /** Current field values, mapped to the comparable `MetaSnapshot` shape. */
+  metaSnapshot: () => MetaSnapshot;
+  /** The loaded `subprofile`'s values, mapped to the same shape. */
+  baselineSnapshot: () => MetaSnapshot;
+  /** Reset every field back to the editor's baseline (last-saved) — powers the
+   *  global editor's "Discard all". Clears the transient blob previews too. */
+  reset: () => void;
+  /** Advance the baseline to the current values after a successful save, so
+   *  `dirty` clears without depending on a refetch (demo-safe). */
+  markSaved: () => void;
 }
 
 /**
@@ -66,17 +83,15 @@ export interface SubprofileMetaEditor {
  * `SubprofileMetaForm` orchestrator so `EditorPaneRouter` can call this ONE
  * hook and hand its fields to three separately-routed panes while preserving
  * the exact same behaviour that component had: a single `dirty` diff against
- * the loaded `subprofile`, one `useUnsavedChangesGuard`, and one explicit
- * `save()` that PATCHes every field in a single request — switching rail
- * panes never fragments this into three saves.
+ * the loaded `subprofile`. Saving (the mutation, toast, and unsaved-changes
+ * guard) is owned by the global editor provider, which reads `dirty`,
+ * `buildMetaPatch()`, and the two snapshot getters from this hook instead of
+ * calling a save function directly — switching rail panes never fragments
+ * this into three saves, and one save button covers every pane.
  */
 export function useSubprofileMetaEditor(
   subprofile: SubprofileView,
 ): SubprofileMetaEditor {
-  const { update } = useSubprofileMutations();
-  const { showToast } = useToast();
-  const { t } = useTranslation();
-
   const [displayName, setDisplayName] = useState(subprofile.displayName);
   const [tagline, setTagline] = useState(subprofile.tagline);
   const [bio, setBio] = useState(subprofile.bio);
@@ -94,6 +109,9 @@ export function useSubprofileMetaEditor(
   });
   const [coverUrl, setCoverUrl] = useState(subprofile.coverUrl ?? "");
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [coverBleed, setCoverBleed] = useState<boolean>(
+    subprofile.skinData?.coverBleed ?? false,
+  );
   const [accent, setAccent] = useState<AccentKey | "">(
     subprofile.accent ?? "",
   );
@@ -102,6 +120,31 @@ export function useSubprofileMetaEditor(
   );
   const [ctaLabel, setCtaLabel] = useState(subprofile.ctaLabel);
   const [ctaUrl, setCtaUrl] = useState(subprofile.ctaUrl);
+
+  // The editor's OWN baseline — what "saved" currently means. Seeded from the
+  // loaded persona and advanced by `markSaved()` after a successful save. This
+  // is why `dirty` must NOT depend on the post-save refetch: in demo mode the
+  // refetch reverts to the unedited mock, and in live mode it returns the
+  // backend-RESOLVED image URL (not the storage key we sent) and trimmed text —
+  // so comparing local state to the refetched prop would leave the editor stuck
+  // dirty after a successful save. The list editors advance their own baseline
+  // the same way in `SubprofileEditorProvider`.
+  const [baseline, setBaseline] = useState<MetaSnapshot>(() => ({
+    displayName: subprofile.displayName,
+    tagline: subprofile.tagline,
+    bio: subprofile.bio,
+    avatarUrl: subprofile.avatarUrl ?? "",
+    coverUrl: subprofile.coverUrl ?? "",
+    slug: subprofile.slug,
+    handle: subprofile.handle ?? "",
+    link: subprofile.linkVisibility,
+    visibility: subprofile.visibility,
+    accent: subprofile.accent ?? "",
+    availability: subprofile.availability ?? "",
+    ctaLabel: subprofile.ctaLabel,
+    ctaUrl: subprofile.ctaUrl,
+    coverBleed: subprofile.skinData?.coverBleed ?? false,
+  }));
 
   const nameMissing = displayName.trim().length === 0;
   // A standalone (unlinked) handle shares the global namespace — don't let a
@@ -112,52 +155,45 @@ export function useSubprofileMetaEditor(
   // go, or a bare link with no call to action, is worse than neither.
   const ctaMismatch = Boolean(ctaLabel.trim()) !== Boolean(ctaUrl.trim());
 
-  // Any local field diverged from the persisted persona? Compared against the
-  // same prop expressions the useState initializers use; once a save-
-  // triggered refetch lands (same id), this settles back to false — no stale
-  // "unsaved changes" prompt.
+  // Any local field diverged from the editor's baseline (last-saved state)?
+  // Advancing `baseline` on save settles this back to false without depending
+  // on a refetch (see the `baseline` comment above).
   const dirty =
-    displayName !== subprofile.displayName ||
-    tagline !== subprofile.tagline ||
-    bio !== subprofile.bio ||
-    avatarUrl !== (subprofile.avatarUrl ?? "") ||
-    link !== subprofile.linkVisibility ||
-    visibility !== subprofile.visibility ||
-    slug !== subprofile.slug ||
-    handle !== (subprofile.handle ?? "") ||
-    coverUrl !== (subprofile.coverUrl ?? "") ||
-    accent !== (subprofile.accent ?? "") ||
-    availability !== (subprofile.availability ?? "") ||
-    ctaLabel !== subprofile.ctaLabel ||
-    ctaUrl !== subprofile.ctaUrl;
+    displayName !== baseline.displayName ||
+    tagline !== baseline.tagline ||
+    bio !== baseline.bio ||
+    avatarUrl !== baseline.avatarUrl ||
+    link !== baseline.link ||
+    visibility !== baseline.visibility ||
+    slug !== baseline.slug ||
+    handle !== baseline.handle ||
+    coverUrl !== baseline.coverUrl ||
+    accent !== baseline.accent ||
+    availability !== baseline.availability ||
+    ctaLabel !== baseline.ctaLabel ||
+    ctaUrl !== baseline.ctaUrl ||
+    coverBleed !== baseline.coverBleed;
 
-  // Warn before navigating away from unsaved persona edits (this form saves
-  // only on an explicit click; a click into any other rail entry or page
-  // would otherwise drop them — the guard fires on ROUTE navigation, not on
-  // switching between the three `hidden`-toggled rail panes, which keep this
-  // same hook instance mounted).
-  useUnsavedChangesGuard({
-    active: dirty && !update.isPending,
-    confirmMessage: t("subprofiles:metaForm.leaveConfirm"),
-  });
-
-  async function save() {
-    if (nameMissing || handleBlocked) return;
-    if (ctaMismatch) {
-      showToast(t("subprofiles:metaForm.ctaMismatch"), "error");
-      return;
-    }
-    // The loaded `avatarUrl`/`coverUrl` are the backend-RESOLVED display URLs
-    // (`toImageUrl` turned the stored storage key into `<api>/files/<key>`), not
-    // the raw key. Sending an untouched one back would persist that derived URL
-    // in place of the clean key — and since a dev API base is `http://…`, the
-    // next read fails `toImageUrl`'s `https://`-only check and resolves to
+  /**
+   * Builds the same partial PATCH the old in-hook `save()` sent, from the
+   * current field state. Pure — no mutation, no toast, no navigation guard;
+   * the provider owns those and calls this only once it has decided a save
+   * should happen. Returns `null` when nothing is dirty (nothing to send).
+   */
+  function buildMetaPatch(): UpdateSubprofileDTO | null {
+    if (!dirty) return null;
+    // At mount `baseline.avatarUrl`/`coverUrl` are the backend-RESOLVED display
+    // URLs (`toImageUrl` turned the stored storage key into `<api>/files/<key>`),
+    // not the raw key. Sending an untouched one back would persist that derived
+    // URL in place of the clean key — and since a dev API base is `http://…`,
+    // the next read fails `toImageUrl`'s `https://`-only check and resolves to
     // `null`, blanking the image. So only send an image field when the user
     // actually changed it: a fresh pick sets it to a new storage key, and a
     // clear sets it to `""` (→ `null`); an untouched field is omitted, leaving
-    // the stored key intact under PATCH semantics.
-    const avatarChanged = avatarUrl !== (subprofile.avatarUrl ?? "");
-    const coverChanged = coverUrl !== (subprofile.coverUrl ?? "");
+    // the stored key intact under PATCH semantics. After a save, `markSaved`
+    // advances the baseline to the sent key so it isn't re-sent next time.
+    const avatarChanged = avatarUrl !== baseline.avatarUrl;
+    const coverChanged = coverUrl !== baseline.coverUrl;
     // slug (the address) and handle live on the Address pane, not Identity. Only
     // send them when the user actually changed them: an Identity-only edit must
     // never touch the address/handle. Critically this stops a nested persona
@@ -165,31 +201,84 @@ export function useSubprofileMetaEditor(
     // save — the empty string is NOT null, so it lands in the partial-unique
     // handle index and two of an owner's personas collide on the global handle
     // namespace. A cleared handle is sent as null (never ""), so it stays exempt.
-    const slugChanged = slug !== subprofile.slug;
-    const handleChanged = handle !== (subprofile.handle ?? "");
-    try {
-      await update.mutateAsync({
-        id: subprofile.id,
-        dto: {
-          displayName: displayName.trim(),
-          tagline: tagline.trim() || null,
-          bio: bio.trim() || null,
-          ...(avatarChanged ? { avatarUrl: avatarUrl || null } : {}),
-          ...(coverChanged ? { coverUrl: coverUrl || null } : {}),
-          accent: accent || null,
-          availability: availability || null,
-          ctaLabel: ctaLabel.trim() || null,
-          ctaUrl: ctaUrl.trim() || null,
-          linkVisibility: link,
-          visibility,
-          ...(slugChanged ? { slug: slug.trim() } : {}),
-          ...(handleChanged ? { handle: handle.trim() || null } : {}),
-        },
-      });
-      showToast(t("subprofiles:metaForm.toastSaved"), "success");
-    } catch {
-      showToast(t("subprofiles:metaForm.toastError"), "error");
-    }
+    const slugChanged = slug !== baseline.slug;
+    const handleChanged = handle !== baseline.handle;
+    // Only PATCH skinData when the bleed flag actually changed, and merge onto
+    // the loaded skinData so we never clobber skin-extras panels' fields.
+    const coverBleedChanged = coverBleed !== baseline.coverBleed;
+    return {
+      displayName: displayName.trim(),
+      tagline: tagline.trim() || null,
+      bio: bio.trim() || null,
+      ...(avatarChanged ? { avatarUrl: avatarUrl || null } : {}),
+      ...(coverChanged ? { coverUrl: coverUrl || null } : {}),
+      accent: accent || null,
+      availability: availability || null,
+      ctaLabel: ctaLabel.trim() || null,
+      ctaUrl: ctaUrl.trim() || null,
+      linkVisibility: link,
+      visibility,
+      ...(slugChanged ? { slug: slug.trim() } : {}),
+      ...(handleChanged ? { handle: handle.trim() || null } : {}),
+      ...(coverBleedChanged
+        ? { skinData: { ...(subprofile.skinData ?? {}), coverBleed } }
+        : {}),
+    };
+  }
+
+  function metaSnapshot(): MetaSnapshot {
+    return {
+      displayName,
+      tagline,
+      bio,
+      avatarUrl,
+      coverUrl,
+      slug,
+      handle,
+      link,
+      visibility,
+      accent,
+      availability,
+      ctaLabel,
+      ctaUrl,
+      coverBleed,
+    };
+  }
+
+  function baselineSnapshot(): MetaSnapshot {
+    return baseline;
+  }
+
+  // Restore every field to the editor's baseline (last-saved state), and drop
+  // the transient blob previews so the docked preview snaps back. Powers
+  // "Discard all" — after saves, this returns to the saved values, not the
+  // original mount values.
+  function reset(): void {
+    setDisplayName(baseline.displayName);
+    setTagline(baseline.tagline);
+    setBio(baseline.bio);
+    setAvatarUrl(baseline.avatarUrl);
+    setAvatarPreview(null);
+    setLink(baseline.link as LinkVisibility);
+    setVisibility(baseline.visibility as Visibility);
+    setSlug(baseline.slug);
+    setHandle(baseline.handle);
+    setHandleStatus({ status: "idle", reason: null });
+    setCoverUrl(baseline.coverUrl);
+    setCoverPreview(null);
+    setCoverBleed(baseline.coverBleed);
+    setAccent(baseline.accent as AccentKey);
+    setAvailability(baseline.availability as AvailabilityKey | "");
+    setCtaLabel(baseline.ctaLabel);
+    setCtaUrl(baseline.ctaUrl);
+  }
+
+  // Advance the baseline to the current field values after a successful save,
+  // so `dirty` clears without waiting on (or being contradicted by) a refetch.
+  // Called by the provider's meta save task on success — the exact analogue of
+  // the list editors advancing their row baselines.
+  function markSaved(): void {
+    setBaseline(metaSnapshot());
   }
 
   return {
@@ -217,6 +306,8 @@ export function useSubprofileMetaEditor(
     setCoverUrl,
     coverPreview,
     setCoverPreview,
+    coverBleed,
+    setCoverBleed,
     accent,
     setAccent,
     availability,
@@ -227,8 +318,12 @@ export function useSubprofileMetaEditor(
     setCtaUrl,
     nameMissing,
     handleBlocked,
+    ctaMismatch,
     dirty,
-    saving: update.isPending,
-    save,
+    buildMetaPatch,
+    metaSnapshot,
+    baselineSnapshot,
+    reset,
+    markSaved,
   };
 }

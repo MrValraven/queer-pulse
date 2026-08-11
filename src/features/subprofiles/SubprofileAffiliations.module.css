@@ -4,6 +4,17 @@
    `--sk-tint` is the ancestor `.pp`'s per-skin accent custom property; it
    inherits down to this module-scoped class fine (CSS custom-property
    inheritance is unaffected by CSS Modules' selector scoping). */
+/* The owner-chosen "Part of" affiliations block. When a persona has no
+   endorser quotes the empty left-hand grid cell is no longer rendered, so this
+   block flows into the foot's first column and reads left-aligned on desktop
+   (rather than being pushed into the right endorsers column). Kept a plain
+   block (not flex) so the `page` skin's centered foot still centers the
+   eyebrow; the margin opens breathing room between the "Part of" eyebrow and
+   the affiliation rows, which Eyebrow itself doesn't provide. */
+.affiliations :global(.partof) {
+  margin-top: 14px;
+}
+
 .seeAll {
   background: none;
   border: none;

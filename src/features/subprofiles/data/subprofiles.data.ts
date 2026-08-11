@@ -68,6 +68,10 @@ export interface DemoSubprofile extends SubprofileDTO {
   ownerSlug: string;
   ownerName: string;
   viewerEndorsed: boolean;
+  /** The note the demo viewer saved with their endorsement (edit-mode prefill).
+   *  Optional so the seeded fixtures don't each need to declare it; set/cleared
+   *  by `mockSetEndorsed`, read back by `mockMyEndorsement`. */
+  viewerEndorsementNote?: string | null;
   endorsers: EndorserDTO[];
   viewerFollowing: boolean;
 }
@@ -1417,10 +1421,14 @@ export const mockEndorsersById = (
 
 /** POST/DELETE /subprofiles/:id/endorse mock — flips the in-memory demo state for
  *  the persona so a route-smoke suite exercising both calls in sequence sees a
- *  consistent count. Idempotent: repeating the same direction is a no-op. */
+ *  consistent count. Idempotent on the count: repeating the same direction is a
+ *  no-op there. The optional `note` mirrors the backend's re-endorse behaviour —
+ *  it's stored when endorsing (a re-endorse updates the note in place) and
+ *  cleared on withdraw, so `mockMyEndorsement` can prefill the edit modal. */
 export const mockSetEndorsed = (
   id: string,
   viewerEndorsed: boolean,
+  note?: string,
 ): { endorsementCount: number; viewerEndorsed: boolean } | null => {
   const sp = findEndorsablePersona(id);
   if (!sp) return null;
@@ -1431,9 +1439,23 @@ export const mockSetEndorsed = (
     );
     sp.viewerEndorsed = viewerEndorsed;
   }
+  sp.viewerEndorsementNote = viewerEndorsed ? (note?.trim() || null) : null;
   return {
     endorsementCount: sp.endorsementCount,
     viewerEndorsed: sp.viewerEndorsed,
+  };
+};
+
+/** GET /subprofiles/:id/endorsement/mine mock — the demo viewer's own
+ *  endorsement state + saved note, for the edit-mode endorse modal prefill. */
+export const mockMyEndorsement = (
+  id: string,
+): { viewerEndorsed: boolean; note: string | null } | null => {
+  const sp = findEndorsablePersona(id);
+  if (!sp) return null;
+  return {
+    viewerEndorsed: sp.viewerEndorsed,
+    note: sp.viewerEndorsementNote ?? null,
   };
 };
 

@@ -339,6 +339,11 @@ export const subprofiles: Catalog = {
   "metaForm.coverLabel": "Cover image",
   "metaForm.coverPlaceholder": "Cover image",
   "metaForm.accentLabel": "Accent colour",
+  "metaForm.bannerEdgeLabel": "Banner edge",
+  "metaForm.bannerEdgeHelper":
+    "Choose how the cover meets the page. Add a cover image to enable this.",
+  "metaForm.bannerEdgeContained": "Contained",
+  "metaForm.bannerEdgeBleed": "Bleed into page",
   "metaForm.availabilityLabel": "Availability",
   "metaForm.availabilityUnset": "Not set",
   "metaForm.ctaLabelLabel": "Button label",
@@ -386,6 +391,11 @@ export const subprofiles: Catalog = {
   "socialEditor.saved": "Links saved",
   "socialEditor.error": "We couldn't save that just now — try again.",
   "socialEditor.capHint": "That's the most links you can add.",
+
+  // Per-item links editor (projects / open-source items)
+  "itemLinks.label": "Links",
+  "itemLinks.helper": "Add a repo, live demo, or docs link.",
+  "itemLinks.add": "Add link",
 
   // Section editor (SubprofileSectionEditor)
   "sectionEditor.empty": "Nothing here yet — add your first when you're ready.",
@@ -614,7 +624,7 @@ export const subprofiles: Catalog = {
   "hero.message": "Message",
   "hero.edit": "Edit persona",
   "hero.report.cta": "Report this persona",
-  "hero.report.ariaLabel": "Report {name}",
+  "hero.more.ariaLabel": "More actions for {name}",
   "hero.viewPhotoAria": "View photo of {name}",
   "hero.standalone": "Standalone · {address}",
 
@@ -637,6 +647,32 @@ export const subprofiles: Catalog = {
   "hero.endorse.send": "Send",
   "hero.endorse.error": "We couldn't save that just now — try again.",
   "hero.endorse.endorsedByNames": "Endorsed by {names}",
+
+  // Endorse-with-note modal (EndorseSubprofileModal, EndorseSubprofileModalParts)
+  "hero.endorse.modal.ariaLabel": "Endorse {name}",
+  "hero.endorse.modal.close": "Close",
+  "hero.endorse.modal.eyebrow": "Add your endorsement",
+  "hero.endorse.modal.title": "Endorse <em>{name}</em>",
+  "hero.endorse.modal.sub":
+    "An endorsement is you, publicly, backing {name}'s work. Add a note if you like — a word on what they're great at means more than the number alone.",
+  "hero.endorse.modal.noteLabel": "Your note",
+  "hero.endorse.modal.optional": "optional",
+  "hero.endorse.modal.notePlaceholder":
+    "What makes {name} worth endorsing? What should other people know?",
+  "hero.endorse.modal.noteOptional": "Optional — but a note means more",
+  "hero.endorse.modal.charsCount_one": "{count} character",
+  "hero.endorse.modal.charsCount_other": "{count} characters",
+  "hero.endorse.modal.cancel": "Cancel",
+  "hero.endorse.modal.save": "Save note",
+  "hero.endorse.modal.withdraw": "Withdraw endorsement",
+  "hero.endorse.modal.sending": "Saving…",
+  "hero.endorse.modal.you": "You",
+  "hero.endorse.modal.savedToast": "Your note is saved.",
+  "hero.endorse.modal.withdrawnToast": "Your endorsement was withdrawn.",
+  "hero.endorse.modal.success.title": "That's <em>{name}</em>, endorsed.",
+  "hero.endorse.modal.success.body":
+    "Your face just joined <b>{name}</b>'s endorsers — that's how good work travels here. Person by person, name by name.",
+  "hero.endorse.modal.success.doneCta": "Done",
 
   // Follow control (SubprofileFollow)
   "hero.follow.cta": "Follow",
@@ -682,10 +718,29 @@ export const subprofiles: Catalog = {
   // Caption-less gallery section (SubprofileSections) — per-photo alt text,
   // since these tiles carry no title/subtitle of their own.
   "galleryPhotoAlt": "{name} — gallery photo {number}",
+  // Clickable gallery cell + the full-screen gallery lightbox (GalleryLightbox).
+  "galleryPhotoOpen": "Open {name}'s photo {number} full-screen",
+  "galleryLightboxLabel": "{name}'s photos",
 
   // Gallery-section editor cap (SubprofileSectionEditor) — shown in place of
   // the Add affordance once the universal gallery section hits its 6-photo max.
   "galleryFull": "6 photos maximum",
+
+  // Add-photos-to-gallery modal (multi-add) — device upload + past-uploads
+  // picker, shown from the gallery section's Add affordance.
+  "gallery.addTitle": "Add photos",
+  "gallery.remaining": "Add up to {count} more",
+  "gallery.fromDevice": "Upload from device",
+  "gallery.uploading": "Uploading… {percent}%",
+  "gallery.pastUploads": "Your past uploads",
+  "gallery.empty": "Nothing uploaded yet — add from your device above.",
+  "gallery.loadError": "Couldn't load your uploads.",
+  "gallery.retry": "Try again",
+  "gallery.selectPhoto": "Add this photo",
+  "gallery.deselectPhoto": "Remove this photo",
+  "gallery.inUse": "In use",
+  "gallery.addCta": "Add {count} to gallery",
+  "gallery.someSkipped": "Only {count} could be added — the gallery holds 6.",
 
   // Public persona page (SubprofilePage.tsx)
   "page.loading": "Loading persona…",
@@ -935,6 +990,43 @@ export const subprofiles: Catalog = {
   "editorSavebar.status": "Each section saves on its own",
   "editorSavebar.hidePreview": "Hide preview",
   "editorSavebar.showPreview": "Show preview",
+
+  // Global "Save all" pending-changes list (EditorSavebar) — replaces the
+  // per-section save buttons with one running list of everything unsaved
+  // across the editor, grouped by rail area, plus a single save/discard pair.
+  "pending.area.meta": "This side",
+  "pending.area.socials": "Social links",
+  "pending.area.affiliations": "Part of",
+  "pending.metaEdited": "{field} edited",
+  "pending.metaSet": "{field} → {value}",
+  "pending.metaImage": "{field} changed",
+  "pending.metaImageRemoved": "{field} removed",
+  "pending.rowSummary": "{area}: {summary}",
+  "pending.count.added": "{count} added",
+  "pending.count.removed": "{count} removed",
+  "pending.count.edited": "{count} edited",
+  "pending.count.reordered": "reordered",
+  "pending.more": "+{count} more",
+  "pending.savedToast": "Saved {count} changes",
+  "pending.saveAll": "Save all changes ({count})",
+  "pending.saving": "Saving…",
+  "pending.discardAll": "Discard all",
+  "pending.saveError": "Couldn't save {areas}",
+  "pending.heading": "Unsaved changes",
+  "pending.field.displayName": "Name",
+  "pending.field.tagline": "Tagline",
+  "pending.field.bio": "Bio",
+  "pending.field.avatarUrl": "Avatar",
+  "pending.field.coverUrl": "Cover image",
+  "pending.field.slug": "Address",
+  "pending.field.handle": "Handle",
+  "pending.field.link": "Visibility (linked)",
+  "pending.field.visibility": "Who can see it",
+  "pending.field.accent": "Accent",
+  "pending.field.availability": "Availability",
+  "pending.field.ctaLabel": "Button label",
+  "pending.field.ctaUrl": "Button link",
+  "pending.field.coverBleed": "Banner edge",
 
   // Item drawer (SubprofileItemDrawer, EditorItemRow) — the collapsed row
   // list + right-anchored drawer that replaced the old always-open item

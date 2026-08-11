@@ -7,6 +7,8 @@ import { SubprofileSpotlight } from "./SubprofileSpotlight";
 import { SubprofileSkinExtras } from "./SubprofileSkinExtras";
 import { SubprofileAffiliations } from "./SubprofileAffiliations";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
+import { usePersonaMotion } from "./usePersonaMotion";
+import "./persona-motion.css";
 import type { PersonaViewMode } from "./personaSkinRender";
 import type { PublicSubprofileView, SubprofileItemView } from "./api/subprofiles.adapters";
 import type { SkinFamily } from "./subprofile-skins";
@@ -26,6 +28,7 @@ export function SubprofilePageBody({
   onAction,
   onOpenWorkAt,
   onOpenWorkItem,
+  onOpenGalleryPhoto,
 }: {
   data: PublicSubprofileView;
   skin: SkinFamily;
@@ -34,11 +37,19 @@ export function SubprofilePageBody({
   onAction: (action: string) => void;
   onOpenWorkAt: (index: number) => void;
   onOpenWorkItem: (item: SubprofileItemView) => void;
+  onOpenGalleryPhoto: (item: SubprofileItemView) => void;
 }) {
   const { t } = useTranslation();
+  const rootRef = usePersonaMotion();
 
   return (
-    <article className="pp" data-skin={skin} style={skinVars}>
+    <article
+      className="pp"
+      data-skin={skin}
+      data-cover-bleed={data.coverUrl && data.skinData?.coverBleed ? "true" : undefined}
+      style={skinVars}
+      ref={rootRef}
+    >
       <div className="pp-cover" data-has-cover={data.coverUrl ? "" : undefined}>
         <ImageSlot
           src={data.coverUrl || undefined}
@@ -84,7 +95,7 @@ export function SubprofilePageBody({
                 featured={data.featured}
               />
             ) : (
-              <SubprofileSpotlight item={data.featured} skin={skin} mode={mode} />
+              <SubprofileSpotlight item={data.featured} skin={skin} mode={mode} accent={data.accent} />
             ))}
 
           <SubprofileSections
@@ -93,6 +104,7 @@ export function SubprofilePageBody({
             mode={mode}
             featuredHidden={Boolean(data.featured)}
             onOpenWork={onOpenWorkItem}
+            onOpenGalleryPhoto={onOpenGalleryPhoto}
           />
 
           <SubprofileSkinExtras

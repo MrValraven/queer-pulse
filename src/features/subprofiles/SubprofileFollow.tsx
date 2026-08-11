@@ -5,15 +5,15 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { useFollow } from "./api/useFollow";
-import styles from "./SubprofileFollow.module.css";
 
 /**
- * The persona's follow control: a one-tap Follow/Following toggle plus the
- * live follower count. Mirrors `SubprofileEndorse` minus the note + endorser
- * cluster — followers are never listed, only counted, to preserve their
- * anonymity. Owners can't follow their own persona (`isOwnerViewing`), and a
- * logged-out visitor can't either, so both see the read-only count instead
- * of the button.
+ * The persona's follow control: a one-tap Follow/Following toggle. Mirrors
+ * `SubprofileEndorse` minus the note + endorser cluster — followers are never
+ * listed to preserve their anonymity, and the follower count now lives in the
+ * hero's shared stat line rather than inline here. Owners can't follow their
+ * own persona (`isOwnerViewing`), and a logged-out visitor can't either, so
+ * both see nothing instead of the button. `followerCount` still feeds the
+ * optimistic follow/unfollow cache updates via `useFollow`.
  */
 export function SubprofileFollow({
   subprofileId,
@@ -48,33 +48,27 @@ export function SubprofileFollow({
     }
   }
 
-  return (
-    <div className={styles.controlRow}>
-      {canFollow && (
-        <Button
-          variant={viewerFollowing ? "jade" : "ghost"}
-          size="md"
-          aria-pressed={viewerFollowing}
-          onClick={() => void toggle()}
-          disabled={pending}
-        >
-          {viewerFollowing ? (
-            <>
-              <FiUserCheck aria-hidden />
-              {t("subprofiles:hero.follow.following")}
-            </>
-          ) : (
-            <>
-              <FiUserPlus aria-hidden />
-              {t("subprofiles:hero.follow.cta")}
-            </>
-          )}
-        </Button>
-      )}
+  if (!canFollow) return null;
 
-      <span className={styles.count}>
-        {t("subprofiles:hero.follow.count", { count: followerCount })}
-      </span>
-    </div>
+  return (
+    <Button
+      variant={viewerFollowing ? "jade" : "ghost"}
+      size="md"
+      aria-pressed={viewerFollowing}
+      onClick={() => void toggle()}
+      disabled={pending}
+    >
+      {viewerFollowing ? (
+        <>
+          <FiUserCheck aria-hidden />
+          {t("subprofiles:hero.follow.following")}
+        </>
+      ) : (
+        <>
+          <FiUserPlus aria-hidden />
+          {t("subprofiles:hero.follow.cta")}
+        </>
+      )}
+    </Button>
   );
 }

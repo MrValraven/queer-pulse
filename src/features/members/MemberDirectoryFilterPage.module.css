@@ -214,23 +214,34 @@
   transform: rotate(180deg);
 }
 /* Height-animated collapse without measuring: the wrapper is a 1-row grid
-   whose track eases between 0fr (collapsed) and 1fr (its content's height). */
+   whose track eases between 0fr (collapsed) and 1fr (its content's height).
+   `overflow: hidden` on the wrapper (not just the inner body) is what actually
+   clips the collapsed track to nothing — without it the body's own height can
+   leak a sliver of content past the 0fr row in some engines, so a checkbox or
+   chip peeks under the header. When open the track is the content's height, so
+   there's nothing to clip. */
 .sectionBodyWrap {
   display: grid;
   grid-template-rows: 0fr;
+  overflow: hidden;
   transition: grid-template-rows 0.28s var(--ease);
 }
 .sectionBodyWrapOpen {
   grid-template-rows: 1fr;
 }
 .sectionBody {
-  /* Clipped so the content doesn't spill while the track is < its height.
-     All padding lives inside the clipped box, so the gaps fade in with the
+  /* The collapsing grid item. It carries NO padding of its own — a padded item
+     keeps a non-zero minimum that stops the 0fr track collapsing to true zero
+     (the body then peeks under the header). Padding moves to `.sectionBodyInner`
+     below, which this clips when the track is < its height. */
+  overflow: hidden;
+  min-height: 0;
+}
+.sectionBodyInner {
+  /* All padding lives here, inside the clipped box, so the gaps fade in with the
      body rather than holding open space when collapsed. Inline padding aligns
      the content with the header text (both inset 12px); the bottom padding
      spaces it off the next section's divider. */
-  overflow: hidden;
-  min-height: 0;
   padding: 4px 12px 14px;
 }
 @media (prefers-reduced-motion: reduce) {

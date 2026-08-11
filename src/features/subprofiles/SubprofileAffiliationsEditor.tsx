@@ -1,20 +1,14 @@
-import { useState } from "react";
 import { FiPlus } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AffiliationInputDTO } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
-import { useAffiliations } from "./api/useAffiliations";
+import {
+  useSubprofileEditorContext,
+  withAffiliationUid,
+} from "./subprofileEditorContext";
 import { MAX_AFFILIATIONS, rolesForTargetType } from "./affiliations.data";
-import { SubprofileAffiliationRow, type AffiliationRow } from "./SubprofileAffiliationRow";
+import { SubprofileAffiliationRow } from "./SubprofileAffiliationRow";
 import sharedStyles from "./SubprofileEditor.module.css";
-
-let seq = 0;
-const withUid = (item: AffiliationInputDTO): AffiliationRow => ({
-  ...item,
-  _uid: `affiliation-${seq++}`,
-});
 
 const emptyRow = (): AffiliationInputDTO => ({
   targetType: "event",
@@ -27,68 +21,37 @@ const emptyRow = (): AffiliationInputDTO => ({
  * rows, each a type toggle + target slug + a role scoped to that type
  * (`SubprofileAffiliationRow`), capped at `MAX_AFFILIATIONS`. Existence,
  * visibility, and block-filtering of every target are validated server-side on
- * save — a rejected save surfaces the backend's message (which names the
- * offending entry) as an error toast rather than a generic failure. Saves the
- * whole list in one PUT via `useAffiliations().replace`. Mirrors
- * `SubprofileSocialLinksEditor`'s replace-all add/remove UX. No outer card/
- * title of its own — the editor's pane router (`EditorPaneRouter`, Task 4)
- * already renders the "Part of" h2 + lede above whichever pane is active,
- * reusing this component's own `affiliationsEditor.title`/`.note` copy, so a
- * second heading here would just repeat it.
+ * save. Rows are CONTROLLED by `SubprofileEditorContext`
+ * (`affiliationRows`/`setAffiliationRows`) — no local state and no Save
+ * button; the global savebar's `saveAll()` PUTs the whole list and surfaces
+ * any rejection (which names the offending entry) as an error toast. Mirrors
+ * `SubprofileSocialLinksEditor`'s add/remove UX. No outer card/title of its
+ * own — the editor's pane router (`EditorPaneRouter`) already renders the
+ * "Part of" h2 + lede above whichever pane is active, reusing this
+ * component's own `affiliationsEditor.title`/`.note` copy, so a second
+ * heading here would just repeat it.
  */
 export function SubprofileAffiliationsEditor({
-  subprofile,
+  subprofile: _subprofile,
 }: {
   subprofile: SubprofileView;
 }) {
-  const { replace } = useAffiliations(subprofile.id);
-  const { showToast } = useToast();
   const { t } = useTranslation();
-  const [rows, setRows] = useState<AffiliationRow[]>(() =>
-    subprofile.affiliations.map(({ targetType, targetSlug, role }) =>
-      withUid({ targetType, targetSlug, role }),
-    ),
-  );
-  const [dirty, setDirty] = useState(false);
+  const { affiliationRows: rows, setAffiliationRows } = useSubprofileEditorContext();
 
   const atMax = rows.length >= MAX_AFFILIATIONS;
-  const saving = replace.isPending;
 
   function patch(uid: string, patchValue: Partial<AffiliationInputDTO>) {
-    setRows((cur) =>
-      cur.map((row) => (row._uid === uid ? { ...row, ...patchValue } : row)),
+    setAffiliationRows(
+      rows.map((row) => (row._uid === uid ? { ...row, ...patchValue } : row)),
     );
-    setDirty(true);
   }
   function remove(uid: string) {
-    setRows((cur) => cur.filter((row) => row._uid !== uid));
-    setDirty(true);
+    setAffiliationRows(rows.filter((row) => row._uid !== uid));
   }
   function add() {
     if (atMax) return;
-    setRows((cur) => [...cur, withUid(emptyRow())]);
-    setDirty(true);
-  }
-
-  async function save() {
-    try {
-      const items = rows
-        .filter((row) => row.targetSlug.trim())
-        .map(({ targetType, targetSlug, role }) => ({
-          targetType,
-          targetSlug: targetSlug.trim(),
-          role,
-        }));
-      await replace.mutateAsync(items);
-      setDirty(false);
-      showToast(t("subprofiles:affiliationsEditor.saved"), "success");
-    } catch (error) {
-      const detail =
-        error instanceof Error && error.message
-          ? error.message
-          : t("subprofiles:affiliationsEditor.error");
-      showToast(detail, "error");
-    }
+    setAffiliationRows([...rows, withAffiliationUid(emptyRow())]);
   }
 
   return (
@@ -128,11 +91,6 @@ export function SubprofileAffiliationsEditor({
             </p>
           )}
         </div>
-        <Button variant="primary" onClick={() => void save()} disabled={saving || !dirty}>
-          {saving
-            ? t("subprofiles:affiliationsEditor.saving")
-            : t("subprofiles:affiliationsEditor.save")}
-        </Button>
       </div>
     </div>
   );

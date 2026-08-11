@@ -38,6 +38,8 @@ export function SubprofileCardFooter({
           endorsementCount={persona.endorsementCount}
           viewerEndorsed={persona.viewerEndorsed}
           isOwnerViewing={isOwnerViewing}
+          personaName={persona.displayName}
+          personaAvatarUrl={persona.avatarUrl}
         />
       </div>
       <div className={styles.footerRight}>

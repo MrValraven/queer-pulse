@@ -1036,4 +1036,7 @@ export const members: Catalog = {
   "network.viewAllAria": "Ver todas as {count} em {group}",
   "network.modalSub_one": "{count} pessoa",
   "network.modalSub_other": "{count} pessoas",
+  "network.searchPlaceholder": "Procurar por nome",
+  "network.searchAria": "Procurar nesta lista por nome",
+  "network.noMatches": "Ninguém aqui corresponde a “{query}”.",
 };
