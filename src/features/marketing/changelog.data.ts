@@ -93,6 +93,124 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "crisp-profile-photos",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("crisp-profile-photos"),
+      },
+      {
+        id: "developer-persona-banner",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("developer-persona-banner"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "persona-preview-edit-hidden",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-preview-edit-hidden"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "persona-solo-card-wide",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-solo-card-wide"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "persona-performance-row-mobile",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-performance-row-mobile"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "endorse-persona-by-owner-name",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("endorse-persona-by-owner-name"),
+      },
+      {
+        id: "landing-featured-member-card",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("landing-featured-member-card"),
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
+      },
+      {
+        id: "session-expiry-csrf-fix",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("session-expiry-csrf-fix"),
+      },
+      {
+        id: "persona-image-remove-confirm",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-image-remove-confirm"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "persona-craft-pass",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-craft-pass"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "persona-audit-hardening",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-audit-hardening"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "persona-followers-owner-view",
+        category: "feature",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-followers-owner-view"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "persona-image-reuse-uploads",
+        category: "feature",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-image-reuse-uploads"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
         id: "persona-banner-quality",
         category: "improvement",
         date: "11 Aug 2026",

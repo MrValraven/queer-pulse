@@ -1,7 +1,35 @@
-/* SubprofileDeleteModal — the modal chrome itself is the shared `<Modal>`
-   primitive; `.losing` is the global "what breaks" list (persona-editor.css,
-   Task 1). This just spaces the modal body's stacked children (intro
-   paragraph / losing list / type-to-confirm field). */
+/* SubprofileDeleteModal — the dialog chrome is the shared `<ModalSheet>`
+   (bottom-sheet on mobile, centred dialog on desktop; drag-to-dismiss +
+   safe-area). This module draws the heading + footer inside the sheet body
+   and spaces the body's stacked children (intro / losing list / type-to-confirm
+   field). `.losing` is the global "what breaks" list (persona-editor.css). */
+
+.head {
+  margin-bottom: 18px;
+  padding-inline-end: 34px;
+}
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(20px, 3vw, 25px);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--text-strong);
+}
+.sub {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.foot {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
 
 .body {
   display: flex;

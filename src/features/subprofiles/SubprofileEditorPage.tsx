@@ -1,3 +1,4 @@
+import { FiAlertTriangle } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
 import { Badge, EmptyState, Spinner } from "../../shared/components/ui";
@@ -6,6 +7,7 @@ import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { useSubprofile } from "./api/useSubprofile";
 import { STATUS_BADGE } from "./mySubprofiles.data";
 import { SubprofileEditorShell } from "./SubprofileEditorShell";
+import { SubprofileNotFoundArt } from "./SubprofileNotFoundArt";
 import styles from "./SubprofileEditor.module.css";
 
 const DASHBOARD = "/account/subprofiles";
@@ -21,7 +23,7 @@ const DASHBOARD = "/account/subprofiles";
 export function SubprofileEditorPage() {
   const { t } = useTranslation();
   const { id } = useParams();
-  const { data: subprofile, isLoading } = useSubprofile(id);
+  const { data: subprofile, isLoading, isError, refetch } = useSubprofile(id);
 
   if (isLoading) {
     return (
@@ -34,11 +36,46 @@ export function SubprofileEditorPage() {
     );
   }
 
+  // A fetch error is distinct from a genuine 404: the persona may well exist,
+  // so offer a Retry rather than the dead-end "not found" state below (which
+  // would otherwise swallow every transient/network failure).
+  if (isError) {
+    return (
+      <AppShell>
+        <div className={styles.page}>
+          <div className={styles.container}>
+            <EmptyState
+              icon={
+                <FiAlertTriangle size={26} color="var(--accent)" aria-hidden />
+              }
+              title={t("subprofiles:editor.errorTitle")}
+              description={t("subprofiles:editor.errorDescription")}
+              action={{
+                label: t("subprofiles:editor.errorRetry"),
+                onClick: () => void refetch(),
+              }}
+              secondaryAction={{
+                label: t("subprofiles:editor.notFoundAction"),
+                to: DASHBOARD,
+              }}
+            />
+          </div>
+        </div>
+      </AppShell>
+    );
+  }
+
   if (!subprofile) {
     return (
       <AppShell>
         <div className={styles.page}>
           <div className={styles.container}>
+            {/* Abstract "came unmoored" spot art above the wall — decorative
+                (the copy carries the meaning), centered over the full-width
+                EmptyState panel. */}
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <SubprofileNotFoundArt />
+            </div>
             <EmptyState
               title={t("subprofiles:editor.notFoundTitle")}
               description={t("subprofiles:editor.notFoundDescription")}

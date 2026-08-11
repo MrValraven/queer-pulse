@@ -25,8 +25,8 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: rgba(var(--plum-rgb), 0.1);
-  color: var(--plum);
+  background: rgba(var(--line-rgb), 0.1);
+  color: var(--text-strong);
 }
 
 @media (max-width: 860px) {

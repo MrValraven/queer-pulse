@@ -10,3 +10,11 @@
   padding: 20px 8px;
   text-align: center;
 }
+
+/* On-demand pagination control below the picker (pages no longer all load on
+   mount). */
+.loadMore {
+  display: flex;
+  justify-content: center;
+  padding-block-start: var(--gap-sm);
+}

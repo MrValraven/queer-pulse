@@ -17,6 +17,24 @@ import { VISUAL_SECTIONS } from "./subprofile-skins";
 export type PersonaViewMode = "public" | "owner" | "preview";
 
 /**
+ * The intents a viewer's persona-page controls dispatch up to the page host
+ * (`SubprofilePage.handleAction`) via the `onAction` callback, threaded through
+ * `SubprofilePageBody` → `SubprofileHero`/`SubprofileHeroActions`/
+ * `SubprofileMoreMenu`/`SubprofileAffiliations`. `"report"` opens the report
+ * modal; the `"people:*"` pair opens the endorsers/followers modal; the
+ * navigation intents (`"edit"`/`"cta"`/`"message"`) accompany controls that
+ * also carry their own `to`/`href`/handler. Replaces the former bare `string`
+ * so every hop is checked against the same closed set.
+ */
+export type PersonaAction =
+  | "edit"
+  | "cta"
+  | "message"
+  | "report"
+  | "people:endorsers"
+  | "people:followers";
+
+/**
  * Is a freeform item date ("14 Mar 2026", "2026", "Feb 2026") in the future?
  * Not stored — derived at render. `Date.parse` handles every format the
  * persona editors produce; an unparseable or past date is "not upcoming".
@@ -63,6 +81,21 @@ export const WORK_STATE_CLASS: Record<WorkState, string> = {
   archived: "archived",
   in_progress: "in-progress",
 };
+
+/**
+ * The " · "-joined studio-work meta line ("Oil on linen · 40×50cm · Ed. 3/10")
+ * built from an item's `medium`/`dimensions`/`edition`, dropping any that are
+ * empty. Shared by the studio tile, checklist, and lightbox so the field order
+ * and separator stay in lockstep. Typed structurally so it accepts a
+ * `SubprofileItemView` without importing the view model (no import cycle).
+ */
+export function workMeta(item: {
+  medium: string | null;
+  dimensions: string | null;
+  edition: string | null;
+}): string {
+  return [item.medium, item.dimensions, item.edition].filter(Boolean).join(" · ");
+}
 
 /**
  * Dietary-mark legend (Table skin — `structured.courses[].dishes[].marks`).

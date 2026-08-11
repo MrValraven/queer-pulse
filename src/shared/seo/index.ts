@@ -7,7 +7,9 @@ export {
   buildFaqSchema,
   buildMedicalWebPageSchema,
   buildBreadcrumbSchema,
+  buildPersonProfileSchema,
   type FaqEntry,
   type BreadcrumbStep,
   type MedicalWebPageInput,
+  type PersonProfileInput,
 } from "./jsonLd.data";

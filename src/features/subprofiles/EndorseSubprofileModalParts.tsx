@@ -1,13 +1,25 @@
-import { useId } from "react";
+import { useEffect, useId, useState } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
-import { Avatar, Button } from "../../shared/components/ui";
+import { Avatar, Button, type AvatarTint } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { initialsFromName } from "../../shared/lib/initials";
 import { initialsOf, tintForSlug } from "../members/api/members.adapters";
-import { currentUser } from "../members/data/members";
 import styles from "./EndorseSubprofileModal.module.css";
+
+/** The minimal face slice `EndorseSuccess` needs for the "+ you" avatar. */
+interface ViewerFace {
+  initials: string;
+  tint: AvatarTint;
+  photo: string | undefined;
+}
+
+const NEUTRAL_FACE: ViewerFace = {
+  initials: "?",
+  tint: "default",
+  photo: undefined,
+};
 
 /**
  * Animated plum-panel success state: the persona's face and the current user's
@@ -26,23 +38,39 @@ export function EndorseSuccess({
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { user } = useAuth();
-  // The viewer's own "+ you" face. The mock persona is DEMO-ONLY; live builds
-  // the face from the real authenticated user, and a live-but-unauthenticated
-  // viewer falls back to a neutral placeholder — never the demo "Tiago Costa"
-  // persona (see the demo-persona-leak guard on live paths).
-  const you = demoMode
-    ? {
+  // The viewer's own "+ you" face. The mock persona is DEMO-ONLY and lives in
+  // the ~3400-line member registry, so it is loaded via a dynamic import inside
+  // the `demoMode` branch only — a top-level VALUE import would bundle that
+  // whole registry into the live path (Rollup can't tree-shake around a runtime
+  // `demoMode` check). Live builds the face from the real authenticated user;
+  // a live-but-unauthenticated viewer falls back to a neutral placeholder —
+  // never the demo "Tiago Costa" persona (see the demo-persona-leak guard).
+  const [demoFace, setDemoFace] = useState<ViewerFace | null>(null);
+  useEffect(() => {
+    if (!demoMode) return;
+    let cancelled = false;
+    void import("../members/data/members").then(({ currentUser }) => {
+      if (cancelled) return;
+      setDemoFace({
         initials: currentUser.initials,
         tint: currentUser.tint,
         photo: currentUser.photo,
-      }
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [demoMode]);
+
+  const you: ViewerFace = demoMode
+    ? (demoFace ?? NEUTRAL_FACE)
     : user
       ? {
           initials: initialsOf(user.profile.firstName, user.profile.lastName),
           tint: tintForSlug(user.profile.slug),
           photo: user.profile.avatarUrl ?? undefined,
         }
-      : { initials: "?", tint: "default" as const, photo: undefined };
+      : NEUTRAL_FACE;
   return (
     <div className={styles.success}>
       <div className={styles.facePair}>

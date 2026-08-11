@@ -1,5 +1,6 @@
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { isUpcoming } from "../personaSkinRender";
+import { SkinDefList } from "./SkinDefList";
 import type {
   SubprofileItemView,
   SubprofileSectionView,
@@ -60,14 +61,7 @@ export function StageBooker({ persona }: { persona: SkinExtrasPersona }) {
   return (
     <div className="booker">
       <h2>{t("subprofiles:skinExtras.stage.bookerTitle")}</h2>
-      <dl>
-        {rows.map(([label, value]) => (
-          <div key={label}>
-            <dt>{label}</dt>
-            <dd>{value}</dd>
-          </div>
-        ))}
-      </dl>
+      <SkinDefList rows={rows} />
     </div>
   );
 }

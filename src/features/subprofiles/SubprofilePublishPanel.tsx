@@ -9,7 +9,8 @@ import {
   PublishUnmetError,
   useSubprofileMutations,
 } from "./api/useSubprofileMutations";
-import { estimateDraftReadiness } from "./subprofileDraftReadiness";
+import { estimateEditorReadiness } from "./subprofileDraftReadiness";
+import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { SideReadinessRing } from "./SideReadinessRing";
 import { PublishChecklist, SubprofilePolishList } from "./PublishChecklist";
 import { SubprofileDeleteModal } from "./SubprofileDeleteModal";
@@ -43,13 +44,20 @@ export function SubprofilePublishPanel({
   const { showToast } = useToast();
   const { t } = useTranslation();
   const { user } = useAuth();
+  const editor = useSubprofileEditorContext();
   const [checklist, setChecklist] = useState<ChecklistState | null>(null);
   const [justPublished, setJustPublished] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
   const isPublished = subprofile.status === "published";
   const isLinked = subprofile.linkVisibility === "linked";
-  const readiness = estimateDraftReadiness(subprofile);
+  // Ring reads the LIVE editor snapshot (meta fields + working rows), not the
+  // saved persona, so it tracks unsaved edits as they're made.
+  const readiness = estimateEditorReadiness(editor);
+  // Publish verifies the SAVED server row. With unsaved edits in the editor,
+  // the check would run against a stale (often empty) row and reject — so gate
+  // Publish behind a Save first rather than firing it against stale state.
+  const { dirty } = editor;
 
   // Where the now-live persona can be viewed: a linked persona nests under the
   // owner's main profile; an unlinked one stands on its own handle.
@@ -151,7 +159,7 @@ export function SubprofilePublishPanel({
           <Button
             variant="primary"
             onClick={() => void onPublish()}
-            disabled={publish.isPending}
+            disabled={publish.isPending || dirty}
           >
             {publish.isPending
               ? t("subprofiles:publishPanel.publishing")
@@ -160,6 +168,11 @@ export function SubprofilePublishPanel({
                 : t("subprofiles:publishPanel.publish")}
           </Button>
         </div>
+        {dirty && (
+          <p className={styles.saveFirstHint} role="status">
+            {t("subprofiles:publishPanel.saveFirstHint")}
+          </p>
+        )}
       </div>
 
       {checklist && (

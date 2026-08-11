@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
-import { Modal } from "../../shared/components/ui/Modal";
+import { ModalSheet } from "../../shared/components/ui/Modal";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { logError } from "../../shared/observability/logger";
@@ -76,42 +76,37 @@ export function SubprofileReportModal({
 
   if (done) {
     return (
-      <Modal
-        title={t("subprofiles:reportModal.success.title")}
+      <ModalSheet
         onClose={onClose}
-        footer={
+        ariaLabel={t("subprofiles:reportModal.success.title")}
+      >
+        <header className={styles.head}>
+          <h3 className={styles.title}>
+            {t("subprofiles:reportModal.success.title")}
+          </h3>
+        </header>
+        <p>{t("subprofiles:reportModal.success.body")}</p>
+        <div className={styles.foot}>
           <Button variant="ghost" onClick={onClose}>
             {t("subprofiles:reportModal.success.doneCta")}
           </Button>
-        }
-      >
-        <p>{t("subprofiles:reportModal.success.body")}</p>
-      </Modal>
+        </div>
+      </ModalSheet>
     );
   }
 
   return (
-    <Modal
-      title={t("subprofiles:reportModal.title", { name: subjectName })}
+    <ModalSheet
       onClose={onClose}
-      sub={t("subprofiles:reportModal.lead")}
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose}>
-            {t("subprofiles:reportModal.cancelCta")}
-          </Button>
-          <Button
-            variant="danger"
-            onClick={submit}
-            disabled={createReport.isPending}
-          >
-            {createReport.isPending
-              ? t("subprofiles:reportModal.submitting")
-              : t("subprofiles:reportModal.submitCta")}
-          </Button>
-        </>
-      }
+      ariaLabel={t("subprofiles:reportModal.title", { name: subjectName })}
     >
+      <header className={styles.head}>
+        <h3 className={styles.title}>
+          {t("subprofiles:reportModal.title", { name: subjectName })}
+        </h3>
+        <p className={styles.sub}>{t("subprofiles:reportModal.lead")}</p>
+      </header>
+
       <div className={styles.label}>
         {t("subprofiles:reportModal.reasonLabel")}
       </div>
@@ -148,6 +143,21 @@ export function SubprofileReportModal({
         value={note}
         onChange={(event) => setNote(event.target.value)}
       />
-    </Modal>
+
+      <div className={styles.foot}>
+        <Button variant="ghost" onClick={onClose}>
+          {t("subprofiles:reportModal.cancelCta")}
+        </Button>
+        <Button
+          variant="danger"
+          onClick={submit}
+          disabled={createReport.isPending}
+        >
+          {createReport.isPending
+            ? t("subprofiles:reportModal.submitting")
+            : t("subprofiles:reportModal.submitCta")}
+        </Button>
+      </div>
+    </ModalSheet>
   );
 }

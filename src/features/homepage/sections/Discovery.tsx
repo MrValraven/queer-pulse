@@ -2,7 +2,7 @@ import { Button, Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
-import { rows, spotlights } from "./Discovery.data";
+import { rows, spotlightViews } from "./Discovery.data";
 import { FeaturedSpotlightCard } from "./FeaturedSpotlightCard";
 import { MemberRow } from "./MemberRow";
 import styles from "./Discovery.module.css";
@@ -28,9 +28,9 @@ export function Discovery() {
         </Reveal>
 
         <div className={styles.eGrid}>
-          {spotlights.length > 0 && (
+          {spotlightViews.length > 0 && (
             <Reveal delay={160} className={styles.featCol}>
-              <FeaturedSpotlightCard items={spotlights} />
+              <FeaturedSpotlightCard items={spotlightViews} />
             </Reveal>
           )}
           <div className={styles.stack}>

@@ -27,8 +27,8 @@
   height: 34px;
   flex: none;
   border-radius: 10px;
-  background: rgba(var(--plum-rgb), 0.06);
-  color: var(--accent);
+  background: var(--wash);
+  color: var(--accent-text);
 }
 
 .linkSelect {
@@ -57,7 +57,7 @@
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 12px;
-  background: rgba(var(--plum-rgb), 0.03);
+  background: var(--wash);
   padding: 8px 12px;
   outline: none;
   transition:

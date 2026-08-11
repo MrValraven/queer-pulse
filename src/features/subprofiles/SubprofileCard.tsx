@@ -4,7 +4,7 @@ import { FiChevronRight, FiLink2, FiUsers } from "react-icons/fi";
 import { Avatar, Tag, TagRow } from "../../shared/components/ui";
 import { linkToPath } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ACCENT_TOKENS, DEFAULT_ACCENT } from "./subprofilePresence.data";
+import { accentStyle, DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { skinFor } from "./subprofile-skins";
 import type { AccentKey, SubprofileCardDTO } from "./api/subprofiles.api";
 import styles from "./SubprofileCard.module.css";
@@ -40,7 +40,6 @@ export function SubprofileCard({
 }) {
   const { t } = useTranslation();
   const accent = (card.accent as AccentKey | null) ?? DEFAULT_ACCENT;
-  const { tint, on } = ACCENT_TOKENS[accent];
   const family = skinFor(card.kind);
   const isOpenToCollabs = card.availability === "open_to_collabs";
   const hasSocials = card.socialCount > 0;
@@ -51,7 +50,7 @@ export function SubprofileCard({
     <Link
       className={styles.card}
       to={to ?? linkToPath(`/p/${card.handle}`)}
-      style={{ ["--accent-tint" as string]: tint, ["--accent-on" as string]: on }}
+      style={accentStyle(accent)}
     >
       <div className={styles.header} aria-hidden />
       <Avatar

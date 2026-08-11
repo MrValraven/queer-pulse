@@ -11,8 +11,8 @@ export function PageExcerpt({ persona }: { persona: SkinExtrasPersona }) {
   return (
     <div className="excerpt">
       <div className="excerpt-lines">
-        {excerpt.lines.map((line, index) => (
-          <span key={index}>{line}</span>
+        {excerpt.lines.map((line) => (
+          <span key={line}>{line}</span>
         ))}
       </div>
       <span className="excerpt-from">

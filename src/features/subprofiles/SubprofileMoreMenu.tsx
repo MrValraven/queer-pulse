@@ -9,6 +9,7 @@ import { FiFlag, FiMoreHorizontal, FiShare2 } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { shareSubprofile } from "./shareSubprofile";
+import type { PersonaAction } from "./personaSkinRender";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 import styles from "./SubprofileMoreMenu.module.css";
 
@@ -26,7 +27,7 @@ export function SubprofileMoreMenu({
   onAction,
 }: {
   view: PublicSubprofileView;
-  onAction: (action: string) => void;
+  onAction: (action: PersonaAction) => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();

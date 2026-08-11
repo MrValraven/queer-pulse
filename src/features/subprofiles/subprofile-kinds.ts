@@ -317,6 +317,33 @@ export const KIND_LABELS: Record<SubprofileKind, string> = {
   generic: "Other",
 };
 
+/**
+ * The name to address a persona by in "backing {name}'s work" copy (the endorse
+ * modal). A persona created without a display name defaults to its profession
+ * (`KIND_LABELS[kind]`, e.g. "Dancer"), so "Endorse Dancer" / "backing Dancer's
+ * work" reads oddly and hides the human behind the craft. When the display name
+ * is still that bare profession, fall back to the owner's first name instead
+ * ("Endorse Philippine" / "backing Philippine's work"). A persona with a real,
+ * custom display name — or one whose owner isn't known here — keeps its
+ * display name unchanged.
+ */
+export function personaAddressName({
+  displayName,
+  kind,
+  ownerName,
+}: {
+  displayName: string;
+  kind: SubprofileKind;
+  ownerName?: string;
+}): string {
+  const trimmedName = displayName.trim();
+  const isBareProfession =
+    trimmedName.toLowerCase() === KIND_LABELS[kind].toLowerCase();
+  if (!isBareProfession) return trimmedName;
+  const ownerFirstName = ownerName?.trim().split(/\s+/)[0];
+  return ownerFirstName || trimmedName;
+}
+
 /** Turn any label into a URL-safe slug: lowercase, non-alphanumerics → hyphens. */
 export function slugify(value: string): string {
   return value

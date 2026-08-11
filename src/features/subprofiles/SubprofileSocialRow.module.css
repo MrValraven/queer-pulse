@@ -8,9 +8,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 999px;
+  touch-action: manipulation;
   /* Theme-responsive chip: a faint accent wash + accent hairline over the
      skin's own ground (not a solid white circle, which clashed on the dark
      stage skin), with the icon in the skin's legible foreground. --accent-tint

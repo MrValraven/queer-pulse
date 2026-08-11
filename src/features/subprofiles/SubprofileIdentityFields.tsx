@@ -37,6 +37,16 @@ export function SubprofileIdentityFields({
 }: SubprofileIdentityFieldsProps) {
   const { t } = useTranslation();
 
+  // The bio's 80-char floor is a publish MINIMUM, not a cap — frame the counter
+  // as "how many more to publish" and count trimmed length (whitespace padding
+  // never satisfies the server's own trimmed check).
+  const bioLength = bio.trim().length;
+  const bioRemaining = Math.max(0, MIN_BIO - bioLength);
+  const bioAside =
+    bioRemaining > 0
+      ? t("subprofiles:metaForm.bioMinRemaining", { count: bioRemaining })
+      : t("subprofiles:metaForm.bioMinMet");
+
   return (
     <>
       <FormField label={t("subprofiles:metaForm.avatarLabel")}>
@@ -78,7 +88,7 @@ export function SubprofileIdentityFields({
 
       <FormField
         label={t("subprofiles:metaForm.bioLabel")}
-        labelAside={`${bio.length}/${MIN_BIO}`}
+        labelAside={bioAside}
         helper={t("subprofiles:metaForm.bioHelper")}
       >
         <textarea

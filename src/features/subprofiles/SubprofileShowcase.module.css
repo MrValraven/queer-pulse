@@ -42,6 +42,15 @@
   }
 }
 
+/* A lone persona WITH a cover uses the landscape card (`.featureInner`
+   `[data-layout="wide"]`), which fills the section width — so no max-width cap
+   here (that's `.solo`'s job for the compact, cover-less card). Named for
+   parity/intent with `.solo`; the base `.showcase` single-column grid already
+   makes the card full-width, so nothing more is needed today. */
+.soloWide {
+  width: 100%;
+}
+
 /* "Add another persona", shown under a lone hero in self view (there's no
    switch-list header to host it next to — see `.addAnother` below for the
    equivalent when a switch list exists). */
@@ -113,6 +122,40 @@
   gap: var(--gap-sm);
   width: 100%;
   min-width: 0;
+}
+
+/* Everything below the cover — avatar/name/tagline/featured/footer. Its own
+   column so the cover can sit above it (compact) or beside it (wide) without
+   the details themselves re-flowing. */
+.featureBody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-sm);
+  width: 100%;
+  min-width: 0;
+}
+
+/* Landscape reading of a lone, cover-bearing persona (see `.soloWide` /
+   SubprofileFeatureCard `variant="wide"`): cover as a full-height side panel,
+   details beside it — so a single card fills the section width instead of
+   leaving its right half empty. Only ever rendered at ≥760px (the caller
+   passes `variant="wide"` on desktop only); below that this component is
+   replaced by the mobile accordion, so the grid is scoped to match. */
+@media (min-width: 760px) {
+  .featureInner[data-layout="wide"] {
+    display: grid;
+    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+    align-items: stretch;
+    gap: clamp(18px, 2.4vw, 30px);
+  }
+}
+
+/* In wide mode the cover fills its stretched grid cell (the details column
+   sets the height). `min-height` guards the degenerate case of the wide card
+   ever rendering below the grid breakpoint, where `height: 100%` would collapse. */
+.featureInner[data-layout="wide"] .cover {
+  min-height: 190px;
 }
 
 /* Directional cross-fade: the incoming persona slides in from the direction

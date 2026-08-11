@@ -86,11 +86,11 @@ export const subprofiles: Catalog = {
   "alsoAs.sidesPrompt.notNow": "Not now",
 
   // Nav + command palette
-  "nav.browse": "Subprofiles",
-  "nav.mine": "Subprofiles",
-  "command.mine.name": "My subprofiles",
+  "nav.browse": "Personas",
+  "nav.mine": "Your personas",
+  "command.mine.name": "My personas",
   "command.mine.sub": "Your professional personas",
-  "command.browse.name": "Browse subprofiles",
+  "command.browse.name": "Browse personas",
   "command.browse.sub": "The persona directory",
 
   // Directory headline (SubprofileDirectoryPage) — the coral <em> left raw
@@ -158,7 +158,7 @@ export const subprofiles: Catalog = {
   "link.help.linked":
     "Shown on your main profile as another persona of yours — people can see the two are the same person.",
   "link.help.unlinked":
-    "Stands on its own, with no visible tie to your main profile. It earns a public handle once it passes the completeness check.",
+    "Stands on its own — nothing here points back to your main profile, so you can keep this work separate from the rest of your life. It earns a public handle once it passes the completeness check.",
 
   // Gig-state / work-state chips (ItemRow, stage + studio/workshop skins) and
   // dietary-mark legend (Table skin) — persisted `gigState`/`workState`
@@ -246,7 +246,7 @@ export const subprofiles: Catalog = {
   "checklist.reqLanguageTitle": "Language that keeps everyone welcome",
   "checklist.reqLanguageMet": "Nothing flagged.",
   "checklist.reqLanguageFail":
-    "Something in your name, handle or bio was flagged — please reword it.",
+    "A word in your name, handle or bio might not sit right with everyone — mind rewording it?",
 
   // Publish-checklist polish nudges (non-blocking, PublishChecklist.tsx)
   "checklist.polishTitle": "A little more polish",
@@ -309,8 +309,8 @@ export const subprofiles: Catalog = {
   "editor.notFoundTitle": "We couldn't find that persona",
   "editor.notFoundDescription":
     "It may have been removed, or the link isn't quite right.",
-  "editor.notFoundAction": "Back to your subprofiles",
-  "editor.backLink": "Your subprofiles",
+  "editor.notFoundAction": "Back to your personas",
+  "editor.backLink": "Your personas",
 
   // Meta editor (useSubprofileMetaEditor, fed to the Identity/Presence/
   // Address rail panes)
@@ -455,6 +455,8 @@ export const subprofiles: Catalog = {
   "newModal.displayNamePlaceholderExample": "e.g. {kind}",
   "newModal.linkChoiceLabel": "Linked to your profile, or its own address?",
   "newModal.linkedAddressNote": "Always yours — nothing to claim.",
+  "newModal.standaloneNote":
+    "Its own address, with nothing pointing back to you — yours to keep separate.",
   "newModal.handleStateClaim":
     "Yours if you publish first — handles are first come, first served.",
   "newModal.toastError": "We couldn't start that one — try again.",
@@ -614,11 +616,14 @@ export const subprofiles: Catalog = {
 
   // Image upload field (ImageUploadField)
   "imageUpload.defaultPlaceholder": "Image",
-  "imageUpload.uploading": "Uploading…",
   "imageUpload.change": "Change",
   "imageUpload.add": "Add image",
   "imageUpload.remove": "Remove image",
-  "imageUpload.error": "We couldn't add that image. Please try again.",
+  "imageUpload.removeConfirm.title": "Remove this image?",
+  "imageUpload.removeConfirm.body":
+    "It'll be cleared from this field. You can add another one anytime.",
+  "imageUpload.removeConfirm.confirm": "Remove",
+  "imageUpload.removeConfirm.cancel": "Keep it",
 
   // Persona hero (SubprofileHero)
   "hero.message": "Message",
@@ -911,14 +916,16 @@ export const subprofiles: Catalog = {
   "peopleModal.endorsementsTitle_other": "{count} endorsements",
   "peopleModal.loading": "Loading…",
   "peopleModal.noEndorsements": "No endorsements yet",
+  "peopleModal.noEndorsementsBody":
+    "When someone backs this persona's work, they'll show up here.",
   "peopleModal.noFollowers": "No followers yet",
   "peopleModal.noNote": "Endorsed without a note",
   "peopleModal.removeAriaLabel": "Remove your endorsement of {name}",
   "peopleModal.removeCta": "Remove",
   "peopleModal.removeError": "We couldn't remove that just now — try again.",
-  "peopleModal.followersPrivateTitle": "Followers stay private",
+  "peopleModal.followersPrivateTitle": "Followers are private",
   "peopleModal.followersPrivateBody":
-    "Following is anonymous by design — we don't show who's following, even to the persona being followed.",
+    "Only the owner of {name} can see who follows. For everyone else, following stays anonymous — your name never shows up here.",
 
   // Skin-specific extras (SubprofileSkinExtras + skins/*.tsx) — the
   // per-family blocks the Phase-1 design tree calls SkinExtras.
@@ -1108,4 +1115,34 @@ export const subprofiles: Catalog = {
     "Your handle, @{handle}, released back into the pool",
   "deleteConfirm.typeLabel": 'Type "{name}" to confirm',
   "deleteConfirm.typeHelper": "This makes sure you mean it.",
+
+  // Persona audit remediation (2026-08-11)
+  "section.countLabel_one": "{count} item",
+  "section.countLabel_other": "{count} items",
+  "page.ogImageAlt": "{name} — {craft} on QueerPulse",
+  "peopleModal.followersCountOnlyTitle": "Followers stay private",
+  "peopleModal.followersCountOnlyBody":
+    "{name} has {count} followers, but following is anonymous — we show the count, never who's behind it.",
+  "publishPanel.saveFirstHint":
+    "Save your changes first — Publish checks your saved profile.",
+  "editor.errorTitle": "Couldn't load this persona",
+  "editor.errorDescription":
+    "Something went wrong reaching the server. Nothing's lost — check your connection and try again.",
+  "editor.errorRetry": "Try again",
+  "metaForm.ctaLabelError": "Add a label so people know what this button does.",
+  "metaForm.ctaUrlError": "Add a link for this button to point to.",
+  "metaForm.bioMinRemaining_one": "{count} character more to publish",
+  "metaForm.bioMinRemaining_other": "{count} characters more to publish",
+  "metaForm.bioMinMet": "Long enough to publish",
+  "pending.blockedName":
+    "This persona needs a name — add it on the Identity tab.",
+  "pending.blockedHandle":
+    "That address is taken — pick another on the Address tab.",
+  "newModal.toastHandleClaimFailed":
+    "That handle got taken just now — we've kept this linked to your profile for the moment. You can claim a new address from the editor.",
+  "invite.loadMore": "Show more connections",
+  "invite.loadingMore": "Loading…",
+
+  "editorSavebar.mobilePreview": "Preview",
+  "mobilePreview.ariaLabel": "Live preview of your persona page",
 };

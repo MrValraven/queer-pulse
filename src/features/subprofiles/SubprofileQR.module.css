@@ -7,7 +7,7 @@
   margin-inline: auto;
   padding: var(--gap-sm);
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-badge);
   text-align: center;
 }

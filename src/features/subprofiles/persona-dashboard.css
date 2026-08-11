@@ -45,10 +45,7 @@
   font-size: clamp(38px, 5vw, 58px);
   line-height: 1.02;
   letter-spacing: -0.025em;
-  color: var(--plum);
-}
-[data-theme="dark"] .page-head h1 {
-  color: var(--ink);
+  color: var(--text-strong);
 }
 .page-head h1 em {
   font-style: italic;
@@ -153,12 +150,9 @@
   font-size: 24px;
   font-weight: 400;
   letter-spacing: -0.02em;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.1;
   margin-top: 2px;
-}
-[data-theme="dark"] .side-name {
-  color: var(--ink);
 }
 .side-tag {
   color: var(--ink-60);
@@ -414,6 +408,11 @@
    is filled with `--accent`, and the inner `<i>` punches a `--paper` hole
    showing the bare number (never a glyph — see `icons-not-glyphs`). Sits in
    the `.side-top` corner as the draft card's readiness indicator. */
+@property --p {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
 .ring {
   --p: 0;
   width: 36px;
@@ -423,11 +422,18 @@
   place-items: center;
   font-size: 11px;
   font-weight: 700;
-  color: var(--plum);
-  background: conic-gradient(var(--accent) calc(var(--p) * 1%), var(--line) 0);
+  color: var(--text-strong);
+  background: conic-gradient(
+    var(--accent-ink) calc(var(--p) * 1%),
+    var(--line-2) 0
+  );
 }
-[data-theme="dark"] .ring {
-  color: var(--ink);
+/* Animate the conic fill up from 0 on mount (the inline `--p` overrides the
+   `.ring` default of 0, and @property makes `--p` interpolable). */
+@media (prefers-reduced-motion: no-preference) {
+  .ring {
+    transition: --p 0.5s var(--ease);
+  }
 }
 .ring i {
   width: 28px;

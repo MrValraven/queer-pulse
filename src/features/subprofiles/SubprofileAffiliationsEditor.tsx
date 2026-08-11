@@ -6,6 +6,7 @@ import {
   useSubprofileEditorContext,
   withAffiliationUid,
 } from "./subprofileEditorContext";
+import { useEditorRowList } from "./useEditorRowList";
 import { MAX_AFFILIATIONS, rolesForTargetType } from "./affiliations.data";
 import { SubprofileAffiliationRow } from "./SubprofileAffiliationRow";
 import sharedStyles from "./SubprofileEditor.module.css";
@@ -39,20 +40,10 @@ export function SubprofileAffiliationsEditor({
   const { t } = useTranslation();
   const { affiliationRows: rows, setAffiliationRows } = useSubprofileEditorContext();
 
-  const atMax = rows.length >= MAX_AFFILIATIONS;
-
-  function patch(uid: string, patchValue: Partial<AffiliationInputDTO>) {
-    setAffiliationRows(
-      rows.map((row) => (row._uid === uid ? { ...row, ...patchValue } : row)),
-    );
-  }
-  function remove(uid: string) {
-    setAffiliationRows(rows.filter((row) => row._uid !== uid));
-  }
-  function add() {
-    if (atMax) return;
-    setAffiliationRows([...rows, withAffiliationUid(emptyRow())]);
-  }
+  const { patch, remove, add, atMax } = useEditorRowList(rows, setAffiliationRows, {
+    max: MAX_AFFILIATIONS,
+    makeEmpty: () => withAffiliationUid(emptyRow()),
+  });
 
   return (
     <div className="ed-grid">

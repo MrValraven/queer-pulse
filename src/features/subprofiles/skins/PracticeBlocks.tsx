@@ -1,5 +1,6 @@
 import { FiCheck } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { SkinDefList } from "./SkinDefList";
 import type { SkinExtrasPersona } from "../SubprofileSkinExtras";
 
 /** Practice `afterBio` slot: fee/session logistics (`skinData.practical`).
@@ -22,14 +23,7 @@ export function PracticePractical({ persona }: { persona: SkinExtrasPersona }) {
 
   return (
     <div className="practical">
-      <dl>
-        {rows.map(([label, value]) => (
-          <div key={label}>
-            <dt>{label}</dt>
-            <dd>{value}</dd>
-          </div>
-        ))}
-      </dl>
+      <SkinDefList rows={rows} />
     </div>
   );
 }
@@ -49,8 +43,8 @@ export function PracticeFirstSession({
     <div className="firstsession">
       <h2>{t("subprofiles:skinExtras.practice.firstSessionTitle")}</h2>
       <ol>
-        {steps.map((step, index) => (
-          <li key={index}>
+        {steps.map((step) => (
+          <li key={`${step.title}|${step.body}`}>
             <b>{step.title}</b>
             <p>{step.body}</p>
           </li>
@@ -99,8 +93,8 @@ export function PracticeReferrals({ persona }: { persona: SkinExtrasPersona }) {
 
   return (
     <div className="referrals">
-      {referrals.map((referral, index) => (
-        <div className="ref" key={index}>
+      {referrals.map((referral) => (
+        <div className="ref" key={`${referral.name}|${referral.note}`}>
           <b>{referral.name}</b>
           <small>{referral.note}</small>
         </div>

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { followSubprofile, unfollowSubprofile } from "./subprofiles.api";
+import type { PublicSubprofileOutcome } from "./usePublicSubprofile";
 
 /** Result shape shared by the follow and unfollow endpoints. */
 export interface FollowResult {
@@ -34,8 +35,32 @@ export function useFollow(subprofileId: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
 
-  const invalidate = () => {
-    void queryClient.invalidateQueries({ queryKey: ["subprofile"] });
+  // Patch the persona's public query cache in place with the AUTHORITATIVE
+  // `{followerCount, viewerFollowing}` the endpoint returns, instead of firing
+  // a broad invalidate + refetch (which flickered the count between the stale
+  // and fresh values on every tap). The public query is keyed by handle/slug +
+  // viewer, not by this persona `id`, so we scan the whole `["subprofile",
+  // "public"]` family via `setQueriesData` and patch only the entry whose
+  // cached DTO carries this `id`. Works identically in demo mode — the demo
+  // branch returns the same `FollowResult` shape (from `mockSetFollowing`,
+  // which also flips the shared `DEMO_SUBPROFILES` state so any later fresh
+  // read stays consistent). Followers are never listed (count-only,
+  // anonymity-preserving), so there is no separate followers query to refresh.
+  const patchPublic = (result: FollowResult) => {
+    queryClient.setQueriesData<PublicSubprofileOutcome>(
+      { queryKey: ["subprofile", "public"] },
+      (prev) =>
+        prev && prev.state === "ok" && prev.data.id === subprofileId
+          ? {
+              ...prev,
+              data: {
+                ...prev.data,
+                followerCount: result.followerCount,
+                viewerFollowing: result.viewerFollowing,
+              },
+            }
+          : prev,
+    );
   };
 
   const follow = useMutation<FollowResult, Error, FollowVariables>({
@@ -53,7 +78,7 @@ export function useFollow(subprofileId: string) {
       }
       return followSubprofile(subprofileId);
     },
-    onSuccess: invalidate,
+    onSuccess: patchPublic,
   });
 
   const unfollow = useMutation<FollowResult, Error, UnfollowVariables>({
@@ -71,7 +96,7 @@ export function useFollow(subprofileId: string) {
       }
       return unfollowSubprofile(subprofileId);
     },
-    onSuccess: invalidate,
+    onSuccess: patchPublic,
   });
 
   return { follow, unfollow };

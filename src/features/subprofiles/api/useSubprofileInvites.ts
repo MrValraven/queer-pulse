@@ -57,13 +57,13 @@ export function useSubprofileInvites(id: string | undefined) {
   const query = useQuery<PersonaInviteDTO[]>({
     queryKey: ["subprofile-invites", demoMode, id],
     enabled: Boolean(id),
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
       if (!id) return [];
       if (demoMode) {
         const { mockPersonaInvites } = await import("../data/subprofiles.data");
         return mockPersonaInvites(id);
       }
-      return listSubprofileInvites(id);
+      return listSubprofileInvites(id, signal);
     },
   });
 

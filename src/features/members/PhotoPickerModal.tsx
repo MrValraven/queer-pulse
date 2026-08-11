@@ -10,7 +10,7 @@ import {
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ImageProcessingError } from "./api/uploadProcessing";
-import { useUploadImage } from "./api/useUploadImage";
+import { useUploadImage, type UploadKind } from "./api/useUploadImage";
 import { useMyMedia, useDeleteMyMedia } from "../settings/api/useMyMedia";
 import {
   resolveMyMediaUrl,
@@ -20,8 +20,110 @@ import styles from "./PhotoPickerModal.module.css";
 
 const LOADING_SKELETON_CELLS = 6;
 
+interface PastUploadsSectionProps {
+  items: MyMediaItem[];
+  isLoading: boolean;
+  isError: boolean;
+  /** Disabled while a device upload is in flight. */
+  uploading: boolean;
+  onRetry: () => void;
+  onSelect: (item: MyMediaItem) => void;
+  onRequestDelete: (item: MyMediaItem) => void;
+}
+
+/**
+ * The "Your photos" grid of the member's own past uploads, with its own loading
+ * (skeletons), error (retry), and empty states. Selecting a thumbnail picks it;
+ * the trash affordance requests a delete (the parent owns the confirm dialog).
+ */
+function PastUploadsSection({
+  items,
+  isLoading,
+  isError,
+  uploading,
+  onRetry,
+  onSelect,
+  onRequestDelete,
+}: PastUploadsSectionProps) {
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <h3 className={styles.sectionTitle}>
+        {t("members:avatar.picker.yourPhotos")}
+      </h3>
+
+      {isLoading && (
+        <ul className={styles.grid} aria-busy="true">
+          {Array.from({ length: LOADING_SKELETON_CELLS }, (_, index) => (
+            <li key={index} className={styles.cell}>
+              <SkeletonLine height="100%" style={{ borderRadius: 12 }} />
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {isError && (
+        <div className={styles.emptyState}>
+          <p>{t("members:avatar.picker.loadError")}</p>
+          <button type="button" className={styles.sourceBtn} onClick={onRetry}>
+            {t("members:avatar.picker.retry")}
+          </button>
+        </div>
+      )}
+
+      {!isLoading && !isError && items.length === 0 && (
+        <p className={styles.emptyState}>{t("members:avatar.picker.empty")}</p>
+      )}
+
+      {!isLoading && !isError && items.length > 0 && (
+        <ul className={styles.grid}>
+          {items.map((item) => (
+            <li key={item.key} className={styles.cell}>
+              <button
+                type="button"
+                className={styles.thumbBtn}
+                aria-label={t("members:avatar.picker.useThis")}
+                onClick={() => onSelect(item)}
+                disabled={uploading}
+              >
+                <ImageSlot
+                  tint="coral"
+                  src={resolveMyMediaUrl(item.fileUrl)}
+                  initials=""
+                  width="100%"
+                  height="100%"
+                  radius={12}
+                  srcSize={220}
+                />
+              </button>
+              {item.inUse && (
+                <span className={styles.inUse}>
+                  {t("members:avatar.picker.inUse")}
+                </span>
+              )}
+              <button
+                type="button"
+                className={styles.deleteBtn}
+                aria-label={t("members:avatar.picker.delete")}
+                onClick={() => onRequestDelete(item)}
+                disabled={uploading}
+              >
+                <FiTrash2 size={14} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
+}
+
 interface PhotoPickerModalProps {
   onClose: () => void;
+  /** Which upload surface to store under — sets size/dimension limits (avatar
+   * vs cover vs work image). Defaults to `"avatar"` for the profile hero. */
+  kind?: UploadKind;
   googlePhoto?: string;
   /** The value currently applied in the editor (last thing passed to
    * `onPick`/`onPickGoogle`) — used to tell whether a deleted gallery item is
@@ -29,7 +131,9 @@ interface PhotoPickerModalProps {
   currentValue?: string;
   /** value = key to persist, previewUrl = absolute/blob URL to show now. */
   onPick: (value: string, previewUrl: string) => void;
-  onPickGoogle: (url: string) => void;
+  /** Only relevant when a `googlePhoto` is offered; omit for slots (persona
+   * avatar/cover/item image) that have no Google source. */
+  onPickGoogle?: (url: string) => void;
   /** Called when the deleted photo was the one currently applied — the
    * caller should clear the hero the same way its own Remove action does. */
   onDeletedCurrent?: () => void;
@@ -44,6 +148,7 @@ interface PhotoPickerModalProps {
  */
 export function PhotoPickerModal({
   onClose,
+  kind = "avatar",
   googlePhoto,
   currentValue,
   onPick,
@@ -53,7 +158,7 @@ export function PhotoPickerModal({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const fileRef = useRef<HTMLInputElement>(null);
-  const uploadAvatar = useUploadImage("avatar");
+  const uploadImage = useUploadImage(kind);
   const { items, isLoading, isError, refetch } = useMyMedia();
   const deleteMedia = useDeleteMyMedia();
 
@@ -67,7 +172,7 @@ export function PhotoPickerModal({
     setProgress(0);
     setUploading(true);
     try {
-      const { key, previewUrl } = await uploadAvatar(file, {
+      const { key, previewUrl } = await uploadImage(file, {
         onProgress: (percent) => setProgress(percent),
       });
       onPick(key, previewUrl);
@@ -119,7 +224,7 @@ export function PhotoPickerModal({
             type="button"
             className={styles.sourceBtn}
             onClick={() => {
-              onPickGoogle(googlePhoto);
+              onPickGoogle?.(googlePhoto);
               onClose();
             }}
             disabled={uploading}
@@ -136,79 +241,18 @@ export function PhotoPickerModal({
         </p>
       )}
 
-      <h3 className={styles.sectionTitle}>
-        {t("members:avatar.picker.yourPhotos")}
-      </h3>
-
-      {isLoading && (
-        <ul className={styles.grid} aria-busy="true">
-          {Array.from({ length: LOADING_SKELETON_CELLS }, (_, index) => (
-            <li key={index} className={styles.cell}>
-              <SkeletonLine height="100%" style={{ borderRadius: 12 }} />
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {isError && (
-        <div className={styles.emptyState}>
-          <p>{t("members:avatar.picker.loadError")}</p>
-          <button
-            type="button"
-            className={styles.sourceBtn}
-            onClick={() => void refetch()}
-          >
-            {t("members:avatar.picker.retry")}
-          </button>
-        </div>
-      )}
-
-      {!isLoading && !isError && items.length === 0 && (
-        <p className={styles.emptyState}>{t("members:avatar.picker.empty")}</p>
-      )}
-
-      {!isLoading && !isError && items.length > 0 && (
-        <ul className={styles.grid}>
-          {items.map((item) => (
-            <li key={item.key} className={styles.cell}>
-              <button
-                type="button"
-                className={styles.thumbBtn}
-                aria-label={t("members:avatar.picker.useThis")}
-                onClick={() => {
-                  onPick(item.key, resolveMyMediaUrl(item.fileUrl));
-                  onClose();
-                }}
-                disabled={uploading}
-              >
-                <ImageSlot
-                  tint="coral"
-                  src={resolveMyMediaUrl(item.fileUrl)}
-                  initials=""
-                  width="100%"
-                  height="100%"
-                  radius={12}
-                  srcSize={220}
-                />
-              </button>
-              {item.inUse && (
-                <span className={styles.inUse}>
-                  {t("members:avatar.picker.inUse")}
-                </span>
-              )}
-              <button
-                type="button"
-                className={styles.deleteBtn}
-                aria-label={t("members:avatar.picker.delete")}
-                onClick={() => setPendingDelete(item)}
-                disabled={uploading}
-              >
-                <FiTrash2 size={14} />
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+      <PastUploadsSection
+        items={items}
+        isLoading={isLoading}
+        isError={isError}
+        uploading={uploading}
+        onRetry={() => void refetch()}
+        onSelect={(item) => {
+          onPick(item.key, resolveMyMediaUrl(item.fileUrl));
+          onClose();
+        }}
+        onRequestDelete={setPendingDelete}
+      />
 
       <input
         ref={fileRef}

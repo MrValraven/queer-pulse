@@ -4,6 +4,8 @@ import { FiChevronLeft } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { buildEditorRailGroups, type EditorPaneKey } from "./editorRail.data";
+import { estimateEditorReadiness } from "./subprofileDraftReadiness";
+import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { SideReadinessRing } from "./SideReadinessRing";
 
 /**
@@ -12,7 +14,7 @@ import { SideReadinessRing } from "./SideReadinessRing";
  * with a `.rail-back` link to the dashboard (matching the design's
  * "‹ Your personas" rail head), then the grouped panes. Plain `<button>`s per
  * entry give native keyboard operability (Tab + Enter/Space) for free; the
- * active entry gets `aria-current="true"`, which the CSS keys its solid-fill
+ * active entry gets `aria-current="page"`, which the CSS keys its solid-fill
  * active state off of. The Publish entry renders the draft-readiness `.ring`
  * in place of an icon (the design's "Get it live" row). Collapses to a
  * horizontal scroller ≤760px via the CSS's own `@container` rule — nothing
@@ -30,7 +32,12 @@ export function EditorRail({
   onSelect: (pane: EditorPaneKey) => void;
 }) {
   const { t } = useTranslation();
+  const editor = useSubprofileEditorContext();
   const groups = buildEditorRailGroups(subprofile);
+  // The rail's "Get it live" ring tracks the LIVE editor snapshot (unsaved
+  // edits included), matching the Publish pane's ring — `buildEditorRailGroups`
+  // seeds it off the saved persona, so override with the live count here.
+  const liveReadiness = estimateEditorReadiness(editor);
 
   return (
     <nav className="ed-rail" aria-label={t("subprofiles:editorRail.navLabel")}>
@@ -44,17 +51,19 @@ export function EditorRail({
           {group.entries.map((entry) => {
             const Icon = entry.icon;
             const isActive = entry.key === activePane;
+            // Only the Publish entry carries a `ring`; render the live count.
+            const ring = entry.ring ? liveReadiness : null;
             return (
               <button
                 key={entry.key}
                 type="button"
-                aria-current={isActive ? "true" : undefined}
+                aria-current={isActive ? "page" : undefined}
                 onClick={() => onSelect(entry.key)}
               >
-                {entry.ring ? (
+                {ring ? (
                   <SideReadinessRing
-                    readyCount={entry.ring.readyCount}
-                    totalCount={entry.ring.totalCount}
+                    readyCount={ring.readyCount}
+                    totalCount={ring.totalCount}
                   />
                 ) : (
                   <Icon size={16} aria-hidden />

@@ -56,10 +56,13 @@ export function SubprofileSpotlight({
       </div>
       <div className="txt">
         <Eyebrow>{t("subprofiles:spotlight.eyebrow")}</Eyebrow>
-        <h3>{item.title}</h3>
-        {(item.subtitle || item.description) && (
-          <p>{item.subtitle || item.description}</p>
-        )}
+        {/* `<h2>`, not `<h3>`: the page heading order is h1 (name) → h2
+            (spotlight + each section), so the spotlight can't skip a level. */}
+        <h2>{item.title}</h2>
+        {/* Render subtitle and description as separate lines — an item with
+            both must not drop the description. */}
+        {item.subtitle && <p>{item.subtitle}</p>}
+        {item.description && <p>{item.description}</p>}
 
         {skin === "workshop" && <WorkshopSnippet item={item} />}
 

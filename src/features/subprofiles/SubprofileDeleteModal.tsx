@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiAtSign, FiGrid, FiUserCheck, FiUsers } from "react-icons/fi";
-import { Button, FormField, Modal } from "../../shared/components/ui";
+import { Button, FormField, ModalSheet } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -20,9 +20,10 @@ import styles from "./SubprofileDeleteModal.module.css";
  * the persona's display name before Delete enables, and spells out exactly
  * what's lost (`.losing`, the global "what breaks" list) rather than a plain
  * confirm. Deleting removes the persona for every co-owner, not just the
- * signed-in one. On success, there's no editor left to return to, so this
- * navigates back to the dashboard (unlike the dashboard's own delete, which
- * just stays on the grid).
+ * signed-in one. On success it closes the modal and navigates to the dashboard:
+ * from the editor that leaves the now-deleted persona's editor; from the
+ * dashboard itself the navigate is a no-op and the closed modal + invalidated
+ * list is all that's needed (this same modal backs both delete entry points).
  */
 export function SubprofileDeleteModal({
   subprofile,
@@ -56,6 +57,7 @@ export function SubprofileDeleteModal({
     try {
       await remove.mutateAsync(subprofile.id);
       showToast(t("subprofiles:mine.toastDeleted", { name: requiredName }), "info");
+      onClose();
       void navigate(routes.subprofilesDashboard);
     } catch {
       showToast(t("subprofiles:mine.toastDeleteError"), "error");
@@ -63,27 +65,19 @@ export function SubprofileDeleteModal({
   }
 
   return (
-    <Modal
-      title={t("subprofiles:mine.deleteModalTitle")}
-      sub={t("subprofiles:mine.deleteModalSub", { name: requiredName })}
+    <ModalSheet
       onClose={onClose}
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose}>
-            {t("subprofiles:mine.deleteModalKeep")}
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => void confirmDelete()}
-            disabled={remove.isPending || !nameMatches}
-          >
-            {remove.isPending
-              ? t("subprofiles:mine.deleteModalDeleting")
-              : t("subprofiles:mine.deleteModalConfirm")}
-          </Button>
-        </>
-      }
+      ariaLabel={t("subprofiles:mine.deleteModalTitle")}
     >
+      <header className={styles.head}>
+        <h3 className={styles.title}>
+          {t("subprofiles:mine.deleteModalTitle")}
+        </h3>
+        <p className={styles.sub}>
+          {t("subprofiles:mine.deleteModalSub", { name: requiredName })}
+        </p>
+      </header>
+
       <div className={styles.body}>
         <p>
           {isSharedDelete
@@ -130,10 +124,28 @@ export function SubprofileDeleteModal({
             onChange={(event) => setTypedName(event.target.value)}
             placeholder={requiredName}
             autoComplete="off"
+            autoCapitalize="off"
+            autoCorrect="off"
             spellCheck={false}
+            enterKeyHint="done"
           />
         </FormField>
       </div>
-    </Modal>
+
+      <div className={styles.foot}>
+        <Button variant="ghost" onClick={onClose}>
+          {t("subprofiles:mine.deleteModalKeep")}
+        </Button>
+        <Button
+          variant="danger"
+          onClick={() => void confirmDelete()}
+          disabled={remove.isPending || !nameMatches}
+        >
+          {remove.isPending
+            ? t("subprofiles:mine.deleteModalDeleting")
+            : t("subprofiles:mine.deleteModalConfirm")}
+        </Button>
+      </div>
+    </ModalSheet>
   );
 }

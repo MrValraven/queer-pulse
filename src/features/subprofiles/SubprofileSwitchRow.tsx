@@ -2,7 +2,7 @@ import { FiChevronRight } from "react-icons/fi";
 import { MemberIdentity } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
-import { ACCENT_TOKENS, DEFAULT_ACCENT } from "./subprofilePresence.data";
+import { accentStyle, DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { SubprofileOwnerBadges } from "./SubprofileOwnerBadges";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 import type { SubprofileStatus, Visibility } from "./api/subprofiles.api";
@@ -52,7 +52,6 @@ export function SubprofileSwitchRow({
 }) {
   const { t } = useTranslation();
   const accent = persona.accent ?? DEFAULT_ACCENT;
-  const { tint, on } = ACCENT_TOKENS[accent];
   // "kind · tagline" — the aka-card secondary line. Falls back to the kind
   // alone when the persona has no tagline set.
   const kindLabel = t(KIND_LABEL_KEYS[persona.kind]);
@@ -96,8 +95,7 @@ export function SubprofileSwitchRow({
       aria-controls={heroId}
       tabIndex={isSelected ? 0 : -1}
       style={{
-        ["--accent-tint" as string]: tint,
-        ["--accent-on" as string]: on,
+        ...accentStyle(accent),
         ...(isEntering ? { ["--row-fade-delay" as string]: `${staggerDelay}ms` } : {}),
       }}
       onClick={() => onSelect(persona.slug)}

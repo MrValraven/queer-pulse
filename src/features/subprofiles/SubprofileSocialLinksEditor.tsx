@@ -6,12 +6,12 @@ import {
   socialHref,
   socialPlatform,
 } from "../../shared/social/socialPlatforms";
-import type { SocialLinkDTO } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import {
   useSubprofileEditorContext,
   withSocialUid,
 } from "./subprofileEditorContext";
+import { useEditorRowList } from "./useEditorRowList";
 import sharedStyles from "./SubprofileEditor.module.css";
 import styles from "./SubprofileSocialLinksEditor.module.css";
 
@@ -45,20 +45,10 @@ export function SubprofileSocialLinksEditor({
   const { t } = useTranslation();
   const { socialRows: rows, setSocialRows } = useSubprofileEditorContext();
 
-  const atMax = rows.length >= MAX_SOCIAL_LINKS;
-
-  function patch(uid: string, patchValue: Partial<SocialLinkDTO>) {
-    setSocialRows(
-      rows.map((row) => (row._uid === uid ? { ...row, ...patchValue } : row)),
-    );
-  }
-  function remove(uid: string) {
-    setSocialRows(rows.filter((row) => row._uid !== uid));
-  }
-  function add() {
-    if (atMax) return;
-    setSocialRows([...rows, withSocialUid({ platform: "website", urlOrHandle: "" })]);
-  }
+  const { patch, remove, add, atMax } = useEditorRowList(rows, setSocialRows, {
+    max: MAX_SOCIAL_LINKS,
+    makeEmpty: () => withSocialUid({ platform: "website", urlOrHandle: "" }),
+  });
 
   return (
     <section className={sharedStyles.card}>

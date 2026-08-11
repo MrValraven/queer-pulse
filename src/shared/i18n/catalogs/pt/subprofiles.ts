@@ -82,11 +82,11 @@ export const subprofiles: Catalog = {
   "alsoAs.sidesPrompt.notNow": "Agora não",
 
   // Navegação + paleta de comandos
-  "nav.browse": "Subperfis",
-  "nav.mine": "Subperfis",
-  "command.mine.name": "Os meus subperfis",
+  "nav.browse": "Personas",
+  "nav.mine": "As tuas personas",
+  "command.mine.name": "As minhas personas",
   "command.mine.sub": "As tuas personas profissionais",
-  "command.browse.name": "Explorar subperfis",
+  "command.browse.name": "Explorar personas",
   "command.browse.sub": "O diretório de personas",
 
   // Título do diretório (SubprofileDirectoryPage) — o <em> a coral ficou como
@@ -156,7 +156,7 @@ export const subprofiles: Catalog = {
   "link.help.linked":
     "Aparece no teu perfil principal como outra persona tua — as pessoas conseguem ver que é a mesma pessoa.",
   "link.help.unlinked":
-    "Existe por si só, sem ligação visível ao teu perfil principal. Ganha um identificador público assim que passa a verificação de completude.",
+    "Existe por si só — nada aqui aponta de volta ao teu perfil principal, por isso podes manter este trabalho à parte do resto da tua vida. Ganha um identificador público assim que passa a verificação de completude.",
 
   // Chips de estado de concerto/projeto (ItemRow, skins stage + studio/workshop)
   // e legenda de marcas dietéticas (skin Table) — campos persistidos
@@ -246,7 +246,7 @@ export const subprofiles: Catalog = {
   "checklist.reqLanguageTitle": "Linguagem que acolhe toda a gente",
   "checklist.reqLanguageMet": "Nada foi assinalado.",
   "checklist.reqLanguageFail":
-    "Algo no teu nome, identificador ou biografia foi assinalado — por favor reformula-o.",
+    "Uma palavra no teu nome, identificador ou biografia pode não cair bem a toda a gente — importas-te de a reformular?",
 
   // Sugestões de polimento, não bloqueantes (PublishChecklist.tsx)
   "checklist.polishTitle": "Uns retoques finais",
@@ -311,8 +311,8 @@ export const subprofiles: Catalog = {
   "editor.notFoundTitle": "Não encontrámos essa persona",
   "editor.notFoundDescription":
     "Pode ter sido removida, ou o link não está certo.",
-  "editor.notFoundAction": "Voltar aos teus subperfis",
-  "editor.backLink": "Os teus subperfis",
+  "editor.notFoundAction": "Voltar às tuas personas",
+  "editor.backLink": "As tuas personas",
 
   // Editor base (useSubprofileMetaEditor, usado pelos painéis Identidade/
   // Presença/Endereço)
@@ -466,6 +466,8 @@ export const subprofiles: Catalog = {
   "newModal.displayNamePlaceholderExample": "por ex. {kind}",
   "newModal.linkChoiceLabel": "Ligada ao teu perfil, ou com endereço próprio?",
   "newModal.linkedAddressNote": "Sempre tua — nada a reclamar.",
+  "newModal.standaloneNote":
+    "Endereço próprio, sem nada a apontar de volta para ti — tua para manteres à parte.",
   "newModal.handleStateClaim":
     "É teu se publicares primeiro — identificadores são por ordem de chegada.",
   "newModal.toastError":
@@ -637,12 +639,14 @@ export const subprofiles: Catalog = {
 
   // Campo de imagem (ImageUploadField)
   "imageUpload.defaultPlaceholder": "Imagem",
-  "imageUpload.uploading": "A carregar…",
   "imageUpload.change": "Alterar",
   "imageUpload.add": "Adicionar imagem",
   "imageUpload.remove": "Remover imagem",
-  "imageUpload.error":
-    "Não conseguimos adicionar essa imagem. Tenta outra vez.",
+  "imageUpload.removeConfirm.title": "Remover esta imagem?",
+  "imageUpload.removeConfirm.body":
+    "Ela será limpa deste campo. Podes adicionar outra quando quiseres.",
+  "imageUpload.removeConfirm.confirm": "Remover",
+  "imageUpload.removeConfirm.cancel": "Manter",
 
   // Cabeçalho da persona (SubprofileHero)
   "hero.message": "Mensagem",
@@ -951,14 +955,16 @@ export const subprofiles: Catalog = {
   "peopleModal.endorsementsTitle_other": "{count} apoios",
   "peopleModal.loading": "A carregar…",
   "peopleModal.noEndorsements": "Ainda sem apoios",
+  "peopleModal.noEndorsementsBody":
+    "Quando alguém apoiar o trabalho desta persona, aparece aqui.",
   "peopleModal.noFollowers": "Ainda sem seguidores",
   "peopleModal.noNote": "Apoiou sem deixar nota",
   "peopleModal.removeAriaLabel": "Remover o teu apoio a {name}",
   "peopleModal.removeCta": "Remover",
   "peopleModal.removeError": "Não conseguimos remover isso agora — tenta outra vez.",
-  "peopleModal.followersPrivateTitle": "Os seguidores mantêm-se privados",
+  "peopleModal.followersPrivateTitle": "Seguidores são privados",
   "peopleModal.followersPrivateBody":
-    "Seguir é anónimo por definição — não mostramos quem segue, nem à própria persona seguida.",
+    "Só a pessoa responsável por {name} vê quem a segue. Para toda a gente, seguir é anónimo — o teu nome nunca aparece aqui.",
 
   // Extras específicos de cada skin (SubprofileSkinExtras + skins/*.tsx) —
   // os blocos por família que a árvore de design da Fase 1 chama SkinExtras.
@@ -1153,4 +1159,35 @@ export const subprofiles: Catalog = {
     "O teu identificador, @{handle}, volta a ficar disponível",
   "deleteConfirm.typeLabel": 'Escreve "{name}" para confirmar',
   "deleteConfirm.typeHelper": "Isto garante que tens mesmo a certeza.",
+
+  // Persona audit remediation (2026-08-11)
+  "section.countLabel_one": "{count} item",
+  "section.countLabel_other": "{count} itens",
+  "page.ogImageAlt": "{name} — {craft} na QueerPulse",
+  "peopleModal.followersCountOnlyTitle": "Os seguidores ficam privados",
+  "peopleModal.followersCountOnlyBody":
+    "{name} tem {count} seguidores, mas seguir é anónimo — mostramos o número, nunca quem está por trás.",
+  "publishPanel.saveFirstHint":
+    "Guarda as alterações primeiro — a publicação verifica o perfil guardado.",
+  "editor.errorTitle": "Não foi possível carregar esta persona",
+  "editor.errorDescription":
+    "Algo correu mal ao contactar o servidor. Nada se perdeu — verifica a ligação e tenta novamente.",
+  "editor.errorRetry": "Tentar novamente",
+  "metaForm.ctaLabelError":
+    "Adiciona um rótulo para as pessoas saberem o que este botão faz.",
+  "metaForm.ctaUrlError": "Adiciona um link para onde este botão aponta.",
+  "metaForm.bioMinRemaining_one": "Falta {count} caráter para publicar",
+  "metaForm.bioMinRemaining_other": "Faltam {count} carateres para publicar",
+  "metaForm.bioMinMet": "Já dá para publicar",
+  "pending.blockedName":
+    "Esta persona precisa de um nome — adiciona-o no separador Identidade.",
+  "pending.blockedHandle":
+    "Esse endereço já está em uso — escolhe outro no separador Endereço.",
+  "newModal.toastHandleClaimFailed":
+    "Esse identificador foi reservado agora mesmo — mantivemos esta persona associada ao teu perfil por enquanto. Podes reclamar um novo endereço no editor.",
+  "invite.loadMore": "Mostrar mais ligações",
+  "invite.loadingMore": "A carregar…",
+
+  "editorSavebar.mobilePreview": "Pré-visualizar",
+  "mobilePreview.ariaLabel": "Pré-visualização da tua página de persona",
 };

@@ -42,9 +42,17 @@ export function useAffiliations(subprofileId: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
 
-  const invalidateAll = () => {
+  // Narrow, id-scoped invalidation — mirrors `useSubprofileMutations`: the
+  // owner list (`["subprofiles"]` plural), THIS persona's owner-editor query
+  // (`["subprofile", demoMode, subprofileId]`), and the public reads
+  // (`["subprofile","public"]`) — never the bare `["subprofile"]` prefix that
+  // would refetch every persona query app-wide.
+  const invalidateOwned = () => {
     void queryClient.invalidateQueries({ queryKey: ["subprofiles"] });
-    void queryClient.invalidateQueries({ queryKey: ["subprofile"] });
+    void queryClient.invalidateQueries({
+      queryKey: ["subprofile", demoMode, subprofileId],
+    });
+    void queryClient.invalidateQueries({ queryKey: ["subprofile", "public"] });
   };
 
   const replace = useMutation<SubprofileDTO, Error, AffiliationInputDTO[]>({
@@ -63,7 +71,7 @@ export function useAffiliations(subprofileId: string) {
         ),
       };
     },
-    onSuccess: invalidateAll,
+    onSuccess: invalidateOwned,
   });
 
   return { replace };

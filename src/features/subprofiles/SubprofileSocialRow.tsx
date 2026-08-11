@@ -4,7 +4,7 @@ import {
   socialHref,
   socialPlatform,
 } from "../../shared/social/socialPlatforms";
-import { ACCENT_TOKENS } from "./subprofilePresence.data";
+import { accentTintStyle } from "./subprofilePresence.data";
 import styles from "./SubprofileSocialRow.module.css";
 
 /**
@@ -31,12 +31,10 @@ export function SubprofileSocialRow({
   const items = links.filter((link) => link.urlOrHandle.trim());
   if (items.length === 0) return null;
 
-  const tint = ACCENT_TOKENS[accent].tint;
-
   return (
     <div
       className={`${styles.row} pp-social-row`}
-      style={{ ["--accent-tint" as string]: tint }}
+      style={accentTintStyle(accent)}
     >
       {items.map((link, index) => {
         const meta = socialPlatform(link.platform);

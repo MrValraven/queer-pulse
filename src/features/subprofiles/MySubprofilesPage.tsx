@@ -1,16 +1,13 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FiPlus } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import { Button, Modal } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfileData } from "../../app/providers/useProfile";
 import { routes, subprofileEditPath } from "../../app/routeMap";
 import { useSubprofiles } from "./api/useSubprofiles";
-import { useSubprofileMembers } from "./api/useSubprofileMembers";
-import { useSubprofileMutations } from "./api/useSubprofileMutations";
 import type { SubprofileKind } from "./api/subprofiles.api";
 import type {
   PublicSubprofileView,
@@ -19,11 +16,20 @@ import type {
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { personaPublicPathForOwner } from "./personaLinks.data";
 import { SideCard } from "./SideCard";
-import { SubprofileShareCard } from "./SubprofileShareCard";
+import { SubprofileDeleteModal } from "./SubprofileDeleteModal";
 import { NewSideModal } from "./NewSideModal";
 import { PersonaInvitesBanner } from "./PersonaInvitesBanner";
 import { LoadingSides, EmptySides, ErrorSides } from "./SubprofileDashboardStates";
+// The global `.sides`/`.side`/`.empty-hero`/`.new-side` dashboard styles.
+// Imported here (a lazy owner-only route) rather than globally so they ride
+// this route's chunk instead of the app-wide bundle.
+import "./persona-dashboard.css";
 import styles from "./MySubprofilesPage.module.css";
+
+// The share card pulls the `qrcode` library into its module — lazy-load it so
+// that weight lands in its own chunk fetched only when a member opens Share,
+// never in the dashboard's initial payload.
+const SubprofileShareCard = lazy(() => import("./SubprofileShareCard"));
 
 const MAX_SUBPROFILES = 12;
 
@@ -69,8 +75,6 @@ export function MySubprofilesPage() {
   const navigate = useNavigate();
   const { profile } = useProfileData();
   const { data: subprofiles, isLoading, isError, refetch } = useSubprofiles();
-  const { remove } = useSubprofileMutations();
-  const { showToast } = useToast();
   const [creating, setCreating] = useState(false);
   const [createKind, setCreateKind] = useState<SubprofileKind | null>(null);
   const [shareTarget, setShareTarget] = useState<SubprofileView | null>(null);
@@ -89,14 +93,6 @@ export function MySubprofilesPage() {
     openCreate(isValidSubprofileKind(rawKind) ? rawKind : null);
     setSearchParams({}, { replace: true });
   }, [searchParams, setSearchParams]);
-  // Co-owner count for the persona pending deletion — reuses the "manage
-  // co-owners" hook rather than a new backend field (`enabled` gates it off
-  // whenever no delete is in flight). Deleting removes the persona for every
-  // co-owner, not just the signed-in one, so a shared persona gets a
-  // stronger warning than a solo one.
-  const { data: deleteTargetMembers } = useSubprofileMembers(deleteTarget?.id);
-  const coOwnerCount = deleteTargetMembers?.length ?? 0;
-  const isSharedDelete = coOwnerCount > 1;
 
   const list = subprofiles ?? [];
   const atCap = list.length >= MAX_SUBPROFILES;
@@ -106,19 +102,6 @@ export function MySubprofilesPage() {
   function openCreate(kind: SubprofileKind | null = null) {
     setCreateKind(kind);
     setCreating(true);
-  }
-
-  async function confirmDelete() {
-    if (!deleteTarget) return;
-    const name = deleteTarget.displayName || t("subprofiles:mine.defaultName");
-    try {
-      await remove.mutateAsync(deleteTarget.id);
-      showToast(t("subprofiles:mine.toastDeleted", { name }), "info");
-    } catch {
-      showToast(t("subprofiles:mine.toastDeleteError"), "error");
-    } finally {
-      setDeleteTarget(null);
-    }
   }
 
   return (
@@ -196,49 +179,21 @@ export function MySubprofilesPage() {
       )}
 
       {shareTarget && (
-        <SubprofileShareCard
-          view={toPublicView(shareTarget, profile.slug)}
-          onClose={() => setShareTarget(null)}
-        />
+        // No fallback: the modal chunk is tiny and the trigger is a deliberate
+        // click, so a brief nothing beats flashing a spinner over the page.
+        <Suspense fallback={null}>
+          <SubprofileShareCard
+            view={toPublicView(shareTarget, profile.slug)}
+            onClose={() => setShareTarget(null)}
+          />
+        </Suspense>
       )}
 
       {deleteTarget && (
-        <Modal
-          title={t("subprofiles:mine.deleteModalTitle")}
-          sub={t("subprofiles:mine.deleteModalSub", {
-            name:
-              deleteTarget.displayName ||
-              t("subprofiles:mine.deleteModalDefaultName"),
-          })}
+        <SubprofileDeleteModal
+          subprofile={deleteTarget}
           onClose={() => setDeleteTarget(null)}
-          footer={
-            <>
-              <Button variant="ghost" onClick={() => setDeleteTarget(null)}>
-                {t("subprofiles:mine.deleteModalKeep")}
-              </Button>
-              <Button
-                variant="danger"
-                onClick={() => void confirmDelete()}
-                disabled={remove.isPending}
-              >
-                {remove.isPending
-                  ? t("subprofiles:mine.deleteModalDeleting")
-                  : t("subprofiles:mine.deleteModalConfirm")}
-              </Button>
-            </>
-          }
-        >
-          <p>
-            {isSharedDelete
-              ? t("subprofiles:mine.deleteModalBodyShared", {
-                  name:
-                    deleteTarget.displayName ||
-                    t("subprofiles:mine.deleteModalDefaultName"),
-                  n: coOwnerCount,
-                })
-              : t("subprofiles:mine.deleteModalBody")}
-          </p>
-        </Modal>
+        />
       )}
     </AppShell>
   );

@@ -1,11 +1,7 @@
 import { FiArrowRight } from "react-icons/fi";
 import { safeHref } from "../../shared/lib/safeHref";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  GIG_STATE_LABEL,
-  WORK_STATE_CLASS,
-  WORK_STATE_LABEL,
-} from "./personaSkinRender";
+import { ItemStateChip } from "./ItemStateChip";
 import { SubprofileSocialRow } from "./SubprofileSocialRow";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
@@ -49,16 +45,7 @@ export function SubprofileItemRow({
       <b>{item.title}</b>
       {item.subtitle && <small>{item.subtitle}</small>}
       {item.meta && <small>{item.meta}</small>}
-      {item.gigState && (
-        <span className={`gigstate ${item.gigState}`}>
-          {t(GIG_STATE_LABEL[item.gigState])}
-        </span>
-      )}
-      {item.workState && (
-        <span className={`gigstate ${WORK_STATE_CLASS[item.workState]}`}>
-          {t(WORK_STATE_LABEL[item.workState])}
-        </span>
-      )}
+      <ItemStateChip item={item} />
       {skin === "stage" && item.doors && (
         <span className="doors">
           {t("subprofiles:row.doors", { doors: item.doors })}

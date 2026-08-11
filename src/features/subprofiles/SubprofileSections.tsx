@@ -42,9 +42,13 @@ function SectionBody({
 
   if (shape === "gallery") {
     const canOpen = interactive && Boolean(onOpenGalleryPhoto);
+    // Drop image-less items BEFORE the cap so no cell renders a dead
+    // placeholder and the remaining indices line up 1:1 with the lightbox's
+    // flat array (`getGalleryWorks` filters identically, then caps at 6).
+    const photos = items.filter((galleryItem) => galleryItem.imageUrl).slice(0, 6);
     return (
       <div className="pp-gallery" data-skin={skin}>
-        {items.slice(0, 6).map((galleryItem, photoIndex) => {
+        {photos.map((galleryItem, photoIndex) => {
           const photo = (
             <ImageSlot
               src={galleryItem.imageUrl || undefined}
@@ -61,7 +65,7 @@ function SectionBody({
               className="pp-gallery-cell"
               key={`${galleryItem.imageUrl}::${photoIndex}`}
             >
-              {canOpen && galleryItem.imageUrl ? (
+              {canOpen ? (
                 <button
                   type="button"
                   className="pp-gallery-btn"
@@ -193,7 +197,16 @@ export function SubprofileSections({
           <section key={section.section} className="pp-sec">
             <header>
               <h2>{t(section.labelKey)}</h2>
-              {items.length > 1 && <span className="count">{items.length}</span>}
+              {items.length > 1 && (
+                <span
+                  className="count"
+                  aria-label={t("subprofiles:section.countLabel", {
+                    count: items.length,
+                  })}
+                >
+                  {items.length}
+                </span>
+              )}
             </header>
             <SectionBody
               shape={shape}

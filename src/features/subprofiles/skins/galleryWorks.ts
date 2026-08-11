@@ -1,3 +1,4 @@
+import { flattenSectionItems } from "./flattenSectionItems";
 import type {
   SubprofileItemView,
   SubprofileSectionView,
@@ -8,13 +9,17 @@ import type {
  * the index space the gallery lightbox opens into. Mirrors `getStudioWorks`
  * but for the caption-less `gallery` section, and applies the same
  * `.slice(0, 6)` cap `SubprofileSections` renders so the lightbox and the grid
- * stay in lockstep. A persona has at most one `gallery` section, but the
+ * stay in lockstep. Image-less items are filtered out FIRST (matching the grid),
+ * so the lightbox never opens onto a blank cell and its indices align 1:1 with
+ * the rendered photos. A persona has at most one `gallery` section, but the
  * `flatMap` keeps this correct if that ever changes.
  */
 export function getGalleryWorks(
   sections: SubprofileSectionView[],
 ): SubprofileItemView[] {
-  return sections
-    .filter((section) => section.section === "gallery")
-    .flatMap((section) => section.items.slice(0, 6));
+  return flattenSectionItems(
+    sections,
+    (section) => section.section === "gallery",
+    (items) => items.filter((item) => item.imageUrl).slice(0, 6),
+  );
 }

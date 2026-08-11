@@ -231,6 +231,63 @@ export function buildLocalBusinessSchema(
   return schema;
 }
 
+export interface PersonProfileInput {
+  /** Display name — the person/persona the page is about. */
+  name: string;
+  /** Canonical page URL — root-relative path or absolute URL. */
+  url: string;
+  /** The persona's craft/kind label, mapped to schema.org `jobTitle`. */
+  jobTitle?: string;
+  /** Avatar or cover — root-relative path or absolute URL. Omitted when absent. */
+  image?: string | null;
+  /** Resolved external profile URLs (social links) for `sameAs`. */
+  sameAs?: string[];
+  /** Short description (tagline/bio). */
+  description?: string;
+}
+
+export interface ProfilePageSchema {
+  "@context": "https://schema.org";
+  "@type": "ProfilePage";
+  mainEntity: {
+    "@type": "Person";
+    name: string;
+    url: string;
+    jobTitle?: string;
+    image?: string;
+    sameAs?: string[];
+    description?: string;
+  };
+}
+
+/**
+ * For a public persona / member profile page. Emits a `ProfilePage` whose
+ * `mainEntity` is the `Person` — the shape Google recommends for profile pages,
+ * carrying `sameAs` (verified external profiles), `jobTitle`, and an image.
+ * Empty optional fields are omitted rather than emitted as null/empty so the
+ * structured data never over-claims.
+ */
+export function buildPersonProfileSchema(
+  input: PersonProfileInput,
+): ProfilePageSchema {
+  const person: ProfilePageSchema["mainEntity"] = {
+    "@type": "Person",
+    name: input.name,
+    url: toAbsoluteUrl(input.url),
+  };
+  if (input.jobTitle) person.jobTitle = input.jobTitle;
+  if (input.image) person.image = toAbsoluteUrl(input.image);
+  if (input.description) person.description = input.description;
+  const sameAs = input.sameAs?.filter(Boolean);
+  if (sameAs && sameAs.length > 0) person.sameAs = sameAs;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    mainEntity: person,
+  };
+}
+
 export function buildBreadcrumbSchema(trail: BreadcrumbStep[]): BreadcrumbSchema {
   return {
     "@context": "https://schema.org",

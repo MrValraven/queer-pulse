@@ -4,7 +4,7 @@ import { Eyebrow, ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AccentKey } from "./api/subprofiles.api";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
-import { ACCENT_TOKENS } from "./subprofilePresence.data";
+import { accentTintStyle } from "./subprofilePresence.data";
 import styles from "./SubprofileShowcase.module.css";
 
 const FEATURED_THUMBNAIL_SIZE = 64;
@@ -26,7 +26,6 @@ export function SubprofileFeaturedStrip({
   accent: AccentKey;
 }) {
   const { t } = useTranslation();
-  const tint = ACCENT_TOKENS[accent].tint;
   // Guard the member-supplied URL the same way the persona CTA and social
   // links are guarded — never trust a raw stored value in an href.
   const featuredHref = safeHref(item.url);
@@ -60,7 +59,7 @@ export function SubprofileFeaturedStrip({
     return (
       <div
         className={styles.featuredStrip}
-        style={{ ["--accent-tint" as string]: tint }}
+        style={accentTintStyle(accent)}
       >
         {content}
       </div>
@@ -70,7 +69,7 @@ export function SubprofileFeaturedStrip({
   return (
     <a
       className={`${styles.featuredStrip} ${styles.featuredStripLink}`}
-      style={{ ["--accent-tint" as string]: tint }}
+      style={accentTintStyle(accent)}
       href={featuredHref}
       target="_blank"
       rel="noopener noreferrer"

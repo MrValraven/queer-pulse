@@ -30,6 +30,13 @@ export function buildVCard(view: PublicSubprofileView): string {
 
   if (view.tagline) lines.push(`TITLE:${escapeVCard(view.tagline)}`);
 
+  // First affiliation ("Part of …") as the vCard organisation — the closest
+  // thing a persona has to an employer/collective for a contacts app.
+  const primaryAffiliation = view.affiliations[0];
+  if (primaryAffiliation?.name) {
+    lines.push(`ORG:${escapeVCard(primaryAffiliation.name)}`);
+  }
+
   lines.push(`URL:${personaShareUrl(view)}`);
 
   if (view.avatarUrl) {

@@ -1,8 +1,9 @@
-import { useMemo, useState, type CSSProperties } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Spinner } from "../../shared/components/ui";
-import { PageMeta } from "../../shared/seo";
+import { SkeletonAvatar, SkeletonLine } from "../../shared/components/ui";
+import { PageMeta, JsonLd, buildPersonProfileSchema } from "../../shared/seo";
+import { socialHref } from "../../shared/social/socialPlatforms";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   usePublicSubprofile,
@@ -21,10 +22,10 @@ import { useStudioLightbox } from "./useStudioLightbox";
 import { useImageLightbox } from "./useImageLightbox";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { personaPublicPath } from "./personaLinks.data";
-import { ACCENT_TOKENS, DEFAULT_ACCENT } from "./subprofilePresence.data";
+import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
 import { skinFor } from "./subprofile-skins";
 import { estimateDraftReadiness } from "./subprofileDraftReadiness";
-import type { PersonaViewMode } from "./personaSkinRender";
+import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import { PAGE_STATE_COPY, type PersonaPageState } from "./subprofilePageStates.data";
 import styles from "./SubprofilePage.module.css";
 
@@ -69,9 +70,12 @@ export function SubprofilePage() {
   const lightbox = useStudioLightbox(
     result.state === "ok" ? result.data.sections : undefined,
   );
+  // `result` is a fresh object each render, so depending on it defeats the
+  // memo. Depend on the stable `sections` reference the query cache holds.
+  const sections = result.state === "ok" ? result.data.sections : undefined;
   const galleryPhotos = useMemo(
-    () => (result.state === "ok" ? getGalleryWorks(result.data.sections) : []),
-    [result],
+    () => (sections ? getGalleryWorks(sections) : []),
+    [sections],
   );
   const galleryLightbox = useImageLightbox(galleryPhotos);
   const [reportOpen, setReportOpen] = useState(false);
@@ -79,18 +83,40 @@ export function SubprofilePage() {
     null,
   );
 
-  function handleAction(action: string) {
+  function handleAction(action: PersonaAction) {
     if (action === "report") setReportOpen(true);
     else if (action === "people:endorsers") setPeopleModalMode("endorsements");
     else if (action === "people:followers") setPeopleModalMode("followers");
   }
 
   if (result.state === "loading") {
+    // A skeleton that reserves the real page's shape — a full-bleed cover band
+    // above a hero identity block (avatar + name + tagline + bio lines) — so the
+    // content swap barely shifts layout (low CLS), instead of a centered spinner
+    // that then jumps to a full page.
     return (
       <PageShell>
-        <div className={styles.loadingWrap} role="status" aria-live="polite">
-          <Spinner />
-          <span>{t("subprofiles:page.loading")}</span>
+        <div
+          className={styles.skeleton}
+          role="status"
+          aria-busy="true"
+          aria-live="polite"
+        >
+          <span className={styles.skeletonLabel}>
+            {t("subprofiles:page.loading")}
+          </span>
+          <div className={styles.skeletonCover} aria-hidden />
+          <div className="wrap">
+            <div className={styles.skeletonHero} aria-hidden>
+              <SkeletonAvatar size={96} />
+              <div className={styles.skeletonHeroText}>
+                <SkeletonLine width="55%" height={30} />
+                <SkeletonLine width="38%" height={16} />
+                <SkeletonLine width="82%" height={14} />
+                <SkeletonLine width="68%" height={14} />
+              </div>
+            </div>
+          </div>
         </div>
       </PageShell>
     );
@@ -123,24 +149,51 @@ export function SubprofilePage() {
   const skin = skinFor(data.kind);
   const mode: PersonaViewMode = data.viewerIsMember ? "owner" : "public";
   const isOwnerDraftPreview = data.status === "draft" && data.viewerIsMember;
-  const accentTokens = ACCENT_TOKENS[data.accent ?? DEFAULT_ACCENT];
-  const skinVars = {
-    "--sk-tint": accentTokens.tint,
-    "--sk-on": accentTokens.on,
-  } as CSSProperties;
+  const skinStyle = skinVars(data.accent ?? DEFAULT_ACCENT);
+
+  const craftLabel = t(KIND_LABEL_KEYS[data.kind]);
+  const canonicalPath = personaPublicPath(data);
+  const cardImage = data.coverUrl ?? data.avatarUrl ?? undefined;
+  // A real wide cover reads well as a large-image card; falling back to the
+  // small avatar/default, `summary` (square thumb) is the better fit.
+  const twitterCard = data.coverUrl ? "summary_large_image" : "summary";
+  const cardImageAlt = cardImage
+    ? t("subprofiles:page.ogImageAlt", { name: data.displayName, craft: craftLabel })
+    : undefined;
+  // Resolved external profile URLs for the Person's `sameAs`.
+  const sameAs = data.socialLinks
+    .map((link) => socialHref(link.platform, link.urlOrHandle))
+    .filter((href): href is string => Boolean(href));
 
   return (
     <PageShell>
       <PageMeta
-        title={`${data.displayName} · ${t(KIND_LABEL_KEYS[data.kind])} — QueerPulse`}
+        title={`${data.displayName} · ${craftLabel} — QueerPulse`}
         description={(data.tagline || data.bio || "").slice(0, 160) || undefined}
-        image={data.coverUrl ?? data.avatarUrl ?? undefined}
-        canonical={personaPublicPath(data)}
+        image={cardImage}
+        imageAlt={cardImageAlt}
+        twitterCard={twitterCard}
+        canonical={canonicalPath}
         // An owner's own unpublished draft preview must never index — only a
         // published persona is meant to be publicly discoverable.
         noIndex={isOwnerDraftPreview || undefined}
         type="profile"
       />
+
+      {/* Structured data for the public persona — never for an owner's own
+          unpublished draft preview, which must not be discoverable at all. */}
+      {!isOwnerDraftPreview && (
+        <JsonLd
+          schema={buildPersonProfileSchema({
+            name: data.displayName,
+            url: canonicalPath,
+            jobTitle: craftLabel,
+            image: cardImage ?? null,
+            sameAs,
+            description: (data.tagline || data.bio || "").slice(0, 300) || undefined,
+          })}
+        />
+      )}
 
       {isOwnerDraftPreview && (
         <SubprofileDraftBanner
@@ -153,7 +206,7 @@ export function SubprofilePage() {
         data={data}
         skin={skin}
         mode={mode}
-        skinVars={skinVars}
+        skinVars={skinStyle}
         onAction={handleAction}
         onOpenWorkAt={lightbox.openAt}
         onOpenWorkItem={lightbox.openItem}

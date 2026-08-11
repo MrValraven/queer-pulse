@@ -56,6 +56,15 @@ export interface EndorserDTO {
   note: string | null;
 }
 
+/** One follower of a persona (returned by the OWNER-only followers list — see
+ *  `getFollowers`). Deliberately note-less: following is a one-tap, contextless
+ *  signal, unlike an endorsement. */
+export interface FollowerDTO {
+  slug: string;
+  name: string;
+  avatarUrl: string | null;
+}
+
 /** One resolved collaboration credit on an item ("with @handle"). Resolved
  *  server-side from the persisted handle — dropped on read if the handle no
  *  longer resolves or is block-filtered against the viewer. */
@@ -387,9 +396,20 @@ export interface MyInviteDTO {
 
 // ── Endpoint fns (contract C4) ───────────────────────────────────────────────
 
+// Read helpers below accept an optional trailing `signal`, forwarded to
+// `apiGet`'s 4th positional arg (`apiGet(path, timeoutMs?, validate?, signal?)`).
+// React Query passes a `signal` into every `queryFn` that fires on unmount /
+// query-key change / navigation, so wiring it through cancels the underlying
+// fetch (not just react-query's bookkeeping) when a user walks away mid-flight.
+
 /** Linked + published personas of a member (their public main-profile "Also as…"). */
-export const getProfileSubprofiles = (slug: string) =>
-  apiGet<SubprofilePublicDTO[]>(`/profiles/${slug}/subprofiles`);
+export const getProfileSubprofiles = (slug: string, signal?: AbortSignal) =>
+  apiGet<SubprofilePublicDTO[]>(
+    `/profiles/${slug}/subprofiles`,
+    undefined,
+    undefined,
+    signal,
+  );
 
 /** Single-item public fetch of a linked persona by owner slug + persona slug
  *  (the nested `/members/:slug/:subslug` route) — Phase 1b. Unlike the bulk
@@ -397,20 +417,29 @@ export const getProfileSubprofiles = (slug: string) =>
  *  that are already viewable, with no room to carry one item's restricted
  *  signal), this resolves the SAME `resolvePublicAccess` contract as
  *  `getSubprofileByHandle`: 200 full DTO / 403 `{restrictedState}` / 404. */
-export const getSubprofileBySlugForProfile = (slug: string, subslug: string) =>
-  apiGet<SubprofilePublicDTO>(`/profiles/${slug}/subprofiles/${subslug}`);
+export const getSubprofileBySlugForProfile = (
+  slug: string,
+  subslug: string,
+  signal?: AbortSignal,
+) =>
+  apiGet<SubprofilePublicDTO>(
+    `/profiles/${slug}/subprofiles/${subslug}`,
+    undefined,
+    undefined,
+    signal,
+  );
 
 /** The current owner's subprofiles, all statuses. */
-export const getMySubprofiles = () =>
-  apiGet<SubprofileDTO[]>("/subprofiles/mine");
+export const getMySubprofiles = (signal?: AbortSignal) =>
+  apiGet<SubprofileDTO[]>("/subprofiles/mine", undefined, undefined, signal);
 
 /** Create a draft subprofile. */
 export const createSubprofile = (dto: CreateSubprofileDTO) =>
   apiPost<SubprofileDTO>("/subprofiles", dto);
 
 /** Owner fetch of a single subprofile (for editing). */
-export const getSubprofile = (id: string) =>
-  apiGet<SubprofileDTO>(`/subprofiles/${id}`);
+export const getSubprofile = (id: string, signal?: AbortSignal) =>
+  apiGet<SubprofileDTO>(`/subprofiles/${id}`, undefined, undefined, signal);
 
 /** Update subprofile meta (PATCH semantics). */
 export const updateSubprofile = (id: string, dto: UpdateSubprofileDTO) =>
@@ -444,19 +473,42 @@ export const deleteSubprofile = (id: string) =>
   apiDelete<{ ok: true }>(`/subprofiles/${id}`);
 
 /** Public fetch of a standalone (unlinked) persona by its global handle. */
-export const getSubprofileByHandle = (handle: string) =>
-  apiGet<SubprofilePublicDTO>(`/subprofiles/by-handle/${handle}`);
+export const getSubprofileByHandle = (handle: string, signal?: AbortSignal) =>
+  apiGet<SubprofilePublicDTO>(
+    `/subprofiles/by-handle/${handle}`,
+    undefined,
+    undefined,
+    signal,
+  );
 
-/** Directory of standalone personas, filterable by kind + free-text query. */
+/** One page of the standalone-persona directory. The backend defaults `limit`
+ *  to 40 and caps it at 100, and returns `total` (the full standalone count)
+ *  alongside the page slice — so a caller can reconstruct the COMPLETE set by
+ *  walking pages until it has `total` rows (see `useSubprofileDirectory`). */
+export interface SubprofileDirectoryPage {
+  items: SubprofileCardDTO[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+/** One page of the standalone-persona directory. Personas redesign Phase 4
+ *  filters family/tags/search CLIENT-SIDE, so this sends no `kind`/`query`
+ *  param — only paging (`page`/`limit`), which `useSubprofileDirectory` uses
+ *  to pull the whole set at `limit=100`. */
 export const getSubprofileDirectory = (
-  params: { kind?: SubprofileKind; query?: string } = {},
+  params: { page?: number; limit?: number } = {},
+  signal?: AbortSignal,
 ) => {
   const q = new URLSearchParams();
-  if (params.kind) q.set("kind", params.kind);
-  if (params.query) q.set("query", params.query);
+  if (params.page !== undefined) q.set("page", String(params.page));
+  if (params.limit !== undefined) q.set("limit", String(params.limit));
   const qs = q.toString();
-  return apiGet<{ items: SubprofileCardDTO[] }>(
+  return apiGet<SubprofileDirectoryPage>(
     `/subprofiles/directory${qs ? `?${qs}` : ""}`,
+    undefined,
+    undefined,
+    signal,
   );
 };
 
@@ -475,9 +527,12 @@ export const withdrawEndorsement = (id: string) =>
   );
 
 /** List a persona's active endorsers (newest first, capped server-side). */
-export const getEndorsers = (id: string) =>
+export const getEndorsers = (id: string, signal?: AbortSignal) =>
   apiGet<{ count: number; endorsers: EndorserDTO[] }>(
     `/subprofiles/${id}/endorsements`,
+    undefined,
+    undefined,
+    signal,
   );
 
 /** The current viewer's own endorsement of a persona — the lazy prefill for the
@@ -487,8 +542,13 @@ export interface MyEndorsementDTO {
   viewerEndorsed: boolean;
   note: string | null;
 }
-export const getMyEndorsement = (id: string) =>
-  apiGet<MyEndorsementDTO>(`/subprofiles/${id}/endorsement/mine`);
+export const getMyEndorsement = (id: string, signal?: AbortSignal) =>
+  apiGet<MyEndorsementDTO>(
+    `/subprofiles/${id}/endorsement/mine`,
+    undefined,
+    undefined,
+    signal,
+  );
 
 /** Follow a published persona (one-way, instant, count-only). Keyed on the
  *  persona's non-identifying `id`, not its slug/handle. */
@@ -504,11 +564,25 @@ export const unfollowSubprofile = (id: string) =>
     `/subprofiles/${id}/follow`,
   );
 
+/** List a persona's followers (newest first, capped server-side). OWNER-ONLY:
+ *  the backend returns 403 for anyone who isn't a co-owner, so this must never
+ *  be called unless the viewer is a member (`SubprofilePublicDTO.viewerIsMember`).
+ *  Following is otherwise anonymity-preserving — everyone else only ever sees
+ *  the count + their own following toggle, never who else is here. Keyed on the
+ *  persona's non-identifying `id`, never slug/handle. */
+export const getFollowers = (id: string, signal?: AbortSignal) =>
+  apiGet<{ count: number; followers: FollowerDTO[] }>(
+    `/subprofiles/${id}/followers`,
+    undefined,
+    undefined,
+    signal,
+  );
+
 // ── Co-ownership (contract C6) ───────────────────────────────────────────────
 
 /** List a persona's co-owners (creator + accepted invitees). */
-export const listSubprofileMembers = (id: string) =>
-  apiGet<MemberDTO[]>(`/subprofiles/${id}/members`);
+export const listSubprofileMembers = (id: string, signal?: AbortSignal) =>
+  apiGet<MemberDTO[]>(`/subprofiles/${id}/members`, undefined, undefined, signal);
 
 /** Invite another member to co-own this persona. Addressed by the invitee's
  *  profile SLUG (the repo convention — mirrors `recipientHandle` /
@@ -517,8 +591,13 @@ export const inviteCoOwner = (id: string, slug: string) =>
   apiPost<PersonaInviteDTO>(`/subprofiles/${id}/invites`, { slug });
 
 /** List a persona's outstanding/resolved co-owner invites. */
-export const listSubprofileInvites = (id: string) =>
-  apiGet<PersonaInviteDTO[]>(`/subprofiles/${id}/invites`);
+export const listSubprofileInvites = (id: string, signal?: AbortSignal) =>
+  apiGet<PersonaInviteDTO[]>(
+    `/subprofiles/${id}/invites`,
+    undefined,
+    undefined,
+    signal,
+  );
 
 /** Revoke a pending co-owner invite. */
 export const revokeSubprofileInvite = (id: string, inviteId: string) =>
@@ -529,8 +608,13 @@ export const leaveSubprofile = (id: string) =>
   apiDelete<{ ok: true }>(`/subprofiles/${id}/members/me`);
 
 /** The current member's own incoming co-owner invites, across all personas. */
-export const listMyPersonaInvites = () =>
-  apiGet<MyInviteDTO[]>("/subprofiles/invites/mine");
+export const listMyPersonaInvites = (signal?: AbortSignal) =>
+  apiGet<MyInviteDTO[]>(
+    "/subprofiles/invites/mine",
+    undefined,
+    undefined,
+    signal,
+  );
 
 /** Accept an incoming co-owner invite. */
 export const acceptPersonaInvite = (inviteId: string) =>

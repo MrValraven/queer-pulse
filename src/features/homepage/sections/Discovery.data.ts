@@ -10,6 +10,8 @@
 import { routes } from "../../../app/routeMap";
 import { members } from "../data/members";
 import type { Member } from "../data/types";
+import { portraitSrc } from "./portraitSrc";
+import type { SpotlightView } from "./spotlightView";
 
 export interface FeaturedSpotlight {
   /** Member slug (key into the members registry). */
@@ -79,3 +81,23 @@ export const rows: Member[] = highlightRowKeys
 /** Route to a member's public profile. */
 export const profilePath = (member: Member) =>
   `${routes.members}/${member.key}`;
+
+/** The featured spotlights normalized to the card's view-model. The rich demo
+ *  `Member` carries every field, so nothing degrades here — the live path
+ *  (`LiveDiscovery`) maps its leaner DTO into the same shape. */
+export const spotlightViews: SpotlightView[] = spotlights.map(
+  ({ member, quote }) => ({
+    key: member.key,
+    to: profilePath(member),
+    name: member.name,
+    initials: member.initials,
+    tint: member.tint,
+    photoUrl: portraitSrc(member.photo),
+    role: member.role,
+    hood: member.hood,
+    tags: member.tags,
+    verified: member.verified,
+    vouchedBy: member.vouchedBy,
+    quote,
+  }),
+);

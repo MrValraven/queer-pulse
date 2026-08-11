@@ -1,12 +1,14 @@
 import { useMemo } from "react";
-import { FiLayers, FiAlertCircle } from "react-icons/fi";
+import { FiLayers, FiAlertTriangle } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import {
   Button,
   EmptyState,
   FeatureHelp,
   Reveal,
-  Spinner,
+  SkeletonAvatar,
+  SkeletonLine,
+  SuccessPanel,
 } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -81,22 +83,22 @@ export function SubprofileDirectoryPage() {
           />
 
           {isLoading ? (
-            <div className={styles.stateWrap} role="status" aria-live="polite">
-              <Spinner />
-              <span>{t("subprofiles:directory.loading")}</span>
-            </div>
+            <DirectoryLoadingGrid />
           ) : isError ? (
             // Distinct from the empty state: a failed fetch must not read as
-            // "no personas yet" — offer a retry rather than a filter clear.
-            <EmptyState
-              icon={<FiAlertCircle />}
+            // "no personas yet". Per docs/STYLE-RULES.md an error surface is the
+            // plum panel (never a light card) — the same `SuccessPanel`
+            // treatment `ErrorSides` gives the dashboard, its jade check swapped
+            // for a coral alert and its action repurposed as a retry.
+            <SuccessPanel
               title={t("subprofiles:directory.error.title")}
-              description={t("subprofiles:directory.error.description")}
-              action={{
-                label: t("subprofiles:directory.error.retry"),
-                onClick: () => void refetch(),
-              }}
-            />
+              icon={<FiAlertTriangle size={26} color="var(--accent)" aria-hidden />}
+              iconTone="coral"
+              onClose={() => void refetch()}
+              closeLabel={t("subprofiles:directory.error.retry")}
+            >
+              {t("subprofiles:directory.error.description")}
+            </SuccessPanel>
           ) : visibleCards.length === 0 ? (
             <EmptyState
               icon={<FiLayers />}
@@ -135,5 +137,49 @@ export function SubprofileDirectoryPage() {
         </div>
       </div>
     </AppShell>
+  );
+}
+
+/** How many placeholder cards the loading grid renders — roughly a first
+ *  viewport's worth, matching the directory's initial `PER_PAGE` reveal. */
+const DIRECTORY_SKELETON_COUNT = 6;
+
+/**
+ * Card-skeleton grid shown while the standalone-persona set loads. Renders into
+ * the SAME `.grid` the real `SubprofileCard`s use, so the real data lands with
+ * no layout jump, and reuses the dashboard's skeleton vocabulary
+ * (`SkeletonAvatar` over shimmer `SkeletonLine` bars — mirrors `LoadingSides`)
+ * shaped to the directory card's header-wash + cut-out-avatar silhouette. One
+ * `aria-busy` region rather than one announcement per cell; the cells
+ * themselves are decorative.
+ */
+function DirectoryLoadingGrid() {
+  const { t } = useTranslation();
+  return (
+    <div
+      className={styles.grid}
+      role="status"
+      aria-busy="true"
+      aria-label={t("subprofiles:directory.loading")}
+    >
+      {Array.from({ length: DIRECTORY_SKELETON_COUNT }, (_, index) => (
+        <div className={styles.skCard} key={index} aria-hidden>
+          <div className={styles.skHeader} />
+          <div className={styles.skAvatar}>
+            <SkeletonAvatar size={60} />
+          </div>
+          <div className={styles.skBody}>
+            <SkeletonLine width="42%" height={12} />
+            <SkeletonLine width="70%" height={20} />
+            <SkeletonLine width="90%" height={14} />
+            <div className={styles.skTags}>
+              <SkeletonLine width={54} height={22} style={{ borderRadius: 999 }} />
+              <SkeletonLine width={68} height={22} style={{ borderRadius: 999 }} />
+              <SkeletonLine width={46} height={22} style={{ borderRadius: 999 }} />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }

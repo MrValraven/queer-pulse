@@ -1902,6 +1902,71 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Abrir o kit de imprensa",
   "changelog.tag.magazineDesk": "Abrir a redação",
 
+  "changelog.entries.crisp-profile-photos.title":
+    "As fotos de perfil estão mais nítidas nas páginas de membros",
+  "changelog.entries.crisp-profile-photos.body":
+    "Alguns retratos de membros apareciam desfocados na página de perfil, enquanto outros estavam nítidos. A foto grande passa a pedir uma resolução à medida do espaço que preenche, por isso cada perfil mostra um retrato claro e definido.",
+
+  "changelog.entries.developer-persona-banner.title":
+    "Os perfis de programador voltam a mostrar banner",
+  "changelog.entries.developer-persona-banner.body":
+    "Os perfis de programador, criador e outros perfis de quem constrói escondiam sem querer a imagem de banner que carregavas. Se adicionaste uma capa, ela passa a aparecer no topo do perfil — e, se não adicionaste, a página fica limpa, sem faixa vazia.",
+
+  "changelog.entries.persona-preview-edit-hidden.title":
+    "Pré-visualizar o teu perfil como visitante já esconde os controlos de edição",
+  "changelog.entries.persona-preview-edit-hidden.body":
+    "Ao pré-visualizares o teu próprio perfil como visitante, o botão Editar ainda aparecia nos teus perfis profissionais — por isso a pré-visualização não correspondia bem ao que os outros veem. Agora fica escondido, e a pré-visualização reflete mesmo a experiência de quem te visita.",
+
+  "changelog.entries.persona-solo-card-wide.title":
+    "Um único perfil profissional com capa passa a ocupar o espaço",
+  "changelog.entries.persona-solo-card-wide.body":
+    "Se o teu perfil tem apenas um perfil profissional e este tem foto de capa, o cartão passa a apresentar-se na horizontal — capa ao lado dos detalhes — em vez de ficar numa coluna estreita com um espaço vazio ao lado. Perfis com menos conteúdo mantêm o cartão compacto.",
+
+  "changelog.entries.persona-performance-row-mobile.title":
+    "As listas de atuações dos perfis leem-se bem no telemóvel",
+  "changelog.entries.persona-performance-row-mobile.body":
+    "Num ecrã estreito, o ano, o título e o local de uma atuação disputavam a mesma linha, apertando o título até ele partir uma letra por linha. Agora cada parte ocupa a sua própria linha, para que as atuações de um bailarino — ou de qualquer perfil — continuem legíveis no telemóvel.",
+
+  "changelog.entries.endorse-persona-by-owner-name.title":
+    "Apoiar um perfil sem nome passa a usar o teu nome",
+  "changelog.entries.endorse-persona-by-owner-name.body":
+    "Quando alguém deixa um perfil com o nome apenas da sua área — “Bailarino”, “Programador” —, a janela de apoio passa a tratar a pessoa pelo primeiro nome (“Apoiar Philippine”) em vez da profissão isolada, para que o texto soe a algo sobre uma pessoa, e não sobre um cargo.",
+
+  "changelog.entries.landing-featured-member-card.title":
+    "Um cartão de membro em destaque mais rico na página inicial",
+  "changelog.entries.landing-featured-member-card.body":
+    "Os membros que a nossa equipa destaca na página inicial aparecem agora no mesmo cartão de destaque completo da demonstração — um retrato grande, as palavras da própria pessoa e uma ligação direta ao perfil — alternando entre todos os que destacámos. Substitui o cartão mais simples que mostrava apenas um nome e uma frase.",
+
+  "changelog.entries.session-expiry-csrf-fix.title":
+    "Menos expulsões inesperadas por “sessão expirada”",
+  "changelog.entries.session-expiry-csrf-fix.body":
+    "Corrigimos um erro que te podia desligar com a mensagem “sessão expirada” mesmo estando a tua sessão perfeitamente válida — o sinal era que bastava recarregar a página para voltares a entrar. Acontecia sobretudo com a aplicação aberta em mais do que um separador. Agora a tua sessão recupera sozinha, em silêncio, em vez de te mandar para o ecrã de início de sessão.",
+
+  "changelog.entries.persona-image-remove-confirm.title":
+    "Uma confirmação rápida antes de remover uma foto da persona",
+  "changelog.entries.persona-image-remove-confirm.body":
+    "Tocar no ícone do caixote numa imagem de avatar, capa ou item já não a apaga de imediato. Aparece primeiro uma pequena confirmação, para que um toque acidental não elimine uma foto que querias manter.",
+
+  "changelog.entries.persona-craft-pass.title":
+    "As personas ficam melhores em todo o lado",
+  "changelog.entries.persona-craft-pass.body":
+    "Uma passagem de acabamento por toda a funcionalidade. O modo escuro está corrigido — detalhes das skins, menus e ícones de estado que antes desapareciam ficam agora nítidos. O diretório de personas já não para nas 40 pessoas, carrega com um esqueleto em vez de um spinner e abre mais depressa porque os estilos das personas já não pesam em todas as outras páginas. No telemóvel, as janelas de apoiantes, denúncia e eliminação são agora painéis que podes deslizar para fechar, as áreas de toque são maiores, os campos de endereço e link abrem o teclado certo, e podes pré-visualizar a tua persona enquanto editas. Partilhar também está mais cuidado: as pré-visualizações de link já não cortam a tua foto, e o editor mostra ilustração a sério quando algo corre mal.",
+
+  "changelog.entries.persona-audit-hardening.title":
+    "Personas: uma passagem de polimento e segurança",
+  "changelog.entries.persona-audit-hardening.body":
+    "Uma revisão ampla das personas. O editor passa a proteger o teu trabalho — avisa antes de o botão de retroceder perder alterações por guardar, mantém o que escreves em segurança durante uma gravação e pede-te para guardar antes de publicar, para que o que vês seja o que fica no ar. As páginas públicas de persona carregam o banner mais depressa, leem-se bem em leitores de ecrã e nunca mostram um placeholder perdido. Quem segue fica privado, os links são verificados por segurança e o diretório de personas carrega mais rápido. As pessoas co-donas podem editar à vontade, mas só quem criou pode renomear, despublicar, eliminar ou remover um co-dono — e todos são avisados se uma persona partilhada for eliminada.",
+
+  "changelog.entries.persona-followers-owner-view.title":
+    "Vê quem segue a tua persona",
+  "changelog.entries.persona-followers-owner-view.body":
+    "Quem é responsável por uma persona pode agora abrir os seus seguidores e ver exatamente quem lá está — as pessoas que acompanham o teu trabalho em silêncio. Para toda a gente, seguir mantém-se privado: mais ninguém consegue ver quem segue uma persona, e aquilo que tu segues nunca aparece a ninguém.",
+
+  "changelog.entries.persona-image-reuse-uploads.title":
+    "Reutiliza uma foto que já carregaste",
+  "changelog.entries.persona-image-reuse-uploads.body":
+    "Todos os espaços de imagem no editor da tua persona — o avatar ou logótipo, o banner de capa e a imagem de cada item — podem agora usar fotos que já carregaste antes, e não apenas um ficheiro novo do teu dispositivo. Ao escolher uma imagem abre-se um seletor com as tuas fotos anteriores, para reutilizares a mesma imagem em várias personas com uns toques, ou apagares as que já não precisas.",
+
   "changelog.entries.persona-banner-quality.title":
     "Banners de persona mais nítidos",
   "changelog.entries.persona-banner-quality.body":

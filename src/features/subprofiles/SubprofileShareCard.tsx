@@ -68,3 +68,7 @@ export function SubprofileShareCard({
     </Modal>
   );
 }
+
+// Default export so `MySubprofilesPage` can `lazy(() => import("./SubprofileShareCard"))`,
+// splitting this component's `qrcode` dependency into its own on-demand chunk.
+export default SubprofileShareCard;

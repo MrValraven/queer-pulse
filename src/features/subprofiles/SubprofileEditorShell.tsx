@@ -6,6 +6,11 @@ import { EditorRail } from "./EditorRail";
 import { EditorPaneRouter } from "./EditorPaneRouter";
 import { EditorSavebar } from "./EditorSavebar";
 import { EditorPreview } from "./EditorPreview";
+// The global `.ed*` editor-shell styles. Imported here (a lazy editor-only
+// surface) rather than globally so they ride the editor route chunk, not the
+// app-wide bundle. The editor's docked preview renders `.pp*` too, but that
+// skin CSS comes in via EditorPreview → SubprofilePageBody's own import.
+import "./persona-editor.css";
 
 /**
  * The `.ed` grid interior — rail, routed pane + savebar, and docked preview —

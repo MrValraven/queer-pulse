@@ -104,6 +104,9 @@ export function NewSideStepIdentity({
                   <b className={styles.choiceTitle}>{t("subprofiles:link.standalone")}</b>
                   <p className={styles.choiceDesc}>{t("subprofiles:link.help.unlinked")}</p>
                   <code className={styles.choiceCode}>/p/{handle || "…"}</code>
+                  <p className={styles.choiceDesc}>
+                    {t("subprofiles:newModal.standaloneNote")}
+                  </p>
                   {handleError === "invalid" ? (
                     <HandleState tone="bad">
                       {t("subprofiles:checklist.reqHandleFailInvalid")}

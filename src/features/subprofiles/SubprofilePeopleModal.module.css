@@ -1,6 +1,29 @@
+/* The sheet supplies the dialog chrome (grabber, close, padding); this modal
+   provides its own heading inside the sheet body. Reserve room on the inline
+   end so a long title never runs under the close chip. */
+.head {
+  margin-bottom: 18px;
+  padding-inline-end: 34px;
+}
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(20px, 3vw, 25px);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--text-strong);
+}
+.sub {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
 .status {
   margin: 0;
-  padding: 4px 0 12px;
+  padding: 8px 4px 16px;
   font-size: 14px;
   color: var(--ink-60);
 }
@@ -8,29 +31,46 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: var(--gap-xs);
+  gap: 2px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+/* A full-row hover/press surface: rounded, with a low-alpha plum tint that
+   reads the same soft way over cream (light) and the dark panel. Rows own
+   their rhythm through padding, so the list gap between them stays tight. */
 .row {
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: var(--gap-xs);
-  padding: 10px 4px;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
+  gap: var(--gap-sm);
+  padding: 10px 12px;
+  border-radius: var(--radius-badge);
+  transition: background var(--dur-fast) var(--ease);
 }
-.row:last-child {
-  border-bottom: none;
+
+@media (hover: hover) and (pointer: fine) {
+  .row:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
+}
+
+.row:focus-within {
+  background: rgba(var(--plum-rgb), 0.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: none;
+  }
 }
 
 .rowLink {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex: 1 1 200px;
+  flex: 1 1 auto;
   min-width: 0;
   text-decoration: none;
   color: inherit;
@@ -39,7 +79,7 @@
 .rowText {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   min-width: 0;
 }
 
@@ -47,11 +87,58 @@
   font-size: 14.5px;
   font-weight: 600;
   color: var(--ink);
+  overflow-wrap: anywhere;
 }
 
-.rowDetail {
-  font-size: 13px;
-  color: var(--ink-60);
-  line-height: 1.4;
+/* Endorsement note as a quiet pull-quote: serif, a soft accent rule down the
+   inline-start edge, and room to breathe. */
+.note {
+  margin: 0;
+  padding-inline-start: 11px;
+  border-inline-start: 2px solid rgba(var(--accent-rgb), 0.4);
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
   overflow-wrap: anywhere;
+}
+
+/* The "endorsed without a note" case stays visually quiet — a small muted
+   label, not a full quote block. */
+.noNote {
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
+  color: var(--ink-60);
+}
+
+/* Withdraw-your-endorsement control: a quiet icon-only affordance that keeps
+   its reserved slot (no layout shift) and reveals on row hover/focus. On
+   touch/coarse pointers it stays visible — nothing hover-only. */
+.removeBtn {
+  flex-shrink: 0;
+  align-self: center;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .removeBtn {
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease);
+  }
+  .row:hover .removeBtn,
+  .row:focus-within .removeBtn {
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .removeBtn {
+      transition: none;
+    }
+  }
+}
+
+/* Give the empty / private EmptyState room to breathe inside the modal: a
+   readable centered measure with comfortable vertical padding. */
+.stateWrap {
+  max-width: 30rem;
+  margin-inline: auto;
+  padding-block: 8px 4px;
 }

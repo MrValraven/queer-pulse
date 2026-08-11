@@ -1,3 +1,32 @@
+/* The <ModalSheet> supplies grabber/close/padding; this modal draws its own
+   heading + footer inside the sheet body. */
+.head {
+  margin-bottom: 18px;
+  padding-inline-end: 34px;
+}
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(20px, 3vw, 25px);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--text-strong);
+}
+.sub {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.foot {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
 .label {
   font-size: 13px;
   font-weight: 600;

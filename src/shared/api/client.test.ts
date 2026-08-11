@@ -263,6 +263,62 @@ describe("403 stale-CSRF retry", () => {
   });
 });
 
+describe("stale-CSRF retry on /auth/refresh", () => {
+  // Regression: a cross-tab CSRF-cookie rotation used to 403 the silent token
+  // refresh and surface a spurious "session expired" (a page reload always
+  // recovered). refreshSession must self-heal the CSRF desync the same way a
+  // mutation does — evict, re-bootstrap, retry once — before giving up.
+  it("evicts CSRF, re-fetches, and retries the refresh once on a 403", async () => {
+    const { refreshSession } = await loadClient();
+    let csrfCalls = 0;
+    let refreshCalls = 0;
+    stubFetch(
+      vi.fn((url: string | URL | Request) => {
+        const requestedUrl = requestUrl(url);
+        if (requestedUrl.includes("/csrf-token")) {
+          csrfCalls++;
+          return Promise.resolve(res(200, { csrfToken: `tok-${csrfCalls}` }));
+        }
+        if (requestedUrl.includes("/auth/refresh")) {
+          refreshCalls++;
+          // Stale token on the first presentation → 403; the fresh token the
+          // client re-bootstraps after eviction → 200.
+          return Promise.resolve(
+            refreshCalls === 1
+              ? res(403, { message: "Invalid or missing CSRF token" })
+              : res(200, {}),
+          );
+        }
+        return Promise.resolve(res(200, {}));
+      }),
+    );
+
+    await expect(refreshSession()).resolves.toBe(true);
+    expect(refreshCalls).toBe(2); // stale 403, then a fresh retry
+    expect(csrfCalls).toBeGreaterThanOrEqual(1); // re-bootstrapped after eviction
+  });
+
+  it("still resolves false when the retried refresh genuinely fails (401)", async () => {
+    const { refreshSession } = await loadClient();
+    let refreshCalls = 0;
+    stubFetch(
+      vi.fn((url: string | URL | Request) => {
+        const requestedUrl = requestUrl(url);
+        if (requestedUrl.includes("/csrf-token"))
+          return Promise.resolve(res(200, { csrfToken: "tok" }));
+        if (requestedUrl.includes("/auth/refresh")) {
+          refreshCalls++;
+          return Promise.resolve(res(401)); // a truly dead session, not a CSRF blip
+        }
+        return Promise.resolve(res(200, {}));
+      }),
+    );
+
+    await expect(refreshSession()).resolves.toBe(false);
+    expect(refreshCalls).toBe(1); // a 401 is authoritative — no CSRF retry
+  });
+});
+
 describe("request behaviours", () => {
   it("does not fetch a CSRF token for safe verbs (GET)", async () => {
     const { apiGet } = await loadClient();

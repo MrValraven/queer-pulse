@@ -1,11 +1,8 @@
 import type { CSSProperties } from "react";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  GIG_STATE_LABEL,
-  WORK_STATE_CLASS,
-  WORK_STATE_LABEL,
-} from "./personaSkinRender";
+import { ItemStateChip } from "./ItemStateChip";
+import { workMeta } from "./personaSkinRender";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 
 /** Resets `<button>` chrome so an interactive (studio) tile looks identical
@@ -51,9 +48,7 @@ export function SubprofileItemTile({
 }) {
   const { t } = useTranslation();
   const plateNumber = String(index + 1).padStart(2, "0");
-  const studioMeta = [item.medium, item.dimensions, item.edition]
-    .filter(Boolean)
-    .join(" · ");
+  const studioMeta = workMeta(item);
 
   const content = (
     <>
@@ -74,16 +69,7 @@ export function SubprofileItemTile({
         <span className="plate">
           {t("subprofiles:tile.plate", { number: plateNumber })}
         </span>
-        {item.gigState && (
-          <span className={`gigstate ${item.gigState}`}>
-            {t(GIG_STATE_LABEL[item.gigState])}
-          </span>
-        )}
-        {item.workState && (
-          <span className={`gigstate ${WORK_STATE_CLASS[item.workState]}`}>
-            {t(WORK_STATE_LABEL[item.workState])}
-          </span>
-        )}
+        <ItemStateChip item={item} />
         <b>{item.title}</b>
         {studioMeta && <small className="tile-meta">{studioMeta}</small>}
       </div>

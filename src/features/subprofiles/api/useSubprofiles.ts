@@ -12,14 +12,20 @@ import { subprofileToView, type SubprofileView } from "./subprofiles.adapters";
  *  unconditionally: a visitor/logged-out viewer must never hit
  *  GET /subprofiles/mine. The hook itself is still called every render either
  *  way (Rules of Hooks); only the network/demo-mock work is skipped. */
-export function useSubprofiles(options: { enabled?: boolean } = {}) {
+export function useSubprofiles(
+  options: { enabled?: boolean; retry?: boolean } = {},
+) {
   const { demoMode } = useDemoMode();
   return useQuery<SubprofileView[]>({
     queryKey: ["subprofiles", "mine", demoMode],
     enabled: options.enabled ?? true,
-    queryFn: async () => {
+    // `retry` passthrough (default undefined → react-query's global policy):
+    // callers gating this query on an auth guard (e.g. the nav persona badge)
+    // pass `false` so a pending/suspended member's 403 isn't hard-retried.
+    ...(options.retry !== undefined ? { retry: options.retry } : {}),
+    queryFn: async ({ signal }) => {
       if (!demoMode) {
-        const dtos = await getMySubprofiles();
+        const dtos = await getMySubprofiles(signal);
         return dtos.map(subprofileToView);
       }
       const { mockMineSubprofiles } = await import("../data/subprofiles.data");

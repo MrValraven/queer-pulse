@@ -34,6 +34,17 @@
   margin: 0;
 }
 
+/* Sits on the `.publishBar` flex row but forced to its own full-width line
+   below the Publish action — the reason the (disabled) Publish button won't
+   fire while there are unsaved edits. */
+.saveFirstHint {
+  flex: 1 1 100%;
+  font-size: 13px;
+  color: var(--accent-ink);
+  line-height: 1.5;
+  margin: 0;
+}
+
 .dangerZone {
   display: flex;
   flex-wrap: wrap;

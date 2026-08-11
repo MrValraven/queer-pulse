@@ -49,13 +49,14 @@ export function NetworkListModal({
       sub={t("members:network.modalSub", { count: filtered.length })}
       onClose={onClose}
     >
-      <SearchInput
-        value={query}
-        onChange={setQuery}
-        placeholder={t("members:network.searchPlaceholder")}
-        ariaLabel={t("members:network.searchAria")}
-        className={styles.search}
-      />
+      <div className={styles.searchBar}>
+        <SearchInput
+          value={query}
+          onChange={setQuery}
+          placeholder={t("members:network.searchPlaceholder")}
+          ariaLabel={t("members:network.searchAria")}
+        />
+      </div>
       {filtered.length > 0 ? (
         <ul className={styles.modalRows}>
           {filtered.map((person) => (

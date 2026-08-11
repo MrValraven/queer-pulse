@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { CONTENT_PANE_LEDE_KEY, PANE_HEADER } from "./editorPaneHeaders.data";
@@ -52,9 +53,25 @@ export function EditorPaneRouter({
     (section) => sectionPaneKey(section.section) === pane,
   );
 
+  // Switching rail panes only swaps `hidden` on already-mounted panels, so a
+  // screen-reader user gets no signal that the content changed. Move focus to
+  // the new pane's heading on each switch (but not the initial mount, which
+  // would otherwise steal focus + scroll on page load).
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const didMountRef = useRef(false);
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    headingRef.current?.focus();
+  }, [pane]);
+
   return (
     <>
-      <h2>{header ? t(header.titleKey) : activeSection ? t(activeSection.labelKey) : ""}</h2>
+      <h2 ref={headingRef} tabIndex={-1}>
+        {header ? t(header.titleKey) : activeSection ? t(activeSection.labelKey) : ""}
+      </h2>
       <p className="lede">
         {header ? t(header.ledeKey) : t(CONTENT_PANE_LEDE_KEY)}
       </p>
@@ -90,6 +107,7 @@ export function EditorPaneRouter({
             onCtaLabelChange={meta.setCtaLabel}
             ctaUrl={meta.ctaUrl}
             onCtaUrlChange={meta.setCtaUrl}
+            ctaMismatch={meta.ctaMismatch}
           />
         </div>
         <SubprofileSocialLinksEditor subprofile={subprofile} />

@@ -167,15 +167,41 @@ function withRefreshLock<T>(task: () => Promise<T>): Promise<T> {
   return locks.request(REFRESH_LOCK, task);
 }
 
-/** POST /auth/refresh once; resolves true on a 2xx, false on anything else. */
-function runRefresh(): Promise<boolean> {
-  return fetch(`${API_BASE_URL}/auth/refresh`, {
-    method: "POST",
-    credentials: "include",
-    headers: csrfToken ? { "X-CSRF-Token": csrfToken } : {},
-  })
-    .then((r) => r.ok)
-    .catch(() => false);
+/**
+ * POST /auth/refresh once; resolves true on a 2xx, false on anything else.
+ *
+ * A 403 here is almost always a STALE CSRF token, not a dead session. Every
+ * GET /csrf-token mints a fresh random token and overwrites the shared,
+ * non-httpOnly `csrf_token` cookie, so a second tab (or a reload in another tab)
+ * rotates that cookie out from under THIS tab's cached `csrfToken`. The
+ * backend's double-submit CsrfGuard then rejects our header/cookie mismatch with
+ * a 403 — and it does so in the guard, BEFORE the controller runs, so the
+ * rotating refresh token is never spent and a retry is safe. Mirror the
+ * self-heal `request()` already does on a CSRF 403: evict the cached token,
+ * re-bootstrap a fresh one, and retry ONCE. Without this, a cross-tab CSRF
+ * desync reads as an expired session and forces a spurious "session expired" —
+ * even though a page reload (which re-bootstraps CSRF from scratch) recovers
+ * cleanly. That gap is exactly the "logged out, but refreshing signs me back
+ * in" symptom.
+ */
+async function runRefresh(): Promise<boolean> {
+  const attempt = () =>
+    fetch(`${API_BASE_URL}/auth/refresh`, {
+      method: "POST",
+      credentials: "include",
+      headers: csrfToken ? { "X-CSRF-Token": csrfToken } : {},
+    });
+  try {
+    let res = await attempt();
+    if (res.status === 403) {
+      csrfToken = null;
+      await ensureCsrf();
+      res = await attempt();
+    }
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 let refreshing: Promise<boolean> | null = null;

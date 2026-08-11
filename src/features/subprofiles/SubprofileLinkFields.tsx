@@ -129,6 +129,7 @@ export function SubprofileLinkFields({
           <b>{t(LINK_TO_LABEL_KEY.unlinked)}</b>
           <p>{t(LINK_HELP_KEY.unlinked)}</p>
           <code>{pathFor("unlinked", ownerSlug, editor.slug, editor.handle)}</code>
+          <p className="handlestate idle">{t("subprofiles:newModal.standaloneNote")}</p>
           {handleNote && <p className={`handlestate ${handleNote.tone}`}>{handleNote.message}</p>}
         </button>
       </div>
@@ -140,6 +141,14 @@ export function SubprofileLinkFields({
             placeholder={t("subprofiles:metaForm.addressPlaceholder")}
             onChange={(event) => editor.setSlug(event.target.value)}
             onBlur={handleSlugBlur}
+            // A URL slug: never auto-capitalise / auto-correct / spell-check it,
+            // and give the URL keyboard (with `/` + `.`). enterKeyHint "done"
+            // since it's the last edited field before the global save.
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            inputMode="url"
+            enterKeyHint="done"
           />
         </FormField>
       ) : (

@@ -4,8 +4,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AccentKey, AvailabilityKey } from "./api/subprofiles.api";
 import { ImageUploadField } from "./ImageUploadField";
 import {
+  accentStyle,
   ACCENT_OPTIONS,
-  ACCENT_TOKENS,
   AVAILABILITY_OPTIONS,
 } from "./subprofilePresence.data";
 import styles from "./SubprofilePresenceFields.module.css";
@@ -27,6 +27,9 @@ interface SubprofilePresenceFieldsProps {
   onCtaLabelChange: (value: string) => void;
   ctaUrl: string;
   onCtaUrlChange: (value: string) => void;
+  /** The CTA label + URL are out of sync (one set, one blank) — a save-blocking
+   *  pairing. Surfaces inline on whichever half is still empty. */
+  ctaMismatch: boolean;
 }
 
 /**
@@ -50,8 +53,20 @@ export function SubprofilePresenceFields({
   onCtaLabelChange,
   ctaUrl,
   onCtaUrlChange,
+  ctaMismatch,
 }: SubprofilePresenceFieldsProps) {
   const { t } = useTranslation();
+
+  // Point the error at the half that's missing: a label with nowhere to go, or
+  // a link with no call to action.
+  const ctaLabelError =
+    ctaMismatch && !ctaLabel.trim()
+      ? t("subprofiles:metaForm.ctaLabelError")
+      : undefined;
+  const ctaUrlError =
+    ctaMismatch && !ctaUrl.trim()
+      ? t("subprofiles:metaForm.ctaUrlError")
+      : undefined;
 
   return (
     <>
@@ -89,17 +104,13 @@ export function SubprofilePresenceFields({
           aria-label={t("subprofiles:metaForm.accentLabel")}
         >
           {ACCENT_OPTIONS.map((key) => {
-            const token = ACCENT_TOKENS[key];
             const isSelected = accent === key;
             return (
               <button
                 key={key}
                 type="button"
                 className={styles.swatch}
-                style={{
-                  ["--accent-tint" as string]: token.tint,
-                  ["--accent-on" as string]: token.on,
-                }}
+                style={accentStyle(key)}
                 data-selected={isSelected || undefined}
                 aria-pressed={isSelected}
                 aria-label={t(`subprofiles:accent.${key}`)}
@@ -133,6 +144,7 @@ export function SubprofilePresenceFields({
       <FormField
         label={t("subprofiles:metaForm.ctaLabelLabel")}
         helper={t("subprofiles:metaForm.ctaHelper")}
+        error={ctaLabelError}
       >
         <input
           value={ctaLabel}
@@ -142,9 +154,14 @@ export function SubprofilePresenceFields({
         />
       </FormField>
 
-      <FormField label={t("subprofiles:metaForm.ctaUrlLabel")}>
+      <FormField label={t("subprofiles:metaForm.ctaUrlLabel")} error={ctaUrlError}>
         <input
           type="url"
+          inputMode="url"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          enterKeyHint="done"
           value={ctaUrl}
           placeholder={t("subprofiles:metaForm.ctaUrlPlaceholder")}
           onChange={(event) => onCtaUrlChange(event.target.value)}

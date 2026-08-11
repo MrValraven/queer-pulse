@@ -3,6 +3,7 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SubprofileFollow } from "./SubprofileFollow";
 import { SubprofileEndorse } from "./SubprofileEndorse";
+import { personaAddressName } from "./subprofile-kinds";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 import styles from "./SubprofileShowcase.module.css";
 
@@ -38,7 +39,11 @@ export function SubprofileCardFooter({
           endorsementCount={persona.endorsementCount}
           viewerEndorsed={persona.viewerEndorsed}
           isOwnerViewing={isOwnerViewing}
-          personaName={persona.displayName}
+          personaName={personaAddressName({
+            displayName: persona.displayName,
+            kind: persona.kind,
+            ownerName: persona.ownerName,
+          })}
           personaAvatarUrl={persona.avatarUrl}
         />
       </div>

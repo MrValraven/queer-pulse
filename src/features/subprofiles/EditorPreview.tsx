@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import { FiExternalLink } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -7,7 +6,7 @@ import { SubprofilePageBody } from "./SubprofilePageBody";
 import { ownerViewToShowcaseView, type SubprofileView } from "./api/subprofiles.adapters";
 import { personaPublicPathForOwner } from "./personaLinks.data";
 import { skinFor, SKIN_META } from "./subprofile-skins";
-import { ACCENT_TOKENS, DEFAULT_ACCENT } from "./subprofilePresence.data";
+import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
 import type { PersonaViewMode } from "./personaSkinRender";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 
@@ -72,11 +71,7 @@ export function EditorPreview({
 
   const skin = skinFor(liveView.kind);
   const data = ownerViewToShowcaseView(liveView, profile.slug);
-  const accentTokens = ACCENT_TOKENS[liveView.accent ?? DEFAULT_ACCENT];
-  const skinVars = {
-    "--sk-tint": accentTokens.tint,
-    "--sk-on": accentTokens.on,
-  } as CSSProperties;
+  const skinStyle = skinVars(liveView.accent ?? DEFAULT_ACCENT);
   // "Open live" always points at the SAVED persona's public URL — it opens
   // what is actually live, which unsaved slug/handle edits haven't changed
   // yet, so it must NOT follow the live-edited slug.
@@ -104,7 +99,7 @@ export function EditorPreview({
             data={data}
             skin={skin}
             mode={PREVIEW_MODE}
-            skinVars={skinVars}
+            skinVars={skinStyle}
             onAction={noop}
             onOpenWorkAt={noop}
             onOpenWorkItem={noop}

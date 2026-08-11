@@ -1,14 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { createPortal } from "react-dom";
 import { FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
 import { useScrollLock } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { resolveAvatarSrc } from "../../../shared/lib/avatarUrl";
+import { useLightboxDialog } from "../useLightboxDialog";
 import type { SubprofileItemView } from "../api/subprofiles.adapters";
 import styles from "./GalleryLightbox.module.css";
-
-const FOCUSABLE =
-  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 export interface GalleryLightboxProps {
   /** The persona's gallery photos — the same flat array `getGalleryWorks`
@@ -44,59 +42,7 @@ export function GalleryLightbox({
   const dialogRef = useRef<HTMLDivElement>(null);
   const item = items[index];
 
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    const previouslyFocused = document.activeElement as HTMLElement | null;
-
-    const focusables = (): HTMLElement[] =>
-      dialog
-        ? Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
-            (el) => el.offsetParent !== null,
-          )
-        : [];
-
-    const first = focusables()[0];
-    if (first) first.focus();
-    else dialog?.focus();
-
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose();
-        return;
-      }
-      if (event.key === "ArrowLeft") {
-        onMove(-1);
-        return;
-      }
-      if (event.key === "ArrowRight") {
-        onMove(1);
-        return;
-      }
-      if (event.key !== "Tab" || !dialog) return;
-      const elements = focusables();
-      const firstEl = elements[0];
-      const lastEl = elements[elements.length - 1];
-      if (!firstEl || !lastEl) {
-        event.preventDefault();
-        dialog.focus();
-        return;
-      }
-      const active = document.activeElement;
-      if (event.shiftKey && (active === firstEl || active === dialog)) {
-        event.preventDefault();
-        lastEl.focus();
-      } else if (!event.shiftKey && active === lastEl) {
-        event.preventDefault();
-        firstEl.focus();
-      }
-    };
-
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      previouslyFocused?.focus?.();
-    };
-  }, [onClose, onMove]);
+  useLightboxDialog(dialogRef, { onClose, onMove });
 
   if (!item || !item.imageUrl) return null;
 

@@ -33,6 +33,7 @@ function demoLandingFeatures(): LandingFeaturesResponseDTO {
       tagline: member.role,
       avatarUrl: member.photo ?? null,
       quote,
+      tags: member.tags,
     })),
     communities: spotlightCommunities.map((community) => ({
       id: community.anchor,

@@ -7,7 +7,7 @@ import { SideStatusPill } from "./SideStatusPill";
 import { SideCardFooter } from "./SideCardFooter";
 import { LINK_BADGE } from "./mySubprofiles.data";
 import {
-  ACCENT_TOKENS,
+  accentTintStyle,
   AVAILABILITY_OPTIONS,
   AVAILABILITY_PILL_TONE,
   DEFAULT_ACCENT,
@@ -41,7 +41,6 @@ interface SideCardProps {
 export function SideCard({ view, onOpen, onEdit, onShare, onDelete }: SideCardProps) {
   const { t } = useTranslation();
   const accent = view.accent ?? DEFAULT_ACCENT;
-  const { tint } = ACCENT_TOKENS[accent];
   const isDraft = view.status === "draft";
   const { readyCount, totalCount } = estimateDraftReadiness(view);
   const tie = LINK_BADGE[view.linkVisibility];
@@ -53,7 +52,7 @@ export function SideCard({ view, onOpen, onEdit, onShare, onDelete }: SideCardPr
     <article className={isDraft ? "side side-draft" : "side"}>
       <div
         className="side-top"
-        style={{ ["--accent-tint" as string]: tint }}
+        style={accentTintStyle(accent)}
       >
         {isDraft ? (
           <SideReadinessRing readyCount={readyCount} totalCount={totalCount} />

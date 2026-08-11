@@ -1850,6 +1850,71 @@ export const marketing: Catalog = {
   "changelog.tag.pressKit": "Open the press kit",
   "changelog.tag.magazineDesk": "Open the desk",
 
+  "changelog.entries.crisp-profile-photos.title":
+    "Profile photos are sharper on member pages",
+  "changelog.entries.crisp-profile-photos.body":
+    "Some member portraits looked soft on the profile page while others were crisp. The large photo now requests a resolution that matches the space it fills, so every profile shows a clear, sharp portrait.",
+
+  "changelog.entries.developer-persona-banner.title":
+    "Developer personas can show a banner again",
+  "changelog.entries.developer-persona-banner.body":
+    "Developer, maker and other builder personas quietly hid the banner image you uploaded. If you've added a cover, it now shows across the top of the persona — and if you haven't, the page stays clean with no empty band.",
+
+  "changelog.entries.persona-preview-edit-hidden.title":
+    "Previewing your profile as a visitor now hides your Edit controls",
+  "changelog.entries.persona-preview-edit-hidden.body":
+    "When you previewed your own profile as a visitor, the Edit button still showed on your personas — so the preview didn't quite match what others see. It's now hidden, and the preview reflects the real visitor experience.",
+
+  "changelog.entries.persona-solo-card-wide.title":
+    "A single persona with a cover now fills the space",
+  "changelog.entries.persona-solo-card-wide.body":
+    "If your profile has just one persona and it has a cover photo, its card now lays out wide — cover beside the details — instead of sitting in a narrow column with an empty gap next to it. Sparser personas keep the compact card.",
+
+  "changelog.entries.persona-performance-row-mobile.title":
+    "Persona performance lists now read cleanly on phones",
+  "changelog.entries.persona-performance-row-mobile.body":
+    "On a narrow screen the year, title and venue of a performance used to fight for one line, squeezing the title until it broke one letter per line. Each part now takes its own line, so a dancer's — or any persona's — performances stay legible on mobile.",
+
+  "changelog.entries.endorse-persona-by-owner-name.title":
+    "Endorsing an unnamed persona now uses your name",
+  "changelog.entries.endorse-persona-by-owner-name.body":
+    "When someone leaves a persona named only after its craft — “Dancer”, “Developer” — the endorse dialog now addresses the person by their first name (“Endorse Philippine”) instead of the bare profession, so the words read like they're about a human, not a job title.",
+
+  "changelog.entries.landing-featured-member-card.title":
+    "A richer featured-member card on the homepage",
+  "changelog.entries.landing-featured-member-card.body":
+    "The members our team features on the homepage now appear in the same full spotlight card as our demo — a large portrait, their own words, and a link straight to their profile — rotating through everyone we've highlighted. It replaces the plainer little card that showed just a name and a line.",
+
+  "changelog.entries.session-expiry-csrf-fix.title":
+    "Fewer surprise “session expired” sign-outs",
+  "changelog.entries.session-expiry-csrf-fix.body":
+    "We fixed a bug that could log you out with a “session expired” message even though your session was still fine — the giveaway was that reloading the page signed you straight back in. It happened most often with the app open in more than one tab. Your session now quietly recovers on its own instead of dropping you to the sign-in screen.",
+
+  "changelog.entries.persona-image-remove-confirm.title":
+    "A quick check before you remove a persona photo",
+  "changelog.entries.persona-image-remove-confirm.body":
+    "Tapping the trash icon on an avatar, cover or item image no longer clears it instantly. You'll get a short confirmation first, so an accidental tap won't wipe a photo you meant to keep.",
+
+  "changelog.entries.persona-craft-pass.title":
+    "Personas look and feel better everywhere",
+  "changelog.entries.persona-craft-pass.body":
+    "A craft pass across the whole feature. Dark mode is fixed throughout — skin details, menus and state icons that used to wash out now stay crisp. The persona directory no longer stops at 40 people, loads with a proper skeleton instead of a spinner, and reads faster because persona styles no longer weigh down every other page. On a phone, the endorsers, report and delete dialogs are now bottom sheets you can swipe away, tap targets are bigger, address and link fields bring up the right keyboard, and you can preview your persona while editing. Sharing is tidier too: link previews no longer crop your photo, and the editor shows real art when something goes wrong.",
+
+  "changelog.entries.persona-audit-hardening.title":
+    "Personas: a polish and safety pass",
+  "changelog.entries.persona-audit-hardening.body":
+    "A broad sweep across personas. The editor now protects your work — it warns before the back button loses unsaved edits, keeps typing safe while a save is in flight, and asks you to save before publishing so what you see is what goes live. Public persona pages load their banner faster, read cleanly for screen readers, and never flash a stray placeholder. Followers stay private, links are scheme-checked for safety, and the persona directory loads quicker. Co-owners can edit freely, but only the creator can rename, unpublish, delete, or remove a co-owner — and everyone's notified if a shared persona is deleted.",
+
+  "changelog.entries.persona-followers-owner-view.title":
+    "See who follows your persona",
+  "changelog.entries.persona-followers-owner-view.body":
+    "The owner of a persona can now open its followers and see exactly who's there — the people quietly keeping up with your work. For everyone else, following stays private: no one else can see who follows a persona, and your own following never shows up to anyone.",
+
+  "changelog.entries.persona-image-reuse-uploads.title":
+    "Reuse a photo you've already uploaded",
+  "changelog.entries.persona-image-reuse-uploads.body":
+    "Every image slot in your persona editor — the avatar or logo, the cover banner, and each item's picture — can now pull from photos you've uploaded before, not just a fresh file from your device. Choosing an image opens a picker with your past uploads, so you can reuse the same shot across personas in a couple of taps, or delete ones you no longer need.",
+
   "changelog.entries.persona-banner-quality.title":
     "Crisper persona banners",
   "changelog.entries.persona-banner-quality.body":

@@ -111,7 +111,11 @@ export function ProfilePage() {
   // the same work/board/skills/groups editors as desktop.
   const belowHero = (
     <>
-      <ProfileSubprofilesSection ownerSlug={ownerSlug} isSelf={selfView} />
+      <ProfileSubprofilesSection
+        ownerSlug={ownerSlug}
+        isSelf={selfView}
+        previewing={isSelf && previewing}
+      />
       <ProfileContent
         profile={resolvedProfile}
         isSelf={selfView}

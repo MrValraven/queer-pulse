@@ -37,15 +37,17 @@ export function TableMenuCard({
   if (!featured || !courses || courses.length === 0) return null;
   const line = featured.subtitle || featured.description;
 
+  // `<h2>`, not `<h3>`: the table skin's featured menu stands in for the
+  // Spotlight, so it sits at the same heading level (h1 name → h2).
   return (
     <div className="menucard">
-      <h3>{featured.title}</h3>
+      <h2>{featured.title}</h2>
       {line && <p className="menucard-line">{line}</p>}
       {courses.map((course) => (
         <div className="course" key={course.n}>
           <span className="course-name">{course.name}</span>
-          {course.dishes.map((dish, dishIndex) => (
-            <div className="dish" key={dishIndex}>
+          {course.dishes.map((dish) => (
+            <div className="dish" key={`${dish.title}|${dish.note ?? ""}`}>
               <b>
                 {dish.title}
                 {dish.marks && dish.marks.length > 0 && (

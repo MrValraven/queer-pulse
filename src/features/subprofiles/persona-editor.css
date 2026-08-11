@@ -78,6 +78,13 @@
   .ed .ed-preview {
     display: none;
   }
+  /* The docked preview is gone here, so its savebar show/hide toggle is a dead
+     control — hide it too rather than leave a button that does nothing. Scoped
+     `.ed .savebar …` so it out-specifies the base `.savebar .savebar-preview-
+     toggle { display: inline-flex }` rule below. */
+  .ed .savebar .savebar-preview-toggle {
+    display: none;
+  }
 }
 /* Phone / narrow tablet: single column. The rail becomes a horizontal
    top strip (same specificity guard as above); the pane runs full width
@@ -180,9 +187,9 @@
     color: var(--ink);
   }
 }
-.ed-rail button[aria-current="true"] {
+.ed-rail button[aria-current="page"] {
   background: var(--plum);
-  color: var(--cream);
+  color: rgb(var(--cream-rgb));
   font-weight: 600;
 }
 .ed-rail .rail-n {
@@ -474,6 +481,23 @@
   justify-content: flex-end;
   flex-wrap: wrap;
 }
+/* The reason Save is disabled while there are still changes (e.g. a missing
+   name) — sits at the start of the actions row, pushing the buttons to the end.
+   Parent-scoped so it out-specifies the generic `.savebar span` rule above. */
+.savebar .savebar-block {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-inline-end: auto;
+  font-size: 13px;
+  color: var(--accent-ink);
+  line-height: 1.4;
+}
+/* The preview-toggle wrapper is a plain inline box, not one of the flexible
+   status spans — keep it hugging its button (out-specifies `.savebar span`). */
+.savebar .savebar-preview-toggle {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
 
 /* ── publish readiness (Task 7 — PublishChecklist restyle) ───────────── */
 .ready {
@@ -512,13 +536,13 @@
 .meter {
   height: 6px;
   border-radius: 999px;
-  background: var(--line);
+  background: var(--line-2);
   overflow: hidden;
 }
 .meter i {
   display: block;
   height: 100%;
-  background: var(--accent);
+  background: var(--accent-ink);
   border-radius: 999px;
   transition: width 0.5s var(--ease);
 }
@@ -622,9 +646,11 @@
      `.drawer-body` flex child never overflows, so it never scrolls. `svh` pins
      the panel to the visible viewport so its body scroll engages. Mirrors the
      shared `<Modal>` (`Modal.module.css`), which hit the same trap. The `vh`
-     line is a fallback for browsers without `svh`. */
+     line is a fallback for browsers without `svh`. The `--keyboard-inset`
+     (published app-wide by `useVisualViewportKeyboard`) shrinks the panel while
+     the iOS soft keyboard is up, so `.drawer-foot` stays above it. */
   height: 100vh;
-  height: 100svh;
+  height: calc(100svh - var(--keyboard-inset, 0px));
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-panel);
@@ -679,7 +705,7 @@
     /* svh, not %: same large-viewport overshoot as above — an 88%-of-large
        sheet anchored to the bottom pushes its footer under the mobile chrome. */
     height: 88vh;
-    height: 88svh;
+    height: calc(88svh - var(--keyboard-inset, 0px));
     margin-top: auto;
     border-radius: 26px 26px 0 0;
   }

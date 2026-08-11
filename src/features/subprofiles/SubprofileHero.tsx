@@ -7,12 +7,13 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
+import { skinFor } from "./subprofile-skins";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { personaPublicPath } from "./personaLinks.data";
 import { SubprofileSocialRow } from "./SubprofileSocialRow";
 import { SubprofileHeroActions } from "./SubprofileHeroActions";
 import { SubprofileTitleBlock } from "./SubprofileTitleBlock";
-import type { PersonaViewMode } from "./personaSkinRender";
+import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 
 /** The design ground truth's `.pp-meta` count buttons carry a bare
@@ -51,7 +52,7 @@ export function SubprofileHero({
 }: {
   view: PublicSubprofileView;
   mode: PersonaViewMode;
-  onAction: (action: string) => void;
+  onAction: (action: PersonaAction) => void;
 }) {
   const { t } = useTranslation();
   const [photoOpen, setPhotoOpen] = useState(false);
@@ -62,9 +63,15 @@ export function SubprofileHero({
     Boolean(view.ownerName) &&
     Boolean(view.ownerSlug);
   const interactive = mode !== "preview";
+  // The studio and page skins `display:none` the avatar entirely (see
+  // `persona-skins.css`) — wrapping a hidden avatar in a real `<button>` would
+  // leave a keyboard tab-stop that focuses nothing, so the enlarge affordance
+  // only exists on skins that actually render the avatar.
+  const skin = skinFor(view.kind);
+  const avatarRendered = skin !== "studio" && skin !== "page";
   // Only a real uploaded photo is worth enlarging — an initials fallback has
   // nothing more to show. Preview mode stays non-interactive like the meta row.
-  const canViewPhoto = interactive && Boolean(view.avatarUrl);
+  const canViewPhoto = interactive && avatarRendered && Boolean(view.avatarUrl);
 
   const avatar = (
     <Avatar
@@ -96,9 +103,13 @@ export function SubprofileHero({
 
         <div className="pp-text">
           <span className="pp-kind">{t(KIND_LABEL_KEYS[view.kind])}</span>
-          <h1 className="pp-name">
-            {view.displayName} <FeatureHelp id="subprofiles.detail" />
-          </h1>
+          {/* The FeatureHelp chip is a sibling of the `<h1>`, never a child, so
+              the heading's accessible name is exactly the display name.
+              `.pp-nameRow` keeps them on one line (persona-skins.css). */}
+          <div className="pp-nameRow">
+            <h1 className="pp-name">{view.displayName}</h1>
+            <FeatureHelp id="subprofiles.detail" />
+          </div>
           {view.tagline && <p className="pp-tagline">{view.tagline}</p>}
 
           <SubprofileSocialRow
@@ -110,28 +121,48 @@ export function SubprofileHero({
           <SubprofileHeroActions view={view} mode={mode} onAction={onAction} />
 
           <div className="pp-meta">
-            <button
-              type="button"
-              style={METABTN_STYLE}
-              disabled={!interactive}
-              onClick={
-                interactive ? () => onAction("people:endorsers") : undefined
-              }
-            >
-              {t("subprofiles:hero.endorse.count", {
-                count: view.endorsementCount,
-              })}
-            </button>
-            <button
-              type="button"
-              style={METABTN_STYLE}
-              disabled={!interactive}
-              onClick={
-                interactive ? () => onAction("people:followers") : undefined
-              }
-            >
-              {t("subprofiles:hero.follow.count", { count: view.followerCount })}
-            </button>
+            {/* A zero count opens an empty modal — render it as plain text
+                instead of a button so there's nothing dead to click. */}
+            {view.endorsementCount > 0 ? (
+              <button
+                type="button"
+                style={METABTN_STYLE}
+                disabled={!interactive}
+                onClick={
+                  interactive ? () => onAction("people:endorsers") : undefined
+                }
+              >
+                {t("subprofiles:hero.endorse.count", {
+                  count: view.endorsementCount,
+                })}
+              </button>
+            ) : (
+              <span>
+                {t("subprofiles:hero.endorse.count", {
+                  count: view.endorsementCount,
+                })}
+              </span>
+            )}
+            {view.followerCount > 0 ? (
+              <button
+                type="button"
+                style={METABTN_STYLE}
+                disabled={!interactive}
+                onClick={
+                  interactive ? () => onAction("people:followers") : undefined
+                }
+              >
+                {t("subprofiles:hero.follow.count", {
+                  count: view.followerCount,
+                })}
+              </button>
+            ) : (
+              <span>
+                {t("subprofiles:hero.follow.count", {
+                  count: view.followerCount,
+                })}
+              </span>
+            )}
             {linkedToOwner && interactive ? (
               <Link className="pp-owner" to={`${routes.members}/${view.ownerSlug}`}>
                 <Translation
@@ -158,7 +189,7 @@ export function SubprofileHero({
           </div>
         </div>
 
-        <SubprofileTitleBlock view={view} mode={mode} />
+        <SubprofileTitleBlock view={view} />
       </div>
 
       {view.bio && <p className="pp-bio">{view.bio}</p>}

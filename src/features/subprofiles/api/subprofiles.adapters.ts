@@ -20,6 +20,24 @@ import type {
   WorkState,
 } from "./subprofiles.api";
 import { SECTION_META, sectionsForKind } from "../subprofile-kinds";
+import { ACCENT_OPTIONS, AVAILABILITY_OPTIONS } from "../subprofilePresence.data";
+
+// ── Wire-value guards ────────────────────────────────────────────────────────
+// `accent`/`availability` arrive as raw `string | null` on the DTO. Narrow them
+// against the known key sets so an unexpected wire value falls back to `null`
+// (the "unset" state components already handle) instead of being blindly cast.
+
+const AVAILABILITY_KEYS: AvailabilityKey[] = AVAILABILITY_OPTIONS.map(
+  (option) => option.value,
+);
+
+function isAccentKey(value: string | null): value is AccentKey {
+  return value !== null && (ACCENT_OPTIONS as string[]).includes(value);
+}
+
+function isAvailabilityKey(value: string | null): value is AvailabilityKey {
+  return value !== null && (AVAILABILITY_KEYS as string[]).includes(value);
+}
 
 // ── View models (what the pages/editor hold) ─────────────────────────────────
 
@@ -215,8 +233,8 @@ export function subprofileToView(dto: SubprofileDTO): SubprofileView {
     tagline: dto.tagline ?? "",
     bio: dto.bio ?? "",
     coverUrl: dto.coverUrl,
-    accent: dto.accent as AccentKey | null,
-    availability: dto.availability as AvailabilityKey | null,
+    accent: isAccentKey(dto.accent) ? dto.accent : null,
+    availability: isAvailabilityKey(dto.availability) ? dto.availability : null,
     ctaLabel: dto.ctaLabel ?? "",
     ctaUrl: dto.ctaUrl ?? "",
     socialLinks: dto.socialLinks,
@@ -248,8 +266,8 @@ export function publicSubprofileToView(
     tagline: dto.tagline ?? "",
     bio: dto.bio ?? "",
     coverUrl: dto.coverUrl,
-    accent: dto.accent as AccentKey | null,
-    availability: dto.availability as AvailabilityKey | null,
+    accent: isAccentKey(dto.accent) ? dto.accent : null,
+    availability: isAvailabilityKey(dto.availability) ? dto.availability : null,
     ctaLabel: dto.ctaLabel ?? "",
     ctaUrl: dto.ctaUrl ?? "",
     socialLinks: dto.socialLinks,

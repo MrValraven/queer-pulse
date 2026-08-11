@@ -1,0 +1,15 @@
+/* The persona preview tree (`.pp` from persona-skins.css) rendered inside a
+   <ModalSheet wide>. Offset the sheet's inline padding so the persona's cover
+   band reads edge-to-edge as it does on the live page; the inner `.wrap` keeps
+   its own gutter, so only the full-bleed cover reaches the sheet edges. A small
+   top offset lifts the cover toward the grabber without hiding under it. The
+   sheet clips to its rounded top corners (overflow), so the cover corners round
+   with the sheet. */
+.frame {
+  margin: 4px -32px 0;
+}
+@media (min-width: 720px) {
+  .frame {
+    margin: 4px -48px 0;
+  }
+}

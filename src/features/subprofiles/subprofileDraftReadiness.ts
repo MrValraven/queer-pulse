@@ -1,3 +1,4 @@
+import type { LinkVisibility, SubprofileSection } from "./api/subprofiles.api";
 import type {
   PublicSubprofileView,
   SubprofileView,
@@ -9,6 +10,49 @@ import { isContentSection } from "./subprofile-kinds";
 // that also runs live (see the `queerpulse-demo-persona-leak` pattern).
 const MIN_BIO_LENGTH = 80;
 const MIN_CONTENT_ITEMS = 3;
+
+/** The primitive facts every readiness read is built from. Extracting them
+ *  keeps the saved-view estimate (`estimateDraftReadiness`) and the live-editor
+ *  estimate (`estimateEditorReadiness`) computing the SAME signal set, so the
+ *  ring can't disagree with itself depending on which source fed it. */
+interface ReadinessFacts {
+  linkVisibility: LinkVisibility;
+  handle: string | null | undefined;
+  hasAvatar: boolean;
+  bioTrimmedLength: number;
+  contentItemCount: number;
+  hasCover: boolean;
+  hasAvailability: boolean;
+  socialLinkCount: number;
+}
+
+function readinessFromFacts(facts: ReadinessFacts): {
+  readyCount: number;
+  totalCount: number;
+} {
+  const signals = [
+    facts.hasAvatar,
+    facts.bioTrimmedLength >= MIN_BIO_LENGTH,
+    facts.contentItemCount >= MIN_CONTENT_ITEMS,
+    // Polish signals — optional to publish, but they're part of "where you
+    // stand", and mirror the `POLISH_NUDGES` list shown alongside the ring.
+    facts.hasCover,
+    facts.hasAvailability,
+    facts.socialLinkCount > 0,
+  ];
+
+  // A standalone (unlinked) persona also needs its own `handle`; a linked one
+  // nests under the owner's profile and doesn't, so `handle` only counts for
+  // unlinked personas.
+  if (facts.linkVisibility !== "linked") {
+    signals.push(Boolean(facts.handle));
+  }
+
+  return {
+    readyCount: signals.filter(Boolean).length,
+    totalCount: signals.length,
+  };
+}
 
 /** The fields this estimate reads, on either view model it accepts — the
  *  owner's own `SubprofileView` (dashboard card ring, editor) or the public
@@ -72,23 +116,57 @@ export function estimateDraftReadiness(
     .filter((section) => isContentSection(section.section))
     .reduce((total, section) => total + section.items.length, 0);
 
-  const signals = [
-    Boolean(data.avatarUrl),
-    data.bio.trim().length >= MIN_BIO_LENGTH,
-    contentItemCount >= MIN_CONTENT_ITEMS,
-    // Polish signals — optional to publish, but they're part of "where you
-    // stand", and mirror the `POLISH_NUDGES` list shown alongside the ring.
-    Boolean(data.coverUrl),
-    Boolean(data.availability),
-    data.socialLinks.length > 0,
-  ];
+  return readinessFromFacts({
+    linkVisibility: data.linkVisibility,
+    handle: data.handle,
+    hasAvatar: Boolean(data.avatarUrl),
+    bioTrimmedLength: data.bio.trim().length,
+    contentItemCount,
+    hasCover: Boolean(data.coverUrl),
+    hasAvailability: Boolean(data.availability),
+    socialLinkCount: data.socialLinks.length,
+  });
+}
 
-  if (data.linkVisibility !== "linked") {
-    signals.push(Boolean(data.handle));
-  }
-
-  return {
-    readyCount: signals.filter(Boolean).length,
-    totalCount: signals.length,
+/**
+ * The SAME readiness read as {@link estimateDraftReadiness}, but from the live,
+ * unsaved editor working-state instead of the saved persona — so the publish
+ * ring (in the Publish pane and the rail's "Get it live" row) tracks edits the
+ * moment they're made rather than reflecting the last-saved server row. Fed the
+ * meta fields plus the working section/social rows off `SubprofileEditorContext`
+ * (typed structurally to avoid a context→readiness import cycle). Content items
+ * are counted by non-blank title so a freshly-appended empty draft row (or an
+ * image-only section) doesn't inflate the count past what a save would persist.
+ */
+export function estimateEditorReadiness(editor: {
+  meta: {
+    link: LinkVisibility;
+    handle: string;
+    avatarUrl: string;
+    bio: string;
+    coverUrl: string;
+    availability: string;
   };
+  sectionRows: Record<string, { title: string }[]>;
+  socialRows: { urlOrHandle: string }[];
+}): { readyCount: number; totalCount: number } {
+  const { meta, sectionRows, socialRows } = editor;
+  const contentItemCount = Object.entries(sectionRows)
+    .filter(([section]) => isContentSection(section as SubprofileSection))
+    .reduce(
+      (total, [, rows]) =>
+        total + rows.filter((row) => row.title.trim()).length,
+      0,
+    );
+
+  return readinessFromFacts({
+    linkVisibility: meta.link,
+    handle: meta.handle,
+    hasAvatar: Boolean(meta.avatarUrl),
+    bioTrimmedLength: meta.bio.trim().length,
+    contentItemCount,
+    hasCover: Boolean(meta.coverUrl),
+    hasAvailability: Boolean(meta.availability),
+    socialLinkCount: socialRows.filter((row) => row.urlOrHandle.trim()).length,
+  });
 }

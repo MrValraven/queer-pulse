@@ -44,7 +44,9 @@
 }
 .title em {
   font-style: italic;
-  color: var(--accent);
+  /* Coral-as-TEXT wants the AA-contrast `--accent-text`, not the brighter
+     `--accent` (which is tuned for fills/affordances, not body-size type). */
+  color: var(--accent-text);
 }
 .sub {
   font-size: 15px;
@@ -73,6 +75,10 @@
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 999px;
   padding: 8px 15px;
+  /* A full 44px touch target (WCAG 2.5.8) even for the shorter `.chipTag`
+     variant, and no double-tap-zoom delay on the toggle. */
+  min-height: 44px;
+  touch-action: manipulation;
   cursor: pointer;
   transition:
     border-color 0.2s var(--ease),
@@ -87,6 +93,12 @@
 .chip:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+/* A tactile press cue on tap — motion-gated so reduced-motion users get none. */
+@media (prefers-reduced-motion: no-preference) {
+  .chip:active {
+    transform: scale(0.98);
+  }
 }
 .chipOn {
   border-color: var(--accent);
@@ -149,13 +161,44 @@
   }
 }
 
-.stateWrap {
+/* ── Loading skeleton ────────────────────────────────────────────────────── */
+/* Mirrors the `SubprofileCard` silhouette (header wash + cut-out avatar + a
+   text stack) so the real cards drop into the same `.grid` with no jump. The
+   shimmer itself comes from the shared `SkeletonLine`/`SkeletonAvatar`
+   primitives; these are only the card shell + layout. */
+.skCard {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-block: 48px;
-  justify-content: center;
-  color: var(--ink-60);
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  overflow: clip;
+}
+.skHeader {
+  height: 72px;
+  flex: none;
+  background: color-mix(in srgb, var(--ink) 4%, var(--paper));
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.05);
+}
+.skAvatar {
+  flex: none;
+  margin-block-start: -34px;
+  margin-inline-start: var(--card-pad);
+}
+.skBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding: 14px var(--card-pad) 20px;
+}
+.skTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  margin-block-start: 6px;
 }
 
 /* ── "Show more" pager ───────────────────────────────────────────────────── */

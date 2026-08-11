@@ -2,8 +2,10 @@
 
 /* Frontend filter field, pinned to the top of the scrolling body so it stays
    reachable while the list scrolls under it. Its cream backdrop bleeds over the
-   body's horizontal padding so rows don't peek through the sides as they pass. */
-.search {
+   body's horizontal padding so rows don't peek through the sides as they pass.
+   Kept as a wrapper around SearchInput (not merged onto its wrap) so the sticky
+   padding never displaces the field's absolutely-positioned search icon. */
+.searchBar {
   position: sticky;
   top: 0;
   z-index: 1;

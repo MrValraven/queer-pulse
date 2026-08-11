@@ -7,14 +7,13 @@ import {
 } from "react";
 import { usePrefersReducedMotion } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { Spotlight } from "./Discovery.data";
-import { portraitSrc } from "./portraitSrc";
+import type { SpotlightView } from "./spotlightView";
 import { SpotlightFace } from "./SpotlightFace";
 import styles from "./Discovery.module.css";
 
 const ROTATE_MS = 5500;
 
-export function FeaturedSpotlightCard({ items }: { items: Spotlight[] }) {
+export function FeaturedSpotlightCard({ items }: { items: SpotlightView[] }) {
   const { t } = useTranslation();
   const reducedMotion = usePrefersReducedMotion();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -42,10 +41,9 @@ export function FeaturedSpotlightCard({ items }: { items: Spotlight[] }) {
   // scrolls into view.
   useEffect(() => {
     for (const item of items) {
-      const source = portraitSrc(item.member.photo);
-      if (!source) continue;
+      if (!item.photoUrl) continue;
       const image = new Image();
-      image.src = source;
+      image.src = item.photoUrl;
     }
   }, [items]);
 
@@ -152,7 +150,7 @@ export function FeaturedSpotlightCard({ items }: { items: Spotlight[] }) {
               aria-hidden={!isActive}
               inert={!isActive}
             >
-              <SpotlightFace member={slide.member} quote={slide.quote} />
+              <SpotlightFace view={slide} />
             </div>
           );
         })}
@@ -165,13 +163,13 @@ export function FeaturedSpotlightCard({ items }: { items: Spotlight[] }) {
         >
           {items.map((item, index) => (
             <button
-              key={item.member.key}
+              key={item.key}
               type="button"
               className={[styles.navDot, index === active && styles.navDotOn]
                 .filter(Boolean)
                 .join(" ")}
               aria-label={t("homepage:discovery.featureMemberAria", {
-                name: item.member.name,
+                name: item.name,
               })}
               aria-current={index === active}
               onClick={() => scrollToIndex(index, true)}

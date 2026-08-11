@@ -14,6 +14,14 @@ export interface DocumentMeta {
   canonical?: string;
   /** Social image — root-relative path or absolute URL. Falls back to default. */
   image?: string;
+  /** Alt text for the social image — emitted as `og:image:alt` /
+   *  `twitter:image:alt`. Omitted entirely when absent (an empty alt is worse
+   *  than none for a social card). */
+  imageAlt?: string;
+  /** Twitter card style — `"summary"` (small square thumb) or
+   *  `"summary_large_image"` (wide hero). Defaults to the site default. Pass
+   *  `"summary_large_image"` only when the `image` is a genuine wide cover. */
+  twitterCard?: string;
   /** When true, emits `<meta name="robots" content="noindex, nofollow">`. */
   noIndex?: boolean;
   /** og:type (e.g. "website" | "article"). Defaults to "website". */
@@ -45,6 +53,25 @@ function upsertMeta(
     } else if (previous !== null) {
       el.setAttribute("content", previous);
     }
+  };
+}
+
+/**
+ * Remove a <meta> tag (if present), restoring it on cleanup. Used to drop the
+ * static shell's fixed `og:image:width`/`height` when a page overrides
+ * `og:image` with an image of unknown dimensions — announcing a square avatar
+ * as 1200×630 makes scrapers crop it. Re-appends the original node on cleanup
+ * (order among head tags is irrelevant), so the default shell dimensions
+ * survive for the next page.
+ */
+function removeMeta(attr: "name" | "property", key: string): () => void {
+  const existing = document.head.querySelector<HTMLMetaElement>(
+    `meta[${attr}="${key}"]`,
+  );
+  if (existing === null) return () => {};
+  existing.remove();
+  return () => {
+    document.head.appendChild(existing);
   };
 }
 
@@ -93,6 +120,8 @@ export function useDocumentMeta(meta: DocumentMeta): void {
     description,
     canonical,
     image,
+    imageAlt,
+    twitterCard,
     noIndex = false,
     type = "website",
   } = meta;
@@ -113,11 +142,27 @@ export function useDocumentMeta(meta: DocumentMeta): void {
       upsertMeta("property", "og:url", url),
       upsertMeta("property", "og:image", resolvedImage),
       upsertMeta("property", "og:type", type),
-      upsertMeta("name", "twitter:card", defaultMeta.twitterCard),
+      upsertMeta("name", "twitter:card", twitterCard ?? defaultMeta.twitterCard),
       upsertMeta("name", "twitter:title", title),
       upsertMeta("name", "twitter:description", resolvedDescription),
       upsertMeta("name", "twitter:image", resolvedImage),
     ];
+
+    if (imageAlt) {
+      cleanups.push(upsertMeta("property", "og:image:alt", imageAlt));
+      cleanups.push(upsertMeta("name", "twitter:image:alt", imageAlt));
+    }
+
+    // The static shell (index.html) hardcodes og:image:width=1200 / height=630
+    // for the default 1200×630 social card. When a page overrides `image` — e.g.
+    // a persona route pointing og:image at a square avatar or an arbitrary cover —
+    // those fixed dimensions are stale and misdescribe the new image, so scrapers
+    // crop it to 1200×630. We don't know the override's real size here, so drop
+    // the width/height tags entirely and let consumers read the actual image.
+    if (image) {
+      cleanups.push(removeMeta("property", "og:image:width"));
+      cleanups.push(removeMeta("property", "og:image:height"));
+    }
 
     if (noIndex) {
       cleanups.push(upsertMeta("name", "robots", "noindex, nofollow"));
@@ -133,5 +178,15 @@ export function useDocumentMeta(meta: DocumentMeta): void {
       // Restore in reverse so overlapping tags unwind cleanly.
       for (let i = cleanups.length - 1; i >= 0; i--) cleanups[i]?.();
     };
-  }, [title, description, canonical, image, noIndex, type, pathname]);
+  }, [
+    title,
+    description,
+    canonical,
+    image,
+    imageAlt,
+    twitterCard,
+    noIndex,
+    type,
+    pathname,
+  ]);
 }

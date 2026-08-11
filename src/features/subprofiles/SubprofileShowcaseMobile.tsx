@@ -34,11 +34,16 @@ export function SubprofileShowcaseMobile({
   personas,
   ownerSlug,
   isSelf = false,
+  previewing = false,
   ownerMetaBySlug,
 }: {
   personas: PublicSubprofileView[];
   ownerSlug: string;
   isSelf?: boolean;
+  /** Owner previewing their own profile as a visitor — suppresses owner
+   *  controls even when `viewerIsMember` is true (live mode). Mirrors the
+   *  desktop `SubprofileShowcase` prop. */
+  previewing?: boolean;
   ownerMetaBySlug?: Map<string, SubprofileOwnerMeta>;
 }) {
   const { t } = useTranslation();
@@ -66,7 +71,8 @@ export function SubprofileShowcaseMobile({
     const meta = ownerMetaBySlug?.get(persona.slug);
     // A co-owner sees Edit here even when viewing a co-owner's profile
     // (`isSelf` false) — `viewerIsMember` on the public DTO is the signal.
-    const canEdit = isSelf || persona.viewerIsMember;
+    // Suppressed while the owner previews their own profile as a visitor.
+    const canEdit = !previewing && (isSelf || persona.viewerIsMember);
     return (
       <div className={styles.mobileAccordion}>
         <SubprofileFeatureCard
@@ -93,7 +99,8 @@ export function SubprofileShowcaseMobile({
         const meta = ownerMetaBySlug?.get(persona.slug);
         // A co-owner sees Edit here even when viewing a co-owner's profile
         // (`isSelf` false) — `viewerIsMember` on the public DTO is the signal.
-        const canEdit = isSelf || persona.viewerIsMember;
+        // Suppressed while the owner previews their own profile as a visitor.
+        const canEdit = !previewing && (isSelf || persona.viewerIsMember);
         return (
           <SubprofileMobileRow
             key={persona.slug}

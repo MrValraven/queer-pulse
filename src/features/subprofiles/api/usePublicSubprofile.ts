@@ -55,7 +55,10 @@ export type PublicSubprofileResult =
  *  carrying a `restrictedState` body) still `throw`s and IS a query error —
  *  collapsed to `not-found` below, matching this hook's pre-Phase-1b
  *  behaviour of never surfacing a distinct "error" page state. */
-type PublicSubprofileOutcome = Exclude<PublicSubprofileResult, { state: "loading" }>;
+export type PublicSubprofileOutcome = Exclude<
+  PublicSubprofileResult,
+  { state: "loading" }
+>;
 
 /** Read a 403 body's `restrictedState`, or `undefined` if it isn't shaped
  *  that way (a stale CSRF 403, a quota 403, etc. — those aren't ours to map). */
@@ -121,7 +124,7 @@ export function usePublicSubprofile(
       viewerSlug,
     ],
     enabled: Boolean(handle || (ownerSlug && subslug)),
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
       if (handle) {
         if (demoMode) {
           const { findDemoSubprofileByHandle, resolvePublicAccessDemo } =
@@ -131,7 +134,7 @@ export function usePublicSubprofile(
           );
         }
         try {
-          const dto = await getSubprofileByHandle(handle);
+          const dto = await getSubprofileByHandle(handle, signal);
           return { state: "ok", data: publicSubprofileToView(dto) };
         } catch (err) {
           return mapLiveError(err);
@@ -155,7 +158,11 @@ export function usePublicSubprofile(
       // list (used by `useProfileSubprofiles`'s "Also as…" block below) can't
       // carry a single item's restricted signal, so this hook never uses it.
       try {
-        const dto = await getSubprofileBySlugForProfile(ownerSlug, subslug);
+        const dto = await getSubprofileBySlugForProfile(
+          ownerSlug,
+          subslug,
+          signal,
+        );
         return { state: "ok", data: publicSubprofileToView(dto) };
       } catch (err) {
         return mapLiveError(err);
@@ -174,7 +181,7 @@ export function useProfileSubprofiles(slug: string | undefined) {
   return useQuery<PublicSubprofileView[]>({
     queryKey: ["subprofiles", "byProfile", demoMode, slug],
     enabled: Boolean(slug),
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
       if (!slug) return [];
       if (demoMode) {
         const { mockSubprofilesForProfile } = await import(
@@ -182,7 +189,7 @@ export function useProfileSubprofiles(slug: string | undefined) {
         );
         return mockSubprofilesForProfile(slug).map(publicSubprofileToView);
       }
-      const dtos = await getProfileSubprofiles(slug);
+      const dtos = await getProfileSubprofiles(slug, signal);
       return dtos.map(publicSubprofileToView);
     },
   });

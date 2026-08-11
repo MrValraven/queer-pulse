@@ -8,7 +8,7 @@ import { routes } from "../../app/routeMap";
 import { getEndorsers, type AffiliationDTO } from "./api/subprofiles.api";
 import { AFFILIATION_ROLE_KEYS, affiliationHref } from "./affiliations.data";
 import { PracticeReferrals } from "./skins/PracticeBlocks";
-import type { PersonaViewMode } from "./personaSkinRender";
+import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 import type { SkinFamily } from "./subprofile-skins";
 import styles from "./SubprofileAffiliations.module.css";
@@ -66,7 +66,7 @@ export function SubprofileAffiliations({
   persona: PublicSubprofileView;
   skin: SkinFamily;
   mode: PersonaViewMode;
-  onAction: (action: string) => void;
+  onAction: (action: PersonaAction) => void;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();

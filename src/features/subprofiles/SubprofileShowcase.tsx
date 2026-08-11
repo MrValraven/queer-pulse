@@ -1,5 +1,6 @@
 import { nestedPersonaPath, routes } from "../../app/routeMap";
 import { Button } from "../../shared/components/ui";
+import { safeHref } from "../../shared/lib/safeHref";
 import { useMediaQuery } from "../../shared/hooks/useMediaQuery";
 import { breakpoint, mediaMax } from "../../shared/theme/breakpoints";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -38,6 +39,7 @@ export function SubprofileShowcase({
   personas,
   ownerSlug,
   isSelf = false,
+  previewing = false,
   ownerMetaBySlug,
 }: {
   personas: PublicSubprofileView[];
@@ -47,6 +49,11 @@ export function SubprofileShowcase({
    *  path (the default) — this component never fetches or infers ownership
    *  itself, it only renders what the caller tells it to. */
   isSelf?: boolean;
+  /** The owner is previewing their own profile as a visitor — suppress every
+   *  owner control even on personas whose public `viewerIsMember` is `true`
+   *  (which it stays in live mode, since the server can't see the client-only
+   *  preview toggle). Without this, Edit survives the preview. */
+  previewing?: boolean;
   /** Per-persona owner-only metadata (status/visibility/id), keyed by slug —
    *  only ever passed in self view. `PublicSubprofileView` has no room for
    *  these fields, so they travel alongside instead of being merged in (see
@@ -75,6 +82,7 @@ export function SubprofileShowcase({
         personas={personas}
         ownerSlug={ownerSlug}
         isSelf={isSelf}
+        previewing={previewing}
         ownerMetaBySlug={ownerMetaBySlug}
       />
     );
@@ -94,15 +102,25 @@ export function SubprofileShowcase({
   // A co-owner sees the same Edit control on THIS persona even when viewing
   // it nested under a co-owner's profile (`isSelf` is false there) — the
   // backend's `viewerIsMember` flag on the public DTO is the signal, so this
-  // never needs an extra members fetch per card.
-  const canEditActive = isSelf || active.viewerIsMember;
+  // never needs an extra members fetch per card. When the owner is previewing
+  // their own profile as a visitor, every owner control is suppressed even
+  // though `viewerIsMember` stays true in live mode (see `previewing`).
+  const canEditActive = !previewing && (isSelf || active.viewerIsMember);
   const ownerControls = canEditActive ? (
     <SubprofileEditButton subprofileId={activeMeta?.id ?? active.id} />
   ) : undefined;
 
+  // A lone persona with a real cover reads as sparse in the capped column, its
+  // right half empty — lay it out landscape instead (cover as a full-height
+  // side panel beside the details), filling the section width. Without a cover
+  // there's no visual anchor for the wide layout, so it stays the compact,
+  // width-capped card (`.solo`).
+  const loneHasCover = !hasList && Boolean(safeHref(active.coverUrl));
+  const loneLayoutClass = loneHasCover ? styles.soloWide : styles.solo;
+
   return (
     <div
-      className={`${styles.showcase} ${hasList ? styles.split : styles.solo}`}
+      className={`${styles.showcase} ${hasList ? styles.split : loneLayoutClass}`}
     >
       {/* Announces the swap for screen-reader/switch-control visitors even
           when the hero has scrolled off-screen (e.g. a long switch list on
@@ -116,6 +134,7 @@ export function SubprofileShowcase({
         persona={active}
         href={nestedPersonaPath(ownerSlug, active.slug)}
         direction={direction}
+        variant={loneHasCover ? "wide" : "compact"}
         id={hasList ? heroId : undefined}
         role={hasList ? "tabpanel" : undefined}
         ariaLabelledby={hasList ? tabId(active.slug) : undefined}

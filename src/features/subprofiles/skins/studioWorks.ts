@@ -1,4 +1,5 @@
 import { VISUAL_SECTIONS } from "../subprofile-skins";
+import { flattenSectionItems } from "./flattenSectionItems";
 import type {
   SubprofileItemView,
   SubprofileSectionView,
@@ -20,7 +21,7 @@ import type {
 export function getStudioWorks(
   sections: SubprofileSectionView[],
 ): SubprofileItemView[] {
-  return sections
-    .filter((section) => VISUAL_SECTIONS.includes(section.section))
-    .flatMap((section) => section.items);
+  return flattenSectionItems(sections, (section) =>
+    VISUAL_SECTIONS.includes(section.section),
+  );
 }

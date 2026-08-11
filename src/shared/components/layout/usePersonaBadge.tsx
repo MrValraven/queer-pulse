@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { useSubprofiles } from "../../../features/subprofiles/api/useSubprofiles";
 import { useMyPersonaInvites } from "../../../features/subprofiles/api/useMyPersonaInvites";
+import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useAuth } from "../../../app/providers/authContext";
 import { Badge } from "../ui";
 
 /**
@@ -15,7 +17,21 @@ import { Badge } from "../ui";
  * stay consistent.
  */
 export function usePersonaBadge(): ReactNode {
-  const { data: personas } = useSubprofiles();
+  const { demoMode } = useDemoMode();
+  const { loggedIn, checking, status } = useAuth();
+  // GATE: this badge renders on EVERY page (it's inside the account-menu row),
+  // so it must not fetch `GET /subprofiles/mine` until the session is settled,
+  // the member is signed in, AND their status is `"active"` — the exact guard
+  // `useMyPersonaInvites` uses. `/subprofiles/mine` sits behind
+  // `ActiveMemberGuard`, so a logged-out/visitor viewer never hits it, and a
+  // signed-in-but-pending/suspended member would otherwise 403 on every page
+  // load. Demo mode is always enabled (a local, network-free mock read).
+  // `retry: false` so a guard rejection isn't hard-retried.
+  const canFetch = demoMode || (!checking && loggedIn && status === "active");
+  const { data: personas } = useSubprofiles({
+    enabled: canFetch,
+    retry: false,
+  });
   const { data: invites } = useMyPersonaInvites();
   const personaCount = personas?.length ?? 0;
   const hasPendingInvite = (invites?.length ?? 0) > 0;

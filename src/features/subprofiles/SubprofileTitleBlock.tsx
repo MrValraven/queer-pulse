@@ -1,7 +1,6 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { personaPublicPath } from "./personaLinks.data";
-import type { PersonaViewMode } from "./personaSkinRender";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 
 /**
@@ -11,17 +10,16 @@ import type { PublicSubprofileView } from "./api/subprofiles.adapters";
  * `persona-skins.css`). Renders unconditionally for every skin — the markup
  * is the same everywhere, the skin decides what's visible.
  *
- * "State" has no real draft/published field to read here (the public/owner
- * views this renders from never carry `status` — a persona page is only
- * reachable once published): it reads "Draft" only in `preview` mode (the
- * Phase-3 editor previewing an in-progress persona), "Published" otherwise.
+ * "State" reads the persona's real `status`, not the view `mode`: an owner
+ * previewing their own unpublished draft (the page renders it with
+ * `mode="owner"`, and the Phase-3 editor with `mode="preview"`) must see
+ * "Draft", never "Published". Every non-owner viewer only ever reaches a
+ * published persona, so `status` is "published" for them.
  */
 export function SubprofileTitleBlock({
   view,
-  mode,
 }: {
   view: PublicSubprofileView;
-  mode: PersonaViewMode;
 }) {
   const { t } = useTranslation();
   return (
@@ -34,7 +32,7 @@ export function SubprofileTitleBlock({
       <dd>{view.sections.length}</dd>
       <dt>{t("subprofiles:hero.titleblock.state")}</dt>
       <dd>
-        {mode === "preview"
+        {view.status === "draft"
           ? t("subprofiles:status.draft")
           : t("subprofiles:status.published")}
       </dd>

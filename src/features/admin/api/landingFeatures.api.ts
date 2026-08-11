@@ -44,6 +44,9 @@ export interface LandingMemberFeatureDTO {
   tagline: string | null;
   avatarUrl: string | null;
   quote: string;
+  /** The member's own public profile tags, surfaced so the homepage spotlight
+   *  mirrors the richer profile-preview card. */
+  tags: string[];
 }
 
 export interface LandingCommunityFeatureDTO {

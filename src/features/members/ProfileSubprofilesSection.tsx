@@ -29,9 +29,17 @@ import styles from "./ProfileSubprofilesSection.module.css";
 export function ProfileSubprofilesSection({
   ownerSlug,
   isSelf,
+  previewing = false,
 }: {
   ownerSlug: string;
   isSelf: boolean;
+  /** The owner is previewing their own profile as a visitor. `isSelf` is already
+   *  `false` in that mode (so the public data path is used), but in live mode a
+   *  persona's `viewerIsMember` flag stays `true` — the server never sees the
+   *  client-only preview toggle — which would otherwise keep the Edit control
+   *  visible. Forwarding this lets the showcase suppress owner controls so the
+   *  preview truly matches the visitor experience. */
+  previewing?: boolean;
 }) {
   const { t } = useTranslation();
   // Rules of Hooks: both sources are called unconditionally on every render.
@@ -91,6 +99,7 @@ export function ProfileSubprofilesSection({
             personas={personas}
             ownerSlug={ownerSlug}
             isSelf={isSelf}
+            previewing={previewing}
             ownerMetaBySlug={isSelf ? ownerMetaBySlug : undefined}
           />
         ) : (

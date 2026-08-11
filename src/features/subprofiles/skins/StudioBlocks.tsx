@@ -1,5 +1,6 @@
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { getStudioWorks } from "./studioWorks";
+import { workMeta } from "../personaSkinRender";
 import type { SkinExtrasPersona } from "../SubprofileSkinExtras";
 
 /** Studio `end` slot: a numbered checklist of every work, opening the
@@ -23,11 +24,11 @@ export function StudioChecklist({
       <h2>{t("subprofiles:skinExtras.studio.checklistTitle")}</h2>
       <ol>
         {works.map((item, index) => {
-          const meta = [item.medium, item.dimensions, item.edition]
-            .filter(Boolean)
-            .join(" · ");
+          const meta = workMeta(item);
           return (
-            <li key={index}>
+            // `index` still drives the lightbox open-index (getStudioWorks is
+            // the canonical index space); only the React key is made stable.
+            <li key={`${item.title}|${item.date}|${item.url}`}>
               <button
                 type="button"
                 disabled={!onOpenWork}

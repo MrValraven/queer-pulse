@@ -70,9 +70,16 @@ export interface SubprofileMetaEditor {
   /** Reset every field back to the editor's baseline (last-saved) — powers the
    *  global editor's "Discard all". Clears the transient blob previews too. */
   reset: () => void;
-  /** Advance the baseline to the current values after a successful save, so
-   *  `dirty` clears without depending on a refetch (demo-safe). */
-  markSaved: () => void;
+  /**
+   * Advance the baseline after a successful save, so `dirty` clears without
+   * depending on a refetch (demo-safe). Takes the snapshot captured at
+   * `buildMetaPatch()` time (via `metaSnapshot()`) rather than re-reading live
+   * field state: if the user keeps typing while the PATCH is in flight, marking
+   * the LIVE values saved would advance the baseline past keystrokes that were
+   * never sent, silently swallowing them. Marking the SENT snapshot keeps those
+   * later edits `dirty` and re-sendable.
+   */
+  markSaved: (snapshot: MetaSnapshot) => void;
 }
 
 /**
@@ -273,12 +280,14 @@ export function useSubprofileMetaEditor(
     setCtaUrl(baseline.ctaUrl);
   }
 
-  // Advance the baseline to the current field values after a successful save,
-  // so `dirty` clears without waiting on (or being contradicted by) a refetch.
+  // Advance the baseline to the snapshot that was actually PATCHed (captured at
+  // build time, passed in here), so `dirty` clears without waiting on (or being
+  // contradicted by) a refetch — while any keystrokes made during the in-flight
+  // save stay `dirty` rather than being folded into the baseline and lost.
   // Called by the provider's meta save task on success — the exact analogue of
-  // the list editors advancing their row baselines.
-  function markSaved(): void {
-    setBaseline(metaSnapshot());
+  // the list editors advancing their row baselines to the rows they sent.
+  function markSaved(snapshot: MetaSnapshot): void {
+    setBaseline(snapshot);
   }
 
   return {

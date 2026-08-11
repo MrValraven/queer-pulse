@@ -5,7 +5,7 @@ import { initialsFromName } from "../../shared/lib/initials";
 import { safeHref } from "../../shared/lib/safeHref";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
-import { ACCENT_TOKENS, DEFAULT_ACCENT } from "./subprofilePresence.data";
+import { accentStyle, DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { SubprofileFeaturedStrip } from "./SubprofileFeaturedStrip";
 import { SubprofileAvailability } from "./SubprofileAvailability";
 import { SubprofileSocialRow } from "./SubprofileSocialRow";
@@ -49,6 +49,13 @@ interface SubprofileFeatureCardProps {
    *  Follow/Endorse so an owner can't follow/endorse their own persona.
    *  Defaults to `false` (the public path never sets this itself). */
   isOwnerViewing?: boolean;
+  /** `"wide"` lays the card out landscape — the cover becomes a full-height
+   *  side panel beside the details instead of a strip on top — so a lone
+   *  persona with a cover fills the section width rather than sitting in a
+   *  half-empty capped column. Only ever passed for a single, cover-bearing
+   *  persona on desktop (≥760px); everywhere else stays `"compact"`. When there
+   *  is no cover this has no effect (the layout falls back to compact). */
+  variant?: "compact" | "wide";
 }
 
 /**
@@ -74,14 +81,17 @@ export function SubprofileFeatureCard({
   status,
   visibility,
   isOwnerViewing = false,
+  variant = "compact",
 }: SubprofileFeatureCardProps) {
   const { t } = useTranslation();
   const accent = persona.accent ?? DEFAULT_ACCENT;
-  const { tint, on } = ACCENT_TOKENS[accent];
   // Guard every member-supplied URL before it lands in an href — cover, CTA,
   // and (inside the child components) social links and the featured item.
   const coverHref = safeHref(persona.coverUrl);
   const ctaHref = safeHref(persona.ctaUrl);
+  // The landscape layout only makes sense with a cover to anchor the side
+  // panel — a "wide" persona with no cover quietly reads as compact.
+  const isWide = variant === "wide" && Boolean(coverHref);
 
   return (
     <article
@@ -89,15 +99,13 @@ export function SubprofileFeatureCard({
       role={role}
       aria-labelledby={ariaLabelledby}
       className={styles.feature}
-      style={{
-        ["--accent-tint" as string]: tint,
-        ["--accent-on" as string]: on,
-      }}
+      style={accentStyle(accent)}
     >
       <div
         key={persona.slug}
         className={styles.featureInner}
         data-direction={direction}
+        data-layout={isWide ? "wide" : "compact"}
       >
         {coverHref && (
           <ImageSlot
@@ -105,11 +113,15 @@ export function SubprofileFeatureCard({
             alt=""
             tint="plum"
             radius={14}
-            height={110}
+            // Wide: fill the grid cell's height as a side panel (the details
+            // column sets the height, the stretched cell matches it). Compact:
+            // the original fixed strip on top.
+            height={isWide ? "100%" : 110}
             className={styles.cover}
           />
         )}
 
+        <div className={styles.featureBody}>
         <div className={styles.featureTop}>
           <Avatar
             initials={initialsFromName(persona.displayName, "?")}
@@ -172,6 +184,7 @@ export function SubprofileFeatureCard({
           ctaHref={ctaHref}
           isOwnerViewing={isOwnerViewing}
         />
+        </div>
       </div>
     </article>
   );

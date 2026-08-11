@@ -133,16 +133,31 @@ function demoResolveCopiedAffiliation(item: AffiliationInputDTO): AffiliationDTO
 /**
  * All owner mutations for subprofiles. Each branches demo↔live: demo resolves
  * optimistically from the mock registry with no network; live calls the API.
- * Every success invalidates the owner list, single-subprofile, public, and
- * directory query keys so the affected surfaces refetch.
+ * Every success invalidates the owner list (plural) + this persona's single
+ * owner-editor query (id-scoped) + the public reads, so the affected surfaces
+ * refetch without touching every unrelated persona query app-wide.
  */
 export function useSubprofileMutations() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
 
-  const invalidateAll = () => {
+  // Narrow, id-scoped invalidation — NOT the bare `["subprofile"]` prefix,
+  // which matches EVERY persona query app-wide (each list page's endorser
+  // cluster, every open public page, etc.). We refresh: the owner
+  // dashboard/list (`["subprofiles"]` plural — its own namespace), this
+  // persona's single owner-editor query (`["subprofile", demoMode, id]`, the
+  // key `useSubprofile` uses), and the public reads (`["subprofile","public"]`,
+  // keyed by handle/slug + viewer so it can't be id-scoped, but still far
+  // narrower than the whole singular prefix). Mirrors `useEndorsement`'s
+  // precedent.
+  const invalidateOwned = (id?: string) => {
     void queryClient.invalidateQueries({ queryKey: ["subprofiles"] });
-    void queryClient.invalidateQueries({ queryKey: ["subprofile"] });
+    if (id) {
+      void queryClient.invalidateQueries({
+        queryKey: ["subprofile", demoMode, id],
+      });
+    }
+    void queryClient.invalidateQueries({ queryKey: ["subprofile", "public"] });
   };
 
   const create = useMutation<SubprofileDTO, Error, CreateSubprofileDTO>({
@@ -153,7 +168,7 @@ export function useSubprofileMutations() {
       const { mockMineSubprofiles } = await import("../data/subprofiles.data");
       return demoCreatedDto(dto, mockMineSubprofiles);
     },
-    onSuccess: invalidateAll,
+    onSuccess: (data) => invalidateOwned(data.id),
   });
 
   const update = useMutation<
@@ -171,7 +186,7 @@ export function useSubprofileMutations() {
       if (!current) throw new Error("Subprofile not found");
       return { ...current, ...dto };
     },
-    onSuccess: invalidateAll,
+    onSuccess: (_data, { id }) => invalidateOwned(id),
   });
 
   const replaceSection = useMutation<
@@ -191,7 +206,7 @@ export function useSubprofileMutations() {
       if (!current) throw new Error("Subprofile not found");
       return applySection(current, section, items, resolveCollaboratorsDemo);
     },
-    onSuccess: invalidateAll,
+    onSuccess: (_data, { id }) => invalidateOwned(id),
   });
 
   const replaceSocials = useMutation<
@@ -209,7 +224,7 @@ export function useSubprofileMutations() {
       if (!current) throw new Error("Subprofile not found");
       return { ...current, socialLinks: items };
     },
-    onSuccess: invalidateAll,
+    onSuccess: (_data, { id }) => invalidateOwned(id),
   });
 
   const replaceAffiliations = useMutation<
@@ -227,7 +242,7 @@ export function useSubprofileMutations() {
       if (!current) throw new Error("Subprofile not found");
       return { ...current, affiliations: items.map(demoResolveCopiedAffiliation) };
     },
-    onSuccess: invalidateAll,
+    onSuccess: (_data, { id }) => invalidateOwned(id),
   });
 
   const publish = useMutation<SubprofileDTO, Error, string>({
@@ -269,7 +284,7 @@ export function useSubprofileMutations() {
             : null,
       };
     },
-    onSuccess: invalidateAll,
+    onSuccess: (_data, id) => invalidateOwned(id),
   });
 
   const unpublish = useMutation<SubprofileDTO, Error, string>({
@@ -286,14 +301,14 @@ export function useSubprofileMutations() {
         handle: current.linkVisibility === "unlinked" ? null : current.handle,
       };
     },
-    onSuccess: invalidateAll,
+    onSuccess: (_data, id) => invalidateOwned(id),
   });
 
   const remove = useMutation<{ ok: true }, Error, string>({
     // MySubprofilesPage toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
     mutationFn: async (id) => (demoMode ? { ok: true } : deleteSubprofile(id)),
-    onSuccess: invalidateAll,
+    onSuccess: (_data, id) => invalidateOwned(id),
   });
 
   return {

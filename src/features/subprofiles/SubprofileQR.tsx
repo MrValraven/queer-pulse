@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import QRCode from "qrcode";
+import { SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./SubprofileQR.module.css";
 
@@ -67,13 +68,20 @@ export function SubprofileQR({ url, ariaLabel, size = 220 }: SubprofileQRProps) 
   }
 
   if (state.status === "loading") {
+    // A single skeleton filling the square keeps the share card at its final
+    // size while the QR renders, so the surrounding layout doesn't jump. The
+    // card's fixed width/height already reserves the space; the shimmer just
+    // reads as a placeholder QR rather than a lone line of text.
     return (
       <div
         className={styles.card}
         style={{ width: size, height: size }}
         aria-busy="true"
+        aria-label={t("subprofiles:qr.loading")}
       >
-        <span className={styles.loadingHint}>{t("subprofiles:qr.loading")}</span>
+        <SkeletonLine
+          style={{ flex: 1, alignSelf: "stretch", borderRadius: 12 }}
+        />
       </div>
     );
   }

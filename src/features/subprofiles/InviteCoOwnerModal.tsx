@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
+  Button,
   MemberSelectList,
   Modal,
   Spinner,
@@ -45,10 +46,6 @@ export function InviteCoOwnerModal({
 
   const { views, loading, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useConnectionsList("all");
-
-  useEffect(() => {
-    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const people = useMemo<MemberSelectPerson[]>(
     () =>
@@ -96,13 +93,34 @@ export function InviteCoOwnerModal({
       ) : people.length === 0 ? (
         <p className={styles.empty}>{t("subprofiles:invite.empty")}</p>
       ) : (
-        <MemberSelectList
-          people={people}
-          selected={selected}
-          onToggle={(slug) => void handleInvite(slug)}
-          multiSelect={false}
-          searchPlaceholder={t("subprofiles:invite.searchPlaceholder")}
-        />
+        <>
+          <MemberSelectList
+            people={people}
+            selected={selected}
+            onToggle={(slug) => void handleInvite(slug)}
+            multiSelect={false}
+            searchPlaceholder={t("subprofiles:invite.searchPlaceholder")}
+          />
+          {/* Pages load ON DEMAND now, not all-at-once on mount. NOTE: the
+              picker's search only matches connections already loaded — a member
+              with many connections may need to load more before a far-down name
+              appears. A server-side connections search (?q=) would be the proper
+              fix; deliberately NOT built here (no new endpoint). */}
+          {hasNextPage && (
+            <div className={styles.loadMore}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+              >
+                {isFetchingNextPage
+                  ? t("subprofiles:invite.loadingMore")
+                  : t("subprofiles:invite.loadMore")}
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </Modal>
   );

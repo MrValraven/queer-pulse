@@ -8,8 +8,14 @@ import { SubprofileSkinExtras } from "./SubprofileSkinExtras";
 import { SubprofileAffiliations } from "./SubprofileAffiliations";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { usePersonaMotion } from "./usePersonaMotion";
+// The global `.pp*` skin styles for the whole persona tree. Imported here (the
+// lazy renderer shared by the public page AND the editor preview) rather than
+// globally, so Vite folds ~its weight into the persona route chunk instead of
+// the app-wide bundle. Must precede persona-motion.css (which layers on top of
+// these same selectors — see that file's load-order note).
+import "./persona-skins.css";
 import "./persona-motion.css";
-import type { PersonaViewMode } from "./personaSkinRender";
+import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import type { PublicSubprofileView, SubprofileItemView } from "./api/subprofiles.adapters";
 import type { SkinFamily } from "./subprofile-skins";
 
@@ -34,7 +40,7 @@ export function SubprofilePageBody({
   skin: SkinFamily;
   mode: PersonaViewMode;
   skinVars: CSSProperties;
-  onAction: (action: string) => void;
+  onAction: (action: PersonaAction) => void;
   onOpenWorkAt: (index: number) => void;
   onOpenWorkItem: (item: SubprofileItemView) => void;
   onOpenGalleryPhoto: (item: SubprofileItemView) => void;
@@ -59,6 +65,15 @@ export function SubprofilePageBody({
           width="100%"
           height="100%"
           className="ph"
+          // Skins that always render the cover band (stage/studio/table) must
+          // show a plain tinted frame when no image is uploaded, never the
+          // literal "Image" placeholder caption. (page/practice hide the band,
+          // and workshop hides it unless a cover was uploaded.)
+          placeholder=""
+          // The single above-the-fold hero image on the page — eager + high
+          // priority so it isn't lazy-deferred as the LCP candidate.
+          loading="eager"
+          fetchPriority="high"
         />
       </div>
 

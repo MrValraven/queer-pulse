@@ -1,6 +1,6 @@
 import type { AccentKey, AvailabilityKey } from "./api/subprofiles.api";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ACCENT_TOKENS, AVAILABILITY_OPTIONS } from "./subprofilePresence.data";
+import { accentTintStyle, AVAILABILITY_OPTIONS } from "./subprofilePresence.data";
 import styles from "./SubprofileAvailability.module.css";
 
 /**
@@ -22,12 +22,11 @@ export function SubprofileAvailability({
   if (!option) return null;
 
   const isOpen = value !== "not_available";
-  const tint = ACCENT_TOKENS[accent].tint;
 
   return (
     <span
       className={`${styles.availability} pp-avail`}
-      style={{ ["--accent-tint" as string]: tint }}
+      style={accentTintStyle(accent)}
     >
       <span
         className={`${styles.dot} ${isOpen ? styles.dotOpen : styles.dotMuted}`}

@@ -28,21 +28,30 @@ export function useMyPersonaInvites() {
   const queryClient = useQueryClient();
 
   const invalidateAfterResolve = () => {
+    // Accepting/declining resolves the invite banner (`["my-persona-invites"]`)
+    // and, on accept, grants co-ownership of a persona that must now appear on
+    // the dashboard (`["subprofiles"]` plural — its own list) and reflect
+    // `viewerIsMember` on the public view. We narrow OFF the broad
+    // `["subprofile"]` prefix (which matches every persona query app-wide) to
+    // just `["subprofile","public"]`: the accept mutation's variable is the
+    // inviteId, not the subprofile id, so an id-scoped single-editor
+    // invalidation isn't available here — and the member isn't in that editor
+    // at accept time anyway.
     void queryClient.invalidateQueries({ queryKey: ["my-persona-invites"] });
     void queryClient.invalidateQueries({ queryKey: ["subprofiles"] });
-    void queryClient.invalidateQueries({ queryKey: ["subprofile"] });
+    void queryClient.invalidateQueries({ queryKey: ["subprofile", "public"] });
   };
 
   const query = useQuery<MyInviteDTO[]>({
     queryKey: ["my-persona-invites", demoMode],
     enabled: demoMode || (!checking && loggedIn && status === "active"),
     retry: false,
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
       if (demoMode) {
         const { mockMyPersonaInvites } = await import("../data/subprofiles.data");
         return mockMyPersonaInvites();
       }
-      return listMyPersonaInvites();
+      return listMyPersonaInvites(signal);
     },
   });
 

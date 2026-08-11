@@ -57,7 +57,7 @@ describe("LiveDiscovery", () => {
     expect(screen.queryAllByRole("link")).toHaveLength(0);
   });
 
-  it("renders one card per curated member, linking to their public profile", async () => {
+  it("renders every curated member in the spotlight card, each linking to their public profile", async () => {
     mockUseLandingFeaturesPublic.mockReturnValue({
       members: [
         {
@@ -67,6 +67,7 @@ describe("LiveDiscovery", () => {
           tagline: "Illustrator",
           avatarUrl: null,
           quote: "Come find me at the print swap.",
+          tags: ["Illustration", "Print"],
         },
         {
           id: "b",
@@ -75,6 +76,7 @@ describe("LiveDiscovery", () => {
           tagline: null,
           avatarUrl: null,
           quote: "I'm around for late-night debugging.",
+          tags: [],
         },
       ],
       communities: [],
@@ -82,19 +84,27 @@ describe("LiveDiscovery", () => {
       isLoading: false,
     });
 
-    render(<LiveDiscovery />, { wrapper: TestProviders });
+    const { container } = render(<LiveDiscovery />, { wrapper: TestProviders });
 
     // Translated chrome (eyebrow/title/sub/CTA) loads lazily — findBy waits.
-    await screen.findByText("Ana Silva");
-    expect(screen.getByText("Bea Costa")).toBeInTheDocument();
+    // Both members render as slides in the rotating spotlight card (the demo's
+    // `FeaturedSpotlightCard`), so each name is present; `getAllBy` tolerates the
+    // carousel's leading/trailing clone slides, which duplicate a name.
+    await screen.findAllByText("Ana Silva");
+    expect(screen.getAllByText("Bea Costa").length).toBeGreaterThan(0);
 
-    const memberLinks = screen
-      .getAllByRole("link")
-      .filter((link) => link.getAttribute("href")?.startsWith("/public-profile/"));
-    expect(memberLinks).toHaveLength(2);
-    expect(memberLinks.map((link) => link.getAttribute("href"))).toEqual([
-      "/public-profile/ana-silva",
-      "/public-profile/bea-costa",
-    ]);
+    // Query the DOM directly rather than by role: inactive slides are
+    // `aria-hidden`/`inert`, so the accessibility-tree role query would only see
+    // the active slide's links. Every member still has a profile-linked card.
+    const profileHrefs = new Set(
+      Array.from(
+        container.querySelectorAll<HTMLAnchorElement>(
+          'a[href^="/public-profile/"]',
+        ),
+      ).map((link) => link.getAttribute("href")),
+    );
+    expect(profileHrefs).toEqual(
+      new Set(["/public-profile/ana-silva", "/public-profile/bea-costa"]),
+    );
   });
 });

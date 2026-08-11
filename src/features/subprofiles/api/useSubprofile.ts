@@ -10,14 +10,14 @@ export function useSubprofile(id: string | undefined) {
   return useQuery<SubprofileView | null>({
     queryKey: ["subprofile", demoMode, id],
     enabled: Boolean(id),
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
       if (!id) return null;
       if (demoMode) {
         const { mockSubprofileById } = await import("../data/subprofiles.data");
         const dto = mockSubprofileById(id);
         return dto ? subprofileToView(dto) : null;
       }
-      return subprofileToView(await getSubprofile(id));
+      return subprofileToView(await getSubprofile(id, signal));
     },
   });
 }

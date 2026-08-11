@@ -18,13 +18,13 @@ export function useSubprofileMembers(id: string | undefined) {
   const query = useQuery<MemberDTO[]>({
     queryKey: ["subprofile-members", demoMode, id],
     enabled: Boolean(id),
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
       if (!id) return [];
       if (demoMode) {
         const { mockPersonaMembers } = await import("../data/subprofiles.data");
         return mockPersonaMembers(id);
       }
-      return listSubprofileMembers(id);
+      return listSubprofileMembers(id, signal);
     },
   });
 
@@ -37,8 +37,21 @@ export function useSubprofileMembers(id: string | undefined) {
       return { ok: true };
     },
     onSuccess: () => {
+      // Narrow, id-scoped invalidation — NOT the broad `["subprofile"]` prefix
+      // (which matches every persona query app-wide). Leaving affects: the
+      // owner dashboard/list (`["subprofiles"]` plural), this persona's owner
+      // editor query (`["subprofile", demoMode, id]`), its public view
+      // (viewerIsMember flips — `["subprofile","public"]`, keyed by handle/slug
+      // not id so it can't be id-scoped), and the members list.
       void queryClient.invalidateQueries({ queryKey: ["subprofiles"] });
-      void queryClient.invalidateQueries({ queryKey: ["subprofile"] });
+      if (id) {
+        void queryClient.invalidateQueries({
+          queryKey: ["subprofile", demoMode, id],
+        });
+      }
+      void queryClient.invalidateQueries({
+        queryKey: ["subprofile", "public"],
+      });
       void queryClient.invalidateQueries({ queryKey: ["subprofile-members"] });
     },
   });

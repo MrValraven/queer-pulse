@@ -6,6 +6,7 @@ import {
   withdrawEndorsement,
   type MyEndorsementDTO,
 } from "./subprofiles.api";
+import type { PublicSubprofileOutcome } from "./usePublicSubprofile";
 
 /** Result shape shared by the endorse and withdraw endpoints. */
 export interface EndorsementResult {
@@ -43,15 +44,31 @@ export function useEndorsement(subprofileId: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
 
-  const invalidate = () => {
-    // Narrow, id-scoped invalidations — NOT the broad `["subprofile"]` prefix,
-    // which would refetch every subprofile query app-wide (e.g. each endorser
-    // cluster on a list page). These three cover everything endorsing touches:
-    // the detail page's viewerEndorsed/count, this persona's endorsers list,
-    // and the viewer's own-endorsement prefill. (List cards read the separate
-    // plural `["subprofiles","byProfile",…]` key, which the old broad singular
-    // key never matched anyway, so narrowing loses no existing refresh.)
-    void queryClient.invalidateQueries({ queryKey: ["subprofile", "public"] });
+  // Patch the persona's public query cache in place with the AUTHORITATIVE
+  // `{endorsementCount, viewerEndorsed}` the endpoint returns, instead of
+  // invalidating + refetching it (which flickered the count between the stale
+  // and fresh values). The public query is keyed by handle/slug + viewer, not
+  // by this persona `id`, so we scan the whole `["subprofile","public"]` family
+  // via `setQueriesData` and patch only the entry whose cached DTO carries this
+  // `id`. Works identically in demo mode (same `EndorsementResult` shape). The
+  // endorsers LIST and the viewer's own-endorsement prefill still need a
+  // refetch — the count-only mutation result can't reconstruct a new endorser
+  // row or the saved note — so those stay narrow, id-scoped invalidations.
+  const settle = (result: EndorsementResult) => {
+    queryClient.setQueriesData<PublicSubprofileOutcome>(
+      { queryKey: ["subprofile", "public"] },
+      (prev) =>
+        prev && prev.state === "ok" && prev.data.id === subprofileId
+          ? {
+              ...prev,
+              data: {
+                ...prev.data,
+                endorsementCount: result.endorsementCount,
+                viewerEndorsed: result.viewerEndorsed,
+              },
+            }
+          : prev,
+    );
     void queryClient.invalidateQueries({
       queryKey: ["subprofile", "endorsers", subprofileId],
     });
@@ -75,7 +92,7 @@ export function useEndorsement(subprofileId: string) {
       }
       return endorseSubprofile(subprofileId, note);
     },
-    onSuccess: invalidate,
+    onSuccess: settle,
   });
 
   const withdraw = useMutation<EndorsementResult, Error, WithdrawVariables>({
@@ -93,7 +110,7 @@ export function useEndorsement(subprofileId: string) {
       }
       return withdrawEndorsement(subprofileId);
     },
-    onSuccess: invalidate,
+    onSuccess: settle,
   });
 
   return { endorse, withdraw };
@@ -113,8 +130,8 @@ export function useMyEndorsement(
   const { demoMode } = useDemoMode();
   return useQuery<MyEndorsementDTO>({
     queryKey: ["subprofile", "my-endorsement", subprofileId],
-    queryFn: async () => {
-      if (!demoMode) return getMyEndorsement(subprofileId);
+    queryFn: async ({ signal }) => {
+      if (!demoMode) return getMyEndorsement(subprofileId, signal);
       const { mockMyEndorsement } = await import("../data/subprofiles.data");
       return (
         mockMyEndorsement(subprofileId) ?? { viewerEndorsed: false, note: null }

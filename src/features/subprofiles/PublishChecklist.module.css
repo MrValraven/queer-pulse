@@ -8,7 +8,7 @@
 }
 .title em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .lede {

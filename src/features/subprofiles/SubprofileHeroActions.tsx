@@ -11,7 +11,8 @@ import { SubprofileFollow } from "./SubprofileFollow";
 import { SubprofileMoreMenu } from "./SubprofileMoreMenu";
 import { SubprofileShare } from "./SubprofileShare";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
-import type { PersonaViewMode } from "./personaSkinRender";
+import { personaAddressName } from "./subprofile-kinds";
+import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 
 /**
@@ -50,7 +51,7 @@ export function SubprofileHeroActions({
 }: {
   view: PublicSubprofileView;
   mode: PersonaViewMode;
-  onAction: (action: string) => void;
+  onAction: (action: PersonaAction) => void;
 }) {
   const { t } = useTranslation();
   const { contact } = useMemberContact(view.ownerSlug ?? "");
@@ -149,7 +150,11 @@ export function SubprofileHeroActions({
         endorsementCount={view.endorsementCount}
         viewerEndorsed={view.viewerEndorsed}
         isOwnerViewing={false}
-        personaName={view.displayName}
+        personaName={personaAddressName({
+          displayName: view.displayName,
+          kind: view.kind,
+          ownerName: view.ownerName,
+        })}
         personaAvatarUrl={view.avatarUrl}
       />
       <SubprofileMoreMenu view={view} onAction={onAction} />

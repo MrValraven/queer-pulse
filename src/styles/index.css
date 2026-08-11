@@ -10,6 +10,9 @@
 @import "./standalone.css";
 @import "../features/economy/tools/tools.print.css";
 @import "../features/subprofiles/persona-fonts.css";
-@import "../features/subprofiles/persona-skins.css";
-@import "../features/subprofiles/persona-dashboard.css";
-@import "../features/subprofiles/persona-editor.css";
+/* persona-skins.css / persona-dashboard.css / persona-editor.css are NOT
+   imported here: together ~108KB that would ship on every one of ~140 routes.
+   Each is imported instead from its lazy consumer (SubprofilePageBody,
+   MySubprofilesPage, SubprofileEditorShell) so Vite folds it into that route's
+   own chunk. persona-fonts.css stays global — its @font-face declarations are
+   cheap and referenced by the skin classes wherever they render. */
