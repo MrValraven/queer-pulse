@@ -28,6 +28,11 @@ import { CommunityEditsProvider } from "../app/providers/CommunityEditsProvider"
 import { DeletedConversationsProvider } from "../app/providers/DeletedConversationsProvider";
 import { DirectoryListingsProvider } from "../app/providers/DirectoryListingsProvider";
 import { WorkshopsProvider } from "../app/providers/WorkshopsProvider";
+import {
+  PublicProfileContext,
+  type PublicProfileContextValue,
+} from "../app/providers/usePublicProfile";
+import { type PublicEligibility } from "../features/members/publicFigure";
 
 type ProviderComponent = ComponentType<{ children: ReactNode }>;
 
@@ -79,6 +84,26 @@ function nest(providers: ProviderComponent[], children: ReactNode): ReactNode {
   );
 }
 
+/** A neutral, always-locked eligibility used only as a filler for fields a test's override omits. */
+const NOOP_ELIGIBILITY: PublicEligibility = {
+  gates: [],
+  score: { total: 0, target: 100, families: [] },
+  standingOk: true,
+  eligible: false,
+  nextActions: [],
+};
+
+const NOOP_PUBLIC_PROFILE_CONTEXT: PublicProfileContextValue = {
+  enabled: false,
+  setEnabled: async () => true,
+  toggle: async () => true,
+  saving: false,
+  eligibility: NOOP_ELIGIBILITY,
+  eligibilityStatus: "ready",
+  retryEligibility: () => {},
+  hydrate: () => {},
+};
+
 export interface TestProvidersProps {
   children: ReactNode;
   /** Router history to start on (route smoke tests pass one URL). */
@@ -105,22 +130,41 @@ export interface TestProvidersProps {
    * fresh, `staleTime: 0`, retry-free client minted per render.
    */
   queryClient?: QueryClient;
+  /**
+   * Escape hatch for tests that need a specific `usePublicProfile()` value
+   * (e.g. a fixed `PublicEligibility`) instead of the one the real
+   * `PublicProfileProvider` derives from profile/demo-mode signals. When
+   * given, an extra `PublicProfileContext.Provider` is nested just inside the
+   * real provider so it wins for every descendant; fields left out of the
+   * override fall back to inert no-ops.
+   */
+  publicProfile?: Partial<PublicProfileContextValue>;
 }
 
 export function TestProviders({
   children,
   initialEntries = ["/"],
   queryClient,
+  publicProfile,
 }: TestProvidersProps) {
   const client =
     queryClient ??
     new QueryClient({
       defaultOptions: { queries: { retry: false } },
     });
+  const content = publicProfile ? (
+    <PublicProfileContext.Provider
+      value={{ ...NOOP_PUBLIC_PROFILE_CONTEXT, ...publicProfile }}
+    >
+      {children}
+    </PublicProfileContext.Provider>
+  ) : (
+    children
+  );
   return (
     <QueryClientProvider client={client}>
       <MemoryRouter initialEntries={initialEntries}>
-        {nest(PROVIDERS, children)}
+        {nest(PROVIDERS, content)}
       </MemoryRouter>
     </QueryClientProvider>
   );

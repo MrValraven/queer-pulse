@@ -23,7 +23,7 @@ export const shared: Catalog = {
   "consent.banner.ariaLabel": "Cookie and privacy choices",
   "consent.banner.title": "A quiet word about <em>cookies.</em>",
   "consent.banner.body":
-    "We only store what keeps you logged in and safe by default. Analytics and error reporting stay off unless you say yes — no ads, no profiling, ever. Change your mind any time in settings. <a>Read the policy</a>.",
+    "We only store what keeps you logged in and safe by default. Error reporting stays off unless you say yes — no ads, no analytics, no profiling, ever. Change your mind any time in settings. <a>Read the policy</a>.",
 
   // Consent actions, shared by the banner and the preference center
   "consent.actions.rejectNonEssential": "Reject non-essential",
@@ -40,9 +40,6 @@ export const shared: Catalog = {
   "consent.preferences.necessary.desc":
     "Your session and CSRF cookies, plus theme and language stored on your device. Required to run the platform — never used to track you.",
   "consent.preferences.necessary.alwaysOnAria": "Always on",
-  "consent.preferences.rows.analytics.title": "Analytics & usage",
-  "consent.preferences.rows.analytics.desc":
-    "Anonymous, aggregate patterns — which pages help, which fall flat. No individual tracking, no ad networks. Off unless you turn it on.",
   "consent.preferences.rows.monitoring.title": "Error & crash reporting",
   "consent.preferences.rows.monitoring.desc":
     "Automatic diagnostics when something breaks, so we can fix it faster. Carries no advertising or profiling data.",
@@ -259,6 +256,7 @@ export const shared: Catalog = {
   "megaNav.community.col.gather.allGatherings": "Gatherings",
   "megaNav.community.col.gather.events": "Events",
   "megaNav.community.col.gather.hostGathering": "Host a gathering",
+  "megaNav.community.col.gather.howCommunitiesWork": "How communities work",
   "megaNav.community.col.organise.head": "Organise",
   "megaNav.community.col.organise.activismVolunteering":
     "Activism & Volunteering",

@@ -252,8 +252,9 @@ export const auth: Catalog = {
   // ── Bloco humano para menores de 18 ──
   "under18.title": "Vamos estar aqui <em>quando estiveres preparade</em>",
   "under18.body1":
-    "Por agora, o QueerPulse é uma comunidade 18+, por isso ainda não podemos criar-te uma conta — e isto não é um julgamento sobre ti. Pertences à comunidade queer; esta sala em particular é que ainda não está aberta a menores de 18. Volta quando fizeres 18 anos e vais ter aqui um lugar.",
-  "under18.body2": "Entretanto, há bastante coisa aqui que já é para ti:",
+    "A parte comunitária do QueerPulse é 18+ por agora, por isso ainda não podemos criar-te uma conta — e isto não é um julgamento sobre ti. Mas quase tudo o que fazemos está aberto a toda a gente, sem precisares de iniciar sessão. Pertences à comunidade queer, e há muita dela à tua espera aqui mesmo.",
+  "under18.body2": "Dá uma vista de olhos à biblioteca e a tudo o resto que já é teu:",
+  "under18.link.library": "A biblioteca — livre para explorares, sem conta",
   "under18.link.queer101": "Queer 101 — o essencial, sem barreiras",
   "under18.link.comingOut": "Assumir-te, ao teu próprio ritmo",
   "under18.link.resources": "Recursos e apoio da comunidade",
@@ -282,12 +283,14 @@ export const auth: Catalog = {
   "requestInvite.field.email.errorRequired":
     "Precisamos de um email para te podermos responder.",
   "requestInvite.field.mutual.label":
-    "Conheces alguém aqui <optional>(opcional)</optional>",
+    "Email de um membro <optional>(opcional)</optional>",
   "requestInvite.field.mutual.helper":
-    "Nomear uma pessoa em comum é a forma mais rápida de entrar — mas não é obrigatório.",
-  "requestInvite.field.mutual.placeholder": "Uma pessoa que possa avalizar-te",
+    "O email de um membro que possa avalizar-te — é como o encontramos, e a forma mais rápida de entrar.",
+  "requestInvite.field.mutual.placeholder": "membro@exemplo.com",
+  "requestInvite.field.mutual.error":
+    "Introduz um email válido, ou deixa em branco.",
   "requestInvite.field.mutual.messagePrefix":
-    "Alguém que me conhece por aqui: {name}",
+    "Um membro que me pode avalizar: {name}",
   "requestInvite.field.why.label": "Porquê o QueerPulse",
   "requestInvite.field.why.placeholder":
     "O que procuras, e o que te traz aqui. Umas frases sinceras já chegam.",
@@ -295,6 +298,8 @@ export const auth: Catalog = {
     "Conta-nos um pouco sobre o que te traz aqui.",
   "requestInvite.agree":
     "Li as <guidelines>diretrizes da comunidade</guidelines> e estou aqui de boa-fé.",
+  "requestInvite.readHint":
+    "Abre as diretrizes e lê até ao fim para continuar.",
   "requestInvite.submit": "Enviar o meu pedido",
   "requestInvite.sending": "A enviar o teu pedido…",
   "requestInvite.submitError":
@@ -318,7 +323,7 @@ export const auth: Catalog = {
     "Sem algoritmo, sem pontuação de lista de espera — uma pessoa da comunidade vê cada pedido.",
   "requestInvite.whatNext.connection.title": "Procuramos uma ligação",
   "requestInvite.whatNext.connection.body":
-    "Se já houver alguém aqui que te possa avalizar, essa é a forma mais certa de entrar. Nomear uma pessoa em comum ajuda.",
+    "Se já houver alguém aqui que te possa avalizar, essa é a forma mais certa de entrar. Partilhar o email dessa pessoa ajuda-nos a encontrá-la.",
   "requestInvite.whatNext.hearBack.title": "Se for que sim, alguém entra em contacto",
   "requestInvite.whatNext.hearBack.body":
     "Uma pessoa da comunidade envia o teu link de convite para o endereço que nos deste, normalmente dentro de umas semanas. Não conseguimos responder a todos os pedidos, por isso, se ficar tudo calado, pedir a alguém que já conheces aqui é a forma mais certa de entrar.",
@@ -397,6 +402,8 @@ export const auth: Catalog = {
     "Nos convívios, pergunta sempre antes de fotografar outras pessoas, mesmo num espaço partilhado.",
   "onboarding.stepNorms.agree":
     "Li e concordo com as <guidelines>Diretrizes da Comunidade</guidelines>",
+  "onboarding.stepNorms.readHint":
+    "Abre as diretrizes e lê até ao fim para continuar.",
   "onboarding.stepNorms.continue": "Concordo, continuar",
   "onboarding.stepNorms.back": "Voltar",
 

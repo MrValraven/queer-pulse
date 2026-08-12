@@ -3,6 +3,24 @@
   flex-direction: column;
   gap: 0.6rem;
 }
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.2rem;
+  align-items: start;
+}
+.editorColumn,
+.previewColumn {
+  min-width: 0;
+}
+.mobileStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.mobileTabs {
+  align-self: flex-start;
+}
 .label {
   font-size: 0.72rem;
   letter-spacing: 0.08em;
@@ -16,7 +34,7 @@
 }
 .block {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr auto;
   gap: 0.5rem;
   align-items: start;
   padding: 0.4rem 0.5rem;
@@ -27,6 +45,31 @@
 .block[data-kind="break"] {
   background: transparent;
   border-style: dashed;
+}
+/* The row currently held under the pointer (via the grip drag handle) —
+   mirrors `EditorItemRow.module.css`'s `.dragging`, lifted above its
+   neighbours so it reads as "picked up" while the list reshuffles. */
+.dragging {
+  position: relative;
+  z-index: 1;
+  border-color: var(--line-2);
+  box-shadow: 0 8px 22px rgba(45, 27, 61, 0.16);
+}
+.grip {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 28px;
+  color: color-mix(in srgb, var(--ink) 40%, transparent);
+  cursor: grab;
+  flex: none;
+  /* Stops the browser claiming the gesture for scroll/zoom so a touch drag
+     actually reorders instead of panning the page (matches the persona
+     item-editor grip in `persona-editor.css`). */
+  touch-action: none;
+}
+.grip:active {
+  cursor: grabbing;
 }
 .blockMain {
   min-width: 0;

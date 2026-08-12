@@ -483,20 +483,17 @@ export const marketing: Catalog = {
   // ── Cookies ────────────────────────────────────────────────────────────
   "cookies.meta.title": "Política de Cookies da QueerPulse e preferências",
   "cookies.meta.description":
-    "Que cookies a QueerPulse utiliza — essenciais, funcionais e de análise — o que cada um faz, e onde ajustar as tuas preferências. Sem cookies de publicidade.",
+    "Que cookies a QueerPulse utiliza — todos estritamente necessários ou funcionais — o que cada um faz, e como gerir as tuas escolhas de privacidade. Sem cookies de publicidade nem de análise.",
   "cookies.eyebrow": "Cookies",
-  "cookies.h1": "O que <em>registamos,</em> e porquê.",
+  "cookies.h1": "Os cookies que <em>usamos,</em> e porquê.",
   "cookies.sub":
-    "Uma lista curta, não um muro de juridiquês. Ajusta abaixo o que te faz sentido.",
+    "Uma lista curta, não um muro de juridiquês. Todos os cookies aqui são essenciais ou funcionais — não há nada para desligar.",
   "cookies.essential.title": "Essenciais",
   "cookies.essential.body":
     "Necessários para te manteres com sessão iniciada e a tua conta segura. Não podem ser desligados.",
   "cookies.functional.title": "Funcionais",
   "cookies.functional.body":
     "Guardam as tuas preferências — tema, idioma, definições de notificação.",
-  "cookies.analytics.title": "Análise",
-  "cookies.analytics.body":
-    "Estatísticas de utilização agregadas e respeitadoras da privacidade, via Plausible. Sem rastreio entre sites, sem redes publicitárias.",
   "cookies.expires.session": "Sessão",
   "cookies.expires.days30": "30 dias",
   "cookies.expires.year1": "1 ano",
@@ -511,19 +508,13 @@ export const marketing: Catalog = {
   "cookies.summary.title": "O teu <em>resumo</em>",
   "cookies.summary.essential": "Essenciais",
   "cookies.summary.functional": "Funcionais",
-  "cookies.summary.analytics": "Análise",
-  "cookies.summary.on": "Ativo",
-  "cookies.summary.off": "Inativo",
-  "cookies.actions.save": "Guardar preferências",
-  "cookies.actions.acceptAll": "Aceitar tudo",
-  "cookies.actions.essentialOnly": "Só essenciais",
+  "cookies.actions.managePreferences": "Gerir preferências",
   "cookies.info":
-    "Altera isto quando quiseres em <settingsLink>Definições</settingsLink>. Detalhe completo na <privacyLink>Política de Privacidade</privacyLink>.",
+    "Gere as tuas escolhas de privacidade quando quiseres em <settingsLink>Definições</settingsLink>. Detalhe completo na <privacyLink>Política de Privacidade</privacyLink>.",
   "cookies.outro.title": "Perguntas sobre <em>os teus dados?</em>",
   "cookies.outro.sub":
     "A Política de Privacidade cobre tudo o que os cookies não cobrem.",
   "cookies.outro.cta": "Ler a Política de Privacidade",
-  "cookies.toast.saved": "Preferências de cookies guardadas",
 
   // ── Pedido de dados (DSAR) ─────────────────────────────────────────────
   "dsar.backToPrivacyLabel": "Política de Privacidade",
@@ -679,11 +670,11 @@ export const marketing: Catalog = {
     "Partilhar conversas ou fotografias privadas sem consentimento",
   "guidelines.clause07.li6":
     "Discriminação com base em qualquer característica protegida",
-  "guidelines.final.titlePre": "Mais uma ",
-  "guidelines.final.titleEm": "coisa",
-  "guidelines.final.p1":
-    "Ninguém acerta nisto sempre. O que importa é <b>como reparas</b> quando falhas, não se falhas alguma vez.",
+  "guidelines.clause07.reportLead": "Denuncia — vais ter apoio.",
+  "guidelines.clause07.reportBody":
+    "Se alguém ultrapassar uma destas linhas, denuncia essa pessoa ou a publicação a partir do menu. A moderação lê todas as denúncias, e nunca ficas com isto sozinhe. Infrações confirmadas levam a um aviso, suspensão ou remoção, e cooperamos com as autoridades quando a segurança de alguém está em risco. Nunca estás a exagerar por denunciar.",
   "guidelines.final.p2": "Obrigade por construíres isto connosco.",
+  "guidelines.modalDone": "Li tudo — concluir",
   "guidelines.outro.title": "Agora já conheces <em>a cultura.</em>",
   "guidelines.outro.sub":
     "O Código de Conduta cobre o que acontece se for violada.",
@@ -921,6 +912,42 @@ export const marketing: Catalog = {
   "pressKit.placeholderFile.line2":
     "O kit de produção incluirá o material real, pronto para produção.",
 
+  // ── Explicador de Comunidades ──────────────────────────────────────────
+  "communitiesAbout.meta.title": "Como funcionam as comunidades no QueerPulse",
+  "communitiesAbout.meta.description":
+    "Salas reais, cuidadas por pessoas reais — sem anúncios, sem algoritmo. Vê como funcionam as comunidades do QueerPulse e como encontrar aquela que parece tua.",
+  "communitiesAbout.hero.eyebrow": "Comunidades",
+  "communitiesAbout.hero.title":
+    "Como funcionam as comunidades, e porque <em>importam</em>",
+  "communitiesAbout.hero.sub":
+    "Salas reais, cuidadas por pessoas reais — sem feeds, sem algoritmo. Eis o que isso significa, e como encontrar aquela que parece tua.",
+  "communitiesAbout.outro.title": "Pronto para encontrar a tua gente?",
+  "communitiesAbout.outro.sub":
+    "Pede um convite e ajudamos-te a encontrar as salas que parecem casa.",
+  "communitiesAbout.what.title": "O que é aqui uma comunidade",
+  "communitiesAbout.what.rooms.title": "Salas, não feeds",
+  "communitiesAbout.what.rooms.body":
+    "Uma comunidade é uma sala com um propósito e alguém que a cuida — não um feed sem fim ordenado por um algoritmo. Sabes sempre em que espaço estás.",
+  "communitiesAbout.what.kept.title": "Cuidadas por pessoas reais",
+  "communitiesAbout.what.kept.body":
+    "Cada comunidade tem alguém que a cuida, que define o tom, acolhe novas caras e zela pela sala.",
+  "communitiesAbout.what.safe.title": "Um espaço em que podes confiar",
+  "communitiesAbout.what.safe.body":
+    "As comunidades são só por convite e moderadas, para que a sala continue a ser um sítio onde podes ser mesmo tu.",
+  "communitiesAbout.how.title": "Como funciona",
+  "communitiesAbout.how.find.title": "Encontra a tua sala",
+  "communitiesAbout.how.find.body":
+    "Explora comunidades por interesse, cena ou bairro até uma parecer tua.",
+  "communitiesAbout.how.welcome.title": "Alguém te acolhe",
+  "communitiesAbout.how.welcome.body":
+    "Quem cuida da sala e os membros dão-te as boas-vindas, para nunca começares do nada.",
+  "communitiesAbout.how.belong.title": "Apareces e pertences",
+  "communitiesAbout.how.belong.body":
+    "Entra na conversa, aparece nos convívios e torna-te uma das caras que os outros gostam de ver.",
+  "communitiesAbout.why.title": "Porque as comunidades importam",
+  "communitiesAbout.why.body":
+    "Pertencer não é uma funcionalidade — é o objetivo todo. Uma boa comunidade é onde encontras a tua gente, te sentes em segurança e te manténs perto do que acontece à tua volta.",
+
   // ── Política de Privacidade ────────────────────────────────────────────
   "privacy.meta.title":
     "Política de Privacidade da QueerPulse: o que recolhemos e porquê",
@@ -946,43 +973,63 @@ export const marketing: Catalog = {
   "privacy.whatWeCollect.title": "O que recolhemos",
   "privacy.whatWeCollect.accountHeading": "Informação da conta",
   "privacy.whatWeCollect.account.item1":
-    "<strong>Detalhes do perfil</strong> que forneces — nome, pronomes, biografia, fotos.",
+    "<strong>Detalhes do perfil</strong> que adicionas — nome, pronomes, descrição, biografia, fotos.",
   "privacy.whatWeCollect.account.item2":
-    "<strong>Informação de contacto</strong> — o teu email, usado para sessão e notificações.",
+    "<strong>Informação de contacto</strong> — o teu email, usado para iniciar sessão e enviar as notificações que ativaste.",
   "privacy.whatWeCollect.account.item3":
-    "<strong>Dados de adesão</strong> — o teu escalão, data de entrada, e quem te avalizou.",
-  "privacy.whatWeCollect.account.item4":
-    "<strong>Informação de faturação</strong>, para pessoas Apoiantes — tratada pelo nosso processador de pagamentos, nunca guardada nos nossos servidores.",
+    "<strong>Dados de adesão</strong> — o teu escalão, data de entrada, quem te convidou e quem te avalizou.",
+  "privacy.whatWeCollect.signInHeading": "Como inicias sessão",
+  "privacy.whatWeCollect.signInBody":
+    "Inicias sessão com o <strong>Google</strong> — não há uma palavra-passe QueerPulse separada para gerir. Quando o fazes, o Google partilha connosco o teu nome, email e foto de perfil. Nunca vemos nem guardamos a tua palavra-passe do Google.",
+  "privacy.whatWeCollect.deviceHeading": "Dados de dispositivo e técnicos",
+  "privacy.whatWeCollect.device.item1":
+    "<strong>O navegador e o dispositivo</strong> a partir dos quais inicias sessão, guardados com as tuas sessões ativas para as poderes ver e terminar à distância.",
+  "privacy.whatWeCollect.device.item2":
+    "<strong>Detalhes das notificações push</strong> — se ativares as notificações, o endereço que o teu navegador nos dá e as suas chaves, para as podermos entregar. Podes desativar quando quiseres.",
+  "privacy.whatWeCollect.device.item3":
+    "<strong>O teu endereço IP</strong>, usado apenas no momento para manter a plataforma segura e prevenir abusos — não é guardado associado à tua conta.",
   "privacy.whatWeCollect.activityHeading": "Dados de atividade",
   "privacy.whatWeCollect.activity.item1":
     "<strong>Publicações, comentários e mensagens</strong> que envias na plataforma.",
   "privacy.whatWeCollect.activity.item2":
-    "<strong>Confirmações e presenças em eventos</strong>, para os convívios poderem planear-se conforme o número de pessoas.",
+    "<strong>O que faz o chat funcionar</strong> — quem está numa conversa, confirmações de entrega e de leitura, reações, e quem bloqueaste. Quem está a escrever e quem está online não é guardado — é apenas em tempo real.",
   "privacy.whatWeCollect.activity.item3":
-    "<strong>Dados básicos de utilização</strong> — páginas visitadas, funcionalidades usadas — agregados e anonimizados para análise.",
+    "<strong>Confirmações e presenças em eventos</strong>, para os convívios poderem planear-se conforme o número de pessoas.",
+  "privacy.whatWeCollect.activity.item4":
+    "<strong>Uma localização geral</strong> que escolheres adicionar — uma cidade ou zona — e a área do mapa que exploras no diretório. Nunca lemos a localização precisa do teu dispositivo.",
   "privacy.whatWeCollect.notCollectedHeading": "O que não recolhemos",
   "privacy.whatWeCollect.notCollectedBody":
-    "Não te rastreamos noutros sites, não vendemos dados a anunciantes, nem construímos um perfil publicitário sobre ti. Não há aqui rede publicitária para alimentar.",
+    "Não fazemos análise de produto nem rastreio de comportamento, não te seguimos noutros sites, não vendemos dados a anunciantes, nem construímos um perfil publicitário sobre ti. Não há aqui rede publicitária para alimentar.",
+  "privacy.sensitive.title": "A tua identidade, nos teus termos",
+  "privacy.sensitive.p1":
+    "Parte do que partilhas aqui é sensível por natureza — os teus pronomes, identidade de género, orientação sexual, se és uma pessoa assumida no trabalho, o apoio que procuras. Tratamo-lo com o cuidado que merece.",
+  "privacy.sensitive.p2":
+    "<strong>És tu que decides o que é visível.</strong> Grande parte disto fica privada para ti por predefinição — escolhes o que aparece no teu perfil público e o que fica visível apenas para ti. Quando a lei chama a isto dados de categoria especial, só os tratamos porque escolheste partilhá-los com a tua comunidade.",
+  "privacy.sensitive.p3":
+    "Os perfis criativos podem conter mais — os dados de nascimento de um perfil de astrologia, o contacto de um serviço de apoio entre pares ou de terapia. Aplica-se a mesma regra: está lá porque o adicionaste, visível exatamente como o definiste, e teu para alterar ou remover quando quiseres.",
+  "privacy.sensitive.p4":
+    "<strong>As fotos são limpas antes de serem enviadas.</strong> Os metadados de localização e de câmara são removidos das imagens no teu dispositivo, para que uma foto não revele em silêncio onde estiveste.",
   "privacy.howWeUse.title": "Como usamos os dados",
   "privacy.howWeUse.intro": "Os teus dados só são usados para:",
   "privacy.howWeUse.item1": "Gerir a tua conta e manter a tua sessão segura",
   "privacy.howWeUse.item2":
-    "Mostrar-te convívios e conteúdo relevantes para ti",
-  "privacy.howWeUse.item3": "Processar pagamentos de adesão e de Apoiante",
+    "Mostrar-te convívios, comunidades e conteúdo relevantes para ti",
+  "privacy.howWeUse.item3":
+    "Entregar as tuas mensagens, notificações e as ligações que crias",
   "privacy.howWeUse.item4":
     "Manter a plataforma segura — investigar denúncias, aplicar o Código de Conduta",
   "privacy.howWeUse.item5": "Enviar-te notificações que ativaste",
   "privacy.howWeUse.item6":
-    "Perceber a utilização agregada, para melhorar o produto",
+    "Resolver problemas e manter a plataforma fiável — com o teu consentimento, através de monitorização de erros que respeita a privacidade",
   "privacy.howWeUse.p1":
-    "Nunca usamos os teus dados para treinar modelos de IA de terceiros nem para os vender a anunciantes.",
+    "Nunca vendemos os teus dados, nem os usamos para treinar modelos de IA ou para os entregar a anunciantes.",
   "privacy.whoSees.title": "Quem vê os teus dados",
   "privacy.whoSees.p1":
     "<strong>Outras pessoas da comunidade</strong> veem o que as tuas definições de privacidade permitirem — o teu perfil público, publicações, e o que escolheres partilhar.",
   "privacy.whoSees.p2":
     "<strong>A nossa pequena equipa</strong> pode aceder a dados da conta para dar apoio, investigar denúncias e manter a plataforma a funcionar.",
   "privacy.whoSees.p3":
-    "<strong>Fornecedores de serviços</strong> — o nosso alojamento, email e processadores de pagamento — veem só o necessário para a sua função específica, ao abrigo de contrato.",
+    "<strong>Fornecedores de serviços</strong> — as empresas que alojam a plataforma, guardam os teus envios, entregam o nosso email e (com o teu consentimento) monitorizam erros — veem só o necessário para a sua função específica, ao abrigo de contrato.",
   "privacy.whoSees.p4":
     "<strong>Mais ninguém.</strong> Nunca vendemos nem alugamos os teus dados a terceiros.",
   "privacy.retention.title": "Por quanto tempo guardamos",
@@ -991,7 +1038,9 @@ export const marketing: Catalog = {
   "privacy.retention.p2":
     "Se eliminares a tua conta, a maioria dos dados pessoais é removida em 30 dias, exceto quando somos legalmente obrigados a retê-los (por exemplo, registos de faturação).",
   "privacy.retention.p3":
-    "Os dados de presença em convívios são eliminados 30 dias após o evento, segundo a nossa política de dados de convívios.",
+    "Algumas coisas desaparecem sozinhas — a presença em convívios 30 dias após o evento, as notificações lidas ao fim de 90 dias, e os registos de notificações push não usados ao fim de 90 dias.",
+  "privacy.retention.p4":
+    "Quando uma conta é eliminada, guardamos uma <strong>impressão unidirecional</strong> do email — nunca o endereço em si — apenas para impedir que uma conta removida seja recriada em silêncio.",
   "privacy.yourRights.title": "Os teus direitos",
   "privacy.yourRights.intro": "Ao abrigo do RGPD, tens direito a:",
   "privacy.yourRights.item1":
@@ -1012,26 +1061,28 @@ export const marketing: Catalog = {
     "Também podes apresentar uma reclamação junto da Comissão Nacional de Proteção de Dados (CNPD), a autoridade portuguesa de proteção de dados.",
   "privacy.cookiesSection.title": "Cookies",
   "privacy.cookiesSection.p1":
-    "Usamos um pequeno número de cookies para te manter com sessão iniciada, lembrar as tuas preferências e perceber a utilização agregada.",
+    "Usamos um pequeno número de cookies para te manter com sessão iniciada e lembrar as tuas preferências — tema, idioma e escolhas de notificações.",
   "privacy.cookiesSection.p2":
-    "Não usamos cookies de publicidade nem de rastreio entre sites — não há aqui rede publicitária para alimentar.",
+    "Não usamos cookies de publicidade nem de rastreio entre sites, e não fazemos análise de produto — não há aqui rede publicitária para alimentar.",
   "privacy.cookiesSection.p3":
     "Consulta a <strong>Política de Cookies</strong> completa para a lista integral, e <em>gere as tuas preferências</em> quando quiseres.",
   "privacy.thirdParties.title": "Terceiros",
   "privacy.thirdParties.intro":
     "Trabalhamos com um pequeno número de fornecedores de serviços, cada um vinculado por contrato a usar os teus dados apenas para o serviço que presta:",
   "privacy.thirdParties.item1":
-    "<strong>Alojamento</strong> — onde a plataforma funciona",
+    "<strong>Google</strong> — dá suporte ao Iniciar sessão com o Google, o nosso único método de acesso. O Google confirma quem és e partilha o teu nome, email e foto de perfil.",
   "privacy.thirdParties.item2":
-    "<strong>Envio de email</strong> — para notificações e emails de conta",
+    "<strong>Alojamento e armazenamento na cloud</strong> — onde a plataforma funciona e onde os teus envios são guardados, num espaço privado.",
   "privacy.thirdParties.item3":
-    "<strong>Processamento de pagamentos</strong> — para adesões de Apoiante, sem nunca tocar diretamente nos dados do teu cartão",
+    "<strong>Envio de email</strong> — para emails de conta e as notificações que ativaste.",
+  "privacy.thirdParties.item4":
+    "<strong>Mapas</strong> — mosaicos de mapa do OpenFreeMap e pesquisas de morada via OpenStreetMap, para mostrar espaços num mapa. Veem a área do mapa em visualização, não quem és.",
+  "privacy.thirdParties.item5":
+    "<strong>Klipy</strong> — dá suporte à pesquisa de GIFs nas mensagens. Quando pesquisas um GIF, o teu termo de pesquisa chega ao Klipy; as tuas mensagens nunca.",
   "privacy.thirdParties.optInIntro":
     "Com o teu <strong>consentimento explícito</strong>, também usamos:",
   "privacy.thirdParties.optItem1":
-    "<strong>Plausible Analytics</strong> — estatísticas de utilização respeitadoras da privacidade, com poucos cookies",
-  "privacy.thirdParties.optItem2":
-    "<strong>Integrações de calendário</strong> — se escolheres sincronizar eventos com o Google Calendar ou o Apple Calendar",
+    "<strong>Monitorização de erros</strong> — um serviço que respeita a privacidade e nos alerta para falhas, sem publicidade e sem qualquer perfil sobre ti.",
   "privacy.thirdParties.outro":
     "Nunca partilhamos os teus dados com corretores de dados nem redes publicitárias.",
   "privacy.changes.title": "Alterações a esta política",
@@ -1058,6 +1109,8 @@ export const marketing: Catalog = {
   "terms.eligibility.title": "Elegibilidade",
   "terms.eligibility.p1":
     "A QueerPulse está aberta a qualquer pessoa com 18 anos ou mais que seja convidada ou avalizada pela comunidade.",
+  "terms.eligibility.why":
+    "É só para adultos por uma razão: muito do que acontece aqui — conversas francas sobre sexo e saúde sexual, encontros e vida noturna, e o tipo de conversa sem filtros que só é seguro entre adultos — não é adequado a menores, e misturar as duas coisas poria em risco a segurança de todos. Quem tem menos de 18 anos também merece comunidade queer; só que esta ainda não é a sala certa para isso.",
   "terms.eligibility.p2":
     "Ao entrares, confirmas que <strong>a informação no teu perfil é exata</strong>, tanto quanto sabes.",
   "terms.eligibility.p3":
@@ -1867,6 +1920,7 @@ export const marketing: Catalog = {
   "changelog.badge.improvement": "Melhoria",
   "changelog.badge.infrastructure": "Infraestrutura",
   "changelog.badge.fix": "Correção",
+  "changelog.tag.aboutCommunities": "Ver como funcionam as comunidades",
   "changelog.tag.work": "Abrir o teu Trabalho",
   "changelog.tag.settings": "Definições de notificações",
   "changelog.tag.messages": "Abrir mensagens",
@@ -1896,16 +1950,102 @@ export const marketing: Catalog = {
   "changelog.tag.trustNetwork": "Abrir a rede de confiança",
   "changelog.tag.invite": "Convidar alguém",
   "changelog.tag.imprint": "Ler o aviso legal",
+  "changelog.tag.terms": "Ler os termos",
+  "changelog.tag.library": "Abrir a biblioteca",
   "changelog.tag.feed": "Abrir o teu feed",
   "changelog.tag.myEvents": "Abrir Meus Eventos",
   "changelog.tag.safeSpaces": "Encontrar um espaço seguro",
   "changelog.tag.pressKit": "Abrir o kit de imprensa",
   "changelog.tag.magazineDesk": "Abrir a redação",
+  "changelog.tag.comingOut": "Ler o guia de sair do armário",
+  "changelog.tag.guidelines": "Ler as diretrizes da comunidade",
+  "changelog.tag.requestInvite": "Pedir para entrar",
+  "changelog.tag.privacy": "Ler a política de privacidade",
+
+  "changelog.entries.privacy-policy-refresh.title":
+    "A Política de Privacidade agora corresponde ao que a plataforma faz de facto",
+  "changelog.entries.privacy-policy-refresh.body":
+    "Revimos a Política de Privacidade de ponta a ponta. Agora explica o Iniciar sessão com o Google, as notificações push e os dados de dispositivo, como os teus dados de identidade ficam sob o teu controlo, os dados de localização e de mensagens que guardamos, e os serviços exatos em que nos apoiamos — e removemos aquilo que não oferecemos. A Política de Cookies e as tuas definições de privacidade passam a corresponder, com a opção de análise não utilizada removida. Sem análise de comportamento, sem publicidade, sem venda de dados — continua verdade.",
+
+  "changelog.entries.members-explainer-modal.title":
+    "O botão “Explorar pessoas” da página inicial agora explica-se",
+  "changelog.entries.members-explainer-modal.body":
+    "Quem não tinha sessão iniciada batia na página de entrada ao clicar em “Explorar pessoas” na página inicial. Agora recebe uma explicação curta e simpática sobre como funciona fazer parte da comunidade — com uma forma clara de pedir convite ou iniciar sessão.",
+
+  "changelog.entries.invite-request-mutual-email.title":
+    "Pedir para entrar passa a pedir o email de um membro",
+  "changelog.entries.invite-request-mutual-email.body":
+    "Quando pedes um convite e conheces alguém aqui, o formulário passa a pedir o email dessa pessoa em vez do nome — é assim que a encontramos e te avalizamos mais depressa. O campo continua opcional, mas se o preencheres verificamos que é um email válido.",
+
+  "changelog.entries.report-form-guide-split.title":
+    "O formulário de denúncia e o guia de denúncias são agora páginas separadas",
+  "changelog.entries.report-form-guide-split.body":
+    "Fazer uma denúncia passa a ter a sua própria página, focada — sem um texto longo para percorrer. Como funciona a denúncia, os princípios por trás de cada decisão e o registo público de moderação vivem agora numa página dedicada “Como funciona a denúncia”, ligada nos dois sentidos.",
+
+  "changelog.entries.safety-page-report-form.title":
+    "Denunciar uma preocupação vai direto ao formulário",
+  "changelog.entries.safety-page-report-form.body":
+    "A página de segurança leva-te agora ao formulário de denúncia dentro da app em vez de um endereço de email, e a explicação do sistema de avais está mais fiel à forma como a entrada na rede realmente funciona.",
+
+  "changelog.entries.public-profile-eligibility-live.title":
+    "Perfis públicos que podes mesmo conquistar.",
+  "changelog.entries.public-profile-eligibility-live.body":
+    "O teu progresso para um perfil público reflete agora a tua atividade real — os textos que publicaste, os eventos que organizaste, apadrinhamentos e recomendações, e o tempo que apareceste. Abre o teu perfil para veres exatamente onde estás.",
+
+  "changelog.entries.public-profile-eligibility-tracker.title":
+    "Um caminho mais claro para o perfil público.",
+  "changelog.entries.public-profile-eligibility-tracker.body":
+    "Os perfis públicos mostram agora exatamente onde estás — o essencial que precisas, como a tua contribuição, a confiança da comunidade e a participação somam, e o próximo passo para avançares.",
+
+  "changelog.entries.how-communities-work-page.title":
+    "Uma entrada mais clara para as comunidades",
+  "changelog.entries.how-communities-work-page.body":
+    "A página inicial mostrava um botão “Junta-te” antes de sequer teres conta. Agora os cartões de comunidade levam a uma nova página que explica como funcionam as comunidades e porque importam — para saberes ao que te juntas antes de pedires convite.",
+
+  "changelog.entries.guidelines-read-gate.title":
+    "Lê as diretrizes até ao fim antes de concordares",
+  "changelog.entries.guidelines-read-gate.body":
+    "As Diretrizes da Comunidade passam a começar pelas linhas vermelhas, explicam como denunciar e o que acontece a quem as ultrapassa — de um aviso à remoção — e pedem que as leias até ao fim antes de a caixa de concordância desbloquear.",
+
+  "changelog.entries.guidelines-in-sheet.title":
+    "Leia as diretrizes da comunidade sem perder o que escreveu",
+  "changelog.entries.guidelines-in-sheet.body":
+    "No pedido de convite e no acolhimento, tocar em “diretrizes da comunidade” levava-te para uma página separada — e para longe de tudo o que já tinhas escrito. Agora as diretrizes sobem numa folha que podes ler e fechar ali mesmo, sem perder nada do que escreveste.",
 
   "changelog.entries.meganav-highlight-illustrations.title":
     "Menus ilustrados na navegação de topo",
   "changelog.entries.meganav-highlight-illustrations.body":
     "Cada menu na navegação de topo passa a abrir com uma ilustração desenhada à mão do seu destaque — pessoas a reunir-se, a cidade, apoio, cultura, trabalho — em vez de um marcador simples.",
+
+  "changelog.entries.coming-out-guide-public.title":
+    "O guia de sair do armário volta a estar aberto a todos",
+  "changelog.entries.coming-out-guide-public.body":
+    "O guia de sair do armário ficou por engano trancado atrás do início de sessão. É uma página de apoio — tal como os nossos recursos e páginas de segurança, deve chegar a quem se está a questionar, tenha conta ou não. Voltou a ser público.",
+
+  "changelog.entries.poem-editor-v2.title":
+    "Escrever um poema já parece mesmo escrever um poema",
+  "changelog.entries.poem-editor-v2.body":
+    "O editor de poemas teve uma revisão completa: uma pré-visualização ao vivo fica mesmo ao lado do que estás a escrever, podes arrastar estrofes para as reordenar ou inserir um separador de secção num instante, e as linhas que colas ficam exatamente onde as puseste. Cada poema tem agora o seu próprio link para partilhar, e a vista de leitura é mais larga e serena, com um botão para copiar o poema para quem quiser guardar as tuas palavras.",
+
+  "changelog.entries.under18-open-invite.title":
+    "A mensagem para menores de 18 passa a abrir uma porta, não a fechá-la",
+  "changelog.entries.under18-open-invite.body":
+    "Se nos disseres que ainda não tens 18, a nota costumava insistir na conta que não podes ter. Agora começa pelo que está aberto a toda a gente — a biblioteca, a revista e os nossos recursos são teus para ler, sem precisares de iniciar sessão.",
+
+  "changelog.entries.adults-only-explainer.title":
+    "“Eis porquê somos 18+” passa mesmo a dizer porquê",
+  "changelog.entries.adults-only-explainer.body":
+    "A ligação “eis porquê” na verificação de idade levava aos Termos sem explicar nada. A secção Elegibilidade passa a dizer claramente porque é que a QueerPulse é só para adultos — e porque quem tem menos de 18 anos também pertence à comunidade queer.",
+
+  "changelog.entries.persona-excerpt-crash-fix.title":
+    "Adicionar um excerto já não estraga o perfil",
+  "changelog.entries.persona-excerpt-crash-fix.body":
+    "Começar um excerto ou um detalhe de menu numa página de persona — preencher um campo antes dos restantes — já não deixa a página em branco. Passa a mostrar o que adicionaste e completa o resto à medida que avanças.",
+
+  "changelog.entries.poem-line-break-fix.title":
+    "As quebras de linha dos poemas ficam guardadas",
+  "changelog.entries.poem-line-break-fix.body":
+    "Colar um poema no editor deixa de juntar as linhas todas quando o lês — cada verso mantém a sua própria linha, tal como o escreveste ou colaste.",
 
   "changelog.entries.poet-rich-poems.title": "Escreve e lê poemas na íntegra",
   "changelog.entries.poet-rich-poems.body":

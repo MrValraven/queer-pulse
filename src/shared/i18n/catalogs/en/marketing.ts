@@ -470,20 +470,17 @@ export const marketing: Catalog = {
   // ── Cookies ────────────────────────────────────────────────────────────
   "cookies.meta.title": "QueerPulse Cookie Policy and preferences",
   "cookies.meta.description":
-    "Which cookies QueerPulse uses — essential, functional, and analytics — what each one does, and where to adjust your preferences. No advertising cookies.",
+    "Which cookies QueerPulse uses — all strictly necessary or functional — what each one does, and how to manage your privacy choices. No advertising or analytics cookies.",
   "cookies.eyebrow": "Cookies",
-  "cookies.h1": "What we <em>track,</em> and why.",
+  "cookies.h1": "The cookies we <em>use,</em> and why.",
   "cookies.sub":
-    "A short list, not a wall of legalese. Toggle what you're comfortable with below.",
+    "A short list, not a wall of legalese. Every cookie here is essential or functional — there's nothing to switch off.",
   "cookies.essential.title": "Essential",
   "cookies.essential.body":
     "Needed to keep you signed in and your account secure. Can't be switched off.",
   "cookies.functional.title": "Functional",
   "cookies.functional.body":
     "Remember your preferences — theme, language, notification settings.",
-  "cookies.analytics.title": "Analytics",
-  "cookies.analytics.body":
-    "Aggregate, privacy-respecting usage stats via Plausible. No cross-site tracking, no ad networks.",
   "cookies.expires.session": "Session",
   "cookies.expires.days30": "30 days",
   "cookies.expires.year1": "1 year",
@@ -498,18 +495,12 @@ export const marketing: Catalog = {
   "cookies.summary.title": "Your <em>summary</em>",
   "cookies.summary.essential": "Essential",
   "cookies.summary.functional": "Functional",
-  "cookies.summary.analytics": "Analytics",
-  "cookies.summary.on": "On",
-  "cookies.summary.off": "Off",
-  "cookies.actions.save": "Save preferences",
-  "cookies.actions.acceptAll": "Accept all",
-  "cookies.actions.essentialOnly": "Essential only",
+  "cookies.actions.managePreferences": "Manage preferences",
   "cookies.info":
-    "Change these any time in <settingsLink>Settings</settingsLink>. Full detail in the <privacyLink>Privacy Policy</privacyLink>.",
+    "Manage your privacy choices any time in <settingsLink>Settings</settingsLink>. Full detail in the <privacyLink>Privacy Policy</privacyLink>.",
   "cookies.outro.title": "Questions about <em>your data?</em>",
   "cookies.outro.sub": "The Privacy Policy covers everything cookies don't.",
   "cookies.outro.cta": "Read the Privacy Policy",
-  "cookies.toast.saved": "Cookie preferences saved",
 
   // ── Data Subject Access Requests (DSAR) ───────────────────────────────
   "dsar.backToPrivacyLabel": "Privacy Policy",
@@ -659,11 +650,11 @@ export const marketing: Catalog = {
   "guidelines.clause07.li5":
     "Sharing private conversations or photos without consent",
   "guidelines.clause07.li6": "Discrimination on any protected basis",
-  "guidelines.final.titlePre": "One more ",
-  "guidelines.final.titleEm": "thing",
-  "guidelines.final.p1":
-    "None of us gets this perfectly right every time. What matters is <b>how you repair</b> when you fall short, not whether you ever do.",
+  "guidelines.clause07.reportLead": "Report it — you'll be supported.",
+  "guidelines.clause07.reportBody":
+    "If someone crosses one of these lines, report them or the post from its menu. Moderators read every report, and you're never left to handle it alone. Confirmed breaches lead to a warning, suspension, or removal, and we cooperate with the authorities where someone's safety is at risk. You are never overreacting by reporting.",
   "guidelines.final.p2": "Thanks for building this with us.",
+  "guidelines.modalDone": "I've read it — done",
   "guidelines.outro.title": "Now you know <em>the culture.</em>",
   "guidelines.outro.sub":
     "The Code of Conduct covers what happens if it's broken.",
@@ -894,6 +885,41 @@ export const marketing: Catalog = {
   "pressKit.placeholderFile.line2":
     "The production kit will include the real production-ready asset.",
 
+  // ── Communities Explainer ──────────────────────────────────────────────
+  "communitiesAbout.meta.title": "How communities work on QueerPulse",
+  "communitiesAbout.meta.description":
+    "Real rooms, kept by real people — no ads, no algorithm. See how QueerPulse communities work, and how to find the one that feels like yours.",
+  "communitiesAbout.hero.eyebrow": "Communities",
+  "communitiesAbout.hero.title": "How communities work, and why they <em>matter</em>",
+  "communitiesAbout.hero.sub":
+    "Real rooms, kept by real people — no feeds, no algorithm. Here's what that means, and how to find the one that feels like yours.",
+  "communitiesAbout.outro.title": "Ready to find your people?",
+  "communitiesAbout.outro.sub":
+    "Request an invite and we'll help you find the rooms that feel like home.",
+  "communitiesAbout.what.title": "What a community is here",
+  "communitiesAbout.what.rooms.title": "Rooms, not feeds",
+  "communitiesAbout.what.rooms.body":
+    "A community is a room with a purpose and someone who keeps it — not an endless feed ranked by an algorithm. You always know whose space you're in.",
+  "communitiesAbout.what.kept.title": "Kept by real people",
+  "communitiesAbout.what.kept.body":
+    "Every community has a keeper who sets the tone, welcomes new faces, and looks out for the room.",
+  "communitiesAbout.what.safe.title": "A space you can trust",
+  "communitiesAbout.what.safe.body":
+    "Communities are invite-only and moderated, so the room stays somewhere you can actually be yourself.",
+  "communitiesAbout.how.title": "How it works",
+  "communitiesAbout.how.find.title": "Find your room",
+  "communitiesAbout.how.find.body":
+    "Browse communities by interest, scene, or neighbourhood until one feels like yours.",
+  "communitiesAbout.how.welcome.title": "A keeper welcomes you",
+  "communitiesAbout.how.welcome.body":
+    "The keeper and members say hello, so you're never starting from nothing.",
+  "communitiesAbout.how.belong.title": "You show up and belong",
+  "communitiesAbout.how.belong.body":
+    "Join the conversation, come to gatherings, and become one of the faces others are glad to see.",
+  "communitiesAbout.why.title": "Why communities matter",
+  "communitiesAbout.why.body":
+    "Belonging isn't a feature — it's the whole point. A good community is where you find your people, feel safe, and stay close to what's happening near you.",
+
   // ── Privacy Policy ─────────────────────────────────────────────────────
   "privacy.meta.title": "QueerPulse Privacy Policy: what we collect and why",
   "privacy.meta.description":
@@ -918,42 +944,63 @@ export const marketing: Catalog = {
   "privacy.whatWeCollect.title": "What we collect",
   "privacy.whatWeCollect.accountHeading": "Account information",
   "privacy.whatWeCollect.account.item1":
-    "<strong>Profile details</strong> you provide — name, pronouns, bio, photos.",
+    "<strong>Profile details</strong> you add — name, pronouns, tagline, bio, photos.",
   "privacy.whatWeCollect.account.item2":
-    "<strong>Contact information</strong> — your email address, used for sign-in and notifications.",
+    "<strong>Contact information</strong> — your email address, used to sign you in and send the notifications you've turned on.",
   "privacy.whatWeCollect.account.item3":
-    "<strong>Membership data</strong> — your tier, join date, and who vouched for you.",
-  "privacy.whatWeCollect.account.item4":
-    "<strong>Billing information</strong>, for Sustainer members — handled by our payment processor, never stored on our servers.",
+    "<strong>Membership data</strong> — your tier, join date, who invited you, and who vouched for you.",
+  "privacy.whatWeCollect.signInHeading": "How you sign in",
+  "privacy.whatWeCollect.signInBody":
+    "You sign in with <strong>Google</strong> — there's no separate QueerPulse password to manage. When you do, Google shares your name, email, and profile photo with us. We never see or store your Google password.",
+  "privacy.whatWeCollect.deviceHeading": "Device & technical data",
+  "privacy.whatWeCollect.device.item1":
+    "<strong>The browser and device</strong> you sign in from, kept with your active sessions so you can see them and sign out remotely.",
+  "privacy.whatWeCollect.device.item2":
+    "<strong>Push notification details</strong> — if you turn notifications on, the address your browser gives us and its keys, so we can deliver them. Turn it off any time.",
+  "privacy.whatWeCollect.device.item3":
+    "<strong>Your IP address</strong>, used only in the moment to keep the platform secure and prevent abuse — it isn't stored against your account.",
   "privacy.whatWeCollect.activityHeading": "Activity data",
   "privacy.whatWeCollect.activity.item1":
     "<strong>Posts, comments, and messages</strong> you send on the platform.",
   "privacy.whatWeCollect.activity.item2":
-    "<strong>Event RSVPs and attendance</strong>, so gatherings can plan around headcount.",
+    "<strong>What keeps chat working</strong> — who's in a conversation, delivery and read receipts, reactions, and anyone you've blocked. Typing and who's online aren't stored — they're live-only.",
   "privacy.whatWeCollect.activity.item3":
-    "<strong>Basic usage data</strong> — pages visited, features used — aggregated and anonymised for analytics.",
+    "<strong>Event RSVPs and attendance</strong>, so gatherings can plan around headcount.",
+  "privacy.whatWeCollect.activity.item4":
+    "<strong>A general location</strong> you choose to add — a city or area — and the map area you browse in the directory. We never read your device's precise location.",
   "privacy.whatWeCollect.notCollectedHeading": "What we don't collect",
   "privacy.whatWeCollect.notCollectedBody":
-    "We don't track you across other websites, sell data to advertisers, or build an advertising profile of you. There's no ad network on this platform to feed.",
+    "We don't run product analytics or behavioural tracking, we don't follow you across other websites, we don't sell data to advertisers, and we don't build an advertising profile of you. There's no ad network on this platform to feed.",
+  "privacy.sensitive.title": "Your identity, on your terms",
+  "privacy.sensitive.p1":
+    "Some of what you share here is sensitive by nature — your pronouns, gender identity, sexual orientation, whether you're out at work, the support you're looking for. We treat it with the care it deserves.",
+  "privacy.sensitive.p2":
+    "<strong>You decide what's visible.</strong> Most of this stays private to you by default — you choose what appears on your public profile and what stays for your eyes only. Where the law calls this special-category data, we hold it only because you chose to share it with your community.",
+  "privacy.sensitive.p3":
+    "Creative profiles can hold more — an astrologer's birth details, a peer-support or therapy listing's contact info. The same rule applies: it's there because you added it, visible exactly as you set it, and yours to change or remove any time.",
+  "privacy.sensitive.p4":
+    "<strong>Photos are cleaned before they're uploaded.</strong> Location and camera metadata are stripped from images on your device, so a picture can't quietly reveal where you were.",
   "privacy.howWeUse.title": "How we use it",
   "privacy.howWeUse.intro": "Your data is used only to:",
   "privacy.howWeUse.item1": "Run your account and keep you signed in securely",
-  "privacy.howWeUse.item2": "Show you gatherings and content relevant to you",
-  "privacy.howWeUse.item3": "Process membership and Sustainer payments",
+  "privacy.howWeUse.item2":
+    "Show you gatherings, communities, and content relevant to you",
+  "privacy.howWeUse.item3":
+    "Deliver your messages, notifications, and the connections you make",
   "privacy.howWeUse.item4":
     "Keep the platform safe — investigating reports, enforcing the Code of Conduct",
   "privacy.howWeUse.item5": "Send you notifications you've opted into",
   "privacy.howWeUse.item6":
-    "Understand aggregate usage, to improve the product",
+    "Fix problems and keep the platform reliable — with your consent, through privacy-respecting error monitoring",
   "privacy.howWeUse.p1":
-    "We never use your data to train third-party AI models or sell it to advertisers.",
+    "We never sell your data, use it to train AI models, or feed it to advertisers.",
   "privacy.whoSees.title": "Who sees your data",
   "privacy.whoSees.p1":
     "<strong>Other members</strong> see what your privacy settings allow — your public profile, posts, and anything you choose to share.",
   "privacy.whoSees.p2":
     "<strong>Our small team</strong> can access account data to provide support, investigate reports, and keep the platform running.",
   "privacy.whoSees.p3":
-    "<strong>Service providers</strong> — our hosting, email, and payment processors — see only what's needed to do their specific job, under contract.",
+    "<strong>Service providers</strong> — the companies that host the platform, store your uploads, deliver our email, and (with your consent) monitor for errors — see only what's needed for their specific job, under contract.",
   "privacy.whoSees.p4":
     "<strong>Nobody else.</strong> We don't sell or rent your data to any third party, ever.",
   "privacy.retention.title": "How long we keep it",
@@ -962,7 +1009,9 @@ export const marketing: Catalog = {
   "privacy.retention.p2":
     "If you delete your account, most personal data is removed within 30 days, except where we're legally required to retain it (e.g. billing records).",
   "privacy.retention.p3":
-    "Gathering attendance data is deleted 30 days after the event, per our gatherings data policy.",
+    "Some things clear on their own — gathering attendance 30 days after the event, read notifications after 90 days, and unused push-notification registrations after 90 days.",
+  "privacy.retention.p4":
+    "When an account is deleted we keep a <strong>one-way fingerprint</strong> of the email — never the address itself — only to stop a removed account being quietly recreated.",
   "privacy.yourRights.title": "Your rights",
   "privacy.yourRights.intro": "Under GDPR, you have the right to:",
   "privacy.yourRights.item1":
@@ -983,26 +1032,28 @@ export const marketing: Catalog = {
     "You can also lodge a complaint with the Comissão Nacional de Proteção de Dados (CNPD), Portugal's data protection authority.",
   "privacy.cookiesSection.title": "Cookies",
   "privacy.cookiesSection.p1":
-    "We use a small number of cookies to keep you signed in, remember your preferences, and understand aggregate usage.",
+    "We use a small number of cookies to keep you signed in and remember your preferences — your theme, language, and notification choices.",
   "privacy.cookiesSection.p2":
-    "We don't use advertising or cross-site tracking cookies — there's no ad network here to feed.",
+    "We don't use advertising or cross-site tracking cookies, and we don't run product analytics — there's no ad network here to feed.",
   "privacy.cookiesSection.p3":
     "See the full <strong>Cookie Policy</strong> for the complete list, and <em>manage your preferences</em> any time.",
   "privacy.thirdParties.title": "Third parties",
   "privacy.thirdParties.intro":
     "We work with a small number of service providers, each bound by contract to use your data only for the service they provide:",
   "privacy.thirdParties.item1":
-    "<strong>Hosting</strong> — where the platform runs",
+    "<strong>Google</strong> — powers Sign in with Google, our only login. Google confirms who you are and shares your name, email, and profile photo.",
   "privacy.thirdParties.item2":
-    "<strong>Email delivery</strong> — for notifications and account emails",
+    "<strong>Cloud hosting & storage</strong> — where the platform runs and where your uploads are kept, in a private store.",
   "privacy.thirdParties.item3":
-    "<strong>Payment processing</strong> — for Sustainer memberships, never touching your card details directly",
+    "<strong>Email delivery</strong> — for account emails and the notifications you've turned on.",
+  "privacy.thirdParties.item4":
+    "<strong>Maps</strong> — map tiles from OpenFreeMap and address lookups via OpenStreetMap, to place venues on a map. They see the map area being viewed, not who you are.",
+  "privacy.thirdParties.item5":
+    "<strong>Klipy</strong> — powers GIF search in messages. When you search for a GIF your search term reaches Klipy; your messages never do.",
   "privacy.thirdParties.optInIntro":
     "With your <strong>explicit opt-in</strong>, we also use:",
   "privacy.thirdParties.optItem1":
-    "<strong>Plausible Analytics</strong> — privacy-respecting, cookie-light usage stats",
-  "privacy.thirdParties.optItem2":
-    "<strong>Calendar integrations</strong> — if you choose to sync events to Google or Apple Calendar",
+    "<strong>Error monitoring</strong> — a privacy-respecting service that alerts us to crashes, with no advertising and no profile of you.",
   "privacy.thirdParties.outro":
     "We never share your data with data brokers or advertising networks.",
   "privacy.changes.title": "Changes to this policy",
@@ -1029,6 +1080,8 @@ export const marketing: Catalog = {
   "terms.eligibility.title": "Eligibility",
   "terms.eligibility.p1":
     "QueerPulse is open to anyone 18 or older who is invited or vouched into the community.",
+  "terms.eligibility.why":
+    "We keep it adults-only for a reason: so much of what happens here — frank talk about sex and sexual health, dating and nightlife, and the kind of unguarded conversation that only feels safe among adults — isn't a fit for minors, and mixing the two would put everyone's safety at risk. Under-18s deserve queer community too; this just isn't the room for it yet.",
   "terms.eligibility.p2":
     "By joining, you confirm that <strong>the information on your profile is accurate</strong> to the best of your knowledge.",
   "terms.eligibility.p3":
@@ -1815,6 +1868,7 @@ export const marketing: Catalog = {
   "changelog.badge.improvement": "Improvement",
   "changelog.badge.infrastructure": "Infrastructure",
   "changelog.badge.fix": "Fix",
+  "changelog.tag.aboutCommunities": "See how communities work",
   "changelog.tag.work": "Open your Work hub",
   "changelog.tag.settings": "Notification settings",
   "changelog.tag.messages": "Open messages",
@@ -1839,21 +1893,107 @@ export const marketing: Catalog = {
   "changelog.tag.search": "Try global search",
   "changelog.tag.donate": "See where money goes",
   "changelog.tag.volunteer": "Find a way in",
+  "changelog.tag.comingOut": "Read the coming-out guide",
   "changelog.tag.notifications": "Open your notifications",
   "changelog.tag.connections": "Open your connections",
   "changelog.tag.trustNetwork": "Open the trust network",
   "changelog.tag.invite": "Invite someone",
   "changelog.tag.imprint": "Read the legal notice",
+  "changelog.tag.terms": "Read the terms",
+  "changelog.tag.library": "Open the library",
   "changelog.tag.feed": "Open your feed",
   "changelog.tag.myEvents": "Open My Events",
   "changelog.tag.safeSpaces": "Find a safe space",
   "changelog.tag.pressKit": "Open the press kit",
   "changelog.tag.magazineDesk": "Open the desk",
+  "changelog.tag.guidelines": "Read the community guidelines",
+  "changelog.tag.requestInvite": "Ask to come in",
+  "changelog.tag.privacy": "Read the privacy policy",
+
+  "changelog.entries.privacy-policy-refresh.title":
+    "The Privacy Policy now matches what the platform actually does",
+  "changelog.entries.privacy-policy-refresh.body":
+    "We refreshed the Privacy Policy end to end. It now explains Sign in with Google, push notifications and device data, how your identity details stay under your control, the location and messaging data we hold, and the exact services we rely on — and we removed things we don't offer. The Cookie Policy and your privacy settings now match, with the unused analytics option removed. No analytics, no ads, no data sales — still true.",
+
+  "changelog.entries.members-explainer-modal.title":
+    "The landing “Explore members” button now explains itself",
+  "changelog.entries.members-explainer-modal.body":
+    "Signed-out visitors used to hit the sign-in wall when they clicked “Explore members” on the homepage. Now they get a short, friendly explainer on how membership works — with a clear way to request an invite or sign in.",
+
+  "changelog.entries.invite-request-mutual-email.title":
+    "Asking to join now asks for a member's email",
+  "changelog.entries.invite-request-mutual-email.body":
+    "When you request an invite and know someone here, the form now asks for their email rather than a name — it's how we actually match them and vouch you in faster. The field stays optional, but if you fill it in we check it's a real email.",
+
+  "changelog.entries.report-form-guide-split.title":
+    "The report form and the reporting guide are now separate pages",
+  "changelog.entries.report-form-guide-split.body":
+    "Making a report is its own focused page — no essay to scroll past. How reporting works, the principles behind each decision, and the public moderation log now live on a dedicated “How reporting works” page, linked from both directions.",
+
+  "changelog.entries.safety-page-report-form.title":
+    "Reporting a concern goes straight to the form",
+  "changelog.entries.safety-page-report-form.body":
+    "The safety page now points you to the in-app report form instead of an email address, and its explanation of vouching reads truer to how joining actually works.",
+
+  "changelog.entries.public-profile-eligibility-live.title":
+    "Public profiles you can actually earn.",
+  "changelog.entries.public-profile-eligibility-live.body":
+    "Your progress toward a public profile now reflects your real activity — the writing you've published, events you've hosted, vouches and endorsements, and time spent showing up. Open your profile to see exactly where you are.",
+
+  "changelog.entries.public-profile-eligibility-tracker.title":
+    "A clearer path to a public profile.",
+  "changelog.entries.public-profile-eligibility-tracker.body":
+    "Public profiles now show exactly where you are — the essentials you need, how your contributions, community trust, and participation add up, and the next thing that moves you forward.",
+
+  "changelog.entries.how-communities-work-page.title":
+    "A clearer welcome to communities",
+  "changelog.entries.how-communities-work-page.body":
+    "The homepage used to offer a “Join” button before you even had an account. Now the community cards lead to a new page that explains how communities work and why they matter — so you know what you're joining before you ask for an invite.",
+
+  "changelog.entries.guidelines-read-gate.title":
+    "Read the guidelines through before you agree",
+  "changelog.entries.guidelines-read-gate.body":
+    "The Community Guidelines now open with the hard lines, spell out how to report harm and what happens to people who cross them — from a warning to removal — and ask you to read to the end before the agree box unlocks.",
+
+  "changelog.entries.guidelines-in-sheet.title":
+    "Read the community guidelines without losing your place",
+  "changelog.entries.guidelines-in-sheet.body":
+    "On the invite request and onboarding, tapping “community guidelines” used to take you off to a separate page — and back over everything you'd typed. The guidelines now slide up in a sheet you can read and close right where you are, so nothing you've written gets lost.",
 
   "changelog.entries.meganav-highlight-illustrations.title":
     "Illustrated menus in the top navigation",
   "changelog.entries.meganav-highlight-illustrations.body":
     "Each menu in the top navigation now opens with a hand-drawn illustration of its highlight — people gathering, the city, support, culture, work — instead of a plain placeholder.",
+
+  "changelog.entries.coming-out-guide-public.title":
+    "The coming-out guide is open to everyone again",
+  "changelog.entries.coming-out-guide-public.body":
+    "The coming-out guide was accidentally locked behind sign-in. It's a support page — like our resources and safety pages, it should reach anyone who's questioning, whether or not they have an account. It's public again.",
+
+  "changelog.entries.poem-editor-v2.title":
+    "Writing a poem now feels like writing a poem",
+  "changelog.entries.poem-editor-v2.body":
+    "The poem editor got a full pass: a live preview sits right beside what you're typing, you can drag stanzas into place or drop in a quick section break, and pasted lines stay exactly where you put them. Every poem also gets its own shareable link, and the reading view is wider and calmer now, with a one-tap copy for anyone who wants to keep your words.",
+
+  "changelog.entries.under18-open-invite.title":
+    "The under-18 message now opens a door instead of closing one",
+  "changelog.entries.under18-open-invite.body":
+    "If you tell us you're not 18 yet, the note used to dwell on the account you can't have. It now leads with what's open to everyone — the library, the magazine and our resources are all yours to read, no login needed.",
+
+  "changelog.entries.adults-only-explainer.title":
+    "“Here's why we're 18+” now actually says why",
+  "changelog.entries.adults-only-explainer.body":
+    "The “here's why” link on the age check used to land on the Terms without explaining anything. The Eligibility section now says plainly why QueerPulse is adults-only — and why under-18s still belong in queer community.",
+
+  "changelog.entries.persona-excerpt-crash-fix.title":
+    "Adding a page excerpt no longer breaks the profile",
+  "changelog.entries.persona-excerpt-crash-fix.body":
+    "Starting an excerpt or menu detail on a persona page — filling in one field before the rest — no longer causes the page to go blank. It now shows what you've added and fills in the rest as you go.",
+
+  "changelog.entries.poem-line-break-fix.title":
+    "Poem line breaks now stick",
+  "changelog.entries.poem-line-break-fix.body":
+    "Pasting a poem into the editor no longer runs its lines together when you read it back — each verse line keeps its own line, just as you typed or pasted it.",
 
   "changelog.entries.poet-rich-poems.title": "Write and read poems in full",
   "changelog.entries.poet-rich-poems.body":

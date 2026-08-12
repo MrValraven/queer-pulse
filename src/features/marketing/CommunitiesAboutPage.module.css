@@ -1,0 +1,74 @@
+.page {
+  max-width: var(--maxw-page);
+  margin: 0 auto;
+  padding: 64px 28px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+.section {
+  width: 100%;
+}
+
+.sectionTitle {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(28px, 3.6vw, 46px);
+  color: var(--text-strong);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: 32px;
+}
+
+.lede {
+  font-size: 16px;
+  color: var(--ink);
+  line-height: 1.75;
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 18px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.icon {
+  width: 26px;
+  height: 26px;
+  color: var(--accent);
+  flex: none;
+}
+
+.cardTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+}
+
+.cardBody {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.65;
+}
+
+:global([data-theme="dark"]) .card {
+  border-color: rgba(var(--cream-rgb), 0.1);
+}

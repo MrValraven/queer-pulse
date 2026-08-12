@@ -111,7 +111,7 @@ export const homepage: Catalog = {
   "painPoints.exchange4.cta": "Explorar trocas de saberes",
 
   "painPoints.hero2.eyebrow": "A falha mais difícil de sentir",
-  "painPoints.hero2.question": '"O que acontece se algo correr mal?"',
+  "painPoints.hero2.question": '"E se eu não estiver bem?"',
   "painPoints.hero2.heading":
     "Por isso construímos <em>uma rede de segurança.</em>",
   "painPoints.hero2.body":
@@ -126,14 +126,14 @@ export const homepage: Catalog = {
   "painPoints.exchange5.heading":
     "Por isso construímos <em>uma forma de agir.</em>",
   "painPoints.exchange5.body":
-    "Campanhas locais, entreajuda e organização — formas reais de mover alguma coisa, em conjunto.",
-  "painPoints.exchange5.cta": "Ver o que está em movimento",
+    "Campanhas locais, entreajuda e organização — formas reais de fazer algo acontecer, em conjunto.",
+  "painPoints.exchange5.cta": "Participar",
 
   "painPoints.exchange6.question": '"Conheço mesmo os meus direitos aqui?"',
   "painPoints.exchange6.heading":
     "Por isso construímos <em>guias em linguagem simples.</em>",
   "painPoints.exchange6.body":
-    "Informação legal sobre a vida LGBTQ+ em Portugal, escrita em linguagem simples — sem precisares de um curso de Direito.",
+    "Informação legal clara sobre a vida LGBTQ+ em Portugal — sem precisares de um curso de Direito.",
   "painPoints.exchange6.cta": "Ler os guias",
 
   "painPoints.exchange7.question":
@@ -156,6 +156,22 @@ export const homepage: Catalog = {
   "discovery.vouchedBy": "Com aval de {name}",
   "discovery.viewProfile": "Ver perfil",
   "discovery.sayHello": "Diz olá",
+  "membersExplainer.eyebrow": "Só para a comunidade",
+  "membersExplainer.title": "A comunidade <em>move</em> a QueerPulse",
+  "membersExplainer.titlePlain": "A comunidade move a QueerPulse",
+  "membersExplainer.lede":
+    "O diretório da comunidade abre-se assim que entras. Eis porque o mantemos assim — e como te juntares.",
+  "membersExplainer.pillars.vouched.title": "Pessoas reais, com aval",
+  "membersExplainer.pillars.vouched.body":
+    "Cada pessoa é convidada e avalizada por alguém que já cá está. Sem bots, sem estranhos a copiar a lista.",
+  "membersExplainer.pillars.inside.title": "O melhor abre-se por dentro",
+  "membersExplainer.pillars.inside.body":
+    "Perfis completos, comunidades e encontros abrem-se no momento em que te juntas.",
+  "membersExplainer.pillars.safe.title": "Só por convite mantém um espaço seguro",
+  "membersExplainer.pillars.safe.body":
+    "Manter o diretório só para a comunidade é como quem cá está consegue ser plenamente quem é.",
+  "membersExplainer.requestInviteCta": "Pedir um convite",
+  "membersExplainer.signInCta": "Já faço parte",
   "discovery.featuredMembersAria": "Pessoas em destaque",
   "discovery.featureMemberAria": "Mostrar {name}",
 
@@ -195,7 +211,7 @@ export const homepage: Catalog = {
     "A comunidade é mais forte <em>quando se constroem juntas</em>",
   "communities.sub":
     "Pesquisa ou filtra a lista e depois abre qualquer comunidade para veres a sala toda — o que é, o que faz, quem está lá dentro, e o que desbloqueias ao entrar.",
-  "communities.browseAllCta": "Ver todas as comunidades",
+  "communities.howCommunitiesWorkCta": "Como funcionam as comunidades",
   "communities.resultCount.all": "<b>{count}</b> comunidades",
   "communities.resultCount.shown": "<b>{count}</b> de {total} comunidades",
 
@@ -246,8 +262,6 @@ export const homepage: Catalog = {
   "communities.spotlight.keptBy": "Mantida por <b>{name}</b> e {extra}",
   "communities.spotlight.keptByName": "Mantida por <b>{name}</b>",
   "communities.spotlight.sinceLabel": "Desde {year}",
-  "communities.spotlight.peekInsideCta": "Espreitar lá dentro",
-  "communities.spotlight.joinCta": "Junta-te",
 
   "communities.room.pulse": "o feed ao vivo",
   "communities.room.discussions": "conversas",

@@ -66,6 +66,25 @@ function normalizeList(value: unknown): unknown {
   );
 }
 
+/** The list-typed sub-field names of an object block (e.g. `excerpt` →
+ *  `["lines"]`, `menuMeta` → `["practical"]`), read from its
+ *  `stringList`/`objectList` controls whose path is nested (`block.field`). A
+ *  persisted object block must carry each of these as an array: an ABSENT list
+ *  sub-field is read as `undefined.length` by the skin renderers (PageExcerpt,
+ *  TableMenuHeader) and white-screens the page, which is exactly what a
+ *  partially-filled block produces (e.g. an excerpt with only `from` typed).
+ *  Whole-block list descriptors (path === blockKey) are handled by the
+ *  empty-list drop in `buildSkinBlocks`, not here. */
+function nestedListSubFields(descriptor: SkinBlockDescriptor): string[] {
+  const subFields: string[] = [];
+  for (const control of descriptor.controls) {
+    if (control.kind !== "stringList" && control.kind !== "objectList") continue;
+    const subKey = control.path.split(".")[1];
+    if (subKey) subFields.push(subKey);
+  }
+  return subFields;
+}
+
 /** Normalize a whole block for persistence: prune a list block, and prune any
  *  nested list fields inside an object block (e.g. `excerpt.lines`,
  *  `menuMeta.practical`). Object blocks keep their partial scalar fields. */
@@ -179,12 +198,24 @@ export function useSubprofileSkinBlocksEditor(
 
   function buildSkinBlocks(): Partial<SkinData> {
     const built: SkinBlocksDraft = {};
-    for (const [blockKey, value] of Object.entries(clone(draft))) {
+    for (const descriptor of descriptors) {
+      const value = clone(draft[descriptor.blockKey]);
+      if (value === undefined) continue;
       const normalized = normalizeBlockValue(value);
       // Drop a list block that normalized down to nothing, so an emptied list
       // doesn't persist as `[]`.
       if (Array.isArray(normalized) && normalized.length === 0) continue;
-      built[blockKey] = normalized;
+      // Guarantee every declared list sub-field of an object block persists as
+      // an array — a partially-filled block (an excerpt with `from` but no
+      // `lines` yet) must never save a shape the skin renderers read `.length`
+      // off. Preserves the scalar fields the owner has already typed.
+      if (normalized && typeof normalized === "object" && !Array.isArray(normalized)) {
+        const object = normalized as Record<string, unknown>;
+        for (const subKey of nestedListSubFields(descriptor)) {
+          if (!Array.isArray(object[subKey])) object[subKey] = [];
+        }
+      }
+      built[descriptor.blockKey] = normalized;
     }
     return built;
   }

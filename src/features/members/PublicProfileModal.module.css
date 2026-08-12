@@ -1,69 +1,6 @@
 /* Public-profile control content, housed in the shared Modal (paper surface). */
-.list {
-  list-style: none;
-  display: grid;
-  gap: 14px;
-  margin: 0;
-  padding: 0;
-}
-.crit {
-  display: flex;
-  gap: 13px;
-  align-items: flex-start;
-}
-.critMark {
-  flex: none;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: rgba(45, 27, 61, 0.05);
-  border: 1px solid rgba(45, 27, 61, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1px;
-}
-.critMark svg {
-  width: 14px;
-  height: 14px;
-  color: var(--cream);
-  stroke-width: 2.4;
-}
-.critMet .critMark {
-  background: var(--jade);
-  border-color: var(--jade);
-}
-.critDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgba(45, 27, 61, 0.3);
-}
-.critText {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.critLabel {
-  font-size: 14.5px;
-  font-weight: 600;
-  color: var(--ink-60);
-}
-.critMet .critLabel {
-  color: var(--plum);
-}
-.critHint {
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--ink-40);
-}
 
-.progress {
-  font-size: 13.5px;
-  color: rgba(45, 27, 61, 0.66);
-  line-height: 1.6;
-  margin: 0;
-}
+/* ── Unlocked state (switch + preview, PublicProfileModal.tsx) ── */
 
 /* Honest scope note — quiet reassurance, jade rule (unlocked state). */
 .notYet {
@@ -72,8 +9,8 @@
   color: rgba(45, 27, 61, 0.7);
   max-width: 60ch;
   text-wrap: pretty;
-  border-left: 2px solid var(--jade);
-  padding-left: 14px;
+  border-inline-start: 2px solid var(--jade);
+  padding-inline-start: 14px;
   margin: 0 0 20px;
 }
 
@@ -85,7 +22,7 @@
   padding: 18px 20px;
   background: rgba(45, 27, 61, 0.04);
   border: 1px solid rgba(45, 27, 61, 0.1);
-  border-radius: 14px;
+  border-radius: var(--radius-badge);
 }
 .switchText {
   display: flex;
@@ -103,7 +40,7 @@
   line-height: 1.5;
 }
 .statusOn {
-  color: var(--jade);
+  color: var(--jade-ink);
 }
 
 @media (max-width: 560px) {
@@ -111,5 +48,365 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 14px;
+  }
+}
+
+/* ── Eligibility tracker (locked-state body, EligibilityTracker.tsx) ── */
+.tracker {
+  display: flex;
+  flex-direction: column;
+  gap: 22px; /* outer rhythm: between groups */
+}
+
+/* Focal progress moment — shown once both essentials are met. */
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 20px 20px;
+  border-radius: var(--radius-badge);
+  background: color-mix(in srgb, var(--plum) 4%, var(--paper));
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  overflow: hidden;
+  isolation: isolate;
+}
+.heroGlow {
+  position: absolute;
+  inset-block-start: -60%;
+  inset-inline-end: -18%;
+  width: 220px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.22),
+    transparent 70%
+  );
+  z-index: -1;
+  pointer-events: none;
+}
+.heroPct {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.25rem, 1rem + 1.1vw, 1.55rem);
+  line-height: 1.15;
+  color: var(--plum);
+  text-wrap: balance;
+}
+.heroTrack {
+  display: block;
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--plum) 10%, transparent);
+  overflow: hidden;
+}
+.heroFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-ink), var(--accent));
+  box-shadow: var(--shadow-accent);
+  transform-origin: left;
+  animation: fillGrow var(--dur-slow) var(--ease) both;
+}
+
+/* A labelled cluster: essentials / families / actions. */
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* inner rhythm: heading → list */
+}
+.essentialsGroup {
+  padding: 16px 18px 18px;
+  border-radius: var(--radius-badge);
+  background: color-mix(in srgb, var(--plum) 3.5%, var(--paper));
+  border: 1px solid rgba(45, 27, 61, 0.08);
+}
+.groupHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.groupCount {
+  font-family: var(--serif);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.95rem;
+  color: var(--plum);
+}
+.groupCount span {
+  color: var(--ink-40);
+}
+
+/* ── Essentials (hard gates) ── */
+.essentials {
+  list-style: none;
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+}
+.crit {
+  display: flex;
+  gap: 13px;
+  align-items: center;
+}
+.critMark {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--plum) 5%, transparent);
+  border: 1px solid rgba(45, 27, 61, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-60);
+}
+.critMark svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2.2;
+}
+.critMet .critMark {
+  background: var(--jade);
+  border-color: var(--jade);
+  color: var(--cream);
+  animation: markPop var(--dur-base) var(--ease) both;
+}
+.critText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.critLabel {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.critMet .critLabel {
+  color: var(--plum);
+}
+.critHint {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-40);
+  text-wrap: pretty;
+}
+
+/* ── Family bars (shown once gates are met) ── */
+.families {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.family {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.familyHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.familyIcon {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--plum) 7%, transparent);
+  color: var(--plum);
+}
+.familyIcon svg {
+  width: 14px;
+  height: 14px;
+}
+.familyLabel {
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--ink);
+  min-width: 0;
+}
+.familyAmount {
+  margin-inline-start: auto;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+  font-size: 0.85rem;
+}
+.track {
+  display: block;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--plum) 10%, transparent);
+  overflow: hidden;
+}
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transform-origin: left;
+  animation: fillGrow var(--dur-slow) var(--ease) both;
+}
+
+/* ── Next actions (point-earning only) ── */
+.actions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.action {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px 14px;
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+  box-shadow: var(--shadow-card);
+}
+.actionIcon {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--plum) 6%, transparent);
+  color: var(--plum);
+}
+.actionIcon svg {
+  width: 15px;
+  height: 15px;
+}
+.actionLabel {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.actionPill {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--jade-ink);
+  background: color-mix(in srgb, var(--jade) 14%, transparent);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+
+/* Silent standing note — never names the reason (safety veto). */
+.standing {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: var(--radius-badge);
+  background: color-mix(in srgb, var(--plum) 8%, transparent);
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Staggered entrance. */
+.hero,
+.group {
+  animation: trackerIn var(--dur-base) var(--ease) both;
+}
+.tracker > *:nth-child(2) {
+  animation-delay: 60ms;
+}
+.tracker > *:nth-child(3) {
+  animation-delay: 120ms;
+}
+.tracker > *:nth-child(4) {
+  animation-delay: 180ms;
+}
+
+@keyframes trackerIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fillGrow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes markPop {
+  0% {
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero,
+  .group,
+  .heroFill,
+  .fill,
+  .critMet .critMark {
+    animation: none;
+  }
+}
+
+/* ── Loading placeholder — checking state (live signals in flight) ── */
+.checking {
+  height: 96px;
+  border-radius: var(--radius-badge);
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--plum) 7%, transparent) 30%,
+    color-mix(in srgb, var(--plum) 12%, transparent) 50%,
+    color-mix(in srgb, var(--plum) 7%, transparent) 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmerSlide 1.4s linear infinite;
+}
+@keyframes shimmerSlide {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .checking {
+    animation: none;
+    background: color-mix(in srgb, var(--plum) 8%, transparent);
   }
 }

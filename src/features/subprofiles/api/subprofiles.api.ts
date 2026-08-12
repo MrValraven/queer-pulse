@@ -5,6 +5,7 @@ import {
   apiPut,
   apiDelete,
 } from "../../../shared/api/client";
+import type { PoemBlock } from "../poem/poemModel";
 
 // ── Wire DTOs (contract C3) ──────────────────────────────────────────────────
 // These types are IDENTICAL to the backend `subprofile-response.ts` views. Keep
@@ -313,32 +314,22 @@ export interface MenuCourse {
   name: string;
   dishes: MenuDish[];
 }
-/** One block of a poem body (poet `poems` section). Stored in the item's
- *  `structured` jsonb blob — no dedicated columns, no migration; round-trips
- *  untouched via `itemToView`/`itemsToInputDto` like `structured.snippet`.
- *  `html` carries inline emphasis + `<br>` line breaks ONLY (allowlist
- *  `em`/`strong`/`br` — see `sanitizePoemHtml`). */
-export type PoemBlock = PoemStanzaBlock | PoemBreakBlock | PoemNoteBlock;
-
-/** A run of verse lines; `<br>`-separated lines preserved verbatim. */
-export interface PoemStanzaBlock {
-  kind: "stanza";
-  id: string;
-  html: string;
-}
-
-/** A stanza/section divider (rendered as an asterism). No text of its own. */
-export interface PoemBreakBlock {
-  kind: "break";
-  id: string;
-}
-
-/** An epigraph / dedication, set in italic and slightly recessed. */
-export interface PoemNoteBlock {
-  kind: "note";
-  id: string;
-  html: string;
-}
+/** Poem block types (poet `poems` section). Single source of truth is
+ *  `../poem/poemModel.ts` — re-exported here so wire-contract consumers keep
+ *  importing from this file. Stored in the item's `structured` jsonb blob —
+ *  no dedicated columns, no migration; round-trips untouched via
+ *  `itemToView`/`itemsToInputDto` like `structured.snippet`. Each stanza/note
+ *  is a `PoemLine[]` (`PoemSpan[]` with inline `em`/`strong` marks) rather
+ *  than an HTML string, so a sanitizer can never flatten line breaks. */
+export type {
+  PoemMark,
+  PoemSpan,
+  PoemLine,
+  PoemBlock,
+  PoemStanzaBlock,
+  PoemBreakBlock,
+  PoemNoteBlock,
+} from "../poem/poemModel";
 
 /** Nested per-item data that doesn't fit flat columns (subprofile_items.structured). */
 export interface ItemStructured {

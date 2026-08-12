@@ -195,16 +195,13 @@ export const resources: Catalog = {
     "O teu perfil é visível às pessoas participantes, mas o contacto direto exige uma ligação partilhada. És contactável, mas com uma camada extra de conforto.",
   "safety.visibility.private.title": "Privado",
   "safety.visibility.private.body":
-    "O teu perfil só é visível à equipa e a quem te avalizou. Apareces na contagem da rede mas não na navegação. A definição certa se saíste do armário há pouco tempo, estás numa situação sensível, ou simplesmente ainda não estás pronte. Não é preciso dar explicações.",
+    "O teu perfil só é visível à equipa e a quem te avalizou. Apareces na contagem da rede mas não na navegação. A definição certa se saíste do armário há pouco tempo, estás numa situação sensível, ou simplesmente ainda não estás pronte — não é preciso dar explicações. Nunca partilhamos a tua participação para fora da QueerPulse sem o teu consentimento explícito.",
 
   "safety.vouching.title": "O modelo de <em>aval</em>",
   "safety.vouching.body1":
-    "Toda a gente na rede é avalizada por pelo menos uma pessoa que já lá está. Isto não é gatekeeping — é o mecanismo que faz a sala parecer digna de confiança. Quando alguém te avaliza, está a dizer: <b>conheço esta pessoa e acho que pertence aqui.</b>",
+    "A maior parte das pessoas chega avalizada por alguém que já está na rede; algumas são aprovadas diretamente pela nossa equipa. De qualquer forma, ninguém chega aqui sozinhe. Isto não é gatekeeping — é o mecanismo que faz a sala parecer digna de confiança. Quando alguém te avaliza, está a dizer: <b>conheço esta pessoa e acho que pertence aqui.</b>",
   "safety.vouching.body2":
     "Quem avaliza não é responsável pelas pessoas que avaliza, mas presta contas de forma real. Se uma pessoa avalizada tiver um comportamento prejudicial, quem a avalizou faz parte da conversa sobre o que acontece a seguir.",
-  "safety.vouching.calloutHead": "Sobre estar fora do armário há pouco tempo",
-  "safety.vouching.calloutBody":
-    "Se ainda não estás fora do armário na tua vida profissional, podes estar como Privade dentro da QueerPulse e mesmo assim beneficiar da comunidade. Nunca partilhamos a tua participação para fora sem consentimento explícito.",
 
   "safety.dataUse.title": "O que <em>não fazemos</em> com os teus dados",
   "safety.dataUse.body1":
@@ -219,10 +216,10 @@ export const resources: Catalog = {
     "Levamos as preocupações de segurança a sério, e respondemos-lhes nós próprios — não um sistema automático. Se alguém te fez sentir insegure, se uma mensagem ultrapassou um limite, se algo não te parece bem, diz-nos.",
   "safety.report.body2":
     "Tratamos cada denúncia com discrição. Não serás identificade à pessoa que estás a denunciar a menos que escolhas sê-lo. Nós damos seguimento.",
-  "safety.report.boxTitle": "Contacta a equipa",
+  "safety.report.boxTitle": "Denunciar uma preocupação",
   "safety.report.boxBody":
-    "Se precisas de denunciar uma preocupação, contacta diretamente. Lemos tudo o que é enviado para este endereço e procuramos responder dentro de 24 horas.",
-  "safety.report.emailCta": "safe@queerpulse.pt",
+    "Usa o formulário de denúncia — chega diretamente à equipa, e procuramos responder dentro de 24 horas.",
+  "safety.report.formCta": "Abrir o formulário de denúncia",
 
   "safety.leaving.title": "Sair da <em>rede</em>",
   "safety.leaving.body1":

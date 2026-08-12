@@ -1,9 +1,8 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { Button, Sending } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { focusFirstErrorAfterRender } from "../../shared/lib/focusFirstError";
-import { routes } from "../../app/routeMap";
+import { GuidelinesLink } from "../marketing/GuidelinesLink";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateJoinRequest } from "./api/useCreateJoinRequest";
@@ -39,7 +38,9 @@ export function RequestInviteForm({
   const [touched, setTouched] = useState(false);
   const [why, setWhy] = useState("");
   const [mutual, setMutual] = useState("");
+  const [mutualTouched, setMutualTouched] = useState(false);
   const [agreed, setAgreed] = useState(false);
+  const [hasRead, setHasRead] = useState(false);
   const [is18, setIs18] = useState(false);
   const [under18, setUnder18] = useState(false);
   // Flipped by the first rejected submit. Until then, only the blur-driven
@@ -52,6 +53,12 @@ export function RequestInviteForm({
   const emailEmpty = email.trim().length === 0;
   const emailError = (touched || attempted) && !emailEmpty && !emailValid;
   const emailMissing = attempted && emailEmpty;
+  // The mutual is optional, but if given it must be a valid email — that's the
+  // whole point of asking for it (a name we can't match doesn't help a reviewer).
+  const mutualEmpty = mutual.trim().length === 0;
+  const mutualValid = EMAIL_RE.test(mutual.trim());
+  const mutualError =
+    (mutualTouched || attempted) && !mutualEmpty && !mutualValid;
   const firstMissing = attempted && first.trim().length === 0;
   const whyMissing = attempted && why.trim().length === 0;
   const consentMissing = attempted && !agreed;
@@ -60,6 +67,7 @@ export function RequestInviteForm({
   const canSubmit =
     first.trim().length > 0 &&
     emailValid &&
+    (mutualEmpty || mutualValid) &&
     why.trim().length > 0 &&
     agreed &&
     is18 &&
@@ -78,9 +86,9 @@ export function RequestInviteForm({
       return;
     }
     try {
-      // The mutual isn't a field on POST /join-requests, so fold it into the
-      // message rather than dropping it — the form asks for it and the copy
-      // beside it says naming one helps, so a reviewer has to actually see it.
+      // The mutual email isn't a field on POST /join-requests, so fold it into
+      // the message rather than dropping it — the form asks for it so a reviewer
+      // can match the request to an existing member, and must actually see it.
       const named = mutual.trim();
       const message = named
         ? `${why.trim()}\n\n${t("auth:requestInvite.field.mutual.messagePrefix", { name: named })}`
@@ -141,6 +149,8 @@ export function RequestInviteForm({
         setWhy={setWhy}
         mutual={mutual}
         setMutual={setMutual}
+        mutualError={mutualError}
+        onMutualBlur={() => setMutualTouched(true)}
       />
 
       <div className={styles.agreeRow}>
@@ -148,23 +158,23 @@ export function RequestInviteForm({
           id="ri-agree"
           type="checkbox"
           checked={agreed}
+          disabled={!hasRead}
           onChange={(e) => setAgreed(e.target.checked)}
           aria-invalid={consentMissing}
+          aria-describedby={!hasRead ? "ri-agree-hint" : undefined}
         />
         <label htmlFor="ri-agree">
           <Translation
             i18nKey="auth:requestInvite.agree"
-            components={{
-              guidelines: (
-                <Link
-                  to={routes.guidelines}
-                  onClick={(e) => e.stopPropagation()}
-                />
-              ),
-            }}
+            components={{ guidelines: <GuidelinesLink onRead={() => setHasRead(true)} /> }}
           />
         </label>
       </div>
+      {!hasRead && (
+        <p id="ri-agree-hint" className={styles.readHint}>
+          {t("auth:requestInvite.readHint")}
+        </p>
+      )}
 
       <AgeAttestation
         id="ri-age"

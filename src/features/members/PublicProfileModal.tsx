@@ -1,29 +1,12 @@
-import { FiArrowRight, FiCheck } from "react-icons/fi";
+import { FiArrowRight } from "react-icons/fi";
 import { Button, Modal, Toggle } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { usePublicProfile } from "../../app/providers/usePublicProfile";
-import type { EligibilityCriterion } from "./publicFigure";
+import { EligibilityTracker } from "./EligibilityTracker";
 import styles from "./PublicProfileModal.module.css";
-
-/** One row of the "how you unlock a public profile" checklist. */
-function CriterionRow({ criterion }: { criterion: EligibilityCriterion }) {
-  const { t } = useTranslation();
-  const { met, labelKey, hintKey } = criterion;
-  return (
-    <li className={`${styles.crit} ${met ? styles.critMet : ""}`}>
-      <span className={styles.critMark} aria-hidden>
-        {met ? <FiCheck /> : <span className={styles.critDot} />}
-      </span>
-      <span className={styles.critText}>
-        <span className={styles.critLabel}>{t(labelKey)}</span>
-        <span className={styles.critHint}>{t(hintKey)}</span>
-      </span>
-    </li>
-  );
-}
 
 /**
  * The member's own public-profile control, housed in the shared Modal (opened
@@ -32,7 +15,8 @@ function CriterionRow({ criterion }: { criterion: EligibilityCriterion }) {
  */
 export function PublicProfileModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
-  const { enabled, toggle, saving, eligibility } = usePublicProfile();
+  const { enabled, toggle, saving, eligibility, eligibilityStatus, retryEligibility } =
+    usePublicProfile();
   const { showToast } = useToast();
 
   // The preference persists but nothing reads it yet: there's no unauthenticated
@@ -53,9 +37,43 @@ export function PublicProfileModal({ onClose }: { onClose: () => void }) {
     );
   }
 
+  if (eligibilityStatus === "loading") {
+    return (
+      <Modal
+        onClose={onClose}
+        eyebrow={t("members:publicProfile.control.locked.eyebrow")}
+        title={
+          <Translation
+            i18nKey="members:publicProfile.control.checking.title"
+            components={{ em: <em /> }}
+          />
+        }
+        sub={t("members:publicProfile.control.checking.body")}
+      >
+        <div className={styles.checking} aria-busy="true" />
+      </Modal>
+    );
+  }
+
+  if (eligibilityStatus === "error") {
+    return (
+      <Modal
+        onClose={onClose}
+        eyebrow={t("members:publicProfile.control.locked.eyebrow")}
+        title={t("members:publicProfile.control.error.title")}
+        sub={t("members:publicProfile.control.error.body")}
+        footer={
+          <Button variant="ghost" onClick={retryEligibility}>
+            {t("members:publicProfile.control.error.retry")}
+          </Button>
+        }
+      >
+        <span />
+      </Modal>
+    );
+  }
+
   if (!eligibility.eligible) {
-    const metCount = eligibility.criteria.filter((criterion) => criterion.met)
-      .length;
     return (
       <Modal
         onClose={onClose}
@@ -67,20 +85,8 @@ export function PublicProfileModal({ onClose }: { onClose: () => void }) {
           />
         }
         sub={t("members:publicProfile.control.locked.lede")}
-        footer={
-          <p className={styles.progress}>
-            {t("members:publicProfile.control.locked.progress", {
-              met: metCount,
-              total: eligibility.criteria.length,
-            })}
-          </p>
-        }
       >
-        <ul className={styles.list}>
-          {eligibility.criteria.map((criterion) => (
-            <CriterionRow key={criterion.key} criterion={criterion} />
-          ))}
-        </ul>
+        <EligibilityTracker eligibility={eligibility} />
       </Modal>
     );
   }

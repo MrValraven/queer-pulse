@@ -143,7 +143,8 @@ const DataProviders = composeProviders([
   EmployerAffiliationProvider,
   PostedJobsProvider,
   ProfileProvider,
-  // Inside ProfileProvider: eligibility is derived from the live self profile.
+  // Live eligibility now comes from GET /me/public-eligibility, not the live
+  // self profile — this provider no longer reads useProfileData().
   PublicProfileProvider,
   ProfileThemeProvider,
   ConnectionsProvider,

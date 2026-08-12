@@ -56,6 +56,28 @@ export interface PublicProfileDTO {
   activity: PublicProfileActivityDTO[];
 }
 
+/** The signed-in member's real eligibility signals (live mode). */
+export interface PublicEligibilitySignalsDto {
+  verified: boolean;
+  tenureDays: number;
+  publishedPieces: string[];
+  hostedOpenEvents: string[];
+  workshopsTaught: number;
+  publishedSubprofiles: number;
+  vouchCount: number;
+  endorsementCount: number;
+  connectionCount: number;
+  eventsAttended: number;
+  communityPosts: number;
+  lastActiveDaysAgo: number;
+  standingOk: boolean;
+}
+
+/** GET /me/public-eligibility */
+export function getPublicEligibilitySignals(): Promise<PublicEligibilitySignalsDto> {
+  return apiGet<PublicEligibilitySignalsDto>("/me/public-eligibility");
+}
+
 /** GET /me/public-profile */
 export async function getPublicProfileVisibility(): Promise<PublicProfileVisibilityDTO> {
   const res =

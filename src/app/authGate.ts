@@ -69,10 +69,13 @@ const GATED_PATTERNS: string[] = [
   "/forum",
   "/thread",
   "/thread/*",
-  // Community stories & pathways
+  // Community stories & pathways. The coming-out guide (/coming-out) is a public
+  // support page — it renders in the marketing PageShell and, like the resources
+  // and safety/crisis pages, must reach a questioning visitor who isn't signed
+  // in, so it is intentionally NOT gated here. `/parents` only redirects to the
+  // gated `/family`, so gating it keeps the bounce consistent.
   "/changemakers",
   "/changemaker/*",
-  "/coming-out",
   "/parents",
   "/caregivers",
   // Member-only actions

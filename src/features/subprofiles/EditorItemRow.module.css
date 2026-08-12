@@ -7,6 +7,14 @@
    is what actually keeps this row from ever forcing horizontal scroll on
    narrow phones — it lets the title/subtitle ellipsize instead of pushing
    the fixed-width grip/action buttons out of the row. */
+/* Thumbnail preview of the row's image (photo-gallery photos, portfolio
+   items) sitting between the grip and the text column, so the user can see
+   WHICH image they're reordering. Fixed square that never shrinks or grows —
+   `flex: none` keeps it stable while the text column absorbs the slack. */
+.thumb {
+  flex: none;
+}
+
 .content {
   display: flex;
   flex-direction: column;

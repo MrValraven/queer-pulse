@@ -405,22 +405,47 @@ export const members: Catalog = {
     "Guardado — vamos ativar isto quando os perfis públicos abrirem",
   "publicProfile.control.toast.failed":
     "Não conseguimos guardar — a tua preferência ficou como estava. Tenta outra vez daqui a pouco.",
+  "publicProfile.control.checking.title": "A ver <em>onde estás</em>",
+  "publicProfile.control.checking.body":
+    "Um momento — estamos a somar as tuas contribuições, apadrinhamentos e tempo por aqui.",
+  "publicProfile.control.error.title": "Não conseguimos verificar agora",
+  "publicProfile.control.error.body":
+    "Algo impediu o carregamento do teu progresso. A culpa não é tua — tenta outra vez daqui a pouco.",
+  "publicProfile.control.error.retry": "Tentar de novo",
 
   // ── Public-profile hero badge (PublicProfileBadge) ──────────────────────────
   "publicProfile.badge.label": "Ficar público",
 
   // ── Critérios de elegibilidade pública (publicFigure.ts) ───────────────────
-  "publicProfile.eligibility.contributes.label": "Contribui publicamente",
-  "publicProfile.eligibility.contributes.hint":
-    "Publica textos ou organiza um convívio aberto que o público possa ver.",
   "publicProfile.eligibility.verified.hint":
     "Confirma a tua identidade para que se saiba que és mesmo tu.",
-  "publicProfile.eligibility.established.label": "Um ano na QueerPulse",
-  "publicProfile.eligibility.established.hint":
-    "Os perfis públicos abrem depois do teu primeiro ano aqui.",
-  "publicProfile.eligibility.trusted.label": "Aval de 2 ou mais pessoas",
-  "publicProfile.eligibility.trusted.hint":
-    "Duas ou mais pessoas a avalizarem-te desbloqueia isto.",
+  "publicProfile.eligibility.tenure.label": "Uma temporada na QueerPulse",
+  "publicProfile.eligibility.tenure.hint":
+    "Os perfis públicos abrem depois dos teus primeiros 90 dias aqui.",
+  "publicProfile.eligibility.tenure.remaining_one": "falta {count} dia",
+  "publicProfile.eligibility.tenure.remaining_other": "faltam {count} dias",
+  "publicProfile.eligibility.family.contribution.label":
+    "Contribuição pública",
+  "publicProfile.eligibility.family.trust.label": "Confiança da comunidade",
+  "publicProfile.eligibility.family.participation.label":
+    "Participação constante",
+  "publicProfile.eligibility.progress.pct":
+    "{pct}% do caminho para um perfil público",
+  "publicProfile.eligibility.gates.heading": "Primeiro, o essencial",
+  "publicProfile.eligibility.families.heading": "Depois, como tudo soma",
+  "publicProfile.eligibility.actions.heading": "O que te faz avançar",
+  "publicProfile.eligibility.action.verify": "Confirma a tua identidade",
+  "publicProfile.eligibility.action.tenure":
+    "Continua a aparecer — o tempo trata disto",
+  "publicProfile.eligibility.action.host":
+    "Publica algo ou organiza um evento aberto",
+  "publicProfile.eligibility.action.vouch":
+    "Pede a quem te conhece para te apadrinhar",
+  "publicProfile.eligibility.action.attend": "Aparece a um encontro ou dois",
+  "publicProfile.eligibility.action.points": "+{points}",
+  "publicProfile.eligibility.family.amount": "{points} / {cap}",
+  "publicProfile.eligibility.standing.blocked":
+    "Isto não pode abrir agora. Não há nada a fazer aqui — vai resolver-se.",
 
   // ── Etiquetas de estatísticas do perfil público (currentUserPublic.data) ──
   "publicProfile.stat.poemsPublished": "Poemas publicados",

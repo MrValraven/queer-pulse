@@ -101,7 +101,7 @@ export const homepage: Catalog = {
   "painPoints.exchange4.cta": "Explore skill swaps",
 
   "painPoints.hero2.eyebrow": "The gap we felt hardest",
-  "painPoints.hero2.question": '"What happens if something goes wrong?"',
+  "painPoints.hero2.question": '"What if I\'m not okay?"',
   "painPoints.hero2.heading": "So we built <em>a safety net.</em>",
   "painPoints.hero2.body":
     "Therapists who get it, peer support that doesn't judge, and crisis lines that pick up — all vetted by the community that needs them.",
@@ -114,13 +114,13 @@ export const homepage: Catalog = {
     '"I want to do something, not just post about it."',
   "painPoints.exchange5.heading": "So we built <em>a way to act.</em>",
   "painPoints.exchange5.body":
-    "Local campaigns, mutual aid, and organising — real ways to move something, together.",
-  "painPoints.exchange5.cta": "See what's moving",
+    "Local campaigns, mutual aid, and organising — real ways to make something happen, together.",
+  "painPoints.exchange5.cta": "Get involved",
 
   "painPoints.exchange6.question": '"Do I actually know my rights here?"',
   "painPoints.exchange6.heading": "So we built <em>plain-language guides.</em>",
   "painPoints.exchange6.body":
-    "Legal information for LGBTQ+ life in Portugal, written in plain language — no law degree required.",
+    "Clear legal information for LGBTQ+ life in Portugal — no law degree required.",
   "painPoints.exchange6.cta": "Read the guides",
 
   "painPoints.exchange7.question": '"Will I actually be safe at this job?"',
@@ -141,6 +141,22 @@ export const homepage: Catalog = {
   "discovery.vouchedBy": "Vouched by {name}",
   "discovery.viewProfile": "View profile",
   "discovery.sayHello": "Say hello",
+  "membersExplainer.eyebrow": "Members-only",
+  "membersExplainer.title": "Members <em>power</em> QueerPulse",
+  "membersExplainer.titlePlain": "Members power QueerPulse",
+  "membersExplainer.lede":
+    "The member directory opens up once you're in. Here's why we keep it that way — and how to join.",
+  "membersExplainer.pillars.vouched.title": "Real people, vouched in",
+  "membersExplainer.pillars.vouched.body":
+    "Every member is invited and vouched for by someone already here. No bots, no strangers scraping the list.",
+  "membersExplainer.pillars.inside.title": "The good stuff opens from inside",
+  "membersExplainer.pillars.inside.body":
+    "Full profiles, communities and gatherings unlock the moment you become a member.",
+  "membersExplainer.pillars.safe.title": "Invite-only keeps it a safe space",
+  "membersExplainer.pillars.safe.body":
+    "Keeping the directory members-only is how people here get to be fully themselves.",
+  "membersExplainer.requestInviteCta": "Request an invite",
+  "membersExplainer.signInCta": "I'm already a member",
   "discovery.featuredMembersAria": "Featured members",
   "discovery.featureMemberAria": "Show {name}",
 
@@ -180,7 +196,7 @@ export const homepage: Catalog = {
     "Community is stronger <em>when communities connect.</em>",
   "communities.sub":
     "Search or filter the list, then open any community to see the whole room — what it is, what it does, who's inside, and what you unlock by joining.",
-  "communities.browseAllCta": "Browse all communities",
+  "communities.howCommunitiesWorkCta": "How communities work",
   "communities.resultCount.all": "<b>{count}</b> communities",
   "communities.resultCount.shown": "<b>{count}</b> of {total} communities",
 
@@ -229,8 +245,6 @@ export const homepage: Catalog = {
   "communities.spotlight.keptBy": "Kept by <b>{name}</b> & {extra}",
   "communities.spotlight.keptByName": "Kept by <b>{name}</b>",
   "communities.spotlight.sinceLabel": "Since {year}",
-  "communities.spotlight.peekInsideCta": "Peek inside",
-  "communities.spotlight.joinCta": "Join",
 
   "communities.room.pulse": "the live feed",
   "communities.room.discussions": "threads",

@@ -363,25 +363,11 @@ export function DataPane({
       <Section label={t("settings:data.section.cookiePrivacy")}>
         <ToggleList>
           <ConsentToggleRow
-            title={t("settings:data.consent.analytics.title")}
-            description={t("settings:data.consent.analytics.desc")}
-            checked={consent.analytics}
-            onChange={(next) =>
-              setConsent(
-                { analytics: next, monitoring: consent.monitoring },
-                "settings_pane",
-              )
-            }
-          />
-          <ConsentToggleRow
             title={t("settings:data.consent.monitoring.title")}
             description={t("settings:data.consent.monitoring.desc")}
             checked={consent.monitoring}
             onChange={(next) =>
-              setConsent(
-                { analytics: consent.analytics, monitoring: next },
-                "settings_pane",
-              )
+              setConsent({ monitoring: next }, "settings_pane")
             }
           />
         </ToggleList>

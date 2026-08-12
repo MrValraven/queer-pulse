@@ -7,61 +7,48 @@ import {
   type ReactNode,
 } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useProfileData } from "./useProfile";
 import { useDemoMode } from "./DemoModeProvider";
 import { useAuth } from "./authContext";
 import {
   evaluatePublicEligibility,
-  type ContributionSignals,
+  type PublicEligibility,
 } from "../../features/members/publicFigure";
-import { CURRENT_USER_PUBLIC } from "../../features/members/currentUserPublic.data";
+import {
+  demoEligibilitySignals,
+  liveEligibilitySignals,
+} from "../../features/members/eligibilitySignals.data";
 import {
   putPublicProfileVisibility,
   type PublicProfileVisibilityDTO,
 } from "../../features/members/api/publicProfile.api";
+import { usePublicEligibilitySignals } from "../../features/members/api/usePublicEligibilitySignals";
 import { logError } from "../../shared/observability/logger";
 import {
   PublicProfileContext,
   type PublicProfileContextValue,
 } from "./usePublicProfile";
 
-/**
- * Public-pieces count for the demo fixture — the mock member's published
- * writing plus the open events they host.
- */
-const DEMO_SIGNALS: ContributionSignals = {
-  publicPieces:
-    CURRENT_USER_PUBLIC.writing.length + CURRENT_USER_PUBLIC.hosting.length,
+/** Shown while live signals are loading/errored — locked, no score, no actions. */
+const PENDING_ELIGIBILITY: PublicEligibility = {
+  gates: [],
+  score: { total: 0, target: 100, families: [] },
+  standingOk: true,
+  eligible: false,
+  nextActions: [],
 };
 
 /**
- * Public-pieces count for a real member, read off their own profile.
- *
- * `activity` is the member's recent *public* activity across the platform and
- * `work` is the selected work they choose to surface — the two public-facing
- * signals the profile payload actually carries. It's a proxy until the backend
- * exposes a contributions endpoint, but it is *theirs*: eligibility for a real
- * member must never be decided by a fixture describing a fictional one.
- */
-function signalsFromProfile(profile: {
-  activity: unknown[];
-  work: unknown[];
-}): ContributionSignals {
-  return { publicPieces: profile.activity.length + profile.work.length };
-}
-
-/**
  * Owns the member's public-profile preference and derives eligibility from their
- * live profile. Must sit inside `ProfileProvider`, since eligibility reads
- * `useProfileData()`.
+ * live signals.
  *
  * Dual-mode: demo mode is session-only (no network) and scores eligibility from
  * the `currentUserPublic.data` fixture, exactly as the prototype always did.
  * Live mode reads/writes GET+PUT /me/public-profile and scores eligibility from
- * the signed-in member's real profile.
+ * GET /me/public-eligibility, fetched asynchronously — `eligibilityStatus`
+ * tells consumers whether that fetch is still loading, errored, or ready, and
+ * `eligibility` stays a neutral locked placeholder until it resolves.
  */
 export function PublicProfileProvider({ children }: { children: ReactNode }) {
-  const { profile } = useProfileData();
   const { demoMode } = useDemoMode();
   const { loggedIn } = useAuth();
   const queryClient = useQueryClient();
@@ -69,14 +56,39 @@ export function PublicProfileProvider({ children }: { children: ReactNode }) {
 
   const live = !demoMode && loggedIn;
 
-  const eligibility = useMemo(
-    () =>
-      evaluatePublicEligibility(
-        profile,
-        demoMode ? DEMO_SIGNALS : signalsFromProfile(profile),
-      ),
-    [profile, demoMode],
-  );
+  const signalsQuery = usePublicEligibilitySignals(live);
+
+  const eligibility = useMemo<PublicEligibility>(() => {
+    // A single reference "now" the pure evaluator scores against — resolved here
+    // (the impure boundary), not inside the evaluator, so renders stay stable
+    // within a session. ISO string keeps the evaluator wall-clock-free.
+    const nowIso = new Date().toISOString();
+    if (demoMode) {
+      return evaluatePublicEligibility(demoEligibilitySignals(nowIso));
+    }
+    if (signalsQuery.data) {
+      return evaluatePublicEligibility(
+        liveEligibilitySignals(signalsQuery.data, nowIso),
+      );
+    }
+    return PENDING_ELIGIBILITY;
+  }, [demoMode, signalsQuery.data]);
+
+  const eligibilityStatus: "loading" | "ready" | "error" = demoMode
+    ? "ready"
+    : signalsQuery.isError
+      ? "error"
+      : signalsQuery.data
+        ? "ready"
+        : "loading";
+
+  // Captured by name rather than closing over `signalsQuery` (a fresh object
+  // every render) — `refetch` itself is a stable reference, so `retryEligibility`
+  // stays stable too and doesn't bust the context `value` memo below.
+  const { refetch: refetchSignals } = signalsQuery;
+  const retryEligibility = useCallback(() => {
+    if (live) void refetchSignals();
+  }, [live, refetchSignals]);
 
   // Whether this live session has already adopted the stored preference.
   const hydrated = useRef(false);
@@ -127,8 +139,26 @@ export function PublicProfileProvider({ children }: { children: ReactNode }) {
   const toggle = useCallback(() => setEnabled(!enabled), [setEnabled, enabled]);
 
   const value = useMemo<PublicProfileContextValue>(
-    () => ({ enabled, setEnabled, toggle, saving, eligibility, hydrate }),
-    [enabled, setEnabled, toggle, saving, eligibility, hydrate],
+    () => ({
+      enabled,
+      setEnabled,
+      toggle,
+      saving,
+      eligibility,
+      eligibilityStatus,
+      retryEligibility,
+      hydrate,
+    }),
+    [
+      enabled,
+      setEnabled,
+      toggle,
+      saving,
+      eligibility,
+      eligibilityStatus,
+      retryEligibility,
+      hydrate,
+    ],
   );
 
   return (

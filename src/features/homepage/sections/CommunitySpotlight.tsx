@@ -2,7 +2,6 @@ import {
   FiArrowRight,
   FiCheck,
   FiClock,
-  FiEye,
   FiGlobe,
   FiLock,
   FiLogIn,
@@ -268,12 +267,9 @@ function FullSpotlight({ community: d }: { community: FullCommunity }) {
             </span>
           </div>
           <div className={styles.actions}>
-            <Button variant="ghost" to={communityHref(d.anchor)}>
-              <FiEye aria-hidden />{" "}
-              {t("homepage:communities.spotlight.peekInsideCta")}
-            </Button>
-            <Button variant="primary" to={communityHref(d.anchor)}>
-              {t("homepage:communities.spotlight.joinCta")}
+            <Button variant="primary" to={routes.aboutCommunities}>
+              {t("homepage:communities.howCommunitiesWorkCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           </div>
         </div>

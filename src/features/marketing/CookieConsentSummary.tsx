@@ -6,21 +6,16 @@ import { routes } from "../../app/routeMap";
 import styles from "./CookiesPage.module.css";
 
 /**
- * The sticky companion column of the cookie consent center: a live summary of
- * the current choice plus the Save / Accept-all / Essential-only actions and a
- * link out to the in-app preference center. Rendered through LegalDoc's `aside`
+ * The sticky companion column of the cookie center: a read-only summary of the
+ * cookies we set — all strictly necessary or functional, so all always-on — plus
+ * a button out to the in-app preference center for the one remaining opt-in
+ * (error monitoring, which isn't a cookie). Rendered through LegalDoc's `aside`
  * slot, which turns the doc into a two-column layout.
  */
 export function CookieConsentSummary({
-  analytics,
-  onSave,
-  onAcceptAll,
-  onEssentialOnly,
+  onManagePreferences,
 }: {
-  analytics: boolean;
-  onSave: () => void;
-  onAcceptAll: () => void;
-  onEssentialOnly: () => void;
+  onManagePreferences: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -48,27 +43,9 @@ export function CookieConsentSummary({
             {t("marketing:cookies.alwaysOn")}
           </span>
         </div>
-        <div className={styles.sumRow}>
-          <span className={styles.sumName}>
-            {t("marketing:cookies.summary.analytics")}
-          </span>
-          <span
-            className={`${styles.sumVal} ${analytics ? styles.sumOn : styles.sumOff}`}
-          >
-            {analytics
-              ? t("marketing:cookies.summary.on")
-              : t("marketing:cookies.summary.off")}
-          </span>
-        </div>
         <div className={styles.actions}>
-          <Button variant="primary" onClick={onSave}>
-            {t("marketing:cookies.actions.save")}
-          </Button>
-          <Button variant="ghost" onClick={onAcceptAll}>
-            {t("marketing:cookies.actions.acceptAll")}
-          </Button>
-          <Button variant="ghost" onClick={onEssentialOnly}>
-            {t("marketing:cookies.actions.essentialOnly")}
+          <Button variant="primary" onClick={onManagePreferences}>
+            {t("marketing:cookies.actions.managePreferences")}
           </Button>
         </div>
       </div>

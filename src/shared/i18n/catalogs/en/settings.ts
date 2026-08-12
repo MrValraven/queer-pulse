@@ -301,9 +301,6 @@ export const settings: Catalog = {
     "If we hold data about you that is factually incorrect, you have the right to have it corrected.",
   "data.correct.cta": "Contact data team",
   "data.section.cookiePrivacy": "Cookie & privacy choices",
-  "data.consent.analytics.title": "Analytics & usage data",
-  "data.consent.analytics.desc":
-    "Anonymous, aggregate usage patterns to improve the platform. No individual tracking, no ad networks. Off unless you turn it on.",
   "data.consent.monitoring.title": "Crash & error reporting",
   "data.consent.monitoring.desc":
     "Automatic diagnostics when something breaks, so we can fix it faster. No advertising or profiling data.",

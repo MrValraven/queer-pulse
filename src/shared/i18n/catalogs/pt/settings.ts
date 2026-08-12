@@ -304,9 +304,6 @@ export const settings: Catalog = {
     "Se tivermos dados sobre ti que estejam factualmente incorretos, tens o direito de os fazer corrigir.",
   "data.correct.cta": "Contactar a equipa de dados",
   "data.section.cookiePrivacy": "Escolhas de cookies e privacidade",
-  "data.consent.analytics.title": "Dados analíticos e de utilização",
-  "data.consent.analytics.desc":
-    "Padrões de utilização anónimos e agregados para melhorar a plataforma. Sem monitorização individual, sem redes publicitárias. Desligado a menos que o ativares.",
   "data.consent.monitoring.title": "Relatórios de falhas e erros",
   "data.consent.monitoring.desc":
     "Diagnósticos automáticos quando algo falha, para conseguirmos corrigi-lo mais depressa. Sem dados de publicidade ou definição de perfis.",

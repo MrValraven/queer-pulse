@@ -16,9 +16,12 @@ export function TableMenuHeader({ persona }: { persona: SkinExtrasPersona }) {
     <div className="menuhead">
       <span className="menuhead-no">{meta.no}</span>
       <span className="menuhead-when">{meta.when}</span>
-      {meta.practical.length > 0 && (
+      {/* `practical` is typed required, but the block editor persists partial
+          objects (only `no`/`when` filled) — guard the sub-field so reading
+          `.length` off an absent list can't white-screen the page. */}
+      {(meta.practical?.length ?? 0) > 0 && (
         <span className="menuhead-practical">
-          {meta.practical.join(" · ")}
+          {meta.practical?.join(" · ")}
         </span>
       )}
     </div>

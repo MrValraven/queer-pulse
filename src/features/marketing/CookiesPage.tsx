@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
 import { PageHero } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useConsent } from "../../app/providers/useConsent";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -12,53 +10,14 @@ import { CookieCategoryCards } from "./CookieCategoryCards";
 import { CookieConsentSummary } from "./CookieConsentSummary";
 
 export function CookiesPage() {
-  const { showToast } = useToast();
   const { t } = useTranslation();
-  // Persist through the real consent gate (spec 07) instead of throwing the
-  // choice away. Analytics is the one opt-in category this page surfaces;
-  // `monitoring` (error tracking) is left to the in-app preference center and
-  // is preserved untouched on a granular save.
-  const {
-    consent,
-    setConsent,
-    acceptAll: acceptAllConsent,
-    rejectAll,
-  } = useConsent();
-  const [analytics, setAnalytics] = useState(consent.analytics);
+  // Every cookie we set is strictly necessary or functional — all always-on —
+  // so this page has no cookie toggles to save. The one remaining opt-in (error
+  // monitoring, spec 01) isn't cookie-based; it lives in the in-app preference
+  // center, which this page links out to.
+  const { openPreferences } = useConsent();
   const pageTitle = t("marketing:cookies.meta.title");
   const pageDescription = t("marketing:cookies.meta.description");
-
-  // Reflect the stored choice — including the backend reconciliation the
-  // provider runs on mount in live mode — so the toggle never drifts from what
-  // is actually persisted.
-  useEffect(() => {
-    setAnalytics(consent.analytics);
-  }, [consent.analytics]);
-
-  const toggleFor: Record<
-    string,
-    { value: boolean; set: (value: boolean) => void }
-  > = {
-    analytics: { value: analytics, set: setAnalytics },
-  };
-
-  function save() {
-    setConsent(
-      { analytics, monitoring: consent.monitoring },
-      "preference_center",
-    );
-    showToast(t("marketing:cookies.toast.saved"), "success");
-  }
-  function acceptAll() {
-    setAnalytics(true);
-    acceptAllConsent("preference_center");
-    showToast(t("marketing:cookies.toast.saved"), "success");
-  }
-  function essentialOnly() {
-    setAnalytics(false);
-    rejectAll("preference_center");
-    showToast(t("marketing:cookies.toast.saved"), "success");
-  }
 
   return (
     <>
@@ -83,15 +42,8 @@ export function CookiesPage() {
             sub={t("marketing:cookies.sub")}
           />
         }
-        body={<CookieCategoryCards toggleFor={toggleFor} />}
-        aside={
-          <CookieConsentSummary
-            analytics={analytics}
-            onSave={save}
-            onAcceptAll={acceptAll}
-            onEssentialOnly={essentialOnly}
-          />
-        }
+        body={<CookieCategoryCards />}
+        aside={<CookieConsentSummary onManagePreferences={openPreferences} />}
         related={
           <Outro
             title={

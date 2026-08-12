@@ -185,16 +185,13 @@ export const resources: Catalog = {
     "Your profile is visible to members, but direct contact requires a shared connection. You're reachable, but with a layer of warmth built in.",
   "safety.visibility.private.title": "Private",
   "safety.visibility.private.body":
-    "Your profile is visible only to the team and your voucher. You appear in the network count but not in browsing. The right setting if you're newly out, in a sensitive situation, or just not ready. No explanation required.",
+    "Your profile is visible only to the team and whoever vouched you in. You appear in the network count but not in browsing. The right setting if you're newly out, in a sensitive situation, or just not ready — no explanation required. We never share your membership outside QueerPulse without your explicit consent.",
 
   "safety.vouching.title": "The <em>vouching</em> model",
   "safety.vouching.body1":
-    "Every member is vouched for by at least one person already in the network. This isn't gatekeeping — it's the mechanism that makes the room feel trustworthy. When someone vouches for you, they're saying: <b>I know this person, and I think they belong here.</b>",
+    "Most people arrive vouched for by someone already in the network; a few are approved directly by our team. Either way, no one walks in as a stranger. This isn't gatekeeping — it's the mechanism that makes the room feel trustworthy. When someone vouches for you, they're saying: <b>I know this person, and I think they belong here.</b>",
   "safety.vouching.body2":
     "Vouchers aren't responsible for the people they vouch for, but they are accountable in a real way. If a vouched member behaves harmfully, their voucher is part of the conversation about what happens next.",
-  "safety.vouching.calloutHead": "On being newly out",
-  "safety.vouching.calloutBody":
-    "If you're not yet out in your professional life, you can be Private within QueerPulse while still benefiting from the community. We will never share your membership externally without explicit consent.",
 
   "safety.dataUse.title": "What we <em>don't do</em> with your data",
   "safety.dataUse.body1":
@@ -209,10 +206,10 @@ export const resources: Catalog = {
     "We take safety concerns seriously, and we respond to them ourselves — not an automated system. If someone has made you feel unsafe, if a message crossed a line, if something doesn't sit right, tell us.",
   "safety.report.body2":
     "We handle every report with discretion. You will not be identified to the person you're reporting unless you choose to be. We will follow up.",
-  "safety.report.boxTitle": "Get in touch with the team",
+  "safety.report.boxTitle": "Report a concern",
   "safety.report.boxBody":
-    "If you need to report a concern, reach out directly. We read everything sent to this address and aim to respond within 24 hours.",
-  "safety.report.emailCta": "safe@queerpulse.pt",
+    "Use the report form — it reaches the team directly, and we aim to respond within 24 hours.",
+  "safety.report.formCta": "Open the report form",
 
   "safety.leaving.title": "Leaving the <em>network</em>",
   "safety.leaving.body1":

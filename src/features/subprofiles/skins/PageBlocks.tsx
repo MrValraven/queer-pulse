@@ -6,7 +6,10 @@ import type { SkinExtrasPersona } from "../SubprofileSkinExtras";
 export function PageExcerpt({ persona }: { persona: SkinExtrasPersona }) {
   const { t } = useTranslation();
   const excerpt = persona.skinData?.excerpt;
-  if (!excerpt || excerpt.lines.length === 0) return null;
+  // `lines` is typed required, but the block editor persists partial objects
+  // (e.g. only `from` filled, `lines` never added), so guard the sub-field —
+  // reading `.length` off an absent `lines` white-screened the whole page.
+  if (!excerpt || !excerpt.lines || excerpt.lines.length === 0) return null;
 
   return (
     <div className="excerpt">

@@ -6,6 +6,10 @@ const SafeSpacesPage = lazyNamed(() => import("./SafeSpacesPage"), "SafeSpacesPa
 const SafeSpaceDetailPage = lazyNamed(() => import("./SafeSpaceDetailPage"), "SafeSpaceDetailPage");
 const HateCrimePage = lazyNamed(() => import("./HateCrimePage"), "HateCrimePage");
 const ReportPage = lazyNamed(() => import("./ReportPage"), "ReportPage");
+const ReportingGuidePage = lazyNamed(
+  () => import("./ReportingGuidePage"),
+  "ReportingGuidePage",
+);
 const BlockMutePage = lazyNamed(() => import("./BlockMutePage"), "BlockMutePage");
 const AppealOutcomePage = lazyNamed(() => import("./AppealOutcomePage"), "AppealOutcomePage");
 const AppealSubmitPage = lazyNamed(() => import("./AppealSubmitPage"), "AppealSubmitPage");
@@ -17,6 +21,7 @@ export function safetyRoutes() {
     <>
       <Route path={routes.hateCrime} element={<HateCrimePage />} />
       <Route path={routes.report} element={<ReportPage />} />
+      <Route path={routes.reporting} element={<ReportingGuidePage />} />
       <Route path={routes.blockMute} element={<BlockMutePage />} />
       <Route path={routes.appealSubmit} element={<AppealSubmitPage />} />
       <Route path={routes.appealOutcome} element={<AppealOutcomePage />} />

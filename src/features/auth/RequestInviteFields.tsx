@@ -29,13 +29,16 @@ export interface RequestInviteFieldsProps {
   why: string;
   setWhy: (v: string) => void;
   /**
-   * Someone already here who knows them. Not a field on POST /join-requests —
-   * the form folds it into `message` so a reviewer actually sees it. Before
-   * that it was an uncontrolled input whose value went nowhere, while the
-   * "Naming a mutual helps" copy beside it promised otherwise.
+   * The email of a member already here who can vouch for them. Optional, but
+   * when given it must be a valid email — that's how a reviewer matches the
+   * request to a real member. Not a field on POST /join-requests — the form
+   * folds it into `message` so a reviewer actually sees it.
    */
   mutual: string;
   setMutual: (v: string) => void;
+  /** Non-empty but malformed email in the mutual field. */
+  mutualError: boolean;
+  onMutualBlur: () => void;
 }
 
 /**
@@ -60,6 +63,8 @@ export function RequestInviteFields({
   setWhy,
   mutual,
   setMutual,
+  mutualError,
+  onMutualBlur,
 }: RequestInviteFieldsProps) {
   const { t } = useTranslation();
   return (
@@ -124,13 +129,18 @@ export function RequestInviteFields({
           />
         }
         helper={t("auth:requestInvite.field.mutual.helper")}
+        error={mutualError ? t("auth:requestInvite.field.mutual.error") : undefined}
       >
         <input
           id="ri-mutual"
-          type="text"
+          type="email"
+          inputMode="email"
+          autoComplete="off"
           placeholder={t("auth:requestInvite.field.mutual.placeholder")}
           value={mutual}
           onChange={(e) => setMutual(e.target.value)}
+          onBlur={onMutualBlur}
+          aria-invalid={mutualError}
         />
       </FormField>
 

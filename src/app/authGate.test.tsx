@@ -14,10 +14,11 @@ import { requiredCapability, useAuthGateRedirect } from "./authGate";
 let role: MemberRole | null = "member";
 let staffRoles: string[] = [];
 let demoMode = false;
+let loggedIn = true;
 
 vi.mock("./providers/authContext", () => ({
   useAuth: () => ({
-    loggedIn: true,
+    loggedIn,
     checking: false,
     role,
     status: "active",
@@ -50,8 +51,32 @@ describe("requiredCapability", () => {
   });
 });
 
+describe("useAuthGateRedirect: public support pages", () => {
+  beforeEach(() => {
+    loggedIn = false;
+    role = null;
+    staffRoles = [];
+    demoMode = false;
+  });
+
+  it("lets a logged-out visitor reach the coming-out guide", () => {
+    const { result } = renderHook(() => useAuthGateRedirect(), {
+      wrapper: wrapperAt("/coming-out"),
+    });
+    expect(result.current).toBeNull();
+  });
+
+  it("still bounces a logged-out visitor off a gated member surface", () => {
+    const { result } = renderHook(() => useAuthGateRedirect(), {
+      wrapper: wrapperAt("/feed"),
+    });
+    expect(result.current).toBe("/auth/sign-in?next=%2Ffeed");
+  });
+});
+
 describe("useAuthGateRedirect: /magazine/editor capability gate", () => {
   beforeEach(() => {
+    loggedIn = true;
     role = "member";
     staffRoles = [];
     demoMode = false;

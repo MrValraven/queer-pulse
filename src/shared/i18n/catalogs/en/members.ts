@@ -400,22 +400,46 @@ export const members: Catalog = {
     "Saved — we'll turn this on when public profiles open",
   "publicProfile.control.toast.failed":
     "We couldn't save that — your preference is unchanged. Try again in a moment.",
+  "publicProfile.control.checking.title": "Checking <em>where you are</em>",
+  "publicProfile.control.checking.body":
+    "One moment — we're totting up your contributions, vouches, and time here.",
+  "publicProfile.control.error.title": "We couldn't check just now",
+  "publicProfile.control.error.body":
+    "Something got in the way of loading your progress. It's not you — try again in a moment.",
+  "publicProfile.control.error.retry": "Try again",
 
   // ── Public-profile hero badge (PublicProfileBadge) ──────────────────────────
   "publicProfile.badge.label": "Go public",
 
   // ── Public-eligibility criteria (publicFigure.ts) ───────────────────────────
-  "publicProfile.eligibility.contributes.label": "Contributes publicly",
-  "publicProfile.eligibility.contributes.hint":
-    "Publish writing or host an open event the public can see.",
   "publicProfile.eligibility.verified.hint":
     "Confirm your identity so people know it's really you.",
-  "publicProfile.eligibility.established.label": "A year on QueerPulse",
-  "publicProfile.eligibility.established.hint":
-    "Public profiles open up after your first year here.",
-  "publicProfile.eligibility.trusted.label": "Vouched-for by 2+ members",
-  "publicProfile.eligibility.trusted.hint":
-    "A couple of members vouching for you unlocks this.",
+  "publicProfile.eligibility.tenure.label": "A season on QueerPulse",
+  "publicProfile.eligibility.tenure.hint":
+    "Public profiles open up after your first 90 days here.",
+  "publicProfile.eligibility.tenure.remaining_one": "{count} day to go",
+  "publicProfile.eligibility.tenure.remaining_other": "{count} days to go",
+  "publicProfile.eligibility.family.contribution.label": "Public contribution",
+  "publicProfile.eligibility.family.trust.label": "Community trust",
+  "publicProfile.eligibility.family.participation.label":
+    "Sustained participation",
+  "publicProfile.eligibility.progress.pct":
+    "{pct}% of the way to a public profile",
+  "publicProfile.eligibility.gates.heading": "First, the essentials",
+  "publicProfile.eligibility.families.heading": "Then, how it adds up",
+  "publicProfile.eligibility.actions.heading": "What moves you forward",
+  "publicProfile.eligibility.action.verify": "Verify your identity",
+  "publicProfile.eligibility.action.tenure":
+    "Keep showing up — time does this one",
+  "publicProfile.eligibility.action.host":
+    "Publish a piece or host an open event",
+  "publicProfile.eligibility.action.vouch":
+    "Ask a member who knows you to vouch",
+  "publicProfile.eligibility.action.attend": "Come to a gathering or two",
+  "publicProfile.eligibility.action.points": "+{points}",
+  "publicProfile.eligibility.family.amount": "{points} / {cap}",
+  "publicProfile.eligibility.standing.blocked":
+    "This can't open right now. Nothing else to do here — it'll sort itself out.",
 
   // ── Public-profile contribution stat labels (currentUserPublic.data) ──────
   "publicProfile.stat.poemsPublished": "Poems published",

@@ -4,8 +4,12 @@ import {
   type ConsentSource,
 } from "../../shared/api/consent.api";
 
-/** The two opt-in categories a member controls. `necessary` is always true. */
-export type OptInCategory = "analytics" | "monitoring";
+/**
+ * The opt-in category a member controls. `necessary` is always true, and
+ * `analytics` is retired from the UI (there is no analytics service) — it stays
+ * in the wire contract pinned to `false`.
+ */
+export type OptInCategory = "monitoring";
 
 /** "unknown" → the banner shows and everything opt-in is treated as off. */
 export type ConsentStatus = "unknown" | "set";

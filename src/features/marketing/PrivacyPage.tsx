@@ -45,7 +45,7 @@ export function PrivacyPage() {
         }
         meta={[
           t("marketing:privacy.meta.effective", { date: "1 February 2023" }),
-          t("marketing:privacy.meta.lastUpdated", { date: "10 July 2026" }),
+          t("marketing:privacy.meta.lastUpdated", { date: "12 August 2026" }),
           t("marketing:privacy.meta.version", { version: POLICY_VERSION }),
         ]}
         plain={{

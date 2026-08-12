@@ -7,7 +7,7 @@ import { logError } from "../observability/logger";
  * pins this exact version at consent time (see `PrivacyPage` meta); bumping it
  * re-prompts anyone whose stored choice predates the change.
  */
-export const POLICY_VERSION = "3.3";
+export const POLICY_VERSION = "3.4";
 
 /** `necessary` is always on (session/CSRF cookies, theme/i18n prefs). */
 export interface ConsentCategories {

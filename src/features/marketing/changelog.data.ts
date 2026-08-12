@@ -93,6 +93,166 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "privacy-policy-refresh",
+        category: "improvement",
+        date: "12 Aug 2026",
+        ...entryKeys("privacy-policy-refresh"),
+        tag: {
+          labelKey: "marketing:changelog.tag.privacy",
+          to: routes.privacy,
+        },
+      },
+      {
+        id: "members-explainer-modal",
+        category: "feature",
+        date: "12 Aug 2026",
+        ...entryKeys("members-explainer-modal"),
+        tag: {
+          labelKey: "marketing:changelog.tag.requestInvite",
+          to: routes.requestInvite,
+        },
+      },
+      {
+        id: "invite-request-mutual-email",
+        category: "improvement",
+        date: "12 Aug 2026",
+        ...entryKeys("invite-request-mutual-email"),
+        tag: {
+          labelKey: "marketing:changelog.tag.requestInvite",
+          to: routes.requestInvite,
+        },
+      },
+      {
+        id: "report-form-guide-split",
+        category: "improvement",
+        date: "12 Aug 2026",
+        ...entryKeys("report-form-guide-split"),
+        tag: {
+          labelKey: "marketing:changelog.tag.safety",
+          to: routes.reporting,
+        },
+      },
+      {
+        id: "safety-page-report-form",
+        category: "improvement",
+        date: "12 Aug 2026",
+        ...entryKeys("safety-page-report-form"),
+        tag: {
+          labelKey: "marketing:changelog.tag.safety",
+          to: routes.safety,
+        },
+      },
+      {
+        id: "public-profile-eligibility-live",
+        category: "improvement",
+        date: "12 Aug 2026",
+        ...entryKeys("public-profile-eligibility-live"),
+        tag: {
+          labelKey: "marketing:changelog.tag.profile",
+          to: routes.accountProfile,
+        },
+      },
+      {
+        id: "public-profile-eligibility-tracker",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("public-profile-eligibility-tracker"),
+        tag: {
+          labelKey: "marketing:changelog.tag.profile",
+          to: routes.accountProfile,
+        },
+      },
+      {
+        id: "how-communities-work-page",
+        category: "feature",
+        date: "11 Aug 2026",
+        ...entryKeys("how-communities-work-page"),
+        tag: {
+          labelKey: "marketing:changelog.tag.aboutCommunities",
+          to: routes.aboutCommunities,
+        },
+      },
+      {
+        id: "guidelines-read-gate",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("guidelines-read-gate"),
+        tag: {
+          labelKey: "marketing:changelog.tag.guidelines",
+          to: routes.guidelines,
+        },
+      },
+      {
+        id: "guidelines-in-sheet",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("guidelines-in-sheet"),
+        tag: {
+          labelKey: "marketing:changelog.tag.guidelines",
+          to: routes.guidelines,
+        },
+      },
+      {
+        id: "coming-out-guide-public",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("coming-out-guide-public"),
+        tag: {
+          labelKey: "marketing:changelog.tag.comingOut",
+          to: routes.comingOut,
+        },
+      },
+      {
+        id: "poem-editor-v2",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("poem-editor-v2"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "under18-open-invite",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("under18-open-invite"),
+        tag: {
+          labelKey: "marketing:changelog.tag.library",
+          to: routes.library,
+        },
+      },
+      {
+        id: "adults-only-explainer",
+        category: "improvement",
+        date: "11 Aug 2026",
+        ...entryKeys("adults-only-explainer"),
+        tag: {
+          labelKey: "marketing:changelog.tag.terms",
+          to: routes.terms,
+        },
+      },
+      {
+        id: "persona-excerpt-crash-fix",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("persona-excerpt-crash-fix"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "poem-line-break-fix",
+        category: "fix",
+        date: "11 Aug 2026",
+        ...entryKeys("poem-line-break-fix"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofiles,
+        },
+      },
+      {
         id: "meganav-highlight-illustrations",
         category: "improvement",
         date: "11 Aug 2026",

@@ -1,5 +1,6 @@
+import { FiArrowRight } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { HubBackLink } from "../../shared/components/ui";
+import { Button, HubBackLink } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -8,7 +9,7 @@ import {
   JsonLd,
   buildBreadcrumbSchema,
 } from "../../shared/seo";
-import { ModerationLogSection, ReportFormSection } from "./ReportSections";
+import { ReportFormSection } from "./ReportSections";
 import { QuickExit } from "./QuickExit";
 import s from "./ReportPage.module.css";
 
@@ -38,16 +39,21 @@ export function ReportPage() {
           </div>
           <h1>
             <Translation
-              i18nKey="safety:report.hero.title"
+              i18nKey="safety:report.form.title"
               components={{ em: <em /> }}
             />
           </h1>
-          <p>{t("safety:report.hero.lead")}</p>
+          <p>{t("safety:report.form.lead")}</p>
+          <div className={s.heroLink}>
+            <Button variant="ghost" to={routes.reporting}>
+              {t("safety:report.howReportingWorksLink")}{" "}
+              <FiArrowRight aria-hidden />
+            </Button>
+          </div>
         </div>
       </header>
 
       <ReportFormSection />
-      <ModerationLogSection />
 
       <QuickExit />
     </PageShell>

@@ -1,0 +1,45 @@
+/* Header for the guidelines bottom-sheet — mirrors the page's PageHero
+   (eyebrow + serif title with a coral <em> + sub) at modal scale, sitting above
+   the shared <GuidelinesContent>. The sheet's own padding + scroll come from
+   Modal.module.css. */
+.head {
+  margin-bottom: 8px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 8px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 28px;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+  margin: 0;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.sub {
+  margin: 10px 0 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+.footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  margin-top: 1rem;
+  background: var(--cream);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+}

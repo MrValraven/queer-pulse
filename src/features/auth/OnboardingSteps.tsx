@@ -5,6 +5,7 @@ import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { GuidelinesLink } from "../marketing/GuidelinesLink";
 import { clearInviteWelcome } from "./api/pendingInvite";
 import { AgeAttestation } from "./AgeAttestation";
 import { Under18Notice } from "./Under18Notice";
@@ -53,6 +54,7 @@ export function StepIntro({
 export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
   const { t } = useTranslation();
   const [agreed, setAgreed] = useState(false);
+  const [hasRead, setHasRead] = useState(false);
   const [is18, setIs18] = useState(false);
   const [under18, setUnder18] = useState(false);
 
@@ -97,15 +99,22 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
         <input
           type="checkbox"
           checked={agreed}
+          disabled={!hasRead}
+          aria-describedby={!hasRead ? "ob-agree-hint" : undefined}
           onChange={(e) => setAgreed(e.target.checked)}
         />
         <span className={styles.agreeLabel}>
           <Translation
             i18nKey="auth:onboarding.stepNorms.agree"
-            components={{ guidelines: <Link to={routes.guidelines} /> }}
+            components={{ guidelines: <GuidelinesLink onRead={() => setHasRead(true)} /> }}
           />
         </span>
       </label>
+      {!hasRead && (
+        <p id="ob-agree-hint" className={styles.readHint}>
+          {t("auth:onboarding.stepNorms.readHint")}
+        </p>
+      )}
       <AgeAttestation
         id="ob-age"
         confirmed={is18}

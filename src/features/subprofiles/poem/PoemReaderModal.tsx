@@ -1,17 +1,21 @@
 import { useRef } from "react";
 import { createPortal } from "react-dom";
-import { FiX } from "react-icons/fi";
-import { useScrollLock } from "../../../shared/hooks";
+import { FiCopy, FiLink, FiX } from "react-icons/fi";
+import { useScrollLock, useShareLink } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useLightboxDialog } from "../useLightboxDialog";
 import type { SubprofileItemView } from "../api/subprofiles.adapters";
 import { PoemBlocksView } from "./PoemBlocksView";
+import { normalizePoemBlocks, poemToPlainText } from "./poemModel";
 import styles from "./PoemReaderModal.module.css";
 
 const NO_MOVE = () => {};
 
 export interface PoemReaderModalProps {
   item: SubprofileItemView;
+  /** Absolute, deep-linkable URL for this exact poem (persona share URL +
+   *  `?poem=<slug>`) — copied by the "Copy link" affordance below. */
+  shareUrl: string;
   onClose: () => void;
 }
 
@@ -21,13 +25,20 @@ export interface PoemReaderModalProps {
  * single-poem reader, so ←/→ move is a no-op. `prefers-reduced-motion` is
  * honoured in the CSS module's open transition.
  */
-export function PoemReaderModal({ item, onClose }: PoemReaderModalProps) {
+export function PoemReaderModal({ item, shareUrl, onClose }: PoemReaderModalProps) {
   const { t } = useTranslation();
   useScrollLock();
   const dialogRef = useRef<HTMLDivElement>(null);
   useLightboxDialog(dialogRef, { onClose, onMove: NO_MOVE });
+  const { share: copyShareLink } = useShareLink({
+    copied: t("subprofiles:share.copied"),
+  });
+  const { share: copyPoemText } = useShareLink({
+    copied: t("subprofiles:poem.reader.copied"),
+  });
 
   const meta = [item.subtitle, item.date].filter(Boolean).join(" · ");
+  const poemPlainText = poemToPlainText(normalizePoemBlocks(item.structured?.poem ?? null));
 
   return createPortal(
     <div
@@ -66,6 +77,26 @@ export function PoemReaderModal({ item, onClose }: PoemReaderModalProps) {
               })}
             </p>
           )}
+          <div className={styles.actions}>
+            <button
+              type="button"
+              className={styles.actionButton}
+              onClick={() => copyShareLink(shareUrl)}
+              aria-label={t("subprofiles:poem.reader.copyLinkAria", {
+                title: item.title,
+              })}
+            >
+              <FiLink aria-hidden /> {t("subprofiles:poem.reader.copyLink")}
+            </button>
+            <button
+              type="button"
+              className={styles.actionButton}
+              onClick={() => copyPoemText(poemPlainText || item.description || "")}
+              aria-label={t("subprofiles:poem.reader.copy")}
+            >
+              <FiCopy aria-hidden /> {t("subprofiles:poem.reader.copy")}
+            </button>
+          </div>
         </header>
 
         <div className={styles.body}>

@@ -13,6 +13,10 @@ export interface PublicProfileContextValue {
   saving: boolean;
   /** Derived from the live self profile — whether the member may go public. */
   eligibility: PublicEligibility;
+  /** Whether the (live) eligibility signals are still loading / errored / ready. */
+  eligibilityStatus: "loading" | "ready" | "error";
+  /** Refetch the live eligibility signals after an error. No-op in demo mode. */
+  retryEligibility: () => void;
   /**
    * Adopt the stored preference. Idempotent per live session: only the FIRST
    * call lands. Hydration is now driven by whichever consumer's query resolves,

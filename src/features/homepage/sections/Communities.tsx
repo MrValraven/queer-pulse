@@ -55,8 +55,8 @@ export function Communities() {
               <p className={styles.sub}>{t("homepage:communities.sub")}</p>
             </div>
             <div className={styles.headRight}>
-              <Button variant="ghost" to={routes.communities}>
-                {t("homepage:communities.browseAllCta")}{" "}
+              <Button variant="ghost" to={routes.aboutCommunities}>
+                {t("homepage:communities.howCommunitiesWorkCta")}{" "}
                 <FiArrowRight aria-hidden />
               </Button>
             </div>

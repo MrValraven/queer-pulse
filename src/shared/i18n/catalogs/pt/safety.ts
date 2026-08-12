@@ -33,11 +33,19 @@ export const safety: Catalog = {
   // ── ReportPage.tsx ─────────────────────────────────────────────────────
   "report.meta.title": "Denunciar uma preocupação à equipa de segurança",
   "report.meta.description":
-    "Como denunciar assédio ou uma situação insegura na QueerPulse, o que acontece depois de submeteres uma denúncia, e um registo público de decisões de moderação anteriores.",
+    "Faz uma denúncia sobre assédio, abuso ou uma situação insegura na QueerPulse. Denuncia de forma anónima, ou deixa um email para a equipa de segurança te contactar.",
   "report.eyebrow": "Segurança e Denúncias",
   "report.hero.title": "A segurança é <em>estrutural.</em>",
   "report.hero.lead":
     "Não é decorativa. Não é uma página no rodapé. A nossa forma de tratar denúncias, o que acontece quando fazes uma, e os princípios que orientam cada decisão que tomamos.",
+
+  // ── Ligações entre o formulário (ReportPage) e o guia
+  //    (ReportingGuidePage) ─────────────────────────────────────────────────
+  "report.howReportingWorksLink": "Como funciona a denúncia",
+  "report.guide.meta.title": "Como funciona a denúncia na QueerPulse",
+  "report.guide.meta.description":
+    "O que acontece depois de submeteres uma denúncia na QueerPulse — o nosso processo de análise, os princípios por trás de cada decisão, e um registo público de decisões de moderação anteriores.",
+  "report.guide.makeReportCta": "Fazer uma denúncia",
 
   "report.how.title": "Como <em>funciona a denúncia</em>",
   "report.how.lead":

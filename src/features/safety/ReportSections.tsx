@@ -94,6 +94,34 @@ function inferSubject(
   return "member";
 }
 
+/** The "how reporting works" preamble — flow steps 01–04. Lives on the
+ *  guidelines page (ReportingGuidePage), separate from the form. */
+export function ReportFlowSection() {
+  const { t } = useTranslation();
+  return (
+    <section className={s.section}>
+      <div className="wrap">
+        <h2>
+          <Translation
+            i18nKey="safety:report.how.title"
+            components={{ em: <em /> }}
+          />
+        </h2>
+        <p className={s.lead}>{t("safety:report.how.lead")}</p>
+        <div className={s.flow}>
+          {FLOW.map((f) => (
+            <div key={f.number} className={s.flowStep}>
+              <div className={s.flowN}>{f.number}</div>
+              <div className={s.flowTitle}>{t(f.titleKey)}</div>
+              <div className={s.flowDesc}>{t(f.descriptionKey)}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function ReportFormSection() {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -142,32 +170,8 @@ export function ReportFormSection() {
   return (
     <section className={s.section}>
       <div className="wrap">
-        <h2>
-          <Translation
-            i18nKey="safety:report.how.title"
-            components={{ em: <em /> }}
-          />
-        </h2>
-        <p className={s.lead}>{t("safety:report.how.lead")}</p>
-        <div className={s.flow}>
-          {FLOW.map((f) => (
-            <div key={f.number} className={s.flowStep}>
-              <div className={s.flowN}>{f.number}</div>
-              <div className={s.flowTitle}>{t(f.titleKey)}</div>
-              <div className={s.flowDesc}>{t(f.descriptionKey)}</div>
-            </div>
-          ))}
-        </div>
-
         <div className={s.formBox}>
           <div>
-            <h3>
-              <Translation
-                i18nKey="safety:report.form.title"
-                components={{ em: <em /> }}
-              />
-            </h3>
-            <p>{t("safety:report.form.lead")}</p>
             <form onSubmit={handleSubmit}>
               <FormField label={t("safety:report.form.categoryLabel")}>
                 <select

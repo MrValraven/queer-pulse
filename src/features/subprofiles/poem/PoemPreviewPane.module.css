@@ -1,0 +1,13 @@
+.preview {
+  min-width: 0;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: 12px;
+  background: var(--paper);
+}
+.previewInner {
+  max-width: 58ch;
+  margin: 0 auto;
+  font-family: var(--serif);
+  font-size: 1.02rem;
+}

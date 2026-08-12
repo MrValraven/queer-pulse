@@ -28,11 +28,19 @@ export const safety: Catalog = {
   // ── ReportPage.tsx ─────────────────────────────────────────────────────
   "report.meta.title": "Report a concern to the QueerPulse safety team",
   "report.meta.description":
-    "How to report harassment or an unsafe situation on QueerPulse, what happens after you submit a report, and a public log of past moderation outcomes.",
+    "File a report about harassment, abuse, or an unsafe situation on QueerPulse. Report anonymously, or leave an email so the safety team can follow up.",
   "report.eyebrow": "Safety & Reporting",
   "report.hero.title": "Safety is <em>structural.</em>",
   "report.hero.lead":
     "Not decorative. Not a page in the footer. Our approach to handling reports, what happens when you make one, and the principles that guide every decision we make.",
+
+  // ── Cross-links between the form (ReportPage) and the guide
+  //    (ReportingGuidePage) ─────────────────────────────────────────────────
+  "report.howReportingWorksLink": "How reporting works",
+  "report.guide.meta.title": "How reporting works on QueerPulse",
+  "report.guide.meta.description":
+    "What happens after you submit a report on QueerPulse — our review process, the principles behind every decision, and a public log of past moderation outcomes.",
+  "report.guide.makeReportCta": "Make a report",
 
   "report.how.title": "How <em>reporting works</em>",
   "report.how.lead":

@@ -13,7 +13,7 @@ export interface CookieRow {
 }
 
 export interface CookieCategory {
-  id: "essential" | "functional" | "analytics";
+  id: "essential" | "functional";
   titleKey: string;
   required?: boolean;
   bodyKey: string;
@@ -72,18 +72,6 @@ export const COOKIE_CATEGORIES: CookieCategory[] = [
         name: "qp_notif",
         expiresKey: "marketing:cookies.expires.months6",
         provider: "QueerPulse",
-      },
-    ],
-  },
-  {
-    id: "analytics",
-    titleKey: "marketing:cookies.analytics.title",
-    bodyKey: "marketing:cookies.analytics.body",
-    cookies: [
-      {
-        name: "plausible_ignore",
-        expiresKey: "marketing:cookies.expires.session",
-        provider: "Plausible",
       },
     ],
   },

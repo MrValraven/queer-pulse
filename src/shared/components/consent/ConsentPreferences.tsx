@@ -7,17 +7,12 @@ import type { ConsentCategories } from "../../api/consent.api";
 import styles from "./Consent.module.css";
 
 interface Row {
-  key: "analytics" | "monitoring";
+  key: "monitoring";
   titleKey: string;
   descKey: string;
 }
 
 const ROWS: Row[] = [
-  {
-    key: "analytics",
-    titleKey: "shared:consent.preferences.rows.analytics.title",
-    descKey: "shared:consent.preferences.rows.analytics.desc",
-  },
   {
     key: "monitoring",
     titleKey: "shared:consent.preferences.rows.monitoring.title",
@@ -36,12 +31,11 @@ export function ConsentPreferences({
   onClose,
 }: {
   consent: ConsentCategories;
-  onSave: (next: { analytics: boolean; monitoring: boolean }) => void;
+  onSave: (next: { monitoring: boolean }) => void;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
   const [state, setState] = useState({
-    analytics: consent.analytics,
     monitoring: consent.monitoring,
   });
 
@@ -60,7 +54,7 @@ export function ConsentPreferences({
         <div className={styles.prefsFoot}>
           <Button
             variant="ghost"
-            onClick={() => setState({ analytics: false, monitoring: false })}
+            onClick={() => setState({ monitoring: false })}
           >
             {t("shared:consent.actions.rejectNonEssential")}
           </Button>

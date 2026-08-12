@@ -251,9 +251,10 @@ export const auth: Catalog = {
   // ── The humane under-18 block ──
   "under18.title": "We'll be here <em>when you're ready</em>",
   "under18.body1":
-    "QueerPulse is an 18+ community for now, so we can't set you up with an account just yet — and that's not a judgement on you. You belong in queer community; this particular room just isn't open to under-18s today. Come back when you turn 18 and there'll be a place for you.",
+    "The community side of QueerPulse is 18+ for now, so we can't set you up with an account just yet — and that's not a judgement on you. But most of what we make is open to everyone, no login needed. You belong in queer community, and there's a lot of it waiting for you right here.",
   "under18.body2":
-    "In the meantime, there's plenty here that's for you right now:",
+    "Have a read of the library and everything else that's yours right now:",
+  "under18.link.library": "The library — free to browse, no account needed",
   "under18.link.queer101": "Queer 101 — the basics, no gatekeeping",
   "under18.link.comingOut": "Coming out, at your own pace",
   "under18.link.resources": "Community resources & support",
@@ -282,13 +283,16 @@ export const auth: Catalog = {
   "requestInvite.field.email.errorRequired":
     "We need an email so we can write back.",
   "requestInvite.field.mutual.label":
-    "Anyone here you know <optional>(optional)</optional>",
+    "A member's email <optional>(optional)</optional>",
   "requestInvite.field.mutual.helper":
-    "Naming a mutual is the fastest route in — but it's not required.",
-  "requestInvite.field.mutual.placeholder": "A member who can vouch for you",
-  // Appended to the message so the reviewer sees the named mutual — there is no
-  // separate field for it on POST /join-requests.
-  "requestInvite.field.mutual.messagePrefix": "Someone who knows me here: {name}",
+    "The email of a member who can vouch for you — it's how we match them, and the fastest route in.",
+  "requestInvite.field.mutual.placeholder": "member@example.com",
+  "requestInvite.field.mutual.error":
+    "Enter a valid email, or leave this blank.",
+  // Appended to the message so the reviewer sees who to match against — there is
+  // no separate field for it on POST /join-requests.
+  "requestInvite.field.mutual.messagePrefix":
+    "A member who can vouch for me: {name}",
   "requestInvite.field.why.label": "Why QueerPulse",
   "requestInvite.field.why.placeholder":
     "What you're looking for, and what brings you here. A few honest sentences is plenty.",
@@ -296,6 +300,8 @@ export const auth: Catalog = {
     "Tell us a little about what brings you here.",
   "requestInvite.agree":
     "I've read the <guidelines>community guidelines</guidelines> and I'm here in good faith.",
+  "requestInvite.readHint":
+    "Open the guidelines and read to the end to continue.",
   "requestInvite.submit": "Send my request",
   "requestInvite.sending": "Sending your request…",
   "requestInvite.submitError": "Could not send your request — please try again",
@@ -318,7 +324,7 @@ export const auth: Catalog = {
     "No algorithm, no waitlist score — a member of the community looks at every request.",
   "requestInvite.whatNext.connection.title": "We look for a connection",
   "requestInvite.whatNext.connection.body":
-    "If someone already here can vouch for you, that's the surest way in. Naming a mutual helps.",
+    "If someone already here can vouch for you, that's the surest way in. Sharing their email helps us match them.",
   // Honest about the real mechanism: there is no mail service, so an approval
   // is a person sending a link by hand, and a decline sends nothing at all.
   // Promising "you hear back either way" would be a quiet lie to someone who
@@ -398,6 +404,8 @@ export const auth: Catalog = {
     "At gatherings, always ask before photographing other members, even in a shared space.",
   "onboarding.stepNorms.agree":
     "I've read and agree to the <guidelines>Community Guidelines</guidelines>",
+  "onboarding.stepNorms.readHint":
+    "Open the guidelines and read to the end to continue.",
   "onboarding.stepNorms.continue": "I agree, continue",
   "onboarding.stepNorms.back": "Back",
 

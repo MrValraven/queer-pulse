@@ -25,6 +25,7 @@ function buildTermsSections(t: TFunction): LegalSection[] {
       body: (
         <>
           <p>{t("marketing:terms.eligibility.p1")}</p>
+          <p>{t("marketing:terms.eligibility.why")}</p>
           <p>
             <Translation
               i18nKey="marketing:terms.eligibility.p2"

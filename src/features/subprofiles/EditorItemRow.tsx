@@ -8,6 +8,7 @@ import {
 } from "react-icons/fi";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { ImageSlot } from "../../shared/components/ui";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 import styles from "./EditorItemRow.module.css";
 
@@ -80,8 +81,22 @@ export function EditorItemRow({
       >
         <FiMoreVertical size={16} />
       </span>
+      {item.imageUrl && (
+        <ImageSlot
+          src={item.imageUrl}
+          alt=""
+          width={44}
+          height={44}
+          radius={10}
+          srcSize={96}
+          className={styles.thumb}
+        />
+      )}
       <div className={styles.content}>
-        <b>{item.title}</b>
+        <b>
+          {item.title ||
+            (item.imageUrl ? t("subprofiles:itemEditor.untitledPhoto") : "")}
+        </b>
         {subtitle && <small>{subtitle}</small>}
       </div>
       <div className="itemacts">

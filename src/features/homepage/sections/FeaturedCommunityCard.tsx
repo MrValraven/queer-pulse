@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import {
+  FiArrowRight,
   FiBook,
   FiCalendar,
   FiCheck,
   FiClock,
-  FiEye,
   FiGrid,
   FiLock,
   FiLogIn,
@@ -16,6 +16,7 @@ import type { IconType } from "react-icons";
 import { Button, ImageSlot } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { routes } from "../../../app/routeMap";
 import type {
   AccessTier,
   CommunityType,
@@ -205,12 +206,9 @@ function CommunityCard({ view }: { view: CommunitySpotlightView }) {
             </span>
           </div>
           <div className={spot.actions}>
-            <Button variant="ghost" to={view.to}>
-              <FiEye aria-hidden />{" "}
-              {t("homepage:communities.spotlight.peekInsideCta")}
-            </Button>
-            <Button variant="primary" to={view.to}>
-              {t("homepage:communities.spotlight.joinCta")}
+            <Button variant="primary" to={routes.aboutCommunities}>
+              {t("homepage:communities.howCommunitiesWorkCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Button>
           </div>
         </div>

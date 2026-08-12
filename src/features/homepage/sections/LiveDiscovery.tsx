@@ -1,4 +1,4 @@
-import { Button, Reveal } from "../../../shared/components/ui";
+import { Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
@@ -7,6 +7,7 @@ import { useLandingFeaturesPublic } from "../api/useLandingFeatures";
 import { FeaturedSpotlightCard } from "./FeaturedSpotlightCard";
 import { portraitSrc } from "./portraitSrc";
 import { type SpotlightView, tintForKey } from "./spotlightView";
+import { ExploreMembersCta } from "./ExploreMembersCta";
 import styles from "./LiveSections.module.css";
 
 /**
@@ -62,9 +63,7 @@ export function LiveDiscovery() {
         </Reveal>
 
         <Reveal className={styles.foot} delay={280}>
-          <Button to={routes.members}>
-            {t("homepage:discovery.exploreMembersCta")}
-          </Button>
+          <ExploreMembersCta />
         </Reveal>
       </div>
     </section>

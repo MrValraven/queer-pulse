@@ -6,6 +6,7 @@ import s from "./LegalDoc.module.css";
 export const PRIVACY_TOC = [
   { id: "who-we-are", titleKey: "privacy.whoWeAre.title" },
   { id: "what-we-collect", titleKey: "privacy.whatWeCollect.title" },
+  { id: "sensitive-identity", titleKey: "privacy.sensitive.title" },
   { id: "how-we-use", titleKey: "privacy.howWeUse.title" },
   { id: "who-sees", titleKey: "privacy.whoSees.title" },
   { id: "retention", titleKey: "privacy.retention.title" },
@@ -16,7 +17,7 @@ export const PRIVACY_TOC = [
   { id: "contact-privacy", titleKey: "privacy.contactSection.title" },
 ];
 
-/** Who we are, what we collect, how we use it, who sees it. */
+/** Who we are, what we collect, and the sensitive-data promise. */
 function coreSections(t: TFunction): LegalSection[] {
   return [
     {
@@ -54,9 +55,31 @@ function coreSections(t: TFunction): LegalSection[] {
                 components={{ strong: <strong /> }}
               />
             </li>
+          </ul>
+          <h4>{t("marketing:privacy.whatWeCollect.signInHeading")}</h4>
+          <p>
+            <Translation
+              i18nKey="marketing:privacy.whatWeCollect.signInBody"
+              components={{ strong: <strong /> }}
+            />
+          </p>
+          <h4>{t("marketing:privacy.whatWeCollect.deviceHeading")}</h4>
+          <ul>
             <li>
               <Translation
-                i18nKey="marketing:privacy.whatWeCollect.account.item4"
+                i18nKey="marketing:privacy.whatWeCollect.device.item1"
+                components={{ strong: <strong /> }}
+              />
+            </li>
+            <li>
+              <Translation
+                i18nKey="marketing:privacy.whatWeCollect.device.item2"
+                components={{ strong: <strong /> }}
+              />
+            </li>
+            <li>
+              <Translation
+                i18nKey="marketing:privacy.whatWeCollect.device.item3"
                 components={{ strong: <strong /> }}
               />
             </li>
@@ -81,11 +104,41 @@ function coreSections(t: TFunction): LegalSection[] {
                 components={{ strong: <strong /> }}
               />
             </li>
+            <li>
+              <Translation
+                i18nKey="marketing:privacy.whatWeCollect.activity.item4"
+                components={{ strong: <strong /> }}
+              />
+            </li>
           </ul>
           <h4>{t("marketing:privacy.whatWeCollect.notCollectedHeading")}</h4>
           <div className={s.highlight}>
             <p>{t("marketing:privacy.whatWeCollect.notCollectedBody")}</p>
           </div>
+        </>
+      ),
+    },
+    {
+      id: "sensitive-identity",
+      title: t("marketing:privacy.sensitive.title"),
+      body: (
+        <>
+          <p>{t("marketing:privacy.sensitive.p1")}</p>
+          <div className={s.highlight}>
+            <p>
+              <Translation
+                i18nKey="marketing:privacy.sensitive.p2"
+                components={{ strong: <strong /> }}
+              />
+            </p>
+          </div>
+          <p>{t("marketing:privacy.sensitive.p3")}</p>
+          <p>
+            <Translation
+              i18nKey="marketing:privacy.sensitive.p4"
+              components={{ strong: <strong /> }}
+            />
+          </p>
         </>
       ),
     },
@@ -153,6 +206,12 @@ function rightsSections(t: TFunction): LegalSection[] {
           <p>{t("marketing:privacy.retention.p1")}</p>
           <p>{t("marketing:privacy.retention.p2")}</p>
           <p>{t("marketing:privacy.retention.p3")}</p>
+          <p>
+            <Translation
+              i18nKey="marketing:privacy.retention.p4"
+              components={{ strong: <strong /> }}
+            />
+          </p>
         </>
       ),
     },
@@ -252,6 +311,18 @@ function policySections(t: TFunction): LegalSection[] {
                 components={{ strong: <strong /> }}
               />
             </li>
+            <li>
+              <Translation
+                i18nKey="marketing:privacy.thirdParties.item4"
+                components={{ strong: <strong /> }}
+              />
+            </li>
+            <li>
+              <Translation
+                i18nKey="marketing:privacy.thirdParties.item5"
+                components={{ strong: <strong /> }}
+              />
+            </li>
           </ul>
           <p>
             <Translation
@@ -263,12 +334,6 @@ function policySections(t: TFunction): LegalSection[] {
             <li>
               <Translation
                 i18nKey="marketing:privacy.thirdParties.optItem1"
-                components={{ strong: <strong /> }}
-              />
-            </li>
-            <li>
-              <Translation
-                i18nKey="marketing:privacy.thirdParties.optItem2"
                 components={{ strong: <strong /> }}
               />
             </li>

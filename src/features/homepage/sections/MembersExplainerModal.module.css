@@ -1,0 +1,103 @@
+.panel {
+  position: relative;
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  padding: 40px 32px 32px;
+}
+
+.close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(var(--cream-rgb), 0.12);
+  color: rgba(var(--cream-rgb), 1);
+  cursor: pointer;
+  transition: background var(--dur-base, 0.2s) var(--ease);
+}
+.close:hover {
+  background: rgba(var(--cream-rgb), 0.22);
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.7);
+  margin-bottom: 10px;
+}
+
+.panel .title {
+  font-family: var(--serif);
+  font-size: clamp(24px, 3vw, 30px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+  color: rgba(var(--cream-rgb), 1);
+}
+.panel .title em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.lede {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(var(--cream-rgb), 0.82);
+  margin: 0 0 24px;
+}
+
+.pillars {
+  list-style: none;
+  margin: 0 0 28px;
+  padding: 0;
+  display: grid;
+  gap: 18px;
+}
+.pillar {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.pillarIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 999px;
+  background: rgba(var(--cream-rgb), 0.12);
+  color: var(--accent);
+  font-size: 18px;
+}
+.pillarText {
+  display: grid;
+  gap: 3px;
+}
+.pillarTitle {
+  font-weight: 600;
+  font-size: 15px;
+  color: rgba(var(--cream-rgb), 1);
+}
+.pillarBody {
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(var(--cream-rgb), 0.78);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}

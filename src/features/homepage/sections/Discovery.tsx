@@ -1,10 +1,10 @@
-import { Button, Reveal } from "../../../shared/components/ui";
+import { Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { routes } from "../../../app/routeMap";
 import { rows, spotlightViews } from "./Discovery.data";
 import { FeaturedSpotlightCard } from "./FeaturedSpotlightCard";
 import { MemberRow } from "./MemberRow";
+import { ExploreMembersCta } from "./ExploreMembersCta";
 import styles from "./Discovery.module.css";
 
 export function Discovery() {
@@ -43,9 +43,7 @@ export function Discovery() {
         </div>
 
         <Reveal className={styles.frameFoot} delay={280}>
-          <Button to={routes.members}>
-            {t("homepage:discovery.exploreMembersCta")}
-          </Button>
+          <ExploreMembersCta />
           <span className={styles.footNote}>
             {t("homepage:discovery.footNote")}
           </span>

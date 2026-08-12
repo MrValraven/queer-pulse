@@ -50,8 +50,8 @@ export function LiveCommunities() {
               </p>
             </div>
             <div>
-              <Button variant="ghost" to={routes.communities}>
-                {t("homepage:communities.browseAllCta")}{" "}
+              <Button variant="ghost" to={routes.aboutCommunities}>
+                {t("homepage:communities.howCommunitiesWorkCta")}{" "}
                 <FiArrowRight aria-hidden />
               </Button>
             </div>

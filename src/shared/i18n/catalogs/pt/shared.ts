@@ -16,7 +16,7 @@ export const shared: Catalog = {
   "consent.banner.ariaLabel": "Escolhas de cookies e privacidade",
   "consent.banner.title": "Uma palavra breve sobre <em>cookies.</em>",
   "consent.banner.body":
-    "Só guardamos o que é necessário para manteres a sessão iniciada e em segurança, por predefinição. As análises e os relatórios de erros ficam desligados a menos que digas que sim — sem anúncios, sem perfilagem, nunca. Muda de ideias quando quiseres, nas definições. <a>Lê a política</a>.",
+    "Só guardamos o que é necessário para manteres a sessão iniciada e em segurança, por predefinição. Os relatórios de erros ficam desligados a menos que digas que sim — sem anúncios, sem análise de comportamento, sem perfilagem, nunca. Muda de ideias quando quiseres, nas definições. <a>Lê a política</a>.",
 
   "consent.actions.rejectNonEssential": "Rejeitar não essenciais",
   "consent.actions.choose": "Escolher",
@@ -32,9 +32,6 @@ export const shared: Catalog = {
   "consent.preferences.necessary.desc":
     "Os teus cookies de sessão e CSRF, mais o tema e o idioma guardados no teu dispositivo. Necessários para o funcionamento da plataforma — nunca usados para te seguir.",
   "consent.preferences.necessary.alwaysOnAria": "Sempre ativo",
-  "consent.preferences.rows.analytics.title": "Análises e utilização",
-  "consent.preferences.rows.analytics.desc":
-    "Padrões anónimos e agregados — que páginas ajudam, quais não resultam. Sem monitorização individual, sem redes de anúncios. Desligado a menos que o ligues.",
   "consent.preferences.rows.monitoring.title": "Erros e falhas",
   "consent.preferences.rows.monitoring.desc":
     "Diagnóstico automático quando algo falha, para resolvermos mais depressa. Não inclui dados de publicidade nem de perfilagem.",
@@ -249,6 +246,8 @@ export const shared: Catalog = {
   "megaNav.community.col.gather.allGatherings": "Convívios",
   "megaNav.community.col.gather.events": "Eventos",
   "megaNav.community.col.gather.hostGathering": "Organizar um convívio",
+  "megaNav.community.col.gather.howCommunitiesWork":
+    "Como funcionam as comunidades",
   "megaNav.community.col.organise.head": "Organizar",
   "megaNav.community.col.organise.activismVolunteering":
     "Ativismo e Voluntariado",

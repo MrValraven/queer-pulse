@@ -111,12 +111,6 @@ export function SafetyPage() {
             />
           </p>
           <p>{t("resources:safety.vouching.body2")}</p>
-          <div className={styles.callout}>
-            <div className={styles.calloutHead}>
-              {t("resources:safety.vouching.calloutHead")}
-            </div>
-            <p>{t("resources:safety.vouching.calloutBody")}</p>
-          </div>
         </Reveal>
 
         <hr className={styles.divider} />
@@ -152,8 +146,8 @@ export function SafetyPage() {
           <div className={styles.reportBox}>
             <h3>{t("resources:safety.report.boxTitle")}</h3>
             <p>{t("resources:safety.report.boxBody")}</p>
-            <Button href="mailto:safe@queerpulse.pt">
-              {t("resources:safety.report.emailCta")}
+            <Button to={routes.report}>
+              {t("resources:safety.report.formCta")}
             </Button>
           </div>
         </Reveal>

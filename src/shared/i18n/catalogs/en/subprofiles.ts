@@ -525,6 +525,9 @@ export const subprofiles: Catalog = {
 
   // Item drawer (SubprofileItemDrawerFields, opened by SubprofileItemDrawer)
   "itemEditor.itemNumber": "Item {n}",
+  // Fallback label in a reorder row for an image-only item with no title
+  // (e.g. a photo-gallery photo) — sits beside its thumbnail preview.
+  "itemEditor.untitledPhoto": "Photo",
   "itemEditor.moveUp": "Move up",
   "itemEditor.moveDown": "Move down",
   "itemEditor.dragToReorder": "Drag to reorder",
@@ -1194,11 +1197,26 @@ export const subprofiles: Catalog = {
   "poem.editor.moveUp": "Move block up",
   "poem.editor.moveDown": "Move block down",
   "poem.editor.remove": "Remove block",
+  "poem.editor.dragToReorder": "Drag to reorder",
+  "poem.editor.blockLabel.stanza": "Stanza {index} of {total}",
+  "poem.editor.blockLabel.note": "Note",
+  "poem.editor.blockLabel.break": "Section break",
   "poem.editor.italic": "Italic",
   "poem.editor.bold": "Bold",
   "poem.editor.toolbarAria": "Text formatting",
+  "poem.editor.tabEdit": "Edit",
+  "poem.editor.tabPreview": "Preview",
+  "poem.editor.paneToggleAria": "Editor view",
+  "poem.editor.resplit.title": "This poem's line breaks may have been lost",
+  "poem.editor.resplit.body": "This looks like an older poem saved as one long line. We can suggest new line breaks from its punctuation — you'll still be able to edit them afterwards.",
+  "poem.editor.resplit.action": "Re-split into lines",
   "poem.row.openAria": "Read the poem “{title}”",
   "poem.reader.withLabel": "With {names}",
+  "poem.reader.sectionBreak": "Section break",
+  "poem.reader.copyLink": "Copy link",
+  "poem.reader.copyLinkAria": "Copy link to the poem “{title}”",
+  "poem.reader.copy": "Copy poem",
+  "poem.reader.copied": "Poem copied",
 
   // Skin-blocks editor (personas expansion — page-block editor pane, rail entry & field labels)
   "editorRail.skinBlocks": "Page blocks",

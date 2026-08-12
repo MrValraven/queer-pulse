@@ -27,7 +27,6 @@ import {
 const STORAGE_KEY = "qp.consent.v1";
 
 interface StoredConsent {
-  analytics: boolean;
   monitoring: boolean;
   policyVersion: string;
 }
@@ -36,18 +35,18 @@ function isStoredConsent(v: unknown): v is StoredConsent {
   return (
     typeof v === "object" &&
     v !== null &&
-    typeof (v as StoredConsent).analytics === "boolean" &&
     typeof (v as StoredConsent).monitoring === "boolean" &&
     typeof (v as StoredConsent).policyVersion === "string"
   );
 }
 
 /**
- * Consent gate (spec 07). Strictly-necessary storage is always on; analytics and
- * error-monitoring are opt-in and default to OFF. The local mirror gives an
- * instant, flicker-free decision; in live mode we reconcile with the backend.
- * Error-monitoring (Sentry, spec 01) is wired here via `setMonitoringConsent`, so
- * nothing loads until the matching category is granted.
+ * Consent gate (spec 07). Strictly-necessary storage is always on; error-
+ * monitoring is the one opt-in category and defaults to OFF. `analytics` is
+ * retired from the UI (no analytics service runs) but kept in the wire contract
+ * pinned to `false`. The local mirror gives an instant, flicker-free decision;
+ * in live mode we reconcile with the backend. Error-monitoring (Sentry, spec 01)
+ * is wired here via `setMonitoringConsent`, so nothing loads until it's granted.
  */
 export function ConsentProvider({ children }: { children: ReactNode }) {
   const { demoMode } = useDemoMode();
@@ -65,10 +64,10 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
   const consent: ConsentCategories = useMemo(
     () => ({
       necessary: true,
-      analytics: active?.analytics ?? false,
+      analytics: false,
       monitoring: active?.monitoring ?? false,
     }),
-    [active?.analytics, active?.monitoring],
+    [active?.monitoring],
   );
   const status: ConsentStatus = active ? "set" : "unknown";
 
@@ -87,7 +86,6 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
     void fetchMyConsent(demoMode).then((res) => {
       if (cancelled || !res) return;
       setStored({
-        analytics: res.categories.analytics,
         monitoring: res.categories.monitoring,
         policyVersion: res.policyVersion,
       });
@@ -100,7 +98,12 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
   const setConsent = useCallback(
     (next: Record<OptInCategory, boolean>, source: ConsentSource) => {
       setStored({ ...next, policyVersion: POLICY_VERSION });
-      const categories: ConsentCategories = { necessary: true, ...next };
+      // `analytics` is retired from the UI but kept in the record, pinned false.
+      const categories: ConsentCategories = {
+        necessary: true,
+        analytics: false,
+        ...next,
+      };
       setPending(true);
       void recordConsent(
         { categories, policyVersion: POLICY_VERSION, source },
@@ -112,12 +115,12 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
 
   const acceptAll = useCallback(
     (source: ConsentSource = "banner") =>
-      setConsent({ analytics: true, monitoring: true }, source),
+      setConsent({ monitoring: true }, source),
     [setConsent],
   );
   const rejectAll = useCallback(
     (source: ConsentSource = "banner") =>
-      setConsent({ analytics: false, monitoring: false }, source),
+      setConsent({ monitoring: false }, source),
     [setConsent],
   );
   const openPreferences = useCallback(() => setPrefsOpen(true), []);
