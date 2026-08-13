@@ -1,7 +1,22 @@
 .filters {
   display: flex;
   flex-direction: column;
+  /* Children sit at their natural width — the kind pill must not be stretched
+     (or squeezed) to the uploader row's column width. */
+  align-items: flex-start;
   gap: 12px;
+}
+
+/* The kind segmented control lays out at content width on one line; on narrow
+   screens the pill scrolls horizontally instead of wrapping its labels. */
+.kindFilter {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Only the uploader search/active-filter row keeps the narrow column width. */
+.uploaderRow {
+  width: 100%;
   max-width: 420px;
 }
 

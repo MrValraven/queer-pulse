@@ -1,3 +1,4 @@
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   LIFESTYLE_TAGS,
@@ -56,65 +57,63 @@ export function FlatmatesFilterBar({
             </button>
           ))}
           <div className={styles.spacer} />
-          <select
-            className={styles.fSelect}
-            aria-label={t("economy:flatmates.filter.anyNeighbourhood")}
+          <Select
+            size="sm"
+            label={t("economy:flatmates.filter.anyNeighbourhood")}
             value={neighbourhood}
-            onChange={(e) => setNeighbourhood(e.target.value)}
-          >
-            <option value="all">
-              {t("economy:flatmates.filter.anyNeighbourhood")}
-            </option>
-            {NEIGHBOURHOODS.map((neighbourhoodName) => (
-              <option key={neighbourhoodName} value={neighbourhoodName}>
-                {neighbourhoodName}
-              </option>
-            ))}
-          </select>
-          <select
-            className={styles.fSelect}
-            aria-label={t("economy:flatmates.filter.anyBudget")}
+            onChange={(value) => setNeighbourhood(value ?? "all")}
+            options={[
+              {
+                value: "all",
+                label: t("economy:flatmates.filter.anyNeighbourhood"),
+              },
+              ...NEIGHBOURHOODS.map((neighbourhoodName) => ({
+                value: neighbourhoodName,
+                label: neighbourhoodName,
+              })),
+            ]}
+          />
+          <Select
+            size="sm"
+            label={t("economy:flatmates.filter.anyBudget")}
             value={budget}
-            onChange={(e) => setBudget(e.target.value)}
-          >
-            <option value="all">
-              {t("economy:flatmates.filter.anyBudget")}
-            </option>
-            <option value="600">
-              {t("economy:flatmates.filter.budget.upTo700")}
-            </option>
-            <option value="700">
-              {t("economy:flatmates.filter.budget.700to900")}
-            </option>
-            <option value="900">
-              {t("economy:flatmates.filter.budget.900to1100")}
-            </option>
-            <option value="1100">
-              {t("economy:flatmates.filter.budget.1100plus")}
-            </option>
-          </select>
-          <select
-            className={styles.fSelect}
-            aria-label={t("economy:flatmates.filter.anyMoveIn")}
+            onChange={(value) => setBudget(value ?? "all")}
+            options={[
+              { value: "all", label: t("economy:flatmates.filter.anyBudget") },
+              {
+                value: "600",
+                label: t("economy:flatmates.filter.budget.upTo700"),
+              },
+              {
+                value: "700",
+                label: t("economy:flatmates.filter.budget.700to900"),
+              },
+              {
+                value: "900",
+                label: t("economy:flatmates.filter.budget.900to1100"),
+              },
+              {
+                value: "1100",
+                label: t("economy:flatmates.filter.budget.1100plus"),
+              },
+            ]}
+          />
+          <Select
+            size="sm"
+            label={t("economy:flatmates.filter.anyMoveIn")}
             value={movein}
-            onChange={(e) => setMovein(e.target.value)}
-          >
-            <option value="all">
-              {t("economy:flatmates.filter.anyMoveIn")}
-            </option>
-            <option value="now">
-              {t("economy:flatmates.filter.moveIn.now")}
-            </option>
-            <option value="jul">
-              {t("economy:flatmates.filter.moveIn.jul")}
-            </option>
-            <option value="aug">
-              {t("economy:flatmates.filter.moveIn.aug")}
-            </option>
-            <option value="flex">
-              {t("economy:flatmates.filter.moveIn.flex")}
-            </option>
-          </select>
+            onChange={(value) => setMovein(value ?? "all")}
+            options={[
+              { value: "all", label: t("economy:flatmates.filter.anyMoveIn") },
+              { value: "now", label: t("economy:flatmates.filter.moveIn.now") },
+              { value: "jul", label: t("economy:flatmates.filter.moveIn.jul") },
+              { value: "aug", label: t("economy:flatmates.filter.moveIn.aug") },
+              {
+                value: "flex",
+                label: t("economy:flatmates.filter.moveIn.flex"),
+              },
+            ]}
+          />
         </div>
         <div className={styles.filterRow}>
           <span className={styles.fLabel}>

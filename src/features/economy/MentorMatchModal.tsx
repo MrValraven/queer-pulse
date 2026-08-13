@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { FiClock } from "react-icons/fi";
 import { Button, Stepper } from "../../shared/components/ui";
 import { useScrollLock, useWizardForm } from "../../shared/hooks";
@@ -33,7 +34,7 @@ export function MentorMatchModal({
     total: flow.steps.length,
   });
 
-  return (
+  return createPortal(
     <div
       className={styles.overlay}
       // Backdrop click is a mouse-only shortcut; Esc and the close button
@@ -107,6 +108,7 @@ export function MentorMatchModal({
           </>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

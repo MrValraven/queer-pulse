@@ -6,6 +6,7 @@ import {
   FadeIn,
   FeatureHelp,
   ModalSheet,
+  Select,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -172,17 +173,16 @@ export function MemberResultsColumn({
             <span id={sortLabelId} className={styles.sortLabel}>
               {t("members:directory.sortLabel")}
             </span>
-            <select
+            <Select
+              size="sm"
+              labelledBy={sortLabelId}
+              options={SORTS.map((sortKey) => ({
+                value: sortKey,
+                label: t(SORT_LABEL_KEY[sortKey]),
+              }))}
               value={sort}
-              aria-labelledby={sortLabelId}
-              onChange={(e) => onSort(e.target.value as SortKey)}
-            >
-              {SORTS.map((sortKey) => (
-                <option key={sortKey} value={sortKey}>
-                  {t(SORT_LABEL_KEY[sortKey])}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => onSort(value as SortKey)}
+            />
           </div>
         </div>
       </div>

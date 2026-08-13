@@ -1,4 +1,4 @@
-import { ChipSelect, FormField } from "../../shared/components/ui";
+import { ChipSelect, FormField, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -87,28 +87,24 @@ function Step1FilmDetails({ form }: { form: SubmitForm }) {
           />
         </FormField>
         <FormField label={t("cinema:submit.form.step1.country.label")}>
-          <select
+          <Select
             value={draft.country}
-            onChange={(e) => set("country", e.target.value)}
-          >
-            {COUNTRIES.map((country) => (
-              <option key={country.value} value={country.value}>
-                {t(country.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => set("country", value ?? "")}
+            options={COUNTRIES.map((country) => ({
+              value: country.value,
+              label: t(country.labelKey),
+            }))}
+          />
         </FormField>
         <FormField label={t("cinema:submit.form.step1.language.label")}>
-          <select
+          <Select
             value={draft.language}
-            onChange={(e) => set("language", e.target.value)}
-          >
-            {LANGUAGES.map((language) => (
-              <option key={language.value} value={language.value}>
-                {t(language.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => set("language", value ?? "")}
+            options={LANGUAGES.map((language) => ({
+              value: language.value,
+              label: t(language.labelKey),
+            }))}
+          />
         </FormField>
       </div>
 

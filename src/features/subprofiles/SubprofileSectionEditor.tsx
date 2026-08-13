@@ -43,14 +43,14 @@ const MAX_GALLERY_PHOTOS = 6;
  * renders the active pane's `<h2>`/lede above this.
  */
 export function SubprofileSectionEditor({
-  subprofileId: _subprofileId,
+  subprofileId,
   section,
 }: {
   subprofileId: string;
   section: SubprofileSectionView;
 }) {
   const { t } = useTranslation();
-  const { sectionRows, setSectionRows } = useSubprofileEditorContext();
+  const { sectionRows, setSectionRows, meta } = useSubprofileEditorContext();
   const rows = sectionRows[section.section] ?? [];
   const [drawerState, setDrawerState] = useState<DrawerState | null>(null);
   const [galleryPickerOpen, setGalleryPickerOpen] = useState(false);
@@ -168,10 +168,12 @@ export function SubprofileSectionEditor({
 
       {drawerState && drawerItem && (
         <SubprofileItemDrawer
+          subprofileId={subprofileId}
           section={section}
           item={drawerItem}
           isNew={drawerState.mode === "add"}
           canFeature={canFeature}
+          authorName={meta.displayName}
           onSave={saveDraft}
           onClose={closeDrawer}
         />

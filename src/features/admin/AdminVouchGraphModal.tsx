@@ -1,4 +1,5 @@
 import { Fragment, useEffect, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { FiLock, FiPlay, FiSearch, FiUser, FiX } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
 import { SkeletonLine } from "../../shared/components/ui";
@@ -161,7 +162,7 @@ function GraphModalShell({
   children: ReactNode;
 }) {
   const { t } = useTranslation();
-  return (
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -185,7 +186,8 @@ function GraphModalShell({
         </button>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -203,7 +205,7 @@ function GraphModalInner({
   const g = useVouchGraph(graph, focusSlug);
   const focusPerson = graph.peopleById[g.focus]!;
 
-  return (
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -358,7 +360,8 @@ function GraphModalInner({
           </div>
         </footer>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

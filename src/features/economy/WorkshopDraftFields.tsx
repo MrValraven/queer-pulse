@@ -1,3 +1,4 @@
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { WorkshopDraft } from "./addWorkshop.build";
 import styles from "./ApplicationModals.module.css";
@@ -70,33 +71,29 @@ export function WorkshopDraftFields({
           <label htmlFor="aw-cat">
             {t("economy:addWorkshop.categoryLabel")}
           </label>
-          <select
+          <Select
             id="aw-cat"
             value={draft.category}
-            onChange={(e) => set({ category: e.target.value })}
-          >
-            {CATS.map((c) => (
-              <option key={c.value} value={c.value}>
-                {t(c.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => set({ category: value ?? "" })}
+            options={CATS.map((category) => ({
+              value: category.value,
+              label: t(category.labelKey),
+            }))}
+          />
         </div>
         <div className={styles.field}>
           <label htmlFor="aw-mode">
             {t("economy:addWorkshop.formatLabel")}
           </label>
-          <select
+          <Select
             id="aw-mode"
             value={draft.mode}
-            onChange={(e) => set({ mode: e.target.value })}
-          >
-            {MODES.map((m) => (
-              <option key={m.value} value={m.value}>
-                {t(m.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => set({ mode: value ?? "" })}
+            options={MODES.map((mode) => ({
+              value: mode.value,
+              label: t(mode.labelKey),
+            }))}
+          />
         </div>
       </div>
 

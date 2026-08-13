@@ -50,23 +50,6 @@
   font-weight: 600;
   color: var(--ink);
 }
-.slotInput {
-  width: 100%;
-  box-sizing: border-box;
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 12px;
-  padding: 11px 14px;
-  font-family: var(--sans);
-  font-size: 16px;
-  color: var(--ink);
-  background: var(--paper);
-  transition: border-color 0.25s var(--ease);
-}
-.slotInput:focus {
-  border-color: var(--accent);
-  outline: none;
-}
-
 /* ── Viewings page ───────────────────────────────────────────────────────── */
 .page {
   max-width: 760px;

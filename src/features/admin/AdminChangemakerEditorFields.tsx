@@ -1,4 +1,5 @@
 import { AdminCheckLine } from "./ui";
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ChangemakerTint } from "../community/api/changemakers.api";
 import type { ChangemakerFormDraft } from "./adminChangemakerEditor.utils";
@@ -53,20 +54,17 @@ export function AdminChangemakerBasicFields({ draft, onChange }: FieldsProps) {
       <label className={styles.fieldLabel} htmlFor="changemaker-tint">
         {t("community:changemakers.admin.editor.tintLabel")}
       </label>
-      <select
+      <Select
         id="changemaker-tint"
-        className={styles.select}
         value={draft.tint}
-        onChange={(event) =>
-          onChange({ tint: event.target.value as ChangemakerTint })
+        options={TINT_OPTIONS.map((tint) => ({
+          value: tint,
+          label: t(`community:changemakers.admin.editor.tint${capitalize(tint)}`),
+        }))}
+        onChange={(value) =>
+          onChange({ tint: (value ?? draft.tint) as ChangemakerTint })
         }
-      >
-        {TINT_OPTIONS.map((tint) => (
-          <option key={tint} value={tint}>
-            {t(`community:changemakers.admin.editor.tint${capitalize(tint)}`)}
-          </option>
-        ))}
-      </select>
+      />
 
       <label className={styles.fieldLabel} htmlFor="changemaker-tags">
         {t("community:changemakers.admin.editor.tagsLabel")}

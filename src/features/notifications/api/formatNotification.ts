@@ -77,7 +77,22 @@ export type NotificationKind =
   // `AddConcernUpdateNotificationType1788600000000`, emitted from
   // `IntakesService.updateStatus`). System-driven, no actor, with
   // `status` (`resolved`/`dismissed`) on the payload selecting the copy.
-  | "concern_update";
+  | "concern_update"
+  // Sent to a member on a change to their verification standing (mirrors the
+  // backend `notifications_type_enum` value added in
+  // `AddVerificationUpdateNotificationType1789100100000`). System-driven, no
+  // actor. THREE distinct payload shapes share this one kind:
+  //  - an admin override (`VerificationService.override`): `{ fromLevel,
+  //    toLevel }` — no `decision` field. The copy names only the new level
+  //    (`toLevel`), via its own inline label set
+  //    (`type.verification_update.level.<level>`).
+  //  - a request approved (`VerificationService.decideRequest`):
+  //    `{ requestedLevel, decision: 'approved' }` — no `toLevel`; the level
+  //    label sources from `requestedLevel` instead.
+  //  - a request rejected (`VerificationService.decideRequest`):
+  //    `{ requestedLevel, decision: 'rejected', reason }` — no level change
+  //    to name; `reason` surfaces as the meta line instead.
+  | "verification_update";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -124,6 +139,9 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   housing_listing_match: "platform",
   // An outcome on a concern you raised is the platform's word — platform tab.
   concern_update: "platform",
+  // An admin manually adjusting your verification standing is the platform's
+  // word, same tab as moderation_outcome/concern_update.
+  verification_update: "platform",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */
@@ -239,6 +257,78 @@ function eventUpdatedKeyFor(type: string, payload: unknown): string {
 }
 
 /**
+ * Resolve the i18n subkey a `verification_update` notification's copy lives
+ * under. The row carries `payload.decision` (`approved | rejected`, written
+ * by `VerificationService.decideRequest`) only for the two request-decision
+ * shapes — an admin override never sets it. `approved`/`rejected` each get
+ * their own copy (`verification_update.approved` / `.rejected`); a missing
+ * `decision` (the override shape, or an unrecognised future value) falls
+ * back to the flat `verification_update.*` copy — the EXISTING
+ * `toLevel`-based override rendering, unchanged. Non-`verification_update`
+ * types pass through unchanged.
+ */
+function verificationUpdateKeyFor(type: string, payload: unknown): string {
+  if (type !== "verification_update") return type;
+  const decision = (payload as { decision?: string } | null)?.decision;
+  return decision === "approved" || decision === "rejected"
+    ? `verification_update.${decision}`
+    : "verification_update";
+}
+
+/**
+ * Resolves the `{level}` token a `verification_update` notification's copy
+ * interpolates — the level the member was moved TO. An admin override
+ * carries this as `payload.toLevel` (written by `VerificationService.
+ * override`); a request approval carries no `toLevel` at all, only
+ * `payload.requestedLevel` (written by `VerificationService.decideRequest`)
+ * — since an approval always grants the level that was requested, the same
+ * token doubles for both, preferring `toLevel` when present. Its own small
+ * label set lives inline under `type.verification_update.level.*` — the
+ * ladder only has four rungs — rather than reaching into the admin
+ * console's `admin:verifications.level.<level>` keys: those live in a
+ * separate, lazily-chunked namespace an ordinary (non-admin) member's session
+ * never otherwise loads, and every other payload-driven kind in this file
+ * (`moderation_outcome`, `concern_update`, …) already keeps its label set
+ * self-contained in this same `notifications` namespace. A missing/
+ * unrecognised level (a future ladder rung an old client doesn't know) falls
+ * back to a generic phrase so the row never interpolates a raw enum value
+ * like `id_verified`. Never called for the `rejected` decision, which names
+ * no level. Non-`verification_update` types are never called with this.
+ */
+function verificationLevelToken(payload: unknown, t: TFunction): string {
+  const record = payload as
+    | { toLevel?: string; requestedLevel?: string }
+    | null;
+  const level = record?.toLevel ?? record?.requestedLevel;
+  const isKnownLevel =
+    level === "none" ||
+    level === "email" ||
+    level === "phone" ||
+    level === "id_verified";
+  return isKnownLevel
+    ? t(`notifications:type.verification_update.level.${level}`)
+    : t("notifications:type.verification_update.levelFallback");
+}
+
+/**
+ * Resolves the `{reason}` token a rejected `verification_update` notification
+ * interpolates — the admin's reason for declining the request
+ * (`payload.reason`, written by `VerificationService.decideRequest`; the
+ * backend requires a non-empty reason to reject, but this reads defensively
+ * like every other payload-driven helper in this file, in case an older row
+ * predates that guarantee or the field arrives as something unexpected). A
+ * missing/blank reason falls back to a generic phrase rather than
+ * interpolating an empty or literal-unresolved token. Only called for the
+ * `rejected` decision.
+ */
+function verificationReasonToken(payload: unknown, t: TFunction): string {
+  const reason = (payload as { reason?: string } | null)?.reason;
+  return typeof reason === "string" && reason.trim() !== ""
+    ? reason
+    : t("notifications:type.verification_update.rejected.reasonFallback");
+}
+
+/**
  * Render a backend notification (`type` + structured `payload`) into display
  * text, through i18n keys rather than hardcoded English — this is why the
  * formatting lives on the frontend at all: it keeps the API language-neutral
@@ -263,11 +353,30 @@ export function formatNotification(
     key = eventUpdatedKeyFor(type, payload);
   } else if (type === "concern_update") {
     key = concernUpdateKeyFor(type, payload);
+  } else if (type === "verification_update") {
+    key = verificationUpdateKeyFor(type, payload);
   } else {
     // `mentionKeyFor` passes every non-`mention` type through unchanged.
     key = mentionKeyFor(type, payload);
   }
   const tokens = interpolationTokens(payload);
+  if (type === "verification_update") {
+    const decision = (payload as { decision?: string } | null)?.decision;
+    if (decision === "rejected") {
+      // Overrides the raw `reason` string `interpolationTokens` would already
+      // have copied through with the same value, defensively re-resolved so a
+      // missing/blank reason falls back to a generic phrase instead of
+      // interpolating an empty string.
+      tokens.reason = verificationReasonToken(payload, t);
+    } else {
+      // Overrides the raw `toLevel`/`fromLevel`/`requestedLevel` enum values
+      // `interpolationTokens` would otherwise copy through verbatim (e.g.
+      // `id_verified`) with the translated, member-facing label the catalog
+      // string's `{level}` expects. Covers both the override shape
+      // (`decision` absent) and the `approved` decision.
+      tokens.level = verificationLevelToken(payload, t);
+    }
+  }
   return {
     text: t(`notifications:type.${key}.text`, tokens),
     meta: t(`notifications:type.${key}.meta`, tokens),

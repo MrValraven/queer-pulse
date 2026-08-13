@@ -88,6 +88,18 @@
 }
 
 /* ── Overflow menu (⋯) for the destructive Remove action ─────────────────── */
+/* While the ⋮ menu is open, `.overflowMenu` hangs DOWN past its row into the
+   next row's box. Each row is wrapped in a `<FadeIn>` whose `.fadeIn` sets
+   `will-change: transform`, making every row its OWN stacking context — so the
+   menu's `z-index: 20` only competes inside its own row, and the later-sibling
+   row paints on top of it. Fix at the FadeIn wrapper itself: when it contains an
+   open menu, make it `position: relative` + a positive `z-index`. `:has()`
+   scopes this to only the row whose menu is open, leaving at-rest layering
+   untouched. Mirrors the messages inbox fix (`.threadRowFade:has(.rowMenuPopover)`). */
+.rowFade:has(.overflowMenu) {
+  position: relative;
+  z-index: 3;
+}
 .overflow {
   position: relative;
   flex: none;

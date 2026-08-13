@@ -1,4 +1,5 @@
 import { useEffect, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { FiCheck, FiClock, FiX } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
 import { Button } from "../../shared/components/ui";
@@ -26,7 +27,7 @@ export function ResourceModal({
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  return (
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -59,7 +60,8 @@ export function ResourceModal({
         )}
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

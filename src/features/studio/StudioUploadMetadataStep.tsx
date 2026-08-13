@@ -1,6 +1,6 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./creator.module.css";
@@ -16,6 +16,7 @@ export function MetadataStep({
   const titleFieldId = useId();
   const yearFieldId = useId();
   const genreFieldId = useId();
+  const [genre, setGenre] = useState("fado");
   return (
     <div className={s.card}>
       <div className={s.cardH}>
@@ -44,15 +45,23 @@ export function MetadataStep({
         <label htmlFor={genreFieldId}>
           {t("studio:upload.metadata.field.genre")}
         </label>
-        <select
+        <Select
           id={genreFieldId}
-          defaultValue={t("studio:upload.metadata.genre.fado")}
-        >
-          <option>{t("studio:upload.metadata.genre.fado")}</option>
-          <option>{t("studio:upload.metadata.genre.electronic")}</option>
-          <option>{t("studio:upload.metadata.genre.folk")}</option>
-          <option>{t("studio:upload.metadata.genre.experimental")}</option>
-        </select>
+          options={[
+            { value: "fado", label: t("studio:upload.metadata.genre.fado") },
+            {
+              value: "electronic",
+              label: t("studio:upload.metadata.genre.electronic"),
+            },
+            { value: "folk", label: t("studio:upload.metadata.genre.folk") },
+            {
+              value: "experimental",
+              label: t("studio:upload.metadata.genre.experimental"),
+            },
+          ]}
+          value={genre}
+          onChange={(value) => setGenre(value ?? "fado")}
+        />
       </div>
       <div style={{ display: "flex", gap: 10, marginTop: 4 }}>
         <Button variant="ghost" onClick={onBack}>

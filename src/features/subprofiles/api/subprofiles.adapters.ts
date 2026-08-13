@@ -43,8 +43,11 @@ function isAvailabilityKey(value: string | null): value is AvailabilityKey {
 
 /** One item with nulls normalized to "" / [] so components render without guards. */
 export interface SubprofileItemView {
+  id: string;
   section: SubprofileSection;
   title: string;
+  /** ISO 8601 first-published timestamp (item row creation on QueerPulse). */
+  createdAt: string;
   subtitle: string;
   description: string;
   url: string;
@@ -163,10 +166,12 @@ export interface SubprofileOwnerMeta {
 
 // ── DTO → view model ─────────────────────────────────────────────────────────
 
-function itemToView(dto: SubprofileItemDTO): SubprofileItemView {
+export function itemToView(dto: SubprofileItemDTO): SubprofileItemView {
   return {
+    id: dto.id,
     section: dto.section,
     title: dto.title,
+    createdAt: dto.createdAt,
     subtitle: dto.subtitle ?? "",
     description: dto.description ?? "",
     url: dto.url ?? "",

@@ -59,6 +59,15 @@ export interface EditorRowsState {
   sectionLabelKeys: Record<string, string>;
   /** Reset every list area back to its loaded/last-saved baseline. */
   resetRows: () => void;
+  /** Explicitly re-seeds ONE section's rows + baseline from freshly-fetched
+   *  subprofile data, discarding any in-progress draft for that section only
+   *  (every other section, socials, and affiliations are left untouched).
+   *  This is the one deliberate escape hatch from the seed-once rule below:
+   *  call it ONLY as the direct result of an explicit content-replacing
+   *  action (a "Protect Your Work" revision restore) — never from a routine
+   *  refetch or save success, which must keep going through the normal
+   *  seed-once path so an in-progress draft is never silently clobbered. */
+  reseedSection: (section: string, nextSubprofile: SubprofileView) => void;
 }
 
 /**
@@ -67,8 +76,11 @@ export interface EditorRowsState {
  * to the just-saved draft on that area's save success, so a partial failure
  * keeps only the failed areas dirty). Seeded ONCE per mount via lazy `useState`
  * (the shell remounts this subtree per persona via `key={subprofile.id}`), so a
- * post-save refetch never re-seeds and clobbers an in-progress draft. Lifted out
- * of `SubprofileEditorProvider` so the provider stays thin wiring.
+ * post-save refetch never re-seeds and clobbers an in-progress draft. The one
+ * exception is `reseedSection`, an explicit opt-in reseed of a single section
+ * used after a revision restore (see its doc on `EditorRowsState`) — every
+ * other path stays seed-once. Lifted out of `SubprofileEditorProvider` so the
+ * provider stays thin wiring.
  */
 export function useEditorRowsState(subprofile: SubprofileView): EditorRowsState {
   const [seed] = useState(() => seedRows(subprofile));
@@ -127,6 +139,22 @@ export function useEditorRowsState(subprofile: SubprofileView): EditorRowsState 
     setAffiliationRows(affiliationBaseline);
   }, [sectionBaseline, socialBaseline, affiliationBaseline]);
 
+  const reseedSection = useCallback(
+    (section: string, nextSubprofile: SubprofileView) => {
+      const sectionView = nextSubprofile.sections.find(
+        (candidate) => candidate.section === section,
+      );
+      // Seed working rows and baseline from the SAME freshly-uid'd array
+      // (mirrors `seedRows` above) so they start back in sync — a restore
+      // replaces this section's content outright, it should read as a clean
+      // reload of that section, not as a pending edit.
+      const freshRows = (sectionView?.items ?? []).map(withUid);
+      setSectionRowsState((current) => ({ ...current, [section]: freshRows }));
+      setSectionBaseline((current) => ({ ...current, [section]: freshRows }));
+    },
+    [],
+  );
+
   return {
     sectionRows,
     setSectionRows,
@@ -142,5 +170,6 @@ export function useEditorRowsState(subprofile: SubprofileView): EditorRowsState 
     setAffiliationBaseline,
     sectionLabelKeys,
     resetRows,
+    reseedSection,
   };
 }

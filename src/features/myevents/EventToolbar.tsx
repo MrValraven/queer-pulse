@@ -1,3 +1,4 @@
+import { Select } from "../../shared/components/ui";
 import { sx } from "./myEvents.styles";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyEvents } from "./MyEventsContext";
@@ -52,18 +53,20 @@ export function EventToolbar() {
       </div>
 
       <div className={sx("ev-controls")}>
-        <select
-          className={sx("ev-sort")}
-          aria-label={t("myevents:toolbar.sortAria")}
+        <Select
+          size="sm"
+          label={t("myevents:toolbar.sortAria")}
           value={c.sortBy}
-          onChange={(e) => c.setSort(e.target.value as SortBy)}
-        >
-          <option value="date">{t("myevents:toolbar.sort.date")}</option>
-          <option value="community">
-            {t("myevents:toolbar.sort.community")}
-          </option>
-          <option value="status">{t("myevents:toolbar.sort.status")}</option>
-        </select>
+          onChange={(value) => c.setSort((value ?? "date") as SortBy)}
+          options={[
+            { value: "date", label: t("myevents:toolbar.sort.date") },
+            {
+              value: "community",
+              label: t("myevents:toolbar.sort.community"),
+            },
+            { value: "status", label: t("myevents:toolbar.sort.status") },
+          ]}
+        />
         <button
           type="button"
           className={sx(`ctrl-btn${c.density === "compact" ? " on" : ""}`)}

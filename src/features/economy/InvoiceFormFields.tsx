@@ -5,7 +5,7 @@ import {
   RETENTION_DISPENSA_NOTE,
 } from "./tax.constants";
 import { type InvoiceClient } from "./invoice.data";
-import { FormField } from "../../shared/components/ui";
+import { DatePicker, FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./InvoiceGeneratorPage.module.css";
 
@@ -166,33 +166,33 @@ export function InvoiceMetaFields({
 
       <div className={styles.rcRow}>
         <FormField label={t("economy:invoiceTool.meta.issueDateLabel")}>
-          <input
-            type="date"
-            value={issueDate}
-            onChange={(e) => setIssueDate(e.target.value)}
+          <DatePicker
+            mode="date"
+            label={t("economy:invoiceTool.meta.issueDateLabel")}
+            value={issueDate || null}
+            onChange={(value) => setIssueDate(value ?? "")}
           />
         </FormField>
         <FormField label={t("economy:invoiceTool.meta.dueDateLabel")}>
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
+          <DatePicker
+            mode="date"
+            label={t("economy:invoiceTool.meta.dueDateLabel")}
+            value={dueDate || null}
+            onChange={(value) => setDueDate(value ?? "")}
           />
         </FormField>
       </div>
 
       <FormField label={t("economy:invoiceTool.meta.ivaRateLabel")}>
-        <select
-          value={ivaRate}
+        <Select
           disabled={exempt53}
-          onChange={(e) => setIvaRate(Number(e.target.value))}
-        >
-          {IVA_RATES.map((r) => (
-            <option key={r.value} value={r.value}>
-              {t(r.labelKey)}
-            </option>
-          ))}
-        </select>
+          options={IVA_RATES.map((r) => ({
+            value: String(r.value),
+            label: t(r.labelKey),
+          }))}
+          value={String(ivaRate)}
+          onChange={(value) => setIvaRate(Number(value))}
+        />
       </FormField>
 
       <label className={styles.check} htmlFor="inv-exempt">

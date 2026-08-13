@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
 import { Button, Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { useLandingFeaturesPublic } from "../api/useLandingFeatures";
+import { ChangemakerGrid } from "./ChangemakerGrid";
 import styles from "./LiveSections.module.css";
 
 /**
@@ -56,30 +56,7 @@ export function LiveChangeMakers() {
           </div>
         </div>
 
-        <div className={styles.grid}>
-          {changemakers.map((person, index) => (
-            <Reveal
-              key={person.id}
-              delay={index * 70}
-              as={Link}
-              to={`/changemaker/${person.slug}`}
-              className={styles.changemakerCard}
-            >
-              <div className={styles.changemakerCause}>{person.cause}</div>
-              <div className={styles.changemakerName}>{person.name}</div>
-              <p className={styles.changemakerBlurb}>{person.blurb}</p>
-              {person.tags.length > 0 && (
-                <div className={styles.changemakerTags}>
-                  {person.tags.map((tag) => (
-                    <span key={tag} className={styles.changemakerTag}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </Reveal>
-          ))}
-        </div>
+        <ChangemakerGrid items={changemakers} />
       </div>
     </section>
   );

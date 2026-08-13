@@ -188,6 +188,14 @@ export const shared: Catalog = {
   "searchInput.placeholder": "Pesquisar…",
   "searchInput.clearAria": "Limpar pesquisa",
 
+  // Select — unified searchable dropdown
+  "select.placeholder": "Selecionar…",
+  "select.searchPlaceholder": "Escreva para filtrar…",
+  "select.noResults": "Sem correspondências",
+  "select.clear": "Limpar seleção",
+  "select.loading": "A carregar…",
+  "select.multiSummary": "{count} selecionados",
+
   // ComingSoon
   "comingSoon.label": "Brevemente",
 
@@ -403,4 +411,34 @@ export const shared: Catalog = {
   "mediaRef.magazine-author": "Pessoa autora",
   "mediaRef.changemaker": "Agente de mudança",
   "mediaRef.collection": "Coleção",
+
+  // calendar.* keys, for the shared APG-compliant Calendar/DatePicker
+  // primitive (Calendar.tsx, CalendarCell.tsx, CalendarHeader.tsx,
+  // DatePicker.tsx, RangeCalendar.tsx).
+  "calendar.chooseDate": "Escolher data",
+  "calendar.chooseTime": "Escolher hora",
+  "calendar.chooseMonth": "Escolher mês",
+  "calendar.chooseRange": "Escolher intervalo de datas",
+  "calendar.prevMonth": "Mês anterior",
+  "calendar.nextMonth": "Próximo mês",
+  "calendar.prevYear": "Ano anterior",
+  "calendar.nextYear": "Próximo ano",
+  "calendar.today": "Hoje",
+  "calendar.clear": "Limpar",
+  "calendar.monthLabel": "Mês",
+  "calendar.yearLabel": "Ano",
+  "calendar.startDate": "Data de início",
+  "calendar.endDate": "Data de fim",
+  "calendar.segment.day": "Dia",
+  "calendar.segment.month": "Mês",
+  "calendar.segment.year": "Ano",
+  "calendar.segment.hour": "Hora",
+  "calendar.segment.minute": "Minuto",
+  "calendar.segment.meridiem": "AM/PM",
+  "calendar.state.today": "hoje",
+  "calendar.state.selected": "selecionado",
+  "calendar.state.unavailable": "indisponível",
+  "calendar.preset.today": "Hoje",
+  "calendar.preset.tomorrow": "Amanhã",
+  "calendar.preset.nextWeek": "Próxima semana",
 };

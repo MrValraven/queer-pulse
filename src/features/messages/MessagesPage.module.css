@@ -161,14 +161,28 @@
 .threadRowWrap:focus-within .threadRow {
   padding-inline-end: 44px;
 }
+/* Every interaction state keeps an OPAQUE base: the plum wash is composited
+   OVER `--paper`, never used as a bare translucent fill. A translucent row
+   would let the jade/accent swipe-affordance layers behind its left/right
+   108px edges bleed through (green on the left, orange on the right) — see
+   `.threadRowSwipeLeading`/`Trailing`. The row must "fully cover them at rest"
+   (line 130) in every state, not just the untouched one. */
 @media (hover: hover) {
   .threadRow:hover {
-    background: rgba(var(--plum-rgb), 0.03);
+    background: linear-gradient(
+        rgba(var(--plum-rgb), 0.03),
+        rgba(var(--plum-rgb), 0.03)
+      ),
+      var(--paper);
   }
 }
 /* Immediate tap feedback on touch (no hover state exists there). */
 .threadRow:active {
-  background: rgba(var(--plum-rgb), 0.08);
+  background: linear-gradient(
+      rgba(var(--plum-rgb), 0.08),
+      rgba(var(--plum-rgb), 0.08)
+    ),
+    var(--paper);
 }
 /* Class-scoped override of the global two-tone ring (see base.css) — this row
    now lives inside `.threadRowSwipeContainer`'s `overflow: hidden` (needed to
@@ -182,7 +196,13 @@
   box-shadow: inset 0 0 0 3px var(--accent-deep);
 }
 .threadActive {
-  background: rgba(var(--plum-rgb), 0.06);
+  /* Opaque base — this is the persistently-selected inbox row, so a
+     translucent wash here would leak the swipe layers on it at ALL times. */
+  background: linear-gradient(
+      rgba(var(--plum-rgb), 0.06),
+      rgba(var(--plum-rgb), 0.06)
+    ),
+    var(--paper);
   box-shadow: inset 3px 0 0 var(--plum);
 }
 .trAv {
@@ -1819,6 +1839,27 @@
 /* Thread row "⋯" menu — sibling of the row button, never nested inside it */
 .threadRowWrap {
   position: relative;
+}
+/* While the ⋯ menu is open, the `.rowMenuPopover` hangs DOWN past its row into
+   the next row's box — and was painting BEHIND that next row, so the dropdown
+   looked invisible.
+
+   Each inbox row is wrapped in a `<FadeIn>` (see MessagesThreadListBody), whose
+   `.fadeIn` sets `will-change: transform`, making every row its OWN stacking
+   context. The popover's `z-index` therefore only competed inside its own row;
+   the next `FadeIn` (a later sibling, painted in DOM order) covered it. Raising
+   `.threadRowWrap` couldn't help — it's trapped inside that FadeIn context.
+
+   Fix at the FadeIn wrapper itself: when it contains an open popover, make it
+   `position: relative` + a positive `z-index`. A positioned positive-z element
+   paints in the topmost stacking step, above sibling FadeIns' stack-level-0
+   contexts regardless of DOM order — so the open row's dropdown paints over the
+   rows below it. Scoped to the open state so at-rest row layering is untouched.
+   (Reduced motion drops the will-change/stacking context, but the rule is
+   harmless there.) */
+.threadRowFade:has(.rowMenuPopover) {
+  position: relative;
+  z-index: 3;
 }
 
 /* Swipe-to-pin/favorite container (mobile, mirrors `.bubbleWrap`'s

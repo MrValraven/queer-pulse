@@ -1,9 +1,11 @@
 import { FiArrowRight } from "react-icons/fi";
 import { safeHref } from "../../shared/lib/safeHref";
+import { formatMonthYear } from "../../shared/lib/date";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ItemStateChip } from "./ItemStateChip";
 import { SubprofileSocialRow } from "./SubprofileSocialRow";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
+import { WorkRightsFooter } from "./rights/WorkRightsFooter";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 import type { AccentKey } from "./api/subprofiles.api";
 import type { SkinFamily } from "./subprofile-skins";
@@ -14,6 +16,13 @@ import type { SkinFamily } from "./subprofile-skins";
  * arrow, description. A stage-skin row with a live ticket link becomes the
  * whole row's `<a>` (never a link-inside-a-link) — a sold-out gig or a
  * `preview`/inert row stays a plain `<div>`.
+ *
+ * Every non-poem row's body ends with `WorkRightsFooter` (copyright +
+ * provenance), gated on `interactive` (never in the editor's docked
+ * `mode="preview"`, mirroring how the poem row's own reader-open is stripped
+ * there) and excluded for `section === "poems"`: a poem gets the SAME
+ * footer once, inside `PoemReaderModal`, when its row's `onOpen` opens the
+ * reader, so showing it again here would double it up.
  */
 export function SubprofileItemRow({
   item,
@@ -22,6 +31,7 @@ export function SubprofileItemRow({
   accent,
   onOpen,
   teaser,
+  authorName,
 }: {
   item: SubprofileItemView;
   skin: SkinFamily;
@@ -34,8 +44,11 @@ export function SubprofileItemRow({
   onOpen?: (item: SubprofileItemView) => void;
   /** Overrides the inline `<p>` body with a one-line teaser (poems). */
   teaser?: string;
+  /** The persona's public display name, used as the `WorkRightsFooter`
+   *  copyright holder for this item. */
+  authorName: string;
 }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const isOff = item.gigState === "cancelled";
   const ticketHref =
     skin === "stage" && item.gigState !== "sold_out"
@@ -58,7 +71,9 @@ export function SubprofileItemRow({
           {t("subprofiles:row.doors", { doors: item.doors })}
         </span>
       )}
-      {item.date && <span className="when">{item.date}</span>}
+      {item.date && (
+        <span className="when">{formatMonthYear(item.date, language)}</span>
+      )}
       {skin === "stage" && ticketHref && (
         <span className="ticketgo">
           <FiArrowRight aria-hidden />
@@ -74,6 +89,9 @@ export function SubprofileItemRow({
         accent={accent ?? DEFAULT_ACCENT}
         interactive={interactive && !onOpen}
       />
+      {interactive && item.section !== "poems" && (
+        <WorkRightsFooter authorName={authorName} createdAtISO={item.createdAt} />
+      )}
     </>
   );
 

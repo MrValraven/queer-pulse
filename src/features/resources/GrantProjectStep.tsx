@@ -1,4 +1,5 @@
-import { FormField } from "../../shared/components/ui";
+import { useState } from "react";
+import { FormField, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./MicroGrantsPage.module.css";
@@ -16,6 +17,7 @@ export function ProjectStep({
   setProjWhat: (v: string) => void;
 }) {
   const { t } = useTranslation();
+  const [stage, setStage] = useState("");
   return (
     <>
       <div className={styles.stepTitle}>
@@ -70,23 +72,31 @@ export function ProjectStep({
           />
         </FormField>
         <FormField label={t("resources:microGrants.apply.project.stageLabel")}>
-          <select defaultValue="">
-            <option value="">
-              {t("resources:microGrants.apply.project.stage.select")}
-            </option>
-            <option>
-              {t("resources:microGrants.apply.project.stage.idea")}
-            </option>
-            <option>
-              {t("resources:microGrants.apply.project.stage.development")}
-            </option>
-            <option>
-              {t("resources:microGrants.apply.project.stage.ready")}
-            </option>
-            <option>
-              {t("resources:microGrants.apply.project.stage.ongoing")}
-            </option>
-          </select>
+          <Select
+            placeholder={t("resources:microGrants.apply.project.stage.select")}
+            value={stage || null}
+            onChange={(value) => setStage(value ?? "")}
+            options={[
+              {
+                value: "idea",
+                label: t("resources:microGrants.apply.project.stage.idea"),
+              },
+              {
+                value: "development",
+                label: t(
+                  "resources:microGrants.apply.project.stage.development",
+                ),
+              },
+              {
+                value: "ready",
+                label: t("resources:microGrants.apply.project.stage.ready"),
+              },
+              {
+                value: "ongoing",
+                label: t("resources:microGrants.apply.project.stage.ongoing"),
+              },
+            ]}
+          />
         </FormField>
       </div>
     </>

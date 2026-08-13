@@ -1,81 +1,80 @@
-import { useState } from "react";
-import { Avatar, Button } from "../../shared/components/ui";
+import { FiChevronRight } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { initialsOf } from "../../shared/api/refs";
-import { VerificationBadge } from "../economy/VerificationBadge";
-import type { VerificationLevel } from "../economy/api/verification.api";
+import { memberRefToPerson } from "../../shared/api/refs";
+import { AdminAvatar, AdminChip, type AvatarTone } from "./ui";
+import { VERIFICATION_STATUS_TONE } from "./verificationStatusTone";
 import type { AdminVerificationDTO } from "./api/adminVerifications.api";
-import styles from "./AdminVerificationsPage.module.css";
+import styles from "./AdminSubmissionList.module.css";
 
-const LEVELS: VerificationLevel[] = ["none", "email", "phone", "id_verified"];
+/**
+ * The verification queue's row list, on the shared `AdminSubmissionList`
+ * classes (the same row family as the concerns/nominations/proposals
+ * inboxes). Each row is read-only here — the level `<select>` + Apply
+ * control that used to sit inline moved into the detail drawer (Task F);
+ * this row's only interactive control is the trailing "Review" button that
+ * opens it via `onOpen(userId)`.
+ */
+export function AdminVerificationRows({
+  rows,
+  onOpen,
+}: {
+  rows: AdminVerificationDTO[];
+  onOpen: (userId: string) => void;
+}) {
+  return (
+    <div className={styles.rows}>
+      {rows.map((row) => (
+        <AdminVerificationRow key={row.userId} row={row} onOpen={onOpen} />
+      ))}
+    </div>
+  );
+}
 
-/** One reviewable verification record with a manual-override control. */
-export function AdminVerificationRow({
+function AdminVerificationRow({
   row,
-  demoMode,
-  saving,
-  onOverride,
+  onOpen,
 }: {
   row: AdminVerificationDTO;
-  demoMode: boolean;
-  saving: boolean;
-  onOverride: (level: VerificationLevel) => void;
+  onOpen: (userId: string) => void;
 }) {
   const { t } = useTranslation();
-  const [level, setLevel] = useState<VerificationLevel>(row.level);
-  const name = row.member
-    ? `${row.member.firstName} ${row.member.lastName}`.trim()
-    : t("admin:verifications.unknownMember");
+  const person = memberRefToPerson(row.member);
+  const name = person?.name ?? t("admin:verifications.unknownMember");
+  const methodLabel = row.method ?? t("admin:verifications.meta.unknown");
+  const providerLabel = row.provider ?? t("admin:verifications.meta.unknown");
 
   return (
     <div className={styles.row}>
-      <Avatar
-        initials={
-          row.member
-            ? initialsOf(row.member.firstName, row.member.lastName)
-            : "?"
-        }
-        src={row.member?.avatarUrl ?? undefined}
+      <AdminAvatar
+        initials={person?.initials ?? "?"}
+        // `Person.tint` is `AvatarTint` (a different, wider palette type);
+        // `tintForSlug` (its only source) only ever produces coral/plum/jade,
+        // which is also a subset of AdminAvatar's `AvatarTone` — same cast
+        // used by EditSuggestionRows.
+        tone={(person?.tint as AvatarTone | undefined) ?? "anon"}
+        size="md"
+        src={person?.avatarUrl ?? undefined}
         alt={name}
-        size={40}
       />
       <div className={styles.rowMain}>
-        <div className={styles.rowName}>
-          {name} <VerificationBadge level={row.level} size="sm" />
+        <div className={styles.rowTop}>
+          <span className={styles.rowName}>{name}</span>
+          <AdminChip tone={VERIFICATION_STATUS_TONE[row.level]} dot>
+            {t(`admin:verifications.level.${row.level}`)}
+          </AdminChip>
         </div>
         <div className={styles.rowMeta}>
           {t("admin:verifications.via", {
-            method: row.method ?? "—",
-            provider: row.provider ?? "—",
+            method: methodLabel,
+            provider: providerLabel,
           })}
         </div>
       </div>
       <div className={styles.rowActions}>
-        <label className={styles.srOnly} htmlFor={`level-${row.userId}`}>
-          {t("admin:verifications.setLevelLabel")}
-        </label>
-        <select
-          id={`level-${row.userId}`}
-          className={styles.select}
-          value={level}
-          disabled={demoMode || saving}
-          onChange={(event) =>
-            setLevel(event.target.value as VerificationLevel)
-          }
-        >
-          {LEVELS.map((option) => (
-            <option key={option} value={option}>
-              {t(`admin:verifications.level.${option}`)}
-            </option>
-          ))}
-        </select>
-        <Button
-          variant="ghost"
-          size="sm"
-          disabled={demoMode || saving || level === row.level}
-          onClick={() => onOverride(level)}
-        >
-          {t("admin:verifications.applyCta")}
+        <Button variant="ghost" size="sm" onClick={() => onOpen(row.userId)}>
+          {t("admin:verifications.reviewCta")}
+          <FiChevronRight aria-hidden />
         </Button>
       </div>
     </div>

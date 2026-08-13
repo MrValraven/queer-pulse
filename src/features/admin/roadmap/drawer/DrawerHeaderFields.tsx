@@ -1,3 +1,4 @@
+import { Select } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type {
   AdminRoadmapItemDTO,
@@ -70,97 +71,82 @@ export function DrawerHeaderFields({
           <label className={styles.fieldLabel} htmlFor="drawer-field-category">
             {t("admin:roadmap.board.field.category")}
           </label>
-          <select
+          <Select
             id="drawer-field-category"
-            className={styles.select}
             value={category}
-            onChange={(event) => onFieldChange({ category: event.target.value })}
-          >
-            {categoryOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+            options={categoryOptions.map((option) => ({
+              value: option.value,
+              label: option.label,
+            }))}
+            onChange={(value) => onFieldChange({ category: value ?? "" })}
+          />
         </div>
 
         <div>
           <label className={styles.fieldLabel} htmlFor="drawer-field-status">
             {t("admin:roadmap.drawer.field.status")}
           </label>
-          <select
+          <Select
             id="drawer-field-status"
-            className={styles.select}
             value={column}
-            onChange={(event) =>
-              onFieldChange({ column: event.target.value as RoadmapColumn })
+            options={COLUMN_VALUES.map((value) => ({
+              value,
+              label: t(`admin:roadmap.board.column.${value}`),
+            }))}
+            onChange={(value) =>
+              onFieldChange({ column: (value ?? column) as RoadmapColumn })
             }
-          >
-            {COLUMN_VALUES.map((value) => (
-              <option key={value} value={value}>
-                {t(`admin:roadmap.board.column.${value}`)}
-              </option>
-            ))}
-          </select>
+          />
         </div>
 
         <div>
           <label className={styles.fieldLabel} htmlFor="drawer-field-target">
             {t("admin:roadmap.drawer.field.target")}
           </label>
-          <select
+          <Select
             id="drawer-field-target"
-            className={styles.select}
             value={targetQuarter ?? ""}
-            onChange={(event) =>
-              onTargetQuarterChange(event.target.value || null)
-            }
-          >
-            <option value="">—</option>
-            {quarterOptions.map((quarter) => (
-              <option key={quarter} value={quarter}>
-                {quarter}
-              </option>
-            ))}
-          </select>
+            options={[
+              { value: "", label: "—" },
+              ...quarterOptions.map((quarter) => ({
+                value: quarter,
+                label: quarter,
+              })),
+            ]}
+            onChange={(value) => onTargetQuarterChange(value || null)}
+          />
         </div>
 
         <div>
           <label className={styles.fieldLabel} htmlFor="drawer-field-owner">
             {t("admin:roadmap.drawer.field.owner")}
           </label>
-          <select
+          <Select
             id="drawer-field-owner"
-            className={styles.select}
             value={ownerId ?? ""}
-            onChange={(event) => onFieldChange({ ownerId: event.target.value || null })}
-          >
-            {ownerOptions.map((option) => (
-              <option key={option.value || "unassigned"} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+            options={ownerOptions.map((option) => ({
+              value: option.value,
+              label: option.label,
+            }))}
+            onChange={(value) => onFieldChange({ ownerId: value || null })}
+          />
         </div>
 
         <div>
           <label className={styles.fieldLabel} htmlFor="drawer-field-priority">
             {t("admin:roadmap.drawer.field.priority")}
           </label>
-          <select
+          <Select
             id="drawer-field-priority"
-            className={styles.select}
             value={priority}
-            onChange={(event) =>
-              onFieldChange({ priority: event.target.value as RoadmapPriority })
+            options={PRIORITY_VALUES.map((value) => ({
+              value,
+              label: value,
+            }))}
+            onChange={(value) =>
+              onFieldChange({ priority: (value ?? priority) as RoadmapPriority })
             }
-          >
-            {PRIORITY_VALUES.map((value) => (
-              <option key={value} value={value}>
-                {value}
-              </option>
-            ))}
-          </select>
+          />
         </div>
       </div>
     </>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
+import { Select } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -7,6 +8,25 @@ import { useCreateReadingGroupProposal } from "./api/useCreateReadingGroupPropos
 import type { ReadingGroupProposalFormat } from "./api/community.api";
 import { type Format, type Group } from "./readingGroups.data";
 import styles from "./ReadingGroupsPage.module.css";
+
+// option value stays canonical English — it's compared (`formatField ===
+// "Online"`) and sent to the API; only the visible label is translated.
+const FORMAT_OPTIONS: { value: string; labelKey: string }[] = [
+  {
+    value: "In-person",
+    labelKey: "community:readingGroups.listGroup.formatOption.inPerson",
+  },
+  {
+    value: "Online",
+    labelKey: "community:readingGroups.listGroup.formatOption.online",
+  },
+  {
+    value: "Either",
+    labelKey: "community:readingGroups.listGroup.formatOption.either",
+  },
+];
+
+const MAX_PEOPLE_OPTIONS = ["4", "6", "8"];
 
 /** The "Start your own group" panel: a real form that lists a group and shows a
  *  plum-panel success state. The new group is handed back via onListed.
@@ -165,40 +185,29 @@ export function ListGroupStrip({
               <label className={styles.ssLabel} htmlFor="ss-format">
                 {t("community:readingGroups.listGroup.formatLabel")}
               </label>
-              <select
+              <Select
                 id="ss-format"
-                className={styles.ssInput}
                 value={formatField}
-                onChange={(e) => setFormatField(e.target.value)}
-              >
-                {/* option value stays canonical English — it's compared
-                    (`formatField === "Online"`) and sent to the API; only the
-                    visible label is translated. */}
-                <option value="In-person">
-                  {t("community:readingGroups.listGroup.formatOption.inPerson")}
-                </option>
-                <option value="Online">
-                  {t("community:readingGroups.listGroup.formatOption.online")}
-                </option>
-                <option value="Either">
-                  {t("community:readingGroups.listGroup.formatOption.either")}
-                </option>
-              </select>
+                onChange={(value) => setFormatField(value ?? "In-person")}
+                options={FORMAT_OPTIONS.map((option) => ({
+                  value: option.value,
+                  label: t(option.labelKey),
+                }))}
+              />
             </div>
             <div className={styles.ssRow}>
               <label className={styles.ssLabel} htmlFor="ss-max">
                 {t("community:readingGroups.listGroup.maxLabel")}
               </label>
-              <select
+              <Select
                 id="ss-max"
-                className={styles.ssInput}
                 value={maxField}
-                onChange={(e) => setMaxField(e.target.value)}
-              >
-                <option>4</option>
-                <option>6</option>
-                <option>8</option>
-              </select>
+                onChange={(value) => setMaxField(value ?? "6")}
+                options={MAX_PEOPLE_OPTIONS.map((count) => ({
+                  value: count,
+                  label: count,
+                }))}
+              />
             </div>
           </div>
           <button

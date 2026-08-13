@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -57,21 +58,16 @@ export function SubmitStoryMeta({
       <label className={styles.fieldLabel} htmlFor="ss-section">
         {t("magazine:submitStory.meta.sectionLabel")}
       </label>
-      <select
+      <Select
         id="ss-section"
-        className={styles.select}
-        value={values.section}
-        onChange={(e) => set({ section: e.target.value })}
-      >
-        <option value="">
-          {t("magazine:submitStory.meta.sectionPlaceholder")}
-        </option>
-        {SECTION_OPTIONS.map((option) => (
-          <option key={option.id} value={option.id}>
-            {t(option.labelKey)}
-          </option>
-        ))}
-      </select>
+        value={values.section || null}
+        onChange={(value) => set({ section: value ?? "" })}
+        placeholder={t("magazine:submitStory.meta.sectionPlaceholder")}
+        options={SECTION_OPTIONS.map((option) => ({
+          value: option.id,
+          label: t(option.labelKey),
+        }))}
+      />
 
       <div className={styles.fieldRow}>
         <div>

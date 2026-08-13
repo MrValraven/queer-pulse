@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FiFilm, FiSearch, FiX, FiZap } from "react-icons/fi";
-import { Button, FadeIn, SectionHead } from "../../shared/components/ui";
+import { Button, FadeIn, SectionHead, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -99,35 +99,31 @@ export function CinemaShortsCatalog({ shelf }: { shelf: ShortsShelf }) {
           <label htmlFor="qp-lang">
             {t("cinema:shorts.catalog.languageLabel")}
           </label>
-          <select
+          <Select
             id="qp-lang"
-            aria-label={t("cinema:shorts.catalog.languageAriaLabel")}
+            size="sm"
             value={state.lang}
-            onChange={(e) => patch({ lang: e.target.value })}
-          >
-            {langOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {t(option.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => patch({ lang: value ?? "" })}
+            options={langOptions.map((option) => ({
+              value: option.value,
+              label: t(option.labelKey),
+            }))}
+          />
         </div>
         <div className={styles.selWrap}>
           <label htmlFor="qp-sort">
             {t("cinema:shorts.catalog.sortLabel")}
           </label>
-          <select
+          <Select
             id="qp-sort"
-            aria-label={t("cinema:shorts.catalog.sortAriaLabel")}
+            size="sm"
             value={state.sort}
-            onChange={(e) => patch({ sort: e.target.value })}
-          >
-            {sortOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {t(option.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => patch({ sort: value ?? state.sort })}
+            options={sortOptions.map((option) => ({
+              value: option.value,
+              label: t(option.labelKey),
+            }))}
+          />
         </div>
         <button type="button" className={styles.btnSurprise} onClick={surprise}>
           <FiZap aria-hidden />

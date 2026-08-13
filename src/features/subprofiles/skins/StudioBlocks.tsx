@@ -1,4 +1,5 @@
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { formatMonthYear } from "../../../shared/lib/date";
 import { getStudioWorks } from "./studioWorks";
 import { workMeta } from "../personaSkinRender";
 import type { SkinExtrasPersona } from "../SubprofileSkinExtras";
@@ -15,7 +16,7 @@ export function StudioChecklist({
   persona: SkinExtrasPersona;
   onOpenWork?: (index: number) => void;
 }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const works = getStudioWorks(persona.sections);
   if (works.length === 0) return null;
 
@@ -39,7 +40,11 @@ export function StudioChecklist({
                 </span>
                 <span className="ck-t">{item.title}</span>
                 {meta && <span className="ck-m">{meta}</span>}
-                {item.date && <span className="ck-d">{item.date}</span>}
+                {item.date && (
+                  <span className="ck-d">
+                    {formatMonthYear(item.date, language)}
+                  </span>
+                )}
               </button>
             </li>
           );

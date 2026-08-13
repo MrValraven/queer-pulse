@@ -108,6 +108,11 @@ export const communities: Catalog = {
   "detail.join.request": "Request to join",
   "detail.joined": "Joined",
   "detail.requested": "Requested",
+  "detail.frozen.title": "This community is paused",
+  "detail.frozen.body":
+    "Moderators are reviewing recent reports. New posts and joins are on hold until they lift the pause.",
+  "detail.frozen.unfreezeCta": "Lift the pause",
+  "detail.frozen.errorToast": "That didn't work. Try again.",
   "detail.save.cta": "Save",
   "detail.save.saved": "Saved",
   "detail.save.savedToast": "Community saved to your profile.",

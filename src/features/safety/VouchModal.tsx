@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { FiShield } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -105,7 +106,7 @@ export function VouchModal({
 
   const charsLeft = 12 - note.trim().length;
 
-  return (
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -216,6 +217,7 @@ export function VouchModal({
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

@@ -1,3 +1,4 @@
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ListSpaceForm } from "./useListSpaceForm";
 import styles from "./ApplicationModals.module.css";
@@ -63,18 +64,16 @@ export function ListSpaceFields({ form }: { form: ListSpaceForm }) {
       </div>
       <div className={styles.field}>
         <label htmlFor="ls-type">{t("economy:listSpace.typeLabel")}</label>
-        <select
+        <Select
           id="ls-type"
-          value={form.type}
-          onChange={(event) => form.setType(event.target.value)}
-        >
-          <option value="">{t("economy:listSpace.chooseOne")}</option>
-          {SPACE_TYPES.map((spaceType) => (
-            <option key={spaceType.value} value={spaceType.value}>
-              {t(spaceType.labelKey)}
-            </option>
-          ))}
-        </select>
+          placeholder={t("economy:listSpace.chooseOne")}
+          value={form.type || null}
+          onChange={(value) => form.setType(value ?? "")}
+          options={SPACE_TYPES.map((spaceType) => ({
+            value: spaceType.value,
+            label: t(spaceType.labelKey),
+          }))}
+        />
       </div>
       <div className={styles.field}>
         <label htmlFor="ls-access">

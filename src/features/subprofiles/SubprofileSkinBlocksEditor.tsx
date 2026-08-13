@@ -1,6 +1,14 @@
-import { FiArrowDown, FiArrowUp, FiPlus, FiX } from "react-icons/fi";
-import { FormField } from "../../shared/components/ui";
+import {
+  FiArrowDown,
+  FiArrowUp,
+  FiMoreVertical,
+  FiPlus,
+  FiTrash2,
+  FiX,
+} from "react-icons/fi";
+import { DatePicker, FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useRowDragReorder } from "./useRowDragReorder";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import type {
   SkinBlockControl,
@@ -60,67 +68,81 @@ function SkinStringListControl({
   const label = t(control.labelKey);
 
   const commit = (next: string[]) => editor.setValue(control.path, next);
-  const swap = (index: number, delta: number) => {
-    const target = index + delta;
-    if (target < 0 || target >= lines.length) return;
+  const reorder = (from: number, to: number) => {
+    if (to < 0 || to >= lines.length) return;
     const next = [...lines];
-    [next[index], next[target]] = [next[target]!, next[index]!];
+    [next[from], next[to]] = [next[to]!, next[from]!];
     commit(next);
   };
+  const { containerRef, draggingIndex, gripHandlers } = useRowDragReorder(reorder);
 
   return (
     <div className={styles.itemsWrap}>
       <span className={styles.itemNum}>{label}</span>
-      {lines.map((line, index) => (
-        <div key={index} className={styles.itemHead}>
-          <input
-            value={line}
-            aria-label={t("subprofiles:skinBlock.lineLabel", {
-              label,
-              index: index + 1,
-            })}
-            onChange={(event) =>
-              commit(lines.map((entry, entryIndex) =>
-                entryIndex === index ? event.target.value : entry,
-              ))
+      <div className={styles.lineList} ref={containerRef}>
+        {lines.map((line, index) => (
+          <div
+            key={index}
+            className={
+              draggingIndex === index
+                ? `${styles.lineRow} ${styles.lineRowDragging}`
+                : styles.lineRow
             }
-          />
-          <div className={styles.itemTools}>
-            <button
-              type="button"
-              className={styles.toolBtn}
-              disabled={index === 0}
-              aria-label={t("subprofiles:skinBlock.moveUp")}
-              onClick={() => swap(index, -1)}
+          >
+            <span
+              className={styles.lineGrip}
+              aria-hidden
+              title={t("subprofiles:skinBlock.dragToReorder")}
+              {...gripHandlers(index)}
             >
-              <FiArrowUp size={15} />
-            </button>
-            <button
-              type="button"
-              className={styles.toolBtn}
-              disabled={index === lines.length - 1}
-              aria-label={t("subprofiles:skinBlock.moveDown")}
-              onClick={() => swap(index, 1)}
-            >
-              <FiArrowDown size={15} />
-            </button>
-            <button
-              type="button"
-              className={styles.toolBtn}
-              aria-label={t("subprofiles:skinBlock.removeItem")}
-              onClick={() =>
-                commit(lines.filter((_, entryIndex) => entryIndex !== index))
+              <FiMoreVertical size={16} />
+            </span>
+            <input
+              className={styles.lineInput}
+              value={line}
+              aria-label={t("subprofiles:skinBlock.lineLabel", {
+                label,
+                index: index + 1,
+              })}
+              onChange={(event) =>
+                commit(lines.map((entry, entryIndex) =>
+                  entryIndex === index ? event.target.value : entry,
+                ))
               }
-            >
-              <FiX size={15} />
-            </button>
+            />
+            <div className={styles.lineOps}>
+              <button
+                type="button"
+                disabled={index === 0}
+                aria-label={t("subprofiles:skinBlock.moveUp")}
+                onClick={() => reorder(index, index - 1)}
+              >
+                <FiArrowUp size={15} aria-hidden />
+              </button>
+              <button
+                type="button"
+                disabled={index === lines.length - 1}
+                aria-label={t("subprofiles:skinBlock.moveDown")}
+                onClick={() => reorder(index, index + 1)}
+              >
+                <FiArrowDown size={15} aria-hidden />
+              </button>
+              <button
+                type="button"
+                aria-label={t("subprofiles:skinBlock.removeItem")}
+                onClick={() =>
+                  commit(lines.filter((_, entryIndex) => entryIndex !== index))
+                }
+              >
+                <FiTrash2 size={15} aria-hidden />
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
-      <div>
+        ))}
+      </div>
+      <div className={styles.lineAddBar}>
         <button
           type="button"
-          className={styles.addBtn}
           onClick={() => commit([...lines, ""])}
         >
           <FiPlus size={15} aria-hidden />
@@ -271,10 +293,11 @@ function SkinGridControl({
     <div className={styles.availEditor}>
       <h3 className={styles.cardTitle}>{t(control.labelKey)}</h3>
       <FormField label={t("subprofiles:skinBlock.practice.availability.startDate")}>
-        <input
-          type="date"
-          value={startDate}
-          onChange={(event) => commit({ startDate: event.target.value, slotTime, cells })}
+        <DatePicker
+          mode="date"
+          label={t("subprofiles:skinBlock.practice.availability.startDate")}
+          value={startDate || null}
+          onChange={(value) => commit({ startDate: value ?? "", slotTime, cells })}
         />
       </FormField>
       <FormField label={t("subprofiles:skinBlock.practice.availability.slotTime")}>

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildSections,
   itemsToInputDto,
+  itemToView,
   ownerViewToShowcaseView,
   publicSubprofileToView,
   subprofileToView,
@@ -28,6 +29,8 @@ function makeItem(
   overrides: Partial<SubprofileItemDTO> & Pick<SubprofileItemDTO, "section" | "title">,
 ): SubprofileItemDTO {
   return {
+    id: "item-test",
+    createdAt: "2025-07-14T09:32:00.000Z",
     subtitle: null,
     description: null,
     url: null,
@@ -80,6 +83,31 @@ function makeMusicianDto(overrides: Partial<SubprofileDTO> = {}): SubprofileDTO 
     ...overrides,
   };
 }
+
+describe("itemToView", () => {
+  it("maps createdAt onto the item view", () => {
+    const view = itemToView(
+      makeItem({
+        section: "poems",
+        title: "Pecado",
+        createdAt: "2025-07-14T09:32:00.000Z",
+        structured: { poem: [] },
+      }),
+    );
+    expect(view.createdAt).toBe("2025-07-14T09:32:00.000Z");
+  });
+
+  it("maps id onto the item view", () => {
+    const view = itemToView(
+      makeItem({
+        id: "item-poem-pecado",
+        section: "poems",
+        title: "Pecado",
+      }),
+    );
+    expect(view.id).toBe("item-poem-pecado");
+  });
+});
 
 describe("buildSections", () => {
   it("drops empty sections in public mode, keeping kind order", () => {
@@ -295,8 +323,10 @@ describe("itemsToInputDto", () => {
       slug: "rui",
     };
     const full: SubprofileItemView = {
+      id: "item-threshold-ep",
       section: "discography",
       title: "Threshold EP",
+      createdAt: "2025-07-14T09:32:00.000Z",
       subtitle: "Penumbra Records",
       description: "",
       url: "https://x.test",
@@ -317,8 +347,10 @@ describe("itemsToInputDto", () => {
       structured: null,
     };
     const minimal: SubprofileItemView = {
+      id: "item-static-bloom",
       section: "discography",
       title: "Static Bloom",
+      createdAt: "2025-04-02T14:05:00.000Z",
       subtitle: "",
       description: "",
       url: "",
@@ -361,8 +393,10 @@ describe("itemsToInputDto", () => {
     // resave used to silently drop gigState/venue/medium/workState/structured
     // because `itemsToInputDto` never forwarded them.
     const gigItem: SubprofileItemView = {
+      id: "item-rrraw-warehouse",
       section: "gigs",
       title: "Rrraw · Warehouse",
+      createdAt: "2025-05-20T20:00:00.000Z",
       subtitle: "",
       description: "",
       url: "",
@@ -383,8 +417,10 @@ describe("itemsToInputDto", () => {
       structured: null,
     };
     const projectItem: SubprofileItemView = {
+      id: "item-tide",
       section: "projects",
       title: "Tide",
+      createdAt: "2025-06-11T10:45:00.000Z",
       subtitle: "",
       description: "",
       url: "",

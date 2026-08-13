@@ -1,4 +1,4 @@
-import { SearchInput, SegmentedControl } from "../../../shared/components/ui";
+import { SearchInput, SegmentedControl, Select } from "../../../shared/components/ui";
 import { cx } from "../../../shared/lib/cx";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "./DeskToolbar.module.css";
@@ -64,16 +64,17 @@ export function DeskToolbar({
       >
         {t("magazine:desk.toolbar.myQueue")}
       </button>
-      <select
-        className={styles.chip}
+      <Select
+        size="sm"
         value={sort}
-        onChange={(event) => onSort(event.target.value as DeskSortKey)}
-        aria-label={t("magazine:desk.toolbar.sortAria")}
-      >
-        <option value="due">{t("magazine:desk.toolbar.sort.due")}</option>
-        <option value="stage">{t("magazine:desk.toolbar.sort.stage")}</option>
-        <option value="sec">{t("magazine:desk.toolbar.sort.section")}</option>
-      </select>
+        onChange={(value) => onSort(value as DeskSortKey)}
+        label={t("magazine:desk.toolbar.sortAria")}
+        options={[
+          { value: "due", label: t("magazine:desk.toolbar.sort.due") },
+          { value: "stage", label: t("magazine:desk.toolbar.sort.stage") },
+          { value: "sec", label: t("magazine:desk.toolbar.sort.section") },
+        ]}
+      />
       <button type="button" className={styles.chip} onClick={onShortcuts}>
         {t("magazine:desk.toolbar.shortcuts")} <span className={styles.kbd}>?</span>
       </button>

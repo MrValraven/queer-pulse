@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../../shared/components/ui";
+import { Button, Select } from "../../shared/components/ui";
 import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -105,18 +105,16 @@ export function JoinCoopModal({
             <label htmlFor="jc-household">
               {t("economy:joinCoop.householdLabel")}
             </label>
-            <select
+            <Select
               id="jc-household"
-              value={household}
-              onChange={(e) => setHousehold(e.target.value)}
-            >
-              <option value="">{t("economy:joinCoop.chooseOne")}</option>
-              {HOUSEHOLD_SIZES.map((h) => (
-                <option key={h.value} value={h.value}>
-                  {t(h.labelKey)}
-                </option>
-              ))}
-            </select>
+              placeholder={t("economy:joinCoop.chooseOne")}
+              value={household || null}
+              onChange={(value) => setHousehold(value ?? "")}
+              options={HOUSEHOLD_SIZES.map((householdSize) => ({
+                value: householdSize.value,
+                label: t(householdSize.labelKey),
+              }))}
+            />
           </div>
           <div className={styles.field}>
             <label htmlFor="jc-note">{t("economy:joinCoop.noteLabel")}</label>

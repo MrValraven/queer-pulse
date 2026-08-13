@@ -1,4 +1,5 @@
 import { AdminCheckLine } from "./ui";
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CoopFormDraft } from "./adminHousingCoopForm.utils";
 import styles from "./AdminHousingCoopsPage.module.css";
@@ -99,20 +100,17 @@ export function AdminHousingCoopIdentityFields({
       <label className={styles.fieldLabel} htmlFor="coop-phase">
         {t("admin:housingCoop.field.phase")}
       </label>
-      <select
+      <Select
         id="coop-phase"
-        className={styles.select}
         value={draft.phase}
-        onChange={(event) =>
-          onChange({ phase: event.target.value as CoopFormDraft["phase"] })
+        options={PHASE_OPTIONS.map((option) => ({
+          value: option.value,
+          label: t(`admin:${option.labelKey}`),
+        }))}
+        onChange={(value) =>
+          onChange({ phase: (value ?? draft.phase) as CoopFormDraft["phase"] })
         }
-      >
-        {PHASE_OPTIONS.map((option) => (
-          <option key={option.value} value={option.value}>
-            {t(`admin:${option.labelKey}`)}
-          </option>
-        ))}
-      </select>
+      />
 
       <label className={styles.fieldLabel} htmlFor="coop-description">
         {t("admin:housingCoop.field.description")}
@@ -211,20 +209,19 @@ export function AdminHousingCoopEconomicsFields({
       <label className={styles.fieldLabel} htmlFor="coop-cta-kind">
         {t("admin:housingCoop.field.cta")}
       </label>
-      <select
+      <Select
         id="coop-cta-kind"
-        className={styles.select}
         value={draft.ctaKind}
-        onChange={(event) =>
-          onChange({ ctaKind: event.target.value as CoopFormDraft["ctaKind"] })
+        options={CTA_OPTIONS.map((option) => ({
+          value: option.value,
+          label: t(`admin:${option.labelKey}`),
+        }))}
+        onChange={(value) =>
+          onChange({
+            ctaKind: (value ?? draft.ctaKind) as CoopFormDraft["ctaKind"],
+          })
         }
-      >
-        {CTA_OPTIONS.map((option) => (
-          <option key={option.value} value={option.value}>
-            {t(`admin:${option.labelKey}`)}
-          </option>
-        ))}
-      </select>
+      />
 
       <div className={styles.checkStack}>
         <AdminCheckLine

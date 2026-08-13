@@ -1,5 +1,5 @@
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
-import { ChipSelect } from "../../shared/components/ui";
+import { useId, type ReactNode } from "react";
+import { ChipSelect, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -181,7 +181,7 @@ export function CinemaBrowseSidebar({
   );
 }
 
-/** Real <select>-style dropdown for sorting results. */
+/** Dropdown for sorting results, built on the shared Select primitive. */
 export function SortDropdown({
   value,
   onChange,
@@ -189,68 +189,18 @@ export function SortDropdown({
   value: SortKey;
   onChange: (key: SortKey) => void;
 }) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
-  const current =
-    SORT_OPTIONS.find((o) => o.value === value) ?? SORT_OPTIONS[0]!;
-
-  useEffect(() => {
-    if (!open) return;
-    function onDoc(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node))
-        setOpen(false);
-    }
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, [open]);
-
   return (
-    <div className={styles.sortWrap} ref={ref}>
-      <button
-        type="button"
-        className={styles.sortSel}
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        onClick={() => setOpen((o) => !o)}
-      >
-        {t(current.labelKey)}
-        <svg
-          width={12}
-          height={12}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2.2}
-        >
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
-      </button>
-      {open && (
-        <ul className={styles.sortMenu} role="listbox">
-          {SORT_OPTIONS.map((o) => (
-            <li key={o.value}>
-              <button
-                type="button"
-                role="option"
-                aria-selected={o.value === value}
-                className={[
-                  styles.sortOpt,
-                  o.value === value && styles.sortOptOn,
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                onClick={() => {
-                  onChange(o.value);
-                  setOpen(false);
-                }}
-              >
-                {t(o.labelKey)}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className={styles.sortWrap}>
+      <Select
+        size="sm"
+        value={value}
+        onChange={(next) => next && onChange(next as SortKey)}
+        options={SORT_OPTIONS.map((o) => ({
+          value: o.value,
+          label: t(o.labelKey),
+        }))}
+      />
     </div>
   );
 }

@@ -113,6 +113,11 @@ export const communities: Catalog = {
   "detail.join.request": "Pedir para entrar",
   "detail.joined": "Já és membro",
   "detail.requested": "Pedido enviado",
+  "detail.frozen.title": "Esta comunidade está em pausa",
+  "detail.frozen.body":
+    "A moderação está a rever denúncias recentes. Novas publicações e entradas ficam suspensas até a pausa ser levantada.",
+  "detail.frozen.unfreezeCta": "Levantar a pausa",
+  "detail.frozen.errorToast": "Não resultou. Tenta novamente.",
   "detail.save.cta": "Guardar",
   "detail.save.saved": "Guardado",
   "detail.save.savedToast": "Comunidade guardada no teu perfil.",

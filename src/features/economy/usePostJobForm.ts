@@ -91,9 +91,9 @@ function slugify(s: string) {
   );
 }
 
-/** Parse the wizard's `<input type="date">` value into a real `Date` (local
+/** Parse the wizard's date field value (yyyy-mm-dd) into a real `Date` (local
  *  midnight, so the picked day never shifts across timezones); empty/invalid
- *  input means "no deadline" — the consumer renders that as "Open" via
+ *  input means "no deadline", the consumer renders that as "Open" via
  *  `deadlineText()`/`useFormat()`, never a baked-in locale string here. */
 function parseFormDeadline(d: string): Date | null {
   if (!d) return null;

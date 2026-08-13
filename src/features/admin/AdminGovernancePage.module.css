@@ -32,6 +32,10 @@
   }
 }
 .statLabel {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
   font-size: 12.5px;
   color: var(--ink-60);
 }
@@ -537,10 +541,14 @@
   border-radius: 3px;
   background: rgba(var(--jade-rgb), 0.16);
 }
-.chartSvg {
+/* The positioned plot box for the tooltip portal. An explicit aspect-ratio
+   reserves the chart's height, since visx's ParentSize wrapper is height:100%
+   and would otherwise collapse this box to zero against its auto-height parent. */
+.chartPlot {
+  position: relative;
   width: 100%;
-  height: auto;
-  display: block;
+  aspect-ratio: 720 / 300;
+  margin-top: 10px;
 }
 .chartGrid {
   stroke: rgba(var(--plum-rgb), 0.1);
@@ -566,6 +574,14 @@
 }
 .barSpend {
   fill: var(--accent-ink);
+}
+/* The surplus a quarter's spending left under its income: a dashed, jade-tinted
+   band over the spending bar, matching the "Surplus to reserve" legend swatch. */
+.surplusBand {
+  fill: rgba(var(--jade-rgb), 0.16);
+  stroke: var(--ink-40);
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
 }
 @keyframes barGrow {
   from {
@@ -982,6 +998,92 @@
   .panelLiveDot {
     animation: none;
   }
+}
+
+/* ── Provenance badges + finance editing ─────────────────────────────────── */
+.sourceBadge {
+  display: inline-flex;
+  vertical-align: middle;
+}
+.sourceBadgeIco {
+  width: 12px;
+  height: 12px;
+  margin-inline-end: 4px;
+}
+
+.finToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block-end: 16px;
+}
+.finToolbarMeta {
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+
+/* Edit dialog */
+.editSection {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.editSection + .editSection,
+.editSection + :global(.field) {
+  margin-block-start: 22px;
+}
+.editLegend {
+  padding: 0;
+  margin-block-end: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.editGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: 14px;
+}
+.editSurplusLabel {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.editSurplus {
+  display: block;
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--jade);
+  padding-block: 8px;
+}
+.editLines {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.editLineRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.editLineLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+@media (min-width: 620px) {
+  .editLineRow {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1.6fr);
+    align-items: end;
+  }
+  .editLineLabel {
+    padding-block-end: 10px;
+  }
+}
   .auditRow {
     transition: none;
   }

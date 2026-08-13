@@ -1,30 +1,40 @@
-import { useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModeratorsRow } from "./AdminCommunityModerators";
 import { AdminChip, AdminToggle } from "./ui";
 import { visLabelKey, type Community } from "./adminCommunities.data";
+import { useUpdateAdminCommunity } from "./api/useUpdateAdminCommunity";
 import styles from "./AdminCommunitiesPage.module.css";
 
 export function SettingsPane({ community }: { community: Community }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  // Neither `join` nor `code` has a backend field yet (live mode — see
-  // adminCommunities.adapters.ts), so both arrive as "". `hasJoinData` also
-  // gates the second-vouch toggle below, which otherwise derives its initial
-  // state from parsing that same fabricated-empty string and would silently
-  // misreport "off" regardless of the community's real setting.
+  const updateCommunity = useUpdateAdminCommunity();
+
+  // The two policy toggles below read real persisted columns
+  // (`requiresSecondVouch` / `autoFreezeOnReports`) and write them through the
+  // admin PATCH. Persistence is real; enforcement (gating a join on a second
+  // vouch; auto-freezing on a report pile-up) is a deliberate follow-up. Only
+  // the "who can join" summary still depends on the backend-less `join` string,
+  // so it stays gated on having that data.
   const hasJoinData = community.join !== "";
-  const [secondVouch, setSecondVouch] = useState(
-    hasJoinData && community.join.includes("2"),
-  );
-  // Unlike `join`/`code`, `Community` has no `autoFreeze` field at all — not
-  // even a mock one — so this setting has no backing data in any mode yet.
-  // Same treatment as the second-vouch toggle above when its data is
-  // missing: default to off, disable the control, and swap in the "not
-  // tracked" subtext rather than silently claiming a state nobody knows.
-  const hasAutoFreezeData = false;
-  const [autoFreeze, setAutoFreeze] = useState(hasAutoFreezeData);
+
+  const saveToggle = (
+    patch: { requiresSecondVouch: boolean } | { autoFreezeOnReports: boolean },
+    value: boolean,
+    onToastKey: string,
+    offToastKey: string,
+  ) => {
+    updateCommunity.mutate(
+      { slug: community.slug, patch },
+      {
+        onSuccess: () =>
+          showToast(t(value ? onToastKey : offToastKey), "success"),
+        onError: () =>
+          showToast(t("admin:communities.settings.saveErrorToast"), "error"),
+      },
+    );
+  };
 
   return (
     <div className={styles.pane}>
@@ -43,45 +53,31 @@ export function SettingsPane({ community }: { community: Community }) {
 
       <ToggleRow
         title={t("admin:communities.settings.secondVouch.title")}
-        sub={
-          hasJoinData
-            ? t("admin:communities.settings.secondVouch.sub")
-            : t("admin:communities.settings.secondVouch.unavailableSub")
+        sub={t("admin:communities.settings.secondVouch.sub")}
+        checked={community.requiresSecondVouch}
+        disabled={updateCommunity.isPending}
+        onChange={(value) =>
+          saveToggle(
+            { requiresSecondVouch: value },
+            value,
+            "admin:communities.settings.secondVouch.onToast",
+            "admin:communities.settings.secondVouch.offToast",
+          )
         }
-        checked={secondVouch}
-        disabled={!hasJoinData}
-        onChange={(v) => {
-          setSecondVouch(v);
-          showToast(
-            t(
-              v
-                ? "admin:communities.settings.secondVouch.onToast"
-                : "admin:communities.settings.secondVouch.offToast",
-            ),
-            "info",
-          );
-        }}
       />
       <ToggleRow
         title={t("admin:communities.settings.autoFreeze.title")}
-        sub={
-          hasAutoFreezeData
-            ? t("admin:communities.settings.autoFreeze.sub")
-            : t("admin:communities.settings.autoFreeze.unavailableSub")
+        sub={t("admin:communities.settings.autoFreeze.sub")}
+        checked={community.autoFreezeOnReports}
+        disabled={updateCommunity.isPending}
+        onChange={(value) =>
+          saveToggle(
+            { autoFreezeOnReports: value },
+            value,
+            "admin:communities.settings.autoFreeze.onToast",
+            "admin:communities.settings.autoFreeze.offToast",
+          )
         }
-        checked={autoFreeze}
-        disabled={!hasAutoFreezeData}
-        onChange={(v) => {
-          setAutoFreeze(v);
-          showToast(
-            t(
-              v
-                ? "admin:communities.settings.autoFreeze.onToast"
-                : "admin:communities.settings.autoFreeze.offToast",
-            ),
-            "info",
-          );
-        }}
       />
 
       {community.code !== "" && (
@@ -114,6 +110,19 @@ export function SettingsPane({ community }: { community: Community }) {
           </AdminChip>
         </div>
       </div>
+
+      {community.frozen && (
+        <div className={styles.setRow}>
+          <div className={styles.setTop}>
+            <div className={styles.setLabel}>
+              {t("admin:communities.settings.status")}
+            </div>
+            <AdminChip tone="coral">
+              {t("admin:communities.settings.frozenChip")}
+            </AdminChip>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

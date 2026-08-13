@@ -205,13 +205,16 @@ function AccountSheetBody({
         </div>
       </div>
 
-      {ACCOUNT_GROUPS.map((group, groupIndex) => (
+      {ACCOUNT_GROUPS.map((group) =>
+        group
+          .filter((item) => item.to !== routes.accountProfile)
+          .filter((item) => !item.liveOnly || !demoMode),
+      )
+        .filter((group) => group.length > 0)
+        .map((group, groupIndex) => (
         <div key={group[0]?.to ?? groupIndex}>
           {groupIndex > 0 && <div className={menu.divider} />}
-          {group
-            .filter((item) => item.to !== routes.accountProfile)
-            .filter((item) => !item.liveOnly || !demoMode)
-            .map((item) => {
+          {group.map((item) => {
               const ItemIcon = item.icon;
               const badge =
                 item.badge ??

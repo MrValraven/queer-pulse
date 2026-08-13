@@ -1,4 +1,4 @@
-import { FilterChips } from "../../shared/components/ui";
+import { FilterChips, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ReviewSort, ReviewStarFilter } from "./reviewSort";
 import s from "./DirectorySpacePage.module.css";
@@ -62,17 +62,15 @@ export function DirectoryReviewControls({
         <span className={s.revSortLabel}>
           {t("marketing:directory.detail.reviews.sortLabel")}
         </span>
-        <select
-          className={s.revSortSelect}
+        <Select
+          size="sm"
+          options={SORT_OPTIONS.map((option) => ({
+            value: option,
+            label: t(SORT_LABEL_KEYS[option]),
+          }))}
           value={sort}
-          onChange={(event) => onSortChange(event.target.value as ReviewSort)}
-        >
-          {SORT_OPTIONS.map((option) => (
-            <option key={option} value={option}>
-              {t(SORT_LABEL_KEYS[option])}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => onSortChange(value as ReviewSort)}
+        />
       </label>
 
       <FilterChips

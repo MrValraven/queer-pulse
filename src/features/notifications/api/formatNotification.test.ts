@@ -164,6 +164,124 @@ describe("formatNotification", () => {
     });
   });
 
+  describe("verification_update", () => {
+    it("names the level the member was moved TO, not the level they moved from", () => {
+      const result = formatNotification(
+        "verification_update",
+        { fromLevel: "email", toLevel: "phone" },
+        t,
+      );
+      expect(result.text).toBe("Your verification level was updated to Phone.");
+      expect(result.meta.trim()).not.toBe("");
+      expect(result.category).toBe("platform");
+      expect(result.kind).toBe("verification_update");
+      // The raw enum value must never leak through unresolved.
+      expect(result.text).not.toContain("phone");
+      expect(result.text).not.toContain("email");
+    });
+
+    it("resolves the same row in Portuguese", () => {
+      const result = formatNotification(
+        "verification_update",
+        { fromLevel: "phone", toLevel: "id_verified" },
+        makeT("pt"),
+      );
+      expect(result.text).toBe(
+        "O teu nível de verificação foi atualizado para Identidade verificada.",
+      );
+    });
+
+    it("falls back to a generic level phrase for an unrecognised toLevel", () => {
+      // A future ladder rung an old client doesn't know yet — must never
+      // interpolate the raw, unresolved value.
+      const result = formatNotification(
+        "verification_update",
+        { toLevel: "some_future_level" },
+        t,
+      );
+      expect(result.text).toBe(
+        "Your verification level was updated to a new level.",
+      );
+      expect(result.text).not.toContain("some_future_level");
+    });
+
+    // Regression coverage for the bug this fix closes: `decideRequest`'s
+    // approve/reject payloads carry no `toLevel`, so before the fix both fell
+    // through to the override's `levelFallback` copy — which for a rejection
+    // is factually false (nothing about the member's level changed).
+    describe("approved decision", () => {
+      it("names the level that was requested, not a false level-updated claim", () => {
+        const result = formatNotification(
+          "verification_update",
+          { requestedLevel: "id_verified", decision: "approved" },
+          t,
+        );
+        expect(result.text).toBe(
+          "Your verification request was approved. You're now verified to ID-verified.",
+        );
+        expect(result.category).toBe("platform");
+        // The raw enum value must never leak through unresolved.
+        expect(result.text).not.toContain("id_verified");
+      });
+
+      it("resolves the same row in Portuguese", () => {
+        const result = formatNotification(
+          "verification_update",
+          { requestedLevel: "phone", decision: "approved" },
+          makeT("pt"),
+        );
+        expect(result.text).toBe(
+          "O teu pedido de verificação foi aprovado. O teu nível de verificação é agora Telefone.",
+        );
+      });
+    });
+
+    describe("rejected decision", () => {
+      it("never implies a level change, and surfaces the admin's reason", () => {
+        const result = formatNotification(
+          "verification_update",
+          {
+            requestedLevel: "id_verified",
+            decision: "rejected",
+            reason: "The submitted document photo was too blurry to verify.",
+          },
+          t,
+        );
+        expect(result.text).toBe("Your verification request was declined.");
+        // The bug this fix closes: this must never read as a level update.
+        expect(result.text).not.toContain("updated");
+        expect(result.text).not.toContain("level");
+        expect(result.meta).toBe(
+          "The submitted document photo was too blurry to verify.",
+        );
+      });
+
+      it("falls back to a generic phrase when no reason is on the payload", () => {
+        const result = formatNotification(
+          "verification_update",
+          { requestedLevel: "id_verified", decision: "rejected" },
+          t,
+        );
+        expect(result.text).toBe("Your verification request was declined.");
+        expect(result.meta).toBe("No reason was shared.");
+      });
+
+      it("resolves the same row in Portuguese", () => {
+        const result = formatNotification(
+          "verification_update",
+          {
+            requestedLevel: "phone",
+            decision: "rejected",
+            reason: "A foto do documento estava desfocada.",
+          },
+          makeT("pt"),
+        );
+        expect(result.text).toBe("O teu pedido de verificação foi recusado.");
+        expect(result.meta).toBe("A foto do documento estava desfocada.");
+      });
+    });
+  });
+
   it("passes scalar payload entries through as interpolation tokens", () => {
     // Today's copy uses no tokens, so this asserts the seam via a stub `t`
     // that echoes what it was handed.

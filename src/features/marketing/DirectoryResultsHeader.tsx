@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { FiList, FiMap, FiX } from "react-icons/fi";
-import { SegmentedControl } from "../../shared/components/ui";
+import { SegmentedControl, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import type { LocalSort } from "./localPlaces";
@@ -75,17 +75,15 @@ export function DirectoryResultsHeader({
               <span className={s.sortLabel}>
                 {t("marketing:directory.sort.label")}
               </span>
-              <select
-                className={s.sortSelect}
+              <Select
+                size="sm"
+                options={SORT_OPTIONS.map((option) => ({
+                  value: option,
+                  label: t(`marketing:directory.sort.${option}`),
+                }))}
                 value={sort}
-                onChange={(event) => onSortChange(event.target.value)}
-              >
-                {SORT_OPTIONS.map((option) => (
-                  <option key={option} value={option}>
-                    {t(`marketing:directory.sort.${option}`)}
-                  </option>
-                ))}
-              </select>
+                onChange={(value) => onSortChange(value ?? "default")}
+              />
             </label>
 
             {/* Desktop only: on phones the switcher rides in the sticky filter

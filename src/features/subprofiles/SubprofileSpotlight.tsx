@@ -8,6 +8,7 @@ import { collaboratorHref } from "./collaborators.data";
 import { WorkshopSnippet } from "./skins/WorkshopBlocks";
 import { SubprofileSocialRow } from "./SubprofileSocialRow";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
+import { WorkRightsFooter } from "./rights/WorkRightsFooter";
 import type { PersonaViewMode } from "./personaSkinRender";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 import type { AccentKey } from "./api/subprofiles.api";
@@ -26,17 +27,27 @@ import type { SkinFamily } from "./subprofile-skins";
  * and collaborator credits render as non-navigating look-alikes — same
  * classes, no `href`/`to` — mirroring `SubprofileSections`' `LinksSection`
  * pattern, so a click inside the preview can never leave the editor.
+ *
+ * The featured item's own `WorkRightsFooter` renders at the end of `.txt`,
+ * gated the same way (`interactive`, so it never shows in the editor's
+ * docked preview) and excluded when the featured item is a poem: a
+ * featured poem's copyright footer belongs to `PoemReaderModal` when its row
+ * opens the reader, never doubled up here.
  */
 export function SubprofileSpotlight({
   item,
   skin,
   mode,
   accent,
+  authorName,
 }: {
   item: SubprofileItemView;
   skin: SkinFamily;
   mode: PersonaViewMode;
   accent: AccentKey | null;
+  /** The persona's public display name, used as the `WorkRightsFooter`
+   *  copyright holder for this featured item. */
+  authorName: string;
 }) {
   const { t } = useTranslation();
   const interactive = mode !== "preview";
@@ -119,6 +130,10 @@ export function SubprofileSpotlight({
           accent={accent ?? DEFAULT_ACCENT}
           interactive={interactive}
         />
+
+        {interactive && item.section !== "poems" && (
+          <WorkRightsFooter authorName={authorName} createdAtISO={item.createdAt} />
+        )}
       </div>
     </div>
   );

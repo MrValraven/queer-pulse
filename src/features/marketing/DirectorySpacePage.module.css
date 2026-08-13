@@ -130,6 +130,42 @@
   color: var(--ink-40);
   font-weight: 600;
 }
+
+/* Cover placeholder for a listing with no uploaded photos AND no captions —
+   an intentional tinted panel (matching the caption cells' tint) carrying the
+   place's monogram, so the cover never renders as an empty box. */
+.galleryEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 300px;
+  border-radius: var(--radius-card);
+  background: rgba(var(--accent-rgb), 0.1);
+}
+.galleryEmptyMonogram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--text-strong);
+  letter-spacing: 0.01em;
+}
+.galleryEmptyLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
 @media (--lg) {
   .gallery {
     grid-template-columns: 1fr;
@@ -373,6 +409,13 @@
   max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 36px 28px 80px;
+  /* Query container so the two-column body responds to the width it actually
+     has, not the viewport. Without this the layout breaks when embedded in a
+     narrow-but-desktop context (the admin moderation preview drawer): the
+     viewport media queries below never fire, so the `1fr 340px` grid stays
+     two-column, the aside overflows, and the feature chips collapse to one
+     glyph per line. The container query mirrors the same collapse for that case. */
+  container: directorySpace / inline-size;
 }
 .grid {
   display: grid;
@@ -381,6 +424,13 @@
   align-items: flex-start;
 }
 @media (--mobile) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* Collapse once the body's own available width — not the viewport — drops below
+   the point where `1fr 340px` still leaves the main column room to read. */
+@container directorySpace (max-width: 760px) {
   .grid {
     grid-template-columns: 1fr;
   }
@@ -555,6 +605,12 @@
   gap: 10px;
 }
 @media (--sm) {
+  .features {
+    grid-template-columns: 1fr;
+  }
+}
+/* Same container-driven collapse for the narrow-container case (see `.page`). */
+@container directorySpace (max-width: 460px) {
   .features {
     grid-template-columns: 1fr;
   }

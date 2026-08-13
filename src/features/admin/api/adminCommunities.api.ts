@@ -1,4 +1,4 @@
-import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
+import { apiDelete, apiGet, apiPatch, apiPost } from "../../../shared/api/client";
 
 /**
  * Admin communities panel (`/admin/communities`, admin-only). Mirrors the
@@ -83,9 +83,24 @@ export interface AdminCommunityDetailDTO extends AdminCommunityCardDTO {
   description: string;
   foundedAt: string;
   visibility: AdminCommunityVisibility;
+  /** Whether joining requires a second existing member's vouch. Persisted;
+   *  not yet enforced in the join flow. */
+  requiresSecondVouch: boolean;
+  /** Whether the community auto-freezes when open reports pile up. Persisted;
+   *  enforcement is a follow-up. */
+  autoFreezeOnReports: boolean;
+  /** True while the community is currently auto-frozen pending report review. */
+  frozen: boolean;
   resolvedPercentage: number;
   moderators: AdminCommunityModeratorDTO[];
   scopedQueue: AdminCommunityQueueItemDTO[];
+}
+
+/** The safety-policy fields the admin Settings tab can PATCH. Every field is
+ *  optional so a single toggle sends only what it changed. */
+export interface UpdateAdminCommunitySettingsDto {
+  requiresSecondVouch?: boolean;
+  autoFreezeOnReports?: boolean;
 }
 
 /** Every community on the platform, for the admin grid. Admin-only — 403s otherwise. */
@@ -95,6 +110,13 @@ export const getAdminCommunities = () =>
 /** One community, with its moderators and scoped report queue. */
 export const getAdminCommunity = (slug: string) =>
   apiGet<AdminCommunityDetailDTO>(`/admin/communities/${slug}`);
+
+/** Update a community's safety-policy settings (admin-only). Returns the full
+ *  refreshed detail so the caller re-renders from authoritative state. */
+export const updateAdminCommunitySettings = (
+  slug: string,
+  dto: UpdateAdminCommunitySettingsDto,
+) => apiPatch<AdminCommunityDetailDTO>(`/admin/communities/${slug}`, dto);
 
 /** The roster members eligible to be promoted to moderator (plain members). */
 export const getAdminCommunityModeratorCandidates = (slug: string) =>

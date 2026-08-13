@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell } from "./ModalKit";
 import styles from "./EconomyPage.module.css";
@@ -12,6 +14,7 @@ export function SalarySubmitModal({
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
+  const [employmentType, setEmploymentType] = useState<string | null>(null);
   return (
     <ModalShell onClose={onClose} ariaLabel={t("economy:salary.submitLong")}>
       <div className={styles.modalHead}>
@@ -70,30 +73,33 @@ export function SalarySubmitModal({
               placeholder={t("economy:salarySubmitModal.yearsExpPlaceholder")}
             />
           </div>
-          <select
-            className={styles.modalSelect}
-            defaultValue=""
-            aria-label={t("economy:salarySubmitModal.employmentTypeLabel")}
-          >
-            <option value="">
-              {t("economy:salarySubmitModal.employmentTypeLabel")}
-            </option>
-            {/* Stable English `value`s kept separate from the translated
-                label text — see i18n sweep §5.1 (never let a rendered label
-                double as the stored/submitted value). */}
-            <option value="Full-time">
-              {t("economy:salarySubmitModal.type.fullTime")}
-            </option>
-            <option value="Part-time">
-              {t("economy:salarySubmitModal.type.partTime")}
-            </option>
-            <option value="Freelance">
-              {t("economy:salarySubmitModal.type.freelance")}
-            </option>
-            <option value="Contract">
-              {t("economy:salarySubmitModal.type.contract")}
-            </option>
-          </select>
+          {/* Stable English `value`s kept separate from the translated
+              label text — see i18n sweep §5.1 (never let a rendered label
+              double as the stored/submitted value). */}
+          <Select
+            label={t("economy:salarySubmitModal.employmentTypeLabel")}
+            placeholder={t("economy:salarySubmitModal.employmentTypeLabel")}
+            value={employmentType}
+            onChange={setEmploymentType}
+            options={[
+              {
+                value: "Full-time",
+                label: t("economy:salarySubmitModal.type.fullTime"),
+              },
+              {
+                value: "Part-time",
+                label: t("economy:salarySubmitModal.type.partTime"),
+              },
+              {
+                value: "Freelance",
+                label: t("economy:salarySubmitModal.type.freelance"),
+              },
+              {
+                value: "Contract",
+                label: t("economy:salarySubmitModal.type.contract"),
+              },
+            ]}
+          />
         </div>
         <button
           type="button"

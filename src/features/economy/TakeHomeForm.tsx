@@ -8,6 +8,7 @@ import {
   type StartupYear,
   type WorkerStatus,
 } from "./takeHome.data";
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./TakeHomeCalculatorPage.module.css";
 
@@ -61,38 +62,30 @@ export function TakeHomeForm({
         <label className={styles.rcLabel} htmlFor="th-activity">
           {t("economy:takeHome.activityLabel")}
         </label>
-        <select
+        <Select
           id="th-activity"
-          className={styles.rcSelect}
+          options={ACTIVITY_OPTIONS.map((o) => ({
+            value: String(o.value),
+            label: t(o.labelKey),
+          }))}
           value={activity}
-          onChange={(e) =>
-            onChange({ activity: e.target.value as ActivityKey })
-          }
-        >
-          {ACTIVITY_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {t(o.labelKey)}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => onChange({ activity: value as ActivityKey })}
+        />
       </div>
 
       <div className={styles.field}>
         <label className={styles.rcLabel} htmlFor="th-status">
           {t("economy:takeHome.statusLabel")}
         </label>
-        <select
+        <Select
           id="th-status"
-          className={styles.rcSelect}
+          options={STATUS_OPTIONS.map((o) => ({
+            value: String(o.value),
+            label: t(o.labelKey),
+          }))}
           value={status}
-          onChange={(e) => onChange({ status: e.target.value as WorkerStatus })}
-        >
-          {STATUS_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {t(o.labelKey)}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => onChange({ status: value as WorkerStatus })}
+        />
       </div>
 
       <div className={styles.rcRow}>
@@ -100,40 +93,32 @@ export function TakeHomeForm({
           <label className={styles.rcLabel} htmlFor="th-year">
             {t("economy:takeHome.yearLabel")}
           </label>
-          <select
+          <Select
             id="th-year"
-            className={styles.rcSelect}
-            value={year}
-            onChange={(e) =>
-              onChange({ year: Number(e.target.value) as TaxYear })
-            }
-          >
-            {YEAR_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
+            options={YEAR_OPTIONS.map((o) => ({
+              value: String(o.value),
+              label: o.label,
+            }))}
+            value={String(year)}
+            onChange={(value) => onChange({ year: Number(value) as TaxYear })}
+          />
         </div>
 
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor="th-startup">
             {t("economy:takeHome.startupLabel")}
           </label>
-          <select
+          <Select
             id="th-startup"
-            className={styles.rcSelect}
-            value={startupYear}
-            onChange={(e) =>
-              onChange({ startupYear: Number(e.target.value) as StartupYear })
+            options={STARTUP_OPTIONS.map((o) => ({
+              value: String(o.value),
+              label: t(o.labelKey),
+            }))}
+            value={String(startupYear)}
+            onChange={(value) =>
+              onChange({ startupYear: Number(value) as StartupYear })
             }
-          >
-            {STARTUP_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {t(o.labelKey)}
-              </option>
-            ))}
-          </select>
+          />
         </div>
       </div>
     </div>

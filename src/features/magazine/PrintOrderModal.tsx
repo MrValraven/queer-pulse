@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { Button, FormField } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -34,7 +35,7 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
 
   const success = stage === "done";
 
-  return (
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -169,6 +170,7 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

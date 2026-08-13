@@ -46,6 +46,9 @@ export interface CommunityDetailDTO extends CommunityCardDTO {
   /** True once an owner has archived the community. Only ever present for the
    *  community's own owner/mods (outsiders 404 an archived community). */
   archived?: boolean;
+  /** True while the community is auto-frozen pending report review. Unlike
+   *  `archived`, a frozen community stays visible, so this reaches all viewers. */
+  frozen?: boolean;
   myJoinRequestStatus: JoinRequestStatus | null;
 }
 export interface CommunityReactionSummary {
@@ -196,6 +199,11 @@ export const updateCommunity = (slug: string, dto: UpdateCommunityDto) =>
  *  returns the (now archived) detail. */
 export const archiveCommunity = (slug: string) =>
   apiPost<CommunityDetailDTO>(`/communities/${slug}/archive`, {});
+
+/** POST /communities/:slug/unfreeze — an owner/mod lifts an auto-freeze once
+ *  the reports are handled. Idempotent; returns the (now unfrozen) detail. */
+export const unfreezeCommunity = (slug: string) =>
+  apiPost<CommunityDetailDTO>(`/communities/${slug}/unfreeze`, {});
 
 /** POST /communities/:slug/transfer — owner hands the community to another
  *  member (who becomes owner; the caller is demoted to mod). */

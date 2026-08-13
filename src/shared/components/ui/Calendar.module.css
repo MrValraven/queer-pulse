@@ -1,0 +1,474 @@
+/* APG-compliant Calendar grid. Mounts with the shared qpMenuIn entrance
+   (guarded for prefers-reduced-motion), same as Select's floating panel. */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: var(--sans);
+  animation: qpMenuIn var(--dur-fast) var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .wrapper {
+    animation: none;
+  }
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+.navGroup {
+  display: flex;
+  gap: 2px;
+}
+.navButton {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition: background 0.16s var(--ease);
+}
+.navButton svg {
+  width: 16px;
+  height: 16px;
+}
+@media (hover: hover) {
+  .navButton:hover {
+    background: var(--wash);
+  }
+}
+.navButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.16);
+}
+
+.selectGroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  gap: 6px;
+}
+.monthSelect {
+  width: 132px;
+}
+.yearSelect {
+  width: 92px;
+}
+
+/* ── Grid ── */
+.grid {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.weekdayHeader {
+  padding: 4px 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  text-align: center;
+}
+.weekdayHeader abbr {
+  text-decoration: none;
+  cursor: default;
+}
+
+.cell {
+  padding: 2px 0;
+  text-align: center;
+}
+
+.dayButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background 0.16s var(--ease),
+    color 0.16s var(--ease),
+    box-shadow 0.16s var(--ease);
+}
+@media (hover: hover) {
+  .dayButton:hover:not(:disabled) {
+    background: var(--wash);
+  }
+}
+.dayButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.16);
+}
+
+/* Today: a coral ring, not a fill, so it stays legible layered under .selected. */
+.today {
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+
+/* Selected: solid fill. --accent-fill (not the bare --accent brand color) is
+   the AA-safe pairing with white text, same rule Button.primary follows. */
+.selected {
+  background: var(--accent-fill);
+  color: #fff;
+  font-weight: 600;
+}
+.selected.today {
+  box-shadow: inset 0 0 0 1.5px #fff;
+}
+@media (hover: hover) {
+  .selected:hover:not(:disabled) {
+    background: var(--accent-deep);
+  }
+}
+
+/* Adjacent-month days: muted, still selectable (clicking pages the month). */
+.outside {
+  color: var(--ink-40);
+}
+
+.dayButton:disabled {
+  color: var(--ink-40);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .dayButton:disabled:hover {
+    background: none;
+  }
+}
+
+/* ── Compact density ── */
+.sm .navButton {
+  width: 28px;
+  height: 28px;
+}
+.sm .monthSelect {
+  width: 116px;
+}
+.sm .yearSelect {
+  width: 82px;
+}
+.sm .dayButton {
+  width: 30px;
+  height: 30px;
+  font-size: 13px;
+}
+
+/* ── DatePicker (Task 6) ──────────────────────────────────────────────────
+   Container wraps the DateField + trigger + optional clear button; the
+   popover is a plain absolutely-positioned dialog, reusing the same
+   --shadow-panel / qpMenuIn entrance and z-index lane as Select's floating
+   panel (`Select.module.css` `.panel`). */
+.container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.trigger {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: 12px;
+  background: var(--cream);
+  color: var(--ink-60);
+  cursor: pointer;
+  transition:
+    border-color 0.16s var(--ease),
+    background 0.16s var(--ease);
+}
+.trigger svg {
+  width: 18px;
+  height: 18px;
+}
+@media (hover: hover) {
+  .trigger:hover:not(:disabled) {
+    background: var(--wash);
+  }
+}
+.trigger:focus-visible {
+  outline: none;
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+}
+.trigger[aria-expanded="true"] {
+  border-color: var(--line-strong);
+  background: var(--paper);
+}
+.trigger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.container.sm .trigger {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+}
+.container.sm .trigger svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Inline clear — a sibling of the trigger (never nested inside it), so we
+   never put a button inside a button. */
+.clear {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(var(--plum-rgb), 0.08);
+  color: var(--ink-60);
+  cursor: pointer;
+  transition: background 0.16s var(--ease);
+}
+.clear svg {
+  width: 14px;
+  height: 14px;
+}
+@media (hover: hover) {
+  .clear:hover {
+    background: rgba(var(--plum-rgb), 0.16);
+  }
+}
+
+.popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 40;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 14px;
+  box-shadow: var(--shadow-panel);
+  padding: 12px;
+  transform-origin: top right;
+  animation: qpMenuIn var(--dur-fast) var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .popover {
+    animation: none;
+  }
+}
+
+/* ── Month-grid popover (mode="month") ── */
+.monthGrid {
+  min-width: 240px;
+}
+.monthGridHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.monthGridYear {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.monthGridButtons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.monthGridButton {
+  padding: 10px 6px;
+  border: none;
+  border-radius: 9px;
+  background: none;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background 0.16s var(--ease),
+    color 0.16s var(--ease);
+}
+@media (hover: hover) {
+  .monthGridButton:hover:not(:disabled) {
+    background: var(--wash);
+  }
+}
+.monthGridButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.16);
+}
+.monthGridButtonSelected {
+  background: var(--accent-fill);
+  color: #fff;
+  font-weight: 600;
+}
+.monthGridButton:disabled {
+  color: var(--ink-40);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── RangeCalendar (Task 7) ───────────────────────────────────────────────
+   Two `.wrapper` grids side by side; the second collapses below --mobile so
+   a range popover doesn't overflow a phone viewport (a fuller mobile sheet
+   is Task 8's seam). */
+.rangeGrids {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+.rangeGrids.sm {
+  gap: 14px;
+}
+@media (--mobile) {
+  .rangeSecondMonth {
+    display: none;
+  }
+}
+
+/* Range endpoints: same solid --accent-fill fill as a single Calendar's
+   `.selected`, just split into two named hooks so the connecting `.inRange`
+   fill can round only the outer edge of each. */
+.rangeStart,
+.rangeEnd {
+  background: var(--accent-fill);
+  color: #fff;
+  font-weight: 600;
+}
+.rangeStart.today,
+.rangeEnd.today {
+  box-shadow: inset 0 0 0 1.5px #fff;
+}
+@media (hover: hover) {
+  .rangeStart:hover:not(:disabled),
+  .rangeEnd:hover:not(:disabled) {
+    background: var(--accent-deep);
+  }
+}
+
+/* Committed connecting span: a soft wash fill, no radius, so consecutive
+   in-range cells read as one continuous bar under the circular endpoints. */
+.inRange {
+  background: var(--wash);
+  border-radius: 0;
+}
+
+/* Provisional hover preview (uncommitted second endpoint): a lighter,
+   dashed-free tint so it reads as "not yet chosen" next to the solid
+   `.rangeStart`/`.rangeEnd` fill. */
+.previewRange {
+  background: rgba(var(--plum-rgb), 0.1);
+  border-radius: 0;
+}
+
+/* Start/end `<td>` cells sit at the outer edge of the connecting bar: round
+   only the side facing away from the range so the bar's inner edge stays
+   flush against `.inRange`/`.previewRange` neighbors. */
+.cell:has(.rangeStart) {
+  border-radius: 50% 0 0 50%;
+}
+.cell:has(.rangeEnd) {
+  border-radius: 0 50% 50% 0;
+}
+.cell:has(.rangeStart, .rangeEnd) {
+  background: var(--wash);
+}
+
+/* ── RangeDatePicker (Task 7) ── */
+.rangeField {
+  display: flex;
+  min-width: 0;
+}
+
+/* ── DatePickerPopoverContent (Task 8) ───────────────────────────────────
+   Shared body rendered identically inside the desktop `.popover` dialog and
+   the mobile `ModalSheet` — presets row, mode content, "Today" footer. */
+.pickerBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.presetButton {
+  padding: 6px 12px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: 999px;
+  background: var(--cream);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    border-color 0.16s var(--ease),
+    background 0.16s var(--ease);
+}
+@media (hover: hover) {
+  .presetButton:hover {
+    background: var(--wash);
+  }
+}
+.presetButton:focus-visible {
+  outline: none;
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.16);
+}
+
+.pickerFooter {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.todayButton {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-deep);
+  cursor: pointer;
+  transition: background 0.16s var(--ease);
+}
+@media (hover: hover) {
+  .todayButton:hover {
+    background: var(--wash);
+  }
+}
+.todayButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.16);
+}

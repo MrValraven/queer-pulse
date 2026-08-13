@@ -188,6 +188,39 @@ export const notifications: Catalog = {
     "The concern you raised has been reviewed and closed.",
   "type.concern_update.dismissed.meta": "Concern update",
 
+  // An admin manually adjusted the member's verification standing
+  // (VerificationService.override). Names only the level they were moved to;
+  // {level} is one of the four labels just below.
+  "type.verification_update.text":
+    "Your verification level was updated to {level}.",
+  "type.verification_update.meta": "Verification update",
+  "type.verification_update.level.none": "None",
+  "type.verification_update.level.email": "Email",
+  "type.verification_update.level.phone": "Phone",
+  "type.verification_update.level.id_verified": "ID-verified",
+  // Fallback for a `toLevel` this build doesn't recognise (a future ladder
+  // rung an old client doesn't know) — keeps the row honest instead of
+  // interpolating a raw enum value.
+  "type.verification_update.levelFallback": "a new level",
+
+  // A member's own verification request was approved
+  // (VerificationService.decideRequest). Reuses the same {level} labels as
+  // the override copy above, sourced from `requestedLevel` since an approval
+  // always grants the level that was requested.
+  "type.verification_update.approved.text":
+    "Your verification request was approved. You're now verified to {level}.",
+  "type.verification_update.approved.meta": "Verification update",
+
+  // A member's own verification request was declined
+  // (VerificationService.decideRequest). No level changed, so the copy never
+  // names one. {reason} is the admin's note explaining the decision.
+  "type.verification_update.rejected.text":
+    "Your verification request was declined.",
+  "type.verification_update.rejected.meta": "{reason}",
+  // Fallback for a rejection row with no reason on the payload (shouldn't
+  // happen — the backend requires one to reject — but read defensively).
+  "type.verification_update.rejected.reasonFallback": "No reason was shared.",
+
   // Moderation outcome — headline per action; the moderator's member-facing note
   // ("the reason the member reads") rides in as {note}. Tapping opens the appeal
   // page. The flat keys are the fallback for an unrecognised action.

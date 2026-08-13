@@ -237,13 +237,15 @@ function AccountMenuPanel({
       </div>
 
       <div className={styles.scroll}>
-        {ACCOUNT_GROUPS.map((group, groupIndex) => (
+        {ACCOUNT_GROUPS.map((group) => group.filter(
+          (item) => !item.liveOnly || !demoMode,
+        ))
+          .filter((group) => group.length > 0)
+          .map((group, groupIndex) => (
           <div key={group[0]?.to ?? groupIndex}>
             {groupIndex > 0 && <div className={styles.divider} />}
             <div className={styles.grid}>
-              {group
-                .filter((item) => !item.liveOnly || !demoMode)
-                .map((item) => {
+              {group.map((item) => {
                 const Icon = item.icon;
                 const badge =
                   item.badge ??

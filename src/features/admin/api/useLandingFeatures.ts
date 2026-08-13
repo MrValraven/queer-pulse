@@ -33,6 +33,12 @@ import {
  *  stroke it appears in the curated list. */
 const ADMIN_LANDING_KEY = "admin-landing";
 
+/** The public homepage feed's query-key prefix (`useLandingFeaturesPublic`).
+ *  Every curation mutation invalidates it alongside the admin key so the
+ *  `/admin/landing` live preview — which enriches its cards from this feed —
+ *  and any open public homepage reflect the change without a manual refetch. */
+const PUBLIC_LANDING_KEY = "landing-features";
+
 /**
  * One section's curated landing-page slots, in `position` order. Demo mode
  * reads the module-scoped demo-session registry (`adminLanding.data.ts`) —
@@ -115,6 +121,7 @@ export function useCreateLandingFeature() {
     live: (variables) => createLandingFeature(variables),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [ADMIN_LANDING_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [PUBLIC_LANDING_KEY] });
     },
   });
 }
@@ -143,6 +150,7 @@ export function useUpdateLandingFeature() {
     live: ({ id, copy, active }) => updateLandingFeature(id, { copy, active }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [ADMIN_LANDING_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [PUBLIC_LANDING_KEY] });
     },
   });
 }
@@ -171,6 +179,7 @@ export function useReorderLandingFeatures() {
     live: (variables) => reorderLandingFeatures(variables),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [ADMIN_LANDING_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [PUBLIC_LANDING_KEY] });
     },
   });
 }
@@ -194,6 +203,7 @@ export function useDeleteLandingFeature() {
     live: ({ id }) => deleteLandingFeature(id),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [ADMIN_LANDING_KEY] });
+      void queryClient.invalidateQueries({ queryKey: [PUBLIC_LANDING_KEY] });
     },
   });
 }

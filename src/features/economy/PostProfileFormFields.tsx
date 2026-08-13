@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MODAL_TAGS, NEIGHBOURHOODS } from "./flatmates.data";
 import type { usePostProfileFormState } from "./usePostProfileFormState";
@@ -57,24 +58,24 @@ export function PostProfileFormFields({
           >
             {t("economy:postProfileForm.neighbourhoodLabel")}
           </label>
-          <select
+          <Select
             id={`${fieldId}-neighbourhood`}
-            className={styles.select}
-            value={form.neighbourhood}
-            onChange={(event) => form.setNeighbourhood(event.target.value)}
-          >
-            <option value="">
-              {t("economy:postProfileForm.neighbourhoodPlaceholder")}
-            </option>
-            {NEIGHBOURHOODS.map((neighbourhoodName) => (
-              <option key={neighbourhoodName} value={neighbourhoodName}>
-                {neighbourhoodName}
-              </option>
-            ))}
-            <option value={t("economy:postProfileForm.anywhereCentral")}>
-              {t("economy:postProfileForm.anywhereCentral")}
-            </option>
-          </select>
+            placeholder={t(
+              "economy:postProfileForm.neighbourhoodPlaceholder",
+            )}
+            value={form.neighbourhood || null}
+            onChange={(value) => form.setNeighbourhood(value ?? "")}
+            options={[
+              ...NEIGHBOURHOODS.map((neighbourhoodName) => ({
+                value: neighbourhoodName,
+                label: neighbourhoodName,
+              })),
+              {
+                value: t("economy:postProfileForm.anywhereCentral"),
+                label: t("economy:postProfileForm.anywhereCentral"),
+              },
+            ]}
+          />
         </div>
         <div className={styles.fieldGroup}>
           <label className={styles.fieldLabel} htmlFor={`${fieldId}-budget`}>
@@ -97,29 +98,28 @@ export function PostProfileFormFields({
         <label className={styles.fieldLabel} htmlFor={`${fieldId}-movein`}>
           {t("economy:postProfileForm.moveInLabel")}
         </label>
-        <select
+        <Select
           id={`${fieldId}-movein`}
-          className={styles.select}
-          value={form.moveInOption}
-          onChange={(event) => form.setMoveInOption(event.target.value)}
-        >
-          <option value="">
-            {t("economy:postProfileForm.moveInPlaceholder")}
-          </option>
-          <option value="now">{t("economy:flatmates.filter.moveIn.now")}</option>
-          <option value="jul2026">
-            {t("economy:postProfileForm.moveIn.jul2026")}
-          </option>
-          <option value="aug2026">
-            {t("economy:postProfileForm.moveIn.aug2026")}
-          </option>
-          <option value="sep2026">
-            {t("economy:postProfileForm.moveIn.sep2026")}
-          </option>
-          <option value="flex">
-            {t("economy:flatmates.filter.moveIn.flex")}
-          </option>
-        </select>
+          placeholder={t("economy:postProfileForm.moveInPlaceholder")}
+          value={form.moveInOption || null}
+          onChange={(value) => form.setMoveInOption(value ?? "")}
+          options={[
+            { value: "now", label: t("economy:flatmates.filter.moveIn.now") },
+            {
+              value: "jul2026",
+              label: t("economy:postProfileForm.moveIn.jul2026"),
+            },
+            {
+              value: "aug2026",
+              label: t("economy:postProfileForm.moveIn.aug2026"),
+            },
+            {
+              value: "sep2026",
+              label: t("economy:postProfileForm.moveIn.sep2026"),
+            },
+            { value: "flex", label: t("economy:flatmates.filter.moveIn.flex") },
+          ]}
+        />
       </div>
       <div className={styles.fieldGroup}>
         <label className={styles.fieldLabel} htmlFor={`${fieldId}-about`}>

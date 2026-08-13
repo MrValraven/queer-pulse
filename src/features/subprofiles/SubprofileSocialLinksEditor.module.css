@@ -5,7 +5,7 @@
    the item drawer). Deliberately NOT `<FormField>`: FormField's `.field select`
    / `.field input` descendant rules out-specify this module's `.linkSelect` /
    `.inlineInput` and blow the platform picker up to full width. Mirrors the
-   neighbouring `HandleChipInput` label/helper instead. */
+   neighbouring `CollaboratorSelect` label/helper instead. */
 .fieldWrap {
   display: flex;
   flex-direction: column;
@@ -73,6 +73,14 @@
   outline: none;
   border-color: var(--line-strong);
   box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.12);
+}
+
+/* Layout-only slot for the shared <Select> primitive that replaced the native
+   platform picker. It brings its own trigger styling, so this only reproduces
+   the flex sizing (and the responsive reflow order below) `.linkSelect` gave
+   the native control. */
+.linkPlatform {
+  flex: none;
 }
 
 .inlineInput {
@@ -163,7 +171,8 @@
   .linkIcon {
     order: 1;
   }
-  .linkSelect {
+  .linkSelect,
+  .linkPlatform {
     order: 2;
     flex: 1 1 auto;
     min-width: 0;

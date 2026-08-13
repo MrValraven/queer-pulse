@@ -43,6 +43,16 @@ export type AccountItem = {
  * (see HEADER_ACTIONS). Labels are bare nouns.
  */
 export const ACCOUNT_GROUPS: AccountItem[][] = [
+  // Getting started — pinned to the very top so new members find their setup
+  // checklist first. liveOnly: it drops out in the demo sandbox.
+  [
+    {
+      labelKey: "shared:accountMenu.items.gettingStarted",
+      to: routes.gettingStarted,
+      icon: FiCompass,
+      liveOnly: true,
+    },
+  ],
   // People — you, your circles, and what's on
   [
     {
@@ -90,12 +100,6 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
   ],
   // Support
   [
-    {
-      labelKey: "shared:accountMenu.items.gettingStarted",
-      to: routes.gettingStarted,
-      icon: FiCompass,
-      liveOnly: true,
-    },
     {
       labelKey: "shared:accountMenu.items.help",
       to: routes.help,

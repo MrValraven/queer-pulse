@@ -1,3 +1,4 @@
+import { Select } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type {
   AdminRoadmapItemDTO,
@@ -96,20 +97,17 @@ export function CapacitySection({
           <label className={styles.fieldLabel} htmlFor="capacity-cost">
             {t("admin:roadmap.drawer.capacity.costLabel")}
           </label>
-          <select
+          <Select
             id="capacity-cost"
-            className={styles.select}
             value={cost}
-            onChange={(event) =>
-              onFieldChange({ cost: event.target.value as RoadmapCost })
+            options={costOptions.map((option) => ({
+              value: option.value,
+              label: option.label,
+            }))}
+            onChange={(value) =>
+              onFieldChange({ cost: (value ?? cost) as RoadmapCost })
             }
-          >
-            {costOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          />
         </div>
       </div>
 

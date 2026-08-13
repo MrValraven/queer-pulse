@@ -655,6 +655,7 @@ export const marketing: Catalog = {
     "If someone crosses one of these lines, report them or the post from its menu. Moderators read every report, and you're never left to handle it alone. Confirmed breaches lead to a warning, suspension, or removal, and we cooperate with the authorities where someone's safety is at risk. You are never overreacting by reporting.",
   "guidelines.final.p2": "Thanks for building this with us.",
   "guidelines.modalDone": "I've read it — done",
+  "guidelines.modalScrollHint": "Scroll to the end to continue.",
   "guidelines.outro.title": "Now you know <em>the culture.</em>",
   "guidelines.outro.sub":
     "The Code of Conduct covers what happens if it's broken.",
@@ -1916,6 +1917,95 @@ export const marketing: Catalog = {
   "changelog.tag.workProfile": "Open your work profile",
   "changelog.tag.governance": "See how QueerPulse is run",
 
+  "changelog.entries.member-directory-filter-crossfade.title":
+    "Smoother filtering in the member directory",
+  "changelog.entries.member-directory-filter-crossfade.body":
+    "Changing a filter in the member directory used to make the results pop in and out abruptly. Now the grid gently cross-fades: the old results fade out for a beat while the new matches settle in, then the cards ease back in together. It respects reduced-motion settings and swaps instantly for anyone who prefers less movement.",
+
+  "changelog.entries.excerpt-line-editor-reorder.title":
+    "A cleaner way to write and reorder page lines",
+  "changelog.entries.excerpt-line-editor-reorder.body":
+    "The list editor for things like excerpt lines on your page now matches the poem editor: each line sits on its own tidy row that fills the width, so no more cramped fields. Drag the handle to reorder, or use the up and down arrows, and remove a line with a single tap. The reorder handle works with touch, keyboard, and assistive tech.",
+
+  "changelog.entries.collaborator-member-picker.title":
+    "Credit collaborators by searching for members",
+  "changelog.entries.collaborator-member-picker.body":
+    "When you add collaborators to something on your persona, you no longer have to remember and type an exact handle. Just start typing a name or handle and pick the member from a searchable list, with their photo, so you credit the right person every time. Your picks show as neat tags, and you can remove any of them just as easily.",
+
+  "changelog.entries.unified-searchable-select.title":
+    "Dropdown menus you can type to search",
+  "changelog.entries.unified-searchable-select.body":
+    "Across the platform, the little dropdown menus for choosing things, a category, a language, a neighbourhood, a role, now share one friendlier design. When a list is long you can just start typing to filter it down, then pick with the keyboard or a tap. Menus that let you choose several options show your picks as neat little tags. It looks and behaves the same everywhere, and reads clearly for screen readers.",
+
+  "changelog.entries.persona-date-month-picker.title":
+    "Pick a month and year for your work, no more typing it out",
+  "changelog.entries.persona-date-month-picker.body":
+    "When you add or edit an item on a persona page, poems, exhibitions, releases and the rest, the date field is now a proper month-and-year picker instead of a free-text box. Choose the month, and it shows up neatly as \"July 2025\" in your language. Dates you'd already written by hand keep showing exactly as you left them.",
+
+  "changelog.entries.unified-date-picker.title":
+    "A new date picker across the app, friendlier and fully keyboard-accessible",
+  "changelog.entries.unified-date-picker.body":
+    "A new date picker across the app: a friendlier, fully keyboard-accessible calendar for every date and time field. Pick a day with a click or the keyboard, type it straight in, or jump between months and years fast, and it reads clearly for screen readers.",
+
+  "changelog.entries.protect-your-work.title": "Protect your work",
+  "changelog.entries.protect-your-work.body":
+    "Every published piece now shows a copyright and first-published line, you can download a dated authorship record to keep as proof, and your saved edits are kept as version history you can view and restore.",
+
+  "changelog.entries.verification-signals-bulk-keyboard.title":
+    "Reviewers can spot duplicates, act in bulk, and fly through the queue",
+  "changelog.entries.verification-signals-bulk-keyboard.body":
+    "Verification requests now carry real signals: how old the account is, any past rejections, and a flag when a provider reference or phone number turns up on more than one account, so a reviewer has context before deciding. Reviewers can select several requests at once to approve, reject, or mark them in review together, and move through the queue by keyboard: J and K to navigate, A to approve, R to reject, and / to search, with the next request opening on its own after a decision.",
+
+  "changelog.entries.verification-request-review.title":
+    "Request verification, and see where it stands",
+  "changelog.entries.verification-request-review.body":
+    "Send a request for email, phone, or ID verification whenever you need one, with a short note if it helps someone recognise you. From there you can watch it move: submitted, in review, approved, or needs another step, and appeal a decision if something doesn't feel right. On the review side, moderators work through a real queue with your note and history alongside each request, so every decision has a reason behind it.",
+
+  "changelog.entries.verification-audit-trail.title":
+    "You'll know when your verification status changes",
+  "changelog.entries.verification-audit-trail.body":
+    "Every time an admin updates your verification level, whether it's raised, lowered, or overridden, you now get notified with the reason why. Behind the scenes, the admin console keeps a full history of every decision: who made it, when, and why, plus whether a level was earned automatically or granted by an admin, so nothing changes without a paper trail.",
+
+  "changelog.entries.community-safety-enforcement.title":
+    "Community safety settings that actually do something",
+  "changelog.entries.community-safety-enforcement.body":
+    "The two community safety settings now take effect, not just save. When a community requires a second vouch to join, someone is only let in once a current member has vouched for them. And when auto-freeze is on, the community pauses itself the moment a serious report (like doxxing) lands or reports pile up, blocking new posts and joins and showing a clear banner, until a moderator lifts the pause once they've handled it.",
+
+  "changelog.entries.community-settings-persist.title":
+    "Community settings that actually save",
+  "changelog.entries.community-settings-persist.body":
+    "In the admin community view, the Settings button now opens the full settings panel where you can edit a community's name, description, membership mode and rules. And on the community's own Settings tab, the two safety toggles, requiring a second vouch to join and auto-freezing on a report, now save for real and stay put after a reload, instead of only flashing a message.",
+
+  "changelog.entries.community-health-explainer.title":
+    "See exactly how a community's health score is worked out",
+  "changelog.entries.community-health-explainer.body":
+    "The health-score explainer now has a \"How it's calculated\" view. It lays out the four signals and how much each one counts, walks through how that community's own numbers add up to its published score, explains why smaller communities are judged more gently, and shows the score bands so you can see where a community sits. Sentiment is shown as not counted yet, because nothing on the platform measures it so far.",
+
+  "changelog.entries.modals-cover-full-screen.title":
+    "Pop-up dialogs now dim the whole screen",
+  "changelog.entries.modals-cover-full-screen.body":
+    "When a dialog opens (a health-score explainer, an invite, a resource, a print order and more) its dimmed backdrop now covers the entire screen and sits centred, instead of being boxed inside part of the page on certain layouts. The dialogs always worked, they just were not always framed against the full window.",
+
+  "changelog.entries.inbox-menu-dropdown-visibility.title":
+    "The chat actions menu now shows up properly",
+  "changelog.entries.inbox-menu-dropdown-visibility.body":
+    "Opening the “⋯” menu on a conversation in your inbox now shows its Pin, Favourite and Delete options on top, instead of them hiding behind the chat below. The menu was always working, it just was not always visible.",
+
+  "changelog.entries.governance-editable-finances.title":
+    "Editable finance figures, with a note on where each number comes from",
+  "changelog.entries.governance-editable-finances.body":
+    "Admins can now correct the figures on the governance Finances tab instead of them being fixed. Every number carries a small tag showing where it comes from: an unverified placeholder, a value an admin entered, or one that is calculated (like the surplus). Corrections are recorded, so it is always clear who changed what and when.",
+
+  "changelog.entries.governance-chart-upgrade.title":
+    "A clearer income-vs-spending chart in the governance area",
+  "changelog.entries.governance-chart-upgrade.body":
+    "The quarter-by-quarter finance chart now sizes to its space and reads more clearly. Hover or keyboard-focus any bar to see that quarter's income, spending and the surplus saved to the reserve, and a dashed band over each spending bar marks the surplus at a glance.",
+
+  "changelog.entries.landing-live-preview.title":
+    "A live homepage preview while curating the landing page",
+  "changelog.entries.landing-live-preview.body":
+    "The team curating the signed-out homepage now sees a live preview of each section right beside the editor. Add, reorder, hide or reword a featured member, community or changemaker and the preview updates instantly, showing the real homepage card before anyone visits.",
+
   "changelog.entries.personas-in-directory.title":
     "Profile personas show up in the directory",
   "changelog.entries.personas-in-directory.body":
@@ -2128,6 +2218,16 @@ export const marketing: Catalog = {
     "The under-18 message now opens a door instead of closing one",
   "changelog.entries.under18-open-invite.body":
     "If you tell us you're not 18 yet, the note used to dwell on the account you can't have. It now leads with what's open to everyone — the library, the magazine and our resources are all yours to read, no login needed.",
+
+  "changelog.entries.guidelines-agree-self-tick.title":
+    "The guidelines box now ticks itself once you've read to the end",
+  "changelog.entries.guidelines-agree-self-tick.body":
+    "On the join and onboarding forms, the “I've read the community guidelines” box can no longer be ticked with a stray click. The guidelines open in a sheet, the confirm button unlocks only when you've scrolled to the end, and finishing there is what ticks the box for you. The button also sits at the bottom of the sheet now instead of floating over the text.",
+
+  "changelog.entries.adults-only-explainer-modal.title":
+    "“Here's why we're 18+” opens right where you are",
+  "changelog.entries.adults-only-explainer-modal.body":
+    "The “here's why” link on the age check used to navigate away to the Terms, so you lost your place in the form. It now opens the explainer in a quiet sheet over the page — read why QueerPulse is adults-only, close it, and keep going without losing a word you'd typed.",
 
   "changelog.entries.adults-only-explainer.title":
     "“Here's why we're 18+” now actually says why",
@@ -4321,6 +4421,7 @@ export const marketing: Catalog = {
   "directory.detail.upcoming.downloadIcs": ".ics",
   "directory.detail.galleryAria": "Photos of {name}",
   "directory.detail.viewPhoto": "View photo",
+  "directory.detail.noPhotos": "No photos yet",
   "directory.detail.lightboxClose": "Close",
   "directory.detail.prevPhoto": "Previous photo",
   "directory.detail.nextPhoto": "Next photo",

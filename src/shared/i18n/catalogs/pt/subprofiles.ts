@@ -540,14 +540,15 @@ export const subprofiles: Catalog = {
   "itemEditor.unfeature": "Remover do destaque",
   "itemEditor.featuredBadge": "Destaque",
 
-  // Editor de chips de colaboração (HandleChipInput, dentro de SubprofileItemDrawerFields)
+  // Seletor de pessoas colaboradoras (CollaboratorSelect, dentro de SubprofileItemDrawerFields)
   "itemEditor.collaboratorsLabel": "Pessoas colaboradoras",
-  "itemEditor.collaboratorsPlaceholder": "@identificador",
+  "itemEditor.collaboratorsPlaceholder": "Pesquisar pessoas para creditar",
+  "itemEditor.collaboratorsSearchPlaceholder": "Pesquisar por nome ou @identificador",
+  "itemEditor.collaboratorsEmpty": "Nenhuma pessoa corresponde a essa pesquisa.",
   "itemEditor.collaboratorsHelper":
-    "Escreve um @identificador e prime enter ou vírgula para o creditar aqui.",
+    "Pesquisa pessoas e escolhe-as para creditar o trabalho delas aqui.",
   "itemEditor.collaboratorsCapHint":
     "É o máximo de pessoas colaboradoras que podes acrescentar.",
-  "itemEditor.collaboratorRemove": "Remover @{handle}",
 
   // Editor de links sociais (SubprofileSocialLinksEditor)
   "socialEditor.title": "Links sociais",
@@ -1264,6 +1265,10 @@ export const subprofiles: Catalog = {
   "poem.reader.copy": "Copiar poema",
   "poem.reader.copied": "Poema copiado",
 
+  // Rodapé público de direitos de autor + proveniência (WorkRightsFooter, protect-your-work Tarefa 3)
+  "rights.copyright": "© {year} {author}. Todos os direitos reservados.",
+  "rights.firstPublished": "Publicado pela primeira vez na QueerPulse · {date}",
+
   // Skin-blocks editor (personas expansion — page-block editor pane, rail entry & field labels)
   "editorRail.skinBlocks": "Blocos da página",
   "editorPane.skinBlocks.title": "Blocos da página",
@@ -1274,6 +1279,7 @@ export const subprofiles: Catalog = {
   "skinBlock.removeItem": "Remover",
   "skinBlock.moveUp": "Mover para cima",
   "skinBlock.moveDown": "Mover para baixo",
+  "skinBlock.dragToReorder": "Arraste para reordenar",
   "skinBlock.lineLabel": "{label} {index}",
   "skinBlock.entryLabel": "Entrada {index}",
   "skinBlock.stage.booker.title": "Para quem contrata",
@@ -1457,6 +1463,31 @@ export const subprofiles: Catalog = {
   "itemDrawer.cancel": "Cancelar",
   "itemDrawer.saveItem": "Guardar item",
   "itemRow.edit": "Editar",
+
+  // Proteja este trabalho (ProtectWorkSection): descarregar/copiar/enviar
+  // por email o registo de autoria do item, apenas para o dono, mostrado na
+  // gaveta assim que o item está guardado (ver `authorshipRecord.ts` para o
+  // conteúdo do registo em si).
+  "protect.heading": "Proteja este trabalho",
+  "protect.blurb":
+    "Descarregue um registo datado do seu trabalho e envie-o para si próprio. É uma prova independente que pode guardar.",
+  "protect.download": "Descarregar registo de autoria",
+  "protect.copy": "Copiar registo",
+  "protect.copied": "Copiado para a área de transferência",
+  "protect.email": "Enviar para o meu email",
+  "protect.failed": "Não foi possível gerar o registo. Tente novamente.",
+
+  // Histórico de versões (ItemRevisionHistoryModal): lista de revisões
+  // guardadas + ver + restaurar, aberto pelo botão "Histórico" na gaveta do
+  // editor de item assim que um item está guardado (hooks `useItemRevisions`/
+  // `useRestoreItemRevision` da Tarefa 9).
+  "history.button": "Histórico",
+  "history.heading": "Histórico de versões",
+  "history.view": "Ver",
+  "history.restore": "Restaurar",
+  "history.empty": "Ainda não há versões anteriores. As edições guardadas aparecem aqui.",
+  "history.restored": "Versão restaurada",
+  "history.restoreFailed": "Não foi possível restaurar esta versão. Tente novamente.",
 
   // Campos ricos por secção (richFields.data.ts, mostrados por
   // SubprofileItemDrawerFields) — detalhes de concertos, suporte/edição de

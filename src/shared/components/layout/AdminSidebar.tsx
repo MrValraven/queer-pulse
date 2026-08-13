@@ -10,6 +10,7 @@ import { ADMIN_NAV, ADMIN_PROFILE, type AdminNavBadge } from "./adminNav.data";
 import { useModReports } from "../../../features/admin/api/useModReports";
 import { useJoinRequests } from "../../../features/admin/api/useJoinRequests";
 import { usePartnerApplications } from "../../../features/marketing/api/usePartnerApplications";
+import { useVerificationRequests } from "../../../features/admin/api/useAdminVerifications";
 import styles from "./AdminShell.module.css";
 
 /** Because every admin page renders its own <AdminShell>, switching admin routes
@@ -43,12 +44,29 @@ export function AdminSidebar({
   const modReports = useModReports();
   const joinRequests = useJoinRequests("pending");
   const partnerApplications = usePartnerApplications();
+  // Phase 2's review queue is live, so the badge now counts the actual
+  // review-queue backlog: every request still waiting on a moderator, at any
+  // stage of that wait (freshly submitted, actively being reviewed, or back
+  // for a second look after an appeal). The filter here matches
+  // AdminVerificationsPage's review-queue default exactly so the query key
+  // hashes the same and react-query serves this from the page's own cache
+  // instead of firing a second request.
+  const verificationRequestsQuery = useVerificationRequests({
+    status: "all",
+    query: "",
+    sort: "recent",
+  });
+  const pendingRequestCount =
+    (verificationRequestsQuery.counts.pending ?? 0) +
+    (verificationRequestsQuery.counts.in_review ?? 0) +
+    (verificationRequestsQuery.counts.appealing ?? 0);
   const badgeCounts: Record<AdminNavBadge, number> = {
     moderation: modReports.data?.counts.open ?? 0,
     members: joinRequests.data?.length ?? 0,
     partnerships:
       partnerApplications.data?.filter((a) => a.status === "pending").length ??
       0,
+    verifications: pendingRequestCount,
   };
 
   return (

@@ -72,6 +72,7 @@ export function SubprofileEditorProvider({
     canSave,
     saveAll,
     discardAll,
+    reseedSection: rows.reseedSection,
   };
 
   return (

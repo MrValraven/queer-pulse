@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import { Button, FormField, StatGrid, StatTile } from "../../shared/components/ui";
+import {
+  Button,
+  FormField,
+  Select,
+  StatGrid,
+  StatTile,
+} from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -174,21 +180,17 @@ export function ReportFormSection() {
           <div>
             <form onSubmit={handleSubmit}>
               <FormField label={t("safety:report.form.categoryLabel")}>
-                <select
-                  value={category}
-                  onChange={(e) =>
-                    setCategory(e.target.value as ReasonCode | "")
+                <Select
+                  placeholder={t("safety:report.form.categoryPlaceholder")}
+                  value={category || null}
+                  onChange={(value) =>
+                    setCategory((value ?? "") as ReasonCode | "")
                   }
-                >
-                  <option value="" disabled>
-                    {t("safety:report.form.categoryPlaceholder")}
-                  </option>
-                  {CATEGORIES.map((c) => (
-                    <option key={c.code} value={c.code}>
-                      {t(c.labelKey)}
-                    </option>
-                  ))}
-                </select>
+                  options={CATEGORIES.map((c) => ({
+                    value: c.code,
+                    label: t(c.labelKey),
+                  }))}
+                />
               </FormField>
               <FormField label={t("safety:report.form.involvedLabel")}>
                 <input

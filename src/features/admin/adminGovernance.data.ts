@@ -1,4 +1,5 @@
 import type { AdminTone } from "./ui";
+import type { FinanceMetricSource } from "./api/adminGovernanceFinances.api";
 
 // ── Finances ────────────────────────────────────────────────────────────────
 
@@ -14,6 +15,8 @@ export interface FinanceStat {
   footKey: string;
   /** `{token}` interpolation values for `footKey`, if any. */
   footValues?: Record<string, string | number>;
+  /** Provenance of `value`, shown as a badge next to the label. */
+  source?: FinanceMetricSource;
 }
 
 /** Token colour keys mapped to CSS-module meter classes in the component. */

@@ -1,5 +1,5 @@
 import { useMemo, useState, type FormEvent } from "react";
-import { Modal, Button } from "../../shared/components/ui";
+import { Modal, Button, Select } from "../../shared/components/ui";
 import { FormField } from "../../shared/components/ui/FormField";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -176,18 +176,14 @@ function EditCommunityFields({
       </FormField>
 
       <FormField label={t("communities:edit.field.type")} required>
-        <select
+        <Select
           value={draft.type}
-          onChange={(event) =>
-            set({ type: event.target.value as CommunityType })
-          }
-        >
-          {CATEGORY_OPTIONS.map((option) => (
-            <option key={option.type} value={option.type}>
-              {t(option.labelKey)}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => set({ type: value as CommunityType })}
+          options={CATEGORY_OPTIONS.map((option) => ({
+            value: option.type,
+            label: t(option.labelKey),
+          }))}
+        />
       </FormField>
 
       <FormField label={t("communities:edit.field.whoFor")} required>
@@ -205,18 +201,14 @@ function EditCommunityFields({
       </FormField>
 
       <FormField label={t("communities:edit.field.access")} required>
-        <select
+        <Select
           value={draft.accessTier}
-          onChange={(event) =>
-            set({ accessTier: event.target.value as AccessTier })
-          }
-        >
-          {ACCESS_OPTIONS.map((option) => (
-            <option key={option.tier} value={option.tier}>
-              {t(option.nameKey)}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => set({ accessTier: value as AccessTier })}
+          options={ACCESS_OPTIONS.map((option) => ({
+            value: option.tier,
+            label: t(option.nameKey),
+          }))}
+        />
       </FormField>
 
       <div className={styles.block}>

@@ -513,6 +513,22 @@
 .mGridSizer {
   position: relative;
   width: 100%;
+  /* Cross-fade on filter change: the sizer dips to transparent for one quick
+     beat while `MemberResultsGrid` swaps the underlying set (which also masks
+     the virtualizer's height/measurement reflow), then the incoming cards
+     re-stagger in. Only `opacity` animates: cheap, no layout thrash. */
+  transition: opacity var(--dur-fast) var(--ease-in);
+}
+.mGridFading {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mGridSizer {
+    transition: none;
+  }
+  .mGridFading {
+    opacity: 1;
+  }
 }
 .mGridRow {
   position: absolute;

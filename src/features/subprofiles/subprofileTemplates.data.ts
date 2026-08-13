@@ -325,7 +325,14 @@ export function buildTemplateItems(
 ): SubprofileItemView[] {
   const templateItems = TEMPLATE_ITEMS[section] ?? [];
   return templateItems.map((templateItem) => ({
+    // Not yet persisted: no server-assigned row exists until the create-time
+    // save response returns one. The revision-history UI guards on `isNew`,
+    // not on `id` truthiness, so an empty placeholder is fine here.
+    id: "",
     section,
+    // Not yet persisted: stamped with "now" as a placeholder until the
+    // create-time save response returns the real server-assigned `createdAt`.
+    createdAt: new Date().toISOString(),
     title: t(templateItem.titleKey),
     subtitle: templateItem.subtitleKey ? t(templateItem.subtitleKey) : "",
     description: templateItem.descriptionKey

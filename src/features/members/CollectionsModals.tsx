@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import {
   FiArrowLeft,
@@ -8,7 +9,7 @@ import {
   FiPlus,
   FiX,
 } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, Select } from "../../shared/components/ui";
 import { useFocusOnMount, useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -41,7 +42,7 @@ function Modal({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
-  return (
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -65,7 +66,8 @@ function Modal({
         </button>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -138,17 +140,15 @@ export function NewCollectionModal({
           <label htmlFor="nc-priv">
             {t("members:collections.modal.newCollection.visibilityLabel")}
           </label>
-          <select
+          <Select
             id="nc-priv"
+            options={PRIVACY_OPTION_KEYS.map((option) => ({
+              value: option.value,
+              label: t(option.labelKey),
+            }))}
             value={privacy}
-            onChange={(e) => setPrivacy(e.target.value as Privacy)}
-          >
-            {PRIVACY_OPTION_KEYS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {t(o.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => setPrivacy(value as Privacy)}
+          />
         </div>
         <div className={styles.foot}>
           <button type="button" className={styles.back} onClick={onClose}>

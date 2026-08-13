@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { HOUSEHOLD_NORM_FIELDS } from "./flatmates.data";
 import type { usePostProfileFormState } from "./usePostProfileFormState";
@@ -31,23 +32,21 @@ export function PostProfileHouseholdFields({
             >
               {t(field.labelKey)}
             </label>
-            <select
+            <Select
               id={`${fieldId}-${field.key}`}
-              className={styles.select}
               value={form.householdNorms[field.key] ?? ""}
-              onChange={(event) =>
-                form.setHouseholdNorm(field.key, event.target.value)
-              }
-            >
-              <option value="">
-                {t("economy:postProfileForm.householdNoPreference")}
-              </option>
-              {field.options.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => form.setHouseholdNorm(field.key, value ?? "")}
+              options={[
+                {
+                  value: "",
+                  label: t("economy:postProfileForm.householdNoPreference"),
+                },
+                ...field.options.map((option) => ({
+                  value: option,
+                  label: option,
+                })),
+              ]}
+            />
           </div>
         ))}
       </div>

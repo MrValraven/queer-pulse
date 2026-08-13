@@ -1,4 +1,5 @@
 import { FiPlus, FiX } from "react-icons/fi";
+import { Select } from "../../shared/components/ui";
 import type { SocialLink } from "../members/data/members";
 import { SOCIAL_PLATFORMS, socialPlatform } from "../members/socialLinks.data";
 import { Translation } from "../../shared/i18n/Translation";
@@ -53,18 +54,18 @@ export function LinksSection({
               <span className={styles.linkIcon} aria-hidden>
                 <Icon size={17} />
               </span>
-              <select
-                className={`${styles.fieldSelect} ${styles.linkPlatform}`}
+              <Select
+                className={styles.linkPlatform}
+                label={t("settings:editProfile.links.platformAriaLabel")}
                 value={link.platform}
-                aria-label={t("settings:editProfile.links.platformAriaLabel")}
-                onChange={(e) => update(i, { platform: e.target.value })}
-              >
-                {SOCIAL_PLATFORMS.map((p) => (
-                  <option key={p.key} value={p.key}>
-                    {p.label}
-                  </option>
-                ))}
-              </select>
+                onChange={(value) =>
+                  update(i, { platform: value ?? link.platform })
+                }
+                options={SOCIAL_PLATFORMS.map((p) => ({
+                  value: p.key,
+                  label: p.label,
+                }))}
+              />
               <input
                 className={styles.fieldInput}
                 value={link.urlOrHandle}

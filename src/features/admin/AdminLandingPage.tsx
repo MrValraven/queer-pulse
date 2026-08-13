@@ -6,6 +6,7 @@ import { FadeIn } from "../../shared/components/ui";
 import { AdminPageHeader, AdminTabs, type AdminTab } from "./ui";
 import { AdminLandingEligiblePicker } from "./AdminLandingEligiblePicker";
 import { AdminLandingFeatureList } from "./AdminLandingFeatureList";
+import { AdminLandingPreview } from "./AdminLandingPreview";
 import type { LandingSection } from "./api/landingFeatures.api";
 import styles from "./AdminLandingPage.module.css";
 
@@ -55,6 +56,12 @@ export function AdminLandingPage() {
         <div className={styles.layout}>
           <AdminLandingEligiblePicker section={tab} />
           <AdminLandingFeatureList section={tab} />
+        </div>
+      </FadeIn>
+
+      <FadeIn delay={200}>
+        <div className={styles.preview}>
+          <AdminLandingPreview section={tab} />
         </div>
       </FadeIn>
     </AdminShell>

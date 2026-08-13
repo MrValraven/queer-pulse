@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, SuccessPanel } from "./ModalKit";
@@ -80,15 +81,15 @@ export function WriteReviewModal({
               <label htmlFor="wr-company">
                 {t("economy:writeReviewModal.companyLabel")}
               </label>
-              <select
+              <Select
                 id="wr-company"
+                options={companies.map((companyOption) => ({
+                  value: companyOption.name,
+                  label: companyOption.name,
+                }))}
                 value={company}
-                onChange={(event) => setCompany(event.target.value)}
-              >
-                {companies.map((companyOption) => (
-                  <option key={companyOption.name}>{companyOption.name}</option>
-                ))}
-              </select>
+                onChange={(value) => setCompany(value ?? "")}
+              />
             </div>
           }
         />

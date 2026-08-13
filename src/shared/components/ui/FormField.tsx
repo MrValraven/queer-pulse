@@ -37,21 +37,29 @@ type ControlProps = {
 };
 
 /**
- * The child we can safely wire up: a single element rendering a host (native)
- * element, i.e. `typeof type === "string"`.
+ * The child we can safely wire up: a single element rendering either a host
+ * (native) element (`typeof type === "string"`) or a custom control that has
+ * opted in by declaring a truthy static `formFieldControl` — its contract being
+ * that it forwards the injected `id`/`aria-*` onto its own focusable control
+ * (as `Select` does, onto its trigger button).
  *
- * A custom component is deliberately excluded. Nothing guarantees it spreads
- * unknown props onto its control — most in this repo don't — so injecting would
- * either vanish silently or, worse, land `aria-invalid` on a wrapper `<div>`,
- * and the `<label htmlFor>` would point at an id that never reaches the DOM.
- * Multi-child and text children are excluded for the same reason. Those cases
- * degrade to exactly the old markup (label without `htmlFor`); the caller stays
- * responsible for labelling, as `ChipSelect`'s `label`/`labelledBy` props do.
+ * Any other custom component is deliberately excluded. Nothing guarantees it
+ * spreads unknown props onto its control — most in this repo don't — so
+ * injecting would either vanish silently or, worse, land `aria-invalid` on a
+ * wrapper `<div>`, and the `<label htmlFor>` would point at an id that never
+ * reaches the DOM. Multi-child and text children are excluded for the same
+ * reason. Those cases degrade to exactly the old markup (label without
+ * `htmlFor`); the caller stays responsible for labelling, as `ChipSelect`'s
+ * `label`/`labelledBy` props do.
  */
-function nativeControl(children: ReactNode): ReactElement<ControlProps> | null {
+function wireableControl(children: ReactNode): ReactElement<ControlProps> | null {
   if (Children.count(children) !== 1 || !isValidElement(children)) return null;
   const only = children as ReactElement<ControlProps>;
-  return typeof only.type === "string" ? only : null;
+  if (typeof only.type === "string") return only;
+  const optedIn =
+    typeof only.type === "function" &&
+    (only.type as { formFieldControl?: boolean }).formFieldControl === true;
+  return optedIn ? only : null;
 }
 
 /**
@@ -81,7 +89,7 @@ export function FormField({
   const helperId = `${uid}-helper`;
   const errorId = `${uid}-error`;
 
-  const control = nativeControl(children);
+  const control = wireableControl(children);
   // The helper stays visible alongside an error rather than being replaced by
   // it: the hint is what tells you how to fix the thing that just failed.
   const describedBy =

@@ -8,7 +8,7 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button, FormField, Outro, Reveal } from "../../shared/components/ui";
+import { Button, FormField, Outro, Reveal, Select } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -188,31 +188,23 @@ export function ContactPage() {
                   />
                 </FormField>
                 <FormField label={t("marketing:contact.form.topicLabel")}>
-                  <select
-                    value={form.topic}
-                    onChange={(e) =>
-                      setForm({ ...form, topic: e.target.value })
+                  <Select
+                    placeholder={t("marketing:contact.form.topicPick")}
+                    options={[
+                      "general",
+                      "safety",
+                      "press",
+                      "partnership",
+                      "other",
+                    ].map((topic) => ({
+                      value: topic,
+                      label: t(`marketing:contact.form.topic.${topic}`),
+                    }))}
+                    value={form.topic || null}
+                    onChange={(value) =>
+                      setForm({ ...form, topic: value ?? "" })
                     }
-                  >
-                    <option value="">
-                      {t("marketing:contact.form.topicPick")}
-                    </option>
-                    <option value="general">
-                      {t("marketing:contact.form.topic.general")}
-                    </option>
-                    <option value="safety">
-                      {t("marketing:contact.form.topic.safety")}
-                    </option>
-                    <option value="press">
-                      {t("marketing:contact.form.topic.press")}
-                    </option>
-                    <option value="partnership">
-                      {t("marketing:contact.form.topic.partnership")}
-                    </option>
-                    <option value="other">
-                      {t("marketing:contact.form.topic.other")}
-                    </option>
-                  </select>
+                  />
                 </FormField>
                 <FormField label={t("marketing:contact.form.messageLabel")}>
                   <textarea

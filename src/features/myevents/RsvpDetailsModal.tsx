@@ -3,6 +3,7 @@ import {
   Button,
   Modal,
   SegmentedControl,
+  Select,
   Toggle,
 } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -24,6 +25,7 @@ export function RsvpDetailsModal() {
   const [guest, setGuest] = useState(false);
   const [vis, setVis] = useState<Visibility>(VIS_DEFAULT);
   const [quiet, setQuiet] = useState(false);
+  const [contribution, setContribution] = useState("10");
   const ev = details.eventId ? byId(details.eventId) : undefined;
 
   const visLabel: Record<Visibility, string> = {
@@ -106,20 +108,26 @@ export function RsvpDetailsModal() {
           <div className={sx("field-hint")}>
             {t("myevents:rsvpModal.slidingHint")}
           </div>
-          <select id="rsvp-contribution" defaultValue="10">
-            <option value="0">
-              {t("myevents:rsvpModal.contribution.free")}
-            </option>
-            <option value="5">
-              {t("myevents:rsvpModal.contribution.supported")}
-            </option>
-            <option value="10">
-              {t("myevents:rsvpModal.contribution.standard")}
-            </option>
-            <option value="15">
-              {t("myevents:rsvpModal.contribution.payItForward")}
-            </option>
-          </select>
+          <Select
+            id="rsvp-contribution"
+            value={contribution}
+            onChange={(value) => setContribution(value ?? "10")}
+            options={[
+              { value: "0", label: t("myevents:rsvpModal.contribution.free") },
+              {
+                value: "5",
+                label: t("myevents:rsvpModal.contribution.supported"),
+              },
+              {
+                value: "10",
+                label: t("myevents:rsvpModal.contribution.standard"),
+              },
+              {
+                value: "15",
+                label: t("myevents:rsvpModal.contribution.payItForward"),
+              },
+            ]}
+          />
         </div>
       )}
 

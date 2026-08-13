@@ -44,7 +44,9 @@ function makeItemView(
   overrides: Partial<SubprofileItemView> & Pick<SubprofileItemView, "section">,
 ): SubprofileItemView {
   return {
+    id: "item-test",
     title: "",
+    createdAt: "2025-01-01T00:00:00.000Z",
     subtitle: "",
     description: "",
     url: "",

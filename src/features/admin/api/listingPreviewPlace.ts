@@ -108,8 +108,13 @@ export function listingDtoToPreviewPlace(dto: ListingDTO): DirectoryPlace {
     // Price tier first (when set), then the listing's own tags — as detail pills.
     pills: [...(dto.price ? [dto.price] : []), ...dto.tags],
     rating: { score: "0", count: 0 },
-    // The gallery renders caption cells (no images in the prototype); surface
-    // the alt-text captions, dropping empty slots.
+    // Carry the real uploaded photos + their alt text so the moderator sees the
+    // actual photo hero/thumbnails the public page shows — not a caption stand-in.
+    // `DirectoryGallery` only falls back to caption cells when every slot is null.
+    photos: dto.photos,
+    alt: dto.alt,
+    // Caption-cell fallback (used only when no photos are uploaded): surface the
+    // alt-text captions, dropping empty slots.
     gallery: [dto.alt.wide, dto.alt.d1, dto.alt.d2, dto.alt.vibe].filter(
       (caption) => caption.length > 0,
     ),

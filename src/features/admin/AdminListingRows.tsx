@@ -83,7 +83,11 @@ export function AdminListingRows({
       </label>
       {rows.map((row, index) =>
         animateEntrance ? (
-          <FadeIn key={row.ref} delay={Math.min(index, 8) * 50}>
+          <FadeIn
+            key={row.ref}
+            delay={Math.min(index, 8) * 50}
+            className={styles.rowFade}
+          >
             <AdminListingRow
               row={row}
               selected={selectedRefs.has(row.ref)}

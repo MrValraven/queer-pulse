@@ -1,13 +1,11 @@
 import { useMemo } from "react";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useMembers } from "../../features/members/api/useMembers";
 import { useCommunities } from "../../features/communities/api/useCommunities";
 import { useTopics } from "../../features/topics/api/useTopics";
 import { useDirectoryPlaces } from "../../features/marketing/api/useDirectory";
 import { useEventMentionOptions } from "../../features/gatherings/api/useEventMentionOptions";
 import { useThreadMentionOptions } from "../../features/forum/api/useThreadMentionOptions";
-import { MEMBERS, memberName } from "../../features/members/data/members";
 import { initialsOf } from "../api/refs";
+import { useMemberSuggestions } from "./useMemberSuggestions";
 
 /** A pick-able mention target, uniform across members, communities, topics, businesses, events, and threads. */
 export interface Suggestion {
@@ -34,43 +32,12 @@ export function useMentionSuggestions(): {
   events: Suggestion[];
   threads: Suggestion[];
 } {
-  const { demoMode } = useDemoMode();
-  const memberList = useMembers();
+  const members = useMemberSuggestions();
   const communityList = useCommunities();
   const topicList = useTopics();
   const directoryPlaces = useDirectoryPlaces();
   const eventOptions = useEventMentionOptions();
   const threadOptions = useThreadMentionOptions();
-
-  const members = useMemo<Suggestion[]>(
-    () =>
-      memberList.items.map((card) => {
-        // Live cards carry their own identity; demo cards resolve it from the
-        // registry by slug (avatarUrl/firstName are undefined on demo cards).
-        // The registry reads are DEMO-ONLY — in live mode a card missing a name
-        // or photo falls back to its slug/initials rather than a mock persona's.
-        const name = card.firstName
-          ? `${card.firstName} ${card.lastName ?? ""}`.trim()
-          : demoMode
-            ? memberName(card.slug)
-            : card.slug;
-        // initialsOf takes first/last separately — derive them from the card
-        // when present, otherwise split the resolved display name.
-        const firstName = card.firstName ?? name.split(" ")[0] ?? "";
-        const lastName = card.lastName ?? name.split(" ").slice(1).join(" ");
-        return {
-          kind: "member",
-          slug: card.slug,
-          name,
-          avatarUrl:
-            card.avatarUrl ??
-            (demoMode ? MEMBERS[card.slug]?.photo : undefined) ??
-            undefined,
-          initials: initialsOf(firstName, lastName),
-        };
-      }),
-    [memberList.items, demoMode],
-  );
 
   const communities = useMemo<Suggestion[]>(
     () =>

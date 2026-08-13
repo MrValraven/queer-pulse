@@ -18,33 +18,35 @@ const svgBaseProps = {
   focusable: false as const,
 };
 
-// Community → three stylized figures gathered around a small round table.
+// Community → three even figures gathered around a round table (a shared meal).
 function CommunityArt(): ReactNode {
   return (
     <svg {...svgBaseProps}>
-      <ellipse cx="120" cy="96" rx="46" ry="16" />
-      <circle cx="120" cy="50" r="12" />
-      <path d="M104 88c0-14 8-24 16-24s16 10 16 24" />
-      <circle cx="64" cy="68" r="11" />
-      <path d="M50 104c0-13 7-22 14-22s14 9 14 22" />
-      <circle cx="176" cy="68" r="11" />
-      <path d="M162 104c0-13 7-22 14-22s14 9 14 22" />
-      <circle cx="120" cy="96" r="6" fill="var(--accent)" stroke="none" />
+      <ellipse cx="120" cy="102" rx="46" ry="17" />
+      <circle cx="120" cy="46" r="12" />
+      <path d="M104 84c0-15 7-25 16-25s16 10 16 25" />
+      <circle cx="60" cy="64" r="11" />
+      <path d="M46 100c0-14 6-23 14-23s14 9 14 23" />
+      <circle cx="180" cy="64" r="11" />
+      <path d="M166 100c0-14 6-23 14-23s14 9 14 23" />
+      <circle cx="120" cy="98" r="5" fill="var(--accent)" stroke="none" />
     </svg>
   );
 }
 
-// Lisbon → a couple of tiled rooftops with a dropped map pin above them.
+// Lisbon → a coral map pin dropped between two little hillside houses.
 function LisbonArt(): ReactNode {
   return (
     <svg {...svgBaseProps}>
       <path d="M40 118h160" />
-      <path d="M56 118V80l30-20 30 20v38" />
-      <path d="M116 118V90l24-16 24 16v28" />
-      <path d="M62 96h48M62 108h48" />
-      <path d="M124 100h32M124 110h32" />
-      <path d="M120 26c-11 0-20 9-20 20 0 14 20 30 20 30s20-16 20-30c0-11-9-20-20-20z" stroke="var(--accent)" />
-      <circle cx="120" cy="46" r="6" stroke="var(--accent)" />
+      <path d="M54 118V94l18-14 18 14v24" />
+      <path d="M54 94h36" />
+      <path d="M62 104h20" />
+      <path d="M150 118V98l18-13 18 13v20" />
+      <path d="M150 98h36" />
+      <path d="M158 108h20" />
+      <path d="M120 32C106 32 95 43 95 57 95 78 120 118 120 118 120 118 145 78 145 57 145 43 134 32 120 32Z" stroke="var(--accent)" />
+      <circle cx="120" cy="53" r="9" />
     </svg>
   );
 }
@@ -75,14 +77,14 @@ function CultureArt(): ReactNode {
   );
 }
 
-// Work → a wrench crossed with two clasped hands (skills & solidarity economy).
+// Work → a briefcase with a single coral clasp (your work, in one place).
 function WorkArt(): ReactNode {
   return (
     <svg {...svgBaseProps}>
-      <path d="M60 44a14 14 0 0 0 18 18l40 40a12 12 0 0 1-17 17l-40-40a14 14 0 0 1-1-35z" />
-      <path d="M132 108l40-40a14 14 0 0 0 18-18 14 14 0 0 1-1 35" />
-      <path d="M120 118c8-8 18-8 26 0" stroke="var(--accent)" />
-      <path d="M96 118c-8-8-8-18 0-26" />
+      <rect x="54" y="52" width="132" height="62" rx="12" />
+      <path d="M102 52v-8a8 8 0 0 1 8-8h20a8 8 0 0 1 8 8v8" />
+      <path d="M54 78h132" />
+      <rect x="112" y="72" width="16" height="12" rx="3" stroke="var(--accent)" />
     </svg>
   );
 }

@@ -1,12 +1,9 @@
 import { Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { routes } from "../../../app/routeMap";
-import { initialsFromName } from "../../../shared/lib/initials";
 import { useLandingFeaturesPublic } from "../api/useLandingFeatures";
 import { FeaturedSpotlightCard } from "./FeaturedSpotlightCard";
-import { portraitSrc } from "./portraitSrc";
-import { type SpotlightView, tintForKey } from "./spotlightView";
+import { memberFeatureToSpotlightView } from "./spotlightView";
 import { ExploreMembersCta } from "./ExploreMembersCta";
 import styles from "./LiveSections.module.css";
 
@@ -29,18 +26,7 @@ export function LiveDiscovery() {
 
   if (isLoading || members.length === 0) return null;
 
-  const views: SpotlightView[] = members.map((member) => ({
-    key: member.slug,
-    to: `${routes.publicProfile}/${member.slug}`,
-    name: member.name,
-    initials: initialsFromName(member.name, "?"),
-    tint: tintForKey(member.slug),
-    photoUrl: portraitSrc(member.avatarUrl ?? undefined),
-    role: member.tagline ?? undefined,
-    tags: member.tags,
-    verified: true,
-    quote: member.quote,
-  }));
+  const views = members.map(memberFeatureToSpotlightView);
 
   return (
     <section className={styles.section} id="discovery">

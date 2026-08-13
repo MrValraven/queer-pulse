@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "../../shared/components/ui";
+import { Button, DatePicker } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell } from "./ModalKit";
@@ -213,27 +213,27 @@ function ProposeTimesModal({
       <p className={v.pageSub}>{t("economy:housingViewing.propose.body")}</p>
       <div className={v.slots}>
         <div className={v.slotRow}>
-          <label className={v.slotLabel} htmlFor="propose-slot-1">
+          <label className={v.slotLabel} id="propose-slot-1-label">
             {t("economy:housingViewing.request.slotOne")}
           </label>
-          <input
+          <DatePicker
+            mode="datetime"
             id="propose-slot-1"
-            type="datetime-local"
-            className={v.slotInput}
-            value={slotOne}
-            onChange={(event) => setSlotOne(event.target.value)}
+            labelledBy="propose-slot-1-label"
+            value={slotOne || null}
+            onChange={(value) => setSlotOne(value ?? "")}
           />
         </div>
         <div className={v.slotRow}>
-          <label className={v.slotLabel} htmlFor="propose-slot-2">
+          <label className={v.slotLabel} id="propose-slot-2-label">
             {t("economy:housingViewing.request.slotTwo")}
           </label>
-          <input
+          <DatePicker
+            mode="datetime"
             id="propose-slot-2"
-            type="datetime-local"
-            className={v.slotInput}
-            value={slotTwo}
-            onChange={(event) => setSlotTwo(event.target.value)}
+            labelledBy="propose-slot-2-label"
+            value={slotTwo || null}
+            onChange={(value) => setSlotTwo(value ?? "")}
           />
         </div>
       </div>

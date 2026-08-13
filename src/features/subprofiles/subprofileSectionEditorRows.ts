@@ -17,7 +17,14 @@ export const withUid = (item: SubprofileItemView): SubprofileEditorRow => ({
 });
 
 export const emptyItem = (section: SubprofileSection): SubprofileItemView => ({
+  // Not yet persisted: no server-assigned row exists yet. The revision-history
+  // UI guards on `isNew`, not on `id` truthiness, so an empty placeholder is
+  // fine here (mirrors the "Protect this work" section's existing pattern).
+  id: "",
   section,
+  // Not yet persisted: stamped with "now" as a placeholder until the save
+  // response returns the real server-assigned `createdAt`.
+  createdAt: new Date().toISOString(),
   title: "",
   subtitle: "",
   description: "",

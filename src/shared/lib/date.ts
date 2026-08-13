@@ -44,6 +44,23 @@ export function formatDate(
   return parsedDate.toLocaleDateString(locale, options);
 }
 
+/** A bare `yyyy-mm` — what an `<input type="month">` emits. */
+const MONTH_ONLY_PATTERN = /^\d{4}-\d{2}$/;
+
+/**
+ * Format a `yyyy-mm` month value (what `<input type="month">` emits) as a
+ * localized "Month Year" — `2025-07` → "July 2025" / "julho de 2025". Anything
+ * that isn't a bare `yyyy-mm` (empty, or legacy free text like "July 2025" or
+ * "Ongoing") is returned unchanged, so dates authored before the month picker
+ * still render exactly as they were written.
+ */
+export function formatMonthYear(value: string, locale?: string): string {
+  if (!MONTH_ONLY_PATTERN.test(value)) return value;
+  const parsed = new Date(`${value}-01T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return value;
+  return parsed.toLocaleDateString(locale, { month: "long", year: "numeric" });
+}
+
 /**
  * "2 hours ago" style relative label from an ISO timestamp, localized through
  * the caller's `Formatters` (backed by `Intl.RelativeTimeFormat`, so it reads

@@ -8,6 +8,7 @@ import { JoinModal } from "./JoinModal";
 import { EditCommunityModal } from "./EditCommunityModal";
 import { LeaveCommunityModal } from "./LeaveCommunityModal";
 import { CommunityDetailHero } from "./CommunityDetailHero";
+import { CommunityFrozenBanner } from "./CommunityFrozenBanner";
 import { LivingHubTabs } from "./LivingHubTabs";
 import { FallbackHubTabs } from "./FallbackHubTabs";
 import { CommunitySidebar } from "./CommunitySidebar";
@@ -111,6 +112,9 @@ export function CommunityDetailPage() {
 
       <div className={styles.body}>
         <div className="wrap">
+          {living?.frozen && slug && (
+            <CommunityFrozenBanner slug={slug} canManage={canEdit} />
+          )}
           <div className={styles.layout}>
             {living ? (
               <LivingHubTabs

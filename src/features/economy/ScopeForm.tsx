@@ -1,5 +1,5 @@
 import { FiPlus, FiX } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, DatePicker } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ScopeState } from "./scope.data";
 import styles from "./ScopeGeneratorPage.module.css";
@@ -179,15 +179,15 @@ export function ScopeForm({ scope, onChange }: ScopeFormProps) {
         </div>
 
         <div className={styles.field}>
-          <label className={styles.rcLabel} htmlFor="scope-valid">
+          <label id="scope-valid-label" className={styles.rcLabel}>
             {t("economy:scopeTool.validUntilLabel")}
           </label>
-          <input
+          <DatePicker
+            mode="date"
             id="scope-valid"
-            className={styles.rcInput}
-            type="date"
-            value={scope.validUntil}
-            onChange={(e) => onChange({ validUntil: e.target.value })}
+            labelledBy="scope-valid-label"
+            value={scope.validUntil || null}
+            onChange={(value) => onChange({ validUntil: value ?? "" })}
           />
         </div>
       </div>

@@ -1,4 +1,9 @@
-import { currentUser, currentUserSlug } from "../../members/data/members";
+import {
+  MEMBERS,
+  currentUser,
+  currentUserSlug,
+  memberName,
+} from "../../members/data/members";
 import { isContentSection } from "../subprofile-kinds";
 import type {
   CollaboratorDTO,
@@ -42,14 +47,29 @@ const DEMO_COLLABORATOR_DIRECTORY: Record<string, CollaboratorDTO> = {
   "grain-studio": GRAIN_COLLABORATOR,
 };
 
-/** Resolve collaborator handle strings against the demo directory, dropping
- *  any handle that isn't a seeded member/persona — mirrors the backend's
- *  drop-if-unresolvable rule for the demo/MSW paths. */
+/** Resolve collaborator handle strings against the demo world: the seeded
+ *  handle→card directory first (for personas + curated overrides like Rui),
+ *  then any real member from the registry (a member's handle is their slug), so
+ *  a collaborator just picked from the member search survives the save echo
+ *  instead of being dropped. An unknown handle still drops, mirroring the
+ *  backend's drop-if-unresolvable rule for the demo/MSW paths. */
 export function resolveCollaboratorsDemo(
   handles: string[] = [],
 ): CollaboratorDTO[] {
   return handles
-    .map((handle) => DEMO_COLLABORATOR_DIRECTORY[handle])
+    .map((handle) => {
+      const seeded = DEMO_COLLABORATOR_DIRECTORY[handle];
+      if (seeded) return seeded;
+      const member = MEMBERS[handle];
+      if (!member) return undefined;
+      return {
+        handle,
+        type: "member",
+        name: memberName(handle),
+        avatarUrl: member.photo ?? null,
+        slug: handle,
+      } satisfies CollaboratorDTO;
+    })
     .filter((collaborator): collaborator is CollaboratorDTO =>
       Boolean(collaborator),
     );
@@ -154,7 +174,9 @@ const NIGHTFORM: DemoSubprofile = {
   ],
   items: [
     {
+      id: "itm-discography-threshold-ep",
       section: "discography",
+      createdAt: "2025-01-08T09:14:00.000Z",
       title: "Threshold EP",
       subtitle: "Penumbra Records",
       description: null,
@@ -170,7 +192,9 @@ const NIGHTFORM: DemoSubprofile = {
       collaborators: [RUI_COLLABORATOR, GRAIN_COLLABORATOR],
     },
     {
+      id: "itm-discography-static-bloom",
       section: "discography",
+      createdAt: "2025-01-11T23:07:00.000Z",
       title: "Static Bloom",
       subtitle: "self-released",
       description: null,
@@ -184,7 +208,9 @@ const NIGHTFORM: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-discography-undertow-remixes",
       section: "discography",
+      createdAt: "2025-01-14T12:00:00.000Z",
       title: "Undertow (remixes)",
       subtitle: "Penumbra Records",
       description: null,
@@ -201,7 +227,9 @@ const NIGHTFORM: DemoSubprofile = {
     // "upcoming" for the StageNextUp/Played split — a known limitation that
     // will lapse and need bumping again as real time passes.
     {
+      id: "itm-gigs-rrraw-warehouse",
       section: "gigs",
+      createdAt: "2025-01-19T00:53:00.000Z",
       title: "Rrraw · Warehouse",
       subtitle: "Lisbon",
       description: null,
@@ -218,7 +246,9 @@ const NIGHTFORM: DemoSubprofile = {
       gigState: "sold_out",
     },
     {
+      id: "itm-gigs-mina-collective",
       section: "gigs",
+      createdAt: "2025-01-21T13:46:00.000Z",
       title: "Mina Collective",
       subtitle: "Porto",
       description: null,
@@ -235,7 +265,9 @@ const NIGHTFORM: DemoSubprofile = {
       gigState: "guest",
     },
     {
+      id: "itm-links-bandcamp",
       section: "links",
+      createdAt: "2025-01-26T02:39:00.000Z",
       title: "Bandcamp",
       url: "https://example.com/nightform",
       subtitle: null,
@@ -248,7 +280,9 @@ const NIGHTFORM: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-links-soundcloud",
       section: "links",
+      createdAt: "2025-01-28T15:32:00.000Z",
       title: "SoundCloud",
       url: "https://example.com/nightform-sc",
       subtitle: null,
@@ -296,7 +330,9 @@ const RUI_DEV: DemoSubprofile = {
   endorsers: [],
   items: [
     {
+      id: "itm-projects-tide",
       section: "projects",
+      createdAt: "2025-02-02T04:25:00.000Z",
       title: "Tide",
       subtitle: null,
       description: "A queue-backed job runner with first-class backpressure.",
@@ -319,7 +355,9 @@ const RUI_DEV: DemoSubprofile = {
       },
     },
     {
+      id: "itm-projects-ledger",
       section: "projects",
+      createdAt: "2025-02-04T17:18:00.000Z",
       title: "Ledger",
       subtitle: null,
       description: "Append-only event store for small teams.",
@@ -333,7 +371,9 @@ const RUI_DEV: DemoSubprofile = {
       workState: "archived",
     },
     {
+      id: "itm-open-source-pg-migrate-lite",
       section: "open_source",
+      createdAt: "2025-02-09T07:11:00.000Z",
       title: "pg-migrate-lite",
       subtitle: null,
       description: "Tiny forward-only migration CLI.",
@@ -391,7 +431,9 @@ const ANIKA_WRITER: DemoSubprofile = {
   endorsers: [],
   items: [
     {
+      id: "itm-publications-salt-lines",
       section: "publications",
+      createdAt: "2025-02-11T20:04:00.000Z",
       title: "Salt Lines",
       subtitle: "Tinta Permanente",
       description: "A chapbook on leaving and being left.",
@@ -404,7 +446,9 @@ const ANIKA_WRITER: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-publications-two-tongues-anthology",
       section: "publications",
+      createdAt: "2025-02-16T08:57:00.000Z",
       title: "Two Tongues (anthology)",
       subtitle: "Migrant Voices Press",
       description: null,
@@ -417,7 +461,9 @@ const ANIKA_WRITER: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-readings-noite-de-poesia",
       section: "readings",
+      createdAt: "2025-02-18T21:50:00.000Z",
       title: "Noite de Poesia",
       subtitle: "Casa do Comum, Lisbon",
       description: null,
@@ -430,7 +476,9 @@ const ANIKA_WRITER: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-readings-migrant-voices-festival",
       section: "readings",
+      createdAt: "2025-02-22T10:43:00.000Z",
       title: "Migrant Voices Festival",
       subtitle: "Porto",
       description: null,
@@ -494,7 +542,9 @@ const ANDRE_LENS: DemoSubprofile = {
   ],
   items: [
     {
+      id: "itm-portfolio-held",
       section: "portfolio",
+      createdAt: "2025-02-25T23:36:00.000Z",
       title: "Held",
       subtitle: null,
       description: "A series of hands and the people they belong to.",
@@ -511,7 +561,9 @@ const ANDRE_LENS: DemoSubprofile = {
       edition: "Edition of 12",
     },
     {
+      id: "itm-portfolio-first-light",
       section: "portfolio",
+      createdAt: "2025-03-01T12:29:00.000Z",
       title: "First Light",
       subtitle: null,
       description: "Morning-after portraits on expired stock.",
@@ -528,7 +580,9 @@ const ANDRE_LENS: DemoSubprofile = {
       edition: "Edition of 8",
     },
     {
+      id: "itm-portfolio-softbutch",
       section: "portfolio",
+      createdAt: "2025-03-05T01:22:00.000Z",
       title: "Softbutch",
       subtitle: null,
       description: null,
@@ -544,7 +598,9 @@ const ANDRE_LENS: DemoSubprofile = {
       edition: "Edition of 20",
     },
     {
+      id: "itm-exhibitions-grain-body",
       section: "exhibitions",
+      createdAt: "2025-03-08T14:15:00.000Z",
       title: "Grain & Body",
       subtitle: "Galeria Foco, Lisbon",
       description: null,
@@ -591,7 +647,9 @@ const TIAGO_DRAFT: DemoSubprofile = {
   endorsers: [],
   items: [
     {
+      id: "itm-projects-queerpulse",
       section: "projects",
+      createdAt: "2025-03-12T04:08:00.000Z",
       title: "QueerPulse",
       subtitle: null,
       description: "A community platform. This one.",
@@ -604,7 +662,9 @@ const TIAGO_DRAFT: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-open-source-use-demo-mode",
       section: "open_source",
+      createdAt: "2025-03-15T17:01:00.000Z",
       title: "use-demo-mode",
       subtitle: null,
       description: "Dual-mode data hooks helper.",
@@ -661,7 +721,9 @@ const CASA_CORVO: DemoSubprofile = {
   endorsers: [],
   items: [
     {
+      id: "itm-menus-winter-no-12",
       section: "menus",
+      createdAt: "2025-03-19T05:54:00.000Z",
       title: "Winter, no. 12",
       subtitle: "six courses",
       description: "Chestnut, salt cod, burnt honey.",
@@ -722,7 +784,9 @@ const CASA_CORVO: DemoSubprofile = {
       },
     },
     {
+      id: "itm-menus-the-long-table",
       section: "menus",
+      createdAt: "2025-03-22T18:47:00.000Z",
       title: "The Long Table",
       subtitle: "four courses",
       description: null,
@@ -736,7 +800,9 @@ const CASA_CORVO: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-residencies-casa-do-comum-kitchen",
       section: "residencies",
+      createdAt: "2025-03-26T07:40:00.000Z",
       title: "Casa do Comum kitchen",
       subtitle: "Lisbon",
       description: null,
@@ -846,7 +912,9 @@ const SOFIA_NEVES: DemoSubprofile = {
   endorsers: [],
   items: [
     {
+      id: "itm-specialisms-identity-coming-out",
       section: "specialisms",
+      createdAt: "2025-03-29T20:33:00.000Z",
       title: "Identity & coming out",
       subtitle: null,
       description: "Including later-in-life and second comings-out.",
@@ -859,7 +927,9 @@ const SOFIA_NEVES: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-specialisms-family-estrangement",
       section: "specialisms",
+      createdAt: "2025-04-01T09:26:00.000Z",
       title: "Family estrangement",
       subtitle: null,
       description: "Repair, boundaries, and grief that has no funeral.",
@@ -872,7 +942,9 @@ const SOFIA_NEVES: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-specialisms-transition-related-support",
       section: "specialisms",
+      createdAt: "2025-04-05T22:19:00.000Z",
       title: "Transition-related support",
       subtitle: null,
       description: "Not gatekeeping. Not assessment. Support.",
@@ -885,7 +957,9 @@ const SOFIA_NEVES: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-credentials-opp-registered-psychologist",
       section: "credentials",
+      createdAt: "2025-04-08T12:12:00.000Z",
       title: "OPP registered psychologist",
       subtitle: "Ordem dos Psicólogos Portugueses",
       description: null,
@@ -898,7 +972,9 @@ const SOFIA_NEVES: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-credentials-msc-clinical-psychology",
       section: "credentials",
+      createdAt: "2025-04-13T01:05:00.000Z",
       title: "MSc Clinical Psychology",
       subtitle: "Universidade de Lisboa",
       description: null,
@@ -911,7 +987,9 @@ const SOFIA_NEVES: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-gallery",
       section: "gallery",
+      createdAt: "2025-04-15T13:58:00.000Z",
       title: "",
       subtitle: null,
       description: null,
@@ -925,7 +1003,9 @@ const SOFIA_NEVES: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-gallery-2",
       section: "gallery",
+      createdAt: "2025-04-20T02:51:00.000Z",
       title: "",
       subtitle: null,
       description: null,
@@ -939,7 +1019,9 @@ const SOFIA_NEVES: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-gallery-3",
       section: "gallery",
+      createdAt: "2025-04-22T15:44:00.000Z",
       title: "",
       subtitle: null,
       description: null,
@@ -1032,7 +1114,9 @@ const DECIMA_CASA: DemoSubprofile = {
   ],
   items: [
     {
+      id: "itm-charts-natal-reading",
       section: "charts",
+      createdAt: "2025-04-27T04:37:00.000Z",
       title: "Natal reading",
       subtitle: "90 minutes · €70",
       description:
@@ -1046,7 +1130,9 @@ const DECIMA_CASA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-charts-the-year-ahead",
       section: "charts",
+      createdAt: "2025-04-29T17:30:00.000Z",
       title: "The year ahead",
       subtitle: "60 minutes · €55",
       description:
@@ -1060,7 +1146,9 @@ const DECIMA_CASA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-charts-two-charts-together",
       section: "charts",
+      createdAt: "2025-05-03T06:23:00.000Z",
       title: "Two charts together",
       subtitle: "90 minutes · €95",
       description:
@@ -1074,7 +1162,9 @@ const DECIMA_CASA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-sky-new-moon-circle",
       section: "sky",
+      createdAt: "2025-05-06T19:16:00.000Z",
       title: "New Moon circle",
       subtitle: "Casa do Comum · Lisbon",
       description: "Twelve people, one hour, no prior knowledge assumed.",
@@ -1087,7 +1177,9 @@ const DECIMA_CASA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-sky-eclipse-season-explained",
       section: "sky",
+      createdAt: "2025-05-10T09:09:00.000Z",
       title: "Eclipse season, explained",
       subtitle: "workshop · online",
       description:
@@ -1101,7 +1193,9 @@ const DECIMA_CASA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-sky-saturn-in-aries",
       section: "sky",
+      createdAt: "2025-05-13T22:02:00.000Z",
       title: "Saturn in Aries",
       subtitle: "group reading · Anjos",
       description: null,
@@ -1114,7 +1208,9 @@ const DECIMA_CASA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-links-letters-from-the-tenth-house",
       section: "links",
+      createdAt: "2025-05-16T10:55:00.000Z",
       title: "Letters from the tenth house",
       subtitle: null,
       description: null,
@@ -1127,7 +1223,9 @@ const DECIMA_CASA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-links-instagram",
       section: "links",
+      createdAt: "2025-05-20T23:48:00.000Z",
       title: "Instagram",
       subtitle: null,
       description: null,
@@ -1173,7 +1271,9 @@ const LECHATDASHINKO: DemoSubprofile = {
   endorsers: [],
   items: [
     {
+      id: "itm-mixes-nocturne-04",
       section: "mixes",
+      createdAt: "2025-05-23T12:41:00.000Z",
       title: "Nocturne 04",
       subtitle: "112 min",
       description: null,
@@ -1187,7 +1287,9 @@ const LECHATDASHINKO: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-mixes-soft-opening",
       section: "mixes",
+      createdAt: "2025-05-28T01:34:00.000Z",
       title: "Soft Opening",
       subtitle: "74 min",
       description: null,
@@ -1203,7 +1305,9 @@ const LECHATDASHINKO: DemoSubprofile = {
     // NOTE: see NIGHTFORM's gigs comment above — this date is an absolute
     // 2027 demo value, deliberately kept "upcoming"; known limitation.
     {
+      id: "itm-gigs-rrraw-warehouse-2",
       section: "gigs",
+      createdAt: "2025-05-30T14:27:00.000Z",
       title: "Rrraw · Warehouse",
       subtitle: "Lisbon",
       description: null,
@@ -1219,7 +1323,9 @@ const LECHATDASHINKO: DemoSubprofile = {
       ticketUrl: "https://ra.co/lechat",
     },
     {
+      id: "itm-gigs-damas",
       section: "gigs",
+      createdAt: "2025-06-04T03:20:00.000Z",
       title: "Damas",
       subtitle: "Lisbon",
       description: null,
@@ -1232,7 +1338,9 @@ const LECHATDASHINKO: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-links-soundcloud-2",
       section: "links",
+      createdAt: "2025-06-06T17:13:00.000Z",
       title: "SoundCloud",
       subtitle: null,
       description: null,
@@ -1285,7 +1393,9 @@ const VANDA_DIESEL: DemoSubprofile = {
     // NOTE: see NIGHTFORM's gigs comment above — this date is an absolute
     // 2027 demo value, deliberately kept "upcoming"; known limitation.
     {
+      id: "itm-shows-sunday-service",
       section: "shows",
+      createdAt: "2025-06-11T06:06:00.000Z",
       title: "Sunday Service",
       subtitle: "Trumps · monthly",
       description: null,
@@ -1301,7 +1411,9 @@ const VANDA_DIESEL: DemoSubprofile = {
       ticketUrl: "https://trumps.pt",
     },
     {
+      id: "itm-shows-drag-race-lisboa",
       section: "shows",
+      createdAt: "2025-06-13T18:59:00.000Z",
       title: "Drag Race Lisboa",
       subtitle: "guest judge",
       description: null,
@@ -1314,7 +1426,9 @@ const VANDA_DIESEL: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-looks-motorbike-madonna",
       section: "looks",
+      createdAt: "2025-06-18T07:52:00.000Z",
       title: "Motorbike Madonna",
       subtitle: null,
       description: null,
@@ -1328,7 +1442,9 @@ const VANDA_DIESEL: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-looks-first-communion",
       section: "looks",
+      createdAt: "2025-06-20T20:45:00.000Z",
       title: "First Communion",
       subtitle: null,
       description: null,
@@ -1383,7 +1499,9 @@ const ANIKA_JOURNAL: DemoSubprofile = {
   endorsers: [],
   items: [
     {
+      id: "itm-publications-untitled-march",
       section: "publications",
+      createdAt: "2025-06-24T09:38:00.000Z",
       title: "Untitled, March",
       subtitle: null,
       description: "A working draft, not for outside eyes yet.",
@@ -1431,7 +1549,9 @@ const JORDAN_AFTERHOURS: DemoSubprofile = {
   endorsers: [],
   items: [
     {
+      id: "itm-mixes-living-room-vol-3",
       section: "mixes",
+      createdAt: "2025-06-27T22:31:00.000Z",
       title: "Living Room, vol. 3",
       subtitle: "58 min",
       description: null,
@@ -1528,7 +1648,9 @@ const CADEIRA_LIVRE: DemoSubprofile = {
   endorsers: [],
   items: [
     {
+      id: "itm-services-cut-any-hair",
       section: "services",
+      createdAt: "2025-07-01T11:24:00.000Z",
       title: "Cut, any hair",
       subtitle: "45 minutes",
       description:
@@ -1542,7 +1664,9 @@ const CADEIRA_LIVRE: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-services-clipper-cut-fade",
       section: "services",
+      createdAt: "2025-07-05T00:17:00.000Z",
       title: "Clipper cut & fade",
       subtitle: "30 minutes",
       description: null,
@@ -1555,7 +1679,9 @@ const CADEIRA_LIVRE: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-services-colour-single-process",
       section: "services",
+      createdAt: "2025-07-08T14:10:00.000Z",
       title: "Colour, single process",
       subtitle: "2 hours",
       description: "Bleach and tone. Patch test a week before, no exceptions.",
@@ -1568,7 +1694,9 @@ const CADEIRA_LIVRE: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-services-first-cut-after-coming-out",
       section: "services",
+      createdAt: "2025-07-12T03:03:00.000Z",
       title: "First cut after coming out",
       subtitle: "as long as it takes",
       description:
@@ -1582,7 +1710,9 @@ const CADEIRA_LIVRE: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-looks-grown-out-bleach",
       section: "looks",
+      createdAt: "2025-07-15T15:56:00.000Z",
       title: "Grown-out bleach",
       subtitle: null,
       description: null,
@@ -1596,7 +1726,9 @@ const CADEIRA_LIVRE: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-looks-short-back-long-everything",
       section: "looks",
+      createdAt: "2025-07-19T04:49:00.000Z",
       title: "Short back, long everything",
       subtitle: null,
       description: null,
@@ -1610,7 +1742,9 @@ const CADEIRA_LIVRE: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-looks-the-anjos-mullet",
       section: "looks",
+      createdAt: "2025-07-22T17:42:00.000Z",
       title: "The Anjos mullet",
       subtitle: null,
       description: null,
@@ -1624,7 +1758,9 @@ const CADEIRA_LIVRE: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-links-booking",
       section: "links",
+      createdAt: "2025-07-26T06:35:00.000Z",
       title: "Booking",
       subtitle: null,
       description: null,
@@ -1681,7 +1817,9 @@ const SANTA_CRUEL: DemoSubprofile = {
   endorsers: [],
   items: [
     {
+      id: "itm-collections-penitente",
       section: "collections",
+      createdAt: "2025-07-29T19:28:00.000Z",
       title: "PENITENTE",
       subtitle: "SS26",
       description: "Fifteen looks in wool, chiffon and church velvet.",
@@ -1695,7 +1833,9 @@ const SANTA_CRUEL: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-collections-irm",
       section: "collections",
+      createdAt: "2025-08-02T08:21:00.000Z",
       title: "IRMÃ",
       subtitle: "AW25",
       description: null,
@@ -1709,7 +1849,9 @@ const SANTA_CRUEL: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-collections-primeira-comunh-o",
       section: "collections",
+      createdAt: "2025-08-05T21:14:00.000Z",
       title: "PRIMEIRA COMUNHÃO",
       subtitle: "SS25",
       description: null,
@@ -1723,7 +1865,9 @@ const SANTA_CRUEL: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-shows-modalisboa-sala-principal",
       section: "shows",
+      createdAt: "2025-08-08T11:07:00.000Z",
       title: "ModaLisboa · Sala Principal",
       subtitle: "Lisbon",
       description: null,
@@ -1736,7 +1880,9 @@ const SANTA_CRUEL: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-shows-portugal-fashion",
       section: "shows",
+      createdAt: "2025-08-13T00:00:00.000Z",
       title: "Portugal Fashion",
       subtitle: "Porto",
       description: null,
@@ -1749,7 +1895,9 @@ const SANTA_CRUEL: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-shows-casa-do-comum-presentation",
       section: "shows",
+      createdAt: "2025-08-15T12:53:00.000Z",
       title: "Casa do Comum · presentation",
       subtitle: "Lisbon",
       description: null,
@@ -1762,7 +1910,9 @@ const SANTA_CRUEL: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-links-lookbook",
       section: "links",
+      createdAt: "2025-08-19T01:46:00.000Z",
       title: "Lookbook",
       subtitle: null,
       description: null,
@@ -1827,7 +1977,9 @@ const TERCEIRO_PISO: DemoSubprofile = {
   endorsers: [],
   items: [
     {
+      id: "itm-programme-held-again",
       section: "programme",
+      createdAt: "2025-08-22T14:39:00.000Z",
       title: "Held, Again",
       subtitle: "GRAIN · photographs, 2023–2026",
       description:
@@ -1842,7 +1994,9 @@ const TERCEIRO_PISO: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-programme-the-long-room",
       section: "programme",
+      createdAt: "2025-08-26T03:32:00.000Z",
       title: "The Long Room",
       subtitle: "group exhibition · six artists",
       description: null,
@@ -1855,7 +2009,9 @@ const TERCEIRO_PISO: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-programme-papel-queimado",
       section: "programme",
+      createdAt: "2025-08-29T16:25:00.000Z",
       title: "Papel Queimado",
       subtitle: "Vera Luís · works on paper",
       description: null,
@@ -1868,7 +2024,9 @@ const TERCEIRO_PISO: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-artists-grain-andr-quintela",
       section: "artists",
+      createdAt: "2025-09-02T05:18:00.000Z",
       title: "GRAIN (André Quintela)",
       subtitle: "photography · represented since 2024",
       description: null,
@@ -1881,7 +2039,9 @@ const TERCEIRO_PISO: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-artists-vera-lu-s",
       section: "artists",
+      createdAt: "2025-09-05T19:11:00.000Z",
       title: "Vera Luís",
       subtitle: "works on paper · represented since 2023",
       description: null,
@@ -1894,7 +2054,9 @@ const TERCEIRO_PISO: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-artists-bruno-sanches",
       section: "artists",
+      createdAt: "2025-09-09T08:04:00.000Z",
       title: "Bruno Sanches",
       subtitle: "sculpture · represented since 2025",
       description: null,
@@ -1907,7 +2069,9 @@ const TERCEIRO_PISO: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-links-programme",
       section: "links",
+      createdAt: "2025-09-12T20:57:00.000Z",
       title: "Programme",
       subtitle: null,
       description: null,
@@ -1961,7 +2125,9 @@ const ANTES_DE_NOS: DemoSubprofile = {
   endorsers: [],
   items: [
     {
+      id: "itm-testimonies-maria-da-concei-o-84",
       section: "testimonies",
+      createdAt: "2025-09-15T09:50:00.000Z",
       title: "Maria da Conceição, 84",
       subtitle: "Lisbon · recorded 2025",
       description:
@@ -1975,7 +2141,9 @@ const ANTES_DE_NOS: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-testimonies-ant-nio-toni-vale-71",
       section: "testimonies",
+      createdAt: "2025-09-19T22:43:00.000Z",
       title: "António 'Toni' Vale, 71",
       subtitle: "Porto · recorded 2024",
       description:
@@ -1989,7 +2157,9 @@ const ANTES_DE_NOS: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-testimonies-sealed-until-2040",
       section: "testimonies",
+      createdAt: "2025-09-22T11:36:00.000Z",
       title: "Sealed until 2040",
       subtitle: "narrator's request",
       description:
@@ -2003,7 +2173,9 @@ const ANTES_DE_NOS: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-projects-ninety-one-voices",
       section: "projects",
+      createdAt: "2025-09-27T00:29:00.000Z",
       title: "Ninety-One Voices",
       subtitle: "exhibition · Arquivo Municipal",
       description: null,
@@ -2016,7 +2188,9 @@ const ANTES_DE_NOS: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-projects-transcription-school",
       section: "projects",
+      createdAt: "2025-09-29T13:22:00.000Z",
       title: "Transcription school",
       subtitle: "with volunteers from the network",
       description: null,
@@ -2029,7 +2203,9 @@ const ANTES_DE_NOS: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-links-the-archive",
       section: "links",
+      createdAt: "2025-10-04T02:15:00.000Z",
       title: "The archive",
       subtitle: null,
       description: null,
@@ -2089,7 +2265,9 @@ const BLOCO_ROSA: DemoSubprofile = {
   endorsers: [],
   items: [
     {
+      id: "itm-campaigns-despejo-zero",
       section: "campaigns",
+      createdAt: "2025-10-06T16:08:00.000Z",
       title: "Despejo Zero",
       subtitle: "eviction defence · Anjos & Intendente",
       description:
@@ -2103,7 +2281,9 @@ const BLOCO_ROSA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-campaigns-fila-trans",
       section: "campaigns",
+      createdAt: "2025-10-11T05:01:00.000Z",
       title: "Fila Trans",
       subtitle: "healthcare waiting lists",
       description:
@@ -2117,7 +2297,9 @@ const BLOCO_ROSA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-actions-housing-assembly",
       section: "actions",
+      createdAt: "2025-10-13T17:54:00.000Z",
       title: "Housing assembly",
       subtitle: "Casa do Comum · open to all",
       description: null,
@@ -2130,7 +2312,9 @@ const BLOCO_ROSA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-actions-waiting-room-takeover",
       section: "actions",
+      createdAt: "2025-10-18T06:47:00.000Z",
       title: "Waiting room takeover",
       subtitle: "Hospital Santa Maria",
       description: null,
@@ -2143,7 +2327,9 @@ const BLOCO_ROSA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-actions-march-for-trans-healthcare",
       section: "actions",
+      createdAt: "2025-10-20T19:40:00.000Z",
       title: "March for trans healthcare",
       subtitle: "Marquês to Rossio",
       description: null,
@@ -2156,7 +2342,9 @@ const BLOCO_ROSA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-links-phone-tree",
       section: "links",
+      createdAt: "2025-10-25T08:33:00.000Z",
       title: "Phone tree",
       subtitle: null,
       description: null,
@@ -2216,7 +2404,9 @@ const AULA_ABERTA: DemoSubprofile = {
   endorsers: [],
   items: [
     {
+      id: "itm-courses-portugu-s-a1-from-zero",
       section: "courses",
+      createdAt: "2025-10-27T21:26:00.000Z",
       title: "Português A1 · from zero",
       subtitle: "12 weeks · Tuesdays 19:00",
       description:
@@ -2230,7 +2420,9 @@ const AULA_ABERTA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-courses-portugu-s-a2-paperwork-appointments",
       section: "courses",
+      createdAt: "2025-10-31T10:19:00.000Z",
       title: "Português A2 · paperwork & appointments",
       subtitle: "8 weeks · Saturdays 11:00",
       description:
@@ -2244,7 +2436,9 @@ const AULA_ABERTA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-courses-conversation-table",
       section: "courses",
+      createdAt: "2025-11-04T00:12:00.000Z",
       title: "Conversation table",
       subtitle: "weekly · drop in",
       description:
@@ -2258,7 +2452,9 @@ const AULA_ABERTA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-resources-health-centre-phrasebook",
       section: "resources",
+      createdAt: "2025-11-07T13:05:00.000Z",
       title: "Health centre phrasebook",
       subtitle: "PT / EN / FR / AR · free download",
       description: null,
@@ -2271,7 +2467,9 @@ const AULA_ABERTA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-resources-name-and-gender-marker-forms-explained",
       section: "resources",
+      createdAt: "2025-11-11T01:58:00.000Z",
       title: "Name and gender-marker forms, explained",
       subtitle: "updated Feb 2026",
       description: null,
@@ -2284,7 +2482,9 @@ const AULA_ABERTA: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-links-timetable",
       section: "links",
+      createdAt: "2025-11-14T14:51:00.000Z",
       title: "Timetable",
       subtitle: null,
       description: null,
@@ -2354,7 +2554,9 @@ const IRON_ORCHID: DemoSubprofile = {
   ],
   items: [
     {
+      id: "itm-performances-vertical-live",
       section: "performances",
+      createdAt: "2025-11-18T03:44:00.000Z",
       title: "Vertical, live",
       subtitle: "Casa do Comum · Lisbon",
       description:
@@ -2368,7 +2570,9 @@ const IRON_ORCHID: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-classes-beginner-pole-foundations",
       section: "classes",
+      createdAt: "2025-11-21T16:37:00.000Z",
       title: "Beginner pole — foundations",
       subtitle: "Level 1 · weekly · Estúdio Norte",
       description:
@@ -2382,7 +2586,9 @@ const IRON_ORCHID: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-classes-flow-choreography",
       section: "classes",
+      createdAt: "2025-11-25T05:30:00.000Z",
       title: "Flow & choreography",
       subtitle: "Level 2 · weekly · Estúdio Norte",
       description:
@@ -2396,7 +2602,9 @@ const IRON_ORCHID: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-reel-2026-reel",
       section: "reel",
+      createdAt: "2025-11-28T18:23:00.000Z",
       title: "2026 reel",
       subtitle: "Two minutes",
       description: "Showcase highlights and studio footage from the last year.",
@@ -2409,7 +2617,9 @@ const IRON_ORCHID: DemoSubprofile = {
       collaborators: [],
     },
     {
+      id: "itm-workshops-aerial-strength-intensive",
       section: "workshops",
+      createdAt: "2025-12-02T07:16:00.000Z",
       title: "Aerial strength intensive",
       subtitle: "One day · open level",
       description:

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
@@ -26,7 +27,7 @@ export function InterestsEditorModal({ onClose }: { onClose: () => void }) {
     );
   }
 
-  return (
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -124,6 +125,7 @@ export function InterestsEditorModal({ onClose }: { onClose: () => void }) {
           </>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

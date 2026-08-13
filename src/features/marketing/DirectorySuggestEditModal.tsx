@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { Button } from "../../shared/components/ui";
+import { Button, Select } from "../../shared/components/ui";
 import { Modal } from "../../shared/components/ui/Modal";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -90,20 +90,15 @@ export function DirectorySuggestEditModal({
       <label className={styles.field} htmlFor={selectId}>
         {t("marketing:directory.detail.suggestEdit.fieldLabel")}
       </label>
-      <select
+      <Select
         id={selectId}
-        className={styles.select}
+        options={FIELDS.map((option) => ({
+          value: option,
+          label: t(`marketing:directory.detail.suggestEdit.field.${option}`),
+        }))}
         value={field}
-        onChange={(event) =>
-          setField(event.target.value as SuggestEditField)
-        }
-      >
-        {FIELDS.map((option) => (
-          <option key={option} value={option}>
-            {t(`marketing:directory.detail.suggestEdit.field.${option}`)}
-          </option>
-        ))}
-      </select>
+        onChange={(value) => setField(value as SuggestEditField)}
+      />
 
       <label className={styles.field} htmlFor={textareaId}>
         {t("marketing:directory.detail.suggestEdit.messageLabel")}

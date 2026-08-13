@@ -1,4 +1,5 @@
 import { AdminSeg } from "./ui";
+import { DatePicker } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SafeSpaceStatus } from "./api/adminSafeSpaces.api";
 import {
@@ -61,15 +62,15 @@ export function AdminSafeSpaceModalFields({
         onChange={(event) => onChange({ verifier: event.target.value })}
       />
 
-      <label className={styles.fieldLabel} htmlFor="safe-space-reverified">
+      <label id="safe-space-reverified-label" className={styles.fieldLabel}>
         {t("admin:adminSafeSpaces.modal.reVerifiedAtLabel")}
       </label>
-      <input
+      <DatePicker
+        mode="date"
         id="safe-space-reverified"
-        type="date"
-        className={styles.textInput}
-        value={draft.reVerifiedAt}
-        onChange={(event) => onChange({ reVerifiedAt: event.target.value })}
+        labelledBy="safe-space-reverified-label"
+        value={draft.reVerifiedAt || null}
+        onChange={(value) => onChange({ reVerifiedAt: value ?? "" })}
       />
 
       <label className={styles.fieldLabel} htmlFor="safe-space-sub">

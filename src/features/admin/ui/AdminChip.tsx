@@ -14,11 +14,16 @@ export type AdminTone =
 export function AdminChip({
   tone = "plum",
   dot = false,
+  title,
   children,
   className,
 }: {
   tone?: AdminTone;
   dot?: boolean;
+  /** Optional tooltip text — a plain-language expansion for a chip whose
+   *  label alone is terse (e.g. a duplicate flag), surfaced natively via the
+   *  `title` attribute so it needs no extra markup or JS to be accessible. */
+  title?: string;
   children: ReactNode;
   className?: string;
 }) {
@@ -27,6 +32,7 @@ export function AdminChip({
       className={[styles.chip, styles[`chip_${tone}`], className]
         .filter(Boolean)
         .join(" ")}
+      title={title}
     >
       {dot && <span className={styles.chipDot} aria-hidden />}
       {children}

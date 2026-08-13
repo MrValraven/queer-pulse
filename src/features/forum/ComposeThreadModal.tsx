@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
-import { Button, ModalSheet } from "../../shared/components/ui";
+import { Button, ModalSheet, Select } from "../../shared/components/ui";
 import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -107,17 +107,14 @@ export function ComposeThreadModal({
           <span className={styles.fieldLabel}>
             {t("forum:compose.categoryFieldLabel")}
           </span>
-          <select
-            className={styles.input}
+          <Select
             value={cat}
-            onChange={(e) => setCat(e.target.value)}
-          >
-            {POST_CATS.map((c) => (
-              <option key={c.id} value={c.id}>
-                {t(c.nameKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => setCat(value ?? cat)}
+            options={POST_CATS.map((c) => ({
+              value: c.id,
+              label: t(c.nameKey),
+            }))}
+          />
         </label>
 
         {myCommunityOptions.length > 0 && (
@@ -125,18 +122,17 @@ export function ComposeThreadModal({
             <span className={styles.fieldLabel}>
               {t("forum:compose.communityFieldLabel")}
             </span>
-            <select
-              className={styles.input}
+            <Select
               value={communitySlug}
-              onChange={(e) => setCommunitySlug(e.target.value)}
-            >
-              <option value="">{t("forum:compose.communityNone")}</option>
-              {myCommunityOptions.map((community) => (
-                <option key={community.slug} value={community.slug}>
-                  {community.name}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => setCommunitySlug(value ?? "")}
+              options={[
+                { value: "", label: t("forum:compose.communityNone") },
+                ...myCommunityOptions.map((community) => ({
+                  value: community.slug,
+                  label: community.name,
+                })),
+              ]}
+            />
           </label>
         )}
 

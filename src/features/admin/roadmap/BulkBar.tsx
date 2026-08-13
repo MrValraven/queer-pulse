@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, BulkActionBar } from "../../../shared/components/ui";
+import { Button, BulkActionBar, Select } from "../../../shared/components/ui";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { describeError } from "../../../shared/api/errorMessage";
@@ -7,7 +7,6 @@ import { useAdminRoadmapMutations } from "../api/useAdminRoadmapMutations";
 import type { RoadmapBulkAction, RoadmapColumn } from "../api/roadmapAdmin.types";
 import { AdminModal } from "../ui";
 import { useRoadmapSelection } from "./state/useRoadmapSelection";
-import styles from "./RoadmapChrome.module.css";
 
 const MOVE_TARGETS: RoadmapColumn[] = [
   "backlog",
@@ -87,25 +86,20 @@ export function BulkBar() {
         onClear={clear}
         clearLabel={t("admin:roadmap.bulkBar.clear")}
       >
-        <select
-          className={`${styles.select} ${styles.bulkSelect}`}
-          value=""
+        <Select
+          size="sm"
+          value={null}
           disabled={pending}
-          aria-label={t("admin:roadmap.bulkBar.moveToPlaceholder")}
-          onChange={(event) => {
-            const column = event.target.value as RoadmapColumn | "";
-            if (column) runBulk("move", column);
+          label={t("admin:roadmap.bulkBar.moveToPlaceholder")}
+          placeholder={t("admin:roadmap.bulkBar.moveToPlaceholder")}
+          options={MOVE_TARGETS.map((column) => ({
+            value: column,
+            label: t(`admin:roadmap.board.column.${column}`),
+          }))}
+          onChange={(value) => {
+            if (value) runBulk("move", value as RoadmapColumn);
           }}
-        >
-          <option value="">
-            {t("admin:roadmap.bulkBar.moveToPlaceholder")}
-          </option>
-          {MOVE_TARGETS.map((column) => (
-            <option key={column} value={column}>
-              {t(`admin:roadmap.board.column.${column}`)}
-            </option>
-          ))}
-        </select>
+        />
 
         <Button variant="jade" onClick={() => runBulk("show")} disabled={pending}>
           {t("admin:roadmap.bulkBar.showPublicly")}

@@ -247,6 +247,15 @@ export const auth: Catalog = {
   "ageAttestation.confirmLabel": "I confirm I'm 18 or older.",
   "ageAttestation.helper":
     "QueerPulse is an adults-only community — <eligibility>here's why</eligibility>. No ID needed; we trust you. <under18>Not 18 yet?</under18>",
+  "adultsOnly.eyebrow": "Membership",
+  "adultsOnly.ariaLabel": "Why QueerPulse is adults-only",
+  "adultsOnly.title": "Why QueerPulse is <em>adults-only</em>",
+  "adultsOnly.body1":
+    "QueerPulse is open to anyone 18 or older who's invited or vouched into the community.",
+  "adultsOnly.body2":
+    "We keep it adults-only for a reason. So much of what happens here is frank talk about sex and sexual health, dating and nightlife, and the kind of unguarded conversation that only feels safe among adults. It isn't a fit for minors, and mixing the two would put everyone's safety at risk. Under-18s deserve queer community too; this just isn't the room for it yet.",
+  "adultsOnly.reassure": "No ID needed. We trust you.",
+  "adultsOnly.done": "Got it",
 
   // ── The humane under-18 block ──
   "under18.title": "We'll be here <em>when you're ready</em>",

@@ -6,9 +6,9 @@ import {
   SkeletonAvatar,
   SkeletonLine,
 } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { adminCommunityMod } from "../../app/routeMap";
 import { AdminTabs, AdminAvatar, type AdminTab } from "./ui";
 import { ScopedQueuePane, MembersPane } from "./AdminCommunityDetailTabs";
 import { SettingsPane } from "./AdminCommunitySettings";
@@ -43,7 +43,6 @@ export function AdminCommunityDetail({
   onBack: () => void;
 }) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
   const [active, setActive] = useState("queue");
   const [health, setHealth] = useState(false);
   const [support, setSupport] = useState(false);
@@ -138,9 +137,7 @@ export function AdminCommunityDetail({
             <Button
               variant="ghost"
               size="md"
-              onClick={() =>
-                showToast(t("admin:communities.detail.settingsToast"), "info")
-              }
+              to={adminCommunityMod(community.slug)}
             >
               {t("admin:communities.detail.settingsCta")}
             </Button>

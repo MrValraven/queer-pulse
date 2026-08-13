@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { SearchInput } from "../../shared/components/ui";
+import { SearchInput, Select } from "../../shared/components/ui";
 import { useDebouncedValue } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -78,22 +78,20 @@ export function AdminListingsHeader({
           <span className={styles.sortLabel}>
             {t("admin:adminListings.sort.label")}
           </span>
-          <select
-            className={styles.sortSelect}
+          <Select
+            size="sm"
             value={value.sort}
-            onChange={(event) =>
+            options={SORT_OPTIONS.map((option) => ({
+              value: option,
+              label: t(`admin:adminListings.sort.${option}`),
+            }))}
+            onChange={(next) =>
               onChange({
                 ...value,
-                sort: event.target.value as ListingQueueSort,
+                sort: (next ?? value.sort) as ListingQueueSort,
               })
             }
-          >
-            {SORT_OPTIONS.map((option) => (
-              <option key={option} value={option}>
-                {t(`admin:adminListings.sort.${option}`)}
-              </option>
-            ))}
-          </select>
+          />
         </label>
       </div>
 

@@ -28,3 +28,13 @@ export function popModal(id: string): void {
 export function isTopmostModal(id: string): boolean {
   return stack.length > 0 && stack[stack.length - 1] === id;
 }
+
+/** Whether ANY dialog is currently mounted, regardless of which one. For a
+ *  page-scoped keyboard shortcut layer (e.g. the admin Review-queue's J/K/A/R
+ *  flow) that needs to go inert the moment ANY modal/drawer/confirm-dialog
+ *  opens above it — including one it doesn't itself track state for, like a
+ *  `ConfirmDialog` mounted by a child component — rather than re-deriving
+ *  that from a handful of local "is this specific dialog open" booleans. */
+export function hasOpenModal(): boolean {
+  return stack.length > 0;
+}

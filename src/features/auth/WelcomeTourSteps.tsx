@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowLeft, FiArrowRight, FiCheck } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, Select } from "../../shared/components/ui";
 import { routes, linkToPath } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -65,6 +65,7 @@ export function TourWelcome({ onNext }: { onNext: () => void }) {
 export function TourProfile({ onNext, onBack }: StepProps) {
   const { t } = useTranslation();
   const [visibility, setVisibility] = useState("open");
+  const [neighbourhood, setNeighbourhood] = useState<string | null>(null);
   return (
     <>
       <div className={styles.eye}>{t("auth:tour.profile.eyebrow")}</div>
@@ -96,18 +97,16 @@ export function TourProfile({ onNext, onBack }: StepProps) {
           placeholder={t("auth:tour.profile.rolePlaceholder")}
           aria-label={t("auth:tour.profile.rolePlaceholder")}
         />
-        <select
-          className={styles.select}
-          defaultValue=""
-          aria-label={t("auth:tour.profile.neighbourhoodDefault")}
-        >
-          <option value="">
-            {t("auth:tour.profile.neighbourhoodDefault")}
-          </option>
-          {NEIGHBOURHOOD_KEYS.map((hoodKey) => (
-            <option key={hoodKey}>{t(hoodKey)}</option>
-          ))}
-        </select>
+        <Select
+          label={t("auth:tour.profile.neighbourhoodDefault")}
+          placeholder={t("auth:tour.profile.neighbourhoodDefault")}
+          value={neighbourhood}
+          onChange={setNeighbourhood}
+          options={NEIGHBOURHOOD_KEYS.map((hoodKey) => ({
+            value: hoodKey,
+            label: t(hoodKey),
+          }))}
+        />
       </div>
       <div className={styles.fieldLabel}>
         {t("auth:tour.profile.visibilityLabel")}

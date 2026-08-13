@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { LuSprout, LuTreeDeciduous } from "react-icons/lu";
-import { Button, Sending } from "../../shared/components/ui";
+import { Button, Select, Sending } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   MATCH_FLOWS,
@@ -48,15 +48,20 @@ function CheckGrid({ options }: { options: MatchArea[] }) {
 /** One placeholder-labelled control (input / select / textarea) in a step. */
 function MatchFieldControl({ field }: { field: MatchField }) {
   const { t } = useTranslation();
+  const [selected, setSelected] = useState<string | null>(null);
   const label = t(field.placeholderKey);
   if (field.kind === "select") {
     return (
-      <select className={styles.mmSelect} aria-label={label} defaultValue="">
-        <option value="">{label}</option>
-        {field.optionKeys?.map((optionKey) => (
-          <option key={optionKey}>{t(optionKey)}</option>
-        ))}
-      </select>
+      <Select
+        label={label}
+        placeholder={label}
+        options={(field.optionKeys ?? []).map((optionKey) => ({
+          value: t(optionKey),
+          label: t(optionKey),
+        }))}
+        value={selected}
+        onChange={setSelected}
+      />
     );
   }
   if (field.kind === "textarea") {

@@ -3,6 +3,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useCommunityEdits } from "../../../app/providers/useCommunityEdits";
 import {
   archiveCommunity,
+  unfreezeCommunity,
   createCommunity,
   createPost,
   deleteCommunityPost,
@@ -294,6 +295,27 @@ export function useArchiveCommunity() {
       void queryClient.invalidateQueries({ queryKey: ["community", slug] });
       void queryClient.invalidateQueries({ queryKey: ["communities"] });
       void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+    },
+  });
+}
+
+/** POST /communities/:slug/unfreeze — owner/mod lifts an auto-freeze from the
+ *  hub's frozen banner. Live unfreezes + invalidates the detail (the banner
+ *  clears when it refetches unfrozen); demo is a no-op the banner reflects with
+ *  its own local "lifted" state. */
+export function useUnfreezeCommunity() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<CommunityDetailDTO | null, Error, { slug: string }>({
+    // The banner toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
+    mutationFn: async ({ slug }) => {
+      if (demoMode) return null;
+      return unfreezeCommunity(slug);
+    },
+    onSuccess: (_data, { slug }) => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: ["community", slug] });
     },
   });
 }

@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { Button, FormField, Modal } from "../../shared/components/ui";
+import { Button, FormField, Modal, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions";
@@ -150,19 +150,20 @@ export function EditDetailsModal({
         </FormField>
         {myCommunityOptions.length > 0 && (
           <FormField label={t("gatherings:create.step3.communityLabel")}>
-            <select
+            <Select
+              options={[
+                {
+                  value: "",
+                  label: t("gatherings:create.step3.communityNone"),
+                },
+                ...myCommunityOptions.map((community) => ({
+                  value: community.slug,
+                  label: community.name,
+                })),
+              ]}
               value={draft.communitySlug}
-              onChange={(event) => setCommunitySlug(event.target.value)}
-            >
-              <option value="">
-                {t("gatherings:create.step3.communityNone")}
-              </option>
-              {myCommunityOptions.map((community) => (
-                <option key={community.slug} value={community.slug}>
-                  {community.name}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => setCommunitySlug(value ?? "")}
+            />
           </FormField>
         )}
         <AudienceScopeField

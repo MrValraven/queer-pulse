@@ -1,4 +1,4 @@
-import { FormField } from "../../../../shared/components/ui";
+import { FormField, Select } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { Slide } from "../../data/decks";
 import { bodyBudget, headingBudget, type FieldBudget } from "./slideBudget";
@@ -72,23 +72,23 @@ export function TextSlideFields({ slide, onChange }: FieldsProps<TextSlide>) {
         />
       </FormField>
       <FormField label={t("magazine:deck.editor.field.align")}>
-        <select
-          className={styles.select}
+        <Select
           value={slide.align ?? ""}
-          onChange={(event) =>
+          onChange={(value) =>
             onChange({
               ...slide,
               align:
-                event.target.value === ""
+                value === "" || value === null
                   ? undefined
-                  : (event.target.value as "left" | "center"),
+                  : (value as "left" | "center"),
             })
           }
-        >
-          <option value="">{t("magazine:deck.editor.field.alignDefault")}</option>
-          <option value="left">{t("magazine:deck.editor.field.alignLeft")}</option>
-          <option value="center">{t("magazine:deck.editor.field.alignCenter")}</option>
-        </select>
+          options={[
+            { value: "", label: t("magazine:deck.editor.field.alignDefault") },
+            { value: "left", label: t("magazine:deck.editor.field.alignLeft") },
+            { value: "center", label: t("magazine:deck.editor.field.alignCenter") },
+          ]}
+        />
       </FormField>
     </>
   );

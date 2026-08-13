@@ -1,5 +1,5 @@
 import { FiCheck } from "react-icons/fi";
-import { FormField, SegmentedControl } from "../../shared/components/ui";
+import { FormField, SegmentedControl, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AccentKey, AvailabilityKey } from "./api/subprofiles.api";
 import { ImageUploadField } from "./ImageUploadField";
@@ -124,21 +124,19 @@ export function SubprofilePresenceFields({
       </FormField>
 
       <FormField label={t("subprofiles:metaForm.availabilityLabel")}>
-        <select
+        <Select
+          options={[
+            { value: "", label: t("subprofiles:metaForm.availabilityUnset") },
+            ...AVAILABILITY_OPTIONS.map((option) => ({
+              value: option.value,
+              label: t(option.labelKey),
+            })),
+          ]}
           value={availability}
-          onChange={(event) =>
-            onAvailabilityChange(event.target.value as AvailabilityKey | "")
+          onChange={(value) =>
+            onAvailabilityChange((value ?? "") as AvailabilityKey | "")
           }
-        >
-          <option value="">
-            {t("subprofiles:metaForm.availabilityUnset")}
-          </option>
-          {AVAILABILITY_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {t(option.labelKey)}
-            </option>
-          ))}
-        </select>
+        />
       </FormField>
 
       <FormField

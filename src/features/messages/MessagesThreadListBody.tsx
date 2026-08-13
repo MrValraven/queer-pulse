@@ -6,6 +6,7 @@ import { MessageThreadListSkeleton } from "./MessagesSkeleton";
 import { MessagesThreadRow } from "./MessagesThreadRow";
 import type { InboxTab } from "./threadFilters";
 import type { Conversation } from "./data";
+import styles from "./MessagesPage.module.css";
 
 /** Empty-state copy per non-"all" tab — "All" can't be empty here (that case
  *  is the whole-inbox empty state above it), so it has no key. */
@@ -98,7 +99,11 @@ export function MessagesThreadListBody({
       {!loading &&
         !searching &&
         visibleThreads.map((thread, index) => (
-          <FadeIn key={thread.id} delay={Math.min(index, 8) * 60}>
+          <FadeIn
+            key={thread.id}
+            delay={Math.min(index, 8) * 60}
+            className={styles.threadRowFade}
+          >
             <MessagesThreadRow
               thread={thread}
               activeId={activeId}

@@ -16,7 +16,20 @@ import {
   getAdminCommunity,
 } from "./adminCommunities.api";
 
-const ADMIN_COMMUNITIES_KEY = "admin-communities";
+export const ADMIN_COMMUNITIES_KEY = "admin-communities";
+
+/** The exact query key `useAdminCommunity` caches one community's detail under.
+ *  Shared so a mutation can optimistically `setQueryData`/invalidate the same
+ *  entry without the key drifting out of sync. `demoMode` and `language` are
+ *  part of the key because the demo fixture and the locale-mapped adaptation
+ *  are both cache-distinct. */
+export function adminCommunityDetailQueryKey(
+  slug: string,
+  demoMode: boolean,
+  language: Language,
+) {
+  return [ADMIN_COMMUNITIES_KEY, "detail", slug, demoMode, language] as const;
+}
 
 /**
  * A `translate` bound to the *resolved* `admin` catalog for `language` (with EN

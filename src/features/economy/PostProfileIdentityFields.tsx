@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PronounField } from "../../shared/identity/PronounField";
@@ -128,23 +129,25 @@ export function PostProfileIdentityFields({
                 >
                   {t(field.labelKey)}
                 </label>
-                <select
+                <Select
                   id={`${fieldId}-${field.key}`}
-                  className={styles.select}
+                  options={[
+                    {
+                      value: "",
+                      label: t(
+                        "economy:postProfileForm.householdNoPreference",
+                      ),
+                    },
+                    ...field.options.map((option) => ({
+                      value: option,
+                      label: option,
+                    })),
+                  ]}
                   value={form.identityHousehold[field.key] ?? ""}
-                  onChange={(event) =>
-                    form.setIdentityHouseholdField(field.key, event.target.value)
+                  onChange={(value) =>
+                    form.setIdentityHouseholdField(field.key, value ?? "")
                   }
-                >
-                  <option value="">
-                    {t("economy:postProfileForm.householdNoPreference")}
-                  </option>
-                  {field.options.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
+                />
               </div>
             ))}
           </div>
@@ -157,22 +160,19 @@ export function PostProfileIdentityFields({
           >
             {t("economy:postProfileForm.visibilityLabel")}
           </label>
-          <select
+          <Select
             id={`${fieldId}-visibility`}
-            className={styles.select}
+            options={IDENTITY_VISIBILITY_OPTIONS.map((option) => ({
+              value: String(option.value),
+              label: t(option.labelKey),
+            }))}
             value={form.identityVisibility}
-            onChange={(event) =>
+            onChange={(value) =>
               form.setIdentityVisibility(
-                event.target.value as typeof form.identityVisibility,
+                value as typeof form.identityVisibility,
               )
             }
-          >
-            {IDENTITY_VISIBILITY_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {t(option.labelKey)}
-              </option>
-            ))}
-          </select>
+          />
         </div>
       </fieldset>
     </div>

@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { Button } from "../../shared/components/ui";
+import { Button, Select } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -67,36 +67,30 @@ export function RateBoardForm({
           <label className={styles.label} htmlFor={ids.role}>
             {t("economy:rateBoard.form.roleLabel")}
           </label>
-          <select
+          <Select
             id={ids.role}
-            className={styles.select}
+            options={ROLE_OPTIONS.map((r) => ({
+              value: String(r.value),
+              label: t(r.labelKey),
+            }))}
             value={role}
-            onChange={(e) => setRole(e.target.value)}
-          >
-            {ROLE_OPTIONS.map((r) => (
-              <option key={r.value} value={r.value}>
-                {t(r.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => setRole(value ?? "")}
+          />
         </div>
 
         <div className={styles.field}>
           <label className={styles.label} htmlFor={ids.exp}>
             {t("economy:rateBoard.form.experienceLabel")}
           </label>
-          <select
+          <Select
             id={ids.exp}
-            className={styles.select}
+            options={EXPERIENCE_OPTIONS.map((o) => ({
+              value: String(o.value),
+              label: t(o.labelKey),
+            }))}
             value={experience}
-            onChange={(e) => setExperience(e.target.value as Experience)}
-          >
-            {EXPERIENCE_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {t(o.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => setExperience(value as Experience)}
+          />
         </div>
       </div>
 
@@ -122,18 +116,15 @@ export function RateBoardForm({
           <label className={styles.label} htmlFor={ids.type}>
             {t("economy:rateBoard.form.typeLabel")}
           </label>
-          <select
+          <Select
             id={ids.type}
-            className={styles.select}
+            options={TYPE_OPTIONS.map((o) => ({
+              value: String(o.value),
+              label: t(o.labelKey),
+            }))}
             value={type}
-            onChange={(e) => setType(e.target.value as RateType)}
-          >
-            {TYPE_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {t(o.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => setType(value as RateType)}
+          />
         </div>
       </div>
 

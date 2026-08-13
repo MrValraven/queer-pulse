@@ -1,5 +1,5 @@
 import { FiPlus, FiX } from "react-icons/fi";
-import { FadeIn } from "../../shared/components/ui";
+import { FadeIn, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SocialLink } from "./data/members";
 import { SOCIAL_PLATFORMS, socialHref, socialPlatform } from "./socialLinks.data";
@@ -86,18 +86,17 @@ export function SocialLinksEditor({
             <span className={styles.linkIcon} aria-hidden>
               <Icon size={16} />
             </span>
-            <select
-              className={styles.linkSelect}
+            <Select
+              label={t("members:social.platformLabel")}
+              options={SOCIAL_PLATFORMS.map((platform) => ({
+                value: platform.key,
+                label: platformLabel(platform.key, platform.label, t),
+              }))}
               value={link.platform}
-              aria-label={t("members:social.platformLabel")}
-              onChange={(event) => update(index, { platform: event.target.value })}
-            >
-              {SOCIAL_PLATFORMS.map((platform) => (
-                <option key={platform.key} value={platform.key}>
-                  {platformLabel(platform.key, platform.label, t)}
-                </option>
-              ))}
-            </select>
+              onChange={(value) =>
+                update(index, { platform: value ?? link.platform })
+              }
+            />
             <input
               className={`${styles.inlineInput} ${styles.linkInput}`}
               value={link.urlOrHandle}

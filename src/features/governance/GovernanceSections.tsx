@@ -3,6 +3,7 @@ import { FiArrowRight } from "react-icons/fi";
 import {
   Button,
   Reveal,
+  Select,
   SkeletonLine,
   StatGrid,
   StatTile,
@@ -481,23 +482,18 @@ export function RaiseSection() {
           className={styles.rcForm}
           onSubmit={(event) => void handleSubmit(event)}
         >
-          <select
-            className={styles.rcSelect}
-            value={category}
-            onChange={(event) =>
-              setCategory(event.target.value as ConcernCategory)
+          <Select
+            label={t("governance:sections.raise.selectPlaceholder")}
+            placeholder={t("governance:sections.raise.selectPlaceholder")}
+            value={category || null}
+            onChange={(value) =>
+              setCategory((value ?? "") as ConcernCategory | "")
             }
-            aria-label={t("governance:sections.raise.selectPlaceholder")}
-          >
-            <option value="" disabled>
-              {t("governance:sections.raise.selectPlaceholder")}
-            </option>
-            {CONCERN_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {t(option.labelKey)}
-              </option>
-            ))}
-          </select>
+            options={CONCERN_OPTIONS.map((option) => ({
+              value: option.value,
+              label: t(option.labelKey),
+            }))}
+          />
           <textarea
             className={styles.rcTextarea}
             value={description}

@@ -712,6 +712,13 @@
    it, `.drawer-body` stays the single-column flex stack declared above — a
    phone is too narrow for two field columns. */
 @media (min-width: 761px) {
+  /* Above the mobile breakpoint widen the sheet to 80% of the viewport (capped
+     so the two-up form stays readable on very wide monitors). Below 761px the
+     base `.drawer` rule keeps it a full-width bottom sheet — 80% would leave
+     awkward side gaps on a phone. */
+  .drawer {
+    width: min(80vw, 1400px);
+  }
   .drawer-body {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -767,55 +774,6 @@
   font-size: 13px;
   color: var(--ink-40);
   display: block;
-}
-
-/* ── collaborator handle chip input (Task 5 — HandleChipInput) ──────────── */
-.chipinput {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  align-items: center;
-  border: 1px solid var(--line-2);
-  border-radius: 12px;
-  padding: 8px 10px;
-  background: var(--paper);
-  min-height: 46px;
-}
-.chipinput:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.16);
-}
-.chipinput input {
-  flex: 1;
-  min-width: 110px;
-  border: none;
-  outline: none;
-  background: none;
-  font-size: 14.5px;
-}
-.hchip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px 8px 3px 3px;
-  border-radius: 999px;
-  background: var(--wash);
-  font-size: 13px;
-  font-weight: 500;
-}
-.hchip button {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  color: var(--ink-40);
-}
-@media (hover: hover) {
-  .hchip button:hover {
-    background: var(--line);
-    color: var(--ink);
-  }
 }
 
 /* ── notices + "what breaks" list (Task 7 — AddressChangeWarningModal) ── */

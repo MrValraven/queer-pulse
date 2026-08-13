@@ -4,7 +4,7 @@ import type {
   RoadmapGuideStep,
   RoadmapItemUpdateBody,
 } from "../../api/roadmapAdmin.types";
-import { Button } from "../../../../shared/components/ui";
+import { Button, DatePicker } from "../../../../shared/components/ui";
 import { AdminCheckLine } from "../../ui";
 import { daysUntil } from "./itemDrawer.data";
 import styles from "./ItemDrawer.module.css";
@@ -107,17 +107,15 @@ export function GuideSection({
         onChange={(event) => setGuide({ credential: event.target.value })}
       />
 
-      <label className={styles.fieldLabel} htmlFor="guide-reverify">
+      <label id="guide-reverify-label" className={styles.fieldLabel}>
         {t("admin:roadmap.drawer.guide.reVerifyByLabel")}
       </label>
-      <input
+      <DatePicker
+        mode="date"
         id="guide-reverify"
-        type="date"
-        className={styles.dateInput}
-        value={guide.reVerifyBy ?? ""}
-        onChange={(event) =>
-          setGuide({ reVerifyBy: event.target.value || null })
-        }
+        labelledBy="guide-reverify-label"
+        value={guide.reVerifyBy}
+        onChange={(value) => setGuide({ reVerifyBy: value })}
       />
 
       <p className={styles.fieldLabel}>

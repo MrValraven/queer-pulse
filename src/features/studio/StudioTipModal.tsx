@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { FiCheck, FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
@@ -44,7 +45,7 @@ export function StudioTipModal({
 
   const success = phase === "done";
 
-  return (
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -167,6 +168,7 @@ export function StudioTipModal({
           </>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

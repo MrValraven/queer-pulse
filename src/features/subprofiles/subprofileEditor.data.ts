@@ -74,7 +74,14 @@ export const LINK_HELP_KEY: Record<LinkVisibility, string> = {
 
 export const FIELD_META: Record<
   string,
-  { labelKey: string; placeholderKey: string; multiline?: boolean }
+  {
+    labelKey: string;
+    placeholderKey: string;
+    multiline?: boolean;
+    /** `"month"` renders a month+year picker (stored as `yyyy-mm`)
+     *  instead of the default free-text input. */
+    inputType?: "text" | "month";
+  }
 > = {
   title: {
     labelKey: "subprofiles:field.title.label",
@@ -96,6 +103,7 @@ export const FIELD_META: Record<
   date: {
     labelKey: "subprofiles:field.date.label",
     placeholderKey: "subprofiles:field.date.placeholder",
+    inputType: "month",
   },
   meta: {
     labelKey: "subprofiles:field.meta.label",

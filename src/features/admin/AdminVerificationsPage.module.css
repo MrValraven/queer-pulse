@@ -5,76 +5,256 @@
   margin-block: 0 1.25rem;
 }
 
-.rows {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+/* ── Keyboard-shortcuts hint (Review-queue segment, Task 4) ──────────────
+   A visible, always-present legend so the J/K/A/R// shortcuts are
+   discoverable and have an accessible hint, not a hidden trick only a
+   power-user stumbles into. Touch-only reviewers can simply ignore it. */
+.keyboardHint {
+  margin: 10px 0 4px;
+  font-size: 12px;
+  color: var(--ink-40);
 }
 
-.row {
+/* ── Bulk action bar — floating, mounted only while ≥1 request is selected
+   (Task 4). Mirrors AdminListingsPage.module.css's `.bulkBar` block; kept as
+   its own copy since the two pages don't share a stylesheet. ────────────── */
+.bulkBar {
+  position: fixed;
+  left: 50%;
+  bottom: max(20px, calc(env(safe-area-inset-bottom) + 14px));
+  transform: translateX(-50%);
+  z-index: 40;
   display: flex;
   align-items: center;
-  gap: 0.9rem;
-  padding: 0.85rem 1rem;
-  background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: 14px;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  width: max-content;
+  max-width: min(92vw, 620px);
+  padding: 12px 16px 12px 22px;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  box-shadow: 0 18px 44px -16px rgba(var(--plum-rgb), 0.6);
+  animation: verificationBulkBarRise 0.2s var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .bulkBar {
+    animation: none;
+  }
+}
+@keyframes verificationBulkBarRise {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+.bulkCount {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 500;
+  flex: none;
+}
+.bulkCapNote {
+  font-size: 11.5px;
+  color: rgba(var(--cream-rgb), 0.7);
+  flex: none;
+}
+.bulkActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   flex-wrap: wrap;
 }
-
-.rowMain {
-  flex: 1 1 12rem;
-  min-width: 0;
+@media (--md) {
+  .bulkBar {
+    flex-direction: column;
+    align-items: stretch;
+    width: calc(100vw - 32px);
+  }
+  .bulkActions {
+    width: 100%;
+  }
+  .bulkActions > * {
+    flex: 1 1 auto;
+  }
 }
 
-.rowName {
+/* ── Detail drawer (Task 9) ────────────────────────────────────────────── */
+.dHead {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 14px;
+}
+.dName {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 21px;
   font-weight: 600;
   color: var(--ink);
 }
-
-.rowMeta {
-  font-size: 0.8rem;
-  color: var(--ink-60);
-  margin-block-start: 0.15rem;
-}
-
-.rowActions {
+.dChips {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
+  margin-top: 6px;
 }
-
-.select {
-  padding: 0.45rem 0.6rem;
-  border: 1px solid rgba(45, 27, 61, 0.16);
-  border-radius: 10px;
-  background: var(--cream);
-  color: var(--ink);
-  font: inherit;
-  font-size: 0.85rem;
+.provenanceLine {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--ink-40);
 }
-
-.select:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-
-.empty {
+.provenanceLabel {
+  font-weight: 600;
   color: var(--ink-60);
-  padding-block: 1.5rem;
+}
+.provenanceLabel::after {
+  content: ":";
+}
+.dFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+.footField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 160px;
+  flex: 1 1 160px;
+}
+.footFieldLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.footSelect,
+.footInput {
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  background: var(--paper);
+  color: var(--text-strong);
+  font-size: 13.5px;
+  font-family: inherit;
+}
+[data-theme="dark"] .footSelect,
+[data-theme="dark"] .footInput {
+  color: var(--ink);
+}
+.footHint {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 12px;
+  color: var(--danger);
 }
 
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
+/* Moderation history (drawer body) — mirrors AdminListingsPage's own
+   .historyPanel block; kept as a separate copy here since the two features'
+   drawers don't share a stylesheet. */
+.historyPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.historySectionTitle {
+  margin: 14px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.historySectionTitle:first-child {
+  margin-top: 0;
+}
+.historyList {
+  list-style: none;
+  margin: 0;
   padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.historyRow {
+  padding: 10px 12px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 12px;
+}
+.historyRowHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.historyRowLabel {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+[data-theme="dark"] .historyRowLabel {
+  color: var(--ink);
+}
+.historyRowMeta {
+  flex: none;
+  font-size: 11px;
+  color: var(--ink-40);
   white-space: nowrap;
-  border: 0;
+}
+.historyRowDetail {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--ink-60);
+}
+.historyArrow {
+  font-size: 10px;
+  color: var(--ink-40);
+}
+.historyActor {
+  color: var(--ink-40);
+}
+.historyReason {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  /* Moderator-authored free text — a pasted URL/ID is realistic and must not
+     blow out the drawer body. */
+  overflow-wrap: anywhere;
+}
+.historyEmpty {
+  margin: 0;
+  padding: 14px 12px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--ink-40);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 12px;
+}
+
+/* Signals placeholder (drawer body, below history) — Phase 3 fills this in;
+   deliberately minimal, no fabricated data. */
+.signalsSection {
+  margin-top: 4px;
+}
+.signalsNote {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--ink-40);
 }

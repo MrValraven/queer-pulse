@@ -36,6 +36,31 @@ export function DirectoryGallery({ place }: { place: DirectoryPlace }) {
   })).flatMap((shot) => (shot.url ? [{ url: shot.url, alt: shot.alt }] : []));
 
   if (shots.length === 0) {
+    // No uploaded photos. If the listing at least described its slots, keep the
+    // tinted caption grid. Otherwise (a fresh submission with no captions
+    // either) a bare grid renders as dead space — show an honest placeholder
+    // panel with the place's initials instead so the cover still reads as
+    // intentional (this is what a moderator sees before any photos exist).
+    if (place.gallery.length === 0) {
+      return (
+        <div className={styles.cover}>
+          <div className={styles.coverInner}>
+            <div
+              className={[styles.galleryEmpty, GCELL[place.tint]].join(" ")}
+              role="img"
+              aria-label={t("marketing:directory.detail.galleryAria", {
+                name: place.name,
+              })}
+            >
+              <span className={styles.galleryEmptyMonogram}>{place.av}</span>
+              <span className={styles.galleryEmptyLabel}>
+                {t("marketing:directory.detail.noPhotos")}
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className={styles.cover}>
         <div className={styles.coverInner}>

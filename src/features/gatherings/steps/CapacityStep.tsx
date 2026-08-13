@@ -1,5 +1,6 @@
 import { useId } from "react";
 import { FiCheck } from "react-icons/fi";
+import { Select } from "../../../shared/components/ui";
 import { useMyCommunityOptions } from "../../communities/api/useMyCommunityOptions";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -41,18 +42,15 @@ export function CapacityStep({ form }: { form: GatheringForm }) {
           <label className={styles.label} htmlFor={`${fieldId}-lang`}>
             {t("gatherings:create.step3.langLabel")}
           </label>
-          <select
+          <Select
             id={`${fieldId}-lang`}
-            className={styles.select}
+            options={LANGS.map((lang) => ({
+              value: lang.value,
+              label: t(lang.labelKey),
+            }))}
             value={form.lang}
-            onChange={(e) => form.setLang(e.target.value)}
-          >
-            {LANGS.map((lang) => (
-              <option key={lang.value} value={lang.value}>
-                {t(lang.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => form.setLang(value ?? "")}
+          />
         </div>
       </div>
       <div className={styles.label} id={`${fieldId}-access-label`}>
@@ -105,21 +103,21 @@ export function CapacityStep({ form }: { form: GatheringForm }) {
           <label className={styles.label} htmlFor={`${fieldId}-community`}>
             {t("gatherings:create.step3.communityLabel")}
           </label>
-          <select
+          <Select
             id={`${fieldId}-community`}
-            className={styles.select}
+            options={[
+              {
+                value: "",
+                label: t("gatherings:create.step3.communityNone"),
+              },
+              ...myCommunityOptions.map((community) => ({
+                value: community.slug,
+                label: community.name,
+              })),
+            ]}
             value={form.communitySlug}
-            onChange={(e) => form.setCommunitySlug(e.target.value)}
-          >
-            <option value="">
-              {t("gatherings:create.step3.communityNone")}
-            </option>
-            {myCommunityOptions.map((community) => (
-              <option key={community.slug} value={community.slug}>
-                {community.name}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => form.setCommunitySlug(value ?? "")}
+          />
         </>
       )}
       <AudienceScopeField

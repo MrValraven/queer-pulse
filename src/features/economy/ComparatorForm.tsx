@@ -6,6 +6,7 @@ import {
   type ActivityKey,
   type StartupYear,
 } from "./comparator.data";
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ComparatorPage.module.css";
 
@@ -56,20 +57,15 @@ export function ComparatorForm({
         <label className={styles.rcLabel} htmlFor="cmp-activity">
           {t("economy:comparator.form.activityLabel")}
         </label>
-        <select
+        <Select
           id="cmp-activity"
-          className={styles.rcSelect}
           value={activity}
-          onChange={(e) =>
-            onChange({ activity: e.target.value as ActivityKey })
-          }
-        >
-          {ACTIVITY_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {t(o.labelKey)}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => onChange({ activity: value as ActivityKey })}
+          options={ACTIVITY_OPTIONS.map((option) => ({
+            value: option.value,
+            label: t(option.labelKey),
+          }))}
+        />
       </div>
 
       <div className={styles.rcRow}>
@@ -77,40 +73,32 @@ export function ComparatorForm({
           <label className={styles.rcLabel} htmlFor="cmp-year">
             {t("economy:comparator.form.yearLabel")}
           </label>
-          <select
+          <Select
             id="cmp-year"
-            className={styles.rcSelect}
-            value={year}
-            onChange={(e) =>
-              onChange({ year: Number(e.target.value) as TaxYear })
-            }
-          >
-            {YEAR_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
+            value={String(year)}
+            onChange={(value) => onChange({ year: Number(value) as TaxYear })}
+            options={YEAR_OPTIONS.map((option) => ({
+              value: String(option.value),
+              label: option.label,
+            }))}
+          />
         </div>
 
         <div className={styles.field}>
           <label className={styles.rcLabel} htmlFor="cmp-startup">
             {t("economy:comparator.form.startupLabel")}
           </label>
-          <select
+          <Select
             id="cmp-startup"
-            className={styles.rcSelect}
-            value={startupYear}
-            onChange={(e) =>
-              onChange({ startupYear: Number(e.target.value) as StartupYear })
+            value={String(startupYear)}
+            onChange={(value) =>
+              onChange({ startupYear: Number(value) as StartupYear })
             }
-          >
-            {STARTUP_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {t(o.labelKey)}
-              </option>
-            ))}
-          </select>
+            options={STARTUP_OPTIONS.map((option) => ({
+              value: String(option.value),
+              label: t(option.labelKey),
+            }))}
+          />
         </div>
       </div>
     </div>

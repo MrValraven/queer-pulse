@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, DatePicker, Select } from "../../shared/components/ui";
 import type { TaxYear } from "./tax.calc";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -88,36 +88,30 @@ export function SetAsideForm({
             <label className={styles.label} htmlFor="sa-activity">
               {t("economy:setAside.activityLabel")}
             </label>
-            <select
+            <Select
               id="sa-activity"
-              className={styles.select}
+              options={ACTIVITY_OPTIONS.map((o) => ({
+                value: String(o.value),
+                label: t(o.labelKey),
+              }))}
               value={activity}
-              onChange={(e) => onActivity(e.target.value as Activity)}
-            >
-              {ACTIVITY_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {t(o.labelKey)}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => onActivity(value as Activity)}
+            />
           </div>
 
           <div className={styles.field}>
             <label className={styles.label} htmlFor="sa-year">
               {t("economy:setAside.yearLabel")}
             </label>
-            <select
+            <Select
               id="sa-year"
-              className={styles.select}
-              value={year}
-              onChange={(e) => onYear(Number(e.target.value) as TaxYear)}
-            >
-              {YEAR_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
+              options={YEAR_OPTIONS.map((o) => ({
+                value: String(o.value),
+                label: o.label,
+              }))}
+              value={String(year)}
+              onChange={(value) => onYear(Number(value) as TaxYear)}
+            />
           </div>
         </div>
       </section>
@@ -148,16 +142,16 @@ export function SetAsideForm({
             />
           </div>
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="sa-date">
+            <label id="sa-date-label" className={styles.label}>
               {t("economy:setAside.dateLabel")}
             </label>
-            <input
+            <DatePicker
+              mode="date"
               id="sa-date"
-              type="date"
-              className={styles.input}
-              value={date}
+              labelledBy="sa-date-label"
+              value={date || null}
               max={today}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={(value) => setDate(value ?? "")}
             />
           </div>
         </div>

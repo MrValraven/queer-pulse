@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Modal, Button, FormField } from "../../../shared/components/ui";
+import { Modal, Button, FormField, Select } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "./DeskModals.module.css";
 
@@ -45,16 +45,14 @@ export function HandoffModal({
         {t("magazine:desk.modals.handoff.body", { title: piece.title })}
       </p>
       <FormField label={t("magazine:desk.modals.handoff.toLabel")}>
-        <select
+        <Select
           value={editorId}
-          onChange={(event) => setEditorId(event.target.value)}
-        >
-          {editors.map((editor) => (
-            <option key={editor.id} value={editor.id}>
-              {editor.name}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => setEditorId(value ?? "")}
+          options={editors.map((editor) => ({
+            value: editor.id,
+            label: editor.name,
+          }))}
+        />
       </FormField>
     </Modal>
   );

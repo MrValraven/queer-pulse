@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { FiAlertTriangle, FiArrowLeft } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
@@ -21,6 +22,7 @@ export function WithdrawModal({
 }) {
   const { t } = useTranslation();
   const { submit, sending, done } = useSubmitFlow();
+  const [reason, setReason] = useState<string | null>(null);
 
   return (
     <ModalShell onClose={onClose} success={done}>
@@ -58,16 +60,16 @@ export function WithdrawModal({
             <label htmlFor="wd-reason">
               {t("economy:withdraw.reasonLabel")}
             </label>
-            <select id="wd-reason" defaultValue="">
-              <option value="">
-                {t("economy:withdraw.reasonPlaceholder")}
-              </option>
-              {WITHDRAW_REASONS.map((r) => (
-                <option key={r.value} value={r.value}>
-                  {t(r.labelKey)}
-                </option>
-              ))}
-            </select>
+            <Select
+              id="wd-reason"
+              placeholder={t("economy:withdraw.reasonPlaceholder")}
+              value={reason}
+              onChange={setReason}
+              options={WITHDRAW_REASONS.map((withdrawReason) => ({
+                value: withdrawReason.value,
+                label: t(withdrawReason.labelKey),
+              }))}
+            />
           </div>
           <div className={styles.note}>
             <FiAlertTriangle

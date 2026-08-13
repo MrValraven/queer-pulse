@@ -1,4 +1,5 @@
 import { useEffect, useId, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { FiX } from "react-icons/fi";
 import { useScrollLock } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -48,7 +49,14 @@ export function AdminModal({
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose, modalId]);
 
-  return (
+  // Portal to <body> so the fixed scrim is anchored to the viewport, never to a
+  // transformed/contained ancestor. A `transform`, `filter`, `contain: paint`
+  // or `content-visibility: auto` on any ancestor establishes a containing
+  // block that would confine this `position: fixed` scrim to that ancestor's
+  // box instead of the viewport. Rendering through <body> escapes all of them.
+  // React events still bubble via the React tree, so onClose et al. work
+  // unchanged. Mirrors the shared `Modal` in shared/components/ui/Modal.tsx.
+  return createPortal(
     <div
       className={styles.modalScrim}
       role="presentation"
@@ -80,6 +88,7 @@ export function AdminModal({
         <div className={styles.modalBody}>{children}</div>
         {footer && <div className={styles.modalFoot}>{footer}</div>}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

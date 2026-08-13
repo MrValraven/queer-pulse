@@ -4,6 +4,7 @@ import {
   Avatar,
   Button,
   FormField,
+  Select,
   Sending,
   type AvatarTint,
 } from "../../shared/components/ui";
@@ -54,6 +55,23 @@ export function ConnectForm({
 
   const canSend = message.trim().length > 0;
 
+  const openToGroupLabel = t("connect:form.reasonOpenToGroup", {
+    first: member.first,
+  });
+  const genericGroupLabel = t("connect:form.reasonGenericGroup");
+  const reasonOptions = [
+    ...memberOpenTo.map((entry) => ({
+      value: reasonValue(entry),
+      label: openToLabel(entry, t),
+      group: openToGroupLabel,
+    })),
+    ...REASONS.map((reasonOption) => ({
+      value: reasonOption.id,
+      label: t(reasonOption.labelKey),
+      group: genericGroupLabel,
+    })),
+  ];
+
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
     if (!canSend || sending) return;
@@ -84,34 +102,14 @@ export function ConnectForm({
       <p className={styles.sub}>{t("connect:form.sub")}</p>
 
       <FormField label={t("connect:form.reasonLabel")}>
-        <select
+        <Select
           id="connect-about"
-          value={reason}
-          onChange={(event) => setReason(event.target.value)}
+          placeholder={t("connect:form.reasonPlaceholder")}
+          value={reason || null}
+          onChange={(value) => setReason(value ?? "")}
           disabled={sending}
-        >
-          <option value="">{t("connect:form.reasonPlaceholder")}</option>
-          {memberOpenTo.length > 0 && (
-            <optgroup
-              label={t("connect:form.reasonOpenToGroup", {
-                first: member.first,
-              })}
-            >
-              {memberOpenTo.map((entry) => (
-                <option key={reasonValue(entry)} value={reasonValue(entry)}>
-                  {openToLabel(entry, t)}
-                </option>
-              ))}
-            </optgroup>
-          )}
-          <optgroup label={t("connect:form.reasonGenericGroup")}>
-            {REASONS.map((reasonOption) => (
-              <option key={reasonOption.id} value={reasonOption.id}>
-                {t(reasonOption.labelKey)}
-              </option>
-            ))}
-          </optgroup>
-        </select>
+          options={reasonOptions}
+        />
       </FormField>
       <FormField label={t("connect:form.messageLabel")} required>
         <textarea

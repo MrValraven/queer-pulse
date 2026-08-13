@@ -10,8 +10,10 @@ import type {
 
 function makeItem(overrides: Partial<SubprofileItemView> = {}): SubprofileItemView {
   return {
+    id: "item-test",
     section: "showcase",
     title: "Untitled",
+    createdAt: "2025-01-01T00:00:00.000Z",
     subtitle: "",
     description: "",
     url: "",

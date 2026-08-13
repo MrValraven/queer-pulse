@@ -93,8 +93,19 @@ function applySection(
   resolveCollaboratorsDemo: (handles?: string[]) => CollaboratorDTO[],
 ): SubprofileDTO {
   const isLinksSection = section === "links";
+  // Section replace has no per-item id continuity in this demo system (the
+  // input DTO carries no id), so an edited item can't distinguish "unchanged"
+  // from "new" here; every replaced item is stamped with "now" as its
+  // first-published date, same limitation as the live backend's MSW mock.
+  const replaceTimestamp = new Date().toISOString();
   const replacedItems = items.map((item) => ({
+    // Same id-continuity limitation as `createdAt` above: a section replace
+    // has no incoming id to preserve, so each replaced item gets a fresh
+    // client-generated one, mirroring the real backend recreating item rows
+    // (and therefore ids) on a full section replace.
+    id: crypto.randomUUID(),
     section,
+    createdAt: replaceTimestamp,
     title: item.title,
     subtitle: item.subtitle ?? null,
     description: item.description ?? null,

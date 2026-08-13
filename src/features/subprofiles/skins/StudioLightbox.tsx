@@ -6,6 +6,7 @@ import { ImageSlot } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { workMeta } from "../personaSkinRender";
 import { useLightboxDialog } from "../useLightboxDialog";
+import { WorkRightsFooter } from "../rights/WorkRightsFooter";
 import type { SubprofileItemView } from "../api/subprofiles.adapters";
 
 export interface StudioLightboxProps {
@@ -16,6 +17,9 @@ export interface StudioLightboxProps {
   onClose: () => void;
   /** `-1` for previous, `1` for next — the caller owns/clamps the index. */
   onMove: (delta: number) => void;
+  /** The persona's public display name, used as the `WorkRightsFooter`
+   *  copyright holder for the item currently shown. */
+  authorName: string;
 }
 
 /**
@@ -25,12 +29,18 @@ export interface StudioLightboxProps {
  * motion: reduce)` block, which already collapses `.lightbox`'s `fadeIn`) —
  * this component adds no JS-driven motion of its own, so there's nothing
  * extra to gate here.
+ *
+ * `items` only ever draws from `VISUAL_SECTIONS` (see `getStudioWorks`),
+ * which never includes `"poems"`. The `section !== "poems"` guard on
+ * `WorkRightsFooter` below is defensive only, matching the same guard on
+ * every other public item surface.
  */
 export function StudioLightbox({
   items,
   index,
   onClose,
   onMove,
+  authorName,
 }: StudioLightboxProps) {
   const { t } = useTranslation();
   useScrollLock();
@@ -88,6 +98,9 @@ export function StudioLightbox({
           <b>{item.title}</b>
           {meta && <span>{meta}</span>}
           {item.description && <p>{item.description}</p>}
+          {item.section !== "poems" && (
+            <WorkRightsFooter authorName={authorName} createdAtISO={item.createdAt} />
+          )}
         </figcaption>
       </figure>
       {items.length > 1 && (

@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
@@ -42,7 +43,7 @@ export function PressKitDownloadModal({
     setDone(true);
   };
 
-  return (
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -122,6 +123,7 @@ export function PressKitDownloadModal({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

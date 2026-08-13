@@ -1,5 +1,5 @@
 import { useState, type FocusEvent } from "react";
-import { FormField } from "../../shared/components/ui";
+import { FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfileData } from "../../app/providers/useProfile";
 import type { LinkVisibility, Visibility } from "./api/subprofiles.api";
@@ -170,16 +170,14 @@ export function SubprofileLinkFields({
             VISIBILITY_OPTIONS[0]!.helpKey,
         )}
       >
-        <select
+        <Select
+          options={VISIBILITY_OPTIONS.map((option) => ({
+            value: option.value,
+            label: t(option.labelKey),
+          }))}
           value={editor.visibility}
-          onChange={(event) => editor.setVisibility(event.target.value as Visibility)}
-        >
-          {VISIBILITY_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {t(option.labelKey)}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => editor.setVisibility(value as Visibility)}
+        />
       </FormField>
 
       {pending && warning && (

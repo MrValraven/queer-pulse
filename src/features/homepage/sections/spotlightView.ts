@@ -1,4 +1,8 @@
 import type { AvatarTint } from "../../../shared/components/ui";
+import { routes } from "../../../app/routeMap";
+import { initialsFromName } from "../../../shared/lib/initials";
+import type { LandingMemberFeatureDTO } from "../../admin/api/landingFeatures.api";
+import { portraitSrc } from "./portraitSrc";
 
 /**
  * The normalized shape the featured spotlight card renders. Both the demo
@@ -41,4 +45,30 @@ export function tintForKey(key: string): AvatarTint {
     hash += key.charCodeAt(index);
   }
   return LIVE_TINTS[hash % LIVE_TINTS.length] ?? "plum";
+}
+
+/**
+ * Map one live/demo `/landing/features` member DTO into the spotlight card's
+ * view-model. Shared by `LiveDiscovery` (the public homepage) and
+ * `AdminLandingPreview` (the `/admin/landing` preview) so both render the exact
+ * same card from the exact same mapping — the lean public feed supplies
+ * name/tagline/avatar/quote plus the member's own tags, and the card hides the
+ * neighbourhood/voucher bits it can't fill. Every featured member is a vouched
+ * community member, so `verified` is always true.
+ */
+export function memberFeatureToSpotlightView(
+  member: LandingMemberFeatureDTO,
+): SpotlightView {
+  return {
+    key: member.slug,
+    to: `${routes.publicProfile}/${member.slug}`,
+    name: member.name,
+    initials: initialsFromName(member.name, "?"),
+    tint: tintForKey(member.slug),
+    photoUrl: portraitSrc(member.avatarUrl ?? undefined),
+    role: member.tagline ?? undefined,
+    tags: member.tags,
+    verified: true,
+    quote: member.quote,
+  };
 }

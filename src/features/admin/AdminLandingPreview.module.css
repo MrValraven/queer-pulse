@@ -1,0 +1,162 @@
+/* The live homepage preview panel on /admin/landing — a browser-framed render
+   of the active tab's section, driven by the admin's own curation data so it
+   updates as they edit. Reuses the real section chrome + cards (see
+   AdminLandingPreview.tsx); this file owns only the surrounding frame. */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.note {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* ── Browser frame ────────────────────────────────────────────────────── */
+.browser {
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--cream);
+}
+
+.browserBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--paper);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.dots {
+  display: inline-flex;
+  gap: 6px;
+  flex: none;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(var(--line-rgb), 0.22);
+}
+
+.url {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--ink-40);
+  background: var(--cream);
+  border-radius: 8px;
+  padding: 5px 12px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The scrollable "page" the real section renders inside. The section supplies
+   its own cream/plum background; we clip and cap it so a tall homepage section
+   stays a browsable thumbnail rather than pushing the editor off-screen. */
+.viewport {
+  max-height: min(72vh, 680px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+/* Trim the homepage section's full-page vertical rhythm to preview scale — the
+   real 100px+ band is honest on a landing page but wasted whitespace in a
+   panel. Targets the child <section> element (its own class is CSS-Module
+   hashed and out of reach), winning on specificity. */
+.viewport > section {
+  padding-top: clamp(28px, 5vw, 48px);
+  padding-bottom: clamp(28px, 5vw, 48px);
+}
+
+.state {
+  margin: 0;
+  padding: clamp(40px, 9vw, 72px) 24px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-40);
+}
+
+/* ── Pending communities (added, not yet enriched by the public feed) ───── */
+.pending {
+  margin-top: 28px;
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px dashed rgba(var(--line-rgb), 0.18);
+  border-radius: var(--radius-card, 22px);
+}
+
+.pendingTitle {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.pendingNote {
+  margin: 4px 0 12px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.pendingList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pendingItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pendingName {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.pendingBlurb {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}

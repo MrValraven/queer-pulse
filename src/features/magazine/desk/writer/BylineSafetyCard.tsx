@@ -1,4 +1,4 @@
-import { FormField } from "../../../../shared/components/ui";
+import { FormField, Select } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { WriterAssignmentDto } from "../../api/writerWorkspace.api";
 import pieceStyles from "../pieceTabs.module.css";
@@ -36,16 +36,17 @@ export function BylineSafetyCard({ assignment, onUpdateByline }: BylineSafetyCar
       <p className={pieceStyles.tiny}>{t("magazine:writer.byline.body")}</p>
       {current ? (
         <FormField label={t("magazine:writer.byline.fieldLabel", { title: current.title })}>
-          <select
+          <Select
             value={current.byline}
-            onChange={(event) => onUpdateByline(current.id, event.target.value)}
-          >
-            <option value={current.byline}>{current.byline}</option>
-            <option value={initialedByline(current.byline)}>
-              {initialedByline(current.byline)}
-            </option>
-            <option value={anonymousByline}>{anonymousByline}</option>
-          </select>
+            onChange={(value) => onUpdateByline(current.id, value ?? "")}
+            options={[
+              current.byline,
+              initialedByline(current.byline),
+              anonymousByline,
+            ]
+              .filter((option, index, all) => all.indexOf(option) === index)
+              .map((byline) => ({ value: byline, label: byline }))}
+          />
         </FormField>
       ) : (
         <p className={pieceStyles.tiny}>{t("magazine:writer.byline.emptyState")}</p>

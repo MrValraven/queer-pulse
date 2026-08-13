@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Select } from "../../shared/components/ui";
 import { ToolPage } from "./tools/ToolPage";
 import { DayRateResult } from "./DayRateResult";
 import { DAY_RATE_DEFAULTS } from "./dayRate.data";
@@ -90,20 +91,20 @@ export function DayRateCalculatorPage() {
         </label>
       </div>
 
-      <label className={styles.field}>
-        <span className={styles.label}>{t("economy:dayRate.ivaLabel")}</span>
-        <select
-          className={styles.select}
+      <div className={styles.field}>
+        <span id="dr-iva-label" className={styles.label}>
+          {t("economy:dayRate.ivaLabel")}
+        </span>
+        <Select
+          labelledBy="dr-iva-label"
           value={iva}
-          onChange={(e) => setIva(e.target.value)}
-        >
-          {IVA_RATES.map((r) => (
-            <option key={r.value} value={String(r.value)}>
-              {t(r.labelKey)}
-            </option>
-          ))}
-        </select>
-      </label>
+          onChange={(value) => setIva(value ?? "")}
+          options={IVA_RATES.map((rate) => ({
+            value: String(rate.value),
+            label: t(rate.labelKey),
+          }))}
+        />
+      </div>
     </div>
   );
 

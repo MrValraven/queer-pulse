@@ -1,6 +1,11 @@
 import { type ReactNode, useId, useState } from "react";
 import { Link } from "react-router-dom";
-import { ComingSoon, ConfirmDialog, Toggle } from "../../shared/components/ui";
+import {
+  ComingSoon,
+  ConfirmDialog,
+  Select,
+  Toggle,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./SettingsPage.module.css";
 
@@ -111,6 +116,13 @@ export function SelectRow({
   );
   const controlled = value !== undefined;
   const titleId = useId();
+  // Select is always controlled, so uncontrolled callers get an internal value
+  // seeded from `defaultValue` (falling back to the first option, as a native
+  // <select> would default to its first <option>).
+  const [internal, setInternal] = useState(
+    defaultValue ?? opts[0]?.value ?? "",
+  );
+  const current = controlled ? value : internal;
   return (
     <div className={styles.selectRow}>
       <div className={styles.toggleLabel}>
@@ -119,19 +131,19 @@ export function SelectRow({
         </div>
         <div className={styles.toggleDesc}>{description}</div>
       </div>
-      <select
-        className={styles.select}
-        aria-labelledby={titleId}
-        {...(controlled ? { value } : { defaultValue })}
+      <Select
+        size="sm"
+        labelledBy={titleId}
+        value={current ?? null}
         disabled={comingSoon}
-        onChange={comingSoon ? undefined : (e) => onChange(e.target.value)}
-      >
-        {opts.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
+        onChange={(next) => {
+          if (comingSoon) return;
+          const chosen = next ?? "";
+          if (!controlled) setInternal(chosen);
+          onChange(chosen);
+        }}
+        options={opts.map((o) => ({ value: o.value, label: o.label }))}
+      />
     </div>
   );
 }

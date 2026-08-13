@@ -40,7 +40,6 @@ export function RequestInviteForm({
   const [mutual, setMutual] = useState("");
   const [mutualTouched, setMutualTouched] = useState(false);
   const [agreed, setAgreed] = useState(false);
-  const [hasRead, setHasRead] = useState(false);
   const [is18, setIs18] = useState(false);
   const [under18, setUnder18] = useState(false);
   // Flipped by the first rejected submit. Until then, only the blur-driven
@@ -154,23 +153,27 @@ export function RequestInviteForm({
       />
 
       <div className={styles.agreeRow}>
+        {/* Read-only on purpose: reading the guidelines to the end is the only
+            way to tick this. A direct click (or Space) can't toggle it — it's
+            controlled by `agreed`, which only the guidelines' confirm button
+            flips (via `onRead`), so `preventDefault` blocks any manual toggle. */}
         <input
           id="ri-agree"
           type="checkbox"
           checked={agreed}
-          disabled={!hasRead}
-          onChange={(e) => setAgreed(e.target.checked)}
+          readOnly
+          onClick={(e) => e.preventDefault()}
           aria-invalid={consentMissing}
-          aria-describedby={!hasRead ? "ri-agree-hint" : undefined}
+          aria-describedby={!agreed ? "ri-agree-hint" : undefined}
         />
         <label htmlFor="ri-agree">
           <Translation
             i18nKey="auth:requestInvite.agree"
-            components={{ guidelines: <GuidelinesLink onRead={() => setHasRead(true)} /> }}
+            components={{ guidelines: <GuidelinesLink onRead={() => setAgreed(true)} /> }}
           />
         </label>
       </div>
-      {!hasRead && (
+      {!agreed && (
         <p id="ri-agree-hint" className={styles.readHint}>
           {t("auth:requestInvite.readHint")}
         </p>

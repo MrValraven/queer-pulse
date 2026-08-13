@@ -423,8 +423,11 @@ export interface SkinData {
 }
 
 export interface SubprofileItemDTO {
+  id: string;
   section: SubprofileSection;
   title: string;
+  /** ISO 8601 first-published timestamp (item row creation on QueerPulse). */
+  createdAt: string;
   subtitle?: string | null;
   description?: string | null;
   url?: string | null;

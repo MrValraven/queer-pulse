@@ -1,10 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import type { MemberRefDTO } from "../../../shared/api/refs";
+import { useDemoAwareMutation } from "./demoAwareMutation";
 import {
   getAdminFinances,
+  updateAdminFinances,
   type AdminFinanceHistoryPoint,
   type AdminFinanceLatest,
   type AdminFinanceResponseDTO,
+  type AdminFinLine,
+  type UpdateAdminFinancesBody,
 } from "./adminGovernanceFinances.api";
 
 // Demo mode reshapes the admin page's own `adminGovernance.data` mock into
@@ -31,6 +36,20 @@ async function buildDemoAdminFinances(): Promise<AdminFinanceResponseDTO> {
   if (!lastQuarter) {
     return { latest: null, history };
   }
+  const toDemoLine = (ledgerRow: {
+    demoLabel: string;
+    amount: number;
+    width: number;
+  }): AdminFinLine => ({
+    label: ledgerRow.demoLabel,
+    amount: String(ledgerRow.amount),
+    note: "",
+    width: ledgerRow.width,
+    items: [],
+    total: { label: "", amount: String(ledgerRow.amount) },
+    source: "seeded",
+  });
+
   const latest: AdminFinanceLatest = {
     quarter: lastQuarter.label,
     incomeTotal: Math.round(lastQuarter.income * 1000),
@@ -39,26 +58,114 @@ async function buildDemoAdminFinances(): Promise<AdminFinanceResponseDTO> {
     mrr: 23150,
     sustainerCount: 1842,
     solidarityRate: 18,
-    income: INCOME_LEDGER.map((ledgerRow) => ({
-      label: ledgerRow.demoLabel,
-      amount: String(ledgerRow.amount),
-      note: "",
-      width: ledgerRow.width,
-      items: [],
-      total: { label: "", amount: String(ledgerRow.amount) },
-    })),
-    expense: LEDGER.map((ledgerRow) => ({
-      label: ledgerRow.demoLabel,
-      amount: String(ledgerRow.amount),
-      note: "",
-      width: ledgerRow.width,
-      items: [],
-      total: { label: "", amount: String(ledgerRow.amount) },
-    })),
+    income: INCOME_LEDGER.map(toDemoLine),
+    expense: LEDGER.map(toDemoLine),
     publishedAt: "",
+    // Every demo figure starts as an unverified placeholder, so the tab
+    // demonstrates the provenance badges out of the box; editing flips a
+    // figure to `manual` (see `applyFinanceEdits`).
+    sources: {
+      mrr: "seeded",
+      sustainerCount: "seeded",
+      solidarityRate: "seeded",
+      incomeTotal: "seeded",
+      expenseTotal: "seeded",
+      surplus: "computed",
+    },
+    editor: null,
+    editedAt: null,
   };
 
   return { latest, history };
+}
+
+/** Query key for the Finances tab. Shared by the read query and the mutation's
+ *  cache write so a demo edit persists for the session (demo never refetches). */
+const financesQueryKey = (demoMode: boolean) =>
+  ["admin-governance-finances", demoMode] as const;
+
+/** The demo "editor" stamped on a demo-mode edit — demo has no real session
+ *  identity, so the badge simply reads "edited by You". */
+const DEMO_EDITOR: MemberRefDTO = {
+  slug: "you",
+  firstName: "You",
+  lastName: "",
+  avatarUrl: null,
+};
+
+const SCALAR_KEYS = [
+  "mrr",
+  "sustainerCount",
+  "solidarityRate",
+  "incomeTotal",
+  "expenseTotal",
+] as const;
+
+function applyLedgerEdits(
+  lines: AdminFinLine[],
+  edits: UpdateAdminFinancesBody["income"],
+): AdminFinLine[] {
+  if (!edits || edits.length === 0) return lines;
+  return lines.map((line, index) => {
+    const edit = edits.find((candidate) => candidate.index === index);
+    if (!edit) return line;
+    const next: AdminFinLine = { ...line };
+    if (edit.amount !== undefined && edit.amount !== line.amount) {
+      next.amount = edit.amount;
+      next.source = "manual";
+    }
+    if (edit.note !== undefined) next.note = edit.note;
+    return next;
+  });
+}
+
+/**
+ * Applies an edit body to a cached response — the demo mode's source of truth
+ * (live mode replaces the whole payload from the server). Flips each changed
+ * scalar's provenance to `manual`, recomputes `surplus` when a total moves, and
+ * stamps the editor.
+ */
+export function applyFinanceEdits(
+  current: AdminFinanceResponseDTO,
+  body: UpdateAdminFinancesBody,
+  editor: MemberRefDTO,
+  editedAt: string,
+): AdminFinanceResponseDTO {
+  const latest = current.latest;
+  if (!latest) return current;
+
+  const next: AdminFinanceLatest = {
+    ...latest,
+    sources: { ...latest.sources },
+  };
+  let touched = false;
+
+  for (const key of SCALAR_KEYS) {
+    const value = body[key];
+    if (value !== undefined && value !== latest[key]) {
+      next[key] = value;
+      next.sources[key] = "manual";
+      touched = true;
+    }
+  }
+
+  if (body.income) {
+    next.income = applyLedgerEdits(latest.income, body.income);
+    touched = true;
+  }
+  if (body.expense) {
+    next.expense = applyLedgerEdits(latest.expense, body.expense);
+    touched = true;
+  }
+  if (body.incomeTotal !== undefined || body.expenseTotal !== undefined) {
+    next.surplus = next.incomeTotal - next.expenseTotal;
+  }
+
+  if (touched) {
+    next.editor = editor;
+    next.editedAt = editedAt;
+  }
+  return { ...current, latest: next };
 }
 
 export interface AdminGovernanceFinancesResult {
@@ -86,7 +193,7 @@ export function useAdminGovernanceFinances(): AdminGovernanceFinancesResult {
   const { demoMode } = useDemoMode();
 
   const query = useQuery<AdminFinanceResponseDTO>({
-    queryKey: ["admin-governance-finances", demoMode],
+    queryKey: financesQueryKey(demoMode),
     queryFn: async () =>
       demoMode ? buildDemoAdminFinances() : getAdminFinances(),
   });
@@ -100,4 +207,46 @@ export function useAdminGovernanceFinances(): AdminGovernanceFinancesResult {
     history: query.data.history,
     loading: false,
   };
+}
+
+/**
+ * Corrects the editable figures on the latest governance finance report.
+ *
+ * Live mode PATCHes `/governance/admin/finances` and reconciles from the
+ * server's response. Demo mode applies the edit to the cached payload via
+ * {@link applyFinanceEdits} and keeps it there for the session — demo never
+ * refetches, so the correction persists without a network round-trip.
+ */
+export function useUpdateAdminFinances() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  const queryKey = financesQueryKey(demoMode);
+
+  return useDemoAwareMutation<
+    AdminFinanceResponseDTO,
+    Error,
+    UpdateAdminFinancesBody
+  >({
+    demoMode,
+    demoResult: (body) => {
+      const current = queryClient.getQueryData<AdminFinanceResponseDTO>(
+        queryKey,
+      ) ?? { latest: null, history: [] };
+      return applyFinanceEdits(
+        current,
+        body,
+        DEMO_EDITOR,
+        new Date().toISOString(),
+      );
+    },
+    live: (body) => updateAdminFinances(body),
+    logLabel: "admin.governance.finances.update",
+    logContext: (body) => ({ fields: Object.keys(body) }),
+    onSuccess: (data) => {
+      queryClient.setQueryData(queryKey, data);
+    },
+    onLiveSettled: () => {
+      void queryClient.invalidateQueries({ queryKey });
+    },
+  });
 }

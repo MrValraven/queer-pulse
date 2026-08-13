@@ -54,7 +54,6 @@ export function StepIntro({
 export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
   const { t } = useTranslation();
   const [agreed, setAgreed] = useState(false);
-  const [hasRead, setHasRead] = useState(false);
   const [is18, setIs18] = useState(false);
   const [under18, setUnder18] = useState(false);
 
@@ -96,21 +95,25 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
         ))}
       </div>
       <label className={styles.agreeRow}>
+        {/* Read-only on purpose: reading the guidelines to the end is the only
+            way to tick this. Controlled by `agreed`, which only the guidelines'
+            confirm button flips (via `onRead`); `preventDefault` blocks any
+            manual toggle from a click or Space. */}
         <input
           type="checkbox"
           checked={agreed}
-          disabled={!hasRead}
-          aria-describedby={!hasRead ? "ob-agree-hint" : undefined}
-          onChange={(e) => setAgreed(e.target.checked)}
+          readOnly
+          onClick={(e) => e.preventDefault()}
+          aria-describedby={!agreed ? "ob-agree-hint" : undefined}
         />
         <span className={styles.agreeLabel}>
           <Translation
             i18nKey="auth:onboarding.stepNorms.agree"
-            components={{ guidelines: <GuidelinesLink onRead={() => setHasRead(true)} /> }}
+            components={{ guidelines: <GuidelinesLink onRead={() => setAgreed(true)} /> }}
           />
         </span>
       </label>
-      {!hasRead && (
+      {!agreed && (
         <p id="ob-agree-hint" className={styles.readHint}>
           {t("auth:onboarding.stepNorms.readHint")}
         </p>

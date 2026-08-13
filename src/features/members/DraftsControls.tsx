@@ -1,4 +1,5 @@
 import { FiX } from "react-icons/fi";
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DRAFT_SORTS, type DraftSortKey } from "./drafts.data";
 import styles from "./DraftsPage.module.css";
@@ -57,18 +58,16 @@ export function DraftsControls({
         <label htmlFor="draftSort">
           {t("members:drafts.controls.sortLabel")}
         </label>
-        <select
+        <Select
           id="draftSort"
+          size="sm"
+          options={DRAFT_SORTS.map((sortOption) => ({
+            value: sortOption.value,
+            label: t(sortOption.labelKey),
+          }))}
           value={sort}
-          onChange={(e) => onSort(e.target.value as DraftSortKey)}
-          aria-label={t("members:drafts.controls.sortAriaLabel")}
-        >
-          {DRAFT_SORTS.map((s) => (
-            <option key={s.value} value={s.value}>
-              {t(s.labelKey)}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => onSort(value as DraftSortKey)}
+        />
       </div>
     </div>
   );

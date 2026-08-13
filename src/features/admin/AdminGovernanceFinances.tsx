@@ -1,4 +1,5 @@
-import { FiActivity } from "react-icons/fi";
+import { useState } from "react";
+import { FiActivity, FiEdit3 } from "react-icons/fi";
 import {
   FadeIn,
   Button,
@@ -12,9 +13,13 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { AdminGovernanceChart } from "./AdminGovernanceChart";
+import { AdminGovernanceFinancesEdit } from "./AdminGovernanceFinancesEdit";
+import { FinanceSourceBadge } from "./FinanceSourceBadge";
 import { useAdminGovernanceFinances } from "./api/useAdminGovernanceFinances";
-import type { AdminFinanceLatest } from "./api/adminGovernanceFinances.api";
-import type { FinLine } from "../governance/governance.data";
+import type {
+  AdminFinanceLatest,
+  AdminFinLine,
+} from "./api/adminGovernanceFinances.api";
 import { type FinanceStat } from "./adminGovernance.data";
 import styles from "./AdminGovernancePage.module.css";
 
@@ -42,6 +47,7 @@ function buildFinanceStats(latest: AdminFinanceLatest): FinanceStat[] {
       comma: true,
       footKey: "governance.finances.foot.sustainersCount",
       footValues: { count: latest.sustainerCount },
+      source: latest.sources.mrr,
     },
     {
       labelKey: "governance.finances.stat.totalIncome",
@@ -49,6 +55,7 @@ function buildFinanceStats(latest: AdminFinanceLatest): FinanceStat[] {
       prefix: "€",
       comma: true,
       footKey: "governance.finances.foot.sources",
+      source: latest.sources.incomeTotal,
     },
     {
       labelKey: "governance.finances.stat.surplus",
@@ -57,18 +64,21 @@ function buildFinanceStats(latest: AdminFinanceLatest): FinanceStat[] {
       comma: true,
       jade: true,
       footKey: "governance.finances.foot.reserve",
+      source: latest.sources.surplus,
     },
     {
       labelKey: "governance.finances.stat.solidarity",
       value: latest.solidarityRate,
       suffix: "%",
       footKey: "governance.finances.foot.solidarityRate",
+      source: latest.sources.solidarityRate,
     },
   ];
 }
 
 export function AdminGovernanceFinances() {
   const { latest, history, loading } = useAdminGovernanceFinances();
+  const [editing, setEditing] = useState(false);
 
   if (loading) {
     return <FinancesSkeleton />;
@@ -82,6 +92,8 @@ export function AdminGovernanceFinances() {
 
   return (
     <>
+      <FinancesToolbar latest={latest} onEdit={() => setEditing(true)} />
+
       <StatGrid columns={4} className={styles.statGrid}>
         {stats.map((stat, index) => (
           <FadeIn key={stat.labelKey} delay={index * 70}>
@@ -104,7 +116,47 @@ export function AdminGovernanceFinances() {
       <FadeIn delay={200}>
         <LiveMrrPanel latest={latest} />
       </FadeIn>
+
+      {editing && (
+        <AdminGovernanceFinancesEdit
+          latest={latest}
+          onClose={() => setEditing(false)}
+        />
+      )}
     </>
+  );
+}
+
+/** Header row above the figures: who last corrected them, and the entry point
+ *  to the edit dialog. */
+function FinancesToolbar({
+  latest,
+  onEdit,
+}: {
+  latest: AdminFinanceLatest;
+  onEdit: () => void;
+}) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const editorName = latest.editor
+    ? `${latest.editor.firstName} ${latest.editor.lastName}`.trim()
+    : null;
+
+  return (
+    <div className={styles.finToolbar}>
+      <span className={styles.finToolbarMeta}>
+        {editorName && latest.editedAt
+          ? t("admin:governance.finances.edit.lastEdited", {
+              name: editorName,
+              date: fmt.date(new Date(latest.editedAt)),
+            })
+          : t("admin:governance.finances.edit.neverEdited")}
+      </span>
+      <Button variant="ghost" onClick={onEdit}>
+        <FiEdit3 aria-hidden />
+        {t("admin:governance.finances.edit.cta")}
+      </Button>
+    </div>
   );
 }
 
@@ -143,7 +195,12 @@ function FinanceStatCard({ stat }: { stat: FinanceStat }) {
 
   return (
     <StatTile
-      label={<span className={styles.statLabel}>{t(`admin:${labelKey}`)}</span>}
+      label={
+        <span className={styles.statLabel}>
+          {t(`admin:${labelKey}`)}
+          {stat.source && <FinanceSourceBadge source={stat.source} />}
+        </span>
+      }
       value={
         <span
           className={[styles.statNum, jade && styles.statNumJade]
@@ -224,13 +281,16 @@ function SpendLedgerCard({ latest }: { latest: AdminFinanceLatest }) {
   );
 }
 
-function Meter({ line, colorIndex }: { line: FinLine; colorIndex: number }) {
+function Meter({ line, colorIndex }: { line: AdminFinLine; colorIndex: number }) {
   const fmt = useFormat();
   const color = ledgerColorAt(colorIndex);
   return (
     <div className={styles.meter}>
       <div className={styles.meterTop}>
-        <span className={styles.meterLabel}>{line.label}</span>
+        <span className={styles.meterLabel}>
+          {line.label}
+          {line.source === "manual" && <FinanceSourceBadge source="manual" />}
+        </span>
         <span className={styles.meterAmount}>
           {fmt.currency(financeAmount(line.amount))}
         </span>

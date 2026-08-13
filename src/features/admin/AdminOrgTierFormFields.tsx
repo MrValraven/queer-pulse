@@ -1,4 +1,5 @@
 import { AdminCheckLine } from "./ui";
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { OrgTierFormDraft } from "./adminOrgTierForm.utils";
 import type { OrgTierCtaType } from "../marketing/api/orgTiers.api";
@@ -101,20 +102,17 @@ export function AdminOrgTierCtaFields({ draft, onChange }: FieldsProps) {
       <label className={styles.fieldLabel} htmlFor="tier-cta-type">
         {t("admin:orgTier.field.cta")}
       </label>
-      <select
+      <Select
         id="tier-cta-type"
-        className={styles.select}
         value={draft.ctaType}
-        onChange={(event) =>
-          onChange({ ctaType: event.target.value as OrgTierCtaType })
+        options={CTA_OPTIONS.map((option) => ({
+          value: option.value,
+          label: t(`admin:${option.labelKey}`),
+        }))}
+        onChange={(value) =>
+          onChange({ ctaType: (value ?? draft.ctaType) as OrgTierCtaType })
         }
-      >
-        {CTA_OPTIONS.map((option) => (
-          <option key={option.value} value={option.value}>
-            {t(`admin:${option.labelKey}`)}
-          </option>
-        ))}
-      </select>
+      />
 
       <label className={styles.fieldLabel} htmlFor="tier-cta-label">
         {t("admin:orgTier.field.ctaLabel")}

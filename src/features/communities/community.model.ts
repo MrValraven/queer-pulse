@@ -135,4 +135,8 @@ export interface LivingCommunity {
   joinRequests?: ModRequest[];
   /** Flagged posts awaiting a mod decision. */
   reports?: ModReport[];
+  /** True while the community is auto-frozen pending report review — the hub
+   *  shows a "frozen, under review" banner and blocks new posts for members.
+   *  Owner/mods lift it from the banner. */
+  frozen?: boolean;
 }

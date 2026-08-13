@@ -1,7 +1,6 @@
-import { Link } from "react-router-dom";
-import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { AdultsOnlyLink } from "./AdultsOnlyLink";
 import styles from "./AgeAttestation.module.css";
 
 interface AgeAttestationProps {
@@ -51,7 +50,7 @@ export function AgeAttestation({
         <Translation
           i18nKey="auth:ageAttestation.helper"
           components={{
-            eligibility: <Link to={`${routes.terms}#eligibility`} />,
+            eligibility: <AdultsOnlyLink />,
             under18: (
               // eslint-disable-next-line jsx-a11y/control-has-associated-label -- <button> is an element template; <Translation> clones it with link text at render time.
               <button

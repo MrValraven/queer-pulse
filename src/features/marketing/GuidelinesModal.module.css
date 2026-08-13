@@ -33,13 +33,36 @@
   line-height: 1.6;
   color: var(--ink-60);
 }
+/* A 1px sentinel that sits just below the last clause: when it scrolls into
+   the sheet's viewport the confirm button unlocks (see GuidelinesModal.tsx). */
+.endSentinel {
+  height: 1px;
+}
+/* The acknowledgement area lives at the true bottom of the sheet, after every
+   clause, rather than floating over the text mid-scroll. Full-bleed (negative
+   side margins cancel the sheet's own padding, restored via padding-inline) so
+   it reads as a distinct footer bar. The button here only becomes clickable
+   once the reader has scrolled to the end of the list. */
 .footer {
-  position: sticky;
-  bottom: 0;
   display: flex;
-  justify-content: flex-end;
-  padding-top: 1rem;
-  margin-top: 1rem;
-  background: var(--cream);
-  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 24px -32px 0;
+  padding: 18px 32px 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.12);
+}
+@media (min-width: 720px) {
+  .footer {
+    margin-inline: -48px;
+    padding-inline: 48px;
+  }
+}
+/* Left-aligned nudge shown until the reader hits the end of the clauses. */
+.footerHint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-60);
 }

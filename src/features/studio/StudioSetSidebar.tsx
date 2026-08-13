@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
+import { Select } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -55,17 +56,15 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
           <label htmlFor={`${fieldId}-type`}>
             {t("studio:setSubmission.sidebar.typeLabel")}
           </label>
-          <select
+          <Select
             id={`${fieldId}-type`}
+            options={SET_TYPES.map((type) => ({
+              value: type.id,
+              label: t(type.labelKey),
+            }))}
             value={setType}
-            onChange={(event) => setSetType(event.target.value)}
-          >
-            {SET_TYPES.map((type) => (
-              <option key={type.id} value={type.id}>
-                {t(type.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => setSetType(value ?? SET_TYPES[0]!.id)}
+          />
         </div>
       </div>
 

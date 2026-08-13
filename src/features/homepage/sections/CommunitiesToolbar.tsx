@@ -1,4 +1,5 @@
 import { FiSearch } from "react-icons/fi";
+import { Select } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { CommunityCategory } from "./Communities.data";
 import {
@@ -81,37 +82,33 @@ export function CommunitiesToolbar({
         ))}
       </div>
 
-      <select
-        className={styles.toolSelect}
+      <Select
+        size="sm"
+        label={t("homepage:communities.toolbar.langAriaLabel")}
         value={state.lang}
-        onChange={(e) => patch({ lang: e.target.value })}
-        aria-label={t("homepage:communities.toolbar.langAriaLabel")}
-      >
-        <option value="all">
-          {t("homepage:communities.toolbar.langAllOption")}
-        </option>
-        {langOptions.map((l) => (
-          <option key={l} value={l}>
-            {LANG_LABEL[l] ?? l}
-          </option>
-        ))}
-      </select>
+        onChange={(value) => patch({ lang: value ?? "all" })}
+        options={[
+          {
+            value: "all",
+            label: t("homepage:communities.toolbar.langAllOption"),
+          },
+          ...langOptions.map((l) => ({ value: l, label: LANG_LABEL[l] ?? l })),
+        ]}
+      />
 
-      <select
-        className={styles.toolSelect}
+      <Select
+        size="sm"
+        label={t("homepage:communities.toolbar.hoodAriaLabel")}
         value={state.hood}
-        onChange={(e) => patch({ hood: e.target.value })}
-        aria-label={t("homepage:communities.toolbar.hoodAriaLabel")}
-      >
-        <option value="all">
-          {t("homepage:communities.toolbar.hoodAllOption")}
-        </option>
-        {hoodOptions.map((h) => (
-          <option key={h} value={h}>
-            {h}
-          </option>
-        ))}
-      </select>
+        onChange={(value) => patch({ hood: value ?? "all" })}
+        options={[
+          {
+            value: "all",
+            label: t("homepage:communities.toolbar.hoodAllOption"),
+          },
+          ...hoodOptions.map((h) => ({ value: h, label: h })),
+        ]}
+      />
 
       <button
         type="button"
@@ -129,25 +126,29 @@ export function CommunitiesToolbar({
 
       <span className={styles.toolSort}>
         {t("homepage:communities.toolbar.sortLabel")}
-        <select
-          className={styles.toolSelect}
+        <Select
+          size="sm"
+          label={t("homepage:communities.toolbar.sortAriaLabel")}
           value={state.sort}
-          onChange={(e) => patch({ sort: e.target.value as SortKey })}
-          aria-label={t("homepage:communities.toolbar.sortAriaLabel")}
-        >
-          <option value="active">
-            {t("homepage:communities.toolbar.sort.active")}
-          </option>
-          <option value="size">
-            {t("homepage:communities.toolbar.sort.size")}
-          </option>
-          <option value="new">
-            {t("homepage:communities.toolbar.sort.new")}
-          </option>
-          <option value="near">
-            {t("homepage:communities.toolbar.sort.near")}
-          </option>
-        </select>
+          onChange={(value) =>
+            patch({ sort: (value ?? "active") as SortKey })
+          }
+          options={[
+            {
+              value: "active",
+              label: t("homepage:communities.toolbar.sort.active"),
+            },
+            {
+              value: "size",
+              label: t("homepage:communities.toolbar.sort.size"),
+            },
+            { value: "new", label: t("homepage:communities.toolbar.sort.new") },
+            {
+              value: "near",
+              label: t("homepage:communities.toolbar.sort.near"),
+            },
+          ]}
+        />
       </span>
     </div>
   );

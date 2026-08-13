@@ -186,6 +186,37 @@ export const notifications: Catalog = {
     "A preocupação que levantaste foi analisada e encerrada.",
   "type.concern_update.dismissed.meta": "Atualização de preocupação",
 
+  // Um admin ajustou manualmente o estado de verificação do membro. Nomeia
+  // apenas o nível para o qual foi movido; {level} é uma das quatro etiquetas
+  // logo abaixo.
+  "type.verification_update.text":
+    "O teu nível de verificação foi atualizado para {level}.",
+  "type.verification_update.meta": "Atualização de verificação",
+  "type.verification_update.level.none": "Nenhum",
+  "type.verification_update.level.email": "Email",
+  "type.verification_update.level.phone": "Telefone",
+  "type.verification_update.level.id_verified": "Identidade verificada",
+  // Recurso alternativo para um `toLevel` que esta versão não reconhece.
+  "type.verification_update.levelFallback": "um novo nível",
+
+  // O pedido de verificação do próprio membro foi aprovado. Reutiliza as
+  // mesmas etiquetas de {level} da cópia acima, a partir de `requestedLevel`,
+  // já que uma aprovação concede sempre o nível que foi pedido.
+  "type.verification_update.approved.text":
+    "O teu pedido de verificação foi aprovado. O teu nível de verificação é agora {level}.",
+  "type.verification_update.approved.meta": "Atualização de verificação",
+
+  // O pedido de verificação do próprio membro foi recusado. Nenhum nível
+  // mudou, por isso a cópia nunca nomeia um. {reason} é a nota do admin a
+  // explicar a decisão.
+  "type.verification_update.rejected.text":
+    "O teu pedido de verificação foi recusado.",
+  "type.verification_update.rejected.meta": "{reason}",
+  // Recurso alternativo para uma recusa sem motivo no payload (não deveria
+  // acontecer — o backend exige um para recusar — mas a leitura é defensiva).
+  "type.verification_update.rejected.reasonFallback":
+    "Não foi partilhado um motivo.",
+
   // Resultado de moderação — título por ação; a nota da equipa dirigida ao
   // membro ("a razão que o membro lê") entra como {note}. Ao tocar, abre a
   // página de recurso. As chaves simples são o fallback para uma ação

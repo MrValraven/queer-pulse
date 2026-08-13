@@ -1,6 +1,6 @@
 import type { MouseEvent as ReactMouseEvent } from "react";
 import type { ArticleImageBlock, ArticleImageCrop, ArticleImageTint } from "../../api/pieces.api";
-import { FormField } from "../../../../shared/components/ui";
+import { FormField, Select } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { RichText } from "./RichText";
 import styles from "./ImageBlockControls.module.css";
@@ -101,18 +101,16 @@ export function ImageBlockControls({ block, onChange }: ImageBlockControlsProps)
         </FormField>
 
         <FormField label={t("magazine:write.image.rightsLabel")}>
-          <select
+          <Select
             value={block.rights}
-            onChange={(event) =>
-              onChange({ ...block, rights: event.target.value as ArticleImageBlock["rights"] })
+            onChange={(value) =>
+              onChange({ ...block, rights: value as ArticleImageBlock["rights"] })
             }
-          >
-            {RIGHTS_VALUES.map((value) => (
-              <option key={value} value={value}>
-                {t(`magazine:write.image.rights.${value}`)}
-              </option>
-            ))}
-          </select>
+            options={RIGHTS_VALUES.map((value) => ({
+              value,
+              label: t(`magazine:write.image.rights.${value}`),
+            }))}
+          />
         </FormField>
       </div>
 

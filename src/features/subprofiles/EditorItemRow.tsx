@@ -8,6 +8,7 @@ import {
 } from "react-icons/fi";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { formatMonthYear } from "../../shared/lib/date";
 import { ImageSlot } from "../../shared/components/ui";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 import styles from "./EditorItemRow.module.css";
@@ -63,8 +64,8 @@ export function EditorItemRow({
   onToggleFeature,
   onRemove,
 }: EditorItemRowProps) {
-  const { t } = useTranslation();
-  const subtitle = [item.subtitle, item.meta, item.date]
+  const { t, language } = useTranslation();
+  const subtitle = [item.subtitle, item.meta, formatMonthYear(item.date, language)]
     .filter(Boolean)
     .join(" · ");
 

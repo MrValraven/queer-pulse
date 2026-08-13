@@ -1,5 +1,6 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 import { FiCheck } from "react-icons/fi";
+import { Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { COMMITMENT_KEYS } from "./microGrants.data";
@@ -19,6 +20,7 @@ export function AboutStep({
 }) {
   const { t } = useTranslation();
   const fieldId = useId();
+  const [priorGrant, setPriorGrant] = useState("");
   return (
     <>
       <div className={styles.stepTitle}>
@@ -55,24 +57,26 @@ export function AboutStep({
       <label className={styles.label} htmlFor={`${fieldId}-prior`}>
         {t("resources:microGrants.apply.about.priorGrantLabel")}
       </label>
-      <select
+      <Select
         id={`${fieldId}-prior`}
-        className={styles.select}
-        defaultValue=""
-      >
-        <option value="">
-          {t("resources:microGrants.apply.about.priorGrant.select")}
-        </option>
-        <option>
-          {t("resources:microGrants.apply.about.priorGrant.first")}
-        </option>
-        <option>
-          {t("resources:microGrants.apply.about.priorGrant.reported")}
-        </option>
-        <option>
-          {t("resources:microGrants.apply.about.priorGrant.pending")}
-        </option>
-      </select>
+        placeholder={t("resources:microGrants.apply.about.priorGrant.select")}
+        value={priorGrant || null}
+        onChange={(value) => setPriorGrant(value ?? "")}
+        options={[
+          {
+            value: "first",
+            label: t("resources:microGrants.apply.about.priorGrant.first"),
+          },
+          {
+            value: "reported",
+            label: t("resources:microGrants.apply.about.priorGrant.reported"),
+          },
+          {
+            value: "pending",
+            label: t("resources:microGrants.apply.about.priorGrant.pending"),
+          },
+        ]}
+      />
       <div className={styles.label} style={{ marginBottom: 10 }}>
         {t("resources:microGrants.apply.about.commitmentsLabel")}
       </div>

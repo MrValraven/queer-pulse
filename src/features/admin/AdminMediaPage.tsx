@@ -90,40 +90,44 @@ export function AdminMediaPage() {
 
       <FadeIn delay={60}>
         <div className={styles.filters}>
-          <SegmentedControl
-            label={t("admin:media.filterAriaLabel")}
-            value={kind}
-            onChange={(next) => setKind(next as AdminMediaKind)}
-            options={ADMIN_MEDIA_KINDS.map((kindValue) => ({
-              value: kindValue,
-              label: t(`admin:media.kinds.${kindValue}`),
-            }))}
-            // While filtering by uploader, kind tabs are inert — the uploader
-            // view spans every kind (the backend ignores `prefix`).
-            disabledOptions={uploaderFilter ? ADMIN_MEDIA_KINDS : undefined}
-          />
-          {uploaderFilter ? (
-            <div className={styles.activeFilter}>
-              <span className={styles.activeFilterLabel}>
-                <FiUser aria-hidden />
-                <Translation
-                  i18nKey="admin:media.filterByUploader.activePill"
-                  values={{ name: uploaderFilter.displayName }}
-                  components={{ strong: <strong /> }}
-                />
-              </span>
-              <button
-                type="button"
-                className={styles.activeFilterClear}
-                onClick={() => setUploaderFilter(null)}
-                aria-label={t("admin:media.filterByUploader.clearAria")}
-              >
-                <FiX aria-hidden />
-              </button>
-            </div>
-          ) : (
-            <AdminMediaUploaderPicker onPick={setUploaderFilter} />
-          )}
+          <div className={styles.kindFilter}>
+            <SegmentedControl
+              label={t("admin:media.filterAriaLabel")}
+              value={kind}
+              onChange={(next) => setKind(next as AdminMediaKind)}
+              options={ADMIN_MEDIA_KINDS.map((kindValue) => ({
+                value: kindValue,
+                label: t(`admin:media.kinds.${kindValue}`),
+              }))}
+              // While filtering by uploader, kind tabs are inert — the uploader
+              // view spans every kind (the backend ignores `prefix`).
+              disabledOptions={uploaderFilter ? ADMIN_MEDIA_KINDS : undefined}
+            />
+          </div>
+          <div className={styles.uploaderRow}>
+            {uploaderFilter ? (
+              <div className={styles.activeFilter}>
+                <span className={styles.activeFilterLabel}>
+                  <FiUser aria-hidden />
+                  <Translation
+                    i18nKey="admin:media.filterByUploader.activePill"
+                    values={{ name: uploaderFilter.displayName }}
+                    components={{ strong: <strong /> }}
+                  />
+                </span>
+                <button
+                  type="button"
+                  className={styles.activeFilterClear}
+                  onClick={() => setUploaderFilter(null)}
+                  aria-label={t("admin:media.filterByUploader.clearAria")}
+                >
+                  <FiX aria-hidden />
+                </button>
+              </div>
+            ) : (
+              <AdminMediaUploaderPicker onPick={setUploaderFilter} />
+            )}
+          </div>
         </div>
       </FadeIn>
 

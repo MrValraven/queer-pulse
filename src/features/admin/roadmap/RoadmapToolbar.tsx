@@ -1,5 +1,6 @@
 import { useMemo, useRef } from "react";
 import { FiSearch } from "react-icons/fi";
+import { Select } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { AdminToggle } from "../ui";
 import type {
@@ -51,51 +52,48 @@ export function RoadmapToolbar({
         />
       </label>
 
-      <select
-        className={styles.select}
+      <Select
+        size="sm"
+        label={t("admin:roadmap.toolbar.categoryAll")}
         value={filters.category}
-        onChange={(event) => setFilter("category", event.target.value)}
-        aria-label={t("admin:roadmap.toolbar.categoryAll")}
-      >
-        <option value="">{t("admin:roadmap.toolbar.categoryAll")}</option>
-        {categories.map((category) => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
-      </select>
+        options={[
+          { value: "", label: t("admin:roadmap.toolbar.categoryAll") },
+          ...categories.map((category) => ({
+            value: category,
+            label: category,
+          })),
+        ]}
+        onChange={(value) => setFilter("category", value ?? "")}
+      />
 
-      <select
-        className={styles.select}
+      <Select
+        size="sm"
+        label={t("admin:roadmap.toolbar.ownerAll")}
         value={filters.owner}
-        onChange={(event) => setFilter("owner", event.target.value)}
-        aria-label={t("admin:roadmap.toolbar.ownerAll")}
-      >
-        <option value="">{t("admin:roadmap.toolbar.ownerAll")}</option>
-        <option value="unassigned">
-          {t("admin:roadmap.toolbar.ownerUnassigned")}
-        </option>
-        {team.map((member) => (
-          <option key={member.userId} value={member.userId}>
-            {member.name}
-          </option>
-        ))}
-      </select>
+        options={[
+          { value: "", label: t("admin:roadmap.toolbar.ownerAll") },
+          {
+            value: "unassigned",
+            label: t("admin:roadmap.toolbar.ownerUnassigned"),
+          },
+          ...team.map((member) => ({
+            value: member.userId,
+            label: member.name,
+          })),
+        ]}
+        onChange={(value) => setFilter("owner", value ?? "")}
+      />
 
-      <select
-        className={styles.select}
+      <Select
+        size="sm"
+        label={t("admin:roadmap.toolbar.sortManual")}
         value={filters.sort}
-        onChange={(event) =>
-          setFilter("sort", event.target.value as RoadmapSort)
-        }
-        aria-label={t("admin:roadmap.toolbar.sortManual")}
-      >
-        {SORT_OPTIONS.map((option) => (
-          <option key={option.value} value={option.value}>
-            {t(option.labelKey)}
-          </option>
-        ))}
-      </select>
+        options={SORT_OPTIONS.map((option) => ({
+          value: option.value,
+          label: t(option.labelKey),
+        }))}
+        onChange={(value) => setFilter("sort", (value ?? filters.sort) as RoadmapSort)}
+      />
 
       <span className={styles.denseToggleGroup}>
         <AdminToggle

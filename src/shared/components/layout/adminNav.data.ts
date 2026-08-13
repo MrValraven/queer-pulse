@@ -28,7 +28,11 @@ import { routes } from "../../../app/routeMap";
 import { currentUser } from "../../../features/members/data/members";
 
 /** Live pending-count source for a nav pill, resolved in AdminSidebar. */
-export type AdminNavBadge = "moderation" | "members" | "partnerships";
+export type AdminNavBadge =
+  | "moderation"
+  | "members"
+  | "partnerships"
+  | "verifications";
 
 export interface AdminNavItem {
   /** Catalog key for the visible label — resolve with `t()`. */
@@ -140,6 +144,8 @@ export const ADMIN_NAV: AdminNavItem[] = [
     labelKey: "shared:adminNav.items.verifications",
     to: routes.adminVerifications,
     icon: FiUserCheck,
+    badge: "verifications",
+    tone: "warn",
   },
   {
     labelKey: "shared:adminNav.items.orgTiers",

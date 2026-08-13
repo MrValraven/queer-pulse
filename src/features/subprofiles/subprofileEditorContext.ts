@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
 import type { AffiliationInputDTO, SocialLinkDTO } from "./api/subprofiles.api";
+import type { SubprofileView } from "./api/subprofiles.adapters";
 import type { SubprofileEditorRow } from "./subprofileSectionEditorRows";
 import type { AffiliationRow } from "./SubprofileAffiliationRow";
 import type { SubprofileMetaEditor } from "./useSubprofileMetaEditor";
@@ -57,6 +58,12 @@ export interface SubprofileEditorContextValue {
   saveAll: () => Promise<void>;
   /** Reset every area back to its loaded baseline. */
   discardAll: () => void;
+  /** Explicit escape hatch from the editor's normal seed-once row state:
+   *  re-seeds ONE section's rows + baseline from freshly-fetched subprofile
+   *  data, discarding any in-progress draft for that section only. Wired to
+   *  `useEditorRowsState`'s `reseedSection` — see its doc for why this must
+   *  stay opt-in and never fire from a routine refetch. */
+  reseedSection: (section: string, nextSubprofile: SubprofileView) => void;
 }
 
 export const SubprofileEditorContext =

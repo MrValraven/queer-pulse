@@ -1,5 +1,6 @@
 import { useId } from "react";
 import { FiAlertCircle } from "react-icons/fi";
+import { DatePicker } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { PostJobForm } from "./usePostJobForm";
@@ -110,15 +111,15 @@ export function PostJobStepDetails({
         </div>
         <div className={styles.fieldRow} style={{ marginTop: 12 }}>
           <div className={styles.field}>
-            <label className={styles.label} htmlFor={`${fieldId}-deadline`}>
+            <label id={`${fieldId}-deadline-label`} className={styles.label}>
               {t("economy:postJob.step2.applyBy")}
             </label>
-            <input
+            <DatePicker
+              mode="date"
               id={`${fieldId}-deadline`}
-              className={styles.input}
-              type="date"
-              value={state.deadline}
-              onChange={(e) => patch({ deadline: e.target.value })}
+              labelledBy={`${fieldId}-deadline-label`}
+              value={state.deadline || null}
+              onChange={(value) => patch({ deadline: value ?? "" })}
             />
           </div>
           <div className={styles.field}>

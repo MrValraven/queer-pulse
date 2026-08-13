@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { DatePicker, Select } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { HOODS } from "../createGathering.data";
@@ -19,21 +20,21 @@ export function DatePlaceStep({ form }: { form: GatheringForm }) {
       <p className={styles.stepSub}>{t("gatherings:create.step2.sub")}</p>
       <div className={styles.row2}>
         <div>
-          <label className={styles.label} htmlFor={`${fieldId}-date`}>
+          <label id={`${fieldId}-date-label`} className={styles.label}>
             {t("gatherings:create.step2.dateLabel")}
           </label>
-          <input
+          <DatePicker
+            mode="date"
             id={`${fieldId}-date`}
-            className={styles.input}
-            type="date"
+            labelledBy={`${fieldId}-date-label`}
             min={new Date().toISOString().slice(0, 10)}
-            required
-            aria-invalid={!form.dateValid}
+            invalid={!form.dateValid}
+            aria-required={true}
             aria-describedby={
               !form.dateValid ? `${fieldId}-date-hint` : undefined
             }
-            value={form.date}
-            onChange={(e) => form.setDate(e.target.value)}
+            value={form.date || null}
+            onChange={(value) => form.setDate(value ?? "")}
           />
           {!form.dateValid && (
             <p id={`${fieldId}-date-hint`} className={styles.hint}>
@@ -42,50 +43,45 @@ export function DatePlaceStep({ form }: { form: GatheringForm }) {
           )}
         </div>
         <div>
-          <label className={styles.label} htmlFor={`${fieldId}-time`}>
+          <label id={`${fieldId}-time-label`} className={styles.label}>
             {t("gatherings:create.step2.timeLabel")}
           </label>
-          <input
+          <DatePicker
+            mode="time"
             id={`${fieldId}-time`}
-            className={styles.input}
-            type="time"
-            value={form.time}
-            onChange={(e) => form.setTime(e.target.value)}
+            labelledBy={`${fieldId}-time-label`}
+            value={form.time || null}
+            onChange={(value) => form.setTime(value ?? "")}
           />
         </div>
       </div>
       <div className={styles.row2}>
         <div>
-          <label className={styles.label} htmlFor={`${fieldId}-endTime`}>
+          <label id={`${fieldId}-endTime-label`} className={styles.label}>
             {t("gatherings:create.step2.endTimeLabel")}
           </label>
-          <input
+          <DatePicker
+            mode="time"
             id={`${fieldId}-endTime`}
-            className={styles.input}
-            type="time"
-            value={form.endTime}
-            onChange={(e) => form.setEndTime(e.target.value)}
+            labelledBy={`${fieldId}-endTime-label`}
+            value={form.endTime || null}
+            onChange={(value) => form.setEndTime(value ?? "")}
           />
         </div>
         <div>
           <label className={styles.label} htmlFor={`${fieldId}-hood`}>
             {t("gatherings:create.step2.hoodLabel")}
           </label>
-          <select
+          <Select
             id={`${fieldId}-hood`}
-            className={styles.select}
-            value={form.hood}
-            onChange={(e) => form.setHood(e.target.value)}
-          >
-            <option value="">
-              {t("gatherings:create.step2.hoodPlaceholder")}
-            </option>
-            {HOODS.map((hood) => (
-              <option key={hood.value} value={hood.value}>
-                {t(hood.labelKey)}
-              </option>
-            ))}
-          </select>
+            placeholder={t("gatherings:create.step2.hoodPlaceholder")}
+            options={HOODS.map((hood) => ({
+              value: hood.value,
+              label: t(hood.labelKey),
+            }))}
+            value={form.hood || null}
+            onChange={(value) => form.setHood(value ?? "")}
+          />
         </div>
       </div>
       <label className={styles.label} htmlFor={`${fieldId}-venue`}>

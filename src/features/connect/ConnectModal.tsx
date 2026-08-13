@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Spinner } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
@@ -93,7 +94,7 @@ export function ConnectModal({
     }
   }
 
-  return (
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -149,6 +150,7 @@ export function ConnectModal({
           />
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

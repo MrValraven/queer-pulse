@@ -24,6 +24,8 @@ function makeItem(
   overrides: Partial<SubprofileItemDTO> & Pick<SubprofileItemDTO, "section" | "title">,
 ): SubprofileItemDTO {
   return {
+    id: "item-test",
+    createdAt: "2025-02-18T16:20:00.000Z",
     subtitle: null,
     description: null,
     url: null,

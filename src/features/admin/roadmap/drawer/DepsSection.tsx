@@ -1,4 +1,5 @@
 import { FiX } from "react-icons/fi";
+import { Select } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { AdminRoadmapItemDTO } from "../../api/roadmapAdmin.types";
 import styles from "./ItemDrawer.module.css";
@@ -63,21 +64,18 @@ export function DepsSection({
       )}
 
       {candidates.length > 0 && (
-        <select
-          className={styles.select}
-          value=""
-          aria-label={t("admin:roadmap.drawer.deps.addPlaceholder")}
-          onChange={(event) => {
-            if (event.target.value) onAdd(event.target.value);
+        <Select
+          value={null}
+          label={t("admin:roadmap.drawer.deps.addPlaceholder")}
+          placeholder={t("admin:roadmap.drawer.deps.addPlaceholder")}
+          options={candidates.map((item) => ({
+            value: item.id,
+            label: item.name,
+          }))}
+          onChange={(value) => {
+            if (value) onAdd(value);
           }}
-        >
-          <option value="">{t("admin:roadmap.drawer.deps.addPlaceholder")}</option>
-          {candidates.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.name}
-            </option>
-          ))}
-        </select>
+        />
       )}
     </div>
   );

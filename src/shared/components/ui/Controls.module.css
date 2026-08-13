@@ -23,6 +23,8 @@
   font: inherit;
   font-size: 13px;
   font-weight: 600;
+  /* Labels stay on one line — a segment must never break word-by-word. */
+  white-space: nowrap;
   cursor: pointer;
   transition:
     background 0.16s var(--ease),

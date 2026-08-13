@@ -120,6 +120,7 @@ function SectionBody({
               skin={skin}
               interactive={interactive}
               accent={accent}
+              authorName={displayName}
             />
           ))}
         </div>
@@ -134,6 +135,7 @@ function SectionBody({
                   skin={skin}
                   interactive={interactive}
                   accent={accent}
+                  authorName={displayName}
                 />
               ))}
             </div>
@@ -157,6 +159,7 @@ function SectionBody({
             skin={skin}
             interactive={interactive}
             accent={accent}
+            authorName={displayName}
             onOpen={poemOpen}
             teaser={
               poemOpen

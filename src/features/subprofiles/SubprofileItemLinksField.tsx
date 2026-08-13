@@ -1,4 +1,5 @@
 import { FiPlus, FiX } from "react-icons/fi";
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   SOCIAL_PLATFORMS,
@@ -69,20 +70,21 @@ export function SubprofileItemLinksField({
                 <span className={styles.linkIcon} aria-hidden>
                   <Icon size={16} />
                 </span>
-                <select
-                  className={styles.linkSelect}
+                <Select
+                  className={styles.linkPlatform}
+                  size="sm"
+                  label={t("subprofiles:socialEditor.platformLabel")}
+                  options={SOCIAL_PLATFORMS.map((platformOption) => ({
+                    value: platformOption.key,
+                    label: platformLabel(
+                      platformOption.key,
+                      platformOption.label,
+                      t,
+                    ),
+                  }))}
                   value={link.platform}
-                  aria-label={t("subprofiles:socialEditor.platformLabel")}
-                  onChange={(event) =>
-                    patch(index, { platform: event.target.value })
-                  }
-                >
-                  {SOCIAL_PLATFORMS.map((platformOption) => (
-                    <option key={platformOption.key} value={platformOption.key}>
-                      {platformLabel(platformOption.key, platformOption.label, t)}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(value) => patch(index, { platform: value ?? "" })}
+                />
                 <input
                   className={`${styles.inlineInput} ${styles.linkInput}`}
                   value={link.urlOrHandle}

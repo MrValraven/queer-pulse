@@ -177,6 +177,7 @@ export function detailDtoToLiving(dto: CommunityDetailDTO): LivingCommunity {
     },
     joinRequests: [],
     reports: [],
+    frozen: dto.frozen ?? false,
   };
 }
 

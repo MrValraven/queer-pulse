@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Select } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ApiError } from "../../shared/api/client";
 import { Translation } from "../../shared/i18n/Translation";
@@ -106,17 +107,15 @@ export function LiveWriteReviewModal({
               <label htmlFor="lwr-company">
                 {t("economy:writeReviewModal.companyLabel")}
               </label>
-              <select
+              <Select
                 id="lwr-company"
+                options={reviewable.map((company) => ({
+                  value: company.slug ?? "",
+                  label: company.name,
+                }))}
                 value={slug}
-                onChange={(event) => setSlug(event.target.value)}
-              >
-                {reviewable.map((company) => (
-                  <option key={company.slug} value={company.slug ?? ""}>
-                    {company.name}
-                  </option>
-                ))}
-              </select>
+                onChange={(value) => setSlug(value ?? "")}
+              />
             </div>
           }
         />

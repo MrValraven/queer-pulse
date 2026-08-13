@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { Button, Sending } from "../../shared/components/ui";
+import { Button, Select, Sending } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -67,24 +67,22 @@ export function SuggestEditModal({ onClose }: { onClose: () => void }) {
             <label className={styles.label} htmlFor={`${fieldId}-term`}>
               {t("resources:suggestEdit.form.termLabel")}
             </label>
-            <select
+            <Select
               id={`${fieldId}-term`}
-              className={styles.select}
-              value={term}
-              onChange={(e) => setTerm(e.target.value)}
-            >
-              <option value="">
-                {t("resources:suggestEdit.form.selectPlaceholder")}
-              </option>
-              {GLOSSARY.map((g) => (
-                <option key={g.termKey} value={t(g.termKey)}>
-                  {t(g.termKey)}
-                </option>
-              ))}
-              <option value="__new">
-                {t("resources:suggestEdit.form.newTermOption")}
-              </option>
-            </select>
+              placeholder={t("resources:suggestEdit.form.selectPlaceholder")}
+              value={term || null}
+              onChange={(value) => setTerm(value ?? "")}
+              options={[
+                ...GLOSSARY.map((g) => ({
+                  value: t(g.termKey),
+                  label: t(g.termKey),
+                })),
+                {
+                  value: "__new",
+                  label: t("resources:suggestEdit.form.newTermOption"),
+                },
+              ]}
+            />
 
             <label className={styles.label} htmlFor={`${fieldId}-change`}>
               {t("resources:suggestEdit.form.changeLabel")}

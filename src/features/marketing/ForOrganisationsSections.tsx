@@ -1,7 +1,7 @@
 import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { Button, Reveal } from "../../shared/components/ui";
+import { Button, Reveal, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -225,19 +225,17 @@ export function PartnerContactForm() {
             <label htmlFor={`${fieldId}-interest`}>
               {t("marketing:forOrgs.form.interestLabel")}
             </label>
-            <select
+            <Select
               id={`${fieldId}-interest`}
+              options={INTEREST_KEYS.map((interestKey) => ({
+                value: interestKey,
+                label: t(`marketing:forOrgs.form.interest.${interestKey}`),
+              }))}
               value={form.interest}
-              onChange={(e) =>
-                setForm({ ...form, interest: e.target.value as InterestKey })
+              onChange={(value) =>
+                setForm({ ...form, interest: value as InterestKey })
               }
-            >
-              {INTEREST_KEYS.map((interestKey) => (
-                <option key={interestKey} value={interestKey}>
-                  {t(`marketing:forOrgs.form.interest.${interestKey}`)}
-                </option>
-              ))}
-            </select>
+            />
           </div>
           <div className={styles.field}>
             <label htmlFor={`${fieldId}-message`}>

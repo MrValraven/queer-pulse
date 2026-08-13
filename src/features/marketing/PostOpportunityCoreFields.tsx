@@ -1,4 +1,4 @@
-import { FormField } from "../../shared/components/ui";
+import { FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Cause, Commit } from "./api/volunteering.api";
 import type { PostOpportunityForm } from "./usePostOpportunityForm";
@@ -50,16 +50,14 @@ export function PostOpportunityCoreFields({
           label={t("marketing:postOpportunity.core.causeLabel")}
           required
         >
-          <select
+          <Select
+            options={CAUSE_OPTIONS.map((cause) => ({
+              value: cause.value,
+              label: t(cause.labelKey),
+            }))}
             value={state.cause}
-            onChange={(e) => set("cause", e.target.value as Cause)}
-          >
-            {CAUSE_OPTIONS.map((c) => (
-              <option key={c.value} value={c.value}>
-                {t(c.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => set("cause", value as Cause)}
+          />
         </FormField>
 
         <FormField
@@ -69,16 +67,14 @@ export function PostOpportunityCoreFields({
             COMMIT_OPTIONS.find((c) => c.value === state.commit)?.hintKey ?? "",
           )}
         >
-          <select
+          <Select
+            options={COMMIT_OPTIONS.map((commit) => ({
+              value: commit.value,
+              label: t(commit.labelKey),
+            }))}
             value={state.commit}
-            onChange={(e) => set("commit", e.target.value as Commit)}
-          >
-            {COMMIT_OPTIONS.map((c) => (
-              <option key={c.value} value={c.value}>
-                {t(c.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => set("commit", value as Commit)}
+          />
         </FormField>
       </div>
 

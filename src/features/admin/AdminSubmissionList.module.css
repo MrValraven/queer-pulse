@@ -89,3 +89,100 @@
 :global([data-theme="dark"]) .row {
   border-color: rgba(var(--cream-rgb), 0.1);
 }
+
+/* ── Row selection (VerificationRequestRows, Task 4) ─────────────────────
+   Same checkbox + select-all treatment as AdminListingsPage.module.css's
+   bulk-selection block — kept as its own copy here since the two row
+   families don't share a stylesheet. */
+.selectAllRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 4px 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-40);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.rowCheckbox {
+  appearance: none;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  border: 1.6px solid rgba(var(--line-rgb), 0.28);
+  border-radius: 6px;
+  background: var(--paper);
+  cursor: pointer;
+  position: relative;
+  transition:
+    background 0.15s var(--ease),
+    border-color 0.15s var(--ease);
+}
+@media (hover: hover) {
+  .rowCheckbox:hover {
+    border-color: var(--jade);
+  }
+}
+.rowCheckbox:checked,
+.rowCheckbox:indeterminate {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+.rowCheckbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.rowCheckbox:indeterminate::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 8.5px;
+  height: 2px;
+  background: #fff;
+  border-radius: 1px;
+}
+.rowCheckbox:focus-visible {
+  outline: 2px solid var(--jade);
+  outline-offset: 2px;
+}
+
+/* On narrow viewports a floating bulk-action bar stacks full-width and needs
+   clearance below the last row — mirrors AdminListingsPage.module.css's
+   `.rowsWithBulkBar`. */
+@media (--md) {
+  .rowsWithBulkBar {
+    padding-bottom: 200px;
+  }
+}
+
+/* The J/K keyboard-navigation focus highlight (VerificationRequestRows) — a
+   distinct visual from `.rowCheckbox:checked` (selection) so a reviewer can
+   tell "keyboard-focused" and "bulk-selected" apart at a glance. Uses the
+   same jade outline as the rest of this page's focus rings rather than
+   inventing a new colour. */
+.rowFocused {
+  outline: 2px solid var(--jade);
+  outline-offset: 2px;
+}
+
+/* Icon prefix inside the verification request row's duplicate-signal chip
+   (VerificationRequestRows) — colour never carries the meaning alone, so the
+   chip pairs its warn tone with this icon plus text. */
+.duplicateIcon {
+  width: 12px;
+  height: 12px;
+  margin-inline-end: 3px;
+  vertical-align: -1px;
+}

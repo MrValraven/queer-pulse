@@ -1,4 +1,4 @@
-import { FormField } from "../../../shared/components/ui";
+import { DatePicker, FormField } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   ANCHOR,
@@ -84,25 +84,27 @@ export function ListingHoursEditor({ form }: { form: ListingForm }) {
                   <div className={styles.stack}>
                     {dayHours.intervals.map((interval, index) => (
                       <div key={index} className={pageStyles.htimes}>
-                        <input
-                          type="time"
-                          value={interval.from}
-                          aria-label={t("marketing:listBusiness.step3.opensAria", {
+                        <DatePicker
+                          mode="time"
+                          size="sm"
+                          label={t("marketing:listBusiness.step3.opensAria", {
                             day: dayLabel,
                           })}
-                          onChange={(event) =>
-                            setInterval(day.id, index, { from: event.target.value })
+                          value={interval.from || null}
+                          onChange={(value) =>
+                            setInterval(day.id, index, { from: value ?? "" })
                           }
                         />
                         <span className={pageStyles.dash}>–</span>
-                        <input
-                          type="time"
-                          value={interval.to}
-                          aria-label={t("marketing:listBusiness.step3.closesAria", {
+                        <DatePicker
+                          mode="time"
+                          size="sm"
+                          label={t("marketing:listBusiness.step3.closesAria", {
                             day: dayLabel,
                           })}
-                          onChange={(event) =>
-                            setInterval(day.id, index, { to: event.target.value })
+                          value={interval.to || null}
+                          onChange={(value) =>
+                            setInterval(day.id, index, { to: value ?? "" })
                           }
                         />
                         {isOvernight(interval) && interval.from && interval.to && (

@@ -1,6 +1,6 @@
 import { useId, useState, type FormEvent } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, DatePicker } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { newId, type IvaEntry } from "./ivaTracker.data";
@@ -93,16 +93,16 @@ export function IvaTrackerForm({ entries, setEntries }: IvaTrackerFormProps) {
             />
           </div>
           <div className={styles.field}>
-            <label className={styles.label} htmlFor={dateId}>
+            <label id={`${dateId}-label`} className={styles.label}>
               {t("economy:ivaTracker.form.dateLabel")}{" "}
               <span className={styles.req}>*</span>
             </label>
-            <input
+            <DatePicker
+              mode="date"
               id={dateId}
-              className={styles.input}
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
+              labelledBy={`${dateId}-label`}
+              value={date || null}
+              onChange={(value) => setDate(value ?? "")}
             />
           </div>
         </div>

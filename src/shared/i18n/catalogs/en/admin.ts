@@ -16,8 +16,9 @@ export const admin: Catalog = {
   "verifications.sub":
     "Review and adjust members' verification levels after a manual check.",
   "verifications.honesty":
-    "We never store identity documents or biometrics — an external provider runs the ID check and only returns a pass or fail. These records hold a level and its provenance, nothing more.",
+    "We never store identity documents or biometrics: an external provider runs the ID check and only returns a pass or fail. These records hold a level and its provenance, nothing more.",
   "verifications.via": "via {method} · {provider}",
+  "verifications.meta.unknown": "not on file",
   "verifications.setLevelLabel": "Set verification level",
   "verifications.applyCta": "Apply",
   "verifications.unknownMember": "Unknown member",
@@ -29,6 +30,149 @@ export const admin: Catalog = {
   "verifications.toast.error": "Couldn't update that verification",
   "verifications.loadError": "Couldn't load verifications",
   "verifications.empty": "No verification records yet.",
+  "verifications.tabs.all": "All",
+  "verifications.reviewCta": "Review",
+  "verifications.loadMore": "Load more",
+  "verifications.loadingMore": "Loading more…",
+  "verifications.search.placeholder": "Search by name",
+  "verifications.search.ariaLabel": "Search members by name",
+  "verifications.sort.label": "Sort",
+  "verifications.sort.recent": "Recently updated",
+  "verifications.sort.oldest": "Oldest updated",
+  "verifications.sort.level": "Highest level",
+
+  // ── Verification detail drawer (Task 9) ────────────────────────────────
+  "verifications.drawer.label": "Verification detail for {name}",
+  "verifications.drawer.provenanceLoading": "Checking history…",
+  "verifications.drawer.provenanceLabel": "Provenance",
+  "verifications.drawer.provenanceNone": "Not yet verified",
+  "verifications.drawer.provenanceEarned": "Member-earned",
+  "verifications.drawer.provenanceGranted": "Granted by {actor}",
+  "verifications.drawer.historyHeading": "Audit history",
+  "verifications.drawer.historyEmpty": "No history yet.",
+  "verifications.drawer.historySystemActor": "System",
+  "verifications.drawer.historyAction.submitted": "Submitted",
+  "verifications.drawer.historyAction.approved": "Approved",
+  "verifications.drawer.historyAction.rejected": "Rejected",
+  "verifications.drawer.historyAction.overridden": "Overridden",
+  "verifications.drawer.historyAction.downgraded": "Downgraded",
+  "verifications.drawer.historyAction.appealed": "Appealed",
+  "verifications.drawer.historyAction.withdrawn": "Withdrawn",
+  "verifications.drawer.signalsHeading": "Signals",
+  "verifications.drawer.signalsNote": "Signals arrive in a later update.",
+  "verifications.drawer.reasonLabel": "Reason",
+  "verifications.drawer.reasonPlaceholder": "Why is this level changing?",
+  "verifications.drawer.reasonRequiredHint":
+    "A reason is required when lowering the level.",
+  "verifications.drawer.liveOnlyTitle":
+    "Applying an override needs the live API. Try this outside demo mode.",
+  "verifications.drawer.applying": "Applying…",
+
+  // ── Review-queue segment + request drawer (Task 9) ─────────────────────
+  "verifications.segment.ariaLabel": "Verification workflow view",
+  "verifications.segment.reviewQueue": "Review queue",
+  "verifications.segment.directOverride": "Direct override",
+
+  "verifications.requests.tabs.pending": "Pending",
+  "verifications.requests.tabs.in_review": "In review",
+  "verifications.requests.tabs.approved": "Approved",
+  "verifications.requests.tabs.rejected": "Rejected",
+  "verifications.requests.tabs.appealing": "Appeals",
+  "verifications.requests.tabs.all": "All",
+
+  "verifications.requests.status.pending": "Pending",
+  "verifications.requests.status.in_review": "In review",
+  "verifications.requests.status.approved": "Approved",
+  "verifications.requests.status.rejected": "Rejected",
+  "verifications.requests.status.appealing": "Appealing",
+  "verifications.requests.status.withdrawn": "Withdrawn",
+
+  "verifications.requests.appealChip": "Appeal",
+  "verifications.requests.duplicateChip": "Duplicate",
+  "verifications.requests.duplicateChipTitle":
+    "This request shares a verification fingerprint with another account.",
+  "verifications.requests.submittedAt": "Submitted {when}",
+  "verifications.requests.empty": "No requests match this view yet.",
+  "verifications.requests.search.placeholder": "Search by name",
+  "verifications.requests.search.ariaLabel": "Search requests by member name",
+  "verifications.requests.sort.recent": "Newest submitted",
+  "verifications.requests.sort.oldest": "Oldest submitted",
+
+  "verifications.requests.drawer.label": "Request review for {name}",
+  "verifications.requests.drawer.contextHeading": "Their request",
+  "verifications.requests.drawer.contextEmpty": "They didn't share any context with this request.",
+  "verifications.requests.drawer.evidenceLabel": "Reference",
+  "verifications.requests.drawer.decisionHeading": "Previous decision",
+  "verifications.requests.drawer.reviewedBy": "reviewed by {actor}",
+  "verifications.requests.drawer.appealBanner":
+    "This member appealed a rejected request. Take a fresh look before deciding again.",
+  "verifications.requests.drawer.duplicateBanner":
+    "This person shares a verification fingerprint with {count} other account(s).",
+  "verifications.requests.drawer.signalsHeading": "Signals",
+  "verifications.requests.drawer.signalsEmpty": "No signals yet.",
+  "verifications.requests.drawer.signals.accountAge": "{days} days old",
+  "verifications.requests.drawer.signals.priorRejections":
+    "{count} prior rejection(s)",
+  "verifications.requests.drawer.signals.noPriorRejections":
+    "No prior rejections",
+  "verifications.requests.drawer.signals.duplicate":
+    "Shared fingerprint with {count} other account(s)",
+  "verifications.requests.drawer.signals.duplicateTitle":
+    "The member's identity-provider session reference is shared with at least one other account.",
+  "verifications.requests.drawer.reasonLabel": "Reason",
+  "verifications.requests.drawer.reasonPlaceholder":
+    "Share why, especially if you're declining.",
+  "verifications.requests.drawer.reasonRequiredHint":
+    "A reason is required to reject. Approving or marking in-review doesn't need one.",
+  "verifications.requests.drawer.notDecidableHint":
+    "This request isn't open for a new decision right now.",
+  "verifications.requests.drawer.markInReviewCta": "Mark in-review",
+  "verifications.requests.drawer.approveCta": "Approve",
+  "verifications.requests.drawer.rejectCta": "Reject",
+  "verifications.requests.drawer.deciding": "Saving…",
+
+  "verifications.requests.toast.approve": "Request approved. The member has been notified.",
+  "verifications.requests.toast.reject": "Request rejected. The member has been notified.",
+  "verifications.requests.toast.in_review": "Request marked in review.",
+
+  // ── Row selection + bulk actions + keyboard flow (Task 4) ───────────────
+  "verifications.requests.selectAll.ariaLabel": "Select all visible requests",
+  "verifications.requests.selectAll.label": "Select all visible",
+  "verifications.requests.selectRow.ariaLabel": "Select {name}",
+
+  "verifications.requests.bulk.ariaLabel": "Bulk actions",
+  "verifications.requests.bulk.selectedCount_one": "{count} selected",
+  "verifications.requests.bulk.selectedCount_other": "{count} selected",
+  "verifications.requests.bulk.approveCta": "Approve",
+  "verifications.requests.bulk.inReviewCta": "Mark in-review",
+  "verifications.requests.bulk.rejectCta": "Reject",
+  "verifications.requests.bulk.clearCta": "Clear",
+  "verifications.requests.bulk.capNote": "Selection capped at {cap} requests",
+  "verifications.requests.bulk.toast.success_one": "{count} request updated.",
+  "verifications.requests.bulk.toast.success_other": "{count} requests updated.",
+  "verifications.requests.bulk.toast.partial":
+    "{succeeded} updated, {failed} skipped.",
+  "verifications.requests.bulk.action.approve":
+    "Couldn't approve the selected requests",
+  "verifications.requests.bulk.action.inReview":
+    "Couldn't mark the selected requests in-review",
+  "verifications.requests.bulk.action.reject":
+    "Couldn't reject the selected requests",
+
+  "verifications.requests.bulk.confirmReject.title_one": "Reject {count} request?",
+  "verifications.requests.bulk.confirmReject.title_other":
+    "Reject {count} requests?",
+  "verifications.requests.bulk.confirmReject.body_one":
+    "This rejects the selected request and notifies the member. This can't be undone from here.",
+  "verifications.requests.bulk.confirmReject.body_other":
+    "This rejects all {count} selected requests and notifies each member. This can't be undone from here.",
+  "verifications.requests.bulk.confirmReject.reasonLabel": "Reason",
+  "verifications.requests.bulk.confirmReject.reasonPlaceholder":
+    "Share why, especially since every member selected will see it.",
+  "verifications.requests.bulk.confirmReject.confirmCta": "Reject requests",
+
+  "verifications.requests.keyboard.hint":
+    "Keyboard: J and K move focus between requests, A approves the focused one, R rejects it, and / jumps to search.",
 
   // ── Shared verbs, reused across many modals/drawers ───────────────────────
   "common.cancel": "Cancel",
@@ -1027,7 +1171,6 @@ export const admin: Catalog = {
   "communities.detail.foundedOnly": "Founded {founded}.",
   "communities.detail.healthChip": "Health {score} · {label}",
   "communities.detail.settingsCta": "Settings",
-  "communities.detail.settingsToast": "Community settings would open here",
   "communities.detail.supportBanner.title":
     "This community could use <em>a hand</em>.",
   "communities.detail.supportBanner.textAlone":
@@ -1084,11 +1227,6 @@ export const admin: Catalog = {
   "communities.settings.secondVouch.title": "Require a second vouch to join",
   "communities.settings.secondVouch.sub":
     "Slows growth, raises trust. Recommended for support spaces.",
-  // Shown, and the toggle disabled, when the community has no `join` data at
-  // all (live mode — see adminCommunities.adapters.ts) rather than silently
-  // rendering the toggle as "off" and claiming a state nobody actually knows.
-  "communities.settings.secondVouch.unavailableSub":
-    "Not available yet — the platform doesn't track this setting.",
   "communities.settings.secondVouch.onToast":
     "Second vouch now required to join",
   "communities.settings.secondVouch.offToast":
@@ -1097,15 +1235,10 @@ export const admin: Catalog = {
     "Auto-freeze new accounts on a doxxing report",
   "communities.settings.autoFreeze.sub":
     "Buys time for a human to review before harm spreads.",
-  // Shown, and the toggle disabled, always — there is no `autoFreeze` field
-  // anywhere yet (not even a mock one), unlike `join`/`code` which are just
-  // empty in live mode. Same "don't claim a state nobody knows" reasoning as
-  // secondVouch.unavailableSub above.
-  "communities.settings.autoFreeze.unavailableSub":
-    "Not available yet — the platform doesn't track this setting.",
   "communities.settings.autoFreeze.onToast":
     "Auto-freeze on doxxing reports enabled",
   "communities.settings.autoFreeze.offToast": "Auto-freeze disabled",
+  "communities.settings.saveErrorToast": "That didn't save. Try again.",
   "communities.settings.codeOfCare": "Code of care",
   "communities.settings.viewCta": "View",
   "communities.settings.codeToast": "The code of care would open here",
@@ -1113,11 +1246,11 @@ export const admin: Catalog = {
   "communities.settings.visibility.private": "Private",
   "communities.settings.visibility.public": "Public",
   "communities.settings.visibility.network": "Network-only",
+  "communities.settings.status": "Status",
+  "communities.settings.frozenChip": "Frozen · under review",
 
   "communities.health.modalTitle": "Why <em>{score}</em>?",
   "communities.health.howCalculatedCta": "How it's calculated",
-  "communities.health.howCalculatedToast":
-    "Health is a weighted blend of four signals, recalculated nightly",
   "communities.health.offerSupportCta": "Offer support",
   "communities.health.closeCta": "Close",
   "communities.health.notMeasured": "Not measured yet",
@@ -1141,6 +1274,27 @@ export const admin: Catalog = {
     "Healthy overall, with one or two areas worth a gentle eye.",
   "communities.health.narrative.dragging":
     "Sentiment and safety load are dragging the score down. This is exactly where a little staff support goes a long way.",
+
+  "communities.health.method.title": "How health is calculated",
+  "communities.health.method.formula":
+    "Health blends four signals into one score, then adjusts for how big your community is. It refreshes every night.",
+  "communities.health.method.signalsHeading": "What goes in",
+  "communities.health.method.weightNotCounted": "Not counted yet",
+  "communities.health.method.exampleTitle": "How this score adds up",
+  "communities.health.method.exampleSubtotal": "Signals blended",
+  "communities.health.method.exampleSizeAdjust": "Adjusted for community size",
+  "communities.health.method.examplePublished": "Published health",
+  "communities.health.method.exampleNote":
+    "Weights shown are illustrative. The exact blend and the size adjustment are worked out nightly on our servers, so read this as the shape of the maths, not the precise formula.",
+  "communities.health.method.sizeNote":
+    "Community size matters. A small space is judged gently, so a quiet week or a single open report does not sink the score the way it would in a community many times its size.",
+  "communities.health.method.bandsHeading": "Where the score sits",
+  "communities.health.method.band.strong": "Strong, 90 and up",
+  "communities.health.method.band.healthy": "Healthy, 78 to 89",
+  "communities.health.method.band.needsHand": "Needs a hand, below 78",
+  "communities.health.method.bandCurrent": "You're here",
+  "communities.health.method.backCta": "Back",
+  "communities.health.method.doneCta": "Got it",
 
   "communities.support.modalTitle": "Lend <em>{name}</em> a hand",
   "communities.support.intro":
@@ -1198,6 +1352,46 @@ export const admin: Catalog = {
   "governance.finances.empty":
     "No published finance report yet — figures will appear here once one is published.",
 
+  "governance.finances.provenance.seeded": "Unverified",
+  "governance.finances.provenance.manual": "Edited",
+  "governance.finances.provenance.computed": "Computed",
+  "governance.finances.provenance.seeded.hint":
+    "Seeded placeholder. Not yet checked against real figures.",
+  "governance.finances.provenance.manual.hint":
+    "Entered by an admin. {editor} on {date}.",
+  "governance.finances.provenance.manual.hintPlain": "Entered by an admin.",
+  "governance.finances.provenance.computed.hint":
+    "Calculated from income minus spending. Not edited directly.",
+  "governance.finances.edit.cta": "Edit figures",
+  "governance.finances.edit.lastEdited": "Last corrected by {name} on {date}",
+  "governance.finances.edit.neverEdited":
+    "No figure has been corrected yet. Every value is seeded.",
+  "governance.finances.edit.eyebrow": "Finances",
+  "governance.finances.edit.title": "Correct the <em>figures</em>",
+  "governance.finances.edit.sub":
+    "Fix any number that is wrong. Every change is recorded, and the figure is marked as admin-entered.",
+  "governance.finances.edit.section.headline": "Headline figures",
+  "governance.finances.edit.section.income": "Income lines",
+  "governance.finances.edit.section.spend": "Spending lines",
+  "governance.finances.edit.section.note": "Reason (optional)",
+  "governance.finances.edit.field.mrr": "Sustainer MRR (€)",
+  "governance.finances.edit.field.sustainerCount": "Sustainer count",
+  "governance.finances.edit.field.solidarityRate": "Solidarity access (%)",
+  "governance.finances.edit.field.incomeTotal": "Total monthly income (€)",
+  "governance.finances.edit.field.expenseTotal": "Total monthly spending (€)",
+  "governance.finances.edit.field.surplus": "Monthly surplus (€)",
+  "governance.finances.edit.field.surplusHint":
+    "Calculated automatically: income minus spending.",
+  "governance.finances.edit.field.lineAmount": "Amount",
+  "governance.finances.edit.field.lineNote": "Note",
+  "governance.finances.edit.notePlaceholder":
+    "Why are you changing these? Saved to the audit trail.",
+  "governance.finances.edit.save": "Save corrections",
+  "governance.finances.edit.cancel": "Cancel",
+  "governance.finances.edit.saved": "Figures updated.",
+  "governance.finances.edit.error": "Could not save. Please try again.",
+  "governance.finances.edit.noChanges": "Nothing changed.",
+
   "governance.ledger.moderatorHonoraria": "Moderator honoraria",
   "governance.ledger.platformTools": "Platform & tools",
   "governance.ledger.mutualAid": "Mutual aid & micro-grants",
@@ -1217,7 +1411,7 @@ export const admin: Catalog = {
 
   "governance.chart.title": "Income vs spending <em>by quarter</em>",
   "governance.chart.sub":
-    "The gap is surplus — it goes straight to the reserve.",
+    "The gap is surplus. It goes straight to the reserve.",
   "governance.chart.ariaLabel":
     "Grouped bar chart of income versus spending per quarter, in thousands of euros",
   "governance.chart.legend.income": "Income",
@@ -2617,6 +2811,17 @@ export const admin: Catalog = {
   "landing.hidden.unpublished": "Hidden — unpublished",
   "landing.hidden.not_public": "Hidden — no longer public",
   "landing.hidden.deleted": "Hidden — profile deleted",
+
+  // ── Live homepage preview (AdminLandingPreview) ─────────────────────────
+  "landing.preview.eyebrow": "Homepage preview",
+  "landing.preview.note":
+    "How this section looks on the signed-out homepage. It updates as you edit.",
+  "landing.preview.loading": "Building the preview…",
+  "landing.preview.empty":
+    "Nothing featured here yet. Add someone on the left to see the homepage preview.",
+  "landing.preview.pendingTitle": "Added, details still loading",
+  "landing.preview.pendingNote":
+    "These show as full cards once their live data loads.",
 
   // ── Press kit (/admin/press-kit) ──────────────────────────────────────────
   "pressKit.header.eyebrow": "Public site",

@@ -1,6 +1,6 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 import { FiZap, FiSettings, FiArrowRight } from "react-icons/fi";
-import { FadeIn } from "../../shared/components/ui";
+import { FadeIn, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SUMMARY, PAYOUTS, BREAKDOWN } from "./studioPayouts.data";
@@ -278,6 +278,7 @@ export function PayoutsList({
 export function PayoutsSidebar() {
   const { t } = useTranslation();
   const fieldId = useId();
+  const [threshold, setThreshold] = useState("5");
   return (
     <div className={s.col}>
       <div className={s.sideCard}>
@@ -339,14 +340,25 @@ export function PayoutsSidebar() {
           <label htmlFor={`${fieldId}-threshold`}>
             {t("studio:payouts.preferences.threshold.label")}
           </label>
-          <select
+          <Select
             id={`${fieldId}-threshold`}
-            defaultValue={t("studio:payouts.preferences.threshold.opt5")}
-          >
-            <option>{t("studio:payouts.preferences.threshold.opt5")}</option>
-            <option>{t("studio:payouts.preferences.threshold.opt20")}</option>
-            <option>{t("studio:payouts.preferences.threshold.opt100")}</option>
-          </select>
+            options={[
+              {
+                value: "5",
+                label: t("studio:payouts.preferences.threshold.opt5"),
+              },
+              {
+                value: "20",
+                label: t("studio:payouts.preferences.threshold.opt20"),
+              },
+              {
+                value: "100",
+                label: t("studio:payouts.preferences.threshold.opt100"),
+              },
+            ]}
+            value={threshold}
+            onChange={(value) => setThreshold(value ?? "5")}
+          />
           <span className={s.fhint}>
             {t("studio:payouts.preferences.threshold.hint")}
           </span>

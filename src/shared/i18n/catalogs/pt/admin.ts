@@ -22,8 +22,9 @@ export const admin: Catalog = {
   "verifications.sub":
     "Rever e ajustar o nível de verificação das pessoas após uma revisão manual.",
   "verifications.honesty":
-    "Nunca guardamos documentos de identidade nem dados biométricos — um parceiro externo faz a verificação e só devolve um passou ou não passou. Estes registos guardam um nível e a sua origem, nada mais.",
+    "Nunca guardamos documentos de identidade nem dados biométricos: um parceiro externo faz a verificação e só devolve um passou ou não passou. Estes registos guardam um nível e a sua origem, nada mais.",
   "verifications.via": "via {method} · {provider}",
+  "verifications.meta.unknown": "sem registo",
   "verifications.setLevelLabel": "Definir nível de verificação",
   "verifications.applyCta": "Aplicar",
   "verifications.unknownMember": "Pessoa desconhecida",
@@ -35,6 +36,158 @@ export const admin: Catalog = {
   "verifications.toast.error": "Não foi possível atualizar essa verificação",
   "verifications.loadError": "Não foi possível carregar as verificações",
   "verifications.empty": "Ainda não há registos de verificação.",
+  "verifications.tabs.all": "Todos",
+  "verifications.reviewCta": "Rever",
+  "verifications.loadMore": "Carregar mais",
+  "verifications.loadingMore": "A carregar mais…",
+  "verifications.search.placeholder": "Procurar por nome",
+  "verifications.search.ariaLabel": "Procurar pessoas por nome",
+  "verifications.sort.label": "Ordenar",
+  "verifications.sort.recent": "Atualizado recentemente",
+  "verifications.sort.oldest": "Atualizado há mais tempo",
+  "verifications.sort.level": "Nível mais alto",
+
+  // ── Gaveta de detalhe da verificação (Tarefa 9) ────────────────────────
+  "verifications.drawer.label": "Detalhe de verificação de {name}",
+  "verifications.drawer.provenanceLoading": "A verificar histórico…",
+  "verifications.drawer.provenanceLabel": "Proveniência",
+  "verifications.drawer.provenanceNone": "Ainda não verificado",
+  "verifications.drawer.provenanceEarned": "Obtido pela própria pessoa",
+  "verifications.drawer.provenanceGranted": "Concedido por {actor}",
+  "verifications.drawer.historyHeading": "Histórico de auditoria",
+  "verifications.drawer.historyEmpty": "Ainda não há histórico.",
+  "verifications.drawer.historySystemActor": "Sistema",
+  "verifications.drawer.historyAction.submitted": "Submetido",
+  "verifications.drawer.historyAction.approved": "Aprovado",
+  "verifications.drawer.historyAction.rejected": "Rejeitado",
+  "verifications.drawer.historyAction.overridden": "Substituído manualmente",
+  "verifications.drawer.historyAction.downgraded": "Nível reduzido",
+  "verifications.drawer.historyAction.appealed": "Recurso apresentado",
+  "verifications.drawer.historyAction.withdrawn": "Retirado",
+  "verifications.drawer.signalsHeading": "Sinais",
+  "verifications.drawer.signalsNote":
+    "Os sinais chegam numa atualização futura.",
+  "verifications.drawer.reasonLabel": "Motivo",
+  "verifications.drawer.reasonPlaceholder": "Porque está o nível a mudar?",
+  "verifications.drawer.reasonRequiredHint":
+    "É necessário um motivo para reduzir o nível.",
+  "verifications.drawer.liveOnlyTitle":
+    "Aplicar uma substituição precisa da API em direto. Experimente fora do modo demonstração.",
+  "verifications.drawer.applying": "A aplicar…",
+
+  // ── Segmento de fila de revisão + gaveta de pedido (Tarefa 9) ──────────
+  "verifications.segment.ariaLabel": "Vista do fluxo de verificação",
+  "verifications.segment.reviewQueue": "Fila de revisão",
+  "verifications.segment.directOverride": "Substituição direta",
+
+  "verifications.requests.tabs.pending": "Pendentes",
+  "verifications.requests.tabs.in_review": "Em revisão",
+  "verifications.requests.tabs.approved": "Aprovados",
+  "verifications.requests.tabs.rejected": "Rejeitados",
+  "verifications.requests.tabs.appealing": "Recursos",
+  "verifications.requests.tabs.all": "Todos",
+
+  "verifications.requests.status.pending": "Pendente",
+  "verifications.requests.status.in_review": "Em revisão",
+  "verifications.requests.status.approved": "Aprovado",
+  "verifications.requests.status.rejected": "Rejeitado",
+  "verifications.requests.status.appealing": "Em recurso",
+  "verifications.requests.status.withdrawn": "Retirado",
+
+  "verifications.requests.appealChip": "Recurso",
+  "verifications.requests.duplicateChip": "Duplicado",
+  "verifications.requests.duplicateChipTitle":
+    "Este pedido partilha uma impressão digital de verificação com outra conta.",
+  "verifications.requests.submittedAt": "Submetido {when}",
+  "verifications.requests.empty": "Ainda não há pedidos nesta vista.",
+  "verifications.requests.search.placeholder": "Procurar por nome",
+  "verifications.requests.search.ariaLabel":
+    "Procurar pedidos pelo nome da pessoa",
+  "verifications.requests.sort.recent": "Submetidos mais recentemente",
+  "verifications.requests.sort.oldest": "Submetidos há mais tempo",
+
+  "verifications.requests.drawer.label": "Revisão do pedido de {name}",
+  "verifications.requests.drawer.contextHeading": "O pedido da pessoa",
+  "verifications.requests.drawer.contextEmpty":
+    "Não partilhou contexto com este pedido.",
+  "verifications.requests.drawer.evidenceLabel": "Referência",
+  "verifications.requests.drawer.decisionHeading": "Decisão anterior",
+  "verifications.requests.drawer.reviewedBy": "revisto por {actor}",
+  "verifications.requests.drawer.appealBanner":
+    "Esta pessoa apresentou recurso de um pedido rejeitado. Reveja com olhos novos antes de decidir de novo.",
+  "verifications.requests.drawer.duplicateBanner":
+    "Esta pessoa partilha uma impressão digital de verificação com {count} outra(s) conta(s).",
+  "verifications.requests.drawer.signalsHeading": "Sinais",
+  "verifications.requests.drawer.signalsEmpty": "Ainda sem sinais.",
+  "verifications.requests.drawer.signals.accountAge": "Conta com {days} dias",
+  "verifications.requests.drawer.signals.priorRejections":
+    "{count} rejeição(ões) anterior(es)",
+  "verifications.requests.drawer.signals.noPriorRejections":
+    "Sem rejeições anteriores",
+  "verifications.requests.drawer.signals.duplicate":
+    "Impressão digital partilhada com {count} outra(s) conta(s)",
+  "verifications.requests.drawer.signals.duplicateTitle":
+    "A referência de sessão do fornecedor de identidade desta pessoa é partilhada com pelo menos outra conta.",
+  "verifications.requests.drawer.reasonLabel": "Motivo",
+  "verifications.requests.drawer.reasonPlaceholder":
+    "Partilhe o porquê, sobretudo se estiver a rejeitar.",
+  "verifications.requests.drawer.reasonRequiredHint":
+    "É necessário um motivo para rejeitar. Aprovar ou marcar em revisão não precisa de um.",
+  "verifications.requests.drawer.notDecidableHint":
+    "Este pedido não está aberto a uma nova decisão neste momento.",
+  "verifications.requests.drawer.markInReviewCta": "Marcar em revisão",
+  "verifications.requests.drawer.approveCta": "Aprovar",
+  "verifications.requests.drawer.rejectCta": "Rejeitar",
+  "verifications.requests.drawer.deciding": "A guardar…",
+
+  "verifications.requests.toast.approve":
+    "Pedido aprovado. A pessoa foi notificada.",
+  "verifications.requests.toast.reject":
+    "Pedido rejeitado. A pessoa foi notificada.",
+  "verifications.requests.toast.in_review": "Pedido marcado como em revisão.",
+
+  // ── Seleção de linhas + ações em massa + fluxo de teclado (Tarefa 4) ────
+  "verifications.requests.selectAll.ariaLabel":
+    "Selecionar todos os pedidos visíveis",
+  "verifications.requests.selectAll.label": "Selecionar todos os visíveis",
+  "verifications.requests.selectRow.ariaLabel": "Selecionar {name}",
+
+  "verifications.requests.bulk.ariaLabel": "Ações em massa",
+  "verifications.requests.bulk.selectedCount_one": "{count} selecionado",
+  "verifications.requests.bulk.selectedCount_other": "{count} selecionados",
+  "verifications.requests.bulk.approveCta": "Aprovar",
+  "verifications.requests.bulk.inReviewCta": "Marcar em revisão",
+  "verifications.requests.bulk.rejectCta": "Rejeitar",
+  "verifications.requests.bulk.clearCta": "Limpar",
+  "verifications.requests.bulk.capNote": "Seleção limitada a {cap} pedidos",
+  "verifications.requests.bulk.toast.success_one":
+    "{count} pedido atualizado.",
+  "verifications.requests.bulk.toast.success_other":
+    "{count} pedidos atualizados.",
+  "verifications.requests.bulk.toast.partial":
+    "{succeeded} atualizados, {failed} não foram.",
+  "verifications.requests.bulk.action.approve":
+    "Não foi possível aprovar os pedidos selecionados",
+  "verifications.requests.bulk.action.inReview":
+    "Não foi possível marcar os pedidos selecionados como em revisão",
+  "verifications.requests.bulk.action.reject":
+    "Não foi possível rejeitar os pedidos selecionados",
+
+  "verifications.requests.bulk.confirmReject.title_one":
+    "Rejeitar {count} pedido?",
+  "verifications.requests.bulk.confirmReject.title_other":
+    "Rejeitar {count} pedidos?",
+  "verifications.requests.bulk.confirmReject.body_one":
+    "Isto rejeita o pedido selecionado e notifica a pessoa. Não pode ser desfeito a partir daqui.",
+  "verifications.requests.bulk.confirmReject.body_other":
+    "Isto rejeita os {count} pedidos selecionados e notifica cada pessoa. Não pode ser desfeito a partir daqui.",
+  "verifications.requests.bulk.confirmReject.reasonLabel": "Motivo",
+  "verifications.requests.bulk.confirmReject.reasonPlaceholder":
+    "Partilhe o porquê, sobretudo porque todas as pessoas selecionadas vão ver isto.",
+  "verifications.requests.bulk.confirmReject.confirmCta": "Rejeitar pedidos",
+
+  "verifications.requests.keyboard.hint":
+    "Teclado: J e K movem o foco entre pedidos, A aprova o pedido em foco, R rejeita-o, e / salta para a pesquisa.",
 
   // ── Verbos partilhados, reutilizados em vários modais/gavetas ─────────────
   "common.cancel": "Cancelar",
@@ -1032,8 +1185,6 @@ export const admin: Catalog = {
   "communities.detail.foundedOnly": "Fundada em {founded}.",
   "communities.detail.healthChip": "Saúde {score} · {label}",
   "communities.detail.settingsCta": "Definições",
-  "communities.detail.settingsToast":
-    "As definições da comunidade abririam aqui",
   "communities.detail.supportBanner.title":
     "Esta comunidade podia usar <em>uma ajuda</em>.",
   "communities.detail.supportBanner.textAlone":
@@ -1094,8 +1245,6 @@ export const admin: Catalog = {
     "Exigir um segundo aval para entrar",
   "communities.settings.secondVouch.sub":
     "Torna o crescimento mais lento, aumenta a confiança. Recomendado para espaços de apoio.",
-  "communities.settings.secondVouch.unavailableSub":
-    "Ainda não disponível — a plataforma não regista esta definição.",
   "communities.settings.secondVouch.onToast":
     "Segundo aval agora obrigatório para entrar",
   "communities.settings.secondVouch.offToast":
@@ -1104,12 +1253,12 @@ export const admin: Catalog = {
     "Congelar automaticamente contas novas numa denúncia de doxxing",
   "communities.settings.autoFreeze.sub":
     "Ganha tempo para uma pessoa rever antes de o dano se espalhar.",
-  "communities.settings.autoFreeze.unavailableSub":
-    "Ainda não disponível — a plataforma não regista esta definição.",
   "communities.settings.autoFreeze.onToast":
     "Congelamento automático em denúncias de doxxing ativado",
   "communities.settings.autoFreeze.offToast":
     "Congelamento automático desativado",
+  "communities.settings.saveErrorToast":
+    "Não foi possível guardar. Tenta novamente.",
   "communities.settings.codeOfCare": "Código de cuidado",
   "communities.settings.viewCta": "Ver",
   "communities.settings.codeToast": "O código de cuidado abriria aqui",
@@ -1117,11 +1266,11 @@ export const admin: Catalog = {
   "communities.settings.visibility.private": "Privada",
   "communities.settings.visibility.public": "Pública",
   "communities.settings.visibility.network": "Só na rede",
+  "communities.settings.status": "Estado",
+  "communities.settings.frozenChip": "Congelada · em revisão",
 
   "communities.health.modalTitle": "Porquê <em>{score}</em>?",
   "communities.health.howCalculatedCta": "Como é calculada",
-  "communities.health.howCalculatedToast":
-    "A saúde é uma combinação ponderada de quatro sinais, recalculada todas as noites",
   "communities.health.offerSupportCta": "Oferecer apoio",
   "communities.health.closeCta": "Fechar",
   "communities.health.notMeasured": "Ainda por medir",
@@ -1146,6 +1295,27 @@ export const admin: Catalog = {
     "Saudável no geral, com uma ou duas áreas a merecer um olhar atento.",
   "communities.health.narrative.dragging":
     "O sentimento e a carga de segurança estão a puxar a pontuação para baixo. É exatamente aqui que um pouco de apoio da equipa faz toda a diferença.",
+
+  "communities.health.method.title": "Como a saúde é calculada",
+  "communities.health.method.formula":
+    "A saúde combina quatro sinais numa única pontuação e depois ajusta ao tamanho da tua comunidade. É atualizada todas as noites.",
+  "communities.health.method.signalsHeading": "O que entra na conta",
+  "communities.health.method.weightNotCounted": "Ainda não conta",
+  "communities.health.method.exampleTitle": "Como esta pontuação se soma",
+  "communities.health.method.exampleSubtotal": "Sinais combinados",
+  "communities.health.method.exampleSizeAdjust": "Ajuste ao tamanho da comunidade",
+  "communities.health.method.examplePublished": "Saúde publicada",
+  "communities.health.method.exampleNote":
+    "Os pesos apresentados são ilustrativos. A combinação exata e o ajuste ao tamanho são calculados todas as noites nos nossos servidores, por isso lê isto como a forma das contas, não a fórmula exata.",
+  "communities.health.method.sizeNote":
+    "O tamanho da comunidade importa. Uma comunidade pequena é avaliada com brandura, por isso uma semana calma ou uma única denúncia em aberto não afunda a pontuação como afundaria numa comunidade muitas vezes maior.",
+  "communities.health.method.bandsHeading": "Onde a pontuação se situa",
+  "communities.health.method.band.strong": "Forte, 90 ou mais",
+  "communities.health.method.band.healthy": "Saudável, 78 a 89",
+  "communities.health.method.band.needsHand": "Precisa de ajuda, abaixo de 78",
+  "communities.health.method.bandCurrent": "Estás aqui",
+  "communities.health.method.backCta": "Voltar",
+  "communities.health.method.doneCta": "Percebido",
 
   "communities.support.modalTitle": "Dar uma ajuda a <em>{name}</em>",
   "communities.support.intro":
@@ -1206,6 +1376,47 @@ export const admin: Catalog = {
   "governance.finances.empty":
     "Ainda sem relatório financeiro publicado — os valores aparecem aqui assim que um for publicado.",
 
+  "governance.finances.provenance.seeded": "Por verificar",
+  "governance.finances.provenance.manual": "Editado",
+  "governance.finances.provenance.computed": "Calculado",
+  "governance.finances.provenance.seeded.hint":
+    "Valor de exemplo. Ainda não confirmado com os números reais.",
+  "governance.finances.provenance.manual.hint":
+    "Introduzido por um administrador. {editor} em {date}.",
+  "governance.finances.provenance.manual.hintPlain":
+    "Introduzido por um administrador.",
+  "governance.finances.provenance.computed.hint":
+    "Calculado a partir da receita menos a despesa. Não é editado diretamente.",
+  "governance.finances.edit.cta": "Editar valores",
+  "governance.finances.edit.lastEdited": "Última correção por {name} em {date}",
+  "governance.finances.edit.neverEdited":
+    "Ainda nenhum valor foi corrigido. Todos são valores de exemplo.",
+  "governance.finances.edit.eyebrow": "Finanças",
+  "governance.finances.edit.title": "Corrigir os <em>valores</em>",
+  "governance.finances.edit.sub":
+    "Corrija qualquer número errado. Cada alteração é registada, e o valor passa a estar marcado como introduzido por um administrador.",
+  "governance.finances.edit.section.headline": "Valores principais",
+  "governance.finances.edit.section.income": "Linhas de receita",
+  "governance.finances.edit.section.spend": "Linhas de despesa",
+  "governance.finances.edit.section.note": "Motivo (opcional)",
+  "governance.finances.edit.field.mrr": "MRR de apoiantes (€)",
+  "governance.finances.edit.field.sustainerCount": "Número de apoiantes",
+  "governance.finances.edit.field.solidarityRate": "Acesso solidário (%)",
+  "governance.finances.edit.field.incomeTotal": "Receita mensal total (€)",
+  "governance.finances.edit.field.expenseTotal": "Despesa mensal total (€)",
+  "governance.finances.edit.field.surplus": "Excedente mensal (€)",
+  "governance.finances.edit.field.surplusHint":
+    "Calculado automaticamente: receita menos despesa.",
+  "governance.finances.edit.field.lineAmount": "Valor",
+  "governance.finances.edit.field.lineNote": "Nota",
+  "governance.finances.edit.notePlaceholder":
+    "Porque está a alterar estes valores? Guardado no registo de auditoria.",
+  "governance.finances.edit.save": "Guardar correções",
+  "governance.finances.edit.cancel": "Cancelar",
+  "governance.finances.edit.saved": "Valores atualizados.",
+  "governance.finances.edit.error": "Não foi possível guardar. Tente novamente.",
+  "governance.finances.edit.noChanges": "Nada foi alterado.",
+
   "governance.ledger.moderatorHonoraria": "Honorários de moderação",
   "governance.ledger.platformTools": "Plataforma e ferramentas",
   "governance.ledger.mutualAid": "Entreajuda e microapoios",
@@ -1225,7 +1436,7 @@ export const admin: Catalog = {
 
   "governance.chart.title": "Receita vs. despesa <em>por trimestre</em>",
   "governance.chart.sub":
-    "A diferença é o excedente — vai diretamente para a reserva.",
+    "A diferença é o excedente. Vai diretamente para a reserva.",
   "governance.chart.ariaLabel":
     "Gráfico de barras agrupadas de receita versus despesa por trimestre, em milhares de euros",
   "governance.chart.legend.income": "Receita",
@@ -2643,6 +2854,17 @@ export const admin: Catalog = {
   "landing.hidden.unpublished": "Oculto — despublicado",
   "landing.hidden.not_public": "Oculto — já não é público",
   "landing.hidden.deleted": "Oculto — perfil eliminado",
+
+  // ── Pré-visualização da página inicial (AdminLandingPreview) ────────────
+  "landing.preview.eyebrow": "Pré-visualização da página inicial",
+  "landing.preview.note":
+    "Como esta secção aparece na página inicial para quem não tem sessão. Atualiza à medida que editas.",
+  "landing.preview.loading": "A montar a pré-visualização…",
+  "landing.preview.empty":
+    "Ainda não há nada em destaque. Adiciona alguém à esquerda para veres a pré-visualização.",
+  "landing.preview.pendingTitle": "Adicionado, detalhes ainda a carregar",
+  "landing.preview.pendingNote":
+    "Aparecem como cartões completos assim que os seus dados reais carregarem.",
 
   // ── Kit de imprensa (/admin/press-kit) ────────────────────────────────────
   "pressKit.header.eyebrow": "Site público",

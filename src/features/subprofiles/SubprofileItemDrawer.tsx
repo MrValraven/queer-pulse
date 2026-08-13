@@ -1,17 +1,24 @@
 import { useId, useState } from "react";
 import { createPortal } from "react-dom";
-import { FiX } from "react-icons/fi";
+import { FiClock, FiX } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
   SubprofileItemView,
   SubprofileSectionView,
+  SubprofileView,
 } from "./api/subprofiles.adapters";
 import { SubprofileItemDrawerFields } from "./SubprofileItemDrawerFields";
 import { useDrawerDismiss } from "./useDrawerDismiss";
+import { useSubprofileEditorContext } from "./subprofileEditorContext";
+import { ProtectWorkSection } from "./rights/ProtectWorkSection";
+import { ItemRevisionHistoryModal } from "./rights/ItemRevisionHistoryModal";
 import styles from "./SubprofileEditor.module.css";
 
 interface SubprofileItemDrawerProps {
+  /** The persona whose item this is — threaded down to the "History" modal,
+   *  which needs it to fetch/restore this item's revisions (Task 10). */
+  subprofileId: string;
   section: SubprofileSectionView;
   /** Baseline draft — either a copy of the row being edited, or
    *  `emptyItem(section.section)` for a new item (see `SubprofileSectionEditor`). */
@@ -19,6 +26,9 @@ interface SubprofileItemDrawerProps {
   isNew: boolean;
   /** Whether this section supports a spotlight item at all (false for `links`). */
   canFeature: boolean;
+  /** The persona's display name, threaded down for the "Protect this work"
+   *  section's authorship record (only rendered for a saved item, see below). */
+  authorName: string;
   onSave: (item: SubprofileItemView) => void;
   onClose: () => void;
 }
@@ -38,17 +48,36 @@ interface SubprofileItemDrawerProps {
  * it commits the saved draft into `rows`, then persists via `replaceSection`.
  */
 export function SubprofileItemDrawer({
+  subprofileId,
   section,
   item,
   isNew,
   canFeature,
+  authorName,
   onSave,
   onClose,
 }: SubprofileItemDrawerProps) {
   const { t } = useTranslation();
+  const { reseedSection } = useSubprofileEditorContext();
   const [draft, setDraft] = useState(item);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const dialogRef = useDrawerDismiss(onClose);
   const titleId = useId();
+
+  // A restore rewrites the saved item server-side, which the drawer's local
+  // `draft` state has no way to pick up, so a restore closes the history
+  // modal AND this drawer together, rather than leaving a stale draft on
+  // screen. It also carries the freshly-refetched persona (see
+  // `useRestoreItemRevision`, `null` in demo mode where there is nothing to
+  // reseed) straight into `reseedSection`, so the section list + docked
+  // preview reflect the restore immediately and a later "Save all" reads the
+  // restored rows as the baseline instead of PUTting the stale pre-restore
+  // ones back over it.
+  function closeHistoryAndDrawer(subprofile: SubprofileView | null) {
+    if (subprofile) reseedSection(section.section, subprofile);
+    setHistoryOpen(false);
+    onClose();
+  }
 
   function patch(p: Partial<SubprofileItemView>) {
     setDraft((cur) => ({ ...cur, ...p }));
@@ -78,14 +107,28 @@ export function SubprofileItemDrawer({
       >
         <div className="drawer-head">
           <h2 id={titleId}>{t(titleKey, { section: t(section.labelKey) })}</h2>
-          <button
-            type="button"
-            className={styles.smallBtn}
-            onClick={onClose}
-            aria-label={t("shared:modal.close")}
-          >
-            <FiX size={16} aria-hidden />
-          </button>
+          <div className={styles.headActions}>
+            {/* History (Task 10): same !isNew guard as ProtectWorkSection below
+                — an unsaved draft has no revisions to show yet. */}
+            {!isNew && (
+              <button
+                type="button"
+                className={styles.smallBtn}
+                onClick={() => setHistoryOpen(true)}
+              >
+                <FiClock size={14} aria-hidden />
+                {t("subprofiles:history.button")}
+              </button>
+            )}
+            <button
+              type="button"
+              className={styles.smallBtn}
+              onClick={onClose}
+              aria-label={t("shared:modal.close")}
+            >
+              <FiX size={16} aria-hidden />
+            </button>
+          </div>
         </div>
 
         <div className="drawer-body">
@@ -112,6 +155,15 @@ export function SubprofileItemDrawer({
               )}
             </button>
           )}
+          {/* Owner-only "Protect this work" (Task 5): only meaningful once the
+              item has a real, server-assigned `createdAt`. Guard on `isNew`,
+              the drawer's own new-vs-existing signal, not on `createdAt`
+              itself: an unsaved draft's `createdAt` is just a client-stamped
+              placeholder from `emptyItem`, so guarding on the field's
+              truthiness alone would wrongly show this for a brand-new item. */}
+          {!isNew && (
+            <ProtectWorkSection item={draft} authorName={authorName} />
+          )}
         </div>
 
         <div className="drawer-foot">
@@ -131,6 +183,18 @@ export function SubprofileItemDrawer({
           </Button>
         </div>
       </div>
+
+      {/* Portals itself to document.body via the shared `Modal` primitive, so
+          nesting it here (inside this drawer's own portal) is harmless. */}
+      {historyOpen && (
+        <ItemRevisionHistoryModal
+          subprofileId={subprofileId}
+          itemId={item.id}
+          section={section.section}
+          onClose={() => setHistoryOpen(false)}
+          onRestored={closeHistoryAndDrawer}
+        />
+      )}
     </div>,
     document.body,
   );

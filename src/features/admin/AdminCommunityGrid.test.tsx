@@ -36,6 +36,8 @@ function makeCommunity(slug: string): Community {
     tone: "jade",
     tag: "Test tag",
     description: "A test community.",
+    requiresSecondVouch: false,
+    autoFreezeOnReports: false,
     members: "100",
     activity: "Steady",
     activePercent: 50,

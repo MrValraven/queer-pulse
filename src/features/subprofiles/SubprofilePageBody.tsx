@@ -122,9 +122,16 @@ export function SubprofilePageBody({
                     slot="spotlight"
                     mode={mode}
                     featured={data.featured}
+                    authorName={data.displayName}
                   />
                 ) : (
-                  <SubprofileSpotlight item={data.featured} skin={skin} mode={mode} accent={data.accent} />
+                  <SubprofileSpotlight
+                    item={data.featured}
+                    skin={skin}
+                    mode={mode}
+                    accent={data.accent}
+                    authorName={data.displayName}
+                  />
                 ))}
 
               <SubprofileSections

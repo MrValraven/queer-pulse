@@ -1,5 +1,6 @@
 import { useId } from "react";
 import { FiZap } from "react-icons/fi";
+import { Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { BENEFITS, CURRENCIES, RATE_PER } from "./postJob.data";
@@ -40,16 +41,12 @@ export function PostJobStepPay({ form }: { form: PostJobForm }) {
             <label className={styles.label} htmlFor={`${fieldId}-currency`}>
               {t("economy:postJob.step3.currency")}
             </label>
-            <select
+            <Select
               id={`${fieldId}-currency`}
-              className={styles.select}
+              options={CURRENCIES.map((c) => ({ value: c, label: c }))}
               value={state.currency}
-              onChange={(e) => patch({ currency: e.target.value })}
-            >
-              {CURRENCIES.map((c) => (
-                <option key={c}>{c}</option>
-              ))}
-            </select>
+              onChange={(value) => patch({ currency: value ?? "" })}
+            />
           </div>
           <div className={styles.field} style={{ marginBottom: 0 }}>
             <label className={styles.label} htmlFor={`${fieldId}-min`}>
@@ -84,18 +81,15 @@ export function PostJobStepPay({ form }: { form: PostJobForm }) {
             <label className={styles.label} htmlFor={`${fieldId}-per`}>
               {t("economy:postJob.step3.per")}
             </label>
-            <select
+            <Select
               id={`${fieldId}-per`}
-              className={styles.select}
+              options={RATE_PER.map((option) => ({
+                value: String(option.value),
+                label: t(option.labelKey),
+              }))}
               value={state.ratePer}
-              onChange={(e) => patch({ ratePer: e.target.value })}
-            >
-              {RATE_PER.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {t(option.labelKey)}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => patch({ ratePer: value ?? "" })}
+            />
           </div>
         </div>
 

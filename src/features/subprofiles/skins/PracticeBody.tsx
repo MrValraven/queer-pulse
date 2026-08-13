@@ -113,7 +113,13 @@ export function PracticeBody({
       <div className="pp-body pp-practice-grid">
         <div className="pp-practice-main">
           {data.featured && (
-            <SubprofileSpotlight item={data.featured} skin="practice" mode={mode} accent={data.accent} />
+            <SubprofileSpotlight
+              item={data.featured}
+              skin="practice"
+              mode={mode}
+              accent={data.accent}
+              authorName={data.displayName}
+            />
           )}
           <SubprofileSections persona={primary} {...sectionProps} />
           <PracticeApproach persona={data} />

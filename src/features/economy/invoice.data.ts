@@ -56,7 +56,7 @@ export interface InvoiceClient {
 /** Default invoice number (Fatura-Recibo series). */
 export const defaultInvoiceNumber = "FR 2026/001";
 
-/** Today's date as an ISO yyyy-mm-dd string, for <input type="date"> defaults. */
+/** Today's date as an ISO yyyy-mm-dd string, for date-field defaults. */
 export { todayIso as isoToday } from "../../shared/lib/date";
 
 /** A date `days` ahead of today, ISO yyyy-mm-dd (default 30-day terms). */

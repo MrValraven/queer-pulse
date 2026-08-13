@@ -537,13 +537,14 @@ export const subprofiles: Catalog = {
   "itemEditor.unfeature": "Remove from spotlight",
   "itemEditor.featuredBadge": "Featured",
 
-  // Collaborator chip editor (HandleChipInput, inside SubprofileItemDrawerFields)
+  // Collaborator member picker (CollaboratorSelect, inside SubprofileItemDrawerFields)
   "itemEditor.collaboratorsLabel": "Collaborators",
-  "itemEditor.collaboratorsPlaceholder": "@handle",
+  "itemEditor.collaboratorsPlaceholder": "Search members to credit",
+  "itemEditor.collaboratorsSearchPlaceholder": "Search by name or @handle",
+  "itemEditor.collaboratorsEmpty": "No members match that search.",
   "itemEditor.collaboratorsHelper":
-    "Type an @handle and press enter or comma to credit them here.",
+    "Search for members and pick them to credit their work here.",
   "itemEditor.collaboratorsCapHint": "That's the most collaborators you can add.",
-  "itemEditor.collaboratorRemove": "Remove @{handle}",
 
   // Social links editor (SubprofileSocialLinksEditor)
   "socialEditor.title": "Social links",
@@ -1227,6 +1228,10 @@ export const subprofiles: Catalog = {
   "poem.reader.copy": "Copy poem",
   "poem.reader.copied": "Poem copied",
 
+  // Public copyright + provenance footer (WorkRightsFooter, protect-your-work Task 3)
+  "rights.copyright": "© {year} {author}. All rights reserved.",
+  "rights.firstPublished": "First published on QueerPulse · {date}",
+
   // Skin-blocks editor (personas expansion — page-block editor pane, rail entry & field labels)
   "editorRail.skinBlocks": "Page blocks",
   "editorPane.skinBlocks.title": "Page blocks",
@@ -1237,6 +1242,7 @@ export const subprofiles: Catalog = {
   "skinBlock.removeItem": "Remove",
   "skinBlock.moveUp": "Move up",
   "skinBlock.moveDown": "Move down",
+  "skinBlock.dragToReorder": "Drag to reorder",
   "skinBlock.lineLabel": "{label} {index}",
   "skinBlock.entryLabel": "Entry {index}",
   "skinBlock.stage.booker.title": "For bookers",
@@ -1418,6 +1424,29 @@ export const subprofiles: Catalog = {
   "itemDrawer.cancel": "Cancel",
   "itemDrawer.saveItem": "Save item",
   "itemRow.edit": "Edit",
+
+  // Protect this work (ProtectWorkSection): owner-only download/copy/email
+  // of the item's authorship record, shown in the drawer once the item is
+  // saved (see `authorshipRecord.ts` for the record content itself).
+  "protect.heading": "Protect this work",
+  "protect.blurb":
+    "Download a dated record of your work and email it to yourself. It is independent proof you can keep.",
+  "protect.download": "Download authorship record",
+  "protect.copy": "Copy record",
+  "protect.copied": "Copied to clipboard",
+  "protect.email": "Email it to me",
+  "protect.failed": "Could not generate the record. Please try again.",
+
+  // Version history (ItemRevisionHistoryModal): saved-revision list + view +
+  // restore, opened from the "History" button in the item editor drawer once
+  // an item is saved (Task 9's `useItemRevisions`/`useRestoreItemRevision`).
+  "history.button": "History",
+  "history.heading": "Version history",
+  "history.view": "View",
+  "history.restore": "Restore",
+  "history.empty": "No earlier versions yet. Saved edits will appear here.",
+  "history.restored": "Version restored",
+  "history.restoreFailed": "Could not restore this version. Please try again.",
 
   // Rich per-section fields (richFields.data.ts, rendered by
   // SubprofileItemDrawerFields) — gig details, visual-work medium/edition,

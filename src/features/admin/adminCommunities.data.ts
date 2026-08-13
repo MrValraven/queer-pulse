@@ -54,6 +54,100 @@ export const BREAKDOWN_META: {
   },
 ];
 
+// ── "How it's calculated" explainer (illustrative, UI-only) ─────────────────
+/**
+ * Illustrative per-signal weights, positionally paired with BREAKDOWN_META.
+ * These communicate the *shape* of the model (which signals carry more) for the
+ * worked example in the health modal. They are UI copy, not the server's exact
+ * coefficients: the real blend and the community-size adjustment run nightly in
+ * the backend, so the explainer reconciles to the real published score by
+ * showing the size adjustment as the remaining delta. Member sentiment is
+ * weighted 0 until the platform actually measures it.
+ */
+export const HEALTH_WEIGHTS: [number, number, number, number] = [
+  0.4, 0.25, 0, 0.35,
+];
+
+export type HealthBand = "strong" | "healthy" | "needsHand";
+
+/** Which score band a health score sits in. Mirrors `healthColor()` thresholds. */
+export function healthBand(score: number): HealthBand {
+  if (score >= 90) return "strong";
+  if (score >= 78) return "healthy";
+  return "needsHand";
+}
+
+/** The three score bands, high to low, for the methodology legend. */
+export const HEALTH_BANDS: {
+  id: HealthBand;
+  color: string;
+  labelKey: string;
+}[] = [
+  {
+    id: "strong",
+    color: "var(--jade)",
+    labelKey: "communities.health.method.band.strong",
+  },
+  {
+    id: "healthy",
+    color: "var(--amber)",
+    labelKey: "communities.health.method.band.healthy",
+  },
+  {
+    id: "needsHand",
+    color: "var(--accent-ink)",
+    labelKey: "communities.health.method.band.needsHand",
+  },
+];
+
+export interface HealthExampleRow {
+  nameKey: string;
+  value: number;
+  weightPercent: number;
+  contribution: number;
+}
+
+export interface HealthWorkedExample {
+  /** Only the measured, weighted signals (sentiment is excluded). */
+  rows: HealthExampleRow[];
+  /** Sum of the rows' contributions (rounded each), so it reconciles exactly. */
+  subtotal: number;
+  /** Signed remainder to the published score — the nightly size adjustment. */
+  sizeAdjust: number;
+  published: number;
+}
+
+/**
+ * Reconstructs how a community's signals roll up into its published health,
+ * using the illustrative `HEALTH_WEIGHTS`. Each contribution is rounded before
+ * summing, then the size adjustment is whatever is left over to the real
+ * published score — so `subtotal + sizeAdjust === published` always holds and
+ * the reader sees the maths land on their actual number.
+ */
+export function healthWorkedExample(community: Community): HealthWorkedExample {
+  const rows: HealthExampleRow[] = [];
+  let subtotal = 0;
+  BREAKDOWN_META.forEach((signalMeta, signalIndex) => {
+    const weight = HEALTH_WEIGHTS[signalIndex]!;
+    const value = community.breakdown[signalIndex];
+    if (weight <= 0 || value == null) return; // sentiment / unmeasured skipped
+    const contribution = Math.round(value * weight);
+    subtotal += contribution;
+    rows.push({
+      nameKey: signalMeta.nameKey,
+      value,
+      weightPercent: Math.round(weight * 100),
+      contribution,
+    });
+  });
+  return {
+    rows,
+    subtotal,
+    sizeAdjust: community.health - subtotal,
+    published: community.health,
+  };
+}
+
 export type Severity = "danger" | "coral" | "amber" | "jade";
 
 export interface QueueItem {
@@ -104,6 +198,17 @@ export interface Community {
   join: string;
   code: string;
   visibility: Visibility;
+  /** Whether joining requires a second existing member's vouch. A real,
+   *  persisted safety policy (admin PATCH /admin/communities/:slug); not yet
+   *  enforced in the join flow. */
+  requiresSecondVouch: boolean;
+  /** Whether the community auto-freezes when open reports pile up. Persisted;
+   *  enforcement is a follow-up. */
+  autoFreezeOnReports: boolean;
+  /** True while the community is currently auto-frozen pending report review.
+   *  Read-only on the admin surface (staff lift a freeze from the community's
+   *  own mod panel). Optional: only the detail endpoint carries it. */
+  frozen?: boolean;
   support: boolean;
   moderators: Moderator[];
   queue: QueueItem[];
@@ -134,6 +239,8 @@ export function firstName(name: string): string {
 export const COMMUNITIES: Community[] = [
   {
     slug: "trans-friends",
+    requiresSecondVouch: true,
+    autoFreezeOnReports: false,
     name: "Trans & Friends",
     initials: "TR",
     tone: "jade",
@@ -187,6 +294,8 @@ export const COMMUNITIES: Community[] = [
   },
   {
     slug: "queer-creatives",
+    requiresSecondVouch: false,
+    autoFreezeOnReports: false,
     name: "Queer Creatives",
     initials: "QC",
     tone: "violet",
@@ -240,6 +349,8 @@ export const COMMUNITIES: Community[] = [
   },
   {
     slug: "lisbon-queers",
+    requiresSecondVouch: false,
+    autoFreezeOnReports: true,
     name: "Lisbon Queers",
     initials: "LQ",
     tone: "coral",
@@ -293,6 +404,8 @@ export const COMMUNITIES: Community[] = [
   },
   {
     slug: "newly-arrived",
+    requiresSecondVouch: false,
+    autoFreezeOnReports: false,
     name: "Newly Arrived",
     initials: "NA",
     tone: "jade",
@@ -324,6 +437,9 @@ export const COMMUNITIES: Community[] = [
   },
   {
     slug: "trans-healthcare",
+    requiresSecondVouch: true,
+    autoFreezeOnReports: true,
+    frozen: true,
     name: "Trans Healthcare",
     initials: "TH",
     tone: "jade",
@@ -355,6 +471,8 @@ export const COMMUNITIES: Community[] = [
   },
   {
     slug: "nightlife-afters",
+    requiresSecondVouch: false,
+    autoFreezeOnReports: true,
     name: "Nightlife & Afters",
     initials: "NF",
     tone: "violet",
@@ -408,6 +526,8 @@ export const COMMUNITIES: Community[] = [
   },
   {
     slug: "elders-memory",
+    requiresSecondVouch: true,
+    autoFreezeOnReports: false,
     name: "Elders & Memory",
     initials: "EM",
     tone: "amber",
@@ -439,6 +559,8 @@ export const COMMUNITIES: Community[] = [
   },
   {
     slug: "mutual-aid-lisbon",
+    requiresSecondVouch: false,
+    autoFreezeOnReports: false,
     name: "Mutual Aid Lisbon",
     initials: "MA",
     tone: "coral",

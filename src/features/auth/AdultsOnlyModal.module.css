@@ -1,0 +1,54 @@
+/* Header for the adults-only bottom-sheet — eyebrow + serif title with a coral
+   <em>, sitting above the explainer copy. The sheet's own padding + scroll come
+   from Modal.module.css. Mirrors GuidelinesModal at modal scale. */
+.head {
+  margin-bottom: 8px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 8px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 28px;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+  margin: 0;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.body {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.body p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink-60);
+}
+.reassure {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  margin-top: 1rem;
+  background: var(--cream);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+}

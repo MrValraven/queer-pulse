@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Button, ModalSheet } from "../../shared/components/ui";
@@ -22,16 +22,42 @@ export function GuidelinesModal({
 }) {
   const { t } = useTranslation();
 
-  // The explicit "I've read it — done" button IS the read confirmation: one
-  // deliberate click marks the guidelines read (unlocking the consent checkbox
-  // in the host form via `onRead`) and closes the sheet. A passive scroll
-  // sentinel proved unreliable — it could miss the end (leaving the checkbox
-  // permanently locked) or fire on open (unlocking it with no deliberate
-  // action), so the gate hangs on this click instead.
+  // The confirm button is a two-part gate. First the reader has to actually
+  // reach the bottom of the clauses: a sentinel at the end of the content
+  // flips `reachedEnd` once it scrolls into the sheet's viewport, which enables
+  // the button. Then one deliberate click on "I've read it — done" is the
+  // confirmation that marks the guidelines read (ticking the consent checkbox
+  // in the host form via `onRead`) and closes the sheet. The click stays the
+  // confirming action, so scrolling alone never silently unlocks anything; the
+  // sentinel only decides *when the button becomes clickable*. If the clauses
+  // are short enough not to scroll, the sentinel is visible on open and the
+  // button starts enabled, so the gate can never strand a reader.
+  const endSentinelRef = useRef<HTMLDivElement>(null);
+  const [reachedEnd, setReachedEnd] = useState(false);
+
+  useEffect(() => {
+    const sentinel = endSentinelRef.current;
+    if (!sentinel) return;
+    // Observe against the scrolling sheet itself (the dialog element), so the
+    // intersection is clipped to what's actually visible inside the sheet.
+    const scrollRoot = sentinel.closest('[role="dialog"]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Latch on: once they've reached the end, scrolling back up must not
+        // relock the button.
+        if (entries.some((entry) => entry.isIntersecting)) setReachedEnd(true);
+      },
+      { root: scrollRoot, threshold: 0 },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, []);
+
   const handleDone = useCallback(() => {
+    if (!reachedEnd) return;
     onRead?.();
     onClose();
-  }, [onRead, onClose]);
+  }, [reachedEnd, onRead, onClose]);
 
   return (
     <ModalSheet
@@ -50,8 +76,18 @@ export function GuidelinesModal({
         <p className={s.sub}>{t("marketing:guidelines.hero.sub")}</p>
       </div>
       <GuidelinesContent />
+      <div ref={endSentinelRef} className={s.endSentinel} aria-hidden />
       <div className={s.footer}>
-        <Button variant="primary" onClick={handleDone}>
+        {!reachedEnd && (
+          <p className={s.footerHint}>
+            {t("marketing:guidelines.modalScrollHint")}
+          </p>
+        )}
+        <Button
+          variant="primary"
+          onClick={handleDone}
+          disabled={!reachedEnd}
+        >
           {t("marketing:guidelines.modalDone")}
         </Button>
       </div>

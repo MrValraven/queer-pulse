@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { FiSearch, FiCornerDownLeft, FiX } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks/useScrollLock";
@@ -119,7 +120,7 @@ export function CommandPalette() {
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -207,6 +208,7 @@ export function CommandPalette() {
           </button>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

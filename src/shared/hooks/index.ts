@@ -13,6 +13,7 @@ export { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 export { useVisualViewportKeyboard } from "./useVisualViewportKeyboard";
 export { useScrollLock } from "./useScrollLock";
 export { useFocusOnMount } from "./useFocusOnMount";
+export { useOutsideDismiss } from "./useOutsideDismiss";
 export { useLocalStorage } from "./useLocalStorage";
 export { useSubmitFlow, type FlowStatus } from "./useSubmitFlow";
 export {

@@ -5,6 +5,7 @@ import { useScrollLock, useShareLink } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useLightboxDialog } from "../useLightboxDialog";
 import type { SubprofileItemView } from "../api/subprofiles.adapters";
+import { WorkRightsFooter } from "../rights/WorkRightsFooter";
 import { PoemBlocksView } from "./PoemBlocksView";
 import { normalizePoemBlocks, poemToPlainText } from "./poemModel";
 import styles from "./PoemReaderModal.module.css";
@@ -13,6 +14,8 @@ const NO_MOVE = () => {};
 
 export interface PoemReaderModalProps {
   item: SubprofileItemView;
+  /** The persona's display name, shown in the copyright footer. */
+  authorName: string;
   /** Absolute, deep-linkable URL for this exact poem (persona share URL +
    *  `?poem=<slug>`) — copied by the "Copy link" affordance below. */
   shareUrl: string;
@@ -25,7 +28,12 @@ export interface PoemReaderModalProps {
  * single-poem reader, so ←/→ move is a no-op. `prefers-reduced-motion` is
  * honoured in the CSS module's open transition.
  */
-export function PoemReaderModal({ item, shareUrl, onClose }: PoemReaderModalProps) {
+export function PoemReaderModal({
+  item,
+  authorName,
+  shareUrl,
+  onClose,
+}: PoemReaderModalProps) {
   const { t } = useTranslation();
   useScrollLock();
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -104,6 +112,7 @@ export function PoemReaderModal({ item, shareUrl, onClose }: PoemReaderModalProp
             blocks={item.structured?.poem ?? null}
             description={item.description}
           />
+          <WorkRightsFooter authorName={authorName} createdAtISO={item.createdAt} />
         </div>
       </div>
     </div>,

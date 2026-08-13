@@ -7,6 +7,7 @@ import {
   type PatternKey,
 } from "./profileTheme.data";
 import { useProfileTheme } from "../../app/providers/useProfileTheme";
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ThemeStudioPreview } from "./ThemeStudioPreview";
 import styles from "./ThemeStudio.module.css";
@@ -155,18 +156,16 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
             </label>
           </div>
         </div>
-        <select
-          className={styles.badgeSelect}
-          aria-label={t("settings:themeStudio.badgeDisplayLabel")}
+        <Select
+          size="sm"
+          label={t("settings:themeStudio.badgeDisplayLabel")}
           value={badge}
-          onChange={(e) => edit({ badge: e.target.value })}
-        >
-          {BADGE_OPTIONS.map((o) => (
-            <option key={o.id} value={o.id}>
-              {t(o.labelKey)}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => edit({ badge: value ?? badge })}
+          options={BADGE_OPTIONS.map((o) => ({
+            value: o.id,
+            label: t(o.labelKey),
+          }))}
+        />
       </div>
 
       <ThemeStudioPreview

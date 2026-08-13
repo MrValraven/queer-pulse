@@ -4,8 +4,10 @@ import type { SubprofileItemDTO } from "./api/subprofiles.api";
 
 function makeItem(overrides: Partial<SubprofileItemDTO>): SubprofileItemDTO {
   return {
+    id: "item-test",
     section: "gigs",
     title: "Untitled",
+    createdAt: "2025-03-01T12:00:00.000Z",
     tags: [],
     isFeatured: false,
     collaborators: [],

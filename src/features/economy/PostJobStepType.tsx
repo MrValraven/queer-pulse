@@ -1,5 +1,6 @@
 import { useId } from "react";
 import { FiAlertCircle } from "react-icons/fi";
+import { Select as UiSelect } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -38,18 +39,15 @@ function Select({
           </span>
         )}
       </label>
-      <select
+      <UiSelect
         id={`${fieldId}-select`}
-        className={styles.select}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {t(option.labelKey)}
-          </option>
-        ))}
-      </select>
+        onChange={(next) => onChange(next ?? "")}
+        options={options.map((option) => ({
+          value: option.value,
+          label: t(option.labelKey),
+        }))}
+      />
     </div>
   );
 }

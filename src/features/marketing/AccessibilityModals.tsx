@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
-import { Button } from "../../shared/components/ui";
+import { createPortal } from "react-dom";
+import { Button, Select } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -29,7 +30,7 @@ function ModalShell({
   label: string;
 }) {
   useScrollLock();
-  return (
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -48,7 +49,8 @@ function ModalShell({
         </button>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -62,6 +64,7 @@ export function FlagVenueModal({
   const { t } = useTranslation();
   const fieldId = useId();
   const [done, setDone] = useState(false);
+  const [issueType, setIssueType] = useState<string | null>(null);
   return (
     <ModalShell
       onClose={onClose}
@@ -114,18 +117,18 @@ export function FlagVenueModal({
               >
                 {t("marketing:accessibility.flagModal.issueTypeLabel")}
               </label>
-              <select
+              <Select
                 id={`${fieldId}-issue`}
-                className={styles.select}
-                defaultValue=""
-              >
-                <option value="">
-                  {t("marketing:accessibility.flagModal.issueTypePlaceholder")}
-                </option>
-                {FLAG_ISSUE_KEYS.map((key) => (
-                  <option key={key}>{t(key)}</option>
-                ))}
-              </select>
+                placeholder={t(
+                  "marketing:accessibility.flagModal.issueTypePlaceholder",
+                )}
+                options={FLAG_ISSUE_KEYS.map((key) => ({
+                  value: key,
+                  label: t(key),
+                }))}
+                value={issueType}
+                onChange={setIssueType}
+              />
             </div>
             <div>
               <label

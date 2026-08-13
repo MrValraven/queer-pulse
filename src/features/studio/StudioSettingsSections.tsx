@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Select } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -153,6 +154,7 @@ export function CaptionsSection() {
   const { t } = useTranslation();
   const [captions, setCaptions] = useState(true);
   const [captionSize, setCaptionSize] = useState("M");
+  const [lyricLanguage, setLyricLanguage] = useState("original");
   const [showBoth, setShowBoth] = useState(false);
 
   return (
@@ -197,26 +199,34 @@ export function CaptionsSection() {
           <h4>{t("studio:settings.captions.lyricLanguage.heading")}</h4>
           <p>{t("studio:settings.captions.lyricLanguage.body")}</p>
         </div>
-        <select
-          className={s.selectMini}
-          aria-label={t("studio:settings.captions.lyricLanguage.heading")}
-        >
-          <option>
-            {t("studio:settings.captions.lyricLanguage.opt.original")}
-          </option>
-          <option>
-            {t("studio:settings.captions.lyricLanguage.opt.english")}
-          </option>
-          <option>
-            {t("studio:settings.captions.lyricLanguage.opt.portuguese")}
-          </option>
-          <option>
-            {t("studio:settings.captions.lyricLanguage.opt.spanish")}
-          </option>
-          <option>
-            {t("studio:settings.captions.lyricLanguage.opt.french")}
-          </option>
-        </select>
+        <Select
+          size="sm"
+          label={t("studio:settings.captions.lyricLanguage.heading")}
+          options={[
+            {
+              value: "original",
+              label: t("studio:settings.captions.lyricLanguage.opt.original"),
+            },
+            {
+              value: "english",
+              label: t("studio:settings.captions.lyricLanguage.opt.english"),
+            },
+            {
+              value: "portuguese",
+              label: t("studio:settings.captions.lyricLanguage.opt.portuguese"),
+            },
+            {
+              value: "spanish",
+              label: t("studio:settings.captions.lyricLanguage.opt.spanish"),
+            },
+            {
+              value: "french",
+              label: t("studio:settings.captions.lyricLanguage.opt.french"),
+            },
+          ]}
+          value={lyricLanguage}
+          onChange={(value) => setLyricLanguage(value ?? "original")}
+        />
       </div>
       <div className={s.opt}>
         <div className={s.ot}>

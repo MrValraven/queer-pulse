@@ -1,5 +1,5 @@
 import { FiSearch, FiDownload } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   AUDIT_ACTION_IDS,
@@ -69,22 +69,25 @@ export function AdminGovernanceAuditFilters({
       </label>
 
       <Select
+        size="sm"
         label={t("admin:governance.audit.filterModerator")}
         value={filters.moderator}
         options={moderatorOptions}
-        onChange={(v) => set("moderator", v)}
+        onChange={(v) => set("moderator", v ?? "all")}
       />
       <Select
+        size="sm"
         label={t("admin:governance.audit.filterAction")}
         value={filters.action}
         options={actionOptions}
-        onChange={(v) => set("action", v as AuditFilterState["action"])}
+        onChange={(v) => set("action", (v ?? "all") as AuditFilterState["action"])}
       />
       <Select
+        size="sm"
         label={t("admin:governance.audit.filterRange")}
         value={filters.range}
         options={rangeOptions}
-        onChange={(v) => set("range", v as AuditFilterState["range"])}
+        onChange={(v) => set("range", (v ?? "all") as AuditFilterState["range"])}
       />
 
       <Button
@@ -96,32 +99,5 @@ export function AdminGovernanceAuditFilters({
         <FiDownload aria-hidden /> {t("admin:governance.audit.exportCta")}
       </Button>
     </div>
-  );
-}
-
-function Select({
-  label,
-  value,
-  options,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  options: { value: string; label: string }[];
-  onChange: (value: string) => void;
-}) {
-  return (
-    <select
-      className={styles.select}
-      aria-label={label}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    >
-      {options.map((o) => (
-        <option key={o.value} value={o.value}>
-          {o.label}
-        </option>
-      ))}
-    </select>
   );
 }

@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./WatchPage.module.css";
 
@@ -33,6 +35,7 @@ export function WatchControls({
   onAdToggle: () => void;
 }) {
   const { t } = useTranslation();
+  const [subtitleLang, setSubtitleLang] = useState("en");
   return (
     <div className={styles.controls}>
       <div className={styles.progress}>
@@ -103,18 +106,21 @@ export function WatchControls({
         >
           AD
         </button>
-        <select
-          className={styles.ctrlLang}
-          defaultValue="en"
-          aria-label={t("cinema:film.facts.language")}
-        >
-          <option value="pt">{t("cinema:watch.controls.subtitleLang.pt")}</option>
-          <option value="en">{t("cinema:watch.controls.subtitleLang.en")}</option>
-          <option value="es">{t("cinema:watch.controls.subtitleLang.es")}</option>
-          <option value="none">
-            {t("cinema:watch.controls.subtitleLang.none")}
-          </option>
-        </select>
+        <Select
+          size="sm"
+          label={t("cinema:film.facts.language")}
+          value={subtitleLang}
+          onChange={(value) => setSubtitleLang(value ?? "en")}
+          options={[
+            { value: "pt", label: t("cinema:watch.controls.subtitleLang.pt") },
+            { value: "en", label: t("cinema:watch.controls.subtitleLang.en") },
+            { value: "es", label: t("cinema:watch.controls.subtitleLang.es") },
+            {
+              value: "none",
+              label: t("cinema:watch.controls.subtitleLang.none"),
+            },
+          ]}
+        />
       </div>
     </div>
   );

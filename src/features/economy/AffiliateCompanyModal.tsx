@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { FiArrowLeft, FiPlus } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, Select } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ModalShell, Sending } from "./ModalKit";
 import { useEmployerAffiliationActions } from "./api/useEmployerAffiliation";
@@ -258,18 +258,15 @@ export function AffiliateCompanyModal({
         <label className={styles.label} htmlFor={`${fieldId}-role`}>
           {t("economy:affiliateCompanyModal.roleLabel")}
         </label>
-        <select
+        <Select
           id={`${fieldId}-role`}
-          className={styles.select}
+          options={AFFILIATION_ROLES.map((r) => ({
+            value: String(r.value),
+            label: t(r.labelKey),
+          }))}
           value={role}
-          onChange={(e) => setRole(e.target.value)}
-        >
-          {AFFILIATION_ROLES.map((r) => (
-            <option key={r.value} value={r.value}>
-              {t(r.labelKey)}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => setRole(value ?? "")}
+        />
       </div>
 
       <div className={styles.stepNav}>

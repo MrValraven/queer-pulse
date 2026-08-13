@@ -5,6 +5,7 @@ import {
   EmptyState,
   FadeIn,
   SearchInput,
+  Select,
 } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -100,18 +101,13 @@ export function ConnectionsAllTab({
           placeholder={t("connect:allTab.searchPlaceholder")}
           ariaLabel={t("connect:allTab.searchAria")}
         />
-        <select
-          className={styles.sortSel}
+        <Select
+          size="sm"
+          label={t("members:directory.sortLabel")}
           value={sort}
-          onChange={(e) => setSort(e.target.value as Sort)}
-          aria-label={t("members:directory.sortLabel")}
-        >
-          {SORTS.map((s) => (
-            <option key={s} value={s}>
-              {sortLabel(s, t)}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => setSort((value ?? "recentlyConnected") as Sort)}
+          options={SORTS.map((s) => ({ value: s, label: sortLabel(s, t) }))}
+        />
       </div>
 
       {loading ? (

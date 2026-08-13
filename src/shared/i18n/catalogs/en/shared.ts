@@ -200,6 +200,14 @@ export const shared: Catalog = {
   "searchInput.placeholder": "Search…",
   "searchInput.clearAria": "Clear search",
 
+  // Select — unified searchable dropdown
+  "select.placeholder": "Select…",
+  "select.searchPlaceholder": "Type to filter…",
+  "select.noResults": "No matches",
+  "select.clear": "Clear selection",
+  "select.loading": "Loading…",
+  "select.multiSummary": "{count} selected",
+
   // ComingSoon
   "comingSoon.label": "Coming soon",
 
@@ -425,4 +433,34 @@ export const shared: Catalog = {
   "mediaRef.magazine-author": "Magazine author",
   "mediaRef.changemaker": "Changemaker",
   "mediaRef.collection": "Collection",
+
+  // calendar.* keys, for the shared APG-compliant Calendar/DatePicker
+  // primitive (Calendar.tsx, CalendarCell.tsx, CalendarHeader.tsx,
+  // DatePicker.tsx, RangeCalendar.tsx).
+  "calendar.chooseDate": "Choose date",
+  "calendar.chooseTime": "Choose time",
+  "calendar.chooseMonth": "Choose month",
+  "calendar.chooseRange": "Choose date range",
+  "calendar.prevMonth": "Previous month",
+  "calendar.nextMonth": "Next month",
+  "calendar.prevYear": "Previous year",
+  "calendar.nextYear": "Next year",
+  "calendar.today": "Today",
+  "calendar.clear": "Clear",
+  "calendar.monthLabel": "Month",
+  "calendar.yearLabel": "Year",
+  "calendar.startDate": "Start date",
+  "calendar.endDate": "End date",
+  "calendar.segment.day": "Day",
+  "calendar.segment.month": "Month",
+  "calendar.segment.year": "Year",
+  "calendar.segment.hour": "Hour",
+  "calendar.segment.minute": "Minute",
+  "calendar.segment.meridiem": "AM/PM",
+  "calendar.state.today": "today",
+  "calendar.state.selected": "selected",
+  "calendar.state.unavailable": "unavailable",
+  "calendar.preset.today": "Today",
+  "calendar.preset.tomorrow": "Tomorrow",
+  "calendar.preset.nextWeek": "Next week",
 };

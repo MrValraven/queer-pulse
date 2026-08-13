@@ -675,6 +675,7 @@ export const marketing: Catalog = {
     "Se alguém ultrapassar uma destas linhas, denuncia essa pessoa ou a publicação a partir do menu. A moderação lê todas as denúncias, e nunca ficas com isto sozinhe. Infrações confirmadas levam a um aviso, suspensão ou remoção, e cooperamos com as autoridades quando a segurança de alguém está em risco. Nunca estás a exagerar por denunciar.",
   "guidelines.final.p2": "Obrigade por construíres isto connosco.",
   "guidelines.modalDone": "Li tudo — concluir",
+  "guidelines.modalScrollHint": "Desliza até ao fim para continuar.",
   "guidelines.outro.title": "Agora já conheces <em>a cultura.</em>",
   "guidelines.outro.sub":
     "O Código de Conduta cobre o que acontece se for violada.",
@@ -1968,6 +1969,95 @@ export const marketing: Catalog = {
   "changelog.tag.workProfile": "Abrir o teu perfil de trabalho",
   "changelog.tag.governance": "Ver como o QueerPulse é gerido",
 
+  "changelog.entries.member-directory-filter-crossfade.title":
+    "Filtragem mais suave no diretório de pessoas",
+  "changelog.entries.member-directory-filter-crossfade.body":
+    "Mudar um filtro no diretório de pessoas fazia os resultados aparecer e desaparecer de forma abrupta. Agora a grelha faz uma transição suave: os resultados antigos esbatem-se por um instante enquanto as novas correspondências assentam, e depois os cartões voltam a surgir em conjunto. Respeita as preferências de movimento reduzido e troca de imediato para quem prefere menos movimento.",
+
+  "changelog.entries.excerpt-line-editor-reorder.title":
+    "Uma forma mais limpa de escrever e reordenar linhas da página",
+  "changelog.entries.excerpt-line-editor-reorder.body":
+    "O editor de listas para coisas como as linhas de excerto na tua página passa a igualar o editor de poemas: cada linha fica na sua própria linha organizada e ocupa toda a largura, sem mais campos apertados. Arrasta a pega para reordenar, ou usa as setas para cima e para baixo, e remove uma linha com um só toque. A pega de reordenar funciona com toque, teclado e tecnologias de apoio.",
+
+  "changelog.entries.collaborator-member-picker.title":
+    "Credita pessoas colaboradoras procurando por membros",
+  "changelog.entries.collaborator-member-picker.body":
+    "Quando acrescentas pessoas colaboradoras a algo na tua persona, já não precisas de lembrar e escrever um identificador exato. Basta começares a escrever um nome ou identificador e escolher a pessoa numa lista pesquisável, com a foto dela, para creditar sempre a pessoa certa. As tuas escolhas aparecem como etiquetas cuidadas e podes remover qualquer uma com a mesma facilidade.",
+
+  "changelog.entries.unified-searchable-select.title":
+    "Menus onde podes escrever para procurar",
+  "changelog.entries.unified-searchable-select.body":
+    "Por toda a plataforma, os pequenos menus para escolher coisas, uma categoria, um idioma, um bairro, uma função, passam a ter um desenho único e mais simpático. Quando a lista é longa, basta começares a escrever para a filtrar e depois escolher com o teclado ou um toque. Os menus que deixam escolher várias opções mostram as tuas escolhas como etiquetas cuidadas. Fica igual em todo o lado e é lido com clareza pelos leitores de ecrã.",
+
+  "changelog.entries.persona-date-month-picker.title":
+    "Escolhe o mês e o ano dos teus trabalhos, sem os escrever à mão",
+  "changelog.entries.persona-date-month-picker.body":
+    "Ao adicionar ou editar um item numa página de persona, poemas, exposições, lançamentos e o resto, o campo de data passa a ser um seletor de mês e ano em vez de uma caixa de texto livre. Escolhes o mês e ele aparece de forma cuidada como \"julho de 2025\" no teu idioma. As datas que já tinhas escrito à mão continuam a aparecer tal como as deixaste.",
+
+  "changelog.entries.unified-date-picker.title":
+    "Um novo seletor de datas em toda a plataforma, mais acolhedor e totalmente acessível por teclado",
+  "changelog.entries.unified-date-picker.body":
+    "Um novo seletor de datas em toda a plataforma: um calendário mais acolhedor e totalmente acessível por teclado para cada campo de data e hora. Escolhe um dia com um clique ou pelo teclado, escreve-o diretamente, ou avança rapidamente entre meses e anos, e é lido com clareza pelos leitores de ecrã.",
+
+  "changelog.entries.protect-your-work.title": "Protege o teu trabalho",
+  "changelog.entries.protect-your-work.body":
+    "Cada peça publicada mostra agora uma linha de direitos de autor e de primeira publicação, podes descarregar um registo de autoria datado para guardar como prova, e as tuas edições guardadas ficam como histórico de versões que podes ver e restaurar.",
+
+  "changelog.entries.verification-signals-bulk-keyboard.title":
+    "Quem revê pedidos agora vê sinais, decide em lote e avança pelo teclado",
+  "changelog.entries.verification-signals-bulk-keyboard.body":
+    "Os pedidos de verificação passam a trazer sinais reais: há quanto tempo a conta existe, rejeições anteriores, e um aviso quando uma referência do fornecedor ou um número de telefone aparece em mais do que uma conta, para que quem revê tenha contexto antes de decidir. É possível selecionar vários pedidos de uma vez para aprovar, rejeitar ou marcar como em análise em conjunto, e avançar pela fila com o teclado: J e K para navegar, A para aprovar, R para rejeitar, e / para pesquisar, com o pedido seguinte a abrir sozinho depois de uma decisão.",
+
+  "changelog.entries.verification-request-review.title":
+    "Pede verificação, e vê como está o teu pedido",
+  "changelog.entries.verification-request-review.body":
+    "Envia um pedido de verificação por email, telefone ou identidade sempre que precisares, com uma nota curta se ajudar alguém a reconhecer-te. A partir daí acompanhas o percurso: submetido, em análise, aprovado, ou a precisar de mais um passo, e podes recorrer de uma decisão se algo não te parecer certo. Do lado da moderação, a equipa trabalha numa fila real, com a tua nota e o teu histórico ao lado de cada pedido, para que cada decisão tenha sempre uma razão por trás.",
+
+  "changelog.entries.verification-audit-trail.title":
+    "Passas a saber quando o teu estado de verificação muda",
+  "changelog.entries.verification-audit-trail.body":
+    "Sempre que um administrador atualiza o teu nível de verificação, seja para subir, descer ou substituir, passas a receber uma notificação com o motivo. Nos bastidores, a consola de administração guarda um histórico completo de cada decisão: quem a tomou, quando e porquê, além de indicar se o nível foi conquistado automaticamente ou atribuído por um administrador, para que nada mude sem deixar rasto.",
+
+  "changelog.entries.community-safety-enforcement.title":
+    "Definições de segurança da comunidade que passam a agir",
+  "changelog.entries.community-safety-enforcement.body":
+    "As duas definições de segurança da comunidade passam a produzir efeito, não só a guardar. Quando uma comunidade exige um segundo aval para entrar, só é admitido quem já tenha o aval de um membro atual. E, com o congelamento automático ativo, a comunidade pausa-se assim que chega uma denúncia grave (como doxxing) ou as denúncias se acumulam, bloqueando novas publicações e entradas e mostrando um aviso claro, até a moderação levantar a pausa depois de tratar do assunto.",
+
+  "changelog.entries.community-settings-persist.title":
+    "Definições da comunidade que guardam mesmo",
+  "changelog.entries.community-settings-persist.body":
+    "Na vista de administração da comunidade, o botão Definições passa a abrir o painel completo, onde podes editar o nome, a descrição, o modo de adesão e as regras da comunidade. E, no separador Definições da própria comunidade, as duas opções de segurança, exigir um segundo aval para entrar e congelar automaticamente numa denúncia, passam a guardar a sério e a manter-se depois de recarregar, em vez de apenas mostrarem uma mensagem.",
+
+  "changelog.entries.community-health-explainer.title":
+    "Vê exatamente como o índice de saúde de uma comunidade é calculado",
+  "changelog.entries.community-health-explainer.body":
+    "O explicador do índice de saúde passa a ter uma vista \"Como é calculada\". Mostra os quatro sinais e quanto cada um conta, percorre como os números da própria comunidade se somam até à pontuação publicada, explica porque as comunidades mais pequenas são avaliadas com mais brandura e mostra os escalões da pontuação para veres onde uma comunidade se situa. O sentimento aparece como ainda não contabilizado, porque até agora nada na plataforma o mede.",
+
+  "changelog.entries.modals-cover-full-screen.title":
+    "As janelas de diálogo passam a escurecer o ecrã inteiro",
+  "changelog.entries.modals-cover-full-screen.body":
+    "Quando uma janela de diálogo abre (o explicador do índice de saúde, um convite, um recurso, um pedido de impressão e outros), o fundo escurecido passa a cobrir o ecrã inteiro e a ficar centrado, em vez de ficar confinado a parte da página em certos ecrãs. As janelas funcionavam sempre, só nem sempre ficavam enquadradas contra a janela toda.",
+
+  "changelog.entries.inbox-menu-dropdown-visibility.title":
+    "O menu de ações de conversa passa a aparecer corretamente",
+  "changelog.entries.inbox-menu-dropdown-visibility.body":
+    "Abrir o menu “⋯” de uma conversa na tua caixa de entrada passa a mostrar as opções Fixar, Favorito e Eliminar por cima, em vez de ficarem escondidas atrás da conversa seguinte. O menu funcionava sempre, só nem sempre estava visível.",
+
+  "changelog.entries.governance-editable-finances.title":
+    "Valores financeiros editáveis, com indicação da origem de cada número",
+  "changelog.entries.governance-editable-finances.body":
+    "Os administradores passam a poder corrigir os valores no separador de Finanças da governação, em vez de estarem fixos. Cada número tem uma pequena etiqueta que mostra a sua origem: um valor de exemplo por verificar, um valor introduzido por um administrador, ou um valor calculado (como o excedente). As correções ficam registadas, por isso é sempre claro quem alterou o quê e quando.",
+
+  "changelog.entries.governance-chart-upgrade.title":
+    "Um gráfico de receita vs. despesa mais claro na área de governação",
+  "changelog.entries.governance-chart-upgrade.body":
+    "O gráfico de finanças trimestre a trimestre passa a ajustar-se ao espaço disponível e a ler-se com mais clareza. Passa o rato ou o foco do teclado sobre qualquer barra para ver a receita, a despesa e o excedente guardado na reserva desse trimestre, e uma faixa tracejada sobre cada barra de despesa marca o excedente num relance.",
+
+  "changelog.entries.landing-live-preview.title":
+    "Pré-visualização em tempo real ao fazer a curadoria da página inicial",
+  "changelog.entries.landing-live-preview.body":
+    "Quem faz a curadoria da página inicial passa a ver uma pré-visualização em tempo real de cada secção ao lado do editor. Adiciona, reordena, oculta ou reescreve um membro, comunidade ou agente de mudança em destaque e a pré-visualização atualiza logo, mostrando o cartão real da página inicial antes de qualquer visita.",
+
   "changelog.entries.personas-in-directory.title":
     "As personas do teu perfil aparecem no diretório",
   "changelog.entries.personas-in-directory.body":
@@ -2180,6 +2270,16 @@ export const marketing: Catalog = {
     "A mensagem para menores de 18 passa a abrir uma porta, não a fechá-la",
   "changelog.entries.under18-open-invite.body":
     "Se nos disseres que ainda não tens 18, a nota costumava insistir na conta que não podes ter. Agora começa pelo que está aberto a toda a gente — a biblioteca, a revista e os nossos recursos são teus para ler, sem precisares de iniciar sessão.",
+
+  "changelog.entries.guidelines-agree-self-tick.title":
+    "A caixa das diretrizes marca-se sozinha quando lês até ao fim",
+  "changelog.entries.guidelines-agree-self-tick.body":
+    "Nos formulários de entrada e de boas-vindas, a caixa “Li as diretrizes da comunidade” já não se marca com um clique distraído. As diretrizes abrem num painel, o botão de confirmar só desbloqueia quando deslizas até ao fim, e concluir aí é o que marca a caixa por ti. O botão fica agora no fundo do painel, em vez de flutuar por cima do texto.",
+
+  "changelog.entries.adults-only-explainer-modal.title":
+    "“Eis porquê somos 18+” abre onde estás",
+  "changelog.entries.adults-only-explainer-modal.body":
+    "A ligação “eis porquê” na verificação de idade levava-te aos Termos, e perdias o teu lugar no formulário. Agora abre a explicação num painel discreto por cima da página — lês porque é que a QueerPulse é só para adultos, fechas, e continuas sem perder uma palavra que tinhas escrito.",
 
   "changelog.entries.adults-only-explainer.title":
     "“Eis porquê somos 18+” passa mesmo a dizer porquê",
@@ -4399,6 +4499,7 @@ export const marketing: Catalog = {
   "directory.detail.upcoming.downloadIcs": ".ics",
   "directory.detail.galleryAria": "Fotos de {name}",
   "directory.detail.viewPhoto": "Ver foto",
+  "directory.detail.noPhotos": "Ainda sem fotos",
   "directory.detail.lightboxClose": "Fechar",
   "directory.detail.prevPhoto": "Foto anterior",
   "directory.detail.nextPhoto": "Foto seguinte",

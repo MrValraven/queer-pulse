@@ -1,9 +1,10 @@
-import { FiArrowRight } from "react-icons/fi";
+import { useEffect, useRef, useState } from "react";
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { AdminModal } from "./ui";
+import { AdminHealthMethod } from "./AdminHealthMethod";
 import {
   BREAKDOWN_META,
   breakdownColor,
@@ -11,6 +12,8 @@ import {
   type Community,
 } from "./adminCommunities.data";
 import styles from "./AdminCommunitiesPage.module.css";
+
+type HealthView = "breakdown" | "method";
 
 const R = 16;
 const CIRC = 2 * Math.PI * R;
@@ -60,89 +63,126 @@ export function AdminHealthModal({
   onOfferSupport: () => void;
 }) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
+  const [view, setView] = useState<HealthView>("breakdown");
 
-  const footer = (
-    <>
-      <Button
-        variant="ghost"
-        size="md"
-        onClick={() =>
-          showToast(t("admin:communities.health.howCalculatedToast"), "info")
-        }
-      >
-        {t("admin:communities.health.howCalculatedCta")}
-      </Button>
-      {community.support ? (
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => {
-            onClose();
-            onOfferSupport();
-          }}
-        >
-          {t("admin:communities.health.offerSupportCta")}{" "}
-          <FiArrowRight aria-hidden />
-        </Button>
-      ) : (
-        <Button variant="primary" size="md" onClick={onClose}>
-          {t("admin:communities.health.closeCta")}
-        </Button>
-      )}
-    </>
+  // Keep keyboard focus inside the dialog when the footer swaps (the trigger /
+  // Back button that had focus unmounts on flip). Focus the fresh pane on each
+  // view change, but not on first open, so the modal's natural entry is left be.
+  const paneRef = useRef<HTMLDivElement>(null);
+  const isFirstView = useRef(true);
+  useEffect(() => {
+    if (isFirstView.current) {
+      isFirstView.current = false;
+      return;
+    }
+    paneRef.current?.focus();
+  }, [view]);
+
+  const primaryAction = community.support ? (
+    <Button
+      variant="primary"
+      size="md"
+      onClick={() => {
+        onClose();
+        onOfferSupport();
+      }}
+    >
+      {t("admin:communities.health.offerSupportCta")} <FiArrowRight aria-hidden />
+    </Button>
+  ) : (
+    <Button variant="primary" size="md" onClick={onClose}>
+      {view === "method"
+        ? t("admin:communities.health.method.doneCta")
+        : t("admin:communities.health.closeCta")}
+    </Button>
   );
 
+  const footer =
+    view === "breakdown" ? (
+      <>
+        <Button variant="ghost" size="md" onClick={() => setView("method")}>
+          {t("admin:communities.health.howCalculatedCta")}
+        </Button>
+        {primaryAction}
+      </>
+    ) : (
+      <>
+        <Button
+          variant="ghost"
+          size="md"
+          onClick={() => setView("breakdown")}
+        >
+          <FiArrowLeft aria-hidden />{" "}
+          {t("admin:communities.health.method.backCta")}
+        </Button>
+        {primaryAction}
+      </>
+    );
+
+  const title =
+    view === "method" ? (
+      t("admin:communities.health.method.title")
+    ) : (
+      <Translation
+        i18nKey="admin:communities.health.modalTitle"
+        values={{ score: community.health }}
+        components={{ em: <em /> }}
+      />
+    );
+
   return (
-    <AdminModal
-      title={
-        <Translation
-          i18nKey="admin:communities.health.modalTitle"
-          values={{ score: community.health }}
-          components={{ em: <em /> }}
-        />
-      }
-      onClose={onClose}
-      footer={footer}
-    >
-      <p className={styles.modalIntro}>
-        {t("admin:communities.health.intro")}{" "}
-        {t(`admin:${breakdownNarrativeKey(community.health)}`)}
-      </p>
-      <div className={styles.bdList}>
-        {BREAKDOWN_META.map((signalMeta, signalIndex) => {
-          const value = community.breakdown[signalIndex]!;
-          const isMeasured = value !== null;
-          return (
-            <div key={signalMeta.id} className={styles.bdRow}>
-              {isMeasured ? (
-                <HealthRing value={value} />
-              ) : (
-                <span className={styles.ringUnmeasured} aria-hidden />
-              )}
-              <div className={styles.bdText}>
-                <div className={styles.bdName}>
-                  {t(`admin:${signalMeta.nameKey}`)}
-                </div>
-                <div className={styles.bdDesc}>
-                  {t(`admin:${signalMeta.descriptionKey}`)}
-                </div>
-              </div>
-              {isMeasured ? (
-                <div
-                  className={styles.bdScore}
-                  style={{ color: breakdownColor(value) }}
-                >
-                  {value}
-                </div>
-              ) : (
-                <div className={styles.bdUnmeasured}>
-                  {t("admin:communities.health.notMeasured")}
-                </div>
-              )}
+    <AdminModal title={title} onClose={onClose} footer={footer}>
+      <div
+        key={view}
+        ref={paneRef}
+        tabIndex={-1}
+        className={styles.healthPane}
+      >
+        {view === "method" ? (
+          <AdminHealthMethod community={community} />
+        ) : (
+          <>
+            <p className={styles.modalIntro}>
+              {t("admin:communities.health.intro")}{" "}
+              {t(`admin:${breakdownNarrativeKey(community.health)}`)}
+            </p>
+            <div className={styles.bdList}>
+              {BREAKDOWN_META.map((signalMeta, signalIndex) => {
+                const value = community.breakdown[signalIndex]!;
+                const isMeasured = value !== null;
+                return (
+                  <div key={signalMeta.id} className={styles.bdRow}>
+                    {isMeasured ? (
+                      <HealthRing value={value} />
+                    ) : (
+                      <span className={styles.ringUnmeasured} aria-hidden />
+                    )}
+                    <div className={styles.bdText}>
+                      <div className={styles.bdName}>
+                        {t(`admin:${signalMeta.nameKey}`)}
+                      </div>
+                      <div className={styles.bdDesc}>
+                        {t(`admin:${signalMeta.descriptionKey}`)}
+                      </div>
+                    </div>
+                    {isMeasured ? (
+                      <div
+                        className={styles.bdScore}
+                        style={{ color: breakdownColor(value) }}
+                      >
+                        {value}
+                      </div>
+                    ) : (
+                      <div className={styles.bdUnmeasured}>
+                        {t("admin:communities.health.notMeasured")}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
-          );
-        })}
+          </>
+        )}
       </div>
     </AdminModal>
   );

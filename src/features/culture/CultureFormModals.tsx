@@ -1,5 +1,5 @@
-import { type ReactNode } from "react";
-import { Button, ChipSelect, Sending } from "../../shared/components/ui";
+import { useState, type ReactNode } from "react";
+import { Button, ChipSelect, Select, Sending } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -99,6 +99,7 @@ export function SuggestPickModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { sending, done, submit } = useSubmitFlow();
+  const [kind, setKind] = useState<string>(PICK_KINDS[0]);
   return (
     <CultureFormModal
       onClose={onClose}
@@ -140,13 +141,15 @@ export function SuggestPickModal({ onClose }: { onClose: () => void }) {
     >
       <div className={styles.field}>
         <label htmlFor="pk-kind">{t("culture:suggestPick.formatLabel")}</label>
-        <select id="pk-kind" defaultValue={PICK_KINDS[0]}>
-          {PICK_KINDS.map((k) => (
-            <option key={k} value={k}>
-              {t(PICK_KIND_OPTION_LABEL_KEY[k])}
-            </option>
-          ))}
-        </select>
+        <Select
+          id="pk-kind"
+          value={kind}
+          onChange={(value) => setKind(value ?? PICK_KINDS[0])}
+          options={PICK_KINDS.map((k) => ({
+            value: k,
+            label: t(PICK_KIND_OPTION_LABEL_KEY[k]),
+          }))}
+        />
       </div>
       <div className={styles.field}>
         <label htmlFor="pk-title">{t("culture:suggestPick.titleLabel")}</label>
@@ -250,6 +253,7 @@ export function SubmitWorkModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { sending, done, submit } = useSubmitFlow();
+  const [medium, setMedium] = useState<string | null>(null);
   return (
     <CultureFormModal
       onClose={onClose}
@@ -299,16 +303,16 @@ export function SubmitWorkModal({ onClose }: { onClose: () => void }) {
       </div>
       <div className={styles.field}>
         <label htmlFor="sw-medium">{t("culture:submitWork.mediumLabel")}</label>
-        <select id="sw-medium" defaultValue="">
-          <option value="" disabled>
-            {t("culture:submitWork.mediumPlaceholder")}
-          </option>
-          {SHOWCASE_MEDIUMS.map((m) => (
-            <option key={m} value={m}>
-              {t(SHOWCASE_MEDIUM_LABEL_KEY[m])}
-            </option>
-          ))}
-        </select>
+        <Select
+          id="sw-medium"
+          placeholder={t("culture:submitWork.mediumPlaceholder")}
+          value={medium}
+          onChange={setMedium}
+          options={SHOWCASE_MEDIUMS.map((m) => ({
+            value: m,
+            label: t(SHOWCASE_MEDIUM_LABEL_KEY[m]),
+          }))}
+        />
       </div>
       <div className={styles.field}>
         <label htmlFor="sw-link">{t("culture:submitWork.linkLabel")}</label>

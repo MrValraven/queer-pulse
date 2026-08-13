@@ -737,36 +737,57 @@ export const economy: Catalog = {
     "Todas as casas e todos os colegas de casa aqui são afirmativos LGBTQ+ — é o <em>padrão.</em>",
   "affirmingBaseline.detailNote":
     "Esta é a base de todas as casas aqui, não um extra do anúncio.",
-  "verification.step.ariaLabel": "Verificar para continuar",
-  "verification.step.title": "Primeiro, uma verificação rápida",
-  "verification.step.subPhone":
-    "Na habitação a segurança é o que mais importa, por isso confirmamos um número de telefone antes de anunciares ou contactares. Fica privado.",
-  "verification.step.subId":
-    "Este passo precisa de verificação de identidade. Nunca vemos nem guardamos o teu documento — um parceiro externo trata disso e só nos diz que passou.",
-  "verification.step.phoneLabel": "O teu número de telefone",
-  "verification.step.phonePlaceholder": "+351 …",
-  "verification.step.privacy":
-    "Usamo-lo apenas para enviar o código, e nunca o mostramos a ninguém.",
-  "verification.step.sendCta": "Enviar código",
-  "verification.step.sending": "A enviar",
-  "verification.step.sendError":
-    "Não foi possível enviar o código — confirma o número e tenta de novo.",
-  "verification.step.codeLabel": "Introduz o código de 6 dígitos",
-  "verification.step.codePlaceholder": "123456",
-  "verification.step.codeHint": "Acabámos de to enviar por SMS.",
-  "verification.step.backCta": "Voltar",
-  "verification.step.confirmCta": "Confirmar",
-  "verification.step.confirming": "A confirmar",
-  "verification.step.codeError":
-    "Esse código não coincide — pede um novo e tenta de novo.",
-  "verification.step.identityBody":
-    "Concluis isto com o nosso parceiro de identidade. Só recebemos um passou ou não passou — nunca o teu documento.",
-  "verification.step.identityCta": "Continuar para a verificação de ID",
-  "verification.step.opening": "A abrir",
-  "verification.step.identityError":
-    "Não foi possível iniciar a verificação de ID — tenta de novo.",
-  "verification.step.cancel": "Agora não",
-  "verification.step.later": "Talvez mais tarde",
+  // ── Pedidos de verificação — enviar, acompanhar, recorrer (Fase 2) ─────
+  "verification.request.ariaLabel": "Pedir verificação",
+  "verification.request.title": "Pedir verificação",
+  "verification.request.subForm":
+    "Uma pessoa moderadora lê cada pedido à mão, por isso conta-nos um pouco por palavras tuas. Não há nenhum documento para enviar, nunca.",
+  "verification.request.levelLabel": "De que nível precisas?",
+  "verification.request.level.phone.hint":
+    "Uma verificação leve de que conseguimos contactar-te. Suficiente para a maioria dos anúncios.",
+  "verification.request.level.id.hint":
+    "Uma verificação mais completa, para os anúncios e funções que a pedem.",
+  "verification.request.contextLabel": "Conta-nos um pouco (opcional)",
+  "verification.request.contextPlaceholder":
+    "Um link para o teu perfil noutro sítio, ou alguém em comum que te conheça. O que ajudar uma pessoa moderadora a reconhecer-te.",
+  "verification.request.contextHint":
+    "As tuas próprias palavras chegam, uma pessoa moderadora lê isto à mão.",
+  "verification.request.submitCta": "Enviar pedido",
+  "verification.request.submitting": "A enviar",
+  "verification.request.submitError":
+    "Não foi possível enviar o teu pedido. Importas-te de tentar de novo?",
+  "verification.request.cancel": "Agora não",
+  "verification.request.sub.pending":
+    "Uma pessoa moderadora lê os pedidos à mão, por isso isto pode demorar alguns dias. Avisamos-te assim que houver decisão.",
+  "verification.request.sub.in_review":
+    "Uma pessoa moderadora está a analisar isto agora. Avisamos-te assim que houver decisão.",
+  "verification.request.sub.appealing":
+    "O teu recurso está com uma pessoa moderadora agora. Avisamos-te assim que houver decisão.",
+  "verification.request.sub.rejected":
+    "Este pedido precisa de mais um passo antes de podermos subir o teu nível.",
+  "verification.request.statusPill.pending": "Enviado",
+  "verification.request.statusPill.in_review": "Em análise",
+  "verification.request.statusPill.appealing": "Recurso em análise",
+  "verification.request.statusPill.rejected": "Precisa de mais um passo",
+  "verification.request.appealChip": "Recurso",
+  "verification.request.yourNote": "A tua nota",
+  "verification.request.moderatorNote": "O que a pessoa moderadora disse",
+  "verification.request.withdrawCta": "Retirar pedido",
+  "verification.request.withdrawing": "A retirar",
+  "verification.request.withdrawnToast": "Pedido retirado.",
+  "verification.request.withdrawError":
+    "Não foi possível retirar o pedido. Importas-te de tentar de novo?",
+  "verification.request.appealCta": "Recorrer desta decisão",
+  "verification.request.appealSending": "A enviar recurso",
+  "verification.request.appealError":
+    "Não foi possível enviar o teu recurso. Importas-te de tentar de novo?",
+  "verification.request.newRequestCta": "Começar um novo pedido",
+  "verification.request.later": "Vejo mais tarde",
+  "verification.request.approved.title": "O teu pedido foi",
+  "verification.request.approved.em": "aprovado",
+  "verification.request.approved.body":
+    "Uma pessoa moderadora subiu o teu nível. Já podes tentar de novo.",
+  "verification.request.approved.continueCta": "Continuar",
   "housingListing.availableFrom":
     "Disponível a partir de {date} · publicado por uma pessoa membro verificada",
   "housingListing.repliesUsually": "Costuma responder <b>{time}</b>",

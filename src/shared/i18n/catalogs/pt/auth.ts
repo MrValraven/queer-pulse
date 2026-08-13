@@ -248,6 +248,15 @@ export const auth: Catalog = {
   "ageAttestation.confirmLabel": "Confirmo que tenho 18 anos ou mais.",
   "ageAttestation.helper":
     "O QueerPulse é uma comunidade só para adultos — <eligibility>percebe porquê</eligibility>. Não precisas de identificação; confiamos em ti. <under18>Ainda não tens 18?</under18>",
+  "adultsOnly.eyebrow": "Adesão",
+  "adultsOnly.ariaLabel": "Porque o QueerPulse é só para adultos",
+  "adultsOnly.title": "Porque o QueerPulse é <em>só para adultos</em>",
+  "adultsOnly.body1":
+    "O QueerPulse está aberto a qualquer pessoa com 18 anos ou mais que seja convidada ou avalizada para a comunidade.",
+  "adultsOnly.body2":
+    "Mantemos o espaço só para adultos por uma razão. Muito do que acontece aqui são conversas francas sobre sexo e saúde sexual, encontros e vida noturna, e o tipo de conversa sem filtros que só é seguro entre adultos. Não é adequado para menores, e misturar os dois poria a segurança de toda a gente em risco. As pessoas com menos de 18 também merecem comunidade queer; este só ainda não é o espaço para isso.",
+  "adultsOnly.reassure": "Não precisas de identificação. Confiamos em ti.",
+  "adultsOnly.done": "Percebi",
 
   // ── Bloco humano para menores de 18 ──
   "under18.title": "Vamos estar aqui <em>quando estiveres preparade</em>",

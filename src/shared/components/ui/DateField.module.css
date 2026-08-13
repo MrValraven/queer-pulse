@@ -1,0 +1,67 @@
+/* Segmented spinbutton date input — the typeable half of DatePicker. Tokens
+   only, mirroring Calendar.module.css / Select.module.css conventions. */
+
+.field {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  padding: 0 10px;
+  height: 40px;
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  background: var(--paper);
+  font-family: var(--sans);
+  font-variant-numeric: tabular-nums;
+  transition: border-color 0.16s var(--ease), box-shadow 0.16s var(--ease);
+}
+.field:focus-within {
+  border-color: var(--plum);
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.16);
+}
+.field.invalid {
+  border-color: var(--danger);
+}
+.field.disabled {
+  opacity: 0.6;
+}
+
+.segmentGroup {
+  display: inline-flex;
+  align-items: center;
+}
+
+.segment {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.6em;
+  padding: 4px 2px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: var(--ink);
+  cursor: default;
+  outline: none;
+  transition: background 0.16s var(--ease), color 0.16s var(--ease);
+}
+.segment:focus-visible {
+  background: var(--wash);
+  box-shadow: 0 0 0 2px rgba(var(--plum-rgb), 0.24);
+}
+.segmentEmpty {
+  color: var(--ink-40);
+}
+
+.separator {
+  color: var(--ink-40);
+  padding: 0 1px;
+  user-select: none;
+}
+
+/* ── Compact density ── */
+.sm.field {
+  height: 34px;
+  padding: 0 8px;
+}
+.sm .segment {
+  font-size: 13px;
+}

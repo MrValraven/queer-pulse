@@ -2085,6 +2085,7 @@ export const LIVING: Record<string, LivingCommunity> = {
   "queer-social": {
     slug: "queer-social",
     accessTier: "public",
+    frozen: true,
     rules: SOCIAL_RULES,
     resources: SOCIAL_RESOURCES,
     events: SOCIAL_EVENTS,

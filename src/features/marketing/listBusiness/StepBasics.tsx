@@ -1,4 +1,4 @@
-import { FormField, RadioCardGroup } from "../../../shared/components/ui";
+import { FormField, RadioCardGroup, Select } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   ANCHOR,
@@ -89,19 +89,15 @@ export function StepBasics({ form }: { form: ListingForm }) {
         label={t("marketing:listBusiness.step1.hoodLabel")}
         required
       >
-        <select
-          value={draft.hood}
-          onChange={(e) => set({ hood: e.target.value })}
-        >
-          <option value="">
-            {t("marketing:listBusiness.step1.hoodPlaceholder")}
-          </option>
-          {NEIGHBOURHOODS.map((h) => (
-            <option key={h} value={h}>
-              {hoodLabel(t, h)}
-            </option>
-          ))}
-        </select>
+        <Select
+          placeholder={t("marketing:listBusiness.step1.hoodPlaceholder")}
+          options={NEIGHBOURHOODS.map((hood) => ({
+            value: hood,
+            label: hoodLabel(t, hood),
+          }))}
+          value={draft.hood || null}
+          onChange={(value) => set({ hood: value ?? "" })}
+        />
       </FormField>
 
       <StepBasicsBadgeField form={form} />

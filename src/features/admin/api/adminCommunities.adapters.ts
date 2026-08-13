@@ -255,6 +255,10 @@ export function cardDtoToCommunity(
     // Neither endpoint exposes a code-of-care summary yet — no backend field.
     code: "",
     visibility: CARD_PATH_VISIBILITY_PLACEHOLDER,
+    // The card endpoint carries no safety-policy flags — only the detail
+    // endpoint does. Default off; the grid never reads these.
+    requiresSecondVouch: false,
+    autoFreezeOnReports: false,
     support: cardDto.needsSupport,
     // The card endpoint carries no moderator roster.
     moderators: [],
@@ -275,6 +279,9 @@ export function detailDtoToCommunity(
     resolvedPercent: detailDto.resolvedPercentage,
     founded: monthYearLabel(detailDto.foundedAt, fmt),
     visibility: detailDto.visibility,
+    requiresSecondVouch: detailDto.requiresSecondVouch,
+    autoFreezeOnReports: detailDto.autoFreezeOnReports,
+    frozen: detailDto.frozen,
     // Still no backend field for either of these — see the card-path comment.
     join: "",
     code: "",

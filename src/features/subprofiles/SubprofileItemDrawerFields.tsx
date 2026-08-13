@@ -1,10 +1,10 @@
-import { FormField } from "../../shared/components/ui";
+import { DatePicker, FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileItemDTO } from "./api/subprofiles.api";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 import { FIELD_META, ITEM_LINKS_SECTIONS } from "./subprofileEditor.data";
 import { ImageUploadField } from "./ImageUploadField";
-import { HandleChipInput } from "./HandleChipInput";
+import { CollaboratorSelect } from "./CollaboratorSelect";
 import { SubprofileItemLinksField } from "./SubprofileItemLinksField";
 import { RICH_FIELDS_FOR_SECTION, type RichFieldDescriptor } from "./richFields.data";
 import { PoemBodyEditor } from "./poem/PoemBodyEditor";
@@ -22,6 +22,18 @@ function parseSnippetLines(raw: string): string[] | null {
     .map((line) => line.trim())
     .filter(Boolean);
   return lines.length > 0 ? lines : null;
+}
+
+/** Seed value for a month picker (`yyyy-mm`). A bare `yyyy-mm` passes through;
+ *  a legacy free-text date ("July 2025") is best-effort parsed so the picker
+ *  opens on the stored month; anything unparseable ("Ongoing") shows empty and
+ *  the stored value is left untouched until the user picks a month. */
+function toMonthValue(raw: string): string {
+  if (/^\d{4}-\d{2}$/.test(raw)) return raw;
+  const parsed = Date.parse(raw);
+  if (Number.isNaN(parsed)) return "";
+  const date = new Date(parsed);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 }
 
 function RichFieldControl({
@@ -63,18 +75,14 @@ function RichFieldControl({
   if (descriptor.kind === "select") {
     return (
       <FormField label={t(descriptor.labelKey)}>
-        <select
+        <Select
+          options={(descriptor.options ?? []).map((option) => ({
+            value: option.value,
+            label: t(option.labelKey),
+          }))}
           value={rawValue}
-          onChange={(e) =>
-            onPatch({ [richKey]: e.target.value || null })
-          }
-        >
-          {descriptor.options?.map((option) => (
-            <option key={option.value} value={option.value}>
-              {t(option.labelKey)}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => onPatch({ [richKey]: value || null })}
+        />
       </FormField>
     );
   }
@@ -152,6 +160,13 @@ export function SubprofileItemDrawerFields({
                 placeholder={t(meta.placeholderKey)}
                 onChange={(e) => onPatch({ [field]: e.target.value })}
               />
+            ) : meta.inputType === "month" ? (
+              <DatePicker
+                mode="month"
+                label={t(meta.labelKey)}
+                value={toMonthValue(value) || null}
+                onChange={(monthValue) => onPatch({ [field]: monthValue ?? "" })}
+              />
             ) : (
               <input
                 value={value}
@@ -211,7 +226,7 @@ export function SubprofileItemDrawerFields({
 
       {draft.section !== "gallery" && (
         <div className="pe-field-wide">
-          <HandleChipInput
+          <CollaboratorSelect
             collaborators={draft.collaborators}
             onChange={(collaborators) => onPatch({ collaborators })}
           />

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiMapPin, FiVideo } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, DatePicker } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -134,27 +134,27 @@ export function RequestViewingModal({
 
           <div className={v.slots}>
             <div className={v.slotRow}>
-              <label className={v.slotLabel} htmlFor="viewing-slot-1">
+              <label className={v.slotLabel} id="viewing-slot-1-label">
                 {t("economy:housingViewing.request.slotOne")}
               </label>
-              <input
+              <DatePicker
+                mode="datetime"
                 id="viewing-slot-1"
-                type="datetime-local"
-                className={v.slotInput}
-                value={slotOne}
-                onChange={(event) => setSlotOne(event.target.value)}
+                labelledBy="viewing-slot-1-label"
+                value={slotOne || null}
+                onChange={(value) => setSlotOne(value ?? "")}
               />
             </div>
             <div className={v.slotRow}>
-              <label className={v.slotLabel} htmlFor="viewing-slot-2">
+              <label className={v.slotLabel} id="viewing-slot-2-label">
                 {t("economy:housingViewing.request.slotTwo")}
               </label>
-              <input
+              <DatePicker
+                mode="datetime"
                 id="viewing-slot-2"
-                type="datetime-local"
-                className={v.slotInput}
-                value={slotTwo}
-                onChange={(event) => setSlotTwo(event.target.value)}
+                labelledBy="viewing-slot-2-label"
+                value={slotTwo || null}
+                onChange={(value) => setSlotTwo(value ?? "")}
               />
             </div>
           </div>

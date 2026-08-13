@@ -1,5 +1,5 @@
 import { FiCalendar, FiFileText, FiGrid, FiList, FiPlus, FiUser } from "react-icons/fi";
-import { Button, SegmentedControl } from "../../../shared/components/ui";
+import { Button, SegmentedControl, Select } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Editor, Issue } from "../data/desk.data";
 import type { DeskTrack } from "./DeskTrackTabs";
@@ -121,17 +121,16 @@ export function DeskHeader({
           <span className={styles.picker}>
             <FiUser aria-hidden />
             {t("magazine:desk.header.viewingAs")}
-            <select
+            <Select
+              size="sm"
               value={me}
-              onChange={(event) => onMe(event.target.value)}
-              aria-label={t("magazine:desk.header.viewingAsEditorAria")}
-            >
-              {editors.map((editor) => (
-                <option key={editor.id} value={editor.id}>
-                  {editor.name.split(" ")[0]}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => onMe(value ?? "")}
+              label={t("magazine:desk.header.viewingAsEditorAria")}
+              options={editors.map((editor) => ({
+                value: editor.id,
+                label: editor.name.split(" ")[0],
+              }))}
+            />
           </span>
           {isIssueTrack && hasIssue && (
             <Button variant="ghost" onClick={onProduce}>

@@ -42,8 +42,17 @@ function buildReplacedSectionItems(
   items: SubprofileItemInputDTO[],
 ): SubprofileItemDTO[] {
   const isLinksSection = section === "links";
+  // Mirrors `useSubprofileMutations`' demo replace path: no per-item id
+  // continuity in this system's input DTO, so every replaced item is
+  // stamped with "now" as its first-published date.
+  const replaceTimestamp = new Date().toISOString();
   return items.map((item) => ({
+    // Same id-continuity limitation as `createdAt` above: mirrors the real
+    // backend recreating item rows (and therefore ids) on a full section
+    // replace, so each mocked item gets a fresh id here too.
+    id: `itm-msw-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     section,
+    createdAt: replaceTimestamp,
     title: item.title,
     subtitle: item.subtitle ?? null,
     description: item.description ?? null,

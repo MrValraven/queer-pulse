@@ -1,3 +1,4 @@
+import { DatePicker, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   activeFilterCount,
@@ -84,41 +85,37 @@ export function HousingFilterBar({ filters, onChange }: FilterBarProps) {
 
         <div className={s.filterField}>
           <label htmlFor="hf-beds">{t("economy:housing.filterBar.beds")}</label>
-          <select
+          <Select
             id="hf-beds"
-            className={s.filterSelect}
+            size="sm"
+            options={BEDROOM_OPTIONS.map((option) => ({
+              value: option.value,
+              label: t(option.labelKey),
+            }))}
             value={filters.bedroomsMin?.toString() ?? ""}
-            onChange={(event) =>
+            onChange={(value) =>
               onChange({
                 ...filters,
-                bedroomsMin:
-                  event.target.value === ""
-                    ? undefined
-                    : Number(event.target.value),
+                bedroomsMin: value ? Number(value) : undefined,
               })
             }
-          >
-            {BEDROOM_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {t(option.labelKey)}
-              </option>
-            ))}
-          </select>
+          />
         </div>
 
         <div className={s.filterField}>
-          <label htmlFor="hf-available">
+          <label id="hf-available-label">
             {t("economy:housing.filterBar.availableBy")}
           </label>
-          <input
+          <DatePicker
+            mode="date"
             id="hf-available"
-            type="date"
-            className={s.filterInput}
-            value={filters.availableBy ?? ""}
-            onChange={(event) =>
+            size="sm"
+            labelledBy="hf-available-label"
+            value={filters.availableBy ?? null}
+            onChange={(value) =>
               onChange({
                 ...filters,
-                availableBy: event.target.value || undefined,
+                availableBy: value ?? undefined,
               })
             }
           />

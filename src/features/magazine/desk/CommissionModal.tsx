@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Modal, Button, FormField, SegmentedControl } from "../../../shared/components/ui";
+import { Modal, Button, DatePicker, FormField, SegmentedControl, Select } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { DeskTrack } from "./DeskTrackTabs";
 import styles from "./DeskModals.module.css";
@@ -125,16 +125,14 @@ export function CommissionModal({
       </FormField>
       <div className={styles.row}>
         <FormField label={t("magazine:desk.modals.commission.sectionLabel")}>
-          <select
+          <Select
             value={section}
-            onChange={(event) => setSection(event.target.value)}
-          >
-            {sections.map((option) => (
-              <option key={option.name} value={option.name}>
-                {option.name}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => setSection(value ?? "")}
+            options={sections.map((option) => ({
+              value: option.name,
+              label: option.name,
+            }))}
+          />
         </FormField>
         <FormField label={t("magazine:desk.modals.commission.wordsLabel")}>
           <input
@@ -147,10 +145,11 @@ export function CommissionModal({
       </div>
       <div className={styles.row}>
         <FormField label={t("magazine:desk.modals.commission.dueDateLabel")}>
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(event) => setDueDate(event.target.value)}
+          <DatePicker
+            mode="date"
+            label={t("magazine:desk.modals.commission.dueDateLabel")}
+            value={dueDate || null}
+            onChange={(value) => setDueDate(value ?? "")}
           />
         </FormField>
         <FormField label={t("magazine:desk.modals.commission.feeLabel")}>

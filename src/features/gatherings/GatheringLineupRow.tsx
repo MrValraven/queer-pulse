@@ -1,5 +1,5 @@
 import { FiX } from "react-icons/fi";
-import { MemberIdentity } from "../../shared/components/ui";
+import { MemberIdentity, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileKind } from "../subprofiles/api/subprofiles.api";
 import { KIND_LABEL_KEYS } from "../subprofiles/subprofile-kinds";
@@ -37,18 +37,17 @@ export function GatheringLineupRow({
         person={{ slug: row.slug, name: row.name, avatarUrl: row.avatarUrl ?? undefined }}
         size={38}
       />
-      <select
+      <Select
         className={styles.roleSelect}
-        aria-label={t("gatherings:lineup.roleLabel")}
+        size="sm"
+        label={t("gatherings:lineup.roleLabel")}
+        options={LINEUP_ROLES.map((role) => ({
+          value: role,
+          label: t(KIND_LABEL_KEYS[role]),
+        }))}
         value={row.role}
-        onChange={(event) => onRoleChange(event.target.value as SubprofileKind)}
-      >
-        {LINEUP_ROLES.map((role) => (
-          <option key={role} value={role}>
-            {t(KIND_LABEL_KEYS[role])}
-          </option>
-        ))}
-      </select>
+        onChange={(value) => onRoleChange(value as SubprofileKind)}
+      />
       <button
         type="button"
         className={styles.removeBtn}

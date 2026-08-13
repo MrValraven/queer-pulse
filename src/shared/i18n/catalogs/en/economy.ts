@@ -719,36 +719,57 @@ export const economy: Catalog = {
     "Every home and housemate here is LGBTQ+ affirming — that's the <em>standard.</em>",
   "affirmingBaseline.detailNote":
     "This is the baseline for every home here, not a listing extra.",
-  "verification.step.ariaLabel": "Verify to continue",
-  "verification.step.title": "A quick verification first",
-  "verification.step.subPhone":
-    "Housing is where safety matters most, so we confirm a phone number before you post or reach out. It stays private.",
-  "verification.step.subId":
-    "This step needs an ID check. We never see or store your document — an external provider handles it and only tells us it passed.",
-  "verification.step.phoneLabel": "Your phone number",
-  "verification.step.phonePlaceholder": "+351 …",
-  "verification.step.privacy":
-    "We use it only to send the code, and never show it to anyone.",
-  "verification.step.sendCta": "Send code",
-  "verification.step.sending": "Sending",
-  "verification.step.sendError":
-    "Couldn't send the code — check the number and try again.",
-  "verification.step.codeLabel": "Enter the 6-digit code",
-  "verification.step.codePlaceholder": "123456",
-  "verification.step.codeHint": "We just texted it to you.",
-  "verification.step.backCta": "Back",
-  "verification.step.confirmCta": "Confirm",
-  "verification.step.confirming": "Confirming",
-  "verification.step.codeError":
-    "That code didn't match — request a new one and try again.",
-  "verification.step.identityBody":
-    "You'll finish this with our identity partner. We only ever receive a pass or fail — never your document.",
-  "verification.step.identityCta": "Continue to ID check",
-  "verification.step.opening": "Opening",
-  "verification.step.identityError":
-    "Couldn't start the ID check — please try again.",
-  "verification.step.cancel": "Not now",
-  "verification.step.later": "Maybe later",
+  // ── Verification requests — submit, track, appeal (Phase 2) ────────────
+  "verification.request.ariaLabel": "Request verification",
+  "verification.request.title": "Request verification",
+  "verification.request.subForm":
+    "A moderator reads every request by hand, so tell us a little in your own words. There's no document to upload, ever.",
+  "verification.request.levelLabel": "Which level do you need?",
+  "verification.request.level.phone.hint":
+    "A light check that we can reach you. Enough for most listings.",
+  "verification.request.level.id.hint":
+    "A fuller check, for the listings and roles that ask for it.",
+  "verification.request.contextLabel": "Tell us a bit (optional)",
+  "verification.request.contextPlaceholder":
+    "A link to your profile elsewhere, or a mutual connection who knows you. Whatever helps a moderator recognise you.",
+  "verification.request.contextHint":
+    "Your own words are enough. A moderator reads this by hand.",
+  "verification.request.submitCta": "Send request",
+  "verification.request.submitting": "Sending",
+  "verification.request.submitError":
+    "Couldn't send your request. Mind trying again?",
+  "verification.request.cancel": "Not now",
+  "verification.request.sub.pending":
+    "A moderator reads requests by hand, so this can take a couple of days. We'll let you know the moment it's decided.",
+  "verification.request.sub.in_review":
+    "A moderator is looking at this now. We'll let you know the moment it's decided.",
+  "verification.request.sub.appealing":
+    "Your appeal is with a moderator now. We'll let you know the moment it's decided.",
+  "verification.request.sub.rejected":
+    "This one needs another step before we can raise your level.",
+  "verification.request.statusPill.pending": "Submitted",
+  "verification.request.statusPill.in_review": "In review",
+  "verification.request.statusPill.appealing": "Appeal in review",
+  "verification.request.statusPill.rejected": "Needs another step",
+  "verification.request.appealChip": "Appeal",
+  "verification.request.yourNote": "Your note",
+  "verification.request.moderatorNote": "What the moderator said",
+  "verification.request.withdrawCta": "Withdraw request",
+  "verification.request.withdrawing": "Withdrawing",
+  "verification.request.withdrawnToast": "Request withdrawn.",
+  "verification.request.withdrawError":
+    "Couldn't withdraw the request. Mind trying again?",
+  "verification.request.appealCta": "Appeal this decision",
+  "verification.request.appealSending": "Sending appeal",
+  "verification.request.appealError":
+    "Couldn't send your appeal. Mind trying again?",
+  "verification.request.newRequestCta": "Start a new request",
+  "verification.request.later": "I'll check back later",
+  "verification.request.approved.title": "Your request is",
+  "verification.request.approved.em": "approved",
+  "verification.request.approved.body":
+    "A moderator raised your level. You're all set to try again.",
+  "verification.request.approved.continueCta": "Continue",
   "housingListing.availableFrom":
     "Available from {date} · posted by a verified member",
   "housingListing.repliesUsually": "Usually replies <b>{time}</b>",

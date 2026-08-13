@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { Button } from "../../shared/components/ui";
+import { Button, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Slide } from "./data/decks";
 import { newSlide } from "./deckDraft";
@@ -129,21 +129,17 @@ export function DeckSlidesEditor({ slides, onChange }: DeckSlidesEditorProps) {
           <label className={styles.label} htmlFor={selectId}>
             {t("magazine:deck.editor.addSlideLayout")}
           </label>
-          <select
+          <Select
             id={selectId}
-            className={styles.select}
+            size="sm"
             value={selectedOption}
             disabled={atCap}
-            onChange={(event) =>
-              setSelectedOption(event.target.value as AddSlideOption)
-            }
-          >
-            {ADD_OPTIONS.map((option) => (
-              <option key={option.id} value={option.id}>
-                {t(option.labelKey)}
-              </option>
-            ))}
-          </select>
+            onChange={(value) => setSelectedOption(value as AddSlideOption)}
+            options={ADD_OPTIONS.map((option) => ({
+              value: option.id,
+              label: t(option.labelKey),
+            }))}
+          />
         </div>
         <Button type="button" variant="ghost" onClick={addSlide} disabled={atCap}>
           {t("magazine:deck.editor.addSlide")}

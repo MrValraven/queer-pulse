@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Spinner } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
@@ -91,7 +92,7 @@ export function VouchMemberModal({
     );
   };
 
-  return (
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -144,6 +145,7 @@ export function VouchMemberModal({
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { AnimatePresence, m } from "motion/react";
 import { FiChevronUp, FiChevronDown, FiTrash2 } from "react-icons/fi";
+import { useMotionPrefs } from "../../app/providers/MotionProvider";
 import {
   Avatar,
   Button,
@@ -168,6 +170,7 @@ function AdminLandingFeatureRow({
   onRemove: () => void;
 }) {
   const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
   const name = feature.target?.name ?? t("admin:landing.list.unknownTarget");
   const preview = copyPreview(section, feature.copy);
 
@@ -258,15 +261,29 @@ function AdminLandingFeatureRow({
         </div>
       </div>
 
-      {expanded && (
-        <div className={styles.editorWrap}>
-          <AdminLandingFeatureEditor
-            section={section}
-            feature={feature}
-            onSaved={onToggleExpand}
-          />
-        </div>
-      )}
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <m.div
+            key="editor"
+            className={styles.editorReveal}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{
+              duration: reducedMotion ? 0 : 0.24,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
+            <div className={styles.editorWrap}>
+              <AdminLandingFeatureEditor
+                section={section}
+                feature={feature}
+                onSaved={onToggleExpand}
+              />
+            </div>
+          </m.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

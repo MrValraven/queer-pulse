@@ -1,7 +1,7 @@
 import { useState, type RefObject } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiCheck } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -271,21 +271,16 @@ function NominateForm({
           value={values.address}
           onChange={(e) => onChange({ address: e.target.value })}
         />
-        <select
-          className={styles.nomSelect}
-          value={values.placeType}
-          onChange={(e) => onChange({ placeType: e.target.value })}
-          aria-label={t("safety:spaces.nominate.typeSelect.placeholder")}
-        >
-          <option value="">
-            {t("safety:spaces.nominate.typeSelect.placeholder")}
-          </option>
-          {NOMINATE_TYPE_KEYS.map((key) => (
-            <option key={key} value={t(key)}>
-              {t(key)}
-            </option>
-          ))}
-        </select>
+        <Select
+          label={t("safety:spaces.nominate.typeSelect.placeholder")}
+          placeholder={t("safety:spaces.nominate.typeSelect.placeholder")}
+          value={values.placeType || null}
+          onChange={(value) => onChange({ placeType: value ?? "" })}
+          options={NOMINATE_TYPE_KEYS.map((key) => ({
+            value: t(key),
+            label: t(key),
+          }))}
+        />
         <textarea
           className={styles.nomTextarea}
           placeholder={t("safety:spaces.nominate.reasonPlaceholder")}

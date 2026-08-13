@@ -1,5 +1,5 @@
 import { FiTrash2 } from "react-icons/fi";
-import { FormField, SegmentedControl } from "../../shared/components/ui";
+import { FormField, SegmentedControl, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AffiliationInputDTO } from "./api/subprofiles.api";
 import {
@@ -78,19 +78,14 @@ export function SubprofileAffiliationRow({
         </FormField>
 
         <FormField label={t("subprofiles:affiliationsEditor.roleLabel")}>
-          <select
-            value={row.role}
-            onChange={(event) => onChange({ role: event.target.value })}
-          >
-            {roles.map((role) => {
+          <Select
+            options={roles.map((role) => {
               const roleKey = AFFILIATION_ROLE_KEYS[role];
-              return (
-                <option key={role} value={role}>
-                  {roleKey ? t(roleKey) : role}
-                </option>
-              );
+              return { value: role, label: roleKey ? t(roleKey) : role };
             })}
-          </select>
+            value={row.role}
+            onChange={(value) => onChange({ role: value ?? "" })}
+          />
         </FormField>
       </div>
 

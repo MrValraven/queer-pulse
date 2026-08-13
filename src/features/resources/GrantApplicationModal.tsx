@@ -5,6 +5,7 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
+import { createPortal } from "react-dom";
 import { FiArrowLeft, FiArrowRight, FiSun, FiX } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -134,7 +135,7 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
       return nx;
     });
 
-  return (
+  return createPortal(
     <div
       className={styles.overlay}
       role="presentation"
@@ -272,6 +273,7 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
