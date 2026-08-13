@@ -72,7 +72,7 @@
     transform: translateY(0);
   }
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .modal {
     padding: 36px 24px 32px;
   }
@@ -220,7 +220,7 @@
 .fieldRow .field {
   margin-bottom: 18px;
 }
-@media (max-width: 480px) {
+@media (--xs) {
   .fieldRow {
     grid-template-columns: 1fr;
     gap: 0;

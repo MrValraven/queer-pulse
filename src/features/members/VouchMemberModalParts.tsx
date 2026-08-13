@@ -107,15 +107,16 @@ export function VouchSuccess({
 }
 
 /**
- * The vouch form: relationship radios, optional skill-endorsement chips, the
- * note textarea + counter, and the cancel / submit actions. Owns no state —
- * the modal lifts form state so it survives the loading transition.
+ * The vouch form: the "how you know them" relationship checkboxes (at least one
+ * required), optional skill-endorsement chips, the note textarea + counter, and
+ * the cancel / submit actions. Owns no state — the modal lifts form state so it
+ * survives the loading transition.
  */
 export function VouchForm({
   profile,
   first,
-  relationship,
-  setRelationship,
+  relationships,
+  toggleRelationship,
   endorsed,
   toggleTag,
   note,
@@ -129,8 +130,8 @@ export function VouchForm({
 }: {
   profile: MemberProfile;
   first: string;
-  relationship: VouchRelationship;
-  setRelationship: (r: VouchRelationship) => void;
+  relationships: VouchRelationship[];
+  toggleRelationship: (r: VouchRelationship) => void;
   endorsed: string[];
   toggleTag: (tag: string) => void;
   note: string;
@@ -144,6 +145,7 @@ export function VouchForm({
 }) {
   const { t } = useTranslation();
   const noteFieldId = useId();
+  const hasRelationship = relationships.length > 0;
   return (
     <div>
       <div className={styles.eye}>{t("members:vouch.modal.form.eyebrow")}</div>
@@ -177,26 +179,32 @@ export function VouchForm({
       </div>
 
       <div className={styles.label}>
-        {t("members:vouch.modal.form.relationshipLabel", { first })}
+        {t("members:vouch.modal.form.relationshipLabel", { first })}{" "}
+        <span className={styles.optional}>
+          {t("members:vouch.modal.form.relationshipHint")}
+        </span>
       </div>
       <div className={styles.opts}>
-        {RELATIONSHIPS.map((r) => (
-          <label
-            key={r}
-            className={[styles.opt, relationship === r && styles.optChecked]
-              .filter(Boolean)
-              .join(" ")}
-          >
-            <input
-              type="radio"
-              name="vouch-relationship"
-              value={r}
-              checked={relationship === r}
-              onChange={() => setRelationship(r)}
-            />
-            {t(RELATIONSHIP_LABEL_KEY[r])}
-          </label>
-        ))}
+        {RELATIONSHIPS.map((r) => {
+          const checked = relationships.includes(r);
+          return (
+            <label
+              key={r}
+              className={[styles.opt, checked && styles.optChecked]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              <input
+                type="checkbox"
+                name="vouch-relationship"
+                value={r}
+                checked={checked}
+                onChange={() => toggleRelationship(r)}
+              />
+              {t(RELATIONSHIP_LABEL_KEY[r])}
+            </label>
+          );
+        })}
       </div>
 
       <div className={styles.anonRow}>
@@ -286,7 +294,7 @@ export function VouchForm({
           variant="primary"
           className={styles.full}
           onClick={onSubmit}
-          disabled={isPending}
+          disabled={isPending || !hasRelationship}
         >
           {isPending ? (
             <>

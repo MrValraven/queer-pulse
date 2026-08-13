@@ -29,12 +29,23 @@ export function flatmateDtoToProfile(
     moveinKey: dto.flexibleTiming ? "flex" : (dto.moveInFrom ?? ""),
     note: dto.about,
     tags: dto.lifestyleTags,
+    // Special-category fields are already gated server-side — an empty value
+    // here just means the viewer isn't permitted to see it.
+    genderIdentity: dto.genderIdentity ?? undefined,
+    safeSpaceNeeds:
+      dto.safeSpaceNeeds.length > 0 ? dto.safeSpaceNeeds : undefined,
+    householdNorms: dto.householdNorms ?? undefined,
+    identityHousehold: dto.identityHousehold ?? undefined,
+    identityVisibility: dto.identityVisibility,
+    // Already GDPR-redacted server-side (generic safe-space label for viewers
+    // the owner hasn't permitted) — safe to render as-is.
+    matchReasons: dto.matchReasons.length > 0 ? dto.matchReasons : undefined,
     initials: dto.member
       ? initialsOf(dto.member.firstName, dto.member.lastName)
       : "",
     tint: tintForSlug(memberSlug),
     photo: dto.member?.avatarUrl ?? undefined,
-    verified: false, // not carried by the DTO (FE-only richness gap)
+    verificationLevel: dto.verificationLevel,
     since: "",
     matchScore: dto.matchScore,
   };

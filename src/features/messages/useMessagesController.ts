@@ -10,6 +10,7 @@ import {
   useRealtimeConnection,
 } from "../../shared/api/realtime";
 import { type ChatMessage, type Conversation } from "./data";
+import { clearConversationPrefs } from "./conversationPrefs";
 import { clearOutbox, loadOutbox } from "./outbox";
 import { clearDrafts } from "./drafts";
 import { useConversations, useUnreadMessages } from "./api/useConversations";
@@ -111,6 +112,9 @@ export function useMessagesController() {
     clearDrafts();
     // Session-scoped group state must not cross the boundary either.
     setLeftGroupIds(new Set());
+    // Demo pin/favorite is local fiction (see conversationPrefs.ts) — it must
+    // never bleed into a real session, nor a real pin into demo.
+    clearConversationPrefs();
   }
   const [composing, setComposing] = useState(false);
   /** The message currently being quoted for a reply, or null. Only a message
@@ -129,7 +133,17 @@ export function useMessagesController() {
       seenIds.add(thread.id);
       merged.push(thread);
     }
-    return merged;
+    // Pinned chats float to the top (WhatsApp-style), newest pin first; every
+    // other pair keeps its merge-order position. `Array.prototype.sort` is
+    // spec-stable, so returning 0 for two threads with no ordering preference
+    // here (both unpinned) never reshuffles them relative to each other — this
+    // is what keeps the pinned-first order intact inside every inbox tab too.
+    return merged.sort((a, b) => {
+      if (!!a.pinnedAt === !!b.pinnedAt) {
+        return a.pinnedAt && b.pinnedAt ? b.pinnedAt.localeCompare(a.pinnedAt) : 0;
+      }
+      return a.pinnedAt ? -1 : 1;
+    });
   }, [extraThreads, baseThreads, locallyDeletedIds]);
 
   // Default the open thread to the first available once threads load. Adjusting

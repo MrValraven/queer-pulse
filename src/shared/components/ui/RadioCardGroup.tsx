@@ -16,8 +16,18 @@ export interface RadioCardGroupProps<OptionId extends string> {
   /** Called with the newly selected id on click, Space/Enter, or arrow move. */
   onChange: (id: OptionId) => void;
   options: RadioCardOption<OptionId>[];
-  /** Accessible name for the `role="radiogroup"` container. */
+  /** Accessible name for the `role="radiogroup"` container. Ignored when
+   *  `ariaLabelledBy` is also passed (still required as a fallback / for
+   *  callers with no visible label element of their own). */
   ariaLabel: string;
+  /** id of a visible label element the caller already renders (e.g. a
+   *  heading or a `.label` div) — associates it via `aria-labelledby`
+   *  instead of the caller re-stating the same text as a bare `ariaLabel`
+   *  string. Takes precedence over `ariaLabel` when set. */
+  ariaLabelledBy?: string;
+  /** id of a visible description element (e.g. a hint paragraph under the
+   *  group's label) to associate via `aria-describedby`. */
+  ariaDescribedBy?: string;
   /** Class for the container (pass the existing layout class, e.g. a grid). */
   className?: string;
   /** Base class for every option button (its "off"/resting look). */
@@ -51,6 +61,8 @@ export function RadioCardGroup<OptionId extends string>({
   onChange,
   options,
   ariaLabel,
+  ariaLabelledBy,
+  ariaDescribedBy,
   className,
   optionClassName,
   checkedClassName,
@@ -109,7 +121,9 @@ export function RadioCardGroup<OptionId extends string>({
     <div
       id={id}
       role="radiogroup"
-      aria-label={ariaLabel}
+      aria-label={ariaLabelledBy ? undefined : ariaLabel}
+      aria-labelledby={ariaLabelledBy}
+      aria-describedby={ariaDescribedBy}
       className={[styles.group, className].filter(Boolean).join(" ")}
       style={
         columns ? { gridTemplateColumns: `repeat(${columns}, 1fr)` } : undefined

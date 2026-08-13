@@ -32,6 +32,7 @@ import { marketingRoutes } from "../features/marketing/routes";
 import { resourceRoutes } from "../features/resources/routes";
 import { safetyRoutes } from "../features/safety/routes";
 import { authRoutes } from "../features/auth/routes";
+import { onboardingRoutes } from "../features/onboarding/routes";
 import { economyRoutes } from "../features/economy/routes";
 import { cinemaRoutes } from "../features/cinema/routes";
 import { studioRoutes } from "../features/studio/routes";
@@ -91,6 +92,7 @@ export function AppRoutes() {
           {resourceRoutes()}
           {safetyRoutes()}
           {authRoutes()}
+          {onboardingRoutes()}
           {economyRoutes()}
           {cinemaRoutes()}
           {studioRoutes(demoMode)}

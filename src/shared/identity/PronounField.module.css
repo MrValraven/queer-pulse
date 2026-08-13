@@ -1,0 +1,27 @@
+/* src/shared/identity/PronounField.module.css */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.label { font-weight: 600; font-size: 14px; color: var(--ink); }
+.helper { font-size: 13px; color: var(--ink-60); margin: 0 0 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  padding: 7px 14px; border-radius: 999px;
+  border: 1px solid rgba(var(--plum-rgb), 0.18);
+  background: var(--paper); color: var(--ink);
+  font: inherit; font-size: 13.5px; cursor: pointer;
+  transition: background 0.15s var(--ease), border-color 0.15s var(--ease);
+}
+.chipSelected { background: var(--plum); color: var(--cream); border-color: var(--plum); }
+.writeOwn { margin-top: 10px; font-weight: 600; font-size: 14px; color: var(--ink); }
+.customList { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.customTag {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 10px; border-radius: 999px;
+  background: rgba(var(--plum-rgb), 0.08); color: var(--ink); font-size: 13.5px;
+}
+.customRemove { background: none; border: 0; cursor: pointer; color: var(--ink-40); font-size: 15px; line-height: 1; }
+.inputRow { display: flex; gap: 8px; margin-top: 6px; }
+.input {
+  flex: 1; padding: 10px 12px; border-radius: 10px;
+  border: 1px solid rgba(var(--plum-rgb), 0.18); background: var(--paper);
+  font: inherit; font-size: 14px; color: var(--ink);
+}

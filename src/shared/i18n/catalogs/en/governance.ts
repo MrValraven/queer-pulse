@@ -188,12 +188,13 @@ export const governance: Catalog = {
     "Describe what happened, or what's wrong, in as much detail as you're comfortable with…",
   "sections.raise.emailPlaceholder": "Your email (so we can update you)",
   "sections.raise.submitCta": "Submit",
+  "sections.raise.submittingCta": "Sending…",
   "sections.raise.submittedToast":
-    "Submitted — we'll be in touch within 48 hours",
-  // Live mode: there's no backend to receive a concern yet, so we don't claim
-  // to have received one (demo keeps the simulated confirmation above).
-  "sections.raise.comingSoonToast":
-    "Concern intake isn't live yet — this form isn't connected.",
+    "Submitted. We'll be in touch within 48 hours.",
+  "sections.raise.errorToast":
+    "Please choose a category and add a few details first.",
+  "sections.raise.failedToast":
+    "We couldn't send that just now. Please try again.",
   // Shown in place of a section's figures when its live fetch fails, so an API
   // error surfaces as a retry prompt rather than a silently-empty grid.
   "error.body": "We couldn't load this section just now.",

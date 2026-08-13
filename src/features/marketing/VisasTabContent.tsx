@@ -48,16 +48,8 @@ export function VisasTabContent({
                   {card.link.href === "#" ? (
                     <button
                       type="button"
+                      className={styles.linkButton}
                       onClick={onPartnerLink}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        padding: 0,
-                        cursor: "pointer",
-                        font: "inherit",
-                        color: "inherit",
-                        textDecoration: "underline",
-                      }}
                     >
                       {t(card.link.labelKey)} <FiArrowRight aria-hidden />
                     </button>

@@ -12,6 +12,7 @@ import {
   FiLayers,
   FiSettings,
   FiHelpCircle,
+  FiCompass,
 } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 
@@ -26,6 +27,12 @@ export type AccountItem = {
    * attach it per-row (matched by `to`) when rendering.
    */
   badge?: ReactNode;
+  /**
+   * Only show this row in live mode. Set on surfaces that track a real member's
+   * account state (e.g. Getting started), which have nothing to show in the demo
+   * sandbox — the panel/sheet drop the row when `demoMode` is on.
+   */
+  liveOnly?: boolean;
 };
 
 /**
@@ -83,6 +90,12 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
   ],
   // Support
   [
+    {
+      labelKey: "shared:accountMenu.items.gettingStarted",
+      to: routes.gettingStarted,
+      icon: FiCompass,
+      liveOnly: true,
+    },
     {
       labelKey: "shared:accountMenu.items.help",
       to: routes.help,

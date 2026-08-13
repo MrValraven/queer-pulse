@@ -1,10 +1,9 @@
-import { Navigate, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
 
 const WellbeingPage = lazyNamed(() => import("./WellbeingPage"), "WellbeingPage");
 const MentalHealthPage = lazyNamed(() => import("./MentalHealthPage"), "MentalHealthPage");
-const TherapistProfilePage = lazyNamed(() => import("./therapist/TherapistProfilePage"), "TherapistProfilePage");
 const TransHealthcarePage = lazyNamed(() => import("./TransHealthcarePage"), "TransHealthcarePage");
 const HarmReductionPage = lazyNamed(() => import("./HarmReductionPage"), "HarmReductionPage");
 const SexualHealthPage = lazyNamed(() => import("./SexualHealthPage"), "SexualHealthPage");
@@ -44,14 +43,6 @@ export function resourceRoutes() {
     <>
       <Route path={routes.wellbeing} element={<WellbeingPage />} />
       <Route path={routes.mentalHealth} element={<MentalHealthPage />} />
-      <Route
-        path={`${routes.therapists}/:id`}
-        element={<TherapistProfilePage />}
-      />
-      <Route
-        path="/therapist"
-        element={<Navigate to={`${routes.therapists}/ines-pereira`} replace />}
-      />
       <Route path={routes.transHealthcare} element={<TransHealthcarePage />} />
       <Route path={routes.harmReduction} element={<HarmReductionPage />} />
       <Route path={routes.sexualHealth} element={<SexualHealthPage />} />

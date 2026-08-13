@@ -1,0 +1,72 @@
+/* Disclosure checkboxes for the "list a space" form (broker + bills). The text
+ * inputs reuse ApplicationModals' `.field`; this is the one shape it doesn't
+ * cover. */
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink);
+  transition:
+    border-color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+.check:hover {
+  border-color: var(--line-strong);
+}
+.check input {
+  accent-color: var(--accent);
+  flex: none;
+  margin-block-start: 2px;
+}
+.checkText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.checkHint {
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+
+/* Photo-quality guidance — a calm helper block above the (reused) upload flow. */
+.guide {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(var(--jade-rgb), 0.07);
+  border: 1px solid rgba(var(--jade-rgb), 0.16);
+}
+.guideTitle {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.guideList {
+  margin: 0;
+  padding-inline-start: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+/* Inline field hint + error for the optional virtual-tour link. */
+.fieldHint {
+  font-size: 12.5px;
+  color: var(--ink-60);
+  margin-block-start: 4px;
+}
+.fieldError {
+  font-size: 12.5px;
+  color: var(--danger);
+  margin-block-start: 4px;
+}

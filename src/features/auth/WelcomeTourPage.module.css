@@ -503,7 +503,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (--xs) {
   .row,
   .exploreGrid {
     grid-template-columns: 1fr;

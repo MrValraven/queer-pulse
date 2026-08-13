@@ -352,12 +352,12 @@
   flex-wrap: wrap;
 }
 
-@media (max-width: 900px) {
+@media (--wide) {
   .headInner {
     grid-template-columns: 1fr;
   }
 }
-@media (max-width: 860px) {
+@media (--mobile) {
   .bodyGrid {
     grid-template-columns: 1fr;
   }

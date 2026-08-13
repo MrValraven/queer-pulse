@@ -33,7 +33,7 @@
   height: 15px;
 }
 
-@media (max-width: 560px) {
+@media (--sm) {
   .back {
     top: 16px;
     right: 14px;

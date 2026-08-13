@@ -4,6 +4,7 @@ import { lazyNamed } from "../../app/routeHelpers";
 
 const AdminDashboardPage = lazyNamed(() => import("./AdminDashboardPage"), "AdminDashboardPage");
 const AdminModerationPage = lazyNamed(() => import("./AdminModerationPage"), "AdminModerationPage");
+const AdminConcernsPage = lazyNamed(() => import("./AdminConcernsPage"), "AdminConcernsPage");
 const AdminMembersPage = lazyNamed(() => import("./AdminMembersPage"), "AdminMembersPage");
 const AdminBotsPage = lazyNamed(() => import("./AdminBotsPage"), "AdminBotsPage");
 const AdminSafeSpacesPage = lazyNamed(() => import("./AdminSafeSpacesPage"), "AdminSafeSpacesPage");
@@ -24,6 +25,8 @@ const AdminRoadmapPage = lazyNamed(() => import("./AdminRoadmapPage"), "AdminRoa
 const ModPanelPage = lazyNamed(() => import("./ModPanelPage"), "ModPanelPage");
 const AdminPartnerApplicationsPage = lazyNamed(() => import("./AdminPartnerApplicationsPage"), "AdminPartnerApplicationsPage");
 const AdminHousingCoopsPage = lazyNamed(() => import("./AdminHousingCoopsPage"), "AdminHousingCoopsPage");
+const AdminHousingGroupsPage = lazyNamed(() => import("./AdminHousingGroupsPage"), "AdminHousingGroupsPage");
+const AdminVerificationsPage = lazyNamed(() => import("./AdminVerificationsPage"), "AdminVerificationsPage");
 const AdminOrgTiersPage = lazyNamed(() => import("./AdminOrgTiersPage"), "AdminOrgTiersPage");
 const AdminSettingsPage = lazyNamed(() => import("./AdminSettingsPage"), "AdminSettingsPage");
 
@@ -33,6 +36,7 @@ export function adminRoutes() {
     <>
       <Route path={routes.admin} element={<AdminDashboardPage />} />
       <Route path={routes.adminModeration} element={<AdminModerationPage />} />
+      <Route path={routes.adminConcerns} element={<AdminConcernsPage />} />
       <Route path={routes.adminMembers} element={<AdminMembersPage />} />
       <Route path={routes.adminBots} element={<AdminBotsPage />} />
       <Route path={routes.adminSafeSpaces} element={<AdminSafeSpacesPage />} />
@@ -72,6 +76,14 @@ export function adminRoutes() {
       <Route
         path={routes.adminHousingCoops}
         element={<AdminHousingCoopsPage />}
+      />
+      <Route
+        path={routes.adminHousingGroups}
+        element={<AdminHousingGroupsPage />}
+      />
+      <Route
+        path={routes.adminVerifications}
+        element={<AdminVerificationsPage />}
       />
       <Route path={routes.adminOrgTiers} element={<AdminOrgTiersPage />} />
       <Route path={routes.adminGovernance} element={<AdminGovernancePage />} />

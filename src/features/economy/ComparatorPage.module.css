@@ -27,7 +27,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .rcRow {
     grid-template-columns: 1fr;
   }
@@ -67,7 +67,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .cols {
     grid-template-columns: 1fr;
   }

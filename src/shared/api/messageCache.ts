@@ -234,6 +234,45 @@ export function patchConversationPreview(
   );
 }
 
+/** Patch a conversation-list row's pin state in place (`pinnedAt` ISO, or
+ *  undefined when unpinned) — used by `useTogglePin`'s optimistic update in
+ *  both demo and live mode, so the row floats to/from the top without an
+ *  inbox refetch. A no-op if the row isn't cached. */
+export function patchConversationPinned(
+  queryClient: QueryClient,
+  conversationId: string,
+  pinnedAt: string | undefined,
+): void {
+  queryClient.setQueriesData<Conversation[]>(
+    { queryKey: ["conversations"] },
+    (previous) =>
+      previous?.map((conversation) =>
+        conversation.id === conversationId
+          ? { ...conversation, pinnedAt }
+          : conversation,
+      ),
+  );
+}
+
+/** Patch a conversation-list row's favorite state in place — used by
+ *  `useToggleFavorite`'s optimistic update in both demo and live mode. A
+ *  no-op if the row isn't cached. */
+export function patchConversationFavorite(
+  queryClient: QueryClient,
+  conversationId: string,
+  favorite: boolean,
+): void {
+  queryClient.setQueriesData<Conversation[]>(
+    { queryKey: ["conversations"] },
+    (previous) =>
+      previous?.map((conversation) =>
+        conversation.id === conversationId
+          ? { ...conversation, favorite }
+          : conversation,
+      ),
+  );
+}
+
 /** Patch a conversation-list row's unread state to zero — used by
  *  `useMarkRead.onSuccess` instead of `invalidateQueries(["conversations"])`,
  *  so opening an unread thread (which fires on every thread-open-with-unread)

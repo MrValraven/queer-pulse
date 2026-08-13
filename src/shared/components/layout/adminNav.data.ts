@@ -20,6 +20,8 @@ import {
   FiEdit3,
   FiRadio,
   FiImage,
+  FiUserCheck,
+  FiFlag,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
@@ -55,6 +57,11 @@ export const ADMIN_NAV: AdminNavItem[] = [
     tone: "alert",
   },
   {
+    labelKey: "shared:adminNav.items.concerns",
+    to: routes.adminConcerns,
+    icon: FiFlag,
+  },
+  {
     labelKey: "nav:members",
     to: routes.adminMembers,
     icon: FiUsers,
@@ -81,6 +88,11 @@ export const ADMIN_NAV: AdminNavItem[] = [
     labelKey: "shared:adminNav.items.listings",
     to: routes.adminListings,
     icon: FiFileText,
+  },
+  {
+    labelKey: "shared:adminNav.items.housingGroups",
+    to: routes.adminHousingGroups,
+    icon: FiHome,
   },
   {
     labelKey: "shared:adminNav.items.media",
@@ -123,6 +135,11 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: FiInbox,
     badge: "partnerships",
     tone: "warn",
+  },
+  {
+    labelKey: "shared:adminNav.items.verifications",
+    to: routes.adminVerifications,
+    icon: FiUserCheck,
   },
   {
     labelKey: "shared:adminNav.items.orgTiers",

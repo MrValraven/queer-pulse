@@ -162,7 +162,7 @@
   gap: 12px;
   margin-bottom: 20px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .edStats {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -307,7 +307,7 @@
   gap: 32px;
   align-items: flex-start;
 }
-@media (max-width: 900px) {
+@media (--wide) {
   .edGrid {
     grid-template-columns: 1fr;
   }
@@ -598,7 +598,7 @@
   background: rgba(45, 27, 61, 0.08);
   color: var(--text-strong);
 }
-@media (max-width: 640px) {
+@media (--md) {
   .pieceRow {
     grid-template-columns: 1fr;
     gap: 10px;
@@ -1411,7 +1411,7 @@
   gap: 32px;
   align-items: flex-start;
 }
-@media (max-width: 900px) {
+@media (--wide) {
   .skelGrid {
     grid-template-columns: 1fr;
   }

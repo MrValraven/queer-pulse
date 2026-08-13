@@ -3,6 +3,7 @@ import { Avatar, Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { AddCohostModal } from "./AddCohostModal";
 import { INITIAL_COHOSTS, type CohostCandidate } from "./manageCohosts.data";
 import { useAddCohost, useRemoveCohost } from "./api/useEventMutations";
@@ -10,15 +11,20 @@ import styles from "./ManageCohosts.module.css";
 
 /**
  * Lists the event's cohosts and lets the host add/remove them. Owns the cohost
- * list as local state (seeded from mock data), so it works identically in demo
- * and live: the mutation is a no-op in demo and a real call + invalidate in live.
+ * list as local state: the add/remove mutations are a no-op in demo and a real
+ * call + invalidate in live. Demo seeds the mock cohosts; live starts empty —
+ * the event detail DTO carries no cohost roster, so seeding from the mock would
+ * leak demo personas into a real gathering.
  */
 export function CohostManager({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
   const addCohost = useAddCohost(slug);
   const removeCohost = useRemoveCohost(slug);
-  const [cohosts, setCohosts] = useState<CohostCandidate[]>(INITIAL_COHOSTS);
+  const [cohosts, setCohosts] = useState<CohostCandidate[]>(
+    demoMode ? INITIAL_COHOSTS : [],
+  );
   const [addOpen, setAddOpen] = useState(false);
   const [confirming, setConfirming] = useState<string | null>(null);
 

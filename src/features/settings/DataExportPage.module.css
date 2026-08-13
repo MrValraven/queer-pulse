@@ -154,7 +154,7 @@
   margin-bottom: 28px;
 }
 
-@media (max-width: 480px) {
+@media (--xs) {
   .dataTypes {
     grid-template-columns: 1fr;
   }

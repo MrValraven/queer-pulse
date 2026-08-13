@@ -201,7 +201,7 @@
   margin-top: 24px;
 }
 
-@media (max-width: 880px) {
+@media (--compact) {
   .flow {
     grid-template-columns: 1fr 1fr;
   }

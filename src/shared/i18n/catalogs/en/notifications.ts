@@ -38,6 +38,12 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> vouched for your safe space.",
   "type.safe_space_vouch.meta": "Safe space",
 
+  // Sent when a new home goes live that matches a saved search with alerts on.
+  // System-driven (no actor); `title`/`area` come from the payload.
+  "type.housing_listing_match.text":
+    "A new home in {area} matches your saved search — {title}.",
+  "type.housing_listing_match.meta": "Housing alert",
+
   "type.promoted_to_member.text": "You're a full member now. Welcome in.",
   "type.promoted_to_member.meta": "Membership",
 
@@ -170,6 +176,17 @@ export const notifications: Catalog = {
 
   "type.roadmap_status.text": "There's an update on an idea you shared.",
   "type.roadmap_status.meta": "Roadmap update",
+
+  // Concern outcome — headline per terminal status (resolved/dismissed); the
+  // flat keys are the fallback for an unrecognised status.
+  "type.concern_update.text": "There's an update on a concern you raised.",
+  "type.concern_update.meta": "Concern update",
+  "type.concern_update.resolved.text":
+    "The concern you raised has been reviewed and resolved.",
+  "type.concern_update.resolved.meta": "Concern update",
+  "type.concern_update.dismissed.text":
+    "The concern you raised has been reviewed and closed.",
+  "type.concern_update.dismissed.meta": "Concern update",
 
   // Moderation outcome — headline per action; the moderator's member-facing note
   // ("the reason the member reads") rides in as {note}. Tapping opens the appeal

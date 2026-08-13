@@ -496,14 +496,6 @@ export const resources: Catalog = {
   "pronounsGuide.faq.a6":
     "Legal name data is only stored if you've explicitly provided it for a purpose that required it (e.g. certain grant applications run through the platform). It's never used as your display name and is stored separately with stricter access controls. You can request its deletion at any time via <a>Data Export</a>.",
 
-  // ── TherapistProfilePage (+ therapist/therapistProfiles.data.tsx) ────────
-  // The individual therapist template rendered at /resources/therapists/:id;
-  // meta describes the directory in general since every :id shares this page.
-  "therapists.meta.title":
-    "LGBTQ+-affirming therapists in Lisbon: verified profiles",
-  "therapists.meta.description":
-    "Vetted LGBTQ+-affirming therapists and psychologists in Lisbon and online — specialisms, languages, sliding-scale fees, and what a first session looks like.",
-
   // ── MentalHealthPage (+ MentalHealthSections.tsx + mentalHealth.data.ts) ──
   "mentalHealth.meta.title": "Queer-affirming mental health support in Lisbon",
   "mentalHealth.meta.description":
@@ -586,33 +578,9 @@ export const resources: Catalog = {
     "Private therapy ranges from €50–120 per session. Some therapists offer sliding scale fees — it's always worth asking. Several therapists in our directory offer community member rates for QueerPulse members.",
   "mentalHealth.sns.peer.title": "Peer support within <em>the community</em>",
   "mentalHealth.sns.peer.body":
-    "The mental health peer support group meets monthly. Members share experiences, recommend resources, and support each other — no professional facilitation, just honest conversation.",
-  "mentalHealth.sns.peer.joinCta": "Join the group",
+    "Sometimes what helps is someone who's been where you are. There's a quiet peer support space in the Forum for members going through a hard time. No professional facilitation, no fixing, just people who understand, listening. Prefer one to one? Ask to talk with a peer mentor.",
+  "mentalHealth.sns.peer.joinCta": "Open the space",
   "mentalHealth.sns.peer.mentorCta": "Find a peer mentor",
-
-  // ── TherapistProfileModal + TherapistProfileBody ────────────────────────
-  // therapist.bio/approach/training/firstSession stay English (mock content,
-  // fetched from the API in live mode); everything below is platform chrome.
-  "mentalHealth.therapistModal.profileAriaLabel": "{name} — profile",
-  "mentalHealth.therapistModal.sayHelloCta": "Say hello",
-  "mentalHealth.therapistModal.sentTitle": "Message sent to {name}.",
-  "mentalHealth.therapistModal.sentText":
-    "They'll reply directly to your email if it feels like a fit. No notifications, no pressure.",
-  "mentalHealth.therapistModal.footNote":
-    "Messages go straight to {name} — held briefly and reviewed before delivery to keep the room safe.",
-
-  "mentalHealth.therapistProfile.meta.slidingScale": "Sliding scale available",
-  "mentalHealth.therapistProfile.meta.fixedRate": "Fixed session rate",
-  "mentalHealth.therapistProfile.meta.years_one": "{count} year in practice",
-  "mentalHealth.therapistProfile.meta.years_other": "{count} years in practice",
-  "mentalHealth.therapistProfile.status.acceptingNew": "Accepting new clients",
-  "mentalHealth.therapistProfile.status.waitlistOnly":
-    "Waitlist only right now",
-  "mentalHealth.therapistProfile.section.about": "About",
-  "mentalHealth.therapistProfile.section.howIWork": "How I work",
-  "mentalHealth.therapistProfile.section.training": "Training & qualifications",
-  "mentalHealth.therapistProfile.section.firstSession": "Your first session",
-  "mentalHealth.therapistProfile.seeFullProfileCta": "See full profile",
 
   // ── WellbeingPage (+ WellbeingSections.tsx + wellbeing.data.ts) ──────────
   "wellbeing.meta.title":
@@ -644,7 +612,6 @@ export const resources: Catalog = {
   "wellbeing.therapists.title": "Queer-affirming <em>therapists in Lisbon</em>",
   "wellbeing.therapists.lead":
     "Vetted by community members. Each therapist listed has been recommended by at least two QueerPulse members. We do not charge listing fees. Want to add someone? <a>Get in touch.</a>",
-  "wellbeing.therapists.requestIntroCta": "Request intro",
   "wellbeing.therapists.applyPrompt": "Are you a queer-affirming therapist?",
   "wellbeing.therapists.applyCta": "Apply to be listed",
 
@@ -686,75 +653,6 @@ export const resources: Catalog = {
   "wellbeing.harm.chemsex.title": "Chemsex support",
   "wellbeing.harm.chemsex.desc":
     "Confidential, non-judgmental resources for members navigating chemsex — connected to real services and real people who've been there.",
-
-  // ── TherapistProfilePage (therapist/ subfolder) ─────────────────────────
-  // Per-therapist facts in therapistProfiles.data.tsx (bio, quote, credsLine,
-  // specialisms, approach paragraphs, vouches, notes, fees, venue, bookCta)
-  // are fetched profile content in live mode and stay English. Everything
-  // below is platform chrome around that content.
-  "therapistProfilePage.backLink": "Therapist directory",
-  "therapistProfilePage.verified.body_one":
-    "<b>Vetted clinician.</b> Credentials checked by QueerPulse Wellbeing on {vettedOn}. {count} independent community vouch in the last 12 months. <a>How we vet</a>",
-  "therapistProfilePage.verified.body_other":
-    "<b>Vetted clinician.</b> Credentials checked by QueerPulse Wellbeing on {vettedOn}. {count} independent community vouches in the last 12 months. <a>How we vet</a>",
-  "therapistProfilePage.sendMessageCta": "Send a message",
-
-  "therapistProfilePage.worksWith.title": "What {name} <em>works with</em>",
-  "therapistProfilePage.worksWith.sub":
-    "Self-declared and consistent with the vouching community.",
-  "therapistProfilePage.approachTitle.he": "His approach",
-  "therapistProfilePage.approachTitle.she": "Her approach",
-  "therapistProfilePage.approachTitle.neutral": "Their approach",
-  "therapistProfilePage.vouches.title_one": "{count} member <em>vouched</em>",
-  "therapistProfilePage.vouches.title_other":
-    "{count} members <em>vouched</em>",
-  "therapistProfilePage.vouches.sub":
-    "Anonymised by the vouching member. The clinic doesn't see who said what.",
-  "therapistProfilePage.vouches.addPrompt": "Have you seen {name}?",
-  "therapistProfilePage.vouches.addHelp": "Help the next member decide",
-  "therapistProfilePage.vouches.addCta": "Add an anonymised vouch",
-  "therapistProfilePage.beforeBook.title":
-    "Before you book — <em>good to know</em>",
-
-  "therapistProfilePage.sidebar.bookHeadingAccepting": "Book — next 4 weeks",
-  "therapistProfilePage.sidebar.bookHeadingWaitlist": "Availability — waitlist",
-  "therapistProfilePage.sidebar.legendAvailable": "Available",
-  "therapistProfilePage.sidebar.legendBooked": "Booked",
-  "therapistProfilePage.sidebar.heldAccepting":
-    "Held {slot}. {name} will confirm by email — nothing is charged for holding.",
-  "therapistProfilePage.sidebar.heldWaitlist":
-    "You're on the list. {name} will write when a slot opens — usually 6–10 weeks.",
-  "therapistProfilePage.sidebar.holdingLabel": "Holding…",
-  "therapistProfilePage.sidebar.joiningLabel": "Joining…",
-  "therapistProfilePage.sidebar.holdSlotCta": "Hold {slot}",
-  "therapistProfilePage.sidebar.pickSlotCta": "Pick an open slot",
-  "therapistProfilePage.sidebar.feesHeading": "Fees",
-  "therapistProfilePage.sidebar.whereHeading": "Where",
-  "therapistProfilePage.sidebar.crisisHeading": "In crisis right now",
-  "therapistProfilePage.sidebar.crisisText":
-    "Therapy isn't the right path when you're in immediate danger. Use these instead — they're staffed for this.",
-  "therapistProfilePage.sidebar.sosVozAmigaCta": "SOS Voz Amiga · 213 544 545",
-
-  "therapistProfilePage.vouch.successAriaLabel": "Vouch received",
-  "therapistProfilePage.vouch.successTitle": "Vouch received,",
-  "therapistProfilePage.vouch.successEm": "thank you.",
-  "therapistProfilePage.vouch.successBody":
-    "A moderator reads every vouch before it's published — yours will appear within a couple of days, anonymised exactly as you wrote it. {name} won't see who sent it, and neither will the clinic.",
-  "therapistProfilePage.vouch.modalAriaLabel": "Vouch for {name}",
-  "therapistProfilePage.vouch.eyebrow": "Community vouch",
-  "therapistProfilePage.vouch.title": "Have you seen {name}? <em>Say so.</em>",
-  "therapistProfilePage.vouch.sub":
-    "Vouches are anonymised — {name} won't see who wrote what, and neither will the clinic. One honest paragraph helps the next member decide.",
-  "therapistProfilePage.vouch.form.textLabel": "Your vouch",
-  "therapistProfilePage.vouch.form.textPlaceholder":
-    "What was it like to work with them? What should the next member know?",
-  "therapistProfilePage.vouch.form.bylineLabel":
-    "How should we describe you? (optional)",
-  "therapistProfilePage.vouch.form.bylineHelper":
-    "Shown instead of your name — keep it as vague as you like.",
-  "therapistProfilePage.vouch.form.bylinePlaceholder":
-    "e.g. Member · couple work",
-  "therapistProfilePage.vouch.submitCta": "Add my vouch",
 
   // ── TransHubPage ─────────────────────────────────────────────────────────
   // Trans healthcare/legal navigation guidance for Portugal — flag for native

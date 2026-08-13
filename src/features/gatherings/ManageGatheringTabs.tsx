@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Tabs } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { OverviewTab } from "./ManageOverviewTab";
-import type { GatheringDetail } from "./ManageOverviewTab";
+import type { GatheringDetail, OverviewCounts } from "./ManageOverviewTab";
 import { AttendeesTab } from "./ManageAttendeesTab";
 import { MessagesTab } from "./ManageMessagesTab";
 import { SettingsTab } from "./ManageSettingsTab";
@@ -19,6 +19,9 @@ interface ManageGatheringTabsProps {
   onCancel: () => void;
   details: GatheringDetail[];
   description: string;
+  /** Live going/waitlist/spots-left for the overview chips; demo omits it and
+   *  the tab falls back to its static trio. */
+  overviewCounts?: OverviewCounts;
   onUpdateDetail: (id: string, value: string) => void;
   onUpdateDescription: (value: string) => void;
 }
@@ -38,6 +41,7 @@ export function ManageGatheringTabs({
   onCancel,
   details,
   description,
+  overviewCounts,
   onUpdateDetail,
   onUpdateDescription,
 }: ManageGatheringTabsProps) {
@@ -59,6 +63,7 @@ export function ManageGatheringTabs({
         <OverviewTab
           details={details}
           description={description}
+          counts={overviewCounts}
           onUpdateDetail={onUpdateDetail}
           onUpdateDescription={onUpdateDescription}
         />

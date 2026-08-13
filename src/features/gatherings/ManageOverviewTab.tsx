@@ -12,6 +12,13 @@ export interface GatheringDetail {
   value: string;
 }
 
+/** Live overview counts; when absent the tab shows its static demo trio. */
+export interface OverviewCounts {
+  going: number;
+  waitlist: number;
+  spotsLeft: number;
+}
+
 const Pencil = () => (
   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
     <path
@@ -26,6 +33,8 @@ const Pencil = () => (
 interface OverviewTabProps {
   details: GatheringDetail[];
   description: string;
+  /** Live going/waitlist/spots-left; absent → the static demo trio. */
+  counts?: OverviewCounts;
   onUpdateDetail: (id: string, value: string) => void;
   onUpdateDescription: (value: string) => void;
 }
@@ -33,6 +42,7 @@ interface OverviewTabProps {
 export function OverviewTab({
   details,
   description,
+  counts,
   onUpdateDetail,
   onUpdateDescription,
 }: OverviewTabProps) {
@@ -47,9 +57,9 @@ export function OverviewTab({
   const lastEditedDays = daysSince(LAST_EDITED_AT);
 
   const stats: [number, string][] = [
-    [14, t("gatherings:manage.overview.stat.going")],
-    [3, t("gatherings:manage.overview.stat.waitlist")],
-    [6, t("gatherings:manage.overview.stat.spotsLeft")],
+    [counts?.going ?? 14, t("gatherings:manage.overview.stat.going")],
+    [counts?.waitlist ?? 3, t("gatherings:manage.overview.stat.waitlist")],
+    [counts?.spotsLeft ?? 6, t("gatherings:manage.overview.stat.spotsLeft")],
   ];
 
   return (

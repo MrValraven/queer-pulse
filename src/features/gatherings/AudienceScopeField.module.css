@@ -1,0 +1,99 @@
+/* AudienceScopeField — shared radiogroup for the gathering audience-scope
+   control (create wizard step 3 + the edit-details modal). Mirrors the
+   CreateGatheringPage step-field look (label/hint pair) and the
+   listBusiness verify-option row (icon + title + description). */
+
+.label {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--ink-40);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.1);
+  border-radius: 11px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font-family: var(--sans);
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .option:hover {
+    border-color: rgba(var(--line-rgb), 0.22);
+  }
+}
+
+.optionOn {
+  border-color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.04);
+}
+
+.icon {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--line-rgb), 0.08);
+  color: var(--ink-60);
+  font-size: 15px;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+.optionOn .icon {
+  background: var(--jade);
+  color: #fff;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.text b {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.text span {
+  font-size: 12.5px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .option,
+  .icon {
+    transition: none;
+  }
+}

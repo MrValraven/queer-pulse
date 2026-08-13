@@ -497,7 +497,7 @@
   text-overflow: ellipsis;
 }
 
-@media (max-width: 860px) {
+@media (--mobile) {
   .hero {
     /* nav band reserved by shell (base.css); this is only breathing room */
     padding-top: 8px;

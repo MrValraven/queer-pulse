@@ -29,14 +29,14 @@
   color: var(--text-strong);
 }
 
-@media (max-width: 860px) {
+@media (--mobile) {
   .wrap {
     /* nav band reserved by shell (base.css); this is only breathing room */
     padding: 24px 24px 64px;
   }
 }
 
-@media (max-width: 480px) {
+@media (--xs) {
   .wrap {
     /* nav band reserved by shell (base.css); this is only breathing room */
     padding: 12px var(--gap-sm) 56px;

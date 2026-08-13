@@ -10,6 +10,7 @@ import { DEMO_GATHERING as g } from "./feedCards.data";
 import {
   FeedActionLink,
   FeedActions,
+  FeedAvatarLink,
   FeedCardHead,
   FeedCardShell,
   FeedDateBlock,
@@ -51,13 +52,15 @@ export function GatheringCard({ item }: { item?: FeedItem } = {}) {
         />
         <FeedIdentity
           lead={
-            <Avatar
-              initials={initials(hostName)}
-              tint={hostTint}
-              size={46}
-              src={host?.avatarUrl ?? undefined}
-              alt={hostName}
-            />
+            <FeedAvatarLink slug={hostSlug} name={hostName}>
+              <Avatar
+                initials={initials(hostName)}
+                tint={hostTint}
+                size={46}
+                src={host?.avatarUrl ?? undefined}
+                alt={hostName}
+              />
+            </FeedAvatarLink>
           }
           name={item.title}
           meta={

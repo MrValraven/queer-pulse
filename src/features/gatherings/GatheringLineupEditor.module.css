@@ -80,7 +80,7 @@
 /* Below 560px the identity + role select + remove button no longer fit one
    line. Give the identity its own full-width row, and share the second row
    between the select (grows) and the remove control (fixed). */
-@media (max-width: 560px) {
+@media (--sm) {
   .row > :first-child {
     flex: 1 1 100%;
     min-width: 0;

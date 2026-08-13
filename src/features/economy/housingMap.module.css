@@ -1,0 +1,54 @@
+.pin {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1px solid rgba(45, 27, 61, 0.14);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(45, 27, 61, 0.18);
+  white-space: nowrap;
+  transition: transform 0.12s var(--ease), background 0.12s var(--ease);
+}
+
+.pin:hover {
+  transform: translateY(-1px);
+}
+
+.pinOn {
+  background: var(--plum);
+  color: var(--cream);
+  border-color: var(--plum);
+}
+
+.count {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--cream);
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+}
+
+.pinOn .count {
+  background: var(--cream);
+  color: var(--plum);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pin {
+    transition: none;
+  }
+  .pin:hover {
+    transform: none;
+  }
+}

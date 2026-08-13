@@ -36,3 +36,14 @@
   margin-top: -8px;
   margin-bottom: 8px;
 }
+
+/* Discrimination-only pointer on the plum success panel — dimmed cream, set
+ * apart from the confirmation body by a soft divider above it. */
+.equalityNote {
+  margin-block-start: 14px;
+  padding-block-start: 14px;
+  border-block-start: 1px solid rgba(247, 243, 238, 0.18);
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(247, 243, 238, 0.7);
+}

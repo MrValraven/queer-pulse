@@ -195,10 +195,13 @@ export const governance: Catalog = {
     "Descreve o que aconteceu, ou o que está errado, com o detalhe que te for confortável…",
   "sections.raise.emailPlaceholder": "O teu email (para te podermos atualizar)",
   "sections.raise.submitCta": "Submeter",
+  "sections.raise.submittingCta": "A enviar…",
   "sections.raise.submittedToast":
-    "Submetido — entraremos em contacto no prazo de 48 horas",
-  "sections.raise.comingSoonToast":
-    "A receção de preocupações ainda não está ativa — este formulário não está ligado.",
+    "Submetido. Entraremos em contacto no prazo de 48 horas.",
+  "sections.raise.errorToast":
+    "Escolhe uma categoria e acrescenta alguns detalhes primeiro.",
+  "sections.raise.failedToast":
+    "Não foi possível enviar neste momento. Tenta novamente.",
   // Mostrado no lugar dos dados de uma secção quando a obtenção falha, para que
   // um erro da API apareça como um pedido de nova tentativa em vez de uma
   // grelha vazia sem explicação.

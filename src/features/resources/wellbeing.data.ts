@@ -1,39 +1,5 @@
 import { routes } from "../../app/routeMap";
 
-/** Mock therapist directory — content, left in English (see scope rule). */
-export const THERAPISTS = [
-  {
-    name: "Dra. Marta Seabra",
-    spec: "Clinical psychologist · LGBTQ+ identity, trauma, and workplace stress.",
-    tags: ["Trans-affirming", "Sliding scale", "EN · PT"],
-    loc: "Príncipe Real · Online",
-  },
-  {
-    name: "Paulo Esteves",
-    spec: "Psychotherapist · relationships, coming out, family estrangement, depression.",
-    tags: ["Non-binary aware", "PT · ES"],
-    loc: "Arroios",
-  },
-  {
-    name: "Dra. Filipa Ramos",
-    spec: "Psychiatrist · gender dysphoria, anxiety, mood disorders, medication management.",
-    tags: ["Trans healthcare", "SNS referrals", "PT"],
-    loc: "Amoreiras",
-  },
-  {
-    name: "Ana Costa, MSc",
-    spec: "Counsellor · identity exploration, neurodivergent-affirming, relationship counselling.",
-    tags: ["ADHD-affirming", "Sliding scale", "EN · PT"],
-    loc: "Mouraria · Online",
-  },
-  {
-    name: "João Saraiva",
-    spec: "Psychologist · gay men's mental health, HIV-positive affirming, substance use support.",
-    tags: ["Harm reduction", "PT · EN"],
-    loc: "Cais do Sodré",
-  },
-];
-
 /**
  * i18n Pattern A. Real-world helpline names (SOS Voz Amiga, ILGA Portugal,
  * Rede ex aequo) are proper nouns and stay untranslated; `descriptionKey`/`hoursKey`

@@ -502,7 +502,7 @@
   margin-top: 8px;
 }
 
-@media (max-width: 760px) {
+@media (--lg) {
   .plumStrip {
     grid-template-columns: 1fr;
   }

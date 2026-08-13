@@ -297,7 +297,7 @@
   color: var(--ink-40);
 }
 
-@media (max-width: 860px) {
+@media (--mobile) {
   .grid {
     grid-template-columns: 1fr;
   }

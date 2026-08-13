@@ -208,7 +208,7 @@
   position: relative;
 }
 
-@media (max-width: 640px) {
+@media (--md) {
   .ctaRow,
   .disclaimer {
     padding: 28px 22px 30px;

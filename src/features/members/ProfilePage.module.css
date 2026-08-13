@@ -678,7 +678,7 @@ button.socialChip {
   margin-top: 3px;
 }
 
-@media (max-width: 860px) {
+@media (--mobile) {
   .pheroGrid {
     grid-template-columns: 1fr;
   }
@@ -693,7 +693,7 @@ button.socialChip {
     grid-template-columns: 1fr;
   }
 }
-@media (max-width: 640px) {
+@media (--md) {
   .shapingsGrid {
     grid-template-columns: 1fr;
   }
@@ -852,7 +852,7 @@ button.socialChip {
   color: var(--ink-60);
   line-height: 1.5;
 }
-@media (max-width: 640px) {
+@media (--md) {
   .groupsGrid {
     grid-template-columns: 1fr;
   }

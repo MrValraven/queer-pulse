@@ -139,7 +139,7 @@ export function SubprofileItemDrawerFields({
       {textFields.map((field) => {
         const meta = FIELD_META[field];
         if (!meta) return null;
-        const value = (draft[field as keyof SubprofileItemView] as string) ?? "";
+        const value = (draft[field] as string) ?? "";
         return (
           <FormField
             key={field}

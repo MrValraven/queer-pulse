@@ -1,0 +1,24 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.36em;
+  padding-block: 0.28em;
+  padding-inline: 0.6em;
+  border-radius: var(--radius-pill, 999px);
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: default;
+  /* The strongest positive-trust chip on the listing — jade, like the
+     ID-verified tier, since the two share the same id-verified signal. */
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.12);
+  border: 1px solid rgba(var(--jade-rgb), 0.24);
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+  flex: none;
+}

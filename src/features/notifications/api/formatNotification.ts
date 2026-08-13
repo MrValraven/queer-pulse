@@ -64,7 +64,20 @@ export type NotificationKind =
   // `SafeSpaceVouchesService.createVouch`). Carries the voucher (`voucherId`)
   // as the actor — omitted for an anonymous vouch, which then reads as
   // "Someone" — plus `spaceName`/`spaceSlug` on the payload.
-  | "safe_space_vouch";
+  | "safe_space_vouch"
+  // Sent to a member when a NEW housing listing goes live that matches one of
+  // their saved searches with alerts on (mirrors the backend
+  // `notifications_type_enum` value added in
+  // `AddHousingListingMatchNotificationType1788300200000`, emitted from
+  // `HousingSavedSearchAlertsListener`). System-driven — no actor — with
+  // `title`/`area`/`slug` on the payload for the copy + deep link.
+  | "housing_listing_match"
+  // Sent to the submitter of a governance concern when an admin resolves or
+  // dismisses it (mirrors the backend `notifications_type_enum` value added in
+  // `AddConcernUpdateNotificationType1788600000000`, emitted from
+  // `IntakesService.updateStatus`). System-driven, no actor, with
+  // `status` (`resolved`/`dismissed`) on the payload selecting the copy.
+  | "concern_update";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -106,6 +119,11 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // A member vouching for your safe space is community activity, same tab as
   // vouch_received.
   safe_space_vouch: "community",
+  // A saved-search match is the platform telling you about a new home — a
+  // platform notification, like listing_approved.
+  housing_listing_match: "platform",
+  // An outcome on a concern you raised is the platform's word — platform tab.
+  concern_update: "platform",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */
@@ -185,6 +203,22 @@ function moderationKeyFor(type: string, payload: unknown): string {
 }
 
 /**
+ * Resolve the i18n subkey a `concern_update` notification's copy lives under.
+ * The row carries `payload.status` (`resolved | dismissed`, written by the
+ * backend when an admin triages the concern) — each gets its own headline
+ * ("Your concern was resolved" vs "…was reviewed and closed"), so the key
+ * branches to `concern_update.<status>`. An unknown/missing status falls back
+ * to the flat `concern_update.*` copy. Non-concern types pass through unchanged.
+ */
+function concernUpdateKeyFor(type: string, payload: unknown): string {
+  if (type !== "concern_update") return type;
+  const status = (payload as { status?: string } | null)?.status;
+  return status === "resolved" || status === "dismissed"
+    ? `concern_update.${status}`
+    : "concern_update";
+}
+
+/**
  * Resolve the i18n subkey an `event_updated` notification's copy lives under.
  * The row carries `payload.changes` (a `string[]` of what materially changed,
  * written by the backend — `startAt` and/or `location`). A change to only the
@@ -227,6 +261,8 @@ export function formatNotification(
     key = moderationKeyFor(type, payload);
   } else if (type === "event_updated") {
     key = eventUpdatedKeyFor(type, payload);
+  } else if (type === "concern_update") {
+    key = concernUpdateKeyFor(type, payload);
   } else {
     // `mentionKeyFor` passes every non-`mention` type through unchanged.
     key = mentionKeyFor(type, payload);

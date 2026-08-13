@@ -25,7 +25,7 @@
   gap: 60px;
   align-items: center;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .honestInner {
     grid-template-columns: 1fr;
     gap: 36px;
@@ -227,7 +227,7 @@
     color: var(--jade);
   }
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .event {
     grid-template-columns: 60px 1fr;
     gap: 14px;

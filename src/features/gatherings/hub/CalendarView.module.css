@@ -54,7 +54,7 @@
   align-items: flex-start;
 }
 
-@media (max-width: 860px) {
+@media (--mobile) {
   .layout {
     grid-template-columns: 1fr;
   }

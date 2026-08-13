@@ -1,4 +1,5 @@
 import { apiGet, apiPut } from "../../../shared/api/client";
+import { FOCUS_AREA_IDS, WORK_SKILL_IDS } from "../workProfile.data";
 
 /**
  * The member's work-profile safety preferences.
@@ -24,6 +25,10 @@ export interface WorkPreferencesDTO {
   outAtWork: OutAtWork;
   transSupport: TransSupportId[];
   safeOnly: boolean;
+  /** Skills the member offers — ids from `WORK_SKILL_IDS`. */
+  skills: string[];
+  /** Focus areas the member seeks support with — ids from `FOCUS_AREA_IDS`. */
+  focusAreas: string[];
 }
 
 /** What a member who has never saved gets — the safest reading of each field. */
@@ -31,10 +36,14 @@ export const DEFAULT_WORK_PREFERENCES: WorkPreferencesDTO = {
   outAtWork: "verified",
   transSupport: [],
   safeOnly: true,
+  skills: [],
+  focusAreas: [],
 };
 
 const OUT_AT_WORK_VALUES = new Set<string>(["out", "verified", "private"]);
 const TRANS_SUPPORT_SET = new Set<string>(TRANS_SUPPORT_IDS);
+const WORK_SKILL_SET = new Set<string>(WORK_SKILL_IDS);
+const FOCUS_AREA_SET = new Set<string>(FOCUS_AREA_IDS);
 
 /**
  * Coerce whatever the wire carries into a whole, valid preferences object.
@@ -46,7 +55,13 @@ const TRANS_SUPPORT_SET = new Set<string>(TRANS_SUPPORT_IDS);
  */
 export function normalizeWorkPreferences(
   dto:
-    | { outAtWork?: string; transSupport?: string[]; safeOnly?: boolean }
+    | {
+        outAtWork?: string;
+        transSupport?: string[];
+        safeOnly?: boolean;
+        skills?: string[];
+        focusAreas?: string[];
+      }
     | null
     | undefined,
 ): WorkPreferencesDTO {
@@ -57,6 +72,12 @@ export function normalizeWorkPreferences(
   const transSupport = (dto?.transSupport ?? []).filter(
     (id): id is TransSupportId => TRANS_SUPPORT_SET.has(id),
   );
+  // Unknown ids are dropped rather than rendered as silent no-ops, matching
+  // transSupport — the client only knows how to render ids it recognises.
+  const skills = (dto?.skills ?? []).filter((id) => WORK_SKILL_SET.has(id));
+  const focusAreas = (dto?.focusAreas ?? []).filter((id) =>
+    FOCUS_AREA_SET.has(id),
+  );
   return {
     outAtWork,
     transSupport,
@@ -64,6 +85,8 @@ export function normalizeWorkPreferences(
       typeof dto?.safeOnly === "boolean"
         ? dto.safeOnly
         : DEFAULT_WORK_PREFERENCES.safeOnly,
+    skills,
+    focusAreas,
   };
 }
 

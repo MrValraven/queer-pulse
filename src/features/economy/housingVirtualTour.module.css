@@ -1,0 +1,32 @@
+.frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: rgba(var(--plum-rgb), 0.06);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+}
+.iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.linkOut {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px;
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+}
+.linkNote {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: 15px;
+  line-height: 1.5;
+}

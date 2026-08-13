@@ -103,6 +103,8 @@ export interface FormingCoop {
   /** Coral/jade emphasis after the label (e.g. the operational-since date). */
   progressEm?: string;
   operational?: boolean;
+  /** Operator-identity-verified marker, admin-set (P3.2). */
+  operatorVerified?: boolean;
   description: string;
   meta: CoopMeta[];
   faces: CoopFace[];
@@ -167,6 +169,7 @@ export const FORMING_COOPS: FormingCoop[] = [
     progressLabel: "Operational since",
     progressEm: "Jan 2024",
     operational: true,
+    operatorVerified: true,
     description: "QueerPulse's first formed co-op. 9 households, 14 adults, 3 children. Mostly Black queer households, formed through the Cova da Moura tenants' association. Open to mentor new co-ops.",
     meta: [
       { label: "Member shares", value: "€4k" },

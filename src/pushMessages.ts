@@ -38,6 +38,9 @@ const en: Record<string, string> = {
   "push:event.cancelled.body": "{event} has been cancelled.",
   "push:safeSpace.vouch.title": "New vouch for your safe space",
   "push:safeSpace.vouch.body": "{name} vouched for {space}.",
+  "push:housing.match.title": "A home matches your search",
+  "push:housing.match.body": "{title} in {area} matches a search you saved.",
+  "push:housing.match.bodyNoArea": "{title} matches a search you saved.",
 };
 
 const pt: Record<string, string> = {
@@ -61,6 +64,9 @@ const pt: Record<string, string> = {
   "push:event.cancelled.body": "{event} foi cancelado.",
   "push:safeSpace.vouch.title": "Novo aval para o teu espaço seguro",
   "push:safeSpace.vouch.body": "{name} avalizou {space}.",
+  "push:housing.match.title": "Uma casa corresponde à tua procura",
+  "push:housing.match.body": "{title} em {area} corresponde a uma procura que guardaste.",
+  "push:housing.match.bodyNoArea": "{title} corresponde a uma procura que guardaste.",
 };
 
 const CATALOG: Record<PushLang, Record<string, string>> = { en, pt };

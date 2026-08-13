@@ -19,7 +19,22 @@ export const messages: Catalog = {
   "thread.newMessage": "Nova mensagem",
   "thread.presenceOnline": "Online agora",
   "thread.menuAria": "Opções da conversa",
+  "thread.pinChat": "Fixar conversa",
+  "thread.unpinChat": "Desafixar conversa",
+  "thread.pinnedIndicator": "Conversa fixada",
+  "thread.pinCapReached": "Podes fixar até 3 conversas",
+  "thread.favoriteChat": "Adicionar aos favoritos",
+  "thread.unfavoriteChat": "Remover dos favoritos",
+  "thread.favoriteIndicator": "Conversa favorita",
   "thread.deleteChat": "Apagar conversa",
+  // Separadores de filtro da caixa de entrada
+  "thread.tabAll": "Todas",
+  "thread.tabUnread": "Não lidas",
+  "thread.tabFavorites": "Favoritas",
+  "thread.tabGroups": "Grupos",
+  "thread.tabEmptyUnread": "Sem conversas por ler",
+  "thread.tabEmptyFavorites": "Ainda sem conversas favoritas",
+  "thread.tabEmptyGroups": "Ainda sem conversas de grupo",
   "deleteChat.confirmTitle": "Apagar esta conversa?",
   "deleteChat.confirmBody":
     "Desaparece da tua caixa de entrada e limpa a tua cópia. {name} mantém a dele(a) — e se te enviar mensagem outra vez, a conversa volta só com as mensagens novas.",
@@ -246,4 +261,10 @@ export const messages: Catalog = {
   "system.memberLeft": "{actor} saiu",
   "system.groupRenamedYou": "Mudaste o nome do grupo para “{value}”",
   "system.groupRenamed": "{actor} mudou o nome do grupo para “{value}”",
+
+  // ── Segurança — bloquear/denunciar um membro + aviso de partilha (Wave A) ──
+  "conversation.reportMemberAction": "Denunciar {name}",
+  "report.memberTitle": "Denunciar {name}?",
+  "conversation.contactSafetyNotice":
+    "Mantém a conversa aqui até confiares em alguém. Nunca envies dinheiro, nem partilhes dados bancários — anúncios verdadeiros não pedem isso.",
 };

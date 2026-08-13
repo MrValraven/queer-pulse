@@ -94,6 +94,11 @@ export function ReportListingModal({
             i18nKey="economy:housingListing.reportModal.success.body"
             values={{ title: subjectName }}
           />
+          {reason === "discrimination" && (
+            <p className={styles.equalityNote}>
+              {t("economy:housingListing.reportModal.success.equalityPointer")}
+            </p>
+          )}
         </SuccessPanel>
       ) : (
         <div>

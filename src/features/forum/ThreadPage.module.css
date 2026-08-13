@@ -535,7 +535,7 @@
   border-color: rgba(var(--cream-rgb), 0.1);
 }
 
-@media (max-width: 640px) {
+@media (--md) {
   .topbar {
     /* nav band reserved by shell (base.css); this is only breathing room */
     padding-top: 12px;

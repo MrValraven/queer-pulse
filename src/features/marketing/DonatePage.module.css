@@ -34,7 +34,7 @@
   gap: 12px;
   margin-bottom: 18px;
 }
-@media (min-width: 560px) {
+@media (--sm-up) {
   .amounts {
     grid-template-columns: repeat(4, 1fr);
   }

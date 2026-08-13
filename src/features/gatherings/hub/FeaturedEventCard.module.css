@@ -13,7 +13,7 @@
   border-radius: var(--radius-card);
 }
 
-@media (min-width: 640px) {
+@media (--md-up) {
   .card {
     flex-direction: row;
     align-items: stretch;
@@ -30,7 +30,7 @@
   background: rgba(var(--plum-rgb), 0.06);
 }
 
-@media (min-width: 640px) {
+@media (--md-up) {
   .thumb {
     width: 220px;
     aspect-ratio: 4 / 3;

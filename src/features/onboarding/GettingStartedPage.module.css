@@ -1,0 +1,146 @@
+.page {
+  max-width: 680px;
+  margin-inline: auto;
+  padding-inline: var(--wrap-px);
+  padding-block: var(--section-y);
+}
+
+.head {
+  margin-block-end: 28px;
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(28px, 6vw, 38px);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 8px 0 10px;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.lede {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-60);
+  max-width: 52ch;
+  margin: 0;
+}
+
+/* ── Progress meter ── */
+.meterRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-block-end: 20px;
+}
+.track {
+  flex: 1;
+  min-width: 0;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--plum) 12%, transparent);
+  overflow: hidden;
+}
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width var(--dur-300, 300ms) var(--ease);
+}
+.meterLabel {
+  flex: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+/* ── Checklist ── */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  border-radius: var(--radius-card);
+}
+.stepDone {
+  background: color-mix(in srgb, var(--jade) 7%, var(--paper));
+  border-color: color-mix(in srgb, var(--jade) 26%, transparent);
+}
+
+.mark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: 38px;
+  block-size: 38px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--plum) 9%, transparent);
+  color: var(--ink-60);
+  font-size: 17px;
+}
+.stepDone .mark {
+  background: color-mix(in srgb, var(--jade) 18%, transparent);
+  color: var(--jade);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+.stepTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.stepDesc {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.doneTag {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--jade);
+}
+
+/* Row action sits below the copy on narrow screens so the CTA keeps a full
+   44px target without crowding the title. */
+@media (max-width: 480px) {
+  .step {
+    flex-wrap: wrap;
+  }
+  .body {
+    flex-basis: calc(100% - 52px);
+  }
+  /* The wrapped third item (CTA link or the done tag) aligns under the copy:
+     mark (38px) + row gap (14px) = 52px. */
+  .doneTag,
+  .step a {
+    margin-inline-start: 52px;
+  }
+}

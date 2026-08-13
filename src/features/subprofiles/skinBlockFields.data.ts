@@ -19,12 +19,14 @@ import { skinFor, type SkinFamily } from "./subprofile-skins";
  *  - `textarea`  — multi-line `<textarea>` (e.g. `colophon`, a gaps note).
  *  - `stringList`— an ordered `string[]` list editor (add/remove/reorder lines).
  *  - `objectList`— an ordered array of small objects, each with `itemFields`.
+ *  - `grid`      — a 4×7 availability calendar editor (Practice skin only):
+ *    start date + slot time + 28 tap-to-cycle day cells.
  *
  * All copy is i18n KEYS resolved by the pane via `t(...)`; the intended EN
  * strings live in the build's `b2-i18n-keys.json` (catalogs updated separately).
  */
 
-export type SkinControlKind = "text" | "textarea" | "stringList" | "objectList";
+export type SkinControlKind = "text" | "textarea" | "stringList" | "objectList" | "grid";
 
 /** One field within an `objectList` entry (e.g. a first-session step's
  *  title/body, a referral's name/note). */
@@ -168,6 +170,27 @@ const PRACTICE_BLOCKS: SkinBlockDescriptor[] = [
     { key: "name", labelKey: label("practice", "referrals", "name") },
     { key: "note", labelKey: label("practice", "referrals", "note"), multiline: true },
   ]),
+  stringListBlock("approach", title("practice", "approach")),
+  stringListBlock("training", title("practice", "training")),
+  objectListBlock("feeSchedule", title("practice", "feeSchedule"), [
+    { key: "label", labelKey: label("practice", "feeSchedule", "label") },
+    { key: "value", labelKey: label("practice", "feeSchedule", "value") },
+  ]),
+  {
+    blockKey: "venue",
+    titleKey: title("practice", "venue"),
+    controls: [
+      { path: "venue.name", kind: "text", labelKey: label("practice", "venue", "name") },
+      { path: "venue.lines", kind: "stringList", labelKey: label("practice", "venue", "lines") },
+    ],
+  },
+  {
+    blockKey: "availability",
+    titleKey: title("practice", "availability"),
+    controls: [
+      { path: "availability", kind: "grid", labelKey: title("practice", "availability") },
+    ],
+  },
 ];
 
 const CHART_BLOCKS: SkinBlockDescriptor[] = [

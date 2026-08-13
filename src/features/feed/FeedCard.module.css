@@ -54,6 +54,27 @@
 .lead {
   flex: none;
 }
+/* Author/host avatar wrapped in a profile link — keeps the circle's footprint
+   (no extra hit area) and adds a hover cue + visible focus ring. */
+.avatarLink {
+  display: inline-flex;
+  border-radius: 50%;
+  transition: opacity 0.15s var(--ease);
+}
+@media (hover: hover) {
+  .avatarLink:hover {
+    opacity: 0.85;
+  }
+}
+.avatarLink:focus-visible {
+  outline: 2px solid var(--fc-accent-ink);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .avatarLink {
+    transition: none;
+  }
+}
 .identityText {
   min-width: 0;
 }

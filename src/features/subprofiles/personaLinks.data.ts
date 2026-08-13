@@ -4,6 +4,7 @@ import type {
   PublicSubprofileView,
   SubprofileView,
 } from "./api/subprofiles.adapters";
+import type { SubprofileCardDTO } from "./api/subprofiles.api";
 
 /**
  * The public URL path for a persona: an unlinked persona lives at the global
@@ -20,6 +21,15 @@ export function personaPublicPath(view: PublicSubprofileView): string {
 /** Absolute, shareable URL for a persona (Share control + OG canonical/url). */
 export function personaShareUrl(view: PublicSubprofileView): string {
   return toAbsoluteUrl(personaPublicPath(view));
+}
+
+/** Directory-card variant of `personaPublicPath`: routes a linked persona to its
+ *  owner-nested URL, an unlinked one to its global handle. */
+export function personaCardPath(card: SubprofileCardDTO): string {
+  if (card.linkVisibility === "linked" && card.ownerSlug) {
+    return nestedPersonaPath(card.ownerSlug, card.slug);
+  }
+  return personaPath(card.handle);
 }
 
 /**

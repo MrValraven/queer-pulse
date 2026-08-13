@@ -118,3 +118,38 @@ export interface GovernancePublishResponseDTO {
 
 export const publishGovernanceOverview = () =>
   apiPost<GovernancePublishResponseDTO>("/governance/admin/publish");
+
+// ── Raise a concern ──────────────────────────────────────────────────────────
+// The public "Submit a concern" form (governance/GovernanceSections · RaiseSection)
+// persists through the generic intake pipeline as the `governance_concern` kind:
+// `POST /intakes/governance_concern`, public + optional-auth (a signed-in member
+// is attributed by the backend's OptionalJwtAuthGuard). Staff triage the result
+// on /admin/concerns. `email` is collected ONLY from logged-out submitters — a
+// signed-in member is identified by their account, so the form omits it for them.
+
+/** The concern categories the form offers (stable keys, not display labels — the
+ *  admin dashboard localises them). */
+export type ConcernCategory =
+  | "member"
+  | "gathering"
+  | "content"
+  | "appeal"
+  | "other";
+
+export interface ConcernSubmission {
+  category: ConcernCategory;
+  description: string;
+  /** Only sent by logged-out submitters, so staff can follow up. */
+  email?: string;
+}
+
+/** Minimal ack the intake endpoint echoes — never the submitted payload. */
+export interface ConcernAckDTO {
+  id: string;
+  status: string;
+}
+
+export const submitConcern = (submission: ConcernSubmission) =>
+  apiPost<ConcernAckDTO>("/intakes/governance_concern", {
+    payload: submission,
+  });

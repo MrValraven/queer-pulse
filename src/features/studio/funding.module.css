@@ -923,7 +923,7 @@
   cursor: pointer;
 }
 
-@media (max-width: 880px) {
+@media (--compact) {
   .bal,
   .flow2,
   .apply,

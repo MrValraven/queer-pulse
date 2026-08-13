@@ -46,7 +46,7 @@
   max-width: 1020px;
   margin: 0 auto;
 }
-@media (max-width: 860px) {
+@media (--mobile) {
   .layout {
     grid-template-columns: 1fr;
     gap: 28px;
@@ -59,7 +59,7 @@
   border-radius: 20px;
   padding: 34px 32px 30px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .form {
     padding: 26px 20px 22px;
   }
@@ -84,7 +84,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .row {
     grid-template-columns: 1fr;
     gap: 0;
@@ -219,7 +219,7 @@
   flex-direction: column;
   gap: 14px;
 }
-@media (max-width: 860px) {
+@media (--mobile) {
   .sidebar {
     position: static;
   }

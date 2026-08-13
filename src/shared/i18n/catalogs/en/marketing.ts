@@ -1875,7 +1875,9 @@ export const marketing: Catalog = {
   "changelog.tag.communities": "Browse communities",
   "changelog.tag.subprofiles": "See subprofiles",
   "changelog.tag.personas": "See personas",
+  "changelog.tag.gettingStarted": "Getting started",
   "changelog.tag.housing": "See housing",
+  "changelog.tag.housingViewings": "See your viewings",
   "changelog.tag.directory": "Open the directory",
   "changelog.tag.cinema": "Visit Cinema",
   "changelog.tag.forum": "Visit the forum",
@@ -1909,11 +1911,158 @@ export const marketing: Catalog = {
   "changelog.tag.guidelines": "Read the community guidelines",
   "changelog.tag.requestInvite": "Ask to come in",
   "changelog.tag.privacy": "Read the privacy policy",
+  "changelog.tag.flatmates": "See the flatmate board",
+  "changelog.tag.tenantRights": "Know your rights",
+  "changelog.tag.workProfile": "Open your work profile",
+  "changelog.tag.governance": "See how QueerPulse is run",
+
+  "changelog.entries.personas-in-directory.title":
+    "Profile personas show up in the directory",
+  "changelog.entries.personas-in-directory.body":
+    "Personas linked to your member profile now appear in the persona directory alongside standalone ones — so a therapist or practitioner whose profile lives on their main page is just as discoverable. Standalone personas stay pseudonymous.",
+
+  "changelog.entries.therapist-personas-directory.title":
+    "Therapist directories, powered by real profiles",
+  "changelog.entries.therapist-personas-directory.body":
+    "The queer-affirming therapist directories now show real, community-verified therapist profiles — each with how they work, fees, availability, where they practise, and vouches from the community. Therapists build and manage their own profile.",
+
+  "changelog.entries.concern-intake-live.title":
+    "Raise a concern, and we'll actually see it",
+  "changelog.entries.concern-intake-live.body":
+    "The “Submit a concern” form on the governance page now reaches the team. Reports, appeals, and issues land in a staff dashboard where they're triaged and tracked to resolution. Signed-in members are identified by their account; if you're logged out, leave an email and we'll follow up.",
+
+  "changelog.entries.housing-neighbourhoods-map.title":
+    "Pick several neighbourhoods, and browse homes on a map",
+  "changelog.entries.housing-neighbourhoods-map.body":
+    "Housing search now lets you filter by more than one Lisbon neighbourhood at once, and a new map view shows homes grouped by neighbourhood. Tap a neighbourhood on the map to add it to your filters.",
+
+  "changelog.entries.housing-outro-band.title":
+    "A closing invitation on the housing board",
+  "changelog.entries.housing-outro-band.body":
+    "The main housing board now ends with the same warm closing band as the rest of the site, with quick ways to list your space or ask the forum. The flatmates tab already had one; now both do.",
+
+  "changelog.entries.gathering-audience-scope.title":
+    "Choose who can see your gathering",
+  "changelog.entries.gathering-audience-scope.body":
+    "When you host a gathering, you can now set exactly how far it reaches: open to everyone on QueerPulse, just the people your connections know, just your own connections, members of the community you're posting to, or an invite-only list. Public stays the default, and you can change it anytime from the manage page.",
+
+  "changelog.entries.unified-pronoun-picker.title":
+    "One consistent pronoun picker across your profiles",
+  "changelog.entries.unified-pronoun-picker.body":
+    "Your pronoun options are now the same everywhere you set them — your profile, your work profile, and housing — drawn from one shared list, so a set you can pick in one place is available in all of them. You can also select more than one set and add your own.",
+  "changelog.entries.work-profile-skills-focus.title":
+    "Pick your skills and focus areas on your work profile",
+  "changelog.entries.work-profile-skills-focus.body":
+    "The “Skills & focus” section on your work profile used to be a fixed display you couldn't change. Now the chips are yours to choose: tap the skills you can offer and the focus areas you'd want support with, and they save with the rest of your work profile. It's what we'll use to match you in the skills exchange and with mentors — pick as many or as few as fit.",
+  "changelog.entries.profile-personal-fields.title":
+    "Your name, pronouns and location now sit together",
+  "changelog.entries.profile-personal-fields.body":
+    "We tidied the top of both your profile editors so the essentials read as one block. In your profile settings, pronouns moved up to sit right alongside your name and location instead of a separate section, and your Work profile now leads with the same three — name, pronouns, location — before anything else. Nothing was removed; it's just easier to see and fill in who you are at a glance.",
+  "changelog.entries.feed-avatar-to-profile.title":
+    "Tap anyone's photo in the feed to open their profile",
+  "changelog.entries.feed-avatar-to-profile.body":
+    "Someone catch your eye in the feed? Their photo is now a doorway. Tap or click the avatar on any post, new-member note, forum thread, or gathering card and you land straight on that person's profile — no hunting for a separate link.",
+  "changelog.entries.affirming-housing-baseline.title":
+    "Every home and housemate here is LGBTQ+ affirming — now it's the standard",
+  "changelog.entries.affirming-housing-baseline.body":
+    "Being LGBTQ+ affirming is no longer a box a listing might tick — it's the baseline for every home, room, and person on the housing board. Before you post a place, publish a flatmate profile, or reach out about a home, you take a short affirming pledge once, and it applies everywhere. Every listing now carries an \"LGBTQ+ affirming\" badge as a norm, not a variable, and if a home or person breaks that pledge you can report it. This is a community commitment, not a filter on who's welcome — nobody is ever sorted by identity.",
+  // ── Wave B2: verified listings, viewing scheduling, two-sided blind reviews ─
+  "changelog.entries.housing-listing-discovery.title":
+    "Find the right home — real photos, a filter that fits, and a heads-up when one comes up",
+  "changelog.entries.housing-listing-discovery.body":
+    "Every listing now opens into a proper photo viewer — swipe or arrow through the rooms full-screen, with captions and a virtual-tour walkthrough when the lister added one. The board has real filters too: price range, neighbourhood, bedrooms, bills included, step-free access, move-in date, and verified-only. Found a search you like? Save it, and we'll quietly let you know when a new home that fits goes live — no refreshing, no scrolling. Listing your own place is clearer as well, with a few gentle pointers on photos that help people picture living there.",
+
+  "changelog.entries.housing-viewings-reviews.title":
+    "See a place before you pay — and reviews that can't be gamed",
+  "changelog.entries.housing-viewings-reviews.body":
+    "You can now request a viewing right from a listing — over video or in person — and propose a couple of times; the person offering the home accepts one, suggests another, or declines, all tracked under Your viewings. Once a viewing is accepted, the exact address opens up to you. It's the research-backed way to avoid a housing scam: see the home live before any money is discussed. Some listings now carry a Verified listing chip, earned only when the lister is ID-verified, the listing has passed our review, and it raised no red flags — never something anyone can switch on themselves. And after a viewing, both sides can leave a blind review: neither of you sees the other's words until you've both written (or two weeks pass), so no review is written in fear of the reply. The rating you see on a home is worked out from those revealed reviews.",
+
+  // ── Wave B1: housing listing integrity — risk scoring, evidence, transparency ─
+  "changelog.entries.housing-listing-integrity.title":
+    "Housing listings you can trust a little more",
+  "changelog.entries.housing-listing-integrity.body":
+    "Every new listing now carries an honest access line — step-free or two flights up, lift or none — and says plainly whether it's a member or an agent offering the place. Agents are welcome here; we just show a small badge so you know. Behind the scenes, a listing is quietly checked before it reaches the board — an implausibly low rent, contact details or pay-before-you-view language, or wording that would gate a home on who you are all raise a flag for a moderator to look at first. And if you report a listing, the report now sorts your concern into a clear reason (scam, discrimination, off-platform, and more), keeps a snapshot of what you saw, and — for discrimination — gently points out you can also raise it with an equality body.",
+
+  // ── Wave A: housing safety, map privacy, messaging safety, flatmates, groups ─
+  "changelog.entries.housing-scam-safety-tenant-rights.title":
+    "Rent without getting scammed — and know your rights",
+  "changelog.entries.housing-scam-safety-tenant-rights.body":
+    "Looking for a home shouldn't mean second-guessing everyone. When you reach out about a place or list one, a short safety note now reminds you of the few things that keep you safe — never pay before you've signed, video-call first, keep the conversation here, never rent a place you haven't seen. There's a new Housing safety page too, with a plain-language guide to your rights as a tenant in Portugal (written and registered leases, the deposit cap, how much rent can rise, and what a landlord can never do) plus a rough sense of what Lisbon rents actually cost. It's general guidance, not legal advice — but it's the context that helps you walk away from a bad deal.",
+
+  "changelog.entries.housing-map-area-privacy.title":
+    "See the area first, the exact address once you're connected",
+  "changelog.entries.housing-map-area-privacy.body":
+    "Housing listings now show where a place is on a map — but only the rough neighbourhood until you and the person are actually connected. The exact address stays private until then, so posting a listing doesn't put your front door on the internet. Once you're connected, the map upgrades to the precise spot and the full address.",
+
+  "changelog.entries.messaging-safety-block-report-pii.title":
+    "Block, report, and a gentle nudge before you overshare",
+  "changelog.entries.messaging-safety-block-report-pii.body":
+    "You can now block or report someone straight from a conversation, and blocking takes effect right away — blocked people drop out of your inbox and can't reach you. If a draft contains a phone number, an email, or bank details, a quiet note reminds you to keep things here and never send money before you trust someone. It never stops you sending — it's a hint, not a gate.",
+
+  "changelog.entries.flatmate-pronoun-pre-share.title":
+    "Share your pronouns with a hello, only when you choose",
+  "changelog.entries.flatmate-pronoun-pre-share.body":
+    "When you say hello to a potential flatmate, you can now choose to share your pronouns along with your message — off by default, and only ever with that one person. It's a small thing that makes a first message land warmer, on your terms.",
+
+  "changelog.entries.flatmate-discovery-mode.title":
+    "A calmer way to browse flatmates",
+  "changelog.entries.flatmate-discovery-mode.body":
+    "The flatmate board now has a Discovery view alongside the list — one profile at a time, with a clear reason it matched you. Pass or like at your own pace; when you both like each other, you can say hello and start the conversation. Prefer the old grid? The List view is one tap away.",
+
+  "changelog.entries.vetted-housing-groups.title":
+    "Vetted housing groups queer renters actually trust",
+  "changelog.entries.vetted-housing-groups.body":
+    "Some of the safest housing happens in small, screened groups rather than open listing sites. There's now a home for them: vetted housing groups where every listing states the rent up front, describes accessibility honestly, and keeps brokers out. Ask to join and a steward reads your request — the group's house rules are right there so you know what you're agreeing to.",
+
+  "changelog.entries.vouch-multiple-relationships.title":
+    "Say all the ways you know someone",
+  "changelog.entries.vouch-multiple-relationships.body":
+    "When you vouch for someone, you can now pick more than one way you know them — friends and collaborators, neighbours you also met through QueerPulse. A vouch rarely comes from a single thread, so it no longer asks you to choose just one.",
+
+  "changelog.entries.getting-started-checklist.title":
+    "A gentle checklist for your first steps",
+  "changelog.entries.getting-started-checklist.body":
+    "A new Getting started page walks you through the first moves — fill in your profile, join a community, create a persona, vouch for and connect with someone, share a post. Each step ticks itself off as you go, so it always reflects what you've actually done. Find it under your account menu.",
+
+  "changelog.entries.onboarding-set-up-personas-after.title":
+    "A calmer welcome — set up personas once you're in",
+  "changelog.entries.onboarding-set-up-personas-after.body":
+    "Onboarding no longer asks you to build a persona while you're still finding your feet. Getting settled comes first; when you're ready, you can create a persona for your craft anytime from your personas page.",
+
+  "changelog.entries.pin-favorite-chats-inbox-tabs.title":
+    "Pin, favorite, and filter your inbox",
+  "changelog.entries.pin-favorite-chats-inbox-tabs.body":
+    "Pin the chats you keep coming back to (up to 3) and they'll stay at the top of your inbox. Favorite the ones that matter, then filter by All, Unread, Favorites, or Groups to find them fast.",
+
+  "changelog.entries.identity-verification-honest-badges.title":
+    "Real identity verification with honest badges",
+  "changelog.entries.identity-verification-honest-badges.body":
+    "Housing is where trust matters most, so a badge now means something real. Confirm a phone number in a quick step to post a listing or flatmate profile, or reach out about a home — and an optional external ID check earns an ID-verified badge. A badge only ever appears for a verification that actually happened, and its tooltip says exactly what it does and doesn't prove. We never see or store your ID document or biometrics — an external partner runs the check and only tells us it passed.",
+
+  "changelog.entries.flatmate-explainable-matching.title":
+    "Smarter, explainable flatmate matching",
+  "changelog.entries.flatmate-explainable-matching.body":
+    "Flatmate matches now show you why they matched — budget, neighbourhood, shared lifestyle, timing, safe-space values, and household basics, each a factor you can see. Add a short co-living questionnaire (noise, shared vs private space) and your household basics feed the score, so a match reads as more than a number. Safe-space specifics stay private: a reason only names what someone shares when they've let you see it. All optional, and never used to filter anyone out.",
+
+  "changelog.entries.flatmate-safe-space-identity.title":
+    "Say who you are on the flatmate board — on your terms",
+  "changelog.entries.flatmate-safe-space-identity.body":
+    "Your flatmate profile can now hold your pronouns, gender, and the things that make a home feel safe — trans-inclusive, no outing, affirming flatmates. It's all opt-in: nothing is stored or shown until you say yes, you choose who sees it, and you can clear it anytime. These details help you find an affirming home; they're never used to filter anyone out.",
 
   "changelog.entries.privacy-policy-refresh.title":
     "The Privacy Policy now matches what the platform actually does",
   "changelog.entries.privacy-policy-refresh.body":
     "We refreshed the Privacy Policy end to end. It now explains Sign in with Google, push notifications and device data, how your identity details stay under your control, the location and messaging data we hold, and the exact services we rely on — and we removed things we don't offer. The Cookie Policy and your privacy settings now match, with the unused analytics option removed. No analytics, no ads, no data sales — still true.",
+
+  "changelog.entries.gatherings-manage-rsvp-recap-live.title":
+    "Hosting a gathering now works for real",
+  "changelog.entries.gatherings-manage-rsvp-recap-live.body":
+    "Managing your gathering, RSVPing, and sharing the recap afterwards are now live, not previews. RSVP is now a button right on the gathering — say you're going, or join the waitlist when it's full, and your spot is still there when you come back. Organisers can edit details, cancel, see who's coming, and add co-hosts against the real event, and the after-photos album attaches to it too. (Inviting a co-host to accept is still on the way.)",
+
+  "changelog.entries.coop-template-portuguese.title":
+    "The co-op formation templates now speak Portuguese",
+  "changelog.entries.coop-template-portuguese.body":
+    "Our co-operative starter documents — the values charter, model statutes, member share agreement and the rest — now read in European Portuguese as well as English. It's a first draft meant to get you moving; have a lawyer review the specifics before you file anything.",
 
   "changelog.entries.members-explainer-modal.title":
     "The landing “Explore members” button now explains itself",

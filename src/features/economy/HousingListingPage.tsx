@@ -9,9 +9,11 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { ApiError } from "../../shared/api/client";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { GAL_BG } from "./housingListing.data";
 import { FILTERS } from "./housing.data";
+import { HousingGallery } from "./HousingGallery";
 import { MessageModal } from "./HousingModals";
+import { RequestViewingModal } from "./RequestViewingModal";
+import { VerifiedListingBadge } from "./VerifiedListingBadge";
 import { HousingListingSkeleton } from "./HousingListingSkeleton";
 import {
   HousingListingError,
@@ -27,13 +29,14 @@ export function HousingListingPage() {
   const { t } = useTranslation();
   const { slug } = useParams();
   const [messaging, setMessaging] = useState(false);
+  const [requestingViewing, setRequestingViewing] = useState(false);
   const [reporting, setReporting] = useState(false);
   const loading = useSimulatedLoad();
   const { isSaved, toggleSave } = useSaved();
   const { showToast } = useToast();
 
   const { data, isLoading, isError, error, refetch } = useHousingListing(slug);
-  const { data: allListings = [] } = useHousingListings("all");
+  const { data: allListings = [] } = useHousingListings();
 
   if (isLoading || loading) {
     return (
@@ -114,17 +117,7 @@ export function HousingListingPage() {
         </Link>
 
         <FadeIn>
-          <div className={s.gallery}>
-            {listing.gallery.map((caption, index) => (
-              <div
-                key={index}
-                className={s.gCell}
-                style={{ background: GAL_BG[listing.tint] }}
-              >
-                <span className={s.gCap}>{caption}</span>
-              </div>
-            ))}
-          </div>
+          <HousingGallery listing={listing} />
 
           <header className={s.head}>
             <div className={s.headTop}>
@@ -151,6 +144,9 @@ export function HousingListingPage() {
               {listing.title} <FeatureHelp id="housing.listing" />
             </h1>
             <div className={s.metaRow}>
+              {listing.verified && (
+                <VerifiedListingBadge verified={listing.verified} />
+              )}
               <span className={s.metaPill}>
                 <FiMapPin /> {listing.hood}
               </span>
@@ -173,6 +169,7 @@ export function HousingListingPage() {
               first={first}
               similar={similar}
               onMessage={() => setMessaging(true)}
+              onRequestViewing={() => setRequestingViewing(true)}
               onReport={() => setReporting(true)}
             />
           </div>
@@ -186,6 +183,14 @@ export function HousingListingPage() {
           responseTime={listing.poster.responseTime}
           listingRef={data.ref}
           onClose={() => setMessaging(false)}
+        />
+      )}
+
+      {requestingViewing && (
+        <RequestViewingModal
+          listingTitle={listing.title}
+          listingRef={data.ref}
+          onClose={() => setRequestingViewing(false)}
         />
       )}
 

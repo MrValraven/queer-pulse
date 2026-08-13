@@ -1,24 +1,68 @@
 /**
- * Canonical responsive breakpoint scale (documentation + non-media tokens).
+ * Canonical responsive breakpoint scale — the CSS source of truth.
  *
- * This is the CSS-side companion to `src/shared/theme/breakpoints.ts` — the two
- * must stay in lock-step. The values below are the de-facto load-bearing
- * breakpoints already used across the ~386 `*.module.css` files.
+ * Two things live here:
+ *   1. `@custom-media` tokens — the named media queries used by every `@media`
+ *      rule across the app (`@media (--mobile) { … }`). These are resolved at
+ *      build time by `postcss-custom-media` (configured in `postcss.config.js`);
+ *      a tiny inline "global data" plugin prepends these definitions to every
+ *      processed CSS / CSS-Module file so the tokens resolve everywhere, not
+ *      just in this file. The `@custom-media` at-rules themselves are stripped
+ *      from output (they never ship as CSS).
+ *   2. `--bp-*` length custom properties — the same pixel values exposed for
+ *      NON-media responsive contexts (`clamp()`, container sizing), since CSS
+ *      `@media` conditions cannot reference `var()`.
  *
- * IMPORTANT: CSS `@media` conditions CANNOT reference custom properties
- * (`@media (max-width: var(--bp-mobile))` does not work), so these tokens are
- * NOT usable inside media queries as-is. They are exposed for non-media
- * responsive contexts (e.g. `clamp()`, container sizing) and as the documented
- * source of truth authors should match when hand-writing `@media` literals.
+ * This file is the CSS-side companion to `src/shared/theme/breakpoints.ts` (the
+ * JS `matchMedia` ladder) — the two must stay in lock-step. The `--*` down
+ * (max-width) tokens and `--*-up` (min-width) tokens mirror the JS ladder's
+ * `mediaMax()` / `mediaMin()` at identical pixel values. Do not "clean up" a
+ * value here in isolation: changing one without changing its JS twin desyncs
+ * the two.
  *
- * Migrating the literal `@media` values across the codebase onto this ladder is
- * a tracked mechanical follow-up (tracker X-8): it requires adding
- * `postcss-custom-media` (there is no PostCSS in the toolchain today) so that
- * `@custom-media --bp-mobile (max-width: 860px);` can be authored and
- * referenced as `@media (--bp-mobile) { … }`. Do that as its own reviewed pass
- * with the plugin installed — do not introduce `@custom-media` syntax before
- * the plugin exists or the build will break.
+ * The JS ladder names (xs/sm/md/lg/mobile/wide) are preserved verbatim as token
+ * names so the two files read as one system.
+ *
+ * ── Down queries (mobile-first "and below") ──────────────────────────────────
  */
+@custom-media --xs (max-width: 480px); /* small phones */
+@custom-media --sm (max-width: 560px); /* large phones */
+@custom-media --md (max-width: 640px); /* phone / single-column profile */
+@custom-media --lg (max-width: 760px); /* tablet portrait */
+@custom-media --mobile (max-width: 860px); /* primary app mobile cutover (tab bar, mobile nav) */
+@custom-media --wide (max-width: 900px); /* admin sidebar off-canvas */
+
+/**
+ * ── Up queries (desktop-first "and above") ───────────────────────────────────
+ * Companions to the down tokens at identical ladder pixel values, mirroring the
+ * JS `mediaMin()` helper. Note these fire at the same px as their down twin (a
+ * viewport exactly at 860px matches BOTH `--mobile` and `--mobile-up`); that is
+ * the JS ladder's own convention (`mediaMax`/`mediaMin` share the value) and is
+ * preserved deliberately. A handful of hand-authored rules use off-by-one
+ * complements (e.g. `min-width: 861px`) — those are intentionally NOT tokenised
+ * and stay literal so their exact 1px boundary is preserved.
+ */
+@custom-media --sm-up (min-width: 560px);
+@custom-media --md-up (min-width: 640px);
+@custom-media --lg-up (min-width: 760px);
+@custom-media --mobile-up (min-width: 860px);
+@custom-media --wide-up (min-width: 900px);
+
+/**
+ * ── Feature-specific outliers ────────────────────────────────────────────────
+ * Off-ladder cutoffs that recur enough to name, but are NOT part of the JS
+ * ladder (JS treats these as raw-px arguments to `mediaMax()`, not ladder
+ * names — see breakpoints.ts). Preserved at their exact historical px.
+ *   --messages : the Messages page's own single-pane cutover (768px). Used only
+ *                in MessagesPage.module.css.
+ *   --compact  : an 880px "stack to single column" gate used broadly across ~21
+ *                feature pages (cinema, marketing, studio, community, forum, …).
+ *                Sits between --mobile (860) and --wide (900). Named neutrally
+ *                (not "map") because its CSS usage is general, not map-specific.
+ */
+@custom-media --messages (max-width: 768px);
+@custom-media --compact (max-width: 880px);
+
 :root {
   --bp-xs: 480px; /* small phones */
   --bp-sm: 560px; /* large phones */

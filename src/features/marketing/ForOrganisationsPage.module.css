@@ -89,7 +89,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
-@media (max-width: 880px) {
+@media (--compact) {
   .tierGrid {
     grid-template-columns: 1fr;
   }
@@ -249,12 +249,12 @@
   gap: 16px;
   margin-top: 32px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .processGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 480px) {
+@media (--xs) {
   .processGrid {
     grid-template-columns: 1fr;
   }
@@ -335,7 +335,7 @@
   gap: 16px;
   margin-bottom: 24px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .partnerRow {
     grid-template-columns: 1fr;
   }
@@ -504,7 +504,7 @@
   gap: 48px;
   align-items: flex-start;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .ctaInner {
     grid-template-columns: 1fr;
   }

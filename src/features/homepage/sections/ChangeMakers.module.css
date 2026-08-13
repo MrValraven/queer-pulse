@@ -133,7 +133,7 @@
   font-weight: 500;
 }
 
-@media (max-width: 760px) {
+@media (--lg) {
   .grid {
     grid-template-columns: 1fr;
   }

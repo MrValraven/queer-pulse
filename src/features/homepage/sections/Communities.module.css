@@ -917,7 +917,7 @@
 }
 
 /* ---------- responsive ---------- */
-@media (max-width: 900px) {
+@media (--wide) {
   .grid {
     grid-template-columns: 1fr;
     gap: 22px;
@@ -952,7 +952,7 @@
     display: none;
   }
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .spotMedia {
     height: 200px;
   }

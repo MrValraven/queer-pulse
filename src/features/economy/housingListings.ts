@@ -1,7 +1,25 @@
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import { MEMBERS, memberName } from "../members/data/members";
+import type { VerificationLevel } from "./api/verification.api";
+import { neighbourhoodCentroid } from "./housingNeighbourhoods";
 
 export type Tint = "coral" | "jade" | "plum";
+
+/**
+ * A listing's map location, honouring address privacy. `approx` is the
+ * neighbourhood-centroid pin shown to everyone; `precise` + `addressLine` are
+ * the exact home, present only when `precision === "exact"` (you're the owner or
+ * a connected member). Pre-connection the UI shows the approximate pin with a
+ * "exact address shared after you connect" note.
+ */
+export interface HousingLocation {
+  approxLatitude: number | null;
+  approxLongitude: number | null;
+  preciseLatitude: number | null;
+  preciseLongitude: number | null;
+  addressLine: string | null;
+  precision: "area" | "exact";
+}
 
 export interface Poster {
   initials: string;
@@ -11,6 +29,9 @@ export interface Poster {
   memberSince: string;
   responseTime: string;
   bio: string;
+  /** The lister's real identity-verification level. Optional in demo fixtures
+   * (absent → no badge, the honest default when we have no verification data). */
+  verificationLevel?: VerificationLevel;
 }
 
 export interface HousingListing {
@@ -34,6 +55,39 @@ export interface HousingListing {
   features: string[];
   facts: { label: string; value: string }[];
   idealFor: string[];
+  location: HousingLocation;
+  /** Transparency (P2.6): step-free/lift/access line. Optional in demo fixtures
+   * that predate the field (absent → the section is simply not rendered). */
+  accessibilityInfo?: string;
+  /** Whether bills are included in the rent — surfaced as a price-clarity line. */
+  billsIncluded?: boolean;
+  /** Who's offering the home. Absent/`member` → no badge; `agent` → broker badge. */
+  listerKind?: "member" | "agent";
+  /** Whether the backend derived this listing as "verified" (id-verified lister
+   * + live + low risk). Absent/false → no chip. Never self-asserted. */
+  verified?: boolean;
+  /** The backend's stable machine reason behind `verified` (granting condition
+   * or first failing gate). Carried through for an honest tooltip/debugging. */
+  verifiedReason?: string;
+  /** Bedroom count (0 = studio); absent when the lister didn't set one. Powers
+   * the beds filter and the fact row. */
+  bedrooms?: number;
+  /** Optional 360°/virtual-tour link (https). Absent → no tour section. */
+  virtualTourUrl?: string;
+}
+
+// Area-level location for a demo listing: the neighbourhood pin, no exact point
+// (the privacy-forward default — you aren't connected to the lister in demo).
+function areaLocation(hood: string): HousingLocation {
+  const centroid = neighbourhoodCentroid(hood);
+  return {
+    approxLatitude: centroid?.latitude ?? null,
+    approxLongitude: centroid?.longitude ?? null,
+    preciseLatitude: null,
+    preciseLongitude: null,
+    addressLine: null,
+    precision: "area",
+  };
 }
 
 export const HOUSING_LISTINGS: HousingListing[] = [
@@ -60,6 +114,7 @@ export const HOUSING_LISTINGS: HousingListing[] = [
       memberSince: "Member since 2023",
       responseTime: "within a few hours",
       bio: "Designer in Príncipe Real, runs Atelier Pulso. Subletting while away on a residency.",
+      verificationLevel: "id_verified",
     },
     gallery: [
       "Living room · garden view",
@@ -94,6 +149,24 @@ export const HOUSING_LISTINGS: HousingListing[] = [
       "A remote worker who needs good light and quiet",
       "Anyone who would treat a much-loved flat with care",
     ],
+    accessibilityInfo:
+      "First floor, no lift — one flight of stairs from the street. Step-free once inside.",
+    billsIncluded: true,
+    bedrooms: 1,
+    // Verified: this fixture's lister is id_verified and the listing is clean —
+    // exactly the state the backend derives the chip from.
+    verified: true,
+    verifiedReason: "id_verified_live_low_risk",
+    // Demo-only "connected" state: precise pin + address are visible, to show
+    // the post-connection view. Every other fixture stays area-level.
+    location: {
+      approxLatitude: 38.7176,
+      approxLongitude: -9.1503,
+      preciseLatitude: 38.7169,
+      preciseLongitude: -9.1487,
+      addressLine: "Rua da Escola Politécnica 42, 1250-102 Lisboa",
+      precision: "exact",
+    },
   },
   {
     slug: "arroios-room-share",
@@ -152,6 +225,11 @@ export const HOUSING_LISTINGS: HousingListing[] = [
       "A quiet, considerate flatmate who still wants community",
       "People who work regular hours and value a calm home",
     ],
+    accessibilityInfo:
+      "Second floor with a lift. Bathroom doorway is narrow — ask us for measurements.",
+    billsIncluded: false,
+    bedrooms: 1,
+    location: areaLocation("Arroios"),
   },
   {
     slug: "graca-studio-shortterm",
@@ -210,6 +288,12 @@ export const HOUSING_LISTINGS: HousingListing[] = [
       "People between flats who want a calm base",
       "Short stays where having your own space matters",
     ],
+    accessibilityInfo:
+      "Ground floor, step-free entrance. Wet-room shower, no bath. Rooftop is up two flights.",
+    billsIncluded: true,
+    bedrooms: 0,
+    listerKind: "agent",
+    location: areaLocation("Graça"),
   },
   {
     slug: "marvila-warehouse-room",
@@ -268,6 +352,11 @@ export const HOUSING_LISTINGS: HousingListing[] = [
       "Someone sociable but self-sufficient",
       "People who would use a shared sound system more than complain about it",
     ],
+    accessibilityInfo:
+      "Warehouse conversion, all on one level. Wide doorways; step at the main entrance.",
+    billsIncluded: false,
+    bedrooms: 1,
+    location: areaLocation("Marvila"),
   },
   {
     slug: "cais-do-sodre-full-flat",
@@ -321,6 +410,11 @@ export const HOUSING_LISTINGS: HousingListing[] = [
       "LGBTQ+ tenants (priority)",
       "People who treat books and plants as housemates",
     ],
+    accessibilityInfo:
+      "Third floor with a small lift (fits one person). Step-free once you're on the floor.",
+    billsIncluded: true,
+    bedrooms: 1,
+    location: areaLocation("Cais do Sodré"),
   },
   {
     slug: "mouraria-two-bed",
@@ -379,6 +473,11 @@ export const HOUSING_LISTINGS: HousingListing[] = [
       "Anyone who wants to be in the heart of Mouraria",
       "People who want a local to point them to the good stuff",
     ],
+    accessibilityInfo:
+      "Traditional building, no lift — two flights up. Not step-free; narrow tiled hallway.",
+    billsIncluded: true,
+    bedrooms: 2,
+    location: areaLocation("Mouraria"),
   },
 ];
 

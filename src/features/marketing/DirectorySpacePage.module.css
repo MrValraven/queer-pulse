@@ -130,7 +130,7 @@
   color: var(--ink-40);
   font-weight: 600;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .gallery {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
@@ -230,7 +230,7 @@
 }
 /* Narrow screens: stack the hero on top and lay the thumbnails out in a row
    beneath it, where aspect-ratio (not the hero height) drives their size. */
-@media (max-width: 640px) {
+@media (--md) {
   .photoGallery {
     grid-template-columns: 1fr;
   }
@@ -358,7 +358,7 @@
     background: rgba(var(--cream-rgb), 0.24);
   }
 }
-@media (max-width: 640px) {
+@media (--md) {
   .lightboxNav {
     width: 40px;
     height: 40px;
@@ -380,7 +380,7 @@
   gap: 48px;
   align-items: flex-start;
 }
-@media (max-width: 860px) {
+@media (--mobile) {
   .grid {
     grid-template-columns: 1fr;
   }
@@ -554,7 +554,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .features {
     grid-template-columns: 1fr;
   }
@@ -991,7 +991,7 @@
   flex: 1 1 auto;
   min-width: 0;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .actionBar {
     position: fixed;
     left: 0;
@@ -1427,12 +1427,12 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 18px;
 }
-@media (max-width: 900px) {
+@media (--wide) {
   .relatedGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .relatedGrid {
     grid-template-columns: 1fr;
   }

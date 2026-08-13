@@ -7,8 +7,11 @@ import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
-import { useSayHello } from "./api/useSayHello";
+import { FlatmateIdentityTags } from "./FlatmateIdentityTags";
+import { FlatmateMatchReasons } from "./FlatmateMatchReasons";
 import { ReportListingModal } from "./ReportListingModal";
+import { SayHelloModal } from "./SayHelloModal";
+import { VerificationBadge } from "./VerificationBadge";
 import type { Profile } from "./flatmates.data";
 import styles from "./FlatmatesPage.module.css";
 
@@ -22,24 +25,13 @@ export function FlatmateCard({
   onSayHello: () => void;
 }) {
   const { t } = useTranslation();
-  const { mutate: sendHello } = useSayHello();
   const { isSaved, toggleSave } = useSaved();
   const { showToast } = useToast();
   const [reporting, setReporting] = useState(false);
+  const [sayingHello, setSayingHello] = useState(false);
 
   const savedId = `flatmate:${p.profileSlug}`;
   const saved = isSaved(savedId);
-
-  const handleSayHello = () => {
-    sendHello(
-      { slug: p.profileSlug },
-      {
-        onError: () =>
-          showToast(t("economy:flatmates.card.sayHelloError"), "error"),
-      },
-    );
-    onSayHello();
-  };
 
   const handleSave = () => {
     const now = toggleSave({
@@ -72,7 +64,7 @@ export function FlatmateCard({
           tint={p.tint}
           src={p.photo}
           alt={p.name}
-          verified={p.verified}
+          verified={p.verificationLevel === "id_verified"}
           size={52}
         />
         <div className={styles.identity}>
@@ -81,6 +73,7 @@ export function FlatmateCard({
               {p.name}
             </Link>
             <MemberStaffBadge slug={p.slug} />
+            <VerificationBadge level={p.verificationLevel} size="sm" />
             {p.matchScore != null && (
               <span className={styles.matchBadge}>
                 {t("economy:flatmates.card.matchScore", {
@@ -89,7 +82,9 @@ export function FlatmateCard({
               </span>
             )}
           </span>
-          <div className={styles.pronouns}>{p.pronouns}</div>
+          <div className={styles.pronouns}>
+            {[p.pronouns, p.genderIdentity].filter(Boolean).join(" · ")}
+          </div>
         </div>
         <span
           className={[
@@ -112,6 +107,8 @@ export function FlatmateCard({
         <span className={styles.detail}>{p.budget}</span>
       </div>
       <p className={styles.note}>{p.note}</p>
+      <FlatmateMatchReasons profile={p} />
+      <FlatmateIdentityTags profile={p} />
       <div className={styles.tags}>
         {p.tags.map((tag) => (
           <span key={tag} className={styles.tag}>
@@ -153,7 +150,7 @@ export function FlatmateCard({
             className={[styles.sayBtn, sent && styles.sayBtnSent]
               .filter(Boolean)
               .join(" ")}
-            onClick={handleSayHello}
+            onClick={() => setSayingHello(true)}
           >
             {sent ? (
               <>
@@ -168,6 +165,14 @@ export function FlatmateCard({
           </button>
         </div>
       </div>
+
+      {sayingHello && (
+        <SayHelloModal
+          profile={p}
+          onSent={onSayHello}
+          onClose={() => setSayingHello(false)}
+        />
+      )}
 
       {reporting && (
         <ReportListingModal

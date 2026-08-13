@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Button, FormField, Modal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions";
+import { AudienceScopeField } from "./AudienceScopeField";
+import type { EventVisibility } from "./api/events.api";
 import { GatheringSuccessPanel } from "./GatheringSuccessPanel";
 import { ATTENDEE_COUNT } from "./manageGathering.data";
 import styles from "./GatheringModals.module.css";
@@ -11,6 +14,13 @@ export interface GatheringDetailsDraft {
   date: string;
   location: string;
   description: string;
+  /** Who can find and RSVP to this gathering. See `AudienceScopeField`. */
+  visibility: EventVisibility;
+  /** The community this gathering is filed to, or `""` for none — mirrors
+   *  `useGatheringForm`'s `communitySlug` convention exactly (same "no
+   *  community" empty-string sentinel), since it's now settable in both
+   *  create and edit. */
+  communitySlug: string;
 }
 
 export function EditDetailsModal({
@@ -23,11 +33,35 @@ export function EditDetailsModal({
   onSave: (draft: GatheringDetailsDraft) => void;
 }) {
   const { t } = useTranslation();
+  const fieldId = useId();
+  const myCommunityOptions = useMyCommunityOptions();
   const [draft, setDraft] = useState<GatheringDetailsDraft>(initial);
   const [done, setDone] = useState(false);
 
-  const set = (key: keyof GatheringDetailsDraft, value: string) =>
-    setDraft((current) => ({ ...current, [key]: value }));
+  const set = <FieldName extends keyof GatheringDetailsDraft>(
+    key: FieldName,
+    value: GatheringDetailsDraft[FieldName],
+  ) => setDraft((current) => ({ ...current, [key]: value }));
+  // Mirrors `useGatheringForm`'s `setCommunitySlug`: clearing the community
+  // while "Community members" is the selected audience scope leaves it
+  // pointing at an audience that no longer exists, so fall back to the
+  // default ("members" — Public) the moment it's cleared. One `setDraft` call
+  // (not two separate pieces of state, unlike the wizard) since both fields
+  // already live on the same draft object.
+  const setCommunitySlug = (value: string) =>
+    setDraft((current) => ({
+      ...current,
+      communitySlug: value,
+      visibility:
+        !value && current.visibility === "community"
+          ? "members"
+          : current.visibility,
+    }));
+  // Reactive to the IN-PROGRESS draft, not the persisted `initial` value —
+  // so picking/clearing a community in this same session immediately
+  // shows/hides the "Community members" tier, exactly like the create
+  // wizard's `form.communitySlug !== ""`.
+  const communityAvailable = draft.communitySlug !== "";
   const canSave =
     draft.title.trim().length > 0 &&
     draft.date.trim().length > 0 &&
@@ -114,6 +148,29 @@ export function EditDetailsModal({
             onChange={(event) => set("description", event.target.value)}
           />
         </FormField>
+        {myCommunityOptions.length > 0 && (
+          <FormField label={t("gatherings:create.step3.communityLabel")}>
+            <select
+              value={draft.communitySlug}
+              onChange={(event) => setCommunitySlug(event.target.value)}
+            >
+              <option value="">
+                {t("gatherings:create.step3.communityNone")}
+              </option>
+              {myCommunityOptions.map((community) => (
+                <option key={community.slug} value={community.slug}>
+                  {community.name}
+                </option>
+              ))}
+            </select>
+          </FormField>
+        )}
+        <AudienceScopeField
+          fieldId={`${fieldId}-audience`}
+          value={draft.visibility}
+          onChange={(value) => set("visibility", value)}
+          communityAvailable={communityAvailable}
+        />
       </div>
     </Modal>
   );

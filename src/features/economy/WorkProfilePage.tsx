@@ -25,6 +25,10 @@ export function WorkProfilePage() {
     toggleTransSupport,
     safeOnly,
     setSafeOnly,
+    skills,
+    toggleSkill,
+    focusAreas,
+    toggleFocusArea,
     loading,
     saving,
     save: persist,
@@ -102,16 +106,23 @@ export function WorkProfilePage() {
             <SkeletonLine height={64} style={{ marginTop: 12 }} />
           </div>
         ) : (
-          <ShowUpAtWorkSection
-            outChoice={outAtWork}
-            onOut={setOutAtWork}
-            trans={transSupport}
-            onToggleTrans={toggleTransSupport}
-            safeOnly={safeOnly}
-            onSafeOnly={setSafeOnly}
-          />
+          <>
+            <ShowUpAtWorkSection
+              outChoice={outAtWork}
+              onOut={setOutAtWork}
+              trans={transSupport}
+              onToggleTrans={toggleTransSupport}
+              safeOnly={safeOnly}
+              onSafeOnly={setSafeOnly}
+            />
+            <SkillsFocusSection
+              skills={skills}
+              onToggleSkill={toggleSkill}
+              focusAreas={focusAreas}
+              onToggleFocusArea={toggleFocusArea}
+            />
+          </>
         )}
-        <SkillsFocusSection />
 
         <div className={styles.saveBar}>
           <Button

@@ -1,6 +1,7 @@
 import { memberName } from "../members/data/members";
 import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction, TranslateOptions } from "../../shared/i18n/types";
+import type { EventVisibility } from "./api/events.api";
 
 /**
  * The "spots" line on an event card — "8 seats left", "32 going", "Open to all".
@@ -65,6 +66,30 @@ export interface GatheringDetail {
    *  gathering ended" as `endAt ?? date` in the past, so a demo gathering
    *  with a past `date` still counts as ended. */
   endAt?: Date;
+  /** Live mode only: the viewer's own RSVP standing, so the in-event RSVP
+   *  control shows the confirmed "you're going" / waitlist state on load (and
+   *  after a reload). `null`/absent = no active RSVP. Absent in the demo
+   *  registry, where it reads as `null` and the plain RSVP action shows. */
+  myRsvpStatus?: "going" | "maybe" | "waitlisted" | null;
+  /** Live mode only: true when the event is at capacity — the control offers
+   *  "Join the waitlist" instead of "I'm going". Absent in the demo registry. */
+  isFull?: boolean;
+  /** Live mode only: the event's capacity, or null when unlimited. */
+  capacity?: number | null;
+  /** Live mode only: the viewer's place in the waitlist queue, when waitlisted. */
+  waitlistPosition?: number | null;
+  /** Live mode only: who can find and RSVP to this gathering — the audience-
+   *  scope the host chose in the wizard (or later, in the edit modal).
+   *  Absent in the demo registry, where the manage dashboard defaults it to
+   *  "members" (Public), matching the wizard's own default. */
+  visibility?: EventVisibility;
+  /** Live mode only: the community this gathering is filed to, if any —
+   *  settable at creation and changeable afterwards via the edit modal's
+   *  community picker. Absent in the demo registry (the demo gathering isn't
+   *  filed to a community), which is fine: the manage dashboard's
+   *  "Community members" audience-scope tier simply stays unoffered there,
+   *  same as any other event with no community. */
+  communitySlug?: string;
 }
 
 export const gatheringDetails: Record<string, GatheringDetail> = {

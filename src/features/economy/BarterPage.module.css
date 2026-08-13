@@ -423,7 +423,7 @@
   max-width: 420px;
 }
 
-@media (max-width: 760px) {
+@media (--lg) {
   .postStrip {
     grid-template-columns: 1fr;
   }

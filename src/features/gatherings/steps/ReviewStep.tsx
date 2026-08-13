@@ -2,6 +2,7 @@ import { FiCheck } from "react-icons/fi";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { audienceScopeLabelKey } from "../audienceScope.data";
 import {
   CONFIRM_CHECK_KEYS,
   accessLabelKey,
@@ -79,6 +80,10 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
         cap: form.cap || "—",
         lang: langLabel,
       }),
+    },
+    {
+      l: t("gatherings:create.step5.row.audience"),
+      v: <strong>{t(audienceScopeLabelKey(form.audienceScope))}</strong>,
     },
     {
       l: t("gatherings:create.step5.row.pricing"),

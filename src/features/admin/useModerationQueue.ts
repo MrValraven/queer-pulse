@@ -159,13 +159,13 @@ export function useModerationQueue() {
     // truth) BUT keeps out rows with an in-flight optimistic removal — see
     // `pendingOpenRemoval` — so a background refetch can't resurrect a row the
     // moderator just actioned while its deferred PATCH is still pending.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+     
     if (dataOpen)
       setOpen(dataOpen.filter((r) => !pendingOpenRemoval.current.has(r.id)));
   }, [dataOpen]);
   useEffect(() => {
     // Same query-mirror guard for the appeals tab (see `pendingAppealRemoval`).
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+     
     if (dataAppeals)
       setAppeals(
         dataAppeals.filter((a) => !pendingAppealRemoval.current.has(a.id)),

@@ -742,6 +742,7 @@ export const members: Catalog = {
   "vouch.modal.form.sub":
     "A vouch is you, publicly, saying you know {first} and trust them in community spaces. It carries weight here — QueerPulse is invite-and-vouch, and your name goes on their profile beside the others who've backed them.",
   "vouch.modal.form.relationshipLabel": "How do you know {first}?",
+  "vouch.modal.form.relationshipHint": "select all that apply",
   "vouch.modal.form.endorseLabel": "What can you vouch they're great at?",
   "vouch.modal.form.optional": "optional",
   "vouch.modal.form.noteLabel": "Your note",

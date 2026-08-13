@@ -16,6 +16,26 @@ import type { Catalog } from "../../types";
  * gramatical sem genderizar quem de facto ocupa o papel.
  */
 export const admin: Catalog = {
+  // ── Consola de verificação de identidade ──────────────────────────────────
+  "verifications.eyebrow": "Confiança e segurança",
+  "verifications.title": "Verificação de <em>identidade</em>",
+  "verifications.sub":
+    "Rever e ajustar o nível de verificação das pessoas após uma revisão manual.",
+  "verifications.honesty":
+    "Nunca guardamos documentos de identidade nem dados biométricos — um parceiro externo faz a verificação e só devolve um passou ou não passou. Estes registos guardam um nível e a sua origem, nada mais.",
+  "verifications.via": "via {method} · {provider}",
+  "verifications.setLevelLabel": "Definir nível de verificação",
+  "verifications.applyCta": "Aplicar",
+  "verifications.unknownMember": "Pessoa desconhecida",
+  "verifications.level.none": "Nenhum",
+  "verifications.level.email": "Email",
+  "verifications.level.phone": "Telefone",
+  "verifications.level.id_verified": "Identidade verificada",
+  "verifications.toast.updated": "Nível de verificação atualizado.",
+  "verifications.toast.error": "Não foi possível atualizar essa verificação",
+  "verifications.loadError": "Não foi possível carregar as verificações",
+  "verifications.empty": "Ainda não há registos de verificação.",
+
   // ── Verbos partilhados, reutilizados em vários modais/gavetas ─────────────
   "common.cancel": "Cancelar",
   "common.close": "Fechar",
@@ -502,6 +522,37 @@ export const admin: Catalog = {
   "adminReadingGroupProposals.toast.error": "Não foi possível concluir. Tenta novamente.",
   "adminReadingGroupProposals.loadMore": "Carregar mais",
   "adminReadingGroupProposals.loadingMore": "A carregar…",
+
+  "adminConcerns.title": "Preocupações <em>levantadas</em>",
+  "adminConcerns.header.eyebrow": "Confiança e segurança",
+  "adminConcerns.header.title": "O que os membros <em>estão a sinalizar</em>",
+  "adminConcerns.header.sub":
+    "Todas as preocupações submetidas pelo formulário de governação — denúncias, contestações e problemas. Filtra por estado de triagem e marca cada uma como em análise, resolvida ou descartada.",
+  "adminConcerns.empty": "Nenhuma preocupação corresponde a este filtro ainda.",
+  "adminConcerns.error":
+    "Não foi possível carregar as preocupações. Tenta novamente.",
+  "adminConcerns.filter.all": "Todas",
+  "adminConcerns.category.member": "Pessoa ou comportamento",
+  "adminConcerns.category.gathering": "Convívio ou evento",
+  "adminConcerns.category.content": "Conteúdo ou plataforma",
+  "adminConcerns.category.appeal": "Contestação de moderação",
+  "adminConcerns.category.other": "Outra coisa",
+  "adminConcerns.status.new": "Nova",
+  "adminConcerns.status.reviewing": "Em análise",
+  "adminConcerns.status.resolved": "Resolvida",
+  "adminConcerns.status.dismissed": "Descartada",
+  "adminConcerns.row.contact": "Contacto: {contact}",
+  "adminConcerns.row.sent": "Enviada {date}",
+  "adminConcerns.contact.anon": "Sem contacto deixado",
+  "adminConcerns.action.reviewing": "Marcar em análise",
+  "adminConcerns.action.resolved": "Resolver",
+  "adminConcerns.action.dismissed": "Descartar",
+  "adminConcerns.toast.reviewing": "Marcada como em análise.",
+  "adminConcerns.toast.resolved": "Preocupação resolvida.",
+  "adminConcerns.toast.dismissed": "Preocupação descartada.",
+  "adminConcerns.toast.error": "Não foi possível concluir. Tenta novamente.",
+  "adminConcerns.loadMore": "Carregar mais",
+  "adminConcerns.loadingMore": "A carregar…",
 
   "adminMagazineSubmissions.title": "Propostas de <em>histórias</em>",
   "adminMagazineSubmissions.header.eyebrow": "Revista",
@@ -1804,6 +1855,34 @@ export const admin: Catalog = {
   "housingRequests.declineCta": "Recusar",
   "housingRequests.acceptCta": "Aceitar",
 
+  // ── Grupos de habitação (/admin/housing-groups) — triagem + normas ─────────
+  "housingGroups.title": "Grupos de <em>habitação</em>",
+  "housingGroups.header.eyebrow": "Habitação verificada",
+  "housingGroups.header.sub":
+    "Analisa quem pede para entrar nos grupos restritos e mantém os anúncios honestos, escondendo os que quebram as regras.",
+  "housingGroups.requests.title": "Pedidos de adesão",
+  "housingGroups.requests.loadError":
+    "A fila de pedidos de adesão não carregou de momento — tenta novamente.",
+  "housingGroups.requests.empty":
+    "Nada à tua espera — todos os pedidos foram analisados.",
+  "housingGroups.requests.unknownGroup": "Grupo desconhecido",
+  "housingGroups.requests.mutuals_one": "{count} ligação em comum",
+  "housingGroups.requests.mutuals_other": "{count} ligações em comum",
+  "housingGroups.requests.declineCta": "Recusar",
+  "housingGroups.requests.approveCta": "Aprovar",
+  "housingGroups.requests.error": "Não foi possível guardar essa decisão",
+  "housingGroups.listings.title": "Anúncios",
+  "housingGroups.listings.loadError":
+    "Os anúncios não carregaram de momento — tenta novamente.",
+  "housingGroups.listings.empty":
+    "Sem anúncios para analisar — ainda nada foi publicado num grupo.",
+  "housingGroups.listings.perMonth": "€{price} / mês",
+  "housingGroups.listings.noGroup": "Sem grupo",
+  "housingGroups.listings.hiddenChip": "Escondido",
+  "housingGroups.listings.hideCta": "Esconder",
+  "housingGroups.listings.unhideCta": "Mostrar",
+  "housingGroups.listings.error": "Não foi possível atualizar esse anúncio",
+
   // ── Roteiro (/admin/roadmap) — quadro, fila de ideias, estatísticas ────────
   "roadmap.title": "Roteiro · <em>o que vem a seguir</em>",
   "roadmap.header.eyebrow": "Roteiro",
@@ -2647,4 +2726,24 @@ export const admin: Catalog = {
   "pressKit.facts.sub":
     "Derivados dos dados da plataforma — mostrados no kit público, não editáveis aqui.",
   "pressKit.facts.empty": "Ainda sem factos disponíveis.",
+
+  // ── Integridade dos anúncios de habitação (Wave B1) — fila por risco ──
+  "housing.risk.title": "Pontuação de risco",
+  "housing.risk.reasonsLabel": "Porque está sinalizado",
+  "housing.risk.evidenceLabel": "Cópia do anúncio denunciado",
+  "housing.risk.reason.rent_far_below_market":
+    "Renda muito abaixo do intervalo local",
+  "housing.risk.reason.rent_below_market": "Renda abaixo do intervalo local",
+  "housing.risk.reason.contact_info_in_text": "Contactos no texto",
+  "housing.risk.reason.off_platform_payment_language":
+    "Linguagem de pagamento antecipado ou fora da plataforma",
+  "housing.risk.reason.discriminatory_language":
+    "Possível linguagem discriminatória",
+  "housing.risk.reason.lister_unverified":
+    "Anunciante sem verificação de telefone ou identidade",
+  "housing.risk.reason.lister_phone_only":
+    "Anunciante só com telefone verificado",
+  "housing.risk.reason.incomplete_listing": "Descrição escassa",
+  "housing.risk.reason.no_photos": "Sem fotografias",
+  "housing.risk.reason.missing_accessibility_info": "Sem informação de acessos",
 };

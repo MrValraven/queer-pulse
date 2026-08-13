@@ -32,6 +32,12 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> avalizou o teu espaço seguro.",
   "type.safe_space_vouch.meta": "Espaço seguro",
 
+  // Enviada quando uma nova casa fica disponível e corresponde a uma procura
+  // guardada com alertas ativos. Do sistema (sem autor); `title`/`area` vêm do payload.
+  "type.housing_listing_match.text":
+    "Uma nova casa em {area} corresponde à tua procura guardada — {title}.",
+  "type.housing_listing_match.meta": "Alerta de casa",
+
   "type.promoted_to_member.text": "Já fazes parte da comunidade. Bem-vinde.",
   "type.promoted_to_member.meta": "Adesão",
 
@@ -168,6 +174,17 @@ export const notifications: Catalog = {
 
   "type.roadmap_status.text": "Há novidades sobre uma ideia que partilhaste.",
   "type.roadmap_status.meta": "Atualização do roteiro",
+
+  // Desfecho de uma preocupação — título por estado terminal
+  // (resolvida/descartada); as chaves simples são o recurso alternativo.
+  "type.concern_update.text": "Há novidades sobre uma preocupação que levantaste.",
+  "type.concern_update.meta": "Atualização de preocupação",
+  "type.concern_update.resolved.text":
+    "A preocupação que levantaste foi analisada e resolvida.",
+  "type.concern_update.resolved.meta": "Atualização de preocupação",
+  "type.concern_update.dismissed.text":
+    "A preocupação que levantaste foi analisada e encerrada.",
+  "type.concern_update.dismissed.meta": "Atualização de preocupação",
 
   // Resultado de moderação — título por ação; a nota da equipa dirigida ao
   // membro ("a razão que o membro lê") entra como {note}. Ao tocar, abre a

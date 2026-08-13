@@ -1,4 +1,11 @@
 import { getMember, fullName, type Member } from "../members/data/members";
+import type {
+  FlatmateHouseholdNorms,
+  FlatmateIdentityHousehold,
+  IdentityVisibility,
+  MatchReason,
+} from "./api/flatmateProfile.api";
+import type { VerificationLevel } from "./api/verification.api";
 
 export type ListingType = "seeking" | "offering";
 
@@ -23,6 +30,14 @@ interface Listing {
   moveinKey: string;
   note: string;
   tags: string[];
+  /** Optional demo-only special-category fields (backend gates these live). */
+  genderIdentity?: string;
+  safeSpaceNeeds?: string[];
+  householdNorms?: FlatmateHouseholdNorms;
+  identityHousehold?: FlatmateIdentityHousehold;
+  /** Demo-only compatibility score + explainable reasons (live: from the API). */
+  matchScore?: number;
+  matchReasons?: MatchReason[];
 }
 
 export interface Profile {
@@ -41,10 +56,18 @@ export interface Profile {
   moveinKey: string;
   note: string;
   tags: string[];
+  genderIdentity?: string;
+  safeSpaceNeeds?: string[];
+  householdNorms?: FlatmateHouseholdNorms;
+  identityHousehold?: FlatmateIdentityHousehold;
+  identityVisibility?: IdentityVisibility;
+  matchReasons?: MatchReason[];
   initials: string;
   tint: Member["tint"];
   photo?: string;
-  verified: boolean;
+  /** The member's real identity-verification level — drives the honest badge.
+   * Never a decorative flag; `email`/`none` show no badge. */
+  verificationLevel: VerificationLevel;
   since: string;
 }
 
@@ -96,6 +119,19 @@ const LISTINGS: Listing[] = [
     moveinKey: "flex",
     note: "Just landed in Lisbon and shooting a documentary on the city's queer nightlife, so my hours are honestly all over the place. I'm tidy, easy company, and good at being quiet when you need the flat calm. Looking for somewhere I don't have to explain the 4am returns.",
     tags: ["Night owl", "Late nights fine", "Sociable"],
+    genderIdentity: "Non-binary",
+    safeSpaceNeeds: ["Trans-inclusive household", "Affirming flatmates"],
+    householdNorms: { sleepSchedule: "Night owl", noise: "Relaxed about noise" },
+    identityHousehold: {
+      outAtHome: "Out at home",
+      bathroomComfort: "Happy to share a bathroom",
+    },
+    matchScore: 88,
+    matchReasons: [
+      { factor: "safeSpace", label: "Shared safe-space values", weight: 15, contribution: 15 },
+      { factor: "budget", label: "Budget and rent line up", weight: 25, contribution: 25 },
+      { factor: "lifestyle", label: "Several lifestyle tags in common", weight: 15, contribution: 10 },
+    ],
   },
   {
     slug: "beatriz",
@@ -120,6 +156,24 @@ const LISTINGS: Listing[] = [
     moveinKey: "flex",
     note: "Translator and poet, working from home most days with headphones on and the kettle always going. I'm after a calm flat with people who are happy to share the occasional dinner and otherwise let the quiet be. Sober-friendly, plant-friendly, low drama.",
     tags: ["WFH", "Quiet household", "Sober household", "Plant parent"],
+    genderIdentity: "Trans woman",
+    safeSpaceNeeds: ["Trans-inclusive household", "No outing", "Chosen-family friendly"],
+    householdNorms: {
+      cleanliness: "Tidy",
+      guests: "Occasional guests",
+      noise: "Quiet, please",
+    },
+    identityHousehold: {
+      mailNamePrivacy: "Post in my chosen name, please",
+      medicationPrivacy: "Discreet about medication",
+    },
+    matchScore: 91,
+    matchReasons: [
+      { factor: "safeSpace", label: "Shared safe-space values", weight: 15, contribution: 15 },
+      { factor: "household", label: "Household basics agree", weight: 15, contribution: 15 },
+      { factor: "neighbourhood", label: "Same neighbourhood", weight: 20, contribution: 20 },
+      { factor: "budget", label: "Budget is roughly in range", weight: 25, contribution: 18 },
+    ],
   },
   {
     slug: "jordan",
@@ -165,10 +219,20 @@ export const PROFILES: Profile[] = LISTINGS.map((l, i) => {
     moveinKey: l.moveinKey,
     note: l.note,
     tags: l.tags,
+    genderIdentity: l.genderIdentity,
+    safeSpaceNeeds: l.safeSpaceNeeds,
+    householdNorms: l.householdNorms,
+    identityHousehold: l.identityHousehold,
+    identityVisibility: "matches",
+    matchScore: l.matchScore ?? null,
+    matchReasons: l.matchReasons,
     initials: m.initials,
     tint: m.tint,
     photo: m.photo,
-    verified: m.verified,
+    // Demo has no real verification event, so mirror the member registry's
+    // verified flag onto the honest ladder (verified → ID-verified) purely to
+    // demonstrate the badge; unverified demo members show none.
+    verificationLevel: m.verified ? "id_verified" : "email",
     since: m.since,
   };
 });
@@ -211,6 +275,135 @@ export const MODAL_TAGS = [
   "Introvert-friendly",
   "420-friendly",
 ];
+
+/** Affirming / values statements a member can add to their profile. These are
+ * always framed as what a home *is*, never as excluding anyone — no
+ * exclusionary options belong here (fair-housing). Stored verbatim. */
+export const SAFE_SPACE_NEEDS = [
+  "Trans-inclusive household",
+  "Affirming flatmates",
+  "No outing",
+  "Chosen-family friendly",
+  "Sober-friendly space",
+  "Neurodivergent-friendly",
+  "Disability-aware",
+  "Pronouns respected",
+];
+
+/** Ordinary shared-living preferences + the co-living compatibility
+ * questionnaire (`noise`, `sharing`). Each maps to one `householdNorms` key; the
+ * option strings are stored verbatim (like lifestyle tags) and feed the
+ * household-compatibility match factor. Ordinary data — no consent needed. */
+export const HOUSEHOLD_NORM_FIELDS: {
+  key: keyof FlatmateHouseholdNorms;
+  labelKey: string;
+  options: string[];
+}[] = [
+  {
+    key: "smoking",
+    labelKey: "economy:postProfileForm.household.smoking",
+    options: ["Non-smoking home", "Smoking OK", "Outdoor only"],
+  },
+  {
+    key: "pets",
+    labelKey: "economy:postProfileForm.household.pets",
+    options: ["Pets welcome", "No pets", "Already have pets"],
+  },
+  {
+    key: "guests",
+    labelKey: "economy:postProfileForm.household.guests",
+    options: ["Guests welcome", "Occasional guests", "Quiet on guests"],
+  },
+  {
+    key: "cleanliness",
+    labelKey: "economy:postProfileForm.household.cleanliness",
+    options: ["Tidy", "Relaxed", "Shared cleaning rota"],
+  },
+  {
+    key: "sleepSchedule",
+    labelKey: "economy:postProfileForm.household.sleepSchedule",
+    options: ["Early riser", "Night owl", "Varies"],
+  },
+  {
+    key: "noise",
+    labelKey: "economy:postProfileForm.household.noise",
+    options: ["Quiet, please", "Relaxed about noise", "Music welcome"],
+  },
+  {
+    key: "sharing",
+    labelKey: "economy:postProfileForm.household.sharing",
+    options: ["Love shared spaces", "A balance of both", "Mostly keep to myself"],
+  },
+];
+
+/** Consent-gated (GDPR Art.9) trans-affirming household prompts. Each maps to
+ * one `identityHousehold` key. Framed as affirming/compatibility, never
+ * intrusive; all optional. Only stored + shown under the same consent gate as
+ * pronouns / gender / safe-space needs. */
+export const IDENTITY_HOUSEHOLD_FIELDS: {
+  key: keyof FlatmateIdentityHousehold;
+  labelKey: string;
+  options: string[];
+}[] = [
+  {
+    key: "outAtHome",
+    labelKey: "economy:postProfileForm.identityHousehold.outAtHome",
+    options: ["Out at home", "Private at home", "Prefer not to say"],
+  },
+  {
+    key: "bathroomComfort",
+    labelKey: "economy:postProfileForm.identityHousehold.bathroom",
+    options: [
+      "Happy to share a bathroom",
+      "Prefer my own bathroom",
+      "No preference",
+    ],
+  },
+  {
+    key: "mailNamePrivacy",
+    labelKey: "economy:postProfileForm.identityHousehold.mailName",
+    options: [
+      "Post in my chosen name, please",
+      "Either name is fine",
+      "Prefer not to say",
+    ],
+  },
+  {
+    key: "medicationPrivacy",
+    labelKey: "economy:postProfileForm.identityHousehold.medication",
+    options: [
+      "Discreet about medication",
+      "Open about it",
+      "Prefer not to say",
+    ],
+  },
+];
+
+/** Who can see the special-category identity fields. */
+export const IDENTITY_VISIBILITY_OPTIONS: {
+  value: IdentityVisibility;
+  labelKey: string;
+}[] = [
+  { value: "public", labelKey: "economy:postProfileForm.visibility.public" },
+  { value: "members", labelKey: "economy:postProfileForm.visibility.members" },
+  { value: "matches", labelKey: "economy:postProfileForm.visibility.matches" },
+  { value: "hidden", labelKey: "economy:postProfileForm.visibility.hidden" },
+];
+
+/** Demo-only stand-in for the signed-in member's own consent-stored pronouns,
+ * so the opt-in pronoun pre-share is demonstrable without a live profile. Live
+ * mode reads the real value from `useMyFlatmateProfile`; never used there. */
+export const DEMO_MY_PRONOUNS = "they/them";
+
+/** Demo-only: a discovery "like" resolves to a mutual match when the profile's
+ * compatibility score clears this bar — deterministic so the fixture always has
+ * a couple of matches to show. Live mode ignores this (the backend decides from
+ * real reciprocal likes). */
+export const DEMO_MATCH_THRESHOLD = 85;
+
+export function demoWouldMatch(p: Profile): boolean {
+  return (p.matchScore ?? 0) >= DEMO_MATCH_THRESHOLD;
+}
 
 export function matchesBudget(p: Profile, budget: string) {
   if (budget === "all") return true;

@@ -218,12 +218,12 @@
   white-space: nowrap;
 }
 
-@media (max-width: 900px) {
+@media (--wide) {
   .grid {
     grid-template-columns: 1fr 1fr;
   }
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .grid {
     grid-template-columns: 1fr;
   }

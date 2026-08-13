@@ -21,6 +21,7 @@ import {
   unmuteMember,
   type BlockOptions,
 } from "../../features/social/api/social.api";
+import { UNREAD_COUNT_KEY } from "../../features/messages/api/useConversations";
 import {
   SocialContext,
   type SocialContextValue,
@@ -174,9 +175,16 @@ export function SocialProvider({ children }: { children: ReactNode }) {
         Promise.resolve(call)
           .then(() => {
             // Blocking severs connections server-side — refresh those surfaces.
+            // A block also hides the pair's DM from the inbox server-side
+            // (`ConversationsService.listConversations`), so re-fetch the
+            // thread list + the nav unread badge too — otherwise a block/
+            // unblock made from inside a chat wouldn't make the thread
+            // disappear/reappear until an unrelated refetch happened to fire.
             if (key === "blocked") {
               void queryClient.invalidateQueries({ queryKey: ["connections"] });
               void queryClient.invalidateQueries({ queryKey: ["members"] });
+              void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+              void queryClient.invalidateQueries({ queryKey: [UNREAD_COUNT_KEY] });
             }
           })
           .catch((err) => {

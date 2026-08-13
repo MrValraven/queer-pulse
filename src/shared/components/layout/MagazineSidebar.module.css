@@ -190,7 +190,7 @@
   background: var(--paper);
 }
 
-@media (max-width: 900px) {
+@media (--wide) {
   .rail {
     position: relative;
     height: 100%;

@@ -680,7 +680,7 @@ button.reportMain:focus-visible {
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .dActions {
     grid-template-columns: 1fr;
   }
@@ -986,7 +986,7 @@ button.reportMain:focus-visible {
   gap: 12px;
   margin-bottom: 18px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .appealDecision {
     grid-template-columns: 1fr;
   }

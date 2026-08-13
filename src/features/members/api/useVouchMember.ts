@@ -5,7 +5,8 @@ import type { VouchRelationship } from "../vouchMember.data";
 
 export interface VouchMemberInput {
   slug: string;
-  relationship?: VouchRelationship;
+  /** The ways the voucher knows this member — one or more. */
+  relationships?: VouchRelationship[];
   note?: string;
   anonymous?: boolean;
 }
@@ -17,9 +18,9 @@ export function useVouchMember() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<{ vouchCount: number } | undefined, Error, VouchMemberInput>({
-    mutationFn: async ({ slug, relationship, note, anonymous }) => {
+    mutationFn: async ({ slug, relationships, note, anonymous }) => {
       if (demoMode) return undefined;
-      return vouchFor(slug, { relationship, note, anonymous });
+      return vouchFor(slug, { relationships, note, anonymous });
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["profile"] });

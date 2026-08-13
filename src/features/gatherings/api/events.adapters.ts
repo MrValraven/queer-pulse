@@ -104,7 +104,33 @@ export function detailToGathering(dto: EventDetailDTO): GatheringDetail {
     viewerIsOrganizer: dto.isOrganizer ?? false,
     bookmarked: dto.isBookmarked ?? false,
     endAt: dto.endAt ? new Date(dto.endAt) : undefined,
+    myRsvpStatus: activeRsvpStatus(dto.myRsvpStatus),
+    isFull: dto.isFull ?? false,
+    capacity: dto.capacity ?? null,
+    waitlistPosition: dto.myWaitlistPosition ?? null,
+    // Falls back to "members" (Public) — the wizard's own default — for an
+    // event the API returns with no `visibility`, so the edit modal never
+    // pre-populates a blank/invalid audience-scope selection.
+    visibility: dto.visibility ?? "members",
+    // `null` (no community) and `undefined` (field absent) both collapse to
+    // undefined here, matching GatheringDetail's "unset" representation.
+    communitySlug: dto.communitySlug ?? undefined,
   };
+}
+
+/**
+ * Normalize the DTO's RSVP status onto the three "active" states the in-event
+ * RSVP control cares about. A `cancelled` row (or an absent status) reads as
+ * `null` — "no active RSVP" — so a member who cancelled sees the plain RSVP
+ * action again rather than a stale confirmed state.
+ */
+function activeRsvpStatus(
+  status: EventDetailDTO["myRsvpStatus"],
+): "going" | "maybe" | "waitlisted" | null {
+  if (status === "going" || status === "maybe" || status === "waitlisted") {
+    return status;
+  }
+  return null;
 }
 
 // ── Attendee view-model (manage / dashboard rows) ───────────────────────────
@@ -208,9 +234,9 @@ export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
     venue: isOnline ? undefined : form.venue.trim() || form.hood || undefined,
     isOnline,
     capacity: Number.isFinite(capacity) ? capacity : undefined,
-    // The wizard has no public/private control; gatherings default to
-    // members-only (visible to the network), the backend's "members" value.
-    visibility: "members",
+    // The host's audience-scope pick from the wizard (default "members" —
+    // Public). See docs/superpowers/specs/2026-08-13-gathering-audience-scope-design.md.
+    visibility: form.audienceScope,
     status: "published",
     // Only sent when the organiser picked one of their communities — omitted
     // keeps the gathering public, exactly as before this field existed.

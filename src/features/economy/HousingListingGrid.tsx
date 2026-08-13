@@ -14,6 +14,7 @@ import {
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FILTERS } from "./housing.data";
+import { AffirmingBaselineBadge } from "./AffirmingBaseline";
 import type { HOUSING_LISTINGS } from "./housingListings";
 import styles from "./HousingPage.module.css";
 
@@ -161,19 +162,22 @@ export function HousingListingGrid({
               <ListingSaveToggle listing={listing} />
             </div>
             <div className={styles.cardBody}>
-              <span
-                className={styles.type}
-                style={{
-                  background: listing.typeColor,
-                  color: listing.typeText,
-                }}
-              >
-                {t(
-                  FILTERS.find(
-                    (filterOption) => filterOption.value === listing.type,
-                  )?.labelKey ?? "economy:housing.filter.all",
-                )}
-              </span>
+              <div className={styles.cardBadges}>
+                <span
+                  className={styles.type}
+                  style={{
+                    background: listing.typeColor,
+                    color: listing.typeText,
+                  }}
+                >
+                  {t(
+                    FILTERS.find(
+                      (filterOption) => filterOption.value === listing.type,
+                    )?.labelKey ?? "economy:housing.filter.all",
+                  )}
+                </span>
+                <AffirmingBaselineBadge />
+              </div>
               <div className={styles.cardTitle}>{listing.title}</div>
               <div className={styles.details}>
                 <span className={styles.detail}>{listing.hood}</span>

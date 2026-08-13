@@ -425,7 +425,7 @@
   color: var(--jade-light, #9be0bd);
 }
 
-@media (max-width: 880px) {
+@media (--compact) {
   .grid {
     grid-template-columns: 1fr;
   }

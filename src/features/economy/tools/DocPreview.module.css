@@ -18,7 +18,7 @@
   line-height: 1.55;
 }
 
-@media (max-width: 640px) {
+@media (--md) {
   .sheet {
     padding: 32px 24px 40px;
     min-height: 0;

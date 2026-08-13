@@ -18,6 +18,7 @@ import { ACCOUNT_GROUPS, HEADER_ACTIONS } from "./accountMenu.data";
 import { useAccountIdentity } from "./useAccountIdentity";
 import { RoleLinks, AccountMenuControls } from "./accountMenuShared";
 import { usePersonaBadge } from "./usePersonaBadge";
+import { useGettingStartedBadge } from "../../../features/onboarding/useGettingStartedBadge";
 import styles from "./AccountMenu.module.css";
 
 /** Profile chip in the logged-in nav that opens a menu: profile, settings, sign out. */
@@ -194,6 +195,7 @@ function AccountMenuPanel({
 }) {
   const { t } = useTranslation();
   const personaBadge = usePersonaBadge();
+  const gettingStartedBadge = useGettingStartedBadge();
   return (
     <div
       className={[styles.menu, placement === "rail" && styles.menuRail]
@@ -239,13 +241,17 @@ function AccountMenuPanel({
           <div key={group[0]?.to ?? groupIndex}>
             {groupIndex > 0 && <div className={styles.divider} />}
             <div className={styles.grid}>
-              {group.map((item) => {
+              {group
+                .filter((item) => !item.liveOnly || !demoMode)
+                .map((item) => {
                 const Icon = item.icon;
                 const badge =
                   item.badge ??
                   (item.to === routes.subprofilesDashboard
                     ? personaBadge
-                    : undefined);
+                    : item.to === routes.gettingStarted
+                      ? gettingStartedBadge
+                      : undefined);
                 return (
                   <Link
                     key={item.to}

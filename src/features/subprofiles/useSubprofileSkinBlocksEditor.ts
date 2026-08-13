@@ -202,6 +202,14 @@ export function useSubprofileSkinBlocksEditor(
       const value = clone(draft[descriptor.blockKey]);
       if (value === undefined) continue;
       const normalized = normalizeBlockValue(value);
+      // The availability calendar with no start date is unusable (the skin
+      // renderer can't derive day numbers) — don't persist it half-filled.
+      if (descriptor.blockKey === "availability") {
+        const av = normalized as { startDate?: unknown } | null;
+        if (!av || typeof av !== "object" || typeof av.startDate !== "string" || av.startDate.trim() === "") {
+          continue;
+        }
+      }
       // Drop a list block that normalized down to nothing, so an emptied list
       // doesn't persist as `[]`.
       if (Array.isArray(normalized) && normalized.length === 0) continue;

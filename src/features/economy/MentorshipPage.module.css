@@ -117,7 +117,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
-@media (max-width: 640px) {
+@media (--md) {
   .chooseGrid {
     grid-template-columns: 1fr;
   }

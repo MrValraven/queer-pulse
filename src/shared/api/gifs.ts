@@ -31,7 +31,7 @@ export interface GifProvider {
   search(query: string, page?: number): Promise<GifSearchPage>;
 }
 
-const KLIPY_KEY = import.meta.env.VITE_KLIPY_KEY as string | undefined;
+const KLIPY_KEY = import.meta.env.VITE_KLIPY_KEY;
 
 /** Whether a live GIF provider is configured. When false, live mode has no
  *  network provider (the KLIPY key is unset), so the picker shows a warm
@@ -64,11 +64,11 @@ function readVariant(node: unknown): GifFileVariant | null {
   if (!node || typeof node !== "object") return null;
   const record = node as Record<string, unknown>;
   if (typeof record.url === "string") {
-    return record as GifFileVariant;
+    return record;
   }
   const gif = record.gif;
   if (gif && typeof gif === "object" && typeof (gif as GifFileVariant).url === "string") {
-    return gif as GifFileVariant;
+    return gif;
   }
   return null;
 }

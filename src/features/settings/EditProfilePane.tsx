@@ -3,10 +3,10 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useProfileEdit } from "../../app/providers/useProfile";
 import { useAuth } from "../../app/providers/authContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { serializePronouns } from "../../shared/identity/pronouns";
 import {
   BioSection,
   IdentitySection,
-  PronounsSection,
   SkillsSection,
 } from "./EditProfileSections";
 import { CommunitiesPickerSection } from "./CommunitiesPickerSection";
@@ -16,7 +16,6 @@ import { UsernameSection } from "./UsernameSection";
 /** Section id of a change, so the host can list what was edited on save. */
 export type ProfileSection =
   | "identity"
-  | "pronouns"
   | "bio"
   | "links"
   | "skills"
@@ -70,14 +69,6 @@ export function EditProfilePane({
         .filter(Boolean)
     : [];
 
-  function togglePronoun(p: string) {
-    const next = selectedPronouns.includes(p)
-      ? selectedPronouns.filter((x) => x !== p)
-      : [...selectedPronouns, p];
-    updateDraft({ pronouns: next.join(", ") });
-    onChange("pronouns");
-  }
-
   function setName(displayName: string) {
     const trimmed = displayName.trimStart();
     const idx = trimmed.indexOf(" ");
@@ -130,9 +121,14 @@ export function EditProfilePane({
         location={draft.hood}
         photo={draft.photo}
         googlePhoto={googlePhoto}
+        pronouns={selectedPronouns}
         onNameChange={setName}
         onLocationChange={(v) => {
           updateDraft({ hood: v });
+          onChange("identity");
+        }}
+        onPronounsChange={(next) => {
+          updateDraft({ pronouns: serializePronouns(next) });
           onChange("identity");
         }}
         onPhotoChange={handlePhotoChange}
@@ -140,7 +136,6 @@ export function EditProfilePane({
         onRemove={handleRemovePhoto}
       />
       <UsernameSection />
-      <PronounsSection selected={selectedPronouns} onToggle={togglePronoun} />
       <BioSection
         bioText={draft.bio}
         occupation={draft.role}

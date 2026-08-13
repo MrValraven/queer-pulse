@@ -175,12 +175,12 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .logoGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 480px) {
+@media (--xs) {
   .logoGrid {
     grid-template-columns: 1fr;
   }
@@ -265,7 +265,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .swatchRow {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -306,12 +306,12 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .imgGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 480px) {
+@media (--xs) {
   .imgGrid {
     grid-template-columns: 1fr;
   }
@@ -340,7 +340,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .teamGrid {
     grid-template-columns: 1fr;
   }
@@ -431,7 +431,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 }
-@media (max-width: 640px) {
+@media (--md) {
   .factsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -537,7 +537,7 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .downloadRow {
     grid-template-columns: 1fr;
   }

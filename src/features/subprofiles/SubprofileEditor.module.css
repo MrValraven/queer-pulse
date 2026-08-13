@@ -369,6 +369,68 @@
   text-align: center;
 }
 
+/* ── Practice skin: availability grid control ────────────────────────────── */
+.availEditor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+}
+.availHelp {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.5;
+  margin: 0;
+}
+.availHead {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-40);
+  text-align: center;
+}
+.availGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+.availCell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+}
+.availCell:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.avail_open {
+  background: color-mix(in srgb, var(--jade) 16%, var(--cream));
+  border-color: color-mix(in srgb, var(--jade) 40%, transparent);
+  color: var(--jade);
+}
+.avail_full {
+  background: color-mix(in srgb, var(--accent) 16%, var(--cream));
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  color: var(--accent-ink);
+}
+.avail_off {
+  background: var(--cream);
+  border-color: rgba(var(--line-rgb), 0.12);
+  color: var(--ink-40);
+}
+
 .srOnly {
   position: absolute;
   width: 1px;

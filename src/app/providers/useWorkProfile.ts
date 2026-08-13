@@ -16,6 +16,12 @@ export interface WorkProfileContextValue {
   /** Only surface community-verified-safe employers. */
   safeOnly: boolean;
   setSafeOnly: (v: boolean) => void;
+  /** Selected skill ids the member offers. */
+  skills: string[];
+  toggleSkill: (id: string) => void;
+  /** Selected focus-area ids the member seeks support with. */
+  focusAreas: string[];
+  toggleFocusArea: (id: string) => void;
   /** True while a save is in flight. */
   saving: boolean;
   /**

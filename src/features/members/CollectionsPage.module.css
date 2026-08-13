@@ -48,12 +48,12 @@
   gap: 18px;
   margin-bottom: 32px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 480px) {
+@media (--xs) {
   .grid {
     grid-template-columns: 1fr;
   }

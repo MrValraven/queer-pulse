@@ -637,12 +637,12 @@
     position: static;
   }
 }
-@media (max-width: 880px) {
+@media (--compact) {
   .essayInner {
     grid-template-columns: 1fr;
   }
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .entry {
     grid-template-columns: 40px 100px 1fr;
   }

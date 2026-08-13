@@ -43,7 +43,7 @@
   position: relative;
   z-index: 2;
 }
-@media (max-width: 880px) {
+@media (--compact) {
   .heroInner {
     grid-template-columns: 1fr;
   }
@@ -228,7 +228,7 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 22px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .coopGrid {
     grid-template-columns: 1fr;
   }
@@ -278,6 +278,19 @@
   font-size: 13px;
   color: var(--ink-40);
   margin-top: 4px;
+}
+.ccVerified {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 28px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(var(--jade-rgb), 0.1);
+  color: var(--jade);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 .ccBody {
   padding: 20px 28px;
@@ -463,12 +476,12 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
-@media (max-width: 880px) {
+@media (--compact) {
   .tpGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .tpGrid {
     grid-template-columns: 1fr;
   }
@@ -560,7 +573,7 @@
   gap: 48px;
   align-items: center;
 }
-@media (max-width: 880px) {
+@media (--compact) {
   .scInner {
     grid-template-columns: 1fr;
   }

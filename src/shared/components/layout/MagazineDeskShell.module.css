@@ -82,7 +82,7 @@
   min-width: 0;
 }
 
-@media (max-width: 900px) {
+@media (--wide) {
   /* The dock leaves `display: contents` and becomes a fixed slide-in panel
      off the left edge, above the mobile bar (z-50) and the scrim (z-65). */
   .sidebarDock {

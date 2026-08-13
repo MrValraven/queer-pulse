@@ -337,7 +337,7 @@
   box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.22);
 }
 
-@media (max-width: 760px) {
+@media (--lg) {
   .cats,
   .contact {
     grid-template-columns: 1fr;

@@ -510,14 +510,6 @@ export const resources: Catalog = {
   "pronounsGuide.faq.a6":
     "Os dados de nome legal só são guardados se os tiveres fornecido explicitamente para um propósito que o exigisse (ex.: certas candidaturas a bolsas feitas através da plataforma). Nunca são usados como o teu nome de exibição e são guardados em separado, com controlos de acesso mais rígidos. Podes pedir a sua eliminação a qualquer momento através de <a>Exportação de Dados</a>.",
 
-  // ── TherapistProfilePage (+ therapist/therapistProfiles.data.tsx) ────────
-  // The individual therapist template rendered at /resources/therapists/:id;
-  // meta describes the directory in general since every :id shares this page.
-  "therapists.meta.title":
-    "Terapeutas afirmativos LGBTQ+ em Lisboa: perfis verificados",
-  "therapists.meta.description":
-    "Conhece terapeutas e psicólogos afirmativos LGBTQ+ em Lisboa e online — especialidades, idiomas, tarifários com escala progressiva, e como é a primeira sessão.",
-
   // ── MentalHealthPage (+ MentalHealthSections.tsx + mentalHealth.data.ts) ──
   "mentalHealth.meta.title":
     "Apoio em saúde mental afirmativo para pessoas queer em Lisboa",
@@ -603,32 +595,9 @@ export const resources: Catalog = {
   "mentalHealth.sns.peer.title":
     "Apoio entre pares <em>dentro da comunidade</em>",
   "mentalHealth.sns.peer.body":
-    "O grupo de apoio entre pares de saúde mental reúne-se mensalmente. As pessoas partilham experiências, recomendam recursos, e apoiam-se mutuamente — sem facilitação profissional, só conversa honesta.",
-  "mentalHealth.sns.peer.joinCta": "Junta-te ao grupo",
+    "Às vezes o que ajuda é alguém que já passou pelo que estás a passar. Há um espaço tranquilo de apoio entre pares no Fórum, para quem está a atravessar uma fase difícil. Sem facilitação profissional, sem tentar resolver, só pessoas que entendem, a ouvir. Preferes um para um? Pede para falar com um mentor de pares.",
+  "mentalHealth.sns.peer.joinCta": "Abrir o espaço",
   "mentalHealth.sns.peer.mentorCta": "Encontrar um mentor de pares",
-
-  // ── TherapistProfileModal + TherapistProfileBody ────────────────────────
-  "mentalHealth.therapistModal.profileAriaLabel": "{name} — perfil",
-  "mentalHealth.therapistModal.sayHelloCta": "Diz olá",
-  "mentalHealth.therapistModal.sentTitle": "Mensagem enviada a {name}.",
-  "mentalHealth.therapistModal.sentText":
-    "Vai responder-te diretamente por email se sentir que resulta. Sem notificações, sem pressão.",
-  "mentalHealth.therapistModal.footNote":
-    "As mensagens vão diretamente para {name} — são retidas brevemente e revistas antes da entrega, para manter o espaço seguro.",
-
-  "mentalHealth.therapistProfile.meta.slidingScale":
-    "Tarifa em escala progressiva disponível",
-  "mentalHealth.therapistProfile.meta.fixedRate": "Tarifa fixa por sessão",
-  "mentalHealth.therapistProfile.meta.years_one": "{count} ano de prática",
-  "mentalHealth.therapistProfile.meta.years_other": "{count} anos de prática",
-  "mentalHealth.therapistProfile.status.acceptingNew":
-    "A aceitar novas pessoas",
-  "mentalHealth.therapistProfile.status.waitlistOnly": "Só em lista de espera",
-  "mentalHealth.therapistProfile.section.about": "Sobre",
-  "mentalHealth.therapistProfile.section.howIWork": "Como trabalho",
-  "mentalHealth.therapistProfile.section.training": "Formação e qualificações",
-  "mentalHealth.therapistProfile.section.firstSession": "A tua primeira sessão",
-  "mentalHealth.therapistProfile.seeFullProfileCta": "Ver perfil completo",
 
   // ── WellbeingPage (+ WellbeingSections.tsx + wellbeing.data.ts) ──────────
   "wellbeing.meta.title":
@@ -661,7 +630,6 @@ export const resources: Catalog = {
     "Terapeutas afirmativos queer <em>em Lisboa</em>",
   "wellbeing.therapists.lead":
     "Avaliados por pessoas da comunidade. Cada terapeuta listado foi recomendado por pelo menos duas pessoas da QueerPulse. Não cobramos taxas de listagem. Queres adicionar alguém? <a>Contacta-nos.</a>",
-  "wellbeing.therapists.requestIntroCta": "Pedir apresentação",
   "wellbeing.therapists.applyPrompt": "És um terapeuta afirmativo queer?",
   "wellbeing.therapists.applyCta": "Candidata-te a ser listado",
 
@@ -702,75 +670,6 @@ export const resources: Catalog = {
   "wellbeing.harm.chemsex.title": "Apoio em chemsex",
   "wellbeing.harm.chemsex.desc":
     "Recursos confidenciais e sem julgamentos para pessoas a navegar o chemsex — ligados a serviços reais e pessoas reais que já passaram por isso.",
-
-  // ── TherapistProfilePage (therapist/ subfolder) ─────────────────────────
-  "therapistProfilePage.backLink": "Diretório de terapeutas",
-  "therapistProfilePage.verified.body_one":
-    "<b>Profissional avaliade.</b> Credenciais verificadas pela QueerPulse Wellbeing em {vettedOn}. {count} aval independente da comunidade nos últimos 12 meses. <a>Como avaliamos</a>",
-  "therapistProfilePage.verified.body_other":
-    "<b>Profissional avaliade.</b> Credenciais verificadas pela QueerPulse Wellbeing em {vettedOn}. {count} avais independentes da comunidade nos últimos 12 meses. <a>Como avaliamos</a>",
-  "therapistProfilePage.sendMessageCta": "Enviar mensagem",
-
-  "therapistProfilePage.worksWith.title":
-    "As áreas em que {name} <em>trabalha</em>",
-  "therapistProfilePage.worksWith.sub":
-    "Autodeclarado e consistente com a comunidade que avaliza.",
-  "therapistProfilePage.approachTitle.he": "A abordagem dele",
-  "therapistProfilePage.approachTitle.she": "A abordagem dela",
-  "therapistProfilePage.approachTitle.neutral": "A abordagem delu",
-  "therapistProfilePage.vouches.title_one": "{count} pessoa <em>avalizou</em>",
-  "therapistProfilePage.vouches.title_other":
-    "{count} pessoas <em>avalizaram</em>",
-  "therapistProfilePage.vouches.sub":
-    "Anonimizado por quem avaliza. A clínica não vê quem disse o quê.",
-  "therapistProfilePage.vouches.addPrompt": "Já tiveste consultas com {name}?",
-  "therapistProfilePage.vouches.addHelp": "Ajuda a próxima pessoa a decidir",
-  "therapistProfilePage.vouches.addCta": "Adicionar um aval anonimizado",
-  "therapistProfilePage.beforeBook.title":
-    "Antes de reservares — <em>bom saber</em>",
-
-  "therapistProfilePage.sidebar.bookHeadingAccepting":
-    "Reservar — próximas 4 semanas",
-  "therapistProfilePage.sidebar.bookHeadingWaitlist":
-    "Disponibilidade — lista de espera",
-  "therapistProfilePage.sidebar.legendAvailable": "Disponível",
-  "therapistProfilePage.sidebar.legendBooked": "Reservado",
-  "therapistProfilePage.sidebar.heldAccepting":
-    "Reservámos {slot}. {name} confirma por email — não há qualquer cobrança para reservar o horário.",
-  "therapistProfilePage.sidebar.heldWaitlist":
-    "Estás na lista. {name} escreve quando abrir uma vaga — normalmente 6 a 10 semanas.",
-  "therapistProfilePage.sidebar.holdingLabel": "A reservar…",
-  "therapistProfilePage.sidebar.joiningLabel": "A entrar na lista…",
-  "therapistProfilePage.sidebar.holdSlotCta": "Reservar {slot}",
-  "therapistProfilePage.sidebar.pickSlotCta": "Escolhe um horário livre",
-  "therapistProfilePage.sidebar.feesHeading": "Tarifas",
-  "therapistProfilePage.sidebar.whereHeading": "Onde",
-  "therapistProfilePage.sidebar.crisisHeading": "Em crise agora mesmo",
-  "therapistProfilePage.sidebar.crisisText":
-    "A terapia não é o caminho certo quando estás em perigo imediato. Usa isto em vez disso — está preparado para isso.",
-  "therapistProfilePage.sidebar.sosVozAmigaCta": "SOS Voz Amiga · 213 544 545",
-
-  "therapistProfilePage.vouch.successAriaLabel": "Aval recebido",
-  "therapistProfilePage.vouch.successTitle": "Aval recebido,",
-  "therapistProfilePage.vouch.successEm": "obrigade.",
-  "therapistProfilePage.vouch.successBody":
-    "A moderação lê todos os avais antes de serem publicados — o teu vai aparecer dentro de alguns dias, anonimizado exatamente como o escreveste. {name} não vai ver quem o enviou, nem a clínica.",
-  "therapistProfilePage.vouch.modalAriaLabel": "Avalizar {name}",
-  "therapistProfilePage.vouch.eyebrow": "Aval da comunidade",
-  "therapistProfilePage.vouch.title":
-    "Já tiveste consultas com {name}? <em>Diz o que achaste.</em>",
-  "therapistProfilePage.vouch.sub":
-    "Os avais são anonimizados — {name} não vai saber quem escreveu o quê, nem a clínica. Um parágrafo honesto ajuda a próxima pessoa a decidir.",
-  "therapistProfilePage.vouch.form.textLabel": "O teu aval",
-  "therapistProfilePage.vouch.form.textPlaceholder":
-    "Como foi trabalhar com esta pessoa? O que deveria saber a próxima pessoa?",
-  "therapistProfilePage.vouch.form.bylineLabel":
-    "Como devemos descrever-te? (opcional)",
-  "therapistProfilePage.vouch.form.bylineHelper":
-    "Aparece em vez do teu nome — mantém tão vago quanto quiseres.",
-  "therapistProfilePage.vouch.form.bylinePlaceholder":
-    "ex.: Pessoa da comunidade · trabalho de casal",
-  "therapistProfilePage.vouch.submitCta": "Adicionar o meu aval",
 
   // ── TransHubPage ─────────────────────────────────────────────────────────
   "transHub.meta.title":

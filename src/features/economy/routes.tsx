@@ -11,7 +11,11 @@ const JobApplyPage = lazyNamed(() => import("./JobApplyPage"), "JobApplyPage");
 const HousingPage = lazyNamed(() => import("./HousingPage"), "HousingPage");
 const HousingCoopPage = lazyNamed(() => import("./HousingCoopPage"), "HousingCoopPage");
 const CoopTemplatePage = lazyNamed(() => import("./CoopTemplatePage"), "CoopTemplatePage");
+const HousingTenantRightsPage = lazyNamed(() => import("./HousingTenantRightsPage"), "HousingTenantRightsPage");
+const HousingGroupsPage = lazyNamed(() => import("./HousingGroupsPage"), "HousingGroupsPage");
+const HousingGroupDetailPage = lazyNamed(() => import("./HousingGroupDetailPage"), "HousingGroupDetailPage");
 const HousingListingPage = lazyNamed(() => import("./HousingListingPage"), "HousingListingPage");
+const HousingViewingsPage = lazyNamed(() => import("./HousingViewingsPage"), "HousingViewingsPage");
 const LandlordPage = lazyNamed(() => import("./LandlordPage"), "LandlordPage");
 const SkillsPage = lazyNamed(() => import("./SkillsPage"), "SkillsPage");
 const WorkshopPage = lazyNamed(() => import("./WorkshopPage"), "WorkshopPage");
@@ -50,6 +54,8 @@ export function economyRoutes() {
       <Route path={`${routes.jobs}/:slug/apply`} element={<JobApplyPage />} />
       <Route path={`${routes.company}/:slug`} element={<CompanyPage />} />
       <Route path={routes.housing} element={<HousingPage />} />
+      {/* Static segment registered before the `:slug` catch so it always wins. */}
+      <Route path={routes.housingViewings} element={<HousingViewingsPage />} />
       <Route
         path={`${routes.housing}/:slug`}
         element={<HousingListingPage />}
@@ -59,6 +65,12 @@ export function economyRoutes() {
       <Route
         path={`${routes.housingCoop}/templates/:slug`}
         element={<CoopTemplatePage />}
+      />
+      <Route path={routes.tenantRights} element={<HousingTenantRightsPage />} />
+      <Route path={routes.housingGroups} element={<HousingGroupsPage />} />
+      <Route
+        path={`${routes.housingGroups}/:slug`}
+        element={<HousingGroupDetailPage />}
       />
       <Route
         path="/work/housing/:slug"

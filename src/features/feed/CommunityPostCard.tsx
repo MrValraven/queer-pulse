@@ -11,6 +11,7 @@ import { MoreMenu, ReportModal } from "./FeedModeration";
 import {
   FeedActionLink,
   FeedActions,
+  FeedAvatarLink,
   FeedCardHead,
   FeedCardShell,
   FeedIdentity,
@@ -76,13 +77,15 @@ export function CommunityPostCard({
       </div>
       <FeedIdentity
         lead={
-          <Avatar
-            initials={authorInitials}
-            tint={authorTint}
-            size={46}
-            src={avatarSrc}
-            alt={authorName}
-          />
+          <FeedAvatarLink slug={authorSlug} name={authorName}>
+            <Avatar
+              initials={authorInitials}
+              tint={authorTint}
+              size={46}
+              src={avatarSrc}
+              alt={authorName}
+            />
+          </FeedAvatarLink>
         }
         name={
           <span>

@@ -116,7 +116,7 @@
   height: 14px;
 }
 
-@media (max-width: 760px) {
+@media (--lg) {
   .toolbar {
     top: 64px;
     flex-wrap: wrap;

@@ -136,28 +136,44 @@ export function NotificationItem({
         <div className={styles.meta}>{notification.meta}</div>
         {notification.actions && (
           <div className={styles.itemActions}>
-            {notification.actions.map((action) => (
-              <button
-                type="button"
-                key={action.label}
-                className={[
-                  styles.btn,
-                  action.variant === "primary"
-                    ? styles.btnPrimary
-                    : styles.btnGhost,
-                ].join(" ")}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  if (action.resolve) {
-                    onResolve(notification.id, action.resolve.toast);
-                  } else if (action.href !== "#") {
-                    void navigate(linkToPath(action.href));
-                  }
-                }}
-              >
-                {action.label}
-              </button>
-            ))}
+            {notification.actions.map((action) => {
+              // An action only earns an interactive control when it can
+              // actually DO something on click: resolve the row in place, or
+              // navigate to a real destination. A placeholder `href` of "#"
+              // with no resolve handler would be a dead button — so we render
+              // it as plain, non-interactive text instead of a fake affordance.
+              const canResolve = Boolean(action.resolve);
+              const canNavigate = Boolean(action.href) && action.href !== "#";
+              if (!canResolve && !canNavigate) {
+                return (
+                  <span key={action.label} className={styles.meta}>
+                    {action.label}
+                  </span>
+                );
+              }
+              return (
+                <button
+                  type="button"
+                  key={action.label}
+                  className={[
+                    styles.btn,
+                    action.variant === "primary"
+                      ? styles.btnPrimary
+                      : styles.btnGhost,
+                  ].join(" ")}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    if (action.resolve) {
+                      onResolve(notification.id, action.resolve.toast);
+                    } else {
+                      void navigate(linkToPath(action.href));
+                    }
+                  }}
+                >
+                  {action.label}
+                </button>
+              );
+            })}
           </div>
         )}
       </div>

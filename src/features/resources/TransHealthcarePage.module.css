@@ -66,7 +66,7 @@
   padding: 52px 0 100px;
   align-items: start;
 }
-@media (max-width: 860px) {
+@media (--mobile) {
   .body {
     grid-template-columns: 1fr;
   }

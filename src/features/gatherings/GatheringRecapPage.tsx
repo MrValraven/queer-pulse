@@ -1,14 +1,21 @@
 import { useRef, useState } from "react";
-import { FiCheck } from "react-icons/fi";
+import { useParams } from "react-router-dom";
+import { FiCamera, FiCheck } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
+import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { routes } from "../../app/routeMap";
 import { useUploadImage } from "../members/api/useUploadImage";
 import { PhotoUploadModal, type RecapPhoto } from "./PhotoUploadModal";
 import { GatheringRecapMain } from "./GatheringRecapSections";
 import { GatheringRecapSidebar } from "./GatheringRecapSidebar";
+import { GatheringPhotosLive } from "./GatheringPhotosLive";
+import { useEvent } from "./api/useEvent";
+import type { GatheringDetail } from "./data";
 import {
   RECAP_ATTENDED_COUNT,
   RECAP_EVENT_DATE,
@@ -25,7 +32,90 @@ import styles from "./GatheringRecapPage.module.css";
  */
 type SubmittedPhoto = RecapPhoto & { imageKey?: string; imagePreviewUrl?: string };
 
+/**
+ * The recap route. Demo renders the full static prototype below; live resolves
+ * the real event off `:slug` and, since the only real recap surface the backend
+ * exposes is the event photo album, renders a minimal real header + the
+ * already-wired live photo album (`GatheringPhotosLive`) whose uploads attach to
+ * the real event id via `useAttachEventPhoto`. The static write-up / attendee
+ * roster have no live source, so they stay demo-only rather than leak.
+ */
 export function GatheringRecapPage() {
+  const { slug: param } = useParams();
+  const { demoMode } = useDemoMode();
+  const { data, isLoading } = useEvent(param);
+
+  if (demoMode) return <DemoGatheringRecap />;
+
+  const gathering = data?.gathering ?? null;
+  if (!gathering) return <RecapUnavailable loading={isLoading} />;
+  return <LiveGatheringRecap gathering={gathering} />;
+}
+
+/** Live loading / not-found frame — live has no recap until the fetch resolves. */
+function RecapUnavailable({ loading }: { loading: boolean }) {
+  const { t } = useTranslation();
+  return (
+    <AppShell>
+      <div className={styles.body}>
+        <div className="wrap">
+          {loading ? (
+            <>
+              <SkeletonLine width="30%" height={18} />
+              <SkeletonLine width="70%" height={40} style={{ marginTop: 16 }} />
+              <SkeletonLine width="90%" height={16} style={{ marginTop: 16 }} />
+            </>
+          ) : (
+            <EmptyState
+              icon={<FiCamera />}
+              title={t("gatherings:gathering.notFoundTitle")}
+              description={t("gatherings:gathering.notFoundDescription")}
+              action={{
+                label: t("gatherings:prototypeComingSoon.browseCta"),
+                to: routes.events,
+              }}
+            />
+          )}
+        </div>
+      </div>
+    </AppShell>
+  );
+}
+
+/** Live recap: real event header + the live photo album (real photos + attach). */
+function LiveGatheringRecap({ gathering }: { gathering: GatheringDetail }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  // Attach is organizer-only server-side (mirrors GatheringPhotosLive).
+  const canUpload = Boolean(gathering.viewerIsOrganizer);
+  return (
+    <AppShell>
+      <div className={styles.hero}>
+        <div className="wrap">
+          <div className={styles.eyebrow}>{t("gatherings:recap.eyebrow")}</div>
+          <div className={styles.title}>{gathering.title}</div>
+          <div className={styles.meta}>
+            {fmt.date(gathering.date, {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}{" "}
+            · {gathering.hood}
+          </div>
+        </div>
+      </div>
+      <div className={styles.body}>
+        <div className="wrap">
+          <GatheringPhotosLive slug={gathering.slug} canUpload={canUpload} />
+        </div>
+      </div>
+    </AppShell>
+  );
+}
+
+/** The full static recap prototype — unchanged demo experience. */
+function DemoGatheringRecap() {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { showToast } = useToast();

@@ -43,7 +43,7 @@
   margin-bottom: 18px;
 }
 
-@media (max-width: 560px) {
+@media (--sm) {
   .rcRow {
     grid-template-columns: 1fr;
   }

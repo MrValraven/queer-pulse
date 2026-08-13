@@ -755,6 +755,7 @@ export const members: Catalog = {
   "vouch.modal.form.sub":
     "Um aval é tu, publicamente, a dizeres que conheces {first} e confias nesta pessoa em espaços da comunidade. Tem peso aqui — a QueerPulse funciona por convite e aval, e o teu nome fica no perfil desta pessoa ao lado de quem mais a apoiou.",
   "vouch.modal.form.relationshipLabel": "Como conheces {first}?",
+  "vouch.modal.form.relationshipHint": "seleciona todas as que se aplicam",
   "vouch.modal.form.endorseLabel":
     "Em que podes garantir que esta pessoa é boa?",
   "vouch.modal.form.optional": "opcional",

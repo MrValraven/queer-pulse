@@ -235,7 +235,7 @@ export const validateDirectoryDetail: ResponseValidator<DirectoryDetailDTO> = (
   const detail = data as Record<string, unknown>;
   assertString(detail.tagline, "tagline");
   assertNumber(detail.savedCount, "savedCount");
-  return data as unknown as DirectoryDetailDTO;
+  return data as DirectoryDetailDTO;
 };
 
 const SEARCH_RESULT_TYPES = [

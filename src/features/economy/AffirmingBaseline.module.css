@@ -1,0 +1,45 @@
+/* Compact "LGBTQ+ affirming" chip — the universal baseline badge on every
+   listing card + detail. Norm statement styling, not a variable attribute. */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-pill, 999px);
+  background: rgba(var(--jade-rgb), 0.12);
+  color: var(--jade);
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.badgeIcon {
+  flex: none;
+  font-size: 0.85rem;
+}
+
+/* One-line norm statement for the board header / housing home. */
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-card, 14px);
+  background: rgba(var(--jade-rgb), 0.09);
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.noteIcon {
+  flex: none;
+  margin-block-start: 0.1rem;
+  color: var(--jade);
+  font-size: 1rem;
+}
+
+.noteText em {
+  font-style: italic;
+  color: var(--accent);
+}

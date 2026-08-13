@@ -531,12 +531,12 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 900px) {
+@media (--wide) {
   .headerInner {
     grid-template-columns: 1fr;
   }
 }
-@media (max-width: 880px) {
+@media (--compact) {
   .feat {
     grid-template-columns: 1fr;
   }

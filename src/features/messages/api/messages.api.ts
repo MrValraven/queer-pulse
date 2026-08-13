@@ -127,6 +127,18 @@ export const editMessage = (
     { body },
   );
 
+/** PATCH /conversations/:id — pin/unpin or favorite/unfavorite a chat
+ *  (WhatsApp-style, CONVERSATION-scoped — distinct from the message-level pin
+ *  in `pinMessage`/`unpinMessage`). Shares the same endpoint `updateGroup`
+ *  (title/avatar) and the mute preference use. The server caps a caller at 3
+ *  pinned chats and answers 409 past it (mirrored client-side before this
+ *  ever fires — see `useTogglePin`). */
+export const updateConversationPrefs = (
+  conversationId: string,
+  changes: { pinned?: boolean; favorite?: boolean },
+) =>
+  apiPatch<ConversationResponse>(`/conversations/${conversationId}`, changes);
+
 /** POST /conversations — open (or reuse) a DM with a member by handle. */
 export const startConversation = (recipientHandle: string) =>
   apiPost<ConversationResponse>("/conversations", { recipientHandle });

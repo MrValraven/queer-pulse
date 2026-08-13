@@ -1,11 +1,57 @@
 import { apiGet, apiPost, apiPut } from "../../../shared/api/client";
 import { toItemsPage, type ItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO } from "../../../shared/api/refs";
+import type { VerificationLevel } from "./verification.api";
+
+export type IdentityVisibility = "public" | "members" | "matches" | "hidden";
+
+/** Optional shared-living preferences + co-living questionnaire (ordinary, not
+ * special-category). `noise` and `sharing` are the questionnaire additions;
+ * `outAtHome` moved into the consent-gated `FlatmateIdentityHousehold`. */
+export interface FlatmateHouseholdNorms {
+  smoking?: string;
+  pets?: string;
+  guests?: string;
+  cleanliness?: string;
+  sleepSchedule?: string;
+  noise?: string;
+  sharing?: string;
+}
+
+/** Consent-gated (GDPR Art.9) trans-affirming household prompts. The backend
+ * only populates these for a viewer the owner has permitted. */
+export interface FlatmateIdentityHousehold {
+  outAtHome?: string;
+  bathroomComfort?: string;
+  mailNamePrivacy?: string;
+  medicationPrivacy?: string;
+}
+
+/** The compatibility factors behind a match score. Stable keys the UI maps to a
+ * translated "why you matched" label. */
+export type MatchFactor =
+  | "budget"
+  | "neighbourhood"
+  | "lifestyle"
+  | "timing"
+  | "safeSpace"
+  | "household";
+
+/** One explainable reason a match scored. `label` is a GDPR-redacted English
+ * fallback; the UI prefers the translated factor label. */
+export interface MatchReason {
+  factor: MatchFactor;
+  label: string;
+  weight: number;
+  contribution: number;
+}
 
 export interface FlatmateProfileDTO {
   slug: string;
   type: "seeking" | "offering";
   member: MemberRefDTO | null;
+  /** The owner's real identity-verification level (honest badge). */
+  verificationLevel: VerificationLevel;
   pronouns: string;
   neighbourhood: string;
   budgetEuros: number;
@@ -13,8 +59,20 @@ export interface FlatmateProfileDTO {
   flexibleTiming: boolean;
   about: string;
   lifestyleTags: string[];
+  /** Special-category (GDPR Art.9). The backend only populates these for a
+   * viewer the owner has permitted — otherwise they arrive empty. */
+  genderIdentity: string | null;
+  safeSpaceNeeds: string[];
+  householdNorms: FlatmateHouseholdNorms | null;
+  /** Consent-gated trans-affirming prompts — null unless the viewer is permitted. */
+  identityHousehold: FlatmateIdentityHousehold | null;
+  identityVisibility: IdentityVisibility;
+  /** Owner-only signal: whether Art.9 consent is on record. */
+  specialCategoryConsent: boolean;
   createdAt: string;
   matchScore: number | null;
+  /** Explainable "why you matched" factors; already GDPR-redacted server-side. */
+  matchReasons: MatchReason[];
 }
 
 export interface FlatmateFilters {
@@ -35,6 +93,15 @@ export interface UpsertFlatmateProfileBody {
   flexibleTiming?: boolean;
   about?: string;
   lifestyleTags?: string[];
+  /** Explicit Art.9 consent. When false/omitted the backend clears every
+   * special-category field (pronouns, gender, safe-space needs). */
+  specialCategoryConsent?: boolean;
+  genderIdentity?: string;
+  safeSpaceNeeds?: string[];
+  householdNorms?: FlatmateHouseholdNorms;
+  /** Consent-gated trans-affirming prompts; only stored when consent is given. */
+  identityHousehold?: FlatmateIdentityHousehold;
+  identityVisibility?: IdentityVisibility;
 }
 
 export async function getFlatmateProfiles(
@@ -60,8 +127,29 @@ export const getMyFlatmateProfile = () =>
 export const upsertFlatmateProfile = (body: UpsertFlatmateProfileBody) =>
   apiPut<FlatmateProfileDTO>("/flatmate-profiles/mine", body);
 
-export const sayHello = (slug: string, body: { body?: string }) =>
-  apiPost<{ conversationId: string }>(
-    `/flatmate-profiles/${slug}/hello`,
-    body,
-  );
+/** Outcome of a say-hello. `pronounsShared` reflects whether the opt-in pronoun
+ * pre-share actually took effect (only when the sender has consent-stored
+ * pronouns), so the UI never has to assume. */
+export interface SayHelloResult {
+  conversationId: string;
+  pronounsShared: boolean;
+}
+
+export const sayHello = (
+  slug: string,
+  body: { body?: string; sharePronouns?: boolean },
+) => apiPost<SayHelloResult>(`/flatmate-profiles/${slug}/hello`, body);
+
+/** A like/pass decision in the discovery deck. */
+export type FlatmateDecision = "like" | "pass";
+
+/** Result of a discovery decision. `matched` is true only on a mutual like. */
+export interface FlatmateDecideResult {
+  decision: FlatmateDecision;
+  matched: boolean;
+}
+
+export const decideFlatmate = (slug: string, decision: FlatmateDecision) =>
+  apiPost<FlatmateDecideResult>(`/flatmate-directory/${slug}/decide`, {
+    decision,
+  });

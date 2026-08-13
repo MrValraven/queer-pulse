@@ -129,7 +129,7 @@
 /* On a phone the card is full-width but narrow: Ref + Edit/Delete/View no longer
    fit one space-between row (each label wraps character-by-character). Stack the
    ref above its own action row so both breathe. */
-@media (max-width: 480px) {
+@media (--xs) {
   .foot {
     flex-direction: column;
     align-items: flex-start;

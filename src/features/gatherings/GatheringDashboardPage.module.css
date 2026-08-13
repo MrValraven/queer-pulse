@@ -177,7 +177,7 @@
     grid-template-columns: 260px 1fr;
   }
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .grid {
     grid-template-columns: 1fr;
   }

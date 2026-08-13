@@ -15,8 +15,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { matchesBudget, type ListingType } from "./flatmates.data";
 import { useFlatmateProfiles } from "./api/useFlatmateProfiles";
 import { FlatmateCard } from "./FlatmateCard";
+import { FlatmateDiscovery } from "./FlatmateDiscovery";
 import { FlatmateSkeleton } from "./FlatmateSkeleton";
 import { FlatmatesFilterBar } from "./FlatmatesFilterBar";
+import { FlatmateViewToggle, type FlatmateView } from "./FlatmateViewToggle";
 import { PostProfileModal } from "./PostProfileModal";
 import styles from "./FlatmatesPage.module.css";
 
@@ -30,6 +32,7 @@ export function FlatmatesBoard() {
   const [tags, setTags] = useState<string[]>([]);
   const [sent, setSent] = useState<Set<number>>(new Set());
   const [modalOpen, setModalOpen] = useState(false);
+  const [view, setView] = useState<FlatmateView>("list");
 
   const { data: source = [], isFetching } = useFlatmateProfiles();
   // Skeleton while the simulated demo beat runs OR (live) the query is in
@@ -90,23 +93,37 @@ export function FlatmatesBoard() {
                 {t("economy:flatmates.count", { count: filtered.length })}{" "}
                 <FeatureHelp id="housing.flatmates" />
               </div>
-              <button
-                type="button"
-                className={styles.postBtn}
-                onClick={() => setModalOpen(true)}
-              >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path
-                    d="M7 1v12M1 7h12"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                {t("economy:flatmates.postProfileCta")}
-              </button>
+              <div className={styles.topActions}>
+                <FlatmateViewToggle view={view} setView={setView} />
+                <button
+                  type="button"
+                  className={styles.postBtn}
+                  onClick={() => setModalOpen(true)}
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path
+                      d="M7 1v12M1 7h12"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  {t("economy:flatmates.postProfileCta")}
+                </button>
+              </div>
             </div>
           )}
+          {!boardEmpty && !loading && view === "discovery" ? (
+            <FlatmateDiscovery
+              key={[type, neighbourhood, budget, movein, tags.join(",")].join(
+                "|",
+              )}
+              profiles={filtered}
+              onSayHello={(profileId) =>
+                setSent((prev) => new Set(prev).add(profileId))
+              }
+            />
+          ) : (
           <div className={styles.grid}>
             {loading ? (
               Array.from({ length: 6 }).map((_, skeletonIndex) => (
@@ -156,6 +173,7 @@ export function FlatmatesBoard() {
               </>
             )}
           </div>
+          )}
         </div>
       </div>
 

@@ -439,28 +439,6 @@ export const auth: Catalog = {
   "onboarding.stepCommunities.empty":
     "No suggestions right now — you can explore and join communities anytime.",
 
-  // Moment 4 — "do you also work as something else?" transient chip step
-  // (StepSideWork). The pick decides where "Set one up" deep-links; nothing
-  // here is persisted (see Decision §4 in the Task 3 build notes).
-  "onboarding.stepSideWork.heading": "Got a craft <em>of your own</em>?",
-  "onboarding.stepSideWork.hint":
-    "Pick the one you'd want its own page for — you can always add more later.",
-  "onboarding.stepSideWork.cta": "Set one up",
-  "onboarding.stepSideWork.skip": "Skip for now",
-  "onboarding.stepSideWork.back": "Back",
-
-  "onboarding.sideWork.music": "Music",
-  "onboarding.sideWork.drag": "Drag",
-  "onboarding.sideWork.code": "Code",
-  "onboarding.sideWork.photography": "Photography",
-  "onboarding.sideWork.food": "Food",
-  "onboarding.sideWork.therapy": "Therapy",
-  "onboarding.sideWork.writing": "Writing",
-  "onboarding.sideWork.art": "Art",
-  "onboarding.sideWork.dj": "DJing",
-  "onboarding.sideWork.dance": "Dance",
-  "onboarding.sideWork.somethingElse": "Something else",
-
   "onboarding.stepDone.heading": "You're <em>part of it</em> now",
   "onboarding.stepDone.cta": "Go to my home",
   "onboarding.quickStart.browseDirectory.title": "Browse the member directory",
@@ -585,4 +563,51 @@ export const auth: Catalog = {
   "tour.neighbourhood.intendente": "Intendente",
   "tour.neighbourhood.elsewhere": "Elsewhere in Lisbon",
   "tour.neighbourhood.newToLisbon": "New to Lisbon — still finding my feet",
+
+  // ── Getting started — the first-steps checklist at /account/getting-started.
+  //    Each step is auto-detected from real account data (see useGettingStarted). ──
+  "gettingStarted.eyebrow": "New here",
+  "gettingStarted.title": "Getting <em>started</em>",
+  "gettingStarted.lede":
+    "A few first moves to find your people and settle in. No rush — do them in any order, whenever you like.",
+  "gettingStarted.progress": "{done} of {total} done",
+  "gettingStarted.meterAria": "{done} of {total} first steps done",
+  "gettingStarted.checking": "Checking your progress…",
+  "gettingStarted.doneLabel": "Done",
+  "gettingStarted.steps.profile.title": "Fill in your profile",
+  "gettingStarted.steps.profile.desc":
+    "A photo and a few words help people recognise you and say hello.",
+  "gettingStarted.steps.profile.done": "Your profile's looking like you.",
+  "gettingStarted.steps.profile.cta": "Edit profile",
+  "gettingStarted.steps.community.title": "Join a community",
+  "gettingStarted.steps.community.desc":
+    "Find the circles that fit — bookish, nightlife, activist — and drop in.",
+  "gettingStarted.steps.community.done": "You're in — welcome to the circle.",
+  "gettingStarted.steps.community.cta": "Find communities",
+  "gettingStarted.steps.persona.title": "Create a persona",
+  "gettingStarted.steps.persona.desc":
+    "Give a side of yourself its own space — your DJ name, your art, your writing.",
+  "gettingStarted.steps.persona.done": "Your persona has its own corner now.",
+  "gettingStarted.steps.persona.cta": "Create a persona",
+  "gettingStarted.steps.vouch.title": "Vouch for someone",
+  "gettingStarted.steps.vouch.desc":
+    "Vouch for someone you trust. It's how the network stays warm and real.",
+  "gettingStarted.steps.vouch.done":
+    "You've vouched — thank you for keeping it real.",
+  "gettingStarted.steps.vouch.cta": "Browse members",
+  "gettingStarted.steps.connect.title": "Connect with someone",
+  "gettingStarted.steps.connect.desc":
+    "Reach out to someone you'd like to know. Connecting opens up messaging.",
+  "gettingStarted.steps.connect.done": "You've made your first connection.",
+  "gettingStarted.steps.connect.cta": "Browse members",
+  "gettingStarted.steps.post.title": "Share your first post",
+  "gettingStarted.steps.post.desc":
+    "Say hello in a community you've joined. No pressure — a sentence is plenty.",
+  "gettingStarted.steps.post.done": "You've said your first hello.",
+  "gettingStarted.steps.post.cta": "Open a community",
+  "gettingStarted.allDone.title": "You're all",
+  "gettingStarted.allDone.em": "set",
+  "gettingStarted.allDone.body":
+    "You've done the essentials. The rest of QueerPulse is yours to wander — take your time.",
+  "gettingStarted.allDone.cta": "Explore QueerPulse",
 };

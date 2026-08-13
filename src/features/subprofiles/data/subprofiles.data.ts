@@ -813,6 +813,34 @@ const SOFIA_NEVES: DemoSubprofile = {
       { name: "Dr. Marta Reis", note: "Clinical psychologist · Lisbon" },
       { name: "Casa Trans Lisboa", note: "Community referral partner" },
     ],
+    approach: [
+      "I work relationally and at your pace. Nothing about your identity is a problem to be solved here.",
+      "Sessions draw on affirmative, trauma-informed and somatic work — we find what fits you rather than the other way round.",
+    ],
+    training: [
+      "MSc Clinical Psychology, Universidade de Lisboa",
+      "Certified in Gender-Affirming Care, WPATH pathway",
+      "EMDR Level II",
+    ],
+    venue: {
+      name: "Anjos practice room",
+      lines: ["Rua de Álvaro Coutinho", "1150-024 Lisboa"],
+    },
+    feeSchedule: [
+      { label: "Standard session", value: "€60" },
+      { label: "Sliding scale", value: "from €30" },
+      { label: "First 20-min call", value: "Free" },
+    ],
+    availability: {
+      startDate: "2026-03-02",
+      slotTime: "18:00",
+      cells: [
+        "off","off","open","off","open","off","off",
+        "off","full","off","open","off","off","off",
+        "off","open","off","off","open","off","off",
+        "off","off","open","off","off","off","off",
+      ],
+    },
   },
   affiliations: [],
   endorsers: [],
@@ -2514,6 +2542,9 @@ function contentItemTags(sp: DemoSubprofile): string[] {
 export function toCardDto(sp: DemoSubprofile): SubprofileCardDTO {
   return {
     handle: sp.handle ?? sp.slug,
+    linkVisibility: sp.linkVisibility,
+    ownerSlug: sp.linkVisibility === "linked" ? sp.ownerSlug : null,
+    slug: sp.slug,
     kind: sp.kind,
     displayName: sp.displayName,
     avatarUrl: sp.avatarUrl,
@@ -2632,8 +2663,9 @@ export const mockSubprofilesForProfile = (
       !s.removedAt,
   ).map((sp) => toPublicDto(sp));
 
-/** Directory cards: unlinked + published + open + not removed, filtered by
- *  kind/query. */
+/** Directory cards: published + open + not removed, filtered by kind/query.
+ *  Includes both unlinked AND linked personas (linked ones route to their
+ *  owner-nested URL via `personaCardPath`). */
 export const mockDirectory = (
   params: { kind?: string; query?: string } = {},
 ): SubprofileCardDTO[] => {
@@ -2641,7 +2673,6 @@ export const mockDirectory = (
   return DEMO_SUBPROFILES.filter(
     (s) =>
       s.status === "published" &&
-      s.linkVisibility === "unlinked" &&
       s.visibility === "open" &&
       !s.removedAt &&
       (!params.kind || s.kind === params.kind) &&
@@ -2650,6 +2681,17 @@ export const mockDirectory = (
         (s.tagline ?? "").toLowerCase().includes(q)),
   ).map(toCardDto);
 };
+
+/** Therapist-kind personas for the resources directory. Unlike `mockDirectory`,
+ *  this INCLUDES linked personas (so Sofia, linked to Maria, appears). */
+export const therapistPersonaCardsDemo = (): SubprofilePublicDTO[] =>
+  DEMO_SUBPROFILES.filter(
+    (s) =>
+      s.kind === "therapist" &&
+      s.status === "published" &&
+      s.visibility === "open" &&
+      !s.removedAt,
+  ).map((sp) => toPublicDto(sp));
 
 // ── Phase 1b: restricted-state resolution (Shared Contract) ─────────────────
 // Mirrors the backend's `resolvePublicAccess` rule order over the demo

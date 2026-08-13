@@ -218,6 +218,11 @@
   color: var(--ink-60);
   line-height: 1.65;
   font-style: italic;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .tcFoot {
   display: flex;
@@ -349,7 +354,7 @@
   flex-wrap: wrap;
 }
 
-@media (max-width: 640px) {
+@media (--md) {
   .crisisInner {
     flex-direction: column;
     align-items: flex-start;

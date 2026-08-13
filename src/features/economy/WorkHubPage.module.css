@@ -276,7 +276,7 @@
   max-width: 42ch;
 }
 
-@media (max-width: 640px) {
+@media (--md) {
   .page {
     /* nav band reserved by shell (base.css); this is only breathing room */
     padding: 12px 18px 72px;

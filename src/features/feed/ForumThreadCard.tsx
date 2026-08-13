@@ -9,6 +9,7 @@ import type { FeedItem } from "../../shared/contracts/contracts";
 import {
   FeedActionLink,
   FeedActions,
+  FeedAvatarLink,
   FeedCardHead,
   FeedCardShell,
   FeedIdentity,
@@ -45,13 +46,15 @@ export function ForumThreadCard({ item }: { item: FeedItem }) {
       />
       <FeedIdentity
         lead={
-          <Avatar
-            initials={initials(authorName)}
-            tint={authorTint}
-            size={46}
-            src={actor?.avatarUrl ?? undefined}
-            alt={authorName}
-          />
+          <FeedAvatarLink slug={authorSlug} name={authorName}>
+            <Avatar
+              initials={initials(authorName)}
+              tint={authorTint}
+              size={46}
+              src={actor?.avatarUrl ?? undefined}
+              alt={authorName}
+            />
+          </FeedAvatarLink>
         }
         name={
           <span>

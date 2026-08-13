@@ -16,6 +16,7 @@ import { ACCOUNT_GROUPS, HEADER_ACTIONS } from "./accountMenu.data";
 import { useAccountIdentity } from "./useAccountIdentity";
 import { RoleLinks, AccountMenuControls } from "./accountMenuShared";
 import { usePersonaBadge } from "./usePersonaBadge";
+import { useGettingStartedBadge } from "../../../features/onboarding/useGettingStartedBadge";
 import { useNavDrawerFocus } from "./useNavDrawerFocus";
 import menu from "./AccountMenu.module.css";
 import styles from "./AccountSheet.module.css";
@@ -180,6 +181,7 @@ function AccountSheetBody({
 }) {
   const { t } = useTranslation();
   const personaBadge = usePersonaBadge();
+  const gettingStartedBadge = useGettingStartedBadge();
   return (
     <div className={menu.scroll}>
       <div className={styles.header}>
@@ -208,13 +210,16 @@ function AccountSheetBody({
           {groupIndex > 0 && <div className={menu.divider} />}
           {group
             .filter((item) => item.to !== routes.accountProfile)
+            .filter((item) => !item.liveOnly || !demoMode)
             .map((item) => {
               const ItemIcon = item.icon;
               const badge =
                 item.badge ??
                 (item.to === routes.subprofilesDashboard
                   ? personaBadge
-                  : undefined);
+                  : item.to === routes.gettingStarted
+                    ? gettingStartedBadge
+                    : undefined);
               return (
                 <Link
                   key={item.to}

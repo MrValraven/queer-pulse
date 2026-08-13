@@ -5,6 +5,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSubmitCoopJoinRequest } from "./api/useSubmitCoopJoinRequest";
+import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
 import type { FormingCoop } from "./housingCoop.data";
 import styles from "./ApplicationModals.module.css";
 
@@ -31,6 +32,7 @@ export function JoinCoopModal({
   const [name, setName] = useState("");
   const [household, setHousehold] = useState("");
   const [note, setNote] = useState("");
+  const { handlePledgeError, pledgeGate } = useAffirmingPledgeGate();
   const joinRequest = useSubmitCoopJoinRequest();
   const coopName = `${coop.name}${coop.nameEm ? ` ${coop.nameEm}` : ""}`;
   const valid = name.trim().length > 1 && !!household;
@@ -45,9 +47,16 @@ export function JoinCoopModal({
         householdSize: household,
         note: note.trim() || undefined,
       },
-      { onError: () => showToast(t("economy:joinCoop.error"), "error") },
+      {
+        onError: (error) => {
+          if (handlePledgeError(error, handleSubmit)) return;
+          showToast(t("economy:joinCoop.error"), "error");
+        },
+      },
     );
   };
+
+  if (pledgeGate) return pledgeGate;
 
   return (
     <ModalShell

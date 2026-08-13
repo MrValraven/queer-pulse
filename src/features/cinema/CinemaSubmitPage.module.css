@@ -772,7 +772,7 @@
     grid-template-columns: 1fr auto;
   }
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .radioGrid {
     grid-template-columns: 1fr 1fr;
   }

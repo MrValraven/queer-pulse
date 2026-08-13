@@ -51,7 +51,7 @@
 .rcRow:last-child {
   margin-bottom: 0;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .rcRow {
     grid-template-columns: 1fr;
   }
@@ -161,7 +161,7 @@
   margin-top: 6px;
 }
 
-@media (max-width: 560px) {
+@media (--sm) {
   .lineHead {
     display: none;
   }
@@ -333,7 +333,7 @@
   color: var(--ink-40);
 }
 
-@media (max-width: 640px) {
+@media (--md) {
   .docHead {
     flex-direction: column;
     gap: 16px;

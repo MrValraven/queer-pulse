@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { IconType } from "react-icons";
+import type { EventVisibility } from "./api/events.api";
 import { LANGS } from "./createGathering.data";
 
 /** All wizard form state + helpers, shared by the page and its step components. */
@@ -29,7 +30,23 @@ export function useGatheringForm() {
   const [venue, setVenue] = useState("");
   // The community this gathering is posted to, or "" for a public gathering
   // visible to everyone (the wizard's default — matches prior behaviour).
-  const [communitySlug, setCommunitySlug] = useState("");
+  const [communitySlug, setCommunitySlugValue] = useState("");
+  // Who can find and RSVP to this gathering. Defaults to "members" — the
+  // wizard's "Public" tier (any signed-in member; see events.api.ts for why
+  // the backend's anonymous "public" value is never used here). "community"
+  // is only ever a valid selection while `communitySlug` is set — see
+  // `setCommunitySlug` below for the fallback when it's cleared.
+  const [audienceScope, setAudienceScope] = useState<EventVisibility>("members");
+  const setCommunitySlug = (value: string) => {
+    setCommunitySlugValue(value);
+    // The "Community members" tier is mutually exclusive with an unset
+    // community — if the host clears their community pick after choosing it,
+    // drop back to the wizard's default rather than leaving the scope
+    // pointing at an audience that no longer exists.
+    if (!value) {
+      setAudienceScope((current) => (current === "community" ? "members" : current));
+    }
+  };
   const [address, setAddress] = useState("");
   const [directions, setDirections] = useState("");
   const [cap, setCap] = useState("14");
@@ -90,7 +107,8 @@ export function useGatheringForm() {
     included.trim().length > 0 ||
     bring.trim().length > 0 ||
     access.size > 0 ||
-    checks.some(Boolean);
+    checks.some(Boolean) ||
+    audienceScope !== "members";
 
   return {
     type,
@@ -109,6 +127,8 @@ export function useGatheringForm() {
     setHood,
     communitySlug,
     setCommunitySlug,
+    audienceScope,
+    setAudienceScope,
     venue,
     setVenue,
     address,

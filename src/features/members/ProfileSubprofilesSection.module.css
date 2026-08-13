@@ -19,7 +19,7 @@
 /* Matches the tighter page gutter used elsewhere below this breakpoint, so
    the dashed prompt doesn't read as more cramped than the rest of the page
    once the viewport narrows. */
-@media (max-width: 480px) {
+@media (--xs) {
   .sidesPrompt {
     padding: var(--card-pad) var(--gap-sm);
   }

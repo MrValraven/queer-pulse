@@ -239,6 +239,13 @@ export interface ConversationResponse {
   lastMessage: MessageResponse | null;
   unreadCount: number;
   updatedAt: string;
+  /** ISO timestamp this chat was pinned to the top of the caller's inbox
+   *  (WhatsApp-style, CONVERSATION-scoped — distinct from the message-level
+   *  `MessageResponse.pinnedAt`). Null/absent = not pinned. Server caps a
+   *  caller at 3 pinned chats and answers 409 past it. */
+  pinnedAt?: string | null;
+  /** Whether the caller has favorited this chat. Absent/false = not a favorite. */
+  favorite?: boolean;
   /** The OTHER participant's read watermark (ISO), for "Seen" receipts. Null for
    *  official/group threads or a counterpart who has never read. */
   otherLastReadAt: string | null;

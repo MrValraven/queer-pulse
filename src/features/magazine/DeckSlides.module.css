@@ -370,7 +370,7 @@
    to fit. Slides must therefore stop filling a fixed 100% height and instead
    take a comfortable minimum, so heading + body / big stats never clip and
    long text scrolls inside the stage. */
-@media (max-width: 640px) {
+@media (--md) {
   .slide {
     height: auto;
     min-height: min(58svh, 460px);

@@ -176,7 +176,7 @@
   gap: 12px;
   margin-bottom: 8px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .grid {
     grid-template-columns: 1fr;
   }

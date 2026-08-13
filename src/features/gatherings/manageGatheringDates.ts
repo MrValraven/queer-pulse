@@ -7,6 +7,11 @@ export function daysSince(date: Date): number {
   return Math.round((date.getTime() - Date.now()) / 86_400_000);
 }
 
+/** Whole days from now until `date`, floored at 0 (for "N days to go"). */
+export function daysUntil(date: Date): number {
+  return Math.max(0, Math.ceil((date.getTime() - Date.now()) / 86_400_000));
+}
+
 /** "just now" for a message sent this session, else a day-level relative time. */
 export function messageRelativeTime(
   sentAt: Date,

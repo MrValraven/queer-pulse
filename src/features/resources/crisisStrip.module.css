@@ -134,7 +134,7 @@
   }
 }
 
-@media (max-width: 560px) {
+@media (--sm) {
   .panel {
     padding: 26px 22px;
   }

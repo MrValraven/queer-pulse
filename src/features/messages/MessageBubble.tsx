@@ -184,7 +184,7 @@ function MessageBubbleImpl({
         .filter(Boolean)
         .join(" ")}
       {...gestures.handlers}
-      /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
+      /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- intentional: the bubble is a deliberately focusable composite widget (see comment above) so keyboard users get a guaranteed entry to the action overlay. */
       tabIndex={canOpenOverlay ? 0 : undefined}
       onKeyDown={canOpenOverlay ? handleBubbleKeyDown : undefined}
       aria-keyshortcuts={canOpenOverlay ? "Enter" : undefined}

@@ -3,21 +3,29 @@ import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import styles from "./SectionHead.module.css";
 
-interface SectionHeadProps extends Omit<
+interface SectionHeadBaseProps extends Omit<
   HTMLAttributes<HTMLDivElement>,
   "title"
 > {
   /** Title content — pass `<>…<em>accent</em></>` for the accent emphasis. */
   title: ReactNode;
   subtitle?: ReactNode;
-  linkLabel?: string;
-  /** Internal route path. */
-  linkTo?: string;
   /** Right-aligned action (e.g. a ghost button). */
   action?: ReactNode;
   /** Use on plum/dark sections. */
   dark?: boolean;
 }
+
+/**
+ * The "see-all" link is paired: a `linkLabel` may only be given alongside a
+ * real `linkTo`, so a label can never render a dead `to="#"` link. Callers
+ * either supply both or neither.
+ */
+type SectionHeadLinkProps =
+  | { linkLabel: string; linkTo: string }
+  | { linkLabel?: undefined; linkTo?: undefined };
+
+type SectionHeadProps = SectionHeadBaseProps & SectionHeadLinkProps;
 
 export function SectionHead({
   title,
@@ -41,8 +49,8 @@ export function SectionHead({
       </div>
       {hasAside && (
         <div className={styles.aside}>
-          {linkLabel && (
-            <Link to={linkTo ?? "#"} className={styles.link}>
+          {linkLabel && linkTo && (
+            <Link to={linkTo} className={styles.link}>
               {linkLabel}{" "}
               <FiArrowRight aria-hidden />
             </Link>

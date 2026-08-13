@@ -1,16 +1,13 @@
 import { Link } from "react-router-dom";
 import { FiLock } from "react-icons/fi";
-import {
-  Avatar,
-  Button,
-  type AvatarTint,
-} from "../../shared/components/ui";
+import { Avatar, type AvatarTint } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { initialsFromParts } from "../../shared/lib/initials";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { memberProfiles } from "../members/data/memberProfiles";
+import { GatheringRsvpControl } from "./GatheringRsvpControl";
 import { spotsText, type GatheringDetail } from "./data";
 import styles from "./GatheringPage.module.css";
 
@@ -151,14 +148,11 @@ export function GatheringSidebar({
         </div>
       )}
 
-      <Button
-        className={styles.fullBtn}
-        onClick={() =>
-          contact({ slug: gathering.hostSlug, name: gathering.host })
-        }
-      >
-        {connected ? t("connect:contact.message") : t(gathering.ctaKey)}
-      </Button>
+      <GatheringRsvpControl
+        gathering={gathering}
+        connected={connected}
+        contact={contact}
+      />
 
       <div className={styles.locReveal}>
         <div className={styles.locHead}>

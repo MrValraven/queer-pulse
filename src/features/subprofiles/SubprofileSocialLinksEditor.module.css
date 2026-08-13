@@ -155,7 +155,7 @@
 /* Below 560px the platform select + handle input no longer fit one row
    comfortably. Regroup into two lines — chrome (icon, select, remove) on top,
    the full-width handle/URL field below — via `order`, no DOM change needed. */
-@media (max-width: 560px) {
+@media (--sm) {
   .linkRow {
     flex-wrap: wrap;
     row-gap: var(--gap-xs);

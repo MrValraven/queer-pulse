@@ -6,6 +6,12 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import type { UpsertFlatmateProfileBody } from "./api/flatmateProfile.api";
 import { useMyFlatmateProfile } from "./api/useMyFlatmateProfile";
 import { useUpsertFlatmateProfile } from "./api/useUpsertFlatmateProfile";
+import {
+  verificationRequiredFrom,
+  type VerificationLevel,
+} from "./api/verification.api";
+import { StepUpVerificationModal } from "./StepUpVerificationModal";
+import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
 import { ModalShell } from "./ModalKit";
 import { PostProfileForm } from "./PostProfileForm";
 import styles from "./FlatmatesPage.module.css";
@@ -14,7 +20,12 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [submitted, setSubmitted] = useState(false);
+  const [stepUp, setStepUp] = useState<VerificationLevel | null>(null);
+  const [pendingBody, setPendingBody] = useState<UpsertFlatmateProfileBody | null>(
+    null,
+  );
   const { data: myProfile } = useMyFlatmateProfile();
+  const { handlePledgeError, pledgeGate } = useAffirmingPledgeGate();
   const upsertFlatmateProfile = useUpsertFlatmateProfile();
 
   const handleSubmit = (body: UpsertFlatmateProfileBody) => {
@@ -23,10 +34,34 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
     if (upsertFlatmateProfile.isPending) return;
     upsertFlatmateProfile.mutate(body, {
       onSuccess: () => setSubmitted(true),
-      onError: () =>
-        showToast(t("economy:postProfileModal.error"), "error"),
+      onError: (error) => {
+        if (handlePledgeError(error, () => handleSubmit(body))) return;
+        const required = verificationRequiredFrom(error);
+        if (required) {
+          // Keep the entered profile so verifying then retries the same save.
+          setPendingBody(body);
+          setStepUp(required);
+        } else {
+          showToast(t("economy:postProfileModal.error"), "error");
+        }
+      },
     });
   };
+
+  if (pledgeGate) return pledgeGate;
+
+  if (stepUp) {
+    return (
+      <StepUpVerificationModal
+        requiredLevel={stepUp}
+        onVerified={() => {
+          setStepUp(null);
+          if (pendingBody) handleSubmit(pendingBody);
+        }}
+        onClose={() => setStepUp(null)}
+      />
+    );
+  }
 
   return (
     <ModalShell

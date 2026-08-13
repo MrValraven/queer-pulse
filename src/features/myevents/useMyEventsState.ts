@@ -67,7 +67,7 @@ export function useMyEventsState(): MyEventsValue {
       setEventsRaw((prev) => {
         const next =
           typeof update === "function"
-            ? (update as (value: MyEvent[]) => MyEvent[])(prev)
+            ? (update)(prev)
             : update;
         trackDirty(prev, next, dirtyEventIds.current);
         return next;
@@ -79,7 +79,7 @@ export function useMyEventsState(): MyEventsValue {
       setNotifsRaw((prev) => {
         const next =
           typeof update === "function"
-            ? (update as (value: Notif[]) => Notif[])(prev)
+            ? (update)(prev)
             : update;
         trackDirty(prev, next, dirtyNotifIds.current);
         return next;
@@ -92,7 +92,7 @@ export function useMyEventsState(): MyEventsValue {
   // server truth for untouched rows while preserving any row with a pending
   // optimistic edit (RSVP, bulk-remove, mark-read). Blindly replacing here was
   // the query-mirror antipattern that clobbered in-flight edits.
-  // eslint-disable-next-line react-hooks/set-state-in-effect
+   
   useEffect(
     () =>
       setEventsRaw((prev) =>
@@ -100,7 +100,7 @@ export function useMyEventsState(): MyEventsValue {
       ),
     [sourceEvents],
   );
-  // eslint-disable-next-line react-hooks/set-state-in-effect
+   
   useEffect(
     () =>
       setNotifsRaw((prev) =>

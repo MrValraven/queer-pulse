@@ -413,7 +413,7 @@ button.tbl-setting {
 }
 
 /* Compact the table on small screens */
-@media (max-width: 480px) {
+@media (--xs) {
   .co-table-wrap {
     height: 292px;
     max-width: 100%;

@@ -25,7 +25,7 @@
 }
 
 /* Hero left, switch list right on wider viewports; stacked below. */
-@media (min-width: 760px) {
+@media (--lg-up) {
   .split {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
     align-items: start;
@@ -36,7 +36,7 @@
    stretches to the full section width, which reads awkwardly for a single
    card. Capped only on wider viewports; below the mobile breakpoint this
    component doesn't even render (see `SubprofileShowcaseMobile`). */
-@media (min-width: 760px) {
+@media (--lg-up) {
   .solo {
     max-width: 32rem;
   }
@@ -149,7 +149,7 @@
    leaving its right half empty. Only ever rendered at ≥760px (the caller
    passes `variant="wide"` on desktop only); below that this component is
    replaced by the mobile accordion, so the grid is scoped to match. */
-@media (min-width: 760px) {
+@media (--lg-up) {
   .featureInner[data-layout="wide"] {
     display: grid;
     grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);

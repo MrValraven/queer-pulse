@@ -280,7 +280,7 @@
   line-height: 1.6;
 }
 
-@media (max-width: 640px) {
+@media (--md) {
   .item {
     grid-template-columns: 40px 1fr;
   }

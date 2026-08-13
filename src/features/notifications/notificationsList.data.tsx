@@ -91,9 +91,13 @@ function buildUnreadNotifications(
           },
         },
         {
+          // Decline resolves the invite in place (see `resolve`) and never
+          // navigates, but `NotifAction.href` is required — point it at the
+          // real related page rather than a "#" placeholder so no dead-link
+          // sentinel exists in the data even if `resolve` were ever dropped.
           label: t("notifications:actions.decline"),
           variant: "ghost",
-          href: "#",
+          href: routes.readingGroups,
           resolve: { toast: t("notifications:list.3.declinedToast") },
         },
       ],

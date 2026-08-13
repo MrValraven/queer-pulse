@@ -14,7 +14,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .row {
     grid-template-columns: 1fr;
   }

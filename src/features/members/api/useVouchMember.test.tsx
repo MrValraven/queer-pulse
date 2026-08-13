@@ -67,7 +67,7 @@ async function loadLive() {
 }
 
 describe("useVouchMember (live mode via MSW)", () => {
-  it("POSTs /members/:slug/vouch with the relationship + note + anonymous payload", async () => {
+  it("POSTs /members/:slug/vouch with the relationships + note + anonymous payload", async () => {
     let receivedBody: unknown;
     server.use(
       // The API client prefixes every `request()`-based call with `/v1` (URI
@@ -84,7 +84,7 @@ describe("useVouchMember (live mode via MSW)", () => {
     act(() => {
       result.current.mutate({
         slug: "marco-vieira",
-        relationship: "friends",
+        relationships: ["friends", "collaborated"],
         note: "We met at a queer film night last year.",
         anonymous: true,
       });
@@ -95,7 +95,7 @@ describe("useVouchMember (live mode via MSW)", () => {
     expect(result.current.data).toEqual({ vouchCount: 7 });
     expect(receivedBody).toEqual({
       note: "We met at a queer film night last year.",
-      relationship: "friends",
+      relationships: ["friends", "collaborated"],
       anonymous: true,
     });
   });
@@ -112,7 +112,10 @@ describe("useVouchMember (demo mode)", () => {
     });
 
     act(() => {
-      result.current.mutate({ slug: "marco-vieira", relationship: "friends" });
+      result.current.mutate({
+        slug: "marco-vieira",
+        relationships: ["friends"],
+      });
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));

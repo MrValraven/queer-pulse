@@ -539,7 +539,7 @@
   display: none;
 }
 
-@media (max-width: 880px) {
+@media (--compact) {
   .body {
     grid-template-columns: 1fr;
   }

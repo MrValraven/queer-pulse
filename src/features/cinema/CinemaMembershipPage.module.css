@@ -327,7 +327,7 @@
   color: var(--text-strong);
 }
 
-@media (max-width: 880px) {
+@media (--compact) {
   .tiersGrid,
   .paysGrid {
     grid-template-columns: 1fr;

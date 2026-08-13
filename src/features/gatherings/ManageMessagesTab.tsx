@@ -4,6 +4,7 @@ import { Button, EmptyState } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { PREVIOUS_MESSAGES, ATTENDEE_COUNT } from "./manageGathering.data";
 import { messageRelativeTime } from "./manageGatheringDates";
 import styles from "./ManageGatheringPage.module.css";
@@ -33,10 +34,24 @@ export function MessagesTab() {
   const fmt = useFormat();
   const composerLabelId = useId();
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState<SentMessage[]>([]);
 
   const messages = [...sent, ...PREVIOUS_MESSAGES];
+
+  // There is no message-attendees endpoint on the backend, so live mode never
+  // fakes a send: it shows an honest "not available yet" state instead of the
+  // demo composer + mock message history.
+  if (!demoMode) {
+    return (
+      <EmptyState
+        icon={<FiSend />}
+        title={t("gatherings:manage.messages.liveUnavailableTitle")}
+        description={t("gatherings:manage.messages.liveUnavailableBody")}
+      />
+    );
+  }
 
   const send = () => {
     const text = message.trim();

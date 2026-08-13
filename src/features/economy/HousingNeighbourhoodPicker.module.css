@@ -1,0 +1,97 @@
+.wrap {
+  position: relative;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid rgba(45, 27, 61, 0.16);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.placeholder {
+  color: rgba(45, 27, 61, 0.55);
+}
+
+.count {
+  flex: none;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--plum);
+  color: var(--cream);
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
+}
+
+.chev {
+  flex: none;
+  transition: transform 0.15s var(--ease);
+}
+
+.chevOpen {
+  transform: rotate(180deg);
+}
+
+.panel {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 6px);
+  left: 0;
+  width: min(360px, 84vw);
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 12px;
+  border: 1px solid rgba(45, 27, 61, 0.12);
+  border-radius: 12px;
+  background: var(--paper);
+  box-shadow: 0 12px 32px rgba(45, 27, 61, 0.16);
+}
+
+.panelFoot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.clear {
+  border: none;
+  background: none;
+  color: var(--accent-ink);
+  font: inherit;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.clear:disabled {
+  color: rgba(45, 27, 61, 0.35);
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chev {
+    transition: none;
+  }
+}

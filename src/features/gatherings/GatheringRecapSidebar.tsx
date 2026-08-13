@@ -77,16 +77,8 @@ export function GatheringRecapSidebar({
           })}{" "}
           · {RECAP_NEXT_EVENT_VENUE}
         </div>
-        <Button
-          to={routes.rsvp}
-          style={{
-            width: "100%",
-            justifyContent: "center",
-            fontSize: 13,
-            padding: "9px 16px",
-          }}
-        >
-          {t("gatherings:cta.rsvp")}{" "}
+        <Button to={routes.events} className={styles.nextCta}>
+          {t("gatherings:landing.ways.browse.cta")}{" "}
           <FiArrowRight aria-hidden />
         </Button>
       </div>

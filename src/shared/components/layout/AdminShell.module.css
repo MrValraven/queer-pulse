@@ -573,7 +573,7 @@
   width: 100%;
 }
 
-@media (max-width: 900px) {
+@media (--wide) {
   .shell {
     grid-template-columns: 1fr;
   }

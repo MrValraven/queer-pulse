@@ -43,7 +43,7 @@
   color: var(--jade-ink);
 }
 
-@media (max-width: 560px) {
+@media (--sm) {
   .switchRow {
     flex-direction: column;
     align-items: flex-start;

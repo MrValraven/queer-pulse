@@ -125,7 +125,7 @@
    (not stacks on top of) the base `.panel` bottom padding above: that
    `max(16px, env(...))` has no tab-bar term, so this is the real value
    whenever the bar is on screen. */
-@media (max-width: 860px) {
+@media (--mobile) {
   .panel {
     padding-bottom: calc(28px + var(--tab-bar-h) + env(safe-area-inset-bottom));
   }

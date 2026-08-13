@@ -1104,7 +1104,7 @@
   cursor: pointer;
 }
 
-@media (max-width: 880px) {
+@media (--compact) {
   .app {
     grid-template-columns: 1fr;
   }

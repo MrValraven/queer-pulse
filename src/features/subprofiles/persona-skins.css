@@ -301,7 +301,7 @@ button.pp-row{background:none;border:0;border-top:1px solid var(--line);font:inh
 .pp-gallery-btn:hover img{transform:scale(1.04)}
 .pp-gallery-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){.pp-gallery-btn img{transition:none}.pp-gallery-btn:hover img{transform:none}}
-@media (max-width:560px){.pp-gallery{grid-template-columns:repeat(2,1fr);gap:8px}}
+@media (--sm){.pp-gallery{grid-template-columns:repeat(2,1fr);gap:8px}}
 .pp-spot{border-radius:22px;padding:clamp(24px,3.4cqw,38px);background:color-mix(in srgb,var(--sk-tint) 9%,var(--paper));border:1px solid color-mix(in srgb,var(--sk-tint) 22%,transparent);display:flex;gap:26px;align-items:center;flex-wrap:wrap}
 .pp-spot .art{width:150px;height:150px;border-radius:14px;flex:none;overflow:hidden}
 /* `min-width:0` overrides the flex default (`min-width:auto`), which lets an
@@ -555,6 +555,50 @@ button.pp-row{background:none;border:0;border-top:1px solid var(--line);font:inh
 .pp[data-skin="practice"] .endo,.pp[data-skin="practice"] .partof>*{border-radius:4px;background:none;border-color:rgba(var(--line-rgb),.12)}
 .pp[data-skin="practice"] .endo-q{font-family:var(--sans);font-size:16.5px;line-height:1.75;font-weight:400}
 .pp[data-skin="practice"] .pp-foot{border-top:1px solid color-mix(in srgb,var(--sk-tint) 30%,transparent);margin-top:20px}
+
+/* — PRACTICE, Task 5: rich two-column therapist layout —
+   `PracticeBody` (skins/PracticeBody.tsx) replaces the single narrow
+   `.pp-body` column with a main reading column + a logistics sidebar, so the
+   `.wrap` needs more room than the letterhead-style single column above. The
+   portrait-style hero (bigger avatar, top-aligned identity block) only
+   applies once the page is wide enough to show two columns — below that the
+   existing `@container (max-width:640px)` centered-mobile-hero rule further
+   up this file still owns the layout untouched. */
+.pp[data-skin="practice"] .wrap{max-width:1000px}
+@container (min-width:641px){
+  .pp[data-skin="practice"] .pp-id{align-items:flex-start}
+  .pp[data-skin="practice"] .pp-av{width:136px;height:136px;font-size:38px}
+}
+.pp[data-skin="practice"] .pp-practice-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) clamp(280px,30%,340px);
+  gap:clamp(40px,5cqw,64px);
+  align-items:start;
+}
+.pp[data-skin="practice"] .pp-practice-main{display:flex;flex-direction:column;gap:clamp(48px,6cqw,76px);min-width:0}
+.pp[data-skin="practice"] .pp-practice-side{
+  display:flex;flex-direction:column;gap:0;
+  position:sticky;top:96px;align-self:start;min-width:0;
+}
+.pp[data-skin="practice"] .pp-practice-side>*+*{
+  margin-top:30px;padding-top:30px;
+  /* `--line-rgb` (not the `--sk-tint`/plum color-mix the rest of this skin's
+     hairlines use) — this divider repeats up to five times down the sidebar,
+     so it needs to stay visibly readable against the near-black practice
+     dark ground, not just the light one; `--line-rgb` already flips to light
+     channels in dark mode for exactly that reason (see colors.css). */
+  border-top:1px solid rgba(var(--line-rgb),.14);
+}
+/* `.practical` carries its own border-top/border-bottom + margin-top from
+   its other call site (`SubprofileSkinExtras`'s `afterBio` slot, a full-width
+   band under the bio for every other skin's single-column body) — strip that
+   self-contained framing when it's nested as the sidebar's first block
+   instead, so it doesn't double up with the divider rule above. */
+.pp[data-skin="practice"] .pp-practice-side .practical{margin-top:0;border-top:none;border-bottom:none;padding:0}
+@container (max-width:640px){
+  .pp[data-skin="practice"] .pp-practice-grid{grid-template-columns:1fr}
+  .pp[data-skin="practice"] .pp-practice-side{position:static}
+}
 
 /* ═══════════ TABLE — a printed menu card ═══════════
    Signature: double-rule frame, rules flanking each head, italic descriptions. */
@@ -829,6 +873,61 @@ button.pp-row{background:none;border:0;border-top:1px solid var(--line);font:inh
 .ref b{font-size:15px;font-weight:600;display:block}
 .ref small{color:var(--ink-40);font-size:13px}
 .refnote{font-size:13px;line-height:1.6;color:var(--ink-40);max-width:46ch;padding-top:4px}
+
+/* — PRACTICE, Task 5: the therapist two-column body's own blocks (see
+   skins/PracticeTherapistBlocks.tsx) — approach/training in the main column,
+   fees/venue/availability in the sidebar, vouches (endorsers) back in the
+   main column. Same quiet-letterhead type language as the blocks above
+   (`.firstsession h2,.access h2`): DM Sans medium, `--skin-practice-ink`,
+   generous line-height, no card chrome. `.fees` reuses a class name the
+   classroom skin also uses for its own fee block — `.fees,.promises{display:
+   none}` earlier in this file hides it by default for every OTHER skin, so
+   it must be turned back on here, scoped to practice, the same way
+   `.pp[data-skin="classroom"] .fees{display:block;…}` does for classroom. */
+.pp[data-skin="practice"] .approach h2,
+.pp[data-skin="practice"] .training h2,
+.pp[data-skin="practice"] .fees h2,
+.pp[data-skin="practice"] .venue h2,
+.pp[data-skin="practice"] .availability h2,
+.pp[data-skin="practice"] .vouches h2{
+  font-family:var(--sans);font-weight:500;font-size:15px;color:var(--skin-practice-ink);letter-spacing:.02em;margin-bottom:16px;
+}
+.pp[data-skin="practice"] .approach p{font-size:16px;line-height:1.85;color:var(--ink);max-width:60ch;margin-top:12px}
+.pp[data-skin="practice"] .approach p:first-of-type{margin-top:0}
+.pp[data-skin="practice"] .training ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.pp[data-skin="practice"] .training li{font-size:15px;line-height:1.6;color:var(--ink-60);padding-left:18px;position:relative}
+.pp[data-skin="practice"] .training li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:var(--skin-practice-ink)}
+.pp[data-skin="practice"] .fees{display:block}
+.pp[data-skin="practice"] .fees dl{display:flex;flex-direction:column;gap:14px}
+.pp[data-skin="practice"] .fees dt{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--skin-practice-ink);margin-bottom:3px}
+.pp[data-skin="practice"] .fees dd{font-size:15px;line-height:1.5;color:var(--ink)}
+.pp[data-skin="practice"] .venue-name{display:block;font-family:var(--serif);font-size:17px;font-weight:400;color:var(--text-strong);margin-bottom:4px}
+.pp[data-skin="practice"] .venue-line{font-size:14px;line-height:1.55;color:var(--ink-60)}
+/* Availability — a 4×7 read-only calendar (see practiceAvailability.ts's
+   `deriveCalendar`): a weekday header row, four `.av-week` rows of
+   `.av-cell`s tri-stated open/full/off, a legend, and the slot time. */
+.pp[data-skin="practice"] .av-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.pp[data-skin="practice"] .av-weekday{text-align:center;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--ink-40)}
+.pp[data-skin="practice"] .av-grid{display:flex;flex-direction:column;gap:4px}
+.pp[data-skin="practice"] .av-week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.pp[data-skin="practice"] .av-cell{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;border-radius:6px;font-size:11px;font-weight:600;background:rgba(var(--line-rgb),.06);color:var(--ink-40)}
+.pp[data-skin="practice"] .av-open{background:rgba(var(--jade-rgb),.18);color:var(--jade-ink)}
+.pp[data-skin="practice"] .av-full{background:rgba(var(--accent-rgb),.16);color:var(--accent-ink)}
+.pp[data-skin="practice"] .av-off{opacity:.55}
+.pp[data-skin="practice"] .av-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:11.5px;color:var(--ink-60)}
+.pp[data-skin="practice"] .av-legend-item{display:inline-flex;align-items:center;gap:5px}
+.pp[data-skin="practice"] .av-legend-item::before{content:"";width:8px;height:8px;border-radius:3px}
+.pp[data-skin="practice"] .av-legend-item.av-open::before{background:var(--jade)}
+.pp[data-skin="practice"] .av-legend-item.av-full::before{background:var(--accent)}
+.pp[data-skin="practice"] .av-slot{margin-top:10px;font-size:12.5px;line-height:1.5;color:var(--ink-40)}
+/* Vouches — endorsers, styled as quiet rows (no card chrome, matching the
+   rest of the practice family) rather than the generic `.endo` quote block,
+   which practice already opts out of (`SubprofileAffiliations`'
+   `showEndo = skin !== "practice"`). */
+.pp[data-skin="practice"] .vouch{display:flex;gap:12px;align-items:flex-start;padding:14px 0}
+.pp[data-skin="practice"] .vouch+.vouch{border-top:1px solid rgba(var(--line-rgb),.1)}
+.pp[data-skin="practice"] .vouch b{font-size:14.5px;font-weight:600;color:var(--text-strong);display:block;padding-top:6px}
+.pp[data-skin="practice"] .vouch p{font-size:14px;line-height:1.55;color:var(--ink-60);margin-top:3px}
 
 /* — TABLE — */
 .menuhead{display:none}

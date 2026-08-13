@@ -140,7 +140,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 0 32px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .termList {
     grid-template-columns: 1fr;
   }

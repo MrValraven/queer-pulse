@@ -53,7 +53,7 @@
    comfortably, drop the vertical centering so the icon aligns with the
    message's first line instead of the whole wrapped block, and let the
    actions row take the full width rather than hugging the right edge. */
-@media (max-width: 480px) {
+@media (--xs) {
   .prompt {
     align-items: flex-start;
   }

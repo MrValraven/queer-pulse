@@ -8,7 +8,8 @@ import {
 import { FiX } from "react-icons/fi";
 import type { VisibilityMode } from "../../shared/components/ui/VisibilityBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { PRONOUN_OPTIONS, VISIBILITY_OPTIONS } from "./profileEdit.data";
+import { PRONOUN_PRESETS } from "../../shared/identity/pronouns";
+import { VISIBILITY_OPTIONS } from "./profileEdit.data";
 import { POPULAR_PROFILE_TAGS, PROFILE_TAG_OPTIONS } from "./profileTags.data";
 import styles from "./ProfileEdit.module.css";
 
@@ -94,35 +95,69 @@ export function InlineTextarea({
   );
 }
 
-/** Quick-pick pronoun chips with a free-text fallback for anything custom. */
+/** Quick-pick pronoun chips (multi-select) with a free-text add for anything custom. */
 export function PronounPicker({
   value,
   onChange,
 }: {
-  value: string;
-  onChange: (v: string) => void;
+  value: string[];
+  onChange: (next: string[]) => void;
 }) {
   const { t } = useTranslation();
-  const isPreset = (PRONOUN_OPTIONS as readonly string[]).includes(value);
+  const [customInput, setCustomInput] = useState("");
+  const presets = PRONOUN_PRESETS as readonly string[];
+  const custom = value.filter((entry) => !presets.includes(entry));
+
+  function toggle(pronoun: string) {
+    onChange(
+      value.includes(pronoun)
+        ? value.filter((entry) => entry !== pronoun)
+        : [...value, pronoun],
+    );
+  }
+  function addCustom() {
+    const trimmed = customInput.trim();
+    setCustomInput("");
+    if (!trimmed || value.includes(trimmed)) return;
+    onChange([...value, trimmed]);
+  }
+
   return (
     <div className={styles.chips}>
-      {PRONOUN_OPTIONS.map((pronoun) => (
+      {PRONOUN_PRESETS.map((pronoun) => (
         <button
           key={pronoun}
           type="button"
-          className={`${styles.chip} ${value === pronoun ? styles.chipSelected : ""}`}
-          aria-pressed={value === pronoun}
-          onClick={() => onChange(value === pronoun ? "" : pronoun)}
+          className={`${styles.chip} ${value.includes(pronoun) ? styles.chipSelected : ""}`}
+          aria-pressed={value.includes(pronoun)}
+          onClick={() => toggle(pronoun)}
         >
           {pronoun}
         </button>
       ))}
+      {custom.map((entry) => (
+        <button
+          key={entry}
+          type="button"
+          className={`${styles.chip} ${styles.chipSelected}`}
+          aria-pressed
+          onClick={() => toggle(entry)}
+        >
+          {entry}
+        </button>
+      ))}
       <input
         className={`${styles.inlineInput} ${styles.customPronoun}`}
-        value={isPreset ? "" : value}
+        value={customInput}
         placeholder={t("members:profileEdit.customPronounPlaceholder")}
         aria-label={t("members:profileEdit.customPronounsLabel")}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) => setCustomInput(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            addCustom();
+          }
+        }}
       />
     </div>
   );

@@ -4,7 +4,9 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
+import { ScamSafetyBanner } from "./ScamSafetyBanner";
 import { useSubmitFlow } from "./modalFlow";
+import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
 import styles from "./ApplicationModals.module.css";
 
 interface ContactRequestModalProps {
@@ -67,6 +69,7 @@ export function ContactRequestModal({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [message, setMessage] = useState(preset);
+  const { handlePledgeError, pledgeGate } = useAffirmingPledgeGate();
   const timerFlow = useSubmitFlow();
   const [customSending, setCustomSending] = useState(false);
   const [customDone, setCustomDone] = useState(false);
@@ -85,12 +88,18 @@ export function ContactRequestModal({
     try {
       await onSend(message.trim());
       setCustomDone(true);
-    } catch {
-      showToast(t("economy:contactRequest.sendError"), "error");
+    } catch (error) {
+      // A pledge gate isn't a send failure — open the affirming-pledge prompt so
+      // the member can accept and retry, rather than a dead-end error toast.
+      if (!handlePledgeError(error, () => void submit())) {
+        showToast(t("economy:contactRequest.sendError"), "error");
+      }
     } finally {
       setCustomSending(false);
     }
   };
+
+  if (pledgeGate) return pledgeGate;
 
   return (
     <ModalShell onClose={onClose} success={done}>
@@ -124,6 +133,8 @@ export function ContactRequestModal({
             <em>{em ?? t("economy:contactRequest.defaultEm")}</em>
           </h2>
           {subtitle && <p className={styles.sub}>{subtitle}</p>}
+
+          <ScamSafetyBanner limit={4} />
 
           <div className={styles.field}>
             <label htmlFor="cr-msg">

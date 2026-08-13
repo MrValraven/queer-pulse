@@ -136,7 +136,7 @@
   color: var(--plum);
 }
 
-@media (max-width: 640px) {
+@media (--md) {
   .pitch {
     flex-wrap: wrap;
   }

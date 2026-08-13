@@ -113,7 +113,7 @@
   position: relative;
   z-index: 1;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .curInner {
     grid-template-columns: 1fr;
     gap: 32px;
@@ -217,12 +217,12 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 480px) {
+@media (--xs) {
   .grid {
     grid-template-columns: 1fr;
   }
@@ -322,7 +322,7 @@
     color: var(--accent-ink);
   }
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .listRow {
     grid-template-columns: 60px 1fr;
   }

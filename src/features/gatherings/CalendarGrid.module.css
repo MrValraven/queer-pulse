@@ -239,7 +239,7 @@
 /* Phone: day cells shrink to ~45px, so trim their padding and cap the event dots.
    Beyond MAX_MOBILE_DAY_DOTS (3, in CalendarGrid.tsx) dots hide and the "+N"
    indicator shows instead of many wrapping 7px dots. */
-@media (max-width: 860px) {
+@media (--mobile) {
   .day {
     padding: 6px 5px;
     min-height: 60px;

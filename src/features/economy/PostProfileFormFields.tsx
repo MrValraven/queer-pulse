@@ -51,19 +51,6 @@ export function PostProfileFormFields({
       </div>
       <div className={styles.row}>
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel} htmlFor={`${fieldId}-pronouns`}>
-            {t("economy:postProfileForm.pronounsLabel")}
-          </label>
-          <input
-            id={`${fieldId}-pronouns`}
-            className={styles.input}
-            type="text"
-            placeholder={t("economy:postProfileForm.pronounsPlaceholder")}
-            value={form.pronouns}
-            onChange={(event) => form.setPronouns(event.target.value)}
-          />
-        </div>
-        <div className={styles.fieldGroup}>
           <label
             className={styles.fieldLabel}
             htmlFor={`${fieldId}-neighbourhood`}
@@ -89,8 +76,6 @@ export function PostProfileFormFields({
             </option>
           </select>
         </div>
-      </div>
-      <div className={styles.row}>
         <div className={styles.fieldGroup}>
           <label className={styles.fieldLabel} htmlFor={`${fieldId}-budget`}>
             {t("economy:postProfileForm.budgetLabel")}
@@ -107,36 +92,34 @@ export function PostProfileFormFields({
             onChange={(event) => form.setBudget(event.target.value)}
           />
         </div>
-        <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel} htmlFor={`${fieldId}-movein`}>
-            {t("economy:postProfileForm.moveInLabel")}
-          </label>
-          <select
-            id={`${fieldId}-movein`}
-            className={styles.select}
-            value={form.moveInOption}
-            onChange={(event) => form.setMoveInOption(event.target.value)}
-          >
-            <option value="">
-              {t("economy:postProfileForm.moveInPlaceholder")}
-            </option>
-            <option value="now">
-              {t("economy:flatmates.filter.moveIn.now")}
-            </option>
-            <option value="jul2026">
-              {t("economy:postProfileForm.moveIn.jul2026")}
-            </option>
-            <option value="aug2026">
-              {t("economy:postProfileForm.moveIn.aug2026")}
-            </option>
-            <option value="sep2026">
-              {t("economy:postProfileForm.moveIn.sep2026")}
-            </option>
-            <option value="flex">
-              {t("economy:flatmates.filter.moveIn.flex")}
-            </option>
-          </select>
-        </div>
+      </div>
+      <div className={styles.fieldGroup}>
+        <label className={styles.fieldLabel} htmlFor={`${fieldId}-movein`}>
+          {t("economy:postProfileForm.moveInLabel")}
+        </label>
+        <select
+          id={`${fieldId}-movein`}
+          className={styles.select}
+          value={form.moveInOption}
+          onChange={(event) => form.setMoveInOption(event.target.value)}
+        >
+          <option value="">
+            {t("economy:postProfileForm.moveInPlaceholder")}
+          </option>
+          <option value="now">{t("economy:flatmates.filter.moveIn.now")}</option>
+          <option value="jul2026">
+            {t("economy:postProfileForm.moveIn.jul2026")}
+          </option>
+          <option value="aug2026">
+            {t("economy:postProfileForm.moveIn.aug2026")}
+          </option>
+          <option value="sep2026">
+            {t("economy:postProfileForm.moveIn.sep2026")}
+          </option>
+          <option value="flex">
+            {t("economy:flatmates.filter.moveIn.flex")}
+          </option>
+        </select>
       </div>
       <div className={styles.fieldGroup}>
         <label className={styles.fieldLabel} htmlFor={`${fieldId}-about`}>

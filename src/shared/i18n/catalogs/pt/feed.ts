@@ -177,6 +177,7 @@ export const feed: Catalog = {
   "card.eyebrow.communityPost": "De uma comunidade tua",
   "card.eyebrow.forumThread": "Tópico do fórum",
   "card.forumThread.anonymousAuthor": "Uma pessoa",
+  "action.viewProfileAria": "Ver o perfil de {name}",
   "action.sayHi": "Dizer olá",
   "action.follow": "Seguir",
   "action.following": "A seguir",

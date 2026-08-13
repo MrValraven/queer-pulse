@@ -1,0 +1,64 @@
+/* Positioned frame for the map: the maplibre canvas + the loader both sit
+   absolutely inside it (see .miniCanvas in marketing/localMap.module.css). */
+.mapShell {
+  position: relative;
+  block-size: clamp(200px, 34vw, 300px);
+  border-radius: var(--radius-card, 22px);
+  overflow: hidden;
+  border: 1px solid rgba(45, 27, 61, 0.09);
+  background: var(--cream);
+}
+
+/* Approximate-area marker: a soft, deliberately fuzzy coral disc over the
+   neighbourhood centroid. It reads as "somewhere around here", never a point.
+   Non-interactive — it's a hint, not a target. */
+.areaBlob {
+  inline-size: 120px;
+  block-size: 120px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.28) 0%,
+    rgba(var(--accent-rgb), 0.16) 55%,
+    rgba(var(--accent-rgb), 0) 78%
+  );
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
+  pointer-events: none;
+}
+
+/* Privacy / precision note under the map. */
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-block-start: 12px;
+  color: var(--ink-60);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.noteIcon {
+  flex-shrink: 0;
+  margin-block-start: 2px;
+  color: var(--accent-ink);
+}
+
+/* Exact-address block (shown only once connected). */
+.address {
+  margin-block-start: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md, 14px);
+  background: var(--paper);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+}
+.addressLabel {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-block-end: 4px;
+}
+.addressValue {
+  color: var(--ink);
+  font-weight: 600;
+}

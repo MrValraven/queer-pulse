@@ -145,7 +145,7 @@
   color: rgba(var(--cream-rgb), 0.5);
 }
 
-@media (max-width: 860px) {
+@media (--mobile) {
   .links {
     display: none;
   }

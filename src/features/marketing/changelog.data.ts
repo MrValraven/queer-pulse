@@ -93,6 +93,285 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "personas-in-directory",
+        category: "improvement",
+        date: "13 Aug 2026",
+        ...entryKeys("personas-in-directory"),
+      },
+      {
+        id: "therapist-personas-directory",
+        category: "feature",
+        date: "13 Aug 2026",
+        ...entryKeys("therapist-personas-directory"),
+      },
+      {
+        id: "housing-neighbourhoods-map",
+        category: "feature",
+        date: "13 Aug 2026",
+        ...entryKeys("housing-neighbourhoods-map"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
+      },
+      {
+        id: "concern-intake-live",
+        category: "feature",
+        date: "13 Aug 2026",
+        ...entryKeys("concern-intake-live"),
+        tag: {
+          labelKey: "marketing:changelog.tag.governance",
+          to: routes.governance,
+        },
+      },
+      {
+        id: "housing-outro-band",
+        category: "fix",
+        date: "13 Aug 2026",
+        ...entryKeys("housing-outro-band"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
+      },
+      {
+        id: "gathering-audience-scope",
+        category: "feature",
+        date: "13 Aug 2026",
+        ...entryKeys("gathering-audience-scope"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "unified-pronoun-picker",
+        category: "improvement",
+        date: "13 Aug 2026",
+        ...entryKeys("unified-pronoun-picker"),
+        tag: {
+          labelKey: "marketing:changelog.tag.editProfile",
+          to: routes.editProfile,
+        },
+      },
+      {
+        id: "work-profile-skills-focus",
+        category: "feature",
+        date: "13 Aug 2026",
+        ...entryKeys("work-profile-skills-focus"),
+        tag: {
+          labelKey: "marketing:changelog.tag.workProfile",
+          to: routes.workProfile,
+        },
+      },
+      {
+        id: "profile-personal-fields",
+        category: "improvement",
+        date: "13 Aug 2026",
+        ...entryKeys("profile-personal-fields"),
+        tag: {
+          labelKey: "marketing:changelog.tag.editProfile",
+          to: routes.editProfile,
+        },
+      },
+      {
+        id: "feed-avatar-to-profile",
+        category: "improvement",
+        date: "13 Aug 2026",
+        ...entryKeys("feed-avatar-to-profile"),
+        tag: {
+          labelKey: "marketing:changelog.tag.feed",
+          to: routes.feed,
+        },
+      },
+      {
+        id: "affirming-housing-baseline",
+        category: "feature",
+        date: "13 Aug 2026",
+        ...entryKeys("affirming-housing-baseline"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
+      },
+      {
+        id: "housing-listing-discovery",
+        category: "feature",
+        date: "13 Aug 2026",
+        ...entryKeys("housing-listing-discovery"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
+      },
+      {
+        id: "housing-viewings-reviews",
+        category: "feature",
+        date: "13 Aug 2026",
+        ...entryKeys("housing-viewings-reviews"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housingViewings",
+          to: routes.housingViewings,
+        },
+      },
+      {
+        id: "housing-listing-integrity",
+        category: "feature",
+        date: "13 Aug 2026",
+        ...entryKeys("housing-listing-integrity"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
+      },
+      {
+        id: "vouch-multiple-relationships",
+        category: "improvement",
+        date: "13 Aug 2026",
+        ...entryKeys("vouch-multiple-relationships"),
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
+      },
+      {
+        id: "getting-started-checklist",
+        category: "feature",
+        date: "13 Aug 2026",
+        ...entryKeys("getting-started-checklist"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gettingStarted",
+          to: routes.gettingStarted,
+        },
+      },
+      {
+        id: "housing-scam-safety-tenant-rights",
+        category: "feature",
+        date: "12 Aug 2026",
+        ...entryKeys("housing-scam-safety-tenant-rights"),
+        tag: {
+          labelKey: "marketing:changelog.tag.tenantRights",
+          to: routes.tenantRights,
+        },
+      },
+      {
+        id: "housing-map-area-privacy",
+        category: "feature",
+        date: "12 Aug 2026",
+        ...entryKeys("housing-map-area-privacy"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
+      },
+      {
+        id: "messaging-safety-block-report-pii",
+        category: "feature",
+        date: "12 Aug 2026",
+        ...entryKeys("messaging-safety-block-report-pii"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "flatmate-pronoun-pre-share",
+        category: "feature",
+        date: "12 Aug 2026",
+        ...entryKeys("flatmate-pronoun-pre-share"),
+        tag: {
+          labelKey: "marketing:changelog.tag.flatmates",
+          to: routes.flatmates,
+        },
+      },
+      {
+        id: "flatmate-discovery-mode",
+        category: "feature",
+        date: "12 Aug 2026",
+        ...entryKeys("flatmate-discovery-mode"),
+        tag: {
+          labelKey: "marketing:changelog.tag.flatmates",
+          to: routes.flatmates,
+        },
+      },
+      {
+        id: "vetted-housing-groups",
+        category: "feature",
+        date: "12 Aug 2026",
+        ...entryKeys("vetted-housing-groups"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housingGroups,
+        },
+      },
+      {
+        id: "onboarding-set-up-personas-after",
+        category: "improvement",
+        date: "12 Aug 2026",
+        ...entryKeys("onboarding-set-up-personas-after"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "pin-favorite-chats-inbox-tabs",
+        category: "feature",
+        date: "12 Aug 2026",
+        ...entryKeys("pin-favorite-chats-inbox-tabs"),
+        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+      },
+      {
+        id: "identity-verification-honest-badges",
+        category: "feature",
+        date: "12 Aug 2026",
+        ...entryKeys("identity-verification-honest-badges"),
+        tag: {
+          labelKey: "marketing:changelog.tag.flatmates",
+          to: routes.flatmates,
+        },
+      },
+      {
+        id: "flatmate-explainable-matching",
+        category: "feature",
+        date: "12 Aug 2026",
+        ...entryKeys("flatmate-explainable-matching"),
+        tag: {
+          labelKey: "marketing:changelog.tag.flatmates",
+          to: routes.flatmates,
+        },
+      },
+      {
+        id: "flatmate-safe-space-identity",
+        category: "feature",
+        date: "12 Aug 2026",
+        ...entryKeys("flatmate-safe-space-identity"),
+        tag: {
+          labelKey: "marketing:changelog.tag.flatmates",
+          to: routes.flatmates,
+        },
+      },
+      {
+        id: "gatherings-manage-rsvp-recap-live",
+        category: "feature",
+        date: "12 Aug 2026",
+        ...entryKeys("gatherings-manage-rsvp-recap-live"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "coop-template-portuguese",
+        category: "improvement",
+        date: "12 Aug 2026",
+        ...entryKeys("coop-template-portuguese"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housingCoop,
+        },
+      },
+      {
         id: "privacy-policy-refresh",
         category: "improvement",
         date: "12 Aug 2026",

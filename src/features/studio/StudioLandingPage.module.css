@@ -95,7 +95,7 @@
   align-items: center;
   gap: 12px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .topNav {
     display: none;
   }
@@ -692,7 +692,7 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
 }
-@media (max-width: 880px) {
+@media (--compact) {
   .compareGrid {
     grid-template-columns: repeat(2, 1fr);
   }

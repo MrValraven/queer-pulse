@@ -5,7 +5,7 @@
   margin-top: 70px;
 }
 
-@media (max-width: 760px) {
+@media (--lg) {
   .settingsPage {
     grid-template-columns: 1fr;
   }
@@ -22,7 +22,7 @@
   background: var(--paper);
 }
 
-@media (max-width: 760px) {
+@media (--lg) {
   .sidebar {
     position: static;
     height: auto;
@@ -93,7 +93,7 @@
   flex: none;
 }
 
-@media (max-width: 760px) {
+@media (--lg) {
   .sidebarInner {
     display: flex;
     gap: 6px;
@@ -114,7 +114,7 @@
   max-width: 660px;
 }
 
-@media (max-width: 900px) {
+@media (--wide) {
   .main {
     padding: 32px 24px 60px;
   }

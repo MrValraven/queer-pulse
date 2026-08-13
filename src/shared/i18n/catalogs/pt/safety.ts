@@ -144,6 +144,8 @@ export const safety: Catalog = {
   "reason.housingUnsafe":
     "Alojamento inseguro, discriminatório, ou com informação enganosa",
   "reason.housingScam": "Burla ou anúncio falso",
+  "reason.notAffirming": "Não é afirmativo LGBTQ+ — quebrou o compromisso da comunidade",
+  "reason.offPlatform": "Pediram para pagar ou sair da plataforma",
   "reason.other": "Outra coisa — explicada em detalhe",
 
   // ── FlagModal.tsx ──────────────────────────────────────────────────────

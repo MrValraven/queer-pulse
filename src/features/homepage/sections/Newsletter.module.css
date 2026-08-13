@@ -152,7 +152,7 @@
   margin-top: 3px;
 }
 
-@media (max-width: 760px) {
+@media (--lg) {
   .inner {
     grid-template-columns: 1fr;
   }

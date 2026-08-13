@@ -14,7 +14,7 @@
 }
 /* Narrower gutter once the full --wrap-px pair would eat too much of a
    phone's width — matches the ground-truth `.wrap` mobile treatment. */
-@media (max-width: 560px) {
+@media (--sm) {
   .container {
     width: min(1080px, 100% - 40px);
     gap: var(--gap-sm);
@@ -154,7 +154,7 @@
    page gutter is subtracted (e.g. a 320px viewport) — force a single column
    below this breakpoint so the grid reflows cleanly instead of relying on
    auto-fill to happen to fit, which would otherwise overflow horizontally. */
-@media (max-width: 640px) {
+@media (--md) {
   .grid {
     grid-template-columns: 1fr;
     gap: var(--gap-sm);

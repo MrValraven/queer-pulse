@@ -6,13 +6,14 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { memberProfiles } from "./data/memberProfiles";
 import { useMemberProfile } from "./api/useMemberProfile";
 import { useVouchMember } from "./api/useVouchMember";
-import { RELATIONSHIPS, type VouchRelationship } from "./vouchMember.data";
+import { type VouchRelationship } from "./vouchMember.data";
 import { VouchForm, VouchSuccess } from "./VouchMemberModalParts";
 import styles from "./VouchMemberModal.module.css";
 
 /**
- * Publicly co-sign an existing member. A short relationship + optional skill
- * endorsements + note, running loading → animated plum-panel success. On
+ * Publicly co-sign an existing member. One or more "how you know them"
+ * relationships + optional skill endorsements + note, running loading →
+ * animated plum-panel success. At least one relationship is required. On
  * success it calls `onVouched` so the member's "Vouched for by…" row gains the
  * current user's face. Self-contained: owns its form state and locks scroll
  * while mounted (it's only rendered when open).
@@ -29,9 +30,7 @@ export function VouchMemberModal({
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const [relationship, setRelationship] = useState<VouchRelationship>(
-    RELATIONSHIPS[0],
-  );
+  const [relationships, setRelationships] = useState<VouchRelationship[]>([]);
   const [endorsed, setEndorsed] = useState<string[]>([]);
   const [note, setNote] = useState("");
   const [anonymous, setAnonymous] = useState(false);
@@ -70,12 +69,19 @@ export function VouchMemberModal({
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
     );
 
+  const toggleRelationship = (value: VouchRelationship) =>
+    setRelationships((prev) =>
+      prev.includes(value)
+        ? prev.filter((r) => r !== value)
+        : [...prev, value],
+    );
+
   const submit = () => {
-    // The note is optional — a relationship is always selected, so a vouch is
-    // always submittable. Only guard against a double-submit while in flight.
-    if (vouch.isPending) return;
+    // At least one "how you know them" is required, and the note is optional.
+    // Guard the empty selection as well as a double-submit while in flight.
+    if (vouch.isPending || relationships.length === 0) return;
     vouch.mutate(
-      { slug, relationship, note: note.trim(), anonymous },
+      { slug, relationships, note: note.trim(), anonymous },
       {
         onSuccess: () => {
           onVouched();
@@ -122,8 +128,8 @@ export function VouchMemberModal({
             <VouchForm
               profile={profile}
               first={first}
-              relationship={relationship}
-              setRelationship={setRelationship}
+              relationships={relationships}
+              toggleRelationship={toggleRelationship}
               endorsed={endorsed}
               toggleTag={toggleTag}
               note={note}

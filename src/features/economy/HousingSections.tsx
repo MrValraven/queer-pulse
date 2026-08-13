@@ -85,7 +85,7 @@ export function HousingLandlords({ landlords }: { landlords: LandlordCard[] }) {
             ))}
           </div>
         ) : (
-          <Reveal as="div">
+          <Reveal as="div" className={styles.llEmpty}>
             <EmptyState
               compact
               icon={<FiAward />}

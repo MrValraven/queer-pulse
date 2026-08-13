@@ -290,7 +290,7 @@ a.sbAll:hover {
   grid-template-columns: repeat(3, 1fr);
   gap: 22px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .filmog {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -383,7 +383,7 @@ a.sbAll:hover {
   padding: 16px 0;
   border-bottom: 1px solid rgba(45, 27, 61, 0.08);
 }
-@media (max-width: 640px) {
+@media (--md) {
   .festRow {
     grid-template-columns: 1fr auto;
   }

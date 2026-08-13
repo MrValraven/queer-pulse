@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell } from "./ModalKit";
 import { useRecommendLandlord } from "./api/useRecommendLandlord";
 import { useSendHousingEnquiry } from "./api/useSendHousingEnquiry";
+import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
 import styles from "./housingModals.module.css";
 
 /** posterFrom() (housingListing.adapters.ts) uses this exact placeholder when
@@ -54,6 +55,7 @@ export function MessageModal({
   );
   const [done, setDone] = useState(false);
   const sendEnquiry = useSendHousingEnquiry();
+  const { handlePledgeError, pledgeGate } = useAffirmingPledgeGate();
   const canSend = text.trim().length >= 20;
   const remaining = 20 - text.trim().length;
 
@@ -62,13 +64,17 @@ export function MessageModal({
       { ref: listingRef, body: text.trim() },
       {
         onSuccess: () => setDone(true),
-        onError: () =>
+        onError: (error) => {
+          if (handlePledgeError(error, handleSend)) return;
           // Don't show "sent" for a message that didn't go through — leave the
           // draft in place so the member can retry.
-          showToast(t("economy:housingModal.message.error"), "error"),
+          showToast(t("economy:housingModal.message.error"), "error");
+        },
       },
     );
   };
+
+  if (pledgeGate) return pledgeGate;
 
   return (
     <ModalShell

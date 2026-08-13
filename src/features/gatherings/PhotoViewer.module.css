@@ -181,7 +181,7 @@
   background: var(--accent);
 }
 
-@media (max-width: 640px) {
+@media (--md) {
   .frame {
     width: 86vw;
     height: 56svh;

@@ -1,13 +1,41 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { FiMoreHorizontal, FiTrash2 } from "react-icons/fi";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type ReactNode,
+} from "react";
+import { FiHeart, FiMoreHorizontal, FiTrash2 } from "react-icons/fi";
+import { TbPin, TbPinnedFilled } from "react-icons/tb";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
+interface MenuItemDef {
+  key: string;
+  label: string;
+  icon: ReactNode;
+  onSelect: () => void;
+  danger?: boolean;
+}
+
 /** Row-level "⋯" menu, rendered as a SIBLING of the thread row `<button>`
- *  (never nested inside it) — see `.threadRowWrap` in MessagesPage.module.css. */
+ *  (never nested inside it) — see `.threadRowWrap` in MessagesPage.module.css.
+ *  Pin/Favorite are CONVERSATION-scoped (a different concept from the existing
+ *  message-level pin/star inside a thread). */
 export function ThreadRowMenu({
+  thread,
+  onTogglePin,
+  onToggleFavorite,
   onDelete,
 }: {
+  /** Carries this row's own pinned/favorite state — the cap check itself lives
+   *  in `useTogglePin` (the caller computes and passes the pinned count into
+   *  its `mutate()` call, not through this component). */
+  thread: Conversation;
+  onTogglePin: () => void;
+  onToggleFavorite: () => void;
   /** Opens the delete-confirmation flow for this conversation. */
   onDelete: () => void;
 }) {
@@ -15,7 +43,39 @@ export function ThreadRowMenu({
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const itemRef = useRef<HTMLButtonElement>(null);
+  const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const isPinned = !!thread.pinnedAt;
+  const isFavorite = !!thread.favorite;
+
+  const items: MenuItemDef[] = useMemo(
+    () => [
+      {
+        key: "pin",
+        label: isPinned
+          ? t("messages:thread.unpinChat")
+          : t("messages:thread.pinChat"),
+        icon: isPinned ? <TbPinnedFilled aria-hidden /> : <TbPin aria-hidden />,
+        onSelect: onTogglePin,
+      },
+      {
+        key: "favorite",
+        label: isFavorite
+          ? t("messages:thread.unfavoriteChat")
+          : t("messages:thread.favoriteChat"),
+        icon: <FiHeart aria-hidden />,
+        onSelect: onToggleFavorite,
+      },
+      {
+        key: "delete",
+        label: t("messages:thread.deleteChat"),
+        icon: <FiTrash2 aria-hidden />,
+        onSelect: onDelete,
+        danger: true,
+      },
+    ],
+    [isPinned, isFavorite, onTogglePin, onToggleFavorite, onDelete, t],
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -35,7 +95,7 @@ export function ThreadRowMenu({
 
   // APG menu-button contract: move focus into the menu when it opens.
   useEffect(() => {
-    if (open) itemRef.current?.focus();
+    if (open) itemRefs.current[0]?.focus();
   }, [open]);
 
   const close = () => {
@@ -43,15 +103,40 @@ export function ThreadRowMenu({
     triggerRef.current?.focus();
   };
 
-  // Escape closes and restores focus to the trigger. Home/End/Arrows keep the
-  // single item focused so the keyboard contract holds if items are ever added.
+  // APG menu keyboard contract, generalized to N items: Arrow Up/Down move a
+  // roving focus, Home/End jump to the ends, Escape closes and restores focus
+  // to the trigger.
+  const moveTo = (index: number) => {
+    const nextIndex = (index + items.length) % items.length;
+    itemRefs.current[nextIndex]?.focus();
+  };
+
   const onMenuKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Escape") {
       event.preventDefault();
       close();
-    } else if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
-      event.preventDefault();
-      itemRef.current?.focus();
+      return;
+    }
+    const currentIndex = itemRefs.current.findIndex(
+      (node) => node === document.activeElement,
+    );
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        moveTo(currentIndex + 1);
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        moveTo(currentIndex - 1);
+        break;
+      case "Home":
+        event.preventDefault();
+        moveTo(0);
+        break;
+      case "End":
+        event.preventDefault();
+        moveTo(items.length - 1);
+        break;
     }
   };
 
@@ -78,21 +163,28 @@ export function ThreadRowMenu({
           tabIndex={-1}
           onKeyDown={onMenuKeyDown}
         >
-          <button
-            ref={itemRef}
-            type="button"
-            role="menuitem"
-            tabIndex={-1}
-            className={styles.rowMenuItemDanger}
-            onClick={(event) => {
-              event.stopPropagation();
-              setOpen(false);
-              onDelete();
-            }}
-          >
-            <FiTrash2 aria-hidden />
-            {t("messages:thread.deleteChat")}
-          </button>
+          {items.map((item, index) => (
+            <button
+              key={item.key}
+              ref={(node) => {
+                itemRefs.current[index] = node;
+              }}
+              type="button"
+              role="menuitem"
+              tabIndex={-1}
+              className={
+                item.danger ? styles.rowMenuItemDanger : styles.rowMenuItem
+              }
+              onClick={(event) => {
+                event.stopPropagation();
+                setOpen(false);
+                item.onSelect();
+              }}
+            >
+              {item.icon}
+              {item.label}
+            </button>
+          ))}
         </div>
       )}
     </div>

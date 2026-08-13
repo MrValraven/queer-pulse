@@ -94,6 +94,26 @@ export function WorkProfileProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const toggleSkill = useCallback((id: string) => {
+    setDraft((prev) => {
+      const has = prev.skills.some((x) => x === id);
+      const next: string[] = has
+        ? prev.skills.filter((x) => x !== id)
+        : [...prev.skills, id];
+      return normalizeWorkPreferences({ ...prev, skills: next });
+    });
+  }, []);
+
+  const toggleFocusArea = useCallback((id: string) => {
+    setDraft((prev) => {
+      const has = prev.focusAreas.some((x) => x === id);
+      const next: string[] = has
+        ? prev.focusAreas.filter((x) => x !== id)
+        : [...prev.focusAreas, id];
+      return normalizeWorkPreferences({ ...prev, focusAreas: next });
+    });
+  }, []);
+
   const save = useCallback(async (): Promise<boolean> => {
     if (!live) {
       // Demo: the session copy is the only store there is, so it's already saved.
@@ -122,11 +142,25 @@ export function WorkProfileProvider({ children }: { children: ReactNode }) {
       toggleTransSupport,
       safeOnly: draft.safeOnly,
       setSafeOnly,
+      skills: draft.skills,
+      toggleSkill,
+      focusAreas: draft.focusAreas,
+      toggleFocusArea,
       saving,
       save,
       hydrate,
     }),
-    [draft, setOutAtWork, toggleTransSupport, setSafeOnly, saving, save, hydrate],
+    [
+      draft,
+      setOutAtWork,
+      toggleTransSupport,
+      setSafeOnly,
+      toggleSkill,
+      toggleFocusArea,
+      saving,
+      save,
+      hydrate,
+    ],
   );
 
   return (

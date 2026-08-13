@@ -110,7 +110,7 @@
   display: grid;
   grid-template-columns: minmax(220px, 42%) 1fr;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .face {
     grid-template-columns: 1fr;
   }
@@ -222,7 +222,7 @@
 .photoVerified svg {
   color: var(--jade-soft);
 }
-@media (max-width: 560px) {
+@media (--sm) {
   /* Match the 4:5 portrait `portraitSrc()` requests, so the face isn't cropped. */
   .featPhoto {
     min-height: 0;

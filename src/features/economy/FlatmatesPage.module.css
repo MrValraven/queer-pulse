@@ -733,6 +733,124 @@
   background: rgba(var(--accent-rgb), 0.09);
   color: var(--accent-ink);
 }
+
+/* ── Household norms + Art.9 identity section ─────────────────────────────── */
+.fieldHint {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  margin: 0;
+}
+.fieldSubLabel {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink-60);
+}
+.normGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  gap: 11px;
+  margin-top: 6px;
+}
+.identitySection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 18px;
+  padding-block-start: 18px;
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.12);
+}
+.consentRow {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  padding: 13px 15px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
+  border-radius: 12px;
+  background: rgba(var(--accent-rgb), 0.04);
+  cursor: pointer;
+}
+.consentCheckbox {
+  margin-block-start: 2px;
+  inline-size: 18px;
+  block-size: 18px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.consentCopy {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.consentCopy em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+.identityFields {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-inline-size: 0;
+  transition: opacity 0.25s var(--ease);
+}
+.identityFields:disabled {
+  opacity: 0.5;
+}
+.safeSpace {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 10px 0 2px;
+}
+.safeSpaceRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.safeSpaceIcon {
+  margin-block-start: 4px;
+  color: var(--accent-ink);
+  flex-shrink: 0;
+}
+.affirmTag {
+  border: 1px solid rgba(var(--accent-rgb), 0.28);
+  border-radius: 999px;
+  padding: 4px 11px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+.matchReasons {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-block-end: 16px;
+}
+.matchReasonsLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.matchReasonsIcon {
+  color: var(--jade);
+  flex-shrink: 0;
+}
+.matchReasonTag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.12);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
 .modalActions {
   display: flex;
   gap: 10px;
@@ -775,7 +893,7 @@
   line-height: 1.65;
 }
 
-@media (max-width: 640px) {
+@media (--md) {
   .row {
     grid-template-columns: 1fr;
   }
@@ -788,4 +906,180 @@
   .body {
     padding: 44px 0 80px;
   }
+}
+
+/* ── Board header actions + list/discovery view toggle ───────────────────── */
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.viewToggle {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
+  background: var(--paper);
+}
+.viewChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition:
+    background 0.22s var(--ease),
+    color 0.22s var(--ease);
+}
+@media (hover: hover) {
+  .viewChip:hover {
+    color: var(--ink);
+  }
+}
+.viewChipOn {
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+/* ── Say-hello modal ─────────────────────────────────────────────────────── */
+.helloForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.helloTitle {
+  font-family: var(--serif);
+  font-size: 25px;
+  line-height: 1.2;
+  color: var(--ink);
+  margin: 0;
+}
+.helloTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+.helloLede {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-60);
+  margin: 0;
+}
+.helloTextarea {
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
+  border-radius: 12px;
+  padding: 12px 15px;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 92px;
+  transition: border-color 0.25s var(--ease);
+}
+.helloTextarea:focus {
+  border-color: var(--accent);
+}
+.helloHint {
+  display: block;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  margin: 4px 0 0;
+}
+.helloActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ── Discovery deck ──────────────────────────────────────────────────────── */
+.discoveryDeck {
+  max-width: 560px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.discoveryProgress {
+  font-size: 13px;
+  color: var(--ink-60);
+  text-align: center;
+  margin: 0;
+}
+.discoveryCard {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  padding: 28px 28px 22px;
+  display: flex;
+  flex-direction: column;
+}
+.discoveryActions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+.discoveryActions > * {
+  min-width: 150px;
+  justify-content: center;
+}
+.discoveryMatch {
+  max-width: 520px;
+  margin-inline: auto;
+  background: var(--plum);
+  border-radius: var(--radius-card);
+  padding: 40px 32px;
+  text-align: center;
+  color: rgba(var(--cream-rgb), 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.discoveryMatchIcon {
+  display: grid;
+  place-items: center;
+  inline-size: 54px;
+  block-size: 54px;
+  border-radius: 50%;
+  background: rgba(var(--cream-rgb), 0.1);
+  color: var(--jade);
+  font-size: 24px;
+}
+.discoveryMatch h3 {
+  font-family: var(--serif);
+  font-size: 24px;
+  line-height: 1.2;
+  margin: 0;
+}
+.discoveryMatch h3 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.discoveryMatch p {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: rgba(var(--cream-rgb), 0.8);
+  margin: 0;
+  max-width: 40ch;
+}
+.discoveryMatchActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 6px;
 }

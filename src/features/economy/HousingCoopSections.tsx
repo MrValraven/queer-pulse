@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiShield } from "react-icons/fi";
 import { Button, HubBackLink, Reveal } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -118,6 +118,7 @@ function CoopCard({
   coop: FormingCoop;
   onCta: (coop: FormingCoop) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={styles.coopCard}>
       <div className={styles.ccHead}>
@@ -129,6 +130,12 @@ function CoopCard({
         </div>
         <span className={styles.ccPhase}>{coop.phaseLabel}</span>
       </div>
+      {coop.operatorVerified && (
+        <div className={styles.ccVerified}>
+          <FiShield aria-hidden />
+          <span>{t("economy:housingCoop.operatorVerified")}</span>
+        </div>
+      )}
       <div className={styles.ccBody}>
         <div className={styles.ccProgress}>
           <div className={styles.ccBar}>

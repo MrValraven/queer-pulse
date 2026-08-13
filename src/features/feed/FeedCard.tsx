@@ -2,7 +2,39 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { AvatarStack, Tag, type AvatarTint } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { memberPath } from "../forum/forumAuthor.helpers";
 import styles from "./FeedCard.module.css";
+
+/**
+ * Wraps a feed card's author/host avatar in a link to that person's profile
+ * (`/members/:slug`), so tapping the photo opens the profile — matching the
+ * forum's `ProfileLink` pattern. Renders the avatar inert when there's no
+ * `slug` (anonymous/official actors), and stops short of nesting anchors: a
+ * feed card's shell is an `<article>`, never a link, so a real `<Link>` here
+ * is safe. Place it in `FeedIdentity`'s `lead` slot.
+ */
+export function FeedAvatarLink({
+  slug,
+  name,
+  children,
+}: {
+  slug?: string;
+  name: string;
+  children: ReactNode;
+}) {
+  const { t } = useTranslation();
+  if (!slug) return <>{children}</>;
+  return (
+    <Link
+      to={memberPath(slug)}
+      className={styles.avatarLink}
+      aria-label={t("feed:action.viewProfileAria", { name })}
+    >
+      {children}
+    </Link>
+  );
+}
 
 export type FeedAccent = "coral" | "jade" | "ink";
 

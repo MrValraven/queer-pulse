@@ -1,11 +1,13 @@
 // src/features/messages/Composer.tsx
-import { useRef, useLayoutEffect, useEffect, useState } from "react";
+import { useMemo, useRef, useLayoutEffect, useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useEmitTyping } from "../../shared/api/realtime";
 import { useReplyPreviewTransition } from "./useReplyPreviewTransition";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { MentionText } from "../../shared/mentions/MentionText";
+import { ComposerSafetyNotice } from "./ComposerSafetyNotice";
+import { detectContactSafetySignals } from "./contactSafetyDetector";
 import { GifComposerButton } from "./GifComposerButton";
 import { MentionHintButton } from "./MentionHintButton";
 import { clearDraft, loadDraft, saveDraft } from "./drafts";
@@ -59,6 +61,8 @@ export function Composer({
   // (via `key={active.id}`) on thread switch, so this lazy initializer re-runs
   // per thread instead of needing an effect to resync it.
   const [draft, setDraft] = useState(() => loadDraft(conversationId));
+  // Advisory-only, recomputed per keystroke — see `ComposerSafetyNotice`.
+  const safetySignals = useMemo(() => detectContactSafetySignals(draft), [draft]);
   // Keeps the reply-preview banner's content mounted through its collapse/
   // fade-out so dismissing it (✕ or post-send clear) actually animates
   // instead of snapping away — see the hook for why the wrapper below is
@@ -219,6 +223,9 @@ export function Composer({
 
   return (
     <div className={styles.composer}>
+      {/* Advisory, non-blocking safety hint (P0.7) — phone/email/banking/
+          external-payment content in the draft. Never gates `handleSend`. */}
+      <ComposerSafetyNotice signals={safetySignals} />
       {/* Always mounted (even with nothing to reply to) so the grid-row/margin
           transition below always has a real "closed" state to animate from —
           `previewMessage` lags the exit animation, see the hook. */}

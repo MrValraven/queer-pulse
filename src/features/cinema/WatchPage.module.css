@@ -588,7 +588,7 @@
     grid-template-columns: 1fr;
   }
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .nextGrid {
     grid-template-columns: 1fr 1fr;
   }

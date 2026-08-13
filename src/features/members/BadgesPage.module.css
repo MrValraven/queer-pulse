@@ -11,7 +11,7 @@
   align-items: start;
   margin-bottom: 52px;
 }
-@media (max-width: 860px) {
+@media (--mobile) {
   .pageHeader {
     grid-template-columns: 1fr;
   }

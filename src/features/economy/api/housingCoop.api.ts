@@ -25,6 +25,7 @@ export interface HousingCoopDTO {
   ctaKind: "join" | "updates" | "mentor";
   faces: CoopFaceDTO[];
   published: boolean;
+  operatorVerified: boolean;
 }
 
 export interface CoopJoinRequestBody {

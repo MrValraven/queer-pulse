@@ -821,7 +821,7 @@
   line-height: 1.65;
   margin-top: 14px;
 }
-@media (max-width: 640px) {
+@media (--md) {
   .aboutStrip {
     padding: 34px 28px;
   }
@@ -883,7 +883,7 @@
   font-style: italic;
   color: var(--accent);
 }
-@media (max-width: 640px) {
+@media (--md) {
   .openCallsStrip {
     padding: 34px 28px;
   }
@@ -899,7 +899,7 @@
     padding: 38px 28px;
   }
 }
-@media (max-width: 900px) {
+@media (--wide) {
   .prog {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -907,7 +907,7 @@
     grid-template-columns: 1fr;
   }
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .collGrid,
   .ledger {
     grid-template-columns: 1fr;
@@ -919,7 +919,7 @@
     gap: 14px;
   }
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .prog {
     grid-template-columns: 1fr;
   }

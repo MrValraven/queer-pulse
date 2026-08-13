@@ -325,7 +325,7 @@
    comfortable minimum and scroll its own overflow (never the whole page),
    and let the active slide flow in-line so its real height drives that
    scroll. Wider screens keep the 16/9 framing untouched. */
-@media (max-width: 640px) {
+@media (--md) {
   .stage {
     aspect-ratio: auto;
     min-height: min(58svh, 460px);
@@ -354,7 +354,7 @@
 /* Present takeover in portrait: the 16/9 min(100%,1100px) stage collapses to
    a thin strip in a black field. Let it fill the column and adapt exactly like
    the inline stage above (grow + scroll) rather than float as a sliver. */
-@media (max-width: 640px) {
+@media (--md) {
   .presentStage {
     padding: 0 12px calc(16px + env(safe-area-inset-bottom));
   }

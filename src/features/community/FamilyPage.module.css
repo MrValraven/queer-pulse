@@ -611,13 +611,13 @@
   flex-wrap: wrap;
 }
 
-@media (max-width: 900px) {
+@media (--wide) {
   .talkInner {
     grid-template-columns: 1fr;
     gap: 40px;
   }
 }
-@media (max-width: 640px) {
+@media (--md) {
   .tabNavInner {
     padding: 0 14px;
   }

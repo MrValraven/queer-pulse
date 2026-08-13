@@ -99,7 +99,7 @@ beforeEach(() => {
       return inner(input, withoutSignal);
     }
     return inner(input, init);
-  }) as typeof globalThis.fetch;
+  });
 });
 
 afterEach(() => {

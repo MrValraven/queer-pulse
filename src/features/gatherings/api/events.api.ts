@@ -16,7 +16,17 @@ import { toItemsPage } from "../../../shared/api/pagination";
 // endpoints validate `@IsEnum(EventVisibility)` with `forbidNonWhitelisted`, so
 // any value outside this set is a 400. (The earlier "open"|"network"|"private"
 // labels matched nothing on the server and silently failed every create.)
-export type EventVisibility = "public" | "members" | "invite_only";
+//
+// The wizard's audience-scope control offers five of these (`members` through
+// `invite_only`); `public` (logged-out/anonymous) stays backend-only — the
+// wizard never sets it. See docs/superpowers/specs/2026-08-13-gathering-audience-scope-design.md.
+export type EventVisibility =
+  | "public"
+  | "members"
+  | "extended_network"
+  | "network"
+  | "community"
+  | "invite_only";
 export type EventStatus = "draft" | "published" | "cancelled";
 export type RsvpStatus = "going" | "maybe" | "waitlisted" | "invited";
 
@@ -81,6 +91,25 @@ export interface EventDetailDTO extends EventCardDTO {
   tiers?: { name: string; desc?: string; price: string }[];
   /** True when the viewer is the host or a cohost (organizer-only actions). */
   isOrganizer?: boolean;
+  /** The viewer's own RSVP standing on this event, so the in-event RSVP control
+   *  can render "you're going" on load. `null` (or a `cancelled` row) means no
+   *  active RSVP. Backend `EventDetail.myRsvpStatus`. */
+  myRsvpStatus?: "going" | "maybe" | "waitlisted" | "cancelled" | null;
+  /** The viewer's place in the waitlist queue, when they're waitlisted.
+   *  Backend `EventDetail.myWaitlistPosition`. */
+  myWaitlistPosition?: number | null;
+  /** True when the event is at capacity — drives the "Join the waitlist"
+   *  affordance. Backend `EventSummary.isFull`. */
+  isFull?: boolean;
+  /** The community this gathering is filed to, or `null` for a
+   *  public/network-scoped gathering with no community. Settable at creation
+   *  and changeable afterwards via the edit modal's community picker (PATCH
+   *  `/events/:slug` with `communitySlug`, see `UpdateEventDto` below) — the
+   *  edit modal also uses this to decide whether the "Community members"
+   *  audience-scope tier stays offered. */
+  communityId?: string | null;
+  /** Slug counterpart of `communityId`. */
+  communitySlug?: string | null;
 }
 
 export interface AttendeeDTO {
@@ -129,8 +158,13 @@ export interface CreateEventDto {
   communitySlug?: string;
 }
 
-/** PATCH /events/:slug — every field optional. */
-export type UpdateEventDto = Partial<CreateEventDto>;
+/** PATCH /events/:slug — every field optional. `communitySlug` additionally
+ *  accepts `null` (on top of `CreateEventDto`'s string-or-omitted), so the
+ *  edit modal can explicitly CLEAR a gathering's community — create-time has
+ *  no such concept; omitting the field there just means "no community". */
+export type UpdateEventDto = Partial<Omit<CreateEventDto, "communitySlug">> & {
+  communitySlug?: string | null;
+};
 
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
 

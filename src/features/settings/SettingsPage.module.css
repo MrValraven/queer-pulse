@@ -462,7 +462,7 @@
   line-height: 1.65;
   margin: 14px 0 24px;
 }
-@media (max-width: 860px) {
+@media (--mobile) {
   .page {
     grid-template-columns: 1fr;
   }
@@ -476,7 +476,7 @@
    being pushed below a wrapped 11-item menu. Mirrors the Forum category
    chip-scroller. Scoped to 860px — where Navbar swaps to the slim `.appBar`
    (see standalone.css) — so the sticky offset below is always correct. */
-@media (max-width: 860px) {
+@media (--mobile) {
   .page {
     gap: 20px;
   }

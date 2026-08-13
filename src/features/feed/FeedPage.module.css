@@ -939,7 +939,7 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (--wide) {
   .layout {
     grid-template-columns: 1fr;
   }

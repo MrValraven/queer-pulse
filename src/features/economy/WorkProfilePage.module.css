@@ -225,6 +225,60 @@
   line-height: 1.5;
 }
 
+/* ---- Selectable taxonomy chips (skills / focus areas) ---- */
+.chipToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink-60);
+  background: rgba(var(--plum-rgb), 0.05);
+  border: 1px solid transparent;
+  border-radius: var(--radius-tag);
+  padding: 7px 13px;
+  cursor: pointer;
+  transition:
+    background 0.2s var(--ease),
+    border-color 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .chipToggle:hover {
+    color: var(--text-strong);
+    border-color: rgba(var(--line-rgb), 0.2);
+  }
+}
+.chipToggle:focus-visible {
+  outline: 2px solid var(--jade);
+  outline-offset: 2px;
+}
+.chipToggleOn {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.13);
+  border-color: rgba(var(--jade-rgb), 0.4);
+  font-weight: 600;
+}
+@media (hover: hover) {
+  .chipToggleOn:hover {
+    color: var(--jade);
+  }
+}
+.chipToggleCheck {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+}
+:global([data-theme="dark"]) .chipToggle {
+  background: rgba(var(--cream-rgb), 0.08);
+  color: rgba(var(--cream-rgb), 0.6);
+}
+:global([data-theme="dark"]) .chipToggleOn {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.18);
+}
+
 /* ---- Visibility matrix ---- */
 .matrix {
   border: 1px solid rgba(var(--line-rgb), 0.1);
@@ -319,7 +373,7 @@
   flex-wrap: wrap;
 }
 
-@media (max-width: 640px) {
+@media (--md) {
   .page {
     /* nav band reserved by shell (base.css); this is only breathing room */
     padding: 12px 18px 72px;

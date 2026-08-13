@@ -277,7 +277,7 @@
   text-underline-offset: 3px;
 }
 
-@media (max-width: 480px) {
+@media (--xs) {
   .cardTop {
     padding: 28px 24px 28px;
   }

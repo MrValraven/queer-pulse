@@ -236,6 +236,10 @@ export const economy: Catalog = {
   "workProfile.identity.legalNameHint":
     "Guardado de forma privada e usado apenas quando a lei o exige.",
   "workProfile.identity.pronouns": "Pronomes",
+  "workProfile.identity.pronounsWriteOwn": "Escreve os teus",
+  "workProfile.identity.pronounsPlaceholder": "ex.: xe/xem",
+  "workProfile.identity.pronounsAdd": "Adicionar",
+  "workProfile.identity.pronounsRemoveAria": "Remover {pronoun}",
   "workProfile.identity.headline": "Título profissional",
   "workProfile.identity.location": "Localização",
   "workProfile.identity.bio": "Biografia curta",
@@ -446,6 +450,45 @@ export const economy: Catalog = {
   "housing.filter.short": "Curta duração",
   "housing.filter.studio": "Estúdio / apartamento inteiro",
   "housing.listSpaceCta": "+ Anunciar o teu espaço",
+  "housing.filterBar.area": "Bairro",
+  "housing.filterBar.areaAny": "Qualquer bairro",
+  "housing.filterBar.areaSelected": "{count} selecionados",
+  "housing.filterBar.areaClear": "Limpar bairros",
+  "housing.filterBar.price": "Preço (€ / mês)",
+  "housing.filterBar.min": "Mín.",
+  "housing.filterBar.max": "Máx.",
+  "housing.filterBar.priceMin": "Preço mínimo",
+  "housing.filterBar.priceMax": "Preço máximo",
+  "housing.filterBar.beds": "Quartos",
+  "housing.filterBar.bedsAny": "Qualquer",
+  "housing.filterBar.bedsStudio": "Estúdio",
+  "housing.filterBar.beds1": "1+",
+  "housing.filterBar.beds2": "2+",
+  "housing.filterBar.beds3": "3+",
+  "housing.filterBar.availableBy": "Disponível até",
+  "housing.filterBar.bills": "Despesas incluídas",
+  "housing.filterBar.accessibility": "Com info de acesso",
+  "housing.filterBar.verified": "Só verificados",
+  "housing.filterBar.clear": "Limpar filtros",
+  "housing.map.ariaLabel": "Mapa de anúncios por bairro",
+  "housing.map.error": "Não foi possível carregar o mapa. Use a vista de lista.",
+  "housing.map.count": "{count} casas",
+  "housing.map.empty": "Ainda não há casas com estes filtros.",
+  "housing.map.jumpToList": "Ir para {count} casas",
+  "housing.map.viewList": "Lista",
+  "housing.map.viewMap": "Mapa",
+  "housing.saveSearch.cta": "Guardar esta procura",
+  "housing.saveSearch.namePlaceholder": "Dá um nome a esta procura",
+  "housing.saveSearch.nameLabel": "Nome desta procura guardada",
+  "housing.saveSearch.save": "Guardar",
+  "housing.saveSearch.cancel": "Cancelar",
+  "housing.saveSearch.saved":
+    "Procura guardada — avisamos-te quando aparecer uma casa assim.",
+  "housing.saveSearch.error": "Não deu para guardar essa procura — tenta outra vez daqui a pouco.",
+  "housing.savedSearches.title": "As tuas procuras guardadas",
+  "housing.savedSearches.alertsOn": "Alertas ativos",
+  "housing.savedSearches.remove": "Remover procura guardada {name}",
+  "housing.savedSearches.removed": "Procura guardada removida",
 
   "housing.empty.filteredTitle": "Sem anúncios deste tipo neste momento",
   "housing.empty.title": "O quadro de habitação está parado neste momento",
@@ -499,6 +542,12 @@ export const economy: Catalog = {
   "housing.subpages.coop.label": "Cooperativa de Habitação",
   "housing.subpages.coop.blurb":
     "Pessoas a comprar e gerir casas em conjunto — como se formam as cooperativas, e como te podes juntar a uma.",
+
+  "housing.outro.title": "Encontrar casa <em>em conjunto.</em>",
+  "housing.outro.sub":
+    "Cada anúncio aqui vem de alguém da comunidade. Anuncia o teu espaço, ou publica o que procuras. A rede move-se depressa pelos seus.",
+  "housing.outro.listCta": "Anunciar o teu espaço",
+  "housing.outro.askForum": "Perguntar no fórum",
 
   // ── HousingModals (mensagem à pessoa anunciante / recomendar) ──────────
   "housingModal.close": "Fechar",
@@ -571,8 +620,27 @@ export const economy: Catalog = {
   "listSpace.areaPlaceholder": "ex.: Arroios, Lisboa",
   "listSpace.rentLabel": "Renda mensal (€) *",
   "listSpace.rentPlaceholder": "ex.: 650",
+  "listSpace.bedroomsLabel": "Quartos",
+  "listSpace.bedroomsPlaceholder": "ex.: 1 — usa 0 para um estúdio",
   "listSpace.typeLabel": "Tipo de espaço *",
   "listSpace.chooseOne": "Escolhe uma opção…",
+  "listSpace.accessLabel": "Acessos e circulação *",
+  "listSpace.accessPlaceholder":
+    "ex.: Segundo andar, sem elevador — um lance de escadas. Sem degraus lá dentro.",
+  "listSpace.photoGuide.title": "Umas boas fotos fazem toda a diferença",
+  "listSpace.photoGuide.lit": "Fotografa com luz natural — quartos bem iluminados passam confiança.",
+  "listSpace.photoGuide.rooms": "Mostra mais do que um quarto, e também a cozinha e a casa de banho.",
+  "listSpace.photoGuide.consent":
+    "Deixa de fora os rostos de colegas de casa, a menos que tenham dado autorização.",
+  "listSpace.tourLabel": "Link de visita virtual",
+  "listSpace.tourPlaceholder": "Matterport, um passeio em vídeo no YouTube…",
+  "listSpace.tourHint": "Opcional — um link https que as pessoas podem abrir para ver antes de visitar.",
+  "listSpace.tourError": "Esse link tem de começar por https://",
+  "listSpace.billsLabel": "As despesas estão incluídas na renda",
+  "listSpace.billsHint": "Água, luz, internet — para as pessoas saberem o que pagam.",
+  "listSpace.agentLabel": "Estou a anunciar como agente ou agência",
+  "listSpace.agentHint":
+    "Agentes são bem-vindos aqui — só mostramos um pequeno selo para ficar claro quem oferece o espaço.",
   "listSpace.note":
     "Os anúncios são revistos antes de aparecerem. Nunca peças um depósito antes de a pessoa visitar o espaço pessoalmente.",
   "listSpace.submitting": "A submeter…",
@@ -617,10 +685,88 @@ export const economy: Catalog = {
   "housingListing.section.features": "Características",
   "housingListing.section.facts": "Factos",
   "housingListing.section.idealFor": "Ideal para",
+  "housingListing.section.accessibility": "Acessos e circulação",
+  "housingListing.section.virtualTour": "Visita virtual",
+  "housingListing.virtualTour.frameTitle": "Visita virtual desta casa",
+  "housingListing.virtualTour.linkNote":
+    "Dá uma volta antes de visitares — esta visita abre num novo separador.",
+  "housingListing.virtualTour.openCta": "Abrir visita virtual",
+  "housingGallery.photoAlt": "{title} — foto {index} de {total}",
+  "housingGallery.openAt": "Abrir fotos de {title} — foto {index} de {total}",
+  "housingGallery.counter": "{index} / {total}",
+  "housingGallery.close": "Fechar fotos",
+  "housingGallery.prev": "Foto anterior",
+  "housingGallery.next": "Foto seguinte",
+  "housingListing.billsIncluded": "Despesas incluídas",
+  "housingListing.billsExcluded": "Despesas não incluídas",
+  "housingListing.agentBadge.label": "Anúncio de agente",
+  "housingListing.agentBadge.tooltip":
+    "Anunciado por um agente ou agência, não por quem lá vive. Agentes são bem-vindos — este selo só o torna claro.",
   "housingListing.messageCtaArrow": "Enviar mensagem a {name}",
   "housingListing.messageCta": "Enviar mensagem a {name}",
   "housingListing.listedBy": "Anunciado por",
   "housingListing.verifiedMember": "Pessoa membro verificada",
+
+  // ── Verificação de identidade — selos honestos + verificação em degraus ─
+  "verification.badge.id.label": "Identidade verificada",
+  "verification.badge.id.tooltip":
+    "Esta pessoa concluiu uma verificação de identidade externa. Confirma quem é — não é uma garantia de segurança nem um aval.",
+  "verification.badge.phone.label": "Telefone verificado",
+  "verification.badge.phone.tooltip":
+    "Esta pessoa confirmou um número de telefone. É uma verificação ligeira — não é prova de identidade.",
+  // ── Compromisso afirmativo (base LGBTQ+ obrigatória) ───────────────────
+  "affirmingPledge.ariaLabel": "O compromisso de habitação afirmativa LGBTQ+",
+  "affirmingPledge.title": "Casas onde és <em>afirmada</em>",
+  "affirmingPledge.sub":
+    "Todas as casas e todos os colegas de casa na QueerPulse são afirmativos LGBTQ+ — é o padrão aqui, não um extra. Antes de publicar ou contactar, assume o compromisso.",
+  "affirmingPledge.point.affirm":
+    "Vou manter as casas e os colegas de casa afirmativos — pessoas trans, não binárias e queer são bem-vindas e respeitadas aqui.",
+  "affirmingPledge.point.noHarm":
+    "Não vou discriminar, expor ninguém, nem tratar alguém pelo género errado.",
+  "affirmingPledge.point.report":
+    "Se uma casa ou pessoa aqui quebrar isto, posso denunciar.",
+  "affirmingPledge.cancel": "Agora não",
+  "affirmingPledge.acceptCta": "Assumir o compromisso",
+  "affirmingPledge.accepting": "A guardar…",
+  "affirmingPledge.error":
+    "Não foi possível guardar o compromisso agora — tenta de novo.",
+  "affirmingBaseline.badge": "Afirmativo LGBTQ+",
+  "affirmingBaseline.badgeTooltip":
+    "Todas as casas e todos os colegas de casa aqui são afirmativos LGBTQ+ — é a base, não um extra do anúncio.",
+  "affirmingBaseline.note":
+    "Todas as casas e todos os colegas de casa aqui são afirmativos LGBTQ+ — é o <em>padrão.</em>",
+  "affirmingBaseline.detailNote":
+    "Esta é a base de todas as casas aqui, não um extra do anúncio.",
+  "verification.step.ariaLabel": "Verificar para continuar",
+  "verification.step.title": "Primeiro, uma verificação rápida",
+  "verification.step.subPhone":
+    "Na habitação a segurança é o que mais importa, por isso confirmamos um número de telefone antes de anunciares ou contactares. Fica privado.",
+  "verification.step.subId":
+    "Este passo precisa de verificação de identidade. Nunca vemos nem guardamos o teu documento — um parceiro externo trata disso e só nos diz que passou.",
+  "verification.step.phoneLabel": "O teu número de telefone",
+  "verification.step.phonePlaceholder": "+351 …",
+  "verification.step.privacy":
+    "Usamo-lo apenas para enviar o código, e nunca o mostramos a ninguém.",
+  "verification.step.sendCta": "Enviar código",
+  "verification.step.sending": "A enviar",
+  "verification.step.sendError":
+    "Não foi possível enviar o código — confirma o número e tenta de novo.",
+  "verification.step.codeLabel": "Introduz o código de 6 dígitos",
+  "verification.step.codePlaceholder": "123456",
+  "verification.step.codeHint": "Acabámos de to enviar por SMS.",
+  "verification.step.backCta": "Voltar",
+  "verification.step.confirmCta": "Confirmar",
+  "verification.step.confirming": "A confirmar",
+  "verification.step.codeError":
+    "Esse código não coincide — pede um novo e tenta de novo.",
+  "verification.step.identityBody":
+    "Concluis isto com o nosso parceiro de identidade. Só recebemos um passou ou não passou — nunca o teu documento.",
+  "verification.step.identityCta": "Continuar para a verificação de ID",
+  "verification.step.opening": "A abrir",
+  "verification.step.identityError":
+    "Não foi possível iniciar a verificação de ID — tenta de novo.",
+  "verification.step.cancel": "Agora não",
+  "verification.step.later": "Talvez mais tarde",
   "housingListing.availableFrom":
     "Disponível a partir de {date} · publicado por uma pessoa membro verificada",
   "housingListing.repliesUsually": "Costuma responder <b>{time}</b>",
@@ -640,6 +786,101 @@ export const economy: Catalog = {
   "housingListing.error.body":
     "Algo correu mal do nosso lado, não do teu. Tenta de novo daqui a um instante.",
   "housingListing.error.retry": "Tentar de novo",
+
+  // ── Selo de anúncio verificado (P2.3) ──────────────────────────────────
+  "verifiedListing.label": "Anúncio verificado",
+  "verifiedListing.tooltip":
+    "Quem anuncia tem identidade verificada, este anúncio passou na nossa revisão e não levantou alertas. É uma verificação real — não é uma garantia de segurança nem um aval.",
+
+  // ── Pedir uma visita (P2.3) ────────────────────────────────────────────
+  "housingViewing.request.cta": "Pedir uma visita",
+  "housingViewing.request.myViewingsLink": "As tuas visitas",
+  "housingViewing.request.ariaLabel": "Pedir uma visita",
+  "housingViewing.request.eyebrow": "Pedir uma visita",
+  "housingViewing.request.title": "Vê <em>ao vivo</em> primeiro",
+  "housingViewing.request.body":
+    "Marca uma visita a <strong>{listingTitle}</strong> — por vídeo ou presencial — antes de falar em dinheiro. Ver a casa ao vivo é a forma mais segura de saber que é real.",
+  "housingViewing.request.modeLabel": "Como preferes ver a casa?",
+  "housingViewing.request.video": "Videochamada",
+  "housingViewing.request.inPerson": "Presencial",
+  "housingViewing.request.slotOne": "Uma hora que te dê jeito",
+  "housingViewing.request.slotTwo": "Outra opção (opcional)",
+  "housingViewing.request.noteLabel": "Uma nota para quem anuncia",
+  "housingViewing.request.notePlaceholder":
+    "Diz olá e menciona o que gostavas de ver ou perguntar.",
+  "housingViewing.request.safety":
+    "Uma visita por vídeo ou presencial antes de pagar é a melhor forma de evitar uma burla de arrendamento.",
+  "housingViewing.request.send": "Enviar pedido de visita",
+  "housingViewing.request.error":
+    "Não foi possível enviar o pedido — tenta de novo daqui a pouco.",
+  "housingViewing.request.successTitle": "Visita <em>pedida.</em>",
+  "housingViewing.request.successBody":
+    "Quem anuncia vai escolher uma hora ou sugerir outra. Vais encontrá-la em As tuas visitas.",
+
+  // ── As tuas visitas (P2.3) ─────────────────────────────────────────────
+  "housingViewing.list.back": "Mural de habitação",
+  "housingViewing.list.title": "As tuas <em>visitas</em>",
+  "housingViewing.list.sub":
+    "Todos os sítios que pediste para ver, e todos os pedidos para ver o teu. Aceita uma hora, sugere outra, ou deixa uma avaliação depois de se conhecerem.",
+  "housingViewing.list.empty":
+    "Ainda não há visitas. Quando pedires uma a partir de um anúncio, aparece aqui.",
+  "housingViewing.list.group.needsResponse": "À tua espera",
+  "housingViewing.list.group.upcoming": "A caminho",
+  "housingViewing.list.group.past": "Anteriores",
+  "housingViewing.list.withLister": "Com {name}",
+  "housingViewing.list.fromEnquirer": "De {name}",
+  "housingViewing.list.video": "Vídeo",
+  "housingViewing.list.inPerson": "Presencial",
+  "housingViewing.list.someone": "alguém",
+  "housingViewing.list.acceptAt": "Aceitar {time}",
+  "housingViewing.list.propose": "Propor outras horas",
+  "housingViewing.list.decline": "Recusar",
+  "housingViewing.list.waiting": "À espera da resposta de {name}",
+  "housingViewing.list.cancel": "Cancelar",
+  "housingViewing.list.markCompleted": "Marcar como feita",
+  "housingViewing.list.leaveReview": "Deixar avaliação",
+  "housingViewing.status.requested": "Pedida",
+  "housingViewing.status.accepted": "Aceite",
+  "housingViewing.status.declined": "Recusada",
+  "housingViewing.status.cancelled": "Cancelada",
+  "housingViewing.status.completed": "Concluída",
+
+  // ── Propor outras horas ────────────────────────────────────────────────
+  "housingViewing.propose.ariaLabel": "Propor outras horas",
+  "housingViewing.propose.title": "Propor outras horas",
+  "housingViewing.propose.body":
+    "Sugere uma ou duas horas que te deem mais jeito. A outra pessoa pode aceitar uma.",
+  "housingViewing.propose.send": "Enviar novas horas",
+
+  // ── Avaliação cega após uma visita concluída (P2.4) ────────────────────
+  "housingViewing.review.ariaLabel": "Deixar avaliação",
+  "housingViewing.review.eyebrow": "Depois da visita",
+  "housingViewing.review.title": "Como correu com <em>{name}?</em>",
+  "housingViewing.review.body":
+    "As avaliações são dos dois lados e cegas: nenhum vê as palavras do outro até ambos escreverem, para que nenhuma avaliação seja influenciada pela outra.",
+  "housingViewing.review.ratingLabel": "A tua classificação",
+  "housingViewing.review.whatWasItLike": "Como foi?",
+  "housingViewing.review.placeholder":
+    "A casa era como descrita? Foi fácil lidar com a pessoa? Detalhes honestos e gentis ajudam quem vier a seguir.",
+  "housingViewing.review.blindNote":
+    "A tua avaliação fica escondida até a outra pessoa deixar a dela — ou passadas duas semanas, o que vier primeiro.",
+  "housingViewing.review.submit": "Enviar avaliação",
+  "housingViewing.review.error":
+    "Não foi possível enviar a avaliação — tenta de novo daqui a pouco.",
+  "housingViewing.review.successTitle": "Avaliação <em>guardada.</em>",
+  "housingViewing.review.successBody":
+    "Obrigado. Fica privada até <strong>{name}</strong> deixar a sua, ou passarem duas semanas.",
+
+  // ── Bloco de avaliações no anúncio (P2.4) ──────────────────────────────
+  "housingViewing.reviews.heading": "Avaliações",
+  "housingViewing.reviews.empty":
+    "Ainda não há avaliações — aparecem aqui quando membros visitarem esta casa e partilharem como correu.",
+  "housingViewing.reviews.outOf": "em 5",
+  "housingViewing.reviews.count_one": "{count} avaliação",
+  "housingViewing.reviews.count_other": "{count} avaliações",
+  "housingViewing.reviews.anonymous": "Um membro",
+  "housingViewing.reviews.ratingAria_one": "{count} estrela",
+  "housingViewing.reviews.ratingAria_other": "{count} estrelas",
 
   // ── ReportListingModal ─────────────────────────────────────────────────
   "housingListing.report": "Denunciar",
@@ -668,6 +909,8 @@ export const economy: Catalog = {
   "housingListing.reportModal.success.em": "recebida.",
   "housingListing.reportModal.success.body":
     "Obrigade. Uma pessoa moderadora vai rever {title}. Podemos contactar-te para mais detalhe, mas nunca partilharemos a tua denúncia com quem denunciaste.",
+  "housingListing.reportModal.success.equalityPointer":
+    "A discriminação no acesso à habitação também pode ser levada a um organismo nacional de igualdade — não tens de escolher. Denunciá-la aqui ajuda-nos a agir na plataforma.",
   "housingListing.reportModal.doneCta": "Concluído",
   "housingListing.reportModal.error":
     "Não foi possível enviar a tua denúncia — não chegou até nós. Verifica a ligação e tenta novamente.",
@@ -794,6 +1037,19 @@ export const economy: Catalog = {
   "flatmates.card.unsavedToast": "Perfil de {name} removido dos guardados",
   "flatmates.card.reportCta": "Denunciar",
   "flatmates.card.reportAriaLabel": "Denunciar o perfil de {name}",
+  "flatmates.card.safeSpaceLabel": "Necessidades de espaço seguro",
+  "flatmates.card.householdLabel": "Casa",
+  "flatmates.card.whyMatched": "Porque combinam",
+
+  // Fatores explicáveis de compatibilidade — a interface mapeia cada `factor`
+  // aqui. As especificidades de espaço seguro são ocultadas pelo backend para
+  // quem não tem permissão para as ver.
+  "flatmates.reason.budget": "Orçamento encaixa",
+  "flatmates.reason.neighbourhood": "Mesmo bairro",
+  "flatmates.reason.lifestyle": "Estilo de vida em comum",
+  "flatmates.reason.timing": "As datas coincidem",
+  "flatmates.reason.safeSpace": "Valores de espaço seguro em comum",
+  "flatmates.reason.household": "As bases da casa combinam",
 
   // ── PostProfileModal / PostProfileForm ─────────────────────────────────
   "postProfileModal.ariaLabel": "Publicar o teu perfil de colega de casa",
@@ -814,6 +1070,9 @@ export const economy: Catalog = {
     "Tens um quarto ou casa partilhada para oferecer",
   "postProfileForm.pronounsLabel": "Pronomes (opcional)",
   "postProfileForm.pronounsPlaceholder": "ex.: ela, ele, elu",
+  "postProfileForm.pronounsWriteOwn": "Escreve os teus",
+  "postProfileForm.pronounsAdd": "Adicionar",
+  "postProfileForm.pronounsRemoveAria": "Remover {pronoun}",
   "postProfileForm.neighbourhoodLabel": "Bairro",
   "postProfileForm.neighbourhoodPlaceholder": "Preferência / localização",
   "postProfileForm.anywhereCentral": "Em qualquer zona central",
@@ -829,6 +1088,45 @@ export const economy: Catalog = {
     "Conta um pouco sobre ti — o teu ritmo, o teu trabalho, que tipo de casa te faz sentir bem. Não precisas de te vender; sê apenas honesta.",
   "postProfileForm.lifestyleTagsLabel": "Tags de estilo de vida",
   "postProfileForm.submitCta": "Publicar perfil",
+
+  // ── Normas da casa (opcional, dados comuns) ─────────────────────────────
+  "postProfileForm.householdLabel": "Casa (opcional)",
+  "postProfileForm.householdHint":
+    "Alguns pontos básicos da vida partilhada, se quiseres que se saibam à partida.",
+  "postProfileForm.householdNoPreference": "Sem preferência",
+  "postProfileForm.household.smoking": "Fumar",
+  "postProfileForm.household.pets": "Animais",
+  "postProfileForm.household.guests": "Visitas",
+  "postProfileForm.household.cleanliness": "Limpeza",
+  "postProfileForm.household.sleepSchedule": "Horário de sono",
+  "postProfileForm.household.noise": "Ruído",
+  "postProfileForm.household.sharing": "Espaço partilhado vs. privado",
+
+  // ── Identidade e espaço seguro (RGPD Art.9, opcional) ───────────────────
+  "postProfileForm.identityLabel": "Identidade e espaço seguro",
+  "postProfileForm.identityHint":
+    "Tudo opcional. Partilha só o que te ajuda a sentir em casa — escolhes quem vê, e podes retirar quando quiseres.",
+  "postProfileForm.consentLabel":
+    "Sim — guardem os meus pronomes, género e necessidades de espaço seguro, e mostrem-nos às pessoas que eu escolher abaixo para nos encontrarmos. Tens o controlo: podes limpá-los <em>quando quiseres.</em>",
+  "postProfileForm.genderLabel": "Género (opcional)",
+  "postProfileForm.genderPlaceholder": "ex.: não-binárie, mulher trans",
+  "postProfileForm.safeSpaceLabel": "O que torna uma casa segura",
+  "postProfileForm.safeSpaceHint":
+    "Escolhe o que te importa. Isto diz o que procuras numa casa — nunca quem é bem-vinde.",
+  // Prompts de casa afirmativos para pessoas trans (Art.9, dentro do consentimento).
+  "postProfileForm.identityHousehold.label": "Viver como tu em casa",
+  "postProfileForm.identityHousehold.hint":
+    "Tudo opcional, e só visto por quem tu escolheres. Partilha o que ajudaria uma casa a sentir-se tua.",
+  "postProfileForm.identityHousehold.outAtHome": "Ser aberte em casa",
+  "postProfileForm.identityHousehold.bathroom": "Partilhar casa de banho",
+  "postProfileForm.identityHousehold.mailName": "Nome no correio e entregas",
+  "postProfileForm.identityHousehold.medication": "Privacidade com medicação",
+
+  "postProfileForm.visibilityLabel": "Quem pode ver isto",
+  "postProfileForm.visibility.public": "Qualquer pessoa no quadro",
+  "postProfileForm.visibility.members": "Qualquer membro",
+  "postProfileForm.visibility.matches": "Só quem poderia partilhar casa comigo",
+  "postProfileForm.visibility.hidden": "Só eu",
 
   // ── CompanyPage (+ Cover / Sidebar / Tabs) ──────────────────────────────
   "company.notFound.title": "Empresa não encontrada",
@@ -2721,6 +3019,384 @@ export const economy: Catalog = {
   "coopTemplate.disclaimer":
     "Este é um modelo de partida — adapta-o com o teu grupo e, sempre que for juridicamente relevante, com um advogado ou notário.",
 
+  // ── CoopTemplatePage: prosa dos documentos-modelo de formação ───────────
+  // pt-PT co-op template — DRAFT machine translation, requires professional
+  // legal review before launch. This is legal/governance prose translated as a
+  // first draft; it is NOT legally verified. Do not treat any figure or clause
+  // as advice. Keys are at EN/pt parity (see catalog parity test) and mirror the
+  // document shape in src/features/economy/coopTemplateContent.data.tsx.
+  // founding-values
+  "coopTemplate.doc.founding-values.tag": "Fase 1 · modelo",
+  "coopTemplate.doc.founding-values.title": "Carta de valores",
+  "coopTemplate.doc.founding-values.titleEm": "fundadores",
+  "coopTemplate.doc.founding-values.intro":
+    "A vossa carta de valores fundadores é a primeira coisa que o grupo escreve em conjunto — antes de um pedido de crédito, antes de um contrato de arrendamento, antes de alguém assinar seja o que for com um banco ou um notário. Põe por palavras o que estão a construir e para quem, para que daqui a seis meses, quando o dinheiro apertar ou uma decisão for difícil, tenham algo a que voltar em conjunto. Trata tudo o que se segue como um primeiro rascunho: lê-o em voz alta em grupo, risca o que não encaixa, e reescreve-o pelas tuas próprias palavras até soar a vocês.",
+  "coopTemplate.doc.founding-values.s0.h": "Porque estamos a formar esta cooperativa",
+  "coopTemplate.doc.founding-values.s0.b0":
+    "Começa com uma ou duas frases que digam, com clareza, para que serve esta cooperativa. Não uma declaração de missão para quem está de fora — uma resposta privada para quem vai assinar os títulos de capital. Do que se estão a proteger uns aos outros, e o que estão a construir?",
+  "coopTemplate.doc.founding-values.s0.b1.0":
+    "Estamos a formar esta cooperativa para que ninguém tenha de escolher entre continuar no armário e ter casa.",
+  "coopTemplate.doc.founding-values.s0.b1.1":
+    "Queremos uma casa onde o envelhecimento, a deficiência e as necessidades de cuidados sejam planeados, e não descobertos tarde demais.",
+  "coopTemplate.doc.founding-values.s0.b1.2":
+    "Estamos a juntar o que temos para que quem, sozinho, seria expulso pelos preços possa continuar na cidade a que chama casa.",
+  "coopTemplate.doc.founding-values.s1.h": "Quem somos, e para quem é esta casa",
+  "coopTemplate.doc.founding-values.s1.b0":
+    "Diz explicitamente quem pertence aqui e em que termos. O silêncio sobre este ponto tende a favorecer quem já tem poder na sala — por isso, põe-no por escrito.",
+  "coopTemplate.doc.founding-values.s1.b1.0":
+    "Esta é uma casa que afirma as pessoas queer e trans. Usamos os nomes e pronomes que as pessoas nos pedem para usar, sem discussão, desde o primeiro dia.",
+  "coopTemplate.doc.founding-values.s1.b1.1":
+    "Comprometemo-nos a trabalhar ativamente contra o racismo, a transfobia, o capacitismo e o classismo em quem admitimos, na forma como falamos uns com os outros, e em quem tem prioridade nas reparações e no orçamento.",
+  "coopTemplate.doc.founding-values.s1.b1.2":
+    "Vamos tornar os nossos espaços físicos e os nossos processos de decisão tão acessíveis quanto formos capazes, e vamos continuar a melhorá-los à medida que as necessidades dos nossos membros mudam.",
+  "coopTemplate.doc.founding-values.s1.b1.3":
+    "Os novos membros entram através de [descreve aqui o vosso processo — um período experimental, um sistema de recomendação, uma votação de todo o grupo].",
+  "coopTemplate.doc.founding-values.s2.h": "Como decidimos em conjunto",
+  "coopTemplate.doc.founding-values.s2.b0":
+    "Escolhe um método antes de precisares de um sob pressão. Muitas cooperativas começam pelo consenso e acrescentam uma alternativa para quando o consenso emperra.",
+  "coopTemplate.doc.founding-values.s2.b1.0":
+    "As decisões do dia a dia (pequenas reparações, política de visitas, o calendário partilhado) são tomadas por quem é afetado, informando o grupo depois.",
+  "coopTemplate.doc.founding-values.s2.b1.1":
+    "As decisões ao nível da casa (alterações ao orçamento, novos membros, regras da casa) vão à assembleia plena, com um quórum definido.",
+  "coopTemplate.doc.founding-values.s2.b1.2":
+    "Quando não se chega a consenso depois de um esforço genuíno, recorremos a [uma maioria qualificada, um período de reflexão e nova votação, uma pessoa facilitadora externa] — decide isto agora, enquanto ainda é hipotético.",
+  "coopTemplate.doc.founding-values.s3.h": "Como cuidamos uns dos outros",
+  "coopTemplate.doc.founding-values.s3.b0":
+    "Os compromissos de segurança e de cuidado pertencem aqui, e não apenas a uma política à parte que ninguém lê.",
+  "coopTemplate.doc.founding-values.s3.b1.0":
+    "Verificamos como está cada pessoa, sobretudo os membros que atravessam um momento difícil, sem que isso seja tarefa de uma só pessoa.",
+  "coopTemplate.doc.founding-values.s3.b1.1":
+    "Temos um plano para o que acontece se um membro estiver em perigo em casa — por parte de um parceiro, um familiar, ou qualquer outra pessoa — e esse plano não depende de esse membro pedir ajuda de forma perfeita.",
+  "coopTemplate.doc.founding-values.s3.b1.2":
+    "Nunca revelamos a orientação ou identidade de ninguém — a familiares, senhorios, empregadores ou aos contactos de cada um — nunca, por motivo algum.",
+  "coopTemplate.doc.founding-values.s4.h": "Dinheiro e justiça",
+  "coopTemplate.doc.founding-values.s4.b0":
+    "Diz com clareza o que significa justiça para o vosso grupo antes de o modelo financeiro (ver o Modelo financeiro explicado) o transformar em números.",
+  "coopTemplate.doc.founding-values.s4.b1.0":
+    "As contribuições são ajustadas ao que cada pessoa consegue realmente pagar, e não divididas de forma idêntica por defeito.",
+  "coopTemplate.doc.founding-values.s4.b1.1":
+    "Ninguém perde a sua casa por causa de dinheiro sem que o grupo tente primeiro, em conjunto, todas as alternativas (ver o Acordo de honestidade financeira e o Processo de resolução de conflitos).",
+  "coopTemplate.doc.founding-values.s4.b1.2":
+    "A informação financeira da cooperativa está sempre disponível a todos os membros. Aqui não há contas fechadas.",
+  "coopTemplate.doc.founding-values.s5.h": "Rever estes valores",
+  "coopTemplate.doc.founding-values.s5.b0":
+    "Os valores desviam-se se ninguém os voltar a ler. Marca uma data, não apenas uma boa intenção.",
+  "coopTemplate.doc.founding-values.s5.b1.0":
+    "Voltamos a ler esta carta em conjunto pelo menos uma vez por ano, e depois de qualquer acontecimento importante que a tenha posto à prova.",
+  "coopTemplate.doc.founding-values.s5.b1.1":
+    "As alterações precisam de [uma maioria qualificada / consenso total — decidam qual] e só produzem efeito depois de todos os membros terem visto a redação proposta.",
+  "coopTemplate.doc.founding-values.s5.b2":
+    "Esta carta é um modelo de partida, não um documento acabado — a versão que conta é aquela em que o vosso grupo desagua depois de discutir, e que revê todos os anos.",
+  // financial-honesty
+  "coopTemplate.doc.financial-honesty.tag": "Fase 1 · modelo",
+  "coopTemplate.doc.financial-honesty.title": "Acordo de honestidade",
+  "coopTemplate.doc.financial-honesty.titleEm": "financeira",
+  "coopTemplate.doc.financial-honesty.intro":
+    "As cooperativas de habitação falham mais vezes por problemas de dinheiro não ditos do que por qualquer questão jurídica. Este acordo existe para que um membro que esteja com dificuldades o diga na segunda semana, e não ao oitavo mês — e para que ninguém tenha de adivinhar quanto os outros ganham, devem ou receiam. Adapta os pormenores ao vosso grupo; mantém o princípio de que todos veem os mesmos números.",
+  "coopTemplate.doc.financial-honesty.s0.h": "O que significa aqui total transparência",
+  "coopTemplate.doc.financial-honesty.s0.b0":
+    "Transparência financeira não significa que todos revelam a totalidade das suas finanças pessoais. Significa que todos veem os mesmos números sobre a cooperativa, e que o grupo acorda antecipadamente que informação individual é partilhada, e porquê.",
+  "coopTemplate.doc.financial-honesty.s0.b1.0":
+    "Cada membro pode consultar o livro de contas partilhado da cooperativa a qualquer momento, e não apenas na reunião anual.",
+  "coopTemplate.doc.financial-honesty.s0.b1.1":
+    "Os valores das contribuições individuais (se ajustados ao rendimento) são visíveis para o grupo, mas os recibos de vencimento ou as declarações de IRS que lhes dão origem não o são, a menos que um membro opte por partilhá-los.",
+  "coopTemplate.doc.financial-honesty.s0.b1.2":
+    "Não existem acordos paralelos sobre dinheiro fora deste documento e do livro de contas partilhado.",
+  "coopTemplate.doc.financial-honesty.s1.h": "O que cada membro revela, e quando",
+  "coopTemplate.doc.financial-honesty.s1.b0":
+    "Sê específico quanto ao que é pedido na entrada face ao que é contínuo.",
+  "coopTemplate.doc.financial-honesty.s1.b1.0":
+    "Na entrada: se consegues cobrir o valor total do título de capital, em que calendário, e qualquer apoio que tragas para o fundo de solidariedade do grupo ou de que precises dele.",
+  "coopTemplate.doc.financial-honesty.s1.b1.1":
+    "De forma contínua: qualquer mudança que afete a tua capacidade de pagar — perda de emprego, doença, alteração de horário — comunicada a [uma pessoa responsável pelas finanças / todo o grupo] assim que souberes, e não depois de teres falhado um pagamento.",
+  "coopTemplate.doc.financial-honesty.s1.b1.2":
+    "Anualmente: uma revisão conjunta para verificar se as contribuições ainda refletem as circunstâncias reais das pessoas.",
+  "coopTemplate.doc.financial-honesty.s2.h": "O livro de contas partilhado",
+  "coopTemplate.doc.financial-honesty.s2.b0":
+    "Nomeia a ferramenta e a regra de acesso, não apenas a intenção.",
+  "coopTemplate.doc.financial-honesty.s2.b1.0":
+    "O livro de contas vive em [uma folha de cálculo partilhada, um programa de contabilidade] que qualquer membro pode abrir, ler e exportar a qualquer momento.",
+  "coopTemplate.doc.financial-honesty.s2.b1.1":
+    "Um ou dois membros funcionam como responsáveis pelas finanças, com rotação a cada [ano], encarregues dos registos — não de controlar quem os pode ver.",
+  "coopTemplate.doc.financial-honesty.s2.b1.2":
+    "Cada pagamento, de entrada ou de saída, é registado no prazo de [uma semana], com uma nota em linguagem simples. Nenhuma rubrica que ninguém saiba explicar.",
+  "coopTemplate.doc.financial-honesty.s3.h": "Lidar com atrasos de pagamento com dignidade",
+  "coopTemplate.doc.financial-honesty.s3.b0":
+    "Escreve este processo antes de alguém estar realmente em atraso — é muito mais difícil chegar a acordo quando já é pessoal.",
+  "coopTemplate.doc.financial-honesty.s3.b1.0":
+    "Um pagamento em falta dá origem a uma conversa privada e não punitiva no prazo de duas semanas, e não a um anúncio ao grupo.",
+  "coopTemplate.doc.financial-honesty.s3.b1.1":
+    "O membro e uma pessoa responsável pelas finanças acordam em conjunto um plano de pagamento; ao grupo diz-se que existe um plano, não os pormenores pessoais por detrás dele, a menos que o membro os queira partilhar.",
+  "coopTemplate.doc.financial-honesty.s3.b1.2":
+    "O fundo de solidariedade (abaixo) é oferecido antes de qualquer conversa sobre a saída de um membro.",
+  "coopTemplate.doc.financial-honesty.s4.h": "Fundo de solidariedade e de emergência",
+  "coopTemplate.doc.financial-honesty.s4.b0":
+    "Um fundo concreto, e não apenas um sentimento generoso, é o que faz com que o «cuidamos uns dos outros» sobreviva a uma emergência real.",
+  "coopTemplate.doc.financial-honesty.s4.b1.0":
+    "Cada membro contribui, a título de exemplo ilustrativo, com 10–20 € por mês para um fundo de emergência partilhado, separado dos custos de funcionamento.",
+  "coopTemplate.doc.financial-honesty.s4.b1.1":
+    "O fundo pode cobrir a falta de um membro, a título de exemplo ilustrativo, até três meses enquanto se prepara um plano de prazo mais longo.",
+  "coopTemplate.doc.financial-honesty.s4.b1.2":
+    "Os pedidos são aprovados por [as pessoas responsáveis pelas finanças / maioria simples] no prazo de uma semana, sem obrigação de justificar a dificuldade em pormenor.",
+  "coopTemplate.doc.financial-honesty.s5.h": "Revisão anual",
+  "coopTemplate.doc.financial-honesty.s5.b0":
+    "Marca uma data fixa para que isto seja revisto no prazo previsto, e não apenas durante uma crise.",
+  "coopTemplate.doc.financial-honesty.s5.b1.0":
+    "Uma vez por ano, o grupo revê: se as contribuições ainda correspondem às circunstâncias, se o fundo de emergência está devidamente dotado, e se alguém tem preocupações de dinheiro por dizer.",
+  "coopTemplate.doc.financial-honesty.s5.b2":
+    "Este acordo é um ponto de partida — adapta os valores, os prazos e os papéis aos números reais do vosso grupo, e revê-o todos os anos.",
+  // crl-statutes
+  "coopTemplate.doc.crl-statutes.tag": "Fase 2 · jurídico",
+  "coopTemplate.doc.crl-statutes.title": "Estatutos-modelo",
+  "coopTemplate.doc.crl-statutes.titleEm": "CRL",
+  "coopTemplate.doc.crl-statutes.intro":
+    "A Cooperativa de Responsabilidade Limitada (CRL) é a forma jurídica sob a qual a maioria das cooperativas de habitação da QueerPulse se regista em Portugal. O que se segue é um modelo, em linguagem simples, das secções de que os teus estatutos precisam — não é o texto jurídico em si, nem constitui aconselhamento jurídico. Leva este esboço, e a tua carta de valores fundadores, a um advogado ou notário com experiência em direito cooperativo antes de redigires ou registares seja o que for.",
+  "coopTemplate.doc.crl-statutes.s0.h": "Nome e sede (sede social)",
+  "coopTemplate.doc.crl-statutes.s0.b0":
+    "Os teus estatutos abrem com o nome da cooperativa e a sua morada registada (sede social), habitualmente o próprio imóvel ou a morada de um membro até à escritura do imóvel.",
+  "coopTemplate.doc.crl-statutes.s0.b1.0":
+    "Denominação legal, incluindo a designação obrigatória «Cooperativa de Responsabilidade Limitada» ou «CRL».",
+  "coopTemplate.doc.crl-statutes.s0.b1.1":
+    "Sede: município e morada completa.",
+  "coopTemplate.doc.crl-statutes.s0.b1.2":
+    "Duração: a maioria das cooperativas regista-se por tempo indeterminado.",
+  "coopTemplate.doc.crl-statutes.s1.h": "Objeto e âmbito (objeto)",
+  "coopTemplate.doc.crl-statutes.s1.b0":
+    "Esta cláusula define o que a cooperativa efetivamente faz — mantém-na específica para a habitação, mas suficientemente ampla para abranger atividades relacionadas.",
+  "coopTemplate.doc.crl-statutes.s1.b1.0":
+    "Objeto principal: adquirir, desenvolver e gerir habitação para os seus membros numa base não especulativa e de cobertura de custos.",
+  "coopTemplate.doc.crl-statutes.s1.b1.1":
+    "Atividades secundárias que podes querer abranger: espaços comuns partilhados, bancos de ferramentas, pequena programação comunitária.",
+  "coopTemplate.doc.crl-statutes.s1.b1.2":
+    "Uma cláusula que exclua a revenda de frações com fins lucrativos, mantendo a habitação da cooperativa fora do mercado especulativo.",
+  "coopTemplate.doc.crl-statutes.s2.h": "Adesão: admissão e saída",
+  "coopTemplate.doc.crl-statutes.s2.b0":
+    "A lei cooperativa exige, em princípio, uma adesão aberta e não discriminatória, permitindo ainda assim que definas critérios de admissão justos e alinhados com os vossos valores.",
+  "coopTemplate.doc.crl-statutes.s2.b1.0":
+    "Critérios e processo de admissão — por exemplo, um período experimental, uma entrevista, uma votação da assembleia.",
+  "coopTemplate.doc.crl-statutes.s2.b1.1":
+    "Condições para a saída voluntária, e o pré-aviso exigido (habitualmente de três a seis meses).",
+  "coopTemplate.doc.crl-statutes.s2.b1.2":
+    "Fundamentos e processo para a saída involuntária — remete para o teu Processo de resolução de conflitos, para que isto não seja decidido caso a caso sem regra.",
+  "coopTemplate.doc.crl-statutes.s3.h": "Direitos e deveres dos membros",
+  "coopTemplate.doc.crl-statutes.s3.b0.0":
+    "Direito a participar e votar na assembleia geral — um membro, um voto, independentemente da dimensão do título de capital. Este é um princípio cooperativo fundamental, não uma opção.",
+  "coopTemplate.doc.crl-statutes.s3.b0.1":
+    "Direito a informação financeira completa sobre a cooperativa (remete para o teu Acordo de honestidade financeira).",
+  "coopTemplate.doc.crl-statutes.s3.b0.2":
+    "Dever de pagar o capital social e as contribuições contínuas conforme acordado.",
+  "coopTemplate.doc.crl-statutes.s3.b0.3":
+    "Dever de participar na governação até um mínimo acordado — comparecer às assembleias, servir por rotação.",
+  "coopTemplate.doc.crl-statutes.s4.h": "Capital e títulos (capital social)",
+  "coopTemplate.doc.crl-statutes.s4.b0":
+    "A lei cooperativa portuguesa fixa valores mínimos dos títulos de capital e regras para a admissão e o reembolso dos membros — um advogado confirma os valores atuais. Os estatutos precisam de indicar:",
+  "coopTemplate.doc.crl-statutes.s4.b1.0":
+    "O valor nominal de um título de capital, e quantos cada membro tem de deter.",
+  "coopTemplate.doc.crl-statutes.s4.b1.1":
+    "Como se pagam os títulos: na totalidade na admissão, ou em prestações (ver o teu Acordo de quota do sócio).",
+  "coopTemplate.doc.crl-statutes.s4.b1.2":
+    "Como se valorizam e reembolsam os títulos à saída, e em que prazo, para que a cooperativa não seja obrigada a reembolsar de uma só vez de forma a pôr em risco as suas finanças.",
+  "coopTemplate.doc.crl-statutes.s5.h": "Órgãos de governação",
+  "coopTemplate.doc.crl-statutes.s5.b0":
+    "As CRL portuguesas estruturam-se habitualmente em torno de três órgãos. Os teus estatutos atribuem poderes específicos a cada um:",
+  "coopTemplate.doc.crl-statutes.s5.b1.0":
+    "Assembleia geral: a totalidade dos membros, e a autoridade máxima. Aprova o orçamento, admite e exclui membros, altera os estatutos.",
+  "coopTemplate.doc.crl-statutes.s5.b1.1":
+    "Direção: um pequeno grupo eleito que trata da administração corrente entre assembleias.",
+  "coopTemplate.doc.crl-statutes.s5.b1.2":
+    "Conselho fiscal: um órgão independente que analisa as contas e presta contas à assembleia — mantido separado da direção, para que um pequeno grupo não controle ao mesmo tempo a despesa e a fiscalização.",
+  "coopTemplate.doc.crl-statutes.s6.h": "Excedentes, reservas e dissolução",
+  "coopTemplate.doc.crl-statutes.s6.b0.0":
+    "Qualquer excedente de exploração é afeto a reservas ou reinvestido no imóvel, e não distribuído como lucro — é isto que mantém a cooperativa não especulativa.",
+  "coopTemplate.doc.crl-statutes.s6.b0.1":
+    "Um fundo de reserva legal mínimo, constituído ao longo do tempo, para reparações imprevistas ou faltas de tesouraria.",
+  "coopTemplate.doc.crl-statutes.s6.b0.2":
+    "Em caso de dissolução, os bens que restarem depois de saldadas as dívidas são transferidos para outra cooperativa ou entidade de fim social, nunca distribuídos aos membros como ganho inesperado — isto é tanto uma exigência legal como um compromisso de valores.",
+  "coopTemplate.doc.crl-statutes.s6.b1":
+    "Isto é um esboço em linguagem simples, não estatutos registáveis. Leva-o, juntamente com a tua carta de valores fundadores, a um advogado ou notário que trabalhe com direito cooperativo antes de redigires o documento que vais efetivamente depositar.",
+  // share-agreement
+  "coopTemplate.doc.share-agreement.tag": "Fase 2 · jurídico",
+  "coopTemplate.doc.share-agreement.title": "Acordo de quota do",
+  "coopTemplate.doc.share-agreement.titleEm": "sócio",
+  "coopTemplate.doc.share-agreement.intro":
+    "Um acordo de quota do sócio é o contrato individual entre a cooperativa e um membro — transforma os estatutos, que são do grupo, num documento que uma pessoa concreta assina, com números concretos ao lado do seu nome. Lê-o como um modelo para preencher em conjunto e verificar com um advogado, não como um formulário para assinar tal como está.",
+  "coopTemplate.doc.share-agreement.s0.h": "A que dá direito a quota",
+  "coopTemplate.doc.share-agreement.s0.b0":
+    "Diz com clareza a que é que a adesão dá direito, e a que não dá.",
+  "coopTemplate.doc.share-agreement.s0.b1.0":
+    "Uma quota de sócio no valor, a título de exemplo ilustrativo, de 5000 €, que dá ao membro o direito de ocupar [uma fração descrita] e a um voto na assembleia geral.",
+  "coopTemplate.doc.share-agreement.s0.b1.1":
+    "Uma quota não é a propriedade de uma fração ou de um metro quadrado específicos — é a adesão à cooperativa, que detém o imóvel coletivamente.",
+  "coopTemplate.doc.share-agreement.s0.b1.2":
+    "A quota não valoriza com o valor de mercado do imóvel; à saída é reembolsada pelo seu valor nominal ajustado (ver abaixo), e não a um preço de mercado.",
+  "coopTemplate.doc.share-agreement.s1.h": "Calendário de pagamento",
+  "coopTemplate.doc.share-agreement.s1.b0":
+    "Define como a quota é paga, já que poucos membros conseguem pagar o valor total à cabeça.",
+  "coopTemplate.doc.share-agreement.s1.b1.0":
+    "Pagamento total na admissão, ou um plano de prestações — por exemplo, 24 pagamentos mensais — acordado individualmente e registado no livro de contas partilhado.",
+  "coopTemplate.doc.share-agreement.s1.b1.1":
+    "O que acontece se falhar uma prestação: remete para o processo de atrasos do teu Acordo de honestidade financeira em vez de o repetir aqui.",
+  "coopTemplate.doc.share-agreement.s2.h": "Sair: condições de reembolso",
+  "coopTemplate.doc.share-agreement.s2.b0":
+    "Esta é a cláusula que os membros leem com mais atenção, e a que mais precisa de ser justa em vez de punitiva.",
+  "coopTemplate.doc.share-agreement.s2.b1.0":
+    "Em caso de saída voluntária com o pré-aviso acordado, a cooperativa reembolsa o valor nominal da quota, ajustado por [inflação / um índice acordado], no prazo, a título de exemplo ilustrativo, de 12 meses após a saída.",
+  "coopTemplate.doc.share-agreement.s2.b1.1":
+    "A cooperativa não é obrigada a reembolsar de uma só vez se isso puser em risco as suas finanças — indica à partida o prazo máximo de reembolso, para que não seja negociado sob pressão.",
+  "coopTemplate.doc.share-agreement.s2.b1.2":
+    "Não se aplica qualquer penalização de saída aos membros que saem em situação regular; as saídas motivadas por dificuldades passam primeiro pelo fundo de solidariedade.",
+  "coopTemplate.doc.share-agreement.s3.h": "Quem pode deter uma quota",
+  "coopTemplate.doc.share-agreement.s3.b0.0":
+    "As quotas são detidas por membros individuais e maiores de idade, não sendo transmitidas por herança, venda ou doação sem a aprovação da assembleia — isto mantém a adesão ligada à participação real, e não ao investimento.",
+  "coopTemplate.doc.share-agreement.s3.b0.1":
+    "O agregado de um membro — parceiros, filhos, família escolhida que viva com essa pessoa — não precisa de uma quota separada para cada um, mas indica com clareza quem conta como vivendo ao abrigo de uma só adesão.",
+  "coopTemplate.doc.share-agreement.s4.h": "Proteção do valor entregue",
+  "coopTemplate.doc.share-agreement.s4.b0":
+    "Como uma quota não é uma caução de arrendamento, normalmente não está abrangida pelo regime português de proteção de cauções de inquilinos — di-lo explicitamente, e diz o que a protege em vez disso.",
+  "coopTemplate.doc.share-agreement.s4.b1.0":
+    "O valor da quota é mantido na conta da cooperativa, registado individualmente no livro de contas, e confirmado por escrito ao membro todos os anos.",
+  "coopTemplate.doc.share-agreement.s4.b1.1":
+    "Um conselho fiscal independente (ver os teus estatutos CRL) verifica que as contas das quotas correspondem ao que é devido a cada membro.",
+  "coopTemplate.doc.share-agreement.s5.h": "Assinaturas",
+  "coopTemplate.doc.share-agreement.s5.b0":
+    "Um bloco de assinaturas simples, datado, com o membro e um representante da direção da cooperativa — mais uma linha que torna explícita a natureza de modelo:",
+  "coopTemplate.doc.share-agreement.s5.b1.0": "Nome do membro, data, assinatura.",
+  "coopTemplate.doc.share-agreement.s5.b1.1":
+    "Nome do representante da cooperativa, cargo, data, assinatura.",
+  "coopTemplate.doc.share-agreement.s5.b1.2":
+    "Nota: este acordo foi adaptado a partir de um modelo da QueerPulse em [data] e revisto por [nome do advogado/notário] antes da assinatura.",
+  "coopTemplate.doc.share-agreement.s5.b2":
+    "Preenche todos os parênteses acima com os números reais do vosso grupo, e põe um advogado a verificar a versão final antes de alguém assinar.",
+  // finance-model
+  "coopTemplate.doc.finance-model.tag": "Fase 3 · finanças",
+  "coopTemplate.doc.finance-model.title": "Modelo financeiro",
+  "coopTemplate.doc.finance-model.titleEm": "explicado",
+  "coopTemplate.doc.finance-model.intro":
+    "Esta explicação percorre como o dinheiro numa cooperativa de habitação se soma na prática — o que estás a pagar, onde é que um crédito e o apoio municipal podem encaixar, e como definir uma contribuição mensal que seja sustentável em vez de otimista. O exemplo resolvido no fim usa apenas números ilustrativos; os teus valores reais dependem inteiramente do teu imóvel, da tua cidade e do teu grupo.",
+  "coopTemplate.doc.finance-model.s0.h": "As camadas de custo",
+  "coopTemplate.doc.finance-model.s0.b0":
+    "Os custos de uma cooperativa vêm em três camadas, e ajuda mantê-las visualmente separadas em vez de juntas num único número assustador.",
+  "coopTemplate.doc.finance-model.s0.b1.0":
+    "Aquisição: o preço de compra do imóvel, mais notário, registo e imposto de transmissão (IMT).",
+  "coopTemplate.doc.finance-model.s0.b1.1":
+    "Obras: renovação, adequação às normas, adaptações de acessibilidade — muitas vezes subestimadas nos edifícios antigos de Lisboa e do Porto.",
+  "coopTemplate.doc.finance-model.s0.b1.2":
+    "Custos correntes: prestação do crédito ou empréstimo, seguros, reserva de manutenção, consumos dos espaços partilhados, e a própria administração da cooperativa (contabilidade, acompanhamento notarial).",
+  "coopTemplate.doc.finance-model.s1.h":
+    "Quotas dos membros, crédito e apoio municipal",
+  "coopTemplate.doc.finance-model.s1.b0":
+    "A maioria das cooperativas da QueerPulse combina três fontes de financiamento em vez de depender de uma só.",
+  "coopTemplate.doc.finance-model.s1.b1.0":
+    "As quotas dos membros (ver o teu Acordo de quota do sócio) cobrem uma parte da aquisição — normalmente o suficiente para tornar o rácio entre o crédito e o valor do imóvel viável para um financiador.",
+  "coopTemplate.doc.finance-model.s1.b1.1":
+    "Um crédito ou empréstimo cooperativo, muitas vezes através da Caixa de Crédito Agrícola Mútuo (CCAM) ou de outro financiador habituado a mutuários cooperativos, cobre o restante da aquisição e, por vezes, as obras.",
+  "coopTemplate.doc.finance-model.s1.b1.2":
+    "O apoio municipal — um arrendamento de longa duração sobre um imóvel do município, um subsídio de renovação, ou um coinvestimento de um fundo de habitação — pode, em alguns casos, reduzir ou substituir totalmente o custo de aquisição. Pergunta à pessoa de ligação ao fundo de habitação da QueerPulse o que está atualmente disponível na tua cidade.",
+  "coopTemplate.doc.finance-model.s2.h": "Definir as contribuições mensais",
+  "coopTemplate.doc.finance-model.s2.b0":
+    "Trabalha de trás para a frente, a partir do que as pessoas conseguem realmente pagar, e depois confirma que o número cobre os custos reais — e não ao contrário.",
+  "coopTemplate.doc.finance-model.s2.b1.0":
+    "Soma o total dos custos correntes mensais: prestação do empréstimo mais reserva mais seguros mais administração.",
+  "coopTemplate.doc.finance-model.s2.b1.1":
+    "Decide como se dividem as contribuições: por igual, ou ajustadas ao rendimento e à dimensão do agregado (remete para a vossa carta de valores fundadores e para o Acordo de honestidade financeira).",
+  "coopTemplate.doc.finance-model.s2.b1.2":
+    "Prevê uma margem — a maioria das cooperativas orça 5–10 % acima dos custos conhecidos para as surpresas que aparecem sempre no primeiro ano.",
+  "coopTemplate.doc.finance-model.s3.h": "Constituir reservas",
+  "coopTemplate.doc.finance-model.s3.b0.0":
+    "Uma reserva de manutenção, dotada desde o primeiro mês, ainda antes de alguma coisa avariar — criá-la mais tarde, depois de uma infiltração no telhado, é muito mais difícil.",
+  "coopTemplate.doc.finance-model.s3.b0.1":
+    "Um valor-alvo para a reserva, muitas vezes falado como vários meses de custos correntes, acordado pelo grupo em vez de presumido.",
+  "coopTemplate.doc.finance-model.s3.b0.2":
+    "A reserva é separada do fundo de emergência/solidariedade — uma protege o edifício, o outro protege os membros.",
+  "coopTemplate.doc.finance-model.s4.h": "Onde encaixam os parceiros da QueerPulse",
+  "coopTemplate.doc.finance-model.s4.b0.0":
+    "A CCAM e financiadores semelhantes, favoráveis a cooperativas: financiamento estruturado para mutuários coletivos em vez de créditos individuais.",
+  "coopTemplate.doc.finance-model.s4.b0.1":
+    "O fundo municipal de habitação: coinvestimento, arrendamentos de longa duração sobre edifícios municipais, ou subsídios associados a metas de habitação acessível. As condições variam de cidade para cidade e mudam ao longo do tempo, por isso confirma as condições atuais com a pessoa de ligação ao fundo de habitação da QueerPulse em vez de te fiares neste documento.",
+  "coopTemplate.doc.finance-model.s4.b0.2":
+    "A equipa jurídica da QueerPulse: uma primeira leitura das condições de financiamento antes de assinares, não um substituto de aconselhamento jurídico e financeiro independente.",
+  "coopTemplate.doc.finance-model.s5.h":
+    "Um exemplo resolvido (apenas números ilustrativos)",
+  "coopTemplate.doc.finance-model.s5.b0":
+    "Nenhum dos valores abaixo é um orçamento real — existem para mostrar como as peças encaixam numa cooperativa hipotética de 6 agregados.",
+  "coopTemplate.doc.finance-model.s5.b1.0":
+    "Imóvel + obras: 900 000 € (ilustrativo)",
+  "coopTemplate.doc.finance-model.s5.b1.1":
+    "Quotas dos membros, 6 agregados × 8000 €: 48 000 € (ilustrativo)",
+  "coopTemplate.doc.finance-model.s5.b1.2":
+    "Coinvestimento municipal: 150 000 € (ilustrativo)",
+  "coopTemplate.doc.finance-model.s5.b1.3":
+    "Montante restante financiado por um crédito cooperativo: 702 000 € (ilustrativo)",
+  "coopTemplate.doc.finance-model.s5.b1.4":
+    "Custo corrente mensal estimado por agregado, incluindo reserva: 420–480 € (ilustrativo)",
+  "coopTemplate.doc.finance-model.s5.b2":
+    "Trata este modelo como uma estrutura de partida, não uma previsão — constrói os teus números reais com o teu financiador, o teu município e, para tudo o que for vinculativo, um contabilista ou advogado.",
+  // conflict-resolution
+  "coopTemplate.doc.conflict-resolution.tag": "Fase 5 · governação",
+  "coopTemplate.doc.conflict-resolution.title": "Processo de resolução de",
+  "coopTemplate.doc.conflict-resolution.titleEm": "conflitos",
+  "coopTemplate.doc.conflict-resolution.intro":
+    "Todas as cooperativas têm conflitos — a diferença entre as que duram e as que não duram está normalmente em terem ou não construído um processo antes de precisarem dele. Este está adaptado do que a Casa Sambizanga usa no dia a dia; trata-o como uma estrutura de partida para percorrer e ajustar com o teu próprio grupo, sobretudo os passos que envolvem a possível saída de alguém.",
+  "coopTemplate.doc.conflict-resolution.s0.h": "Princípios: reparar em vez de punir",
+  "coopTemplate.doc.conflict-resolution.s0.b0":
+    "Define o tom antes dos passos. Um processo que só existe para punir tende a levar as pessoas a esconder problemas em vez de os levantar.",
+  "coopTemplate.doc.conflict-resolution.s0.b1.0":
+    "O objetivo de qualquer passo abaixo é reparar a relação ou a situação o suficiente para que a cooperativa continue a funcionar, e não estabelecer quem tinha razão.",
+  "coopTemplate.doc.conflict-resolution.s0.b1.1":
+    "Qualquer pessoa pode levantar uma preocupação sem que isso seja tratado como uma acusação contra ela por a ter levantado.",
+  "coopTemplate.doc.conflict-resolution.s0.b1.2":
+    "As questões de segurança (ver abaixo) são a única categoria em que a reparação fica para trás face à proteção imediata.",
+  "coopTemplate.doc.conflict-resolution.s1.h": "Desacordos do dia a dia",
+  "coopTemplate.doc.conflict-resolution.s1.b0":
+    "A maior parte do atrito nunca precisa de um processo formal — di-lo explicitamente para que as pessoas não agravem coisas pequenas por ansiedade.",
+  "coopTemplate.doc.conflict-resolution.s1.b1.0":
+    "Barulho, tarefas, visitas, uso dos espaços partilhados: levantados diretamente, a sós, o mais próximo possível do momento em que acontecem.",
+  "coopTemplate.doc.conflict-resolution.s1.b1.1":
+    "Se começar uma conversa direta sozinho parecer difícil demais, pede a um terceiro membro para estar presente — não para tomar partido, apenas para que não sejam duas pessoas sozinhas num momento difícil.",
+  "coopTemplate.doc.conflict-resolution.s2.h": "O processo por etapas",
+  "coopTemplate.doc.conflict-resolution.s2.b0":
+    "Quando uma conversa direta não resolve algo, ou parece inseguro tentá-la sozinho, o processo agrava-se por etapas — cada uma menos exigente do que a seguinte, para que a maioria das coisas se resolva antes de chegar à assembleia.",
+  "coopTemplate.doc.conflict-resolution.s2.b1.0":
+    "Etapa 1, direta: as pessoas envolvidas conversam, a sós, idealmente na semana em que a questão surge.",
+  "coopTemplate.doc.conflict-resolution.s2.b1.1":
+    "Etapa 2, facilitada: se a etapa 1 não resultar, um terceiro membro, escolhido por acordo e não designado, facilita uma conversa entre as pessoas envolvidas.",
+  "coopTemplate.doc.conflict-resolution.s2.b1.2":
+    "Etapa 3, assembleia: se continuar por resolver, ou afetar toda a casa, é levado a todo o grupo como um ponto de agenda claro e acordado, não como uma emboscada.",
+  "coopTemplate.doc.conflict-resolution.s2.b1.3":
+    "Etapa 4, mediação externa: para tudo o que o grupo não consiga resolver internamente, chama-se uma pessoa mediadora externa, a expensas da cooperativa, antes de se considerar qualquer decisão sobre a saída de alguém.",
+  "coopTemplate.doc.conflict-resolution.s3.h": "Questões de dano e segurança",
+  "coopTemplate.doc.conflict-resolution.s3.b0":
+    "Algumas situações passam diretamente para a ação de proteção, e não devem esperar pela etapa 1.",
+  "coopTemplate.doc.conflict-resolution.s3.b1.0":
+    "Tudo o que envolva violência, assédio ou a segurança imediata de um membro vai diretamente para os membros que têm um papel de resposta de segurança, ignorando por completo o processo por etapas.",
+  "coopTemplate.doc.conflict-resolution.s3.b1.1":
+    "A pessoa que sofreu o dano decide, tanto quanto possível, o que acontece a seguir — seja espaço, uma conversa facilitada, ou a saída temporária de alguém de casa.",
+  "coopTemplate.doc.conflict-resolution.s3.b1.2":
+    "A cooperativa não investiga nem julga por si própria matérias criminais; apoia a pessoa afetada no acesso a ajuda externa, se a quiser, e toma decisões sobre a segurança da habitação partilhada em paralelo.",
+  "coopTemplate.doc.conflict-resolution.s4.h": "Limites e responsabilização",
+  "coopTemplate.doc.conflict-resolution.s4.b0.0":
+    "Responsabilização, aqui, significa alguém mudar efetivamente o comportamento que causou o dano, com apoio, e não apenas um pedido de desculpas sem seguimento.",
+  "coopTemplate.doc.conflict-resolution.s4.b0.1":
+    "Os acordos feitos em qualquer etapa — um comportamento alterado, um limite, uma ação de reparação — são postos por escrito e recebem uma data de revisão, para que sejam verificados em vez de dados como resolvidos.",
+  "coopTemplate.doc.conflict-resolution.s5.h": "Quando alguém tem de sair",
+  "coopTemplate.doc.conflict-resolution.s5.b0":
+    "Este é o passo mais difícil, e aquele que mais vale a pena decidir com calma, com antecedência, em vez de a meio de uma crise.",
+  "coopTemplate.doc.conflict-resolution.s5.b1.0":
+    "A saída involuntária só é considerada depois da etapa 4, exceto em situações de segurança em que é necessária uma separação imediata e temporária.",
+  "coopTemplate.doc.conflict-resolution.s5.b1.1":
+    "A decisão exige [um limiar acordado — por exemplo, uma maioria qualificada da assembleia, excluindo quem está diretamente envolvido] e segue as condições de saída dos teus estatutos CRL e do Acordo de quota do sócio.",
+  "coopTemplate.doc.conflict-resolution.s5.b1.2":
+    "Sempre que possível, a cooperativa apoia o membro que sai a encontrar habitação alternativa — isto é uma rede de segurança habitacional, não uma máquina de despejos.",
+  "coopTemplate.doc.conflict-resolution.s6.h": "Rever o processo",
+  "coopTemplate.doc.conflict-resolution.s6.b0":
+    "Revê isto depois de ser efetivamente usado, não apenas segundo um calendário.",
+  "coopTemplate.doc.conflict-resolution.s6.b1.0":
+    "Depois de qualquer uso da etapa 3 ou seguinte, o grupo revê se o próprio processo funcionou, separando isso do desfecho daquele conflito em concreto.",
+  "coopTemplate.doc.conflict-resolution.s6.b1.1":
+    "Anualmente, a par da revisão da carta de valores fundadores, verifica se o processo por etapas, o papel de facilitação e o papel de resposta de segurança ainda servem o grupo à medida que este cresceu ou mudou.",
+  "coopTemplate.doc.conflict-resolution.s6.b2":
+    "Este processo é um modelo de partida adaptado da prática de outra cooperativa da QueerPulse — percorre todos os passos em grupo antes de precisares dele, e ajusta os papéis e os limiares para que sirvam o vosso.",
+
   // ── Estatísticas do hero (housingCoop.data → COOP_STATS) ────────────────
   "housingCoop.stats.activeGroups": "Grupos ativos",
   "housingCoop.stats.householdsHoused": "Agregados alojados",
@@ -2989,4 +3665,184 @@ export const economy: Catalog = {
   // ── companies.data.tsx — títulos estruturais dentro do "Sobre" de cada empresa ─
   "company.about.howWeWorkHeading": "Como trabalhamos",
   "company.about.whatWeLookForHeading": "O que procuramos",
+
+  // ── Segurança na habitação — aviso anti-burla, direitos, preços (Wave A) ──
+  "housingSafety.banner.ariaLabel": "Segurança na habitação",
+  "housingSafety.banner.eyebrow": "Antes de avançares",
+  "housingSafety.banner.title": "Umas coisas que te mantêm <em>seguro</em>",
+  "housingSafety.banner.dismiss": "Dispensar",
+  "housingSafety.banner.moreCta": "Conhece os teus direitos, deteta uma burla",
+  "housingSafety.tips.neverPayFirst":
+    "Nunca pagues nada antes de teres um contrato assinado.",
+  "housingSafety.tips.videoCall":
+    "Pede uma videochamada — vê a pessoa e o espaço em direto.",
+  "housingSafety.tips.lowPrice":
+    "Um preço muito abaixo do normal costuma ser um aviso, não uma pechincha.",
+  "housingSafety.tips.noTransfers":
+    "Sem transferências nem sinais antes de confirmares com quem estás a falar.",
+  "housingSafety.tips.stayOnPlatform":
+    "Mantém a conversa aqui — é mais fácil pedir ajuda se algo correr mal.",
+  "housingSafety.tips.neverSightUnseen":
+    "Nunca arrendes um espaço que tu, ou alguém de confiança, não tenham visto ao vivo.",
+  "housingSafety.price.title": "Quanto custa mesmo arrendar em Lisboa",
+  "housingSafety.price.lead":
+    "Uma referência rápida. Se um espaço estiver muito abaixo destes valores, pergunta-te porquê antes de avançares.",
+  "housingSafety.price.room.label": "Quarto individual num apartamento partilhado",
+  "housingSafety.price.double.label": "Quarto partilhado, por pessoa",
+  "housingSafety.price.studio.label": "Estúdio só para ti",
+  "housingSafety.price.perMonth": "/ mês",
+  "housingSafety.price.note":
+    "Intervalos aproximados para Lisboa, como referência — não uma avaliação.",
+  "housingSafety.page.eyebrow": "Segurança na habitação",
+  "housingSafety.page.title": "Arrendar, com <em>segurança</em>",
+  "housingSafety.page.lead":
+    "Um guia curto e claro para detetar uma burla e conhecer os teus direitos enquanto inquilino em Portugal — para encontrares casa sem ficares na dúvida.",
+  "housingSafety.page.antiScamTitle": "Detetar uma <em>burla</em>",
+  "housingSafety.page.rightsTitle": "Os teus direitos enquanto inquilino em Portugal",
+  "housingSafety.rights.lease.title": "Um contrato escrito e registado",
+  "housingSafety.rights.lease.point.1":
+    "O teu arrendamento deve ser um contrato escrito — um acordo verbal deixa-te com muito menos para te defenderes.",
+  "housingSafety.rights.lease.point.2":
+    "O senhorio tem de registar o contrato nas Finanças. Desde 2025, se não o fizer, podes registá-lo tu através do Portal das Finanças.",
+  "housingSafety.rights.lease.point.3":
+    "O prazo mínimo é de um ano, salvo acordo diferente por escrito entre ambos.",
+  "housingSafety.rights.lease.point.4":
+    "Guarda a tua cópia assinada e o registo — são eles que provam os teus direitos mais tarde.",
+  "housingSafety.rights.deposit.title": "Caução e renda adiantada",
+  "housingSafety.rights.deposit.point.1":
+    "A caução está limitada a duas rendas.",
+  "housingSafety.rights.deposit.point.2":
+    "Os senhorios costumam ainda pedir cerca de duas rendas adiantadas — algo muito além disso não é o habitual.",
+  "housingSafety.rights.rentIncrease.title": "Aumentos de renda",
+  "housingSafety.rights.rentIncrease.point.1":
+    "A renda pode subir no máximo uma vez a cada 12 meses, e só com 30 dias de aviso por escrito.",
+  "housingSafety.rights.rentIncrease.point.2":
+    "O aumento anual está limitado pelo coeficiente do INE — em 2026 é de 2,24%.",
+  "housingSafety.rights.rentIncrease.point.3":
+    "Um aumento acima do limite, ou mais do que uma vez por ano, não é permitido.",
+  "housingSafety.rights.eviction.title": "Despejo e a tua casa",
+  "housingSafety.rights.eviction.point.1":
+    "Só podes ser despejado através de um tribunal ou do Balcão Nacional do Arrendamento — nunca de imediato.",
+  "housingSafety.rights.eviction.point.2":
+    "O senhorio não pode mudar as fechaduras, cortar-te a água ou a luz, nem retirar os teus bens para te obrigar a sair.",
+  "housingSafety.rights.eviction.point.3":
+    "Esse tipo de assédio é crime segundo a Lei n.º 12/2019 — tens o direito de denunciar.",
+  "housingSafety.rights.discrimination.title": "Se fores tratado de forma injusta",
+  "housingSafety.rights.discrimination.point.1":
+    "A lei do arrendamento não prevê proteções específicas para pessoas LGBTQ+, mas a discriminação pode na mesma ser denunciada a um organismo para a igualdade.",
+  "housingSafety.rights.discrimination.point.2":
+    "Guarda as mensagens e os apontamentos — um registo escrito ajuda se decidires avançar.",
+  "housingSafety.disclaimer.title": "Orientação, não <em>aconselhamento jurídico</em>",
+  "housingSafety.disclaimer.body":
+    "Mantivemos isto rigoroso e claro, mas cada situação é única. Para algo que conte mesmo, fala com uma associação de inquilinos ou com um advogado.",
+  "housingSafety.backToHousing": "Voltar à habitação",
+
+  // ── Localização do anúncio — área aproximada vs morada exata (Wave A) ──
+  "housingListing.section.location": "Onde fica",
+  "housingListing.location.approxNote":
+    "Por agora vês a área aproximada. A morada exata aparece assim que tu e a pessoa ficarem ligados.",
+  "housingListing.location.exactNote":
+    "Estão ligados, por isso esta é a localização exata.",
+  "housingListing.location.addressLabel": "Morada",
+  "housingListing.location.mapAreaAria":
+    "Mapa que mostra a área aproximada de {title}",
+  "housingListing.location.mapExactAria":
+    "Mapa que mostra a localização exata de {title}",
+
+  // ── Diz olá — primeira mensagem, com partilha opcional de pronomes (Wave A) ─
+  "sayHello.ariaLabel": "Diz olá a {name}",
+  "sayHello.title": "Diz <em>olá</em>",
+  "sayHello.lede":
+    "Uma primeira mensagem curta e calorosa faz toda a diferença. Diz o que procuras e o que trarias para uma casa.",
+  "sayHello.messageLabel": "A tua mensagem",
+  "sayHello.messagePlaceholder":
+    "Olá! Procuro um sítio calmo e queer-friendly a partir de setembro…",
+  "sayHello.sharePronouns": "Deixar {name} ver os meus pronomes — {pronouns}",
+  "sayHello.sharePronounsHint":
+    "Partilhado só com esta pessoa, e só quando quiseres.",
+  "sayHello.noPronounsHint":
+    "Adiciona pronomes ao teu perfil para os partilhares aqui.",
+  "sayHello.cancel": "Cancelar",
+  "sayHello.send": "Enviar olá",
+  "sayHello.sending": "A enviar…",
+  "sayHello.success.title": "O teu olá está a <em>caminho</em>",
+  "sayHello.success.em": "caminho",
+  "sayHello.success.body":
+    "{name} vai ver a tua mensagem na caixa de entrada. Terás resposta por lá se quiser falar.",
+  "sayHello.success.bodyWithPronouns":
+    "{name} vai ver a tua mensagem e os teus pronomes na caixa de entrada. Terás resposta por lá se quiser falar.",
+  "sayHello.success.close": "Concluído",
+
+  // ── Companheiros de casa — alternar lista/descoberta + modo descoberta (Wave A) ─
+  "flatmates.view.label": "Escolhe como explorar",
+  "flatmates.view.list": "Lista",
+  "flatmates.view.discovery": "Descoberta",
+  "flatmates.discovery.progress": "{current} de {total}",
+  "flatmates.discovery.pass": "Passar",
+  "flatmates.discovery.like": "Gostar",
+  "flatmates.discovery.sayHello": "Diz olá",
+  "flatmates.discovery.keepBrowsing": "Continuar a explorar",
+  "flatmates.discovery.error": "Não foi possível guardar — tenta daqui a pouco.",
+  "flatmates.discovery.matchTitle": "Disseram olá os <em>dois</em>",
+  "flatmates.discovery.matchBody":
+    "Tu e {name} gostaram um do outro. Começa a conversa quando quiseres.",
+  "flatmates.discovery.doneTitle": "Por agora, é toda a gente",
+  "flatmates.discovery.doneBody":
+    "Já viste todos os perfis que encaixam nos teus filtros. Volta em breve — entra gente nova com frequência.",
+
+  // ── Grupos de habitação verificados + pedido de entrada (Wave A) ──
+  "housingGroups.backLabel": "Habitação",
+  "housingGroups.hero.eyebrow": "Habitação verificada",
+  "housingGroups.hero.title": "Grupos em que quem arrenda queer <em>confia</em>",
+  "housingGroups.hero.sub":
+    "Grupos de habitação pequenos e triados, onde cada anúncio indica a renda, descreve a acessibilidade com honestidade e nenhum intermediário entra.",
+  "housingGroups.grid.title": "Encontra as tuas <em>pessoas</em>",
+  "housingGroups.grid.sub":
+    "Pede para entrar num grupo e alguém da equipa vem dizer olá. Cada grupo tem as suas regras.",
+  "housingGroups.gated": "Pedir para entrar",
+  "housingGroups.members": "{count} membros",
+  "housingGroups.view": "Ver",
+  "housingGroups.empty.title": "Ainda não há grupos",
+  "housingGroups.empty.titleEm": "abertos",
+  "housingGroups.empty.body":
+    "Os grupos de habitação verificados estão a formar-se cidade a cidade. Volta em breve, ou começa um com pessoas em quem já confias.",
+  "housingGroups.detail.backLabel": "Todos os grupos",
+  "housingGroups.detail.askToJoin": "Pedir para entrar",
+  "housingGroups.detail.join": "Entrar neste grupo",
+  "housingGroups.norms.title": "Como",
+  "housingGroups.norms.titleEm": "cuidamos uns dos outros",
+  "housingGroups.norms.sub":
+    "Regras com que toda a gente aqui concorda. Quem as quebra, sai — é mesmo esse o ponto.",
+  "housingGroups.listings.title": "Quartos e apartamentos lá dentro",
+  "housingGroups.listings.perMonth": "€{price} / mês",
+  "housingGroups.listings.accessLabel": "Acessibilidade:",
+  "housingGroups.listings.empty":
+    "Sem quartos listados de momento. Entra para seres o primeiro a ver o próximo.",
+
+  // ── Entrar num grupo de habitação — pedido triado (Wave A) ──
+  "joinGroup.ariaLabel": "Pedir para entrar em {name}",
+  "joinGroup.eyebrow": "Pedir para entrar",
+  "joinGroup.title": "Pedir para entrar em <em>{name}</em>",
+  "joinGroup.sub":
+    "Alguém da equipa lê cada pedido. Conta-lhes um pouco sobre ti — não há respostas erradas.",
+  "joinGroup.nameLabel": "O teu nome",
+  "joinGroup.namePlaceholder": "O nome por que te tratam",
+  "joinGroup.relationshipLabel": "Como fazes parte da comunidade",
+  "joinGroup.relationshipPlaceholder":
+    "Um amigo respondeu por mim, já fui a alguns encontros…",
+  "joinGroup.optional": "(opcional)",
+  "joinGroup.disclaimer":
+    "As tuas respostas são vistas apenas pela equipa do grupo, nunca publicadas.",
+  "joinGroup.cancel": "Cancelar",
+  "joinGroup.sending": "A enviar…",
+  "joinGroup.sendCta": "Enviar pedido",
+  "joinGroup.error": "Não foi possível enviar — tenta daqui a pouco.",
+  "joinGroup.success.title": "O teu pedido está <em>feito</em>",
+  "joinGroup.success.em": "feito",
+  "joinGroup.success.closeLabel": "Concluído",
+  "joinGroup.success.body":
+    "Alguém da equipa de <strong>{name}</strong> vai analisá-lo e responder-te. Terás notícias na tua caixa de entrada.",
+
+  // ── Cooperativa de habitação — marca de operador verificado (Wave A) ──
+  "housingCoop.operatorVerified": "Operador verificado",
 };

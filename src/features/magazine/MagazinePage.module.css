@@ -469,13 +469,13 @@
   line-height: 1.62;
 }
 
-@media (max-width: 900px) {
+@media (--wide) {
   .grid,
   .essaysGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .coverRebalanced {
     grid-template-columns: 1fr;
   }
@@ -495,7 +495,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .grid,
   .essaysGrid {
     grid-template-columns: 1fr;

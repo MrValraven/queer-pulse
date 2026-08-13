@@ -50,7 +50,7 @@
    left-aligned title reads as orphaned, and the "New persona" CTA is worth
    making a full-width, easy-to-hit thumb target rather than a small
    right-hugging pill. */
-@media (max-width: 640px) {
+@media (--md) {
   .headActions {
     align-items: stretch;
     width: 100%;

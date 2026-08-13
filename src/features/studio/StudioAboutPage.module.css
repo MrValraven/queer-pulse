@@ -321,7 +321,7 @@
   margin-top: 28px;
 }
 
-@media (max-width: 760px) {
+@media (--lg) {
   .rateBand,
   .tiers,
   .skeptic {

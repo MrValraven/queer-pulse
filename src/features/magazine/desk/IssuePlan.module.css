@@ -155,7 +155,7 @@
   }
 }
 
-@media (max-width: 760px) {
+@media (--lg) {
   .row {
     grid-template-columns: 1fr;
   }

@@ -2,10 +2,10 @@ import { Link } from "react-router-dom";
 import { initialsFromName } from "../../shared/lib/initials";
 import { FiChevronRight, FiLink2, FiUsers } from "react-icons/fi";
 import { Avatar, Tag, TagRow } from "../../shared/components/ui";
-import { linkToPath } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { accentStyle, DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { skinFor } from "./subprofile-skins";
+import { personaCardPath } from "./personaLinks.data";
 import type { AccentKey, SubprofileCardDTO } from "./api/subprofiles.api";
 import styles from "./SubprofileCard.module.css";
 
@@ -17,9 +17,9 @@ const CARD_TAG_CAP = 4;
 /**
  * Expressive "artist card" for a standalone persona. Reused by the persona
  * directory and the main profile's "Also as…" block, so it stays self-contained
- * and takes a plain `SubprofileCardDTO`. Links to `/p/<handle>` by default; pass
- * `to` to override — the "Also as…" block sends linked personas to their nested
- * `/members/<owner>/<slug>` route instead (linked personas have no handle).
+ * and takes a plain `SubprofileCardDTO`. Routes via `personaCardPath` by
+ * default — `/members/<owner>/<slug>` for linked personas, `/p/<handle>` for
+ * unlinked ones; pass `to` to override (the "Also as…" block does this).
  *
  * A persona is not a member, so it never carries a platform staff/mod badge —
  * that badge belongs to the owning member's profile, not to their personas.
@@ -49,7 +49,7 @@ export function SubprofileCard({
   return (
     <Link
       className={styles.card}
-      to={to ?? linkToPath(`/p/${card.handle}`)}
+      to={to ?? personaCardPath(card)}
       style={accentStyle(accent)}
     >
       <div className={styles.header} aria-hidden />

@@ -267,7 +267,7 @@
   margin-top: 6px;
   line-height: 1.45;
 }
-@media (max-width: 640px) {
+@media (--md) {
   .statRow {
     grid-template-columns: 1fr;
   }
@@ -386,7 +386,7 @@
   margin-bottom: 28px;
 }
 
-@media (max-width: 760px) {
+@media (--lg) {
   .relGrid {
     grid-template-columns: 1fr;
   }

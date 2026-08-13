@@ -81,4 +81,19 @@ export const economyKeys = {
   // Landlord board (list) — read by `useLandlords`; invalidated on suggest.
   landlordsRoot: ["landlords"] as const,
   landlords: (demoMode: boolean) => ["landlords", demoMode] as const,
+
+  // The caller's housing viewings (both sides) — read by `useMyHousingViewings`;
+  // patched in place by the viewing-action mutations, invalidated on request.
+  housingViewingsRoot: ["housing-viewings"] as const,
+  housingViewings: (demoMode: boolean) =>
+    ["housing-viewings", demoMode] as const,
+
+  // A listing's public revealed reviews + average — read by `useListingReviews`.
+  listingReviews: (demoMode: boolean, slug: string | undefined) =>
+    ["housing-listing-reviews", demoMode, slug] as const,
+
+  // The blind-review pair for one viewing — read by `useViewingReviewPair`;
+  // invalidated after the caller submits their own review.
+  viewingReviewPair: (demoMode: boolean, viewingId: string | undefined) =>
+    ["housing-viewing-review-pair", demoMode, viewingId] as const,
 };

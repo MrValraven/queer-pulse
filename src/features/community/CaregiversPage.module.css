@@ -124,7 +124,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
 }
-@media (max-width: 880px) {
+@media (--compact) {
   .lessons {
     grid-template-columns: 1fr;
   }
@@ -280,7 +280,7 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 18px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .grGrid {
     grid-template-columns: 1fr;
   }

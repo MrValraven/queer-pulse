@@ -1,7 +1,6 @@
 import type { IconType } from "react-icons";
 import { FiBookOpen, FiCalendar, FiUsers } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
-import type { SubprofileKind } from "../subprofiles/api/subprofiles.api";
 
 /**
  * i18n Pattern A — every field below is platform-authored chrome (the intro
@@ -26,7 +25,7 @@ export const ONBOARDING_PREVIEW = [
 // Total number of onboarding steps, including the warm intro (counted as step 1)
 // and the final "you're all set" screen. Used to render an honest, linear
 // "Step X of N" indicator and progress bar across every step.
-export const TOTAL_STEPS = 8;
+export const TOTAL_STEPS = 7;
 
 export const NORMS = [
   {
@@ -74,44 +73,6 @@ export const INTENTS: { value: string; labelKey: string }[] = [
   {
     value: "Creative collaboration",
     labelKey: "auth:onboarding.intent.creative",
-  },
-];
-
-/**
- * Chip options for "do you also work as something else?" (Moment 4 — a
- * transient answer, never persisted; see `StepSideWork`). `value` is the
- * stable identifier used for selection state; `labelKey` is what the chip
- * displays. `kind`, where present, is the matching `SubprofileKind` — picking
- * that chip pre-selects it in the persona-creation deep-link (`?kind=`). A
- * craft with no direct kind match (e.g. "Something else") omits `kind`, so
- * the deep-link opens the create flow without a preset.
- */
-export const SIDE_WORK_OPTIONS: {
-  value: string;
-  labelKey: string;
-  kind?: SubprofileKind;
-}[] = [
-  { value: "Music", labelKey: "auth:onboarding.sideWork.music", kind: "musician" },
-  { value: "Drag", labelKey: "auth:onboarding.sideWork.drag", kind: "drag" },
-  { value: "Code", labelKey: "auth:onboarding.sideWork.code", kind: "developer" },
-  {
-    value: "Photography",
-    labelKey: "auth:onboarding.sideWork.photography",
-    kind: "photographer",
-  },
-  { value: "Food", labelKey: "auth:onboarding.sideWork.food", kind: "chef" },
-  {
-    value: "Therapy",
-    labelKey: "auth:onboarding.sideWork.therapy",
-    kind: "therapist",
-  },
-  { value: "Writing", labelKey: "auth:onboarding.sideWork.writing", kind: "writer" },
-  { value: "Art", labelKey: "auth:onboarding.sideWork.art", kind: "visual_artist" },
-  { value: "DJing", labelKey: "auth:onboarding.sideWork.dj", kind: "dj" },
-  { value: "Dance", labelKey: "auth:onboarding.sideWork.dance", kind: "dancer" },
-  {
-    value: "Something else",
-    labelKey: "auth:onboarding.sideWork.somethingElse",
   },
 ];
 

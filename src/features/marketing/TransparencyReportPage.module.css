@@ -200,7 +200,7 @@
   gap: 18px;
   margin-bottom: 32px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .bignumRow {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -259,7 +259,7 @@
   gap: 14px;
   margin-bottom: 32px;
 }
-@media (max-width: 640px) {
+@media (--md) {
   .sourceGrid {
     grid-template-columns: 1fr;
   }
@@ -442,7 +442,7 @@
   text-align: right;
   min-width: 60px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .modRow {
     grid-template-columns: 1fr auto;
   }
@@ -474,7 +474,7 @@
   gap: 24px;
   align-items: center;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .reqCard {
     grid-template-columns: 1fr;
   }

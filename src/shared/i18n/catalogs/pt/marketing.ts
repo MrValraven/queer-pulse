@@ -1927,7 +1927,9 @@ export const marketing: Catalog = {
   "changelog.tag.communities": "Ver comunidades",
   "changelog.tag.subprofiles": "Ver subperfis",
   "changelog.tag.personas": "Ver personas",
+  "changelog.tag.gettingStarted": "Primeiros passos",
   "changelog.tag.housing": "Ver habitação",
+  "changelog.tag.housingViewings": "Ver as tuas visitas",
   "changelog.tag.directory": "Abrir o diretório",
   "changelog.tag.cinema": "Visitar o Cinema",
   "changelog.tag.forum": "Visitar o fórum",
@@ -1961,11 +1963,158 @@ export const marketing: Catalog = {
   "changelog.tag.guidelines": "Ler as diretrizes da comunidade",
   "changelog.tag.requestInvite": "Pedir para entrar",
   "changelog.tag.privacy": "Ler a política de privacidade",
+  "changelog.tag.flatmates": "Ver o quadro de colegas de casa",
+  "changelog.tag.tenantRights": "Conhece os teus direitos",
+  "changelog.tag.workProfile": "Abrir o teu perfil de trabalho",
+  "changelog.tag.governance": "Ver como o QueerPulse é gerido",
+
+  "changelog.entries.personas-in-directory.title":
+    "As personas do teu perfil aparecem no diretório",
+  "changelog.entries.personas-in-directory.body":
+    "As personas ligadas ao teu perfil de membro passam a aparecer no diretório de personas, ao lado das autónomas — por isso um terapeuta ou profissional cuja persona vive na sua página principal é igualmente descoberto. As personas autónomas continuam pseudónimas.",
+
+  "changelog.entries.therapist-personas-directory.title":
+    "Diretórios de terapeutas, com perfis reais",
+  "changelog.entries.therapist-personas-directory.body":
+    "Os diretórios de terapeutas afirmativos passam a mostrar perfis reais, verificados pela comunidade — cada um com a forma como trabalham, valores, disponibilidade, onde atendem e recomendações da comunidade. Os terapeutas criam e gerem o seu próprio perfil.",
+
+  "changelog.entries.concern-intake-live.title":
+    "Levanta uma preocupação, e nós vamos mesmo vê-la",
+  "changelog.entries.concern-intake-live.body":
+    "O formulário “Submeter uma preocupação” na página de governação chega agora à equipa. Denúncias, contestações e problemas aparecem num painel da equipa, onde são triados e acompanhados até à resolução. Os membros com sessão iniciada são identificados pela sua conta; se estiveres com sessão terminada, deixa um email e entraremos em contacto.",
+
+  "changelog.entries.housing-neighbourhoods-map.title":
+    "Escolha vários bairros e explore casas num mapa",
+  "changelog.entries.housing-neighbourhoods-map.body":
+    "A procura de casa passa a permitir filtrar por mais do que um bairro de Lisboa ao mesmo tempo, e uma nova vista de mapa mostra as casas agrupadas por bairro. Toque num bairro no mapa para o juntar aos filtros.",
+
+  "changelog.entries.housing-outro-band.title":
+    "Um convite de fecho no quadro de habitação",
+  "changelog.entries.housing-outro-band.body":
+    "O quadro principal de habitação termina agora com a mesma faixa de fecho acolhedora que o resto do site, com formas rápidas de anunciar o teu espaço ou perguntar no fórum. O separador de colegas de casa já tinha uma; agora ambos têm.",
+
+  "changelog.entries.gathering-audience-scope.title":
+    "Escolhe quem pode ver o teu convívio",
+  "changelog.entries.gathering-audience-scope.body":
+    "Ao organizares um convívio, agora podes definir exatamente até onde ele chega: aberto a todas as pessoas na QueerPulse, só a quem as tuas ligações conhecem, só às tuas próprias ligações, aos membros da comunidade onde estás a publicar, ou só a quem convidares. Público continua a ser a opção por omissão, e podes mudá-la a qualquer momento a partir da página de gestão.",
+
+  "changelog.entries.unified-pronoun-picker.title":
+    "Um seletor de pronomes consistente em todos os perfis",
+  "changelog.entries.unified-pronoun-picker.body":
+    "As tuas opções de pronomes passam a ser iguais em todo o lado onde as defines — o teu perfil, o teu perfil de trabalho e a habitação — a partir de uma lista partilhada, para que um conjunto que escolhes num sítio esteja disponível em todos. Também podes escolher mais do que um conjunto e adicionar os teus.",
+  "changelog.entries.work-profile-skills-focus.title":
+    "Escolhe as tuas competências e áreas de foco no perfil de trabalho",
+  "changelog.entries.work-profile-skills-focus.body":
+    "A secção “Competências e foco” do teu perfil de trabalho era antes um mostruário fixo que não podias alterar. Agora as etiquetas são tuas para escolher: toca nas competências que podes oferecer e nas áreas de foco em que gostarias de apoio, e ficam guardadas com o resto do teu perfil de trabalho. É o que vamos usar para te ligar na troca de competências e com mentores — escolhe quantas fizerem sentido.",
+  "changelog.entries.profile-personal-fields.title":
+    "O teu nome, pronomes e localização agora ficam juntos",
+  "changelog.entries.profile-personal-fields.body":
+    "Arrumámos o topo dos dois editores de perfil para que o essencial se leia como um só bloco. Nas definições do teu perfil, os pronomes subiram para ficar mesmo ao lado do nome e da localização, em vez de uma secção separada, e o teu perfil de Trabalho passa a começar pelos mesmos três — nome, pronomes, localização — antes de tudo o resto. Nada foi removido; é só mais fácil ver e preencher quem és num relance.",
+  "changelog.entries.feed-avatar-to-profile.title":
+    "Toca na foto de alguém no feed para abrir o perfil",
+  "changelog.entries.feed-avatar-to-profile.body":
+    "Alguém te chamou a atenção no feed? A foto passou a ser uma porta. Toca ou clica no avatar de qualquer publicação, nota de nova pessoa, tópico do fórum ou cartão de convívio e vais direto ao perfil dessa pessoa — sem procurar um link à parte.",
+  "changelog.entries.affirming-housing-baseline.title":
+    "Todas as casas e todos os colegas de casa aqui são afirmativos LGBTQ+ — agora é o padrão",
+  "changelog.entries.affirming-housing-baseline.body":
+    "Ser afirmativo LGBTQ+ deixou de ser uma opção que um anúncio pode ou não marcar — é a base de todas as casas, quartos e pessoas no quadro de habitação. Antes de publicares um espaço, criares um perfil de colega de casa ou contactares sobre uma casa, assumes uma vez um compromisso afirmativo, e ele aplica-se em todo o lado. Cada anúncio passa a ter um selo \"Afirmativo LGBTQ+\" como norma, não como variável, e se uma casa ou pessoa quebrar esse compromisso podes denunciar. Isto é um compromisso da comunidade, não um filtro sobre quem é bem-vindo — ninguém é separado pela sua identidade.",
+  // ── Wave B2: anúncios verificados, marcação de visitas, avaliações cegas ─
+  "changelog.entries.housing-listing-discovery.title":
+    "Encontra a casa certa — fotos a sério, filtros que encaixam e um aviso quando aparece",
+  "changelog.entries.housing-listing-discovery.body":
+    "Cada anúncio abre agora num visualizador de fotos como deve ser — desliza ou navega pelos quartos em ecrã inteiro, com legendas e uma visita virtual quando quem anuncia a acrescentou. O quadro passa a ter filtros a sério: intervalo de preço, bairro, quartos, despesas incluídas, acesso sem degraus, data de entrada e só verificados. Gostaste de uma procura? Guarda-a e avisamos-te discretamente quando surgir uma casa nova que encaixe — sem estares sempre a atualizar. Anunciar a tua própria casa também ficou mais claro, com umas dicas simples sobre fotos que ajudam quem procura a imaginar-se a viver lá.",
+
+  "changelog.entries.housing-viewings-reviews.title":
+    "Vê a casa antes de pagar — e avaliações que não se manipulam",
+  "changelog.entries.housing-viewings-reviews.body":
+    "Passas a poder pedir uma visita diretamente a partir de um anúncio — por vídeo ou presencial — e propor algumas horas; quem oferece a casa aceita uma, sugere outra ou recusa, tudo registado em As tuas visitas. Assim que uma visita é aceite, a morada exata abre-se para ti. É a forma comprovada de evitar uma burla de arrendamento: ver a casa ao vivo antes de se falar em dinheiro. Alguns anúncios passam a ter um selo de Anúncio verificado, conquistado só quando quem anuncia tem identidade verificada, o anúncio passou na nossa revisão e não levantou alertas — nunca algo que alguém possa ligar por si. E depois de uma visita, ambos os lados podem deixar uma avaliação cega: nenhum vê as palavras do outro até ambos escreverem (ou passarem duas semanas), para que nenhuma avaliação seja escrita com medo da resposta. A classificação que vês numa casa é calculada a partir dessas avaliações reveladas.",
+
+  // ── Wave B1: integridade dos anúncios de habitação — risco, provas, transparência ─
+  "changelog.entries.housing-listing-integrity.title":
+    "Anúncios de habitação em que podes confiar um pouco mais",
+  "changelog.entries.housing-listing-integrity.body":
+    "Cada novo anúncio passa a incluir uma linha honesta sobre acessos — sem degraus ou dois lances de escadas, com ou sem elevador — e diz claramente se é uma pessoa membro ou um agente a oferecer o espaço. Os agentes são bem-vindos aqui; só mostramos um pequeno selo para saberes. Nos bastidores, um anúncio é verificado antes de chegar ao quadro — uma renda pouco plausível, contactos ou linguagem de pagar antes de visitar, ou frases que condicionariam uma casa a quem tu és levantam um alerta para uma pessoa moderadora ver primeiro. E se denunciares um anúncio, a denúncia passa a organizar a tua preocupação numa razão clara (burla, discriminação, fora da plataforma e mais), guarda uma cópia do que viste e — no caso de discriminação — lembra com cuidado que também a podes levar a um organismo de igualdade.",
+
+  // ── Wave A: segurança na habitação, privacidade no mapa, mensagens, grupos ─
+  "changelog.entries.housing-scam-safety-tenant-rights.title":
+    "Arrenda sem cair em burlas — e conhece os teus direitos",
+  "changelog.entries.housing-scam-safety-tenant-rights.body":
+    "Procurar casa não devia ser desconfiar de toda a gente. Quando contactas por causa de um espaço ou anuncias um, passa a aparecer uma nota curta de segurança com as poucas coisas que te protegem — nunca pagar antes de assinar, fazer videochamada primeiro, manter a conversa aqui, nunca arrendar um sítio que não viste. Há também uma nova página de Segurança na habitação, com um guia claro sobre os teus direitos enquanto inquilino em Portugal (contratos escritos e registados, o limite da caução, quanto a renda pode subir e o que um senhorio nunca pode fazer) e uma ideia aproximada de quanto custam mesmo as rendas em Lisboa. É orientação geral, não aconselhamento jurídico — mas é o contexto que te ajuda a recusar um mau negócio.",
+
+  "changelog.entries.housing-map-area-privacy.title":
+    "Vê primeiro a zona, a morada exata só quando estiverem ligados",
+  "changelog.entries.housing-map-area-privacy.body":
+    "Os anúncios de habitação passam a mostrar num mapa onde fica o espaço — mas só a zona aproximada até tu e a pessoa estarem realmente ligados. A morada exata fica privada até lá, por isso anunciar não põe a tua porta na internet. Assim que ficarem ligados, o mapa passa ao ponto exato e à morada completa.",
+
+  "changelog.entries.messaging-safety-block-report-pii.title":
+    "Bloquear, denunciar e um lembrete antes de partilhares demais",
+  "changelog.entries.messaging-safety-block-report-pii.body":
+    "Passas a poder bloquear ou denunciar alguém diretamente numa conversa, e o bloqueio tem efeito de imediato — quem bloqueias sai da tua caixa de entrada e não te consegue contactar. Se uma mensagem tiver um número de telefone, um email ou dados bancários, um aviso discreto lembra-te de manter tudo aqui e de nunca enviar dinheiro antes de confiares. Nunca te impede de enviar — é uma sugestão, não uma barreira.",
+
+  "changelog.entries.flatmate-pronoun-pre-share.title":
+    "Partilha os teus pronomes com um olá, só quando quiseres",
+  "changelog.entries.flatmate-pronoun-pre-share.body":
+    "Quando dizes olá a um possível colega de casa, passas a poder partilhar os teus pronomes junto com a mensagem — desativado por omissão, e só com essa pessoa. É um pormenor que faz a primeira mensagem chegar mais calorosa, nos teus termos.",
+
+  "changelog.entries.flatmate-discovery-mode.title":
+    "Uma forma mais calma de explorar colegas de casa",
+  "changelog.entries.flatmate-discovery-mode.body":
+    "O quadro de colegas de casa passa a ter uma vista de Descoberta, ao lado da lista — um perfil de cada vez, com uma razão clara para ter encaixado contigo. Passa ou gosta ao teu ritmo; quando ambos gostam, podes dizer olá e começar a conversa. Preferes a grelha de antes? A vista de Lista está a um toque.",
+
+  "changelog.entries.vetted-housing-groups.title":
+    "Grupos de habitação verificados em que quem arrenda queer confia",
+  "changelog.entries.vetted-housing-groups.body":
+    "Parte da habitação mais segura acontece em grupos pequenos e triados, e não em sites de anúncios abertos. Agora há uma casa para eles: grupos de habitação verificados onde cada anúncio indica a renda à partida, descreve a acessibilidade com honestidade e deixa os intermediários de fora. Pede para entrar e alguém da equipa lê o teu pedido — as regras do grupo estão ali à vista, para saberes com o que estás a concordar.",
+
+  "changelog.entries.vouch-multiple-relationships.title":
+    "Diz todas as formas como conheces alguém",
+  "changelog.entries.vouch-multiple-relationships.body":
+    "Ao avalizar alguém, podes agora escolher mais do que uma forma como conheces essa pessoa — amigues e pessoas com quem colaboraste, vizinhes que também conheceste na QueerPulse. Um aval raramente vem de um só fio, por isso já não te pede para escolheres apenas um.",
+
+  "changelog.entries.getting-started-checklist.title":
+    "Uma lista suave para os teus primeiros passos",
+  "changelog.entries.getting-started-checklist.body":
+    "Uma nova página de Primeiros passos guia-te pelas primeiras ações — preencher o perfil, entrar numa comunidade, criar uma persona, avalizar e ligar-te a alguém, publicar. Cada passo assinala-se sozinho à medida que avanças, por isso reflete sempre o que já fizeste. Encontra-la no menu da tua conta.",
+
+  "changelog.entries.onboarding-set-up-personas-after.title":
+    "Um acolhimento mais calmo — cria personas depois de entrares",
+  "changelog.entries.onboarding-set-up-personas-after.body":
+    "O onboarding já não te pede para criar uma persona enquanto ainda te estás a ambientar. Primeiro instalas-te; quando quiseres, podes criar uma persona para o teu ofício a qualquer momento a partir da tua página de personas.",
+
+  "changelog.entries.pin-favorite-chats-inbox-tabs.title":
+    "Fixe, marque como favorita e filtre a sua caixa de entrada",
+  "changelog.entries.pin-favorite-chats-inbox-tabs.body":
+    "Fixe as conversas a que volta sempre (até 3) e elas ficam no topo da sua caixa de entrada. Marque as que importam como favoritas e depois filtre por Todas, Não lidas, Favoritas ou Grupos para as encontrar rapidamente.",
+
+  "changelog.entries.identity-verification-honest-badges.title":
+    "Verificação de identidade real com selos honestos",
+  "changelog.entries.identity-verification-honest-badges.body":
+    "Na habitação a confiança é o que mais importa, por isso um selo passa a significar algo real. Confirma um número de telefone num passo rápido para anunciar um espaço ou perfil de colega de casa, ou para contactar sobre uma casa — e uma verificação de identidade externa opcional dá direito a um selo de identidade verificada. Um selo só aparece para uma verificação que realmente aconteceu, e a sua dica diz exatamente o que prova e o que não prova. Nunca vemos nem guardamos o teu documento de identidade nem dados biométricos — um parceiro externo faz a verificação e só nos diz que passou.",
+
+  "changelog.entries.flatmate-explainable-matching.title":
+    "Correspondências de colega de casa mais inteligentes e explicáveis",
+  "changelog.entries.flatmate-explainable-matching.body":
+    "As correspondências mostram agora porque combinam — orçamento, bairro, estilo de vida em comum, datas, valores de espaço seguro e bases da casa, cada um um fator que consegues ver. Preenche um pequeno questionário de convivência (ruído, espaço partilhado vs. privado) e as tuas bases de casa entram na pontuação, para que uma correspondência seja mais do que um número. As especificidades de espaço seguro ficam privadas: uma razão só nomeia o que alguém partilha quando te deu permissão para ver. Tudo opcional, e nunca usado para excluir ninguém.",
+
+  "changelog.entries.flatmate-safe-space-identity.title":
+    "Diz quem és no quadro de colegas de casa — nos teus termos",
+  "changelog.entries.flatmate-safe-space-identity.body":
+    "O teu perfil de colega de casa pode agora incluir os teus pronomes, o teu género e aquilo que torna uma casa segura — inclusiva para pessoas trans, sem revelar a tua identidade a terceiros, colegas de casa afirmativos. É tudo opcional: nada é guardado ou mostrado até dizeres que sim, escolhes quem vê, e podes limpá-lo quando quiseres. Estes dados ajudam-te a encontrar um lar afirmativo; nunca servem para excluir ninguém.",
 
   "changelog.entries.privacy-policy-refresh.title":
     "A Política de Privacidade agora corresponde ao que a plataforma faz de facto",
   "changelog.entries.privacy-policy-refresh.body":
     "Revimos a Política de Privacidade de ponta a ponta. Agora explica o Iniciar sessão com o Google, as notificações push e os dados de dispositivo, como os teus dados de identidade ficam sob o teu controlo, os dados de localização e de mensagens que guardamos, e os serviços exatos em que nos apoiamos — e removemos aquilo que não oferecemos. A Política de Cookies e as tuas definições de privacidade passam a corresponder, com a opção de análise não utilizada removida. Sem análise de comportamento, sem publicidade, sem venda de dados — continua verdade.",
+
+  "changelog.entries.gatherings-manage-rsvp-recap-live.title":
+    "Organizar um encontro já funciona a sério",
+  "changelog.entries.gatherings-manage-rsvp-recap-live.body":
+    "Gerir o teu encontro, marcar presença e partilhar o resumo depois já estão a funcionar — deixaram de ser pré-visualizações. Marcar presença é agora um botão no próprio encontro — diz que vais, ou entra na lista de espera quando está cheio, e o teu lugar continua lá quando voltas. Quem organiza pode editar detalhes, cancelar, ver quem vem e adicionar co-anfitriãs/os no evento real, e o álbum de fotos também fica agarrado a ele. (Convidar alguém para co-anfitrião com aceitação ainda está a caminho.)",
+
+  "changelog.entries.coop-template-portuguese.title":
+    "Os modelos para formar uma cooperativa já falam português",
+  "changelog.entries.coop-template-portuguese.body":
+    "Os nossos documentos-base para cooperativas — a carta de valores, os estatutos-modelo, o acordo de título de capital e os restantes — já se leem em português europeu além de inglês. É um primeiro rascunho para te pôr a andar; pede a um/a advogado/a que reveja os detalhes antes de entregares seja o que for.",
 
   "changelog.entries.members-explainer-modal.title":
     "O botão “Explorar pessoas” da página inicial agora explica-se",

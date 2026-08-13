@@ -1243,7 +1243,7 @@ button.cal-cell.has {
   gap: 7px;
 }
 
-@media (max-width: 560px) {
+@media (--sm) {
   .ev-card {
     flex-wrap: wrap;
   }

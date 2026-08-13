@@ -101,6 +101,20 @@ export const gatherings: Catalog = {
   "cta.bookSlot": "Marcar horário",
   "cta.joinWaitlist": "Entrar na lista de espera",
 
+  // ── In-event RSVP control (GatheringRsvpControl) ──────────────────────────
+  // RSVP é uma ação dentro do detalhe do encontro: a ação principal, o estado
+  // confirmado "vais estar lá" / lista de espera, e o cancelamento.
+  "rsvpControl.goingCta": "Eu vou",
+  "rsvpControl.waitlistCta": "Entrar na lista de espera",
+  "rsvpControl.pendingCta": "Um momento…",
+  "rsvpControl.goingTitle": "Vais <em>estar lá</em>",
+  "rsvpControl.waitlistTitle": "Estás na <em>lista de espera</em>",
+  "rsvpControl.goingCount_one": "{count} pessoa confirmada até agora",
+  "rsvpControl.goingCount_other": "{count} pessoas confirmadas até agora",
+  "rsvpControl.waitlistPosition": "És o número {position} na fila",
+  "rsvpControl.waitlistNote": "Avisamos-te assim que abrir uma vaga.",
+  "rsvpControl.cancelCta": "Cancelar presença",
+
   // ── Linha de detalhe de quem vai (attendeeMeta) ───────────────────────────
   // Os pronomes ao lado são as palavras da própria pessoa — não se traduzem.
   "attendee.rsvpdOn": "Confirmou em {date}",
@@ -224,6 +238,10 @@ export const gatherings: Catalog = {
   "rsvp.withLabel": "Vais com",
   "rsvp.othersCount_one": "e mais {count} pessoa",
   "rsvp.othersCount_other": "e mais {count} pessoas",
+  "rsvp.live.goingWith_one": "Vais, juntamente com <strong>mais {count} pessoa</strong>.",
+  "rsvp.live.goingWith_other": "Vais, juntamente com <strong>mais {count} pessoas</strong>.",
+  "rsvp.live.waitlistNote_one": "Há mais {count} pessoa na lista de espera.",
+  "rsvp.live.waitlistNote_other": "Há mais {count} pessoas na lista de espera.",
   "rsvp.host.roleLabel": "Organização do clube de leitura",
   "rsvp.calendar.label": "Adicionar ao calendário",
   "rsvp.calendar.googleCta": "Google Calendar",
@@ -595,6 +613,25 @@ export const gatherings: Catalog = {
   "create.step3.communityLabel": "Publicar numa comunidade (opcional)",
   "create.step3.communityNone": "Nenhuma — encontro público",
 
+  // AudienceScopeField.tsx — partilhado pelo assistente de criação (passo 3)
+  // e pelo modal de edição do convívio.
+  "audienceScope.label": "Quem pode ver este convívio?",
+  "audienceScope.hint":
+    "Escolhe até onde isto chega — podes mudar a qualquer momento.",
+  "audienceScope.members.label": "Público",
+  "audienceScope.members.helper":
+    "Qualquer pessoa na QueerPulse pode encontrar isto e confirmar presença.",
+  "audienceScope.extendedNetwork.label": "Ligações das tuas ligações",
+  "audienceScope.extendedNetwork.helper":
+    "Pessoas que as tuas ligações conhecem podem encontrar isto — amigos de amigos, não desconhecidos.",
+  "audienceScope.network.label": "Só a rede",
+  "audienceScope.network.helper": "Só pessoas com quem já tens uma ligação.",
+  "audienceScope.community.label": "Membros da comunidade",
+  "audienceScope.community.helper":
+    "Só membros da comunidade onde estás a publicar.",
+  "audienceScope.inviteOnly.label": "Só por convite",
+  "audienceScope.inviteOnly.helper": "Só as pessoas que convidares.",
+
   // CreateGatheringSteps.tsx — step 4: pricing
   "create.step4.title": "Bilhetes e <em>preços.</em>",
   "create.step4.sub":
@@ -641,6 +678,7 @@ export const gatherings: Catalog = {
   "create.step5.row.dateTime": "Data e hora",
   "create.step5.row.location": "Localização",
   "create.step5.row.capacity": "Capacidade",
+  "create.step5.row.audience": "Quem pode ver",
   "create.step5.row.pricing": "Preços",
   "create.step5.row.accessibility": "Acessibilidade",
   "create.step5.pricingFree": "Evento gratuito",
@@ -925,6 +963,9 @@ export const gatherings: Catalog = {
   "manage.messages.openedOf": "{opened} / {total} abriram",
   "manage.messages.sentToast_one": "Novidade enviada a {count} pessoa",
   "manage.messages.sentToast_other": "Novidade enviada a {count} pessoas",
+  "manage.messages.liveUnavailableTitle": "Mensagens para participantes a caminho",
+  "manage.messages.liveUnavailableBody":
+    "Enviar novidades a toda a gente que vai ainda não está disponível. Entretanto, partilha as novidades na página do encontro ou fala com quem já tens ligação.",
 
   // ── Manage: settings tab ─────────────────────────────────────────────────────
   "manage.settings.optionsHeading": "Opções do convívio",

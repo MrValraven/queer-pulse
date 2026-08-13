@@ -79,7 +79,7 @@
   gap: 44px;
   align-items: flex-start;
 }
-@media (max-width: 900px) {
+@media (--wide) {
   .layout {
     grid-template-columns: 1fr;
   }

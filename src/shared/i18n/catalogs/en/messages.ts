@@ -31,7 +31,22 @@ export const messages: Catalog = {
   "thread.newMessage": "New message",
   "thread.presenceOnline": "Online now",
   "thread.menuAria": "Conversation options",
+  "thread.pinChat": "Pin chat",
+  "thread.unpinChat": "Unpin chat",
+  "thread.pinnedIndicator": "Pinned chat",
+  "thread.pinCapReached": "You can pin up to 3 chats",
+  "thread.favoriteChat": "Favorite chat",
+  "thread.unfavoriteChat": "Unfavorite chat",
+  "thread.favoriteIndicator": "Favorite chat",
   "thread.deleteChat": "Delete chat",
+  // Inbox filter tabs
+  "thread.tabAll": "All",
+  "thread.tabUnread": "Unread",
+  "thread.tabFavorites": "Favorites",
+  "thread.tabGroups": "Groups",
+  "thread.tabEmptyUnread": "No unread chats",
+  "thread.tabEmptyFavorites": "No favorite chats yet",
+  "thread.tabEmptyGroups": "No group chats yet",
   "deleteChat.confirmTitle": "Delete this chat?",
   "deleteChat.confirmBody":
     "It disappears from your inbox and clears your copy. {name} keeps theirs — and if they message you again, the chat comes back with only the new messages.",
@@ -256,4 +271,10 @@ export const messages: Catalog = {
   "system.memberLeft": "{actor} left",
   "system.groupRenamedYou": "You renamed the group to “{value}”",
   "system.groupRenamed": "{actor} renamed the group to “{value}”",
+
+  // ── Safety — block/report a member + share-carefully notice (Wave A) ──
+  "conversation.reportMemberAction": "Report {name}",
+  "report.memberTitle": "Report {name}?",
+  "conversation.contactSafetyNotice":
+    "Keep the conversation here until you trust someone. Never send money, and never share bank details — real listings don't ask for that.",
 };

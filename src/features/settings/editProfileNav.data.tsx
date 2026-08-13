@@ -26,16 +26,6 @@ export const PROFILE_NAV: ProfileNavItem[] = [
     ),
   },
   {
-    id: "pronouns",
-    labelKey: "settings:editProfile.nav.pronouns.label",
-    groupKey: "settings:editProfile.nav.group.profile",
-    icon: (
-      <svg viewBox="0 0 16 16">
-        <path d="M4 4h8M8 4v8M5 11l3 2 3-2" />
-      </svg>
-    ),
-  },
-  {
     id: "bio",
     labelKey: "settings:editProfile.nav.bio.label",
     groupKey: "settings:editProfile.nav.group.profile",

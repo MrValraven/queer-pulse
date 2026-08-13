@@ -101,8 +101,10 @@ export interface UseMessageGesturesResult {
 
 /** True when the pointer landed on an interactive descendant (a reaction chip,
  *  the reply-quote, an action button, the edit field) rather than the bubble
- *  surface — those own their own behaviour, so gestures must ignore them. */
-function isInteractiveTarget(event: React.PointerEvent): boolean {
+ *  surface — those own their own behaviour, so gestures must ignore them.
+ *  Exported so `useThreadRowSwipe` (the inbox row's pin/favorite swipe) reuses
+ *  the same guard instead of forking it. */
+export function isInteractiveTarget(event: React.PointerEvent): boolean {
   const target = event.target as HTMLElement | null;
   return !!target?.closest("button, a, textarea, input, select");
 }

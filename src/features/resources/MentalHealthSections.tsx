@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { FiArrowRight, FiHeart } from "react-icons/fi";
 import {
   Avatar,
@@ -9,26 +10,20 @@ import {
 } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  EXPERIENCES,
-  SNS,
-  LANGS,
-  type Therapist,
-} from "./mentalHealth.data";
-import { useTherapists } from "./api/useTherapists";
-import { TherapistProfileModal } from "./TherapistProfileModal";
+import { EXPERIENCES, SNS } from "./mentalHealth.data";
+import { useTherapistPersonas } from "./api/useTherapistPersonas";
+import type { TherapistCardVM } from "./therapistPersonaCard";
 import styles from "./MentalHealthPage.module.css";
 
 export function TherapistSection() {
   const { t } = useTranslation();
-  const { therapists: allTherapists, comingSoon } = useTherapists();
+  const { cards, comingSoon } = useTherapistPersonas();
   const [filter, setFilter] = useState("all");
-  const [active, setActive] = useState<Therapist | null>(null);
 
-  const therapists =
-    filter === "all"
-      ? allTherapists
-      : allTherapists.filter((th) => th.langs.includes(filter));
+  const langOptions = ["all", ...new Set(cards.flatMap((card) => card.langs))];
+
+  const therapists: TherapistCardVM[] =
+    filter === "all" ? cards : cards.filter((card) => card.langs.includes(filter));
 
   return (
     <section className={styles.sec}>
@@ -63,33 +58,34 @@ export function TherapistSection() {
           />
         ) : (
           <>
-        <div className={styles.thFilter}>
-          <span className={styles.thFilterLabel} id="mh-therapist-lang-label">
-            {t("resources:mentalHealth.therapists.filterLabel")}
-          </span>
-          <FilterChips
-            labelledBy="mh-therapist-lang-label"
-            tone="jade"
-            value={filter}
-            onChange={setFilter}
-            options={LANGS.map((l) => ({
-              value: l,
-              label:
-                l === "all"
-                  ? t("resources:mentalHealth.therapists.allLanguages")
-                  : l,
-            }))}
-          />
-        </div>
+        {langOptions.length > 1 && (
+          <div className={styles.thFilter}>
+            <span className={styles.thFilterLabel} id="mh-therapist-lang-label">
+              {t("resources:mentalHealth.therapists.filterLabel")}
+            </span>
+            <FilterChips
+              labelledBy="mh-therapist-lang-label"
+              tone="jade"
+              value={filter}
+              onChange={setFilter}
+              options={langOptions.map((l) => ({
+                value: l,
+                label:
+                  l === "all"
+                    ? t("resources:mentalHealth.therapists.allLanguages")
+                    : l,
+              }))}
+            />
+          </div>
+        )}
         <div className={styles.therapistGrid}>
           {therapists.map((therapist, index) => (
             <Reveal
-              key={therapist.id}
-              as="button"
-              type="button"
+              key={therapist.handle}
+              as={Link}
+              to={therapist.href}
               className={styles.therapistCard}
               delay={Math.min(index, 8) * 60}
-              onClick={() => setActive(therapist)}
               aria-label={t(
                 "resources:mentalHealth.therapists.viewProfileAriaLabel",
                 { name: therapist.name },
@@ -99,7 +95,7 @@ export function TherapistSection() {
                 <Avatar
                   initials={therapist.initials}
                   size={56}
-                  src={therapist.photo}
+                  src={therapist.avatarUrl ?? undefined}
                   alt={therapist.name}
                   className={styles.tcAv}
                 />
@@ -122,23 +118,28 @@ export function TherapistSection() {
                 </span>
               </div>
               <div className={styles.tcTags}>
-                {therapist.langs.map((l) => (
-                  <span
-                    key={l}
-                    className={`${styles.tcTag} ${styles.tcTagLang}`}
-                  >
-                    {l}
-                  </span>
-                ))}
+                {therapist.langs.length > 0 &&
+                  therapist.langs.map((l) => (
+                    <span
+                      key={l}
+                      className={`${styles.tcTag} ${styles.tcTagLang}`}
+                    >
+                      {l}
+                    </span>
+                  ))}
                 {therapist.specs.map((s) => (
                   <span key={s} className={styles.tcTag}>
                     {s}
                   </span>
                 ))}
               </div>
-              <p className={styles.tcNote}>{therapist.note}</p>
+              {therapist.note && (
+                <p className={styles.tcNote}>{therapist.note}</p>
+              )}
               <div className={styles.tcFoot}>
-                <span className={styles.tcFormat}>{therapist.format}</span>
+                {therapist.format && (
+                  <span className={styles.tcFormat}>{therapist.format}</span>
+                )}
                 <span className={styles.tcContact}>
                   {t("resources:mentalHealth.therapists.viewProfileCta")}{" "}
                   <FiArrowRight aria-hidden />
@@ -150,12 +151,6 @@ export function TherapistSection() {
           </>
         )}
       </div>
-      {active && (
-        <TherapistProfileModal
-          therapist={active}
-          onClose={() => setActive(null)}
-        />
-      )}
     </section>
   );
 }

@@ -42,6 +42,8 @@ export type ReasonCode =
   | "venue_accessibility"
   | "housing_unsafe"
   | "housing_scam"
+  | "not_affirming"
+  | "off_platform"
   | "other";
 
 /** Stable code → human label. Labels are the only thing that gets localized. */
@@ -60,6 +62,8 @@ export const REASON_LABELS: Record<ReasonCode, string> = {
   venue_accessibility: "An accessibility problem",
   housing_unsafe: "Unsafe, discriminatory, or misrepresented housing",
   housing_scam: "Scam or fake listing",
+  not_affirming: "Not LGBTQ+ affirming — broke the community pledge",
+  off_platform: "Asked to pay or move off-platform",
   other: "Something else — explained in detail",
 };
 
@@ -86,6 +90,8 @@ export const REASON_LABEL_KEYS: Record<ReasonCode, string> = {
   venue_accessibility: "safety:reason.venueAccessibility",
   housing_unsafe: "safety:reason.housingUnsafe",
   housing_scam: "safety:reason.housingScam",
+  not_affirming: "safety:reason.notAffirming",
+  off_platform: "safety:reason.offPlatform",
   other: "safety:reason.other",
 };
 
@@ -142,20 +148,24 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
   ],
   community: ["hate_speech", "spam", "other"],
   housing: [
-    "housing_unsafe",
-    "harassment",
-    "discrimination",
     "housing_scam",
+    "housing_unsafe",
+    "not_affirming",
+    "discrimination",
+    "off_platform",
+    "harassment",
     "other",
   ],
   flatmate: [
     "harassment",
+    "not_affirming",
     "discrimination",
     "impersonation",
     "unwanted_contact",
     "other",
   ],
   landlord: [
+    "not_affirming",
     "discrimination",
     "harassment",
     "impersonation",

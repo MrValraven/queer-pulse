@@ -17,7 +17,7 @@
    AppShell render — NOT a bare `main`. Pages nest their own <main> elements, and
    self-contained frames (Studio, Cinema) render their own; a bare selector would
    leak the tab-bar offset into all of them. */
-@media (max-width: 860px) {
+@media (--mobile) {
   :root {
     /* Raise bottom-anchored floating UI clear of the tab bar, which now
        renders on any mobile view (browser tab or installed), not just

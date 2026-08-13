@@ -111,7 +111,7 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   padding-right: 120px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .eventH {
     padding-right: 60px;
   }

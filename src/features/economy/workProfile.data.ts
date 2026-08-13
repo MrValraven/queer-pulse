@@ -88,20 +88,37 @@ export const VIS_MATRIX: VisRow[] = [
   },
 ];
 
-export const WORK_SKILLS_KEYS = [
-  "economy:workProfile.skill.branding",
-  "economy:workProfile.skill.backend",
-  "economy:workProfile.skill.fundraising",
-  "economy:workProfile.skill.photography",
-  "economy:workProfile.skill.copywriting",
-  "economy:workProfile.skill.product",
+/**
+ * A selectable chip in the skills exchange. `id` is the stable wire/storage
+ * value (identical to the backend's `WORK_SKILL_IDS` / `FOCUS_AREA_IDS`);
+ * `labelKey` renders the chip. Mirrors the `{ id, labelKey }` idiom of
+ * `TRANS_SUPPORT` — single source of truth for its list on this side.
+ */
+export interface WorkTaxonomyOption {
+  id: string;
+  labelKey: string;
+}
+
+/** Skills a member can offer — what they're matched on as a mentor/peer. */
+export const WORK_SKILLS: WorkTaxonomyOption[] = [
+  { id: "branding", labelKey: "economy:workProfile.skill.branding" },
+  { id: "backend", labelKey: "economy:workProfile.skill.backend" },
+  { id: "fundraising", labelKey: "economy:workProfile.skill.fundraising" },
+  { id: "photography", labelKey: "economy:workProfile.skill.photography" },
+  { id: "copywriting", labelKey: "economy:workProfile.skill.copywriting" },
+  { id: "product", labelKey: "economy:workProfile.skill.product" },
 ];
 
-export const FOCUS_AREAS_KEYS = [
-  "economy:workProfile.focus.careerDirection",
-  "economy:workProfile.focus.comingOut",
-  "economy:workProfile.focus.creativePractice",
-  "economy:workProfile.focus.startingBusiness",
-  "economy:workProfile.focus.difficultWorkplace",
-  "economy:workProfile.focus.mentalHealth",
+/** Focus areas a member wants support with — what mentors are matched against. */
+export const FOCUS_AREAS: WorkTaxonomyOption[] = [
+  { id: "career-direction", labelKey: "economy:workProfile.focus.careerDirection" },
+  { id: "coming-out", labelKey: "economy:workProfile.focus.comingOut" },
+  { id: "creative-practice", labelKey: "economy:workProfile.focus.creativePractice" },
+  { id: "starting-business", labelKey: "economy:workProfile.focus.startingBusiness" },
+  { id: "difficult-workplace", labelKey: "economy:workProfile.focus.difficultWorkplace" },
+  { id: "mental-health", labelKey: "economy:workProfile.focus.mentalHealth" },
 ];
+
+/** The closed id sets — used by the API normalizer to drop unknown wire values. */
+export const WORK_SKILL_IDS = WORK_SKILLS.map((option) => option.id);
+export const FOCUS_AREA_IDS = FOCUS_AREAS.map((option) => option.id);

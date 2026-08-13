@@ -82,7 +82,7 @@
 /* Edge fade so off-screen tabs read as scrollable — scoped to narrow screens
    where the strip actually overflows, so wide screens (all tabs visible) don't
    show a permanent dimmed edge. */
-@media (max-width: 760px) {
+@media (--lg) {
   .tabs {
     -webkit-mask-image: linear-gradient(
       to right,
@@ -142,7 +142,7 @@
   gap: 40px;
   align-items: center;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .incHeroBox {
     grid-template-columns: 1fr;
   }
@@ -201,7 +201,7 @@
   align-items: start;
   margin-bottom: 60px;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .incCols {
     grid-template-columns: 1fr;
   }
@@ -473,7 +473,7 @@
   gap: 16px;
   margin-bottom: 18px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .rcRow {
     grid-template-columns: 1fr;
   }
@@ -791,7 +791,7 @@
   margin-top: 18px;
 }
 
-@media (max-width: 640px) {
+@media (--md) {
   .hero {
     /* nav band reserved by shell (base.css); this is only breathing room */
     padding: 36px 0 0;

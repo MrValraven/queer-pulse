@@ -24,7 +24,7 @@
   gap: 16px;
   margin-bottom: 14px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .rcRow {
     grid-template-columns: 1fr;
   }

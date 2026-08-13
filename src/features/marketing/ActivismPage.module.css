@@ -303,7 +303,7 @@
   margin-top: 2px;
 }
 
-@media (max-width: 880px) {
+@media (--compact) {
   .layout {
     grid-template-columns: 1fr;
   }

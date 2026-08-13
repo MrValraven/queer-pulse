@@ -131,6 +131,14 @@ export interface Conversation {
   online?: boolean;
   /** Optional precise unread count — renders a badge when > 0. Absent = fall back to the `unread` dot. */
   unreadCount?: number;
+  /** ISO timestamp this chat was pinned to the top of the inbox (WhatsApp-style,
+   *  CONVERSATION-scoped — distinct from a message's own `ChatMessage.pinnedAt`).
+   *  Absent = not pinned. Drives both the pinned-first inbox sort and the row's
+   *  pin indicator. Capped at 3 pinned chats server-side (409 past that). */
+  pinnedAt?: string;
+  /** Whether the signed-in member has favorited this chat. Absent/false =
+   *  not a favorite. Drives the row's heart indicator and the Favorites tab. */
+  favorite?: boolean;
   /** Counterpart's read watermark (ISO, live). Drives the "Seen" receipt. */
   otherLastReadAt?: string;
   /** Counterpart's delivered watermark (ISO, live). Drives the "double check". */

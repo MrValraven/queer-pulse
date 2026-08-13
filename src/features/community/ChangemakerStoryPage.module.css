@@ -117,7 +117,7 @@
   background: rgba(var(--cream-rgb), 0.5);
   display: inline-block;
 }
-@media (max-width: 640px) {
+@media (--md) {
   .hero {
     height: 400px;
   }

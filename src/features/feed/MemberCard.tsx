@@ -12,6 +12,7 @@ import { DEMO_MEMBER } from "./feedCards.data";
 import {
   FeedActionLink,
   FeedActions,
+  FeedAvatarLink,
   FeedCardHead,
   FeedCardShell,
   FeedIdentity,
@@ -94,13 +95,15 @@ export function MemberCard({ item }: { item?: FeedItem } = {}) {
       />
       <FeedIdentity
         lead={
-          <Avatar
-            initials={avatarInitials}
-            tint={tint}
-            size={46}
-            src={avatarSrc}
-            alt={name}
-          />
+          <FeedAvatarLink slug={slug} name={name}>
+            <Avatar
+              initials={avatarInitials}
+              tint={tint}
+              size={46}
+              src={avatarSrc}
+              alt={name}
+            />
+          </FeedAvatarLink>
         }
         name={
           <span>

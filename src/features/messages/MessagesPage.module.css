@@ -41,7 +41,7 @@
    unqualified now, for the same reason — so this remains the ONLY top-offset
    math in play here; nothing stacks on top of it, which is what previously
    doubled the gap on some devices and let it undershoot on others.) */
-@media (max-width: 860px) {
+@media (--mobile) {
   .app {
     --messages-top-offset: calc(var(--app-bar-h) + env(safe-area-inset-top));
   }
@@ -103,6 +103,9 @@
   outline: 2px solid var(--plum);
   outline-offset: 2px;
 }
+.tpTabs {
+  margin-top: 12px;
+}
 .threadList {
   flex: 1;
   overflow-y: auto;
@@ -118,16 +121,39 @@
   gap: 10px;
   padding: 13px 16px;
   cursor: pointer;
-  touch-action: manipulation;
+  /* `pan-y` (not `manipulation`): vertical list-scroll stays native, but the
+     horizontal axis is claimed by `useThreadRowSwipe`'s own pointer handlers
+     so a swipe-right/left isn't fought by the browser's own panning. */
+  touch-action: pan-y;
+  /* Own opaque surface (was `background: none`, relying on `.threadPanel`'s
+     ancestor `--paper`) — this row now sits ABOVE the two swipe affordance
+     layers in `.threadRowSwipeContainer` and must fully cover them at rest.
+     `position: relative` + `z-index: 1` keeps it painted above those layers
+     regardless of DOM order inside the container. */
+  position: relative;
+  z-index: 1;
+  background: var(--paper);
   transition: background var(--dur-fast) var(--ease),
-    padding-inline-end var(--dur-fast) var(--ease);
+    padding-inline-end var(--dur-fast) var(--ease),
+    transform 220ms var(--ease-out);
   border-bottom: 1px solid rgba(var(--line-rgb), 0.05);
   width: 100%;
   text-align: left;
-  background: none;
   border-left: none;
   border-right: none;
   border-top: none;
+}
+/* Following the finger: no transition, so the row tracks 1:1 (same pattern as
+   `.bubbleWrapSwiping`). Scoped to exactly the duration of an active drag. */
+.threadRowSwiping {
+  transition: none;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .threadRow {
+    transition: background var(--dur-fast) var(--ease),
+      padding-inline-end var(--dur-fast) var(--ease);
+  }
 }
 /* Reserve room for the "⋯" trigger on hover/focus so it doesn't sit on top of
    the timestamp/unread badge — no layout shift while the trigger is hidden. */
@@ -143,6 +169,17 @@
 /* Immediate tap feedback on touch (no hover state exists there). */
 .threadRow:active {
   background: rgba(var(--plum-rgb), 0.08);
+}
+/* Class-scoped override of the global two-tone ring (see base.css) — this row
+   now lives inside `.threadRowSwipeContainer`'s `overflow: hidden` (needed to
+   clip the swipe travel), which would cut off the global ring's OUTWARD
+   outline + halo. An INSET ring stays fully inside the row's own border box,
+   so it's never clipped by that ancestor. `--accent-deep` alone still clears
+   3:1 against the row's own `--paper` background at rest and its tinted
+   `--plum` wash when active (see `.threadActive`) — both light surfaces. */
+.threadRow:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--accent-deep);
 }
 .threadActive {
   background: rgba(var(--plum-rgb), 0.06);
@@ -199,6 +236,25 @@
   font-size: 11px;
   color: var(--ink-40);
   flex: none;
+}
+/* Pin/favorite row indicators (conversation-scoped — distinct from the
+   in-bubble message pin/star), sitting beside the timestamp. */
+.trIndicators {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+.trPinnedIcon,
+.trFavoriteIcon {
+  display: inline-flex;
+  font-size: 12px;
+}
+.trPinnedIcon {
+  color: var(--ink-40);
+}
+.trFavoriteIcon {
+  color: var(--accent);
 }
 .trPreviewRow {
   display: flex;
@@ -273,7 +329,7 @@
   background: rgba(var(--plum-rgb), 0.12);
   transform: scale(0.92);
 }
-@media (max-width: 768px) {
+@media (--messages) {
   .backBtn {
     display: flex;
   }
@@ -364,6 +420,14 @@
   align-items: center;
   gap: 2px;
   margin-inline-end: -6px;
+}
+
+/* ConversationSafetyMenu (Block/Report) — an inline flex item in .ctbActions,
+   unlike .rowMenu (thread-row's absolutely-positioned hover trigger). Reuses
+   .rowMenuPopover / .rowMenuItem / .rowMenuItemDanger for the dropdown itself. */
+.safetyMenuWrap {
+  position: relative;
+  display: inline-flex;
 }
 
 .area {
@@ -1216,6 +1280,26 @@
   align-items: flex-end;
   gap: 8px;
 }
+
+/* ComposerSafetyNotice (P0.7 contact/payment-off-platform hint) — advisory,
+   never blocks the send button below it. */
+.composerSafetyNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-block-end: 8px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: rgba(var(--amber-rgb), 0.12);
+  border: 1px solid rgba(var(--amber-rgb), 0.3);
+  color: var(--amber-ink);
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+.composerSafetyNotice svg {
+  flex: none;
+  margin-block-start: 1px;
+}
 .gifBubble {
   display: block;
   max-width: 220px;
@@ -1597,7 +1681,7 @@
   color: var(--ink-40);
 }
 
-@media (max-width: 768px) {
+@media (--messages) {
   .threadPanel {
     width: 100%;
   }
@@ -1737,6 +1821,55 @@
   position: relative;
 }
 
+/* Swipe-to-pin/favorite container (mobile, mirrors `.bubbleWrap`'s
+   swipe-to-reply). Wraps ONLY the two affordance layers + the row `<button>`
+   — `.rowMenu` below stays a direct child of `.threadRowWrap` so its own
+   absolute positioning is unaffected.
+   `overflow: hidden` clips the row's own horizontal travel so a swipe can't
+   visibly overhang past the row's footprint. The global `:focus-visible` ring
+   (outline + outward halo) would be clipped by that same `overflow: hidden`
+   when the row itself is keyboard-focused, so `.threadRow:focus-visible`
+   below swaps it for a self-contained INSET ring — same precedent as
+   `CopyLinkRow`/`FormField`'s class-scoped focus overrides — that never
+   extends past the row's own border box, so no ancestor clip can touch it. */
+.threadRowSwipeContainer {
+  position: relative;
+  overflow: hidden;
+}
+/* Full-height background layers, sit BEHIND `.threadRow` (z-index 0 vs. its
+   1) and are revealed as the row slides away under a swipe. Icon opacity/
+   scale are written directly by `useThreadRowSwipe` per pointer frame — the
+   baseline (invisible, `scale(0.5)`) inline style lives on the icon `<span>`
+   itself in `ThreadRowSwipeAffordances.tsx`. Decorative (`aria-hidden`): the
+   ⋯ menu already covers the same actions for keyboard/AT users. */
+.threadRowSwipeLeading,
+.threadRowSwipeTrailing {
+  position: absolute;
+  inset-block: 0;
+  z-index: 0;
+  width: 108px;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  color: var(--cream);
+  pointer-events: none;
+}
+.threadRowSwipeLeading {
+  inset-inline-start: 0;
+  justify-content: flex-start;
+  padding-inline-start: 22px;
+  background: var(--jade);
+}
+.threadRowSwipeTrailing {
+  inset-inline-end: 0;
+  justify-content: flex-end;
+  padding-inline-end: 22px;
+  background: var(--accent);
+}
+.threadRowSwipeIcon {
+  display: inline-flex;
+}
+
 .rowMenu {
   position: absolute;
   top: 50%;
@@ -1808,6 +1941,25 @@
   .rowMenuPopover {
     animation: none;
   }
+}
+
+.rowMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-strong);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rowMenuItem:hover {
+  background: rgba(var(--plum-rgb), 0.06);
 }
 
 .rowMenuItemDanger {

@@ -1,10 +1,10 @@
-import { useId, useState, type KeyboardEvent } from "react";
+import { useId, type KeyboardEvent } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { PRONOUN_CHIPS } from "./editProfile.data";
+import { PronounField } from "../../shared/identity/PronounField";
 import { IdentityPhotoField } from "./EditProfileIdentityFields";
 import styles from "./EditProfilePage.module.css";
 
@@ -14,8 +14,12 @@ interface IdentitySectionProps {
   photo?: string;
   /** Avatar from the member's social login, offered as a one-tap restore. */
   googlePhoto?: string;
+  /** The member's pronoun set — the personal block keeps name, pronouns, and
+   * location together rather than splitting pronouns into its own section. */
+  pronouns: string[];
   onNameChange: (v: string) => void;
   onLocationChange: (v: string) => void;
+  onPronounsChange: (next: string[]) => void;
   /** Called with the persistable storage key once an uploaded photo resolves. */
   onPhotoChange: (storageKey: string) => void;
   onUseGooglePhoto: () => void;
@@ -27,8 +31,10 @@ export function IdentitySection({
   location,
   photo,
   googlePhoto,
+  pronouns,
   onNameChange,
   onLocationChange,
+  onPronounsChange,
   onPhotoChange,
   onUseGooglePhoto,
   onRemove,
@@ -70,6 +76,24 @@ export function IdentitySection({
           {t("settings:editProfile.identity.displayNameHint")}
         </div>
       </div>
+      <PronounField
+        value={pronouns}
+        onChange={onPronounsChange}
+        labels={{
+          field: t("settings:editProfile.pronouns.label"),
+          helper: (
+            <Translation
+              i18nKey="settings:editProfile.pronouns.sub"
+              components={{ a: <Link to={routes.pronounsGuide} /> }}
+            />
+          ),
+          writeOwn: t("settings:editProfile.pronouns.writeOwnLabel"),
+          placeholder: t("settings:editProfile.pronouns.writeOwnPlaceholder"),
+          add: t("settings:editProfile.skills.add"),
+          removeAria: (pronoun) =>
+            t("settings:editProfile.pronouns.removeCustomAriaLabel", { pronoun }),
+        }}
+      />
       <div className={styles.field}>
         <label className={styles.fieldLabel} htmlFor={`${fieldId}-location`}>
           {t("settings:editProfile.identity.locationLabel")}{" "}
@@ -87,118 +111,6 @@ export function IdentitySection({
         />
         <div className={styles.fieldHint}>
           {t("settings:editProfile.identity.locationHint")}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-interface PronounsSectionProps {
-  selected: string[];
-  onToggle: (p: string) => void;
-}
-
-export function PronounsSection({ selected, onToggle }: PronounsSectionProps) {
-  const { t } = useTranslation();
-  const fieldId = useId();
-  const [customInput, setCustomInput] = useState("");
-  // Anything selected that is not one of the preset chips is a written-in set.
-  const customPronouns = selected.filter((p) => !PRONOUN_CHIPS.includes(p));
-
-  function addCustom() {
-    const trimmed = customInput.trim();
-    setCustomInput("");
-    if (!trimmed || selected.includes(trimmed)) return;
-    onToggle(trimmed);
-  }
-
-  return (
-    <div className={styles.section} id="pronouns">
-      <h2 className={styles.sectionTitle}>
-        <Translation
-          i18nKey="settings:editProfile.pronouns.title"
-          components={{ em: <em /> }}
-        />
-      </h2>
-      <p className={styles.sectionSub}>
-        <Translation
-          i18nKey="settings:editProfile.pronouns.sub"
-          components={{ a: <Link to={routes.pronounsGuide} /> }}
-        />
-      </p>
-      <div className={styles.field} style={{ marginBottom: "14px" }}>
-        <div className={styles.fieldLabel}>
-          {t("settings:editProfile.pronouns.label")}
-        </div>
-        <div className={styles.pronounChips}>
-          {PRONOUN_CHIPS.map((p) => (
-            <button
-              type="button"
-              key={p}
-              className={[
-                styles.pronounChip,
-                selected.includes(p) && styles.pronounChipSelected,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => onToggle(p)}
-            >
-              {p}
-            </button>
-          ))}
-        </div>
-        <label
-          className={styles.fieldLabel}
-          style={{ marginTop: "10px" }}
-          htmlFor={`${fieldId}-custom-pronoun`}
-        >
-          {t("settings:editProfile.pronouns.writeOwnLabel")}
-        </label>
-        {customPronouns.length > 0 && (
-          <div className={styles.skillsDisplay}>
-            {customPronouns.map((p) => (
-              <span key={p} className={styles.skillTag}>
-                {p}
-                <button
-                  type="button"
-                  className={styles.skillTagRemove}
-                  aria-label={t(
-                    "settings:editProfile.pronouns.removeCustomAriaLabel",
-                    { pronoun: p },
-                  )}
-                  onClick={() => onToggle(p)}
-                >
-                  ×
-                </button>
-              </span>
-            ))}
-          </div>
-        )}
-        <div className={styles.skillInputRow}>
-          <input
-            id={`${fieldId}-custom-pronoun`}
-            className={styles.fieldInput}
-            type="text"
-            placeholder={t("settings:editProfile.pronouns.writeOwnPlaceholder")}
-            value={customInput}
-            onChange={(e) => setCustomInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                addCustom();
-              }
-            }}
-          />
-          <Button
-            variant="ghost"
-            onClick={addCustom}
-            style={{ whiteSpace: "nowrap" }}
-          >
-            {t("settings:editProfile.skills.add")}
-          </Button>
-        </div>
-        <div className={styles.fieldHint}>
-          {t("settings:editProfile.pronouns.hint")}
         </div>
       </div>
     </div>

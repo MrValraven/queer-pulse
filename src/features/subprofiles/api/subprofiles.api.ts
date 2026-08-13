@@ -346,6 +346,9 @@ export interface ItemStructured {
   poem?: PoemBlock[] | null;
 }
 
+/** Practice skin (therapist): tri-state for one availability slot. */
+export type PracticeAvailState = "open" | "full" | "off";
+
 /** Persona-level skin blocks (subprofiles.skin_data). Only the keys relevant to the
  *  persona's derived skin are populated. Display data — present on the public view too. */
 export interface SkinData {
@@ -367,6 +370,24 @@ export interface SkinData {
   firstSession?: { title: string; body: string }[] | null;
   access?: string[] | null;
   referrals?: { name: string; note: string }[] | null;
+  /** Practice skin: how the therapist works, one prose paragraph per entry. */
+  approach?: string[] | null;
+  /** Practice skin: training / qualifications, most recent first. */
+  training?: string[] | null;
+  /** Practice skin: where they practise. `lines` = address lines.
+   *  (Room/building accessibility lives in the existing `access` key.) */
+  venue?: { name: string; lines: string[] } | null;
+  /** Practice skin: a 4-week availability grid. `startDate` is the ISO date of
+   *  the first cell (a Monday); `cells` is 28 tri-state slots in row-major order
+   *  (4 weeks × 7 days). Day numbers + month labels derive from `startDate`. */
+  availability?: {
+    startDate: string;
+    slotTime: string;
+    cells: PracticeAvailState[];
+  } | null;
+  /** Practice skin (therapist): fee breakdown rows shown in the sidebar.
+   *  Named `feeSchedule` (not `fees`) — `fees` is the Classroom skin's key. */
+  feeSchedule?: { label: string; value: string }[] | null;
   /** Chart skin (astrologer): the live sky band shown in the hero. */
   sky?: { moon: string; phase: string; note: string } | null;
   /** Chart skin: what the astrologer needs from a querent before a reading. */
@@ -514,6 +535,12 @@ export interface SubprofilePublicDTO {
 /** Directory / list card. */
 export interface SubprofileCardDTO {
   handle: string;
+  /** Linked personas live under their owner's member profile; unlinked at /p/:handle. */
+  linkVisibility: LinkVisibility;
+  /** The owner member's profile slug — LINKED personas only, else null (anonymity). */
+  ownerSlug: string | null;
+  /** The persona's per-owner slug (for the /members/:ownerSlug/:slug route). */
+  slug: string;
   kind: SubprofileKind;
   displayName: string;
   avatarUrl: string | null;
@@ -719,16 +746,18 @@ export interface SubprofileDirectoryPage {
 }
 
 /** One page of the standalone-persona directory. Personas redesign Phase 4
- *  filters family/tags/search CLIENT-SIDE, so this sends no `kind`/`query`
- *  param — only paging (`page`/`limit`), which `useSubprofileDirectory` uses
- *  to pull the whole set at `limit=100`. */
+ *  filters family/tags/search CLIENT-SIDE, so this sends no `query` param —
+ *  only paging (`page`/`limit`), which `useSubprofileDirectory` uses to pull
+ *  the whole set at `limit=100`. Optionally forwards `kind` for kind-scoped
+ *  directories (e.g. the therapist directory), so the server can filter. */
 export const getSubprofileDirectory = (
-  params: { page?: number; limit?: number } = {},
+  params: { page?: number; limit?: number; kind?: string } = {},
   signal?: AbortSignal,
 ) => {
   const q = new URLSearchParams();
   if (params.page !== undefined) q.set("page", String(params.page));
   if (params.limit !== undefined) q.set("limit", String(params.limit));
+  if (params.kind) q.set("kind", params.kind);
   const qs = q.toString();
   return apiGet<SubprofileDirectoryPage>(
     `/subprofiles/directory${qs ? `?${qs}` : ""}`,

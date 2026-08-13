@@ -459,7 +459,7 @@
    them out as three equal columns instead so they always share one row; a long
    label wraps within its own third rather than breaking the pill. Desktop keeps
    the inline-flex pill above (wide right column already fits one row). */
-@media (max-width: 640px) {
+@media (--md) {
   .segmented {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -896,7 +896,7 @@
 /* On narrow phones the label and the actions can't share one row without the
    buttons shrinking below a comfortable tap target. Stack them: the label
    takes its own row, and Discard / Save split the full width evenly. */
-@media (max-width: 560px) {
+@media (--sm) {
   .saveBar {
     gap: 10px 16px;
     padding-left: clamp(16px, 5vw, 64px);
@@ -986,7 +986,7 @@
    on phones only; desktop sizing above is untouched. Fields already ≥16px
    (.shortBioInput 18, .bioInput 17, .nowInput 16, .nameInput clamp≥30,
    .workTitleInput 18) are intentionally left alone. */
-@media (max-width: 640px) {
+@media (--md) {
   .hoodInput,
   .openToInput,
   .customPronoun,

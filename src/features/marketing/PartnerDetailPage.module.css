@@ -36,7 +36,7 @@
   margin-bottom: 36px;
   border-bottom: 2px solid var(--line-strong);
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .hero {
     grid-template-columns: 80px 1fr;
     row-gap: 18px;
@@ -61,7 +61,7 @@
   flex: none;
   letter-spacing: -0.02em;
 }
-@media (max-width: 760px) {
+@media (--lg) {
   .logo {
     width: 80px;
     height: 80px;
@@ -182,7 +182,7 @@
   gap: 40px;
   align-items: flex-start;
 }
-@media (max-width: 860px) {
+@media (--mobile) {
   .grid {
     grid-template-columns: 1fr;
   }
@@ -225,7 +225,7 @@
   border-radius: 18px;
   margin: 24px 0 32px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .stats {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -254,7 +254,7 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 }
-@media (max-width: 640px) {
+@media (--md) {
   .collabGrid {
     grid-template-columns: 1fr;
   }

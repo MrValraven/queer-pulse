@@ -22,7 +22,12 @@ export interface AdminJoinRequestDTO {
   coop: { slug: string; name: string } | null;
 }
 
-export type CoopWriteBody = Omit<HousingCoopDTO, "id">;
+// `operatorVerified` is a separate admin marker (set via the verification flow,
+// optional on the backend create/update DTOs), not something the coop create/
+// edit form manages — so it's optional here rather than required on every write.
+export type CoopWriteBody = Omit<HousingCoopDTO, "id" | "operatorVerified"> & {
+  operatorVerified?: boolean;
+};
 
 /** Every housing coop on the platform, published or not. Admin-only — 403s otherwise. */
 export const getAdminCoops = () =>

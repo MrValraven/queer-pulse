@@ -180,7 +180,7 @@ export const PoemRichLine = forwardRef<PoemRichLineHandle, PoemRichLineProps>(
           if (element) onChangeRef.current(parsePoemHtml(element.innerHTML));
         }
       };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+       
     }, []);
 
     function commit() {

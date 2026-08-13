@@ -22,7 +22,7 @@
   overscroll-behavior: contain;
   animation: modalUp 0.4s var(--ease);
 }
-@media (min-width: 640px) {
+@media (--md-up) {
   .overlay {
     align-items: center;
   }

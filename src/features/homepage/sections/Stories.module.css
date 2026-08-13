@@ -75,7 +75,7 @@
   margin: 12px 0 0;
 }
 
-@media (max-width: 760px) {
+@media (--lg) {
   .feature {
     grid-template-columns: 1fr;
     gap: 24px;

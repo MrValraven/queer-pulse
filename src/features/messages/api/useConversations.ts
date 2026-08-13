@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
 import { useDeletedConversations } from "../../../app/providers/useDeletedConversations";
+import { applyConversationPrefs } from "../conversationPrefs";
 import { conversations as mockConversations, type Conversation } from "../data";
 import { getConversations, getConversationsUnreadCount } from "./messages.api";
 import { conversationToView } from "./messages.adapters";
@@ -21,8 +22,12 @@ export function useConversations() {
     queryKey: ["conversations", demoMode, deletedToken],
     queryFn: async () => {
       if (demoMode) {
-        return mockConversations.filter(
-          (conversation) => !deletedIds.has(conversation.id),
+        // Fold in DEMO pin/favorite overrides (localStorage) so a toggle
+        // survives this refetch and a reload — see conversationPrefs.ts.
+        return applyConversationPrefs(
+          mockConversations.filter(
+            (conversation) => !deletedIds.has(conversation.id),
+          ),
         );
       }
       const rows = await getConversations();

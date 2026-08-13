@@ -92,7 +92,7 @@
   gap: 36px;
   align-items: flex-start;
 }
-@media (max-width: 860px) {
+@media (--mobile) {
   .grid {
     grid-template-columns: 1fr;
   }
@@ -275,7 +275,7 @@
   flex-direction: column;
   gap: 14px;
 }
-@media (max-width: 860px) {
+@media (--mobile) {
   .side {
     position: static;
   }

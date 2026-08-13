@@ -73,7 +73,7 @@ export function LocationPickerMap({ latitude, longitude, onChange }: LocationPic
       mapRef.current = null;
     };
     // Create-once: coordinate updates are handled by the effect below.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   // Reflect coords → marker, once the map has loaded. No coords ⇒ no marker.

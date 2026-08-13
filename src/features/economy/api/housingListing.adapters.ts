@@ -13,11 +13,15 @@ const TYPE_STYLE: Record<
   studio: { tint: "plum", typeColor: "rgba(var(--violet-rgb),.1)", typeText: "var(--violet)" },
 };
 
-function posterFrom(lister: HousingListingDTO["lister"]): Poster {
+function posterFrom(
+  lister: HousingListingDTO["lister"],
+  verificationLevel: HousingListingDTO["listerVerificationLevel"],
+): Poster {
   if (!lister) {
     return {
       initials: "", name: "A member", fullName: "A member",
       tint: "coral", memberSince: "", responseTime: "within a day", bio: "",
+      verificationLevel,
     };
   }
   const full = `${lister.firstName} ${lister.lastName}`.trim();
@@ -29,7 +33,14 @@ function posterFrom(lister: HousingListingDTO["lister"]): Poster {
     memberSince: "",
     responseTime: "within a day",
     bio: "",
+    verificationLevel,
   };
+}
+
+/** "Studio" for 0 beds, else "N bed"/"N beds" — the compact `beds` chip text. */
+function bedroomsLabel(bedrooms: number): string {
+  if (bedrooms === 0) return "Studio";
+  return `${bedrooms} ${bedrooms === 1 ? "bed" : "beds"}`;
 }
 
 export function listingDtoToHousingListing(dto: HousingListingDTO): HousingListing {
@@ -39,11 +50,17 @@ export function listingDtoToHousingListing(dto: HousingListingDTO): HousingListi
     { label: "Area", value: dto.area || dto.city },
     { label: "Available", value: dto.availableFrom ?? "Now" },
   ];
+  if (dto.bedrooms !== null) {
+    facts.push({ label: "Bedrooms", value: bedroomsLabel(dto.bedrooms) });
+  }
   if (dto.minStayMonths) {
     facts.push({ label: "Minimum stay", value: `${dto.minStayMonths} months` });
   }
   facts.push({ label: "Bills", value: dto.billsIncluded ? "Included" : "Not included" });
-  if (dto.lgbtqFriendly) facts.push({ label: "LGBTQ+ friendly", value: "Yes" });
+  // `lgbtqFriendly` is intentionally NOT surfaced as a per-listing fact anymore:
+  // being LGBTQ+ affirming is the mandatory universal baseline for every home
+  // here, not a variable attribute. It shows as a norm badge instead (see
+  // AffirmingBaselineBadge), so it never reads as something a listing could lack.
 
   return {
     slug: dto.slug,
@@ -53,17 +70,32 @@ export function listingDtoToHousingListing(dto: HousingListingDTO): HousingListi
     tint: style.tint,
     title: dto.title,
     hood: dto.area || dto.city,
-    beds: "", // backend has no `beds` field — rendered minimally (documented gap)
+    beds: dto.bedrooms !== null ? bedroomsLabel(dto.bedrooms) : "",
     avail: dto.availableFrom ?? "Available now",
     description: dto.blurb,
     price: `€${dto.rentEuros.toLocaleString()}`,
     period: "month",
     image: dto.gallery[0],
-    poster: posterFrom(dto.lister),
+    poster: posterFrom(dto.lister, dto.listerVerificationLevel),
     gallery: dto.gallery,
     longDesc: dto.description ? [dto.description] : [],
     features: dto.features,
     facts,
     idealFor: dto.idealFor,
+    accessibilityInfo: dto.accessibilityInfo || undefined,
+    billsIncluded: dto.billsIncluded,
+    listerKind: dto.listerKind,
+    verified: dto.listingVerified,
+    verifiedReason: dto.listingVerifiedReason,
+    bedrooms: dto.bedrooms ?? undefined,
+    virtualTourUrl: dto.virtualTourUrl ?? undefined,
+    location: {
+      approxLatitude: dto.approxLatitude,
+      approxLongitude: dto.approxLongitude,
+      preciseLatitude: dto.preciseLatitude,
+      preciseLongitude: dto.preciseLongitude,
+      addressLine: dto.addressLine,
+      precision: dto.locationPrecision,
+    },
   };
 }

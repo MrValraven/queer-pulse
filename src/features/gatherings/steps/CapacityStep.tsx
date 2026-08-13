@@ -3,6 +3,7 @@ import { FiCheck } from "react-icons/fi";
 import { useMyCommunityOptions } from "../../communities/api/useMyCommunityOptions";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { AudienceScopeField } from "../AudienceScopeField";
 import { ACCESS_OPTIONS, LANGS } from "../createGathering.data";
 import type { GatheringForm } from "../useGatheringForm";
 import styles from "../CreateGatheringPage.module.css";
@@ -121,6 +122,12 @@ export function CapacityStep({ form }: { form: GatheringForm }) {
           </select>
         </>
       )}
+      <AudienceScopeField
+        fieldId={`${fieldId}-audience`}
+        value={form.audienceScope}
+        onChange={form.setAudienceScope}
+        communityAvailable={form.communitySlug !== ""}
+      />
     </div>
   );
 }

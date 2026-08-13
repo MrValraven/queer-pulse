@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import {
   Button,
@@ -7,14 +8,30 @@ import {
   StatTile,
 } from "../../shared/components/ui";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useAuth } from "../../app/providers/authContext";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useGovernanceFinances } from "./api/useGovernanceFinances";
 import { useGovernanceOverview } from "./api/useGovernanceOverview";
+import { submitConcern, type ConcernCategory } from "./api/governance.api";
 import { FinanceLines } from "./GovernanceFinance";
 import styles from "./GovernancePage.module.css";
+
+/** The concern categories, in the order the select lists them. Each carries a
+ *  stable payload value (persisted, localisation-independent) and the i18n key
+ *  for its visible label. */
+const CONCERN_OPTIONS: { value: ConcernCategory; labelKey: string }[] = [
+  { value: "member", labelKey: "governance:sections.raise.option.member" },
+  {
+    value: "gathering",
+    labelKey: "governance:sections.raise.option.gathering",
+  },
+  { value: "content", labelKey: "governance:sections.raise.option.content" },
+  { value: "appeal", labelKey: "governance:sections.raise.option.appeal" },
+  { value: "other", labelKey: "governance:sections.raise.option.other" },
+];
 
 /**
  * Distinct error/retry state for a governance section. Rendered in place of a
@@ -394,7 +411,53 @@ export function DecisionsSection() {
 export function RaiseSection() {
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
+  const { loggedIn } = useAuth();
   const { t } = useTranslation();
+  const [category, setCategory] = useState<ConcernCategory | "">("");
+  const [description, setDescription] = useState("");
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const reset = () => {
+    setCategory("");
+    setDescription("");
+    setEmail("");
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (submitting) return;
+    // Category and a few words of detail are the minimum a triager needs to
+    // act; without them the row would land in the dashboard as an empty task.
+    if (!category || !description.trim()) {
+      showToast(t("governance:sections.raise.errorToast"), "error");
+      return;
+    }
+    // Demo mode has no backend — keep the prototype's simulated confirmation.
+    if (demoMode) {
+      showToast(t("governance:sections.raise.submittedToast"), "success");
+      reset();
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await submitConcern({
+        category,
+        description: description.trim(),
+        // A signed-in member is identified by their account (attributed
+        // server-side); only a logged-out submitter supplies an email so we
+        // can follow up.
+        ...(loggedIn || !email.trim() ? {} : { email: email.trim() }),
+      });
+      showToast(t("governance:sections.raise.submittedToast"), "success");
+      reset();
+    } catch {
+      showToast(t("governance:sections.raise.failedToast"), "error");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <Reveal as="section" className={styles.section} id="raise">
       <div className={styles.eye}>{t("governance:sections.raise.eyebrow")}</div>
@@ -416,49 +479,48 @@ export function RaiseSection() {
         </p>
         <form
           className={styles.rcForm}
-          onSubmit={(e) => {
-            e.preventDefault();
-            // No backend concern-intake endpoint exists yet (the governance
-            // controller only exposes GET overview/finances). Demo mode keeps
-            // the prototype's simulated confirmation; live mode stays honest
-            // rather than telling a member we received a concern we can't store.
-            if (demoMode) {
-              showToast(
-                t("governance:sections.raise.submittedToast"),
-                "success",
-              );
-            } else {
-              showToast(t("governance:sections.raise.comingSoonToast"), "info");
-            }
-          }}
+          onSubmit={(event) => void handleSubmit(event)}
         >
           <select
             className={styles.rcSelect}
-            defaultValue=""
+            value={category}
+            onChange={(event) =>
+              setCategory(event.target.value as ConcernCategory)
+            }
             aria-label={t("governance:sections.raise.selectPlaceholder")}
           >
             <option value="" disabled>
               {t("governance:sections.raise.selectPlaceholder")}
             </option>
-            <option>{t("governance:sections.raise.option.member")}</option>
-            <option>{t("governance:sections.raise.option.gathering")}</option>
-            <option>{t("governance:sections.raise.option.content")}</option>
-            <option>{t("governance:sections.raise.option.appeal")}</option>
-            <option>{t("governance:sections.raise.option.other")}</option>
+            {CONCERN_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {t(option.labelKey)}
+              </option>
+            ))}
           </select>
           <textarea
             className={styles.rcTextarea}
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
             placeholder={t("governance:sections.raise.textareaPlaceholder")}
             aria-label={t("governance:sections.raise.textareaPlaceholder")}
           />
-          <input
-            className={styles.rcInput}
-            type="email"
-            placeholder={t("governance:sections.raise.emailPlaceholder")}
-            aria-label={t("governance:sections.raise.emailPlaceholder")}
-          />
-          <Button type="submit">
-            {t("governance:sections.raise.submitCta")}{" "}
+          {/* Logged-out submitters leave an email so we can follow up; a
+              signed-in member is reached through their account. */}
+          {!loggedIn && (
+            <input
+              className={styles.rcInput}
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder={t("governance:sections.raise.emailPlaceholder")}
+              aria-label={t("governance:sections.raise.emailPlaceholder")}
+            />
+          )}
+          <Button type="submit" disabled={submitting}>
+            {submitting
+              ? t("governance:sections.raise.submittingCta")
+              : t("governance:sections.raise.submitCta")}{" "}
             <FiArrowRight aria-hidden />
           </Button>
         </form>

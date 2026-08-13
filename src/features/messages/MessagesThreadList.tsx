@@ -1,29 +1,22 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { FiMessageCircle } from "react-icons/fi";
 import { paneScrollRegistry } from "../../app/paneScrollRegistry";
-import {
-  EmptyState,
-  FadeIn,
-  FeatureHelp,
-  PullToRefresh,
-  SearchInput,
-} from "../../shared/components/ui";
-import { useTranslation } from "../../shared/i18n/useTranslation";
+import { PullToRefresh } from "../../shared/components/ui";
 import { DeleteConversationDialog } from "./DeleteConversationDialog";
-import { MessagesSearchResults } from "./MessagesSearchResults";
-import { MessageThreadListSkeleton } from "./MessagesSkeleton";
-import { MessagesThreadRow } from "./MessagesThreadRow";
+import { MessagesThreadListBody } from "./MessagesThreadListBody";
+import { MessagesThreadListHeader } from "./MessagesThreadListHeader";
+import { filterThreadsByTab, type InboxTab } from "./threadFilters";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
 /**
- * The element that actually scrolls inside `.threadList`. `PullToRefresh` nests
- * its own `overflow-y: auto; height: 100%` scroller as the direct child, so the
- * rows overflow THAT element while `.threadList`'s single child fits it exactly
- * — meaning the inner one is the real scroll surface. Register that so
- * scroll-to-top / per-navigation restore act on the surface that moves, falling
- * back to `.threadList` itself if the structure ever changes.
+ * The element that actually scrolls inside `.threadList`. `PullToRefresh`
+ * nests its own `overflow-y: auto; height: 100%` scroller as the direct
+ * child, so the rows overflow THAT element while `.threadList`'s single
+ * child fits it exactly — meaning the inner one is the real scroll surface.
+ * Register that so scroll-to-top / per-navigation restore act on the surface
+ * that moves, falling back to `.threadList` itself if the structure ever
+ * changes.
  */
 function resolveScrollContainer(root: HTMLElement): HTMLElement {
   const child = root.firstElementChild;
@@ -64,11 +57,28 @@ export function MessagesThreadList({
   onSelectResult: (conversationId: string, messageId?: string) => void;
   deletePending: boolean;
 }) {
-  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [confirmDelete, setConfirmDelete] = useState<Conversation | null>(
     null,
   );
+  // All/Unread/Favorites/Groups — local UI state, doesn't need to persist.
+  // Reset to "All" whenever a search starts so leaving the search view never
+  // strands the list on a stale filter the user can't see the control for.
+  const [activeTab, setActiveTab] = useState<InboxTab>("all");
+  const searching = !loading && query.trim().length > 0;
+  const showTabs = !loading && !searching && threads.length > 0;
+  const visibleThreads = useMemo(
+    () => filterThreadsByTab(threads, activeTab, activeId, readIds),
+    [threads, activeTab, activeId, readIds],
+  );
+  // The count the pin-toggle mutation caps against — the whole inbox
+  // (pre-tab-filter), so pinning from inside e.g. the Favorites tab still
+  // enforces the real cap.
+  const pinnedCount = useMemo(
+    () => threads.filter((thread) => !!thread.pinnedAt).length,
+    [threads],
+  );
+
   // The inbox list is this fullHeight route's own scroll surface (the window
   // doesn't move). Register it so ScrollManager can restore/reset its offset per
   // navigation and honour a tap-on-the-active-tab scroll-to-top — the pane half
@@ -81,80 +91,18 @@ export function MessagesThreadList({
   }, []);
   return (
     <div className={styles.threadPanel}>
-      <div className={styles.tpTop}>
-        <div className={styles.tpHeadRow}>
-          <div className={styles.tpTitle}>
-            {t("messages:thread.title")}
-            <FeatureHelp id="messages.inbox" />
-          </div>
-          <div className={styles.tpHeadActions}>
-            <button
-              type="button"
-              className={styles.composeBtn}
-              title={t("messages:group.newTooltip")}
-              aria-label={t("messages:group.newTooltip")}
-              onClick={onComposeGroup}
-            >
-              <svg
-                width={17}
-                height={17}
-                viewBox="0 0 20 20"
-                fill="none"
-                aria-hidden
-              >
-                <circle cx="7" cy="7.5" r="2.6" stroke="currentColor" strokeWidth={1.5} />
-                <path
-                  d="M2.5 15.5c0-2.2 2-3.6 4.5-3.6s4.5 1.4 4.5 3.6"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                  strokeLinecap="round"
-                />
-                <circle cx="14" cy="6.5" r="2" stroke="currentColor" strokeWidth={1.5} />
-                <path
-                  d="M13 11.2c2.2 0 4 1.2 4 3.3"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
-            <button
-              type="button"
-              className={styles.composeBtn}
-              title={t("messages:thread.composeTooltip")}
-              aria-label={t("messages:thread.composeTooltip")}
-              onClick={onCompose}
-            >
-              <svg
-                width={15}
-                height={15}
-                viewBox="0 0 15 15"
-                fill="none"
-                aria-hidden
-              >
-                <path
-                  d="M10.5 2L13 4.5l-7 7H3.5V9l7-7Z"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M2 13h11"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-        <SearchInput
-          value={query}
-          onChange={onQueryChange}
-          placeholder={t("messages:thread.searchPlaceholder")}
-          ariaLabel={t("messages:thread.searchAria")}
-        />
-      </div>
+      <MessagesThreadListHeader
+        query={query}
+        onQueryChange={(value) => {
+          if (value.trim()) setActiveTab("all");
+          onQueryChange(value);
+        }}
+        onCompose={onCompose}
+        onComposeGroup={onComposeGroup}
+        showTabs={showTabs}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
 
       <div className={styles.threadList} ref={threadListRef}>
         {/* `queryKey: ["conversations"]` matches useConversations' inline
@@ -172,47 +120,22 @@ export function MessagesThreadList({
             queryClient.invalidateQueries({ queryKey: ["conversations"] })
           }
         >
-          {loading && <MessageThreadListSkeleton count={6} />}
-          {/* Query present → the unified search view: name-matched conversations
-              (already filtered by the controller into `threads`) alongside
-              cross-conversation message-body hits. */}
-          {!loading && query.trim() && (
-            <MessagesSearchResults
-              query={query}
-              threads={threads}
-              activeId={activeId}
-              readIds={readIds}
-              onOpen={onOpen}
-              onRequestDelete={setConfirmDelete}
-              onSelectResult={onSelectResult}
-              onClearSearch={() => onQueryChange("")}
-            />
-          )}
-          {!loading && !query.trim() && threads.length === 0 && (
-            <EmptyState
-              compact
-              icon={<FiMessageCircle />}
-              title={t("messages:thread.emptyTitle")}
-              description={t("messages:thread.emptyDescription")}
-              action={{
-                label: t("messages:thread.newMessage"),
-                onClick: onCompose,
-              }}
-            />
-          )}
-          {!loading &&
-            !query.trim() &&
-            threads.map((thread, index) => (
-              <FadeIn key={thread.id} delay={Math.min(index, 8) * 60}>
-                <MessagesThreadRow
-                  thread={thread}
-                  activeId={activeId}
-                  readIds={readIds}
-                  onOpen={onOpen}
-                  onRequestDelete={setConfirmDelete}
-                />
-              </FadeIn>
-            ))}
+          <MessagesThreadListBody
+            loading={loading}
+            searching={searching}
+            query={query}
+            threads={threads}
+            visibleThreads={visibleThreads}
+            activeTab={activeTab}
+            activeId={activeId}
+            readIds={readIds}
+            pinnedCount={pinnedCount}
+            onOpen={onOpen}
+            onCompose={onCompose}
+            onQueryChange={onQueryChange}
+            onSelectResult={onSelectResult}
+            onRequestDelete={setConfirmDelete}
+          />
         </PullToRefresh>
       </div>
       {confirmDelete && (

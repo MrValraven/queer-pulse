@@ -306,7 +306,7 @@
   color: var(--text-60);
 }
 
-@media (max-width: 640px) {
+@media (--md) {
   .card {
     padding: 22px;
   }

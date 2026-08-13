@@ -221,6 +221,52 @@
   justify-content: center;
 }
 
+/* In-event RSVP control (GatheringRsvpControl) */
+.rsvpPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rsvpConfirm {
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-radius: var(--radius-card);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.rsvpConfirmHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.rsvpConfirmHead em {
+  font-style: italic;
+  color: var(--accent);
+}
+.rsvpConfirmIcon {
+  display: inline-flex;
+  flex: none;
+  color: var(--jade);
+  font-size: 22px;
+}
+.rsvpConfirmNote {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: rgba(var(--cream-rgb), 0.72);
+}
+.rsvpActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .other {
   margin-top: 80px;
   padding-top: 60px;
@@ -303,7 +349,7 @@
   margin-top: 4px;
 }
 
-@media (max-width: 860px) {
+@media (--mobile) {
   .page {
     /* nav band reserved by shell (base.css); this is only breathing room */
     padding-top: 16px;

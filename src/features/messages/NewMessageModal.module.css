@@ -25,7 +25,7 @@
 
 /* Bottom sheet on phones — in the thumb arc, lifts above the on-screen keyboard
    (the search field can raise it) and clears the notch/home indicator. */
-@media (max-width: 860px) {
+@media (--mobile) {
   .overlay {
     align-items: flex-end;
     padding: 0;

@@ -10,6 +10,26 @@ import type { Catalog } from "../../types";
  * `*.data.ts` files — see docs/i18n/extraction-brief.md §1.
  */
 export const admin: Catalog = {
+  // ── Identity verification console ─────────────────────────────────────────
+  "verifications.eyebrow": "Trust & safety",
+  "verifications.title": "Identity <em>verification</em>",
+  "verifications.sub":
+    "Review and adjust members' verification levels after a manual check.",
+  "verifications.honesty":
+    "We never store identity documents or biometrics — an external provider runs the ID check and only returns a pass or fail. These records hold a level and its provenance, nothing more.",
+  "verifications.via": "via {method} · {provider}",
+  "verifications.setLevelLabel": "Set verification level",
+  "verifications.applyCta": "Apply",
+  "verifications.unknownMember": "Unknown member",
+  "verifications.level.none": "None",
+  "verifications.level.email": "Email",
+  "verifications.level.phone": "Phone",
+  "verifications.level.id_verified": "ID-verified",
+  "verifications.toast.updated": "Verification level updated.",
+  "verifications.toast.error": "Couldn't update that verification",
+  "verifications.loadError": "Couldn't load verifications",
+  "verifications.empty": "No verification records yet.",
+
   // ── Shared verbs, reused across many modals/drawers ───────────────────────
   "common.cancel": "Cancel",
   "common.close": "Close",
@@ -501,6 +521,36 @@ export const admin: Catalog = {
   "adminReadingGroupProposals.toast.error": "That didn't go through. Please try again.",
   "adminReadingGroupProposals.loadMore": "Load more",
   "adminReadingGroupProposals.loadingMore": "Loading…",
+
+  "adminConcerns.title": "Concerns <em>raised</em>",
+  "adminConcerns.header.eyebrow": "Trust & safety",
+  "adminConcerns.header.title": "What members <em>are flagging</em>",
+  "adminConcerns.header.sub":
+    "Every concern submitted through the governance form — reports, appeals, and issues. Filter by triage status, then mark each one reviewing, resolved, or dismissed.",
+  "adminConcerns.empty": "No concerns match this filter yet.",
+  "adminConcerns.error": "We couldn't load concerns. Please try again.",
+  "adminConcerns.filter.all": "All",
+  "adminConcerns.category.member": "Member or behaviour",
+  "adminConcerns.category.gathering": "Gathering or event",
+  "adminConcerns.category.content": "Content or platform",
+  "adminConcerns.category.appeal": "Moderation appeal",
+  "adminConcerns.category.other": "Something else",
+  "adminConcerns.status.new": "New",
+  "adminConcerns.status.reviewing": "Reviewing",
+  "adminConcerns.status.resolved": "Resolved",
+  "adminConcerns.status.dismissed": "Dismissed",
+  "adminConcerns.row.contact": "Contact: {contact}",
+  "adminConcerns.row.sent": "Sent {date}",
+  "adminConcerns.contact.anon": "No contact left",
+  "adminConcerns.action.reviewing": "Mark reviewing",
+  "adminConcerns.action.resolved": "Resolve",
+  "adminConcerns.action.dismissed": "Dismiss",
+  "adminConcerns.toast.reviewing": "Marked as reviewing.",
+  "adminConcerns.toast.resolved": "Concern resolved.",
+  "adminConcerns.toast.dismissed": "Concern dismissed.",
+  "adminConcerns.toast.error": "That didn't go through. Please try again.",
+  "adminConcerns.loadMore": "Load more",
+  "adminConcerns.loadingMore": "Loading…",
 
   "adminMagazineSubmissions.title": "Story <em>submissions</em>",
   "adminMagazineSubmissions.header.eyebrow": "Magazine",
@@ -1791,6 +1841,34 @@ export const admin: Catalog = {
   "housingRequests.declineCta": "Decline",
   "housingRequests.acceptCta": "Accept",
 
+  // ── Housing groups (/admin/housing-groups) — join triage + norm enforcement ─
+  "housingGroups.title": "Housing <em>groups</em>",
+  "housingGroups.header.eyebrow": "Vetted housing",
+  "housingGroups.header.sub":
+    "Review who's asking to join the access-gated groups, and keep listings honest by hiding any that break the norms.",
+  "housingGroups.requests.title": "Join requests",
+  "housingGroups.requests.loadError":
+    "The join-request queue couldn't load right now — please try again.",
+  "housingGroups.requests.empty":
+    "Nothing waiting on you — every request has been reviewed.",
+  "housingGroups.requests.unknownGroup": "Unknown group",
+  "housingGroups.requests.mutuals_one": "{count} mutual connection",
+  "housingGroups.requests.mutuals_other": "{count} mutual connections",
+  "housingGroups.requests.declineCta": "Decline",
+  "housingGroups.requests.approveCta": "Approve",
+  "housingGroups.requests.error": "Couldn't save that decision",
+  "housingGroups.listings.title": "Listings",
+  "housingGroups.listings.loadError":
+    "The listings couldn't load right now — please try again.",
+  "housingGroups.listings.empty":
+    "No listings to review — nothing's been posted to a group yet.",
+  "housingGroups.listings.perMonth": "€{price} / mo",
+  "housingGroups.listings.noGroup": "No group",
+  "housingGroups.listings.hiddenChip": "Hidden",
+  "housingGroups.listings.hideCta": "Hide",
+  "housingGroups.listings.unhideCta": "Un-hide",
+  "housingGroups.listings.error": "Couldn't update that listing",
+
   // ── Roadmap (/admin/roadmap) — board, idea queue, hero stats ───────────────
   "roadmap.title": "Roadmap · <em>what's next</em>",
   "roadmap.header.eyebrow": "Roadmap",
@@ -2620,4 +2698,23 @@ export const admin: Catalog = {
   "pressKit.facts.sub":
     "Derived from platform data — shown on the public press kit, not editable here.",
   "pressKit.facts.empty": "No facts available yet.",
+
+  // ── Housing listing integrity (Wave B1) — risk-sorted moderation queue ──
+  // Admin-facing labels for a housing listing's pre-publish risk score, the
+  // machine reasons behind it, and the report evidence snapshot. Server sends
+  // stable codes; these turn them into human column/labels for a reviewer.
+  "housing.risk.title": "Risk score",
+  "housing.risk.reasonsLabel": "Why it's flagged",
+  "housing.risk.evidenceLabel": "Reported listing snapshot",
+  "housing.risk.reason.rent_far_below_market": "Rent far below the local range",
+  "housing.risk.reason.rent_below_market": "Rent below the local range",
+  "housing.risk.reason.contact_info_in_text": "Contact details in the text",
+  "housing.risk.reason.off_platform_payment_language":
+    "Off-platform or advance-payment language",
+  "housing.risk.reason.discriminatory_language": "Possible discriminatory wording",
+  "housing.risk.reason.lister_unverified": "Lister not phone- or ID-verified",
+  "housing.risk.reason.lister_phone_only": "Lister phone-verified only",
+  "housing.risk.reason.incomplete_listing": "Sparse description",
+  "housing.risk.reason.no_photos": "No photos",
+  "housing.risk.reason.missing_accessibility_info": "No accessibility info",
 };

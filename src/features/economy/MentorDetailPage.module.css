@@ -79,7 +79,7 @@
   margin-bottom: 36px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
 }
-@media (max-width: 640px) {
+@media (--md) {
   .head {
     grid-template-columns: 1fr;
   }
@@ -173,7 +173,7 @@
   align-items: flex-start;
   margin-bottom: 32px;
 }
-@media (max-width: 860px) {
+@media (--mobile) {
   .grid {
     grid-template-columns: 1fr;
   }
@@ -211,7 +211,7 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
-@media (max-width: 560px) {
+@media (--sm) {
   .whatGrid {
     grid-template-columns: 1fr;
   }
@@ -275,7 +275,7 @@
   flex-direction: column;
   gap: 14px;
 }
-@media (max-width: 860px) {
+@media (--mobile) {
   .side {
     position: static;
   }

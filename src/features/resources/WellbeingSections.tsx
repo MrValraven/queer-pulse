@@ -1,24 +1,23 @@
 import { FiArrowRight, FiHeart } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, EmptyState, Reveal } from "../../shared/components/ui";
-import { useConnect } from "../../app/providers/useConnect";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { useTherapists } from "./api/useTherapists";
+import { useTherapistPersonas } from "./api/useTherapistPersonas";
 import { CardGrid, ResourceCard } from "./ResourceCard";
-import { THERAPISTS, CRISIS, HARM } from "./wellbeing.data";
+import { CRISIS, HARM } from "./wellbeing.data";
 import styles from "./resources.module.css";
 
-/** Community-vetted therapist directory. */
+/** Community-vetted therapist directory, backed by real therapist personas. */
 export function TherapistsSection() {
-  const { openConnect } = useConnect();
   const { t } = useTranslation();
-  // Live mode has no therapist backend, so the mock directory (named personas +
-  // a working "Request intro" CTA) is fabricated. Never surface bookable fake
-  // therapists against the real API; show an honest coming-soon instead. Demo
-  // mode keeps the `THERAPISTS` mock.
-  const { comingSoon } = useTherapists();
+  const navigate = useNavigate();
+  // Backed by real therapist-kind personas (useTherapistPersonas): demo mode
+  // surfaces the demo therapist persona(s); live mode queries the real
+  // persona directory. `comingSoon` is only true live+empty — never surface
+  // bookable fake therapists against the real API.
+  const { cards, comingSoon } = useTherapistPersonas();
   return (
     <section
       className={`${styles.section} ${styles.sectionPaper}`}
@@ -49,21 +48,23 @@ export function TherapistsSection() {
           />
         ) : (
         <CardGrid>
-          {THERAPISTS.map((therapist, index) => (
+          {cards.map((vm, index) => (
             <ResourceCard
-              key={therapist.name}
-              name={therapist.name}
-              spec={therapist.spec}
-              tags={therapist.tags}
-              loc={therapist.loc}
-              ctaLabel={t("resources:wellbeing.therapists.requestIntroCta")}
-              onCta={() => openConnect()}
+              key={vm.handle}
+              name={vm.name}
+              spec={vm.creds ?? ""}
+              tags={vm.specs}
+              loc={vm.format ?? ""}
+              ctaLabel={t("resources:mentalHealth.therapists.viewProfileCta")}
+              onCta={() => {
+                void navigate(vm.href);
+              }}
               delay={index * 55}
             />
           ))}
           <Reveal
             className={`${styles.card} ${styles.cardDashed}`}
-            delay={THERAPISTS.length * 55}
+            delay={cards.length * 55}
           >
             <div>
               {t("resources:wellbeing.therapists.applyPrompt")}

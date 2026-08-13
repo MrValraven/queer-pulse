@@ -100,6 +100,20 @@ export const gatherings: Catalog = {
   "cta.bookSlot": "Book a slot",
   "cta.joinWaitlist": "Join the waitlist",
 
+  // ── In-event RSVP control (GatheringRsvpControl) ──────────────────────────
+  // RSVP is an action inside the gathering detail: the primary action, its
+  // confirmed "you're going" / waitlist state, and cancellation.
+  "rsvpControl.goingCta": "I'm going",
+  "rsvpControl.waitlistCta": "Join the waitlist",
+  "rsvpControl.pendingCta": "One moment…",
+  "rsvpControl.goingTitle": "You're <em>going</em>",
+  "rsvpControl.waitlistTitle": "You're on the <em>waitlist</em>",
+  "rsvpControl.goingCount_one": "{count} member going so far",
+  "rsvpControl.goingCount_other": "{count} members going so far",
+  "rsvpControl.waitlistPosition": "You're number {position} in line",
+  "rsvpControl.waitlistNote": "We'll let you know the moment a spot opens.",
+  "rsvpControl.cancelCta": "Cancel RSVP",
+
   // ── Attendee meta line (attendeeMeta in api/events.adapters.ts) ───────────
   // The pronouns beside these are the person's own words and stay untranslated.
   "attendee.rsvpdOn": "RSVP'd {date}",
@@ -220,6 +234,10 @@ export const gatherings: Catalog = {
   "rsvp.withLabel": "You're going with",
   "rsvp.othersCount_one": "and {count} other member",
   "rsvp.othersCount_other": "and {count} other members",
+  "rsvp.live.goingWith_one": "You're going, along with <strong>{count} other member</strong>.",
+  "rsvp.live.goingWith_other": "You're going, along with <strong>{count} other members</strong>.",
+  "rsvp.live.waitlistNote_one": "{count} more is on the waitlist.",
+  "rsvp.live.waitlistNote_other": "{count} more are on the waitlist.",
   "rsvp.host.roleLabel": "Reading group organiser",
   "rsvp.calendar.label": "Add to calendar",
   "rsvp.calendar.googleCta": "Google Calendar",
@@ -583,6 +601,24 @@ export const gatherings: Catalog = {
   "create.step3.communityLabel": "Post to a community (optional)",
   "create.step3.communityNone": "None — public gathering",
 
+  // AudienceScopeField.tsx — shared by the create wizard (step 3) and the
+  // manage-gathering edit modal.
+  "audienceScope.label": "Who can see this gathering?",
+  "audienceScope.hint": "Choose how wide this reaches — you can change it anytime.",
+  "audienceScope.members.label": "Public",
+  "audienceScope.members.helper":
+    "Anyone on QueerPulse can find this and RSVP.",
+  "audienceScope.extendedNetwork.label": "Connections of connections",
+  "audienceScope.extendedNetwork.helper":
+    "People your connections know can find this — friends of friends, not strangers.",
+  "audienceScope.network.label": "Network only",
+  "audienceScope.network.helper": "Only people you're connected to.",
+  "audienceScope.community.label": "Community members",
+  "audienceScope.community.helper":
+    "Only members of the community you're posting to.",
+  "audienceScope.inviteOnly.label": "Invite only",
+  "audienceScope.inviteOnly.helper": "Only the people you invite.",
+
   // CreateGatheringSteps.tsx — step 4: pricing
   "create.step4.title": "Tickets and <em>pricing.</em>",
   "create.step4.sub":
@@ -625,6 +661,7 @@ export const gatherings: Catalog = {
   "create.step5.row.dateTime": "Date & time",
   "create.step5.row.location": "Location",
   "create.step5.row.capacity": "Capacity",
+  "create.step5.row.audience": "Who can see this",
   "create.step5.row.pricing": "Pricing",
   "create.step5.row.accessibility": "Accessibility",
   "create.step5.pricingFree": "Free event",
@@ -894,6 +931,9 @@ export const gatherings: Catalog = {
   "manage.messages.openedOf": "{opened} / {total} opened",
   "manage.messages.sentToast_one": "Update sent to {count} attendee",
   "manage.messages.sentToast_other": "Update sent to {count} attendees",
+  "manage.messages.liveUnavailableTitle": "Messaging attendees is on the way",
+  "manage.messages.liveUnavailableBody":
+    "Sending updates to everyone who's coming isn't switched on yet. In the meantime, share news on the gathering page or message guests you're connected with.",
 
   // ── Manage: settings tab ─────────────────────────────────────────────────────
   "manage.settings.optionsHeading": "Gathering options",

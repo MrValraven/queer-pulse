@@ -1,14 +1,19 @@
-import { Tag, TagRow } from "../../shared/components/ui";
+import { useState } from "react";
+import { FiCheck } from "react-icons/fi";
+import { TagRow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useProfileData } from "../../app/providers/useProfile";
 import { fullName } from "../members/data/members";
+import { PronounField } from "../../shared/identity/PronounField";
+import { parsePronouns } from "../../shared/identity/pronouns";
 import {
   OUT_AT_WORK,
   TRANS_SUPPORT,
   VIS_MATRIX,
-  WORK_SKILLS_KEYS,
-  FOCUS_AREAS_KEYS,
+  WORK_SKILLS,
+  FOCUS_AREAS,
+  type WorkTaxonomyOption,
 } from "./workProfile.data";
 import styles from "./WorkProfilePage.module.css";
 
@@ -17,6 +22,11 @@ export function IdentitySection() {
   const { t } = useTranslation();
   // The signed-in member (real profile live, mock currentUser in demo mode).
   const { profile } = useProfileData();
+  // Display-only, v1: identity inputs here are uncontrolled/non-persisting;
+  // this local state mirrors that until real save is wired up.
+  const [pronouns, setPronouns] = useState(() =>
+    parsePronouns(profile.pronouns ?? ""),
+  );
   return (
     <section className={styles.section}>
       <h2 className={styles.sectionTitle}>
@@ -29,18 +39,48 @@ export function IdentitySection() {
         {t("economy:workProfile.identity.sub")}
       </p>
 
-      <div className={styles.fieldRow}>
-        <div className={styles.field}>
-          <div className={styles.fieldLabel}>
-            {t("economy:workProfile.identity.nameInUse")}
-          </div>
-          <input
-            className={styles.fieldInput}
-            type="text"
-            aria-label={t("economy:workProfile.identity.nameInUse")}
-            defaultValue={fullName(profile)}
-          />
+      {/* Personal core — name, pronouns, location kept together and leading,
+          mirroring the main profile editor's identity block. */}
+      <div className={styles.field}>
+        <div className={styles.fieldLabel}>
+          {t("economy:workProfile.identity.nameInUse")}
         </div>
+        <input
+          className={styles.fieldInput}
+          type="text"
+          aria-label={t("economy:workProfile.identity.nameInUse")}
+          defaultValue={fullName(profile)}
+        />
+      </div>
+
+      <div className={styles.field}>
+        <PronounField
+          value={pronouns}
+          onChange={setPronouns}
+          labels={{
+            field: t("economy:workProfile.identity.pronouns"),
+            writeOwn: t("economy:workProfile.identity.pronounsWriteOwn"),
+            placeholder: t("economy:workProfile.identity.pronounsPlaceholder"),
+            add: t("economy:workProfile.identity.pronounsAdd"),
+            removeAria: (pronoun) =>
+              t("economy:workProfile.identity.pronounsRemoveAria", { pronoun }),
+          }}
+        />
+      </div>
+
+      <div className={styles.field}>
+        <div className={styles.fieldLabel}>
+          {t("economy:workProfile.identity.location")}
+        </div>
+        <input
+          className={styles.fieldInput}
+          type="text"
+          aria-label={t("economy:workProfile.identity.location")}
+          defaultValue={profile.hood}
+        />
+      </div>
+
+      <div className={styles.fieldRow}>
         <div className={styles.field}>
           <div className={styles.fieldLabel}>
             {t("economy:workProfile.identity.legalName")}{" "}
@@ -58,20 +98,6 @@ export function IdentitySection() {
             {t("economy:workProfile.identity.legalNameHint")}
           </div>
         </div>
-      </div>
-
-      <div className={styles.fieldRow}>
-        <div className={styles.field}>
-          <div className={styles.fieldLabel}>
-            {t("economy:workProfile.identity.pronouns")}
-          </div>
-          <input
-            className={styles.fieldInput}
-            type="text"
-            aria-label={t("economy:workProfile.identity.pronouns")}
-            defaultValue={profile.pronouns ?? ""}
-          />
-        </div>
         <div className={styles.field}>
           <div className={styles.fieldLabel}>
             {t("economy:workProfile.identity.headline")}
@@ -83,18 +109,6 @@ export function IdentitySection() {
             defaultValue={profile.role}
           />
         </div>
-      </div>
-
-      <div className={styles.field}>
-        <div className={styles.fieldLabel}>
-          {t("economy:workProfile.identity.location")}
-        </div>
-        <input
-          className={styles.fieldInput}
-          type="text"
-          aria-label={t("economy:workProfile.identity.location")}
-          defaultValue={profile.hood}
-        />
       </div>
 
       <div className={styles.field}>
@@ -267,9 +281,59 @@ export function ShowUpAtWorkSection({
   );
 }
 
-/** Section 3 — skills offered/sought and focus areas. */
-export function SkillsFocusSection() {
+/** A multi-select row of taxonomy chips — a selectable chip per option. */
+function SelectableChipRow({
+  options,
+  selected,
+  onToggle,
+  groupLabel,
+}: {
+  options: WorkTaxonomyOption[];
+  selected: string[];
+  onToggle: (id: string) => void;
+  groupLabel: string;
+}) {
   const { t } = useTranslation();
+  return (
+    <TagRow role="group" aria-label={groupLabel}>
+      {options.map((option) => {
+        const on = selected.includes(option.id);
+        return (
+          <button
+            key={option.id}
+            type="button"
+            aria-pressed={on}
+            className={[styles.chipToggle, on && styles.chipToggleOn]
+              .filter(Boolean)
+              .join(" ")}
+            onClick={() => onToggle(option.id)}
+          >
+            {on && (
+              <FiCheck className={styles.chipToggleCheck} aria-hidden />
+            )}
+            {t(option.labelKey)}
+          </button>
+        );
+      })}
+    </TagRow>
+  );
+}
+
+/** Section 3 — skills offered and focus areas sought, both multi-select. */
+export function SkillsFocusSection({
+  skills,
+  onToggleSkill,
+  focusAreas,
+  onToggleFocusArea,
+}: {
+  skills: string[];
+  onToggleSkill: (id: string) => void;
+  focusAreas: string[];
+  onToggleFocusArea: (id: string) => void;
+}) {
+  const { t } = useTranslation();
+  const skillsLabel = t("economy:workProfile.skillsFocus.skills");
+  const focusLabel = t("economy:workProfile.skillsFocus.focusAreas");
   return (
     <section className={styles.section}>
       <h2 className={styles.sectionTitle}>
@@ -282,24 +346,22 @@ export function SkillsFocusSection() {
         {t("economy:workProfile.skillsFocus.sub")}
       </p>
       <div className={styles.field}>
-        <div className={styles.fieldLabel}>
-          {t("economy:workProfile.skillsFocus.skills")}
-        </div>
-        <TagRow>
-          {WORK_SKILLS_KEYS.map((key) => (
-            <Tag key={key}>{t(key)}</Tag>
-          ))}
-        </TagRow>
+        <div className={styles.fieldLabel}>{skillsLabel}</div>
+        <SelectableChipRow
+          options={WORK_SKILLS}
+          selected={skills}
+          onToggle={onToggleSkill}
+          groupLabel={skillsLabel}
+        />
       </div>
       <div className={styles.field}>
-        <div className={styles.fieldLabel}>
-          {t("economy:workProfile.skillsFocus.focusAreas")}
-        </div>
-        <TagRow>
-          {FOCUS_AREAS_KEYS.map((key) => (
-            <Tag key={key}>{t(key)}</Tag>
-          ))}
-        </TagRow>
+        <div className={styles.fieldLabel}>{focusLabel}</div>
+        <SelectableChipRow
+          options={FOCUS_AREAS}
+          selected={focusAreas}
+          onToggle={onToggleFocusArea}
+          groupLabel={focusLabel}
+        />
       </div>
     </section>
   );

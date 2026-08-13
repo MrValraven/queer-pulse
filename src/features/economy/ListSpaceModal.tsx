@@ -1,49 +1,60 @@
-import { useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { CreateHousingListingBody } from "./api/housingListing.api";
 import { useSubmitHousingListing } from "./api/useSubmitHousingListing";
+import {
+  verificationRequiredFrom,
+  type VerificationLevel,
+} from "./api/verification.api";
+import { StepUpVerificationModal } from "./StepUpVerificationModal";
+import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
 import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
+import { ScamSafetyBanner } from "./ScamSafetyBanner";
+import { ListSpaceFields } from "./ListSpaceFields";
+import { useListSpaceForm } from "./useListSpaceForm";
+import { useState } from "react";
 import styles from "./ApplicationModals.module.css";
-
-const SPACE_TYPES = [
-  { value: "sublet", labelKey: "economy:listSpace.type.sublet" },
-  { value: "room", labelKey: "economy:listSpace.type.room" },
-  { value: "short", labelKey: "economy:listSpace.type.short" },
-  { value: "studio", labelKey: "economy:listSpace.type.studio" },
-];
 
 export function ListSpaceModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const [title, setTitle] = useState("");
-  const [area, setArea] = useState("");
-  const [rent, setRent] = useState("");
-  const [type, setType] = useState("");
+  const form = useListSpaceForm();
   const [done, setDone] = useState(false);
+  const [stepUp, setStepUp] = useState<VerificationLevel | null>(null);
+  const { handlePledgeError, pledgeGate } = useAffirmingPledgeGate();
   const submitListing = useSubmitHousingListing();
   const sending = submitListing.isPending;
-  const valid =
-    title.trim().length > 3 && area.trim().length > 1 && !!rent && !!type;
 
   const handleSubmit = () => {
-    if (!valid) return;
-    const body: CreateHousingListingBody = {
-      type: type as CreateHousingListingBody["type"],
-      title: title.trim(),
-      city: area.trim(),
-      area: area.trim(),
-      rentEuros: Number(rent),
-    };
-    submitListing.mutate(body, {
+    if (!form.valid) return;
+    submitListing.mutate(form.buildBody(), {
       onSuccess: () => setDone(true),
-      // Don't show the success panel for a listing that didn't go through —
-      // keep the form filled in so the member can retry.
-      onError: () => showToast(t("economy:listSpace.error"), "error"),
+      // Neither gate is a failure — open the matching prompt so the member can
+      // accept the affirming pledge / verify and retry, not a dead-end toast.
+      onError: (error) => {
+        if (handlePledgeError(error, handleSubmit)) return;
+        const required = verificationRequiredFrom(error);
+        if (required) setStepUp(required);
+        else showToast(t("economy:listSpace.error"), "error");
+      },
     });
   };
+
+  if (pledgeGate) return pledgeGate;
+
+  if (stepUp) {
+    return (
+      <StepUpVerificationModal
+        requiredLevel={stepUp}
+        onVerified={() => {
+          setStepUp(null);
+          handleSubmit();
+        }}
+        onClose={() => setStepUp(null)}
+      />
+    );
+  }
 
   return (
     <ModalShell onClose={onClose} success={done}>
@@ -56,7 +67,7 @@ export function ListSpaceModal({ onClose }: { onClose: () => void }) {
         >
           <Translation
             i18nKey="economy:listSpace.success.body"
-            values={{ title }}
+            values={{ title: form.title }}
             components={{ strong: <strong /> }}
           />
         </SuccessPanel>
@@ -71,54 +82,10 @@ export function ListSpaceModal({ onClose }: { onClose: () => void }) {
           </h2>
           <p className={styles.sub}>{t("economy:listSpace.sub")}</p>
 
-          <div className={styles.field}>
-            <label htmlFor="ls-title">
-              {t("economy:listSpace.titleLabel")}
-            </label>
-            <input
-              id="ls-title"
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder={t("economy:listSpace.titlePlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="ls-area">{t("economy:listSpace.areaLabel")}</label>
-            <input
-              id="ls-area"
-              type="text"
-              value={area}
-              onChange={(e) => setArea(e.target.value)}
-              placeholder={t("economy:listSpace.areaPlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="ls-rent">{t("economy:listSpace.rentLabel")}</label>
-            <input
-              id="ls-rent"
-              type="number"
-              min={0}
-              value={rent}
-              onChange={(e) => setRent(e.target.value)}
-              placeholder={t("economy:listSpace.rentPlaceholder")}
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="ls-type">{t("economy:listSpace.typeLabel")}</label>
-            <select
-              id="ls-type"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-            >
-              <option value="">{t("economy:listSpace.chooseOne")}</option>
-              {SPACE_TYPES.map((spaceType) => (
-                <option key={spaceType.value} value={spaceType.value}>
-                  {t(spaceType.labelKey)}
-                </option>
-              ))}
-            </select>
-          </div>
+          <ScamSafetyBanner />
+
+          <ListSpaceFields form={form} />
+
           <p className={styles.note}>{t("economy:listSpace.note")}</p>
 
           <div className={`${styles.foot} ${styles.footEnd}`}>
@@ -128,7 +95,7 @@ export function ListSpaceModal({ onClose }: { onClose: () => void }) {
             <Button
               variant="primary"
               size="lg"
-              disabled={!valid || sending}
+              disabled={!form.valid || sending}
               onClick={handleSubmit}
             >
               {sending ? (

@@ -29,7 +29,7 @@
    "New persona" CTA becomes a full-width, easy-to-hit thumb target (the
    right-aligned column also stops looking orphaned once it's the only thing
    on its row). `--bp-md` (640px) — the shared phone/single-column cutover. */
-@media (max-width: 640px) {
+@media (--md) {
   .page-head {
     flex-direction: column;
     align-items: stretch;

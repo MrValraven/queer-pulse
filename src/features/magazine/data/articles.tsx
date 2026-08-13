@@ -56,7 +56,7 @@ export function asTypedBlock(block: ArticleBlock): TypedArticleBlock | null {
     return null;
   }
   if ("kind" in block && typeof (block as { kind?: unknown }).kind === "string") {
-    return block as TypedArticleBlock;
+    return block;
   }
   return null;
 }

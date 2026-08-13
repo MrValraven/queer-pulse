@@ -71,7 +71,7 @@
   grid-template-columns: 0 1fr;
   gap: 0;
 }
-@media (max-width: 860px) {
+@media (--mobile) {
   .grid {
     grid-template-columns: 1fr;
   }
@@ -84,7 +84,7 @@
 }
 /* Below the point where a 280px card + gutters no longer fits, drop the results
    to a single fluid column so cards never overflow or clip. */
-@media (max-width: 560px) {
+@media (--sm) {
   .mGrid {
     grid-template-columns: 1fr;
   }

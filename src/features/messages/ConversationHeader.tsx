@@ -5,6 +5,7 @@ import { hapticTap } from "../../shared/lib/haptics";
 import { Avatar, FeatureHelp } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { ConversationSafetyMenu } from "./ConversationSafetyMenu";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
@@ -130,6 +131,15 @@ export function ConversationHeader({
       )}
 
       <div className={styles.ctbActions}>
+        {/* Block/Report — DM only. Groups have no single counterpart to act
+            against; official threads have no member behind them at all. */}
+        {!isGroup && !active.official && active.slug && (
+          <ConversationSafetyMenu
+            slug={active.slug}
+            reportSubjectId={active.otherParticipantId}
+            name={active.name.split(" ")[0] ?? active.name}
+          />
+        )}
         <button
           type="button"
           className={styles.ctbIconBtn}

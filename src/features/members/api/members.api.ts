@@ -280,14 +280,16 @@ export const replaceGroups = (items: GroupMembershipDTO[]) =>
 export const vouchFor = (
   slug: string,
   input: {
-    relationship?: VouchRelationship;
+    relationships?: VouchRelationship[];
     note?: string;
     anonymous?: boolean;
   } = {},
 ) =>
   apiPost<{ vouchCount: number }>(`/members/${slug}/vouch`, {
     ...(input.note ? { note: input.note } : {}),
-    ...(input.relationship ? { relationship: input.relationship } : {}),
+    ...(input.relationships?.length
+      ? { relationships: input.relationships }
+      : {}),
     ...(input.anonymous ? { anonymous: true } : {}),
   });
 

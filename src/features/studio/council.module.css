@@ -790,7 +790,7 @@
   padding: 4px 10px;
 }
 
-@media (max-width: 900px) {
+@media (--wide) {
   .curators,
   .facts,
   .trBody {

@@ -521,7 +521,7 @@
    in the thumb arc. Full-bleed to the card edges with a paper backdrop so
    content scrolls cleanly under it; safe-area padding clears the home
    indicator. */
-@media (max-width: 860px) {
+@media (--mobile) {
   .nav {
     position: sticky;
     bottom: 0;

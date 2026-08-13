@@ -6,6 +6,8 @@ import type {
   UpsertFlatmateProfileBody,
 } from "./api/flatmateProfile.api";
 import { PostProfileFormFields } from "./PostProfileFormFields";
+import { PostProfileHouseholdFields } from "./PostProfileHouseholdFields";
+import { PostProfileIdentityFields } from "./PostProfileIdentityFields";
 import { usePostProfileFormState } from "./usePostProfileFormState";
 import styles from "./FlatmatesPage.module.css";
 
@@ -40,6 +42,8 @@ export function PostProfileForm({
       </div>
       <p className={styles.modalSub}>{t("economy:postProfileForm.sub")}</p>
       <PostProfileFormFields form={form} />
+      <PostProfileHouseholdFields form={form} />
+      <PostProfileIdentityFields form={form} />
       <div className={styles.modalActions}>
         <Button
           type="button"

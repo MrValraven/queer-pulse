@@ -8,6 +8,7 @@ import { SubprofileSkinExtras } from "./SubprofileSkinExtras";
 import { SubprofileAffiliations } from "./SubprofileAffiliations";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { usePersonaMotion } from "./usePersonaMotion";
+import { PracticeBody } from "./skins/PracticeBody";
 // The global `.pp*` skin styles for the whole persona tree. Imported here (the
 // lazy renderer shared by the public page AND the editor preview) rather than
 // globally, so Vite folds ~its weight into the persona route chunk instead of
@@ -80,62 +81,75 @@ export function SubprofilePageBody({
       </div>
 
       <div className="wrap">
-        <SubprofileSkinExtras
-          persona={data}
-          skin={skin}
-          slot="top"
-          mode={mode}
-          onOpenWork={onOpenWorkAt}
-        />
-
-        <div className="pp-runhead">
-          <span>{data.displayName}</span>
-          <span>{t(KIND_LABEL_KEYS[data.kind])}</span>
-        </div>
-
-        <SubprofileHero view={data} mode={mode} onAction={onAction} />
-        <SubprofileSkinExtras persona={data} skin={skin} slot="afterBio" mode={mode} />
-
-        <div className="pp-body">
-          {data.featured &&
-            (skin === "table" &&
-            (data.featured.structured?.courses?.length ?? 0) > 0 ? (
-              // Table skin's MenuCard only has markup for `structured.courses`;
-              // a featured item without courses would otherwise render
-              // nowhere (still hidden from its section by `featuredHidden`
-              // below), so fall back to the generic Spotlight for it.
-              <SubprofileSkinExtras
-                persona={data}
-                skin={skin}
-                slot="spotlight"
-                mode={mode}
-                featured={data.featured}
-              />
-            ) : (
-              <SubprofileSpotlight item={data.featured} skin={skin} mode={mode} accent={data.accent} />
-            ))}
-
-          <SubprofileSections
-            persona={data}
-            skin={skin}
+        {skin === "practice" ? (
+          <PracticeBody
+            data={data}
             mode={mode}
-            featuredHidden={Boolean(data.featured)}
-            onOpenWork={onOpenWorkItem}
+            onAction={onAction}
+            onOpenWorkItem={onOpenWorkItem}
             onOpenGalleryPhoto={onOpenGalleryPhoto}
             onOpenPoem={onOpenPoem}
           />
+        ) : (
+          <>
+            <SubprofileSkinExtras
+              persona={data}
+              skin={skin}
+              slot="top"
+              mode={mode}
+              onOpenWork={onOpenWorkAt}
+            />
 
-          <SubprofileSkinExtras
-            persona={data}
-            skin={skin}
-            slot="end"
-            mode={mode}
-            featured={data.featured}
-            onOpenWork={onOpenWorkAt}
-          />
-        </div>
+            <div className="pp-runhead">
+              <span>{data.displayName}</span>
+              <span>{t(KIND_LABEL_KEYS[data.kind])}</span>
+            </div>
 
-        <SubprofileAffiliations persona={data} skin={skin} mode={mode} onAction={onAction} />
+            <SubprofileHero view={data} mode={mode} onAction={onAction} />
+            <SubprofileSkinExtras persona={data} skin={skin} slot="afterBio" mode={mode} />
+
+            <div className="pp-body">
+              {data.featured &&
+                (skin === "table" &&
+                (data.featured.structured?.courses?.length ?? 0) > 0 ? (
+                  // Table skin's MenuCard only has markup for `structured.courses`;
+                  // a featured item without courses would otherwise render
+                  // nowhere (still hidden from its section by `featuredHidden`
+                  // below), so fall back to the generic Spotlight for it.
+                  <SubprofileSkinExtras
+                    persona={data}
+                    skin={skin}
+                    slot="spotlight"
+                    mode={mode}
+                    featured={data.featured}
+                  />
+                ) : (
+                  <SubprofileSpotlight item={data.featured} skin={skin} mode={mode} accent={data.accent} />
+                ))}
+
+              <SubprofileSections
+                persona={data}
+                skin={skin}
+                mode={mode}
+                featuredHidden={Boolean(data.featured)}
+                onOpenWork={onOpenWorkItem}
+                onOpenGalleryPhoto={onOpenGalleryPhoto}
+                onOpenPoem={onOpenPoem}
+              />
+
+              <SubprofileSkinExtras
+                persona={data}
+                skin={skin}
+                slot="end"
+                mode={mode}
+                featured={data.featured}
+                onOpenWork={onOpenWorkAt}
+              />
+            </div>
+
+            <SubprofileAffiliations persona={data} skin={skin} mode={mode} onAction={onAction} />
+          </>
+        )}
       </div>
     </article>
   );
