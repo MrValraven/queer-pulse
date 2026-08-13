@@ -18,13 +18,13 @@ export const homepage: Catalog = {
   "meta.title":
     "QueerPulse — a comunidade queer de Lisboa, online e na vida real",
   "meta.description":
-    "Uma rede só por convite para pessoas LGBTQ+ em Lisboa — convívios, comunidades, trocas de saberes e apoio, construídos por quem usa a plataforma, para quem a usa.",
+    "Uma comunidade queer só por convite para Lisboa, tanto presencial como online: convívios, trocas de saberes e apoio mútuo, entre pessoas que aparecem umas pelas outras.",
 
   // ── Hero ───────────────────────────────────────────────────────────────────
   "hero.eyebrow": "Ao vivo em Lisboa",
   "hero.title": "A tua gente, <em>aqui mesmo em Lisboa.</em>",
   "hero.sub":
-    "A QueerPulse é uma rede só por convite para a comunidade LGBTQ+ de Lisboa — convívios reais, apoio real, pessoas reais. Sem swipes, sem mensagens às cegas.",
+    "É onde a Lisboa queer se encontra mesmo, tanto ao vivo como online. Toda a gente entrou com o aval de quem já cá estava, por isso a sala inteira escolheu estar. Uma comunidade que é de quem cá está.",
   "hero.requestInviteCta": "Pedir um convite",
   "hero.exploreMembersCta": "Explorar pessoas",
   "hero.note": "Todas as semanas entram pessoas novas, sempre com aval.",

@@ -998,6 +998,9 @@
   .panelLiveDot {
     animation: none;
   }
+  .auditRow {
+    transition: none;
+  }
 }
 
 /* ── Provenance badges + finance editing ─────────────────────────────────── */
@@ -1082,9 +1085,5 @@
   }
   .editLineLabel {
     padding-block-end: 10px;
-  }
-}
-  .auditRow {
-    transition: none;
   }
 }

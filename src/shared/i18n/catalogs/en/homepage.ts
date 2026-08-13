@@ -12,13 +12,13 @@ export const homepage: Catalog = {
   "meta.title":
     "QueerPulse — Lisbon's queer community, online and in real life",
   "meta.description":
-    "An invite-only network for LGBTQ+ people in Lisbon — gatherings, communities, skill swaps, and support, built by and for the people who use it.",
+    "An invite-only queer community for Lisbon, in person as much as online: gatherings, skill swaps, and mutual support, among people who show up for each other.",
 
   // ── Hero ───────────────────────────────────────────────────────────────────
   "hero.eyebrow": "Live in Lisboa",
   "hero.title": "Your people, <em>right here in Lisboa.</em>",
   "hero.sub":
-    "QueerPulse is an invite-only network for the Lisbon LGBTQ+ community — real gatherings, real support, real people. No swiping, no cold DMs.",
+    "Where queer Lisbon actually finds each other, in person as much as online. Everyone here was vouched in by someone already inside, so the whole room chose to be. A community that belongs to the people in it.",
   "hero.requestInviteCta": "Request an invite",
   "hero.exploreMembersCta": "Explore members",
   "hero.note": "New members join every week, always vouched in.",
