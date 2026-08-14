@@ -11,6 +11,12 @@ interface PageHeroProps {
   eyebrow?: ReactNode;
   /** Display headline. Use an `<em>` for the coral emphasis. */
   title: ReactNode;
+  /**
+   * Rendered beside the title (e.g. a `<FeatureHelp>` info chip), not inside
+   * it — keeps it out of the h1's accessible name and off the title's own
+   * wrapping width, so it never drops onto its own line.
+   */
+  titleAction?: ReactNode;
   /** Supporting line under the title. */
   sub?: ReactNode;
   /**
@@ -33,6 +39,7 @@ export function PageHero({
   backLink,
   eyebrow,
   title,
+  titleAction,
   sub,
   plum = true,
   children,
@@ -47,7 +54,14 @@ export function PageHero({
       <div className="wrap">
         {backLink}
         {eyebrow && <div className={styles.eyebrow}>{eyebrow}</div>}
-        <h1 className={styles.title}>{title}</h1>
+        {titleAction ? (
+          <div className={styles.titleRow}>
+            <h1 className={styles.title}>{title}</h1>
+            {titleAction}
+          </div>
+        ) : (
+          <h1 className={styles.title}>{title}</h1>
+        )}
         {sub && <p className={styles.sub}>{sub}</p>}
         {children}
       </div>

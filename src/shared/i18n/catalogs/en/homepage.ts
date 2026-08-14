@@ -16,7 +16,7 @@ export const homepage: Catalog = {
 
   // ── Hero ───────────────────────────────────────────────────────────────────
   "hero.eyebrow": "Live in Lisboa",
-  "hero.title": "Your people, <em>right here in Lisboa.</em>",
+  "hero.title": "A queer network, <em>rooted in Lisbon.</em>",
   "hero.sub":
     "Where queer Lisbon actually finds each other, in person as much as online. Everyone here was vouched in by someone already inside, so the whole room chose to be. A community that belongs to the people in it.",
   "hero.requestInviteCta": "Request an invite",
@@ -81,7 +81,8 @@ export const homepage: Catalog = {
 
   "painPoints.exchange2.question":
     '"I want to spend my money with people like me."',
-  "painPoints.exchange2.heading": "So we built <em>the directory.</em>",
+  "painPoints.exchange2.heading":
+    "So we built <em>the local queer business directory.</em>",
   "painPoints.exchange2.body":
     "Queer-owned shops, studios, and services across Lisbon: easy to find, easy to support.",
   "painPoints.exchange2.cta": "Browse the directory",
@@ -131,7 +132,7 @@ export const homepage: Catalog = {
 
   // ── Discovery (member highlight) ─────────────────────────────────────────
   "discovery.eyebrow": "{count}+ members and counting",
-  "discovery.title": "Everyone here is <em>real.</em>",
+  "discovery.title": "The <em>faces</em> of queer Lisbon",
   "discovery.sub":
     "Every face here is a genuine, vouched member of queer Lisbon: a real portrait of someone you could actually say hello to.",
   "discovery.exploreMembersCta": "Explore members",

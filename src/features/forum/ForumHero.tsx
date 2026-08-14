@@ -22,7 +22,6 @@ export function ForumHero({
       <div className="wrap">
         <div className={styles.heroRow}>
           <div>
-            <div className={styles.cat}>{t("forum:hero.eyebrow")}</div>
             <h1>
               <Translation
                 i18nKey="forum:hero.title"

@@ -53,14 +53,12 @@ export function DirectoryPage() {
       <PageHero
         eyebrow={t("marketing:directory.hero.eyebrow")}
         title={
-          <>
-            <Translation
-              i18nKey="marketing:directory.hero.title"
-              components={{ em: <em /> }}
-            />{" "}
-            <FeatureHelp id="local.directory" />
-          </>
+          <Translation
+            i18nKey="marketing:directory.hero.title"
+            components={{ em: <em /> }}
+          />
         }
+        titleAction={<FeatureHelp id="local.directory" />}
         sub={t("marketing:directory.hero.sub")}
       >
         <div className={s.heroNote}>

@@ -201,7 +201,7 @@ export const help: Catalog = {
   "home.landing.use":
     "Lê o destaque e desce a página para ver quem cá está e para que serve a rede.\nPede um convite para começar a tua adesão.\nExplora membros e comunidades para ganhares uma ideia antes de entrares.",
   "home.landing.demo":
-    "a página de entrada dá o tom com frases como \"As tuas pessoas, aqui mesmo em Lisboa\": uma rede por recomendação, de pessoas que conheces mesmo.",
+    "a página de entrada dá o tom com frases como \"Uma rede queer, com raízes em Lisboa\": uma rede por recomendação, de pessoas que conheces mesmo.",
   "housing.flatmates.title":
     "Colegas de casa",
   "housing.flatmates.intro":

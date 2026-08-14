@@ -35,14 +35,12 @@ export function AboutPage() {
       <PageHero
         eyebrow={t("marketing:about.hero.eyebrow")}
         title={
-          <>
-            <Translation
-              i18nKey="marketing:about.hero.title"
-              components={{ em: <em /> }}
-            />{" "}
-            <FeatureHelp id="marketing.about" />
-          </>
+          <Translation
+            i18nKey="marketing:about.hero.title"
+            components={{ em: <em /> }}
+          />
         }
+        titleAction={<FeatureHelp id="marketing.about" />}
         sub={t("marketing:about.hero.sub")}
       />
 

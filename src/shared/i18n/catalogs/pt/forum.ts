@@ -1,7 +1,7 @@
 import type { Catalog } from "../../types";
 
 /**
- * Cópia do Fórum ("os comuns"). `THREADS` (títulos, resumos, corpo dos posts,
+ * Cópia do Fórum ("a praça pública"). `THREADS` (títulos, resumos, corpo dos posts,
  * respostas, tags, datas "publicado há…") fica deliberadamente FORA deste
  * catálogo — em modo live vem de `GET /forum/threads` +
  * `GET /forum/threads/:slug/posts` (ver `api/forum.adapters.ts`): é conteúdo
@@ -41,8 +41,7 @@ export const forum: Catalog = {
   "replySort.mostHelpful": "Mais úteis",
 
   // ── Hero da ForumPage ───────────────────────────────────────────────────
-  "hero.eyebrow": "A Praça Pública · aberta a todas as pessoas da comunidade",
-  "hero.title": "Os <em>comuns</em>",
+  "hero.title": "A <em>praça</em> pública",
   "hero.lead":
     "A única comunidade a que todas as pessoas aqui pertencem: perguntas, propostas, guias, e o trabalho lento de construir um movimento. Cuidem-se. Estás à procura de uma sala mais pequena?",
   "hero.findCommunitiesCta": "Encontra as tuas comunidades",
@@ -70,7 +69,7 @@ export const forum: Catalog = {
   "firstPost.starter.flatmates": "Procuro colegas de casa em…",
 
   // ── ComposeThreadModal ──────────────────────────────────────────────────
-  "compose.confirmTitle": "Publicado <em>nos comuns</em>",
+  "compose.confirmTitle": "Publicado <em>na praça pública</em>",
   "compose.confirmBody":
     "A tua publicação está em direto no topo do fórum. As pessoas podem responder, votar, e ajudar.",
   "compose.done": "Concluído",
@@ -117,7 +116,7 @@ export const forum: Catalog = {
   "threadList.emptyFiltered.action": "Ver todas as publicações",
   "threadList.emptyAll.title": "Sossegado por aqui, por agora",
   "threadList.emptyAll.description":
-    "Os comuns estão abertos a todas as pessoas da comunidade. Sê quem começa a conversa.",
+    "A praça pública está aberta a todas as pessoas da comunidade. Sê quem começa a conversa.",
   "threadList.emptyAll.action": "Escrever uma publicação",
   "threadList.pinnedBadge": "Fixado",
   "threadList.upvoteAria": "Votar a favor",

@@ -1,7 +1,7 @@
 import type { Catalog } from "../../types";
 
 /**
- * The Forum ("the commons") page chrome. `THREADS` (titles, excerpts, bodies,
+ * The Forum ("the town square") page chrome. `THREADS` (titles, excerpts, bodies,
  * replies, tags, "posted" timestamps) is deliberately NOT in this catalog —
  * `GET /forum/threads` + `GET /forum/threads/:slug/posts` serve that exact
  * content in live mode (see `api/forum.adapters.ts`), so it's member-authored
@@ -35,8 +35,7 @@ export const forum: Catalog = {
   "replySort.mostHelpful": "Most helpful",
 
   // ── ForumPage hero ──────────────────────────────────────────────────────
-  "hero.eyebrow": "The Public Square · open to every member",
-  "hero.title": "The <em>commons</em>",
+  "hero.title": "The town <em>square</em>",
   "hero.lead":
     "The one community everyone here belongs to: questions, proposals, guides, and the slow work of building a movement. Take care of each other. Looking for a smaller room?",
   "hero.findCommunitiesCta": "Find your communities",
@@ -64,7 +63,7 @@ export const forum: Catalog = {
   "firstPost.starter.flatmates": "Looking for flatmates in…",
 
   // ── ComposeThreadModal ──────────────────────────────────────────────────
-  "compose.confirmTitle": "Posted to <em>the commons</em>",
+  "compose.confirmTitle": "Posted to <em>the town square</em>",
   "compose.confirmBody":
     "Your thread is live at the top of the forum. Members can reply, upvote, and help.",
   "compose.done": "Done",
@@ -110,7 +109,7 @@ export const forum: Catalog = {
   "threadList.emptyFiltered.action": "Show all posts",
   "threadList.emptyAll.title": "Quiet in here, for now",
   "threadList.emptyAll.description":
-    "The commons is open to every member. Be the one to start the conversation.",
+    "The town square is open to every member. Be the one to start the conversation.",
   "threadList.emptyAll.action": "Write a post",
   "threadList.pinnedBadge": "Pinned",
   "threadList.upvoteAria": "Upvote",

@@ -69,7 +69,7 @@ const PLATFORMS: Platform[] = [
     ic: "rgba(45,27,61,.07)",
     it: "var(--plum)",
     description: "A text-based social and personal ads app for queer, lesbian, bi, trans and non-binary people. Community first.",
-    url: "lex-app.com",
+    url: "www.lex.lgbt",
   },
   {
     cat: "Dating",
@@ -204,16 +204,7 @@ const PLATFORMS: Platform[] = [
     ic: "rgba(45,27,61,.08)",
     it: "var(--plum)",
     description: "Youth-focused LGBTQ+ association with peer support and advocacy groups across Portugal.",
-    url: "ex-aequo.pt",
-  },
-  {
-    cat: "Portugal",
-    name: "Panteras Rosa",
-    icon: "PR",
-    ic: "rgba(74,140,111,.1)",
-    it: "var(--jade)",
-    description: "Trans rights activism and advocacy. Political campaigning and community organising in Portugal.",
-    url: "panterasrosa.com",
+    url: "rea.pt",
   },
 ];
 

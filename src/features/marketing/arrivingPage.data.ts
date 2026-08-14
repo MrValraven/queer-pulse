@@ -106,7 +106,7 @@ export const ORGS: Org[] = [
     color: "var(--plum)",
     name: "Rede ex aequo",
     description: "Youth-focused LGBTQ+ association with active groups in Lisbon. Peer support, advocacy, and a welcoming environment for people who are younger or who are still figuring things out.",
-    url: "↗ ex-aequo.pt",
+    url: "↗ rea.pt",
   },
 ];
 

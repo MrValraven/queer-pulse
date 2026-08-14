@@ -22,7 +22,7 @@ export const homepage: Catalog = {
 
   // ── Hero ───────────────────────────────────────────────────────────────────
   "hero.eyebrow": "Ao vivo em Lisboa",
-  "hero.title": "A tua gente, <em>aqui mesmo em Lisboa.</em>",
+  "hero.title": "Uma rede queer, <em>com raízes em Lisboa.</em>",
   "hero.sub":
     "É onde a Lisboa queer se encontra mesmo, tanto ao vivo como online. Toda a gente entrou com o voto de confiança de quem já cá estava, por isso a sala inteira escolheu estar. Uma comunidade que é de quem cá está.",
   "hero.requestInviteCta": "Pedir um convite",
@@ -89,7 +89,8 @@ export const homepage: Catalog = {
 
   "painPoints.exchange2.question":
     '"Quero gastar o meu dinheiro com pessoas como eu."',
-  "painPoints.exchange2.heading": "Por isso construímos <em>o diretório.</em>",
+  "painPoints.exchange2.heading":
+    "Por isso construímos <em>o diretório local de negócios queer.</em>",
   "painPoints.exchange2.body":
     "Lojas, ateliês e serviços de pessoas queer por toda a Lisboa: fáceis de encontrar, fáceis de apoiar.",
   "painPoints.exchange2.cta": "Ver o diretório",
@@ -146,7 +147,7 @@ export const homepage: Catalog = {
 
   // ── Discovery (destaque de pessoas) ───────────────────────────────────────
   "discovery.eyebrow": "Mais de {count} pessoas, e a crescer",
-  "discovery.title": "Aqui é toda a gente <em>real.</em>",
+  "discovery.title": "Os <em>rostos</em> da Lisboa queer",
   "discovery.sub":
     "Cada cara aqui é uma pessoa autêntica e com voto de confiança da comunidade queer de Lisboa: um retrato real de alguém a quem podes mesmo dizer olá.",
   "discovery.exploreMembersCta": "Explorar pessoas",

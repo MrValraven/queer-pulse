@@ -1,5 +1,6 @@
 .hero {
-  padding: clamp(128px, 26vw, 200px) 0 clamp(64px, 10vw, 110px);
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: clamp(32px, 5vw, 56px) 0 clamp(64px, 10vw, 110px);
   position: relative;
   overflow: hidden;
 }

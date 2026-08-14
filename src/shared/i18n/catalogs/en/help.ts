@@ -209,7 +209,7 @@ export const help: Catalog = {
   "home.landing.use":
     "Read the hero and scroll down to see who's here and what the network is for.\nRequest an invite to start your own membership.\nExplore members and communities to get a feel before you join.",
   "home.landing.demo":
-    "the landing sets the tone with lines like \"Your people, right here in Lisboa\": a vouched-in network of people you actually know.",
+    "the landing sets the tone with lines like \"A queer network, rooted in Lisbon\": a vouched-in network of people you actually know.",
   "housing.flatmates.title":
     "Flatmates",
   "housing.flatmates.intro":
