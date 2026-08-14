@@ -1,7 +1,12 @@
+import { useRef, useState } from "react";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useLandingFeaturesPublic } from "../homepage/api/useLandingFeatures";
-import { FeaturedSpotlightCard } from "../homepage/sections/FeaturedSpotlightCard";
+import {
+  FeaturedSpotlightCard,
+  type FeaturedSpotlightCardHandle,
+} from "../homepage/sections/FeaturedSpotlightCard";
+import { SpotlightRow } from "../homepage/sections/SpotlightRow";
 import { FeaturedCommunityCard } from "../homepage/sections/FeaturedCommunityCard";
 import { ChangemakerGrid } from "../homepage/sections/ChangemakerGrid";
 import { memberFeatureToSpotlightView } from "../homepage/sections/spotlightView";
@@ -111,6 +116,8 @@ function MemberStage({
   views: ReturnType<typeof memberFeatureToSpotlightView>[];
 }) {
   const { t } = useTranslation();
+  const cardRef = useRef<FeaturedSpotlightCardHandle>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
   if (views.length === 0) return <EmptyState />;
   return (
     <section className={liveStyles.section}>
@@ -122,8 +129,24 @@ function MemberStage({
           <Translation i18nKey="homepage:discovery.title" components={{ em: <em /> }} />
         </h2>
         <p className={liveStyles.sub}>{t("homepage:discovery.sub")}</p>
-        <div className={liveStyles.featWrap}>
-          <FeaturedSpotlightCard items={views} />
+        <div className={liveStyles.roster}>
+          <div className={liveStyles.rosterFeat}>
+            <FeaturedSpotlightCard
+              ref={cardRef}
+              items={views}
+              onActiveChange={setActiveIndex}
+            />
+          </div>
+          <div className={liveStyles.rosterRows}>
+            {views.map((view, index) => (
+              <SpotlightRow
+                key={view.key}
+                view={view}
+                active={index === activeIndex}
+                onSelect={() => cardRef.current?.goTo(index)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -88,13 +88,32 @@
   gap: 20px;
   position: relative;
 }
-/* The featured-member spotlight (rich rotating card, reused from the demo
-   showcase) reads as a hero rather than a grid item, so it sits in a single
-   constrained column — roughly the demo's featured-column width — instead of
-   stretching the full content width. */
-.featWrap {
+/* Featured spotlight card + roster rows, side by side — the same two-column
+   showcase the demo `Discovery` uses, so a live visitor sees the whole set of
+   members the card rotates through, not only whoever's on screen. Columns are
+   top-aligned (`start`): the portrait card is the tall one, the roster is a
+   handful of short rows beside it, so stretching them would just spread the
+   rows apart. Collapses to one column at the demo's 820px breakpoint. */
+.roster {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 22px;
+  align-items: start;
   margin-top: clamp(32px, 4vw, 48px);
-  max-width: 640px;
+}
+/* Grid child so the card fills its column's width. */
+.rosterFeat {
+  display: grid;
+}
+.rosterRows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+@media (max-width: 820px) {
+  .roster {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── Community card ── */

@@ -1,7 +1,7 @@
 .rows {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
   margin-top: 20px;
 }
 
@@ -11,14 +11,69 @@
   margin: 20px 0;
 }
 
+.filterBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.filterLabel {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+
+.filterBar > :last-child {
+  min-width: 220px;
+}
+
+@media (--sm) {
+  .filterBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filterBar > :last-child {
+    min-width: 0;
+  }
+}
+
 .row {
   display: flex;
   align-items: center;
   gap: 16px;
+  height: 100%;
   padding: 16px 18px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card, 22px);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color 0.16s var(--ease),
+    box-shadow 0.16s var(--ease),
+    transform 0.16s var(--ease);
+}
+
+.row:hover {
+  border-color: rgba(var(--plum-rgb), 0.28);
+  box-shadow: 0 6px 20px rgba(var(--plum-rgb), 0.08);
+}
+
+.row:focus-visible {
+  outline: none;
+  border-color: rgba(var(--plum-rgb), 0.4);
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: none;
+  }
 }
 
 .rowMain {
@@ -63,4 +118,140 @@
 
 :global([data-theme="dark"]) .row {
   border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+/* ── Detail drawer ─────────────────────────────────────────── */
+
+.drawerHeadInner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.drawerCode {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.drawerCodeText {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-strong);
+}
+
+.copyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  background: rgba(var(--plum-rgb), 0.05);
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background 0.16s var(--ease),
+    color 0.16s var(--ease);
+}
+
+.copyButton:hover {
+  background: rgba(var(--plum-rgb), 0.12);
+  color: var(--text-strong);
+}
+
+.copyButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.2);
+}
+
+.drawerChips {
+  display: flex;
+  gap: 8px;
+}
+
+.detailList {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.detailRow {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.detailLabel {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.detailValue {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.detailPlain {
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.detailCaption {
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+
+.personRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.personName {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-strong);
+}
+
+.messageBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(var(--plum-rgb), 0.05);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.messageLabel {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.messageText {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+:global([data-theme="dark"]) .messageBlock {
+  background: rgba(var(--cream-rgb), 0.05);
+  border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copyButton {
+    transition: none;
+  }
 }

@@ -1,9 +1,14 @@
+import { useRef, useState } from "react";
 import { Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useLandingFeaturesPublic } from "../api/useLandingFeatures";
-import { FeaturedSpotlightCard } from "./FeaturedSpotlightCard";
+import {
+  FeaturedSpotlightCard,
+  type FeaturedSpotlightCardHandle,
+} from "./FeaturedSpotlightCard";
 import { memberFeatureToSpotlightView } from "./spotlightView";
+import { SpotlightRow } from "./SpotlightRow";
 import { ExploreMembersCta } from "./ExploreMembersCta";
 import styles from "./LiveSections.module.css";
 
@@ -11,8 +16,11 @@ import styles from "./LiveSections.module.css";
  * Live-mode counterpart to `Discovery`: the members an admin has chosen to
  * feature on `/landing/features`, rendered through the same rich spotlight card
  * the demo showcase uses — a portrait, quote, and profile link that rotate
- * through everyone curated. Renders nothing when nobody is curated yet: an empty
- * section beats inventing members for production visitors.
+ * through everyone curated. Beside the card sits the same two-column roster the
+ * demo showcase has: one compact row per featured member, so visitors can see
+ * the whole set the card is cycling through rather than only whoever's on
+ * screen. Renders nothing when nobody is curated yet: an empty section beats
+ * inventing members for production visitors.
  *
  * The public feed carries name/tagline/avatar/quote plus the member's own
  * profile tags, so the card's neighborhood and voucher-name bits stay hidden
@@ -23,6 +31,8 @@ import styles from "./LiveSections.module.css";
 export function LiveDiscovery() {
   const { t } = useTranslation();
   const { members, isLoading } = useLandingFeaturesPublic();
+  const cardRef = useRef<FeaturedSpotlightCardHandle>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   if (isLoading || members.length === 0) return null;
 
@@ -44,9 +54,26 @@ export function LiveDiscovery() {
           {t("homepage:discovery.sub")}
         </Reveal>
 
-        <Reveal className={styles.featWrap} delay={160}>
-          <FeaturedSpotlightCard items={views} />
-        </Reveal>
+        <div className={styles.roster}>
+          <Reveal className={styles.rosterFeat} delay={160}>
+            <FeaturedSpotlightCard
+              ref={cardRef}
+              items={views}
+              onActiveChange={setActiveIndex}
+            />
+          </Reveal>
+          <div className={styles.rosterRows}>
+            {views.map((view, index) => (
+              <Reveal key={view.key} delay={200 + index * 70}>
+                <SpotlightRow
+                  view={view}
+                  active={index === activeIndex}
+                  onSelect={() => cardRef.current?.goTo(index)}
+                />
+              </Reveal>
+            ))}
+          </div>
+        </div>
 
         <Reveal className={styles.foot} delay={280}>
           <ExploreMembersCta />

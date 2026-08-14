@@ -1,17 +1,20 @@
-import { useState } from "react";
-import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { useMemo, useState } from "react";
+import { Button, FadeIn, Select, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminTabs, AdminChip, type AdminTone } from "./ui";
+import { AdminPageHeader, AdminTabs, AdminChip } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
 import { routes } from "../../app/routeMap";
-import { useAdminInvites, type AdminInviteFilter } from "./api/useAdminInvites";
-import type {
-  AdminInviteDTO,
-  AdminInviteStatus,
-} from "./api/adminInvites.api";
+import {
+  useAdminInvites,
+  useAdminInviteInviters,
+  type AdminInviteFilter,
+} from "./api/useAdminInvites";
+import { AdminInviteDrawer } from "./AdminInviteDrawer";
+import { ADMIN_INVITE_STATUS_TONE } from "./adminInviteStatusTone";
+import type { AdminInviteDTO } from "./api/adminInvites.api";
 import styles from "./AdminInvitesPage.module.css";
 
 const FILTERS: AdminInviteFilter[] = [
@@ -21,14 +24,6 @@ const FILTERS: AdminInviteFilter[] = [
   "expired",
   "revoked",
 ];
-
-/** Chip tone per status, matching the sent-invites palette (amber = pending). */
-const STATUS_TONE: Record<AdminInviteStatus, AdminTone> = {
-  valid: "amber",
-  used: "jade",
-  expired: "ghost",
-  revoked: "coral",
-};
 
 /** Day + month + year, locale-aware. */
 function shortDate(fmt: Formatters, iso: string): string {
@@ -51,15 +46,33 @@ function recipientLine(invite: AdminInviteDTO, t: TFunction): string {
   return t("admin:adminInvites.row.toAnyone");
 }
 
-function AdminInviteRow({ invite }: { invite: AdminInviteDTO }) {
+function AdminInviteRow({
+  invite,
+  onOpen,
+}: {
+  invite: AdminInviteDTO;
+  onOpen: () => void;
+}) {
   const { t } = useTranslation();
   const fmt = useFormat();
   return (
-    <div className={styles.row}>
+    <div
+      className={styles.row}
+      role="button"
+      tabIndex={0}
+      aria-label={t("admin:adminInvites.row.open", { code: invite.code })}
+      onClick={onOpen}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onOpen();
+        }
+      }}
+    >
       <div className={styles.rowMain}>
         <div className={styles.rowTop}>
           <span className={styles.rowName}>{invite.code}</span>
-          <AdminChip tone={STATUS_TONE[invite.status]} dot>
+          <AdminChip tone={ADMIN_INVITE_STATUS_TONE[invite.status]} dot>
             {t(`admin:adminInvites.status.${invite.status}`)}
           </AdminChip>
         </div>
@@ -104,13 +117,32 @@ function InviteRowsSkeleton() {
 export function AdminInvitesPage() {
   const { t } = useTranslation();
   const [filter, setFilter] = useState<AdminInviteFilter>("all");
+  const [inviterSlug, setInviterSlug] = useState<string | null>(null);
+  const [selectedInvite, setSelectedInvite] = useState<AdminInviteDTO | null>(
+    null,
+  );
+  // The sender filter runs server-side: `inviterSlug` is passed to the query so
+  // it narrows the whole invite graph, not just the loaded pages, and its
+  // options come from a dedicated inviters list covering every sender platform-
+  // wide (not only those already fetched).
   const {
     invites,
     isLoading,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useAdminInvites(filter);
+  } = useAdminInvites(filter, inviterSlug);
+  const { inviters } = useAdminInviteInviters();
+
+  const inviterOptions = useMemo(
+    () =>
+      inviters.map((inviter) => ({
+        value: inviter.slug,
+        label: `${inviter.name} (${inviter.count})`,
+        keywords: inviter.name,
+      })),
+    [inviters],
+  );
 
   return (
     <AdminShell
@@ -148,17 +180,43 @@ export function AdminInvitesPage() {
         />
       </FadeIn>
 
+      {inviterOptions.length > 1 && (
+        <FadeIn delay={70}>
+          <div className={styles.filterBar}>
+            <span className={styles.filterLabel} id="invite-inviter-label">
+              {t("admin:adminInvites.filterByInviter")}
+            </span>
+            <Select
+              labelledBy="invite-inviter-label"
+              size="sm"
+              clearable
+              value={inviterSlug}
+              placeholder={t("admin:adminInvites.allInviters")}
+              options={inviterOptions}
+              onChange={setInviterSlug}
+            />
+          </div>
+        </FadeIn>
+      )}
+
       <FadeIn delay={80}>
         {isLoading ? (
           <InviteRowsSkeleton />
         ) : invites.length === 0 ? (
-          <p className={styles.emptyLine}>{t("admin:adminInvites.empty")}</p>
+          <p className={styles.emptyLine}>
+            {inviterSlug
+              ? t("admin:adminInvites.emptyForInviter")
+              : t("admin:adminInvites.empty")}
+          </p>
         ) : (
           <>
             <div className={styles.rows}>
               {invites.map((invite, index) => (
                 <FadeIn key={invite.id} delay={Math.min(index, 8) * 50}>
-                  <AdminInviteRow invite={invite} />
+                  <AdminInviteRow
+                    invite={invite}
+                    onOpen={() => setSelectedInvite(invite)}
+                  />
                 </FadeIn>
               ))}
             </div>
@@ -179,6 +237,13 @@ export function AdminInvitesPage() {
           </>
         )}
       </FadeIn>
+
+      {selectedInvite && (
+        <AdminInviteDrawer
+          invite={selectedInvite}
+          onClose={() => setSelectedInvite(null)}
+        />
+      )}
     </AdminShell>
   );
 }

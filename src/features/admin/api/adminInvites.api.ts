@@ -25,6 +25,10 @@ export interface AdminInviteDTO {
   invitee?: AdminInvitePersonDTO | null;
   /** The email the inviter addressed it to, if any. */
   email?: string | null;
+  /** The personal message the inviter wrote when sending the invite. */
+  note?: string | null;
+  /** The inviter's "why I'm inviting you" vouch message. */
+  vouch?: string | null;
   /** ISO timestamp the invite was created. */
   createdAt: string;
   /** ISO timestamp the invite stops working. */
@@ -38,16 +42,33 @@ export interface AdminInviteListDTO {
   pageSize: number;
 }
 
-/** Paginated invite list for the admin panel, optionally filtered by status. */
+/** One sender in the "filter by inviter" dropdown: a member who has minted at
+ *  least one invite, with how many they sent. Keyed by `slug`. */
+export interface AdminInviteInviterDTO {
+  slug: string;
+  name: string;
+  avatarUrl?: string | null;
+  count: number;
+}
+
+/** Paginated invite list for the admin panel, optionally filtered by status and
+ *  a single sender (by slug, resolved server-side). */
 export const getAdminInvites = (parameters: {
   page?: number;
   status?: AdminInviteStatus;
+  inviterSlug?: string;
 }) => {
   const searchParams = new URLSearchParams();
   if (parameters.page) searchParams.set("page", String(parameters.page));
   if (parameters.status) searchParams.set("status", parameters.status);
+  if (parameters.inviterSlug)
+    searchParams.set("inviterSlug", parameters.inviterSlug);
   const querySuffix = searchParams.toString();
   return apiGet<AdminInviteListDTO>(
     `/admin/invites${querySuffix ? `?${querySuffix}` : ""}`,
   );
 };
+
+/** Every member who has sent an invite, for the sender filter's dropdown. */
+export const getAdminInviteInviters = () =>
+  apiGet<AdminInviteInviterDTO[]>("/admin/invites/inviters");

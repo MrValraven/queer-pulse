@@ -1,6 +1,8 @@
 import {
+  forwardRef,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useLayoutEffect,
   useRef,
   useState,
@@ -13,7 +15,23 @@ import styles from "./Discovery.module.css";
 
 const ROTATE_MS = 5500;
 
-export function FeaturedSpotlightCard({ items }: { items: SpotlightView[] }) {
+/** Imperative handle so an outside control (the roster rows) can drive which
+ *  member is featured, the same way the built-in dots do. */
+export interface FeaturedSpotlightCardHandle {
+  goTo: (index: number) => void;
+}
+
+interface FeaturedSpotlightCardProps {
+  items: SpotlightView[];
+  /** Fires whenever the featured slide changes (swipe, dot, auto-rotate, or
+   *  `goTo`), so a parent can highlight the matching roster row. */
+  onActiveChange?: (index: number) => void;
+}
+
+export const FeaturedSpotlightCard = forwardRef<
+  FeaturedSpotlightCardHandle,
+  FeaturedSpotlightCardProps
+>(function FeaturedSpotlightCard({ items, onActiveChange }, ref) {
   const { t } = useTranslation();
   const reducedMotion = usePrefersReducedMotion();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -23,6 +41,9 @@ export function FeaturedSpotlightCard({ items }: { items: SpotlightView[] }) {
   const settleTimerRef = useRef<number | null>(null);
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+  // Sticky, unlike `paused` (which hover toggles): once a visitor picks a member
+  // from the roster, auto-rotate stays off so the card holds their choice.
+  const [stopped, setStopped] = useState(false);
 
   const firstItem = items[0];
   const lastItem = items[items.length - 1];
@@ -67,6 +88,25 @@ export function FeaturedSpotlightCard({ items }: { items: SpotlightView[] }) {
     },
     [firstRealOffset, reducedMotion],
   );
+
+  // Let outside controls (the roster rows) feature a member by index, matching
+  // the dots' smooth scroll — the resulting scroll settles into `active`, so the
+  // highlight stays driven by one source of truth.
+  useImperativeHandle(
+    ref,
+    () => ({
+      goTo: (index: number) => {
+        setStopped(true);
+        scrollToIndex(index, true);
+      },
+    }),
+    [scrollToIndex],
+  );
+
+  // Report the featured slide up so a parent roster can mirror the highlight.
+  useEffect(() => {
+    onActiveChange?.(active);
+  }, [active, onActiveChange]);
 
   // Auto-rotate always steps forward by one slide; the clone + teleport below
   // turns the last→first wrap into a short seamless scroll instead of a rewind.
@@ -119,10 +159,10 @@ export function FeaturedSpotlightCard({ items }: { items: SpotlightView[] }) {
   }, [active, scrollToIndex]);
 
   useEffect(() => {
-    if (reducedMotion || paused || items.length <= 1) return;
+    if (reducedMotion || paused || stopped || items.length <= 1) return;
     const id = setTimeout(advance, ROTATE_MS);
     return () => clearTimeout(id);
-  }, [active, paused, reducedMotion, items.length, advance]);
+  }, [active, paused, stopped, reducedMotion, items.length, advance]);
 
   if (items.length === 0) return null;
 
@@ -179,4 +219,4 @@ export function FeaturedSpotlightCard({ items }: { items: SpotlightView[] }) {
       )}
     </article>
   );
-}
+});
