@@ -9,10 +9,8 @@ import { requestInvitePath } from "../auth/api/joinRequestSource";
 import {
   CONTRAST_THEM_KEYS,
   CONTRAST_US_KEYS,
-  PULL_QUOTE_KEY,
   VALUES,
   WHO_PARAGRAPH_KEYS,
-  WHO_PULL_KEY,
   WHY_PARAGRAPH_KEYS,
 } from "./about.data";
 import { MarketingSection } from "./MarketingSection";
@@ -45,24 +43,17 @@ export function AboutPage() {
       />
 
       <MarketingSection eyebrow={t("marketing:about.why.eyebrow")}>
-        <div className={s.originGrid}>
-          <div>
-            <Reveal as="h2" className={m.sectionTitle} delay={60}>
-              <Translation
-                i18nKey="marketing:about.why.title"
-                components={{ em: <em /> }}
-              />
-            </Reveal>
-            <Reveal as="div" className={s.body} delay={120}>
-              {WHY_PARAGRAPH_KEYS.map((key) => (
-                <p key={key}>{t(key)}</p>
-              ))}
-            </Reveal>
-          </div>
-          <Reveal className={s.pull} delay={80}>
-            {t(PULL_QUOTE_KEY)}
-          </Reveal>
-        </div>
+        <Reveal as="h2" className={m.sectionTitle} delay={60}>
+          <Translation
+            i18nKey="marketing:about.why.title"
+            components={{ em: <em /> }}
+          />
+        </Reveal>
+        <Reveal as="div" className={s.body} delay={120}>
+          {WHY_PARAGRAPH_KEYS.map((key) => (
+            <p key={key}>{t(key)}</p>
+          ))}
+        </Reveal>
       </MarketingSection>
 
       <MarketingSection
@@ -132,24 +123,17 @@ export function AboutPage() {
       </MarketingSection>
 
       <MarketingSection flush eyebrow={t("marketing:about.who.eyebrow")}>
-        <div className={s.originGrid}>
-          <div>
-            <Reveal as="h2" className={m.sectionTitle} delay={60}>
-              <Translation
-                i18nKey="marketing:about.who.title"
-                components={{ em: <em /> }}
-              />
-            </Reveal>
-            <Reveal as="div" className={s.body} delay={120}>
-              {WHO_PARAGRAPH_KEYS.map((key) => (
-                <p key={key}>{t(key)}</p>
-              ))}
-            </Reveal>
-          </div>
-          <Reveal className={s.pull} delay={80}>
-            {t(WHO_PULL_KEY)}
-          </Reveal>
-        </div>
+        <Reveal as="h2" className={m.sectionTitle} delay={60}>
+          <Translation
+            i18nKey="marketing:about.who.title"
+            components={{ em: <em /> }}
+          />
+        </Reveal>
+        <Reveal as="div" className={s.body} delay={120}>
+          {WHO_PARAGRAPH_KEYS.map((key) => (
+            <p key={key}>{t(key)}</p>
+          ))}
+        </Reveal>
 
         <Reveal className={s.contactStrip} delay={60}>
           <div className={s.csText}>

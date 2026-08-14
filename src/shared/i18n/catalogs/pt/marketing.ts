@@ -31,20 +31,24 @@ export const marketing: Catalog = {
     "Por isso, um pequeno grupo — profissionais, organizadores, artistas — decidiu construir a alternativa: uma rede pensada para a confiança, não para a escala, onde o objetivo é a ligação, não o envolvimento.",
   "about.why.p3":
     "Cresce mais devagar assim. Isso é o desenho, não um defeito.",
-  "about.why.pullQuote":
-    "Não queríamos uma audiência maior. Queríamos uma sala em que pudéssemos confiar.",
   "about.difference.eyebrow": "A diferença",
   "about.difference.title": "O que <em>não estamos a construir.</em>",
   "about.contrast.them.label": "Em todo o lado",
   "about.contrast.us.label": "QueerPulse",
   "about.contrast.them.attention": "Otimizado para prender a tua atenção",
   "about.contrast.them.algorithm": "Um algoritmo decide o que vês",
+  "about.contrast.them.signup": "Qualquer pessoa se inscreve com um email",
   "about.contrast.them.growth": "Crescimento a qualquer custo",
   "about.contrast.them.value": "Os teus dados são o produto",
-  "about.contrast.us.noAds": "Sem anúncios, nunca",
-  "about.contrast.us.findWhatYouNeed": "Encontras o que precisas e sais",
-  "about.contrast.us.smallByDesign": "Pequeno por design, não por acaso",
-  "about.contrast.us.valueStays": "O valor que crias fica na comunidade",
+  "about.contrast.us.noTracking":
+    "Não rastreamos o que clicas nem quanto tempo ficas",
+  "about.contrast.us.feedIsYours":
+    "O teu feed é exatamente as comunidades a que te juntaste",
+  "about.contrast.us.vouched": "Cada pessoa é avalizada por alguém que já está cá",
+  "about.contrast.us.growthPace":
+    "O crescimento acompanha o ritmo dos avais",
+  "about.contrast.us.valueStays":
+    "As contribuições financiam um fundo de apoio mútuo gerido pela comunidade",
   "about.beliefs.eyebrow": "No que acreditamos",
   "about.beliefs.title": "Os valores por trás de <em>cada decisão.</em>",
   "about.values.smallByDesign.title": "Pequeno por design",
@@ -68,11 +72,9 @@ export const marketing: Catalog = {
   "about.who.eyebrow": "Quem está por trás disto",
   "about.who.title": "Construída pela <em>comunidade, para a comunidade.</em>",
   "about.who.p1":
-    "A QueerPulse é gerida por quem a usa — uma pequena equipa fundadora e um círculo crescente de pessoas que ajudam a definir o que vem a seguir.",
+    "A QueerPulse é gerida por quem a usa: uma pequena equipa fundadora e um círculo crescente de pessoas que ajudam a definir o que vem a seguir.",
   "about.who.p2":
     "Não temos capital de risco à procura de retorno. Temos quotas, doações e apoios que mantêm a plataforma independente.",
-  "about.who.pullQuote":
-    "Ninguém nesta equipa está a tentar enriquecer com isto. Estamos a tentar fazer bem-feito.",
   "about.contactStrip.title": "Perguntas? <em>Estamos contactáveis.</em>",
   "about.contactStrip.body":
     "Sem pedidos de suporte perdidos numa fila. Uma pessoa a sério lê o que envias.",

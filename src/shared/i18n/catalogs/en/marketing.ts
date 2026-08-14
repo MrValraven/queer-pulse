@@ -23,21 +23,25 @@ export const marketing: Catalog = {
   "about.why.p2":
     "So a small group of us (professionals, organisers, artists) decided to build the alternative ourselves: a network sized for trust, where the point is connection.",
   "about.why.p3": "It's slower to grow this way. That's the design, exactly as intended.",
-  "about.why.pullQuote":
-    "We didn't want a bigger audience. We wanted a room we could trust.",
   "about.difference.eyebrow": "The difference",
   "about.difference.title": "What we're <em>not building.</em>",
   "about.contrast.them.label": "Everywhere else",
   "about.contrast.us.label": "QueerPulse",
   "about.contrast.them.attention": "Optimised to hold your attention",
   "about.contrast.them.algorithm": "An algorithm decides what you see",
+  "about.contrast.them.signup": "Anyone can sign up with an email",
   "about.contrast.them.growth": "Growth at any cost",
   "about.contrast.them.value": "Your data is the product",
-  "about.contrast.us.noAds": "No ads, ever",
-  "about.contrast.us.findWhatYouNeed": "You find what you need, then log off",
-  "about.contrast.us.smallByDesign": "Small by design",
+  "about.contrast.us.noTracking":
+    "We don't track what you click or how long you stay",
+  "about.contrast.us.feedIsYours":
+    "Your feed is exactly the communities you joined",
+  "about.contrast.us.vouched":
+    "Every member is vouched in by someone already here",
+  "about.contrast.us.growthPace":
+    "Growth keeps pace with how fast people can vouch",
   "about.contrast.us.valueStays":
-    "The value you create stays with the community",
+    "Membership funds a mutual-aid pot the community controls",
   "about.beliefs.eyebrow": "What we believe",
   "about.beliefs.title": "The values behind <em>every decision.</em>",
   "about.values.smallByDesign.title": "Small by design",
@@ -64,8 +68,6 @@ export const marketing: Catalog = {
     "QueerPulse is run by the people who use it, a small founding team, and a growing circle of members who help shape what comes next.",
   "about.who.p2":
     "We're not backed by venture capital chasing a return. We're backed by memberships, donations, and grants that keep the platform independent.",
-  "about.who.pullQuote":
-    "Nobody on this team is trying to get rich off this. We're trying to get it right.",
   "about.contactStrip.title": "Questions? <em>We're reachable.</em>",
   "about.contactStrip.body":
     "No support tickets vanishing into a queue. A real person reads what you send.",

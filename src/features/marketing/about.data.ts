@@ -9,19 +9,19 @@ export const WHY_PARAGRAPH_KEYS = [
   "marketing:about.why.p3",
 ];
 
-export const PULL_QUOTE_KEY = "marketing:about.why.pullQuote";
-
 export const CONTRAST_THEM_KEYS = [
   "marketing:about.contrast.them.attention",
   "marketing:about.contrast.them.algorithm",
+  "marketing:about.contrast.them.signup",
   "marketing:about.contrast.them.growth",
   "marketing:about.contrast.them.value",
 ];
 
 export const CONTRAST_US_KEYS = [
-  "marketing:about.contrast.us.noAds",
-  "marketing:about.contrast.us.findWhatYouNeed",
-  "marketing:about.contrast.us.smallByDesign",
+  "marketing:about.contrast.us.noTracking",
+  "marketing:about.contrast.us.feedIsYours",
+  "marketing:about.contrast.us.vouched",
+  "marketing:about.contrast.us.growthPace",
   "marketing:about.contrast.us.valueStays",
 ];
 
@@ -29,8 +29,6 @@ export const WHO_PARAGRAPH_KEYS = [
   "marketing:about.who.p1",
   "marketing:about.who.p2",
 ];
-
-export const WHO_PULL_KEY = "marketing:about.who.pullQuote";
 
 export const VALUES: { titleKey: string; bodyKey: string }[] = [
   {

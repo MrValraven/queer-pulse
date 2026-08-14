@@ -196,6 +196,21 @@ main[data-page-main][data-shell="full-height"] {
   padding-top: 0;
 }
 
+/* When a page's first content is a plum `<PageHero>` (`data-plum` — a plain
+   attribute, not a CSS-module class, so it's reachable from here), tint the
+   reserved nav-band gap above it plum too, instead of leaving it showing the
+   cream page background behind the floating nav. Painted as a background
+   layer sized/positioned to main's OWN box (top, `--nav-band` tall) rather
+   than as a fixed-height overlay, so it automatically lines up with however
+   much of that band is actually visible in each nav layout: the sidebar rail
+   (nav-mode.css) and mobile app bar (standalone.css) both reconcile by
+   shifting this same box with margin-top, never by changing its padding, so
+   this stays correct without duplicating any of that per-mode math. */
+main[data-page-main]:has(header[data-plum]) {
+  background: linear-gradient(var(--plum), var(--plum)) top / 100%
+    var(--nav-band) no-repeat;
+}
+
 /* Visually-hidden helper for accessible labels */
 .visuallyHidden {
   position: absolute;

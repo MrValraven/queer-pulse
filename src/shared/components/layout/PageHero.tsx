@@ -50,6 +50,11 @@ export function PageHero({
       className={[styles.hero, plum && styles.plum, className]
         .filter(Boolean)
         .join(" ")}
+      // Plain data attribute (not a CSS-module class) so base.css's
+      // `main[data-page-main]:has(...)` can key off it to tint the reserved
+      // nav-band gap plum too, without base.css needing to know PageHero's
+      // hashed class names.
+      data-plum={plum || undefined}
     >
       <div className="wrap">
         {backLink}

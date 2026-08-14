@@ -1,25 +1,11 @@
-.originGrid {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 48px;
-  align-items: center;
+.body {
+  max-width: var(--maxw-text);
 }
 .body p {
   font-size: 15.5px;
   color: var(--ink-60);
   line-height: 1.75;
   margin-bottom: 14px;
-}
-.pull {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: 24px;
-  color: var(--text-strong);
-  line-height: 1.4;
-  letter-spacing: -0.01em;
-  border-left: 3px solid var(--accent);
-  padding-left: 24px;
-  font-style: italic;
 }
 
 .contrastGrid {
@@ -151,10 +137,6 @@
 }
 
 @media (--compact) {
-  .originGrid {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
   .contrastGrid {
     grid-template-columns: 1fr;
   }
