@@ -173,7 +173,7 @@ export const WORKSHOPS: Workshop[] = [
       {
         n: "06",
         title: "Binding, trimming, distribution",
-        description: "Saddle-stitch by hand, trim to size, the math of distribution. Closing party at Café Beirão.",
+        description: "Saddle-stitch by hand, trim to size, the math of distribution. Closing party at the community café.",
         date: "Tue 29 Jul",
         length: "3+ hr",
       },

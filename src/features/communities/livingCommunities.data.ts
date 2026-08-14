@@ -324,7 +324,7 @@ const HUB_PULSE: Post[] = [
     id: "hub-p4",
     author: P("jonas"),
     kind: "post",
-    body: "Soft reminder that the open clinic night is a no-question-too-small space. Last time we covered everything from blood tests to how to ask a GP for a referral without it becoming a whole thing. Thursday, Café Beirão, drop-in.",
+    body: "Soft reminder that the open clinic night is a no-question-too-small space. Last time we covered everything from blood tests to how to ask a GP for a referral without it becoming a whole thing. Thursday, at the community café, drop-in.",
     image: img("photo-1488521787991-ed7bbaae773c"),
     reactions: rx(["heart", 19, true], ["support", 7]),
     replies: [
@@ -367,7 +367,7 @@ const HUB_EVENTS: CommunityEvent[] = [
     dd: "12",
     mm: "Jun",
     title: "Open clinic night: bring questions",
-    meta: "Thursday · 19:00 · Café Beirão",
+    meta: "Thursday · 19:00 · The community café",
     spots: "drop-in",
   },
   {
@@ -860,7 +860,7 @@ const AID_PULSE: Post[] = [
     id: "aid-p2",
     author: P("jonas"),
     kind: "post",
-    body: "Open clinic night this Thursday: bring any question, no question is too basic. Last time we covered blood tests, GP referrals, and how to ask for a letter without it becoming an appointment about your identity. Drop-in from 19:00 at Café Beirão.",
+    body: "Open clinic night this Thursday: bring any question, no question is too basic. Last time we covered blood tests, GP referrals, and how to ask for a letter without it becoming an appointment about your identity. Drop-in from 19:00 at the community café.",
     reactions: rx(["heart", 21], ["celebrate", 12, true]),
     replies: [
       {
@@ -936,7 +936,7 @@ const AID_EVENTS: CommunityEvent[] = [
     dd: "6",
     mm: "Jun",
     title: "Peer exchange: navigating healthcare",
-    meta: "Thursday · 19:00 · Café Beirão",
+    meta: "Thursday · 19:00 · The community café",
     past: true,
     recapHref: "#",
   },

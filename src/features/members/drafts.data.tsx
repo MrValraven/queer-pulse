@@ -268,13 +268,13 @@ export const DRAFTS: Draft[] = [
     createdMinutes: 5760,
     deadlineDays: null,
     sortTitle: "Post in Creatives",
-    searchText: "post creatives portfolio night café beirão wednesday",
+    searchText: "post creatives portfolio night community cafe wednesday",
     title: (
       <>
         Post in <em>Creatives</em>
       </>
     ),
-    description: '"Hosting a portfolio night the first Wednesday of every month, at Café Beirão. 12 spots, drop a link…"',
+    description: '"Hosting a portfolio night the first Wednesday of every month, at the community café. 12 spots, drop a link…"',
     meta: [{ kind: "startedAgo" }, { kind: "lastEditedAgo" }],
     progress: 78,
     actions: [

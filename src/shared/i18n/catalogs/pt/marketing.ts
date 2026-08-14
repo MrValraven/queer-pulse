@@ -903,12 +903,12 @@ export const marketing: Catalog = {
   "pressKit.preview.boilerplate.desc": "Versões curta e média",
   "pressKit.preview.factSheet.title": "Ficha de factos",
   "pressKit.preview.factSheet.desc": "PDF de uma página, pronto a imprimir",
-  "pressKit.boiler.short.wc": "25 palavras · 154 carateres",
+  "pressKit.boiler.short.wc": "25 palavras · 210 carateres",
   "pressKit.boiler.short.text":
-    "A QueerPulse é uma rede profissional queer com raízes em Lisboa — a ligar profissionais LGBTQ+, criatives, ativistas e pessoas da comunidade para trabalho, comunidade, cultura e entreajuda.",
-  "pressKit.boiler.med.wc": "60 palavras · 408 carateres",
+    "A QueerPulse é uma plataforma comunitária queer pequena e por convite, com raízes em Lisboa — a ligar profissionais, criativos, ativistas e pessoas da comunidade para trabalho, comunidade, cultura e entreajuda.",
+  "pressKit.boiler.med.wc": "60 palavras · 424 carateres",
   "pressKit.boiler.med.text":
-    "A QueerPulse é uma rede profissional queer com raízes em Lisboa, fundada em 2024. Ligamos profissionais LGBTQ+, criatives, ativistas e pessoas da comunidade para trabalho, comunidade, cultura e entreajuda. A adesão é por convite, operacionalmente protegida, e gratuita no escalão solidário. A plataforma mantém uma revista, um podcast, uma rede de espaços seguros e um fundo de microapoios distribuído pela própria comunidade.",
+    "A QueerPulse é uma plataforma comunitária queer pequena e por convite, com raízes em Lisboa, fundada em 2024 por profissionais, organizadores e artistas a construir uma alternativa às redes que prendem a atenção: sem publicidade, sem algoritmo. Cada pessoa é avalizada por alguém que já está cá. Sem capital de risco por trás, a plataforma vive de mensalidades, doações e apoios, e publica uma revista para a sua comunidade.",
   "pressKit.downloads.boilerplate.title": "Texto institucional",
   "pressKit.placeholderFile.line1":
     "Este é um ficheiro de substituição gerado para o protótipo.",
@@ -1243,7 +1243,7 @@ export const marketing: Catalog = {
     "130 palavras · para reportagens longas, secções “sobre”",
   "pressKit.boiler.long.wc": "130 palavras",
   "pressKit.boiler.long.text":
-    "A QueerPulse é uma rede profissional queer sediada em Lisboa, fundada em 2024 por oito pessoas da comunidade na sala das traseiras do Café Beirão. É gerida por um grupo de voluntários, não é uma empresa registada, e sustentada por contribuições dos membros e doações pontuais. A adesão é por convite avalizado. A plataforma mantém uma revista, um podcast (The Back Room), uma rede verificada de espaços seguros por toda a Lisboa, um fundo de microapoios distribuído em 14 dias por um círculo rotativo da comunidade, e uma parceria operacional com uma organização nacional de direitos LGBTQ+ para apoio jurídico e encaminhamento de linhas de apoio. Publicamos o que recebemos e o que gastamos.",
+    "A QueerPulse é uma plataforma comunitária queer pequena e por convite, com raízes em Lisboa, fundada em 2024 por um grupo de profissionais, organizadores e artistas que queriam uma alternativa às redes desenhadas para prender a atenção: sem publicidade, sem algoritmo, sem crescimento pelo crescimento. É gerida pelas pessoas que a usam — uma pequena equipa fundadora e um círculo crescente de membros que ajudam a moldar o que vem a seguir. Cada pessoa é avalizada por alguém que já está cá. A QueerPulse não tem capital de risco à procura de retorno; vive de mensalidades, doações e apoios que a mantêm independente. O dinheiro que passa pela QueerPulse fica dentro da comunidade de onde veio, e a plataforma já publica uma revista para os seus membros.",
   "pressKit.mark.section.title": "A <em>marca</em> e como usá-la",
   "pressKit.mark.section.lead":
     "Três variantes aprovadas. O logótipo leva sempre o ponto de pulso coral — exceto na variante inversa “coral”, onde o ponto passa a ameixa. Não recolores o ponto para mais nada.",
@@ -1272,7 +1272,7 @@ export const marketing: Catalog = {
   "pressKit.photography.section.title": "<em>Fotografia</em> autorizada",
   "pressKit.photography.section.lead":
     "Seis imagens, com autorização de modelo e pré-autorizadas para uso editorial. Crédito: <em>fotografias de André Bento para a QueerPulse</em>. Resolução: 3000 × 2000 px JPG.",
-  "pressKit.photography.image1": "01 · Pessoas fundadoras no Café Beirão",
+  "pressKit.photography.image1": "01 · Pessoas fundadoras, os primeiros tempos",
   "pressKit.photography.image2": "02 · Noite de clínica aberta, a decorrer",
   "pressKit.photography.image3": "03 · A revista impressa, em leque",
   "pressKit.photography.image4": "04 · Escritório do Trans Hub · Mouraria",
@@ -1443,7 +1443,7 @@ export const marketing: Catalog = {
     "O suficiente para pôr o teu lugar no mapa. No passo seguinte podes fazê-lo brilhar.",
   "listBusiness.step1.nameLabel": "Como se chama?",
   "listBusiness.step1.nameHelper": "O nome tal como as pessoas o procurariam.",
-  "listBusiness.step1.namePlaceholder": "ex.: Café Beirão",
+  "listBusiness.step1.namePlaceholder": "ex.: o nome que os habituais usam",
   "listBusiness.step1.dupHead":
     "Talvez já exista um lugar com este nome no diretório:",
   "listBusiness.step1.catsLabel": "Que tipo de lugar é? — escolhe até 2",

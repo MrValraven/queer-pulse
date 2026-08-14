@@ -876,12 +876,12 @@ export const marketing: Catalog = {
   "pressKit.preview.boilerplate.desc": "Short and medium lengths",
   "pressKit.preview.factSheet.title": "Fact sheet",
   "pressKit.preview.factSheet.desc": "One-page printable PDF",
-  "pressKit.boiler.short.wc": "25 words · 154 char",
+  "pressKit.boiler.short.wc": "25 words · 196 char",
   "pressKit.boiler.short.text":
-    "QueerPulse is a queer professional network rooted in Lisbon, connecting LGBTQ+ professionals, creatives, activists and community members for work, community, culture and mutual support.",
-  "pressKit.boiler.med.wc": "60 words · 408 char",
+    "QueerPulse is a small, invite-based queer community platform rooted in Lisbon, connecting professionals, creatives, activists and community members for work, community, culture and mutual support.",
+  "pressKit.boiler.med.wc": "60 words · 424 char",
   "pressKit.boiler.med.text":
-    "QueerPulse is a queer professional network rooted in Lisbon, founded in 2024. We connect LGBTQ+ professionals, creatives, activists and community members for work, community, culture and mutual support. Membership is by invitation, operationally protected, and free at the solidarity tier. The platform runs a magazine, a podcast, a safe-spaces network, and a micro-grants fund disbursed by the community itself.",
+    "QueerPulse is a small, invite-based queer community platform rooted in Lisbon, founded in 2024 by professionals, organisers and artists building an alternative to attention-driven networks: no ads, no algorithm deciding what members see. Members are vouched in by someone already there. Not backed by venture capital, the platform runs on memberships, donations and grants, and publishes a member magazine for its community.",
   "pressKit.downloads.boilerplate.title": "Boilerplate",
   "pressKit.placeholderFile.line1":
     "This is a placeholder file generated for the prototype.",
@@ -1210,7 +1210,7 @@ export const marketing: Catalog = {
     "130 words · for longer features, “about” sections",
   "pressKit.boiler.long.wc": "130 words",
   "pressKit.boiler.long.text":
-    "QueerPulse is a Lisbon-based queer professional network, founded in 2024 by eight community members in the back room of Café Beirão. It is run by a group of volunteers, not a registered company, and supported by member contributions and one-off donations. Membership is by vouched invitation. The platform supports a magazine, a podcast (The Back Room), a verified safe-spaces network across Lisbon, a micro-grants fund disbursed within 14 days by a rotating community circle, and an operational partnership with a national LGBTQ+ rights organisation for legal aid and helpline handoffs. We publish what we take in and what we spend.",
+    "QueerPulse is a small, invite-based queer community platform rooted in Lisbon, founded in 2024 by a group of professionals, organisers and artists who wanted an alternative to attention-optimised networks: no ads, no algorithm, no growth for its own sake. It is run by the people who use it: a small founding team and a growing circle of members who help shape what comes next. Every member is vouched in by someone already there, and growth stays paced to how fast people can vouch. QueerPulse isn't backed by venture capital chasing a return; it's sustained instead by memberships, donations and grants that keep the platform independent. Money that moves through QueerPulse stays inside the community it came from, and the platform already publishes a member magazine, with more shared infrastructure planned as the community grows.",
   "pressKit.mark.section.title": "The <em>mark</em> and how to use it",
   "pressKit.mark.section.lead":
     "Three approved variations. The wordmark always carries the coral pulse dot, except in the inverse “coral” variant, where the dot becomes plum. Don't recolour the dot to anything else.",
@@ -1238,7 +1238,7 @@ export const marketing: Catalog = {
   "pressKit.photography.section.title": "Cleared <em>photography</em>",
   "pressKit.photography.section.lead":
     "Six images, model-released and pre-cleared for editorial use. Credit: <em>photographs by André Bento for QueerPulse</em>. Resolution: 3000 × 2000 px JPG.",
-  "pressKit.photography.image1": "01 · Founding members at Café Beirão",
+  "pressKit.photography.image1": "01 · Founding members, early days",
   "pressKit.photography.image2": "02 · Open clinic night, in progress",
   "pressKit.photography.image3": "03 · The print magazine, fanned",
   "pressKit.photography.image4": "04 · Trans Hub office · Mouraria",
@@ -1401,7 +1401,7 @@ export const marketing: Catalog = {
     "Just enough to put your place on the map. You can make it sing in the next step.",
   "listBusiness.step1.nameLabel": "What's it called?",
   "listBusiness.step1.nameHelper": "The name as people would search for it.",
-  "listBusiness.step1.namePlaceholder": "e.g. Café Beirão",
+  "listBusiness.step1.namePlaceholder": "e.g. the name your regulars use",
   "listBusiness.step1.dupHead":
     "A place by this name may already be in the directory:",
   "listBusiness.step1.catsLabel": "What kind of place is it?. Pick up to 2",

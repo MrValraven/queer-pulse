@@ -81,7 +81,7 @@ export const ALTS: {
         <em>{"creatives only"}</em>
       </>
     ),
-    venue: "Café Beirão back room",
+    venue: "The community café, back room",
     time: new Date(2026, 5, 28, 18, 0),
     note: "informal",
     spots: { key: "gatherings:spots.spotsLeft", values: { count: 11 } },

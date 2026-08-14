@@ -40,7 +40,7 @@ const FROM_FULL_NAME = "Anika Kovač";
 const FROM_ROLE = "Healthcare designer · Trans & Non-Binary Network";
 const EVENT_TITLE_PREFIX = "Open clinic night: ";
 const EVENT_TITLE_EM = "bring your prescription questions.";
-const EVENT_VENUE_NAME = "Café Beirão";
+const EVENT_VENUE_NAME = "the community café";
 const EVENT_HOOD_SUFFIX = " · Anjos";
 const PERSONAL_QUOTE_P1 =
   "\"I'd love to do this with you. You're calmer than I am about the front-door bit and you know Sandra and Rui. I'll bring the doctor, the pharmacist, and the kettle. ";

@@ -180,7 +180,7 @@ const healthcare: Topic = {
           Open clinic night: <em>bring your prescription questions.</em>
         </>
       ),
-      body: "Dr. Inês Pereira and a pharmacist from Farmácia do Carmo take over the back room of Café Beirão for two hours of free, no-records consultation. 22 spots, RSVP required.",
+      body: "Dr. Inês Pereira and a pharmacist from Farmácia do Carmo take over the community café's back room for two hours of free, no-records consultation. 22 spots, RSVP required.",
       stats: (
         <>
           <b>14 spots left</b> · 30-day open clinic streak

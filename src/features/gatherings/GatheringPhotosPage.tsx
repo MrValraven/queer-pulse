@@ -57,7 +57,7 @@ const CALENDAR = routes.calendar;
 const REPORT = routes.report;
 
 /**
- * The hero eyebrow/title/dek. "Open clinic night", "Café Beirão", the two
+ * The hero eyebrow/title/dek. "Open clinic night", "the community café", the two
  * attendee names, and the dek's descriptive sentences are this specific
  * album's own content — in live mode they'd come straight off the album
  * record, so they stay in English. The surrounding labels ("Hosted by",

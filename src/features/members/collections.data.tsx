@@ -148,7 +148,7 @@ export const RECENT_SAVES: RecentSave[] = [
     id: "r3",
     kind: "BIZ",
     kindVariant: "business",
-    title: "Café Beirão · pastelaria + community room",
+    title: "The neighbourhood café · pastelaria + community room",
     saved: "Saved 3 days ago",
   },
 ];

@@ -20,12 +20,12 @@ export const PHOTOS_NEXT_EVENT_DATE = new Date(2026, 6, 10);
  * the component reads them as expressions rather than bare JSX text.
  */
 export const PHOTOS_EVENT_TITLE = "Open clinic night";
-export const PHOTOS_VENUE = "Café Beirão";
+export const PHOTOS_VENUE = "the community café";
 export const PHOTOS_HOST_MEMBER = "Anika Kovač";
 export const PHOTOS_HOST_ORG = "Trans Hub";
 export const PHOTOS_PHOTOGRAPHER = "André Bento";
 export const PHOTOS_DEK =
-  "A photo album from the back room of Café Beirão. Photos by André Bento and three attending members who opted to share.";
+  "A photo album from the community café's back room. Photos by André Bento and three attending members who opted to share.";
 export const PHOTOS_DEK_EMPHASIS =
   "Faces are blurred by default unless the person opted in by name";
 export const PHOTOS_DEK_SUFFIX =

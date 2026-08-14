@@ -380,7 +380,6 @@ export interface SeedPlace {
   badge: OwnerBadge;
 }
 export const SEED: SeedPlace[] = [
-  { name: "Café Beirão", cat: "food", hood: "Anjos", badge: "owned" },
   { name: "Clínica do Largo", cat: "health", hood: "Anjos", badge: "friendly" },
   { name: "Livraria Rosa", cat: "culture", hood: "Graça", badge: "owned" },
   { name: "Estúdio Marvila", cat: "design", hood: "Marvila", badge: "owned" },

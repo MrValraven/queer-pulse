@@ -173,7 +173,7 @@ export const AUTHORS: Record<string, Author> = {
         kicker: "Reporting",
         title: (
           <>
-            Inside the back room of <em>Café Beirão.</em>
+            Inside the back room of <em>a neighbourhood café.</em>
           </>
         ),
         dek: "How a monthly open clinic became Lisbon's quietest piece of mutual-aid infrastructure.",
@@ -288,7 +288,7 @@ export const AUTHORS: Record<string, Author> = {
       kicker: "Feature · Issue 09 · Reportage",
       title: (
         <>
-          Inside the back room of <em>Café Beirão.</em>
+          Inside the back room of <em>a neighbourhood café.</em>
         </>
       ),
       dek: "How a monthly open clinic became Lisbon's quietest piece of mutual-aid infrastructure, and why the people who run it don't want you to call it that.",

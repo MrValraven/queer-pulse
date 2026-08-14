@@ -88,7 +88,7 @@ export const TOC: { headingKey: string; entries: Entry[] }[] = [
         minutes: 11,
         title: (
           <>
-            Inside the back room of <em>Café Beirão.</em>
+            Inside the back room of <em>a neighbourhood café.</em>
           </>
         ),
         dek: "How a monthly open clinic became Lisbon's quietest piece of mutual-aid infrastructure.",
