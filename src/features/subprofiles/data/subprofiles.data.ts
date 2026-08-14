@@ -157,7 +157,7 @@ const NIGHTFORM: DemoSubprofile = {
       slug: "rui",
       name: "Rui Marçal",
       avatarUrl: null,
-      note: "Saw NIGHTFORM close out Rrraw — the whole room was still buzzing an hour later.",
+      note: "Saw NIGHTFORM close out Rrraw. The whole room was still buzzing an hour later.",
     },
     {
       slug: "anika",
@@ -504,7 +504,7 @@ const ANDRE_LENS: DemoSubprofile = {
   avatarUrl:
     "https://images.unsplash.com/photo-1519638831568-d9897f54ed69?q=80&w=800&auto=format&fit=crop",
   tagline: "Analog portraiture, queer bodies, medium format",
-  bio: "GRAIN is a film photography practice photographing queer and trans community. Slow, consensual, tender portraits — no rush, no flash.",
+  bio: "GRAIN is a film photography practice photographing queer and trans community. Slow, consensual, tender portraits: no rush, no flash.",
   coverUrl:
     "https://images.unsplash.com/photo-1495707902641-75cac588d2e9?q=80&w=1600&auto=format&fit=crop",
   accent: "amber",
@@ -531,7 +531,7 @@ const ANDRE_LENS: DemoSubprofile = {
       name: "Diogo Vasques",
       avatarUrl:
         "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop",
-      note: "Sat for the Held series — gentlest photographer I've worked with.",
+      note: "Sat for the Held series. Gentlest photographer I've worked with.",
     },
     {
       slug: "tiago",
@@ -627,7 +627,7 @@ const TIAGO_DRAFT: DemoSubprofile = {
   handle: null,
   displayName: "Tiago Costa",
   avatarUrl: null,
-  tagline: "Fullstack — React, TypeScript, Node",
+  tagline: "Fullstack: React, TypeScript, Node",
   bio: "Building for the community.",
   coverUrl: null,
   accent: null,
@@ -881,7 +881,7 @@ const SOFIA_NEVES: DemoSubprofile = {
     ],
     approach: [
       "I work relationally and at your pace. Nothing about your identity is a problem to be solved here.",
-      "Sessions draw on affirmative, trauma-informed and somatic work — we find what fits you rather than the other way round.",
+      "Sessions draw on affirmative, trauma-informed and somatic work. We find what fits you rather than the other way round.",
     ],
     training: [
       "MSc Clinical Psychology, Universidade de Lisboa",
@@ -1052,7 +1052,7 @@ const DECIMA_CASA: DemoSubprofile = {
   displayName: "Décima Casa",
   avatarUrl: null,
   tagline: "Charts read slowly, for people the textbooks never described",
-  bio: "Décima Casa is a queer astrology practice in Anjos. I read birth charts and transits as a language for the life you are actually living — not a forecast, not a verdict. Trans and non-binary charts are read without the gendered shorthand the tradition arrived with.",
+  bio: "Décima Casa is a queer astrology practice in Anjos. I read birth charts and transits as a language for the life you are actually living, a way of reflecting on the present. Trans and non-binary charts are read without the gendered shorthand the tradition arrived with.",
   coverUrl: null,
   accent: "violet",
   availability: "booking",
@@ -1078,13 +1078,13 @@ const DECIMA_CASA: DemoSubprofile = {
     },
     birthData: {
       date: "The day you were born",
-      time: "The exact minute — from the certificate, not from memory",
+      time: "The exact minute: from the certificate, not from memory",
       place: "City and country",
       note: "No birth time? Say so when you book. There is a way to work without it, and it costs the same.",
     },
     ethics: [
       "Not a forecast. I will not tell you what happens, or when.",
-      "Not a diagnosis. Astrology sits beside therapy and medicine, never in front of them.",
+      "Not a diagnosis. Astrology sits beside therapy and medicine as a companion to them.",
       "Not a verdict on anyone else. I do not read the chart of someone who has not asked.",
       "No gendered readings. Venus is not the woman in your chart.",
     ],
@@ -1136,7 +1136,7 @@ const DECIMA_CASA: DemoSubprofile = {
       title: "The year ahead",
       subtitle: "60 minutes · €55",
       description:
-        "Return and transits, in plain language — what this year keeps asking of you.",
+        "Return and transits, in plain language: what this year keeps asking of you.",
       url: null,
       imageUrl: null,
       date: null,
@@ -1480,7 +1480,7 @@ const ANIKA_JOURNAL: DemoSubprofile = {
   displayName: "Anika's Journal",
   avatarUrl: null,
   tagline: "Unfinished drafts, kept for no one but me",
-  bio: "A private working notebook — half-formed lines that aren't ready for anyone else yet.",
+  bio: "A private working notebook, half-formed lines that aren't ready for anyone else yet.",
   coverUrl: null,
   accent: null,
   availability: null,
@@ -1529,7 +1529,7 @@ const JORDAN_AFTERHOURS: DemoSubprofile = {
   handle: "afterhours-jordan",
   displayName: "Afterhours",
   avatarUrl: null,
-  tagline: "The quiet alias — sets shared with people I actually know",
+  tagline: "The quiet alias: sets shared with people I actually know",
   bio: "A second, smaller alias for the sets I don't put on the main page. Visible to signed-in members only.",
   coverUrl: null,
   accent: null,
@@ -1633,7 +1633,7 @@ const CADEIRA_LIVRE: DemoSubprofile = {
   viewerFollowing: false,
   skinData: {
     chair: {
-      rate: "€25 — every cut, every head",
+      rate: "€25, every cut, every head",
       walkins: "Walk-ins Thursday, 15:00–19:00",
       where: "Rua do Benformoso 42, Anjos",
       quiet: "Quiet hours Monday, no music, no small talk",
@@ -1641,7 +1641,7 @@ const CADEIRA_LIVRE: DemoSubprofile = {
     beforeYouSit: [
       "I ask what you want your hair to do. Not what it did before.",
       "You can bring a friend, or your own clippers, or nothing at all.",
-      "First binder-friendly cut is on the house if money is tight — just say so when you book.",
+      "First binder-friendly cut is on the house if money is tight. Just say so when you book.",
     ],
   },
   affiliations: [],
@@ -1969,7 +1969,7 @@ const TERCEIRO_PISO: DemoSubprofile = {
       hours: "Thursday to Sunday, 14:00–19:00",
       address: "Rua dos Anjos 88, 3º · Lisbon",
       access:
-        "Third floor, no lift — we bring the work down for anyone who asks",
+        "Third floor, no lift. We bring the work down for anyone who asks",
       admission: "Free, always",
     },
   },
@@ -2256,7 +2256,7 @@ const BLOCO_ROSA: DemoSubprofile = {
     },
     principles: [
       "Nobody is handed to the police. Ever.",
-      "Decisions are made by the people in the room, not by the loudest account online.",
+      "Decisions are made by the people who show up in the room.",
       "Trans healthcare is housing is migration. We do not rank them.",
       "Childcare and interpretation at every assembly, or the assembly is postponed.",
     ],
@@ -2388,7 +2388,7 @@ const AULA_ABERTA: DemoSubprofile = {
   viewerFollowing: false,
   skinData: {
     fees: {
-      cost: "Free — always, for everyone",
+      cost: "Free, always, for everyone",
       materials: "Books, notebooks and pens provided",
       where: "Biblioteca dos Anjos, Tuesdays & Saturdays",
       extras: "Childcare on Saturdays · metro fare reimbursed if you ask",
@@ -2511,8 +2511,8 @@ const IRON_ORCHID: DemoSubprofile = {
   handle: "iron-orchid",
   displayName: "Iron Orchid",
   avatarUrl: null,
-  tagline: "Pole as strength and as language — I perform, and I teach.",
-  bio: "Iron Orchid is a pole practice built on strength, control, and expression. I perform showcases across the city and teach weekly classes for every body — beginners welcome, no prior athletic background assumed. Trans and queer students especially welcome.",
+  tagline: "Pole as strength and as language. I perform, and I teach.",
+  bio: "Iron Orchid is a pole practice built on strength, control, and expression. I perform showcases across the city and teach weekly classes for every body: beginners welcome, no prior athletic background assumed. Trans and queer students especially welcome.",
   coverUrl: null,
   accent: "coral",
   availability: "booking",
@@ -2560,7 +2560,7 @@ const IRON_ORCHID: DemoSubprofile = {
       title: "Vertical, live",
       subtitle: "Casa do Comum · Lisbon",
       description:
-        "A twenty-minute showcase set — three pieces, one continuous arc from floor to top of the pole.",
+        "A twenty-minute showcase set: three pieces, one continuous arc from floor to top of the pole.",
       url: null,
       imageUrl: null,
       date: "14 Jun 2026",
@@ -2573,7 +2573,7 @@ const IRON_ORCHID: DemoSubprofile = {
       id: "itm-classes-beginner-pole-foundations",
       section: "classes",
       createdAt: "2025-11-21T16:37:00.000Z",
-      title: "Beginner pole — foundations",
+      title: "Beginner pole: foundations",
       subtitle: "Level 1 · weekly · Estúdio Norte",
       description:
         "Grip, spins, and your first climb, at a pace that assumes nothing. Every body, every week.",

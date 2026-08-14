@@ -87,7 +87,7 @@ export function CommitmentSection({
               <span className={styles.slipMove}>
                 {slip.from || "—"} → {slip.to || "—"}
               </span>
-              {" — "}
+              {": "}
               {slip.reason}
               <span className={styles.slipMeta}>
                 {slip.movedByName} · {new Date(slip.movedAt).toLocaleDateString()}

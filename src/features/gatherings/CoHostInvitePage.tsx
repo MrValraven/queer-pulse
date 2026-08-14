@@ -34,17 +34,17 @@ const MESSAGES = routes.messages;
  * that guards un-keyed chrome.
  */
 const INVITE_SUB_TEXT =
-  "She's running an open clinic night and would like a second person at the door — for vibes, for the line, and so the night doesn't rest on one set of shoulders.";
+  "She's running an open clinic night and would like a second person at the door: for vibes, for the line, and so the night doesn't rest on one set of shoulders.";
 const FROM_AVATAR_INITIALS = "AK";
 const FROM_FULL_NAME = "Anika Kovač";
 const FROM_ROLE = "Healthcare designer · Trans & Non-Binary Network";
-const EVENT_TITLE_PREFIX = "Open clinic night — ";
+const EVENT_TITLE_PREFIX = "Open clinic night: ";
 const EVENT_TITLE_EM = "bring your prescription questions.";
 const EVENT_VENUE_NAME = "Café Beirão";
 const EVENT_HOOD_SUFFIX = " · Anjos";
 const PERSONAL_QUOTE_P1 =
-  "\"I'd love to do this with you. You're calmer than I am about the front-door bit and you know Sandra and Rui. I'll bring the doctor, the pharmacist, and the kettle — ";
-const PERSONAL_QUOTE_EM = "can you bring the room?";
+  "\"I'd love to do this with you. You're calmer than I am about the front-door bit and you know Sandra and Rui. I'll bring the doctor, the pharmacist, and the kettle. ";
+const PERSONAL_QUOTE_EM = "Can you bring the room?";
 
 export function CoHostInvitePage() {
   const { t } = useTranslation();
@@ -152,7 +152,7 @@ export function CoHostInvitePage() {
               <div className={styles.eventMeta}>
                 <b>
                   {fmt.date(EVENT_START, { weekday: "short" })}{" "}
-                  {fmt.time(EVENT_START)} — {fmt.time(EVENT_END)}
+                  {fmt.time(EVENT_START)} to {fmt.time(EVENT_END)}
                 </b>
                 <span className={styles.dot} />
                 <b>{EVENT_VENUE_NAME}</b>

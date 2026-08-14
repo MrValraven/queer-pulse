@@ -300,7 +300,7 @@ export const DRAFTS: Draft[] = [
         Reply to <em>Anika Kovač's post about queer-friendly GPs</em>
       </>
     ),
-    description: '"Dr. Inês Pereira at Clínica do Largo, third Rita\'s vouch — go. Worth knowing that her phone is the one on the door, not the website…"',
+    description: '"Dr. Inês Pereira at Clínica do Largo, third Rita\'s vouch. Go. Worth knowing that her phone is the one on the door, not the website…"',
     meta: [{ kind: "startedAgo" }, { kind: "savedAgo", variant: "pulse" }],
     progress: 92,
     actions: [{ label: "Send reply", variant: "primary" }, { label: "Edit" }],
@@ -341,12 +341,12 @@ export const DRAFTS: Draft[] = [
     editedMinutes: 125280,
     createdMinutes: 125280,
     deadlineDays: 3,
-    sortTitle: "Pitch · Six months on a four-day week — the sequel",
+    sortTitle: "Pitch · Six months on a four-day week: the sequel",
     searchText:
       "pitch six months four-day week sequel issue 05 editorial revision",
     title: (
       <>
-        Pitch · <em>"Six months on a four-day week — the sequel"</em>
+        Pitch · <em>"Six months on a four-day week: the sequel"</em>
       </>
     ),
     description: "Follow-up to my Issue 05 piece · sent to editorial in March, never finished revision",

@@ -27,7 +27,7 @@ export const messages: Catalog = {
   "thread.clearSearch": "Clear search",
   "thread.emptyTitle": "No conversations yet",
   "thread.emptyDescription":
-    "When you start a chat, it'll live here — a quiet, private space just for you and the people you reach out to.",
+    "When you start a chat, it'll live here: a quiet, private space just for you and the people you reach out to.",
   "thread.newMessage": "New message",
   "thread.presenceOnline": "Online now",
   "thread.menuAria": "Conversation options",
@@ -49,9 +49,9 @@ export const messages: Catalog = {
   "thread.tabEmptyGroups": "No group chats yet",
   "deleteChat.confirmTitle": "Delete this chat?",
   "deleteChat.confirmBody":
-    "It disappears from your inbox and clears your copy. {name} keeps theirs — and if they message you again, the chat comes back with only the new messages.",
+    "It disappears from your inbox and clears your copy. {name} keeps theirs, and if they message you again, the chat comes back with only the new messages.",
   "deleteChat.confirmBodyGeneric":
-    "It disappears from your inbox and clears your copy. The other member keeps theirs — and if they message you again, the chat comes back with only the new messages.",
+    "It disappears from your inbox and clears your copy. The other member keeps theirs, and if they message you again, the chat comes back with only the new messages.",
   "deleteChat.confirmCta": "Delete chat",
   "deleteChat.cancelCta": "Cancel",
 
@@ -61,15 +61,15 @@ export const messages: Catalog = {
   "gif.searchPlaceholder": "Search GIFs",
   "gif.loading": "Loading GIFs…",
   "gif.empty": "No GIFs found",
-  "gif.error": "Couldn't load GIFs — try again",
+  "gif.error": "Couldn't load GIFs. Try again",
   "gif.loadMore": "Load more",
   "gif.poweredBy": "Powered by KLIPY",
   "gif.comingSoonTitle": "GIFs are coming soon",
-  "gif.comingSoonHint": "We're wiring up GIF search — check back soon to add a little motion to your messages.",
+  "gif.comingSoonHint": "We're wiring up GIF search. Check back soon to add a little motion to your messages.",
 
   // Connection status strip (ConnectionStatusBanner) at the top of the open
   // thread — surfaces when the member is offline or the socket is reconnecting.
-  "connection.offline": "You're offline — messages will send when you reconnect.",
+  "connection.offline": "You're offline. Messages will send when you reconnect.",
   "connection.reconnecting": "Reconnecting…",
 
   // Shortcut hint — the "?" affordance in the composer that lists the mention
@@ -115,7 +115,7 @@ export const messages: Catalog = {
   "conversation.loadingOlder": "Loading earlier messages…",
   "conversation.typing": "{name} is typing…",
   "conversation.officialNotice":
-    "This is an automated thread — replies aren't monitored.",
+    "This is an automated thread. Replies aren't monitored.",
   "conversation.blockedNotice":
     "You blocked {name}. Unblock them from their profile to send a message.",
   "conversation.composerPlaceholder": "Message {name}…",
@@ -126,7 +126,7 @@ export const messages: Catalog = {
   "conversation.backToList": "Back to conversations",
   "conversation.emptyPanelTitle": "Your messages live here",
   "conversation.emptyPanelBody":
-    "Pick a conversation on the left, or start a new one — a quiet, private space just for you and the people you reach out to.",
+    "Pick a conversation on the left, or start a new one: a quiet, private space just for you and the people you reach out to.",
   "day.today": "Today",
   "day.yesterday": "Yesterday",
   // Screen-reader-only boundary label for a day separator; `day` is the visible
@@ -197,7 +197,7 @@ export const messages: Catalog = {
   "starred.title": "Starred messages",
   "starred.open": "Starred messages",
   "starred.close": "Close",
-  "starred.sub": "Messages you've saved — only you can see these.",
+  "starred.sub": "Messages you've saved. Only you can see these.",
   "starred.loading": "Loading your starred messages…",
   "starred.empty":
     "Nothing starred yet. Star a message to keep it here for later.",
@@ -276,5 +276,5 @@ export const messages: Catalog = {
   "conversation.reportMemberAction": "Report {name}",
   "report.memberTitle": "Report {name}?",
   "conversation.contactSafetyNotice":
-    "Keep the conversation here until you trust someone. Never send money, and never share bank details — real listings don't ask for that.",
+    "Keep the conversation here until you trust someone. Never send money, and never share bank details. Real listings don't ask for that.",
 };

@@ -1,5 +1,7 @@
 import { useState, type ReactElement } from "react";
+import { AnimatePresence, m } from "motion/react";
 import { Link } from "react-router-dom";
+import { useMotionPrefs } from "../../app/providers/MotionProvider";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, SubpageIndex } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -177,6 +179,7 @@ const CATEGORIES: Category[] = [
 
 export function HelpPage() {
   const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
   const [tab, setTab] = useState(CATEGORIES[0]!.id);
   const [open, setOpen] = useState<string | null>(`${CATEGORIES[0]!.id}-0`);
   const category = CATEGORIES.find((c) => c.id === tab)!;
@@ -254,14 +257,28 @@ export function HelpPage() {
                       ›
                     </span>
                   </button>
-                  {isOpen && (
-                    <div className={s.accA}>
-                      <Translation
-                        i18nKey={item.aKey}
-                        components={item.aComponents}
-                      />
-                    </div>
-                  )}
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <m.div
+                        key="answer"
+                        className={s.accReveal}
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{
+                          duration: reducedMotion ? 0 : 0.24,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                      >
+                        <div className={s.accA}>
+                          <Translation
+                            i18nKey={item.aKey}
+                            components={item.aComponents}
+                          />
+                        </div>
+                      </m.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               );
             })}

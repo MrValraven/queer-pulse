@@ -30,7 +30,7 @@ const SEEDS: ChangeMakerSeed[] = [
     member: "jonas",
     cause: "Trans Healthcare",
     blurb:
-      "Trained 40+ GPs in trans-affirming care and is pushing for systemic reform in Portugal's public health system — one policy at a time.",
+      "Trained 40+ GPs in trans-affirming care and is pushing for systemic reform in Portugal's public health system, one policy at a time.",
     tags: ["Health", "Policy"],
   },
   {
@@ -38,7 +38,7 @@ const SEEDS: ChangeMakerSeed[] = [
     member: "luisa",
     cause: "Arts & Culture",
     blurb:
-      "Programming queer art into Lisbon's mainstream cultural venues — so we're not a sidebar but part of the main story of this city.",
+      "Programming queer art into Lisbon's mainstream cultural venues, making it part of the main story of this city.",
     tags: ["Arts", "Programming"],
   },
 ];

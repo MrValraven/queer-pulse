@@ -4,6 +4,7 @@ import {
   createJoinRequest,
   type CreateJoinRequestResult,
 } from "./joinRequest.api";
+import type { JoinRequestSource } from "./joinRequestSource";
 import { TERMS_VERSION } from "./ageAttestation.api";
 
 /** What the request-invite form hands the mutation. */
@@ -15,6 +16,8 @@ export interface JoinRequestVars {
   /** Optional free-text city. */
   city?: string;
   message: string;
+  /** The CTA the applicant came through, when the form could resolve one. */
+  source?: JoinRequestSource;
 }
 
 /**
@@ -29,7 +32,7 @@ export function useCreateJoinRequest() {
   return useMutation<CreateJoinRequestResult, Error, JoinRequestVars>({
     // RequestInviteForm toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
-    mutationFn: async ({ name, email, city, message }) => {
+    mutationFn: async ({ name, email, city, message, source }) => {
       if (demoMode) {
         return {
           id: "demo-join-request",
@@ -44,6 +47,7 @@ export function useCreateJoinRequest() {
         message,
         ageAttested: true,
         termsVersion: TERMS_VERSION,
+        source,
       });
     },
   });

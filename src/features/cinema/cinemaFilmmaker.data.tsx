@@ -87,15 +87,15 @@ export const FILMMAKERS: Record<string, Filmmaker> = {
     bio: (
       <>
         Documentary filmmaker based in Marvila, Lisbon. Three features and seven
-        shorts since 2014 — mostly about the city she grew up in, the people it
+        shorts since 2014, mostly about the city she grew up in, the people it
         keeps invisible, and the small architectures of survival they build for
         themselves. Member of the Lisbon Documentary Co-op.{" "}
         <em>All of her work is made in Marvila or about it.</em>
       </>
     ),
     statement:
-      "I make films about people who were never asked whether they wanted to be documented. The asking is the film, half the time — watching someone decide whether to trust a camera is more interesting than anything the camera then records.",
-    statementWho: "— Maria Vasconcelos, 2025 director's note",
+      "I make films about people who were never asked whether they wanted to be documented. The asking is the film, half the time: watching someone decide whether to trust a camera is more interesting than anything the camera then records.",
+    statementWho: "Maria Vasconcelos, 2025 director's note",
     stats: [
       { k: "Films on QP", v: <em>4</em> },
       {
@@ -183,31 +183,31 @@ export const FILMMAKERS: Record<string, Filmmaker> = {
         year: "2025",
         namePre: "Queer Lisboa ",
         nameEm: "29",
-        detail: "The light between rooms — international competition",
+        detail: "The light between rooms: international competition",
         award: "Best documentary",
       },
       {
         year: "2025",
         namePre: "DocLisboa",
-        detail: "The light between rooms — Portuguese competition",
+        detail: "The light between rooms: Portuguese competition",
         award: "Jury selection",
       },
       {
         year: "2026",
         namePre: "CPH:DOX",
-        detail: "The light between rooms — international competition",
+        detail: "The light between rooms: international competition",
         award: "Special mention",
       },
       {
         year: "2026",
         namePre: "Outfest",
-        detail: "The light between rooms — international docs",
+        detail: "The light between rooms: international docs",
         award: "Selected",
       },
       {
         year: "2022",
         namePre: "IndieLisboa",
-        detail: "O rio que atravessa — national competition",
+        detail: "O rio que atravessa: national competition",
         award: "Audience award",
       },
     ],
@@ -224,7 +224,7 @@ export const FILMMAKERS: Record<string, Filmmaker> = {
         day: "28",
         month: "Jun",
         kind: "Masterclass · open",
-        titlePre: "Filming in the kitchen — ",
+        titlePre: "Filming in the kitchen: ",
         titleEm: "intimacy and the documentary frame",
         sub: "QueerPulse Gathering · 18:00 · 34 going · free",
       },

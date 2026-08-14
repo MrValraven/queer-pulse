@@ -16,8 +16,8 @@ import type { Catalog } from "../../types";
 export const members: Catalog = {
   // ── Cartão do diretório (MemberCardBody) ───────────────────────────────────
   "card.you": "Tu",
-  "card.vouchCount_one": "{count} aval",
-  "card.vouchCount_other": "{count} avais",
+  "card.vouchCount_one": "{count} voto de confiança",
+  "card.vouchCount_other": "{count} votos de confiança",
   "card.mutualsCount_one": "{count} contacto em comum",
   "card.mutualsCount_other": "{count} contactos em comum",
 
@@ -25,11 +25,11 @@ export const members: Catalog = {
   "upload.error.unsupportedType":
     "Esse tipo de imagem não é suportado. Usa um ficheiro JPEG, PNG, WebP ou GIF.",
   "upload.error.tooLarge":
-    "Essa imagem é demasiado grande — mantém-na abaixo de {maxLabel}.",
+    "Essa imagem é demasiado grande. Mantém-na abaixo de {maxLabel}.",
   "upload.error.decodeFailed":
     "Não conseguimos ler essa imagem. Tenta um ficheiro diferente.",
   "upload.error.tooSmall":
-    "Essa imagem é demasiado pequena — precisa de ter pelo menos {minWidth} × {minHeight}px.",
+    "Essa imagem é demasiado pequena. Precisa de ter pelo menos {minWidth} × {minHeight}px.",
   "upload.error.stripFailed":
     "Não conseguimos processar essa imagem em segurança, por isso não a carregámos. Tenta um ficheiro diferente.",
   "upload.error.retry":
@@ -84,7 +84,7 @@ export const members: Catalog = {
   "workItem.linkPlaceholder": "Link (opcional, ex.: https://bandcamp.com/…)",
   "workItem.linkLabel": "Link do trabalho",
   "workItem.linkedNote":
-    "Está ligado a uma página da QueerPulse — não editável aqui.",
+    "Está ligado a uma página da QueerPulse. Não editável aqui.",
   "workItem.remove": "Remover",
 
   // ── Estados da página de perfil (ProfilePage) ──────────────────────────────
@@ -111,17 +111,17 @@ export const members: Catalog = {
   "profile.hero.verifiedBadge": "Pessoa verificada",
   "profile.hero.viewPhotoAria": "Ver foto de {name}",
   "profile.hero.curatorLink":
-    "Curadoria do Cinema — ver perfil de programação",
+    "Curadoria do Cinema: ver perfil de programação",
   "profile.hero.memberSince": "Nesta comunidade desde {since}",
   "profile.hero.location": "{hood}, Lisboa",
   "profile.hero.editCta": "Editar perfil",
   "profile.hero.previewCta": "Ver como visitante",
   "profile.hero.requestIntroCta": "Pedir uma apresentação",
   "profile.hero.sayHelloCta": "Dizer olá",
-  "profile.hero.vouchedFor": "Avalizaste {first}",
-  "profile.hero.vouchedShort": "Com aval",
-  "profile.hero.withdrawVouchCta": "Retirar aval",
-  "profile.hero.vouchForCta": "Avalizar {first}",
+  "profile.hero.vouchedFor": "Deste um voto de confiança a {first}",
+  "profile.hero.vouchedShort": "Com voto de confiança",
+  "profile.hero.withdrawVouchCta": "Retirar voto de confiança",
+  "profile.hero.vouchForCta": "Dar voto de confiança a {first}",
   "profile.hero.levelLabel": "Nível {number}",
   "profile.hero.badgesChip": "{earned} / {total} emblemas",
   "profile.hero.badgesDesc": "{earned} conquistados · {discover} por descobrir",
@@ -131,7 +131,7 @@ export const members: Catalog = {
   "profile.hero.perksArrow": "Resgatar as tuas vantagens",
 
   // ── Linha de estatísticas + separadores de conteúdo (ProfileStatsRow, ProfileTabBar) ──
-  "profile.stats.vouches": "Avais",
+  "profile.stats.vouches": "Votos de confiança",
   "profile.stats.communities": "Comunidades",
   "profile.stats.personas": "Também como",
   "profile.tabs.about": "Sobre",
@@ -158,14 +158,14 @@ export const members: Catalog = {
   "content.now.subtitle": "O que ocupa {first} agora",
   "content.now.openLabel": "Disponível para",
   "content.work.title": "Trabalho em destaque",
-  "content.work.subtitle": "Só alguns trabalhos, não um portefólio completo",
+  "content.work.subtitle": "Só alguns trabalhos, escolhidos a dedo",
   "content.board.title": "No quadro de trocas",
   "content.board.subtitle": "O que {first} anda a pedir e a oferecer agora",
   "content.board.looking": "Precisa de",
   "content.board.offering": "Oferece",
   "content.skills.title": "Competências e ofertas",
   "content.skills.subtitle":
-    "Aquilo em que {first} pode ajudar — e trocar no quadro de trocas",
+    "Aquilo em que {first} pode ajudar, e trocar no quadro de trocas",
   "content.skills.barterCta": "Ver o quadro de trocas completo",
   "content.groups.title": "Grupos e círculos",
   "content.groups.subtitle": "Onde {first} aparece na comunidade",
@@ -232,7 +232,7 @@ export const members: Catalog = {
   // ── Estado "Agora" + Disponível para (ProfileNowField, OpenToEditor) ───────
   "profileEdit.now.label": "Agora",
   "profileEdit.now.help":
-    "O que te ocupa neste momento. Muda sempre que quiseres — se deixares vazio, esta secção não aparece no teu perfil.",
+    "O que te ocupa neste momento. Muda sempre que quiseres. Se deixares vazio, esta secção não aparece no teu perfil.",
   "profileEdit.now.placeholder":
     "A acabar um fanzine, a aprender a soldar, à procura de sala de ensaio…",
   "profileEdit.openTo.label": "Disponível para",
@@ -251,7 +251,7 @@ export const members: Catalog = {
 
   // ── Barra de edição (ProfileEditBar) ────────────────────────────────────────
   "profileEdit.bar.unsaved":
-    "Estás a editar o teu perfil — alterações por guardar",
+    "Estás a editar o teu perfil, alterações por guardar",
   "profileEdit.bar.discard": "Descartar",
   "profileEdit.bar.saving": "A guardar…",
   "profileEdit.bar.tryAgain": "Tentar novamente",
@@ -282,7 +282,7 @@ export const members: Catalog = {
 
   // ── Editor de competências (SkillsEditor) ───────────────────────────────────
   "profileEdit.skills.subtitle":
-    "Aquilo em que podes ajudar — e trocar no quadro de trocas",
+    "Aquilo em que podes ajudar, e trocar no quadro de trocas",
   "profileEdit.skills.add": "Adicionar",
   "profileEdit.skills.namePlaceholder": "Uma competência ou serviço…",
   "profileEdit.skills.nameLabel": "Competência ou serviço",
@@ -300,16 +300,16 @@ export const members: Catalog = {
   "profileEdit.groups.roleLabel": "O teu papel",
   "profileEdit.groups.removeLabel": "Remover {name}",
 
-  // ── Linha de avais no cabeçalho (HeroVouchRow) ─────────────────────────────
+  // ── Linha de votos de confiança no cabeçalho (HeroVouchRow) ────────────────
   "hero.vouch.namesPlusYou": "{names}, e tu",
   "hero.vouch.youOnly": "tu",
   "hero.vouch.anonymous": "Anónimo",
-  "hero.vouch.by": "Quem avaliza: <b>{names}</b>.",
+  "hero.vouch.by": "Quem te deu um voto de confiança: <b>{names}</b>.",
   "hero.vouch.onlyNumberMatters": "É o único número que importa aqui.",
   "hero.vouch.emptySelf":
-    "Ainda sem avais. Vão aparecer aqui à medida que quem te conhece juntar o nome — o único número que importa.",
+    "Ainda sem votos de confiança. Vão aparecer aqui à medida que quem te conhece juntar o nome. É o único número que importa.",
   "hero.vouch.emptyOther":
-    "Ainda ninguém avalizou {first}. Se conheces esta pessoa, o teu pode ser o primeiro.",
+    "Ainda ninguém deu um voto de confiança a {first}. Se conheces esta pessoa, o teu pode ser o primeiro.",
 
   // ── Linha de intenção "Aqui para" (ProfileHero) ─────────────────────────────
   "hero.hereFor.label": "Aqui para",
@@ -330,7 +330,7 @@ export const members: Catalog = {
   "publicBySlug.activityEmpty": "Ainda nada público por aqui.",
   "publicBySlug.joinTitle": "O QueerPulse é só por convite",
   "publicBySlug.joinBody":
-    "Um sítio onde a Lisboa queer se junta — sem anúncios, sem algoritmo. Precisas de alguém que te traga, ou podes pedir-nos diretamente.",
+    "Um sítio onde a Lisboa queer se junta: sem anúncios, sem algoritmo. Precisas de alguém que te traga, ou podes pedir-nos diretamente.",
   "publicBySlug.notFound.metaTitle": "Não encontrado · QueerPulse",
   "publicBySlug.notFound.title": "Não há nada neste link",
   "publicBySlug.notFound.description":
@@ -349,7 +349,7 @@ export const members: Catalog = {
   "publicProfile.locked.postsTitle":
     "Publicações, respostas e mensagens diretas são <em>só para a comunidade.</em>",
   "publicProfile.locked.postsBody":
-    "A QueerPulse mantém o dia a dia da comunidade atrás de um início de sessão, para proteger as pessoas. Junta-te e o feed de {first} desbloqueia-se de imediato — incluindo a possibilidade de enviares mensagem a {first}.",
+    "A QueerPulse mantém o dia a dia da comunidade atrás de um início de sessão, para proteger as pessoas. Junta-te e o feed de {first} desbloqueia-se de imediato, incluindo a possibilidade de enviares mensagem a {first}.",
   "publicProfile.requestInviteArrow": "Pedir um convite",
   "publicProfile.locked.connectionsHeading": "Ligações",
   "publicProfile.locked.connectionsTitle":
@@ -358,14 +358,14 @@ export const members: Catalog = {
     "Para proteger as redes das pessoas da comunidade, não mostramos listas de ligações publicamente. Entra para veres os teus contactos em comum com {first}.",
   "publicProfile.bottomCta.title": "Queres <em>ver tudo?</em>",
   "publicProfile.bottomCta.body":
-    "A QueerPulse funciona por convite — {firstName} pode avalizar-te se já se conheceram pessoalmente. Ou pede um convite diretamente a nós.",
-  "publicProfile.bottomCta.vouchCta": "Pedir a {firstName} para avalizar",
+    "A QueerPulse funciona por convite. {firstName} pode dar-te um voto de confiança se já se conheceram pessoalmente. Ou pede um convite diretamente a nós.",
+  "publicProfile.bottomCta.vouchCta": "Pedir a {firstName} um voto de confiança",
 
   // ── Secções de perfil público (PublicProfileSections) ──────────────────────
   "publicProfile.preview.ownerLabel":
     "Pré-visualização do teu perfil público · é assim que quem não é da comunidade te veria",
   "publicProfile.preview.notYet":
-    "Os perfis públicos ainda não estão abertos — esta pré-visualização só é visível para ti.",
+    "Os perfis públicos ainda não estão abertos. Esta pré-visualização só é visível para ti.",
   "publicProfile.pill.live": "Ativo",
   "publicProfile.pill.off": "Inativo",
   "publicProfile.preview.backToProfile": "Voltar ao teu perfil",
@@ -374,7 +374,7 @@ export const members: Catalog = {
   "publicProfile.head.eyebrow": "Perfil público · @{slug}",
   "publicProfile.head.location": "<b>{hood}</b>, Lisboa",
   "publicProfile.head.memberSince": "Nesta comunidade desde <b>{since}</b>",
-  "publicProfile.head.vouchedFor": "<b>Com aval</b> de {count} pessoas",
+  "publicProfile.head.vouchedFor": "<b>Com voto de confiança</b> de {count} pessoas",
   "publicProfile.head.requestInviteCta": "Pedir um convite para ligar",
   "publicProfile.head.ctaNote":
     "O perfil completo de {firstName}, publicações e acesso a mensagens diretas abrem assim que te tornares parte da comunidade.",
@@ -384,33 +384,33 @@ export const members: Catalog = {
   "publicProfile.control.locked.title":
     "Um perfil público é algo em que <em>cresces aos poucos.</em>",
   "publicProfile.control.locked.lede":
-    "Os perfis públicos são para quem ajuda a levar o lado público da QueerPulse — quem escreve, organiza convívios ou lidera projetos. É aqui que estás:",
+    "Os perfis públicos são para quem ajuda a levar o lado público da QueerPulse: quem escreve, organiza convívios ou lidera projetos. É aqui que estás:",
   "publicProfile.control.locked.progress":
-    "{met} de {total} cumpridos — continua a aparecer e isto desbloqueia-se sozinho.",
+    "{met} de {total} cumpridos. Continua a aparecer e isto desbloqueia-se sozinho.",
   "publicProfile.control.unlocked.eyebrow": "Perfil público · desbloqueado",
   "publicProfile.control.unlocked.title":
     "Já podes partilhar um <em>perfil público.</em>",
   "publicProfile.control.unlocked.lede":
-    "Um perfil público vai permitir que quem ainda não é da comunidade encontre a tua escrita, os teus convívios e uma forma de te contactar — sem abrir o resto da comunidade.",
+    "Um perfil público vai permitir que quem ainda não é da comunidade encontre a tua escrita, os teus convívios e uma forma de te contactar, sem abrir o resto da comunidade.",
   "publicProfile.control.notYet":
     "Os perfis públicos ainda não estão abertos, por isso nada aqui é publicado em lado nenhum e ninguém fora da QueerPulse te vê. Guardamos o que escolheres, e é isso que vamos ativar no dia em que abrirem.",
   "publicProfile.control.switchLabel": "Mostrar um perfil público",
   "publicProfile.control.statusOn":
-    "Ativo — guardado para quando os perfis públicos abrirem.",
-  "publicProfile.control.statusOff": "Inativo — nada teu se torna público.",
+    "Ativo: guardado para quando os perfis públicos abrirem.",
+  "publicProfile.control.statusOff": "Inativo: nada teu se torna público.",
   "publicProfile.control.viewCta": "Pré-visualizar o teu perfil público",
   "publicProfile.control.toast.hidden":
-    "Guardado — o teu perfil fica só para a comunidade",
+    "Guardado: o teu perfil fica só para a comunidade",
   "publicProfile.control.toast.live":
-    "Guardado — vamos ativar isto quando os perfis públicos abrirem",
+    "Guardado: vamos ativar isto quando os perfis públicos abrirem",
   "publicProfile.control.toast.failed":
-    "Não conseguimos guardar — a tua preferência ficou como estava. Tenta outra vez daqui a pouco.",
+    "Não conseguimos guardar. A tua preferência ficou como estava. Tenta outra vez daqui a pouco.",
   "publicProfile.control.checking.title": "A ver <em>onde estás</em>",
   "publicProfile.control.checking.body":
-    "Um momento — estamos a somar as tuas contribuições, apadrinhamentos e tempo por aqui.",
+    "Um momento. Estamos a somar as tuas contribuições, apadrinhamentos e tempo por aqui.",
   "publicProfile.control.error.title": "Não conseguimos verificar agora",
   "publicProfile.control.error.body":
-    "Algo impediu o carregamento do teu progresso. A culpa não é tua — tenta outra vez daqui a pouco.",
+    "Algo impediu o carregamento do teu progresso. A culpa não é tua. Tenta outra vez daqui a pouco.",
   "publicProfile.control.error.retry": "Tentar de novo",
 
   // ── Public-profile hero badge (PublicProfileBadge) ──────────────────────────
@@ -436,7 +436,7 @@ export const members: Catalog = {
   "publicProfile.eligibility.actions.heading": "O que te faz avançar",
   "publicProfile.eligibility.action.verify": "Confirma a tua identidade",
   "publicProfile.eligibility.action.tenure":
-    "Continua a aparecer — o tempo trata disto",
+    "Continua a aparecer. O tempo trata disto",
   "publicProfile.eligibility.action.host":
     "Publica algo ou organiza um evento aberto",
   "publicProfile.eligibility.action.vouch":
@@ -445,7 +445,7 @@ export const members: Catalog = {
   "publicProfile.eligibility.action.points": "+{points}",
   "publicProfile.eligibility.family.amount": "{points} / {cap}",
   "publicProfile.eligibility.standing.blocked":
-    "Isto não pode abrir agora. Não há nada a fazer aqui — vai resolver-se.",
+    "Isto não pode abrir agora. Não há nada a fazer aqui. Vai resolver-se.",
 
   // ── Etiquetas de estatísticas do perfil público (currentUserPublic.data) ──
   "publicProfile.stat.poemsPublished": "Poemas publicados",
@@ -456,7 +456,7 @@ export const members: Catalog = {
   // ── Estado vazio do perfil público em modo real (sem contribuições) ─────────
   "publicProfile.emptyLive.title": "A tua história pública começa aqui",
   "publicProfile.emptyLive.description":
-    "À medida que publicas textos, organizas convívios e recebes avais, tudo isso aparece aqui para o mundo ver. Ainda não há nada público — começa a contribuir para a comunidade.",
+    "À medida que publicas textos, organizas convívios e recebes votos de confiança, tudo isso aparece aqui para o mundo ver. Ainda não há nada público. Começa a contribuir para a comunidade.",
   "publicProfile.emptyLive.cta": "Explorar convívios",
 
   // ── Pesquisa global (SearchPage) ────────────────────────────────────────────
@@ -489,7 +489,7 @@ export const members: Catalog = {
   "search.resultCount_other": `<b>{count}</b> resultados para "<b>{query}</b>"`,
   "search.empty.title": "Nada encontrado",
   "search.empty.body":
-    "Tenta outra palavra — nome de uma pessoa, bairro, competência, ou tipo de convívio.",
+    "Tenta outra palavra: nome de uma pessoa, bairro, competência, ou tipo de convívio.",
   "search.hero.label": "Pesquisar",
   "search.hero.title":
     "Encontra quem ou o que quiseres <em>na comunidade.</em>",
@@ -503,7 +503,7 @@ export const members: Catalog = {
   "directory.memberCountSuffix_other": "pessoas,",
   "directory.findSuffix": "exatamente.",
   "directory.lead":
-    "Filtra pelo que oferecem, onde vivem, ao que estão <b>disponíveis</b>. Os dados funcionam nos dois sentidos — as pessoas aparecem aqui porque optaram por ser encontráveis por estas razões.",
+    "Filtra pelo que oferecem, onde vivem, ao que estão <b>disponíveis</b>. Os dados funcionam nos dois sentidos. As pessoas aparecem aqui porque optaram por ser encontráveis por estas razões.",
   "directory.toast.filtersCleared": "Filtros limpos",
   "directory.showingPrefix": "A mostrar",
   "directory.showingOf": "de",
@@ -513,7 +513,7 @@ export const members: Catalog = {
   "directory.sort.recentlyJoined": "Juntaram-se recentemente",
   "directory.sort.closestMutuals": "Mais contactos em comum",
   "directory.sort.aToZ": "De A a Z",
-  "directory.sort.mostVouched": "Mais avalizadas",
+  "directory.sort.mostVouched": "Com mais votos de confiança",
   "directory.removeChipLabel": "Remover {label}",
   "directory.emptyFiltered.title": "Nada corresponde aos teus filtros",
   "directory.emptyFiltered.description":
@@ -521,10 +521,10 @@ export const members: Catalog = {
   "directory.clearFiltersCta": "Limpar filtros",
   "directory.emptyAll.title": "Ainda não há pessoas aqui",
   "directory.emptyAll.description":
-    "Este diretório ainda está a encher-se. À medida que as pessoas se juntam à QueerPulse e optam por ser encontráveis, vão aparecer aqui — volta a verificar em breve.",
+    "Este diretório ainda está a encher-se. À medida que as pessoas se juntam à QueerPulse e optam por ser encontráveis, vão aparecer aqui. Volta a verificar em breve.",
   "directory.error.title": "Não conseguimos carregar o diretório",
   "directory.error.description":
-    "Algo correu mal ao procurar pessoas — isto não é um diretório vazio. Tenta novamente daqui a pouco.",
+    "Algo correu mal ao procurar pessoas. Isto não é um diretório vazio. Tenta novamente daqui a pouco.",
   "directory.error.retry": "Tentar novamente",
   "directory.loadingMore": "A carregar…",
   "directory.loadMoreCta": "Carregar mais pessoas",
@@ -701,75 +701,75 @@ export const members: Catalog = {
   "commandPalette.escKey": "esc",
   "commandPalette.placeholder": "Pesquisar pessoas, convívios, comunidades…",
   "commandPalette.signInBody": "Inicia sessão para pesquisar em toda a QueerPulse.",
-  "commandPalette.noMatches": "Sem resultados — tenta outra palavra.",
+  "commandPalette.noMatches": "Sem resultados. Tenta outra palavra.",
   "commandPalette.seeAllResults":
     "Ver todos os resultados para “<b>{query}</b>”",
   "commandPalette.openFullSearch": "Abrir pesquisa completa",
 
   // ── Página de aval para convite (VouchPage) ─────────────────────────────────
-  "vouch.page.toast": "O teu aval para {name} já está a caminho do conselho.",
+  "vouch.page.toast": "O teu voto de confiança para {name} já está a caminho do conselho.",
   "vouch.page.success.title": "Isso é <em>um verdadeiro acolhimento.</em>",
   "vouch.page.success.body":
-    "O teu aval para {name} já chegou ao conselho da comunidade. Vão saber que já havia alguém a torcer por esta pessoa antes mesmo de ela entrar.",
+    "O teu voto de confiança para {name} já chegou ao conselho da comunidade. Vão saber que já havia alguém a torcer por esta pessoa antes mesmo de ela entrar.",
   "vouch.page.success.connectionsCta": "Voltar às ligações",
   "vouch.page.success.browseCta": "Explorar pessoas",
-  "vouch.page.eyebrow": "Aval",
+  "vouch.page.eyebrow": "Voto de confiança",
   "vouch.page.title": "Diz-nos que <em>as conheces.</em>",
   "vouch.page.noteLabel": "Adiciona uma nota curta (opcional)",
   "vouch.page.notePlaceholder":
     "Como conheces {name}, e o que deve saber o conselho?",
-  "vouch.page.submitCta": "Enviar o meu aval",
+  "vouch.page.submitCta": "Enviar o meu voto de confiança",
   "vouch.page.skipCta": "Agora não",
-  "vouch.page.emptyLive.title": "Os convites para avalizar chegam por link",
+  "vouch.page.emptyLive.title": "Os convites para dar um voto de confiança chegam por link",
   "vouch.page.emptyLive.description":
-    "Quando alguém te pedir para avalizar, recebes um link pessoal que abre o pedido aqui mesmo. De momento não há ninguém à espera do teu aval.",
+    "Quando alguém te pedir um voto de confiança, recebes um link pessoal que abre o pedido aqui mesmo. De momento não há ninguém à espera do teu voto de confiança.",
   "vouch.page.emptyLive.cta": "Ver membros",
 
-  // ── Explicação de porquê avalizar (vouch.data.ts MEANS) ─────────────────────
+  // ── Explicação de porquê dar um voto de confiança (vouch.data.ts MEANS) ─────
   "vouch.means.know.title": "Conheces esta pessoa, a sério",
   "vouch.means.know.body":
-    "Um aval diz que já conheceste esta pessoa e confias nela em espaços da comunidade. Isso tem peso aqui.",
+    "Um voto de confiança diz que já conheceste esta pessoa e confias nela em espaços da comunidade. Isso tem peso aqui.",
   "vouch.means.safe.title": "Mantém o espaço seguro",
   "vouch.means.safe.body":
-    "A QueerPulse funciona por convite e aval por uma razão. Pessoas a avalizarem pessoas é como nos mantemos numa comunidade pequena e de confiança.",
+    "A QueerPulse funciona por convite e voto de confiança por uma razão. Pessoas a darem votos de confiança a pessoas é como nos mantemos numa comunidade pequena e de confiança.",
   "vouch.means.council.title": "É visto pelo conselho",
   "vouch.means.council.body":
-    "A tua nota vai para o conselho da comunidade junto com o pedido desta pessoa — não é publicada.",
+    "A tua nota vai para o conselho da comunidade junto com o pedido desta pessoa. Não é publicada.",
 
-  // ── Opções de relação para avalizar uma pessoa (vouchMember.data.ts) ──────
+  // ── Opções de relação para dar um voto de confiança (vouchMember.data.ts) ──
   "vouch.relationship.collaborated": "Já colaborámos",
   "vouch.relationship.friends": "Somos amigues",
   "vouch.relationship.group": "Mesmo coletivo ou grupo",
   "vouch.relationship.metThroughQueerPulse": "Conhecemo-nos na QueerPulse",
   "vouch.relationship.neighbours": "Somos vizinhes",
 
-  // ── Modal de avalizar uma pessoa (VouchMemberModal, VouchMemberModalParts) ──
-  "vouch.modal.ariaLabel": "Avalizar {first}",
+  // ── Modal de dar um voto de confiança (VouchMemberModal, VouchMemberModalParts) ──
+  "vouch.modal.ariaLabel": "Dar voto de confiança a {first}",
   "vouch.modal.close": "Fechar",
-  "vouch.modal.success.title": "Aí está <em>{first}</em>, com aval.",
+  "vouch.modal.success.title": "Aí está <em>{first}</em>, com voto de confiança.",
   "vouch.modal.success.body":
-    "A tua cara acabou de entrar no círculo de avais de <b>{first}</b> — é assim que a confiança circula aqui. Pessoa a pessoa, nome a nome.",
+    "A tua cara acabou de entrar no círculo de votos de confiança de <b>{first}</b>. É assim que a confiança circula aqui. Pessoa a pessoa, nome a nome.",
   "vouch.modal.success.doneCta": "Concluído",
-  "vouch.modal.form.eyebrow": "Adicionar o teu aval",
-  "vouch.modal.form.title": "Apoia <em>{first}</em>",
+  "vouch.modal.form.eyebrow": "Adicionar o teu voto de confiança",
+  "vouch.modal.form.title": "Dá um voto de confiança a <em>{first}</em>",
   "vouch.modal.form.sub":
-    "Um aval é tu, publicamente, a dizeres que conheces {first} e confias nesta pessoa em espaços da comunidade. Tem peso aqui — a QueerPulse funciona por convite e aval, e o teu nome fica no perfil desta pessoa ao lado de quem mais a apoiou.",
+    "Um voto de confiança é tu, publicamente, a dizeres que conheces {first} e confias nesta pessoa em espaços da comunidade. Tem peso aqui. A QueerPulse funciona por convite e voto de confiança, e o teu nome fica no perfil desta pessoa ao lado de quem mais a apoiou.",
   "vouch.modal.form.relationshipLabel": "Como conheces {first}?",
   "vouch.modal.form.relationshipHint": "seleciona todas as que se aplicam",
   "vouch.modal.form.endorseLabel":
-    "Em que podes garantir que esta pessoa é boa?",
+    "Em que podes dar um voto de confiança de que esta pessoa é boa?",
   "vouch.modal.form.optional": "opcional",
   "vouch.modal.form.noteLabel": "A tua nota",
   "vouch.modal.form.notePlaceholder":
     "Como conheces {first}, e o que deve saber o resto da comunidade?",
-  "vouch.modal.form.noteOptional": "Opcional — mas uma nota diz mais",
+  "vouch.modal.form.noteOptional": "Opcional, mas uma nota diz mais",
   "vouch.modal.form.charsCount_one": "{count} carácter",
   "vouch.modal.form.charsCount_other": "{count} carateres",
   "vouch.modal.form.cancel": "Cancelar",
-  "vouch.modal.form.sending": "A enviar o teu aval…",
+  "vouch.modal.form.sending": "A enviar o teu voto de confiança…",
   "vouch.modal.form.anonymousLabel":
-    "Avalizar anonimamente — o teu nome fica oculto de outros membros",
-  "vouch.modal.error": "Não conseguimos guardar o teu aval. Tenta novamente.",
+    "Dar voto de confiança anonimamente. O teu nome fica oculto de outros membros",
+  "vouch.modal.error": "Não conseguimos guardar o teu voto de confiança. Tenta novamente.",
 
   // ── Vocabulário de separadores/ordenação/estado dos rascunhos (drafts.data.tsx) ──
   "drafts.tabs.all": "Tudo",
@@ -835,14 +835,14 @@ export const members: Catalog = {
     'Nada nos teus rascunhos corresponde a "{query}". Tenta outra palavra, ou limpa a pesquisa.',
   "drafts.empty.allCaughtUpTitle": "Tudo em dia.",
   "drafts.empty.allCaughtUpText":
-    "Não há rascunhos por aí — nada a meio caminho à tua espera. Quando começares algo e te afastares, fica guardado aqui.",
+    "Não há rascunhos por aí. Nada a meio caminho à tua espera. Quando começares algo e te afastares, fica guardado aqui.",
   "drafts.empty.startCta": "Começar algo novo",
   "drafts.toast.deleted_one": "Rascunho eliminado",
   "drafts.toast.deleted_other": "{count} rascunhos eliminados",
   "drafts.toast.undo": "Desfazer",
-  "drafts.toast.kept": "Rascunho mantido — mais 30 dias",
+  "drafts.toast.kept": "Rascunho mantido: mais 30 dias",
   "drafts.dangerNote":
-    "<b>Sobre a regra dos 90 dias:</b> rascunhos que não tocas há 87+ dias recebem um lembrete por email, e são eliminados automaticamente ao dia 90. Podes prolongar qualquer rascunho 30 dias de cada vez. <em>Isto existe para manter a tua lista de rascunhos honesta — não para perderes trabalho.</em>",
+    "<b>Sobre a regra dos 90 dias:</b> rascunhos que não tocas há 87+ dias recebem um lembrete por email, e são eliminados automaticamente ao dia 90. Podes prolongar qualquer rascunho 30 dias de cada vez. <em>Isto mantém a tua lista de rascunhos honesta e protege o teu trabalho.</em>",
 
   // ── Linha de rascunho (DraftRow) ────────────────────────────────────────────
   "drafts.row.selectAriaLabel": "Selecionar rascunho",
@@ -889,7 +889,7 @@ export const members: Catalog = {
   "collections.toast.removeError":
     "Não foi possível remover esse item. Tenta de novo.",
   "collections.newCollection.defaultMeta":
-    "Acabada de criar — começa a adicionar guardados",
+    "Acabada de criar. Começa a adicionar guardados",
   "collections.updatedJustNow": "Atualizado agora mesmo",
   // Card de coleção em modo live (valores vêm do servidor).
   "collections.live.updated": "Atualizado {time}",
@@ -958,7 +958,7 @@ export const members: Catalog = {
   "savedByYou.heading": "Guardado por ti · em toda a QueerPulse",
   "savedByYou.empty.title": "Ainda não guardaste nada",
   "savedByYou.empty.description":
-    "Guarda artigos, filmes, vagas e publicações à medida que exploras — vão reunir-se aqui para voltares a eles e organizá-los em coleções.",
+    "Guarda artigos, filmes, vagas e publicações à medida que exploras. Vão reunir-se aqui para voltares a eles e organizá-los em coleções.",
   "savedByYou.empty.browseMagazineCta": "Explorar a revista",
   "savedByYou.empty.exploreCinemaCta": "Explorar o Cinema",
   "savedByYou.count_one": "{count} guardado",
@@ -987,7 +987,7 @@ export const members: Catalog = {
   "places.awaitingReview": "Aguarda revisão",
   "places.empty.title": "Ainda sem espaços",
   "places.empty.description":
-    "Gere um estúdio, loja, clínica ou espaço em Lisboa? Regista-o no diretório — assim que ficar ativo, aparece aqui também.",
+    "Gere um estúdio, loja, clínica ou espaço em Lisboa? Regista-o no diretório. Assim que ficar ativo, aparece aqui também.",
   "places.empty.action": "Registar o meu espaço",
 
   // ── Chrome da página de emblemas (BadgesPage, BadgesSections) ──────────────
@@ -1011,7 +1011,7 @@ export const members: Catalog = {
     "Algo correu mal ao aceder ao teu reconhecimento. Tenta novamente daqui a pouco.",
   "badges.emptyTitle": "Ainda sem emblemas",
   "badges.emptyDescription":
-    "Aparece, organiza e participa — os teus primeiros emblemas surgem aqui à medida que avanças.",
+    "Aparece, organiza e participa. Os teus primeiros emblemas surgem aqui à medida que avanças.",
 
   // ── Chrome da página de vantagens (PerksPage, PerksSections) ───────────────
   "perks.page.backToBadges": "Emblemas e nível",
@@ -1031,33 +1031,33 @@ export const members: Catalog = {
   "perks.sidebar.xpSummary":
     "{xp} / {xpMax} XP · {xpToNext} para o Nível {nextLevel}",
   "perks.sidebar.nextUnlockNote":
-    "As próximas vantagens desbloqueiam no <strong>Nível {nextLevel} · {nextName}</strong> — organizar sem aprovação e mais convites por mês.",
+    "As próximas vantagens desbloqueiam no <strong>Nível {nextLevel} · {nextName}</strong>: organizar sem aprovação e mais convites por mês.",
   "perks.sidebar.seeAllBadgesCta": "Ver todos os emblemas e níveis",
   "perks.sidebar.explainedTitle": "Vantagens explicadas",
   "perks.sidebar.suggestTitle": "Sugerir uma vantagem",
   "perks.sidebar.suggestPlaceholder": "Partilha uma ideia…",
   "perks.sidebar.sendSuggestionCta": "Enviar sugestão",
   "perks.sidebar.suggestUnavailableToast":
-    "As sugestões de vantagens ainda não estão abertas — obrigade pela paciência.",
+    "As sugestões de vantagens ainda não estão abertas. Obrigade pela paciência.",
   "perks.claim.alreadyActive": "Já ativo",
   "perks.claim.active": "Ativo",
   "perks.claim.claimed": "Resgatado",
   "perks.claim.unavailableToast":
-    "Resgatar vantagens ainda não está disponível — ainda estamos a preparar isto.",
+    "Resgatar vantagens ainda não está disponível. Ainda estamos a preparar isto.",
 
   // ── A tua rede (ProfileNetworkStats + NetworkListModal) — só do dono ─────────
   "network.title": "A tua rede",
   "network.subtitle":
     "Com quem estás ligade e a confiança que construíram juntes.",
   "network.group.connected": "Ligações",
-  "network.group.vouchedGiven": "Avalizaste",
-  "network.group.vouchedReceived": "Avalizaram-te",
+  "network.group.vouchedGiven": "Votos de confiança que deste",
+  "network.group.vouchedReceived": "Votos de confiança que recebeste",
   "network.row.connected": "ligade {time}",
   "network.row.connectedNoTime": "ligade",
-  "network.row.vouchedGiven": "avalizaste {time}",
-  "network.row.vouchedGivenNoTime": "avalizaste",
-  "network.row.vouchedReceived": "avalizou-te {time}",
-  "network.row.vouchedReceivedNoTime": "avalizou-te",
+  "network.row.vouchedGiven": "deste um voto de confiança {time}",
+  "network.row.vouchedGivenNoTime": "deste um voto de confiança",
+  "network.row.vouchedReceived": "deu-te um voto de confiança {time}",
+  "network.row.vouchedReceivedNoTime": "deu-te um voto de confiança",
   "network.viewAll": "Ver todas {count}",
   "network.viewAllAria": "Ver todas as {count} em {group}",
   "network.modalSub_one": "{count} pessoa",

@@ -33,7 +33,7 @@ function FilmEntry({ film }: { film: CollectionFilm }) {
         <div className={styles.entryMeta}>{film.meta}</div>
         <blockquote className={styles.why}>
           {film.why}
-          <span className={styles.who}>— {film.who}</span>
+          <span className={styles.who}>{film.who}</span>
         </blockquote>
         <div className={styles.entryTags}>
           {film.tags.map((t) => (

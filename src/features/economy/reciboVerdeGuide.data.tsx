@@ -46,7 +46,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         <p>
           Before you can send your first recibo verde, you tell the Autoridade
           Tributária (Finanças) that you&apos;re working for yourself. This is
-          called <strong>abrir atividade</strong> — registering as a{" "}
+          called <strong>abrir atividade</strong>, registering as a{" "}
           <em>trabalhador independente</em>. It&apos;s free, and you can do the
           whole thing online through the <strong>Portal das Finanças</strong>{" "}
           (or in person at a Loja de Finanças if you&apos;d rather have someone
@@ -59,7 +59,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
             login.
           </li>
           <li>
-            A clear idea of what you do — you&apos;ll pick a{" "}
+            A clear idea of what you do: you&apos;ll pick a{" "}
             <em>código de atividade</em> (CAE / CIRS code) that describes your
             work.
           </li>
@@ -71,7 +71,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         <p>
           Once you&apos;re registered, you issue invoices (
           <em>faturas-recibo</em>, the modern recibos verdes) straight from the
-          Portal. No special software needed — though our invoice tool makes the
+          Portal. No special software needed, though our invoice tool makes the
           maths and the legal notes painless.
         </p>
       </>
@@ -90,7 +90,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
           Most freelancers start in the <strong>regime simplificado</strong>.
           The idea is generous: the tax office assumes a chunk of what you earn
           was spent running your business, so you&apos;re only taxed on a{" "}
-          <em>coefficient</em> of your gross income — not the whole thing.
+          <em>coefficient</em> of your gross income, a slice of the whole.
         </p>
         <p>
           <strong>Taxable income = coefficient × gross income.</strong> The
@@ -111,11 +111,11 @@ export const GUIDE_SECTIONS: GuideSection[] = [
           So on the {pct(SIMPLIFIED_COEFFICIENTS.services)} coefficient, earning{" "}
           {euro(1000)} means only{" "}
           {euro(1000 * SIMPLIFIED_COEFFICIENTS.services)} counts as taxable
-          income — the rest is presumed to be your costs.
+          income. The rest is presumed to be your costs.
         </p>
         <p>
           There&apos;s a kind starting bonus, too: in your{" "}
-          <strong>first two years</strong> the taxable slice is reduced —
+          <strong>first two years</strong> the taxable slice is reduced:
           multiplied by {pct(SIMPLIFIED_STARTUP_FACTORS.year1)} in year one (a
           50% cut) and {pct(SIMPLIFIED_STARTUP_FACTORS.year2)} in year two (a
           25% cut). It softens the landing while you find your feet.
@@ -135,7 +135,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         <p>
           <strong>Retenção na fonte</strong> is withholding: when a business
           client pays you, they hold back a slice and send it to Finanças as an
-          advance on your IRS. It&apos;s not an extra tax — it&apos;s
+          advance on your IRS. It&apos;s not an extra tax: it&apos;s a
           pre-payment, settled when you file your annual return.
         </p>
         <p>
@@ -149,7 +149,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         <ul>
           <li>
             <strong>Only company / business clients withhold.</strong> When you
-            invoice a private individual, there&apos;s no retention — you
+            invoice a private individual, there&apos;s no retention: you
             receive the full amount and account for the tax yourself later.
           </li>
           <li>
@@ -157,7 +157,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
             <strong>{euro(RETENTION_DISPENSA_THRESHOLD)}</strong> a year, you
             can claim the <em>dispensa de retenção</em> and skip withholding
             entirely (art. 101.º-B). Handy for keeping cash flow in your own
-            pocket — just mark the receipt with the dispensa note.
+            pocket. Just mark the receipt with the dispensa note.
           </li>
         </ul>
       </>
@@ -176,7 +176,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
           IVA (VAT) sounds intimidating, but many freelancers never have to
           charge it. If your turnover stays below{" "}
           <strong>{euro(IVA_EXEMPTION_THRESHOLD)}</strong> a year, you qualify
-          for the <strong>isenção do art. 53.º do CIVA</strong> — meaning you
+          for the <strong>isenção do art. 53.º do CIVA</strong>, meaning you
           don&apos;t add IVA to your invoices at all.
         </p>
         <p>
@@ -187,7 +187,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         </p>
         <p>
           Once you cross {euro(IVA_EXEMPTION_THRESHOLD)} you leave the exemption
-          and start charging IVA — usually from the start of the following year.
+          and start charging IVA, usually from the start of the following year.
           It&apos;s a good problem to have, and a sign your work is growing.
         </p>
       </>
@@ -203,10 +203,10 @@ export const GUIDE_SECTIONS: GuideSection[] = [
     body: (
       <>
         <p>
-          Segurança Social is your social-security contribution — it funds your
+          Segurança Social is your social-security contribution: it funds your
           pension, sick pay, and parental leave. For freelancers the rate is{" "}
           <strong>{pct(SS_RATE_FREELANCER)}</strong>, charged on a base built
-          from your services income (not the full amount — only part of it
+          from your services income (not the full amount, only part of it
           counts).
         </p>
         <p>
@@ -234,23 +234,23 @@ export const GUIDE_SECTIONS: GuideSection[] = [
     body: (
       <>
         <p>
-          You don&apos;t need to memorise the tax calendar — just these three
+          You don&apos;t need to memorise the tax calendar, just these three
           rhythms:
         </p>
         <ul>
           <li>
-            <strong>Quarterly Segurança Social declaration</strong> — filed in{" "}
+            <strong>Quarterly Segurança Social declaration</strong>: filed in{" "}
             <strong>January, April, July and October</strong>, covering the
             previous quarter. Quick, but don&apos;t skip it: missing it can
             default you to a higher base.
           </li>
           <li>
-            <strong>IRS season</strong> — your annual income-tax return, filed
+            <strong>IRS season</strong>: your annual income-tax return, filed
             in <strong>spring</strong> (the window typically runs April to
             June). This is where withholding and coefficients all settle up.
           </li>
           <li>
-            <strong>IVA periodic returns</strong> — only if you&apos;re{" "}
+            <strong>IVA periodic returns</strong>: only if you&apos;re{" "}
             <em>not</em> under the art. 53.º exemption. Monthly or quarterly
             depending on your turnover.
           </li>
@@ -272,7 +272,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
     body: (
       <>
         <p>
-          Starting out comes with real breathing room — Portugal goes easy on
+          Starting out comes with real breathing room. Portugal goes easy on
           first-timers:
         </p>
         <ul>
@@ -282,7 +282,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
             </strong>{" "}
             If this is your first time as an independent worker, you&apos;re
             exempt from contributions for your first{" "}
-            {SS_FIRST_YEAR_EXEMPTION_MONTHS} months — your first payment falls
+            {SS_FIRST_YEAR_EXEMPTION_MONTHS} months. Your first payment falls
             in month {SS_FIRST_YEAR_EXEMPTION_MONTHS + 1}.
           </li>
           <li>
@@ -296,7 +296,7 @@ export const GUIDE_SECTIONS: GuideSection[] = [
           <li>
             <strong>IRS Jovem.</strong> If you&apos;re a younger worker, the IRS
             Jovem regime can exempt a large share of your income from tax for
-            several years. Worth checking whether you qualify — it can make a
+            several years. Worth checking whether you qualify. It can make a
             real difference early on.
           </li>
         </ul>

@@ -1,4 +1,5 @@
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import type {
   ConversationRole,
   ReactionSummary,
@@ -121,6 +122,10 @@ export interface Conversation {
   tint: AvatarTint;
   /** Counterpart's profile photo (live: from the DTO). Absent → initials avatar. */
   avatarUrl?: string;
+  /** Saved reframe crop for `avatarUrl` — GROUP conversations only (a locked
+   *  1:1 crop); absent for DMs, where the counterpart's own profile avatar
+   *  crop isn't carried on the conversation DTO. */
+  avatarCrop?: CropRect;
   name: string;
   pronouns: string;
   connectedSince: string;
@@ -187,7 +192,7 @@ export const conversations: Conversation[] = [
     time: "Now",
     // Group previews are prefixed with the sender's first name (see the live
     // adapter); the demo bakes the same shape in.
-    preview: "Anika: The terrace is booked for 11am — see you all there!",
+    preview: "Anika: The terrace is booked for 11am, see you all there!",
     unread: true,
     unreadCount: 3,
     isGroup: true,
@@ -230,7 +235,7 @@ export const conversations: Conversation[] = [
           },
           {
             from: "them",
-            text: "Late morning works best for me — 11ish?",
+            text: "Late morning works best for me, 11ish?",
             senderName: "Jordan Park",
             senderHandle: "jordan",
             senderTint: "jade",
@@ -242,7 +247,7 @@ export const conversations: Conversation[] = [
           },
           {
             from: "them",
-            text: "The terrace is booked for 11am — see you all there!",
+            text: "The terrace is booked for 11am, see you all there!",
             senderName: "Anika Kovač",
             senderHandle: "anika",
             senderTint: "coral",
@@ -271,7 +276,7 @@ export const conversations: Conversation[] = [
         items: [
           {
             from: "them",
-            text: "Hey! I saw your question in the Trans & Non-Binary thread about GPs. Dr. Carla Nunes at Clínica do Marquês is brilliant — she gets it without needing a full explanation every visit.",
+            text: "Hey! I saw your question in the Trans & Non-Binary thread about GPs. Dr. Carla Nunes at Clínica do Marquês is brilliant. She gets it without needing a full explanation every visit.",
           },
           {
             from: "me",
@@ -279,7 +284,7 @@ export const conversations: Conversation[] = [
           },
           {
             from: "them",
-            text: "Yes — I'd recommend booking by email rather than phone, she's quicker to respond. You can request a first appointment here: https://clinicadomarques.pt/book",
+            text: "Yes, I'd recommend booking by email rather than phone, she's quicker to respond. You can request a first appointment here: https://clinicadomarques.pt/book",
           },
         ],
       },
@@ -288,11 +293,11 @@ export const conversations: Conversation[] = [
         items: [
           {
             from: "me",
-            text: "That would be amazing, yes please — and I saw the brunch is confirmed: https://queerpulse.example/pride-brunch",
+            text: "That would be amazing, yes please. And I saw the brunch is confirmed: https://queerpulse.example/pride-brunch",
           },
           {
             from: "them",
-            text: "Thanks for the recommendation! I'll reach out to her this week — really appreciate you taking the time.",
+            text: "Thanks for the recommendation! I'll reach out to her this week. Really appreciate you taking the time.",
             time: "Just now",
             // Demo-only seed so the reaction chips have something to render in
             // the prototype; toggling is inert here (no server id to mutate —
@@ -341,7 +346,7 @@ export const conversations: Conversation[] = [
     pronouns: "he/him",
     connectedSince: "Jan 2026",
     time: "Mon",
-    preview: "The venue confirmed — we're all set for the…",
+    preview: "The venue confirmed. We're all set for the…",
     unread: true,
     messages: [
       {
@@ -349,7 +354,7 @@ export const conversations: Conversation[] = [
         items: [
           {
             from: "them",
-            text: "The venue confirmed — we're all set for the Pride Brunch. They've given us the whole terrace from 11am.",
+            text: "The venue confirmed. We're all set for the Pride Brunch. They've given us the whole terrace from 11am.",
             time: "Mon 2:30 PM",
           },
         ],
@@ -373,7 +378,7 @@ export const conversations: Conversation[] = [
         items: [
           {
             from: "me",
-            text: "Hi Maria — would you be open to a quick chat sometime? I have some questions about trans healthcare resources.",
+            text: "Hi Maria, would you be open to a quick chat sometime? I have some questions about trans healthcare resources.",
           },
           {
             from: "them",
@@ -401,7 +406,7 @@ export const conversations: Conversation[] = [
         items: [
           {
             from: "me",
-            text: "I think the angle you want is less about documentation and more about memory — what communities choose to remember vs forget.",
+            text: "I think the angle you want is less about documentation and more about memory: what communities choose to remember vs forget.",
           },
           {
             from: "them",
@@ -429,7 +434,7 @@ export const conversations: Conversation[] = [
         items: [
           {
             from: "them",
-            text: "Welcome to QueerPulse! Here's what to explore first — your profile, upcoming gatherings, and the member directory. We're glad you're here.",
+            text: "Welcome to QueerPulse! Here's what to explore first: your profile, upcoming gatherings, and the member directory. We're glad you're here.",
             time: "1 Jun 9:00 AM",
           },
         ],
@@ -453,7 +458,7 @@ export const conversations: Conversation[] = [
         items: [
           {
             from: "them",
-            text: "Let me know if you want me to introduce you to Nadia — she does exactly the kind of work you're describing.",
+            text: "Let me know if you want me to introduce you to Nadia. She does exactly the kind of work you're describing.",
             time: "28 May 4:12 PM",
           },
         ],

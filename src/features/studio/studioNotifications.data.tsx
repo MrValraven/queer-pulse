@@ -58,7 +58,7 @@ export const NOTIFICATIONS: NotifItem[] = [
         <strong>Mariana Sol</strong> replied to your <em>€2 tip</em>
       </>
     ),
-    reply: '"rita ily — this one really was for the mães. see you Wednesday."',
+    reply: '"rita ily, this one really was for the mães. see you Wednesday."',
     meta: <>on “Carta para a santa”</>,
   },
   {
@@ -71,7 +71,7 @@ export const NOTIFICATIONS: NotifItem[] = [
     icon: { kind: "live", node: <FiMonitor /> },
     title: (
       <>
-        The <strong>Wednesday set</strong> is <em>live now</em> — Sara Marques
+        The <strong>Wednesday set</strong> is <em>live now</em>, Sara Marques
         programming
       </>
     ),

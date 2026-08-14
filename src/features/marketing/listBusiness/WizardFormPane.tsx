@@ -1,3 +1,4 @@
+import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { NEXT_LABEL_KEYS, type ListingDraft } from "./listBusiness.data";
 import type { ListingForm } from "./useListingForm";
@@ -34,7 +35,10 @@ export function WizardFormPane({
   goToStep: (n: number) => void;
   onBack: () => void;
   onNext: () => void;
-  uploadPhoto: (file: File) => Promise<{ key: string; previewUrl: string }>;
+  uploadPhoto: (
+    file: File,
+    options?: { crop?: CropRect },
+  ) => Promise<{ key: string; previewUrl: string }>;
 }) {
   const { t } = useTranslation();
   const isEdit = mode === "edit";

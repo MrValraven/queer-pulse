@@ -31,7 +31,7 @@ export const PRACTITIONERS: Practitioner[] = [
     isMember: true,
     range: "€30 – €80",
     scaleNote:
-      "Income-based. First session free to assess fit. No proof required — you set the amount.",
+      "Income-based. First session free to assess fit. No proof required. You set the amount.",
     description: "Queer-affirming, trauma-informed psychotherapy. Works with gender identity, relationship structures, and life transitions. In-person and remote.",
     tags: ["LGBTQ+", "trauma", "relationships", "trans-affirming"],
     tint: "jade",
@@ -61,7 +61,7 @@ export const PRACTITIONERS: Practitioner[] = [
     isMember: false,
     range: "Free (SNS) or €35 private",
     scaleNote:
-      "SNS patients pay nothing. Private appointments for those without a centros de saúde allocation — sliding scale for income under €1,200/month.",
+      "SNS patients pay nothing. Private appointments for those without a centros de saúde allocation: sliding scale for income under €1,200/month.",
     description: "LGBTQ+-affirming GP with experience in trans health. Provides referrals for gender dysphoria care within the SNS system. No judgement, ever.",
     tags: ["GP", "trans-affirming", "SNS", "HRT referrals"],
     tint: "jade",
@@ -106,7 +106,7 @@ export const PRACTITIONERS: Practitioner[] = [
     isMember: false,
     range: "€0 – €60 consultation",
     scaleNote:
-      "Consultation and check-up on sliding scale. Treatment costs negotiated separately — no one is turned away for cost alone.",
+      "Consultation and check-up on sliding scale. Treatment costs negotiated separately. No one is turned away for cost alone.",
     description: "Queer-welcoming dental practice. Trans patients: preferred name and pronouns on file from the first visit. Consultations in PT or EN.",
     tags: ["dental", "LGBTQ+ welcoming", "trans-affirming"],
     tint: "jade",

@@ -35,7 +35,7 @@ export function StudioTrackLyrics() {
       </div>
       <div className={trackStyles.lyric}>
         <div className={trackStyles.annot}>
-          Verse one — addressed to St. Iria, plainly
+          Verse one: addressed to St. Iria, plainly
         </div>
         <p className={trackStyles.played}>Querida santa, não me ouves —</p>
         <p className={trackStyles.played}>e ainda assim te escrevo.</p>
@@ -46,7 +46,7 @@ export function StudioTrackLyrics() {
         <p>O dia inteiro à porta, à espera —</p>
         <p>como quem espera a chuva.</p>
         <div className={trackStyles.annot}>
-          Verse two — to her mother, the same day
+          Verse two: to her mother, the same day
         </div>
         <p>Mãe deixou a chave por baixo da pedra,</p>
         <p>a manhã que partiu.</p>

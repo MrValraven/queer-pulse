@@ -246,7 +246,7 @@ export const INCOME: FinLine[] = [
   {
     label: "Gathering ticket sales",
     amount: "€2,180",
-    note: "Net figure. QueerPulse takes 0% of ticket revenue — 100% goes to hosts. This line covers only events we organise ourselves.",
+    note: "Net figure. QueerPulse takes 0% of ticket revenue. 100% goes to hosts. This line covers only events we organise ourselves.",
     width: 94,
     items: [
       {
@@ -299,7 +299,7 @@ export const EXPENSE: FinLine[] = [
   {
     label: "Platform & tools",
     amount: "€520",
-    note: "Hosting, email infrastructure, storage, and development tools. No proprietary stack — we use open-source where possible.",
+    note: "Hosting, email infrastructure, storage, and development tools. No proprietary stack: we use open-source where possible.",
     width: 26,
     items: [
       {
@@ -347,27 +347,27 @@ export const EXPENSE: FinLine[] = [
     width: 60,
     items: [
       {
-        name: "Newcomer dinner — venue (Casa do Alentejo)",
+        name: "Newcomer dinner: venue (Casa do Alentejo)",
         period: "April",
         amount: "€180",
       },
       {
-        name: "Newcomer dinner — food & catering",
+        name: "Newcomer dinner: food & catering",
         period: "April",
         amount: "€220",
       },
       {
-        name: "Trans healthcare session — equipment",
+        name: "Trans healthcare session: equipment",
         period: "May · venue donated",
         amount: "€40",
       },
       {
-        name: "Skills fair — venue hire (LX Factory)",
+        name: "Skills fair: venue hire (LX Factory)",
         period: "April",
         amount: "€280",
       },
       {
-        name: "Skills fair — materials & printing",
+        name: "Skills fair: materials & printing",
         period: "April",
         amount: "€60",
       },
@@ -421,32 +421,32 @@ export const EXPENSE: FinLine[] = [
     width: 38,
     items: [
       {
-        name: "Grant #1 — Housing emergency support",
+        name: "Grant #1: Housing emergency support",
         period: "—",
         amount: "€200",
       },
       {
-        name: "Grant #2 — Creative project (documentary)",
+        name: "Grant #2: Creative project (documentary)",
         period: "—",
         amount: "€150",
       },
       {
-        name: "Grant #3 — Trans healthcare travel costs",
+        name: "Grant #3: Trans healthcare travel costs",
         period: "—",
         amount: "€120",
       },
       {
-        name: "Grant #4 — Community event materials",
+        name: "Grant #4: Community event materials",
         period: "—",
         amount: "€80",
       },
       {
-        name: "Grant #5 — Skills training course fee",
+        name: "Grant #5: Skills training course fee",
         period: "—",
         amount: "€150",
       },
       {
-        name: "Grant #6 — Emergency relocation support",
+        name: "Grant #6: Emergency relocation support",
         period: "—",
         amount: "€100",
       },
@@ -456,7 +456,7 @@ export const EXPENSE: FinLine[] = [
   {
     label: "Magazine production",
     amount: "€380",
-    note: "Contributor honoraria, editorial costs, and design. Contributors are paid — no unpaid labour policy.",
+    note: "Contributor honoraria, editorial costs, and design. Contributors are paid: no unpaid labour policy.",
     width: 18,
     items: [
       {
@@ -480,10 +480,10 @@ export const EXPENSE: FinLine[] = [
     note: "Small quarterly payments to our three volunteer moderators. Moderation is difficult work and should not be entirely unpaid.",
     width: 22,
     items: [
-      { name: "Mariana — lead moderator", period: "Q2 2026", amount: "€200" },
-      { name: "Rui — moderator", period: "Q2 2026", amount: "€150" },
+      { name: "Mariana, lead moderator", period: "Q2 2026", amount: "€200" },
+      { name: "Rui, moderator", period: "Q2 2026", amount: "€150" },
       {
-        name: "Ana — moderator (part-time)",
+        name: "Ana, moderator (part-time)",
         period: "Q2 2026",
         amount: "€120",
       },
@@ -511,7 +511,7 @@ export const EVENTS: [string, string][] = [
   ],
   [
     "This quarter:",
-    "34 gatherings hosted. ~€8,400 in ticket revenue — all of which went directly to hosts.",
+    "34 gatherings hosted. ~€8,400 in ticket revenue, all of which went directly to hosts.",
   ],
 ];
 

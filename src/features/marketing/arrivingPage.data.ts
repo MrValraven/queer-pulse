@@ -63,7 +63,7 @@ export const HOODS: Hood[] = [
     tagBg: "rgba(232,119,90,.1)",
     name: "Cais do Sodré",
     description: "Creative energy by the river. Formerly the rough end of the city, now full of independent studios, cultural spaces, and the Pink Street. Where new Lisbon meets old Lisbon. André's studio is here.",
-    note: "Home to the Pink Street — Lisbon's most famous queer bar strip",
+    note: "Home to the Pink Street, Lisbon's most famous queer bar strip",
   },
   {
     tag: "Growing · Affordable",

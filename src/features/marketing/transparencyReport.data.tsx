@@ -76,8 +76,7 @@ export const ALLOC = [
     color: "rgba(45,27,61,.5)",
     w: 10,
     label: "Partner & legal operations",
-    detail:
-      "legal-consult programme (€45/consult), policy work, the auditor",
+    detail: "legal-consult programme (€45/consult), policy work",
     amt: "€26,750",
     pct: "10%",
   },
@@ -95,7 +94,7 @@ export const ALLOC = [
     w: 3,
     label: "Admin & the boring bits",
     detail:
-      "Accounting software, the legal entity, postage, the office at Largo dos Anjos",
+      "Accounting software, postage, the office at Largo dos Anjos",
     amt: "€8,030",
     pct: "3%",
   },
@@ -159,7 +158,7 @@ export const PEOPLE2: Bignum[] = [
         1,<em>612</em>
       </>
     ),
-    p: "87% — most are within 5 km of Anjos",
+    p: "87%: most are within 5 km of Anjos",
   },
   {
     lbl: "Members elsewhere in PT",
@@ -361,7 +360,7 @@ export const MISTAKES = [
         legal-aid organisation on the 2024 self-determination amendments were
         removed by a new moderator
         who interpreted them as "personal attacks".{" "}
-        <b>They weren't — they were disagreement.</b> Both were reinstated
+        <b>They weren't. They were disagreement.</b> Both were reinstated
         within 36 hours after the appeal.
       </>
     ),
@@ -384,8 +383,8 @@ export const MISTAKES = [
         <b>
           three vouched-in members did not turn out to be who they said they
           were
-        </b>{" "}
-        — two were marketing scrapers, one was a journalist using a fake
+        </b>:{" "}
+        two were marketing scrapers, one was a journalist using a fake
         identity.
       </>
     ),

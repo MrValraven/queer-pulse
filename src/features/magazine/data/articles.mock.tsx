@@ -37,9 +37,9 @@ export const articles: Record<string, Article> = {
       {
         pull: "We became more deliberate about what we chose to stay for. That is not the same as choosing to stay.",
       },
-      "What I keep coming back to, talking to people who were here for all of it, is how external pressure accelerated something internal. The community that came through that decade is not the community that entered it. It lost spaces and gained practices. The informal structures — the kitchens, the group chats, the particular table at the particular café on Sunday — survived better than the formal ones. The bars closed. The friendships did not.",
+      "What I keep coming back to, talking to people who were here for all of it, is how external pressure accelerated something internal. The community that came through that decade is not the community that entered it. It lost spaces and gained practices. The informal structures (the kitchens, the group chats, the particular table at the particular café on Sunday) survived better than the formal ones. The bars closed. The friendships did not.",
       "A new generation arrived and asked different questions. They wanted to know about structure, consent, how decisions got made. They were not wrong to ask. But they arrived into a community built in the dark, by people who built it because they had nowhere else to be, and some of what looked like chaos to newcomers was accumulated knowledge that had never been written down.",
-      "Did we change? I think we became more deliberate. You do not end up in a queer chosen family by accident anymore. You choose it — with the awareness that other things are available, that the choosing has meaning. Whether that is better or worse than the earlier version, when you ended up together because there was no other option, I am not sure. But it is different. And I think it is ours.",
+      "Did we change? I think we became more deliberate. You do not end up in a queer chosen family by accident anymore. You choose it, with the awareness that other things are available, that the choosing has meaning. Whether that is better or worse than the earlier version, when you ended up together because there was no other option, I am not sure. But it is different. And I think it is ours.",
     ],
     // Block-based body (Phase 3 §7.3) — this is the demo's one block-editor
     // article, so the public reader exercises the typed-block path (and its
@@ -56,7 +56,7 @@ export const articles: Record<string, Article> = {
       {
         id: "cc-2",
         kind: "paragraph",
-        html: "The decade between 2016 and 2026 remade the city in ways that feel personal even when they are structural. Rents tripled. Whole neighbourhoods changed texture — see the <a href=\"https://queerpulse.example/magazine\">magazine's ongoing housing coverage</a> for the numbers behind it.",
+        html: "The decade between 2016 and 2026 remade the city in ways that feel personal even when they are structural. Rents tripled. Whole neighbourhoods changed texture. See the <a href=\"https://queerpulse.example/magazine\">magazine's ongoing housing coverage</a> for the numbers behind it.",
       },
       {
         id: "cc-3",
@@ -71,13 +71,13 @@ export const articles: Record<string, Article> = {
       {
         id: "cc-5",
         kind: "paragraph",
-        html: "What I keep coming back to, talking to people who were here for all of it, is how external pressure accelerated something internal. The <em>informal</em> structures — the kitchens, the group chats, the particular table at the particular café on Sunday — survived better than the formal ones.",
+        html: "What I keep coming back to, talking to people who were here for all of it, is how external pressure accelerated something internal. The <em>informal</em> structures (the kitchens, the group chats, the particular table at the particular café on Sunday) survived better than the formal ones.",
       },
       {
         id: "cc-6",
         kind: "image",
         alt: "Friends around a kitchen table in Mouraria, late evening, candles and plates",
-        caption: "The kitchen that outlasted the bar — <em>still meeting every Sunday</em>.",
+        caption: "The kitchen that outlasted the bar, <em>still meeting every Sunday</em>.",
         credit: `Photo: ${memberName("andre")}`,
         rights: "commissioned",
         tint: "jade",
@@ -89,7 +89,7 @@ export const articles: Record<string, Article> = {
         kind: "qa",
         who: memberName("ines"),
         q: "Did the community actually get <strong>smaller</strong>, or just quieter?",
-        html: "Quieter, mostly. The bars closed, but the friendships didn't — they just moved somewhere a landlord can't see them.",
+        html: "Quieter, mostly. The bars closed, but the friendships didn't: they just moved somewhere a landlord can't see them.",
       },
       {
         id: "cc-8",
@@ -138,13 +138,13 @@ export const articles: Record<string, Article> = {
     tags: ["Community", "Chosen family", "Lisbon"],
     related: ["city-changed", "politics-of-staying"],
     body: [
-      "The original group met at a language exchange in 2016. There were seven of them — some Portuguese, some Brazilian, one from Cape Verde, one from Germany who never quite left. They did not set out to become a family. They set out to practise their Spanish on a Tuesday evening in a bar that served free olives and had too many candles.",
+      "The original group met at a language exchange in 2016. There were seven of them: some Portuguese, some Brazilian, one from Cape Verde, one from Germany who never quite left. They did not set out to become a family. They set out to practise their Spanish on a Tuesday evening in a bar that served free olives and had too many candles.",
       "Of those seven, two have left Lisbon. One moved to Porto for work and visits twice a year. One moved to Berlin in 2022 after the third rent increase in two years and has not come back. Two of the original group died: Rui, in 2021, from cancer he did not mention until it was advanced; and Filipa, in an accident in 2023 that nobody who knew her has yet found the right language for.",
       {
         pull: "A chosen family is not chosen once. It is chosen again and again, through inconvenience and absence.",
       },
-      "The three who remain in Lisbon still meet on the same corner in Mouraria on the first Sunday of every month. Not always all three — sometimes it is two, sometimes one sits there for an hour waiting to see if anyone will come. They do not talk about it as maintenance. It does not feel like that to them. It feels like showing up for something that has already been decided.",
-      "What holds a chosen family together, I have come to think, is not affection. Affection comes and goes. What holds it is the accumulated evidence that you showed up when it was inconvenient — the hospital waiting rooms, the 2am phone calls, the times you left a party early because someone needed you. You were not obligated to any of it. The family is made entirely of choices, which is what makes it mean what it means.",
+      "The three who remain in Lisbon still meet on the same corner in Mouraria on the first Sunday of every month. Not always all three: sometimes it is two, sometimes one sits there for an hour waiting to see if anyone will come. They do not talk about it as maintenance. It does not feel like that to them. It feels like showing up for something that has already been decided.",
+      "What holds a chosen family together, I have come to think, is not affection. Affection comes and goes. What holds it is the accumulated evidence that you showed up when it was inconvenient: the hospital waiting rooms, the 2am phone calls, the times you left a party early because someone needed you. You were not obligated to any of it. The family is made entirely of choices, which is what makes it mean what it means.",
     ],
   },
   "last-bar": {
@@ -172,12 +172,12 @@ export const articles: Record<string, Article> = {
     tags: ["Nightlife", "Lisbon", "Queer space"],
     related: ["city-changed", "kiko-neves"],
     body: [
-      "There is no sign. There has never been a sign. The address circulates by word of mouth, the way addresses used to before everyone had a phone and a map in their pocket. If you find it, you find it. The bar — I am not naming it here because the owner asked me not to — has been open since 1987, which means it survived the AIDS crisis, two recessions, three rounds of Bairro Alto gentrification, and the arrival of the internet.",
+      "There is no sign. There has never been a sign. The address circulates by word of mouth, the way addresses used to before everyone had a phone and a map in their pocket. If you find it, you find it. The bar (I am not naming it here because the owner asked me not to) has been open since 1987, which means it survived the AIDS crisis, two recessions, three rounds of Bairro Alto gentrification, and the arrival of the internet.",
       "The owner, whose name I will give only as Paulo, is in his sixties. He has worked behind this bar for thirty-seven years. He does not have Instagram. He did not apply for any of the city's LGBTQ+ venue support grants. He closes when he feels like closing and opens when he feels like opening, and this erratic schedule appears to be part of the loyalty structure rather than a failure of management.",
       {
         pull: "No Instagram. No theme nights. No cocktail menu. Just a room, a sound system, and forty years of the community walking through the same door.",
       },
-      "What strikes me about the place is how much it resembles a very well-maintained ruin. Nothing has been renovated. The bar stools are original. The lighting has never been updated, which means it operates at the exact luminosity of 1987 nightlife — dark enough to be kind, light enough to find your way to the bathroom.",
+      "What strikes me about the place is how much it resembles a very well-maintained ruin. Nothing has been renovated. The bar stools are original. The lighting has never been updated, which means it operates at the exact luminosity of 1987 nightlife: dark enough to be kind, light enough to find your way to the bathroom.",
       'Paulo is not sentimental about any of this. I asked him why he hadn\'t updated the decor. He said: "Updated for who?" I did not have a good answer. Neither, I think, does the city that keeps trying to turn Bairro Alto into something else. Some places resist not through effort but through a kind of stubborn self-similarity.',
     ],
   },
@@ -206,8 +206,8 @@ export const articles: Record<string, Article> = {
     tags: ["Housing", "Politics", "Chosen family"],
     related: ["politics-of-staying", "city-changed"],
     body: [
-      'The legislation that passed in April amends three articles of the urban rental law and introduces a new category of "social vulnerability" that can delay evictions by sixty days. The amendment is well-intentioned. It is also, as three housing lawyers independently told me, likely to produce outcomes its drafters did not anticipate — particularly for queer households whose structure the law does not recognise.',
-      "The key provision is the sixty-day eviction delay for households qualifying as socially vulnerable. Queer households — same-sex couples, single transgender people, chosen-family living arrangements — are not automatically included in that definition. You have to apply. The application requires documentation. And the documentation required assumes a family structure that many queer households simply do not have.",
+      'The legislation that passed in April amends three articles of the urban rental law and introduces a new category of "social vulnerability" that can delay evictions by sixty days. The amendment is well-intentioned. It is also, as three housing lawyers independently told me, likely to produce outcomes its drafters did not anticipate, particularly for queer households whose structure the law does not recognise.',
+      "The key provision is the sixty-day eviction delay for households qualifying as socially vulnerable. Queer households (same-sex couples, single transgender people, chosen-family living arrangements) are not automatically included in that definition. You have to apply. The application requires documentation. And the documentation required assumes a family structure that many queer households simply do not have.",
       {
         pull: "The law does not recognise chosen family as a category. Your flatmates of eight years are legally strangers.",
       },
@@ -246,7 +246,7 @@ export const articles: Record<string, Article> = {
         pull: "The community did not follow my identity. My identity followed the community.",
       },
       "The moment I date everything from is not a conversation. It is being on a rooftop in Mouraria in late 2019, watching the sun go down over the river with four people I had met that year, and noticing that I had stopped monitoring myself. I had not decided to stop. I had just run out of things to monitor.",
-      "Becoming queer — and I do mean becoming, not discovering — was not a private thing that happened inside me and then I announced. It happened in rooms with other people. The community gave me the language for the identity. Then the identity became possible.",
+      "Becoming queer (and I do mean becoming, not discovering) was not a private thing that happened inside me and then I announced. It happened in rooms with other people. The community gave me the language for the identity. Then the identity became possible.",
     ],
   },
   "visibility-politics": {
@@ -275,9 +275,9 @@ export const articles: Record<string, Article> = {
     related: ["i-arrived", "politics-of-staying"],
     body: [
       "Every June, we are told that visibility saves lives. And it does. There is data. Young queer people who see queer adults existing in the world are statistically less likely to hurt themselves. This is true and it matters and I am not arguing against it.",
-      "What I want to ask is: whose visibility are we talking about? The queer person in the ad campaign. The celebrity who came out to twelve million followers. These are real forms of visibility and they help real people. But they are not most people I know. Most people I know are visible in small, exhausting ways — visible to their landlord, visible in job interviews where they mention something and feel the temperature shift.",
+      "What I want to ask is: whose visibility are we talking about? The queer person in the ad campaign. The celebrity who came out to twelve million followers. These are real forms of visibility and they help real people. But they are not most people I know. Most people I know are visible in small, exhausting ways: visible to their landlord, visible in job interviews where they mention something and feel the temperature shift.",
       {
-        pull: "Real visibility is not the absence of danger — it is the presence of ease. It is the unclenching.",
+        pull: "Real visibility is not the absence of danger. It is the presence of ease. It is the unclenching.",
       },
       "Real visibility is having the thing you say received normally. It is showing up somewhere and not running a quick calculation about whether this is safe. We have built a great deal of infrastructure for the billboard kind of visibility. We have built far less for the kind that happens in a doctor's office, or a workplace meeting, or a family kitchen.",
       "I am not against Pride. I am against the substitution of these things for the harder work of building the infrastructure of ordinary ease. The test of a queer-friendly environment is not whether it has a rainbow in the logo. It is whether a queer person who works there can mention their partner without having to decide, first, whether it is worth it.",
@@ -350,7 +350,7 @@ export const articles: Record<string, Article> = {
         <br />
         An untuned piano and audiences who had made an effort to get there. That
         changes everything. When people leave their house, take two buses,
-        arrive somewhere uncertain — they are already in a different mode. You
+        arrive somewhere uncertain. They are already in a different mode. You
         can slow down. You can fail.
       </>,
       <>
@@ -369,8 +369,8 @@ export const articles: Record<string, Article> = {
         <br />
         2022. Eleven people. Three left early. One asked me afterwards if I had
         considered playing something more fun. I went home and wrote for six
-        hours. The best gig was the album release — everyone there, perfect
-        energy — and I felt almost nothing. There is something about resistance
+        hours. The best gig was the album release (everyone there, perfect
+        energy) and I felt almost nothing. There is something about resistance
         and constraint that I apparently require.
       </>,
       <>
@@ -404,7 +404,7 @@ export const articles: Record<string, Article> = {
     initials: "IT",
     tint: "jade",
     imgDesc:
-      "A working design studio in Príncipe Real — mismatched desks, plants, queer creatives at work",
+      "A working design studio in Príncipe Real: mismatched desks, plants, queer creatives at work",
     authorBio: `${memberName("ines")} designs identities and editorial systems for cultural institutions and small presses. She has run her studio in Príncipe Real since 2020.`,
     tags: ["Design", "Community", "Príncipe Real"],
     related: ["supper-club-mouraria", "invite-only-safety"],
@@ -415,14 +415,14 @@ export const articles: Record<string, Article> = {
       ctaTo: routes.requestInvite,
     },
     body: [
-      "Six years ago it was a dusty first-floor flat with bad wiring, a view of someone else's laundry, and a landlord who answered exactly half of our emails. Today it's where half of Lisbon's queer design scene passes through — and nobody there is performing for an algorithm.",
+      "Six years ago it was a dusty first-floor flat with bad wiring, a view of someone else's laundry, and a landlord who answered exactly half of our emails. Today it's where half of Lisbon's queer design scene passes through, and nobody there is performing for an algorithm.",
       "I moved the studio into Príncipe Real in 2020, just before everything closed. The timing was accidental and probably lucky: the neighbourhood emptied out, rents dropped briefly to something almost survivable, and I signed a lease I couldn't really afford on a space I couldn't really see the point of yet.",
       {
         kind: "quote",
         text: "The studio didn't become a community because I planned it that way. It became one because there was nowhere else to go, and then because people kept coming back.",
         cite: memberName("ines"),
       },
-      "The first person who wasn't me to work there was André — a photographer who needed a corner to edit in and was between flats. Then came a week when two designers from Porto were in the city and needed desks. Then a sound designer who said she'd stay for a month and left after a year to open her own place two streets away.",
+      "The first person who wasn't me to work there was André, a photographer who needed a corner to edit in and was between flats. Then came a week when two designers from Porto were in the city and needed desks. Then a sound designer who said she'd stay for a month and left after a year to open her own place two streets away.",
       {
         kind: "image",
         alt: "The studio at Rua de São Marçal",
@@ -442,7 +442,7 @@ export const articles: Record<string, Article> = {
           </>
         ),
       },
-      "I'm suspicious of the word community when it comes from a brand. But I don't have a better word for what the studio became. It wasn't a collective — nobody had a stake in the space or shared the costs except me. It wasn't a co-working space — there were no memberships, no hot desks, no branded mugs. It was just a room where queer creative people worked, ate lunch, complained about clients, and occasionally fell asleep on the sofa.",
+      "I'm suspicious of the word community when it comes from a brand. But I don't have a better word for what the studio became. It wasn't a collective: nobody had a stake in the space or shared the costs except me. It wasn't a co-working space: there were no memberships, no hot desks, no branded mugs. It was just a room where queer creative people worked, ate lunch, complained about clients, and occasionally fell asleep on the sofa.",
       "What made it feel different from other studios I'd been in was the absence of the things studios usually have: hierarchy, competition, the quiet performance of being-busy-enough. Nobody was there to network. Most people were there because they needed somewhere to be, and the somewhere happened to be warm and not hostile to who they were.",
       {
         kind: "quote",
@@ -457,9 +457,9 @@ export const articles: Record<string, Article> = {
           </>
         ),
       },
-      "I think about this a lot: what makes a creative space feel safe for queer people? It's not rainbow flags. It's not a policy on the wall. It's something harder to name — a quality of attention, maybe. The sense that you don't have to explain yourself before you're allowed to work. That you won't have to perform normalcy to earn the right to use the printer.",
-      "The studio never had a policy. What it had was: everyone who came was brought by someone who already knew the room. That's it. Not a vetting process — just the slow accumulation of people who vouched for each other, who said \"this person is good, you should meet them,\" and meant it.",
-      "Which is, I think, also what QueerPulse is trying to do. Not a platform, not a network in the LinkedIn sense, but a room — one that keeps its shape because people take care of it.",
+      "I think about this a lot: what makes a creative space feel safe for queer people? It's not rainbow flags. It's not a policy on the wall. It's something harder to name: a quality of attention, maybe. The sense that you don't have to explain yourself before you're allowed to work. That you won't have to perform normalcy to earn the right to use the printer.",
+      "The studio never had a policy. What it had was: everyone who came was brought by someone who already knew the room. That's it. Not a vetting process: just the slow accumulation of people who vouched for each other, who said \"this person is good, you should meet them,\" and meant it.",
+      "Which is, I think, also what QueerPulse is trying to do. Not a platform, not a network in the LinkedIn sense, but a room, one that keeps its shape because people take care of it.",
       {
         kind: "heading",
         text: (
@@ -468,7 +468,7 @@ export const articles: Record<string, Article> = {
           </>
         ),
       },
-      "It's louder than it was. There are more plants. Someone hung a print of a Lotte Reiniger silhouette animation that I didn't choose but have grown to love. On Fridays there's usually something going on that I didn't organise — a critique session, a long lunch, sometimes someone playing music quietly on a laptop while they work on something they're not ready to show anyone.",
+      "It's louder than it was. There are more plants. Someone hung a print of a Lotte Reiniger silhouette animation that I didn't choose but have grown to love. On Fridays there's usually something going on that I didn't organise: a critique session, a long lunch, sometimes someone playing music quietly on a laptop while they work on something they're not ready to show anyone.",
       "I still work there every day. I still sign the lease. But the studio stopped feeling like mine a long time ago, and that's the best thing that ever happened to it.",
     ],
   },
@@ -500,7 +500,7 @@ export const articles: Record<string, Article> = {
     },
     body: [
       "Tomás Beto's apartment smells like vinegar and something fermenting in a jar he won't tell me about. There are twelve chairs stacked in the corner, a whiteboard with a menu written in pencil, and a cat asleep on a pile of linen napkins. In three hours, strangers will sit down at his dining table and eat whatever he decides to cook.",
-      "This is Queer Supper Club №12. Tomás has been doing this for just over two years — hosting intimate dinners for members of the QueerPulse community out of his apartment in Mouraria. No fixed menu. No Instagram. Twelve seats, and a waiting list that he mostly ignores in favour of people he's heard about through the network.",
+      "This is Queer Supper Club №12. Tomás has been doing this for just over two years, hosting intimate dinners for members of the QueerPulse community out of his apartment in Mouraria. No fixed menu. No Instagram. Twelve seats, and a waiting list that he mostly ignores in favour of people he's heard about through the network.",
       "Until 2023, he was a product manager at a fintech startup in Parque das Nações, commuting forty minutes each way, managing a team of eight, and making a salary that looked good on paper. He left in March of that year, with no plan except a fermentation kit and a kitchen he'd been under-using for years.",
       {
         kind: "quote",
@@ -529,14 +529,14 @@ export const articles: Record<string, Article> = {
         question:
           "Was there a moment when you decided you were going to do this, or did it happen gradually?",
         answer:
-          "There was a moment, but it wasn't dramatic. I was at a work dinner — one of those dinners where you're meant to network but everyone is tired — and I looked at the food and thought, this is the worst meal I've had in months, and I'm surrounded by people who don't notice. That was it. Not quitting because I was miserable. Quitting because I'd become someone who ate bad food at a networking dinner and thought it was fine.",
+          "There was a moment, but it wasn't dramatic. I was at a work dinner (one of those dinners where you're meant to network but everyone is tired) and I looked at the food and thought, this is the worst meal I've had in months, and I'm surrounded by people who don't notice. That was it. Not quitting because I was miserable. Quitting because I'd become someone who ate bad food at a networking dinner and thought it was fine.",
       },
       {
         kind: "qa",
         answererInitials: "TB",
         question: "What was the first supper club like?",
         answer:
-          "Terrifying. Eight people, not twelve — I didn't trust myself for twelve yet. A friend of mine from Graça, Sofia's flatmate at the time, spread the word through the queer community. Everyone who came was a stranger to me. The menu was overambitious. The bread was bad. But the conversation was — it was the best dinner I'd had in years. People talked about things. Real things. I went to bed at 2am and thought, okay, this is what I'm doing.",
+          "Terrifying. Eight people, not twelve. I didn't trust myself for twelve yet. A friend of mine from Graça, Sofia's flatmate at the time, spread the word through the queer community. Everyone who came was a stranger to me. The menu was overambitious. The bread was bad. But the conversation was... it was the best dinner I'd had in years. People talked about things. Real things. I went to bed at 2am and thought, okay, this is what I'm doing.",
       },
       {
         kind: "qa",
@@ -544,7 +544,7 @@ export const articles: Record<string, Article> = {
         question:
           "Why specifically a queer supper club? Why not just a supper club?",
         answer:
-          "Because the room is different. Not every dinner, and not obviously — but there's something about sitting down with a table full of people who have all, in different ways, had to think carefully about who they are. It changes the texture of a conversation. People are less performative. They're less interested in impressing and more interested in connecting. That might be a romantic reading, but it's what I've found to be true.",
+          "Because the room is different. Not every dinner, and not obviously, but there's something about sitting down with a table full of people who have all, in different ways, had to think carefully about who they are. It changes the texture of a conversation. People are less performative. They're less interested in impressing and more interested in connecting. That might be a romantic reading, but it's what I've found to be true.",
       },
       {
         kind: "heading",
@@ -561,7 +561,7 @@ export const articles: Record<string, Article> = {
         question:
           'You\'ve described what you do as "queer hospitality" in a few conversations I\'ve heard about. What do you mean by that?',
         answer:
-          "I mean hospitality that isn't interested in performing abundance. A lot of high-end food culture is about showing you how much — how many courses, how rare the ingredients, how impressive the technique. I'm more interested in the feeling of the room. Are people comfortable? Is there space for a difficult conversation if someone needs one? Is the food good enough that it doesn't get in the way of why we're all here? Queer spaces, at their best, do this. They prioritise the feeling of being together over the feeling of being seen.",
+          "I mean hospitality that isn't interested in performing abundance. A lot of high-end food culture is about showing you how much: how many courses, how rare the ingredients, how impressive the technique. I'm more interested in the feeling of the room. Are people comfortable? Is there space for a difficult conversation if someone needs one? Is the food good enough that it doesn't get in the way of why we're all here? Queer spaces, at their best, do this. They prioritise the feeling of being together over the feeling of being seen.",
       },
       {
         kind: "quote",
@@ -581,7 +581,7 @@ export const articles: Record<string, Article> = {
         answererInitials: "TB",
         question: "How did you find QueerPulse?",
         answer:
-          "Sofia vouched for me. We met at a film screening in Alfama — she was working on a documentary about the neighbourhood and I was there as a guest of someone I barely knew. We ended up talking for three hours. She was the first person in a long time who asked me what I was working on and actually listened to the answer. She told me about QueerPulse a week later. I joined and immediately found four people I wanted to cook for.",
+          "Sofia vouched for me. We met at a film screening in Alfama. She was working on a documentary about the neighbourhood and I was there as a guest of someone I barely knew. We ended up talking for three hours. She was the first person in a long time who asked me what I was working on and actually listened to the answer. She told me about QueerPulse a week later. I joined and immediately found four people I wanted to cook for.",
       },
       {
         kind: "qa",
@@ -589,7 +589,7 @@ export const articles: Record<string, Article> = {
         question:
           "What has the network given you that you couldn't get elsewhere?",
         answer:
-          "Access to people without the social overhead. In a regular networking context, I'd have to explain myself — what I do, why I left the job, why the supper club, whether it makes money. Here, I can just say I run a supper club in Mouraria and people understand what that means and why it matters. The shorthand exists. That's rare.",
+          "Access to people without the social overhead. In a regular networking context, I'd have to explain myself: what I do, why I left the job, why the supper club, whether it makes money. Here, I can just say I run a supper club in Mouraria and people understand what that means and why it matters. The shorthand exists. That's rare.",
       },
       "Supper Club №12 is tonight. Tomás won't tell me the menu. \"If I tell you, you'll be disappointed when I change it at the last minute,\" he says, and goes back to the vinegar and the jar and the cat on the napkins. I leave with the feeling that something good is about to happen in this apartment, and that the city is lucky to have it.",
     ],
@@ -610,9 +610,9 @@ export const articles: Record<string, Article> = {
     initials: "QP",
     tint: "plum",
     imgDesc:
-      "A small, warmly lit room set for a few people — an intentional gathering, not a crowd",
+      "A small, warmly lit room set for a few people, an intentional gathering rather than a crowd",
     authorBio:
-      "QueerPulse was built by a small group of queer professionals in Lisbon who kept asking each other why there wasn't a space like this already. Questions, concerns, and feedback are always welcome at hello@queerpulse.pt.",
+      "QueerPulse was built by a small group of queer professionals in Lisbon who kept asking each other why there wasn't a space like this already. Questions, concerns, and feedback are always welcome at hello@queerpulse.com.",
     tags: ["On Building", "Safety", "Community"],
     related: ["studio-principe-real", "supper-club-mouraria"],
     outro: {
@@ -636,7 +636,7 @@ export const articles: Record<string, Article> = {
         ),
       },
       "Growth is the default assumption of anyone building software. More users, more value. More value, more funding. More funding, more users. The loop is self-reinforcing and, for most platforms, it's also the beginning of the end of what made them worth building in the first place.",
-      "We're not anti-growth. We're pro-quality. Those two things are in tension in most contexts. We believe they don't have to be — but only if you're willing to say no to growth when it comes at the cost of what the space is for.",
+      "We're not anti-growth. We're pro-quality. Those two things are in tension in most contexts. We believe they don't have to be, but only if you're willing to say no to growth when it comes at the cost of what the space is for.",
       {
         kind: "quote",
         text: "A room that holds everyone holds no one in particular. We wanted to build something that holds specific people, carefully, on purpose.",
@@ -650,7 +650,7 @@ export const articles: Record<string, Article> = {
         ),
       },
       "Queer people online face a particular set of risks that most platforms weren't designed with in mind. Outing. Harassment from organised bad-faith actors. The exhausting performance of being visible in environments that don't guarantee safety. The slow-motion experience of watching a space you trusted fill up with people who are there to observe or exploit rather than participate.",
-      "Open sign-up, even with robust moderation, doesn't solve this. Moderation is reactive. By the time a harmful actor is moderated out, the damage — the chilling effect on members who saw what happened — is already done. The only effective preventative measure we've found is: someone who is already in the room has to say that this person belongs here, and put their name to it.",
+      "Open sign-up, even with robust moderation, doesn't solve this. Moderation is reactive. By the time a harmful actor is moderated out, the damage (the chilling effect on members who saw what happened) is already done. The only effective preventative measure we've found is: someone who is already in the room has to say that this person belongs here, and put their name to it.",
       "That's vouching. It's not a perfect system. People vouch for people who turn out to be wrong for the community. But it means every harmful incident has a traceable origin, and it means people think before they invite. That second thing is underrated.",
       {
         kind: "stats",
@@ -679,7 +679,7 @@ export const articles: Record<string, Article> = {
         ),
       },
       "It means we build safety in at the structural level, not the policy level. Policies are things you write and hope people read. Structure is what shapes behaviour whether or not anyone reads anything.",
-      "The invite-only structure means the person who introduced you is accountable, in a mild but real way, for your presence in the room. The visibility settings mean you can participate at the level you're comfortable with — not just \"public or private\" but a genuine spectrum. The absence of follower counts and public metrics means there's no incentive to perform rather than participate.",
+      "The invite-only structure means the person who introduced you is accountable, in a mild but real way, for your presence in the room. The visibility settings mean you can participate at the level you're comfortable with, not just \"public or private\" but a genuine spectrum. The absence of follower counts and public metrics means there's no incentive to perform rather than participate.",
       "None of this is unprecedented. Some of the best communities in the world operate this way. It just isn't the default in tech, because the default in tech is designed to maximise engagement, and engaged users generate data, and data generates revenue. We're not optimising for that.",
       {
         kind: "heading",
@@ -689,7 +689,7 @@ export const articles: Record<string, Article> = {
           </>
         ),
       },
-      "There are real costs. People who should be in this room aren't yet, because they don't know anyone who's already here, or because they're in a situation where asking for an invitation feels exposing. We think about this a lot. We're trying to build ways in for people who arrive at the edge of the network without a prior connection — community events, open gatherings, a waitlist that we work through ourselves. We're not satisfied with where we are on this.",
+      "There are real costs. People who should be in this room aren't yet, because they don't know anyone who's already here, or because they're in a situation where asking for an invitation feels exposing. We think about this a lot. We're trying to build ways in for people who arrive at the edge of the network without a prior connection: community events, open gatherings, a waitlist that we work through ourselves. We're not satisfied with where we are on this.",
       "The other cost is slower growth, and with it slower revenue. We're a small operation funded by membership and by the occasional partnership with organisations we trust. We're not going to scale our way out of needing to think carefully about these tradeoffs. That's okay. We'd rather be smaller and right than larger and compromised.",
       {
         kind: "quote",

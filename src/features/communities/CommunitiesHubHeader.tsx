@@ -33,6 +33,9 @@ export function CommunitiesHubHeader({
             <CommunitiesTopTabs active={active} onChange={onChange} />
           </div>
           <div className={styles.actions}>
+            <Button variant="ghost" to={routes.aboutCommunities}>
+              {t("communities:hub.howItWorksCta")}
+            </Button>
             <Button variant="primary" to={routes.startCommunity}>
               {t("communities:hub.startCta")}
             </Button>

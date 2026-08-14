@@ -81,7 +81,7 @@ const LISTINGS: Listing[] = [
     budgetRange: 800,
     movein: "Flexible",
     moveinKey: "flex",
-    note: "Between roles right now and looking for somewhere settled in Arroios after a summer of subletting. I'm a product manager — tidy, around during the day, and I walk everywhere so I'm rarely underfoot in the evenings. Looking for a household where I don't have to translate myself.",
+    note: "Between roles right now and looking for somewhere settled in Arroios after a summer of subletting. I'm a product manager: tidy, around during the day, and I walk everywhere so I'm rarely underfoot in the evenings. Looking for a household where I don't have to translate myself.",
     tags: ["WFH", "Quiet household", "Sociable", "Early riser"],
   },
   {
@@ -93,7 +93,7 @@ const LISTINGS: Listing[] = [
     budgetRange: 750,
     movein: "Available now",
     moveinKey: "now",
-    note: "There's a room going in our warehouse flat in Marvila — high ceilings, far too many plants, and three of us in tech and music who mostly keep good hours. Looking for a fourth who's easy-going and cares about a calm home. The cat is already in residence.",
+    note: "There's a room going in our warehouse flat in Marvila: high ceilings, far too many plants, and three of us in tech and music who mostly keep good hours. Looking for a fourth who's easy-going and cares about a calm home. The cat is already in residence.",
     tags: ["Plant parent", "WFH", "Quiet household", "Pets welcome"],
   },
   {
@@ -105,7 +105,7 @@ const LISTINGS: Listing[] = [
     budgetRange: 950,
     movein: "Mid-July",
     moveinKey: "jul",
-    note: "I have a bright first-floor flat in Príncipe Real with a spare room and a garden view. I run my design studio from the back, often at odd hours, so I'm after someone calm and self-contained — you'd have your own bathroom and a very quiet street.",
+    note: "I have a bright first-floor flat in Príncipe Real with a spare room and a garden view. I run my design studio from the back, often at odd hours, so I'm after someone calm and self-contained. You'd have your own bathroom and a very quiet street.",
     tags: ["WFH", "Quiet household", "Introvert-friendly", "Plant parent"],
   },
   {
@@ -142,7 +142,7 @@ const LISTINGS: Listing[] = [
     budgetRange: 700,
     movein: "1 August",
     moveinKey: "aug",
-    note: "The smaller room in my place in Graça is opening up — good afternoon light, a tidy-ish kitchen, and me, usually covered in clay and home most days. I like a quiet household with real conversation in it. My cat already runs the place.",
+    note: "The smaller room in my place in Graça is opening up: good afternoon light, a tidy-ish kitchen, and me, usually covered in clay and home most days. I like a quiet household with real conversation in it. My cat already runs the place.",
     tags: ["WFH", "Quiet household", "Plant parent", "Cats welcome"],
   },
   {
@@ -184,7 +184,7 @@ const LISTINGS: Listing[] = [
     budgetRange: 900,
     movein: "Available now",
     moveinKey: "now",
-    note: "Community organiser — after a decade of this work I've learned to protect a calm home. I'm looking for a steady, considerate household in Graça: I cook, I clean up after myself, and I'm very good at keeping the peace. No drama, just a place to land.",
+    note: "Community organiser: after a decade of this work I've learned to protect a calm home. I'm looking for a steady, considerate household in Graça: I cook, I clean up after myself, and I'm very good at keeping the peace. No drama, just a place to land.",
     tags: ["Quiet household", "Sociable", "WFH", "Early riser"],
   },
   {

@@ -40,15 +40,15 @@ export interface PieceRecordView extends PieceRecordDto {
 
 const BRIEF: PieceBrief = {
   angle:
-    "Six people who met at a Wednesday meeting in Anjos in 2003 are now each other's ageing plan. Not a policy piece — one kitchen table, said out loud.",
+    "Six people who met at a Wednesday meeting in Anjos in 2003 are now each other's ageing plan. Not a policy piece: one kitchen table, said out loud.",
   wants: [
     "Reported, not personal essay",
     "At least three of the six on the record",
     "One number that lands: next-of-kin refusal rates",
-    "No coming-out backstory — start at fifty",
+    "No coming-out backstory. Start at fifty",
   ],
   avoid:
-    "Do not name the clinic. Do not use 'chosen family' in the headline — we have used it twice this year.",
+    "Do not name the clinic. Do not use 'chosen family' in the headline. We have used it twice this year.",
   wordCount: 2800,
   filedWords: 3140,
   rate: "€420",
@@ -82,12 +82,12 @@ const CARE: PieceCare = {
       out: null,
       consent: "pending",
       reply: "waiting",
-      note: "Quoted in a professional capacity — needs sign-off from the clinic press office.",
+      note: "Quoted in a professional capacity. Needs sign-off from the clinic press office.",
     },
   ],
   contentNotes: ["Illness and hospital settings", "Death of a friend (brief, section 3)"],
   flags: [
-    { key: "Names a venue", on: true, note: "Bar Sétimo — closed, safe to name." },
+    { key: "Names a venue", on: true, note: "Bar Sétimo: closed, safe to name." },
     { key: "Legal risk", on: false, note: "No allegations against a named person." },
     {
       key: "Names a health provider",
@@ -126,7 +126,7 @@ const AUDIT: PieceAuditEntryDto[] = [
   { actorId: "Marta", action: "commissioned the piece", detail: null, createdAt: "2 Jul, 10:12" },
   {
     actorId: "Sara Pinheiro",
-    action: "filed a draft — 3,140 words, 340 over",
+    action: "filed a draft: 3,140 words, 340 over",
     detail: null,
     createdAt: "29 Jul, 22:03",
   },
@@ -140,7 +140,7 @@ const AUDIT: PieceAuditEntryDto[] = [
   { actorId: "Ana Duarte", action: "opened the read", detail: null, createdAt: "4 Aug, 14:02" },
   {
     actorId: "System",
-    action: "flagged: names a health provider — second reader required",
+    action: "flagged: names a health provider, second reader required",
     detail: null,
     createdAt: "4 Aug, 14:02",
   },
@@ -171,7 +171,7 @@ const SIMILAR: SimilarPieceDto[] = [
     issue: 9,
     when: "Mar 2026",
     by: "Marta Cruz",
-    why: "Same subject, different angle — read before filing",
+    why: "Same subject, different angle: read before filing",
   },
   {
     title: "Who signs the form",
@@ -193,9 +193,9 @@ const SIMILAR: SimilarPieceDto[] = [
  * sensitivity-read items — with content notes already written.
  */
 const PUBLISH_GATE: PublishGateItemDto[] = [
-  { label: "Consent — Teresa M.", done: true },
-  { label: "Consent — Rui S.", done: true },
-  { label: "Consent — Dra. Câmara", done: false },
+  { label: "Consent: Teresa M.", done: true },
+  { label: "Consent: Rui S.", done: true },
+  { label: "Consent: Dra. Câmara", done: false },
   {
     label: "Sensitivity read: Nobody is outed by detail or jigsaw identification",
     done: true,

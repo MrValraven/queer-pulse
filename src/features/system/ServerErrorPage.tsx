@@ -180,7 +180,7 @@ export function ServerErrorPage() {
           <Translation
             i18nKey="system:serverError.footer.contact"
             // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- element template; <Translation> clones it with the link text at render time.
-            components={{ a: <a href="mailto:help@queerpulse.pt" /> }}
+            components={{ a: <a href="mailto:hello@queerpulse.com" /> }}
           />
         </p>
       </div>

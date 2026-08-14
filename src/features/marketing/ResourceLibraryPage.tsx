@@ -115,7 +115,7 @@ export function ResourceLibraryPage() {
       >
         <Button
           size="lg"
-          href="mailto:hello@queerpulse.pt?subject=Resource suggestion"
+          href="mailto:hello@queerpulse.com?subject=Resource suggestion"
         >
           {t("marketing:resourceLibrary.outro.cta")}
         </Button>

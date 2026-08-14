@@ -19,10 +19,10 @@ export const connect: Catalog = {
   "page.eyebrow": "Your network",
   "page.title": "People you've <em>actually met.</em>",
   "page.lead":
-    "QueerPulse doesn't do followers. You connect with people once you've met them — at a gathering, through someone, or because they vouched for you. Quality over count.",
+    "QueerPulse doesn't do followers. You connect with people once you've met them: at a gathering, through someone, or because they vouched for you. Quality over count.",
   "page.inviteCta": "Invite a friend",
   "page.note":
-    "<b>No follower counts on purpose.</b> If you're looking to “follow a member's posts” without connecting first, use the Communities feed instead. Connections are a two-way thing — they unlock messaging and tagged updates.",
+    "<b>No follower counts on purpose.</b> If you're looking to “follow a member's posts” without connecting first, use the Communities feed instead. Connections are a two-way thing: they unlock messaging and tagged updates.",
   "page.loadMoreLoading": "Loading…",
   "page.loadMore": "Load more",
 
@@ -56,7 +56,7 @@ export const connect: Catalog = {
   "card.mutuals_other": "<b>{count}</b> mutuals",
   "card.connectedSince": "Connected <b>{since}</b>",
   "card.tagsMoreTitle": "Also: {list}",
-  "card.noMutuals": "No mutuals — review carefully",
+  "card.noMutuals": "No mutuals: review carefully",
   "card.sentAgo": "Sent <b>{sentAgo}</b>",
   "card.introducedBy": "Introduced by <a>{name}</a>",
   "card.reason": "About <b>{reason}</b>",
@@ -76,7 +76,7 @@ export const connect: Catalog = {
 
   // Vouched-for tab intro (ConnectionsPanels)
   "panelIntro.vouched":
-    "People you've vouched for, or who've vouched for you. <em>Vouching is a small but meaningful act</em> — it stays attached to that member's profile.",
+    "People you've vouched for, or who've vouched for you. <em>Vouching is a small but meaningful act</em>. It stays attached to that member's profile.",
 
   // All-connections tab (ConnectionsAllTab)
   "allTab.searchPlaceholder": "Search by name, role, or community",
@@ -126,7 +126,7 @@ export const connect: Catalog = {
   "form.messageLabel": "Your message",
   "form.messagePlaceholder": "Write naturally. There's no template.",
   "form.note":
-    "If you're not connected yet, this arrives as a request — they decide whether to open the conversation. Either way, it stays between the two of you.",
+    "If you're not connected yet, this arrives as a request: they decide whether to open the conversation. Either way, it stays between the two of you.",
   "form.cancel": "Cancel",
   "form.sendingLabel": "Sending…",
   "form.send": "Send",
@@ -148,7 +148,7 @@ export const connect: Catalog = {
   "notice.close": "Close",
   "notice.alreadyPending.title": "You've already <em>reached out.</em>",
   "notice.alreadyPending.body":
-    "Your message is already waiting with {name}. They'll open the conversation when they're ready — no need to send it again.",
+    "Your message is already waiting with {name}. They'll open the conversation when they're ready. No need to send it again.",
   "notice.alreadyConnected.title": "You're already <em>connected.</em>",
   "notice.alreadyConnected.body":
     "You and {name} are already connected. Open your messages to pick the conversation back up.",

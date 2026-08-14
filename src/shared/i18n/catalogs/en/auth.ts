@@ -188,9 +188,9 @@ export const auth: Catalog = {
     "Something went wrong generating your link — try again.",
   "invite.link.formNote": "This link works once, for one person.",
   "invite.link.defaultVouch":
-    "A quiet, vouched-for queer community in Lisbon — no ads, no algorithm. I think you'd belong here.",
+    "A quiet, vouched-for queer community in Lisbon. No ads, no algorithm. I think you'd belong here.",
   "invite.link.shareMessage":
-    "{senderFirst} invited you to QueerPulse — a quiet, vouched-for queer community. Your personal invite: {url}",
+    "{senderFirst} invited you to QueerPulse, a quiet, vouched-for queer community. Your personal invite: {url}",
 
   "invite.ready.headline": "Your invite is <em>ready</em>",
   "invite.ready.sub": "Share it however feels natural — it's good for one use.",
@@ -580,6 +580,11 @@ export const auth: Catalog = {
   "gettingStarted.lede":
     "A few first moves to find your people and settle in. No rush — do them in any order, whenever you like.",
   "gettingStarted.progress": "{done} of {total} done",
+  "gettingStarted.levelStrip.eyebrow": "Your level",
+  "gettingStarted.levelStrip.progress": "{xp} of {xpMax} XP",
+  "gettingStarted.levelStrip.hint": "Each step you finish earns XP toward your next level.",
+  "gettingStarted.stepXp": "+{xp} XP",
+  "gettingStarted.success.badge": "You earned the First Steps badge.",
   "gettingStarted.meterAria": "{done} of {total} first steps done",
   "gettingStarted.checking": "Checking your progress…",
   "gettingStarted.doneLabel": "Done",

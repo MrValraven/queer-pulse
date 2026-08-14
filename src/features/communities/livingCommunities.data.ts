@@ -72,13 +72,13 @@ const RUNNERS_PULSE: Post[] = [
     author: P("monica"),
     kind: "announcement",
     pinned: true,
-    body: "Sunday's route is locked: the 7 km Parque das Nações loop, flat and step-free the whole way — perfect if it's your first time out with us. We split into three pace groups at the start, nobody runs alone, and coffee after at the usual spot. Meet 7:50, we move at 8:00 sharp.",
+    body: "Sunday's route is locked: the 7 km Parque das Nações loop, flat and step-free the whole way, perfect if it's your first time out with us. We split into three pace groups at the start, nobody runs alone, and coffee after at the usual spot. Meet 7:50, we move at 8:00 sharp.",
     image: img("photo-1571008887538-b36bb32f4571"),
     reactions: rx(["heart", 24, true], ["celebrate", 11], ["fire", 6]),
     replies: [
       {
         author: P("kai"),
-        text: "First-timer here — is 7 km doable if I've only ever done 5?",
+        text: "First-timer here: is 7 km doable if I've only ever done 5?",
         time: "3h",
       },
       {
@@ -142,7 +142,7 @@ const RUNNERS_PULSE: Post[] = [
     id: "run-p5",
     author: P("rita"),
     kind: "post",
-    body: "Made us a little club flag for the group shots. Bringing it Sunday — find me at the start line.",
+    body: "Made us a little club flag for the group shots. Bringing it Sunday. Find me at the start line.",
     image: img("photo-1476480862126-209bfaa8edc8"),
     reactions: rx(["celebrate", 22], ["heart", 14, true]),
     replies: [
@@ -183,7 +183,7 @@ const RUNNERS_MOMENTS: PulseMoment[] = [
   {
     id: "run-m2",
     kind: "event",
-    text: "New gathering posted — Sunrise run, Parque das Nações",
+    text: "New gathering posted: Sunrise run, Parque das Nações",
     time: "1d",
   },
   {
@@ -249,7 +249,7 @@ const RUNNERS_RULES = [
   "The slowest runner sets the warm-up. We regroup at every turn.",
   'No pace-shaming, no body-shaming, no "you should" about anyone\'s training.',
   "What gets shared on a run stays on the run.",
-  "Coffee after is not optional (it is — but come anyway).",
+  "Coffee after is not optional (it is, but come anyway).",
 ];
 
 /* ----------------------------------------------------------------------------
@@ -277,12 +277,12 @@ const HUB_PULSE: Post[] = [
     author: P("anika"),
     kind: "announcement",
     pinned: true,
-    body: "Hormone supply update: two pharmacies are short again this month. Farmácia do Carmo will hold stock if you call ahead, and there's an in-supply alternative formulation — full details in the pinned doc. Please don't ration without talking to a clinician first. If a shortage is being used to gatekeep your prescription, that is not on you — flag it here.",
+    body: "Hormone supply update: two pharmacies are short again this month. Farmácia do Carmo will hold stock if you call ahead, and there's an in-supply alternative formulation. Full details in the pinned doc. Please don't ration without talking to a clinician first. If a shortage is being used to gatekeep your prescription, that is not on you. Flag it here.",
     reactions: rx(["support", 28, true], ["heart", 12]),
     replies: [
       {
         author: P("jonas"),
-        text: "Confirming Farmácia do Carmo — Rui at the counter is excellent and never makes it weird.",
+        text: "Confirming Farmácia do Carmo: Rui at the counter is excellent and never makes it weird.",
         time: "5h",
       },
       {
@@ -298,7 +298,7 @@ const HUB_PULSE: Post[] = [
     id: "hub-p2",
     author: P("catarina-vaz"),
     kind: "post",
-    body: "The June vetted-clinician list is live: 47 names, all re-checked in the last 90 days, with notes on what each is good for. Two new endocrinology entries near Anjos. Corrections always welcome — this only works because we keep it honest together.",
+    body: "The June vetted-clinician list is live: 47 names, all re-checked in the last 90 days, with notes on what each is good for. Two new endocrinology entries near Anjos. Corrections always welcome. This only works because we keep it honest together.",
     reactions: rx(["heart", 21, true], ["celebrate", 9]),
     replies: [
       {
@@ -314,7 +314,7 @@ const HUB_PULSE: Post[] = [
     id: "hub-p3",
     author: P("rui"),
     kind: "post",
-    body: "Legal name-change workshop this Friday with ILGA legal. Bring your questions and, if you have them, your documents — we go through the actual forms together, line by line. 12 spots left.",
+    body: "Legal name-change workshop this Friday with ILGA legal. Bring your questions and, if you have them, your documents. We go through the actual forms together, line by line. 12 spots left.",
     reactions: rx(["celebrate", 17], ["heart", 8, true]),
     replies: [],
     time: "1d",
@@ -343,13 +343,13 @@ const HUB_MOMENTS: PulseMoment[] = [
   {
     id: "hub-m1",
     kind: "resource",
-    text: "Anika pinned a resource — Vetted clinician list (June)",
+    text: "Anika pinned a resource: Vetted clinician list (June)",
     time: "1d",
   },
   {
     id: "hub-m2",
     kind: "event",
-    text: "New gathering posted — Legal name-change workshop",
+    text: "New gathering posted: Legal name-change workshop",
     time: "1d",
   },
   {
@@ -366,7 +366,7 @@ const HUB_EVENTS: CommunityEvent[] = [
     id: "hub-e2",
     dd: "12",
     mm: "Jun",
-    title: "Open clinic night — bring questions",
+    title: "Open clinic night: bring questions",
     meta: "Thursday · 19:00 · Café Beirão",
     spots: "drop-in",
   },
@@ -395,7 +395,7 @@ const HUB_RESOURCES: CommunityResource[] = [
     note: "What to do during a shortage",
   },
   {
-    title: "Legal name change — step by step",
+    title: "Legal name change: step by step",
     href: "/safety/legal",
     kind: "guide",
     note: "Forms, costs, timelines",
@@ -411,7 +411,7 @@ const HUB_RESOURCES: CommunityResource[] = [
     kind: "link",
   },
   {
-    title: "Peer support — how it works",
+    title: "Peer support: how it works",
     href: "/resources/peer-support",
     kind: "link",
   },
@@ -419,7 +419,7 @@ const HUB_RESOURCES: CommunityResource[] = [
 
 const HUB_RULES = [
   "Confidentiality is the first rule and the last. What's shared here stays here.",
-  "No outing anyone — including yourself accidentally. Reduced visibility by default.",
+  "No outing anyone, including yourself accidentally. Reduced visibility by default.",
   "Vetted means vetted: only add a provider you've actually seen.",
   "Medical info is peer experience, not prescription. Always loop in a clinician.",
   "We assume good faith and protect each other's safety over comfort.",
@@ -454,7 +454,7 @@ const ARTS_PULSE: Post[] = [
     author: P("luisa"),
     kind: "announcement",
     pinned: true,
-    body: "Open crit this Saturday — bring ONE work, finished or not. The rule stays the same: honest, kind, specific. We look at the work in front of us, not the CV behind it. 8 easels, 8 spots, coffee and a long table after.",
+    body: "Open crit this Saturday: bring ONE work, finished or not. The rule stays the same: honest, kind, specific. We look at the work in front of us, whatever the CV behind it. 8 easels, 8 spots, coffee and a long table after.",
     image: img("photo-1513475382585-d06e58bcb0e0"),
     reactions: rx(["celebrate", 19, true], ["heart", 11], ["fire", 5]),
     replies: [
@@ -487,7 +487,7 @@ const ARTS_PULSE: Post[] = [
       },
       {
         author: P("sofia-castano"),
-        text: "Yes — and I'll document the first print run for the collective's page.",
+        text: "Yes, and I'll document the first print run for the collective's page.",
         time: "1h",
       },
     ],
@@ -515,7 +515,7 @@ const ARTS_PULSE: Post[] = [
     id: "art-p4",
     author: P("sofia-castano"),
     kind: "post",
-    body: "Documented last month's group show before we struck it. Full set going up on the collective page — tag yourself, grab anything with your work in it.",
+    body: "Documented last month's group show before we struck it. Full set going up on the collective page. Tag yourself, grab anything with your work in it.",
     image: img("photo-1452860606245-08befc0ff44b"),
     reactions: rx(["celebrate", 21], ["heart", 16, true]),
     replies: [],
@@ -542,7 +542,7 @@ const ARTS_PULSE: Post[] = [
     id: "art-p6",
     author: P("tomas"),
     kind: "post",
-    body: "I cook, you crit. Proposing a supper-club-meets-crit night — I feed everyone, we look at work between courses. Who's in?",
+    body: "I cook, you crit. Proposing a supper-club-meets-crit night: I feed everyone, we look at work between courses. Who's in?",
     image: img("photo-1547891654-e66ed7ebb968"),
     reactions: rx(["fire", 18, true], ["celebrate", 14], ["heart", 7]),
     replies: [
@@ -561,7 +561,7 @@ const ARTS_MOMENTS: PulseMoment[] = [
   {
     id: "art-m1",
     kind: "event",
-    text: "New gathering posted — Open crit, Atelier Pulso",
+    text: "New gathering posted: Open crit, Atelier Pulso",
     time: "7h",
   },
   {
@@ -573,7 +573,7 @@ const ARTS_MOMENTS: PulseMoment[] = [
   {
     id: "art-m3",
     kind: "resource",
-    text: "Sofia Castaño pinned a resource — Group show photo set",
+    text: "Sofia Castaño pinned a resource: Group show photo set",
     time: "1d",
   },
 ];
@@ -592,7 +592,7 @@ const ARTS_EVENTS: CommunityEvent[] = [
     id: "art-e3",
     dd: "24",
     mm: "May",
-    title: 'Spring group show — "Soft Edges"',
+    title: 'Spring group show: "Soft Edges"',
     meta: "borrowed space, Marvila",
     past: true,
     recapHref: "#",
@@ -604,7 +604,7 @@ const ARTS_RESOURCES: CommunityResource[] = [
     title: "How our crits work",
     href: "/resources/art-crit-guide",
     kind: "guide",
-    note: "Honest, kind, specific — in that order",
+    note: "Honest, kind, specific, in that order",
   },
   {
     title: "Shared equipment + booking",
@@ -626,9 +626,9 @@ const ARTS_RESOURCES: CommunityResource[] = [
 
 const ARTS_RULES = [
   "Crits are honest, kind, and specific. Vague praise helps no one.",
-  "We critique the work, never the person.",
+  "We aim our critique at the work and leave the person out of it.",
   "No gatekeeping by medium, stage, or institution. Practice is the only ticket.",
-  "Shared equipment stays shared — book it, clean it, log it.",
+  "Shared equipment stays shared: book it, clean it, log it.",
   "Document generously, credit always.",
 ];
 
@@ -657,17 +657,17 @@ const SOCIAL_PULSE: Post[] = [
     author: P("tomas"),
     kind: "announcement",
     pinned: true,
-    body: "June is the Park rooftop — Thursday the 19th, 19:00. Step-free from the east lift, space to move and corners to retreat to, and the sunset is worth showing up for. No dress code, no agenda. Bring someone new if you want; come alone if you want. I'll be at the lift at 18:50.",
+    body: "June is the Park rooftop: Thursday the 19th, 19:00. Step-free from the east lift, space to move and corners to retreat to, and the sunset is worth showing up for. No dress code, no agenda. Bring someone new if you want; come alone if you want. I'll be at the lift at 18:50.",
     reactions: rx(["heart", 31, true], ["celebrate", 18], ["fire", 7]),
     replies: [
       {
         author: P("carla"),
-        text: "Step-free confirmed — I checked last week. Lift is at the east entrance on Rua Castilho.",
+        text: "Step-free confirmed. I checked last week. Lift is at the east entrance on Rua Castilho.",
         time: "5h",
       },
       {
         author: P("kai"),
-        text: "First-timer here — will there be a way to spot the group?",
+        text: "First-timer here: will there be a way to spot the group?",
         time: "4h",
       },
       {
@@ -704,7 +704,7 @@ const SOCIAL_PULSE: Post[] = [
     replies: [
       {
         author: P("luisa"),
-        text: "Arquivo in Príncipe Real — library-café, genuinely quiet and beautiful.",
+        text: "Arquivo in Príncipe Real: library-café, genuinely quiet and beautiful.",
         time: "7h",
       },
       {
@@ -736,7 +736,7 @@ const SOCIAL_PULSE: Post[] = [
     id: "soc-p5",
     author: P("nuno"),
     kind: "post",
-    body: "The book swap table at the last meetup went down really well. Proposing we make it a regular thing — a small pile on the table each time. Gives first-timers something to do with their hands for the first ten minutes, which helps.",
+    body: "The book swap table at the last meetup went down really well. Proposing we make it a regular thing: a small pile on the table each time. Gives first-timers something to do with their hands for the first ten minutes, which helps.",
     reactions: rx(["heart", 22], ["celebrate", 11, true]),
     replies: [
       {
@@ -755,7 +755,7 @@ const SOCIAL_MOMENTS: PulseMoment[] = [
   {
     id: "soc-m2",
     kind: "event",
-    text: "New gathering posted — June meetup, Park rooftop",
+    text: "New gathering posted: June meetup, Park rooftop",
     time: "6h",
   },
   { id: "soc-m3", kind: "joined", text: "Luísa joined the group", time: "2d" },
@@ -767,7 +767,7 @@ const SOCIAL_EVENTS: CommunityEvent[] = [
     id: "soc-e2",
     dd: "17",
     mm: "Jul",
-    title: "July meetup — Jardim da Estrela",
+    title: "July meetup: Jardim da Estrela",
     meta: "Thursday · 18:30 · open air",
     spots: "open to all",
   },
@@ -775,7 +775,7 @@ const SOCIAL_EVENTS: CommunityEvent[] = [
     id: "soc-e3",
     dd: "18",
     mm: "May",
-    title: "May meetup — Graça terrace",
+    title: "May meetup: Graça terrace",
     meta: "Thursday · 19:00",
     past: true,
     recapHref: "#",
@@ -787,11 +787,11 @@ const SOCIAL_RESOURCES: CommunityResource[] = [
     title: "Getting the most from your first meetup",
     href: "/resources/first-meetup-guide",
     kind: "guide",
-    note: "No agenda, no pressure — here's what to expect",
+    note: "No agenda, no pressure: here's what to expect",
   },
   { title: "Past venues map", href: "/gatherings", kind: "link" },
   {
-    title: 'Community values — what "no agenda" means',
+    title: 'Community values: what "no agenda" means',
     href: "/resources/first-meetup-guide",
     kind: "doc",
   },
@@ -804,9 +804,9 @@ const SOCIAL_RESOURCES: CommunityResource[] = [
 ];
 
 const SOCIAL_RULES = [
-  'No agenda, no pitch, no "so what do you do?" — just show up.',
+  'No agenda, no pitch, no "so what do you do?" Just show up.',
   "You don't need to be out, or out in any particular way, to be here.",
-  "Ask before taking photos — always, of everyone.",
+  "Ask before taking photos, always, of everyone.",
   "Look after first-timers; we were all one once.",
   "What's shared in person stays in person.",
 ];
@@ -839,12 +839,12 @@ const AID_PULSE: Post[] = [
     author: P("anika"),
     kind: "announcement",
     pinned: true,
-    body: "Updated resource board is live: clinician list refreshed (49 names now), two new pharmacies on the supply map, and a new section on navigating insurance paperwork. Everything is peer-maintained — if you see something wrong or missing, flag it here. This only works because we all keep it honest.",
+    body: "Updated resource board is live: clinician list refreshed (49 names now), two new pharmacies on the supply map, and a new section on navigating insurance paperwork. Everything is peer-maintained. If you see something wrong or missing, flag it here. This only works because we all keep it honest.",
     reactions: rx(["support", 34, true], ["heart", 17], ["celebrate", 8]),
     replies: [
       {
         author: P("jonas"),
-        text: "Added Dr. Marta Fonseca to the endocrinology section — she's new to Lisbon and genuinely good.",
+        text: "Added Dr. Marta Fonseca to the endocrinology section: she's new to Lisbon and genuinely good.",
         time: "4h",
       },
       {
@@ -860,7 +860,7 @@ const AID_PULSE: Post[] = [
     id: "aid-p2",
     author: P("jonas"),
     kind: "post",
-    body: "Open clinic night this Thursday — bring any question, no question is too basic. Last time we covered blood tests, GP referrals, and how to ask for a letter without it becoming an appointment about your identity. Drop-in from 19:00 at Café Beirão.",
+    body: "Open clinic night this Thursday: bring any question, no question is too basic. Last time we covered blood tests, GP referrals, and how to ask for a letter without it becoming an appointment about your identity. Drop-in from 19:00 at Café Beirão.",
     reactions: rx(["heart", 21], ["celebrate", 12, true]),
     replies: [
       {
@@ -876,7 +876,7 @@ const AID_PULSE: Post[] = [
     id: "aid-p3",
     author: P("rui"),
     kind: "post",
-    body: "Name-change clinic Friday with ILGA Portugal legal — we go through the actual forms together. Twelve spots left. If you've been putting it off because the paperwork feels impossible, this is the session for you. We do it line by line.",
+    body: "Name-change clinic Friday with ILGA Portugal legal. We go through the actual forms together. Twelve spots left. If you've been putting it off because the paperwork feels impossible, this is the session for you. We do it line by line.",
     reactions: rx(["celebrate", 16, true], ["heart", 9]),
     replies: [],
     time: "1d",
@@ -886,7 +886,7 @@ const AID_PULSE: Post[] = [
     id: "aid-p4",
     author: P("kai"),
     kind: "post",
-    body: "The spare-room board got me my flat. Wanted to say it out loud because when I posted there six months ago I wasn't sure anything would come of it. If you need safe housing, post there — the network is real.",
+    body: "The spare-room board got me my flat. Wanted to say it out loud because when I posted there six months ago I wasn't sure anything would come of it. If you need safe housing, post there. The network is real.",
     reactions: rx(["heart", 28, true], ["celebrate", 14], ["support", 6]),
     replies: [
       {
@@ -904,13 +904,13 @@ const AID_MOMENTS: PulseMoment[] = [
   {
     id: "aid-m1",
     kind: "resource",
-    text: "Anika updated the resource board — clinician list June refresh",
+    text: "Anika updated the resource board: clinician list June refresh",
     time: "5h",
   },
   {
     id: "aid-m2",
     kind: "event",
-    text: "New gathering posted — name-change clinic with ILGA",
+    text: "New gathering posted: name-change clinic with ILGA",
     time: "1d",
   },
   {
@@ -935,7 +935,7 @@ const AID_EVENTS: CommunityEvent[] = [
     id: "aid-e3",
     dd: "6",
     mm: "Jun",
-    title: "Peer exchange — navigating healthcare",
+    title: "Peer exchange: navigating healthcare",
     meta: "Thursday · 19:00 · Café Beirão",
     past: true,
     recapHref: "#",
@@ -956,7 +956,7 @@ const AID_RESOURCES: CommunityResource[] = [
     note: "What to do when stock is short",
   },
   {
-    title: "Legal name change — step by step",
+    title: "Legal name change: step by step",
     href: "/safety/legal",
     kind: "guide",
     note: "Forms, costs, and timelines in Portugal",
@@ -975,10 +975,10 @@ const AID_RESOURCES: CommunityResource[] = [
 ];
 
 const AID_RULES = [
-  "What's shared here stays here — confidentiality is the first rule.",
+  "What's shared here stays here: confidentiality is the first rule.",
   "This is peer experience, not medical advice. Always loop in a clinician for health decisions.",
   "Mutual means reciprocal: give what you can, take what you need, no ledger kept.",
-  "No outing anyone — including yourself accidentally. Reduced visibility by default.",
+  "No outing anyone, including yourself accidentally. Reduced visibility by default.",
   "Practical help is valued as much as emotional support; both are needed.",
 ];
 
@@ -1007,12 +1007,12 @@ const PARENTS_PULSE: Post[] = [
     author: P("fatima"),
     kind: "announcement",
     pinned: true,
-    body: "Jardim da Estrela family picnic this Sunday — bring blankets, kids, and whatever you like to eat. We've got a patch reserved near the fountain. No programme, no itinerary; the kids run and the grown-ups finally get to talk for a bit. All family structures, all ages, all welcome.",
+    body: "Jardim da Estrela family picnic this Sunday: bring blankets, kids, and whatever you like to eat. We've got a patch reserved near the fountain. No programme, no itinerary; the kids run and the grown-ups finally get to talk for a bit. All family structures, all ages, all welcome.",
     reactions: rx(["heart", 29, true], ["celebrate", 16], ["fire", 4]),
     replies: [
       {
         author: P("carla"),
-        text: "We'll be there — ours are 4 and 7, happy to help tire out any other kids in range.",
+        text: "We'll be there. Ours are 4 and 7, happy to help tire out any other kids in range.",
         time: "6h",
       },
       {
@@ -1033,12 +1033,12 @@ const PARENTS_PULSE: Post[] = [
     replies: [
       {
         author: P("fatima"),
-        text: "Dr. Sousa in Arroios — both my kids see her, she's brilliant and matter-of-fact about it.",
+        text: "Dr. Sousa in Arroios: both my kids see her, she's brilliant and matter-of-fact about it.",
         time: "5h",
       },
       {
         author: P("monica"),
-        text: "Dr. Alves in Santos — a bit further but worth it. Very good with anxious kids too.",
+        text: "Dr. Alves in Santos: a bit further but worth it. Very good with anxious kids too.",
         time: "3h",
       },
     ],
@@ -1049,7 +1049,7 @@ const PARENTS_PULSE: Post[] = [
     id: "par-p3",
     author: P("sofia"),
     kind: "post",
-    body: "I've been making a short documentary about queer families in Lisbon and I'd love to talk to anyone willing to share their story — no faces required, voice-only is fine. The stories that never get told are the ones I want.",
+    body: "I've been making a short documentary about queer families in Lisbon and I'd love to talk to anyone willing to share their story: no faces required, voice-only is fine. The stories that never get told are the ones I want.",
     reactions: rx(["heart", 18], ["celebrate", 9, true]),
     replies: [
       {
@@ -1083,14 +1083,14 @@ const PARENTS_MOMENTS: PulseMoment[] = [
   {
     id: "par-m1",
     kind: "event",
-    text: "New gathering posted — family picnic, Jardim da Estrela",
+    text: "New gathering posted: family picnic, Jardim da Estrela",
     time: "8h",
   },
   { id: "par-m2", kind: "joined", text: "Rita joined the network", time: "2d" },
   {
     id: "par-m3",
     kind: "resource",
-    text: "Fátima pinned — queer-friendly paediatricians list",
+    text: "Fátima pinned: queer-friendly paediatricians list",
     time: "3d",
   },
 ];
@@ -1101,7 +1101,7 @@ const PARENTS_EVENTS: CommunityEvent[] = [
     id: "par-e2",
     dd: "29",
     mm: "Jun",
-    title: "Parents coffee — no kids required",
+    title: "Parents coffee: no kids required",
     meta: "Sunday · 10:30 · central café",
     spots: "open to all",
   },
@@ -1109,7 +1109,7 @@ const PARENTS_EVENTS: CommunityEvent[] = [
     id: "par-e3",
     dd: "4",
     mm: "May",
-    title: "Spring playdate — Parque Eduardo VII",
+    title: "Spring playdate: Parque Eduardo VII",
     meta: "Sunday · 11:00",
     past: true,
     recapHref: "#",
@@ -1124,7 +1124,7 @@ const PARENTS_RESOURCES: CommunityResource[] = [
     note: "Peer-verified, updated regularly",
   },
   {
-    title: "School intake forms — navigating the fields",
+    title: "School intake forms: navigating the fields",
     href: "/resources/school-forms-guide",
     kind: "guide",
     note: "What to ask, what to expect",
@@ -1135,7 +1135,7 @@ const PARENTS_RESOURCES: CommunityResource[] = [
     kind: "link",
   },
   {
-    title: "Family-friendly venues — step-free and good for kids",
+    title: "Family-friendly venues: step-free and good for kids",
     href: "/resources/accessible-lisbon",
     kind: "link",
   },
@@ -1143,10 +1143,10 @@ const PARENTS_RESOURCES: CommunityResource[] = [
 
 const PARENTS_RULES = [
   "Kids are welcome at in-person gatherings unless specifically noted otherwise.",
-  "Different family structures are all valid here — none need explaining or defending.",
+  "Different family structures are all valid here. None need explaining or defending.",
   "Medical experiences: share your story, not prescriptions for other families.",
   "What's shared in the network stays in the network.",
-  "We look after the grown-ups too, not just the children.",
+  "We look after the grown-ups too, alongside the children.",
 ];
 
 /* ----------------------------------------------------------------------------
@@ -1171,7 +1171,7 @@ const COMINGOUT_PULSE: Post[] = [
     author: P("catarina-vaz"),
     kind: "announcement",
     pinned: true,
-    body: "Wednesday check-in circle is open — 19:00, members only. If you're here and haven't said anything yet, that's fine. Being here is already something. The only rule for tonight: you don't owe anyone a full story.",
+    body: "Wednesday check-in circle is open: 19:00, members only. If you're here and haven't said anything yet, that's fine. Being here is already something. The only rule for tonight: you don't owe anyone a full story.",
     reactions: rx(["support", 19, true], ["heart", 14]),
     replies: [
       {
@@ -1208,7 +1208,7 @@ const COMINGOUT_PULSE: Post[] = [
     id: "cout-p3",
     author: P("jonas"),
     kind: "post",
-    body: "Reminder that this space has reduced visibility by default — nothing here appears on your public profile, and the member list is not shown to other members unless you choose to connect. You control what's visible, always.",
+    body: "Reminder that this space has reduced visibility by default: nothing here appears on your public profile, and the member list is not shown to other members unless you choose to connect. You control what's visible, always.",
     reactions: rx(["support", 16, true], ["heart", 7]),
     replies: [],
     time: "5d",
@@ -1226,7 +1226,7 @@ const COMINGOUT_MOMENTS: PulseMoment[] = [
   {
     id: "cout-m2",
     kind: "event",
-    text: "Weekly check-in circle — Wednesday 19:00",
+    text: "Weekly check-in circle: Wednesday 19:00",
     time: "2d",
   },
   {
@@ -1260,13 +1260,13 @@ const COMINGOUT_EVENTS: CommunityEvent[] = [
 
 const COMINGOUT_RESOURCES: CommunityResource[] = [
   {
-    title: "How this space works — privacy and visibility",
+    title: "How this space works: privacy and visibility",
     href: "/resources/community-privacy",
     kind: "guide",
     note: "What is and isn't visible from your profile",
   },
   {
-    title: "Coming out at work — a guide",
+    title: "Coming out at work: a guide",
     href: "/resources/coming-out-at-work",
     kind: "guide",
   },
@@ -1285,7 +1285,7 @@ const COMINGOUT_RESOURCES: CommunityResource[] = [
 const COMINGOUT_RULES = [
   "Confidentiality is the first rule and the last. What's shared here stays here.",
   "No pressure to share anything, ever. Presence is enough.",
-  "No outing anyone — not here, not outside. This is absolute.",
+  "No outing anyone, not here, not outside. This is absolute.",
   "We don't give advice unless it's asked for.",
   "Nothing here appears on your public profile. Reduced visibility by default.",
 ];
@@ -1319,12 +1319,12 @@ const ELDERS_PULSE: Post[] = [
     author: P("rui"),
     kind: "announcement",
     pinned: true,
-    body: "Long lunch at Cervejaria Trindade, Wednesday the 18th, 13:00 — accessible via the Chiado entrance, all seating, excellent acoustics for a group this size. Table booked in the back room. We usually run until mid-afternoon. No agenda; the conversation always finds its own way.",
+    body: "Long lunch at Cervejaria Trindade, Wednesday the 18th, 13:00: accessible via the Chiado entrance, all seating, excellent acoustics for a group this size. Table booked in the back room. We usually run until mid-afternoon. No agenda; the conversation always finds its own way.",
     reactions: rx(["heart", 26, true], ["celebrate", 14]),
     replies: [
       {
         author: P("catarina-vaz"),
-        text: "The back room is much quieter — good call, Rui.",
+        text: "The back room is much quieter. Good call, Rui.",
         time: "6h",
       },
       {
@@ -1340,7 +1340,7 @@ const ELDERS_PULSE: Post[] = [
     id: "eld-p2",
     author: P("catarina-vaz"),
     kind: "post",
-    body: "The oral history project has its first four recordings confirmed — Sofia is doing the interviews and they're going to be extraordinary. If you haven't said yes yet and want to, there are still slots. Your story doesn't have to be dramatic to be worth keeping.",
+    body: "The oral history project has its first four recordings confirmed. Sofia is doing the interviews and they're going to be extraordinary. If you haven't said yes yet and want to, there are still slots. Your story doesn't have to be dramatic to be worth keeping.",
     reactions: rx(["heart", 22, true], ["celebrate", 11]),
     replies: [
       {
@@ -1356,7 +1356,7 @@ const ELDERS_PULSE: Post[] = [
     id: "eld-p3",
     author: P("sofia"),
     kind: "post",
-    body: "Thank you to everyone who spoke with me so far. I wasn't prepared for how much this would move me. I'm treating each recording with everything I have. The documentary will take time — but it will be honest.",
+    body: "Thank you to everyone who spoke with me so far. I wasn't prepared for how much this would move me. I'm treating each recording with everything I have. The documentary will take time, but it will be honest.",
     reactions: rx(["heart", 33], ["celebrate", 17, true], ["support", 8]),
     replies: [
       {
@@ -1384,13 +1384,13 @@ const ELDERS_MOMENTS: PulseMoment[] = [
   {
     id: "eld-m1",
     kind: "event",
-    text: "New gathering posted — long lunch, Cervejaria Trindade",
+    text: "New gathering posted: long lunch, Cervejaria Trindade",
     time: "8h",
   },
   {
     id: "eld-m2",
     kind: "resource",
-    text: "Mónica pinned — LGBTQ+ aging and healthcare guide (PT)",
+    text: "Mónica pinned: LGBTQ+ aging and healthcare guide (PT)",
     time: "5d",
   },
   {
@@ -1415,7 +1415,7 @@ const ELDERS_EVENTS: CommunityEvent[] = [
     id: "eld-e3",
     dd: "21",
     mm: "May",
-    title: "Spring tea — Pátio da Galé",
+    title: "Spring tea: Pátio da Galé",
     meta: "Wednesday · 15:00",
     past: true,
     recapHref: "#",
@@ -1430,7 +1430,7 @@ const ELDERS_RESOURCES: CommunityResource[] = [
     note: "Just translated into Portuguese",
   },
   {
-    title: "Oral history project — how to participate",
+    title: "Oral history project: how to participate",
     href: "/resources/oral-history-project",
     kind: "guide",
   },
@@ -1441,17 +1441,17 @@ const ELDERS_RESOURCES: CommunityResource[] = [
     note: "Peer-verified by the group",
   },
   {
-    title: "ILGA Portugal — elder services",
+    title: "ILGA Portugal: elder services",
     href: "https://ilga-portugal.pt",
     kind: "link",
   },
 ];
 
 const ELDERS_RULES = [
-  "We start from respect — for histories, choices, and years lived differently from our own.",
+  "We start from respect: for histories, choices, and years lived differently from our own.",
   "We don't ask anyone to represent a past they didn't all share.",
   "Medical experiences: peer wisdom only. Always loop in a clinician for health decisions.",
-  "Accessibility: if you need something, ask — it will be arranged without fuss.",
+  "Accessibility: if you need something, ask. It will be arranged without fuss.",
   "No tech required to participate. We figure things out together.",
 ];
 
@@ -1484,7 +1484,7 @@ const YOUTH_PULSE: Post[] = [
     author: P("rita"),
     kind: "announcement",
     pinned: true,
-    body: "CVs and first-jobs clinic this Friday — bring your laptop and whatever draft you've got, even if it's a mess. Nuno and I will go through them with you, and there'll be people who've done the hiring as well as people who've just survived the interview. 15 spots, no experience required.",
+    body: "CVs and first-jobs clinic this Friday: bring your laptop and whatever draft you've got, even if it's a mess. Nuno and I will go through them with you, and there'll be people who've done the hiring as well as people who've just survived the interview. 15 spots, no experience required.",
     reactions: rx(["celebrate", 26, true], ["heart", 18], ["fire", 9]),
     replies: [
       {
@@ -1499,7 +1499,7 @@ const YOUTH_PULSE: Post[] = [
       },
       {
         author: P("rita"),
-        text: "Both — we've got creatives and people in traditional roles. Bring whatever you have.",
+        text: "Both. We've got creatives and people in traditional roles. Bring whatever you have.",
         time: "3h",
       },
     ],
@@ -1552,7 +1552,7 @@ const YOUTH_PULSE: Post[] = [
       },
       {
         author: P("nuno"),
-        text: "There are exceptions — early commissions from institutions that will actually publish your name. But 'evaporates at a real quote' is a no.",
+        text: "There are exceptions: early commissions from institutions that will actually publish your name. But 'evaporates at a real quote' is a no.",
         time: "6h",
       },
     ],
@@ -1581,7 +1581,7 @@ const YOUTH_MOMENTS: PulseMoment[] = [
   {
     id: "yth-m1",
     kind: "event",
-    text: "New gathering posted — CVs and first-jobs clinic",
+    text: "New gathering posted: CVs and first-jobs clinic",
     time: "6h",
   },
   {
@@ -1627,7 +1627,7 @@ const YOUTH_RESOURCES: CommunityResource[] = [
     note: "Peer-reviewed, updated monthly",
   },
   {
-    title: "Freelancing as a creative — the basics",
+    title: "Freelancing as a creative: the basics",
     href: "/economy",
     kind: "guide",
     note: "Invoicing, rates, contracts",
@@ -1646,11 +1646,11 @@ const YOUTH_RESOURCES: CommunityResource[] = [
 ];
 
 const YOUTH_RULES = [
-  "This room belongs to the under-25s. Older members contribute when asked, not by default.",
-  'No unsolicited career advice or "in my day…" — there are better formats for that.',
+  "This room belongs to the under-25s. Older members contribute only when asked.",
+  'No unsolicited career advice or "in my day…" There are better formats for that.',
   "Share opportunities generously; credit the person who shared it when you pass it on.",
   "Money is not a taboo topic here. Financial honesty is part of solidarity.",
-  "We look out for each other's mental health, not just their CVs.",
+  "We look out for each other's mental health, well beyond the CVs.",
 ];
 
 /* ----------------------------------------------------------------------------
@@ -1682,7 +1682,7 @@ const POC_PULSE: Post[] = [
     author: P("fatima"),
     kind: "announcement",
     pinned: true,
-    body: "Supper & sounds in Mouraria this Saturday — Tomas is cooking, we've got a playlist that goes from Nairobi to São Paulo, and we'll eat together until it's late. RSVP inside, there are only a few spots left. Bring something to contribute to the table if you can, but come even if you can't.",
+    body: "Supper & sounds in Mouraria this Saturday: Tomas is cooking, we've got a playlist that goes from Nairobi to São Paulo, and we'll eat together until it's late. RSVP inside, there are only a few spots left. Bring something to contribute to the table if you can, but come even if you can't.",
     reactions: rx(["fire", 34, true], ["heart", 22], ["celebrate", 14]),
     replies: [
       {
@@ -1713,7 +1713,7 @@ const POC_PULSE: Post[] = [
       },
       {
         author: P("nuno"),
-        text: "Adding the Cape Verdean bakery near Anjos — open Saturday mornings.",
+        text: "Adding the Cape Verdean bakery near Anjos, open Saturday mornings.",
         time: "2h",
       },
     ],
@@ -1724,7 +1724,7 @@ const POC_PULSE: Post[] = [
     id: "poc-p3",
     author: P("sofia-castano"),
     kind: "post",
-    body: "Documented the last gathering properly — full photo set going up in the archive this week. It was a beautiful evening. Tag yourselves in the album and grab what you need.",
+    body: "Documented the last gathering properly. Full photo set going up in the archive this week. It was a beautiful evening. Tag yourselves in the album and grab what you need.",
     reactions: rx(["celebrate", 21], ["heart", 18, true]),
     replies: [],
     time: "3d",
@@ -1734,7 +1734,7 @@ const POC_PULSE: Post[] = [
     id: "poc-p4",
     author: P("nuno"),
     kind: "post",
-    body: "Article worth reading: 'Queer and of colour in Lisbon — a visibility gap'. It's not perfect but it names some things that needed naming. Leaving it here for discussion, not as a verdict.",
+    body: "Article worth reading: 'Queer and of colour in Lisbon: a visibility gap'. It's not perfect but it names some things that needed naming. Leaving it here to open up a discussion.",
     reactions: rx(["support", 18, true], ["heart", 11], ["fire", 5]),
     replies: [
       {
@@ -1752,13 +1752,13 @@ const POC_MOMENTS: PulseMoment[] = [
   {
     id: "poc-m1",
     kind: "event",
-    text: "New gathering posted — supper & sounds, Mouraria",
+    text: "New gathering posted: supper & sounds, Mouraria",
     time: "7h",
   },
   {
     id: "poc-m2",
     kind: "resource",
-    text: "Kai updated the ingredients-from-home map — 34 entries",
+    text: "Kai updated the ingredients-from-home map: 34 entries",
     time: "2d",
   },
   { id: "poc-m3", kind: "joined", text: "Luísa joined the space", time: "4d" },
@@ -1787,7 +1787,7 @@ const POC_EVENTS: CommunityEvent[] = [
 
 const POC_RESOURCES: CommunityResource[] = [
   {
-    title: "Ingredients from home — Lisbon map",
+    title: "Ingredients from home: Lisbon map",
     href: "/resources/ingredients-map",
     kind: "doc",
     note: "34 spots from 14 countries, crowd-sourced",
@@ -1811,7 +1811,7 @@ const POC_RESOURCES: CommunityResource[] = [
 
 const POC_RULES = [
   "This is a space by and for queer people of colour. White guests by explicit invitation only.",
-  "Race and queerness are held equally here — neither is a footnote of the other.",
+  "Race and queerness are held equally here: neither is a footnote of the other.",
   "No migration-status policing or assumptions about anyone's background.",
   "Joy is as political as solidarity. Both are welcome, neither is obligatory.",
   "Credit all labour, especially emotional labour.",
@@ -1846,12 +1846,12 @@ const DISABLED_PULSE: Post[] = [
     author: P("beatriz"),
     kind: "announcement",
     pinned: true,
-    body: "Low-sensory hangout this Sunday — hybrid, as always. In-person is at Maria Caxuxa in Intendente (genuinely step-free, hearing loop, no loud music). Online link in the events tab. Carers and PAs are always welcome, no booking needed for them. Come in whatever state you're in — we're not measuring.",
+    body: "Low-sensory hangout this Sunday: hybrid, as always. In-person is at Maria Caxuxa in Intendente (genuinely step-free, hearing loop, no loud music). Online link in the events tab. Carers and PAs are always welcome, no booking needed for them. Come in whatever state you're in. We're not measuring.",
     reactions: rx(["heart", 24, true], ["support", 16], ["celebrate", 7]),
     replies: [
       {
         author: P("anika"),
-        text: "Verified the venue last week — everything listed is accurate, and the staff are brilliant.",
+        text: "Verified the venue last week: everything listed is accurate, and the staff are brilliant.",
         time: "6h",
       },
       {
@@ -1867,7 +1867,7 @@ const DISABLED_PULSE: Post[] = [
     id: "dis-p2",
     author: P("anika"),
     kind: "post",
-    body: "Two more step-free venue additions today: A Cena in Mouraria (purpose-built, hearing loop, accessible toilet, staff who know what they're doing) and Solar dos Presuntos which has just completed works. Only add places you've been yourself — the list is only useful if it's honest.",
+    body: "Two more step-free venue additions today: A Cena in Mouraria (purpose-built, hearing loop, accessible toilet, staff who know what they're doing) and Solar dos Presuntos which has just completed works. Only add places you've been yourself. The list is only useful if it's honest.",
     reactions: rx(["support", 21, true], ["heart", 13]),
     replies: [
       {
@@ -1888,7 +1888,7 @@ const DISABLED_PULSE: Post[] = [
     replies: [
       {
         author: P("monica"),
-        text: "Physiotherapist here — the spiral you're describing is real and common. DM me if you want to talk it through properly.",
+        text: "Physiotherapist here. The spiral you're describing is real and common. DM me if you want to talk it through properly.",
         time: "10h",
       },
       {
@@ -1904,7 +1904,7 @@ const DISABLED_PULSE: Post[] = [
     id: "dis-p4",
     author: P("monica"),
     kind: "post",
-    body: "Flagging a new guide: 'Navigating Portuguese healthcare with a disability or chronic condition' — not perfect but the sections on referrals and accessible GP practices in Lisbon are useful and recent. Adding to the resources tab.",
+    body: "Flagging a new guide: 'Navigating Portuguese healthcare with a disability or chronic condition'. Not perfect, but the sections on referrals and accessible GP practices in Lisbon are useful and recent. Adding to the resources tab.",
     reactions: rx(["support", 17, true], ["heart", 9]),
     replies: [],
     time: "5d",
@@ -1916,13 +1916,13 @@ const DISABLED_MOMENTS: PulseMoment[] = [
   {
     id: "dis-m1",
     kind: "event",
-    text: "New gathering posted — low-sensory hangout (hybrid)",
+    text: "New gathering posted: low-sensory hangout (hybrid)",
     time: "7h",
   },
   {
     id: "dis-m2",
     kind: "resource",
-    text: "Anika updated step-free venues list — 2 additions",
+    text: "Anika updated step-free venues list: 2 additions",
     time: "2d",
   },
   {
@@ -1939,7 +1939,7 @@ const DISABLED_EVENTS: CommunityEvent[] = [
     id: "dis-e2",
     dd: "7",
     mm: "Jul",
-    title: "Online check-in — July",
+    title: "Online check-in: July",
     meta: "Monday · 18:00 · members only",
     spots: "open to members",
   },
@@ -1959,7 +1959,7 @@ const DISABLED_RESOURCES: CommunityResource[] = [
     title: "Step-free venues in Lisbon",
     href: "/resources/accessible-lisbon",
     kind: "doc",
-    note: "Peer-verified only — please check before adding",
+    note: "Peer-verified only. Please check before adding",
   },
   {
     title: "Navigating Portuguese healthcare with a disability",
@@ -1967,23 +1967,23 @@ const DISABLED_RESOURCES: CommunityResource[] = [
     kind: "guide",
   },
   {
-    title: "Disability rights in Portugal — plain language",
+    title: "Disability rights in Portugal: plain language",
     href: "/safety/legal",
     kind: "guide",
   },
   {
-    title: "Spoon theory — what it is and how we use it here",
+    title: "Spoon theory: what it is and how we use it here",
     href: "/resources/spoon-theory",
     kind: "link",
   },
 ];
 
 const DISABLED_RULES = [
-  "Every gathering is hybrid by default — online is never second class.",
+  "Every gathering is hybrid by default. Online is never second class.",
   "Access needs are mentioned up front and accommodated without question or comment.",
   "Never ask what someone's diagnosis is unless they offer it.",
-  "Carers and personal assistants are always welcome — no booking, no fuss.",
-  "No inspiration-porn — we are not anyone's motivation.",
+  "Carers and personal assistants are always welcome: no booking, no fuss.",
+  "No inspiration-porn. We are not anyone's motivation.",
 ];
 
 /* ----------------------------------------------------------------------------
@@ -2011,7 +2011,7 @@ const HUB_REPORTS: ModReport[] = [
     postExcerpt:
       "You don't need a doctor, just order from this site, way cheaper and no questions…",
     author: { initials: "··", name: "Removed account", tint: "plum" },
-    reason: "Unsafe medical advice — bypasses clinician",
+    reason: "Unsafe medical advice: bypasses clinician",
     reporter: P("jonas"),
     time: "5h",
   },
@@ -2020,7 +2020,7 @@ const HUB_REPORTS: ModReport[] = [
     postExcerpt:
       "Can everyone share their full name and clinic so I can put together a list?",
     author: P("sofia-castano"),
-    reason: "Privacy — requesting identifying info in a safe space",
+    reason: "Privacy: requesting identifying info in a safe space",
     reporter: P("rui"),
     time: "1d",
   },
@@ -2032,7 +2032,7 @@ const RUNNERS_REPORTS: ModReport[] = [
     postExcerpt:
       "Honestly if you can't keep a 5min/km pace maybe this isn't the group for you.",
     author: { initials: "··", name: "A member", tint: "coral" },
-    reason: "Pace-shaming — against rule 3",
+    reason: "Pace-shaming: against rule 3",
     reporter: P("carla"),
     time: "6h",
   },

@@ -10,7 +10,7 @@ export const ALBUM = {
   href: routes.studioAlbum,
   meta: "Mariana Sol · Album",
   description:
-    "A nine-track meditation on faith, the city, and queer longing — recorded live in Lisbon.",
+    "A nine-track meditation on faith, the city, and queer longing, recorded live in Lisbon.",
 };
 
 export const TRACKS: {
@@ -25,7 +25,7 @@ export const TRACKS: {
 }[] = [
   {
     n: 1,
-    pre: "Abertura — ",
+    pre: "Abertura: ",
     em: "a luz",
     who: "instrumental · piano",
     tm: "2:10",
@@ -115,7 +115,7 @@ export const TRACKS: {
   },
   {
     n: 11,
-    pre: "Fecho — ",
+    pre: "Fecho: ",
     em: "a luz que entra",
     who: "instrumental · piano + cello",
     tm: "3:32",

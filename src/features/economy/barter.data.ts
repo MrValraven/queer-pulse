@@ -30,7 +30,7 @@ export const BARTERS: Barter[] = [
     offer: "Brand identity design",
     want: "Portuguese tax return help",
     offerDetail:
-      "Logo, type, colour — full brand for a small project or solo practice. Up to 3 rounds of revisions.",
+      "Logo, type, colour: full brand for a small project or solo practice. Up to 3 rounds of revisions.",
     wantDetail:
       "My imposto IRS is a mess. Two hours of your time, I give you a visual identity.",
     tags: ["design", "branding", "visual identity"],
@@ -46,7 +46,7 @@ export const BARTERS: Barter[] = [
     offerDetail:
       "Rough cut to final export. Up to 15 minutes. I work fast and I listen.",
     wantDetail:
-      "Freelance contract review, recibos verdes questions. Nothing complicated — I just need someone who knows.",
+      "Freelance contract review, recibos verdes questions. Nothing complicated. I just need someone who knows.",
     tags: ["video", "editing", "post-production"],
     days: 5,
   },
@@ -55,7 +55,7 @@ export const BARTERS: Barter[] = [
     member: "andre",
     category: "creative",
     mode: "offering",
-    offer: "Portrait session — analog, medium format",
+    offer: "Portrait session: analog, medium format",
     want: "",
     offerDetail:
       "One roll of film, developed and scanned. For members who have never had a proper portrait. I will not make you uncomfortable.",
@@ -165,7 +165,7 @@ export const BARTERS: Barter[] = [
     offerDetail:
       "Trauma-informed, queer-affirming, body-neutral. All levels. I come to you if you have space.",
     wantDetail:
-      "A simple logo and one-page PDF. Something I can send to people. Clean, not corporate.",
+      "A simple logo and one-page PDF. Something I can send to people. Clean and understated.",
     tags: ["yoga", "breathwork", "body-neutral"],
     days: 14,
   },
@@ -178,7 +178,7 @@ export const BARTERS: Barter[] = [
     category: "care",
     mode: "seeking",
     offer: "",
-    want: "Haircut — someone trans-competent, not expensive",
+    want: "Haircut: someone trans-competent, not expensive",
     offerDetail: "",
     wantDetail:
       "In exchange I offer two hours of furniture assembly, moving help, or general muscle-use.",
@@ -195,7 +195,7 @@ export const BARTERS: Barter[] = [
     offerDetail:
       "Seasonal, no menu in advance. I cook what is good that week. Wine included.",
     wantDetail:
-      "I want actual photographs of the food, not phone photos. Someone who knows about light.",
+      "I want proper photographs of the food, taken with a real camera. Someone who knows about light.",
     tags: ["cooking", "dinner", "food"],
     days: 7,
   },
@@ -224,7 +224,7 @@ export const BARTERS: Barter[] = [
     category: "body",
     mode: "both",
     offer: "Capoeira basics (up to 4 sessions)",
-    want: "Web presence — something simple",
+    want: "Web presence: something simple",
     offerDetail:
       "Not performance capoeira. Movement, music, community. No experience needed. I teach slowly.",
     wantDetail:
@@ -241,7 +241,7 @@ export const BARTERS: Barter[] = [
     category: "body",
     mode: "seeking",
     offer: "",
-    want: "Running buddy — 3× per week, Ribeira",
+    want: "Running buddy: 3× per week, Ribeira",
     offerDetail: "",
     wantDetail:
       "In return: I speak four languages and will tutor you in any of them for the same number of hours.",

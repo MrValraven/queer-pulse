@@ -178,7 +178,7 @@ export const resources: Catalog = {
   "safety.meta.title":
     "Como a QueerPulse protege a tua privacidade e segurança",
   "safety.meta.description":
-    "Como funcionam os níveis de visibilidade, o sistema de avais e a proteção de dados na QueerPulse — e como denunciar uma preocupação ou sair da rede.",
+    "Como funcionam os níveis de visibilidade, o sistema de votos de confiança e a proteção de dados na QueerPulse, e como denunciar uma preocupação ou sair da rede.",
   "safety.hero.cat": "Segurança e privacidade",
   "safety.hero.title": "A tua visibilidade. <em>A tua escolha.</em>",
   "safety.hero.intro":
@@ -195,13 +195,13 @@ export const resources: Catalog = {
     "O teu perfil é visível às pessoas participantes, mas o contacto direto exige uma ligação partilhada. És contactável, mas com uma camada extra de conforto.",
   "safety.visibility.private.title": "Privado",
   "safety.visibility.private.body":
-    "O teu perfil só é visível à equipa e a quem te avalizou. Apareces na contagem da rede mas não na navegação. A definição certa se saíste do armário há pouco tempo, estás numa situação sensível, ou simplesmente ainda não estás pronte — não é preciso dar explicações. Nunca partilhamos a tua participação para fora da QueerPulse sem o teu consentimento explícito.",
+    "O teu perfil só é visível à equipa e a quem te deu um voto de confiança. Apareces na contagem da rede mas não na navegação. A definição certa se saíste do armário há pouco tempo, estás numa situação sensível, ou simplesmente ainda não estás pronte. Não é preciso dar explicações. Nunca partilhamos a tua participação para fora da QueerPulse sem o teu consentimento explícito.",
 
-  "safety.vouching.title": "O modelo de <em>aval</em>",
+  "safety.vouching.title": "O modelo de <em>voto de confiança</em>",
   "safety.vouching.body1":
-    "A maior parte das pessoas chega avalizada por alguém que já está na rede; algumas são aprovadas diretamente pela nossa equipa. De qualquer forma, ninguém chega aqui sozinhe. Isto não é gatekeeping — é o mecanismo que faz a sala parecer digna de confiança. Quando alguém te avaliza, está a dizer: <b>conheço esta pessoa e acho que pertence aqui.</b>",
+    "A maior parte das pessoas chega com o voto de confiança de alguém que já está na rede; algumas são aprovadas diretamente pela nossa equipa. De qualquer forma, ninguém chega aqui sozinhe. Isto é o mecanismo que faz a sala parecer digna de confiança. Quando alguém te dá um voto de confiança, está a dizer: <b>conheço esta pessoa e acho que pertence aqui.</b>",
   "safety.vouching.body2":
-    "Quem avaliza não é responsável pelas pessoas que avaliza, mas presta contas de forma real. Se uma pessoa avalizada tiver um comportamento prejudicial, quem a avalizou faz parte da conversa sobre o que acontece a seguir.",
+    "Quem dá um voto de confiança presta contas de forma real, mesmo que a responsabilidade por cada comportamento seja sempre de cada pessoa. Se uma pessoa com voto de confiança tiver um comportamento prejudicial, quem lhe deu esse voto faz parte da conversa sobre o que acontece a seguir.",
 
   "safety.dataUse.title": "O que <em>não fazemos</em> com os teus dados",
   "safety.dataUse.body1":
@@ -209,7 +209,7 @@ export const resources: Catalog = {
   "safety.dataUse.body2":
     "O que guardamos: o teu nome, email, conteúdo do perfil e definição de visibilidade. O que não guardamos: a tua localização para além do bairro que escolhes partilhar, o teu comportamento de navegação, ou o que dizes em mensagens privadas.",
   "safety.dataUse.body3":
-    "Podes pedir tudo o que temos sobre ti, ou pedir-nos para eliminar a tua conta, a qualquer momento. Envia um email para <b>hello@queerpulse.pt</b>.",
+    "Podes pedir tudo o que temos sobre ti, ou pedir-nos para eliminar a tua conta, a qualquer momento. Envia um email para <b>hello@queerpulse.com</b>.",
 
   "safety.report.title": "Se algo <em>não parecer bem</em>",
   "safety.report.body1":
@@ -230,7 +230,7 @@ export const resources: Catalog = {
   "safety.outro.title":
     "A segurança é uma funcionalidade, <em>não uma nota de rodapé.</em>",
   "safety.outro.sub": "Alguma questão sobre como a rede funciona? Escreve-nos.",
-  "safety.outro.cta": "hello@queerpulse.pt",
+  "safety.outro.cta": "hello@queerpulse.com",
 
   "safety.subpageIndex.eyebrow": "Segurança",
   "safety.subpageIndex.title": "Denúncias e direitos",
@@ -495,7 +495,7 @@ export const resources: Catalog = {
     "Sim, uma vez por ano. As alterações de nome de utilizador atualizam o URL do teu perfil — links antigos redirecionam durante 90 dias. Vai a Editar Perfil → Identidade para o alterar.",
   "pronounsGuide.faq.q2": "E se o meu nome morto aparecer nalgum lugar?",
   "pronounsGuide.faq.a2":
-    "Contacta-nos imediatamente através de <a>help@queerpulse.pt</a> e vamos remover ou atualizar isso com prioridade. Isto inclui assinaturas na revista, publicações antigas do fórum atribuídas ao teu nome anterior, e quaisquer arquivos de email que guardemos.",
+    "Contacta-nos imediatamente através de <a>hello@queerpulse.com</a> e vamos remover ou atualizar isso com prioridade. Isto inclui assinaturas na revista, publicações antigas do fórum atribuídas ao teu nome anterior, e quaisquer arquivos de email que guardemos.",
   "pronounsGuide.faq.q3": "Mudar o meu nome afeta o meu histórico de convites?",
   "pronounsGuide.faq.a3":
     "Não. As tuas relações de convite (quem te convidou, quem convidaste) são mantidas internamente por ID de conta, não por nome, por isso as mudanças de nome não têm qualquer efeito nelas.",
@@ -749,7 +749,7 @@ export const resources: Catalog = {
 
   "transHub.outro.title": "És viste <em>aqui.</em>",
   "transHub.outro.sub":
-    "A QueerPulse é uma rede por convite, com aval necessário. Se alguém em quem confias já está cá, pede-lhe para te avalizar.",
+    "A QueerPulse é uma rede por convite, com voto de confiança necessário. Se alguém em quem confias já está cá, pede-lhe um voto de confiança.",
   "transHub.outro.cta": "Pedir um convite",
 
   // ── TransHealthcarePage ──────────────────────────────────────────────────

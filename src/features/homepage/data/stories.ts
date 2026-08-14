@@ -6,7 +6,7 @@ export const featureStory: StoryFeature = {
   category: "Field Notes",
   title: "How a Príncipe Real studio became a quiet home for queer designers",
   excerpt:
-    "Six years ago it was a dusty first-floor flat with bad wiring. Today it's where half of Lisbon's queer design scene passes through — and nobody there is performing for an algorithm.",
+    "Six years ago it was a dusty first-floor flat with bad wiring. Today it's where half of Lisbon's queer design scene passes through, and nobody there is performing for an algorithm.",
   bylineInitials: MEMBERS.ines!.initials,
   byline: `Words by ${memberName("ines")} · 6 min read →`,
   href: routes.story,
@@ -28,7 +28,7 @@ export const storyCards: StoryCard[] = [
   },
   {
     category: "On Building",
-    title: "Why we stayed invite-only: safety as a feature, not a gate",
+    title: "Why we stayed invite-only: safety as a built-in feature",
     bylineInitials: "QP",
     byline: "The QueerPulse team · 3 min read",
     href: routes.storySafety,

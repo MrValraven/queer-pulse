@@ -1,4 +1,5 @@
 import { ImageUploadField } from "../subprofiles/ImageUploadField";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./NewMessageModal.module.css";
 
@@ -9,6 +10,10 @@ interface GroupAvatarFieldProps {
    * the owner/admin picks a new one. `undefined` → the initials placeholder.
    */
   currentAvatarUrl?: string;
+  /** Saved reframe crop for `currentAvatarUrl` — the group avatar is a locked
+   *  1:1 crop and this field's `circle` slot is a true square, so it's safe
+   *  to render directly. */
+  currentAvatarCrop?: CropRect;
   /** The group name, used as the placeholder label on the empty slot. */
   groupName: string;
   /**
@@ -31,6 +36,7 @@ interface GroupAvatarFieldProps {
  */
 export function GroupAvatarField({
   currentAvatarUrl,
+  currentAvatarCrop,
   groupName,
   onChange,
 }: GroupAvatarFieldProps) {
@@ -42,6 +48,7 @@ export function GroupAvatarField({
       </span>
       <ImageUploadField
         value={currentAvatarUrl ?? ""}
+        crop={currentAvatarCrop}
         onChange={onChange}
         kind="group-avatar"
         circle

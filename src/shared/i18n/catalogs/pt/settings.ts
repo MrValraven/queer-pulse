@@ -32,10 +32,10 @@ export const settings: Catalog = {
   // ── Guia de terminologia da comunidade (settings.data.ts TERMS) ──────────
   "terms.queer.name": "Queer",
   "terms.queer.def":
-    "Um termo abrangente para identidades sexuais e de género que não são heterossexuais nem cisgénero. Reapropriado de um insulto; o uso varia — algumas pessoas mais velhas da comunidade podem preferir não o usar.",
+    "Um termo abrangente para identidades sexuais e de género que não são heterossexuais nem cisgénero. Reapropriado de um insulto; o uso varia: algumas pessoas mais velhas da comunidade podem preferir não o usar.",
   "terms.cisgender.name": "Cisgénero",
   "terms.cisgender.def":
-    "Descreve alguém cuja identidade de género corresponde ao sexo atribuído à nascença. Não é um juízo de valor — é apenas um descritor neutro.",
+    "Descreve alguém cuja identidade de género corresponde ao sexo atribuído à nascença. É apenas um descritor neutro, sem qualquer juízo de valor.",
   "terms.nonBinary.name": "Não-binárie",
   "terms.nonBinary.def":
     "Uma identidade de género que existe fora do binário homem/mulher. Algumas pessoas não-binárias usam pronomes neutros; pergunta sempre, nunca presumas.",
@@ -66,13 +66,13 @@ export const settings: Catalog = {
 
   // ── SettingsModals.tsx — SuggestEditModal (guia de terminologia) ─────────
   "modals.suggestEdit.ariaLabel": "Sugerir uma alteração a {term}",
-  "modals.suggestEdit.success.title": "Agradecemos — <em>anotado.</em>",
+  "modals.suggestEdit.success.title": "Agradecemos, <em>anotado.</em>",
   "modals.suggestEdit.success.body":
     "A tua sugestão de alteração a <strong>{term}</strong> está com a nossa equipa editorial da comunidade. As alterações de terminologia são revistas antes de serem publicadas; iremos avisar-te do que acontece.",
   "modals.suggestEdit.eyebrow": "Terminologia · sugerir uma alteração",
   "modals.suggestEdit.title": "Refina <em>{term}.</em>",
   "modals.suggestEdit.desc":
-    "Este guia é editado pela comunidade. Sugere uma redação mais clara ou uma correção — todas as alterações são revistas antes de serem publicadas.",
+    "Este guia é editado pela comunidade. Sugere uma redação mais clara ou uma correção. Todas as alterações são revistas antes de serem publicadas.",
   "modals.suggestEdit.wordingLabel": "A tua sugestão de redação",
   "modals.suggestEdit.wordingPlaceholder":
     "Uma definição mais clara de «{term}»…",
@@ -89,13 +89,13 @@ export const settings: Catalog = {
     "A reunir os teus dados e a preparar um ficheiro JSON. Isto costuma demorar um momento…",
   "modals.dataExport.readyTitle": "A tua exportação está <em>pronta.</em>",
   "modals.dataExport.readyBody":
-    "Preparámos os teus dados em <strong>{filename}</strong>. Não enviamos nada por email — descarregas aqui mesmo, nesta página.",
+    "Preparámos os teus dados em <strong>{filename}</strong>. Não enviamos nada por email. Descarregas aqui mesmo, nesta página.",
   "modals.dataExport.downloadCta": "Descarregar {filename}",
 
   // ── SettingsPersonalisation.tsx — ProfileThemePane ───────────────────────
   "personalisation.theme.title": "Tema do <em>perfil.</em>",
   "personalisation.theme.sub":
-    "Personaliza o aspeto do teu perfil e do cartão no diretório. Escolhe uma bandeira, um estilo de capa e um padrão — e o que aparece junto ao teu nome.",
+    "Personaliza o aspeto do teu perfil e do cartão no diretório. Escolhe uma bandeira, um estilo de capa e um padrão, e o que aparece junto ao teu nome.",
 
   // ── SettingsPersonalisation.tsx — AccessibilityPane ──────────────────────
   "personalisation.accessibility.title":
@@ -119,18 +119,18 @@ export const settings: Catalog = {
   // ficam em inglês, sinalizado no relatório para um follow-up coordenado.
   "interests.title": "Molda o que <em>vês.</em>",
   "interests.sub":
-    "Isto é privado — não aparece no teu perfil. Ajuda-nos a mostrar-te convívios, pessoas e conteúdo relevante para ti. Podes mudar isto quando quiseres.",
+    "Isto é privado (não aparece no teu perfil). Ajuda-nos a mostrar-te convívios, pessoas e conteúdo relevante para ti. Podes mudar isto quando quiseres.",
   "interests.identities.heading": "Que identidades sentes como tuas?",
   "interests.identities.skip": "Saltar",
   "interests.identities.skipped": "Saltado",
   "interests.identities.helper":
-    "Seleciona quantas fizerem sentido. Usamos isto para sugerir comunidades e conteúdo relevantes — não para te categorizar.",
+    "Seleciona quantas fizerem sentido. Usamos isto para sugerir comunidades e conteúdo relevantes. Nunca serve para te categorizar.",
   // ── Descoberta por identidade (IdentitySections.tsx) ────────────────────
   // Copy que pede uma revelação: diz o que acontece e quem vê, sem incentivar
   // a resposta. Sem alcance, sem contagens, sem "ajuda os outros a encontrar-te".
   "discoverable.heading": "Ser encontrade por identidade",
   "discoverable.helper":
-    "Está desligado a não ser que o ligues. O que ligares aqui fica visível para outros membros com sessão iniciada quando filtram o diretório — e em mais lado nenhum. As tuas identidades continuam fora do teu perfil de qualquer forma.",
+    "Está desligado a não ser que o ligues. O que ligares aqui fica visível para outros membros com sessão iniciada quando filtram o diretório, e em mais lado nenhum. As tuas identidades continuam fora do teu perfil de qualquer forma.",
   "discoverable.retract":
     "Desliga e deixas de aparecer nessas pesquisas de imediato.",
   "discoverable.rowOn": "Quem filtrar por isto consegue encontrar-te.",
@@ -142,24 +142,24 @@ export const settings: Catalog = {
     "As identidades que acabaste de acrescentar aparecem aqui depois de guardares.",
   "discoverable.toast.removed": "Já não apareces nessas pesquisas.",
   "discoverable.error":
-    "Não foi possível guardar — nada mudou. Tenta outra vez daqui a pouco.",
+    "Não foi possível guardar. Nada mudou. Tenta outra vez daqui a pouco.",
 
   "interests.lookingFor.heading": "O que procuras aqui?",
   "interests.lookingFor.helper": "Seleciona quantas quiseres.",
   "interests.lookingFor.showOnProfile": "Mostrar no meu perfil o que procuro",
   "interests.life.heading": "Um pouco sobre a tua vida",
-  "interests.life.note": "(privado — ajuda com sugestões locais)",
+  "interests.life.note": "(privado: ajuda com sugestões locais)",
   "interests.life.cityLabel": "Cidade / região",
   "interests.life.languagesLabel": "Idiomas",
   "interests.life.languagesPlaceholder": "ex.: português, inglês",
   "interests.life.ageLabel": "A tua faixa etária",
-  "interests.life.ageNote": "(opcional — nunca é mostrado a outras pessoas)",
+  "interests.life.ageNote": "(opcional: nunca é mostrado a outras pessoas)",
   "interests.reading.heading": "O que gostas de ler?",
   "interests.reading.frequencyHeading":
     "Com que frequência queres ter notícias nossas?",
   "interests.content.heading": "Definições de conteúdo",
   "interests.content.helper":
-    "Desativar isto nunca afeta o teu acesso à comunidade — só o teu feed.",
+    "Desativar isto nunca afeta o teu acesso à comunidade, só o teu feed.",
   "interests.content.legalNote":
     "Estas preferências são privadas. Só tu e a QueerPulse podem vê-las.",
 
@@ -231,11 +231,11 @@ export const settings: Catalog = {
     "Quando alguém te pede para se ligar a ti",
   "notifications.messages.sayHello.title": "Recebeste um «Olá»",
   "notifications.messages.sayHello.desc": "Quando alguém te acena no perfil",
-  "notifications.messages.vouch.title": "Avais",
-  "notifications.messages.vouch.desc": "Quando alguém te avaliza",
+  "notifications.messages.vouch.title": "Votos de confiança",
+  "notifications.messages.vouch.desc": "Quando alguém te dá um voto de confiança",
   "notifications.phonePush.title": "Notificações no telemóvel",
   "notifications.phonePush.desc":
-    "Recebe um aviso no telemóvel quando alguém te envia mensagem — mesmo com o QueerPulse fechado. Adiciona primeiro o QueerPulse ao ecrã principal.",
+    "Recebe um aviso no telemóvel quando alguém te envia mensagem, mesmo com o QueerPulse fechado. Adiciona primeiro o QueerPulse ao ecrã principal.",
   "notifications.phonePush.unsupported":
     "O teu navegador ainda não consegue mostrar notificações no telemóvel.",
   "notifications.phonePush.blocked":
@@ -244,9 +244,9 @@ export const settings: Catalog = {
   "notifications.phonePush.test.desc":
     "Envia uma notificação para os teus dispositivos para confirmar que está tudo a funcionar.",
   "notifications.phonePush.test.action": "Enviar teste",
-  "notifications.phonePush.test.sent": "Teste enviado — confirma no teu dispositivo",
+  "notifications.phonePush.test.sent": "Teste enviado. Confirma no teu dispositivo",
   "notifications.phonePush.test.error":
-    "Não foi possível enviar o teste — tenta daqui a pouco",
+    "Não foi possível enviar o teste. Tenta daqui a pouco",
   "notifications.communities.newPost.title":
     "Nova publicação nas minhas comunidades",
   "notifications.communities.newPost.desc":
@@ -261,7 +261,7 @@ export const settings: Catalog = {
   "notifications.communities.weeklyDigest.title":
     "Resumo semanal da comunidade",
   "notifications.communities.weeklyDigest.desc":
-    "Um resumo tranquilo do que se passa — um email, uma vez por semana",
+    "Um resumo tranquilo do que se passa: um email, uma vez por semana",
   "notifications.delivery.email.title": "Notificações por email",
   "notifications.delivery.email.desc":
     "Com que frequência agrupar e enviar notificações por email",
@@ -280,7 +280,7 @@ export const settings: Catalog = {
   "language.section.platformPreference": "Preferência de idioma da plataforma",
   "language.interfaceLanguage.title": "Idioma da interface",
   "language.interfaceLanguage.desc":
-    "O idioma que a QueerPulse usa nos menus, etiquetas e mensagens do sistema. O português ainda está a ser traduzido em toda a plataforma — algumas páginas ficam em inglês por agora.",
+    "O idioma que a QueerPulse usa nos menus, etiquetas e mensagens do sistema. O português ainda está a ser traduzido em toda a plataforma. Algumas páginas ficam em inglês por agora.",
   "language.section.terminologyGuide": "Guia de terminologia da comunidade",
   "language.searchPlaceholder": "Procurar termos…",
 
@@ -314,7 +314,7 @@ export const settings: Catalog = {
   "data.section.personalisation": "Personalização",
   "data.searchPersonalisation.title": "Personalização da pesquisa",
   "data.searchPersonalisation.desc":
-    "Usa os teus interesses e ligações para melhorar as pessoas e convívios sugeridos. Uma preferência de produto — fica na tua conta, não é monitorização.",
+    "Usa os teus interesses e ligações para melhorar as pessoas e convívios sugeridos. É uma preferência de produto que fica na tua conta, mantida à parte de qualquer monitorização.",
   "data.section.dangerZone": "Zona de perigo",
   "data.deactivate.title": "Desativar conta",
   "data.deactivate.desc":
@@ -356,13 +356,13 @@ export const settings: Catalog = {
   "visibility.section.additionalControls": "Controlos adicionais",
   "visibility.privateNetwork.label": "Manter a minha rede de confiança privada",
   "visibility.privateNetwork.help":
-    "Esconde de outros membros quem te deu aval e a quem deste aval. A administração continua a conseguir ver, por motivos de segurança.",
+    "Esconde de outros membros quem te deu um voto de confiança e a quem deste um voto de confiança. A administração continua a conseguir ver, por motivos de segurança.",
   "visibility.featuredConsent.label":
     "Deixar a administração destacar-te na página inicial",
   "visibility.featuredConsent.description":
     "Membros públicos que deram o seu consentimento podem ser escolhidos para aparecer na página inicial de vez em quando. Podes desativar isto quando quiseres ficar fora dos destaques.",
   "visibility.featuredConsent.disabledHint":
-    'Define primeiro a tua visibilidade como "Aberto a ligações" — só perfis públicos podem ser destacados.',
+    'Define primeiro a tua visibilidade como "Aberto a ligações". Só perfis públicos podem ser destacados.',
   "visibility.newArrivals.title": "Mostrar-me em «Novidades»",
   "visibility.newArrivals.desc":
     "Diz à comunidade que te juntaste recentemente",
@@ -395,7 +395,7 @@ export const settings: Catalog = {
   // ── MyUploadsPane.tsx — imagens que a própria pessoa enviou ──────────────
   "uploads.title": "As tuas imagens",
   "uploads.intro":
-    "Todas as imagens que enviaste. Apaga as que não precisares — incluindo envios duplicados sem querer.",
+    "Todas as imagens que enviaste. Apaga as que não precisares, incluindo envios duplicados sem querer.",
   "uploads.demoOnly":
     "As tuas imagens aparecem aqui quando tens sessão iniciada na app em direto.",
   "uploads.loading": "A carregar as tuas imagens…",
@@ -469,7 +469,7 @@ export const settings: Catalog = {
   "editProfile.identity.locationOptional": "opcional",
   "editProfile.identity.locationPlaceholder": "ex.: Mouraria, Intendente…",
   "editProfile.identity.locationHint":
-    "Apenas ao nível do bairro — nunca a morada exata.",
+    "Apenas ao nível do bairro. Nunca a morada exata.",
 
   // ── EditProfileSections.tsx — PronounsSection ────────────────────────────
   "editProfile.pronouns.title": "Pronomes <em>e nome</em>",
@@ -479,7 +479,7 @@ export const settings: Catalog = {
   "editProfile.pronouns.writeOwnLabel": "Escreve os teus",
   "editProfile.pronouns.writeOwnPlaceholder": "Ou escreve os teus…",
   "editProfile.pronouns.hint":
-    "Podes selecionar várias etiquetas acima. Os pronomes só são mostrados no teu perfil — não em meta tags nem em URLs.",
+    "Podes selecionar várias etiquetas acima. Os pronomes só são mostrados no teu perfil, nunca em meta tags nem em URLs.",
   "editProfile.pronouns.removeCustomAriaLabel": "Remover {pronoun}",
 
   // ── EditProfileSections.tsx — BioSection ─────────────────────────────────
@@ -528,35 +528,35 @@ export const settings: Catalog = {
   // ── UsernameSection.tsx ────────────────────────────────────────────────────
   "editProfile.username.title": "O teu <em>nome de utilizador</em>",
   "editProfile.username.sub":
-    "Esta é a tua identificação em toda a QueerPulse — como as pessoas encontram o teu perfil. Escolhe uma que seja tua; podes mudá-la mais tarde, embora as ligações antigas deixem de apontar para aqui.",
+    "Esta é a tua identificação em toda a QueerPulse: como as pessoas encontram o teu perfil. Escolhe uma que seja tua; podes mudá-la mais tarde, embora as ligações antigas deixem de apontar para aqui.",
   "editProfile.username.fieldLabel": "Nome de utilizador",
   "editProfile.username.fieldHint":
-    "Letras minúsculas, números e hífenes — de 3 a 30 carateres.",
+    "Letras minúsculas, números e hífenes: de 3 a 30 carateres.",
   "editProfile.username.save": "Guardar nome de utilizador",
   "editProfile.username.saving": "A guardar…",
   "editProfile.username.previewPrefix":
     "O teu perfil está em <strong>/members/{handle}</strong>",
   "editProfile.username.toast.updated": "Nome de utilizador atualizado.",
   "editProfile.username.error.taken":
-    "Já há alguém com esse nome — tenta outro.",
+    "Já há alguém com esse nome. Tenta outro.",
   "editProfile.username.error.reserved":
-    "Essa palavra está reservada para a plataforma — tenta outra.",
+    "Essa palavra está reservada para a plataforma. Tenta outra.",
   "editProfile.username.error.invalid":
-    "Esse nome de utilizador não é permitido — verifica o formato e tenta novamente.",
+    "Esse nome de utilizador não é permitido. Verifica o formato e tenta novamente.",
   "editProfile.username.error.generic":
-    "Não conseguimos atualizar o teu nome de utilizador agora — tenta novamente.",
+    "Não conseguimos atualizar o teu nome de utilizador agora. Tenta novamente.",
 
   // ── UsernameField.tsx / usernameField.data.ts ────────────────────────────
   "usernameField.defaultLabel": "Nome de utilizador",
   "usernameField.placeholder": "oteunome",
   "usernameField.checking": "A verificar…",
-  "usernameField.free": "Parece livre — este pode ser teu.",
+  "usernameField.free": "Parece livre. Este pode ser teu.",
   "usernameField.yours": "Este é o teu nome de utilizador.",
   "usernameField.reason.invalid":
-    "Os nomes de utilizador têm de 3 a 30 carateres — letras minúsculas, números e hífenes.",
+    "Os nomes de utilizador têm de 3 a 30 carateres: letras minúsculas, números e hífenes.",
   "usernameField.reason.reserved":
-    "Essa palavra está reservada para a plataforma — tenta outra.",
-  "usernameField.reason.taken": "Já há alguém com esse nome — tenta outro.",
+    "Essa palavra está reservada para a plataforma. Tenta outra.",
+  "usernameField.reason.taken": "Já há alguém com esse nome. Tenta outro.",
 
   // ── SessionsPage.tsx — chrome (os registos de sessão são mock/dados
   // vindos de GET /account/sessions — ficam em inglês) ─────────────────────
@@ -566,7 +566,7 @@ export const settings: Catalog = {
   "sessions.eyebrow": "Segurança · Sessões ativas",
   "sessions.h1": "Onde tens <em>sessão iniciada</em> agora mesmo.",
   "sessions.lead":
-    "Todos os dispositivos com uma sessão ativa. Se algo aqui parecer estranho, termina a sessão — e lê <a>o que fazer a seguir</a>.",
+    "Todos os dispositivos com uma sessão ativa. Se algo aqui parecer estranho, termina a sessão, e lê <a>o que fazer a seguir</a>.",
   "sessions.bulk.onlyDevice":
     "Este é o único dispositivo em que tens sessão iniciada.",
   "sessions.bulk.multi_one":
@@ -586,7 +586,7 @@ export const settings: Catalog = {
     "Em vez de te mostrarmos uma lista em que não podemos confiar, não mostrámos nada. Tenta novamente dentro de momentos.",
   "sessions.empty.none.title": "Sem sessões ativas",
   "sessions.empty.none.desc":
-    "Não há sessão iniciada em lado nenhum agora — nem mesmo neste dispositivo, o que normalmente significa que a tua sessão está prestes a ser renovada.",
+    "Não há sessão iniciada em lado nenhum agora, nem mesmo neste dispositivo, o que normalmente significa que a tua sessão está prestes a ser renovada.",
   "sessions.toast.signedOut":
     "Sessão terminada. Se não foste tu, revê as tuas sessões ativas e termina qualquer dispositivo que não reconheças.",
   "sessions.toast.signedOutError":
@@ -596,7 +596,7 @@ export const settings: Catalog = {
   "sessions.toast.signedOutAllError":
     "Não conseguimos terminar as outras sessões. Tenta novamente.",
   "sessions.footNote":
-    "<strong>Algo parece errado?</strong> Termina a sessão em qualquer dispositivo que não reconheças e <a>conta-nos o que aconteceu</a> — vamos ajudar-te a proteger a tua conta.",
+    "<strong>Algo parece errado?</strong> Termina a sessão em qualquer dispositivo que não reconheças e <a>conta-nos o que aconteceu</a>. Vamos ajudar-te a proteger a tua conta.",
 
   // ── DataExportPage.tsx — hero + toast + outro ────────────────────────────
   "dataExport.hero.eyebrow": "Os teus dados · RGPD, art.º 20",
@@ -618,7 +618,7 @@ export const settings: Catalog = {
     "Seleciona os tipos de dados que queres incluir no teu arquivo.",
   "dataExport.steps.step2.label": "Confirma a tua identidade",
   "dataExport.steps.step2.desc":
-    "Pedimos-te para confirmares que és tu, aqui mesmo — sem email nem palavra-passe.",
+    "Pedimos-te para confirmares que és tu, aqui mesmo. Sem email nem palavra-passe.",
   "dataExport.steps.step3.label": "Descarrega o teu arquivo",
   "dataExport.steps.step3.desc":
     "É criado logo e descarregas a partir desta página.",
@@ -655,7 +655,7 @@ export const settings: Catalog = {
   // ── DataExportSections.tsx — DataExportStatus ────────────────────────────
   "dataExport.status.ready.title": "O teu arquivo está pronto",
   "dataExport.status.ready.body":
-    "Está pronto para descarregares. Não enviámos nada por email — isto fica entre ti e esta página.",
+    "Está pronto para descarregares. Não enviámos nada por email. Isto fica entre ti e esta página.",
   "dataExport.status.ready.bodyWithExpiry":
     "Está pronto para descarregares. Não enviámos nada por email. Guardamo-lo aqui até <strong>{date}</strong> e depois apagamo-lo.",
   "dataExport.status.expired.title": "Essa ligação expirou",
@@ -663,11 +663,11 @@ export const settings: Catalog = {
     "Não guardamos arquivos indefinidamente. Pede outra vez e criamos-te um novo.",
   "dataExport.status.failed.title": "Isso não funcionou",
   "dataExport.status.failed.body":
-    "Não conseguimos construir o teu arquivo agora — nada saiu da tua conta. Tenta novamente dentro de momentos.",
+    "Não conseguimos construir o teu arquivo agora. Nada saiu da tua conta. Tenta novamente dentro de momentos.",
   "dataExport.status.retry": "Pedir novamente",
   "dataExport.status.building.title": "A construir o teu arquivo",
   "dataExport.status.building.body":
-    "Estamos a reunir os teus dados e a prepará-los. Isto demora só um momento — mantém-te nesta página e o teu arquivo fica pronto para descarregares aqui mesmo.",
+    "Estamos a reunir os teus dados e a prepará-los. Isto demora só um momento. Mantém-te nesta página e o teu arquivo fica pronto para descarregares aqui mesmo.",
   "dataExport.status.download": "Descarregar {filename}",
 
   // ── DataExportSections.tsx — DataExportIncluded ──────────────────────────
@@ -699,7 +699,7 @@ export const settings: Catalog = {
     "As tuas preferências de notificações, definições de privacidade, seleção de idioma e qualquer outra configuração de conta que tenhas definido.",
   "dataExport.accordion.payments.title": "Pagamentos (se aplicável)",
   "dataExport.accordion.payments.body":
-    "Se contribuíste para eventos pagos ou para o fundo da comunidade, um registo das datas e montantes das transações. Não guardamos dados de cartão — os pagamentos são processados pela Stripe.",
+    "Se contribuíste para eventos pagos ou para o fundo da comunidade, um registo das datas e montantes das transações. Não guardamos dados de cartão. Os pagamentos são processados pela Stripe.",
 
   // ── dataExport.data.ts — shared accordion tag dictionary ─────────────────
   "dataExport.tag.name": "nome",
@@ -734,7 +734,7 @@ export const settings: Catalog = {
   "dataExport.tag.amounts": "montantes",
   "dataExport.tag.dates": "datas",
   "dataExport.demoArchiveNote":
-    "Exportação de demonstração gerada no navegador — nenhum dado pessoal saiu deste dispositivo.",
+    "Exportação de demonstração gerada no navegador. Nenhum dado pessoal saiu deste dispositivo.",
 
   // ── SaveButton.tsx — controlo de guardar reutilizável ────────────────────
   "saveButton.defaultLabel": "Guardar alterações",
@@ -776,7 +776,7 @@ export const settings: Catalog = {
     "Impede que orbes de fundo, pontos pulsantes e indicadores de carregamento animem.",
   "a11y.preview.liveLabel": "Pré-visualização em direto",
   "a11y.preview.cardText":
-    "Este cartão anima ao carregar — muda as definições de movimento para veres o efeito.",
+    "Este cartão anima ao carregar. Muda as definições de movimento para veres o efeito.",
   "a11y.section.reading.eyebrow": "Leitura",
   "a11y.section.reading.desc":
     "Ajusta a forma como o conteúdo é apresentado para uma leitura confortável.",
@@ -802,7 +802,7 @@ export const settings: Catalog = {
     "Mantém a barra de navegação sempre visível ao percorreres a página.",
   "a11y.toggle.skipLink.title": "Ligação para saltar para o conteúdo",
   "a11y.toggle.skipLink.desc":
-    "Ligado por predefinição. Pressiona Tab e aparece no topo uma ligação «Saltar para o conteúdo principal», para passares a navegação de uma vez. Desligar remove esse atalho — a ligação fica escondida até receber foco, por isso deixá-la ligada não te custa nada.",
+    "Ligado por predefinição. Pressiona Tab e aparece no topo uma ligação «Saltar para o conteúdo principal», para passares a navegação de uma vez. Desligar remove esse atalho. A ligação fica escondida até receber foco, por isso deixá-la ligada não te custa nada.",
 
   // ── DeleteAccountPage.tsx / DeleteAccountSection.tsx / DeleteAccountSections.tsx
   // — o fluxo de saída. Precisão acima de estilo (zona de perigo).
@@ -830,7 +830,7 @@ export const settings: Catalog = {
   "deleteAccount.confirm.cancelBtn": "Cancelar",
   "deleteAccount.pending.cancelling": "A cancelar…",
   "deleteAccount.pending.cancelBtn": "Cancelar eliminação",
-  "deleteAccount.toast.cancelled": "Eliminação cancelada — bem-vinde de volta.",
+  "deleteAccount.toast.cancelled": "Eliminação cancelada. Bem-vinde de volta.",
   "deleteAccount.toast.cancelError":
     "Não conseguimos cancelar isso agora. Tenta novamente.",
   "deleteAccount.options.deactivate.title": "Desativar",
@@ -844,7 +844,7 @@ export const settings: Catalog = {
   "deleteAccount.pending.banner":
     "<strong>A tua conta está agendada para eliminação.</strong> Está tudo oculto agora e será permanentemente apagado a <strong>{date}</strong>. Mudaste de ideias? Ainda podes cancelar e continuar de onde ficaste.",
   "deleteAccount.wh.deactivate.profileHidden":
-    "O teu <strong>perfil fica oculto</strong> de imediato — nenhuma outra pessoa o consegue encontrar ou ver.",
+    "O teu <strong>perfil fica oculto</strong> de imediato. Nenhuma outra pessoa o consegue encontrar ou ver.",
   "deleteAccount.wh.deactivate.dataPreserved":
     "Os teus <strong>dados são totalmente preservados</strong>: mensagens, publicações e histórico mantêm-se intactos.",
   "deleteAccount.wh.deactivate.reactivateInstantly":
@@ -856,13 +856,13 @@ export const settings: Catalog = {
   "deleteAccount.wh.delete.queuedForDeletion":
     "<strong>Todos os teus dados ficam em fila para eliminação</strong> e são permanentemente apagados no prazo de 30 dias.",
   "deleteAccount.wh.delete.messagesDeleted":
-    "As mensagens que enviaste <strong>são eliminadas de todas as conversas</strong> — quem as recebeu também as perde.",
+    "As mensagens que enviaste <strong>são eliminadas de todas as conversas</strong>. Quem as recebeu também as perde.",
   "deleteAccount.wh.delete.postsRemoved":
-    "As tuas publicações no fórum são <strong>permanentemente removidas</strong> — não anonimizadas, eliminadas.",
+    "As tuas publicações no fórum são <strong>permanentemente removidas</strong>. O conteúdo é eliminado por completo.",
   "deleteAccount.wh.delete.emailSuppressed":
     "O teu endereço de email é <strong>adicionado a uma lista de supressão</strong> para não recriarmos a tua conta por acidente.",
   "deleteAccount.wh.delete.exportFirst":
-    "Podes pedir um <strong>arquivo de dados antes de eliminares</strong> — faz isso primeiro.",
+    "Podes pedir um <strong>arquivo de dados antes de eliminares</strong>. Faz isso primeiro.",
   "deleteAccount.phrase.deactivate": "desativar a minha conta",
   "deleteAccount.phrase.delete": "eliminar a minha conta",
   "deleteAccount.confirmHint.deactivate":
@@ -877,7 +877,7 @@ export const settings: Catalog = {
   "destructiveFlow.backToHome": "Voltar à QueerPulse",
   "destructiveFlow.error.title": "Isso não <em>correu bem.</em>",
   "destructiveFlow.error.body":
-    "Não conseguimos concluir isto agora — nada foi alterado. Verifica a tua ligação e tenta novamente, ou volta dentro de momentos.",
+    "Não conseguimos concluir isto agora. Nada foi alterado. Verifica a tua ligação e tenta novamente, ou volta dentro de momentos.",
   "destructiveFlow.error.close": "Fechar",
   "destructiveFlow.error.tryAgain": "Tentar novamente",
   "destructiveFlow.confirm.notNow": "Agora não",
@@ -885,7 +885,7 @@ export const settings: Catalog = {
   "destructiveFlow.deactivate.title":
     "Ocultar o teu perfil <em>por agora?</em>",
   "destructiveFlow.deactivate.body":
-    "O teu perfil torna-se invisível e as notificações param. <strong>Nada é eliminado</strong> — volta a iniciar sessão quando quiseres e continuas exatamente de onde ficaste.",
+    "O teu perfil torna-se invisível e as notificações param. <strong>Nada é eliminado</strong>. Volta a iniciar sessão quando quiseres e continuas exatamente de onde ficaste.",
   "destructiveFlow.deactivate.confirmLabel": "Desativar",
   "destructiveFlow.deactivate.loadingText": "A desativar a tua conta…",
   "destructiveFlow.deactivate.resultTitle": "Sessão <em>terminada.</em>",
@@ -899,7 +899,7 @@ export const settings: Catalog = {
   "destructiveFlow.delete.loadingText": "A agendar a eliminação da tua conta…",
   "destructiveFlow.delete.resultTitle": "Está <em>agendado.</em>",
   "destructiveFlow.delete.resultBody":
-    "A tua conta está agendada para eliminação. Tens <strong>30 dias</strong> para mudar de ideias — basta voltares a iniciar sessão com a Google e paramos a eliminação. Depois disso, os teus dados são permanentemente apagados. Cuida de ti.",
+    "A tua conta está agendada para eliminação. Tens <strong>30 dias</strong> para mudar de ideias. Basta voltares a iniciar sessão com a Google e paramos a eliminação. Depois disso, os teus dados são permanentemente apagados. Cuida de ti.",
 
   // ── ThemeStudio.tsx / profileTheme.data.ts — seletor de tema do perfil.
   // Os NOMES das bandeiras (FLAG_SWATCHES.label) ficam deliberadamente em
@@ -916,7 +916,7 @@ export const settings: Catalog = {
   "themeStudio.showLevelToggle": "Mostrar nível no perfil",
   "themeStudio.previewLabel": "Pré-visualização",
   "themeStudio.previewHintTop":
-    "Atualiza-se em direto à medida que escolhes um tema. Guardado neste navegador como pré-visualização — ainda não aparece no teu perfil público.",
+    "Atualiza-se em direto à medida que escolhes um tema. Guardado neste navegador como pré-visualização. Ainda não aparece no teu perfil público.",
   "themeStudio.profileCardLabel": "Cartão de perfil",
   "themeStudio.directoryCardLabel": "Cartão no diretório",
   "themeStudio.directoryHint":
@@ -932,7 +932,7 @@ export const settings: Catalog = {
   "themeStudio.badge.eventHost": "Organiza Encontros (Lendário)",
   "themeStudio.badge.sustainer": "Apoiante (Raro)",
   "themeStudio.badge.regular": "Regular (Raro)",
-  "themeStudio.badge.vouch": "Aval (Raro)",
+  "themeStudio.badge.vouch": "Voto de confiança (Raro)",
   "themeStudio.backToProfile": "O meu perfil",
   "themeStudio.saveTheme": "Guardar tema",
   "themeStudio.toast.saved": "Tema guardado",
@@ -947,7 +947,7 @@ export const settings: Catalog = {
   "linkProvider.cancel": "Cancelar",
   "linkProvider.linkedTitle": "Ligação com {provider} <em>concluída.</em>",
   "linkProvider.linkedSub":
-    "Já podes entrar na QueerPulse com {provider}. Revoga o acesso quando quiseres, a partir desta página — as tuas mensagens e associações a comunidades nunca foram partilhadas.",
+    "Já podes entrar na QueerPulse com {provider}. Revoga o acesso quando quiseres, a partir desta página. As tuas mensagens e associações a comunidades nunca foram partilhadas.",
   "linkProvider.done": "Concluído",
 
   // ── IntegrationsModal.tsx ─────────────────────────────────────────────────
@@ -955,7 +955,7 @@ export const settings: Catalog = {
   "integrationsModal.eyebrow": "Ligar outra",
   "integrationsModal.title": "Integrações <em>disponíveis.</em>",
   "integrationsModal.desc":
-    "Cada integração tem um âmbito restrito — nenhuma consegue ler as tuas mensagens diretas, rascunhos, faturação ou associações a comunidades.",
+    "Cada integração tem um âmbito restrito. Nenhuma consegue ler as tuas mensagens diretas, rascunhos, faturação ou associações a comunidades.",
   "integrationsModal.connectedTag": "Ligada",
   "integrationsModal.connectCta": "Ligar",
 
@@ -1010,7 +1010,7 @@ export const settings: Catalog = {
   "security.process.step2.note": "Objetivo: 5 dias úteis",
   "security.process.step3.title": "Correção",
   "security.process.step3.text":
-    "Para vulnerabilidades confirmadas, corrigimos e implementamos uma atualização. O prazo depende da gravidade — os problemas críticos são tratados como emergências.",
+    "Para vulnerabilidades confirmadas, corrigimos e implementamos uma atualização. O prazo depende da gravidade. Os problemas críticos são tratados como emergências.",
   "security.process.step3.note":
     "Crítico: <72h · Elevado: <7 dias · Médio/Baixo: próxima versão",
   "security.process.step4.title": "Divulgação",
@@ -1031,7 +1031,7 @@ export const settings: Catalog = {
   "security.pgp.label": "Chave pública PGP",
   "security.pgp.copyCta": "Copiar chave",
   "security.pgp.copied": "Chave PGP copiada.",
-  "security.pgp.copyFailed": "Falha ao copiar — seleciona e copia manualmente.",
+  "security.pgp.copyFailed": "Falha ao copiar. Seleciona e copia manualmente.",
 
   "security.outro.titleTop": "A segurança é",
   "security.outro.titleEm": "trabalho de comunidade.",

@@ -1,18 +1,35 @@
 import type { SubprofileItemView } from "../api/subprofiles.adapters";
-import { poemToPlainText } from "../poem/poemModel";
+import { normalizePoemVersions, poemToPlainText } from "../poem/poemModel";
 
 /**
  * Deterministic plain-text rendering of an item's content, used as the input
- * to `sha256Hex` for the authorship record. Poems render via `poemToPlainText`
- * (the reader's own "copy poem" helper) so the hash covers the actual verse
- * body; every other item type falls back to title + subtitle + description.
- * LF-normalized (CRLF collapsed) and trimmed so the same content always hashes
- * the same regardless of platform line endings or incidental whitespace.
+ * to `sha256Hex` for the authorship record. Poems render every named
+ * translation via `poemToPlainText` (the reader's own "copy poem" helper) so
+ * the hash covers all the verse an owner published, each labelled version
+ * prefixed with its name; every other item type falls back to title +
+ * subtitle + description. LF-normalized (CRLF collapsed) and trimmed so the
+ * same content always hashes the same regardless of platform line endings or
+ * incidental whitespace.
+ *
+ * A single untitled version renders as bare `poemToPlainText(blocks)` (no
+ * label prefix), so pre-translation poems hash exactly as they did before —
+ * an owner's earlier saved record still verifies.
  */
 export function canonicalContent(item: SubprofileItemView): string {
   const parts: string[] = [item.title ?? ""];
-  if (item.section === "poems" && item.structured?.poem) {
-    parts.push(poemToPlainText(item.structured.poem));
+  if (
+    item.section === "poems" &&
+    (item.structured?.poemVersions || item.structured?.poem)
+  ) {
+    const versions = normalizePoemVersions(
+      item.structured?.poemVersions ?? null,
+      item.structured?.poem ?? null,
+    );
+    for (const version of versions) {
+      const body = poemToPlainText(version.blocks);
+      const label = version.label.trim();
+      parts.push(label ? `[${label}]\n${body}` : body);
+    }
   } else {
     if (item.subtitle) parts.push(item.subtitle);
     if (item.description) parts.push(item.description);

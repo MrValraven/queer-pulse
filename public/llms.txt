@@ -10,18 +10,18 @@ here.
 
 ## What is public
 
-- **Resources** (https://queerpulse.com/resources) — practical guides for queer
+- **Resources** (https://queerpulse.com/resources). Practical guides for queer
   life in Lisbon: trans healthcare and name changes, LGBTQ+-affirming
   therapists and paediatricians, sexual health, harm reduction, disability and
   accessibility, ageing, peer support, and a glossary of terms.
-- **Safety** (https://queerpulse.com/safety) — crisis and emergency guidance,
+- **Safety** (https://queerpulse.com/safety). Crisis and emergency guidance,
   reporting hate crime, legal rights in Portugal, and how to leave a situation
   safely.
-- **Local guides** (https://queerpulse.com/local/safe-spaces) — arriving in
+- **Local guides** (https://queerpulse.com/local/safe-spaces). Arriving in
   Lisbon, visas, housing, and safe spaces.
-- **About** (https://queerpulse.com/about) — the manifesto, governance,
+- **About** (https://queerpulse.com/about). The manifesto, governance,
   constitution and transparency reporting.
-- **Policies** (https://queerpulse.com/policies/privacy) — privacy, terms,
+- **Policies** (https://queerpulse.com/policies/privacy). Privacy, terms,
   cookies and community guidelines.
 
 ## What is not public
@@ -37,6 +37,6 @@ word of mouth rather than surfaced through search.
 ## Usage
 
 Retrieval and citation with a link back to queerpulse.com is welcome. Use for
-model training is not permitted — see https://queerpulse.com/robots.txt.
+model training is not permitted. See https://queerpulse.com/robots.txt.
 
 Contact: https://queerpulse.com/about/contact

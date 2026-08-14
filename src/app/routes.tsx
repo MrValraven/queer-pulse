@@ -6,7 +6,12 @@ import { ErrorBoundary } from "../shared/components/feedback/ErrorBoundary";
 import { lazyNamed } from "./routeHelpers";
 import { routes } from "./routeMap";
 import { LEGACY_REDIRECTS } from "./routes.redirects.data";
-import { useAuthGateRedirect, isGatedPath, isGuestOnlyPath } from "./authGate";
+import {
+  useAuthGateRedirect,
+  isGatedPath,
+  isGuestOnlyPath,
+  isComingSoonPath,
+} from "./authGate";
 import { useAuth } from "./providers/authContext";
 import { useDemoMode } from "./providers/DemoModeProvider";
 
@@ -56,6 +61,14 @@ export function AppRoutes() {
   const gateRedirect = useAuthGateRedirect();
   const { pathname } = useLocation();
   const { demoMode } = useDemoMode();
+  // The Work & Economy surface isn't launched yet — bounce its routes to the
+  // roadmap, where a "Coming soon" card lists what's landing. Decided before the
+  // auth checks because it doesn't depend on a session (the roadmap is public),
+  // and inert in local dev (isComingSoonPath is false there) so the area stays
+  // reachable while it's being built.
+  if (isComingSoonPath(pathname)) {
+    return <Navigate to={routes.roadmap} replace />;
+  }
   // While the live session is still being determined, hold gated routes on the
   // branded loader — showing the page (or bouncing to sign-in) prematurely would
   // flash. Guest-only auth screens are held too, so a signed-in member reloading

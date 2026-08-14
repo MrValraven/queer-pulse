@@ -16,7 +16,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     time: "2–4 hrs/week",
     location: "In-person · Lisbon",
     skills: ["Communication", "Languages", "Event support"],
-    description: "Help a national LGBTQ+ rights organisation reach more people through community events, tabling, and direct outreach. No experience necessary — training provided on day one.",
+    description: "Help a national LGBTQ+ rights organisation reach more people through community events, tabling, and direct outreach. No experience necessary: training provided on day one.",
     eyebrow: "Volunteer · LGBTQ+ Rights · rights-org partnership",
     urgent: "Recruiting now · rolling intake",
     titleLead: "Community outreach · ",
@@ -24,7 +24,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     sub: (
       <>
         The organisation does the slow, unglamorous work of being{" "}
-        <b>present</b> — at fairs, in schools, at the info table nobody notices
+        <b>present</b>: at fairs, in schools, at the info table nobody notices
         until they need it.{" "}
         <em>You're the friendly face at that table.</em> You hand out
         information, answer the easy questions, and know exactly who to point
@@ -49,14 +49,14 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     ],
     why: [
       <>
-        Most people don't find the organisation in a crisis — they find it at a
+        Most people don't find the organisation in a crisis. They find it at a
         stall, months earlier, and remember it when they need it.{" "}
         <b>Showing up consistently is the whole job.</b> A staffed table at the
         right event reaches more people than a month of social posts.
       </>,
       <>
         Outreach is also how the organisation spots what's changing on the
-        ground — which questions are getting more common, which neighbourhoods
+        ground: which questions are getting more common, which neighbourhoods
         are underserved.{" "}
         <em>You're the eyes and ears as much as the hands.</em>
       </>,
@@ -68,7 +68,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       },
       {
         title: "Answer the common questions",
-        description: "Name changes, where to get tested, how to report — the FAQs, with a script.",
+        description: "Name changes, where to get tested, how to report: the FAQs, with a script.",
       },
       {
         title: "Refer the harder ones",
@@ -76,7 +76,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       },
       {
         title: "Log who you reached",
-        description: "A quick tally at the end — anonymised counts, never names.",
+        description: "A quick tally at the end: anonymised counts, never names.",
       },
     ],
     commitments: [
@@ -88,12 +88,12 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         b: "2–4 hours a week",
         s: "You pick the events from a shared calendar",
       },
-      { b: "No fixed term", s: "Do one event or one a week — both are useful" },
+      { b: "No fixed term", s: "Do one event or one a week. Both are useful" },
       { b: "Quarterly check-in", s: "30 min with the outreach lead, optional" },
     ],
     goodFor: [
       <>
-        You don't need experience — you need to be{" "}
+        You don't need experience. You need to be{" "}
         <b>approachable and reliable</b>. Speaking Portuguese and English both
         helps; a third language helps more. If you can hold a friendly
         conversation with a stranger and not over-promise, you're good for this.
@@ -147,7 +147,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     time: "4 hrs/week",
     location: "In-person · Lisbon",
     skills: ["Active listening", "Empathy", "Confidentiality"],
-    description: "Support people through peer-led mental health conversations. Training provided — you don't need to be a professional. You need to care and to listen well.",
+    description: "Support people through peer-led mental health conversations. Training provided. You don't need to be a professional. You need to care and to listen well.",
     eyebrow: "Volunteer · Health & Wellbeing · Opus Diversus",
     urgent: "Recruiting · next cohort starts 1 Jul",
     titleLead: "Peer support · ",
@@ -155,8 +155,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     sub: (
       <>
         Opus Diversus runs a weekly peer-support drop-in for queer people who
-        need to talk and don't want a clinic. <b>You're not a therapist</b> —
-        you're a trained peer who listens well, holds confidentiality, and knows
+        need to talk and don't want a clinic. <b>You're not a therapist</b>.
+        You're a trained peer who listens well, holds confidentiality, and knows
         when to escalate.{" "}
         <em>The training is real and so is the support around you.</em>
       </>
@@ -182,13 +182,13 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         Clinical waitlists in Lisbon are long, and for a lot of queer people a
         clinic is the last place they'll go first.{" "}
         <b>A peer who's been there lowers the bar to asking for help.</b> Many
-        people use the drop-in as the step before therapy — or instead of it,
+        people use the drop-in as the step before therapy, or instead of it,
         when therapy isn't available.
       </>,
       <>
-        This is held work, not heroics. You're never alone in the room, there's
+        This is held, supported work. You're never alone in the room, there's
         always a clinician on call, and{" "}
-        <em>your own wellbeing is part of the plan</em>, not an afterthought.
+        <em>your own wellbeing is built into the plan from the start.</em>
       </>,
     ],
     tasks: [
@@ -198,7 +198,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       },
       {
         title: "Keep confidentiality, always",
-        description: "What's said in the room stays there — with clear, taught exceptions.",
+        description: "What's said in the room stays there, with clear, taught exceptions.",
       },
       {
         title: "Recognise when to escalate",
@@ -206,7 +206,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       },
       {
         title: "Attend the monthly debrief",
-        description: "Supervised group reflection — for the people you saw, and for you.",
+        description: "Supervised group reflection: for the people you saw, and for you.",
       },
     ],
     commitments: [
@@ -225,8 +225,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       <>
         You need to be <b>steady, warm, and able to sit with discomfort</b>{" "}
         without rushing to make it better. Lived experience of mental health
-        struggle is welcome, not required. If you're currently in an acute
-        crisis yourself, this isn't the right moment — and that's okay.
+        struggle is welcome and optional. If you're currently in an acute
+        crisis yourself, this isn't the right moment, and that's okay.
       </>,
       <>
         Vetting includes a longer conversation with the Opus Diversus team and a
@@ -234,7 +234,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       </>,
     ],
     teamIntro:
-      "A small, tight cohort — 8 peers and 2 clinicians. Some of the team:",
+      "A small, tight cohort: 8 peers and 2 clinicians. Some of the team:",
     team: TEAM_POOL.slice(1, 5),
     applyRole: "Peer Support · Opus Diversus",
     spotsFilled: "8 / 12",
@@ -295,7 +295,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     titleEm: "LGBTQ+ youth group.",
     sub: (
       <>
-        Rede ex aequo runs weekly groups for queer teenagers — a room where they
+        Rede ex aequo runs weekly groups for queer teenagers, a room where they
         can be ahead of where the rest of their week lets them be.{" "}
         <b>You co-hold that room</b> with an experienced facilitator.{" "}
         <em>
@@ -324,11 +324,11 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       <>
         For a queer 15-year-old, a weekly group can be the only place they're
         not managing how they're seen. <b>Consistency is the intervention.</b> A
-        facilitator who disappears does more harm than one who was never there —
-        which is why this role asks for a school year, not a season.
+        facilitator who disappears does more harm than one who was never there,
+        which is why this role asks for a full school year.
       </>,
       <>
-        You co-facilitate, never solo, alongside someone who's done it for
+        You always co-facilitate alongside someone who's done it for
         years. You'll learn the craft of holding a group:{" "}
         <em>
           making space, keeping it safe, knowing when to step in and when to let
@@ -351,7 +351,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       },
       {
         title: "Debrief after each session",
-        description: "15 minutes with your co-facilitator — what happened, what's next.",
+        description: "15 minutes with your co-facilitator: what happened, what's next.",
       },
       {
         title: "Flag safeguarding concerns",
@@ -373,7 +373,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     goodFor: [
       <>
         You need <b>patience, warmth, and zero need to be the cool one</b>.
-        Prior youth experience helps but isn't required — the training and your
+        Prior youth experience helps but isn't required. The training and your
         co-facilitator carry you. If you can commit to a school year and pass
         the check, you're who they need.
       </>,
@@ -401,7 +401,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       <>
         Application submitted for{" "}
         <strong>Youth Co-facilitator · Rede ex aequo</strong>. Next step is the
-        enhanced background check — they'll email you the form.
+        enhanced background check. They'll email you the form.
       </>
     ),
     partner: {
@@ -430,7 +430,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     time: "2–3 hrs/week",
     location: "Remote or in-person",
     skills: ["Writing", "Graphic design", "Social media"],
-    description: "Help craft communications for trans rights campaigns. Writing, social, design — bring what you have. Fully flexible and mostly remote.",
+    description: "Help craft communications for trans rights campaigns. Writing, social, design: bring what you have. Fully flexible and mostly remote.",
     eyebrow: "Volunteer · LGBTQ+ Rights · Panteras Rosa",
     urgent: "Recruiting · remote-friendly",
     titleLead: "Campaign comms · ",
@@ -439,7 +439,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       <>
         Panteras Rosa moves fast and runs lean. When a bad bill drops or a
         moment opens, they need words and images out the same day.{" "}
-        <b>You're part of the team that makes that happen</b> — writing,
+        <b>You're part of the team that makes that happen</b>: writing,
         designing, or just turning a messy brief into a clean post.{" "}
         <em>Bring whatever you've got; mostly remote.</em>
       </>
@@ -467,8 +467,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         <b>
           Panteras Rosa punches above its weight precisely because of volunteers
           like you
-        </b>{" "}
-        — there is no comms department, there's the group chat and the people in
+        </b>.{" "}
+        There is no comms department, there's the group chat and the people in
         it.
       </>,
       <>
@@ -484,7 +484,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       },
       {
         title: "Design quick assets",
-        description: "Stories, posters, banners — templates exist, bring taste.",
+        description: "Stories, posters, banners. Templates exist, bring taste.",
       },
       {
         title: "Draft and tighten copy",
@@ -502,7 +502,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       },
       {
         b: "2–3 hours a week",
-        s: "Or banked — busy weeks and quiet ones average out",
+        s: "Or banked: busy weeks and quiet ones average out",
       },
       {
         b: "No fixed term",
@@ -515,7 +515,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     ],
     goodFor: [
       <>
-        Anyone who can <b>write clearly or make something look good</b> — and
+        Anyone who can <b>write clearly or make something look good</b>, and
         who's okay with the occasional fire drill. You don't need to be a
         designer or a journalist; you need taste, speed, and a feel for the
         cause. Fully remote works.
@@ -556,7 +556,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     time: "2–3 hrs/week",
     location: "In-person · Mouraria",
     skills: ["Listening", "Documentation", "Organising"],
-    description: "Support queer residents navigating housing challenges — documenting situations, connecting people with legal aid, attending community meetings.",
+    description: "Support queer residents navigating housing challenges: documenting situations, connecting people with legal aid, attending community meetings.",
     eyebrow: "Volunteer · Housing · Housing Justice Network",
     urgent: "Recruiting · Mouraria-based",
     titleLead: "Housing advocate · ",
@@ -565,7 +565,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       <>
         Queer people get pushed out of housing in ways that are hard to prove
         and easy to ignore. The Network's job is to{" "}
-        <b>make the pattern visible</b> — by documenting cases carefully and
+        <b>make the pattern visible</b>, by documenting cases carefully and
         connecting people to legal aid before an eviction becomes a fact.{" "}
         <em>
           You're the person who sits down and writes it all down properly.
@@ -595,14 +595,14 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         <b>
           Patient documentation is what turns scattered injustice into a case a
           lawyer can run
-        </b>{" "}
-        — or a campaign that changes a building's behaviour.
+        </b>,{" "}
+        or a campaign that changes a building's behaviour.
       </>,
       <>
         You won't be doing this alone or cold.{" "}
         <em>You're paired with an experienced advocate</em> and backed by the
-        Network's legal contacts. Your job is care and accuracy, not legal
-        advice.
+        Network's legal contacts. Your job is care and accuracy; the legal
+        advice is theirs to give.
       </>,
     ],
     tasks: [
@@ -612,11 +612,11 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       },
       {
         title: "Document situations precisely",
-        description: "Dates, messages, who said what. Facts, not conclusions.",
+        description: "Dates, messages, who said what. Just the facts.",
       },
       {
         title: "Connect people to legal aid",
-        description: "You hand off to the Network's lawyers — you don't advise.",
+        description: "You hand off to the Network's lawyers. You don't advise.",
       },
       {
         title: "Attend the monthly meeting",
@@ -633,12 +633,12 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         s: "Mostly resident conversations and write-ups",
       },
       { b: "Monthly Network meeting", s: "Evening in Mouraria · case review" },
-      { b: "Paired, not solo", s: "An experienced advocate has your back" },
+      { b: "Always paired", s: "An experienced advocate has your back" },
     ],
     goodFor: [
       <>
         You need to be a <b>good listener and a careful writer</b> who can hold
-        a boundary — you're documenting, not rescuing. Knowing the
+        a boundary. You're there to document. Knowing the
         Mouraria/Anjos area and speaking Portuguese both help a lot. Calm and
         meticulous beats charismatic here.
       </>,
@@ -691,7 +691,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     time: "Project by project",
     location: "In-person · Lisbon",
     skills: ["Event logistics", "Hospitality", "Photography"],
-    description: "Help set up and run exhibitions, crits, and group shows. Event-by-event commitment — pick the ones that work for you.",
+    description: "Help set up and run exhibitions, crits, and group shows. Event-by-event commitment: pick the ones that work for you.",
     eyebrow: "Volunteer · Arts & Culture · Rainbow Arts Collective",
     urgent: "Recruiting · pick your shows",
     titleLead: "Production crew · ",
@@ -699,7 +699,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     sub: (
       <>
         The Collective puts on exhibitions, crits, and group shows in borrowed
-        spaces — which means every show is built and struck by hand.{" "}
+        spaces, which means every show is built and struck by hand.{" "}
         <b>You're part of the crew that makes it look effortless.</b> Hanging
         work, running the door, pouring the wine, shooting the night.{" "}
         <em>Pick the shows that fit your month.</em>
@@ -728,13 +728,13 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         <b>
           A show with a good crew feels generous; a show without one feels like
           a struggle
-        </b>{" "}
-        — and the artists feel the difference. You're the reason a space becomes
+        </b>,{" "}
+        and the artists feel the difference. You're the reason a space becomes
         an event.
       </>,
       <>
         This is the lowest-pressure way to be useful on the whole board.{" "}
-        <em>Do one install and never come back, or become a regular</em> — both
+        <em>Do one install and never come back, or become a regular</em>. Both
         are genuinely welcome.
       </>,
     ],
@@ -770,7 +770,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         Anyone who likes{" "}
         <b>making a room feel good and isn't precious about lifting things</b>.
         Logistics brains, hospitality people, and photographers are all useful.
-        No art background needed — enthusiasm and reliability for the shifts you
+        No art background needed: enthusiasm and reliability for the shifts you
         claim is the whole ask.
       </>,
     ],
@@ -792,7 +792,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     applyConfirm: (
       <>
         You're on the crew list for <strong>Rainbow Arts Collective</strong>.
-        You'll get the crew chat invite — claim whichever shifts suit you.
+        You'll get the crew chat invite. Claim whichever shifts suit you.
       </>
     ),
     partner: null,
@@ -818,7 +818,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     sub: (
       <>
         Every QueerPulse dinner, talk, and clinic night needs someone making
-        sure it feels warm — greeting people at the door, watching for whoever
+        sure it feels warm: greeting people at the door, watching for whoever
         came alone, keeping the night running.{" "}
         <b>You're the reason a room of strangers relaxes.</b>{" "}
         <em>It's also the fastest way to know everyone.</em>
@@ -843,7 +843,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     why: [
       <>
         The difference between a good gathering and an awkward one is almost
-        always one person paying attention —{" "}
+        always one person paying attention:{" "}
         <b>
           noticing who's standing alone, making the introduction, refilling the
           water.
@@ -866,7 +866,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       },
       {
         title: "Watch for whoever came alone",
-        description: "The single most useful thing — catch them, introduce them.",
+        description: "The single most useful thing: catch them, introduce them.",
       },
       {
         title: "Keep the night running",
@@ -887,7 +887,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         b: "Zero ongoing obligation",
         s: "One a month or one a week, both great",
       },
-      { b: "Members welcome", s: "You don't need to be one — but most are" },
+      { b: "Members welcome", s: "You don't need to be one, but most are" },
     ],
     goodFor: [
       <>
@@ -915,7 +915,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     applyConfirm: (
       <>
         You're on the gatherings crew for <strong>QueerPulse</strong>. You'll
-        get the crew calendar — shadow one event, then claim whatever fits.
+        get the crew calendar. Shadow one event, then claim whatever fits.
       </>
     ),
     partner: null,

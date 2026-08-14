@@ -5,6 +5,7 @@ import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { TransHubCommunitySection } from "./TransHubCommunitySection";
@@ -166,7 +167,7 @@ export function TransHubPage() {
         }
         sub={t("resources:transHub.outro.sub")}
       >
-        <Button to={routes.requestInvite} variant="primary" size="lg">
+        <Button to={requestInvitePath("trans_hub")} variant="primary" size="lg">
           {t("resources:transHub.outro.cta")}
         </Button>
       </Outro>

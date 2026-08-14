@@ -282,7 +282,7 @@ export const THREADS: Thread[] = [
     pinned: true,
     title: "Master resource guide: LGBTQ+ in Lisbon",
     excerpt:
-      "Everything you need to navigate Lisbon as a queer person — organisations, healthcare, housing, legal rights, and community. Updated monthly.",
+      "Everything you need to navigate Lisbon as a queer person: organisations, healthcare, housing, legal rights, and community. Updated monthly.",
     author: qpAuthor("mariana"),
     posted: "2 months ago",
     views: 4120,
@@ -290,7 +290,7 @@ export const THREADS: Thread[] = [
     comments: 12,
     tags: ["guide", "resources"],
     body: [
-      "This is the living index we point every new arrival to. It pulls together the organisations, healthcare routes, housing boards, legal contacts, and community spaces that members have vouched for — and we update it at the start of every month.",
+      "This is the living index we point every new arrival to. It pulls together the organisations, healthcare routes, housing boards, legal contacts, and community spaces that members have vouched for, and we update it at the start of every month.",
       "Each section links out to a dedicated guide: trans-affirming healthcare, the housing board, emergency and legal resources, and the events calendar. If a contact has gone cold or a link is dead, reply here and a moderator will fix it within a day or two.",
       "Bookmark this thread. If you only read one thing on the forum, read this one first.",
     ],
@@ -301,7 +301,7 @@ export const THREADS: Thread[] = [
         time: "6 weeks ago",
         helpful: true,
         body: [
-          "Saving this. The healthcare section alone saved me weeks of guesswork when I moved over from Porto — the note about which SNS centres actually follow the trans pathway is gold.",
+          "Saving this. The healthcare section alone saved me weeks of guesswork when I moved over from Porto. The note about which SNS centres actually follow the trans pathway is gold.",
           "One addition: the AMPLOS parents-and-families group runs a monthly drop-in that isn't listed yet. Worth adding under community.",
         ],
         reactions: 14,
@@ -316,7 +316,7 @@ export const THREADS: Thread[] = [
           text: "the AMPLOS parents-and-families group runs a monthly drop-in…",
         },
         body: [
-          `Added AMPLOS to the community section — thank you ${MEMBERS.rita!.first}. Keep them coming.`,
+          `Added AMPLOS to the community section. Thank you ${MEMBERS.rita!.first}. Keep them coming.`,
         ],
         reactions: 5,
       }),
@@ -336,7 +336,7 @@ export const THREADS: Thread[] = [
     opPostId: "demo-op-2",
     category: "health",
     pinned: true,
-    title: "Trans-affirming healthcare in Lisbon — the full guide",
+    title: "Trans-affirming healthcare in Lisbon: the full guide",
     excerpt:
       "How to find a GP who will treat you with respect, how the SNS system handles trans healthcare, and who to call when it goes wrong.",
     author: author("jonas"),
@@ -347,7 +347,7 @@ export const THREADS: Thread[] = [
     tags: ["health", "trans", "guide"],
     body: [
       "I put this together after three years of navigating the system myself and helping a dozen other people through it. The short version: it is possible to get respectful, competent care on the SNS, but which centro de saúde you land at matters enormously.",
-      "The guide covers how to register, how to request a referral to the gender team at the Hospital de Santa Maria, what documentation actually speeds things up, and — importantly — what to do when a GP stalls or misgenders you. There are escalation routes that work.",
+      "The guide covers how to register, how to request a referral to the gender team at the Hospital de Santa Maria, what documentation actually speeds things up, and, importantly, what to do when a GP stalls or misgenders you. There are escalation routes that work.",
       "I will keep this updated as the 2026 protocol changes land. If your experience differs from what is written here, please reply so the picture stays honest.",
     ],
     replies: [
@@ -376,7 +376,7 @@ export const THREADS: Thread[] = [
         time: "4 weeks ago",
         isOP: true,
         body: [
-          "Noted Lapa as a recommended centre. Thank you both — this is exactly the kind of ground-truth that makes the guide useful.",
+          "Noted Lapa as a recommended centre. Thank you both. This is exactly the kind of ground-truth that makes the guide useful.",
         ],
         reactions: 6,
       }),
@@ -387,7 +387,7 @@ export const THREADS: Thread[] = [
     opPostId: "demo-op-3",
     category: "general",
     pinned: true,
-    title: "Welcome thread — introduce yourself",
+    title: "Welcome thread: introduce yourself",
     excerpt:
       "Say hello. Tell us who you are, where you're from, what you make, and what brought you to QueerPulse. We read every one.",
     author: qpAuthor("rui"),
@@ -398,7 +398,7 @@ export const THREADS: Thread[] = [
     tags: ["welcome"],
     body: [
       "New here? This is the place to land. Tell us your name (or what you go by), where you came from, what you make or do, and what brought you to QueerPulse.",
-      "No pressure to write an essay — a single line is welcome. The only rule is the one that runs through the whole forum: be kind, be useful.",
+      "No pressure to write an essay. A single line is welcome. The only rule is the one that runs through the whole forum: be kind, be useful.",
     ],
     replies: [
       reply("carla", {
@@ -406,7 +406,7 @@ export const THREADS: Thread[] = [
         parentPostId: null,
         time: "3 weeks ago",
         body: [
-          "Hi all — Carla, illustrator, moved here from Madrid in January. Still figuring out the city but the welcome here has been real. Looking for studio-share leads and people to draw with.",
+          "Hi all. Carla, illustrator, moved here from Madrid in January. Still figuring out the city but the welcome here has been real. Looking for studio-share leads and people to draw with.",
         ],
         reactions: 12,
       }),
@@ -444,7 +444,7 @@ export const THREADS: Thread[] = [
     comments: 24,
     tags: ["proposal", "film"],
     body: [
-      "I have been talking to the programming team at Cinema São Jorge and they are genuinely open to a recurring queer film night — one Tuesday a month, the small room, ticketed at cost so it stays affordable.",
+      "I have been talking to the programming team at Cinema São Jorge and they are genuinely open to a recurring queer film night: one Tuesday a month, the small room, ticketed at cost so it stays affordable.",
       "Before I commit us, I want to know two things: would you actually come, and would you help? I can handle the cinema relationship and programming, but I would need a couple of people on the door and one on social.",
       "Upvote if you would come. Reply if you want to help make it happen.",
     ],
@@ -455,7 +455,7 @@ export const THREADS: Thread[] = [
         time: "4 days ago",
         helpful: true,
         body: [
-          "Yes, and yes — I can do the door and bring the bookshop in as a small sponsor. A monthly anchor like this is exactly what the scene is missing.",
+          "Yes, and yes. I can do the door and bring the bookshop in as a small sponsor. A monthly anchor like this is exactly what the scene is missing.",
         ],
         reactions: 13,
       }),
@@ -464,7 +464,7 @@ export const THREADS: Thread[] = [
         parentPostId: null,
         time: "3 days ago",
         body: [
-          "Would absolutely come. Suggestion: keep one slot a quarter for Portuguese-language queer cinema specifically — there is more of it than people think and it never gets screened.",
+          "Would absolutely come. Suggestion: keep one slot a quarter for Portuguese-language queer cinema specifically. There is more of it than people think and it never gets screened.",
         ],
         reactions: 7,
       }),
@@ -478,7 +478,7 @@ export const THREADS: Thread[] = [
           text: "I can do the door and bring the bookshop in as a small sponsor.",
         },
         body: [
-          `Amazing — that covers door and a sponsor in one go. ${MEMBERS["rui-fernandes"]!.first}, the Portuguese-cinema slot is a great idea, locking it in. I will draft a first season and post it next week.`,
+          `Amazing. That covers door and a sponsor in one go. ${MEMBERS["rui-fernandes"]!.first}, the Portuguese-cinema slot is a great idea, locking it in. I will draft a first season and post it next week.`,
         ],
         reactions: 9,
       }),
@@ -490,7 +490,7 @@ export const THREADS: Thread[] = [
     category: "general",
     title: "What queer spaces in Lisbon do you miss or want to see return?",
     excerpt:
-      "Bars, clubs, bookshops, community centres — what's been lost, what never existed but should, and what we could build. Share yours.",
+      "Bars, clubs, bookshops, community centres: what's been lost, what never existed but should, and what we could build. Share yours.",
     author: author("diogo"),
     posted: "6 days ago",
     views: 980,
@@ -498,8 +498,8 @@ export const THREADS: Thread[] = [
     comments: 28,
     tags: ["spaces", "culture"],
     body: [
-      "I keep hearing people talk about places that used to exist — a bar in Príncipe Real, a women's night that ran for years, a bookshop that doubled as a meeting room. Some of it before my time.",
-      "So: what do you miss, what never existed but should have, and — the real question — what could we actually build now, together? I am asking partly out of nostalgia and partly because I think a list like this is the start of a plan.",
+      "I keep hearing people talk about places that used to exist: a bar in Príncipe Real, a women's night that ran for years, a bookshop that doubled as a meeting room. Some of it before my time.",
+      "So: what do you miss, what never existed but should have, and, the real question, what could we actually build now, together? I am asking partly out of nostalgia and partly because I think a list like this is the start of a plan.",
     ],
     replies: [
       reply("catarina-vaz", {
@@ -553,7 +553,7 @@ export const THREADS: Thread[] = [
     tags: ["housing", "guide"],
     body: [
       "Three weeks, forty-something viewings, two scams narrowly avoided. Here is what I wish someone had told me before I started looking.",
-      'Budget for the deposit-plus-two-months reality, assume the photos are two years old, and never transfer anything before seeing a place in person — the "I am abroad, here are the keys by courier" message is always a scam. The fiador (guarantor) requirement is the wall most newcomers hit; I get into the workarounds below.',
+      'Budget for the deposit-plus-two-months reality, assume the photos are two years old, and never transfer anything before seeing a place in person. The "I am abroad, here are the keys by courier" message is always a scam. The fiador (guarantor) requirement is the wall most newcomers hit; I get into the workarounds below.',
       "This is not meant to discourage you. People do find homes here. It just takes longer and costs more than the portals admit, and going in clear-eyed helps.",
     ],
     replies: [
@@ -583,7 +583,7 @@ export const THREADS: Thread[] = [
     opPostId: "demo-op-16",
     category: "trans",
     pinned: true,
-    title: "Trans healthcare in Portugal 2026 — the complete SNS guide",
+    title: "Trans healthcare in Portugal 2026: the complete SNS guide",
     excerpt:
       "How the SNS pathway works, which gender clinics in Lisbon are actually welcoming, and what to do when the system pushes back.",
     author: author("jonas"),
@@ -594,7 +594,7 @@ export const THREADS: Thread[] = [
     tags: ["trans", "healthcare"],
     body: [
       "A companion to the Lisbon healthcare guide, this one focuses specifically on the 2026 SNS pathway end to end: registration, the gender-team referral, the assessment process, and what HRT access actually looks like once you are in the system.",
-      "I have tried to be precise about timelines — what is realistic versus what the protocol promises — and to name the points where people most often get stuck. There is also a section on private routes for those who can afford them and want to bridge the wait.",
+      "I have tried to be precise about timelines, what is realistic versus what the protocol promises, and to name the points where people most often get stuck. There is also a section on private routes for those who can afford them and want to bridge the wait.",
       "If the protocol shifts mid-year, I will flag the change here with a date so you can tell old advice from current.",
     ],
     replies: [
@@ -613,7 +613,7 @@ export const THREADS: Thread[] = [
         parentPostId: null,
         time: "9 days ago",
         body: [
-          "For the private-bridge section — worth noting a couple of the endocrinologists listed will coordinate with your SNS team so you are not running two parallel records. Ask before booking.",
+          "For the private-bridge section: worth noting a couple of the endocrinologists listed will coordinate with your SNS team so you are not running two parallel records. Ask before booking.",
         ],
         reactions: 7,
       }),
@@ -623,7 +623,7 @@ export const THREADS: Thread[] = [
     id: 11,
     opPostId: "demo-op-11",
     category: "arts",
-    title: "Vote: Queer film series — what do we watch in July?",
+    title: "Vote: Queer film series, what do we watch in July?",
     excerpt:
       "We're doing our first proper screening. Submit and upvote films below. Foreign language films very welcome.",
     author: author("sofia"),
@@ -633,7 +633,7 @@ export const THREADS: Thread[] = [
     comments: 12,
     tags: ["film", "vote"],
     body: [
-      "Following on from the São Jorge proposal — our first screening is happening in July and you get to pick it. Drop a film in the replies and upvote the ones you would turn up for.",
+      "Following on from the São Jorge proposal. Our first screening is happening in July and you get to pick it. Drop a film in the replies and upvote the ones you would turn up for.",
       "Two asks: foreign-language and Portuguese cinema very welcome, and try to keep it to things we can actually licence for a small one-off screening. I will tally the top three next Friday.",
     ],
     replies: [
@@ -642,7 +642,7 @@ export const THREADS: Thread[] = [
         parentPostId: null,
         time: "2 days ago",
         body: [
-          '"Tchindas" — a documentary from Cabo Verde, warm, funny, and almost never screened here. Would be a perfect opener.',
+          '"Tchindas", a documentary from Cabo Verde, warm, funny, and almost never screened here. Would be a perfect opener.',
         ],
         reactions: 9,
       }),
@@ -652,7 +652,7 @@ export const THREADS: Thread[] = [
         time: "1 day ago",
         helpful: true,
         body: [
-          'Seconding a Lusophone opener. If we want something with a bit of weight after, "Madame Satã" still holds up and gets people talking afterwards — which is half the point of a screening.',
+          'Seconding a Lusophone opener. If we want something with a bit of weight after, "Madame Satã" still holds up and gets people talking afterwards, which is half the point of a screening.',
         ],
         reactions: 11,
       }),
@@ -662,7 +662,7 @@ export const THREADS: Thread[] = [
         time: "22h ago",
         isOP: true,
         body: [
-          "Both on the shortlist. Keep voting — I will post the final three on Friday and we will run the top one as the July night.",
+          "Both on the shortlist. Keep voting. I will post the final three on Friday and we will run the top one as the July night.",
         ],
         reactions: 4,
       }),
@@ -682,7 +682,7 @@ export const THREADS: Thread[] = [
     comments: 23,
     tags: ["platform", "inclusion"],
     body: [
-      'I want to raise something carefully. The invite-only model and the "professional network" language keep the quality high, but I worry they quietly select for people who already have stability — and screen out the ones who need community most.',
+      'I want to raise something carefully. The invite-only model and the "professional network" language keep the quality high, but I worry they quietly select for people who already have stability, and screen out the ones who need community most.',
       "I am not arguing for throwing the doors open overnight. I am asking whether there is a middle path: a sponsored-membership route, an open resources tier, something. What would we lose, and what would we gain?",
     ],
     replies: [
@@ -691,7 +691,7 @@ export const THREADS: Thread[] = [
         parentPostId: null,
         time: "7 days ago",
         body: [
-          'I came in through a member sponsor with zero "professional" credentials and it changed my year. So I am living proof the middle path works — it just currently depends on knowing the right person, which is the problem you are naming.',
+          'I came in through a member sponsor with zero "professional" credentials and it changed my year. So I am living proof the middle path works. It just currently depends on knowing the right person, which is the problem you are naming.',
         ],
         reactions: 14,
       }),
@@ -715,7 +715,7 @@ export const THREADS: Thread[] = [
           text: "make the resources, housing board, and emergency contacts fully open…",
         },
         body: [
-          `This is the sharpest version of what I was reaching for. I am going to write it up as a governance proposal — open safety layer, curated social layer. Thank you ${MEMBERS.fatima!.first}.`,
+          `This is the sharpest version of what I was reaching for. I am going to write it up as a governance proposal: open safety layer, curated social layer. Thank you ${MEMBERS.fatima!.first}.`,
         ],
         reactions: 8,
       }),
@@ -736,8 +736,8 @@ export const THREADS: Thread[] = [
     tags: ["grants", "fund"],
     body: [
       "The community fund stands at €840 for Q3. Grants run €50–200 and are meant to be quick: a paragraph on what you need it for, no forms, no jury theatre.",
-      "Priority goes to three things — small queer-led projects and events, skills and equipment that pay forward, and genuine emergencies. Decisions are made by a rotating panel of three members and announced openly in the governance thread.",
-      "Reply here or DM a moderator to apply. If you have benefited before, consider topping the fund up — it only exists because members keep it alive.",
+      "Priority goes to three things: small queer-led projects and events, skills and equipment that pay forward, and genuine emergencies. Decisions are made by a rotating panel of three members and announced openly in the governance thread.",
+      "Reply here or DM a moderator to apply. If you have benefited before, consider topping the fund up. It only exists because members keep it alive.",
     ],
     replies: [
       reply("ines-fonseca", {
@@ -745,7 +745,7 @@ export const THREADS: Thread[] = [
         parentPostId: null,
         time: "3 days ago",
         body: [
-          "Applied for €120 toward materials for a binder-sewing workshop. Whatever the panel decides, thank you for making the process this painless — the no-forms part is why I actually applied.",
+          "Applied for €120 toward materials for a binder-sewing workshop. Whatever the panel decides, thank you for making the process this painless. The no-forms part is why I actually applied.",
         ],
         reactions: 10,
       }),
@@ -764,7 +764,7 @@ export const THREADS: Thread[] = [
     id: 15,
     opPostId: "demo-op-15",
     category: "jobs",
-    title: "Queer-run bookshop in Anjos — hiring a bookseller",
+    title: "Queer-run bookshop in Anjos: hiring a bookseller",
     excerpt:
       "The bookshop we've been building is opening in September. Looking for a part-time bookseller with a love of queer literature.",
     author: author("ines"),
@@ -774,9 +774,9 @@ export const THREADS: Thread[] = [
     comments: 14,
     tags: ["jobs", "bookshop"],
     body: [
-      "It is really happening — the bookshop opens in Anjos in September, and we are hiring our first part-time bookseller. Three days a week to start, fair pay on the solidarity scale, with room to grow as we do.",
+      "It is really happening. The bookshop opens in Anjos in September, and we are hiring our first part-time bookseller. Three days a week to start, fair pay on the solidarity scale, with room to grow as we do.",
       "What we are looking for: someone who genuinely loves queer literature, is comfortable on a till and talking to strangers, and wants to help shape a space rather than just staff it. Portuguese and English both needed; other languages a bonus.",
-      "No formal CV required — tell me about a book that changed you and why you want this. Reply here or DM me.",
+      "No formal CV required. Tell me about a book that changed you and why you want this. Reply here or DM me.",
     ],
     replies: [
       reply("anika", {
@@ -794,7 +794,7 @@ export const THREADS: Thread[] = [
         parentPostId: null,
         time: "18h ago",
         body: [
-          "Not applying but — if you need someone to build a few shelves before September, I do carpentry and I will trade it for a launch-night invite. Serious offer.",
+          "Not applying, but if you need someone to build a few shelves before September, I do carpentry and I will trade it for a launch-night invite. Serious offer.",
         ],
         reactions: 8,
       }),
@@ -804,7 +804,7 @@ export const THREADS: Thread[] = [
         time: "15h ago",
         isOP: true,
         body: [
-          `${MEMBERS.anika!.first}, that is exactly the energy — replied to your DM. ${MEMBERS["tomas-mendes"]!.first}, yes please, the shelves are genuinely on the critical path. Let us talk.`,
+          `${MEMBERS.anika!.first}, that is exactly the energy. Replied to your DM. ${MEMBERS["tomas-mendes"]!.first}, yes please, the shelves are genuinely on the critical path. Let us talk.`,
         ],
         reactions: 6,
       }),
@@ -814,7 +814,7 @@ export const THREADS: Thread[] = [
     id: 19,
     opPostId: "demo-op-19",
     category: "trans",
-    title: "Legal name change in Portugal — sharing experiences and tips",
+    title: "Legal name change in Portugal: sharing experiences and tips",
     excerpt:
       "Possible since 2018, but in practice it depends heavily on which conservatória and official you see. Share your story.",
     author: author("catarina-vaz"),
@@ -826,7 +826,7 @@ export const THREADS: Thread[] = [
     body: [
       "Self-determination of name and gender marker has been law since 2018, no medical report required. On paper it is one of the better frameworks in Europe. In practice, whether it goes smoothly depends a frustrating amount on which conservatória you walk into and who is behind the desk.",
       "I went through it last year and want to build a shared map: which offices were respectful, which dragged their feet, what documents actually got asked for, and how long it really took. The more data points, the less of a lottery it is for the next person.",
-      "Share your experience below — good or bad. Anonymised is fine; just say the area, not your name.",
+      "Share your experience below, good or bad. Anonymised is fine; just say the area, not your name.",
     ],
     replies: [
       reply("raquel-baptista", {
@@ -835,7 +835,7 @@ export const THREADS: Thread[] = [
         time: "6 days ago",
         helpful: true,
         body: [
-          "Conservatória dos Registos Centrais (Lisbon) was straightforward for me — booked online, brought citizen card and the standard declaration, done in one visit and the new card arrived in about two weeks. The official was completely matter-of-fact about it.",
+          "Conservatória dos Registos Centrais (Lisbon) was straightforward for me: booked online, brought citizen card and the standard declaration, done in one visit and the new card arrived in about two weeks. The official was completely matter-of-fact about it.",
         ],
         reactions: 16,
       }),
@@ -844,7 +844,7 @@ export const THREADS: Thread[] = [
         parentPostId: null,
         time: "5 days ago",
         body: [
-          'Less smooth at a smaller office outside the city — got asked for a "medical document" that the law explicitly does not require. I printed the statute, brought it back, and they processed it without comment. Know the law before you go.',
+          'Less smooth at a smaller office outside the city: got asked for a "medical document" that the law explicitly does not require. I printed the statute, brought it back, and they processed it without comment. Know the law before you go.',
         ],
         reactions: 12,
       }),
@@ -854,7 +854,7 @@ export const THREADS: Thread[] = [
         time: "5 days ago",
         isOP: true,
         body: [
-          `Both logged into the map — Registos Centrais green, the smaller office flagged with ${MEMBERS["sofia-castano"]!.first}'s tip about bringing the statute. This is exactly the ground-truth I hoped for.`,
+          `Both logged into the map: Registos Centrais green, the smaller office flagged with ${MEMBERS["sofia-castano"]!.first}'s tip about bringing the statute. This is exactly the ground-truth I hoped for.`,
         ],
         reactions: 7,
       }),

@@ -105,7 +105,7 @@ function FilmCard({
         ))}
       </div>
       <div className={styles.fcCurator}>
-        <span className={styles.by}>{film.by}</span> — {film.note.slice(0, 48)}…
+        <span className={styles.by}>{film.by}</span>: {film.note.slice(0, 48)}…
       </div>
     </Link>
   );

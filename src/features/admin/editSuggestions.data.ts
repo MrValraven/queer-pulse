@@ -10,7 +10,7 @@ export const ADMIN_EDIT_SUGGESTIONS: EditSuggestionDTO[] = [
     listingName: "Café Aurora",
     field: "hours",
     message:
-      "They're closed on Mondays now, not just late — I walked over last Monday at 10am and the shutter was down.",
+      "They're closed on Mondays now, not just late. I walked over last Monday at 10am and the shutter was down.",
     status: "pending",
     submittedBy: {
       slug: "ines",
@@ -25,7 +25,7 @@ export const ADMIN_EDIT_SUGGESTIONS: EditSuggestionDTO[] = [
     listingRef: "QPL-2026-0005",
     listingName: "Café Aurora",
     field: "phone",
-    message: "The listed number rings out — their new one is +351 21 887 4401.",
+    message: "The listed number rings out. Their new one is +351 21 887 4401.",
     status: "pending",
     submittedBy: {
       slug: "rui",
@@ -40,7 +40,7 @@ export const ADMIN_EDIT_SUGGESTIONS: EditSuggestionDTO[] = [
     listingRef: "QPL-2026-0006",
     listingName: "Casa Viva",
     field: "website",
-    message: "casaviva.pt redirects to a squatted domain page now — might be worth pulling the link until they sort it.",
+    message: "casaviva.pt redirects to a squatted domain page now. Might be worth pulling the link until they sort it.",
     status: "accepted",
     submittedBy: {
       slug: "tiago",

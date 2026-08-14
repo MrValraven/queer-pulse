@@ -28,6 +28,7 @@ function makeDto(overrides: Partial<ListingDTO> = {}): ListingDTO {
     tags: [],
     goodFor: [],
     langs: [],
+    online: false,
     address: "Rua X 1",
     geocoded: true,
     latitude: 38.7167,

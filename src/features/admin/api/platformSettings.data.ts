@@ -32,7 +32,7 @@ export const DEMO_PLATFORM_SETTING_CHANGES: PlatformSettingChangeDTO[] = [
     settingKey: "joinRequestsEnabled",
     oldValue: "true",
     newValue: "false",
-    note: "Spam wave — pausing intake.",
+    note: "Spam wave: pausing intake.",
     createdAt: "2026-07-18T08:02:00.000Z",
   },
   {
@@ -41,7 +41,7 @@ export const DEMO_PLATFORM_SETTING_CHANGES: PlatformSettingChangeDTO[] = [
     settingKey: "lockdownEnabled",
     oldValue: "false",
     newValue: "true",
-    note: "Spam wave — pausing intake.",
+    note: "Spam wave: pausing intake.",
     createdAt: "2026-07-18T08:02:00.000Z",
   },
 ];

@@ -48,7 +48,7 @@ export const EVENTS: SoberEvent[] = [
     d: "08",
     m: "Jun",
     type: "Social",
-    name: "Morning walk — Monsanto Forest Park",
+    name: "Morning walk: Monsanto Forest Park",
     meta: [
       { icon: FiMapPin, text: "Monsanto" },
       { text: "9:00am" },
@@ -61,7 +61,7 @@ export const EVENTS: SoberEvent[] = [
     d: "14",
     m: "Jun",
     type: "Culture",
-    name: "Book club meetup — Giovanni's Room",
+    name: "Book club meetup: Giovanni's Room",
     meta: [
       { icon: FiCoffee, text: "Linha d'Água café, Príncipe Real" },
       { text: "18:30" },
@@ -73,7 +73,7 @@ export const EVENTS: SoberEvent[] = [
     d: "21",
     m: "Jun",
     type: "Support",
-    name: "Sober & Queer — weekly peer support",
+    name: "Sober & Queer: weekly peer support",
     meta: [
       { icon: FiMapPin, text: "Online (private link sent on RSVP)" },
       { text: "19:00" },
@@ -85,7 +85,7 @@ export const EVENTS: SoberEvent[] = [
     d: "28",
     m: "Jun",
     type: "Outdoors",
-    name: "Pride picnic — alcohol-free zone",
+    name: "Pride picnic: alcohol-free zone",
     meta: [
       { icon: FiMapPin, text: "Jardim da Estrela" },
       { text: "14:00–18:00" },
@@ -97,7 +97,7 @@ export const EVENTS: SoberEvent[] = [
     d: "05",
     m: "Jul",
     type: "Social",
-    name: "Film night — Portrait of a Lady on Fire",
+    name: "Film night: Portrait of a Lady on Fire",
     meta: [
       { icon: FiMapPin, text: "Member's flat, Mouraria" },
       { text: "20:00" },
@@ -143,8 +143,8 @@ export const VENUES = [
   },
   {
     neighbourhood: "Bairro Alto",
-    name: "ZDB — Zé dos Bois",
-    description: "Arts venue with exhibitions, performances, and events. Alcohol is served but never the focus — many events are entirely sober in practice. Consistently queer-safe.",
+    name: "ZDB: Zé dos Bois",
+    description: "Arts venue with exhibitions, performances, and events. Alcohol is served but never the focus. Many events are entirely sober in practice. Consistently queer-safe.",
     tags: ["Alcohol present", "Never the focus", "Arts-led"],
   },
   {
@@ -158,7 +158,7 @@ export const VENUES = [
 export const VOICES = [
   {
     quote:
-      '"I thought getting sober would mean losing the community. It turned out I found a deeper one — people who show up because they want to, not because the bar is there."',
+      '"I thought getting sober would mean losing the community. It turned out I found a deeper one, people who show up because they want to, not because the bar is there."',
     avatar: "ML",
     avatarBackground: "rgba(232,119,90,.15)",
     avatarColor: "var(--accent-ink)",
@@ -167,7 +167,7 @@ export const VOICES = [
   },
   {
     quote:
-      "\"I don't drink for health reasons, not recovery — but the reaction is often the same. Having spaces where it just isn't the question is a relief I can't fully describe.\"",
+      "\"I don't drink for health reasons, not recovery. But the reaction is often the same. Having spaces where it just isn't the question is a relief I can't fully describe.\"",
     avatar: "RP",
     avatarBackground: "rgba(74,140,111,.15)",
     avatarColor: "var(--jade)",
@@ -176,7 +176,7 @@ export const VOICES = [
   },
   {
     quote:
-      "\"The morning walk group changed things for me. I'd been so isolated — not because I didn't want connection, but because every social option seemed to start at midnight in a bar.\"",
+      "\"The morning walk group changed things for me. I'd been so isolated, not because I didn't want connection, but because every social option seemed to start at midnight in a bar.\"",
     avatar: "CF",
     avatarBackground: "rgba(45,27,61,.1)",
     avatarColor: "var(--plum)",

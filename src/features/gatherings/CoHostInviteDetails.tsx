@@ -48,7 +48,7 @@ export function CoHostInviteDetails({ host }: { host: string }) {
           ))}
         </div>
         <p className={styles.outclause}>
-          <b>{t("gatherings:cohostInvite.outclauseBold")}</b> {OUTCLAUSE_REST}
+          <b>{t("gatherings:cohostInvite.outclauseBold")}</b>{OUTCLAUSE_REST}
         </p>
       </div>
     </>

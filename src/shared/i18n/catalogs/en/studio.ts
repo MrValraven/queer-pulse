@@ -112,7 +112,7 @@ export const studio: Catalog = {
   "error404.eyebrow": "Track not found",
   "error404.title": "This song <em>doesn't exist.</em>",
   "error404.body":
-    "The track, set, or page you were after was never recorded, got taken down by the artist, or lives behind a sign-in. No drama — the catalogue is large and the room is warm.",
+    "The track, set, or page you were after was never recorded, got taken down by the artist, or lives behind a sign-in. No drama. The catalogue is large and the room is warm.",
   "error404.backCta": "Back to the player",
   "error404.goBackCta": "Go back",
   "error404.tryInsteadTitle": "Try one of these instead",
@@ -126,7 +126,7 @@ export const studio: Catalog = {
   "error500.eyebrow": "Something dropped out",
   "error500.title": "We lost the <em>recording.</em>",
   "error500.body":
-    "A server on our side stumbled mid-take. Your account, your saves, and every artist's payout are safe — this is just the front of house. Give it a second and try again.",
+    "A server on our side stumbled mid-take. Your account, your saves, and every artist's payout are safe. This is just the front of house. Give it a second and try again.",
   "error500.tryAgainCta": "Try again",
   "error500.backCta": "Back to the player",
   "error500.statusPrefix": "All payouts and banking unaffected ·",
@@ -138,7 +138,7 @@ export const studio: Catalog = {
   "landing.nav.howItWorks": "How it works",
   "landing.nav.forArtists": "For artists",
   "landing.footer.tagline":
-    "A queer professional network rooted in Lisbon. Studio is one of its rooms — alongside Cinema, Magazine, and Gatherings.",
+    "A queer professional network rooted in Lisbon. Studio is one of its rooms, alongside Cinema, Magazine, and Gatherings.",
   "landing.footer.col.studio": "Studio",
   "landing.footer.col.studio.thisWeek": "This week",
   "landing.footer.col.studio.djSets": "DJ sets",
@@ -152,7 +152,7 @@ export const studio: Catalog = {
   "landing.footer.col.council.submissions": "Submissions",
   "landing.footer.col.council.curatorCouncil": "Curator council",
   "landing.footer.col.coop.strategyPlan": "The strategy plan",
-  "landing.footer.copyright": "© {year} QueerPulse Studio Co-op CRL — Lisbon",
+  "landing.footer.copyright": "© {year} QueerPulse Studio Co-op CRL, Lisbon",
   "landing.footer.languages": "EN · PT",
 
   // ── Marketing hero (StudioLandingHero) ────────────────────────────────────
@@ -173,7 +173,7 @@ export const studio: Catalog = {
   "landing.demo.payNote":
     "This listen pays {artist} <em>{amount}</em> when you're a sustainer. Right now, the room is open as a demo.",
   "landing.demo.quote":
-    "“Stay through the second verse of track six. <em>The piano leaves you there on purpose.</em>” — {attribution}, programming lead",
+    "“Stay through the second verse of track six. <em>The piano leaves you there on purpose.</em>” {attribution}, programming lead",
 
   // ── Four promises (StudioLandingPromises) ─────────────────────────────────
   "landing.promises.eyebrow": "The contract · not the marketing",
@@ -193,7 +193,7 @@ export const studio: Catalog = {
     "No listening data sold, syndicated, or used to recommend. Personal play history is private and deletable in one click. Aggregate plays exist for the ledger; nothing else leaves the building.",
 
   // ── Public ledger counter (StudioLandingCounter) ──────────────────────────
-  "landing.counter.liveEyebrow": "Live — updated as it happens",
+  "landing.counter.liveEyebrow": "Live, updated as it happens",
   "landing.counter.title":
     "Since the open beta opened, <em>QueerPulse Studio</em> has paid out:",
   "landing.counter.sub": "to {count} artists, in {cycles} monthly cycles.",
@@ -250,16 +250,16 @@ export const studio: Catalog = {
   "signin.in.joinCta": "Join the room",
   "signin.in.freePrompt": "Just want to listen?",
   "signin.in.freeCta": "Stream one set free, no account",
-  "signin.in.signedInToast": "Signed in — welcome back",
-  "signin.in.signedInGoogleToast": "Signed in with Google — welcome back",
+  "signin.in.signedInToast": "Signed in, welcome back",
+  "signin.in.signedInGoogleToast": "Signed in with Google, welcome back",
 
   "signin.join.title": "Join the <em>room.</em>",
   "signin.join.lede":
-    "Pick how much of the co-op you want. You can change tiers or cancel any month — no lock-in, no winback emails.",
+    "Pick how much of the co-op you want. You can change tiers or cancel any month: no lock-in, no winback emails.",
   "signin.join.chooseTier": "Choose your tier",
   "signin.join.tier.studio.title": "Studio <em>only</em>",
   "signin.join.tier.studio.body":
-    "Everything in Studio — the council's weekly set, live rooms, the full catalogue, lossless audio, direct artist subscriptions.",
+    "Everything in Studio: the council's weekly set, live rooms, the full catalogue, lossless audio, direct artist subscriptions.",
   "signin.join.tier.studio.incl":
     "{sharePercent} of your fee reaches artists by play",
   "signin.join.tier.coop.badge": "Best value",
@@ -277,16 +277,16 @@ export const studio: Catalog = {
   "welcome.eyebrow": "You're in · let's set your room",
   "welcome.title": "Welcome to the <em>room</em>, {name}.",
   "welcome.sub":
-    "Three quick things and the first set is yours. <em>Skip any of it</em> — none of this is locked in.",
+    "Three quick things and the first set is yours. <em>Skip any of it</em>. None of this is locked in.",
   "welcome.step1.title": "Follow a few <em>artists</em>",
   "welcome.step1.dek":
-    "We'll surface their new releases first. Pick three or more — <em>the council picks the rest</em>.",
+    "We'll surface their new releases first. Pick three or more: <em>the council picks the rest</em>.",
   "welcome.step1.followedCount_one": "{count} followed",
   "welcome.step1.followedCount_other": "{count} followed",
   "welcome.nextCta": "Next",
   "welcome.step2.title": "Set your default <em>tip</em>",
   "welcome.step2.dek":
-    "One tap from the player sends this straight to the artist — <em>100%, no cut</em>. Change it any time.",
+    "One tap from the player sends this straight to the artist: <em>100%, no cut</em>. Change it any time.",
   "welcome.skipCta": "Skip",
   "welcome.tip.nod": "a nod",
   "welcome.tip.coffee": "a coffee",
@@ -297,13 +297,13 @@ export const studio: Catalog = {
     "Our defaults are the careful ones. <em>Nothing here is on unless you turn it on.</em>",
   "welcome.step3.history.title": "Keep my listening history",
   "welcome.step3.history.body":
-    "A private, deletable record only you see. Off by default — nothing leaves your browser.",
+    "A private, deletable record only you see. Off by default: nothing leaves your browser.",
   "welcome.step3.tipNotes.title": "Make my tip notes public",
   "welcome.step3.tipNotes.body":
     "Off keeps every note between you and the artist. You can flip any single note later.",
   "welcome.step3.librarySync.title": "Sync my library across devices",
   "welcome.step3.librarySync.body":
-    "Saves and follows move with you. On by default — turn off to keep it on this device only.",
+    "Saves and follows move with you. On by default. Turn off to keep it on this device only.",
   "welcome.enterRoomCta": "Enter the room",
   "welcome.readyToast": "Your room is ready",
 
@@ -312,23 +312,23 @@ export const studio: Catalog = {
   "about.hero.title":
     "A streaming co-op that <em>pays</em> the people who made the song.",
   "about.hero.lede":
-    "You've heard \"fair pay for artists\" from every platform that underpays them. So here's the arithmetic, the governance, and the honest ceiling — <em>no slogans you can't audit.</em>",
+    "You've heard \"fair pay for artists\" from every platform that underpays them. So here's the arithmetic, the governance, and the honest ceiling: <em>no slogans you can't audit.</em>",
 
-  "about.sec.whatItIs.num": "01 — what it is",
+  "about.sec.whatItIs.num": "01: what it is",
   "about.sec.whatItIs.heading":
     "A listening platform, run as a <em>co-op</em>.",
   "about.sec.whatItIs.p1":
-    "QueerPulse Studio is owned by the people who use it — listeners and artists together — not by shareholders or a label. <strong>Eighty cents of every euro a listen generates goes to the artist.</strong> Every cent of every tip. The split is public, the catalogue is curated by an elected council of six, and the masters never leave the artist's hands.",
+    "QueerPulse Studio is owned by the people who use it, listeners and artists together, not by shareholders or a label. <strong>Eighty cents of every euro a listen generates goes to the artist.</strong> Every cent of every tip. The split is public, the catalogue is curated by an elected council of six, and the masters never leave the artist's hands.",
   "about.sec.whatItIs.p2":
     "It is the third room of the QueerPulse co-op, after the Magazine and Cinema. One membership covers all of it. You can be a member for the writing and never open Studio; you can be here only for the music and never read a word.",
   "about.sec.whatItIs.pull":
     "We are not trying to be a smaller Spotify. We're trying to be a <em>different kind of room</em>.",
 
-  "about.sec.rate.num": "02 — the rate",
+  "about.sec.rate.num": "02: the rate",
   "about.sec.rate.heading":
-    "€0.05 a play. A <em>floor</em>, not a marketing number.",
+    "€0.05 a play. A <em>floor</em> we're actually held to.",
   "about.sec.rate.p1":
-    "We commit to <strong>€0.05 per qualifying play</strong> — roughly fifteen times what Spotify pays. A qualifying play is at least 30 seconds, capped at one payout per listener per day so nobody can farm it. The floor can rise by simple majority at the assembly; it can only <em>fall</em> with a two-thirds supermajority. In practice, that means it doesn't fall.",
+    "We commit to <strong>€0.05 per qualifying play</strong>: roughly fifteen times what Spotify pays. A qualifying play is at least 30 seconds, capped at one payout per listener per day so nobody can farm it. The floor can rise by simple majority at the assembly; it can only <em>fall</em> with a two-thirds supermajority. In practice, that means it doesn't fall.",
   "about.sec.rate.footnote":
     "For comparison: at €0.003 a stream, a song needs about 330,000 plays to earn what one here earns in 20,000. We are not pretending that's a small difference.",
 
@@ -337,56 +337,56 @@ export const studio: Catalog = {
   "about.rate.cell.share.value": "<em>80</em>%",
   "about.rate.cell.share.label": "of subscription revenue to artists, by play",
   "about.rate.cell.tip.value": "<em>100</em>%",
-  "about.rate.cell.tip.label": "of every tip — no platform cut, ever",
+  "about.rate.cell.tip.label": "of every tip, no platform cut, ever",
 
-  "about.sec.ceiling.num": "03 — what an artist can actually earn",
+  "about.sec.ceiling.num": "03: what an artist can actually earn",
   "about.sec.ceiling.heading": "Honest about the <em>ceiling</em>.",
   "about.sec.ceiling.p1":
-    "Most \"creator economy\" pages show you the top 0.1% and let you assume you're them. Here's what the rate actually produces at four real levels of listening — and where it stops.",
+    "Most \"creator economy\" pages show you the top 0.1% and let you assume you're them. Here's what the rate actually produces at four real levels of listening, and where it stops.",
 
   "about.tier.casual.label": "Casual",
   "about.tier.casual.value": "74",
   "about.tier.casual.body":
-    "1,480 qualifying plays — about <em>75 listeners</em> playing one track three times a week. Coffee money, paid monthly.",
+    "1,480 qualifying plays: about <em>75 listeners</em> playing one track three times a week. Coffee money, paid monthly.",
   "about.tier.building.label": "Building",
   "about.tier.building.value": "340",
   "about.tier.building.body":
-    "6,800 plays, two tips, one album buy. A working sideline — <em>rent-adjacent</em> in Lisbon.",
+    "6,800 plays, two tips, one album buy. A working sideline, <em>rent-adjacent</em> in Lisbon.",
   "about.tier.sustaining.label": "Sustaining",
   "about.tier.sustaining.value": "1,820",
   "about.tier.sustaining.body":
-    "36,000 plays, a regular tipping pool, one live room a month. Below the median Portuguese wage — and <em>12× what Spotify pays</em> for the same listening.",
+    "36,000 plays, a regular tipping pool, one live room a month. Below the median Portuguese wage, and <em>12× what Spotify pays</em> for the same listening.",
   "about.tier.touring.label": "Touring artist",
   "about.tier.touring.body":
     "Studio will <em>not</em> replace a touring income, and we won't pretend it can. It can, plausibly, replace the rent while you make the next thing.",
   "about.tierFoot":
-    "These aren't projections from a pitch deck — they're the live ledger's actual per-stream rate times honest play counts. <em>The real numbers are public, every Monday at noon.</em>",
+    "These aren't projections from a pitch deck. They're the live ledger's actual per-stream rate times honest play counts. <em>The real numbers are public, every Monday at noon.</em>",
 
-  "about.sec.governance.num": "04 — who decides",
+  "about.sec.governance.num": "04: who decides",
   "about.sec.governance.heading":
     "An elected <em>council</em>, term-limited, on the record.",
   "about.sec.governance.p1":
     "Six curators program the weekly set, run submission triage, and write a paragraph justifying every pick. They're elected by the whole co-op at the annual assembly, paid a flat €400/mo stipend that appears on the public ledger, and limited to two-year terms with mandatory rotation. <strong>No algorithm decides who gets heard.</strong> A person does, and signs their name to it.",
   "about.sec.governance.p2":
-    "The per-listen floor and the split percentages are set yearly by a joint vote of sustainers and artists, with a 20% quorum. If you think the rate is wrong, you don't email support — <em>you vote, or you stand.</em>",
+    "The per-listen floor and the split percentages are set yearly by a joint vote of sustainers and artists, with a 20% quorum. If you think the rate is wrong, you don't email support. <em>You vote, or you stand.</em>",
 
-  "about.sec.hardQuestions.num": "05 — the hard questions",
+  "about.sec.hardQuestions.num": "05: the hard questions",
   "about.sec.hardQuestions.heading":
     "The ones you're <em>actually</em> asking.",
 
   "about.skeptic.broke.q":
     "This sounds lovely and doomed. How does it not go broke?",
   "about.skeptic.broke.a":
-    "Honestly, at low scale, the per-listen floor is expensive and a breakout track can cost more in bandwidth than it earns. Our mitigation is boring and public: casual listeners default to AAC, we cache aggressively, and the ledger is reconciled <em>daily</em> so we see red before it's a crisis, not after.",
+    "Honestly, at low scale, the per-listen floor is expensive and a breakout track can cost more in bandwidth than it earns. Our mitigation is boring and public: casual listeners default to AAC, we cache aggressively, and the ledger is reconciled <em>daily</em> so we see red before it's a crisis.",
   "about.skeptic.clique.q": "Curated by six people sounds like a clique.",
   "about.skeptic.clique.a":
-    "It can become one — that's the real risk. The guardrails are two-year term limits, forced rotation, and the fact that every pick is published with a name and a reason. <em>A clique that has to explain itself in writing every week is a weaker clique.</em>",
+    "It can become one. That's the real risk. The guardrails are two-year term limits, forced rotation, and the fact that every pick is published with a name and a reason. <em>A clique that has to explain itself in writing every week is a weaker clique.</em>",
   "about.skeptic.clone.q": "Is this just a Spotify clone with nicer copy?",
   "about.skeptic.clone.a":
     "If the home page were rows of square cover art, yes. The product is editorial on purpose: a programmed weekly set, live listening rooms, payouts visible on every track. <em>If we ever look like a smaller Spotify, hold us to this paragraph.</em>",
   "about.skeptic.leave.q": "What happens to my music if I leave?",
   "about.skeptic.leave.a":
-    "You keep your masters and everything you've earned. Takedown is a one-page, 14-day process with no retention loop. Past plays stay paid. Leaving is as easy as arriving — we think that's the only honest way to ask you to stay.",
+    "You keep your masters and everything you've earned. Takedown is a one-page, 14-day process with no retention loop. Past plays stay paid. Leaving is as easy as arriving. We think that's the only honest way to ask you to stay.",
 
   "about.cta.title": "The room is small, and it <em>pays</em>.",
   "about.cta.body":
@@ -399,11 +399,11 @@ export const studio: Catalog = {
   "accessibility.hero.title":
     "Music is for everyone or it <em>isn't music</em>.",
   "accessibility.hero.lede":
-    "This is both a statement of intent and a live checklist of what actually works today. Where something's <em>not</em> done yet, we say so — we'd rather be honest than aspirational.",
+    "This is both a statement of intent and a live checklist of what actually works today. Where something's <em>not</em> done yet, we say so. We'd rather be honest than aspirational.",
   "accessibility.statement.p1":
-    "QueerPulse Studio commits to meeting <em>WCAG 2.2 AA</em> across every surface, and to treating accessibility as a product requirement, not a compliance afterthought. Deaf and hard-of-hearing people should be able to use a music platform. So should blind and low-vision people, people who navigate by keyboard, and people who need words in their own language.",
+    "QueerPulse Studio commits to meeting <em>WCAG 2.2 AA</em> across every surface, and to treating accessibility as a core product requirement, built in from the start. Deaf and hard-of-hearing people should be able to use a music platform. So should blind and low-vision people, people who navigate by keyboard, and people who need words in their own language.",
   "accessibility.statement.p2":
-    "We test with real screen readers and real users — paid, from our own community — every release. <em>If something here doesn't work for you, that's a bug, and we want the report.</em>",
+    "We test with real screen readers and real users (paid, from our own community) every release. <em>If something here doesn't work for you, that's a bug, and we want the report.</em>",
 
   "accessibility.group.deaf.heading":
     "For Deaf & <em>hard-of-hearing</em> listeners",
@@ -411,13 +411,13 @@ export const studio: Catalog = {
     "A music platform can't pretend everyone hears it the same way. So we caption the talk and surface the words.",
   "accessibility.item.captions.heading": "Captioned <em>live rooms</em>",
   "accessibility.item.captions.body":
-    "Every broadcast is auto-captioned in real time; council broadcasts get a <em>human pass</em>. The talk between songs, the dedications, the artist's asides — all transcribed and adjustable in size.",
+    "Every broadcast is auto-captioned in real time; council broadcasts get a <em>human pass</em>. The talk between songs, the dedications, the artist's asides: all transcribed and adjustable in size.",
   "accessibility.item.lyrics.heading": "Time-synced <em>lyrics</em>",
   "accessibility.item.lyrics.body":
     "Where the artist supplied them, lyrics scroll in time with playback, with the current line highlighted. Readable as a static sheet too, for any track.",
   "accessibility.item.waveforms.heading": "Visual <em>waveforms</em>",
   "accessibility.item.waveforms.body":
-    "Live rooms and tracks show a real-time waveform tied to the actual audio, so rhythm and dynamics are visible, not only audible.",
+    "Live rooms and tracks show a real-time waveform tied to the actual audio, so rhythm and dynamics are visible as well as audible.",
   "accessibility.item.signed.heading": "Signed <em>broadcasts</em>",
   "accessibility.item.signed.body":
     "Flagship council broadcasts include a Portuguese Sign Language (LGP) interpreter window. Expanding to weekly rooms next quarter.",
@@ -428,7 +428,7 @@ export const studio: Catalog = {
     "The catalogue is mostly in Portuguese, with songs in a dozen other languages. Words shouldn't be a wall.",
   "accessibility.item.translation.heading": "Lyric <em>translation</em>",
   "accessibility.item.translation.body":
-    "Community translations sit beside the original. Show one or both at once. Translators are credited and <em>paid from the solidarity fund</em> — translation is labour.",
+    "Community translations sit beside the original. Show one or both at once. Translators are credited and <em>paid from the solidarity fund</em>. Translation is labour.",
   "accessibility.item.interfaceLang.heading":
     "Interface in <em>your language</em>",
   "accessibility.item.interfaceLang.body":
@@ -437,18 +437,18 @@ export const studio: Catalog = {
   "accessibility.group.lowVision.heading":
     "For low-vision & <em>keyboard</em> navigation",
   "accessibility.group.lowVision.dek":
-    "The whole player is operable without a mouse, and the dark theme is built to clear contrast — not just to look moody.",
+    "The whole player is operable without a mouse, and the dark theme is built to clear contrast as well as mood.",
   "accessibility.item.contrast.heading": "Contrast that <em>passes</em>",
   "accessibility.item.contrast.body":
     "Body text sits at 4.5:1 or better against the plum; interactive elements at 3:1 minimum, with a high-contrast mode that lifts everything further. Focus rings are always visible.",
   "accessibility.item.screenReader.heading":
     "Screen-reader notes on the <em>player</em>",
   "accessibility.item.screenReader.body":
-    "The persistent transport announces track, artist, elapsed time, and <em>what this play pays the artist</em>. Tip and save are labelled buttons; the live tip feed is a polite ARIA live region, never a barrage.",
+    "The persistent transport announces track, artist, elapsed time, and <em>what this play pays the artist</em>. Tip and save are labelled buttons; the live tip feed is a polite ARIA live region, paced to stay gentle.",
   "accessibility.item.reducedMotion.heading":
     "Respects <em>reduced motion</em>",
   "accessibility.item.reducedMotion.body":
-    "Every decorative animation — the pulse dot, the waveforms, the equaliser bars — stills itself when your system asks for reduced motion. Nothing essential moves.",
+    "Every decorative animation (the pulse dot, the waveforms, the equaliser bars) stills itself when your system asks for reduced motion. Nothing essential moves.",
 
   "accessibility.status.live": "Live",
   "accessibility.status.inProgress": "In progress",
@@ -467,9 +467,9 @@ export const studio: Catalog = {
 
   "accessibility.contact.title": "Found a <em>barrier</em>?",
   "accessibility.contact.body":
-    "Tell us and we'll treat it as a bug, not a feature request. Reports from assistive-tech users jump the queue — <em>access@queerpulse.org</em>, or flag it from any page's footer. We respond within two working days, with a fix or an honest timeline.",
+    "Tell us and we'll treat it as a bug to fix. Reports from assistive-tech users jump the queue: <em>hello@queerpulse.com</em>, or flag it from any page's footer. We respond within two working days, with a fix or an honest timeline.",
   "accessibility.contact.reportCta": "Report an access barrier",
-  "accessibility.contact.reportToast": "Thanks — we'll treat this as a bug",
+  "accessibility.contact.reportToast": "Thanks. We'll treat this as a bug",
   "accessibility.contact.meta":
     "Last audited 2 Jun 2026 · WCAG 2.2 AA · NVDA, VoiceOver, TalkBack · next audit Sep 2026",
 
@@ -477,8 +477,8 @@ export const studio: Catalog = {
   "help.hero.eyebrow": "Help · real people, real answers",
   "help.hero.title": "How can we <em>help</em>?",
   "help.hero.dek":
-    "Most answers are below. If they're not, a human reads every message — we don't run a bot maze, and there's no tier of support you have to pay for.",
-  "help.searchPlaceholder": "Search help — tipping, payouts, audio quality…",
+    "Most answers are below. If they're not, a human reads every message. We don't run a bot maze, and there's no tier of support you have to pay for.",
+  "help.searchPlaceholder": "Search help: tipping, payouts, audio quality…",
   "help.searchAria": "Search help",
   "help.searchCta": "Search",
   "help.searchingToast": "Searching the help centre…",
@@ -505,23 +505,23 @@ export const studio: Catalog = {
 
   "help.faq.priceDiff.q": "What's the difference between €7 and €11?",
   "help.faq.priceDiff.a":
-    "<strong>€7/mo</strong> is Studio only. <strong>€11/mo</strong> is the whole QueerPulse co-op — Studio plus Cinema, the Magazine, Gatherings, reading groups, and a vote at the annual assembly. One membership, every surface. Change tiers any month.",
+    "<strong>€7/mo</strong> is Studio only. <strong>€11/mo</strong> is the whole QueerPulse co-op: Studio plus Cinema, the Magazine, Gatherings, reading groups, and a vote at the annual assembly. One membership, every surface. Change tiers any month.",
   "help.faq.cancel.q": "How do I cancel?",
   "help.faq.cancel.a":
-    'One click in <a>Settings → Erase & exit</a>. No retention call, no "are you sure" loop, no winback emails. We think leaving should be as easy as arriving — that\'s the only honest way to ask you to stay.',
+    'One click in <a>Settings → Erase & exit</a>. No retention call, no "are you sure" loop, no winback emails. We think leaving should be as easy as arriving. That\'s the only honest way to ask you to stay.',
   "help.faq.dataSold.q": "Is my data sold or used to train anything?",
   "help.faq.dataSold.a":
     "<strong>Never.</strong> We don't sell, share, or train on what you listen to. Aggregate play counts feed the public ledger, but nothing that identifies you. Full detail in the <a>trust & terms</a> page.",
 
   "help.faq.getPaid.q": "When and how do I get paid?",
   "help.faq.getPaid.a":
-    'Monthly, on the 5th, with a €5 floor. SEPA or Stripe Connect. You see the per-stream rate that month, ledger entry numbers, and per-release breakdowns. Collaborators are paid <em>directly</em> — there\'s no "main artist" wallet. See <a>Payouts</a>.',
+    'Monthly, on the 5th, with a €5 floor. SEPA or Stripe Connect. You see the per-stream rate that month, ledger entry numbers, and per-release breakdowns. Collaborators are paid <em>directly</em>. There\'s no "main artist" wallet. See <a>Payouts</a>.',
   "help.faq.keepMasters.q": "Do I keep my masters?",
   "help.faq.keepMasters.a":
-    "<strong>Always.</strong> You keep your masters and your rights. You can take any release down in a one-page, 14-day process with no retention loop — and past plays stay paid. See <a>Rights & takedown</a>.",
+    "<strong>Always.</strong> You keep your masters and your rights. You can take any release down in a one-page, 14-day process with no retention loop, and past plays stay paid. See <a>Rights & takedown</a>.",
   "help.faq.realisticEarn.q": "What can I realistically earn?",
   "help.faq.realisticEarn.a":
-    "We're honest about the ceiling: roughly €74/mo casual, €340/mo building, €1,820/mo sustaining. Studio won't replace a touring income — but it can replace the rent. The full breakdown is on <a>About Studio</a>.",
+    "We're honest about the ceiling: roughly €74/mo casual, €340/mo building, €1,820/mo sustaining. Studio won't replace a touring income, but it can replace the rent. The full breakdown is on <a>About Studio</a>.",
 
   "help.stillStuck.title": "Still <em>stuck</em>?",
   "help.statusOperational": "All systems operational ·",
@@ -546,7 +546,7 @@ export const studio: Catalog = {
   "press.downloadingPhotosToast": "Downloading press photos · hi-res",
   "press.downloadingPhotoToast": "Downloading photo · hi-res",
   "press.accessRequestedToast":
-    "Press access requested — we'll verify you once",
+    "Press access requested. We'll verify you once",
   "press.eyebrow": "Auto-generated press kit · always current",
   "press.fact.from": "From",
   "press.fact.pronouns": "Pronouns",
@@ -560,7 +560,7 @@ export const studio: Catalog = {
   "press.pauseAria": "Pause preview",
   "press.watermarkedBadge": "Watermarked",
   "press.previewNote":
-    "This preview carries an <em>inaudible watermark</em> and a spoken QueerPulse tag at the tail. For a clean broadcast master, request the full promo — we verify press once, then you're cleared for everything.",
+    "This preview carries an <em>inaudible watermark</em> and a spoken QueerPulse tag at the tail. For a clean broadcast master, request the full promo. We verify press once, then you're cleared for everything.",
   "press.section.bio": "<em>Bio</em>",
   "press.copyBothCta": "Copy both",
   "press.bio.shortLabel": "Short · 40 words",
@@ -594,14 +594,14 @@ export const studio: Catalog = {
   "terms.hero.eyebrow": "Trust & terms",
   "terms.hero.title": "The deal, written so you can <em>actually read it</em>.",
   "terms.hero.lede":
-    "The full legal terms exist and a lawyer wrote them. But here's the whole thing in plain language first — <em>because a co-op you can't understand isn't really yours</em>.",
+    "The full legal terms exist and a lawyer wrote them. But here's the whole thing in plain language first: <em>because a co-op you can't understand isn't really yours</em>.",
 
   "terms.deal.artists.title": "Artists keep <em>80%</em> & their masters",
   "terms.deal.artists.body":
-    "The split is in the deed, not a settings page. <em>The floor can rise, never fall</em> without a two-thirds vote.",
+    "The split lives in the co-op's deed, binding by law. <em>The floor rises freely and can only fall by a two-thirds vote.</em>",
   "terms.deal.tips.title": "Tips are <em>100%</em>, always",
   "terms.deal.tips.body":
-    "No platform cut on tips, ever. This one isn't up for a vote — it's a founding term.",
+    "No platform cut on tips, ever. This one isn't up for a vote. It's a founding term.",
   "terms.deal.data.title": "Your data is <em>never</em> sold",
   "terms.deal.data.body":
     "Not sold, not shared, not used to train anything. History is off by default and erasable in one tap.",
@@ -609,10 +609,10 @@ export const studio: Catalog = {
   "terms.deal.leaving.body":
     "Take down work in 14 days, close your account in one click. Past plays stay paid either way.",
 
-  "terms.sec.deed.num": "01 — the co-op deed",
+  "terms.sec.deed.num": "01: the co-op deed",
   "terms.sec.deed.heading": "What it means that you <em>own</em> this.",
   "terms.sec.deed.p1":
-    "QueerPulse Studio is a registered co-operative. Members — listeners and artists — are the owners, not the customers. That isn't branding: it's a legal structure with a deed you can read, that binds the people running it.",
+    "QueerPulse Studio is a registered co-operative. Members, listeners and artists alike, own it. That isn't branding: it's a legal structure with a deed you can read, that binds the people running it.",
   "terms.sec.deed.p2":
     "The deed fixes three things the people in charge <strong>cannot quietly change</strong>: the 80% artist floor, the 100% tip pass-through, and the public ledger. Altering the floor downward needs a two-thirds supermajority of the whole membership. The council is <em>elected, term-limited, and paid on the ledger</em>. There are no founder shares and no investor veto.",
   "terms.sec.deed.pull":
@@ -620,12 +620,12 @@ export const studio: Catalog = {
   "terms.sec.deed.footnote":
     "The full deed and the co-op's annual accounts are published every year alongside the <a>transparency report</a>.",
 
-  "terms.sec.licences.num": "02 — licences",
+  "terms.sec.licences.num": "02: licences",
   "terms.sec.licences.heading": "What you can <em>do</em> with the music.",
   "terms.sec.licences.p1":
-    "Every release names its licence, picked by the artist. Here's what each one means for you as a listener — and for anyone who wants to reuse the work in a set, a film, or a remix.",
+    "Every release names its licence, picked by the artist. Here's what each one means for you as a listener, and for anyone who wants to reuse the work in a set, a film, or a remix.",
   "terms.sec.licences.footnote":
-    "DJ sets are special: a set can include tracks under different licences, and our matcher routes each track's payout to its own artist. <em>Covers are allowed</em>; mechanical royalties are handled through a Portuguese collecting partner, and we don't pay synchronisation — so clearing a cover for film use is on you.",
+    "DJ sets are special: a set can include tracks under different licences, and our matcher routes each track's payout to its own artist. <em>Covers are allowed</em>; mechanical royalties are handled through a Portuguese collecting partner, and we don't pay synchronisation, so clearing a cover for film use is on you.",
 
   "terms.licence.arr.title": "All rights <em>reserved</em>",
   "terms.licence.arr.row1": "Stream & save it",
@@ -640,12 +640,12 @@ export const studio: Catalog = {
   "terms.licence.ccBySa.row2": "Commercial use allowed",
   "terms.licence.ccBySa.row3": "Share remixes <em>same licence</em>",
 
-  "terms.sec.privacy.num": "03 — privacy, briefly",
+  "terms.sec.privacy.num": "03: privacy, briefly",
   "terms.sec.privacy.heading": "What we <em>hold</em>, and what we don't.",
   "terms.sec.privacy.p1":
-    "We hold your account, your saves, your receipts, and whatever you explicitly turn on. We do <strong>not</strong> hold a profile of your taste to sell, a history you didn't ask us to keep, or anything we'd hand to an advertiser — because we don't have advertisers.",
+    "We hold your account, your saves, your receipts, and whatever you explicitly turn on. We do <strong>not</strong> hold a profile of your taste to sell, a history you didn't ask us to keep, or anything we'd hand to an advertiser, because we don't have advertisers.",
   "terms.sec.privacy.footnote":
-    "Aggregate, de-identified play counts feed the public ledger so artists get paid and the numbers are auditable. You can export everything we hold, or erase it, from <a>Settings → Erase & exit</a> — instantly, no modal, no undo needed because we mean it.",
+    "Aggregate, de-identified play counts feed the public ledger so artists get paid and the numbers are auditable. You can export everything we hold, or erase it, from <a>Settings → Erase & exit</a>: instantly, no modal, no undo needed because we mean it.",
 
   "terms.longVersions.title": "The long versions",
   "terms.longVersions.meta":
@@ -660,18 +660,18 @@ export const studio: Catalog = {
   // stay English in both modes (§1).
   "rights.promise.window.title": "14-day removal",
   "rights.promise.window.body":
-    "Confirm a takedown and the release stops being served within 14 days — usually the same night. Caches clear, links 404 to a tasteful page.",
+    "Confirm a takedown and the release stops being served within 14 days, usually the same night. Caches clear, links 404 to a tasteful page.",
   "rights.promise.paid.title": "Past plays stay paid",
   "rights.promise.paid.body":
     "Every listen up to removal is paid in the next cycle. Taking work down never claws back money already earned.",
   "rights.promise.banking.title": "Banking untouched",
   "rights.promise.banking.body":
-    "A takedown is not an account closure. Your SEPA details, your payout schedule, your collaborator splits — all stay live.",
+    "A takedown is not an account closure. Your SEPA details, your payout schedule, your collaborator splits: all stay live.",
 
   "rights.hero.eyebrow": "Your work · your call",
   "rights.hero.title": "Rights & <em>takedown</em>.",
   "rights.hero.dek":
-    'One page. Your masters are yours — you can take any release off Studio at any time, for any reason or none. No retention team, no exit survey, no "are you sure" loop designed to wear you down.',
+    'One page. Your masters are yours. You can take any release off Studio at any time, for any reason or none. No retention team, no exit survey, no "are you sure" loop designed to wear you down.',
 
   "rights.releases.heading": "Your <em>releases</em>",
   "rights.releases.liveCount_one": "{count} live",
@@ -689,14 +689,14 @@ export const studio: Catalog = {
     "This page only removes individual releases. To close your artist account, end your sustainer membership, and request a full data export, that lives in <a>Settings → Erase & exit</a>. <em>Even then, past payouts are yours to keep</em> and we'll keep paying out any plays that already happened.",
 
   "rights.takedownStartedToast": '"{title}" enters its 14-day removal window',
-  "rights.removalCancelledToast": "Removal cancelled — release stays up",
+  "rights.removalCancelledToast": "Removal cancelled. Release stays up",
 
   // ── Takedown confirm modal (StudioTakedownModal) ──────────────────────────
   "rights.modal.confirmAria": "Confirm takedown of {title}",
   "rights.modal.eyebrow": "Confirm takedown",
   "rights.modal.title": "Take down <em>{title}</em>?",
   "rights.modal.body":
-    'It\'ll stop being served within 14 days. Existing links will resolve to a short "this work has been withdrawn by the artist" page. <em>You can re-publish it any time</em> — your masters never leave your hands.',
+    'It\'ll stop being served within 14 days. Existing links will resolve to a short "this work has been withdrawn by the artist" page. <em>You can re-publish it any time</em>. Your masters never leave your hands.',
   "rights.modal.keepEarned":
     "<em>You keep everything already earned.</em> This release stays paid for every play up to removal, in the next cycle.",
   "rights.modal.confirmCta": "Take it down",
@@ -811,10 +811,10 @@ export const studio: Catalog = {
   "withdrawn.hero.eyebrow": "Withdrawn by the artist",
   "withdrawn.hero.title": "This work has been <em>taken down</em>.",
   "withdrawn.hero.sub":
-    "The artist removed it from Studio — their right, their call. <em>No reason is owed</em>, and we don't ask for one.",
+    "The artist removed it from Studio: their right, their call. <em>No reason is owed</em>, and we don't ask for one.",
   "withdrawn.card.title": "What this <em>means</em>",
   "withdrawn.card.body":
-    "A takedown isn't a deletion of the work itself — the masters stay with the artist, who can re-publish any time. It just means it's no longer served here. If you'd bought or saved it, it stays in your library as a record, marked withdrawn.",
+    "A takedown isn't a deletion of the work itself. The masters stay with the artist, who can re-publish any time. It just means it's no longer served here. If you'd bought or saved it, it stays in your library as a record, marked withdrawn.",
   "withdrawn.card.jadeLine":
     "If you tipped or bought this, <em>every cent already reached the artist</em> and stays with them. Nothing is clawed back.",
   "withdrawn.visitArtistCta": "Visit the artist's page",
@@ -858,12 +858,12 @@ export const studio: Catalog = {
   "settings.eyebrow": "Your room · settings",
   "settings.title": "How the room <em>treats</em> you.",
   "settings.dek":
-    "Audio, privacy, captions, tipping. Nothing here is on unless you turn it on — and anything you turn on, you can erase in <em>one tap, no confirmation modal</em>.",
+    "Audio, privacy, captions, tipping. Nothing here is on unless you turn it on, and anything you turn on, you can erase in <em>one tap, no confirmation modal</em>.",
 
   "settings.audio.label": "Audio",
   "settings.audio.title": "Sound <em>quality</em>",
   "settings.audio.dek":
-    "FLAC is lossless and bigger; AAC is lighter on data. Streaming and downloads can differ — pick per context.",
+    "FLAC is lossless and bigger; AAC is lighter on data. Streaming and downloads can differ. Pick per context.",
   "settings.audio.streamQuality.heading": "Default streaming quality",
   "settings.audio.streamQuality.body":
     "On a good connection we'll go as high as you allow. We never auto-upgrade on cellular without asking.",
@@ -887,14 +887,14 @@ export const studio: Catalog = {
   "settings.privacy.label": "Privacy",
   "settings.privacy.title": "What the room <em>remembers</em>",
   "settings.privacy.dek":
-    "The short version: almost nothing, by default. We never sell, share, or train on what you play. Aggregate plays feed the public ledger — nothing that identifies you.",
+    "The short version: almost nothing, by default. We never sell, share, or train on what you play. Aggregate plays feed the public ledger, nothing that identifies you.",
   "settings.privacy.history.heading": "Listening history",
   "settings.privacy.history.body":
-    "Off by default — nothing about what you played leaves your browser. Turn on for a private, deletable record only you can see.",
+    "Off by default: nothing about what you played leaves your browser. Turn on for a private, deletable record only you can see.",
   "settings.privacy.cloudSync.heading": "Cloud-sync my library",
   "settings.privacy.cloudSync.body":
     "Saves and follows move between devices. Without this they live on this device only.",
-  "settings.privacy.tipNotes.heading": "Tip notes — who sees them",
+  "settings.privacy.tipNotes.heading": "Tip notes: who sees them",
   "settings.privacy.tipNotes.body":
     "The note you write when you tip. <em>Private is the default</em>: only you and the artist ever read it.",
   "settings.privacy.tipNotes.private.label": "Private",
@@ -909,7 +909,7 @@ export const studio: Catalog = {
     "Anyone can read it on the artist's page. You can still hide any single note later.",
   "settings.privacy.tipReceipts.heading": "Public tip receipts",
   "settings.privacy.tipReceipts.body":
-    'Each tip mints a receipt showing the split — no personal data. On, it can be shared as a "look what the room paid this artist" card.',
+    'Each tip mints a receipt showing the split, no personal data. On, it can be shared as a "look what the room paid this artist" card.',
 
   "settings.captions.label": "Captions & lyrics",
   "settings.captions.title": "Words on the <em>screen</em>",
@@ -936,7 +936,7 @@ export const studio: Catalog = {
   "settings.tipping.label": "Tipping",
   "settings.tipping.title": "Your default <em>tip</em>",
   "settings.tipping.dek":
-    "What the one-tap tip pill sends. 100% reaches the artist — there is no platform cut on tips, ever.",
+    "What the one-tap tip pill sends. 100% reaches the artist. There is no platform cut on tips, ever.",
   "settings.tipping.defaultAmount.heading": "Default amount",
   "settings.tipping.defaultAmount.body":
     "You can always pick a different figure at tip time.",
@@ -953,10 +953,10 @@ export const studio: Catalog = {
     "Wipes the private record from this device and the cloud. <em>Done instantly. No undo.</em>",
   "settings.erase.history.cta": "Erase history",
   "settings.erase.history.toast":
-    "History erased — gone from this device and the cloud.",
+    "History erased. Gone from this device and the cloud.",
   "settings.erase.export.heading": "Download everything we hold on you",
   "settings.erase.export.note":
-    "A JSON of your saves, tips, receipts and settings — emailed within the hour.",
+    "A JSON of your saves, tips, receipts and settings, emailed within the hour.",
   "settings.erase.export.cta": "Request export",
   "settings.erase.export.toast":
     "We'll email your data export within the hour.",
@@ -973,7 +973,7 @@ export const studio: Catalog = {
   "notifications.eyebrow": "Your room · what happened while you were out",
   "notifications.title": "The room's been <em>busy</em>.",
   "notifications.dek":
-    "Tip replies from artists, new releases from people you follow, live rooms about to open. <em>Only the things you asked to hear about</em> — tune it in Settings.",
+    "Tip replies from artists, new releases from people you follow, live rooms about to open. <em>Only the things you asked to hear about</em>. Tune it in Settings.",
   "notifications.filter.all": "All",
   "notifications.filter.reply": "Replies",
   "notifications.filter.release": "Releases",
@@ -993,14 +993,14 @@ export const studio: Catalog = {
   "tipModal.eyebrow": "Tip · 100% to the artist",
   "tipModal.title": "Send a tip to <em>{recipient}</em>",
   "tipModal.sub":
-    "Tips pass through untouched — every cent lands with {recipient}.",
+    "Tips pass through untouched: every cent lands with {recipient}.",
   "tipModal.customPlaceholder": "Custom amount",
   "tipModal.sendingCta": "Sending…",
   "tipModal.sendCta": "Tip {amount}",
   "tipModal.note":
     "Pays {recipient} on top of streaming · <em>nothing skimmed</em>",
   "tipModal.success.title":
-    "Thank you — that's <em>{amount}</em> to {recipient}.",
+    "Thank you. That's <em>{amount}</em> to {recipient}.",
   "tipModal.success.body":
     "100% of your tip reaches {recipient} directly. No platform cut, no processing skimmed off the top.",
   "tipModal.success.backCta": "Back to the music",
@@ -1018,7 +1018,7 @@ export const studio: Catalog = {
   "library.eyebrow": "Your library",
   "library.title": "Everything you've <em>kept.</em>",
   "library.dek":
-    "Saved albums, sets, and tracks — and the <em>{amount}</em> you've paid {artistCount} artists this year by listening here.",
+    "Saved albums, sets, and tracks, plus the <em>{amount}</em> you've paid {artistCount} artists this year by listening here.",
   "library.tabs.albums": "Albums",
   "library.tabs.sets": "Sets",
   "library.tabs.collections": "Collections",
@@ -1029,7 +1029,7 @@ export const studio: Catalog = {
   "library.category.tracks": "tracks",
   "library.empty.title": "Your library's empty here",
   "library.empty.description":
-    "Nothing in <em>{category}</em> yet. Wander the studio, and anything you save lands right here — yours to come back to.",
+    "Nothing in <em>{category}</em> yet. Wander the studio, and anything you save lands right here, yours to come back to.",
   "library.empty.browseCta": "Browse the studio",
   "library.empty.searchCta": "Search the catalogue",
 
@@ -1050,7 +1050,7 @@ export const studio: Catalog = {
   "search.results.featuredNow": "Featured <em>now</em>",
   "search.empty.title": "Nothing matched that",
   "search.empty.description":
-    "We couldn't find anything for <em>{term}</em>. Try a different word, or loosen the filter — the catalogue is bigger than it looks.",
+    "We couldn't find anything for <em>{term}</em>. Try a different word, or loosen the filter. The catalogue is bigger than it looks.",
   "search.empty.clearCta": "Clear search",
 
   // ── Creator dashboard (StudioDashboardPage + Charts + Side) ────────────────
@@ -1061,7 +1061,7 @@ export const studio: Catalog = {
   "dashboard.hero.eyebrow": "Studio · this month",
   "dashboard.hero.title": "Good week, <em>{name}</em>.",
   "dashboard.hero.sub":
-    "<em>{trackTitle}</em> is two months old and still climbing — the curators kept it in rotation.",
+    "<em>{trackTitle}</em> is two months old and still climbing. The curators kept it in rotation.",
 
   "dashboard.stats.playsThisMonth": "Plays · this month",
   "dashboard.stats.streamingEarnings": "Streaming earnings",
@@ -1078,12 +1078,12 @@ export const studio: Catalog = {
   "dashboard.side.quickActions.heading": "Things you can <em>do</em> from here",
   "dashboard.side.quickActions.upload.label": "Upload a new release",
   "dashboard.side.quickActions.upload.hint": "WAV / FLAC · 3 steps · 8 minutes",
-  "dashboard.side.quickActions.goLive.label": "Go live — host a listening room",
+  "dashboard.side.quickActions.goLive.label": "Go live: host a listening room",
   "dashboard.side.quickActions.payouts.label": "Review payouts & banking",
   "dashboard.side.deal.eyebrow": "The deal, always",
   "dashboard.side.deal.heading": "80% to <em>you.</em>",
   "dashboard.side.deal.body":
-    "Every play, every tip, every buy. The split is the same for a first release as for a festival winner — and it's printed on the public ledger.",
+    "Every play, every tip, every buy. The split is the same for a first release as for a festival winner, and it's printed on the public ledger.",
   "dashboard.side.deal.perPlay.label": "Per play",
   "dashboard.side.deal.yourShare.label": "Your share",
   "dashboard.side.deal.tips.label": "Tips",
@@ -1109,7 +1109,7 @@ export const studio: Catalog = {
   "upload.dropzone.title":
     "Drop a folder of <em>WAVs</em>, or click to browse.",
   "upload.dropzone.body":
-    "An EP, an album, a single — same flow. We'll figure out track order from filenames.",
+    "An EP, an album, a single: same flow. We'll figure out track order from filenames.",
   "upload.dropzone.accepts":
     "accepts · <em>WAV · FLAC · AIFF</em> · max 96 kHz / 24 bit · up to 24 tracks",
 
@@ -1119,11 +1119,11 @@ export const studio: Catalog = {
   "upload.files.loudnessCheck": "Loudness check",
   "upload.files.loudWarning.title": "Track {trackNumber} is loud.",
   "upload.files.loudWarning.body":
-    "Master comes in at {measuredLoudness} — our floor is {targetLoudness} default. <em>This isn't fatal:</em> we can normalise on the fly per listener. If you intended this peak, leave it.",
+    "Master comes in at {measuredLoudness}. Our floor is {targetLoudness} default. <em>This isn't fatal:</em> we can normalise on the fly per listener. If you intended this peak, leave it.",
   "upload.files.loudToggle.show": "What we do with loud masters",
   "upload.files.loudToggle.hide": "What we do with loud masters",
   "upload.files.loudExplainer":
-    "We keep your master <em>exactly as delivered</em> and store it untouched. For playback we apply per-listener loudness normalisation to roughly −14 LUFS, so your track sits at a comfortable level next to everything else in a set — <em>without re-encoding or clipping your file</em>. Listeners who turn normalisation off in their settings hear your original peak. Nothing is baked in; you can change the target or opt out per release at any time.",
+    "We keep your master <em>exactly as delivered</em> and store it untouched. For playback we apply per-listener loudness normalisation to roughly −14 LUFS, so your track sits at a comfortable level next to everything else in a set, <em>without re-encoding or clipping your file</em>. Listeners who turn normalisation off in their settings hear your original peak. Nothing is baked in; you can change the target or opt out per release at any time.",
 
   "upload.coverArt.heading":
     "Cover art <em>{readyCount} of {totalCount} · linted</em>",
@@ -1146,7 +1146,7 @@ export const studio: Catalog = {
   "upload.side.files.eyebrow": "What we do with your files",
   "upload.side.files.title": "Yours, <em>still</em>.",
   "upload.side.files.body":
-    "You drop the masters; we transcode and stream. Your original WAV / FLAC stays your property — we hold a copy <em>only</em> for delivery. Takedown removes the listening copy in 14 days. Non-exclusive, always.",
+    "You drop the masters; we transcode and stream. Your original WAV / FLAC stays your property. We hold a copy <em>only</em> for delivery. Takedown removes the listening copy in 14 days. Non-exclusive, always.",
   "upload.side.files.list.sourceKept.label": "Source kept",
   "upload.side.files.list.sourceKept.value": "your file, untouched",
   "upload.side.files.list.listenerDelivery.label": "Listener delivery",
@@ -1182,7 +1182,7 @@ export const studio: Catalog = {
 
   "upload.submitted.title": "Submitted for <em>review.</em>",
   "upload.submitted.body":
-    "Your release is in the council queue. A curator will check the files, splits and credits — usually within a day or two — and you'll get a note the moment it's live. Nothing publishes without your final yes.",
+    "Your release is in the council queue. A curator will check the files, splits and credits, usually within a day or two, and you'll get a note the moment it's live. Nothing publishes without your final yes.",
   "upload.submitted.viewPayoutsCta": "View your payouts",
   "upload.submitted.toast": "Release submitted for review",
 
@@ -1218,7 +1218,7 @@ export const studio: Catalog = {
 
   "payouts.sidebar.methodEyebrow": "Payout method · active",
   "payouts.sidebar.methodHeading": "Sending to <em>SEPA</em>",
-  "payouts.sidebar.method.sepa.label": "SEPA — IBAN",
+  "payouts.sidebar.method.sepa.label": "SEPA: IBAN",
   "payouts.sidebar.method.sepa.badge": "Active",
   "payouts.sidebar.method.stripe.label": "Stripe Connect",
   "payouts.sidebar.method.stripe.hint": "connected · backup, not primary",
@@ -1256,8 +1256,8 @@ export const studio: Catalog = {
     "Programming the room · Monday morning · drag anything below",
   "program.header.title": "Week <em>{weekNumber}</em> · {dateRange}",
   "program.header.sub":
-    "Build the slate of the week: <em>one cover, 12 — 16 tracks, 2 — 3 collections, broadcasts</em>. Press publish at noon and the homepage rotates.",
-  "program.header.autosave": "Auto-saved · {time} — every keystroke",
+    "Build the slate of the week: <em>one cover, 12 to 16 tracks, 2 to 3 collections, broadcasts</em>. Press publish at noon and the homepage rotates.",
+  "program.header.autosave": "Auto-saved · {time}, every keystroke",
   "program.header.previewRoomCta": "Preview the room",
 
   "program.publishBar.status":
@@ -1267,14 +1267,14 @@ export const studio: Catalog = {
   "program.publishBar.publishCta": "Publish at noon",
 
   "program.toast.addedToSlate": "Added to this week's slate",
-  "program.toast.passed": "Passed — the writer can resubmit later",
+  "program.toast.passed": "Passed. The writer can resubmit later",
   "program.toast.playingPreview": "Playing preview…",
   "program.toast.openingRoomPreview": "Opening the room preview…",
   "program.toast.chooseNewCover": "Choose a new cover artist…",
   "program.toast.editingCoverNote": "Editing the cover note…",
   "program.toast.openingHomepagePreview": "Opening homepage preview…",
   "program.toast.draftSaved": "Draft saved",
-  "program.toast.published": "Slate published — homepage rotates at noon",
+  "program.toast.published": "Slate published. Homepage rotates at noon",
 
   "program.inbox.heading": "Submissions · <em>{count} new</em>",
   "program.inbox.triageCta": "Triage",
@@ -1292,7 +1292,7 @@ export const studio: Catalog = {
   "program.slate.singles.count":
     "{placed} of {total} placed · {open} slots open",
   "program.slate.singles.notePlaceholder":
-    "— write a one-line note · why this, why now —",
+    "Write a one-line note · why this, why now",
   "program.slate.singles.noteAria": "Note for {title}",
   "program.slate.singles.removeAria": "Remove {title}",
   "program.slate.singles.addSlotCta":
@@ -1315,7 +1315,7 @@ export const studio: Catalog = {
     "Submission triage · the council answers every submission in 14 days",
   "triage.header.title": "Inbox · <em>{count}</em> new this week.",
   "triage.header.sub":
-    "Every submission gets read or listened to. <em>Pass</em> takes a sentence — that sentence becomes the artist's answer. Median reply time this season: {count} days.",
+    "Every submission gets read or listened to. <em>Pass</em> takes a sentence: that sentence becomes the artist's answer. Median reply time this season: {count} days.",
 
   "triage.kpi.newThisWeek": "new this week",
   "triage.kpi.youClaimed": "you claimed",
@@ -1349,7 +1349,7 @@ export const studio: Catalog = {
   "triage.detail.flaggedHeading": "What other curators flagged ({count})",
   "triage.detail.answerHeading": "Your <em>answer</em>",
   "triage.detail.decision.heading":
-    "If you pass — write one sentence. This goes to {artistName} as the answer.",
+    "If you pass, write one sentence. This goes to {artistName} as the answer.",
   "triage.detail.decision.placeholder":
     "A small sentence that explains the no. We never send a form letter, ever.",
   "triage.detail.decision.hint":
@@ -1359,7 +1359,7 @@ export const studio: Catalog = {
   "triage.detail.addToSlateCta": "＋ Add to next slate",
   "triage.detail.toast.held": "Held for a second read",
   "triage.detail.toast.passed":
-    "Passed with your sentence — sent to {artistName}",
+    "Passed with your sentence, sent to {artistName}",
   "triage.detail.toast.addedToSlate": "Added to the next slate",
 
   // ── Flag review (StudioFlagReviewPage + Card) ──────────────────────────────
@@ -1386,11 +1386,11 @@ export const studio: Catalog = {
   "flagReview.resolution.corrected": "corrected",
   "flagReview.resolution.held": "held",
 
-  "flagReview.toast.claimed": "Claimed — it's yours to review",
+  "flagReview.toast.claimed": "Claimed. It's yours to review",
   "flagReview.toast.lineupConfirmed": "Lineup confirmed accurate",
   "flagReview.toast.lineupCorrected": "Lineup corrected",
   "flagReview.toast.dismissedCreditsConfirmed":
-    "Flag dismissed — credits confirmed correct",
+    "Flag dismissed. Credits confirmed correct",
   "flagReview.toast.correctionRequested":
     "Correction requested from the artist",
   "flagReview.toast.heldUntilCorrected": "Held until corrected",
@@ -1434,19 +1434,19 @@ export const studio: Catalog = {
     "<em>{count}</em> in the room · {sustainers} sustainers · {cities} cities",
   "broadcast.status.pauseMicCta": "Pause mic",
   "broadcast.status.endBroadcastCta": "End broadcast",
-  "broadcast.status.toast.micPaused": "Mic paused — the room hears silence",
+  "broadcast.status.toast.micPaused": "Mic paused. The room hears silence",
   "broadcast.status.toast.ending": "Broadcast ends in 5… archiving to a replay",
 
   "broadcast.audioIn.panelLabel": "Audio in",
   "broadcast.audioIn.singleCamVideo": "Single-cam video",
   "broadcast.audioIn.cameraNote":
-    "Audio-only is the default for listening rooms. Camera ships in Phase 5 — flagged off for now.",
+    "Audio-only is the default for listening rooms. Camera ships in Phase 5, flagged off for now.",
 
   "broadcast.nowPlaying.onAirNow": "On the air now",
   "broadcast.nowPlaying.setListLabel":
-    "Set list · <em>type as you play</em> — it becomes the cue sheet on archive",
+    "Set list · <em>type as you play</em>: it becomes the cue sheet on archive",
   "broadcast.nowPlaying.inputPlaceholder":
-    "What did you just play? Artist — title…",
+    "What did you just play? Artist · title…",
   "broadcast.nowPlaying.inputAria": "Add a track to the set list",
   "broadcast.nowPlaying.addCta": "Add",
   "broadcast.nowPlaying.justAdded": "Just added",
@@ -1455,7 +1455,7 @@ export const studio: Catalog = {
   "broadcast.nowPlaying.badge.matched": "€ matched",
   "broadcast.nowPlaying.badge.hold": "Hold",
   "broadcast.nowPlaying.footer":
-    "Matched tracks pay their artists automatically from this set's payout. <em>Held tracks wait</em> until the council's matcher clears them — nobody loses a cent in the meantime.",
+    "Matched tracks pay their artists automatically from this set's payout. <em>Held tracks wait</em> until the council's matcher clears them. Nobody loses a cent in the meantime.",
 
   "broadcast.aside.tipsTab": "Live tips <em>{amount}</em>",
   "broadcast.aside.talkbackTab": "Talkback <em>{count}</em>",
@@ -1474,7 +1474,7 @@ export const studio: Catalog = {
   "sheet.store.eyebrow": "Sheet music & lyrics archive",
   "sheet.store.title": "Buy the <em>score</em>, pay the people.",
   "sheet.store.dek":
-    "A {amount} micropayment unlocks a clean, printable PDF — and splits <em>{splitRatio}</em> to the people who made and transcribed it. Reading is free; downloading pays.",
+    "A {amount} micropayment unlocks a clean, printable PDF, and splits <em>{splitRatio}</em> to the people who made and transcribed it. Reading is free; downloading pays.",
 
   "sheet.preview.eyebrow": "Lead sheet · transcription",
   "sheet.preview.byLine":
@@ -1497,7 +1497,7 @@ export const studio: Catalog = {
   "sheet.checkout.role.composer": "composer",
   "sheet.checkout.role.coop": "The co-op · hosting & infra",
   "sheet.checkout.splitFoot":
-    "Sheets pay <em>90%</em> to the makers — more generous than the 80% streaming split, because the work is one-off and hosting a PDF costs near zero. <em>Voted in at the 9 June assembly.</em>",
+    "Sheets pay <em>90%</em> to the makers, more generous than the 80% streaming split, because the work is one-off and hosting a PDF costs near zero. <em>Voted in at the 9 June assembly.</em>",
   "sheet.checkout.payMethod.card.label": "Saved card",
   "sheet.checkout.payMethod.card.sub": "one-tap, no re-entry",
   "sheet.checkout.payMethod.sepa.label": "SEPA direct",
@@ -1508,7 +1508,7 @@ export const studio: Catalog = {
   "sheet.checkout.note":
     "Instant download · re-download any time from your library · <em>the makers are paid tonight</em>.",
   "sheet.checkout.downloadedToast":
-    "Downloaded — {amount} paid to {names} tonight",
+    "Downloaded: {amount} paid to {names} tonight",
 
   "sheet.also.heading": "From the same <em>transcriber</em>",
   "sheet.also.subtitle_one":
@@ -1551,27 +1551,27 @@ export const studio: Catalog = {
   "receipt.footer.publicLedgerLink": "public ledger",
   "receipt.footer.rowLabel": "row {code}",
   "receipt.footer.exportCta": "Export PDF",
-  "receipt.actions.share": "Share — paid card",
+  "receipt.actions.share": "Share paid card",
   "receipt.actions.tipAgain": "Tip again",
   "receipt.actions.openArtistPage": "Open {artist}'s page",
   "receipt.actions.emailCopy": "Email me a copy",
-  "receipt.toast.shareCopied": "Paid card copied — share it anywhere.",
-  "receipt.toast.tipAgain": "Tip {artist} again — same track.",
+  "receipt.toast.shareCopied": "Paid card copied. Share it anywhere.",
+  "receipt.toast.tipAgain": "Tip {artist} again, same track.",
   "receipt.toast.emailCopy": "A copy is on its way to your inbox.",
   "receipt.privacyNote":
     "By default tips are <em>public, with your name</em>. You can make this one anonymous, or set every future tip to anonymous, in settings. <em>We don't share tip data with anyone.</em> <a>Privacy commitments</a>",
 
   // ── Sustain-membership checkout (StudioCheckoutPage) ──────────────────────
-  "checkout.doneToast": "You're sustaining the studio — welcome in.",
+  "checkout.doneToast": "You're sustaining the studio. Welcome in.",
   "checkout.doneTitle": "You're <em>sustaining</em> it now.",
   "checkout.doneBody":
-    "Welcome in. Every track you play from here pays the artist who made it. Your first payment of {amount} is done — the rest is just listening.",
+    "Welcome in. Every track you play from here pays the artist who made it. Your first payment of {amount} is done. The rest is just listening.",
   "checkout.startListeningCta": "Start listening",
   "checkout.goToLibraryCta": "Go to your library",
   "checkout.eyebrow": "Checkout",
   "checkout.title": "Sustain the <em>studio.</em>",
   "checkout.dek":
-    "Seven euros a month keeps a fair-pay music platform alive — and pays the artists you actually listen to, on every play.",
+    "Seven euros a month keeps a fair-pay music platform alive, and pays the artists you actually listen to, on every play.",
   "checkout.nameLabel": "Name on card",
   "checkout.namePlaceholder": "Your name",
   "checkout.cardLabel": "Card number",
@@ -1582,7 +1582,7 @@ export const studio: Catalog = {
   "checkout.payCta": "Pay {amount}{cadence}",
   "checkout.cadenceMonthly": "/ month",
   "checkout.prototypeNote":
-    "This is a prototype — no card is charged and nothing is stored.",
+    "This is a prototype. No card is charged and nothing is stored.",
   "checkout.planName": "Sustain",
   "checkout.membershipLabel": "{name} <em>membership</em>",
   "checkout.dueTodayLabel": "Due today",
@@ -1593,7 +1593,7 @@ export const studio: Catalog = {
   "checkout.lines.platformShare": "Platform & hosting",
   "checkout.lines.included": "included",
   "checkout.reassure.cancel":
-    "Cancel any time — one click, no email, no retention call.",
+    "Cancel any time: one click, no email, no retention call.",
   "checkout.reassure.share":
     "{percent}% of every euro is paid straight to the artists you listen to.",
   "checkout.reassure.noAds": "No ads, ever. Your listening data is never sold.",
@@ -1609,7 +1609,7 @@ export const studio: Catalog = {
   "fund.hero.liveLabel": "Public · updated Mondays at noon",
   "fund.hero.title": "The <em>solidarity</em> fund.",
   "fund.hero.dek":
-    "A small pooled reserve that pays the people the per-stream rate can't reach — <em>transcribers, translators, first-timers, and artists in a hard month</em>. Where it comes from and where it goes, in full.",
+    "A small pooled reserve that pays the people the per-stream rate can't reach: <em>transcribers, translators, first-timers, and artists in a hard month</em>. Where it comes from and where it goes, in full.",
 
   "fund.balance.label": "Fund balance · today",
   "fund.balance.paidThisQuarterLabel": "paid out this quarter",
@@ -1635,7 +1635,7 @@ export const studio: Catalog = {
 
   "fund.flows.out.transcribers.label": "Transcribers & <em>translators</em>",
   "fund.flows.out.transcribers.desc":
-    "Sheet music, lyric translations — paid per accepted piece.",
+    "Sheet music, lyric translations, paid per accepted piece.",
   "fund.flows.out.grants.label": "First-release <em>grants</em>",
   "fund.flows.out.grants.desc":
     "€1,200 unrestricted to first-time members on the spring strand.",
@@ -1678,7 +1678,7 @@ export const studio: Catalog = {
   "calls.hero.eyebrow": "From the council",
   "calls.hero.title": "Open <em>calls</em> & commissions.",
   "calls.hero.dek":
-    "Briefs the council and co-op have funded. Apply inline — attach a <em>single track or release</em> from your catalogue. No cover letters, no portfolios; the work speaks.",
+    "Briefs the council and co-op have funded. Apply inline: attach a <em>single track or release</em> from your catalogue. No cover letters, no portfolios; the work speaks.",
 
   "calls.filter.all": "All open",
   "calls.filter.commissions": "Commissions",
@@ -1695,9 +1695,9 @@ export const studio: Catalog = {
   "calls.card.submitCta": "Submit application",
   "calls.card.cancelCta": "Cancel",
   "calls.card.singleTrackNote":
-    "<em>One track only</em> — the council wants your sharpest, not your folder.",
+    "<em>One track only</em>: the council wants your single sharpest track.",
   "calls.card.submittedToast":
-    "Application submitted — the council reviews in Monday triage",
+    "Application submitted. The council reviews in Monday triage",
 
   "calls.applied.statusPrefix": "Status ·",
   "calls.applied.decisionBy": "decision by {date}",
@@ -1713,7 +1713,7 @@ export const studio: Catalog = {
   "setSubmission.hero.eyebrow": "New submission · DJ set or mix",
   "setSubmission.hero.title": "Submit a <em>set</em>.",
   "setSubmission.hero.dek":
-    "Upload the long-form file, paste your tracklist with timecodes, and our matcher finds the source artists so <em>every track in the set pays its maker</em>. Unmatched tracks hold their payout safely until cleared — nobody loses a cent.",
+    "Upload the long-form file, paste your tracklist with timecodes, and our matcher finds the source artists so <em>every track in the set pays its maker</em>. Unmatched tracks hold their payout safely until cleared. Nobody loses a cent.",
 
   "setSubmission.steps.file": "File",
   "setSubmission.steps.tracklist": "Tracklist & matcher",
@@ -1721,7 +1721,7 @@ export const studio: Catalog = {
 
   "setSubmission.matcher.uploadedBadge": "Uploaded",
   "setSubmission.matcher.tracklistLabel":
-    "Paste your tracklist · timecode — artist — title",
+    "Paste your tracklist · timecode · artist · title",
   "setSubmission.matcher.pasteHint":
     "One line per track. We accept most formats. <em>Re-run the matcher</em> whenever you edit.",
   "setSubmission.matcher.runCta": "▸ Run the matcher",
@@ -1754,14 +1754,14 @@ export const studio: Catalog = {
     "Unmatched tracks <em>hold their share</em> until the council's matcher clears them. The set goes live now; held money releases the moment a source is confirmed.",
   "setSubmission.sidebar.submitCta": "Submit set",
   "setSubmission.sidebar.submittedToast":
-    "Set submitted — live now, held shares pending clearance",
+    "Set submitted. Live now, held shares pending clearance",
 
   // ── Off-air landing (StudioOffAirPage + Hero) ─────────────────────────────
   // Chrome only — the curator's signoff quote, next-broadcast title, and
   // night-cap set/curator names below are content and stay English in both
   // modes (§1). StudioOffAirShelves is already swept — match its pattern.
   "offAir.page.browseNote":
-    "The doors are shut, but the shelves are open. <em>Browse anything below</em> — it all still plays.",
+    "The doors are shut, but the shelves are open. <em>Browse anything below</em>. It all still plays.",
   "offAir.hero.statusLine": "Off air · {time} in Lisbon",
   "offAir.hero.roomDark": "the room is dark",
   "offAir.hero.title": "The room is <em>closed</em> for the night.",
@@ -1777,7 +1777,7 @@ export const studio: Catalog = {
   // backend yet and must not present invented payouts/figures as real.
   "comingSoon.title": "The Studio is <em>still tuning up</em>",
   "comingSoon.description":
-    "Our co-op music platform — artist pages, live sets, payouts and the solidarity fund — isn't open to the public yet. We're building it in the open and it'll land here soon.",
+    "Our co-op music platform (artist pages, live sets, payouts and the solidarity fund) isn't open to the public yet. We're building it in the open and it'll land here soon.",
   "comingSoon.exploreCulture": "Explore Culture",
   "comingSoon.backHome": "Back to home",
 };

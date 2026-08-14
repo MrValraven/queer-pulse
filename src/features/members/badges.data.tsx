@@ -151,7 +151,7 @@ export const perksLadder: PerkLadderRow[] = [
     status: "Locked",
     perks: [
       "Advisory board eligibility",
-      'Lifetime "Pillar" status — permanent badge',
+      'Lifetime "Pillar" status, permanent badge',
     ],
   },
 ];

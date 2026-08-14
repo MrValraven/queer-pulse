@@ -105,7 +105,7 @@ const PROFILES: CompanyProfile[] = [
     ),
     nameText: "Atelier Pulso",
     tagline:
-      "A brand and editorial studio in Príncipe Real. We make identity systems, books, and slow internet things — mostly for cultural institutions and independent labels.",
+      "A brand and editorial studio in Príncipe Real. We make identity systems, books, and slow internet things, mostly for cultural institutions and independent labels.",
     badges: [
       { label: "Queer-run · verified", kind: "verified" },
       { label: "Lisbon", kind: "plain" },
@@ -123,29 +123,28 @@ const PROFILES: CompanyProfile[] = [
         <p>
           Atelier Pulso is a <em>twelve-person studio</em> working in identity,
           editorial, and digital, founded in 2022 by Inês Mateus. We split our
-          time between commissioned work for cultural institutions — mostly
-          museums, magazines, and independent labels — and self-initiated
+          time between commissioned work for cultural institutions (mostly
+          museums, magazines, and independent labels) and self-initiated
           projects (a magazine, a riso press, a small grants programme).
         </p>
         <p>
           About a third of our work is print. Another third is identity systems.
-          The last third is whatever the work asks for — a website, a workshop,
-          an exhibition design, a typeface. We don't have a separate "digital
-          team" and "print team", we have a studio of people who care equally
-          about both.
+          The last third is whatever the work asks for: a website, a workshop,
+          an exhibition design, a typeface. We're one studio of people who care
+          equally about print and digital.
         </p>
         <HowWeWorkHeading />
         <p>
           Four-day week, year-round. Generous time off (<strong>28 days</strong>{" "}
           + bank holidays + your birthday). Sliding-scale compensation: same
           role pays the same regardless of where you started. Loud about queer
-          presence in our work and quiet about it externally — we don't put
+          presence in our work and quiet about it externally. We don't put
           rainbow logos on anything.
         </p>
         <WhatWeLookForHeading />
         <p>
-          Curiosity. People who can <strong>show their reasoning</strong>, not
-          just their output. We hire portfolio-blind for first-round — your CV
+          Curiosity. People who can <strong>show their reasoning</strong> as
+          well as their output. We hire portfolio-blind for first-round. Your CV
           and a written sample are what we read first. We've hired self-taught
           designers, career changers, and people without a degree.
         </p>
@@ -186,7 +185,7 @@ const PROFILES: CompanyProfile[] = [
           "Designer, 2 years in role · trans / non-binary · still here · posted 14 days ago",
         body: [
           "Genuinely the first job where my pronouns being respected wasn't something I had to explain or maintain. New hires get a briefing. Clients who repeatedly misgender get a polite call.",
-          "Pay is below Berlin/Amsterdam rates, in line with Lisbon. Four-day week is real — Inês will call you out if you Slack on a Friday.",
+          "Pay is below Berlin/Amsterdam rates, in line with Lisbon. Four-day week is real. Inês will call you out if you Slack on a Friday.",
         ],
       },
       {
@@ -195,7 +194,7 @@ const PROFILES: CompanyProfile[] = [
         byline:
           "Senior designer, 4 years in role · gay man · still here · posted 2 months ago",
         body: [
-          "If you're looking for a big career ladder this isn't it — the studio is 12 people and stays 12 people on purpose. But if you want a job where you can make the best work of your life, this is it.",
+          "If you're looking for a big career ladder this isn't it. The studio is 12 people and stays 12 people on purpose. But if you want a job where you can make the best work of your life, this is it.",
           "Only nit: training budget is small. They'll pay for one big thing a year. Within that, generous.",
         ],
       },
@@ -205,7 +204,7 @@ const PROFILES: CompanyProfile[] = [
         byline:
           "Designer, 6 months in role · lesbian · still here · posted 4 months ago",
         body: [
-          "I came in via QueerPulse and they did the paid trial week thing genuinely — €500 wired before I started, no strings if it didn't work out. It worked out.",
+          "I came in via QueerPulse and they did the paid trial week thing genuinely: €500 wired before I started, no strings if it didn't work out. It worked out.",
         ],
       },
     ],
@@ -237,7 +236,7 @@ const PROFILES: CompanyProfile[] = [
     membersLabel: "View all 7 members",
     hiringContact: {
       name: "Inês Mateus",
-      role: "Founder & design director — handles all hiring personally.",
+      role: "Founder & design director. Handles all hiring personally.",
     },
   },
   {
@@ -263,7 +262,7 @@ const PROFILES: CompanyProfile[] = [
     about: (
       <>
         <p>
-          We have been doing this work for two decades — advocacy at the
+          We have been doing this work for two decades: advocacy at the
           level of law and policy, a legal support line, a documentation centre,
           and community programmes that run out of our building in Lisbon
           and out into the country. We are a <em>membership organisation</em>,
@@ -299,7 +298,7 @@ const PROFILES: CompanyProfile[] = [
       },
       {
         title: "Members first",
-        description: "We answer to the community we serve, not to funders or a board that's never met us.",
+        description: "We answer to the community we serve, above funders or a board that's never met us.",
       },
     ],
     reviewScore: "4.4",
@@ -351,7 +350,7 @@ const PROFILES: CompanyProfile[] = [
     membersLabel: "View all 5 members",
     hiringContact: {
       name: "Programmes team",
-      role: "Applications are read by the programmes team, not a recruiter.",
+      role: "Applications are read by the programmes team directly.",
     },
   },
   {
@@ -379,12 +378,12 @@ const PROFILES: CompanyProfile[] = [
         <p>
           Opus Diversus runs peer support groups, a mental-health navigation
           line, and advocacy work for LGBTQ+ people across Lisbon. This is{" "}
-          <em>care work</em>, and we treat it as such — with supervision,
+          <em>care work</em>, and we treat it as such: with supervision,
           boundaries, and real support for the people who hold the room.
         </p>
         <p>
           We hire for lived experience and the ability to be steady in a hard
-          moment, not for a clinical CV. Training is provided, and no one runs a
+          moment, above a clinical CV. Training is provided, and no one runs a
           group alone before they're ready.
         </p>
         <HowWeWorkHeading />
@@ -405,7 +404,7 @@ const PROFILES: CompanyProfile[] = [
         description: "Clinical supervision for every front-line facilitator. Care work needs care.",
       },
       {
-        title: "Steady, not heroic",
+        title: "Steady and sustainable",
         description: "Good boundaries beat burnout. We build rotas that let people last.",
       },
       {
@@ -429,7 +428,7 @@ const PROFILES: CompanyProfile[] = [
         byline:
           "Facilitator, 2 years in role · trans / non-binary · still here · posted 1 month ago",
         body: [
-          "The supervision is the real thing — I've never felt dropped after a heavy session. Part-time pay is modest, but the boundaries are so healthy it never tips into burnout.",
+          "The supervision is the real thing. I've never felt dropped after a heavy session. Part-time pay is modest, but the boundaries are so healthy it never tips into burnout.",
         ],
       },
       {
@@ -472,7 +471,7 @@ const PROFILES: CompanyProfile[] = [
     name: <>Livraria Devagar</>,
     nameText: "Livraria Devagar",
     tagline:
-      "A queer-run independent bookshop opening in Anjos in 2026 — LGBTQ+ literature, translation, and small presses.",
+      "A queer-run independent bookshop opening in Anjos in 2026: LGBTQ+ literature, translation, and small presses.",
     badges: [
       { label: "Queer-run · verified", kind: "verified" },
       { label: "Anjos", kind: "plain" },
@@ -489,11 +488,11 @@ const PROFILES: CompanyProfile[] = [
         <p>
           Livraria Devagar is a new queer bookshop opening in Anjos in September
           2026. We're small, we're deliberate, and we want the people who help
-          us open the doors to have <em>real say</em> in what the shop becomes —
+          us open the doors to have <em>real say</em> in what the shop becomes:
           the sections, the events, the feel of the place.
         </p>
         <p>
-          This is retail — tills, shelves, slow afternoons — but it's also
+          This is retail (tills, shelves, slow afternoons), but it's also
           community work. The right person will love both halves equally.
         </p>
         <HowWeWorkHeading />
@@ -518,7 +517,7 @@ const PROFILES: CompanyProfile[] = [
         description: "We're called Devagar for a reason. No rush, no churn, no pressure to upsell.",
       },
       {
-        title: "Community, not footfall",
+        title: "Community over footfall",
         description: "Readings, launches, and a space that belongs to the neighbourhood as much as to us.",
       },
     ],
@@ -538,7 +537,7 @@ const PROFILES: CompanyProfile[] = [
         byline:
           "Bookseller (founding) · lesbian · still here · posted 3 weeks ago",
         body: [
-          "I helped pick the poetry section. Where else does a part-time bookseller get to do that? Pay is modest and the shop isn't even open yet — but it feels like ours.",
+          "I helped pick the poetry section. Where else does a part-time bookseller get to do that? Pay is modest and the shop isn't even open yet, but it feels like ours.",
         ],
       },
     ],
@@ -560,7 +559,7 @@ const PROFILES: CompanyProfile[] = [
     membersLabel: "View all 3 members",
     hiringContact: {
       name: "The founders",
-      role: "Tell us about a book that mattered to you — that's what we read first.",
+      role: "Tell us about a book that mattered to you. That's what we read first.",
     },
   },
   {
@@ -575,7 +574,7 @@ const PROFILES: CompanyProfile[] = [
     ),
     nameText: "QueerPulse",
     tagline:
-      "The community platform behind this network — a small, remote-friendly team building tools for queer life in Lisbon and beyond.",
+      "The community platform behind this network: a small, remote-friendly team building tools for queer life in Lisbon and beyond.",
     badges: [
       { label: "Queer-run · verified", kind: "verified" },
       { label: "Lisbon + remote", kind: "plain" },
@@ -590,15 +589,15 @@ const PROFILES: CompanyProfile[] = [
     about: (
       <>
         <p>
-          QueerPulse is the platform you're reading this on — a{" "}
+          QueerPulse is the platform you're reading this on: a{" "}
           <em>member-owned</em> community network with a jobs board, a magazine,
           a directory, and a growing set of tools for queer economic life. The
           team is small, remote-friendly, and builds in the open.
         </p>
         <p>
-          We hire slowly and we hire people, not résumés. Everything we ask of
-          the employers on this board — pay transparency, real inclusion, honest
-          hiring — we hold ourselves to first.
+          We hire slowly and we hire people over résumés. Everything we ask of
+          the employers on this board (pay transparency, real inclusion, honest
+          hiring) we hold ourselves to first.
         </p>
         <HowWeWorkHeading />
         <p>
@@ -615,15 +614,15 @@ const PROFILES: CompanyProfile[] = [
       },
       {
         title: "Practise what we list",
-        description: "Every standard we hold employers to, we meet ourselves — starting with pay transparency.",
+        description: "Every standard we hold employers to, we meet ourselves, starting with pay transparency.",
       },
       {
-        title: "Remote, not scattered",
+        title: "Remote and connected",
         description: "Async by default, a Lisbon anchor for those who want it, real overlap hours for the rest.",
       },
       {
         title: "People over résumés",
-        description: "We read written samples before CVs and hire for judgement, not pedigree.",
+        description: "We read written samples before CVs and hire for judgement over pedigree.",
       },
     ],
     reviewScore: "4.8",
@@ -651,7 +650,7 @@ const PROFILES: CompanyProfile[] = [
         byline:
           "Product, 8 months in role · queer · still here · posted 1 month ago",
         body: [
-          "You'll touch a lot because the team is lean — that's the trade for the ownership you get. Async works well; overlap hours are respected.",
+          "You'll touch a lot because the team is lean. That's the trade for the ownership you get. Async works well; overlap hours are respected.",
         ],
       },
     ],
@@ -676,7 +675,7 @@ const PROFILES: CompanyProfile[] = [
     membersLabel: "View all 6 members",
     hiringContact: {
       name: "The QueerPulse team",
-      role: "First review is by the team you'd join, never a recruiter.",
+      role: "First review is by the team you'd join.",
     },
   },
 ];

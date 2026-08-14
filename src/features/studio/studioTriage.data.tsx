@@ -169,7 +169,7 @@ export const SUBS: Sub[] = [
     ],
     day: "Day 4",
     of: true,
-    note: "sapatão-sci-fi mix, 38 minutes, all heard from below the dancefloor. last submission got a thoughtful pass — this one starts differently.",
+    note: "sapatão-sci-fi mix, 38 minutes, all heard from below the dancefloor. last submission got a thoughtful pass. this one starts differently.",
     meta: [
       <>
         Submitted <em>Wed 5 Jun</em>

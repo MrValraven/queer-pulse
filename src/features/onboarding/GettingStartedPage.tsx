@@ -7,6 +7,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { useGettingStarted, type GettingStartedStepState } from "./useGettingStarted";
+import { GETTING_STARTED_STEP_XP } from "./gettingStarted.data";
+import { LevelXpStrip } from "./LevelXpStrip";
 import styles from "./GettingStartedPage.module.css";
 
 /** The progress track above the checklist — a share of steps done, with a live
@@ -67,9 +69,16 @@ function StepRow({ step }: { step: GettingStartedStepState }) {
           {t("auth:gettingStarted.doneLabel")}
         </span>
       ) : (
-        <Button to={step.to} variant="ghost" size="sm">
-          {t(step.ctaKey)}
-        </Button>
+        <>
+          <span className={styles.stepXp}>
+            {t("auth:gettingStarted.stepXp", {
+              xp: String(GETTING_STARTED_STEP_XP),
+            })}
+          </span>
+          <Button to={step.to} variant="ghost" size="sm">
+            {t(step.ctaKey)}
+          </Button>
+        </>
       )}
     </li>
   );
@@ -114,12 +123,16 @@ export function GettingStartedPage() {
             onClose={() => {
               void navigate(routes.feed);
             }}
-            steps={steps.map((step) => t(step.titleKey))}
+            steps={[
+              ...steps.map((step) => t(step.titleKey)),
+              t("auth:gettingStarted.success.badge"),
+            ]}
           >
             {t("auth:gettingStarted.allDone.body")}
           </SuccessPanel>
         ) : (
           <>
+            <LevelXpStrip />
             <ProgressMeter
               done={completedCount}
               total={totalCount}

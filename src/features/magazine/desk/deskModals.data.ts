@@ -15,7 +15,7 @@ export const PASS_TEMPLATES: PassTemplate[] = [
   {
     id: "notus",
     label: "Not for us",
-    body: "Thank you for trusting us with this. It is not the right fit for QueerPulse — we are not the home this piece deserves, and I would rather say so than sit on it. Please do send us the next one.",
+    body: "Thank you for trusting us with this. It is not the right fit for QueerPulse. We are not the home this piece deserves, and I would rather say so than sit on it. Please do send us the next one.",
   },
   {
     id: "notnow",
@@ -25,7 +25,7 @@ export const PASS_TEMPLATES: PassTemplate[] = [
   {
     id: "elsewhere",
     label: "Try another section",
-    body: "This does not work as a feature, but it would sit beautifully in Service — shorter, more practical, same reporting. Want me to commission it that way?",
+    body: "This does not work as a feature, but it would sit beautifully in Service: shorter, more practical, same reporting. Want me to commission it that way?",
   },
   {
     id: "deck",

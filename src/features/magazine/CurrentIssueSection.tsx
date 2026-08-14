@@ -1,5 +1,6 @@
 import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -59,7 +60,7 @@ export function CurrentIssueSection() {
               {t("magazine:issue.readCta", { number: CURRENT_ISSUE_NUMBER })}{" "}
               <FiArrowRight aria-hidden />
             </Button>
-            <Button to={routes.requestInvite} variant="ghost-dark">
+            <Button to={requestInvitePath("magazine")} variant="ghost-dark">
               {t("magazine:issue.orderPrintCta", {
                 price: fmt.currency(8),
               })}

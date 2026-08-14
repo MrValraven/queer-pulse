@@ -37,7 +37,7 @@ const BLOCKS: ArticleBlock[] = [
   {
     id: "b2",
     kind: "paragraph",
-    html: "That is the thing about the friends you made when you were twenty-two and frightened: the number stays in your hands long after the friendship has gone quiet. You keep it the way you keep a spare key — not because you expect to use it, but because the alternative is admitting you have nowhere to go.",
+    html: "That is the thing about the friends you made when you were twenty-two and frightened: the number stays in your hands long after the friendship has gone quiet. You keep it the way you keep a spare key, not because you expect to use it, but because the alternative is admitting you have nowhere to go.",
   },
   {
     id: "b3",
@@ -47,7 +47,7 @@ const BLOCKS: ArticleBlock[] = [
   {
     id: "b4",
     kind: "paragraph",
-    html: "They met at a Wednesday meeting in Anjos in 2003, six people who had each been told, in different words, to be less. What formed was not a friendship group so much as an infrastructure — someone to sit in the waiting room, someone to lie to the landlord, someone whose sofa was assumed.",
+    html: "They met at a Wednesday meeting in Anjos in 2003, six people who had each been told, in different words, to be less. What formed was not a friendship group so much as an infrastructure: someone to sit in the waiting room, someone to lie to the landlord, someone whose sofa was assumed.",
   },
   {
     id: "b5",
@@ -68,7 +68,7 @@ const BLOCKS: ArticleBlock[] = [
   {
     id: "b7",
     kind: "quote",
-    html: "We are each other’s ageing plan. That is not romantic, it is just arithmetic — none of us had children and most of us are not speaking to our brothers.",
+    html: "We are each other’s ageing plan. That is not romantic, it is just arithmetic: none of us had children and most of us are not speaking to our brothers.",
     cite: "Teresa, 51",
   },
   {
@@ -130,7 +130,7 @@ const DEMO_VERSION_BLOCKS: Record<string, ArticleBlock[]> = {
     {
       id: "b5",
       kind: "pullQuote",
-      html: "Nobody drafted a contract. But everyone knew who to call at three in the morning — Teresa said so, more than once.",
+      html: "Nobody drafted a contract. But everyone knew who to call at three in the morning. Teresa said so, more than once.",
     },
     BLOCKS[5]!,
     BLOCKS[6]!,
@@ -170,7 +170,7 @@ export const DEMO_ARTICLE_COMMENTS: ArticleCommentDto[] = [
     blockId: "b9",
     parentId: null,
     author: "Ana (fact-check)",
-    body: "Second stat is from the 2024 ILGA survey — need the sample size in the source line before this ships.",
+    body: "Second stat is from the 2024 ILGA survey. Need the sample size in the source line before this ships.",
     resolved: false,
     createdAt: "2026-08-09T09:40:00.000Z",
     replies: [],
@@ -189,7 +189,7 @@ export const DEMO_ARTICLE_COMMENTS: ArticleCommentDto[] = [
         blockId: null,
         parentId: "c1",
         author: "Marta",
-        body: "Fixed — swapped the attribution to Rui and double-checked with them directly.",
+        body: "Fixed: swapped the attribution to Rui and double-checked with them directly.",
         resolved: false,
         createdAt: "2026-08-08T11:42:00.000Z",
         replies: [],

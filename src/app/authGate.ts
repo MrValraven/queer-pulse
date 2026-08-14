@@ -129,6 +129,61 @@ function matchesAny(pathname: string, patterns: string[]): boolean {
 }
 
 /**
+ * The "Work & Economy" surface (Career + Economy columns of the Work meganav,
+ * plus the freelance calculators that hang off `/economy`) is still being
+ * finished, so for now it's hidden from members: its nav entry is dropped and
+ * its routes bounce to the roadmap, where a "Coming soon" card lists what's
+ * landing. Matched explicitly rather than by a `/work/*` prefix because Housing
+ * lives under `/work/landlord` and `/work/housing` and is a separate, live
+ * surface that must stay reachable.
+ *
+ * Active only in shipped builds. `import.meta.env.DEV` is `true` under
+ * `pnpm dev`, so the whole area stays reachable for local development, and is
+ * inlined to `false` by `vite build`, so every deployed artifact hides it — see
+ * `isComingSoonPath`.
+ */
+const COMING_SOON_PATTERNS: string[] = [
+  // Career column
+  "/account/work",
+  "/account/work-profile",
+  "/work/jobs",
+  "/work/jobs/*",
+  "/work/companies",
+  "/work/companies/*",
+  "/work/skills",
+  "/work/skills/*",
+  "/work/mentorship",
+  "/work/mentorship/*",
+  "/work/employer-reviews",
+  "/work/application-status",
+  // Economy column + the freelance calculators reached from it
+  "/work/barter",
+  "/work/barter/*",
+  "/work/solidarity",
+  "/work/grants",
+  "/work/offer",
+  "/economy",
+  "/economy/*",
+];
+
+/**
+ * True when a path belongs to the not-yet-launched Work & Economy surface and
+ * should be hidden. Always false in local development so the area stays
+ * reachable while it's being built.
+ */
+export function isComingSoonPath(pathname: string): boolean {
+  if (import.meta.env.DEV) return false;
+  return matchesAny(pathname, COMING_SOON_PATTERNS);
+}
+
+/** The link-href form of `isComingSoonPath` (see `isGatedLink`). */
+export function isComingSoonLink(href: string): boolean {
+  const path = linkToPath(href).split(/[?#]/)[0] || "/";
+  if (!path.startsWith("/")) return false; // external / mailto / tel
+  return isComingSoonPath(path);
+}
+
+/**
  * Role-gated surfaces. Being logged in is not enough for these — the admin panel
  * requires an admin, the community/`/mod` moderation surfaces require a moderator
  * (or admin). Enforced client-side in live mode; the backend remains the source
@@ -220,7 +275,8 @@ export function isGatedLink(href: string): boolean {
  */
 export function useIsLinkVisible(): (href: string) => boolean {
   const { loggedIn } = useAuth();
-  return (href: string) => loggedIn || !isGatedLink(href);
+  return (href: string) =>
+    !isComingSoonLink(href) && (loggedIn || !isGatedLink(href));
 }
 
 /**

@@ -98,7 +98,7 @@ export const CURATORS: Record<string, CuratorProfile> = {
     pull: (
       <>
         "I programme the cover film each week. I try to choose something that
-        resists the easy arc — <em>no coming out, no reveal, no redemption</em>.
+        resists the easy arc: <em>no coming out, no reveal, no redemption</em>.
         Just people, in rooms, living."
       </>
     ),
@@ -140,8 +140,8 @@ export const CURATORS: Record<string, CuratorProfile> = {
         meta: "Yuki Tanaka · Japan, 2024",
         note: (
           <>
-            "Tanaka takes a premise that could be sentimental — son cooks dinner
-            to come out — and makes something almost Ozu-like from it.{" "}
+            "Tanaka takes a premise that could be sentimental (son cooks dinner
+            to come out) and makes something almost Ozu-like from it.{" "}
             <em>The patience of it.</em>"
           </>
         ),
@@ -231,8 +231,8 @@ export const CURATORS: Record<string, CuratorProfile> = {
         week: "Week 12 · 23 March 2026",
         quote: (
           <>
-            "What Tanaka does with domestic space — the way the kitchen is both{" "}
-            <em>staging ground and safe room</em> — is exactly what I'm trying
+            "What Tanaka does with domestic space, the way the kitchen is both{" "}
+            <em>staging ground and safe room</em>, is exactly what I'm trying
             to find in everything we programme."
           </>
         ),
@@ -264,7 +264,7 @@ export const CURATORS: Record<string, CuratorProfile> = {
     bio: (
       <>
         West African ballroom, diaspora cinema, and trans documentary. Okoye
-        programmes for genuine collaboration —{" "}
+        programmes for genuine collaboration:{" "}
         <em>where the subject and the filmmaker are in the room together</em>,
         not one looking at the other.
       </>
@@ -292,7 +292,7 @@ export const CURATORS: Record<string, CuratorProfile> = {
         meta: "Ada Nwosu · Nigeria / UK, 2025",
         note: (
           <>
-            "A ballroom film made from inside the houses, not from the balcony.{" "}
+            "A ballroom film made from inside the houses, by the people who live there.{" "}
             <em>Nobody here is being explained.</em>"
           </>
         ),
@@ -610,7 +610,7 @@ export const CURATORS: Record<string, CuratorProfile> = {
           <>
             "When we say Iberian we mean the plural.{" "}
             <em>
-              Galician, Basque, Catalan, Portuguese — the border is the subject.
+              Galician, Basque, Catalan, Portuguese: the border is the subject.
             </em>
             "
           </>

@@ -60,18 +60,18 @@ export const JOBS: Job[] = [
       category: "Design",
       posted: new Date(2026, 5, 1),
       about: [
-        "Inês Mateus is building out Atelier Pulso, her design studio in Príncipe Real. She's looking for a junior graphic designer who cares deeply about type, publication design, and the craft of making things beautiful. You'll be working closely with Inês from day one — this is a small studio, not a junior-on-production setup.",
+        "Inês Mateus is building out Atelier Pulso, her design studio in Príncipe Real. She's looking for a junior graphic designer who cares deeply about type, publication design, and the craft of making things beautiful. You'll be working closely with Inês from day one. This is a small studio where you take on real design work from the start.",
         "The studio is queer-run and works deliberately slowly. Clients are mostly independent: small publishers, community organisations, independent galleries, and the occasional mid-size company that has earned the studio's trust. The work is varied, the standards are high, and you'll be trusted with real creative responsibility earlier than you might expect.",
       ],
       dayToDay: [
-        "Typography and layout for editorial clients — books, zines, annual reports, print publications",
+        "Typography and layout for editorial clients: books, zines, annual reports, print publications",
         "Brand identity work for independent and community projects, from concept through to final files",
         "Production of print-ready files and management of relationships with Lisbon printers",
         "Occasional web design and motion projects, in collaboration with studio partners",
         "Participation in client presentations and creative reviews with Inês",
       ],
       lookingFor: [
-        "A portfolio that shows you care about craft — not just decoration, but structure, hierarchy, and intention",
+        "A portfolio that shows you care about the craft beneath the surface: structure, hierarchy, and intention",
         "1–2 years of professional or equivalent design experience; we'll look at strong student work too",
         "Fluent in Adobe InDesign, Illustrator, and Photoshop; Figma is a bonus",
         "Genuine curiosity about print production, paper, and the physicality of designed objects",
@@ -80,9 +80,9 @@ export const JOBS: Job[] = [
       offer: [
         "€1,200–1,500 per month depending on experience, with a structured salary review at 6 months",
         "Flexible hours around a broadly 10–18 studio day; we're not precious about start times",
-        "A real mentorship — not task assignment. Inês will invest time in your development",
+        "A real mentorship focused on your growth. Inês will invest time in your development",
         "A working environment that doesn’t require you to hide or code-switch",
-        "Participation in pro-bono community projects — work you can be proud of for the right reasons",
+        "Participation in pro-bono community projects, work you can be proud of for the right reasons",
       ],
       aboutCompany:
         "Founded by Inês Mateus in 2022, Atelier Pulso is a small design studio in Príncipe Real specialising in editorial design, brand identity, and publication work for independent clients. We work slowly, intentionally, and with care for the objects we make. We are queer-run and believe that makes our work better, our relationships more honest, and our studio a more human place to spend your days.",
@@ -110,7 +110,7 @@ export const JOBS: Job[] = [
       category: "Community",
       posted: new Date(2026, 5, 4),
       about: [
-        "We're looking for a Community Outreach Coordinator to run our programmes across Lisbon — from neighbourhood drop-ins to partnerships with schools, clinics, and local associations. This is a public-facing role for someone who is as comfortable in a community centre as in a coordination meeting.",
+        "We're looking for a Community Outreach Coordinator to run our programmes across Lisbon: from neighbourhood drop-ins to partnerships with schools, clinics, and local associations. This is a public-facing role for someone who is as comfortable in a community centre as in a coordination meeting.",
         "You would join a small, tightly-knit team that has been doing this work for decades. The role is grounded in trust: with volunteers, with the people who walk through our door, and with the partner organisations we hold accountable.",
       ],
       dayToDay: [
@@ -170,7 +170,7 @@ export const JOBS: Job[] = [
         "3+ years building backend systems in production",
         "Strong with at least one of Rust or Go, and willing to learn the other",
         "Care about reliability, testing, and clear writing",
-        "No fintech background required — payments knowledge is a bonus, not a gate",
+        "No fintech background required. Payments knowledge is a welcome bonus",
       ],
       offer: [
         "€2,800–3,800 per month depending on experience, plus equity",
@@ -181,7 +181,7 @@ export const JOBS: Job[] = [
       aboutCompany:
         "A Series-A fintech headquartered in Marvila, building cross-border payments infrastructure for small businesses. Around 40 people, half of them engineers.",
       reviewerNote:
-        "First review is by an engineer, not a recruiter. Expect a short take-home rather than a whiteboard.",
+        "First review is by an engineer who'd work with you. Expect a short take-home rather than a whiteboard.",
     },
   },
   {
@@ -205,7 +205,7 @@ export const JOBS: Job[] = [
       posted: new Date(2026, 4, 30),
       about: [
         "Rainbow Arts Collective is looking for a part-time Programme Coordinator to keep our exhibitions, events, and residencies running smoothly. Twenty hours a week, flexibly arranged, with a couple of fixed days around install and opening nights.",
-        "This is an organising role for someone who loves art but is energised by logistics — the spreadsheets, the artist emails, the install schedule — as much as the work on the walls.",
+        "This is an organising role for someone who loves art but is energised by logistics (the spreadsheets, the artist emails, the install schedule) as much as the work on the walls.",
       ],
       dayToDay: [
         "Coordinate exhibition timelines, install, and de-install",
@@ -251,8 +251,8 @@ export const JOBS: Job[] = [
       category: "Care",
       posted: new Date(2026, 5, 2),
       about: [
-        "Opus Diversus runs peer support groups for LGBTQ+ people across Lisbon, and we are looking for a part-time facilitator to hold a regular weekly group and a few one-off sessions. This is care work, and we treat it as such — with supervision, boundaries, and support for you.",
-        "We hire for lived experience and the ability to hold a room, not for a clinical CV. Training is provided, and you will never run a group alone before you are ready.",
+        "Opus Diversus runs peer support groups for LGBTQ+ people across Lisbon, and we are looking for a part-time facilitator to hold a regular weekly group and a few one-off sessions. This is care work, and we treat it as such: with supervision, boundaries, and support for you.",
+        "We hire for lived experience and the ability to hold a room, above a clinical CV. Training is provided, and you will never run a group alone before you are ready.",
       ],
       dayToDay: [
         "Facilitate a weekly peer support group, in person",
@@ -264,7 +264,7 @@ export const JOBS: Job[] = [
         "Lived experience of the LGBTQ+ community and its mental-health realities",
         "Warmth, steadiness, and good boundaries",
         "Portuguese essential; other languages welcome",
-        "No formal qualification required — we train you",
+        "No formal qualification required. We train you",
       ],
       offer: [
         "€900 per month, part-time",
@@ -299,7 +299,7 @@ export const JOBS: Job[] = [
       posted: new Date(2026, 5, 5),
       about: [
         "Livraria Devagar is a new queer bookshop opening in Anjos in September 2026, and we want a part-time bookseller to help us open the doors and shape what the shop becomes. You would be one of the first people in the room, which means real say in the sections, the events, and the feel of the place.",
-        "This is retail, so there are tills and shelves and slow afternoons — but it is also community work, and the right person will love both halves equally.",
+        "This is retail, so there are tills and shelves and slow afternoons, but it is also community work, and the right person will love both halves equally.",
       ],
       dayToDay: [
         "Recommend books and look after customers on the floor",
@@ -311,7 +311,7 @@ export const JOBS: Job[] = [
         "A real love of books, and queer literature in particular",
         "Warm, unhurried, and good with people",
         "Reliable for weekend and some evening shifts",
-        "Retail experience is a bonus, not a requirement",
+        "Retail experience is a welcome bonus",
       ],
       offer: [
         "€800 per month, part-time",
@@ -322,7 +322,7 @@ export const JOBS: Job[] = [
       aboutCompany:
         "Livraria Devagar is a queer-run independent bookshop opening in Anjos in 2026, focused on LGBTQ+ literature, translation, and small presses.",
       reviewerNote:
-        "Tell us about a book that mattered to you — that is the part of the application we read first.",
+        "Tell us about a book that mattered to you. That is the part of the application we read first.",
     },
   },
 ];

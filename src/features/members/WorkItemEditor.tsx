@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
-import { ImageSlot } from "../../shared/components/ui";
+import { ImageSlot, PhotoReframeModal } from "../../shared/components/ui";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { WorkItem } from "./data/members";
 import { ImageProcessingError } from "./api/uploadProcessing";
@@ -35,12 +36,16 @@ export function WorkItemEditor({
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
 
-  async function pick(file: File) {
+  /** Shared tail of both upload paths (direct GIF path + post-reframe path). */
+  async function uploadAndApply(file: File, crop?: CropRect) {
     setError(null);
     setUploading(true);
     try {
-      const { key, previewUrl: newPreviewUrl } = await uploadWorkImage(file);
+      const { key, previewUrl: newPreviewUrl } = await uploadWorkImage(file, {
+        crop,
+      });
       // Single-slot picker — the previous local preview (if any) is now
       // stale, so revoke it right away instead of leaving it to the hook's
       // unmount sweep.
@@ -56,6 +61,23 @@ export function WorkItemEditor({
     } finally {
       setUploading(false);
     }
+  }
+
+  function pick(file: File) {
+    // GIFs bypass the reframer entirely (animation would be destroyed by the
+    // crop/re-encode path) and upload directly, as before.
+    if (file.type === "image/gif") {
+      void uploadAndApply(file);
+      return;
+    }
+    setPendingFile(file);
+  }
+
+  async function handleCropConfirmed(crop: CropRect) {
+    if (!pendingFile) return;
+    const fileToUpload = pendingFile;
+    setPendingFile(null);
+    await uploadAndApply(fileToUpload, crop);
   }
 
   const displayedImage = previewUrl ?? item.image;
@@ -116,10 +138,19 @@ export function WorkItemEditor({
         hidden
         onChange={(e) => {
           const f = e.target.files?.[0];
-          if (f) void pick(f);
+          if (f) pick(f);
           e.target.value = "";
         }}
       />
+
+      {pendingFile && (
+        <PhotoReframeModal
+          file={pendingFile}
+          kind="work-image"
+          onCancel={() => setPendingFile(null)}
+          onConfirm={(crop) => void handleCropConfirmed(crop)}
+        />
+      )}
 
       <input
         className={`${editStyles.inlineInput} ${editStyles.workCatInput}`}

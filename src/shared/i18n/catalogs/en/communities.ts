@@ -33,11 +33,11 @@ export const communities: Catalog = {
   "discover.hero.eyebrow": "Communities & Collectives",
   "discover.hero.title": "Find your <em>people.</em>",
   "discover.hero.lead":
-    "A living directory of queer communities and collectives across Lisbon. Social clubs, arts collectives, activist groups, sports teams, support circles, and professional networks — something for where you are right now.",
+    "A living directory of queer communities and collectives across Lisbon. Social clubs, arts collectives, activist groups, sports teams, support circles, and professional networks: something for where you are right now.",
   "discover.hero.cta": "Go to your hub",
   "discover.empty.none.title": "No communities yet",
   "discover.empty.none.description":
-    "The directory is still finding its feet. Be one of the first to gather your people — start a community and others will follow.",
+    "The directory is still finding its feet. Be one of the first to gather your people. Start a community and others will follow.",
   "discover.empty.none.cta": "Start a community",
   "discover.empty.filtered.title": "Nothing matches your filters",
   "discover.empty.filtered.description":
@@ -47,7 +47,7 @@ export const communities: Catalog = {
   "discover.loadMoreCta": "Load more communities",
   "discover.outro.title": "Not finding the right <em>space?</em>",
   "discover.outro.sub":
-    "Suggest a community to add to the directory, or post on the board to find people who share your interest — and maybe start something together.",
+    "Suggest a community to add to the directory, or post on the board to find people who share your interest, and maybe start something together.",
   "discover.outro.cta": "See the board",
 
   // ── Community card / join CTA labels ───────────────────────────────────────
@@ -70,11 +70,12 @@ export const communities: Catalog = {
     "Here's what's been happening across your {count} communities.",
   "hub.discoverCta": "Discover communities",
   "hub.startCta": "Start a community",
+  "hub.howItWorksCta": "How communities work",
   "hub.empty.title": "You haven't joined any communities yet",
   "hub.empty.description":
-    "Browse by interest and find where you belong — there's no rush.",
+    "Browse by interest and find where you belong. There's no rush.",
   "hub.digest.label": "This week, quietly",
-  "hub.digest.note": "No pings — just your communities' week in one glance.",
+  "hub.digest.note": "No pings: just your communities' week in one glance.",
   "hub.digest.posts": "new posts",
   "hub.digest.active": "active members",
   "hub.digest.events": "upcoming events",
@@ -124,7 +125,7 @@ export const communities: Catalog = {
   "detail.share.copiedToast": "Link copied to your clipboard.",
   "detail.leave.confirm.title": "Leave {name}?",
   "detail.leave.confirm.body":
-    "You'll stop seeing this community's pulse and gatherings. You can always come back — you'll just need to join again.",
+    "You'll stop seeing this community's pulse and gatherings. You can always come back. You'll just need to join again.",
   "detail.leave.confirm.cancel": "Stay",
   "detail.leave.confirm.confirmCta": "Leave community",
   "detail.hero.andMore": "and {count} more",
@@ -188,14 +189,14 @@ export const communities: Catalog = {
   "detail.discussion.empty.searchMore":
     "None of the loaded discussions match. Load more to search the rest.",
   "detail.discussion.searchScopeNote":
-    "Searching only the discussions loaded so far — load more to widen it.",
+    "Searching only the discussions loaded so far. Load more to widen it.",
   "detail.discussion.startedToast": "Discussion started.",
   "detail.discussion.loadMore": "Load more",
 
   // ── Events tab (living hub) ────────────────────────────────────────────────
   "detail.events.upcoming": "Upcoming gatherings",
   "detail.events.noUpcoming":
-    "No gatherings on the calendar yet — check back soon.",
+    "No gatherings on the calendar yet. Check back soon.",
   "detail.events.past": "Past gatherings",
   "detail.events.recapCta": "Read recap",
   "detail.events.rsvpCta": "RSVP",
@@ -210,7 +211,7 @@ export const communities: Catalog = {
   "detail.roster.showingOf_one": "Showing {shown} of {count} member",
   "detail.roster.showingOf_other": "Showing {shown} of {count} members",
   "detail.roster.searchScopeNote":
-    "Searching only the members loaded so far — load more to widen it.",
+    "Searching only the members loaded so far. Load more to widen it.",
   "detail.roster.loadMoreCta": "Load more members",
   "detail.roster.loadingMore": "Loading…",
 
@@ -218,14 +219,14 @@ export const communities: Catalog = {
   "detail.modtools.joinRequests.label": "People asking to join",
   "detail.modtools.joinRequests.empty.title": "No requests waiting",
   "detail.modtools.joinRequests.empty.description":
-    "You're all caught up — new requests will appear here.",
+    "You're all caught up. New requests will appear here.",
   "detail.modtools.joinRequests.requestedAgo": "Requested {time} ago",
   "detail.modtools.joinRequests.approveCta": "Approve",
   "detail.modtools.joinRequests.declineCta": "Decline",
   "detail.modtools.reports.label": "Reported posts",
   "detail.modtools.reports.empty.title": "All clear",
   "detail.modtools.reports.empty.description":
-    "Nothing has been flagged — the community looks after each other.",
+    "Nothing has been flagged. The community looks after each other.",
   "detail.modtools.reports.meta":
     "From {author} · flagged by {reporter} · {time} ago",
   "detail.modtools.reports.removeCta": "Remove post",
@@ -234,7 +235,7 @@ export const communities: Catalog = {
   "detail.modtools.members.makeModCta": "Make mod",
   "detail.modtools.members.removeCta": "Remove from community",
   "detail.modtools.members.ownerTag": "Owner",
-  "detail.modtools.toast.approved": "{name} approved — welcome them in.",
+  "detail.modtools.toast.approved": "{name} approved. Welcome them in.",
   "detail.modtools.toast.declined":
     "{name}'s request wasn't approved this time.",
   "detail.modtools.toast.postRemoved":
@@ -244,7 +245,7 @@ export const communities: Catalog = {
   "detail.modtools.toast.removed": "{name} has been removed.",
 
   // ── Pulse tab (living hub) ─────────────────────────────────────────────────
-  "detail.pulse.joinHint": "You're welcome to read — join {name} to take part.",
+  "detail.pulse.joinHint": "You're welcome to read. Join {name} to take part.",
   "detail.pulse.composerPlaceholder": "Share something with {name}…",
   "detail.pulse.shareCta": "Share",
   "detail.pulse.pinnedAnnouncement": "Pinned announcement",
@@ -275,7 +276,7 @@ export const communities: Catalog = {
   "badges.reaction.celebrate": "Celebrate",
   "badges.reaction.support": "Support",
   "badges.reaction.fire": "Fire",
-  "badges.reaction.ariaLabel": "{label} — {count}",
+  "badges.reaction.ariaLabel": "{label}: {count}",
 
   // ── Join modal ─────────────────────────────────────────────────────────────
   "join.close": "Close",
@@ -290,11 +291,11 @@ export const communities: Catalog = {
   "join.about.eyebrow": "A bit about you",
   "join.about.title": "How should the community know you?",
   "join.about.hint":
-    "Optional — a little context helps people know who you are.",
+    "Optional: a little context helps people know who you are.",
   "join.about.namePlaceholder": "Your name",
   "join.about.pronounsPlaceholder": "Pronouns, if you'd like to share",
   "join.about.aboutPlaceholder":
-    "A sentence about yourself — what brings you here?",
+    "A sentence about yourself: what brings you here?",
   "join.involvement.eyebrow": "Almost done",
   "join.involvement.title": "How would you like to be involved?",
   "join.involvement.emailPlaceholder": "Your email address",
@@ -302,7 +303,7 @@ export const communities: Catalog = {
   "join.involvement.sendRequestCta": "Send request",
   "join.involvement.joinCta": "Join the community",
   "join.involvement.updates.label": "Keep me updated",
-  "join.involvement.updates.desc": "News and events only — no commitment",
+  "join.involvement.updates.desc": "News and events only: no commitment",
   "join.involvement.active.label": "Active member",
   "join.involvement.active.desc": "Come to events and join the group",
   "join.involvement.organise.label": "Help organise",
@@ -310,7 +311,7 @@ export const communities: Catalog = {
   "join.done.requestTitle": "Your request is with the mods",
   "join.done.welcomeTitle": "Welcome to {name}",
   "join.done.requestBody":
-    "Thanks — the mods of <strong>{name}</strong> will read your request and welcome you in. We'll let you know either way.",
+    "Thanks. The mods of <strong>{name}</strong> will read your request and welcome you in. We'll let you know either way.",
   "join.done.joinedBody":
     "You're part of <strong>{name}</strong> now. Someone will be in touch to help you find your footing.",
   "join.done.doneCta": "Done",
@@ -320,7 +321,7 @@ export const communities: Catalog = {
   "start.hero.eyebrow": "Communities & Collectives · found a space",
   "start.hero.title": "Start a <em>community.</em>",
   "start.hero.lead":
-    "A place for your people to gather — social, support, creative, or something only you can name. <strong>Nothing goes live until you're ready.</strong>",
+    "A place for your people to gather: social, support, creative, or something only you can name. <strong>Nothing goes live until you're ready.</strong>",
   "start.next.begin": "Let's begin",
   "start.next.people": "Next: the people",
   "start.next.door": "Next: the door",
@@ -358,17 +359,17 @@ export const communities: Catalog = {
   "start.panel.open.title":
     "Every community started with ⟪one person⟫ opening a door.",
   "start.panel.open.lead":
-    "This is yours to open. Take it a step at a time — nothing goes live until the very end, and you can leave and come back whenever you like.",
+    "This is yours to open. Take it a step at a time. Nothing goes live until the very end, and you can leave and come back whenever you like.",
   "start.panel.why.thread": "Why",
   "start.panel.why.eyebrow": "Chapter one · the heart",
   "start.panel.why.title": "Let's start with ⟪why.⟫",
   "start.panel.why.lead":
-    "Before anything practical — what is this space for, and who is it for? Say it plainly. This is what people read first.",
+    "Before anything practical: what is this space for, and who is it for? Say it plainly. This is what people read first.",
   "start.panel.who.thread": "Who",
   "start.panel.who.eyebrow": "Chapter two · the people",
   "start.panel.who.title": "Who are you ⟪gathering?⟫",
   "start.panel.who.lead":
-    "The people this space is meant to hold. Be specific and be welcoming — this helps the right people know it's for them.",
+    "The people this space is meant to hold. Be specific and be welcoming. This helps the right people know it's for them.",
   "start.panel.safety.thread": "Safety",
   "start.panel.safety.eyebrow": "Chapter three · the door",
   "start.panel.safety.title": "Who can ⟪find⟫ this space?",
@@ -383,7 +384,7 @@ export const communities: Catalog = {
   "start.panel.tone.eyebrow": "Chapter five · the culture",
   "start.panel.tone.title": "Set ⟪the tone.⟫",
   "start.panel.tone.lead":
-    "Every space has a culture. Here's a short covenant to start from — keep what fits, add your own words.",
+    "Every space has a culture. Here's a short covenant to start from. Keep what fits, add your own words.",
   "start.panel.feeling.thread": "Feeling",
   "start.panel.feeling.eyebrow": "Chapter six · the feel",
   "start.panel.feeling.title": "Give it ⟪a feeling.⟫",
@@ -398,21 +399,21 @@ export const communities: Catalog = {
   "start.panel.confirm.eyebrow": "The last step",
   "start.panel.confirm.title": "Ready to ⟪open the doors?⟫",
   "start.panel.confirm.lead":
-    "Here's the whole space, in one glance. Nothing here is fixed — you can change all of it once you're inside.",
+    "Here's the whole space, in one glance. Nothing here is fixed. You can change all of it once you're inside.",
 
   // ── Chapter 0 — Opening ────────────────────────────────────────────────────
   "start.opening.reassure":
-    "<strong>Nothing you do here is public until the last step.</strong> Take your time, skip what you're unsure about, and change your mind as often as you like. Founding a community is a big, generous thing — there's no wrong way to start.",
+    "<strong>Nothing you do here is public until the last step.</strong> Take your time, skip what you're unsure about, and change your mind as often as you like. Founding a community is a big, generous thing. There's no wrong way to start.",
   "start.opening.signed":
     "You'll be its first steward, <strong>{name}</strong>.",
 
   // ── Chapter 1 — Why ────────────────────────────────────────────────────────
   "start.why.nameLabel": "Name your community",
   "start.why.namePlaceholder": "e.g. Sunday Sapphic Swimmers",
-  "start.why.collisionHead": "A few spaces already sound a little like this —",
+  "start.why.collisionHead": "A few spaces already sound a little like this:",
   "start.why.purposeLabel": "What is it for?",
   "start.why.purposePlaceholder":
-    "Say it plainly — what happens here, and why it matters.",
+    "Say it plainly: what happens here, and why it matters.",
   "start.why.purposeHint":
     "This is the first thing people read. One or two warm sentences is plenty.",
   "start.why.kindLabel": "What kind of space is it?",
@@ -462,7 +463,7 @@ export const communities: Catalog = {
   "start.access.private.join":
     "Invite only, and no one outside can see it exists.",
   "start.access.private.note":
-    "For spaces where being found is itself a risk — coming-out groups, survivors, people not yet out.",
+    "For spaces where being found is itself a risk: coming-out groups, survivors, people not yet out.",
 
   // ── Chapter 4 — Running ────────────────────────────────────────────────────
   "start.running.stewardsHeading": "Stewards",
@@ -503,21 +504,21 @@ export const communities: Catalog = {
 
   // ── Chapter 5 — Tone ───────────────────────────────────────────────────────
   "start.tone.covenantIntro":
-    '"We look after each other here. Warmth first, always — and no room for anyone who\'d make this space unsafe."',
+    '"We look after each other here. Warmth first, always, and no room for anyone who\'d make this space unsafe."',
   "start.tone.addPlaceholder": "Add a value in your own words",
   "start.tone.addCta": "Add",
   "start.tone.wrongHeading": "When something goes wrong",
   "start.tone.wrongSub":
-    "You won't have to improvise. Every community starts with the same gentle ladder — you can adjust it inside.",
+    "You won't have to improvise. Every community starts with the same gentle ladder. You can adjust it inside.",
 
   // ── Covenant rule presets ──────────────────────────────────────────────────
   "start.rulePreset.warmth":
-    "Treat everyone with warmth and respect — no bigotry, ever.",
+    "Treat everyone with warmth and respect: no bigotry, ever.",
   "start.rulePreset.confidentiality":
     "What's shared here stays here. No screenshots, no outing.",
   "start.rulePreset.consent":
     "Consent first. Ask before photos, tags, or intros.",
-  "start.rulePreset.welcome": "Newcomers get a welcome, not a test.",
+  "start.rulePreset.welcome": "Newcomers get a warm welcome.",
 
   // ── Enforcement ladder ─────────────────────────────────────────────────────
   "start.ladder.quietWord.title": "A quiet word",
@@ -534,25 +535,25 @@ export const communities: Catalog = {
   "start.tint.plum": "Deep plum",
   "start.feeling.coverLabel": "A cover image",
   "start.feeling.coverHint":
-    "Optional — a wide photo that greets people on your community's card. At least 1200 × 600px.",
+    "Optional: a wide photo that greets people on your community's card. At least 1200 × 600px.",
   "start.feeling.taglineLabel": "A tagline",
   "start.feeling.taglinePlaceholder":
     "One line that captures the feeling of the place",
   "start.feeling.taglineHint":
-    "Short and warm — this sits under your community's name.",
+    "Short and warm. This sits under your community's name.",
 
   // ── Chapter 7 — People ─────────────────────────────────────────────────────
   "start.people.label": "People you'd love to see here",
   "start.people.hint":
-    "They'll get a warm invite when you open — no pressure, no spam.",
+    "They'll get a warm invite when you open: no pressure, no spam.",
   "start.people.empty":
     "You're not connected to anyone yet. Once you connect with people, you'll be able to invite them here.",
   "start.people.seedNote":
-    "You can also share your community's link once it's open — that's often how the first ten people really arrive.",
+    "You can also share your community's link once it's open. That's often how the first ten people really arrive.",
 
   // ── Chapter 8 — Confirm ────────────────────────────────────────────────────
   "start.confirm.lead":
-    "Here's the whole space, in one glance. Nothing here is fixed — you can change all of it once you're inside.",
+    "Here's the whole space, in one glance. Nothing here is fixed. You can change all of it once you're inside.",
   "start.confirm.handleLabel": "Your community's address",
   "start.confirm.editCta": "Edit",
   "start.confirm.notSetYet": "Not set yet",
@@ -591,7 +592,7 @@ export const communities: Catalog = {
   "start.preview.insideLabel": "What's inside",
   "start.preview.foundingMembers": "Founding members",
   "start.preview.footNote":
-    "Nothing is public yet — this is only visible to you.",
+    "Nothing is public yet. This is only visible to you.",
   "start.preview.handleFallback": "your-community",
 
   // ── Category options (wizard "What kind of space?" chips + badges) ───────
@@ -618,17 +619,17 @@ export const communities: Catalog = {
   "start.success.invitesOnWay_one": "{count} warm invite is on the way.",
   "start.success.invitesOnWay_other": "{count} warm invites are on the way.",
   "start.success.inviteWheneverReady":
-    "Invite people whenever you're ready — there's no rush.",
+    "Invite people whenever you're ready. There's no rush.",
   "start.success.postFirstHello":
     "Post a first hello so no one walks into an empty room.",
   "start.success.backToHub": "Back to your hub",
   "start.success.startAnother": "Start another",
   "start.success.body":
-    "You opened something real today. {name} now has a home on QueerPulse — a door for your people to walk through. Go say the first hello.",
+    "You opened something real today. {name} now has a home on QueerPulse, a door for your people to walk through. Go say the first hello.",
 
   // ── Toasts (StartCommunityPage) ───────────────────────────────────────────
-  "start.toast.createError": "Couldn't open your community — try again.",
-  "start.toast.created": "{name} is live — welcome, steward",
+  "start.toast.createError": "Couldn't open your community. Try again.",
+  "start.toast.created": "{name} is live. Welcome, steward",
 
   // ── Adapter-composed chrome (api/communities.adapters.ts, useAllCommunities.ts) ──
   // Fused mock-string trap: the phrase is chrome even though the mock/live data
@@ -650,7 +651,7 @@ export const communities: Catalog = {
   "detail.topicThread.welcomeTitle": "Welcome to {name}",
   "detail.topicThread.recently": "recently",
   "detail.topicThread.justNow": "just now",
-  "detail.topicThread.welcomeSayHello": "Welcome to {name} — say hello",
+  "detail.topicThread.welcomeSayHello": "Welcome to {name}. Say hello",
   "detail.topicThread.beginningPost":
     "This is the very beginning of {name}. Introduce yourself and tell us what brought you here.",
   "detail.organiser.founder": "Founder",
@@ -677,5 +678,5 @@ export const communities: Catalog = {
   "edit.rules.addPlaceholder": "Add a shared value…",
   "edit.rules.remove": "Remove rule",
   "edit.toast.saved": "Changes saved",
-  "edit.toast.error": "Couldn't save your changes — please try again.",
+  "edit.toast.error": "Couldn't save your changes. Please try again.",
 };

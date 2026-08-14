@@ -111,7 +111,7 @@ export function SlideEditorCard({
           className={styles.headerMain}
           onClick={onSelect}
           aria-expanded={selected}
-          aria-label={`${t("magazine:deck.editor.slideNumber", { n: index + 1 })} — ${t(
+          aria-label={`${t("magazine:deck.editor.slideNumber", { n: index + 1 })}: ${t(
             layoutLabelKey(slide),
           )}`}
         >

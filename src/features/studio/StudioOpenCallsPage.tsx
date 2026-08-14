@@ -99,7 +99,7 @@ export function StudioOpenCallsPage() {
                       </h3>
                       <p className={s.brief}>
                         You attached <em>A Beja</em> and a note. Sara claimed it
-                        on 4 June. Decision by 18 June — you'll hear back here
+                        on 4 June. Decision by 18 June. You'll hear back here
                         and by email, with a sentence either way.
                       </p>
                     </div>

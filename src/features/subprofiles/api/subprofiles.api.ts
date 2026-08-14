@@ -5,7 +5,8 @@ import {
   apiPut,
   apiDelete,
 } from "../../../shared/api/client";
-import type { PoemBlock } from "../poem/poemModel";
+import type { PoemBlock, PoemVersion } from "../poem/poemModel";
+import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 
 // ── Wire DTOs (contract C3) ──────────────────────────────────────────────────
 // These types are IDENTICAL to the backend `subprofile-response.ts` views. Keep
@@ -329,6 +330,7 @@ export type {
   PoemStanzaBlock,
   PoemBreakBlock,
   PoemNoteBlock,
+  PoemVersion,
 } from "../poem/poemModel";
 
 /** Nested per-item data that doesn't fit flat columns (subprofile_items.structured). */
@@ -342,8 +344,15 @@ export interface ItemStructured {
    *  are shared. Round-trips untouched via `itemToView`/`itemsToInputDto`. */
   links?: SocialLinkDTO[] | null;
   /** Poet `poems` section only: the poem body as an ordered block list.
-   *  See `PoemBlock`. Absent on every other section/kind. */
+   *  See `PoemBlock`. Absent on every other section/kind. When
+   *  `poemVersions` is present this mirrors the first (default) version's
+   *  blocks so pre-translation readers keep working (no migration). */
   poem?: PoemBlock[] | null;
+  /** Poet `poems` section only: named translations/versions of the poem. The
+   *  first entry is the default; readers cycle the rest via tabs. See
+   *  `PoemVersion`. Absent for single-version poems saved before this existed
+   *  (they read as one default version via `normalizePoemVersions`). */
+  poemVersions?: PoemVersion[] | null;
 }
 
 /** Practice skin (therapist): tri-state for one availability slot. */
@@ -457,6 +466,9 @@ export interface SubprofileDTO {
   handle: string | null;
   displayName: string;
   avatarUrl: string | null;
+  /** Saved reframe crop for `avatarUrl` (fractions of the source image), when
+   *  the owner cropped their persona avatar in the reframe editor. */
+  avatarCrop?: CropRect | null;
   tagline: string | null;
   bio: string | null;
   coverUrl: string | null;

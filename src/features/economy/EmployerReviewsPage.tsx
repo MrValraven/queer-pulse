@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { Button, EmptyState, FadeIn, Outro } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -20,7 +21,7 @@ import { LiveWriteReviewModal } from "./LiveWriteReviewModal";
 import { useCompanies } from "./api/useCompanies";
 import styles from "./EmployerReviewsPage.module.css";
 
-const INVITE = routes.requestInvite;
+const INVITE = requestInvitePath("employer_reviews");
 
 export function EmployerReviewsPage() {
   const { t } = useTranslation();

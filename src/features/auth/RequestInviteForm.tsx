@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Button, Sending } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { focusFirstErrorAfterRender } from "../../shared/lib/focusFirstError";
@@ -11,6 +12,7 @@ import {
   isJoinRequestsClosedError,
   isUnder18Error,
 } from "./api/joinRequest.api";
+import { parseJoinRequestSource } from "./api/joinRequestSource";
 import { AgeAttestation } from "./AgeAttestation";
 import { RequestInviteFields } from "./RequestInviteFields";
 import { Under18Notice } from "./Under18Notice";
@@ -32,6 +34,10 @@ export function RequestInviteForm({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const [searchParams] = useSearchParams();
+  // Which CTA sent them here, read once from `?from=`. Unknown/absent → null, so
+  // a hand-edited param never becomes a stored source.
+  const source = parseJoinRequestSource(searchParams.get("from"));
   const createJoinRequest = useCreateJoinRequest();
   const [city, setCity] = useState("");
   const [email, setEmail] = useState("");
@@ -97,6 +103,7 @@ export function RequestInviteForm({
         email: email.trim(),
         city: city.trim() || undefined,
         message,
+        source: source ?? undefined,
       });
       onSent("sent");
     } catch (err) {

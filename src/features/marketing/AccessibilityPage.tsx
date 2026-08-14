@@ -6,6 +6,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { VENUES } from "./accessibility.data";
 import {
@@ -16,7 +17,7 @@ import {
 import { AccommodationsModal, FlagVenueModal } from "./AccessibilityModals";
 import styles from "./AccessibilityPage.module.css";
 
-const INVITE = routes.requestInvite;
+const INVITE = requestInvitePath("accessibility");
 
 export function AccessibilityPage() {
   const { t } = useTranslation();

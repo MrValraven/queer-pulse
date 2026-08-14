@@ -95,7 +95,7 @@ const iberian: CollectionDetail = {
     { initials: "SC", name: "Sofía Castro", role: "Co-curator" },
   ],
   essayIntro:
-    "“The collection is an argument about continuity. That queer Iberian cinema did not begin in 1978 with the transition to democracy — it began with the first person who pointed a camera at something they were told not to show.”",
+    "“The collection is an argument about continuity. That queer Iberian cinema did not begin in 1978 with the transition to democracy. It began with the first person who pointed a camera at something they were told not to show.”",
   essayBody: [
     "We started building this collection in early 2024, João and I, with a shared feeling of frustration: every retrospective we'd seen of Iberian queer cinema treated the Carnation Revolution as Year Zero. As if the image-making before it had been purely heterosexual, purely obedient. It hadn't.",
     <>
@@ -104,7 +104,7 @@ const iberian: CollectionDetail = {
       watch them now with a literacy that their makers didn't have, but they
       made them anyway. That is what we wanted to start with.
     </>,
-    "The second half of the collection moves from Almodóvar — whose queer vision came partly from watching the Iberian films that couldn't show what they were — through to the current generation of Portuguese and Spanish directors for whom queerness is just a given condition of the frame, not a risk or a statement. From Marvila to Madrid, from TikTok-native short to three-hour installation work.",
+    "The second half of the collection moves from Almodóvar, whose queer vision came partly from watching the Iberian films that couldn't show what they were, through to the current generation of Portuguese and Spanish directors for whom queerness is simply a given condition of the frame. From Marvila to Madrid, from TikTok-native short to three-hour installation work.",
     <>
       Watch in order, at least once. The argument only lands if you feel the
       distance from film 01 to film 24. <em>After that, wander.</em>
@@ -139,12 +139,12 @@ const iberian: CollectionDetail = {
     { k: "Last updated", v: <em>Jun 2026</em> },
   ],
   detailsNote:
-    "Two films added in June 2026. Sofía added a new section on Galician cinema — films 21–24.",
+    "Two films added in June 2026. Sofía added a new section on Galician cinema: films 21–24.",
   orderNote: (
     <>
       The order matters. <strong>Films 01–12</strong> are pre-democracy
       (1967–1978): they're coded, oblique, and worth watching in sequence before
-      you reach film 13. <em>After that, you can wander freely</em> — the second
+      you reach film 13. <em>After that, you can wander freely</em>. The second
       half doesn't have a fixed argument. If you're short on time, films 05, 13,
       and 20 are the three we'd pick first.
     </>
@@ -158,7 +158,7 @@ const iberian: CollectionDetail = {
       titlePre: "O Crime ",
       titleEm: "do Padre Amaro",
       meta: "Carlos Coelho · Portugal · 1967",
-      why: "“Watch it as coded silence — the thing that cannot be named accumulates until the last scene. It's the most Portuguese film in the collection.”",
+      why: "“Watch it as coded silence: the thing that cannot be named accumulates until the last scene. It's the most Portuguese film in the collection.”",
       who: "João Ribeiro",
       tags: ["PT spoken", "EN subs", "Archive print"],
       price: "Free",
@@ -223,7 +223,7 @@ const iberian: CollectionDetail = {
       titlePre: "O que ",
       titleEm: "fica",
       meta: "Inês Lourenço · Galicia/Portugal · 2026",
-      why: "“The last entry in the collection, and the newest. Inês made this at 22. It's in Galician, which is not technically Portuguese and not quite Spanish — and that liminality is what the film is about.”",
+      why: "“The last entry in the collection, and the newest. Inês made this at 22. It's in Galician, which is not technically Portuguese and not quite Spanish, and that liminality is what the film is about.”",
       who: "Sofía Castro",
       tags: ["GL spoken", "EN subs", "PT subs", "New"],
       price: "Free",
@@ -282,15 +282,15 @@ const transDocs: CollectionDetail = {
   ],
   curators: [{ initials: "DO", name: "D. Okoye", role: "Lead curator" }],
   essayIntro:
-    "“A documentary about a trans person is not the same thing as a documentary made with one. This collection is about the second kind — where the subject holds the edit as much as the director does.”",
+    "“A documentary about a trans person is not the same thing as a documentary made with one. This collection is about the second kind: where the subject holds the edit as much as the director does.”",
   essayBody: [
-    "The decade is barely half over and it has already produced more trans-authored documentary than the four before it combined. I wanted to gather the films that treat their subjects as collaborators rather than case studies — where consent is ongoing, and the camera can be told to stop.",
+    "The decade is barely half over and it has already produced more trans-authored documentary than the four before it combined. I wanted to gather the films that treat their subjects as collaborators rather than case studies: where consent is ongoing, and the camera can be told to stop.",
     <>
       Five of the twelve are directed by trans filmmakers. The other seven I
       chose because the people in front of the lens were given final say over
       the cut. <em>That distinction is the whole collection.</em>
     </>,
-    "There's no single argument to watch in order here — start anywhere. But if you only have one evening, begin with the two free titles. They're the gentlest doors into the rest.",
+    "There's no single argument to watch in order here. Start anywhere. But if you only have one evening, begin with the two free titles. They're the gentlest doors into the rest.",
   ],
   details: [
     { k: "Languages", v: "EN · PT · FR" },
@@ -357,7 +357,7 @@ const transDocs: CollectionDetail = {
       why: (
         <>
           “Kel spent three years finding the people Marsha's story reached in
-          the Lusophone world. <em>It's an inheritance film</em> — about what we
+          the Lusophone world. <em>It's an inheritance film</em>, about what we
           pass down when there are no institutions to hold it.”
         </>
       ),
@@ -459,7 +459,7 @@ const parents: CollectionDetail = {
     { k: "Last updated", v: <em>Apr 2026</em> },
   ],
   detailsNote:
-    "Chosen with the help of the QueerPulse family-support room. If a film here caused a hard conversation to go well, tell us — it earns its place.",
+    "Chosen with the help of the QueerPulse family-support room. If a film here caused a hard conversation to go well, tell us. It earns its place.",
   films: [
     {
       num: "01",
@@ -502,7 +502,7 @@ const parents: CollectionDetail = {
       why: (
         <>
           “A big loud family lunch where the coming-out is <em>not</em> the
-          climax — it's page ten, and the film keeps going. That's the gift.”
+          climax. It's page ten, and the film keeps going. That's the gift.”
         </>
       ),
       who: "Sara Marques",
@@ -576,15 +576,15 @@ const lesbianScifi: CollectionDetail = {
   ],
   curators: [{ initials: "YR", name: "Yara Reis", role: "Curator" }],
   essayIntro:
-    "“Science fiction is the only genre that has to imagine the future — which means it's the only genre that has to decide, out loud, whether we're in it. This collection is a record of everyone who decided yes.”",
+    "“Science fiction is the only genre that has to imagine the future, which means it's the only genre that has to decide, out loud, whether we're in it. This collection is a record of everyone who decided yes.”",
   essayBody: [
-    "It starts, as it has to, with Born in Flames in 1978: not the first, but the loudest, the one that made the argument impossible to un-hear. From there the collection reaches forward — through the video-art tapes of the '90s, through the festival features of the 2010s, and out to the Brazilian shorts no distributor has bothered to import yet.",
+    "It starts, as it has to, with Born in Flames in 1978: not the first, but the loudest, the one that made the argument impossible to un-hear. From there the collection reaches forward: through the video-art tapes of the '90s, through the festival features of the 2010s, and out to the Brazilian shorts no distributor has bothered to import yet.",
     <>
       The future has always had us in it.{" "}
       <em>The archive just kept losing the tapes.</em> Half the work of this
       collection was finding them.
     </>,
-    "Watch out of order if you like — sci-fi doesn't need chronology. But the leap from film 01 to film 18 is worth feeling: forty-eight years of the same stubborn refusal to be edited out of tomorrow.",
+    "Watch out of order if you like. Sci-fi doesn't need chronology. But the leap from film 01 to film 18 is worth feeling: forty-eight years of the same stubborn refusal to be edited out of tomorrow.",
   ],
   details: [
     { k: "Languages", v: "EN · PT · ES" },
@@ -654,7 +654,7 @@ const lesbianScifi: CollectionDetail = {
             {" "}
             It's about building a home in something that won't hold still
           </em>
-          — which is the most lesbian premise I know.”
+          , which is the most lesbian premise I know.”
         </>
       ),
       who: "Yara Reis",
@@ -671,7 +671,7 @@ const lesbianScifi: CollectionDetail = {
       titlePre: "Amanhã ",
       titleEm: "Talvez",
       meta: "Bruna Alves · Brazil · 2026",
-      why: "“The newest and furthest out. A Brazilian short no one is importing yet — so we imported it. The future, still arriving.”",
+      why: "“The newest and furthest out. A Brazilian short no one is importing yet, so we imported it. The future, still arriving.”",
       who: "Yara Reis",
       tags: ["PT spoken", "EN subs", "New"],
       price: "Free",
@@ -735,12 +735,12 @@ const houseOcean: CollectionDetail = {
   essayBody: [
     "I grew up between Lagos and London, and the ballroom I knew was never the one on the television. It was borrowed, translated, argued over. When people talk about the houses as if they belong to one city, one decade, one country, I want to hand them these eight films.",
     <>
-      The collection traces the form as it travels — from West African drag
+      The collection traces the form as it travels: from West African drag
       lineages that predate the word "ballroom," through the diaspora scenes of
       Paris, Lisbon and London, and back again. <em>Nothing here is a copy.</em>{" "}
       Every scene reinvented what it received.
     </>,
-    "Watch them in any order. There is no single argument to follow — the point is precisely that the form has no single home. But the two free titles are the warmest way in, and I'd start there if the history is new to you.",
+    "Watch them in any order. There is no single argument to follow. The point is precisely that the form has no single home. But the two free titles are the warmest way in, and I'd start there if the history is new to you.",
   ],
   details: [
     { k: "Languages", v: "EN · FR · PT · Yoruba" },
@@ -764,7 +764,7 @@ const houseOcean: CollectionDetail = {
     { k: "Last updated", v: <em>Apr 2026</em> },
   ],
   detailsNote:
-    "Two of these films were nearly lost — no distributor, no preservation copy. QueerPulse Cinema paid for the transfers. That's what the sustainer fund is for.",
+    "Two of these films were nearly lost: no distributor, no preservation copy. QueerPulse Cinema paid for the transfers. That's what the sustainer fund is for.",
   films: [
     {
       num: "01",
@@ -774,7 +774,7 @@ const houseOcean: CollectionDetail = {
       titlePre: "Before the ",
       titleEm: "Word",
       meta: "Adaeze Nwosu · Nigeria · 2014",
-      why: "“Start here. Adaeze films the elders who were performing femininity and lineage decades before anyone called it ballroom. The form didn't arrive — it was already home.”",
+      why: "“Start here. Adaeze films the elders who were performing femininity and lineage decades before anyone called it ballroom. The form didn't arrive. It was already home.”",
       who: "D. Okoye",
       tags: ["EN spoken", "Yoruba", "EN subs", "Archive print"],
       price: "Free",
@@ -809,7 +809,7 @@ const houseOcean: CollectionDetail = {
       titlePre: "A Casa em ",
       titleEm: "Lisboa",
       meta: "Kiala Nzita · Portugal/Angola · 2021",
-      why: "“The Lisbon scene, filmed by someone inside it. This is the film that made me want to build the collection — the ocean crossing happening in real time, in a city I could walk to.”",
+      why: "“The Lisbon scene, filmed by someone inside it. This is the film that made me want to build the collection: the ocean crossing happening in real time, in a city I could walk to.”",
       who: "D. Okoye",
       tags: ["PT spoken", "EN subs", "Audio description"],
       price: "Free",
@@ -824,7 +824,7 @@ const houseOcean: CollectionDetail = {
       titlePre: "Return ",
       titleEm: "Category",
       meta: "Adaeze Nwosu · Nigeria/UK · 2024",
-      why: "“Ten years after film 01, Adaeze goes back. The diaspora children return to Lagos and the elders read them — lovingly, mercilessly. The ocean crossed twice.”",
+      why: "“Ten years after film 01, Adaeze goes back. The diaspora children return to Lagos and the elders read them: lovingly, mercilessly. The ocean crossed twice.”",
       who: "D. Okoye",
       tags: ["EN spoken", "Yoruba", "EN subs"],
       price: "Sustainer",
@@ -897,13 +897,13 @@ const slowEastAsian: CollectionDetail = {
   ],
   curators: [{ initials: "YR", name: "Yara Reis", role: "Lead curator" }],
   essayIntro:
-    "“Western queer cinema is often in a hurry — to come out, to be seen, to resolve. These six films from Japan and Korea are in no hurry at all. They ask you to sit in the room a little longer than is comfortable.”",
+    "“Western queer cinema is often in a hurry: to come out, to be seen, to resolve. These six films from Japan and Korea are in no hurry at all. They ask you to sit in the room a little longer than is comfortable.”",
   essayBody: [
     "This is a small collection on purpose. Six films, all feature-length, all slow in the specific way that East Asian queer cinema has made its own: elliptical, patient, more interested in the space between two people than in the declaration that might close it.",
     <>
       I don't mean slow as a compliment you give a difficult film. I mean it as
       the actual subject. <em>Waiting is the plot.</em> The held glance, the
-      meal eaten in silence, the season that changes while nothing is said —
+      meal eaten in silence, the season that changes while nothing is said:
       that is where these films live.
     </>,
     "You can watch them in any order, but watch them alone, or with one person you trust to stay quiet. They don't survive a second screen.",
@@ -1041,15 +1041,15 @@ const queerElders: CollectionDetail = {
   ],
   curators: [{ initials: "JR", name: "João Ribeiro", role: "Lead curator" }],
   essayIntro:
-    "“One film, one person, at least thirty minutes. No arc, no lesson, no death to make it meaningful. Just looking at someone who survived long enough to be looked at — for long enough that looking becomes something else.”",
+    "“One film, one person, at least thirty minutes. No arc, no lesson, no death to make it meaningful. Just looking at someone who survived long enough to be looked at, for long enough that looking becomes something else.”",
   essayBody: [
-    "I built this collection because I was tired of watching queer elders appear in films for ninety seconds — a talking head to authenticate someone else's story, then gone. I wanted twelve films that did the opposite: stayed in the room, past the point of comfort, until the person stopped performing and simply was.",
+    "I built this collection because I was tired of watching queer elders appear in films for ninety seconds: a talking head to authenticate someone else's story, then gone. I wanted twelve films that did the opposite: stayed in the room, past the point of comfort, until the person stopped performing and simply was.",
     <>
       The rule for inclusion was strict. One subject. Thirty minutes minimum. No
       voiceover explaining them to us.{" "}
       <em>The camera has to be patient enough to be forgotten.</em>
     </>,
-    "There's no order to follow. Each film is complete in itself. But five are free, and I chose those five to be the ones I'd want a younger person to see first — proof, mostly, that there is an after, and that it can be tender.",
+    "There's no order to follow. Each film is complete in itself. But five are free, and I chose those five to be the ones I'd want a younger person to see first: proof, mostly, that there is an after, and that it can be tender.",
   ],
   details: [
     { k: "Languages", v: "PT · EN · ES · FR" },
@@ -1073,10 +1073,10 @@ const queerElders: CollectionDetail = {
     { k: "Last updated", v: <em>Jun 2026</em> },
   ],
   detailsNote:
-    "Three of the twelve subjects have since died. Their films stay exactly as they approved them — we don't add memorial cards. They didn't want them.",
+    "Three of the twelve subjects have since died. Their films stay exactly as they approved them. We don't add memorial cards. They didn't want them.",
   orderNote: (
     <>
-      There's no fixed order here — <em>each portrait stands alone</em>. But if
+      There's no fixed order here. <em>Each portrait stands alone</em>. But if
       you want a place to begin, films 01, 04, and 09 are the three free titles
       I most want a younger person to see first.
     </>
@@ -1144,7 +1144,7 @@ const queerElders: CollectionDetail = {
       titlePre: "Kofi Keeps the ",
       titleEm: "Keys",
       meta: "Ama Boateng · Ghana/UK · 2024",
-      why: "“Kofi has kept the keys to a London community centre for thirty years — the only queer space some people had. Ama simply watches him open up, every morning, for a week.”",
+      why: "“Kofi has kept the keys to a London community centre for thirty years: the only queer space some people had. Ama simply watches him open up, every morning, for a week.”",
       who: "João Ribeiro",
       tags: ["EN spoken", "EN subs", "New"],
       price: "Free",

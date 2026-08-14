@@ -12,10 +12,10 @@ export const culture: Catalog = {
   "hero.eyebrow": "Cena e rádio de Lisboa",
   "hero.title": "A <em>cena</em> queer de Lisboa.",
   "hero.lead":
-    "Os clubes, encomendas, mostras e rádio que compõem a vida cultural queer da cidade — com curadoria da comunidade, sempre em mudança.",
+    "Os clubes, encomendas, mostras e rádio que compõem a vida cultural queer da cidade: com curadoria da comunidade, sempre em mudança.",
   "outro.title": "Cria algo <em>connosco.</em>",
   "outro.sub":
-    "Cultura não é o que acontece nos eventos. É o que construímos entre eles — em silêncio, com constância, juntes.",
+    "Cultura é o que construímos entre os eventos, em silêncio, com constância, juntes.",
   "outro.submitWorkCta": "Submeter o teu trabalho",
   "outro.exploreCommunitiesCta": "Explorar comunidades",
 
@@ -40,7 +40,7 @@ export const culture: Catalog = {
 
   "commissions.heading": "Encomendas <em>criativas.</em>",
   "commissions.sub":
-    "Estou a criar algo — ajuda-me a torná-lo melhor. Mais estruturado do que o quadro aberto.",
+    "Estou a criar algo. Ajuda-me a torná-lo melhor. Mais estruturado do que o quadro aberto.",
   "commissions.postProjectCta": "+ Publicar um projeto",
   "commissions.cat.photo": "Fotografia",
   "commissions.cat.music": "Música",
@@ -55,7 +55,7 @@ export const culture: Catalog = {
 
   "showcase.heading": "Trabalho da <em>comunidade.</em>",
   "showcase.sub":
-    "Exposição rotativa — 8 trabalhos exibidos de cada vez. Submissões revistas mensalmente.",
+    "Exposição rotativa: 8 trabalhos exibidos de cada vez. Submissões revistas mensalmente.",
   "showcase.submitWorkCta": "+ Submeter o teu trabalho",
   "showcase.emptyLive.title": "Trabalhos em destaque em breve",
   "showcase.emptyLive.description":
@@ -63,7 +63,7 @@ export const culture: Catalog = {
 
   "radio.heading": "Rádio da <em>comunidade.</em>",
   "radio.sub":
-    "Presença cultural ambiente — com curadoria de DJs rotativos. Sem algoritmo. Sem anúncios.",
+    "Presença cultural ambiente, com curadoria de DJs rotativos. Sem algoritmo. Sem anúncios.",
   "radio.submitPlaylistCta": "Submeter uma playlist",
   "radio.emptyLive.title": "Programação de rádio em breve",
   "radio.emptyLive.description":
@@ -121,7 +121,7 @@ export const culture: Catalog = {
   "postProject.success.step1":
     "Uma pessoa moderadora revê novas publicações no prazo de 48 horas.",
   "postProject.success.step2":
-    "Depois de publicado, vais receber manifestações de interesse por email — as primeiras respostas costumam chegar dentro de uma semana.",
+    "Depois de publicado, vais receber manifestações de interesse por email. As primeiras respostas costumam chegar dentro de uma semana.",
 
   "submitWork.title": "Submete o teu <em>trabalho</em>",
   "submitWork.sub":
@@ -163,12 +163,12 @@ export const culture: Catalog = {
   "submitPlaylist.success.body":
     "Obrigada por te ofereceres para um turno na rádio da comunidade. Rodamos as pessoas convidadas para o som se manter humano.",
   "submitPlaylist.success.step1":
-    "Uma pessoa da curadoria ouve todas as submissões — sem algoritmo, sem saltar faixas.",
+    "Uma pessoa da curadoria ouve todas as submissões: sem algoritmo, sem saltar faixas.",
   "submitPlaylist.success.step2":
     "Se encaixar, reservamos-te um lugar e enviamos-te um email até <strong>{date}</strong>.",
 
   "commissionInterest.errorToast":
-    "Não foi possível enviar o teu interesse — tenta novamente.",
+    "Não foi possível enviar o teu interesse. Tenta novamente.",
   "commissionInterest.eyebrow": "Manifestar interesse",
   "commissionInterest.title": "Contacta <em>{name}</em>",
   "commissionInterest.sub":
@@ -186,7 +186,7 @@ export const culture: Catalog = {
   "commissionInterest.success.step2":
     "Se quiser avançar, apresentamos-vos por email.",
   "commissionInterest.success.step3":
-    "Sem pressão de qualquer forma — as colaborações aqui são sempre um sim de ambos os lados.",
+    "Sem pressão de qualquer forma. As colaborações aqui são sempre um sim de ambos os lados.",
 
   "options.lookingFor.writer": "Escrita",
   "options.lookingFor.editor": "Edição",

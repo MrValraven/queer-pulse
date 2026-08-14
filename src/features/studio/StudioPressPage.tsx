@@ -366,7 +366,7 @@ function ContactSection({ onRequest }: { onRequest: () => void }) {
             />
           </h3>
           <p>
-            Mariana handles her own press — no gatekeepers.{" "}
+            Mariana handles her own press. No gatekeepers.{" "}
             <em>press@marianasol.pt</em> · usually replies within a day.
           </p>
         </div>

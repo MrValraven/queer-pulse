@@ -18,7 +18,7 @@ export const RECAP_EVENT_SUBTITLE = "June Edition";
 export const RECAP_VENUE = "Príncipe Real, Lisbon";
 export const RECAP_SIDEBAR_VENUE = "A Cevicheria";
 export const RECAP_HOST_NAME = "Sofia Rodrigues";
-export const RECAP_NEXT_EVENT_TITLE = "Queer Book Club — July";
+export const RECAP_NEXT_EVENT_TITLE = "Queer Book Club: July";
 export const RECAP_NEXT_EVENT_VENUE = "LX Factory";
 
 /**
@@ -29,9 +29,9 @@ export const RECAP_NEXT_EVENT_VENUE = "LX Factory";
  * expression.
  */
 export const RECAP_WRITEUP: string[] = [
-  "We took over the terrace at A Cevicheria on a warm Saturday morning, and for three hours it became ours — a little corner of Príncipe Real that felt genuinely, unmistakably queer. Thirty-eight people came. Some knew each other; most didn't, at least not yet. By noon, you wouldn't have known the difference.",
-  'There was a long table of food that kept getting replenished. There were conversations that started with "how do you know the host?" and turned into something else entirely — plans, collaborations, phone numbers exchanged. Two people who\'d been connected on QueerPulse for months finally met in person.',
-  "These gatherings don't have agendas. They're just time — held, deliberately, for people like us to be in a room together. This one was a good one. We'll do it again in July.",
+  "We took over the terrace at A Cevicheria on a warm Saturday morning, and for three hours it became ours: a little corner of Príncipe Real that felt genuinely, unmistakably queer. Thirty-eight people came. Some knew each other; most didn't, at least not yet. By noon, you wouldn't have known the difference.",
+  'There was a long table of food that kept getting replenished. There were conversations that started with "how do you know the host?" and turned into something else entirely: plans, collaborations, phone numbers exchanged. Two people who\'d been connected on QueerPulse for months finally met in person.',
+  "These gatherings don't have agendas. They're just time, held deliberately, for people like us to be in a room together. This one was a good one. We'll do it again in July.",
 ];
 
 export interface RecapDayPhoto {

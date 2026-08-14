@@ -12,7 +12,7 @@
 /** Shown on every tool that touches tax/legal/financial figures. */
 export const TAX_DISCLAIMER =
   "General information, not tax or legal advice. Rules change and individual " +
-  "situations differ — confirm with a contabilista certificado before relying on this.";
+  "situations differ. Confirm with a contabilista certificado before relying on this.";
 
 /* ── IVA (VAT) — Continente. Source: Art. 18.º CIVA. ───────────────────── */
 /** i18n Pattern A — `labelKey` resolved via t() by InvoiceFormFields / DayRateCalculatorPage. */

@@ -80,7 +80,7 @@ export const VOICES: Voice[] = [
     who: "A member, coming-out space",
   },
   {
-    text: "It did not go well, and I got through it — with the network, the legal templates, and a new job six months later. Even the bad version is survivable.",
+    text: "It did not go well, and I got through it, with the network, the legal templates, and a new job six months later. Even the bad version is survivable.",
     who: "A member, coming-out space",
   },
 ];

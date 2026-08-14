@@ -83,7 +83,7 @@ export const REAL_ENTRIES: Record<string, Omit<Member, "id">> = {
     photo: philippinePhoto,
     verified: true,
     since: "2026",
-    bio: "My journey has always been about bridging worlds — from the grace of dance stages to the runway of fashion shows, and now to the world of innovation and sustainability. As a professional dancer and model, I've performed in fashion shows and TV commercials, bringing artistry and presence to every project, and that creative foundation shapes how I approach ecosystem building and impact-driven innovation. Today I'm building my path in venture capital through VC Lab's Venture Institute, supporting entrepreneurs and scaling sustainable, tech-enabled solutions across Europe and Africa.",
+    bio: "My journey has always been about bridging worlds: from the grace of dance stages to the runway of fashion shows, and now to the world of innovation and sustainability. As a professional dancer and model, I've performed in fashion shows and TV commercials, bringing artistry and presence to every project, and that creative foundation shapes how I approach ecosystem building and impact-driven innovation. Today I'm building my path in venture capital through VC Lab's Venture Institute, supporting entrepreneurs and scaling sustainable, tech-enabled solutions across Europe and Africa.",
     now: "Building my path in venture capital through VC Lab's Venture Institute, and backing sustainable, tech-enabled ventures across Europe and Africa.",
     openTo: [
       { kind: "preset", id: "collaborating" },

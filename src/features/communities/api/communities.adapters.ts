@@ -137,7 +137,7 @@ export function detailDtoToDetail(dto: CommunityDetailDTO): CommunityDetail {
     tags: [badge],
     organiser,
     nextEvent: {
-      dd: "—",
+      dd: "-",
       mm: "soon",
       title: "Next gathering to be announced",
       meta: "Check the events tab",

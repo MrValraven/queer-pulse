@@ -10,7 +10,7 @@ export const ADMIN_READING_GROUP_PROPOSALS: AdminReadingGroupProposalDTO[] = [
   {
     id: "rgp_4001",
     member: { slug: "joana", name: "Joana Reis" },
-    book: "Giovanni's Room — James Baldwin",
+    book: "Giovanni's Room by James Baldwin",
     why: "A cornerstone of queer literature I'd love to read slowly together.",
     format: "In-person",
     maxPeople: 6,
@@ -22,7 +22,7 @@ export const ADMIN_READING_GROUP_PROPOSALS: AdminReadingGroupProposalDTO[] = [
   {
     id: "rgp_4002",
     member: { slug: "marco", name: "Marco Vieira" },
-    book: "Stone Butch Blues — Leslie Feinberg",
+    book: "Stone Butch Blues by Leslie Feinberg",
     why: null,
     format: "Online",
     maxPeople: 8,
@@ -34,7 +34,7 @@ export const ADMIN_READING_GROUP_PROPOSALS: AdminReadingGroupProposalDTO[] = [
   {
     id: "rgp_4003",
     member: { slug: "sofia", name: "Sofia Antunes" },
-    book: "Paul Takes the Form of a Mortal Girl — Andrea Lawlor",
+    book: "Paul Takes the Form of a Mortal Girl by Andrea Lawlor",
     why: "Perfect for a lighter summer read.",
     format: "Either",
     maxPeople: 4,

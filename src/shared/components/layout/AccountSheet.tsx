@@ -11,6 +11,7 @@ import { useNavMode, type NavMode } from "../../../app/providers/navModeContext"
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTeamRole, type TeamRole } from "../../../features/admin/adminRole";
 import { routes } from "../../../app/routeMap";
+import { isComingSoonLink } from "../../../app/authGate";
 import { useTranslation } from "../../i18n/useTranslation";
 import { ACCOUNT_GROUPS, HEADER_ACTIONS } from "./accountMenu.data";
 import { useAccountIdentity } from "./useAccountIdentity";
@@ -208,7 +209,8 @@ function AccountSheetBody({
       {ACCOUNT_GROUPS.map((group) =>
         group
           .filter((item) => item.to !== routes.accountProfile)
-          .filter((item) => !item.liveOnly || !demoMode),
+          .filter((item) => !item.liveOnly || !demoMode)
+          .filter((item) => !isComingSoonLink(item.to)),
       )
         .filter((group) => group.length > 0)
         .map((group, groupIndex) => (

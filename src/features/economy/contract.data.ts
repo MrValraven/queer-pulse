@@ -68,7 +68,7 @@ export const DOC_STRINGS: Record<Lang, DocStrings> = {
     date: "Date",
     disclaimer:
       "General information, not legal advice. Laws change and individual " +
-      "situations differ — confirm with a qualified lawyer (advogado) before relying on this.",
+      "situations differ. Confirm with a qualified lawyer (advogado) before relying on this.",
   },
   pt: {
     title: "Contrato de Prestação de Serviços",
@@ -87,7 +87,7 @@ export const DOC_STRINGS: Record<Lang, DocStrings> = {
     date: "Data",
     disclaimer:
       "Informação geral, não constitui aconselhamento jurídico. As leis mudam e " +
-      "cada situação é diferente — confirme com um advogado antes de se basear neste documento.",
+      "cada situação é diferente. Confirme com um advogado antes de se basear neste documento.",
   },
 };
 
@@ -216,14 +216,14 @@ export const CLAUSES: Clause[] = [
     body: {
       en: () =>
         `Neither party is liable for delay or failure to perform caused by events beyond its ` +
-        `reasonable control — including illness, natural disaster, civil unrest, strikes, or ` +
+        `reasonable control, including illness, natural disaster, civil unrest, strikes, or ` +
         `failure of essential infrastructure. The affected party shall notify the other promptly ` +
         `and resume performance as soon as reasonably possible. If such an event continues for ` +
         `more than 30 days, either party may terminate this agreement with payment due for work ` +
         `completed to that point.`,
       pt: () =>
         `Nenhuma das partes é responsável por atrasos ou incumprimentos causados por eventos alheios ` +
-        `ao seu controlo razoável — incluindo doença, catástrofes naturais, agitação civil, greves ou ` +
+        `ao seu controlo razoável, incluindo doença, catástrofes naturais, agitação civil, greves ou ` +
         `falha de infraestruturas essenciais. A parte afetada deve notificar a outra prontamente e ` +
         `retomar a execução logo que razoavelmente possível. Se tal evento se prolongar por mais de ` +
         `30 dias, qualquer das partes pode rescindir o contrato, sendo devido o pagamento do trabalho ` +

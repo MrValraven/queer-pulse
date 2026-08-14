@@ -19,7 +19,7 @@ function demoReport(body: CreateReportInput): ReportDTO {
     severity: "medium",
     status: "open",
     createdAt: new Date().toISOString(),
-    acknowledgement: "Report received — a moderator is on it.",
+    acknowledgement: "Report received. A moderator is on it.",
   };
 }
 

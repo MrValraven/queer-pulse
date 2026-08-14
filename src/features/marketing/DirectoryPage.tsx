@@ -5,6 +5,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { useLocalPlaces } from "./api/useLocalPlaces";
 import { useDirectoryFilters } from "./useDirectoryFilters";
 import { LocalFilterBar } from "./LocalFilterBar";
@@ -145,7 +146,7 @@ export function DirectoryPage() {
         }
         sub={t("marketing:directory.outro.sub")}
       >
-        <Button size="lg" to={routes.requestInvite}>
+        <Button size="lg" to={requestInvitePath("directory")}>
           {t("marketing:directory.outro.cta")}
         </Button>
       </Outro>

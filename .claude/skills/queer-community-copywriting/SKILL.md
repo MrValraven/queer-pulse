@@ -21,6 +21,8 @@ From `docs/design-system.md` → Content fundamentals:
 - **Sentence case** everywhere. ALL CAPS only for eyebrows, footer column heads, category chips.
 - **Emphasis = one Fraunces italic `<em>` in the coral accent** — never bold, never ALL CAPS, never an exclamation mark. Emphasise the _one_ word that carries the feeling.
 - **No emoji** in headings or body (toasts / wellbeing widget / notifications only).
+- **No "X, not Y" antithesis.** Never frame a claim by what it isn't — banned in every form: "X, not Y", "not just X but Y", "X, never Y", and negation tails ("…not a stock photo or a bot"). State the positive plainly: "Everyone here is real", not "Real people, not a directory". Reads as AI-slick.
+- **No em dash (—) anywhere.** Restructure with a period, comma, or colon.
 - **Numbers are used sparingly and meaningfully** — "247 members", "6 spots left" — as trust signals, not hype.
 - **Tone is safety-conscious, community-first, non-transactional. Avoid FOMO.**
 - **Bilingual EN/PT** — keep phrasing translatable; avoid idioms that won't survive in Portuguese.
@@ -68,6 +70,7 @@ Run this on any copy before shipping it:
 - [ ] Second person, sentence case, no exclamation mark doing the emphasis.
 - [ ] Exactly one Fraunces italic `<em>` (coral) on the word that matters — or none.
 - [ ] Belonging/safety framing, not conversion/FOMO/scarcity.
+- [ ] No "X, not Y" antithesis and no em dash — state the positive plainly.
 - [ ] No assumed gender, binary, or identity label; they/them + "folks/people".
 - [ ] No dated/clinical terms (see table); mirror self-identification.
 - [ ] Concrete community detail beats abstract uplift.

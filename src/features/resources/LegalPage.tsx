@@ -14,6 +14,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useConnect } from "../../app/providers/useConnect";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import {
   PageMeta,
   JsonLd,
@@ -341,7 +342,7 @@ export function LegalPage() {
         }
         sub={t("resources:legal.outro.sub")}
       >
-        <Button to={routes.requestInvite} variant="primary" size="lg">
+        <Button to={requestInvitePath("legal")} variant="primary" size="lg">
           {t("resources:legal.outro.requestInviteCta")}
         </Button>
       </Outro>

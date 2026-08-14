@@ -245,7 +245,7 @@ export function buildContactCards(t: TFunction): ContactCard[] {
       ),
       body: (
         <>
-          <em>help@queerpulse.org</em>
+          <em>hello@queerpulse.com</em>
           <br />
           {t("studio:help.contact.email.replyLine")}
         </>

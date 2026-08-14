@@ -98,7 +98,13 @@ export function MegaNav() {
 
   return (
     <>
-      <div className={styles.items}>
+      <div
+        className={styles.items}
+        // Close is scheduled only when the cursor leaves the whole trigger row,
+        // not when it crosses the gaps BETWEEN names. So an already-open panel
+        // stays open while the cursor hovers between two triggers.
+        onMouseLeave={scheduleClose}
+      >
         {menus.map((menu, index) => (
           <button
             key={menu.key}
@@ -113,7 +119,6 @@ export function MegaNav() {
             aria-expanded={openKey === menu.key}
             aria-controls={openKey === menu.key ? "mega-panel" : undefined}
             onMouseEnter={() => openMenu(menu.key)}
-            onMouseLeave={scheduleClose}
             onClick={() => toggleMenu(menu.key)}
             onKeyDown={(event) => onButtonKeyDown(event, index)}
           >

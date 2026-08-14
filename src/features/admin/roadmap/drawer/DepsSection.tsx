@@ -53,7 +53,7 @@ export function DepsSection({
                   type="button"
                   className={styles.depRemove}
                   onClick={() => onRemove(item.id)}
-                  aria-label={`${t("admin:common.delete")} — ${item.name}`}
+                  aria-label={`${t("admin:common.delete")}: ${item.name}`}
                 >
                   <FiX size={13} aria-hidden />
                 </button>

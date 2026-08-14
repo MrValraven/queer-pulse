@@ -92,7 +92,20 @@ export type NotificationKind =
   //  - a request rejected (`VerificationService.decideRequest`):
   //    `{ requestedLevel, decision: 'rejected', reason }` — no level change
   //    to name; `reason` surfaces as the meta line instead.
-  | "verification_update";
+  | "verification_update"
+  // Sent to a member when the XP/badge awarding engine credits them across a
+  // level threshold (mirrors the backend `notifications_type_enum` value
+  // added in `AddRecognitionNotificationTypes1789600000000`). System-driven,
+  // no actor. Payload carries `{ level, name }`; both interpolate straight
+  // into the flat `type.xp_level_up.text` copy via `interpolationTokens`
+  // (no key branching needed, unlike `moderation_outcome`/`concern_update`).
+  | "xp_level_up"
+  // Sent to a member when the XP/badge awarding engine grants them a badge
+  // (mirrors the backend `notifications_type_enum` value added in
+  // `AddRecognitionNotificationTypes1789600000000`). System-driven, no
+  // actor. Payload carries `{ badgeName }`, interpolated the same way as
+  // `xp_level_up` above.
+  | "badge_earned";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -142,6 +155,10 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // An admin manually adjusting your verification standing is the platform's
   // word, same tab as moderation_outcome/concern_update.
   verification_update: "platform",
+  // The awarding engine crediting XP/badges is the platform's word on your
+  // own standing, same tab as verification_update.
+  xp_level_up: "platform",
+  badge_earned: "platform",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */

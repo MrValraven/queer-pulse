@@ -87,7 +87,7 @@ export function PartnerDetailSidebar({ p }: { p: Partner }) {
         <Button
           variant="primary"
           className={s.becomeBtn}
-          href="mailto:partners@queerpulse.pt"
+          href="mailto:hello@queerpulse.com"
         >
           {t("marketing:partnerDetail.sidebar.becomeCta")}{" "}
           <FiArrowRight aria-hidden />

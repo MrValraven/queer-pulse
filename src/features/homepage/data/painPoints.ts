@@ -63,7 +63,7 @@ export const gapsThread: GapThreadItem[] = [
     headingKey: "homepage:painPoints.exchange4.heading",
     bodyKey: "homepage:painPoints.exchange4.body",
     ctaLabelKey: "homepage:painPoints.exchange4.cta",
-    href: routes.skills,
+    href: routes.roadmap,
   },
   // ── Act II · Safety & rights ───────────────────────────────────────
   {
@@ -105,6 +105,6 @@ export const gapsThread: GapThreadItem[] = [
     headingKey: "homepage:painPoints.exchange7.heading",
     bodyKey: "homepage:painPoints.exchange7.body",
     ctaLabelKey: "homepage:painPoints.exchange7.cta",
-    href: routes.employerReviews,
+    href: routes.roadmap,
   },
 ];

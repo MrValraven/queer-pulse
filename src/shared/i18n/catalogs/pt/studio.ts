@@ -108,7 +108,7 @@ export const studio: Catalog = {
   "error404.eyebrow": "Faixa não encontrada",
   "error404.title": "Esta música <em>não existe.</em>",
   "error404.body":
-    "A faixa, o set ou a página que procuravas nunca foi gravada, foi removida pelo artista, ou está atrás de um início de sessão. Sem drama — o catálogo é grande e a sala está quente.",
+    "A faixa, o set ou a página que procuravas nunca foi gravada, foi removida pelo artista, ou está atrás de um início de sessão. Sem drama. O catálogo é grande e a sala está quente.",
   "error404.backCta": "Voltar ao leitor",
   "error404.goBackCta": "Voltar atrás",
   "error404.tryInsteadTitle": "Experimenta uma destas",
@@ -122,7 +122,7 @@ export const studio: Catalog = {
   "error500.eyebrow": "Algo falhou",
   "error500.title": "Perdemos a <em>gravação.</em>",
   "error500.body":
-    "Um servidor do nosso lado falhou a meio da gravação. A tua conta, as tuas gravações e o pagamento a cada artista estão seguros — isto é só o front of house. Espera um segundo e tenta outra vez.",
+    "Um servidor do nosso lado falhou a meio da gravação. A tua conta, as tuas gravações e o pagamento a cada artista estão seguros. Isto é só o front of house. Espera um segundo e tenta outra vez.",
   "error500.tryAgainCta": "Tentar outra vez",
   "error500.backCta": "Voltar ao leitor",
   "error500.statusPrefix":
@@ -135,7 +135,7 @@ export const studio: Catalog = {
   "landing.nav.howItWorks": "Como funciona",
   "landing.nav.forArtists": "Para artistas",
   "landing.footer.tagline":
-    "Uma rede profissional queer com raízes em Lisboa. A Studio é uma das suas salas — a par de Cinema, Magazine e Convívios.",
+    "Uma rede profissional queer com raízes em Lisboa. A Studio é uma das suas salas, a par de Cinema, Magazine e Convívios.",
   "landing.footer.col.studio": "Studio",
   "landing.footer.col.studio.thisWeek": "Esta semana",
   "landing.footer.col.studio.djSets": "Sets de DJ",
@@ -149,7 +149,7 @@ export const studio: Catalog = {
   "landing.footer.col.council.submissions": "Submissões",
   "landing.footer.col.council.curatorCouncil": "Conselho de curadoria",
   "landing.footer.col.coop.strategyPlan": "O plano estratégico",
-  "landing.footer.copyright": "© {year} QueerPulse Studio Co-op CRL — Lisboa",
+  "landing.footer.copyright": "© {year} QueerPulse Studio Co-op CRL, Lisboa",
   "landing.footer.languages": "EN · PT",
 
   // ── Hero de marketing (StudioLandingHero) ─────────────────────────────────
@@ -170,7 +170,7 @@ export const studio: Catalog = {
   "landing.demo.payNote":
     "Esta audição paga a {artist} <em>{amount}</em> quando és sustentador. Neste momento, a sala está aberta como demonstração.",
   "landing.demo.quote":
-    "«Fica até ao segundo verso da faixa seis. <em>O piano deixa-te ali de propósito.</em>» — {attribution}, responsável pela programação",
+    "«Fica até ao segundo verso da faixa seis. <em>O piano deixa-te ali de propósito.</em>» {attribution}, responsável pela programação",
 
   // ── As quatro promessas (StudioLandingPromises) ───────────────────────────
   "landing.promises.eyebrow": "O contrato · não o marketing",
@@ -190,7 +190,7 @@ export const studio: Catalog = {
     "Nenhum dado de audição é vendido, distribuído ou usado para recomendar. O histórico pessoal de reprodução é privado e apagável num clique. Existem reproduções agregadas para o livro-razão; mais nada sai daqui.",
 
   // ── Contador do livro-razão público (StudioLandingCounter) ────────────────
-  "landing.counter.liveEyebrow": "Ao vivo — atualizado em tempo real",
+  "landing.counter.liveEyebrow": "Ao vivo, atualizado em tempo real",
   "landing.counter.title":
     "Desde que a beta abriu, a <em>QueerPulse Studio</em> já pagou:",
   "landing.counter.sub": "a {count} artistas, em {cycles} ciclos mensais.",
@@ -249,17 +249,17 @@ export const studio: Catalog = {
   "signin.in.joinCta": "Junta-te à sala",
   "signin.in.freePrompt": "Só queres ouvir?",
   "signin.in.freeCta": "Ouve um set grátis, sem conta",
-  "signin.in.signedInToast": "Sessão iniciada — bem-vinde de volta",
+  "signin.in.signedInToast": "Sessão iniciada, bem-vinde de volta",
   "signin.in.signedInGoogleToast":
-    "Sessão iniciada com o Google — bem-vinde de volta",
+    "Sessão iniciada com o Google, bem-vinde de volta",
 
   "signin.join.title": "Junta-te à <em>sala.</em>",
   "signin.join.lede":
-    "Escolhe quanto da cooperativa queres. Podes mudar de nível ou cancelar em qualquer mês — sem fidelização, sem emails a insistir.",
+    "Escolhe quanto da cooperativa queres. Podes mudar de nível ou cancelar em qualquer mês: sem fidelização, sem emails a insistir.",
   "signin.join.chooseTier": "Escolhe o teu nível",
   "signin.join.tier.studio.title": "Só <em>Studio</em>",
   "signin.join.tier.studio.body":
-    "Tudo na Studio — o set semanal do conselho, salas ao vivo, o catálogo completo, áudio sem perdas, subscrições diretas a artistas.",
+    "Tudo na Studio: o set semanal do conselho, salas ao vivo, o catálogo completo, áudio sem perdas, subscrições diretas a artistas.",
   "signin.join.tier.studio.incl":
     "{sharePercent} da tua quota chega a artistas por reprodução",
   "signin.join.tier.coop.badge": "Melhor valor",
@@ -277,16 +277,16 @@ export const studio: Catalog = {
   "welcome.eyebrow": "Já entraste · vamos configurar a tua sala",
   "welcome.title": "Bem-vinde à <em>sala</em>, {name}.",
   "welcome.sub":
-    "Três coisas rápidas e o primeiro set é teu. <em>Podes saltar qualquer uma</em> — nada disto fica fixo.",
+    "Três coisas rápidas e o primeiro set é teu. <em>Podes saltar qualquer uma</em>. Nada disto fica fixo.",
   "welcome.step1.title": "Segue alguns <em>artistas</em>",
   "welcome.step1.dek":
-    "Vamos mostrar-te primeiro os lançamentos deles. Escolhe três ou mais — <em>o conselho escolhe o resto</em>.",
+    "Vamos mostrar-te primeiro os lançamentos deles. Escolhe três ou mais: <em>o conselho escolhe o resto</em>.",
   "welcome.step1.followedCount_one": "{count} a seguir",
   "welcome.step1.followedCount_other": "{count} a seguir",
   "welcome.nextCta": "Seguinte",
   "welcome.step2.title": "Define a tua <em>gorjeta</em> por omissão",
   "welcome.step2.dek":
-    "Um toque no leitor envia isto diretamente ao artista — <em>100%, sem corte</em>. Muda quando quiseres.",
+    "Um toque no leitor envia isto diretamente ao artista: <em>100%, sem corte</em>. Muda quando quiseres.",
   "welcome.skipCta": "Saltar",
   "welcome.tip.nod": "um aceno",
   "welcome.tip.coffee": "um café",
@@ -297,14 +297,14 @@ export const studio: Catalog = {
     "As nossas predefinições são as mais cuidadosas. <em>Nada aqui está ativo a menos que o ligues.</em>",
   "welcome.step3.history.title": "Guardar o meu histórico de audição",
   "welcome.step3.history.body":
-    "Um registo privado e apagável que só tu vês. Desligado por omissão — nada sai do teu navegador.",
+    "Um registo privado e apagável que só tu vês. Desligado por omissão: nada sai do teu navegador.",
   "welcome.step3.tipNotes.title": "Tornar públicas as minhas notas de gorjeta",
   "welcome.step3.tipNotes.body":
     "Desligado mantém cada nota entre ti e o artista. Podes mudar qualquer nota depois.",
   "welcome.step3.librarySync.title":
     "Sincronizar a minha biblioteca entre dispositivos",
   "welcome.step3.librarySync.body":
-    "As gravações e os seguimentos acompanham-te. Ligado por omissão — desliga para manter só neste dispositivo.",
+    "As gravações e os seguimentos acompanham-te. Ligado por omissão. Desliga para manter só neste dispositivo.",
   "welcome.enterRoomCta": "Entrar na sala",
   "welcome.readyToast": "A tua sala está pronta",
 
@@ -313,23 +313,23 @@ export const studio: Catalog = {
   "about.hero.title":
     "Uma cooperativa de streaming que <em>paga</em> a quem fez a música.",
   "about.hero.lede":
-    "Já ouviste «pagamento justo para artistas» da parte de todas as plataformas que os pagam mal. Por isso, aqui tens a aritmética, a governação e o teto honesto — <em>sem slogans que não se consigam verificar.</em>",
+    "Já ouviste «pagamento justo para artistas» da parte de todas as plataformas que os pagam mal. Por isso, aqui tens a aritmética, a governação e o teto honesto: <em>sem slogans que não se consigam verificar.</em>",
 
-  "about.sec.whatItIs.num": "01 — o que é",
+  "about.sec.whatItIs.num": "01: o que é",
   "about.sec.whatItIs.heading":
     "Uma plataforma de audição, gerida como <em>cooperativa</em>.",
   "about.sec.whatItIs.p1":
-    "A QueerPulse Studio pertence a quem a usa — quem ouve e quem faz música, juntos — não a acionistas nem a uma editora discográfica. <strong>Oitenta cêntimos de cada euro gerado por uma audição vão para o artista.</strong> Cada cêntimo de cada gorjeta, também. A divisão é pública, o catálogo é curado por um conselho eleito de seis pessoas, e os masters nunca saem das mãos de quem os fez.",
+    "A QueerPulse Studio pertence a quem a usa, quem ouve e quem faz música, juntos, não a acionistas nem a uma editora discográfica. <strong>Oitenta cêntimos de cada euro gerado por uma audição vão para o artista.</strong> Cada cêntimo de cada gorjeta, também. A divisão é pública, o catálogo é curado por um conselho eleito de seis pessoas, e os masters nunca saem das mãos de quem os fez.",
   "about.sec.whatItIs.p2":
     "É a terceira sala da cooperativa QueerPulse, depois da Magazine e do Cinema. Uma só assinatura cobre tudo. Podes ser pessoa da comunidade só pela escrita e nunca abrir a Studio; podes estar aqui só pela música e nunca ler uma palavra.",
   "about.sec.whatItIs.pull":
     "Não estamos a tentar ser um Spotify mais pequeno. Estamos a tentar ser uma <em>sala diferente</em>.",
 
-  "about.sec.rate.num": "02 — a taxa",
+  "about.sec.rate.num": "02: a taxa",
   "about.sec.rate.heading":
-    "€0,05 por reprodução. Um <em>piso</em>, não um número de marketing.",
+    "€0,05 por reprodução. Um <em>piso</em> a que estamos mesmo obrigados.",
   "about.sec.rate.p1":
-    "Comprometemo-nos a <strong>€0,05 por reprodução válida</strong> — cerca de quinze vezes o que o Spotify paga. Uma reprodução válida tem pelo menos 30 segundos, com um limite de um pagamento por pessoa a ouvir, por dia, para que ninguém possa fazer batota. O piso pode subir por maioria simples na assembleia; só pode <em>descer</em> com maioria de dois terços. Na prática, isso significa que não desce.",
+    "Comprometemo-nos a <strong>€0,05 por reprodução válida</strong>: cerca de quinze vezes o que o Spotify paga. Uma reprodução válida tem pelo menos 30 segundos, com um limite de um pagamento por pessoa a ouvir, por dia, para que ninguém possa fazer batota. O piso pode subir por maioria simples na assembleia; só pode <em>descer</em> com maioria de dois terços. Na prática, isso significa que não desce.",
   "about.sec.rate.footnote":
     "Para comparação: a €0,003 por reprodução, uma música precisa de cerca de 330 000 reproduções para ganhar o que aqui ganha em 20 000. Não estamos a fingir que é uma diferença pequena.",
 
@@ -340,56 +340,56 @@ export const studio: Catalog = {
     "da receita de subscrições para artistas, por reprodução",
   "about.rate.cell.tip.value": "<em>100</em>%",
   "about.rate.cell.tip.label":
-    "de cada gorjeta — sem corte da plataforma, nunca",
+    "de cada gorjeta, sem corte da plataforma, nunca",
 
-  "about.sec.ceiling.num": "03 — o que um artista pode realmente ganhar",
+  "about.sec.ceiling.num": "03: o que um artista pode realmente ganhar",
   "about.sec.ceiling.heading": "Honestos quanto ao <em>teto</em>.",
   "about.sec.ceiling.p1":
-    "A maioria das páginas sobre a «economia de criadores» mostra-te o top 0,1% e deixa-te presumir que és tu. Aqui está o que a taxa realmente produz em quatro níveis reais de audição — e onde para.",
+    "A maioria das páginas sobre a «economia de criadores» mostra-te o top 0,1% e deixa-te presumir que és tu. Aqui está o que a taxa realmente produz em quatro níveis reais de audição, e onde para.",
 
   "about.tier.casual.label": "Ocasional",
   "about.tier.casual.value": "74",
   "about.tier.casual.body":
-    "1480 reproduções válidas — cerca de <em>75 pessoas a ouvir</em> uma faixa três vezes por semana. Dinheiro para um café, pago todos os meses.",
+    "1480 reproduções válidas: cerca de <em>75 pessoas a ouvir</em> uma faixa três vezes por semana. Dinheiro para um café, pago todos os meses.",
   "about.tier.building.label": "Em crescimento",
   "about.tier.building.value": "340",
   "about.tier.building.body":
-    "6800 reproduções, duas gorjetas, uma compra de álbum. Um rendimento extra a sério — <em>quase dá para a renda</em> em Lisboa.",
+    "6800 reproduções, duas gorjetas, uma compra de álbum. Um rendimento extra a sério, <em>quase dá para a renda</em> em Lisboa.",
   "about.tier.sustaining.label": "Consolidado",
   "about.tier.sustaining.value": "1820",
   "about.tier.sustaining.body":
-    "36 000 reproduções, uma bolsa de gorjetas regular, uma sala ao vivo por mês. Abaixo do salário mediano português — e <em>12× o que o Spotify paga</em> pela mesma audição.",
+    "36 000 reproduções, uma bolsa de gorjetas regular, uma sala ao vivo por mês. Abaixo do salário mediano português, e <em>12× o que o Spotify paga</em> pela mesma audição.",
   "about.tier.touring.label": "Artista em digressão",
   "about.tier.touring.body":
     "A Studio <em>não</em> vai substituir um rendimento de digressão, e não vamos fingir que consegue. Pode, plausivelmente, pagar a renda enquanto fazes a próxima coisa.",
   "about.tierFoot":
-    "Isto não são projeções de um pitch deck — são a taxa real por reprodução do livro-razão ao vivo, multiplicada por contagens de reproduções honestas. <em>Os números reais são públicos, todas as segundas-feiras ao meio-dia.</em>",
+    "Isto não são projeções de um pitch deck. São a taxa real por reprodução do livro-razão ao vivo, multiplicada por contagens de reproduções honestas. <em>Os números reais são públicos, todas as segundas-feiras ao meio-dia.</em>",
 
-  "about.sec.governance.num": "04 — quem decide",
+  "about.sec.governance.num": "04: quem decide",
   "about.sec.governance.heading":
     "Um <em>conselho</em> eleito, com mandato limitado, registado publicamente.",
   "about.sec.governance.p1":
     "Seis pessoas programam o set semanal, tratam da triagem de submissões e escrevem um parágrafo a justificar cada escolha. São eleitas por toda a cooperativa na assembleia anual, recebem uma ajuda de custo fixa de €400/mês que aparece no livro-razão público, e têm mandatos limitados a dois anos com rotação obrigatória. <strong>Nenhum algoritmo decide quem é ouvido.</strong> É uma pessoa que decide, e assina o nome por baixo.",
   "about.sec.governance.p2":
-    "O piso por audição e as percentagens da divisão são definidos anualmente por votação conjunta de sustentadores e artistas, com quórum de 20%. Se achas que a taxa está errada, não escreves ao apoio ao cliente — <em>votas, ou candidatas-te.</em>",
+    "O piso por audição e as percentagens da divisão são definidos anualmente por votação conjunta de sustentadores e artistas, com quórum de 20%. Se achas que a taxa está errada, não escreves ao apoio ao cliente. <em>Votas, ou candidatas-te.</em>",
 
-  "about.sec.hardQuestions.num": "05 — as perguntas difíceis",
+  "about.sec.hardQuestions.num": "05: as perguntas difíceis",
   "about.sec.hardQuestions.heading": "As que estás <em>mesmo</em> a fazer.",
 
   "about.skeptic.broke.q":
     "Isto soa lindo e condenado ao fracasso. Como é que isto não vai à falência?",
   "about.skeptic.broke.a":
-    "Sendo honestos, em baixa escala, o piso por audição é caro e uma faixa que rebente pode custar mais em largura de banda do que aquilo que gera. A nossa mitigação é aborrecida e pública: quem ouve de forma ocasional fica por defeito em AAC, fazemos cache de forma agressiva, e o livro-razão é reconciliado <em>diariamente</em>, para vermos o vermelho antes de ser uma crise, não depois.",
+    "Sendo honestos, em baixa escala, o piso por audição é caro e uma faixa que rebente pode custar mais em largura de banda do que aquilo que gera. A nossa mitigação é aborrecida e pública: quem ouve de forma ocasional fica por defeito em AAC, fazemos cache de forma agressiva, e o livro-razão é reconciliado <em>diariamente</em>, para vermos o vermelho antes de ser uma crise.",
   "about.skeptic.clique.q": "Curadoria feita por seis pessoas soa a panelinha.",
   "about.skeptic.clique.a":
-    "Pode tornar-se numa — esse é o risco real. As salvaguardas são mandatos de dois anos, rotação obrigatória, e o facto de cada escolha ser publicada com um nome e uma razão. <em>Uma panelinha que tem de se justificar por escrito todas as semanas é uma panelinha mais fraca.</em>",
+    "Pode tornar-se numa. Esse é o risco real. As salvaguardas são mandatos de dois anos, rotação obrigatória, e o facto de cada escolha ser publicada com um nome e uma razão. <em>Uma panelinha que tem de se justificar por escrito todas as semanas é uma panelinha mais fraca.</em>",
   "about.skeptic.clone.q":
     "Isto não é só um clone do Spotify com copy mais bonita?",
   "about.skeptic.clone.a":
     "Se a página principal fosse filas de capas de álbum quadradas, seria. O produto é editorial de propósito: um set semanal programado, salas de audição ao vivo, pagamentos visíveis em cada faixa. <em>Se algum dia parecermos um Spotify mais pequeno, cobra-nos este parágrafo.</em>",
   "about.skeptic.leave.q": "O que acontece à minha música se eu sair?",
   "about.skeptic.leave.a":
-    "Ficas com os teus masters e com tudo o que ganhaste. A remoção é um processo de uma página, com 14 dias, sem ciclo de retenção. As reproduções passadas continuam pagas. Sair é tão fácil como entrar — achamos que é a única forma honesta de te pedir para ficares.",
+    "Ficas com os teus masters e com tudo o que ganhaste. A remoção é um processo de uma página, com 14 dias, sem ciclo de retenção. As reproduções passadas continuam pagas. Sair é tão fácil como entrar. Achamos que é a única forma honesta de te pedir para ficares.",
 
   "about.cta.title": "A sala é pequena, e <em>paga</em>.",
   "about.cta.body":
@@ -402,11 +402,11 @@ export const studio: Catalog = {
   "accessibility.hero.title":
     "A música é para toda a gente, ou não é <em>música</em>.",
   "accessibility.hero.lede":
-    "Isto é, ao mesmo tempo, uma declaração de intenção e uma lista de verificação viva do que já funciona mesmo hoje. Onde algo <em>ainda não</em> está feito, dizemo-lo — preferimos ser honestos a parecer aspiracionais.",
+    "Isto é, ao mesmo tempo, uma declaração de intenção e uma lista de verificação viva do que já funciona mesmo hoje. Onde algo <em>ainda não</em> está feito, dizemo-lo. Preferimos ser honestos a parecer aspiracionais.",
   "accessibility.statement.p1":
-    "A QueerPulse Studio compromete-se a cumprir a <em>WCAG 2.2 AA</em> em todas as superfícies, e a tratar a acessibilidade como um requisito de produto, não um pormenor de conformidade. Pessoas surdas e com dificuldades auditivas devem poder usar uma plataforma de música. O mesmo vale para pessoas cegas e com baixa visão, pessoas que navegam pelo teclado, e pessoas que precisam de palavras na sua própria língua.",
+    "A QueerPulse Studio compromete-se a cumprir a <em>WCAG 2.2 AA</em> em todas as superfícies, e a tratar a acessibilidade como um requisito de produto central, integrado desde o início. Pessoas surdas e com dificuldades auditivas devem poder usar uma plataforma de música. O mesmo vale para pessoas cegas e com baixa visão, pessoas que navegam pelo teclado, e pessoas que precisam de palavras na sua própria língua.",
   "accessibility.statement.p2":
-    "Testamos com leitores de ecrã reais e pessoas reais — pagas, da nossa própria comunidade — em cada lançamento. <em>Se algo aqui não funcionar para ti, isso é um erro, e queremos o teu relatório.</em>",
+    "Testamos com leitores de ecrã reais e pessoas reais (pagas, da nossa própria comunidade) em cada lançamento. <em>Se algo aqui não funcionar para ti, isso é um erro, e queremos o teu relatório.</em>",
 
   "accessibility.group.deaf.heading":
     "Para pessoas surdas e com <em>dificuldades auditivas</em>",
@@ -414,13 +414,13 @@ export const studio: Catalog = {
     "Uma plataforma de música não pode fingir que toda a gente ouve da mesma forma. Por isso legendamos a conversa e mostramos as palavras.",
   "accessibility.item.captions.heading": "Salas <em>ao vivo</em> legendadas",
   "accessibility.item.captions.body":
-    "Cada transmissão é legendada automaticamente em tempo real; as transmissões do conselho recebem uma <em>revisão humana</em>. A conversa entre músicas, as dedicatórias, os comentários do artista — tudo transcrito e com tamanho ajustável.",
+    "Cada transmissão é legendada automaticamente em tempo real; as transmissões do conselho recebem uma <em>revisão humana</em>. A conversa entre músicas, as dedicatórias, os comentários do artista: tudo transcrito e com tamanho ajustável.",
   "accessibility.item.lyrics.heading": "Letras <em>sincronizadas</em>",
   "accessibility.item.lyrics.body":
     "Quando o artista as disponibiliza, as letras avançam ao ritmo da reprodução, com a linha atual destacada. Também podes lê-las como uma folha estática, em qualquer faixa.",
   "accessibility.item.waveforms.heading": "<em>Formas de onda</em> visuais",
   "accessibility.item.waveforms.body":
-    "As salas ao vivo e as faixas mostram uma forma de onda em tempo real ligada ao áudio real, para que o ritmo e a dinâmica sejam visíveis, não só audíveis.",
+    "As salas ao vivo e as faixas mostram uma forma de onda em tempo real ligada ao áudio real, para que o ritmo e a dinâmica sejam visíveis além de audíveis.",
   "accessibility.item.signed.heading": "Transmissões <em>com intérprete</em>",
   "accessibility.item.signed.body":
     "As transmissões principais do conselho incluem uma janela de interpretação em Língua Gestual Portuguesa (LGP). A expandir para as salas semanais no próximo trimestre.",
@@ -431,7 +431,7 @@ export const studio: Catalog = {
     "O catálogo está sobretudo em português, com músicas numa dezena de outras línguas. As palavras não deviam ser uma barreira.",
   "accessibility.item.translation.heading": "<em>Tradução</em> de letras",
   "accessibility.item.translation.body":
-    "As traduções feitas pela comunidade aparecem ao lado do original. Mostra uma, ou as duas ao mesmo tempo. Quem traduz é creditado e <em>pago pelo fundo de solidariedade</em> — traduzir é trabalho.",
+    "As traduções feitas pela comunidade aparecem ao lado do original. Mostra uma, ou as duas ao mesmo tempo. Quem traduz é creditado e <em>pago pelo fundo de solidariedade</em>. Traduzir é trabalho.",
   "accessibility.item.interfaceLang.heading":
     "Interface na <em>tua língua</em>",
   "accessibility.item.interfaceLang.body":
@@ -440,18 +440,18 @@ export const studio: Catalog = {
   "accessibility.group.lowVision.heading":
     "Para navegação por <em>baixa visão</em> e teclado",
   "accessibility.group.lowVision.dek":
-    "Todo o leitor é operável sem rato, e o tema escuro foi construído para ter contraste claro — não só para parecer com atmosfera.",
+    "Todo o leitor é operável sem rato, e o tema escuro foi construído para ter contraste claro além de atmosfera.",
   "accessibility.item.contrast.heading": "Contraste que <em>passa</em>",
   "accessibility.item.contrast.body":
     "O texto principal está a 4,5:1 ou melhor contra o roxo; os elementos interativos a um mínimo de 3:1, com um modo de alto contraste que reforça tudo ainda mais. Os anéis de foco estão sempre visíveis.",
   "accessibility.item.screenReader.heading":
     "Notas para leitor de ecrã no <em>leitor</em>",
   "accessibility.item.screenReader.body":
-    "O leitor persistente anuncia a faixa, o artista, o tempo decorrido, e <em>quanto esta audição paga ao artista</em>. Dar gorjeta e guardar são botões com etiqueta; a lista de gorjetas ao vivo é uma região viva ARIA educada, nunca uma rajada.",
+    "O leitor persistente anuncia a faixa, o artista, o tempo decorrido, e <em>quanto esta audição paga ao artista</em>. Dar gorjeta e guardar são botões com etiqueta; a lista de gorjetas ao vivo é uma região viva ARIA educada, de ritmo suave.",
   "accessibility.item.reducedMotion.heading":
     "Respeita o <em>movimento reduzido</em>",
   "accessibility.item.reducedMotion.body":
-    "Toda a animação decorativa — o ponto pulsante, as formas de onda, as barras do equalizador — imobiliza-se quando o teu sistema pede movimento reduzido. Nada essencial se move.",
+    "Toda a animação decorativa (o ponto pulsante, as formas de onda, as barras do equalizador) imobiliza-se quando o teu sistema pede movimento reduzido. Nada essencial se move.",
 
   "accessibility.status.live": "Disponível",
   "accessibility.status.inProgress": "Em curso",
@@ -470,10 +470,10 @@ export const studio: Catalog = {
 
   "accessibility.contact.title": "Encontraste uma <em>barreira</em>?",
   "accessibility.contact.body":
-    "Conta-nos e vamos tratá-la como um erro, não como um pedido de funcionalidade. Relatórios de pessoas que usam tecnologia de apoio passam à frente na fila — <em>access@queerpulse.org</em>, ou assinala a partir do rodapé de qualquer página. Respondemos em dois dias úteis, com uma correção ou um prazo honesto.",
+    "Conta-nos e vamos tratá-la como um erro a corrigir. Relatórios de pessoas que usam tecnologia de apoio passam à frente na fila: <em>hello@queerpulse.com</em>, ou assinala a partir do rodapé de qualquer página. Respondemos em dois dias úteis, com uma correção ou um prazo honesto.",
   "accessibility.contact.reportCta": "Reportar uma barreira de acesso",
   "accessibility.contact.reportToast":
-    "Recebido — vamos tratar isto como um erro",
+    "Recebido. Vamos tratar isto como um erro",
   "accessibility.contact.meta":
     "Última auditoria: 2 jun. 2026 · WCAG 2.2 AA · NVDA, VoiceOver, TalkBack · próxima auditoria: set. 2026",
 
@@ -481,9 +481,9 @@ export const studio: Catalog = {
   "help.hero.eyebrow": "Ajuda · pessoas reais, respostas reais",
   "help.hero.title": "Como podemos <em>ajudar</em>?",
   "help.hero.dek":
-    "A maioria das respostas está abaixo. Se não estiver, uma pessoa lê cada mensagem — não temos um labirinto de bots, nem existe um nível de apoio que tenhas de pagar.",
+    "A maioria das respostas está abaixo. Se não estiver, uma pessoa lê cada mensagem. Não temos um labirinto de bots, nem existe um nível de apoio que tenhas de pagar.",
   "help.searchPlaceholder":
-    "Pesquisar ajuda — gorjetas, pagamentos, qualidade de áudio…",
+    "Pesquisar ajuda: gorjetas, pagamentos, qualidade de áudio…",
   "help.searchAria": "Pesquisar ajuda",
   "help.searchCta": "Pesquisar",
   "help.searchingToast": "A pesquisar no centro de ajuda…",
@@ -510,10 +510,10 @@ export const studio: Catalog = {
 
   "help.faq.priceDiff.q": "Qual é a diferença entre €7 e €11?",
   "help.faq.priceDiff.a":
-    "<strong>€7/mês</strong> é só a Studio. <strong>€11/mês</strong> é toda a cooperativa QueerPulse — Studio mais Cinema, Magazine, Convívios, grupos de leitura e um voto na assembleia anual. Uma só assinatura, todos os espaços. Muda de nível em qualquer mês.",
+    "<strong>€7/mês</strong> é só a Studio. <strong>€11/mês</strong> é toda a cooperativa QueerPulse: Studio mais Cinema, Magazine, Convívios, grupos de leitura e um voto na assembleia anual. Uma só assinatura, todos os espaços. Muda de nível em qualquer mês.",
   "help.faq.cancel.q": "Como cancelo?",
   "help.faq.cancel.a":
-    'Um clique em <a>Definições → Apagar e sair</a>. Sem chamada de retenção, sem ciclo de "tens a certeza", sem emails a insistir. Achamos que sair devia ser tão fácil como entrar — é a única forma honesta de te pedir para ficares.',
+    'Um clique em <a>Definições → Apagar e sair</a>. Sem chamada de retenção, sem ciclo de "tens a certeza", sem emails a insistir. Achamos que sair devia ser tão fácil como entrar. É a única forma honesta de te pedir para ficares.',
   "help.faq.dataSold.q":
     "Os meus dados são vendidos ou usados para treinar alguma coisa?",
   "help.faq.dataSold.a":
@@ -521,13 +521,13 @@ export const studio: Catalog = {
 
   "help.faq.getPaid.q": "Quando e como sou pago?",
   "help.faq.getPaid.a":
-    'Mensalmente, no dia 5, com um piso de €5. SEPA ou Stripe Connect. Vês a taxa por reprodução desse mês, os números de cada entrada no livro-razão e a divisão por lançamento. Quem colabora é pago <em>diretamente</em> — não há uma carteira do "artista principal". Consulta <a>Pagamentos</a>.',
+    'Mensalmente, no dia 5, com um piso de €5. SEPA ou Stripe Connect. Vês a taxa por reprodução desse mês, os números de cada entrada no livro-razão e a divisão por lançamento. Quem colabora é pago <em>diretamente</em>. Não há uma carteira do "artista principal". Consulta <a>Pagamentos</a>.',
   "help.faq.keepMasters.q": "Fico com os meus masters?",
   "help.faq.keepMasters.a":
-    "<strong>Sempre.</strong> Ficas com os teus masters e com os teus direitos. Podes remover qualquer lançamento num processo de uma página, com 14 dias, sem ciclo de retenção — e as reproduções passadas continuam pagas. Consulta <a>Direitos e remoção</a>.",
+    "<strong>Sempre.</strong> Ficas com os teus masters e com os teus direitos. Podes remover qualquer lançamento num processo de uma página, com 14 dias, sem ciclo de retenção, e as reproduções passadas continuam pagas. Consulta <a>Direitos e remoção</a>.",
   "help.faq.realisticEarn.q": "O que posso realisticamente ganhar?",
   "help.faq.realisticEarn.a":
-    "Somos honestos quanto ao teto: cerca de €74/mês ocasional, €340/mês em crescimento, €1820/mês consolidado. A Studio não vai substituir um rendimento de digressão — mas pode substituir a renda. A explicação completa está em <a>Sobre a Studio</a>.",
+    "Somos honestos quanto ao teto: cerca de €74/mês ocasional, €340/mês em crescimento, €1820/mês consolidado. A Studio não vai substituir um rendimento de digressão, mas pode substituir a renda. A explicação completa está em <a>Sobre a Studio</a>.",
 
   "help.stillStuck.title": "Ainda com <em>dúvidas</em>?",
   "help.statusOperational": "Todos os sistemas operacionais ·",
@@ -555,7 +555,7 @@ export const studio: Catalog = {
     "A transferir fotos de imprensa · alta resolução",
   "press.downloadingPhotoToast": "A transferir foto · alta resolução",
   "press.accessRequestedToast":
-    "Acesso de imprensa pedido — vamos verificar-te uma vez",
+    "Acesso de imprensa pedido. Vamos verificar-te uma vez",
   "press.eyebrow": "Kit de imprensa gerado automaticamente · sempre atual",
   "press.fact.from": "De",
   "press.fact.pronouns": "Pronomes",
@@ -569,7 +569,7 @@ export const studio: Catalog = {
   "press.pauseAria": "Pausar pré-visualização",
   "press.watermarkedBadge": "Com marca de água",
   "press.previewNote":
-    "Esta pré-visualização tem uma <em>marca de água inaudível</em> e uma identificação falada da QueerPulse no final. Para um master limpo para transmissão, pede o promo completo — verificamos a tua imprensa uma vez, e depois ficas autorizado para tudo.",
+    "Esta pré-visualização tem uma <em>marca de água inaudível</em> e uma identificação falada da QueerPulse no final. Para um master limpo para transmissão, pede o promo completo. Verificamos a tua imprensa uma vez, e depois ficas autorizado para tudo.",
   "press.section.bio": "<em>Biografia</em>",
   "press.copyBothCta": "Copiar as duas",
   "press.bio.shortLabel": "Curta · 40 palavras",
@@ -604,15 +604,15 @@ export const studio: Catalog = {
   "terms.hero.title":
     "O acordo, escrito para <em>conseguires mesmo lê-lo</em>.",
   "terms.hero.lede":
-    "Os termos legais completos existem e foram escritos por um advogado. Mas aqui tens tudo em linguagem simples primeiro — <em>porque uma cooperativa que não consegues entender não é mesmo tua</em>.",
+    "Os termos legais completos existem e foram escritos por um advogado. Mas aqui tens tudo em linguagem simples primeiro: <em>porque uma cooperativa que não consegues entender não é mesmo tua</em>.",
 
   "terms.deal.artists.title":
     "Os artistas ficam com <em>80%</em> e com os seus masters",
   "terms.deal.artists.body":
-    "A divisão está no estatuto, não numa página de definições. <em>O piso pode subir, nunca descer</em> sem uma votação de dois terços.",
+    "A divisão vive no estatuto da cooperativa, vinculada por lei. <em>O piso sobe livremente e só pode descer com uma votação de dois terços.</em>",
   "terms.deal.tips.title": "As gorjetas são <em>100%</em>, sempre",
   "terms.deal.tips.body":
-    "Sem corte da plataforma nas gorjetas, nunca. Isto não está sujeito a votação — é uma cláusula fundadora.",
+    "Sem corte da plataforma nas gorjetas, nunca. Isto não está sujeito a votação. É uma cláusula fundadora.",
   "terms.deal.data.title": "Os teus dados <em>nunca</em> são vendidos",
   "terms.deal.data.body":
     "Não são vendidos, não são partilhados, não são usados para treinar nada. O histórico está desligado por defeito e é apagável num toque.",
@@ -620,10 +620,10 @@ export const studio: Catalog = {
   "terms.deal.leaving.body":
     "A remoção do teu trabalho demora 14 dias, e fechas a conta com um clique. As reproduções passadas continuam pagas de qualquer forma.",
 
-  "terms.sec.deed.num": "01 — o estatuto da cooperativa",
+  "terms.sec.deed.num": "01: o estatuto da cooperativa",
   "terms.sec.deed.heading": "O que significa isto ser <em>teu</em>.",
   "terms.sec.deed.p1":
-    "A QueerPulse Studio é uma cooperativa registada. As pessoas — quem ouve e quem faz música — são as proprietárias, não as clientes. Isto não é uma imagem de marca: é uma estrutura legal com um estatuto que podes ler, e que vincula quem a gere.",
+    "A QueerPulse Studio é uma cooperativa registada. As pessoas, quem ouve e quem faz música, são as suas proprietárias. Isto não é uma imagem de marca: é uma estrutura legal com um estatuto que podes ler, e que vincula quem a gere.",
   "terms.sec.deed.p2":
     "O estatuto fixa três coisas que quem está no comando <strong>não pode mudar em segredo</strong>: o piso de 80% para artistas, a passagem de 100% das gorjetas, e o livro-razão público. Baixar o piso exige uma maioria de dois terços de toda a cooperativa. O conselho é <em>eleito, com mandato limitado, e pago no livro-razão</em>. Não há ações de fundador nem veto de investidores.",
   "terms.sec.deed.pull":
@@ -631,12 +631,12 @@ export const studio: Catalog = {
   "terms.sec.deed.footnote":
     "O estatuto completo e as contas anuais da cooperativa são publicados todos os anos junto com o <a>relatório de transparência</a>.",
 
-  "terms.sec.licences.num": "02 — licenças",
+  "terms.sec.licences.num": "02: licenças",
   "terms.sec.licences.heading": "O que podes <em>fazer</em> com a música.",
   "terms.sec.licences.p1":
-    "Cada lançamento indica a sua licença, escolhida pelo artista. Aqui está o que cada uma significa para ti como ouvinte — e para quem quiser reutilizar o trabalho num set, num filme, ou numa remistura.",
+    "Cada lançamento indica a sua licença, escolhida pelo artista. Aqui está o que cada uma significa para ti como ouvinte, e para quem quiser reutilizar o trabalho num set, num filme, ou numa remistura.",
   "terms.sec.licences.footnote":
-    "Os sets de DJ são especiais: um set pode incluir faixas com licenças diferentes, e o nosso sistema encaminha o pagamento de cada faixa para o seu próprio artista. <em>Covers são permitidos</em>; os direitos mecânicos são geridos através de um parceiro de cobrança português, e não pagamos sincronização — por isso, autorizar um cover para uso em filme é contigo.",
+    "Os sets de DJ são especiais: um set pode incluir faixas com licenças diferentes, e o nosso sistema encaminha o pagamento de cada faixa para o seu próprio artista. <em>Covers são permitidos</em>; os direitos mecânicos são geridos através de um parceiro de cobrança português, e não pagamos sincronização, por isso autorizar um cover para uso em filme é contigo.",
 
   "terms.licence.arr.title": "Todos os direitos <em>reservados</em>",
   "terms.licence.arr.row1": "Reproduzir e guardar",
@@ -652,13 +652,13 @@ export const studio: Catalog = {
   "terms.licence.ccBySa.row3":
     "Partilhar remisturas com a <em>mesma licença</em>",
 
-  "terms.sec.privacy.num": "03 — privacidade, em resumo",
+  "terms.sec.privacy.num": "03: privacidade, em resumo",
   "terms.sec.privacy.heading":
     "O que <em>guardamos</em>, e o que não guardamos.",
   "terms.sec.privacy.p1":
-    "Guardamos a tua conta, as tuas gravações, os teus recibos, e o que ativares explicitamente. <strong>Não</strong> guardamos um perfil do teu gosto para vender, um histórico que não pediste que guardássemos, nem nada que déssemos a um anunciante — porque não temos anunciantes.",
+    "Guardamos a tua conta, as tuas gravações, os teus recibos, e o que ativares explicitamente. <strong>Não</strong> guardamos um perfil do teu gosto para vender, um histórico que não pediste que guardássemos, nem nada que déssemos a um anunciante, porque não temos anunciantes.",
   "terms.sec.privacy.footnote":
-    "Contagens de reproduções agregadas e anónimas alimentam o livro-razão público, para que os artistas sejam pagos e os números sejam auditáveis. Podes exportar tudo o que guardamos, ou apagá-lo, em <a>Definições → Apagar e sair</a> — instantaneamente, sem modal, sem necessidade de desfazer porque falamos a sério.",
+    "Contagens de reproduções agregadas e anónimas alimentam o livro-razão público, para que os artistas sejam pagos e os números sejam auditáveis. Podes exportar tudo o que guardamos, ou apagá-lo, em <a>Definições → Apagar e sair</a>: instantaneamente, sem modal, sem necessidade de desfazer porque falamos a sério.",
 
   "terms.longVersions.title": "As versões completas",
   "terms.longVersions.meta":
@@ -673,18 +673,18 @@ export const studio: Catalog = {
   // artista e ficam em inglês nos dois modos (§1).
   "rights.promise.window.title": "Remoção em 14 dias",
   "rights.promise.window.body":
-    "Confirma uma remoção e o lançamento deixa de estar disponível dentro de 14 dias — normalmente na mesma noite. As caches limpam-se, os links dão erro 404 para uma página cuidada.",
+    "Confirma uma remoção e o lançamento deixa de estar disponível dentro de 14 dias, normalmente na mesma noite. As caches limpam-se, os links dão erro 404 para uma página cuidada.",
   "rights.promise.paid.title": "As reproduções passadas continuam pagas",
   "rights.promise.paid.body":
     "Cada audição até à remoção é paga no ciclo seguinte. Remover um trabalho nunca recupera dinheiro já ganho.",
   "rights.promise.banking.title": "A parte bancária não é afetada",
   "rights.promise.banking.body":
-    "Uma remoção não é um encerramento de conta. Os teus dados SEPA, o teu calendário de pagamentos, as divisões com colaboradores — tudo continua ativo.",
+    "Uma remoção não é um encerramento de conta. Os teus dados SEPA, o teu calendário de pagamentos, as divisões com colaboradores: tudo continua ativo.",
 
   "rights.hero.eyebrow": "O teu trabalho · a tua decisão",
   "rights.hero.title": "Direitos e <em>remoção</em>.",
   "rights.hero.dek":
-    'Uma só página. Os teus masters são teus — podes remover qualquer lançamento da Studio a qualquer momento, por qualquer razão ou nenhuma. Sem equipa de retenção, sem inquérito de saída, sem ciclo de "tens a certeza" pensado para te desgastar.',
+    'Uma só página. Os teus masters são teus. Podes remover qualquer lançamento da Studio a qualquer momento, por qualquer razão ou nenhuma. Sem equipa de retenção, sem inquérito de saída, sem ciclo de "tens a certeza" pensado para te desgastar.',
 
   "rights.releases.heading": "Os teus <em>lançamentos</em>",
   "rights.releases.liveCount_one": "{count} ativo",
@@ -704,14 +704,14 @@ export const studio: Catalog = {
   "rights.takedownStartedToast":
     "«{title}» entra na janela de remoção de 14 dias",
   "rights.removalCancelledToast":
-    "Remoção cancelada — o lançamento continua disponível",
+    "Remoção cancelada. O lançamento continua disponível",
 
   // ── Modal de confirmação de remoção (StudioTakedownModal) ─────────────────
   "rights.modal.confirmAria": "Confirmar remoção de {title}",
   "rights.modal.eyebrow": "Confirmar remoção",
   "rights.modal.title": "Remover <em>{title}</em>?",
   "rights.modal.body":
-    "Vai deixar de estar disponível dentro de 14 dias. Os links existentes vão passar a mostrar uma pequena página «este trabalho foi retirado pelo artista». <em>Podes republicá-lo quando quiseres</em> — os teus masters nunca saem das tuas mãos.",
+    "Vai deixar de estar disponível dentro de 14 dias. Os links existentes vão passar a mostrar uma pequena página «este trabalho foi retirado pelo artista». <em>Podes republicá-lo quando quiseres</em>. Os teus masters nunca saem das tuas mãos.",
   "rights.modal.keepEarned":
     "<em>Ficas com tudo o que já ganhaste.</em> Este lançamento continua pago por cada reprodução até à remoção, no ciclo seguinte.",
   "rights.modal.confirmCta": "Remover",
@@ -822,10 +822,10 @@ export const studio: Catalog = {
   "withdrawn.hero.eyebrow": "Removido pelo artista",
   "withdrawn.hero.title": "Este trabalho foi <em>removido</em>.",
   "withdrawn.hero.sub":
-    "O artista removeu-o da Studio — o direito é dele, a decisão é dele. <em>Não deve nenhuma explicação</em>, e não pedimos uma.",
+    "O artista removeu-o da Studio: o direito é dele, a decisão é dele. <em>Não deve nenhuma explicação</em>, e não pedimos uma.",
   "withdrawn.card.title": "O que isto <em>significa</em>",
   "withdrawn.card.body":
-    "Uma remoção não é uma eliminação do trabalho em si — os masters ficam com o artista, que pode republicá-lo quando quiser. Só significa que deixou de estar disponível aqui. Se o tivesses comprado ou guardado, continua na tua biblioteca como registo, marcado como removido.",
+    "Uma remoção não é uma eliminação do trabalho em si. Os masters ficam com o artista, que pode republicá-lo quando quiser. Só significa que deixou de estar disponível aqui. Se o tivesses comprado ou guardado, continua na tua biblioteca como registo, marcado como removido.",
   "withdrawn.card.jadeLine":
     "Se deste uma gorjeta ou compraste isto, <em>cada cêntimo já chegou ao artista</em> e fica com ele. Nada é recuperado.",
   "withdrawn.visitArtistCta": "Ver a página do artista",
@@ -869,12 +869,12 @@ export const studio: Catalog = {
   "settings.eyebrow": "A tua sala · definições",
   "settings.title": "Como a sala te <em>trata</em>.",
   "settings.dek":
-    "Áudio, privacidade, legendas, gorjetas. Nada aqui está ativo a menos que o ligues — e o que ligares, podes apagar com <em>um toque, sem modal de confirmação</em>.",
+    "Áudio, privacidade, legendas, gorjetas. Nada aqui está ativo a menos que o ligues, e o que ligares, podes apagar com <em>um toque, sem modal de confirmação</em>.",
 
   "settings.audio.label": "Áudio",
   "settings.audio.title": "Qualidade de <em>som</em>",
   "settings.audio.dek":
-    "FLAC é sem perdas e maior; AAC pesa menos dados. Reprodução e transferências podem diferir — escolhe por contexto.",
+    "FLAC é sem perdas e maior; AAC pesa menos dados. Reprodução e transferências podem diferir. Escolhe por contexto.",
   "settings.audio.streamQuality.heading": "Qualidade de reprodução por defeito",
   "settings.audio.streamQuality.body":
     "Numa boa ligação, vamos tão alto quanto permitires. Nunca subimos a qualidade em dados móveis sem perguntar.",
@@ -898,14 +898,14 @@ export const studio: Catalog = {
   "settings.privacy.label": "Privacidade",
   "settings.privacy.title": "O que a sala <em>guarda</em>",
   "settings.privacy.dek":
-    "Em resumo: quase nada, por defeito. Nunca vendemos, partilhamos ou treinamos com o que ouves. As reproduções agregadas alimentam o livro-razão público — nada que te identifique.",
+    "Em resumo: quase nada, por defeito. Nunca vendemos, partilhamos ou treinamos com o que ouves. As reproduções agregadas alimentam o livro-razão público, nada que te identifique.",
   "settings.privacy.history.heading": "Histórico de audição",
   "settings.privacy.history.body":
-    "Desligado por defeito — nada do que ouves sai do teu navegador. Liga para um registo privado e apagável que só tu vês.",
+    "Desligado por defeito: nada do que ouves sai do teu navegador. Liga para um registo privado e apagável que só tu vês.",
   "settings.privacy.cloudSync.heading": "Sincronizar a biblioteca na nuvem",
   "settings.privacy.cloudSync.body":
     "As gravações e os seguimentos passam entre dispositivos. Sem isto, ficam só neste dispositivo.",
-  "settings.privacy.tipNotes.heading": "Notas de gorjeta — quem as vê",
+  "settings.privacy.tipNotes.heading": "Notas de gorjeta: quem as vê",
   "settings.privacy.tipNotes.body":
     "A nota que escreves ao dar uma gorjeta. <em>Privado é a predefinição</em>: só tu e o artista a leem.",
   "settings.privacy.tipNotes.private.label": "Privado",
@@ -920,7 +920,7 @@ export const studio: Catalog = {
     "Qualquer pessoa pode ler na página do artista. Ainda podes ocultar qualquer nota depois.",
   "settings.privacy.tipReceipts.heading": "Recibos de gorjeta públicos",
   "settings.privacy.tipReceipts.body":
-    'Cada gorjeta gera um recibo com a divisão — sem dados pessoais. Ligado, pode ser partilhado como um cartão "olha o que a sala pagou a este artista".',
+    'Cada gorjeta gera um recibo com a divisão, sem dados pessoais. Ligado, pode ser partilhado como um cartão "olha o que a sala pagou a este artista".',
 
   "settings.captions.label": "Legendas e letras",
   "settings.captions.title": "Palavras no <em>ecrã</em>",
@@ -948,7 +948,7 @@ export const studio: Catalog = {
   "settings.tipping.label": "Gorjetas",
   "settings.tipping.title": "A tua <em>gorjeta</em> por defeito",
   "settings.tipping.dek":
-    "O que o botão de gorjeta rápida envia. 100% chega ao artista — nunca há corte da plataforma nas gorjetas.",
+    "O que o botão de gorjeta rápida envia. 100% chega ao artista. Nunca há corte da plataforma nas gorjetas.",
   "settings.tipping.defaultAmount.heading": "Valor por defeito",
   "settings.tipping.defaultAmount.body":
     "Podes sempre escolher outro valor no momento de dar a gorjeta.",
@@ -966,10 +966,10 @@ export const studio: Catalog = {
     "Apaga o registo privado deste dispositivo e da nuvem. <em>Feito na hora. Sem desfazer.</em>",
   "settings.erase.history.cta": "Apagar histórico",
   "settings.erase.history.toast":
-    "Histórico apagado — já não está neste dispositivo nem na nuvem.",
+    "Histórico apagado. Já não está neste dispositivo nem na nuvem.",
   "settings.erase.export.heading": "Transferir tudo o que guardamos sobre ti",
   "settings.erase.export.note":
-    "Um ficheiro JSON com as tuas gravações, gorjetas, recibos e definições — enviado por email dentro de uma hora.",
+    "Um ficheiro JSON com as tuas gravações, gorjetas, recibos e definições, enviado por email dentro de uma hora.",
   "settings.erase.export.cta": "Pedir exportação",
   "settings.erase.export.toast":
     "Vamos enviar-te a exportação dos teus dados dentro de uma hora.",
@@ -987,7 +987,7 @@ export const studio: Catalog = {
     "A tua sala · o que aconteceu enquanto estiveste fora",
   "notifications.title": "A sala esteve <em>ocupada</em>.",
   "notifications.dek":
-    "Respostas a gorjetas de artistas, novos lançamentos de quem segues, salas ao vivo prestes a abrir. <em>Só as coisas que pediste para ouvir</em> — ajusta isso nas Definições.",
+    "Respostas a gorjetas de artistas, novos lançamentos de quem segues, salas ao vivo prestes a abrir. <em>Só as coisas que pediste para ouvir</em>. Ajusta isso nas Definições.",
   "notifications.filter.all": "Tudo",
   "notifications.filter.reply": "Respostas",
   "notifications.filter.release": "Lançamentos",
@@ -1007,14 +1007,14 @@ export const studio: Catalog = {
   "tipModal.eyebrow": "Gorjeta · 100% para o artista",
   "tipModal.title": "Dar uma gorjeta a <em>{recipient}</em>",
   "tipModal.sub":
-    "As gorjetas passam sem retenções — cada cêntimo chega a {recipient}.",
+    "As gorjetas passam sem retenções: cada cêntimo chega a {recipient}.",
   "tipModal.customPlaceholder": "Outro valor",
   "tipModal.sendingCta": "A enviar…",
   "tipModal.sendCta": "Dar {amount}",
   "tipModal.note":
     "Paga a {recipient} para além da reprodução · <em>nada é retido</em>",
   "tipModal.success.title":
-    "Obrigade — foram <em>{amount}</em> para {recipient}.",
+    "Obrigade. Foram <em>{amount}</em> para {recipient}.",
   "tipModal.success.body":
     "100% da tua gorjeta chega a {recipient} diretamente. Sem corte da plataforma, sem processamento retido.",
   "tipModal.success.backCta": "Voltar à música",
@@ -1033,7 +1033,7 @@ export const studio: Catalog = {
   "library.eyebrow": "A tua biblioteca",
   "library.title": "Tudo o que <em>guardaste.</em>",
   "library.dek":
-    "Álbuns, sets e faixas guardados — e os <em>{amount}</em> que já pagaste a {artistCount} artistas este ano só por ouvires aqui.",
+    "Álbuns, sets e faixas guardados, além dos <em>{amount}</em> que já pagaste a {artistCount} artistas este ano só por ouvires aqui.",
   "library.tabs.albums": "Álbuns",
   "library.tabs.sets": "Sets",
   "library.tabs.collections": "Coleções",
@@ -1044,7 +1044,7 @@ export const studio: Catalog = {
   "library.category.tracks": "faixas",
   "library.empty.title": "A tua biblioteca está vazia aqui",
   "library.empty.description":
-    "Ainda nada em <em>{category}</em>. Explora a Studio, e tudo o que guardares aparece aqui — para voltares quando quiseres.",
+    "Ainda nada em <em>{category}</em>. Explora a Studio, e tudo o que guardares aparece aqui, para voltares quando quiseres.",
   "library.empty.browseCta": "Explorar a Studio",
   "library.empty.searchCta": "Pesquisar o catálogo",
 
@@ -1066,7 +1066,7 @@ export const studio: Catalog = {
   "search.results.featuredNow": "Em destaque <em>agora</em>",
   "search.empty.title": "Nada correspondeu a isso",
   "search.empty.description":
-    "Não encontrámos nada para <em>{term}</em>. Tenta outra palavra, ou alarga o filtro — o catálogo é maior do que parece.",
+    "Não encontrámos nada para <em>{term}</em>. Tenta outra palavra, ou alarga o filtro. O catálogo é maior do que parece.",
   "search.empty.clearCta": "Limpar pesquisa",
 
   // ── Painel de criação (StudioDashboardPage + Charts + Side) ───────────────
@@ -1077,7 +1077,7 @@ export const studio: Catalog = {
   "dashboard.hero.eyebrow": "Studio · este mês",
   "dashboard.hero.title": "Boa semana, <em>{name}</em>.",
   "dashboard.hero.sub":
-    "<em>{trackTitle}</em> já tem dois meses e continua a subir — os curadores mantiveram-na na rotação.",
+    "<em>{trackTitle}</em> já tem dois meses e continua a subir. Os curadores mantiveram-na na rotação.",
 
   "dashboard.stats.playsThisMonth": "Reproduções · este mês",
   "dashboard.stats.streamingEarnings": "Receita de reprodução",
@@ -1097,13 +1097,13 @@ export const studio: Catalog = {
   "dashboard.side.quickActions.upload.hint":
     "WAV / FLAC · 3 passos · 8 minutos",
   "dashboard.side.quickActions.goLive.label":
-    "Ficar ao vivo — organizar uma sala de audição",
+    "Ficar ao vivo: organizar uma sala de audição",
   "dashboard.side.quickActions.payouts.label":
     "Ver pagamentos e dados bancários",
   "dashboard.side.deal.eyebrow": "O acordo, sempre",
   "dashboard.side.deal.heading": "80% para <em>ti.</em>",
   "dashboard.side.deal.body":
-    "Cada reprodução, cada gorjeta, cada compra. A divisão é igual para um primeiro lançamento ou para quem vence um festival — e está impressa no livro-razão público.",
+    "Cada reprodução, cada gorjeta, cada compra. A divisão é igual para um primeiro lançamento ou para quem vence um festival, e está impressa no livro-razão público.",
   "dashboard.side.deal.perPlay.label": "Por reprodução",
   "dashboard.side.deal.yourShare.label": "A tua parte",
   "dashboard.side.deal.tips.label": "Gorjetas",
@@ -1129,7 +1129,7 @@ export const studio: Catalog = {
   "upload.dropzone.title":
     "Larga uma pasta de <em>WAVs</em>, ou clica para procurar.",
   "upload.dropzone.body":
-    "Um EP, um álbum, um single — o mesmo fluxo. Descobrimos a ordem das faixas a partir dos nomes dos ficheiros.",
+    "Um EP, um álbum, um single: o mesmo fluxo. Descobrimos a ordem das faixas a partir dos nomes dos ficheiros.",
   "upload.dropzone.accepts":
     "aceita · <em>WAV · FLAC · AIFF</em> · máx. 96 kHz / 24 bit · até 24 faixas",
 
@@ -1139,11 +1139,11 @@ export const studio: Catalog = {
   "upload.files.loudnessCheck": "Verificação de volume",
   "upload.files.loudWarning.title": "A faixa {trackNumber} está alta.",
   "upload.files.loudWarning.body":
-    "O master vem a {measuredLoudness} — o nosso limiar por defeito é {targetLoudness}. <em>Isto não é fatal:</em> podemos normalizar em tempo real por ouvinte. Se pretendias este pico, deixa como está.",
+    "O master vem a {measuredLoudness}. O nosso limiar por defeito é {targetLoudness}. <em>Isto não é fatal:</em> podemos normalizar em tempo real por ouvinte. Se pretendias este pico, deixa como está.",
   "upload.files.loudToggle.show": "O que fazemos com masters altos",
   "upload.files.loudToggle.hide": "O que fazemos com masters altos",
   "upload.files.loudExplainer":
-    "Guardamos o teu master <em>exatamente como foi entregue</em> e sem alterações. Na reprodução, aplicamos normalização de volume por ouvinte a cerca de −14 LUFS, para que a tua faixa fique num nível confortável ao lado de tudo o resto num set — <em>sem recodificar nem cortar o teu ficheiro</em>. Quem desliga a normalização nas definições ouve o teu pico original. Nada fica fixo; podes mudar o alvo ou desativar por lançamento a qualquer momento.",
+    "Guardamos o teu master <em>exatamente como foi entregue</em> e sem alterações. Na reprodução, aplicamos normalização de volume por ouvinte a cerca de −14 LUFS, para que a tua faixa fique num nível confortável ao lado de tudo o resto num set, <em>sem recodificar nem cortar o teu ficheiro</em>. Quem desliga a normalização nas definições ouve o teu pico original. Nada fica fixo; podes mudar o alvo ou desativar por lançamento a qualquer momento.",
 
   "upload.coverArt.heading":
     "Capa <em>{readyCount} de {totalCount} · validada</em>",
@@ -1167,7 +1167,7 @@ export const studio: Catalog = {
   "upload.side.files.eyebrow": "O que fazemos com os teus ficheiros",
   "upload.side.files.title": "Teus, <em>na mesma</em>.",
   "upload.side.files.body":
-    "Tu largas os masters; nós convertemos e transmitimos. O teu WAV / FLAC original continua a ser teu — guardamos uma cópia <em>só</em> para entrega. A remoção apaga a cópia de reprodução em 14 dias. Não exclusivo, sempre.",
+    "Tu largas os masters; nós convertemos e transmitimos. O teu WAV / FLAC original continua a ser teu. Guardamos uma cópia <em>só</em> para entrega. A remoção apaga a cópia de reprodução em 14 dias. Não exclusivo, sempre.",
   "upload.side.files.list.sourceKept.label": "Fonte guardada",
   "upload.side.files.list.sourceKept.value": "o teu ficheiro, sem alterações",
   "upload.side.files.list.listenerDelivery.label": "Entrega ao ouvinte",
@@ -1204,7 +1204,7 @@ export const studio: Catalog = {
 
   "upload.submitted.title": "Submetido para <em>revisão.</em>",
   "upload.submitted.body":
-    "O teu lançamento está na fila do conselho. Uma pessoa curadora vai verificar os ficheiros, divisões e créditos — normalmente dentro de um ou dois dias — e vais receber um aviso assim que estiver disponível. Nada é publicado sem a tua confirmação final.",
+    "O teu lançamento está na fila do conselho. Uma pessoa curadora vai verificar os ficheiros, divisões e créditos, normalmente dentro de um ou dois dias, e vais receber um aviso assim que estiver disponível. Nada é publicado sem a tua confirmação final.",
   "upload.submitted.viewPayoutsCta": "Ver os teus pagamentos",
   "upload.submitted.toast": "Lançamento submetido para revisão",
 
@@ -1241,7 +1241,7 @@ export const studio: Catalog = {
 
   "payouts.sidebar.methodEyebrow": "Método de pagamento · ativo",
   "payouts.sidebar.methodHeading": "A enviar para <em>SEPA</em>",
-  "payouts.sidebar.method.sepa.label": "SEPA — IBAN",
+  "payouts.sidebar.method.sepa.label": "SEPA: IBAN",
   "payouts.sidebar.method.sepa.badge": "Ativo",
   "payouts.sidebar.method.stripe.label": "Stripe Connect",
   "payouts.sidebar.method.stripe.hint": "ligado · reserva, não principal",
@@ -1279,8 +1279,8 @@ export const studio: Catalog = {
     "A programar a sala · segunda-feira de manhã · arrasta o que quiseres abaixo",
   "program.header.title": "Semana <em>{weekNumber}</em> · {dateRange}",
   "program.header.sub":
-    "Constrói a seleção da semana: <em>uma capa, 12 — 16 faixas, 2 — 3 coleções, transmissões</em>. Publica ao meio-dia e a página inicial roda.",
-  "program.header.autosave": "Guardado automaticamente · {time} — a cada tecla",
+    "Constrói a seleção da semana: <em>uma capa, 12 a 16 faixas, 2 a 3 coleções, transmissões</em>. Publica ao meio-dia e a página inicial roda.",
+  "program.header.autosave": "Guardado automaticamente · {time}, a cada tecla",
   "program.header.previewRoomCta": "Pré-visualizar a sala",
 
   "program.publishBar.status":
@@ -1291,7 +1291,7 @@ export const studio: Catalog = {
 
   "program.toast.addedToSlate": "Adicionado à seleção desta semana",
   "program.toast.passed":
-    "Recusado — quem submeteu pode voltar a tentar depois",
+    "Recusado. Quem submeteu pode voltar a tentar depois",
   "program.toast.playingPreview": "A reproduzir pré-visualização…",
   "program.toast.openingRoomPreview": "A abrir a pré-visualização da sala…",
   "program.toast.chooseNewCover": "Escolhe um novo artista de capa…",
@@ -1300,7 +1300,7 @@ export const studio: Catalog = {
     "A abrir a pré-visualização da página inicial…",
   "program.toast.draftSaved": "Rascunho guardado",
   "program.toast.published":
-    "Seleção publicada — a página inicial roda ao meio-dia",
+    "Seleção publicada. A página inicial roda ao meio-dia",
 
   "program.inbox.heading": "Submissões · <em>{count} novas</em>",
   "program.inbox.triageCta": "Triagem",
@@ -1318,7 +1318,7 @@ export const studio: Catalog = {
   "program.slate.singles.count":
     "{placed} de {total} colocados · {open} espaços em aberto",
   "program.slate.singles.notePlaceholder":
-    "— escreve uma nota de uma linha · porquê isto, porquê agora —",
+    "Escreve uma nota de uma linha · porquê isto, porquê agora",
   "program.slate.singles.noteAria": "Nota para {title}",
   "program.slate.singles.removeAria": "Remover {title}",
   "program.slate.singles.addSlotCta":
@@ -1342,7 +1342,7 @@ export const studio: Catalog = {
   "triage.header.title":
     "Caixa de entrada · <em>{count}</em> novas esta semana.",
   "triage.header.sub":
-    "Cada submissão é lida ou ouvida. <em>Recusar</em> exige uma frase — essa frase torna-se a resposta ao artista. Tempo médio de resposta esta época: {count} dias.",
+    "Cada submissão é lida ou ouvida. <em>Recusar</em> exige uma frase: essa frase torna-se a resposta ao artista. Tempo médio de resposta esta época: {count} dias.",
 
   "triage.kpi.newThisWeek": "novas esta semana",
   "triage.kpi.youClaimed": "reclamaste",
@@ -1377,7 +1377,7 @@ export const studio: Catalog = {
     "O que outras pessoas da curadoria assinalaram ({count})",
   "triage.detail.answerHeading": "A tua <em>resposta</em>",
   "triage.detail.decision.heading":
-    "Se recusares — escreve uma frase. Isto vai para {artistName} como resposta.",
+    "Se recusares, escreve uma frase. Isto vai para {artistName} como resposta.",
   "triage.detail.decision.placeholder":
     "Uma pequena frase que explique o não. Nunca enviamos uma carta-tipo.",
   "triage.detail.decision.hint":
@@ -1387,7 +1387,7 @@ export const studio: Catalog = {
   "triage.detail.addToSlateCta": "＋ Adicionar à próxima seleção",
   "triage.detail.toast.held": "Retido para uma segunda audição",
   "triage.detail.toast.passed":
-    "Recusado com a tua frase — enviado a {artistName}",
+    "Recusado com a tua frase, enviado a {artistName}",
   "triage.detail.toast.addedToSlate": "Adicionado à próxima seleção",
 
   // ── Revisão de sinalizações (StudioFlagReviewPage + Card) ─────────────────
@@ -1414,11 +1414,11 @@ export const studio: Catalog = {
   "flagReview.resolution.corrected": "corrigido",
   "flagReview.resolution.held": "retido",
 
-  "flagReview.toast.claimed": "Reclamado — é teu para rever",
+  "flagReview.toast.claimed": "Reclamado. É teu para rever",
   "flagReview.toast.lineupConfirmed": "Formação confirmada como exata",
   "flagReview.toast.lineupCorrected": "Formação corrigida",
   "flagReview.toast.dismissedCreditsConfirmed":
-    "Sinalização recusada — créditos confirmados como corretos",
+    "Sinalização recusada. Créditos confirmados como corretos",
   "flagReview.toast.correctionRequested": "Correção pedida ao artista",
   "flagReview.toast.heldUntilCorrected": "Retido até corrigir",
 
@@ -1462,20 +1462,20 @@ export const studio: Catalog = {
   "broadcast.status.pauseMicCta": "Pausar microfone",
   "broadcast.status.endBroadcastCta": "Terminar transmissão",
   "broadcast.status.toast.micPaused":
-    "Microfone em pausa — a sala ouve silêncio",
+    "Microfone em pausa. A sala ouve silêncio",
   "broadcast.status.toast.ending":
     "A transmissão termina em 5… a arquivar como reposição",
 
   "broadcast.audioIn.panelLabel": "Entrada de áudio",
   "broadcast.audioIn.singleCamVideo": "Vídeo de uma câmara",
   "broadcast.audioIn.cameraNote":
-    "Só áudio é a predefinição para salas de audição. A câmara chega na Fase 5 — por agora está desativada.",
+    "Só áudio é a predefinição para salas de audição. A câmara chega na Fase 5, por agora está desativada.",
 
   "broadcast.nowPlaying.onAirNow": "No ar agora",
   "broadcast.nowPlaying.setListLabel":
-    "Lista do set · <em>escreve à medida que tocas</em> — torna-se a folha de cue no arquivo",
+    "Lista do set · <em>escreve à medida que tocas</em>: torna-se a folha de cue no arquivo",
   "broadcast.nowPlaying.inputPlaceholder":
-    "O que acabaste de tocar? Artista — título…",
+    "O que acabaste de tocar? Artista · título…",
   "broadcast.nowPlaying.inputAria": "Adicionar uma faixa à lista do set",
   "broadcast.nowPlaying.addCta": "Adicionar",
   "broadcast.nowPlaying.justAdded": "Acabado de adicionar",
@@ -1484,7 +1484,7 @@ export const studio: Catalog = {
   "broadcast.nowPlaying.badge.matched": "€ correspondido",
   "broadcast.nowPlaying.badge.hold": "Em espera",
   "broadcast.nowPlaying.footer":
-    "Faixas correspondidas pagam os artistas automaticamente a partir do pagamento deste set. <em>Faixas retidas esperam</em> até o sistema de correspondência do conselho as validar — ninguém perde um cêntimo entretanto.",
+    "Faixas correspondidas pagam os artistas automaticamente a partir do pagamento deste set. <em>Faixas retidas esperam</em> até o sistema de correspondência do conselho as validar. Ninguém perde um cêntimo entretanto.",
 
   "broadcast.aside.tipsTab": "Gorjetas ao vivo <em>{amount}</em>",
   "broadcast.aside.talkbackTab": "Apoio <em>{count}</em>",
@@ -1500,7 +1500,7 @@ export const studio: Catalog = {
   "sheet.store.eyebrow": "Arquivo de partituras e letras",
   "sheet.store.title": "Compra a <em>partitura</em>, paga a quem a fez.",
   "sheet.store.dek":
-    "Um micropagamento de {amount} desbloqueia um PDF limpo e imprimível — e reparte <em>{splitRatio}</em> por quem compôs e transcreveu. Ler é grátis; descarregar paga.",
+    "Um micropagamento de {amount} desbloqueia um PDF limpo e imprimível, e reparte <em>{splitRatio}</em> por quem compôs e transcreveu. Ler é grátis; descarregar paga.",
 
   "sheet.preview.eyebrow": "Partitura · transcrição",
   "sheet.preview.byLine":
@@ -1526,7 +1526,7 @@ export const studio: Catalog = {
   "sheet.checkout.role.composer": "composição",
   "sheet.checkout.role.coop": "A cooperativa · alojamento & infraestrutura",
   "sheet.checkout.splitFoot":
-    "As partituras pagam <em>90%</em> a quem as fez — mais generoso do que os 80% do streaming, porque o trabalho é único e alojar um PDF custa quase nada. <em>Aprovado na assembleia de 9 de junho.</em>",
+    "As partituras pagam <em>90%</em> a quem as fez, mais generoso do que os 80% do streaming, porque o trabalho é único e alojar um PDF custa quase nada. <em>Aprovado na assembleia de 9 de junho.</em>",
   "sheet.checkout.payMethod.card.label": "Cartão guardado",
   "sheet.checkout.payMethod.card.sub": "um toque, sem reintroduzir dados",
   "sheet.checkout.payMethod.sepa.label": "SEPA direto",
@@ -1538,7 +1538,7 @@ export const studio: Catalog = {
   "sheet.checkout.note":
     "Download instantâneo · descarrega outra vez quando quiseres a partir da tua biblioteca · <em>quem fez isto é pago esta noite</em>.",
   "sheet.checkout.downloadedToast":
-    "Descarregado — {amount} pagos a {names} esta noite",
+    "Descarregado: {amount} pagos a {names} esta noite",
 
   "sheet.also.heading": "Da mesma <em>transcrição</em>",
   "sheet.also.subtitle_one":
@@ -1580,28 +1580,28 @@ export const studio: Catalog = {
   "receipt.footer.publicLedgerLink": "livro-razão público",
   "receipt.footer.rowLabel": "linha {code}",
   "receipt.footer.exportCta": "Exportar PDF",
-  "receipt.actions.share": "Partilhar — cartão pago",
+  "receipt.actions.share": "Partilhar cartão pago",
   "receipt.actions.tipAgain": "Dar gorjeta outra vez",
   "receipt.actions.openArtistPage": "Abrir a página de {artist}",
   "receipt.actions.emailCopy": "Enviar-me uma cópia por email",
-  "receipt.toast.shareCopied": "Cartão pago copiado — partilha onde quiseres.",
-  "receipt.toast.tipAgain": "Gorjeta para {artist} outra vez — a mesma faixa.",
+  "receipt.toast.shareCopied": "Cartão pago copiado. Partilha onde quiseres.",
+  "receipt.toast.tipAgain": "Gorjeta para {artist} outra vez, a mesma faixa.",
   "receipt.toast.emailCopy":
     "Uma cópia está a caminho da tua caixa de entrada.",
   "receipt.privacyNote":
     "Por predefinição, as gorjetas são <em>públicas, com o teu nome</em>. Podes tornar esta anónima, ou definir todas as gorjetas futuras como anónimas, nas definições. <em>Não partilhamos dados de gorjetas com ninguém.</em> <a>Compromissos de privacidade</a>",
 
   // ── Checkout da contribuição (StudioCheckoutPage) ──────────────────────────
-  "checkout.doneToast": "Já estás a contribuir para o studio — bem-vinde.",
+  "checkout.doneToast": "Já estás a contribuir para o studio. Bem-vinde.",
   "checkout.doneTitle": "Já estás a <em>contribuir</em> para isto.",
   "checkout.doneBody":
-    "Bem-vinde. Cada faixa que ouvires aqui paga a quem a fez. O teu primeiro pagamento de {amount} está feito — o resto é só ouvir.",
+    "Bem-vinde. Cada faixa que ouvires aqui paga a quem a fez. O teu primeiro pagamento de {amount} está feito. O resto é só ouvir.",
   "checkout.startListeningCta": "Começar a ouvir",
   "checkout.goToLibraryCta": "Ir para a tua biblioteca",
   "checkout.eyebrow": "Checkout",
   "checkout.title": "Contribui para o <em>studio.</em>",
   "checkout.dek":
-    "Sete euros por mês mantêm viva uma plataforma de música com pagamento justo — e pagam às pessoas artistas que realmente ouves, em cada reprodução.",
+    "Sete euros por mês mantêm viva uma plataforma de música com pagamento justo, e pagam às pessoas artistas que realmente ouves, em cada reprodução.",
   "checkout.nameLabel": "Nome no cartão",
   "checkout.namePlaceholder": "O teu nome",
   "checkout.cardLabel": "Número do cartão",
@@ -1612,7 +1612,7 @@ export const studio: Catalog = {
   "checkout.payCta": "Pagar {amount}{cadence}",
   "checkout.cadenceMonthly": "/ mês",
   "checkout.prototypeNote":
-    "Isto é um protótipo — nenhum cartão é cobrado e nada é guardado.",
+    "Isto é um protótipo. Nenhum cartão é cobrado e nada é guardado.",
   "checkout.planName": "Contribuir",
   "checkout.membershipLabel": "Adesão <em>{name}</em>",
   "checkout.dueTodayLabel": "A pagar hoje",
@@ -1623,7 +1623,7 @@ export const studio: Catalog = {
   "checkout.lines.platformShare": "Plataforma & alojamento",
   "checkout.lines.included": "incluído",
   "checkout.reassure.cancel":
-    "Cancela quando quiseres — um clique, sem email, sem chamada de retenção.",
+    "Cancela quando quiseres: um clique, sem email, sem chamada de retenção.",
   "checkout.reassure.share":
     "{percent}% de cada euro é pago diretamente às pessoas artistas que ouves.",
   "checkout.reassure.noAds":
@@ -1633,7 +1633,7 @@ export const studio: Catalog = {
   "fund.hero.liveLabel": "Público · atualizado às segundas ao meio-dia",
   "fund.hero.title": "O fundo de <em>solidariedade</em>.",
   "fund.hero.dek":
-    "Uma pequena reserva partilhada que paga a quem a taxa por reprodução não consegue alcançar — <em>quem transcreve, quem traduz, quem está a começar, e artistas num mês difícil</em>. De onde vem e para onde vai, por inteiro.",
+    "Uma pequena reserva partilhada que paga a quem a taxa por reprodução não consegue alcançar: <em>quem transcreve, quem traduz, quem está a começar, e artistas num mês difícil</em>. De onde vem e para onde vai, por inteiro.",
 
   "fund.balance.label": "Saldo do fundo · hoje",
   "fund.balance.paidThisQuarterLabel": "pago este trimestre",
@@ -1659,7 +1659,7 @@ export const studio: Catalog = {
 
   "fund.flows.out.transcribers.label": "Transcrição & <em>tradução</em>",
   "fund.flows.out.transcribers.desc":
-    "Partituras, traduções de letras — pagas por peça aceite.",
+    "Partituras, traduções de letras, pagas por peça aceite.",
   "fund.flows.out.grants.label": "Bolsas de <em>primeira edição</em>",
   "fund.flows.out.grants.desc":
     "1 200 € sem restrições para pessoas membros estreantes na leva da primavera.",
@@ -1699,7 +1699,7 @@ export const studio: Catalog = {
   "calls.hero.eyebrow": "Da parte do conselho",
   "calls.hero.title": "Chamadas <em>abertas</em> & comissões.",
   "calls.hero.dek":
-    "Propostas financiadas pelo conselho e pela cooperativa. Candidata-te diretamente — anexa <em>uma única faixa ou edição</em> do teu catálogo. Sem cartas de apresentação, sem portefólios; o trabalho fala por si.",
+    "Propostas financiadas pelo conselho e pela cooperativa. Candidata-te diretamente: anexa <em>uma única faixa ou edição</em> do teu catálogo. Sem cartas de apresentação, sem portefólios; o trabalho fala por si.",
 
   "calls.filter.all": "Tudo aberto",
   "calls.filter.commissions": "Comissões",
@@ -1716,9 +1716,9 @@ export const studio: Catalog = {
   "calls.card.submitCta": "Submeter candidatura",
   "calls.card.cancelCta": "Cancelar",
   "calls.card.singleTrackNote":
-    "<em>Só uma faixa</em> — o conselho quer o teu melhor, não a tua pasta inteira.",
+    "<em>Só uma faixa</em>: o conselho quer a tua melhor faixa, uma só.",
   "calls.card.submittedToast":
-    "Candidatura submetida — o conselho analisa na triagem de segunda-feira",
+    "Candidatura submetida. O conselho analisa na triagem de segunda-feira",
 
   "calls.applied.statusPrefix": "Estado ·",
   "calls.applied.decisionBy": "decisão até {date}",
@@ -1730,7 +1730,7 @@ export const studio: Catalog = {
   "setSubmission.hero.eyebrow": "Nova submissão · set ou mix de DJ",
   "setSubmission.hero.title": "Submete um <em>set</em>.",
   "setSubmission.hero.dek":
-    "Carrega o ficheiro completo, cola a tua tracklist com marcas de tempo, e o nosso comparador encontra as fontes originais para que <em>cada faixa do set pague a quem a fez</em>. As faixas não correspondidas retêm o pagamento em segurança até serem confirmadas — ninguém perde um cêntimo.",
+    "Carrega o ficheiro completo, cola a tua tracklist com marcas de tempo, e o nosso comparador encontra as fontes originais para que <em>cada faixa do set pague a quem a fez</em>. As faixas não correspondidas retêm o pagamento em segurança até serem confirmadas. Ninguém perde um cêntimo.",
 
   "setSubmission.steps.file": "Ficheiro",
   "setSubmission.steps.tracklist": "Tracklist & comparador",
@@ -1738,7 +1738,7 @@ export const studio: Catalog = {
 
   "setSubmission.matcher.uploadedBadge": "Carregado",
   "setSubmission.matcher.tracklistLabel":
-    "Cola a tua tracklist · marca de tempo — artista — título",
+    "Cola a tua tracklist · marca de tempo · artista · título",
   "setSubmission.matcher.pasteHint":
     "Uma linha por faixa. Aceitamos a maioria dos formatos. <em>Volta a correr o comparador</em> sempre que editares.",
   "setSubmission.matcher.runCta": "▸ Correr o comparador",
@@ -1774,11 +1774,11 @@ export const studio: Catalog = {
     "As faixas não correspondidas <em>retêm a sua parte</em> até o comparador do conselho as confirmar. O set fica disponível já; o dinheiro retido é libertado assim que a fonte for confirmada.",
   "setSubmission.sidebar.submitCta": "Submeter set",
   "setSubmission.sidebar.submittedToast":
-    "Set submetido — disponível já, partes retidas pendentes de confirmação",
+    "Set submetido. Disponível já, partes retidas pendentes de confirmação",
 
   // ── Fora do ar (StudioOffAirPage + Hero) ───────────────────────────────────
   "offAir.page.browseNote":
-    "As portas estão fechadas, mas as prateleiras estão abertas. <em>Explora o que quiseres aqui em baixo</em> — continua tudo a tocar.",
+    "As portas estão fechadas, mas as prateleiras estão abertas. <em>Explora o que quiseres aqui em baixo</em>. Continua tudo a tocar.",
   "offAir.hero.statusLine": "Fora do ar · {time} em Lisboa",
   "offAir.hero.roomDark": "a sala está às escuras",
   "offAir.hero.title": "A sala está <em>fechada</em> por esta noite.",
@@ -1794,7 +1794,7 @@ export const studio: Catalog = {
   // o Studio ainda não tem backend e não pode mostrar valores inventados.
   "comingSoon.title": "O Studio ainda está a <em>afinar</em>",
   "comingSoon.description":
-    "A nossa plataforma de música em cooperativa — páginas de artistas, sessões ao vivo, pagamentos e o fundo de solidariedade — ainda não abriu ao público. Estamos a construí-la à vista de todes e chega aqui em breve.",
+    "A nossa plataforma de música em cooperativa (páginas de artistas, sessões ao vivo, pagamentos e o fundo de solidariedade) ainda não abriu ao público. Estamos a construí-la à vista de todes e chega aqui em breve.",
   "comingSoon.exploreCulture": "Explorar a Cultura",
   "comingSoon.backHome": "Voltar ao início",
 };

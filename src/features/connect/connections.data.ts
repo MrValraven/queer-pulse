@@ -96,7 +96,7 @@ export const CONNECTION_META: Record<string, ConnectionMeta> = {
     mutuals: 1,
     sentAgo: "2h ago",
     requestMessage:
-      '"Hi Tiago — we met briefly at the harm-reduction workshop. I\'d love to stay in touch and compare notes sometime."',
+      '"Hi Tiago, we met briefly at the harm-reduction workshop. I\'d love to stay in touch and compare notes sometime."',
   },
   "mariana-costa": { pron: "she/her", mutuals: 2, sentAgo: "yesterday" },
   "bilal-kaya": { pron: "he/him", mutuals: 3, sentAgo: "3 days ago" },

@@ -199,7 +199,7 @@ export const resources: Catalog = {
   "safety.dataUse.body2":
     "What we store: your name, email, profile content, and visibility setting. What we don't store: your location beyond the neighbourhood you choose to share, your browsing behaviour, or anything you tell us in private messages.",
   "safety.dataUse.body3":
-    "You can request everything we hold about you, or ask us to delete your account, at any time. Send an email to <b>hello@queerpulse.pt</b>.",
+    "You can request everything we hold about you, or ask us to delete your account, at any time. Send an email to <b>hello@queerpulse.com</b>.",
 
   "safety.report.title": "If something <em>feels wrong</em>",
   "safety.report.body1":
@@ -219,7 +219,7 @@ export const resources: Catalog = {
 
   "safety.outro.title": "Safety is a feature, <em>not a footnote.</em>",
   "safety.outro.sub": "Any questions about how the network works? Write to us.",
-  "safety.outro.cta": "hello@queerpulse.pt",
+  "safety.outro.cta": "hello@queerpulse.com",
 
   "safety.subpageIndex.eyebrow": "Safety",
   "safety.subpageIndex.title": "Reporting & rights",
@@ -482,7 +482,7 @@ export const resources: Catalog = {
     "Yes, once per year. Username changes update your profile URL — any old links will redirect for 90 days. Go to Edit Profile → Identity to change it.",
   "pronounsGuide.faq.q2": "What if my deadname appears somewhere?",
   "pronounsGuide.faq.a2":
-    "Contact us immediately at <a>help@queerpulse.pt</a> and we'll remove or update it as a priority. This includes magazine bylines, old forum posts attributed to your previous name, and any email archives we hold.",
+    "Contact us immediately at <a>hello@queerpulse.com</a> and we'll remove or update it as a priority. This includes magazine bylines, old forum posts attributed to your previous name, and any email archives we hold.",
   "pronounsGuide.faq.q3": "Does changing my name affect my invite history?",
   "pronounsGuide.faq.a3":
     "No. Your invite relationships (who invited you, who you've invited) are maintained internally by account ID, not name, so name changes have no effect on them.",

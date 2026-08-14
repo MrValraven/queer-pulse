@@ -37,6 +37,18 @@ export interface PoemNoteBlock {
  *  untouched via `itemToView`/`itemsToInputDto` like `structured.snippet`. */
 export type PoemBlock = PoemStanzaBlock | PoemBreakBlock | PoemNoteBlock;
 
+/** One named translation/version of a poem: a free-text `label` (e.g.
+ *  "Português", "English", "Original") plus its own ordered block body. A poem
+ *  keeps an ordered `PoemVersion[]` in `structured.poemVersions`; the first
+ *  entry is the default shown on load, and its blocks are also mirrored into
+ *  the legacy `structured.poem` field so pre-translation readers (row teaser,
+ *  authorship record, revision history) keep working without a migration. */
+export interface PoemVersion {
+  id: string;
+  label: string;
+  blocks: PoemBlock[];
+}
+
 // ── Fallback id (mirrors `nextPoemBlockId` in poemBlocks.ts) ────────────────
 // Ids are PERSISTED (round-trip through `structured`), so a per-load counter
 // would collide with previously-saved ids after reload — crypto.randomUUID().
@@ -103,6 +115,40 @@ export function normalizePoemBlocks(raw: unknown): PoemBlock[] {
     if (block) blocks.push(block);
   }
   return blocks;
+}
+
+function normalizeOneVersion(entry: unknown): PoemVersion | null {
+  if (typeof entry !== "object" || entry === null) return null;
+  const record = entry as Record<string, unknown>;
+  const id =
+    typeof record.id === "string" && record.id.length > 0
+      ? record.id
+      : randomPoemBlockId();
+  const label = typeof record.label === "string" ? record.label : "";
+  return { id, label, blocks: normalizePoemBlocks(record.blocks) };
+}
+
+/** Accepts the new `structured.poemVersions` array (or any junk from the
+ *  untyped jsonb blob) and always returns at least one `PoemVersion`. When no
+ *  usable versions exist it falls back to a single untitled version built from
+ *  the legacy `structured.poem` body — so a poem saved before translations
+ *  existed reads as one default version without a migration. Every read
+ *  boundary should call this instead of reading `poemVersions`/`poem` raw. */
+export function normalizePoemVersions(
+  rawVersions: unknown,
+  legacyPoem?: unknown,
+): PoemVersion[] {
+  if (Array.isArray(rawVersions)) {
+    const versions: PoemVersion[] = [];
+    for (const entry of rawVersions) {
+      const version = normalizeOneVersion(entry);
+      if (version) versions.push(version);
+    }
+    if (versions.length > 0) return versions;
+  }
+  return [
+    { id: randomPoemBlockId(), label: "", blocks: normalizePoemBlocks(legacyPoem ?? null) },
+  ];
 }
 
 /** True when every span's text is blank (or the line has no spans). */

@@ -290,7 +290,7 @@ export const MEMBER_DETAIL: Record<string, MemberDetail> = {
       { labelKey: "admin:members.glance.reportsAgainst", value: "0" },
     ],
     graphNote:
-      "21 members vouch for Inês, who vouches for 3 in return. A dense, mutual graph is a sign of deeply-held trust — not a metric to game.",
+      "21 members vouch for Inês, who vouches for 3 in return. A dense, mutual graph is a sign of deeply-held trust that no one should try to game.",
     communities: [
       { label: "Trans & Friends · moderator", tone: "jade" },
       { label: "Queer Creatives", tone: "violet" },
@@ -302,7 +302,7 @@ export const MEMBER_DETAIL: Record<string, MemberDetail> = {
         when: "2 min ago",
       },
       {
-        what: 'Hosted "Queer founders breakfast" — 34 attended',
+        what: 'Hosted "Queer founders breakfast", 34 attended',
         when: "Jun 12",
       },
       { what: "Vouched for Marco Vieira", when: "May 30" },
@@ -316,7 +316,7 @@ export const MEMBER_DETAIL: Record<string, MemberDetail> = {
       },
       {
         tone: "neutral",
-        title: "Filed a report (harassment) — resolved",
+        title: "Filed a report (harassment), resolved",
         meta: "Jan 2026 · acted on by Júlia S. · ",
         metaLink: "view",
         note: '"Reported misgendering in a thread; the other member was warned."',
@@ -378,7 +378,7 @@ export function detailFor(member: AdminMember): MemberDetail {
       },
       { labelKey: "admin:members.glance.reportsAgainst", value: "0" },
     ],
-    graphNote: `${member.vouchCount} members have vouched for ${first}. A mutual graph is a sign of trust — not a metric to optimise.`,
+    graphNote: `${member.vouchCount} members have vouched for ${first}. A mutual graph is a sign of trust that no one should try to optimise.`,
     communities: [
       { label: "Trans & Friends", tone: "jade" },
       { label: "Queer Creatives", tone: "violet" },

@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent } from "react";
 import { FiArrowLeft, FiCamera } from "react-icons/fi";
-import { Button, ImageSlot } from "../../shared/components/ui";
+import { Button, ImageSlot, PhotoReframeModal } from "../../shared/components/ui";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useAuth } from "../../app/providers/authContext";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -27,17 +28,18 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
   // when there's a new key, so Skip (or an untouched Google photo) writes nothing.
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [pendingKey, setPendingKey] = useState<string | null>(null);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleFile(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    event.target.value = "";
-    if (!file) return;
+  /** Shared tail of both upload paths (direct GIF path + post-reframe path). */
+  async function uploadAndApply(file: File, crop?: CropRect) {
     setError(null);
     setUploading(true);
     try {
-      const { key, previewUrl: nextPreviewUrl } = await uploadAvatar(file);
+      const { key, previewUrl: nextPreviewUrl } = await uploadAvatar(file, {
+        crop,
+      });
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       setPreviewUrl(nextPreviewUrl);
       setPendingKey(key);
@@ -50,6 +52,26 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
     } finally {
       setUploading(false);
     }
+  }
+
+  async function handleFile(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    // GIFs bypass the reframer entirely (animation would be destroyed by the
+    // crop/re-encode path) and upload directly, as before.
+    if (file.type === "image/gif") {
+      await uploadAndApply(file);
+      return;
+    }
+    setPendingFile(file);
+  }
+
+  async function handleCropConfirmed(crop: CropRect) {
+    if (!pendingFile) return;
+    const fileToUpload = pendingFile;
+    setPendingFile(null);
+    await uploadAndApply(fileToUpload, crop);
   }
 
   async function handleContinue() {
@@ -124,6 +146,14 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
           <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepPhoto.back")}
         </button>
       </div>
+      {pendingFile && (
+        <PhotoReframeModal
+          file={pendingFile}
+          kind="avatar"
+          onCancel={() => setPendingFile(null)}
+          onConfirm={(crop) => void handleCropConfirmed(crop)}
+        />
+      )}
     </>
   );
 }

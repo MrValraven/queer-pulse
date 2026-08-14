@@ -1,7 +1,7 @@
 import { Button, Eyebrow, FeatureHelp, Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { routes } from "../../../app/routeMap";
+import { requestInvitePath } from "../../auth/api/joinRequestSource";
 import styles from "./Hero.module.css";
 
 export function Hero() {
@@ -29,7 +29,7 @@ export function Hero() {
           <p className={styles.sub}>{t("homepage:hero.sub")}</p>
 
           <div className={styles.cta}>
-            <Button size="lg" to={routes.requestInvite}>
+            <Button size="lg" to={requestInvitePath("homepage_hero")}>
               {t("homepage:hero.requestInviteCta")}
             </Button>
             <Button size="lg" variant="ghost" href="#discovery">

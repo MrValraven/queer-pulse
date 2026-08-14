@@ -108,7 +108,7 @@ export const TOC: { headingKey: string; entries: Entry[] }[] = [
             Dr. Inês Pereira on <em>fifteen minutes of someone else's time.</em>
           </>
         ),
-        dek: "The Anjos GP who treats trans patients as adults — and changed the protocol for an entire clinic.",
+        dek: "The Anjos GP who treats trans patients as adults, and changed the protocol for an entire clinic.",
         byline: (
           <>
             Interview by <b>Sara Pinheiro</b>

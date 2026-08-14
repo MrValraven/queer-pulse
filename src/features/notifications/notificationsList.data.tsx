@@ -118,7 +118,7 @@ function buildUnreadNotifications(
           components={{ strong: <strong /> }}
           values={{
             subprofileName: "Nightform",
-            itemTitle: "Collab track — Static Bloom",
+            itemTitle: "Collab track: Static Bloom",
           }}
         />
       ),
@@ -275,7 +275,7 @@ function buildReadNotifications(
           i18nKey="notifications:list.9.text"
           components={{ strong: <strong /> }}
           values={{
-            event: "Queer Cinema Night — Levante",
+            event: "Queer Cinema Night: Levante",
             date: fmt.date(reportDate, { month: "long", day: "numeric" }),
           }}
         />
@@ -297,7 +297,7 @@ function buildReadNotifications(
       icon: { Glyph: FiClipboard, background: "rgba(45,27,61,.07)" },
       text: t("notifications:list.11.text", {
         count: 12,
-        postTitle: "Housing law update — what I found out",
+        postTitle: "Housing law update: what I found out",
       }),
       meta: t("notifications:list.11.meta"),
       time: fmt.relativeTime(-6, "day"),

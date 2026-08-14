@@ -23,7 +23,7 @@ export const DEMO_BOT_PROFILES: Record<string, ProfileDTO> = {
     firstName: "QueerPulse",
     lastName: "",
     pronouns: "they/them",
-    tagline: "The house voice — welcomes, invites, and the occasional cheer.",
+    tagline: "The house voice: welcomes, invites, and the occasional cheer.",
     location: "Lisbon",
     avatarUrl: null,
     // Required by MemberCardDTO (which ProfileDTO extends): the house account

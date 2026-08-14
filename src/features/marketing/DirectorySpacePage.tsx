@@ -72,7 +72,7 @@ export function DirectorySpacePage() {
     return (
       <PageShell>
         <PageMeta
-          title={`${t("marketing:directory.detail.notFound.title")} — QueerPulse`}
+          title={`${t("marketing:directory.detail.notFound.title")} | QueerPulse`}
           noIndex
         />
         <div className={s.notFound}>
@@ -99,7 +99,7 @@ export function DirectorySpacePage() {
   return (
     <PageShell>
       <PageMeta
-        title={`${place.name} — QueerPulse`}
+        title={`${place.name} | QueerPulse`}
         description={clampDescription(place.tagline || place.desc)}
         canonical={canonicalPath}
         image={place.photos?.wide ?? undefined}

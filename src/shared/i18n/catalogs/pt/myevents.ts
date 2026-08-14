@@ -12,7 +12,7 @@ export const myevents: Catalog = {
   "page.eyebrow": "A tua conta · Eventos",
   "page.title": "Os teus <em>eventos</em>",
   "page.sub":
-    "Tudo a que vais e tudo o que organizas — reunido num só lugar acolhedor.",
+    "Tudo a que vais e tudo o que organizas: reunido num só lugar acolhedor.",
   "header.settingsAria": "Preferências de eventos",
   "header.notifAria": "Notificações",
   "header.createCta": "Criar um convívio",
@@ -63,7 +63,7 @@ export const myevents: Catalog = {
 
   // ── Offline banner ─────────────────────────────────────────────────────────
   "offline.banner":
-    "Estás offline — a mostrar os teus eventos guardados. As alterações sincronizam quando estiveres de volta.",
+    "Estás offline. A mostrar os teus eventos guardados. As alterações sincronizam quando estiveres de volta.",
 
   // ── Agenda grouping (myEvents.agenda.ts → EventAgenda) ────────────────────
   "agenda.today": "Hoje",
@@ -83,34 +83,34 @@ export const myevents: Catalog = {
   // (nunca um falso "sem eventos" — ver EventAgenda).
   "agenda.error.title": "Não conseguimos carregar os teus <em>eventos</em>",
   "agenda.error.description":
-    "Algo correu mal ao chegar ao teu calendário. Os teus eventos estão seguros — é só um percalço do nosso lado.",
+    "Algo correu mal ao chegar ao teu calendário. Os teus eventos estão seguros. É só um percalço do nosso lado.",
   "agenda.error.retry": "Tentar de novo",
 
   // ── Empty states (empties.data.tsx, Pattern B) ────────────────────────────
   "empties.upcoming.title": "Ainda nada no calendário <em>por agora</em>",
   "empties.upcoming.sub":
-    "Quando disseres que sim a um convívio ou organizares um teu, aparece logo aqui. Há sempre algo a acontecer — dá uma vista de olhos quando quiseres.",
+    "Quando disseres que sim a um convívio ou organizares um teu, aparece logo aqui. Há sempre algo a acontecer. Dá uma vista de olhos quando quiseres.",
   "empties.upcoming.browseCta": "Ver convívios",
   "empties.upcoming.hostCta": "Organiza um teu",
   "empties.going.title": "Sem confirmações <em>por agora</em>",
   "empties.going.sub":
-    "Ainda não disseste sim a nada que aí vem. Vê o que há — uma noite de cinema, um piquenique, um clube de leitura tranquilo — e diz sim a um deles.",
+    "Ainda não disseste sim a nada que aí vem. Vê o que há (uma noite de cinema, um piquenique, um clube de leitura tranquilo) e diz sim a um deles.",
   "empties.going.cta": "Ver o que há",
   "empties.hosting.title": "Não estás a organizar <em>nada</em>",
   "empties.hosting.sub":
-    "Os melhores convívios começam com uma pessoa a decidir abrir espaço. O teu pode ser um jantar pequeno ou um piquenique inteiro — ajudamos-te a organizá-lo.",
+    "Os melhores convívios começam com uma pessoa a decidir abrir espaço. O teu pode ser um jantar pequeno ou um piquenique inteiro. Ajudamos-te a organizá-lo.",
   "empties.hosting.cta": "Criar um convívio",
   "empties.waitlisted.title": "Sem listas de espera <em>por agora</em>",
   "empties.waitlisted.sub":
-    "Quando um convívio que queres está cheio, entra na lista de espera e guardamos o teu lugar — avisamos-te se abrir uma vaga.",
+    "Quando um convívio que queres está cheio, entra na lista de espera e guardamos o teu lugar. Avisamos-te se abrir uma vaga.",
   "empties.waitlisted.cta": "Ver convívios",
-  "empties.past.title": "Sem histórico <em>aqui</em> — mas ainda vais a tempo",
+  "empties.past.title": "Sem histórico <em>aqui</em>, mas ainda vais a tempo",
   "empties.past.sub":
     "Depois do teu primeiro convívio, fica aqui como um registo tranquilo de onde estiveste e de quem conheceste.",
   "empties.past.cta": "Encontra o teu primeiro",
   "empties.saved.title": "Nada guardado ou <em>pendente</em>",
   "empties.saved.sub":
-    "Guarda convívios de que ainda não tens a certeza, e qualquer convite de outras pessoas espera aqui por ti — sem pressa, sem stress.",
+    "Guarda convívios de que ainda não tens a certeza, e qualquer convite de outras pessoas espera aqui por ti. Sem pressa, sem stress.",
   "empties.saved.cta": "Ver convívios",
   "empties.day.title": "Nada <em>neste dia</em>",
   "empties.day.sub":
@@ -143,7 +143,7 @@ export const myevents: Catalog = {
   "soon.startsInHours": "Começa daqui a {hours}h",
   "soon.startsInHoursMins": "Começa daqui a {hours}h {mins}m",
   "soon.checkInCta": "Fazer check-in",
-  "soon.checkedInToast": "Check-in feito — tem uma ótima experiência",
+  "soon.checkedInToast": "Check-in feito. Tem uma ótima experiência",
   "soon.ticketCta": "Bilhete",
 
   // ── Status badges (EventCardBadges) ───────────────────────────────────────
@@ -160,7 +160,7 @@ export const myevents: Catalog = {
   "badges.inPhotos_one": "Estás em {count} fotografia",
   "badges.inPhotos_other": "Estás em {count} fotografias",
   "badges.saved": "Guardado",
-  "badges.invitedTakeYourTime": "Convidade — não há pressa",
+  "badges.invitedTakeYourTime": "Convidade. Não há pressa",
   "badges.youInvited": "Convidaste {invitee}",
   "badges.waitlistSuffix_one": " · {count} em lista de espera",
   "badges.waitlistSuffix_other": " · {count} em lista de espera",
@@ -184,7 +184,7 @@ export const myevents: Catalog = {
   "side.receiptCta": "Recibo",
   "side.joinWaitlistCta": "Entrar na lista de espera",
   "side.joinWaitlistToast":
-    "Adicionade à lista de espera — entraremos em contacto",
+    "Adicionade à lista de espera. Entraremos em contacto",
   "side.rsvpCta": "Confirmar presença",
   "side.removeCta": "Remover",
   "side.removedFromSavedToast": "Removido dos guardados",
@@ -196,7 +196,7 @@ export const myevents: Catalog = {
   "bookmark.save": "Guardar",
   "bookmark.saved": "Guardado",
   "bookmark.saveAria": "Guardar este evento",
-  "bookmark.savedAria": "Guardado — remover dos teus eventos",
+  "bookmark.savedAria": "Guardado. Remover dos teus eventos",
   "bookmark.savedToast": "Guardado nos teus eventos",
   "bookmark.removedToast": "Removido dos guardados",
 
@@ -245,7 +245,7 @@ export const myevents: Catalog = {
   "alert.seeWhatChangedToast": "A mostrar o histórico completo de alterações",
   "conflict.clashesWith": "Coincide com {title}",
   "conflict.body":
-    "à mesma hora. Só podes estar num sítio — talvez valha a pena deixar um deles.",
+    "à mesma hora. Só podes estar num sítio. Talvez valha a pena deixar um deles.",
   "edge.cancelledTitle": "Quem organiza cancelou este convívio.",
   "edge.cancelledBody": "A tua confirmação foi libertada —",
   "edge.findSomethingSimilar": "encontrar algo semelhante",
@@ -287,7 +287,7 @@ export const myevents: Catalog = {
   "calSubscribe.feedSub":
     "Sincroniza automaticamente com o Google ou Apple Calendar",
   "calSubscribe.feedToast":
-    "Link do feed copiado — adiciona-o no Google ou Apple Calendar",
+    "Link do feed copiado. Adiciona-o no Google ou Apple Calendar",
   "calSubscribe.exportTitle": "Exportar este mês",
   "calSubscribe.exportSub": "Transfere um ficheiro .ics único",
   "calSubscribe.exportToast": "Eventos de {month} transferidos como .ics",
@@ -295,7 +295,7 @@ export const myevents: Catalog = {
   // ── Recommendations strip (Discovery) ─────────────────────────────────────
   "discovery.title": "Talvez <em>gostes</em>",
   "discovery.imGoingCta": "Eu vou",
-  "discovery.imGoingToast": "Vais — adicionado aos teus eventos",
+  "discovery.imGoingToast": "Vais. Adicionado aos teus eventos",
   "discovery.saveCta": "Guardar",
   "discovery.saveToast": "Guardado para depois",
   "discovery.hideCta": "Ocultar",
@@ -304,7 +304,7 @@ export const myevents: Catalog = {
   "insights.eyebrow": "O teu ano até agora",
   "insights.emptyStat": "O teu ano <em>começa</em> aqui",
   "insights.emptySub":
-    "Assim que fores ao teu primeiro convívio, ele junta-se aqui — uma contagem tranquila de onde estiveste este ano.",
+    "Assim que fores ao teu primeiro convívio, ele junta-se aqui: uma contagem tranquila de onde estiveste este ano.",
   "insights.emptyCta": "Encontra o teu primeiro",
   "insights.stat_one": "<em>{count}</em> convívio",
   "insights.stat_other": "<em>{count}</em> convívios",
@@ -316,9 +316,9 @@ export const myevents: Catalog = {
 
   // ── Overflow menu (MoreMenu) ───────────────────────────────────────────────
   "moreMenu.share": "Partilhar este evento",
-  "moreMenu.shareToast": "Link do evento copiado — partilha-o onde quiseres",
+  "moreMenu.shareToast": "Link do evento copiado. Partilha-o onde quiseres",
   "moreMenu.shareCopyFailToast":
-    "Não foi possível copiar o link — tenta de novo",
+    "Não foi possível copiar o link. Tenta de novo",
   "moreMenu.inviteFriend": "Convidar um amigo",
   "moreMenu.messageHost": "Enviar mensagem a quem organiza",
   "moreMenu.openGroupChat": "Abrir conversa de grupo",
@@ -328,7 +328,7 @@ export const myevents: Catalog = {
   "moreMenu.transferToast": "Escolhe para quem transferir o teu bilhete…",
   "moreMenu.requestRefund": "Pedir reembolso",
   "moreMenu.refundToast":
-    "Reembolso pedido — 3 a 5 dias até voltar ao teu cartão",
+    "Reembolso pedido: 3 a 5 dias até voltar ao teu cartão",
   "moreMenu.addToWallet": "Adicionar à Apple Wallet",
   "moreMenu.walletToast": "Adicionado à Apple Wallet",
   "moreMenu.connectWithMet": "Ligar-te a quem conheceste",
@@ -386,17 +386,17 @@ export const myevents: Catalog = {
   "rsvpModal.guestNamePlaceholder": "Nome de quem levas (opcional)",
   "rsvpModal.contributionLabel": "A tua contribuição",
   "rsvpModal.slidingHint":
-    "Este é a pagar o que puderes — escolhe o que funciona para ti, sem perguntas.",
-  "rsvpModal.contribution.free": "0 € — preciso que seja gratuito agora",
-  "rsvpModal.contribution.supported": "5 € — tarifa apoiada",
-  "rsvpModal.contribution.standard": "10 € — padrão",
-  "rsvpModal.contribution.payItForward": "15 € — para ajudar outra pessoa",
+    "Este é a pagar o que puderes. Escolhe o que funciona para ti, sem perguntas.",
+  "rsvpModal.contribution.free": "0 €: preciso que seja gratuito agora",
+  "rsvpModal.contribution.supported": "5 €: tarifa apoiada",
+  "rsvpModal.contribution.standard": "10 €: padrão",
+  "rsvpModal.contribution.payItForward": "15 €: para ajudar outra pessoa",
   "rsvpModal.accessNeeds": "Necessidades de acesso",
   "rsvpModal.accessPlaceholder":
     "Percurso sem degraus, um canto tranquilo, LGP, tudo o que ajude a estares confortável…",
   "rsvpModal.dietaryNeeds": "Necessidades alimentares",
   "rsvpModal.dietaryPlaceholder":
-    "Alergias, vegan, halal, kosher — para eventos onde a comida é partilhada…",
+    "Alergias, vegan, halal, kosher, para eventos onde a comida é partilhada…",
   "rsvpModal.whoSees": "Quem pode ver que vais?",
   "rsvpModal.visibility.everyone": "Todas as pessoas",
   "rsvpModal.visibility.connections": "Ligações",
@@ -408,17 +408,17 @@ export const myevents: Catalog = {
     "Só quem organiza vê as tuas notas de acesso e alimentação. Podes mudar tudo isto quando quiseres.",
   "rsvpModal.cancelCta": "Cancelar",
   "rsvpModal.saveCta": "Guardar",
-  "rsvpModal.savedToast": "Guardado — só quem organiza vê isto",
+  "rsvpModal.savedToast": "Guardado. Só quem organiza vê isto",
 
   // ── Event preferences modal (EventSettingsModal) ──────────────────────────
   "settingsModal.eyebrow": "Preferências",
   "settingsModal.title": "Como os teus eventos <em>chegam até ti</em>",
   "settingsModal.comingSoonNote":
-    "A sincronização de calendário e os bilhetes ainda estão a caminho — vais poder ligá-los assim que estiverem disponíveis.",
+    "A sincronização de calendário e os bilhetes ainda estão a caminho. Vais poder ligá-los assim que estiverem disponíveis.",
   "settingsModal.pushLiveNote":
     "O tempo do lembrete, o push no telemóvel, a tua visibilidade padrão e o email estão todos ativos. A sincronização de calendário e os bilhetes são uma pré-visualização do que aí vem.",
   "settingsModal.pushLiveDesc":
-    "Neste dispositivo — uma notificação quando um evento a que vais está prestes a começar.",
+    "Neste dispositivo: uma notificação quando um evento a que vais está prestes a começar.",
   "settingsModal.pushUnsupported":
     "Este navegador não suporta notificações push.",
   "settingsModal.pushBlocked":
@@ -467,13 +467,13 @@ export const myevents: Catalog = {
   "reportModal.noteLabel": "Há algo que devíamos saber?",
   "reportModal.noteOptional": "(opcional)",
   "reportModal.notePlaceholder":
-    "Conta o que aconteceu por tuas palavras — só a equipa de segurança vê isto.",
+    "Conta o que aconteceu por tuas palavras. Só a equipa de segurança vê isto.",
   "reportModal.privacyNote":
     "As denúncias são confidenciais. Quem organiza nunca fica a saber quem denunciou.",
   "reportModal.cancelCta": "Cancelar",
   "reportModal.sendCta": "Enviar denúncia",
   "reportModal.sentToast":
-    "Denúncia enviada — a nossa equipa de segurança trata do resto",
+    "Denúncia enviada. A nossa equipa de segurança trata do resto",
 
   // ── Block-host confirm (BlockHostConfirm) ─────────────────────────────────
   "blockModal.eyebrow": "Bloquear",
@@ -486,20 +486,20 @@ export const myevents: Catalog = {
   "blockModal.cancelCta": "Cancelar",
   "blockModal.confirmCta": "Bloquear",
   "blockModal.blockedToast":
-    "Bloqueade — não vais mais ver os eventos desta pessoa",
+    "Bloqueade. Não vais mais ver os eventos desta pessoa",
 
   // ── Toasts from RSVP/notification lifecycle (useMyEventsState.ts) ────────
-  "toast.reminderSet": "Lembrete definido — {lead} antes",
+  "toast.reminderSet": "Lembrete definido: {lead} antes",
   "toast.reminderOff": "Lembrete desativado",
   "toast.markedMaybe":
-    "Marcade como talvez — quem organiza vê que ainda não tens a certeza",
-  "toast.fullyIn": "Estás dentro — até já",
-  "toast.rsvpGoing": "Vais — até já",
-  "toast.invitationDeclined": "Convite recusado — tudo bem.",
+    "Marcade como talvez. Quem organiza vê que ainda não tens a certeza",
+  "toast.fullyIn": "Estás dentro. Até já",
+  "toast.rsvpGoing": "Vais. Até já",
+  "toast.invitationDeclined": "Convite recusado. Tudo bem.",
   "toast.placeReleased":
-    "O teu lugar foi libertado — a próxima pessoa na lista de espera vai ter notícias nossas.",
+    "O teu lugar foi libertado. A próxima pessoa na lista de espera vai ter notícias nossas.",
   "toast.leftWaitlist": "Saíste da lista de espera.",
-  "toast.skippedThisOne": "Saltaste esta — continuas na série.",
+  "toast.skippedThisOne": "Saltaste esta. Continuas na série.",
   "toast.leftWholeSeries": "Saíste da série toda.",
   "toast.preferencesSaved": "Preferências guardadas",
 };

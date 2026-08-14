@@ -63,7 +63,7 @@ export const topics: Catalog = {
     "Posts, questions, and recommendations tagged <strong>#{tag}</strong> from across the QueerPulse community.",
   "fallback.postMeta": "Be the first here",
   "fallback.postTitle":
-    "Nothing tagged <em>#{tag}</em> yet — want to start the thread?",
+    "Nothing tagged <em>#{tag}</em> yet. Want to start the thread?",
   "fallback.postBody":
     "Topics grow when someone goes first. Post a question, a recommendation, or a resource with #{tag} and it will show up right here.",
   "fallback.postStats": "<b>0</b> posts · waiting for you",
@@ -72,6 +72,6 @@ export const topics: Catalog = {
   // errored). Page chrome, not fetched content, so it translates.
   "notFound.title": "This topic isn't here",
   "notFound.description":
-    "We couldn't find a topic for that tag — it may have been renamed or removed. Head back to the forum to find where the conversation moved.",
+    "We couldn't find a topic for that tag. It may have been renamed or removed. Head back to the forum to find where the conversation moved.",
   "notFound.backCta": "Back to the forum",
 };

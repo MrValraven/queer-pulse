@@ -23,9 +23,9 @@ export const EVENT_HOST_NAME = "Mateus Costa";
 export const EVENT_PILL_LOCATION = "Casa do Alentejo, Intendente";
 export const EVENT_HOOD_LABEL = "Intendente";
 export const EVENT_HERO_ALT =
-  "Event image — warm dinner setting, long communal table, candlelight";
+  "Event image: warm dinner setting, long communal table, candlelight";
 export const EVENT_ABOUT_P1 =
-  "Once a month, we set a long table for people who have recently arrived in Lisbon — or who arrived a while ago and never quite found their people. This dinner is informal, unhurried, and bilingual. You don't need to know anyone.";
+  "Once a month, we set a long table for people who have recently arrived in Lisbon, or who arrived a while ago and never quite found their people. This dinner is informal, unhurried, and bilingual. You don't need to know anyone.";
 export const EVENT_ABOUT_P2 =
   "We eat well, we stay too long, we probably talk about housing at some point. The idea is to make introductions that have a chance of becoming something real. Some of the people at the last dinner have since become flatmates, collaborators, or close friends.";
 export const EVENT_ABOUT_ACCESSIBILITY_TEXT =

@@ -108,7 +108,7 @@ export const INITIAL_TIPS: Tip[] = [
     initials: "RM",
     name: "Rita M.",
     amount: 5,
-    note: "earn it, mariana — this one's for my mãe",
+    note: "earn it, mariana. this one's for my mãe",
   },
   {
     id: 2,
@@ -176,7 +176,7 @@ export const TALKBACK: TalkbackMessage[] = [
     id: 2,
     initials: "MS",
     name: "You",
-    text: "nod — going into the cover after this one. can you pin the translation too?",
+    text: "nod, going into the cover after this one. can you pin the translation too?",
     own: true,
   },
   {
@@ -191,6 +191,6 @@ export const TALKBACK: TalkbackMessage[] = [
     initials: "SM",
     name: "Sara M.",
     role: "council",
-    text: "dropping by — this set is gorgeous. I'll feature the replay on Monday's slate.",
+    text: "dropping by, this set is gorgeous. I'll feature the replay on Monday's slate.",
   },
 ];

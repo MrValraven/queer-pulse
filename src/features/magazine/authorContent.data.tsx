@@ -87,7 +87,7 @@ export const AUTHORS: Record<string, Author> = {
     pronouns: "she/her",
     bio: (
       <>
-        Sara writes about queer life and the systems that surround it — clinics,
+        Sara writes about queer life and the systems that surround it: clinics,
         classrooms, courtrooms, neighbourhoods. She joined QueerPulse Magazine
         in 2023 after a decade in public-health reporting at <em>Público</em>{" "}
         and <em>Mensagem de Lisboa</em>. Born in Setúbal, lives in Anjos.
@@ -143,7 +143,7 @@ export const AUTHORS: Record<string, Author> = {
             Dr. Inês Pereira on <em>fifteen minutes of someone else's time.</em>
           </>
         ),
-        dek: "The Anjos GP who treats trans patients as adults — and changed the protocol for an entire clinic.",
+        dek: "The Anjos GP who treats trans patients as adults, and changed the protocol for an entire clinic.",
         meta: "Issue 06 · Feb 2026",
       },
       {
@@ -165,7 +165,7 @@ export const AUTHORS: Record<string, Author> = {
             Stop calling it "access." <em>Call it care.</em>
           </>
         ),
-        dek: "A small change in language that changes how clinics get funded — and who gets seen.",
+        dek: "A small change in language that changes how clinics get funded, and who gets seen.",
         meta: "Issue 04 · Oct 2025",
       },
       {
@@ -197,7 +197,7 @@ export const AUTHORS: Record<string, Author> = {
       </>
     ),
     readingBlurb:
-      "Curated by the writer herself — books, longforms, and resources she returns to when reporting.",
+      "Curated by the writer herself: books, longforms, and resources she returns to when reporting.",
     reading: [
       {
         title: (
@@ -214,7 +214,7 @@ export const AUTHORS: Record<string, Author> = {
       {
         title: (
           <>
-            Lisboa pulse — visual notes <em>· Editora Anjos</em>
+            Lisboa pulse: visual notes <em>· Editora Anjos</em>
           </>
         ),
         tag: "zine",
@@ -264,7 +264,7 @@ export const AUTHORS: Record<string, Author> = {
     bio: (
       <>
         Jonas reports on the quiet infrastructure that keeps queer Lisbon
-        standing — the open clinics, the back rooms, the WhatsApp groups that
+        standing: the open clinics, the back rooms, the WhatsApp groups that
         move faster than any institution. He came to QueerPulse from community
         radio, and it shows: he'd rather sit in a room for six hours than send
         an email. Lives in <em>Marvila</em>, mostly on foot.
@@ -291,7 +291,7 @@ export const AUTHORS: Record<string, Author> = {
           Inside the back room of <em>Café Beirão.</em>
         </>
       ),
-      dek: "How a monthly open clinic became Lisbon's quietest piece of mutual-aid infrastructure — and why the people who run it don't want you to call it that.",
+      dek: "How a monthly open clinic became Lisbon's quietest piece of mutual-aid infrastructure, and why the people who run it don't want you to call it that.",
       publishedDate: new Date(2026, 5, 6),
       minutes: 11,
       readsThisWeek: "1.2k",
@@ -432,7 +432,7 @@ export const AUTHORS: Record<string, Author> = {
     pronouns: "she/her",
     bio: (
       <>
-        Luísa writes essays about the built world and what it does to the body —
+        Luísa writes essays about the built world and what it does to the body:
         waiting rooms, ramps, doorways, the lighting in a place you go to be
         seen. She trained as an architect and left to write about why buildings
         so often forget the people inside them. Reads slowly, on purpose. Lives
@@ -460,7 +460,7 @@ export const AUTHORS: Record<string, Author> = {
           The waiting room is <em>also part of the treatment.</em>
         </>
       ),
-      dek: "On chairs, lighting, music, and what design quietly does to a body waiting to be seen — an essay about the rooms we pretend are neutral.",
+      dek: "On chairs, lighting, music, and what design quietly does to a body waiting to be seen: an essay about the rooms we pretend are neutral.",
       publishedDate: new Date(2026, 5, 6),
       minutes: 7,
       readsThisWeek: "640",
@@ -532,7 +532,7 @@ export const AUTHORS: Record<string, Author> = {
             Handrails, and other <em>love letters.</em>
           </>
         ),
-        dek: "The small fixtures that assume you'll fall — and quietly decide to catch you.",
+        dek: "The small fixtures that assume you'll fall, and quietly decide to catch you.",
         meta: "Issue 04 · Oct 2025",
       },
     ],
@@ -601,7 +601,7 @@ export const AUTHORS: Record<string, Author> = {
     pronouns: "she/her",
     bio: (
       <>
-        Catarina writes the long ones — the twenty-minute pieces that follow a
+        Catarina writes the long ones: the twenty-minute pieces that follow a
         single thread across decades. She spent years in the ILGA Portugal
         archive before she wrote a word, and it taught her that most queer
         history survives as a phone number someone still remembers. Based in{" "}
@@ -629,7 +629,7 @@ export const AUTHORS: Record<string, Author> = {
           A history of the lifeline, <em>1995–2025.</em>
         </>
       ),
-      dek: "Three decades of ILGA Portugal's helpline, told through the calls operators remember — and the ones they can't stop remembering.",
+      dek: "Three decades of ILGA Portugal's helpline, told through the calls operators remember, and the ones they can't stop remembering.",
       publishedDate: new Date(2026, 5, 6),
       minutes: 22,
       readsThisWeek: "410",
@@ -770,7 +770,7 @@ export const AUTHORS: Record<string, Author> = {
     pronouns: "he/they",
     bio: (
       <>
-        Tomás writes profiles — the pharmacist who never asks a follow-up
+        Tomás writes profiles: the pharmacist who never asks a follow-up
         question, the nurse still there after twenty years, the people who hold
         a neighbourhood up without ever being thanked for it. They believe the
         most political thing a person can do is keep showing up. Lives in{" "}
@@ -798,7 +798,7 @@ export const AUTHORS: Record<string, Author> = {
           The pharmacist who fills <em>every prescription.</em>
         </>
       ),
-      dek: "Rui, from Farmácia do Carmo, doesn't ask follow-up questions. He has reasons — and a drawer of them going back fifteen years.",
+      dek: "Rui, from Farmácia do Carmo, doesn't ask follow-up questions. He has reasons, and a drawer of them going back fifteen years.",
       publishedDate: new Date(2026, 5, 6),
       minutes: 6,
       readsThisWeek: "720",
@@ -940,11 +940,11 @@ export const AUTHORS: Record<string, Author> = {
     pronouns: "she/her",
     bio: (
       <>
-        Anika writes about the people who work the frontlines of care — nurses,
+        Anika writes about the people who work the frontlines of care: nurses,
         outreach workers, the ones on the long shift. She arrived in Lisbon from
         Ljubljana in 2019 and reports in three languages, mostly from waiting
-        rooms and staff canteens. She thinks burnout is a policy failure, not a
-        character flaw, and writes like it. Lives in <em>Almada</em>.
+        rooms and staff canteens. She thinks burnout is a policy failure rather
+        than a character flaw, and writes like it. Lives in <em>Almada</em>.
       </>
     ),
     stats: [
@@ -968,7 +968,7 @@ export const AUTHORS: Record<string, Author> = {
           Twenty years in <em>a hospital corridor.</em>
         </>
       ),
-      dek: "A nurse on what's changed, what hasn't, and what she still does anyway — even on the shifts nobody wants to work.",
+      dek: "A nurse on what's changed, what hasn't, and what she still does anyway, even on the shifts nobody wants to work.",
       publishedDate: new Date(2026, 5, 6),
       minutes: 7,
       readsThisWeek: "530",
@@ -1007,7 +1007,7 @@ export const AUTHORS: Record<string, Author> = {
             Burnout is <em>a policy, not a feeling.</em>
           </>
         ),
-        dek: "A union rep on why queer health workers leave — and what would make them stay.",
+        dek: "A union rep on why queer health workers leave, and what would make them stay.",
         meta: "Issue 07 · Apr 2026",
       },
       {
@@ -1064,7 +1064,7 @@ export const AUTHORS: Record<string, Author> = {
       {
         title: (
           <>
-            Nemzeti — notes from a ward <em>· A. Kovač</em>
+            Nemzeti: notes from a ward <em>· A. Kovač</em>
           </>
         ),
         tag: "zine",
@@ -1111,7 +1111,7 @@ export const AUTHORS: Record<string, Author> = {
       <>
         Sofia has been writing about queer life in Lisbon since 2019, and
         editing it since 2023. She wrote this issue's cover story and edited
-        half the rest — the kind of journalist who's happiest when her own
+        half the rest: the kind of journalist who's happiest when her own
         byline isn't the point. Documentary background, interviewer's patience.
         She's also a QueerPulse member; you can find her in the community too.
       </>
@@ -1137,7 +1137,7 @@ export const AUTHORS: Record<string, Author> = {
           The city changed. <em>Did we?</em>
         </>
       ),
-      dek: "Lisbon's queer community has spent a decade finding itself. The rent tripled, the bars closed and reopened and closed again. What survived — and what did we lose?",
+      dek: "Lisbon's queer community has spent a decade finding itself. The rent tripled, the bars closed and reopened and closed again. What survived, and what did we lose?",
       publishedDate: new Date(2026, 5, 6),
       minutes: 14,
       readsThisWeek: "3.1k",
@@ -1176,7 +1176,7 @@ export const AUTHORS: Record<string, Author> = {
             Mariza Câmara, <em>district health director.</em>
           </>
         ),
-        dek: "An hour on queer health policy — what passed, and what got quietly buried.",
+        dek: "An hour on queer health policy: what passed, and what got quietly buried.",
         meta: "Issue 07 · Apr 2026",
       },
       {
@@ -1362,7 +1362,7 @@ export const AUTHORS: Record<string, Author> = {
             The piece we <em>didn't run.</em>
           </>
         ),
-        dek: "On killing a story to protect the people in it — and what that cost.",
+        dek: "On killing a story to protect the people in it, and what that cost.",
         meta: "Issue 06 · Feb 2026",
       },
       {

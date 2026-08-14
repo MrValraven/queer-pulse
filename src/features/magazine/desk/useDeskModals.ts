@@ -81,7 +81,7 @@ export function useDeskModals({
     // (and thus `activeMe`) hasn't resolved yet rather than firing a request the
     // backend rejects with "editorId must be a UUID".
     if (!activeMe) {
-      showToast("Still loading your editor profile — try again in a moment.", "error");
+      showToast("Still loading your editor profile. Try again in a moment.", "error");
       return;
     }
     if (modal?.kind === "commission" && modal.pitch && contextId) {

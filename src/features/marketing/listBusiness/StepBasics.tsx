@@ -87,7 +87,12 @@ export function StepBasics({ form }: { form: ListingForm }) {
         className={styles.lbField}
         id={ANCHOR.hood}
         label={t("marketing:listBusiness.step1.hoodLabel")}
-        required
+        required={!draft.online}
+        helper={
+          draft.online
+            ? t("marketing:listBusiness.step1.hoodOnlineHelper")
+            : undefined
+        }
       >
         <Select
           placeholder={t("marketing:listBusiness.step1.hoodPlaceholder")}

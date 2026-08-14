@@ -73,6 +73,7 @@ export function MobileProfileHeader({
       srcSize={176}
       placeholder={fullName}
       alt={fullName}
+      crop={profile.avatarCrop}
     />
   );
 

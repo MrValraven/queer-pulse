@@ -447,7 +447,12 @@ button.pp-row{background:none;border:0;border-top:1px solid var(--line);font:inh
 .pp[data-skin="page"] .pp-bio{max-width:600px;margin:0 auto;font-size:17px;line-height:1.9;text-align:justify;hyphens:auto;padding-top:34px}
 .pp[data-skin="page"] .pp-bio::first-letter{font-family:var(--serif);font-size:58px;line-height:.84;float:left;padding:7px 12px 0 0;font-weight:300;color:var(--accent-ink)}
 .pp[data-skin="page"] .pp-body,.pp[data-skin="page"] .pp-foot{max-width:600px;margin:0 auto;width:100%;counter-reset:folio}
-.pp[data-skin="page"] .pp-body{gap:0}
+/* The page skin's sections own their own vertical rhythm (`.pp-sec` top padding
+   + the folio `::after` bottom spacer), so the generic `.pp-body` top padding
+   (up to 64px) double-counts above the first section — a ~108px void between the
+   bio and the first chapter. Drop it and let `.pp-sec`'s 44px carry the gap, in
+   line with the ~84px rhythm used between sections. */
+.pp[data-skin="page"] .pp-body{gap:0;padding-top:0}
 .pp[data-skin="page"] .pp-sec{padding:44px 0 0}
 .pp[data-skin="page"] .pp-sec::after{counter-increment:folio;content:"· " counter(folio) " ·";display:block;text-align:center;font-family:var(--serif);font-size:13px;color:var(--ink-40);padding-top:40px}
 .pp[data-skin="page"] .pp-sec > header{justify-content:center;border-bottom:none;padding-bottom:18px}
@@ -834,8 +839,8 @@ button.pp-row{background:none;border:0;border-top:1px solid var(--line);font:inh
 .excerpt-from{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-40)}
 .excerpt-from em{font-style:italic;text-transform:none;letter-spacing:0;font-size:14px;color:var(--accent-ink)}
 .colophon{max-width:600px;margin:26px auto 0;text-align:center;font-size:12.5px;font-style:italic;color:var(--ink-40);border-top:.5px solid rgba(var(--skin-page-ink-rgb),.25);padding-top:22px}
-.pp[data-skin="page"] .pp-row{padding:12px 0 12px 68px;text-indent:0;position:relative}
-.pp[data-skin="page"] .pp-row .when{position:absolute;left:0;top:14px;float:none;font-size:14px}
+.pp[data-skin="page"] .pp-row{padding:12px 0 12px 96px;text-indent:0;position:relative}
+.pp[data-skin="page"] .pp-row .when{position:absolute;left:0;top:15px;width:84px;float:none;font-size:13px;line-height:1.4}
 .pp[data-skin="page"] .pp-row b::after{content:", "}
 
 /* — WORKSHOP — */

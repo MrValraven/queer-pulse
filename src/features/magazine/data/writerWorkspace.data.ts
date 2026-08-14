@@ -73,14 +73,14 @@ const PITCHES: WriterPitchDto[] = [
     id: "wp1",
     title: "The last kiosk in Anjos",
     sent: "12 Jul",
-    state: "Maybe — held for issue 15",
+    state: "Maybe: held for issue 15",
     tone: "hold",
   },
   {
     id: "wp2",
     title: "Why we stopped going out",
     sent: "2 Jun",
-    state: 'Passed — "not now", Marta replied personally',
+    state: 'Passed: "not now", Marta replied personally',
     tone: "no",
   },
 ];

@@ -1,4 +1,4 @@
-import { FiCheckCircle, FiMail, FiMapPin } from "react-icons/fi";
+import { FiCheckCircle, FiCompass, FiMail, FiMapPin } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { AdminAvatar } from "./ui";
 import { portrait } from "./adminPeople.data";
@@ -56,6 +56,13 @@ export function JoinRequestCard({
           <dd className={styles.queueFactValue}>
             {item.city ?? t("admin:members.verify.noCity")}
           </dd>
+        </div>
+        <div className={styles.queueFact}>
+          <dt className={styles.queueFactLabel}>
+            <FiCompass aria-hidden />
+            {t("admin:members.verify.sourceLabel")}
+          </dt>
+          <dd className={styles.queueFactValue}>{item.sourceLabel}</dd>
         </div>
       </dl>
 

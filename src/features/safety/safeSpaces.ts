@@ -76,7 +76,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     typeLabel: "Bar",
     name: "Purex",
     neighbourhood: "Intendente",
-    description: "One of Lisbon's longest-running queer bars. Genuinely inclusive — not a scene where one type of person dominates. Staff are known to be directly supportive if anything goes wrong. Gender-neutral bathrooms, accessible entrance.",
+    description: "One of Lisbon's longest-running queer bars. Genuinely inclusive, with no single type of person dominating the scene. Staff are known to be directly supportive if anything goes wrong. Gender-neutral bathrooms, accessible entrance.",
     tags: ["Gender-neutral bathrooms", "Accessible", "Trans-welcoming"],
     rating: "4.9",
     reviews: "54 reviews",
@@ -128,7 +128,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     ],
     glance: [
       { label: "Type", value: "Bar · Wed–Sun" },
-      { label: "Open today", value: "21:00 — 03:00", accent: true },
+      { label: "Open today", value: "21:00 to 03:00", accent: true },
       { label: "Languages", value: "PT · EN" },
       { label: "Step-free", value: "Yes" },
       { label: "Bathroom", value: "Gender-neutral" },
@@ -143,12 +143,12 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     typeLabel: "Bar",
     name: "Trumps",
     neighbourhood: "Rato",
-    description: "Old-school Lisbon gay bar with a loyal community. Welcoming to lesbians, bi, and non-binary people — not just gay men. Drag nights on Fridays. Some accessibility limitations (stairs to main bar).",
+    description: "Old-school Lisbon gay bar with a loyal community. Welcoming to lesbians, bi, and non-binary people as much as gay men. Drag nights on Fridays. Some accessibility limitations (stairs to main bar).",
     tags: ["Drag nights", "Long-standing", "Stairs noted"],
     rating: "4.7",
     reviews: "38 reviews",
     eyebrow: "Bar · Rato · Lisbon",
-    sub: "A Lisbon institution that grew up well — once a gay-men's bar, now a home for the whole community. Friday drag is legendary; the stairs are real.",
+    sub: "A Lisbon institution that grew up well: once a gay-men's bar, now a home for the whole community. Friday drag is legendary; the stairs are real.",
     metaPills: [
       { label: "Drag Fridays" },
       { label: "Stairs to main bar", accent: true },
@@ -159,15 +159,15 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     promises: [
       {
         title: "Welcoming beyond gay men.",
-        desc: "Lesbian, bi, trans and non-binary people are explicitly welcome — staff and regulars set that tone.",
+        desc: "Lesbian, bi, trans and non-binary people are explicitly welcome. Staff and regulars set that tone.",
       },
       {
         title: "Door staff trained on harassment.",
-        desc: "Security will act on a complaint and bar a repeat offender, not shrug it off.",
+        desc: "Security will act on a complaint and bar a repeat offender.",
       },
       {
         title: "Access limits stated plainly.",
-        desc: "Stairs down to the main bar; no lift. Step-free street-level area available — ask at the door.",
+        desc: "Stairs down to the main bar; no lift. Step-free street-level area available. Ask at the door.",
       },
       {
         title: "Incidents reported to moderation within 48h.",
@@ -188,15 +188,15 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
         name: memberName("sofia-castano"),
         tint: C,
         byline: "Regular",
-        text: "Docked nothing for safety — only flagged the stairs so wheelchair-using friends know in advance. Staff carried my friend's chair without being asked.",
+        text: "Docked nothing for safety. Only flagged the stairs so wheelchair-using friends know in advance. Staff carried my friend's chair without being asked.",
         when: "Vouched 21 Feb 2026",
       },
     ],
     glance: [
       { label: "Type", value: "Bar · Tue–Sun" },
-      { label: "Open today", value: "22:00 — 04:00", accent: true },
+      { label: "Open today", value: "22:00 to 04:00", accent: true },
       { label: "Languages", value: "PT · EN" },
-      { label: "Step-free", value: "Partial — stairs to main bar" },
+      { label: "Step-free", value: "Partial (stairs to main bar)" },
       { label: "Bathroom", value: "Gendered + one neutral" },
       { label: "Last verified", value: "11 Apr 2026" },
     ],
@@ -209,12 +209,12 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     typeLabel: "Club",
     name: "Lux Frágil",
     neighbourhood: "Santa Apolónia",
-    description: "Lisbon's most celebrated club has a consistent track record with the queer community. Multiple floors, good lighting in bathrooms, security staff who take complaints seriously. Queer nights occur regularly — check their calendar.",
+    description: "Lisbon's most celebrated club has a consistent track record with the queer community. Multiple floors, good lighting in bathrooms, security staff who take complaints seriously. Queer nights occur regularly. Check their calendar.",
     tags: ["Queer nights", "Reviewed security", "Multiple floors"],
     rating: "4.6",
     reviews: "47 reviews",
     eyebrow: "Club · Santa Apolónia · Lisbon",
-    sub: "The big one, and a careful one. Security here actually takes complaints seriously, the bathrooms are lit, and queer nights are part of the programming, not a token.",
+    sub: "The big one, and a careful one. Security here actually takes complaints seriously, the bathrooms are lit, and queer nights are a core part of the programming.",
     metaPills: [
       { label: "Regular queer nights" },
       { label: "Trained security", accent: true },
@@ -226,7 +226,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     promises: [
       {
         title: "Security take complaints seriously.",
-        desc: "Report someone to any staff member and it is acted on — we tested this twice during verification.",
+        desc: "Report someone to any staff member and it is acted on. We tested this twice during verification.",
       },
       {
         title: "Well-lit bathrooms, monitored.",
@@ -234,7 +234,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       },
       {
         title: "A quiet floor to step away.",
-        desc: "The upstairs bar is calmer and staffed — a place to land if a night gets too much.",
+        desc: "The upstairs bar is calmer and staffed, a place to land if a night gets too much.",
       },
       {
         title: "Incidents reported to moderation within 48h.",
@@ -261,9 +261,9 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     ],
     glance: [
       { label: "Type", value: "Club · Thu–Sat" },
-      { label: "Open today", value: "23:59 — 06:00", accent: true },
+      { label: "Open today", value: "23:59 to 06:00", accent: true },
       { label: "Languages", value: "PT · EN" },
-      { label: "Step-free", value: "Yes — lift to all floors" },
+      { label: "Step-free", value: "Yes (lift to all floors)" },
       { label: "Bathroom", value: "Gendered, well-lit" },
       { label: "Last verified", value: "28 Mar 2026" },
     ],
@@ -281,7 +281,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     rating: "4.9",
     reviews: "29 reviews",
     eyebrow: "Café · Príncipe Real · Lisbon",
-    sub: "A queer-owned, sober-friendly café built for the long stay — laptop mornings, quiet first dates, a community board that actually gets read. Fully step-free.",
+    sub: "A queer-owned, sober-friendly café built for the long stay: laptop mornings, quiet first dates, a community board that actually gets read. Fully step-free.",
     metaPills: [
       { label: "Queer-owned" },
       { label: "Sober-friendly", accent: true },
@@ -297,7 +297,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       },
       {
         title: "A safe table to wait at.",
-        desc: "Meeting a stranger from a date or a sale? Tell staff — they keep an eye and will intervene if it goes wrong.",
+        desc: "Meeting a stranger from a date or a sale? Tell staff. They keep an eye and will intervene if it goes wrong.",
       },
       {
         title: "Fully step-free + accessible bathroom.",
@@ -305,7 +305,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       },
       {
         title: "Sober by default.",
-        desc: "No alcohol, no pressure — a rare quiet option in a nightlife neighbourhood.",
+        desc: "No alcohol, no pressure: a rare quiet option in a nightlife neighbourhood.",
       },
     ],
     vouches: [
@@ -328,9 +328,9 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     ],
     glance: [
       { label: "Type", value: "Café · 7 days" },
-      { label: "Open today", value: "08:00 — 19:00", accent: true },
+      { label: "Open today", value: "08:00 to 19:00", accent: true },
       { label: "Languages", value: "PT · EN · ES" },
-      { label: "Step-free", value: "Yes — level entrance" },
+      { label: "Step-free", value: "Yes (level entrance)" },
       { label: "Bathroom", value: "Accessible, gender-neutral" },
       { label: "Last verified", value: "6 May 2026" },
     ],
@@ -360,7 +360,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     promises: [
       {
         title: "No assumptions about bodies or practices.",
-        desc: "Intake is designed by and for queer people. You are asked what is relevant, never interrogated.",
+        desc: "Intake is designed by and for queer people. You are asked only what is relevant.",
       },
       {
         title: "Free and genuinely anonymous.",
@@ -372,7 +372,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       },
       {
         title: "Warm hand-off to further care.",
-        desc: "If you need more, they connect you to vetted, affirming services — not a leaflet.",
+        desc: "If you need more, they personally connect you to vetted, affirming services.",
       },
     ],
     vouches: [
@@ -395,7 +395,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     ],
     glance: [
       { label: "Type", value: "Sexual health · free" },
-      { label: "Open today", value: "17:00 — 21:00", accent: true },
+      { label: "Open today", value: "17:00 to 21:00", accent: true },
       { label: "Languages", value: "PT · EN" },
       { label: "Step-free", value: "Yes" },
       { label: "Cost", value: "Free · anonymous" },
@@ -410,7 +410,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     typeLabel: "Services",
     name: "Barbearia Mouraria",
     neighbourhood: "Mouraria",
-    description: "A barbershop with community roots. Explicitly welcoming to trans and non-binary people — staff are experienced with all hair types and won't make your visit about your identity. No gendered pricing.",
+    description: "A barbershop with community roots. Explicitly welcoming to trans and non-binary people. Staff are experienced with all hair types and won't make your visit about your identity. No gendered pricing.",
     tags: ["Trans-welcoming", "No gendered pricing", "Walk-in welcome"],
     rating: "4.8",
     reviews: "22 reviews",
@@ -431,11 +431,11 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       },
       {
         title: "No gendered pricing.",
-        desc: "Price is by service, never by gender or hair length.",
+        desc: "Price is by service, the same whatever your gender or hair length.",
       },
       {
         title: "Your visit is not about your identity.",
-        desc: "Staff will not make small talk into an interrogation. You are a client, not a lesson.",
+        desc: "Staff will not make small talk into an interrogation. You are simply a client here.",
       },
       {
         title: "A held first chop.",
@@ -456,16 +456,16 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
         name: memberName("nuno"),
         tint: P,
         byline: "Regular",
-        text: "Same price as anywhere, none of the awkwardness, twice the skill. Genuinely safe — never once misgendered, never once a weird question.",
+        text: "Same price as anywhere, none of the awkwardness, twice the skill. Genuinely safe: never once misgendered, never once a weird question.",
         when: "Vouched 30 Mar 2026",
       },
     ],
     glance: [
       { label: "Type", value: "Barbershop" },
-      { label: "Open today", value: "10:00 — 19:00", accent: true },
+      { label: "Open today", value: "10:00 to 19:00", accent: true },
       { label: "Languages", value: "PT · EN" },
-      { label: "Step-free", value: "Yes — ground floor" },
-      { label: "Pricing", value: "By service, not gender" },
+      { label: "Step-free", value: "Yes (ground floor)" },
+      { label: "Pricing", value: "By service, gender-neutral" },
       { label: "Last verified", value: "24 Apr 2026" },
     ],
     address: "R. dos Cavaleiros 40 · Mouraria",
@@ -475,7 +475,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     slug: "zdb",
     category: "Arts",
     typeLabel: "Arts",
-    name: "ZDB — Zé dos Bois",
+    name: "ZDB (Zé dos Bois)",
     neighbourhood: "Bairro Alto",
     description: "Arts venue with a long history of hosting queer artists and events. Programming is consistently intersectional. Welcomes community events, hosts several regular queer club nights, and has always been a safe space for queerness in Lisbon.",
     tags: ["Queer programming", "Community events", "Accessible"],
@@ -493,7 +493,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     verifier: "Mod team · 2 visits",
     promises: [
       {
-        title: "Queer events are core, not after-hours.",
+        title: "Queer events are core to the calendar.",
         desc: "Programming is intersectional on purpose and queer nights are part of the main calendar.",
       },
       {
@@ -502,7 +502,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       },
       {
         title: "Free space for community events.",
-        desc: "They lend the room to community organisers — several QueerPulse events have run here.",
+        desc: "They lend the room to community organisers. Several QueerPulse events have run here.",
       },
       {
         title: "Incidents reported to moderation within 48h.",
@@ -515,7 +515,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
         name: memberName("luisa"),
         tint: P,
         byline: "Curator · vouched 3×",
-        text: "I've put on queer shows here for years. They protect the work and the audience equally. When a crowd got hostile once, staff shut it down, not the artist.",
+        text: "I've put on queer shows here for years. They protect the work and the audience equally. When a crowd got hostile once, staff shut down the hostility and stood by the artist.",
         when: "Vouched 8 Apr 2026",
       },
       {
@@ -553,7 +553,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     rating: "4.7",
     reviews: "18 reviews",
     eyebrow: "Café · Cais do Sodré · Lisbon",
-    sub: "Calm, queer-staffed, and reliably respectful — the go-to for a low-stakes first date or a daytime meeting in a loud part of town. Sober by default.",
+    sub: "Calm, queer-staffed, and reliably respectful: the go-to for a low-stakes first date or a daytime meeting in a loud part of town. Sober by default.",
     metaPills: [
       { label: "Queer-staffed" },
       { label: "Sober-friendly", accent: true },
@@ -577,7 +577,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
       },
       {
         title: "Sober-friendly.",
-        desc: "No alcohol and no pressure — easy to suggest to anyone who needs that.",
+        desc: "No alcohol and no pressure: easy to suggest to anyone who needs that.",
       },
     ],
     vouches: [
@@ -600,7 +600,7 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     ],
     glance: [
       { label: "Type", value: "Café · 7 days" },
-      { label: "Open today", value: "08:00 — 18:00", accent: true },
+      { label: "Open today", value: "08:00 to 18:00", accent: true },
       { label: "Languages", value: "PT · EN" },
       { label: "Step-free", value: "Yes" },
       { label: "Bathroom", value: "Gender-neutral" },
@@ -647,7 +647,7 @@ export const REMOVED_SPACES: RemovedSpace[] = [
       },
     ],
     whatNow:
-      "Bar Atlas is no longer a verified safe space and the venue may not display the badge. If you have a recent experience here — good or bad — you can still file a report; the record stays open in case the venue applies to be re-reviewed in future, which requires demonstrable change.",
+      "Bar Atlas is no longer a verified safe space and the venue may not display the badge. If you have a recent experience here, good or bad, you can still file a report; the record stays open in case the venue applies to be re-reviewed in future, which requires demonstrable change.",
   },
   {
     status: "removed",
@@ -661,7 +661,7 @@ export const REMOVED_SPACES: RemovedSpace[] = [
     listedSince: "June 2023",
     flags: 7,
     reasonLong: [
-      "Over three months, seven members — most of them queer people of colour — reported being turned away or held at the door of Clube Vértigo on nights it advertised as queer-friendly, while others walked straight in.",
+      "Over three months, seven members, most of them queer people of colour, reported being turned away or held at the door of Clube Vértigo on nights it advertised as queer-friendly, while others walked straight in.",
       "The Queer & of Colour community raised it collectively. The pattern was consistent enough, and the venue's explanation thin enough, that the panel removed the listing. Safety that is conditional on how you look is not safety.",
     ],
     timeline: [
@@ -682,7 +682,7 @@ export const REMOVED_SPACES: RemovedSpace[] = [
       { date: "21 Mar 2026", event: "Listing permanently removed." },
     ],
     whatNow:
-      "Clube Vértigo is delisted. We shared an anonymised summary of the reports with the venue. Re-review would require a published, audited door policy and a clean record over a full season — they have not applied.",
+      "Clube Vértigo is delisted. We shared an anonymised summary of the reports with the venue. Re-review would require a published, audited door policy and a clean record over a full season. They have not applied.",
   },
   {
     status: "removed",
@@ -696,7 +696,7 @@ export const REMOVED_SPACES: RemovedSpace[] = [
     listedSince: "September 2022",
     flags: 3,
     reasonLong: [
-      "Café Norte changed hands in late 2025. The original owners had earned the badge; the new ones inherited it — and our rule that new ownership triggers an early re-review existed for exactly this.",
+      "Café Norte changed hands in late 2025. The original owners had earned the badge; the new ones inherited it, and our rule that new ownership triggers an early re-review existed for exactly this.",
       "Three members reported repeated, careless misgendering and a generally colder room. We reached out twice to offer the free staff training every listed venue gets. Both messages went unanswered. Without engagement, the listing could not stand.",
     ],
     timeline: [
@@ -719,7 +719,7 @@ export const REMOVED_SPACES: RemovedSpace[] = [
       },
     ],
     whatNow:
-      "This is a soft removal, not a verdict on individuals — it can be reversed. If the new owners take up the training and a fresh round of visits meets the criteria, Café Norte can be re-listed. The door is open; they need to walk through it.",
+      "This is a soft removal that can be reversed, and it passes no verdict on individuals. If the new owners take up the training and a fresh round of visits meets the criteria, Café Norte can be re-listed. The door is open; they need to walk through it.",
   },
 ];
 

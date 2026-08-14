@@ -2,7 +2,12 @@ import { useCallback, useEffect, useRef } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { logError } from "../../../shared/observability/logger";
 import {
+  isIdentityCrop,
+  type CropRect,
+} from "../../../shared/components/ui/cropGeometry";
+import {
   requestUpload,
+  saveCrop,
   type UploadContentType,
   type UploadKind,
 } from "./uploads.api";
@@ -18,6 +23,14 @@ export type { UploadKind } from "./uploads.api";
 export interface UploadOptions {
   /** Called with 0–100 as the storage PUT streams. No-ops in demo mode. */
   onProgress?: (percent: number) => void;
+  /**
+   * The reframe crop chosen for this image, as fractions of the source. When
+   * present and not the identity crop (the whole image, unreframed), it's
+   * persisted server-side keyed by the uploaded `key` — see `saveCrop` in
+   * `uploads.api.ts`. Persisting it is best-effort: it never blocks or fails
+   * the upload itself (see the live-mode branch below).
+   */
+  crop?: CropRect;
 }
 
 /** The resolved value of a successful upload. */
@@ -45,6 +58,8 @@ export interface UploadResult {
    * covers them.
    */
   previewUrl: string;
+  /** Echoes `options.crop`, when one was passed in. */
+  crop?: CropRect;
 }
 
 /** A PUT failure the hook knows how to react to. `transient` → one auto-retry. */
@@ -142,6 +157,14 @@ async function putWithRetry(
  *   `previewUrl` exists precisely so callers don't have to wait for that
  *   round-trip to show the picked image.
  *
+ * When `options.crop` is a non-identity reframe (see `isIdentityCrop`), live
+ * mode also persists it server-side after the upload PUT succeeds, keyed by
+ * the storage `key` (`saveCrop` in `uploads.api.ts`). That persistence is
+ * best-effort: one retry on failure, then it's logged and swallowed — it
+ * never blocks or fails the resolved `{ key, previewUrl }`. The resolved
+ * value always echoes `crop` back (in both modes) so callers can render the
+ * reframed preview immediately without waiting on a round-trip.
+ *
  * Every `previewUrl` this hook creates is revoked when the owning component
  * unmounts (see the `outstandingPreviewUrls` ref below) — that's the only
  * cleanup this hook can safely do on the caller's behalf, since only the
@@ -181,24 +204,42 @@ export function useUploadImage(kind: UploadKind) {
       outstandingPreviewUrls.current.add(previewUrl);
 
       if (demoMode) {
+        // Demo mode never touches the network, so there's nowhere real to
+        // persist the crop — just echo it back for the caller to store
+        // alongside the preview, same as the key/previewUrl above.
         options?.onProgress?.(100);
-        return { key: previewUrl, previewUrl };
+        return { key: previewUrl, previewUrl, crop: options?.crop };
       }
 
       const contentType = blob.type as UploadContentType;
+      let key: string;
       try {
-        const { uploadUrl, key } = await requestUpload(
-          kind,
-          contentType,
-          blob.size,
-        );
-        await putWithRetry(uploadUrl, blob, options?.onProgress);
-        return { key, previewUrl };
+        const presigned = await requestUpload(kind, contentType, blob.size);
+        key = presigned.key;
+        await putWithRetry(presigned.uploadUrl, blob, options?.onProgress);
       } catch (err) {
         logError(err, { scope: "useUploadImage", kind });
         if (err instanceof ImageProcessingError) throw err;
         throw new ImageProcessingError(RETRY_KEY);
       }
+
+      // Persist the crop, best-effort, AFTER the upload itself has already
+      // succeeded. This must never turn a successful image upload into a
+      // failed one: one retry on failure, then swallow (logged) — the caller
+      // still gets back a resolved { key, previewUrl }.
+      if (options?.crop && !isIdentityCrop(options.crop)) {
+        try {
+          await saveCrop(key, options.crop);
+        } catch {
+          try {
+            await saveCrop(key, options.crop);
+          } catch (err) {
+            logError(err, { scope: "useUploadImage.saveCrop", kind });
+          }
+        }
+      }
+
+      return { key, previewUrl, crop: options?.crop };
     },
     [demoMode, kind],
   );

@@ -141,9 +141,9 @@ export const coverFilm = {
   titleEm: "between",
   titlePost: " rooms",
   meta: "Maria Vasconcelos · Portugal, 2025 · 92 min · documentary",
-  curatorWho: "— Programmed by João Ribeiro",
+  curatorWho: "Programmed by João Ribeiro",
   curatorBody:
-    "A patient, generous film about Lisbon's working-class queer elders, made over three years in the kitchens that raised them. Stay for the second hour — it's where the film stops being about loss and starts being about teaching.",
+    "A patient, generous film about Lisbon's working-class queer elders, made over three years in the kitchens that raised them. Stay for the second hour. It's where the film stops being about loss and starts being about teaching.",
   /** Fields used to explain why other films relate to this one. */
   country: "PT",
   curator: "João Ribeiro",
@@ -222,7 +222,7 @@ export const collections = [
     tag: "Collection",
     titlePre: "Trans documentaries: ",
     titleEm: "the 2020s",
-    desc: "The decade is half over. Twelve documentaries — five by trans filmmakers — selected for how they treat their subjects as collaborators.",
+    desc: "The decade is half over. Twelve documentaries, five by trans filmmakers, selected for how they treat their subjects as collaborators.",
     by: "D. Okoye",
     av: "DO",
     count: "12 films · 3 free · 9 rent",

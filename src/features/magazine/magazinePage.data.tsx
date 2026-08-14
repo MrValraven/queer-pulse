@@ -88,7 +88,7 @@ export const FEATURED_DECK: {
   coverDesc:
     "Narrow street in Mouraria, late afternoon light, laundry lines overhead",
   excerpt:
-    "Seven of them met at a language exchange in 2016. This is what the next ten years did to a chosen family — one slide at a time.",
+    "Seven of them met at a language exchange in 2016. This is what the next ten years did to a chosen family, one slide at a time.",
 };
 
 export const FEATURES: Card[] = [
@@ -146,7 +146,7 @@ export const ESSAYS: Card[] = [
       </>
     ),
     excerpt:
-      "On becoming queer as arrival rather than revelation — and why the community gave me the language for the identity, not the other way around.",
+      "On becoming queer as arrival rather than revelation, and why the community gave me the language for the identity, not the other way around.",
     author: memberName("tomas"),
     meta: "8 min read",
     initials: MEMBERS.tomas!.initials,
@@ -162,7 +162,7 @@ export const ESSAYS: Card[] = [
       </>
     ),
     excerpt:
-      "Visibility saves lives. The data says so. But whose visibility are we building infrastructure for — and is the billboard kind ever enough?",
+      "Visibility saves lives. The data says so. But whose visibility are we building infrastructure for? And is the billboard kind ever enough?",
     author: "Rui Fernandes",
     meta: "7 min read",
     initials: "RF",
@@ -178,7 +178,7 @@ export const ESSAYS: Card[] = [
       </>
     ),
     excerpt:
-      "Everyone who left had a reasonable reason. But rebuilding the informal infrastructure of a queer life is specific, slow work — and the staying was the building.",
+      "Everyone who left had a reasonable reason. But rebuilding the informal infrastructure of a queer life is specific, slow work, and the staying was the building.",
     author: "Catarina Melo",
     meta: "6 min read",
     initials: "CM",
@@ -235,7 +235,7 @@ export const REVIEWS: Card[] = [
     kicker: "Book",
     title: (
       <>
-        <em>The Argonauts</em> — Maggie Nelson
+        <em>The Argonauts</em> by Maggie Nelson
       </>
     ),
     excerpt:
@@ -269,7 +269,7 @@ export const REVIEWS: Card[] = [
   {
     id: "review-sereia",
     kicker: "Venue",
-    title: "Sereia, Intendente — a bar that wants to be boring",
+    title: "Sereia, Intendente: a bar that wants to be boring",
     excerpt:
       "Six weeks old, no theme nights, no Instagram. Sereia is attempting something rare in a new queer bar: to simply be somewhere you can drink slowly and talk.",
     author: memberName("sofia"),
@@ -314,7 +314,7 @@ export const COMMUNITY: Card[] = [
     kicker: "Memory",
     title: "The Archive Night: memory as infrastructure",
     excerpt:
-      "On the last Friday of each month, a room in Mouraria fills with people talking about queer Lisbon history — the kind held in boxes under beds, not institutions.",
+      "On the last Friday of each month, a room in Mouraria fills with people talking about queer Lisbon history, the kind held in boxes under beds rather than institutions.",
     author: "Rui Fernandes",
     meta: "8 min read",
     initials: "RF",

@@ -23,14 +23,14 @@ const DEMO_THUMB =
 const SEEDED: Record<string, Omit<LinkPreviewResponse, "url">> = {
   "clinicadomarques.pt": {
     siteName: "Clínica do Marquês",
-    title: "Book an appointment — Clínica do Marquês",
+    title: "Book an appointment: Clínica do Marquês",
     description:
       "Trans-affirming primary care in central Lisbon. Request a first appointment by email; the team usually replies within two working days.",
     imageUrl: DEMO_THUMB,
   },
   "queerpulse.example": {
     siteName: "QueerPulse",
-    title: "Pride Brunch 2026 — the whole terrace, 11am",
+    title: "Pride Brunch 2026: the whole terrace, 11am",
     description:
       "Our community brunch is confirmed. Save the date, bring a friend, and RSVP so we can plan the pastries.",
     imageUrl: DEMO_THUMB,

@@ -1,4 +1,5 @@
 import { apiPost } from "../../../shared/api/client";
+import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 
 /** Image content types the upload endpoints accept. */
 export type UploadContentType =
@@ -99,3 +100,14 @@ export const requestUpload = (
     contentType,
     byteSize,
   } satisfies PresignRequest);
+
+/**
+ * Persist the reframe crop chosen for an already-uploaded image, keyed by its
+ * storage `key`. `POST /uploads/crop`, `204` on success. Best-effort from the
+ * caller's point of view: `useUploadImage` calls this after the upload PUT
+ * already resolved and never lets a failure here block or reject the upload
+ * result — see the retry-once-then-swallow handling there.
+ */
+export async function saveCrop(key: string, crop: CropRect): Promise<void> {
+  await apiPost<void>("/uploads/crop", { key, crop });
+}

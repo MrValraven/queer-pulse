@@ -7,7 +7,7 @@ import { formatDate } from "../../../shared/lib/date";
 import type { SubprofileSection } from "../api/subprofiles.api";
 import type { SubprofileView } from "../api/subprofiles.adapters";
 import { PoemBlocksView } from "../poem/PoemBlocksView";
-import { normalizePoemBlocks } from "../poem/poemModel";
+import { normalizePoemVersions } from "../poem/poemModel";
 import {
   useItemRevisionDetail,
   useItemRevisions,
@@ -54,10 +54,11 @@ function readSnapshotStructured(
 
 /** True when the snapshot carries a poem body, regardless of `section`: a
  *  belt-and-suspenders check alongside `section === "poems"` per the plan,
- *  since older revisions could in principle predate a section rename. */
+ *  since older revisions could in principle predate a section rename. Accepts
+ *  either the legacy single `poem` body or the newer `poemVersions` array. */
 function hasPoemStructure(snapshot: Record<string, unknown>): boolean {
   const structured = readSnapshotStructured(snapshot);
-  return Array.isArray(structured?.poem);
+  return Array.isArray(structured?.poem) || Array.isArray(structured?.poemVersions);
 }
 
 /**
@@ -188,6 +189,7 @@ function RevisionSnapshotPreview({
   revisionId,
   section,
 }: RevisionSnapshotPreviewProps) {
+  const { t } = useTranslation();
   const { data: detail, isLoading } = useItemRevisionDetail(
     subprofileId,
     itemId,
@@ -203,12 +205,29 @@ function RevisionSnapshotPreview({
 
   if (isPoem) {
     const structured = readSnapshotStructured(snapshot);
+    // Show every translation this revision held, each under its name. A
+    // pre-translation snapshot normalizes to one untitled version, rendered
+    // exactly as before (no label heading).
+    const versions = normalizePoemVersions(
+      structured?.poemVersions,
+      structured?.poem,
+    );
     return (
       <div className={styles.preview}>
-        <PoemBlocksView
-          blocks={normalizePoemBlocks(structured?.poem)}
-          description={description}
-        />
+        {versions.map((version, index) => (
+          <div key={version.id} className={styles.previewVersion}>
+            {versions.length > 1 && (
+              <p className={styles.previewVersionLabel}>
+                {version.label.trim() ||
+                  t("subprofiles:poem.versions.untitled", { index: index + 1 })}
+              </p>
+            )}
+            <PoemBlocksView
+              blocks={version.blocks}
+              description={index === 0 ? description : undefined}
+            />
+          </div>
+        ))}
       </div>
     );
   }

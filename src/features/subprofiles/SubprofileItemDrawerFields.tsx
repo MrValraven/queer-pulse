@@ -7,7 +7,7 @@ import { ImageUploadField } from "./ImageUploadField";
 import { CollaboratorSelect } from "./CollaboratorSelect";
 import { SubprofileItemLinksField } from "./SubprofileItemLinksField";
 import { RICH_FIELDS_FOR_SECTION, type RichFieldDescriptor } from "./richFields.data";
-import { PoemBodyEditor } from "./poem/PoemBodyEditor";
+import { PoemVersionsEditor } from "./poem/PoemVersionsEditor";
 import { poemHasContent } from "./poem/poemBlocks";
 
 type Field = keyof SubprofileItemDTO;
@@ -180,17 +180,26 @@ export function SubprofileItemDrawerFields({
 
       {isPoems && (
         <div className="pe-field-wide">
-          <PoemBodyEditor
-            value={draft.structured?.poem ?? null}
+          <PoemVersionsEditor
+            value={draft.structured?.poemVersions ?? null}
+            legacyPoem={draft.structured?.poem ?? null}
             description={draft.description}
-            onChange={(poem) =>
+            onChange={(versions) => {
+              const primaryBlocks = versions[0]?.blocks ?? [];
               onPatch({
                 // Poem body becomes the single source of truth: clear the legacy
                 // `description` once real blocks exist so we don't persist two.
-                description: poemHasContent(poem) ? "" : draft.description,
-                structured: { ...(draft.structured ?? {}), poem },
-              })
-            }
+                description: poemHasContent(primaryBlocks) ? "" : draft.description,
+                structured: {
+                  ...(draft.structured ?? {}),
+                  poemVersions: versions,
+                  // Mirror the default (first) translation into the legacy
+                  // `poem` field so the row teaser, authorship record and
+                  // revision history keep reading `structured.poem` unchanged.
+                  poem: primaryBlocks,
+                },
+              });
+            }}
           />
         </div>
       )}

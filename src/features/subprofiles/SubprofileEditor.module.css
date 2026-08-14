@@ -8,9 +8,15 @@
   padding: 28px 0 clamp(48px, 6vw, 96px);
 }
 
+/* Holds only the page header. Spans the full `wrap` width and left-aligns so
+   the title sits directly above the editor shell's left rail ("Your personas"),
+   rather than centered in a narrow column indented to the rail's right. The
+   12px start inset matches the rail's own content inset (`.ed-rail .rail-back`
+   / nav buttons in persona-editor.css) so the title lines up with the rail
+   items directly beneath it. */
 .container {
-  width: min(760px, 100% - 40px);
-  margin-inline: auto;
+  width: 100%;
+  padding-inline-start: 12px;
   display: flex;
   flex-direction: column;
   gap: 28px;
@@ -45,11 +51,15 @@
 }
 
 /* ── Page header ─────────────────────────────────────────────────────────── */
+/* Single row, everything clustered to the left: the title, then the kind +
+   status badges hugging its right. The title takes only the width it needs
+   (`flex: 0 1 auto`, not `1 1`) so the badges sit right beside it instead of
+   being flung to the far edge on a short name like "Poet". */
 .header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 8px 12px;
 }
 .headTitle {
   font-family: var(--serif);
@@ -59,7 +69,7 @@
   color: var(--text-strong);
   line-height: 1.1;
   margin: 0;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
 }
 .headTitle em {

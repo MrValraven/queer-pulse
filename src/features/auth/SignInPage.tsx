@@ -13,7 +13,7 @@ import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { probeBackend, type BackendProbe } from "../../shared/api/client";
 import { usePlatformStatus } from "../../shared/api/usePlatformStatus";
-import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "./api/joinRequestSource";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
@@ -283,7 +283,7 @@ export function SignInPage() {
       </button>
 
       <div className={styles.footer}>
-        <Link to={routes.requestInvite} className="invite">
+        <Link to={requestInvitePath("sign_in")} className="invite">
           {t("auth:common.notAMemberYet")}
         </Link>
       </div>

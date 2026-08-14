@@ -25,6 +25,8 @@ export interface DirectoryCardDTO {
   av: string;
   owned: boolean;
   memberFirst: string | null;
+  /** Online-only business (no physical location). Absent on older payloads. */
+  online?: boolean;
   // Map pin the owner placed while listing. null ⇒ list-only (no pin).
   latitude: number | null;
   longitude: number | null;

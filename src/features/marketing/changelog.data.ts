@@ -93,6 +93,48 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "recognition-xp",
+        category: "feature",
+        date: "14 Aug 2026",
+        ...entryKeys("recognition-xp"),
+      },
+      {
+        id: "communities-explained",
+        category: "improvement",
+        date: "14 Aug 2026",
+        ...entryKeys("communities-explained"),
+        tag: {
+          labelKey: "marketing:changelog.tag.aboutCommunities",
+          to: routes.aboutCommunities,
+        },
+      },
+      {
+        id: "smoother-drag-reorder",
+        category: "improvement",
+        date: "14 Aug 2026",
+        ...entryKeys("smoother-drag-reorder"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "poem-translations",
+        category: "feature",
+        date: "14 Aug 2026",
+        ...entryKeys("poem-translations"),
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "reframe-your-photos",
+        category: "feature",
+        date: "14 Aug 2026",
+        ...entryKeys("reframe-your-photos"),
+      },
+      {
         id: "guidelines-agree-self-tick",
         category: "improvement",
         date: "13 Aug 2026",

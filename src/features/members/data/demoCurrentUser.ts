@@ -70,7 +70,7 @@ export const currentUser: Member = {
     {
       category: "Fullstack Developer",
       title:
-        "Broadvoice — real-time VoIP systems (React, Node, NestJS, Apache Kafka)",
+        "Broadvoice, real-time VoIP systems (React, Node, NestJS, Apache Kafka)",
       year: "2022–2025",
       image:
         "https://plus.unsplash.com/premium_photo-1732115973557-47e5c91ba6e9?q=80&w=800&auto=format&fit=crop",
@@ -78,7 +78,7 @@ export const currentUser: Member = {
     {
       category: "Fullstack Developer",
       title:
-        "AAUE, Universidade de Évora — web platforms & a custom CMS (Vue, React, Node)",
+        "AAUE, Universidade de Évora, web platforms & a custom CMS (Vue, React, Node)",
       year: "2020–2022",
       image:
         "https://plus.unsplash.com/premium_photo-1737392496893-07869d657a6e?q=80&w=800&auto=format&fit=crop",
@@ -137,7 +137,7 @@ export const currentUser: Member = {
   shapings: {
     film: {
       title: "Star Wars",
-      note: "An odd, deep love for the lore — worldbuilding is my favourite kind of magic.",
+      note: "An odd, deep love for the lore. Worldbuilding is my favourite kind of magic.",
     },
     book: {
       title: "The Player's Handbook (D&D 5e)",
@@ -149,7 +149,7 @@ export const currentUser: Member = {
     },
     moment: {
       title: "Seeing people safe to be themselves",
-      note: "Pride parades, heavy metal concerts — I get teary knowing they'll never be alone.",
+      note: "Pride parades, heavy metal concerts. I get teary knowing they'll never be alone.",
     },
   },
 };

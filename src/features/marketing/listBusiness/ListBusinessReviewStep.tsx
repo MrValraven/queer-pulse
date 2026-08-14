@@ -206,7 +206,9 @@ export function StepReview({
         onEdit={() => onEdit(3)}
       >
         <Row k={t("marketing:listBusiness.step5.row.address")}>
-          {draft.address}
+          {draft.online
+            ? t("marketing:listBusiness.step5.onlineBusiness")
+            : draft.address}
         </Row>
         <Row k={t("marketing:listBusiness.step5.row.hours")}>
           {hoursSummary(draft)}

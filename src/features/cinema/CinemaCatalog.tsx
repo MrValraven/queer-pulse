@@ -54,7 +54,7 @@ export function ProgrammeSection() {
             </h3>
             <div className={styles.fMeta}>{film.meta}</div>
             <div className={styles.fNote}>
-              {film.note} <span className={styles.by}>— {film.by}</span>
+              {film.note} <span className={styles.by}>{film.by}</span>
             </div>
           </Link>
         ))}
@@ -76,7 +76,7 @@ export function ProgrammeSection() {
             <em>Watch them in the order you want.</em>”
           </p>
           <div className={styles.sig}>
-            — Sara Marques, programming lead.{" "}
+            Sara Marques, programming lead.{" "}
             <Link to={routes.cinemaBrowse}>
               {t("cinema:programme.notebook.readMoreCta")}{" "}
               <FiArrowRight aria-hidden />

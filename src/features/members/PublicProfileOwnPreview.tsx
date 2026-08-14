@@ -4,6 +4,7 @@ import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useProfileData } from "../../app/providers/useProfile";
 import { useAuth } from "../../app/providers/authContext";
@@ -147,7 +148,7 @@ export function PublicProfileOwnPreview() {
             }
             body={t("members:publicProfile.locked.postsBody", { first })}
             action={
-              <Button variant="primary" to={routes.requestInvite}>
+              <Button variant="primary" to={requestInvitePath("public_profile")}>
                 {t("members:publicProfile.requestInviteArrow")}{" "}
                 <FiArrowRight aria-hidden />
               </Button>

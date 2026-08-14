@@ -1,6 +1,7 @@
 import { FiArrowRight } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -61,7 +62,7 @@ export function ArrivingPage() {
         }
         sub={t("marketing:arriving.outro.sub")}
       >
-        <Button to={routes.requestInvite} variant="primary" size="lg">
+        <Button to={requestInvitePath("arriving")} variant="primary" size="lg">
           {t("marketing:arriving.outro.cta")} <FiArrowRight aria-hidden />
         </Button>
       </Outro>

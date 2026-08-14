@@ -53,7 +53,7 @@ export const LOBBY: LobbyMessage[] = [
     name: "Kai L.",
     badge: "",
     when: "5m",
-    body: "The window between the two apartments — such a quiet image of community.",
+    body: "The window between the two apartments, such a quiet image of community.",
   },
 ];
 

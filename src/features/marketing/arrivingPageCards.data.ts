@@ -23,7 +23,7 @@ export const HEALTH: InfoCard[] = [
     icon: FiActivity,
     iconBg: "rgba(74,140,111,.1)",
     title: "Registering with SNS",
-    body: "Register with the Serviço Nacional de Saúde (SNS) as soon as you have a NIF. You're entitled to a GP (médico de família). Ask at your local health centre (Centro de Saúde) — Arroios, Mouraria, and Príncipe Real all have active centres.",
+    body: "Register with the Serviço Nacional de Saúde (SNS) as soon as you have a NIF. You're entitled to a GP (médico de família). Ask at your local health centre (Centro de Saúde). Arroios, Mouraria, and Príncipe Real all have active centres.",
     link: {
       label: "sns.gov.pt",
       href: "https://www.sns.gov.pt",
@@ -48,7 +48,7 @@ export const HEALTH: InfoCard[] = [
     icon: FiPhone,
     iconBg: "rgba(74,140,111,.1)",
     title: "Crisis support",
-    body: "ILGA Portugal runs a support line for LGBTQ+ people facing crisis, discrimination, or violence. They can also help connect you with legal aid if needed. The line is Portuguese-language with limited English support — bring a friend if needed.",
+    body: "ILGA Portugal runs a support line for LGBTQ+ people facing crisis, discrimination, or violence. They can also help connect you with legal aid if needed. The line is Portuguese-language with limited English support. Bring a friend if needed.",
     link: { label: "ILGA Portugal", href: PLATFORMS },
   },
 ];
@@ -58,13 +58,13 @@ export const HOUSING: InfoCard[] = [
     icon: FiBarChart2,
     iconBg: "rgba(232,119,90,.1)",
     title: "The reality of the market",
-    body: "Lisbon rents have increased significantly over the past five years. Budget €800–1100 for a room in central neighbourhoods. Arroios and Mouraria offer better value. Move fast — good listings go in days. Airbnb has reduced long-term rental stock dramatically.",
+    body: "Lisbon rents have increased significantly over the past five years. Budget €800–1100 for a room in central neighbourhoods. Arroios and Mouraria offer better value. Move fast. Good listings go in days. Airbnb has reduced long-term rental stock dramatically.",
   },
   {
     icon: FiUsers,
     iconBg: "rgba(74,140,111,.1)",
     title: "Community housing network",
-    body: "The Queer Housing Justice Network (run by Catarina Vaz) tracks queer-safe sublets and short-term shares within the community. Check the QueerPulse board — several members post housing regularly. The best leads come through the network, not portals.",
+    body: "The Queer Housing Justice Network (run by Catarina Vaz) tracks queer-safe sublets and short-term shares within the community. Check the QueerPulse board. Several members post housing regularly. The best leads come through the network.",
     link: { label: "Queer Housing Network", href: CHANGEMAKERS },
   },
   {
@@ -78,7 +78,7 @@ export const HOUSING: InfoCard[] = [
     icon: FiMessageCircle,
     iconBg: "rgba(232,119,90,.1)",
     title: "Ask on the board",
-    body: '"Looking for a room or short-term sublet — arriving in June" is a completely valid post. The community is genuinely helpful about this. Someone will know someone.',
+    body: '"Looking for a room or short-term sublet, arriving in June" is a completely valid post. The community is genuinely helpful about this. Someone will know someone.',
     link: { label: "Go to the board", href: "/#board" },
   },
 ];

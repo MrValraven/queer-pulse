@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { FiRepeat } from "react-icons/fi";
-import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { PageShell } from "../../shared/components/layout";
 import {
   Button,
@@ -231,7 +231,7 @@ export function BarterPage() {
         }
         sub={t("economy:barter.outro.sub")}
       >
-        <Button to={routes.requestInvite} size="lg">
+        <Button to={requestInvitePath("barter")} size="lg">
           {t("economy:barter.outro.cta")}
         </Button>
       </Outro>

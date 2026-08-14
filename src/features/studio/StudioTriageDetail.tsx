@@ -83,7 +83,7 @@ export function StudioTriageDetail() {
         <h4>{t("studio:triage.detail.flaggedHeading", { count: 3 })}</h4>
         <p style={{ fontStyle: "italic", color: "rgba(247,243,238,.6)" }}>
           D. Okoye: "the bridge at 2:14 is the thing." · João R.: "PT feels
-          regional — Porto, not Lisbon." · Yara R.: "i'd put this on the
+          regional: Porto, not Lisbon." · Yara R.: "i'd put this on the
           standards collection in a year, easily."
         </p>
       </div>

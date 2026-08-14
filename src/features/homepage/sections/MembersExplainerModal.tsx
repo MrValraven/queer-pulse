@@ -4,6 +4,7 @@ import { ModalSheet } from "../../../shared/components/ui/Modal";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
+import { requestInvitePath } from "../../auth/api/joinRequestSource";
 import { MEMBER_PILLARS } from "./membersExplainer.data";
 import styles from "./MembersExplainerModal.module.css";
 
@@ -57,7 +58,7 @@ export function MembersExplainerModal({ onClose }: { onClose: () => void }) {
         </ul>
 
         <div className={styles.actions}>
-          <Button size="lg" to={routes.requestInvite}>
+          <Button size="lg" to={requestInvitePath("members_explainer")}>
             {t("homepage:membersExplainer.requestInviteCta")}{" "}
             <FiArrowRight aria-hidden />
           </Button>

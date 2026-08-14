@@ -38,7 +38,7 @@ export function StudioSheetCheckout() {
       <div className={s.chSub}>{t("studio:sheet.checkout.subtitle")}</div>
       <div className={s.line}>
         <span className="k">
-          Lead sheet — {SHEET_TITLE}
+          Lead sheet: {SHEET_TITLE}
           <small>{SHEET_SPEC}</small>
         </span>
         <span className={s.v}>{fmt.currency(SHEET_PRICE)}</span>

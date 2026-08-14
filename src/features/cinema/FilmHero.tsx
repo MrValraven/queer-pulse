@@ -40,10 +40,9 @@ export function FilmHero() {
             <div className={styles.cpText}>
               “A patient, generous film about Lisbon's working-class queer
               elders, made over three years in the kitchens that raised them.{" "}
-              <em>Stay for the second hour</em> — it's where the film stops
+              <em>Stay for the second hour</em>. It's where the film stops
               being about loss and starts being about teaching.”
               <span className="who">
-                —{" "}
                 <Link to={`${routes.cinemaCurator}/joao-ribeiro`}>
                   João Ribeiro
                 </Link>{" "}

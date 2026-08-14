@@ -35,12 +35,12 @@ function messageFor(error: unknown): string | null {
       return null; // PlatformLockProvider owns this (maintenance screen)
     if (error.status === 404) return null; // pages own their empty state
     if (error.status >= 500)
-      return "Something went wrong on our end — please try again.";
+      return "Something went wrong on our end. Please try again.";
     if (error.status === 403)
       return reasonFor(error) ?? "You don't have access to that.";
     return reasonFor(error) ?? "Something went wrong.";
   }
-  return reasonFor(error) ?? "Something went wrong — please try again.";
+  return reasonFor(error) ?? "Something went wrong. Please try again.";
 }
 
 /** QueryCache onError: log always; toast only unexpected 5xx (pages own the rest).

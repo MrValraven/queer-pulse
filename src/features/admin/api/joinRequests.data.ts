@@ -13,6 +13,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     createdAt: "2026-07-01T09:12:00.000Z",
     ageAttestedAt: "2026-07-01T09:11:40.000Z",
     termsVersion: "2.4",
+    source: "homepage_hero",
     reviewedAt: null,
     reviewedBy: null,
     inviteCode: null,
@@ -28,6 +29,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     createdAt: "2026-06-30T18:40:00.000Z",
     ageAttestedAt: "2026-06-30T18:39:12.000Z",
     termsVersion: "2.4",
+    source: "skills",
     reviewedAt: null,
     reviewedBy: null,
     inviteCode: null,
@@ -44,6 +46,9 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     createdAt: "2026-06-28T11:05:00.000Z",
     ageAttestedAt: "2026-06-28T11:04:31.000Z",
     termsVersion: "2.4",
+    // No source — went straight to the request page, so demo covers the
+    // "Opened the invite page directly" fallback.
+    source: null,
     reviewedAt: null,
     reviewedBy: null,
     inviteCode: null,

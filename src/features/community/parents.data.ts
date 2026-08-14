@@ -44,7 +44,7 @@ export const MEETUPS = [
   {
     dd: "24",
     mm: "Jun",
-    title: "Mothers & fathers night — chosen and biological",
+    title: "Mothers & fathers night: chosen and biological",
     meta: "Trans Hub office · 18:00 · adults",
     tagKey: "parentNetwork.tag.social",
   },

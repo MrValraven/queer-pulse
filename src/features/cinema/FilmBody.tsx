@@ -38,8 +38,8 @@ export function FilmBody() {
               <p>
                 I first met Maria's footage three years before this film
                 existed. She'd been recording the kitchens of her grandmother's
-                friends — eleven older lesbian and gay women in Marvila and
-                Beato — without a project, without funding, without knowing what
+                friends, eleven older lesbian and gay women in Marvila and
+                Beato, without a project, without funding, without knowing what
                 she was looking for.
               </p>
               <p>
@@ -51,7 +51,7 @@ export function FilmBody() {
               <p>
                 I'm programming this for week 23 because the cinema's first job
                 is to make space for films that treat queer elders as{" "}
-                <em>teachers</em>, not subjects. Stay for the second hour.
+                <em>teachers</em>. Stay for the second hour.
               </p>
             </div>
           </div>
@@ -66,14 +66,14 @@ export function FilmBody() {
             <div className={styles.syn}>
               <p>
                 For three years, between 2022 and 2025, the filmmaker followed
-                eleven queer elders across two Lisbon neighbourhoods — Marvila
-                and Beato — into the kitchens that had hosted their lives.{" "}
+                eleven queer elders across two Lisbon neighbourhoods, Marvila
+                and Beato, into the kitchens that had hosted their lives.{" "}
                 <em>The light between rooms</em> is not a film about coming out.
                 It is a film about what was already there, before anyone had the
                 word for it.
               </p>
               <p className="source">
-                — Director's statement, Cinemateca Portuguesa programme, March
+                Director's statement, Cinemateca Portuguesa programme, March
                 2025.
               </p>
             </div>

@@ -9,7 +9,7 @@ export const subprofiles: Catalog = {
   // Directory (SubprofileDirectoryPage)
   "directory.eyebrow": "Directory · personas",
   "directory.subtitle":
-    "Pseudonymous professional personas from across the community. No ranking, no algorithm — just the work.",
+    "Pseudonymous professional personas from across the community. No ranking, no algorithm. Just the work.",
   "directory.searchPlaceholder": "Search personas",
   "directory.searchAria": "Search personas",
   "directory.filterLabel": "Filter by craft",
@@ -21,7 +21,7 @@ export const subprofiles: Catalog = {
   "directory.empty.clear": "Clear filters",
   "directory.error.title": "We couldn't load the directory",
   "directory.error.description":
-    "Something went wrong reaching the server. This isn't an empty directory — try again in a moment.",
+    "Something went wrong reaching the server. This isn't an empty directory. Try again in a moment.",
   "directory.error.retry": "Try again",
   "directory.openToCollabsChip": "Open to collabs",
   "directory.tagFilterHeading": "Tags",
@@ -71,7 +71,7 @@ export const subprofiles: Catalog = {
   "alsoAs.showFewer": "Show fewer",
   "alsoAs.empty.title": "Show more of what you <em>make</em>",
   "alsoAs.empty.description":
-    "Your music, your code, your writing — linked here or standing on its own.",
+    "Your music, your code, your writing, linked here or standing on its own.",
   "alsoAs.empty.cta": "Create a persona",
 
   // Stronger self+empty prompt (SidesPrompt, in ProfileSubprofilesSection —
@@ -81,7 +81,7 @@ export const subprofiles: Catalog = {
   "alsoAs.sidesPrompt.eyebrow": "A quiet suggestion",
   "alsoAs.sidesPrompt.heading": "You do more than <em>one thing</em>.",
   "alsoAs.sidesPrompt.description":
-    "A persona gives that other craft its own page — linked here, or standing entirely on its own.",
+    "A persona gives that other craft its own page, linked here, or standing entirely on its own.",
   "alsoAs.sidesPrompt.cta": "Create a persona",
   "alsoAs.sidesPrompt.notNow": "Not now",
 
@@ -318,9 +318,9 @@ export const subprofiles: Catalog = {
   "link.linked": "Linked",
   "link.standalone": "Standalone",
   "link.help.linked":
-    "Shown on your main profile as another persona of yours — people can see the two are the same person.",
+    "Shown on your main profile as another persona of yours. People can see the two are the same person.",
   "link.help.unlinked":
-    "Stands on its own — nothing here points back to your main profile, so you can keep this work separate from the rest of your life. It earns a public handle once it passes the completeness check.",
+    "Stands on its own. Nothing here points back to your main profile, so you can keep this work separate from the rest of your life. It earns a public handle once it passes the completeness check.",
 
   // Gig-state / work-state chips (ItemRow, stage + studio/workshop skins) and
   // dietary-mark legend (Table skin) — persisted `gigState`/`workState`
@@ -386,11 +386,11 @@ export const subprofiles: Catalog = {
   "checklist.stateUnknown": "Still to check",
   "checklist.reqHandleTitle": "A handle that's yours",
   "checklist.reqHandleMet":
-    "This is where people will find you — queerpulse.app/p/your-handle.",
+    "This is where people will find you: queerpulse.app/p/your-handle.",
   "checklist.reqHandleFailInvalid":
     "Handles are 3–30 characters: lowercase letters, numbers and hyphens.",
   "checklist.reqHandleFailTaken":
-    "Someone already has that handle — try another.",
+    "Someone already has that handle. Try another.",
   "checklist.reqHandleFailReserved":
     "That handle is reserved. Pick a different one.",
   "checklist.reqAvatarTitle": "A photo or image",
@@ -400,15 +400,15 @@ export const subprofiles: Catalog = {
   "checklist.reqBioTitle": "A bio of at least 80 characters",
   "checklist.reqBioMet": "Enough for someone to get who you are at a glance.",
   "checklist.reqBioFail":
-    "Tell people a little more — your bio needs at least 80 characters.",
+    "Tell people a little more. Your bio needs at least 80 characters.",
   "checklist.reqItemsTitle": "At least three things to show",
   "checklist.reqItemsMet": "Enough work for the page to feel alive.",
   "checklist.reqItemsFail":
-    "Add a few more pieces — you need at least three across your sections.",
+    "Add a few more pieces. You need at least three across your sections.",
   "checklist.reqLanguageTitle": "Language that keeps everyone welcome",
   "checklist.reqLanguageMet": "Nothing flagged.",
   "checklist.reqLanguageFail":
-    "A word in your name, handle or bio might not sit right with everyone — mind rewording it?",
+    "A word in your name, handle or bio might not sit right with everyone. Mind rewording it?",
 
   // Publish-checklist polish nudges (non-blocking, PublishChecklist.tsx)
   "checklist.polishTitle": "A little more polish",
@@ -420,7 +420,7 @@ export const subprofiles: Catalog = {
   // Owner dashboard (MySubprofilesPage + SideCard)
   "mine.title": "Your other <em>personas</em>",
   "mine.sub":
-    "A professional persona of yours for each thing you do — linked to your main profile, or standing on its own.",
+    "A professional persona of yours for each thing you do, linked to your main profile, or standing on its own.",
   "mine.newCta": "New persona",
   "mine.newSideTile": "New persona",
   "mine.count": "{n} of {max}",
@@ -428,7 +428,7 @@ export const subprofiles: Catalog = {
   "mine.untitled": "Untitled persona",
   "mine.defaultName": "That persona",
   "mine.toastDeleted": "{name} deleted",
-  "mine.toastDeleteError": "We couldn't delete that just now — try again.",
+  "mine.toastDeleteError": "We couldn't delete that just now. Try again.",
   "mine.deleteModalTitle": "Delete this persona?",
   "mine.deleteModalSub": "“{name}” and everything on it will be gone for good.",
   "mine.deleteModalDefaultName": "This persona",
@@ -437,7 +437,7 @@ export const subprofiles: Catalog = {
   "mine.deleteModalDeleting": "Deleting…",
   "mine.deleteModalBody": "This can't be undone.",
   "mine.deleteModalBodyShared":
-    "This removes {name} for all {n} co-owners — it can't be undone.",
+    "This removes {name} for all {n} co-owners. It can't be undone.",
   "mine.rowEdit": "Edit",
   "mine.rowDelete": "Delete",
   "mine.endorsementCount_one": "{count} endorsement",
@@ -451,7 +451,7 @@ export const subprofiles: Catalog = {
   "mine.empty.eyebrow": "Your personas",
   "mine.empty.title": "You have one profile. <em>You are not one thing.</em>",
   "mine.empty.sub":
-    "Every craft you practice can have its own page — tied to your name, or standing entirely on its own. Start with the first.",
+    "Every craft you practice can have its own page, tied to your name, or standing entirely on its own. Start with the first.",
   "mine.empty.newCta": "Start your first persona",
   "mine.empty.browseCta": "See what other people made",
   "mine.emptySamples.stage.name": "Hot Mess Express",
@@ -463,7 +463,7 @@ export const subprofiles: Catalog = {
   "mine.error.title": "We couldn't load your",
   "mine.error.em": "personas",
   "mine.error.description":
-    "Something went wrong reaching the server. Nothing here is lost — try again in a moment.",
+    "Something went wrong reaching the server. Nothing here is lost. Try again in a moment.",
   "mine.error.retry": "Try again",
 
   // Editor page (SubprofileEditorPage)
@@ -521,7 +521,7 @@ export const subprofiles: Catalog = {
   "metaForm.leaveConfirm":
     "You have unsaved changes to this profile. Leave without saving them?",
   "metaForm.toastSaved": "Details saved",
-  "metaForm.toastError": "We couldn't save that just now — try again.",
+  "metaForm.toastError": "We couldn't save that just now. Try again.",
 
   // Item drawer (SubprofileItemDrawerFields, opened by SubprofileItemDrawer)
   "itemEditor.itemNumber": "Item {n}",
@@ -556,7 +556,7 @@ export const subprofiles: Catalog = {
   "socialEditor.save": "Save links",
   "socialEditor.saving": "Saving…",
   "socialEditor.saved": "Links saved",
-  "socialEditor.error": "We couldn't save that just now — try again.",
+  "socialEditor.error": "We couldn't save that just now. Try again.",
   "socialEditor.capHint": "That's the most links you can add.",
 
   // Per-item links editor (projects / open-source items)
@@ -565,13 +565,13 @@ export const subprofiles: Catalog = {
   "itemLinks.add": "Add link",
 
   // Section editor (SubprofileSectionEditor)
-  "sectionEditor.empty": "Nothing here yet — add your first when you're ready.",
+  "sectionEditor.empty": "Nothing here yet. Add your first when you're ready.",
   "sectionEditor.addTo": "Add to {section}",
   "sectionEditor.capHint": "That's the most you can add to one section.",
   "sectionEditor.save": "Save section",
   "sectionEditor.saving": "Saving…",
   "sectionEditor.toastSaved": "{section} saved",
-  "sectionEditor.toastError": "We couldn't save that just now — try again.",
+  "sectionEditor.toastError": "We couldn't save that just now. Try again.",
 
   // Publish panel (SubprofilePublishPanel)
   "publishPanel.successTitle": "You're",
@@ -581,7 +581,7 @@ export const subprofiles: Catalog = {
   "publishPanel.successLinked":
     "This persona now shows on your main profile as one of your personas.",
   "publishPanel.successUnlinked":
-    "This persona stands on its own now — people can find it by its handle and in the directory.",
+    "This persona stands on its own now. People can find it by its handle and in the directory.",
   "publishPanel.copyPublished":
     "This persona is live. Your edits save as you go.",
   "publishPanel.copyLinkedUnpublished":
@@ -595,16 +595,16 @@ export const subprofiles: Catalog = {
   "publishPanel.recheck": "Re-check & publish",
   "publishPanel.toastLive": "Your persona is live",
   "publishPanel.toastPublishError":
-    "We couldn't publish — check the requirements below.",
-  "publishPanel.toastUnpublished": "Back to draft — only you can see it now.",
-  "publishPanel.toastError": "We couldn't do that just now — try again.",
+    "We couldn't publish. Check the requirements below.",
+  "publishPanel.toastUnpublished": "Back to draft. Only you can see it now.",
+  "publishPanel.toastError": "We couldn't do that just now. Try again.",
 
   // New persona wizard, two steps (NewSideModal + NewSideStepCraft +
   // NewSideStepIdentity). Step 1 picks the craft; step 2 names it and
   // chooses linked-vs-unlinked.
   "newModal.stepCraftTitle": "Start a new <em>persona</em>",
   "newModal.sub":
-    "Each one is a professional persona of yours — pick what it's for.",
+    "Each one is a professional persona of yours. Pick what it's for.",
   "newModal.stepIdentityTitle": "Give it a <em>name</em>",
   "newModal.stepIdentitySub":
     "How it's known, and whether people can tell it's you.",
@@ -617,22 +617,22 @@ export const subprofiles: Catalog = {
   "newModal.craftSummary": "A {kind} persona gets a {skin} page with {sections}.",
   "newModal.displayNameLabel": "Display name",
   "newModal.displayNameHelper":
-    "Optional — leave it blank to be known by the profession.",
+    "Optional. Leave it blank to be known by the profession.",
   "newModal.displayNamePlaceholderDefault": "How this persona is known",
   "newModal.displayNamePlaceholderExample": "e.g. {kind}",
   "newModal.linkChoiceLabel": "Linked to your profile, or its own address?",
-  "newModal.linkedAddressNote": "Always yours — nothing to claim.",
+  "newModal.linkedAddressNote": "Always yours. Nothing to claim.",
   "newModal.standaloneNote":
-    "Its own address, with nothing pointing back to you — yours to keep separate.",
+    "Its own address, with nothing pointing back to you. Yours to keep separate.",
   "newModal.handleStateClaim":
-    "Yours if you publish first — handles are first come, first served.",
-  "newModal.toastError": "We couldn't start that one — try again.",
+    "Yours if you publish first. Handles are first come, first served.",
+  "newModal.toastError": "We couldn't start that one. Try again.",
 
   // Duplicate a persona — start-method picker (StartMethodPicker) and
   // copy-source/mode picker (CopySourcePicker, CopyModePreview), both used
   // from the create flow when the owner already has other personas.
   "start.label": "How do you want to start?",
-  "start.helper": "Pick a starting point — you can change everything later.",
+  "start.helper": "Pick a starting point. You can change everything later.",
   "start.copyDisabledHelper":
     "Create a persona first, then you can copy it here.",
   "start.template": "By craft",
@@ -655,7 +655,7 @@ export const subprofiles: Catalog = {
   "family.studio.label": "Studio",
   "family.studio.note": "Work first, captions second.",
   "family.page.label": "Page",
-  "family.page.note": "A book column — words carry it.",
+  "family.page.note": "A book column. Words carry it.",
   "family.workshop.label": "Workshop",
   "family.workshop.note": "Built things, listed plainly.",
   "family.practice.label": "Practice",
@@ -668,22 +668,22 @@ export const subprofiles: Catalog = {
   "family.chair.label": "Chair",
   "family.chair.note": "A lit mirror and a price list that never asks your gender.",
   "family.runway.label": "Runway",
-  "family.runway.note": "A lookbook spread — enormous name, tiny credits, tall images.",
+  "family.runway.note": "A lookbook spread: enormous name, tiny credits, tall images.",
   "family.gallery.label": "Gallery",
-  "family.gallery.note": "Museum air — every item is a wall label.",
+  "family.gallery.note": "Museum air. Every item is a wall label.",
   "family.history.label": "Record",
-  "family.history.note": "Aged paper and a timeline — dates in the margin, sources named.",
+  "family.history.note": "Aged paper and a timeline: dates in the margin, sources named.",
   "family.collective.label": "Poster",
-  "family.collective.note": "Riso ink on cheap paper — a demand at the top, dates you read across a room.",
+  "family.collective.note": "Riso ink on cheap paper: a demand at the top, dates you read across a room.",
   "family.classroom.label": "Classroom",
-  "family.classroom.note": "A board and a handout — numbered weeks, fees stated before you ask.",
+  "family.classroom.note": "A board and a handout: numbered weeks, fees stated before you ask.",
 
   // Starter templates (Phase 4a) — create-time picker (NewSideModal)
   // and the in-editor "Insert examples" affordance (SubprofileSectionEditor).
   // Section-item copy reads as friendly, editable placeholders — a creator
   // is meant to replace them with their own work, not keep them as-is.
   "template.helper":
-    "Templates fill your sections with a couple of example items and a suggested tagline — everything's yours to edit or clear.",
+    "Templates fill your sections with a couple of example items and a suggested tagline. Everything's yours to edit or clear.",
   "template.insertExamples": "Insert examples",
 
   // Per-kind suggested taglines — applied alongside the section templates,
@@ -709,7 +709,7 @@ export const subprofiles: Catalog = {
   "template.tagline.therapist": "An affirming space to think things through.",
   "template.tagline.astrologer": "Charts read slowly, for the life you're living.",
   "template.tagline.pole_dancer":
-    "On the pole and in the room — I perform, and I teach.",
+    "On the pole and in the room: I perform, and I teach.",
   "template.tagline.generic": "A few things I've made, gathered here.",
 
   // Per-section example items (used by both the create-time template and
@@ -723,7 +723,7 @@ export const subprofiles: Catalog = {
     "What it does, who it's for, and what you learned building it.",
   "template.section.open_source.item1.title": "A project I contribute to",
   "template.section.open_source.item1.desc":
-    "What it does, and how you're involved — maintainer, contributor, or just started.",
+    "What it does, and how you're involved: maintainer, contributor, or just started.",
   "template.section.publications.item1.title": "Something I wrote",
   "template.section.publications.item1.subtitle": "Where it was published",
   "template.section.publications.item1.desc":
@@ -739,7 +739,7 @@ export const subprofiles: Catalog = {
     "What it is and what went into making it.",
   "template.section.portfolio.item2.title": "Another piece",
   "template.section.portfolio.item2.desc":
-    "A second example — swap in whatever shows your range.",
+    "A second example. Swap in whatever shows your range.",
   "template.section.exhibitions.item1.title": "An exhibition",
   "template.section.exhibitions.item1.subtitle": "Where it showed",
   "template.section.filmography.item1.title": "A film I made",
@@ -807,7 +807,7 @@ export const subprofiles: Catalog = {
   "template.section.sky.item1.title": "A circle or workshop",
   "template.section.sky.item1.subtitle": "Where it happens",
   "template.section.sky.item1.desc":
-    "What to expect — no prior knowledge assumed.",
+    "What to expect. No prior knowledge assumed.",
 
   // Image upload field (ImageUploadField)
   "imageUpload.defaultPlaceholder": "Image",
@@ -845,7 +845,7 @@ export const subprofiles: Catalog = {
   "hero.endorse.addNote": "Add a note",
   "hero.endorse.notePlaceholder": "Say a word about why (optional)",
   "hero.endorse.send": "Send",
-  "hero.endorse.error": "We couldn't save that just now — try again.",
+  "hero.endorse.error": "We couldn't save that just now. Try again.",
   "hero.endorse.endorsedByNames": "Endorsed by {names}",
 
   // Endorse-with-note modal (EndorseSubprofileModal, EndorseSubprofileModalParts)
@@ -854,12 +854,12 @@ export const subprofiles: Catalog = {
   "hero.endorse.modal.eyebrow": "Add your endorsement",
   "hero.endorse.modal.title": "Endorse <em>{name}</em>",
   "hero.endorse.modal.sub":
-    "An endorsement is you, publicly, backing {name}'s work. Add a note if you like — a word on what they're great at means more than the number alone.",
+    "An endorsement is you, publicly, backing {name}'s work. Add a note if you like. A word on what they're great at means more than the number alone.",
   "hero.endorse.modal.noteLabel": "Your note",
   "hero.endorse.modal.optional": "optional",
   "hero.endorse.modal.notePlaceholder":
     "What makes {name} worth endorsing? What should other people know?",
-  "hero.endorse.modal.noteOptional": "Optional — but a note means more",
+  "hero.endorse.modal.noteOptional": "Optional, but a note means more",
   "hero.endorse.modal.charsCount_one": "{count} character",
   "hero.endorse.modal.charsCount_other": "{count} characters",
   "hero.endorse.modal.cancel": "Cancel",
@@ -869,9 +869,9 @@ export const subprofiles: Catalog = {
   "hero.endorse.modal.you": "You",
   "hero.endorse.modal.savedToast": "Your note is saved.",
   "hero.endorse.modal.withdrawnToast": "Your endorsement was withdrawn.",
-  "hero.endorse.modal.success.title": "That's <em>{name}</em>, endorsed.",
+  "hero.endorse.modal.success.title": "Thank you for your <em>endorsement</em>.",
   "hero.endorse.modal.success.body":
-    "Your face just joined <b>{name}</b>'s endorsers — that's how good work travels here. Person by person, name by name.",
+    "Your face just joined <b>{name}</b>'s endorsers. That's how good work travels here. Person by person, name by name.",
   "hero.endorse.modal.success.doneCta": "Done",
 
   // Follow control (SubprofileFollow)
@@ -879,7 +879,7 @@ export const subprofiles: Catalog = {
   "hero.follow.following": "Following",
   "hero.follow.count_one": "{count} follower",
   "hero.follow.count_other": "{count} followers",
-  "hero.follow.error": "We couldn't save that just now — try again.",
+  "hero.follow.error": "We couldn't save that just now. Try again.",
 
   // Share control (SubprofileShare, MySubprofilesPage)
   "share.cta": "Share",
@@ -896,7 +896,7 @@ export const subprofiles: Catalog = {
   "shareCard.qrAria": "QR code linking to {name}'s persona page",
   "shareCard.copyLink": "Copy link",
   "qr.loading": "Generating QR code…",
-  "qr.error": "Couldn't generate a QR code — here's the link instead.",
+  "qr.error": "Couldn't generate a QR code. Here's the link instead.",
 
   // Featured item spotlight (SubprofileSpotlight)
   "spotlight.eyebrow": "Start here",
@@ -917,7 +917,7 @@ export const subprofiles: Catalog = {
 
   // Caption-less gallery section (SubprofileSections) — per-photo alt text,
   // since these tiles carry no title/subtitle of their own.
-  "galleryPhotoAlt": "{name} — gallery photo {number}",
+  "galleryPhotoAlt": "{name}, gallery photo {number}",
   // Clickable gallery cell + the full-screen gallery lightbox (GalleryLightbox).
   "galleryPhotoOpen": "Open {name}'s photo {number} full-screen",
   "galleryLightboxLabel": "{name}'s photos",
@@ -933,21 +933,21 @@ export const subprofiles: Catalog = {
   "gallery.fromDevice": "Upload from device",
   "gallery.uploading": "Uploading… {percent}%",
   "gallery.pastUploads": "Your past uploads",
-  "gallery.empty": "Nothing uploaded yet — add from your device above.",
+  "gallery.empty": "Nothing uploaded yet. Add from your device above.",
   "gallery.loadError": "Couldn't load your uploads.",
   "gallery.retry": "Try again",
   "gallery.selectPhoto": "Add this photo",
   "gallery.deselectPhoto": "Remove this photo",
   "gallery.inUse": "In use",
   "gallery.addCta": "Add {count} to gallery",
-  "gallery.someSkipped": "Only {count} could be added — the gallery holds 6.",
+  "gallery.someSkipped": "Only {count} could be added. The gallery holds 6.",
 
   // Public persona page (SubprofilePage.tsx)
   "page.loading": "Loading persona…",
   "page.ownerTie": "Another persona from <em>{name}</em>",
   "page.visit": "Visit",
   "page.notFoundTitle": "This persona isn't here",
-  "page.notFoundMetaTitle": "Persona not found — QueerPulse",
+  "page.notFoundMetaTitle": "Persona not found · QueerPulse",
   "page.notFoundDescription":
     "It may have been unpublished, kept private, or this link could be out of date. Nothing's wrong on your end.",
   "page.notFoundAction": "Browse personas",
@@ -972,7 +972,7 @@ export const subprofiles: Catalog = {
 
   // Owner-viewing-own-draft banner (SubprofileDraftBanner) — built, not yet
   // wired (see the component's own doc comment for why).
-  "draftBanner.message": "Draft — nobody else can open this address yet.",
+  "draftBanner.message": "Draft. Nobody else can open this address yet.",
   "draftBanner.readiness": "{ready} of {total} ready to publish",
   "draftBanner.edit": "Edit",
   "draftBanner.publish": "Publish",
@@ -1017,7 +1017,7 @@ export const subprofiles: Catalog = {
   "affiliationsEditor.note":
     "Link this persona to the events and communities you're part of.",
   "affiliationsEditor.empty":
-    "Nothing linked yet — add an event or community below.",
+    "Nothing linked yet. Add an event or community below.",
   "affiliationsEditor.itemNumber": "Item {n}",
   "affiliationsEditor.remove": "Remove",
   "affiliationsEditor.typeLabel": "Type",
@@ -1031,7 +1031,7 @@ export const subprofiles: Catalog = {
   "affiliationsEditor.save": "Save links",
   "affiliationsEditor.saving": "Saving…",
   "affiliationsEditor.saved": "Links saved",
-  "affiliationsEditor.error": "We couldn't save that just now — try again.",
+  "affiliationsEditor.error": "We couldn't save that just now. Try again.",
 
   // Co-owners panel (SubprofileOwnersPanel, in the editor)
   "owners.title": "Co-owners",
@@ -1042,7 +1042,7 @@ export const subprofiles: Catalog = {
   "owners.inviteCta": "Invite a co-owner",
   "owners.revokeAria": "Revoke the invite to {name}",
   "owners.toastRevoked": "Invite revoked",
-  "owners.toastRevokeError": "We couldn't revoke that just now — try again.",
+  "owners.toastRevokeError": "We couldn't revoke that just now. Try again.",
   "owners.leaveCta": "Leave persona",
   "owners.leaveModalTitle": "Leave this persona?",
   "owners.leaveModalBody":
@@ -1051,7 +1051,7 @@ export const subprofiles: Catalog = {
   "owners.leaveModalConfirm": "Leave",
   "owners.leaveModalLeaving": "Leaving…",
   "owners.toastLeft": "You've left this persona",
-  "owners.toastLeaveError": "We couldn't do that just now — try again.",
+  "owners.toastLeaveError": "We couldn't do that just now. Try again.",
 
   // Invite-a-co-owner modal (InviteCoOwnerModal)
   "invite.title": "Invite a co-owner",
@@ -1062,8 +1062,8 @@ export const subprofiles: Catalog = {
   "invite.cta": "Invite",
   "invite.inviting": "Inviting…",
   "invite.toastSent":
-    "Invite sent — they'll need to accept before they can manage this persona.",
-  "invite.toastError": "We couldn't send that invite — try again.",
+    "Invite sent. They'll need to accept before they can manage this persona.",
+  "invite.toastError": "We couldn't send that invite. Try again.",
 
   // Incoming co-owner invites banner (PersonaInvitesBanner, on MySubprofilesPage)
   "invites.regionLabel": "Invitations to co-own a persona",
@@ -1073,9 +1073,9 @@ export const subprofiles: Catalog = {
   "invites.decline": "Decline",
   "invites.declining": "Declining…",
   "invites.toastAccepted": "You now co-own {name}",
-  "invites.toastAcceptError": "We couldn't accept that invite — try again.",
+  "invites.toastAcceptError": "We couldn't accept that invite. Try again.",
   "invites.toastDeclined": "Invite declined",
-  "invites.toastDeclineError": "We couldn't decline that invite — try again.",
+  "invites.toastDeclineError": "We couldn't decline that invite. Try again.",
 
   // Report modal (SubprofileReportModal) + persona-specific reasons
   // (subprofileReportModal.data.ts) — every reason still maps to a stable,
@@ -1083,7 +1083,7 @@ export const subprofiles: Catalog = {
   // display copy layered over the shared /reports taxonomy.
   "reportModal.title": "Report {name}?",
   "reportModal.lead":
-    "Reports are reviewed by our moderation team — your name is never shared with the person you're reporting.",
+    "Reports are reviewed by our moderation team. Your name is never shared with the person you're reporting.",
   "reportModal.reasonLabel": "What's the concern?",
   "reportModal.reasons.impersonating": "Impersonating",
   "reportModal.reasons.hateOrHarassment": "Hate or harassment",
@@ -1097,7 +1097,7 @@ export const subprofiles: Catalog = {
   "reportModal.cancelCta": "Cancel",
   "reportModal.submitCta": "Send report",
   "reportModal.submitting": "Sending…",
-  "reportModal.error": "We couldn't send that report — try again.",
+  "reportModal.error": "We couldn't send that report. Try again.",
   "reportModal.success.title": "Report sent",
   "reportModal.success.body":
     "Thank you. A moderator will review this persona. We may contact you for more detail, but we'll never share your report with them.",
@@ -1117,10 +1117,10 @@ export const subprofiles: Catalog = {
   "peopleModal.noNote": "Endorsed without a note",
   "peopleModal.removeAriaLabel": "Remove your endorsement of {name}",
   "peopleModal.removeCta": "Remove",
-  "peopleModal.removeError": "We couldn't remove that just now — try again.",
+  "peopleModal.removeError": "We couldn't remove that just now. Try again.",
   "peopleModal.followersPrivateTitle": "Followers are private",
   "peopleModal.followersPrivateBody":
-    "Only the owner of {name} can see who follows. For everyone else, following stays anonymous — your name never shows up here.",
+    "Only the owner of {name} can see who follows. For everyone else, following stays anonymous. Your name never shows up here.",
 
   // Skin-specific extras (SubprofileSkinExtras + skins/*.tsx) — the
   // per-family blocks the Phase-1 design tree calls SkinExtras.
@@ -1149,7 +1149,7 @@ export const subprofiles: Catalog = {
   "skinExtras.practice.firstSessionTitle": "What a first session looks like",
   "skinExtras.practice.accessTitle": "The room itself",
   "skinExtras.practice.referralsNote":
-    "No public testimonials — client confidentiality comes first. These are simply people who've referred others here.",
+    "No public testimonials. Client confidentiality comes first. These are simply people who've referred others here.",
   "skinExtras.practice.approachTitle": "How I work",
   "skinExtras.practice.trainingTitle": "Training & qualifications",
   "skinExtras.practice.feesTitle": "Fees",
@@ -1199,7 +1199,7 @@ export const subprofiles: Catalog = {
   // Rich poem editor + reader (poet kind, page skin) — structured stanza/
   // break/note blocks with inline italic/bold formatting.
   "poem.editor.label": "Poem",
-  "poem.editor.stanzaPlaceholder": "Write a stanza — press Enter for a new line",
+  "poem.editor.stanzaPlaceholder": "Write a stanza. Press Enter for a new line",
   "poem.editor.notePlaceholder": "An epigraph or dedication",
   "poem.editor.addStanza": "Stanza",
   "poem.editor.addBreak": "Section break",
@@ -1218,7 +1218,7 @@ export const subprofiles: Catalog = {
   "poem.editor.tabPreview": "Preview",
   "poem.editor.paneToggleAria": "Editor view",
   "poem.editor.resplit.title": "This poem's line breaks may have been lost",
-  "poem.editor.resplit.body": "This looks like an older poem saved as one long line. We can suggest new line breaks from its punctuation — you'll still be able to edit them afterwards.",
+  "poem.editor.resplit.body": "This looks like an older poem saved as one long line. We can suggest new line breaks from its punctuation. You'll still be able to edit them afterwards.",
   "poem.editor.resplit.action": "Re-split into lines",
   "poem.row.openAria": "Read the poem “{title}”",
   "poem.reader.withLabel": "With {names}",
@@ -1228,6 +1228,17 @@ export const subprofiles: Catalog = {
   "poem.reader.copy": "Copy poem",
   "poem.reader.copied": "Poem copied",
 
+  // Poem translations/versions — several versions of one poem (e.g. original +
+  // translations), cycled through tabs in the editor and the reader.
+  "poem.versions.add": "Add a translation",
+  "poem.versions.untitled": "Version {index}",
+  "poem.versions.namePlaceholder": "e.g. Português, English, Original",
+  "poem.versions.nameAria": "Translation name",
+  "poem.versions.makeDefault": "Make default",
+  "poem.versions.remove": "Remove translation",
+  "poem.versions.tablistAria": "Poem translations",
+  "poem.versions.readerAria": "Choose a translation",
+
   // Public copyright + provenance footer (WorkRightsFooter, protect-your-work Task 3)
   "rights.copyright": "© {year} {author}. All rights reserved.",
   "rights.firstPublished": "First published on QueerPulse · {date}",
@@ -1235,7 +1246,7 @@ export const subprofiles: Catalog = {
   // Skin-blocks editor (personas expansion — page-block editor pane, rail entry & field labels)
   "editorRail.skinBlocks": "Page blocks",
   "editorPane.skinBlocks.title": "Page blocks",
-  "editorPane.skinBlocks.lede": "The details unique to your page — booking terms, hours, what people should bring. These show on your public page.",
+  "editorPane.skinBlocks.lede": "The details unique to your page: booking terms, hours, what people should bring. These show on your public page.",
   "pending.area.skin": "Page blocks",
   "pending.skinEdited": "{field} updated",
   "skinBlock.addItem": "Add",
@@ -1486,7 +1497,7 @@ export const subprofiles: Catalog = {
     "People already have links to {from}. Once you confirm, this persona moves to {to}.",
   "addressWarning.oldLinksDie": "Old links to {path} stop working",
   "addressWarning.handleReleased":
-    "Your handle goes back into the pool — anyone could claim it",
+    "Your handle goes back into the pool. Anyone could claim it",
   "addressWarning.followersKept":
     "Your followers and endorsements stay exactly as they are",
   "addressWarning.cancel": "Keep the current address",
@@ -1497,7 +1508,7 @@ export const subprofiles: Catalog = {
   // authoritative `checklist.*` below), plus the danger-zone delete row.
   "publishPanel.estimateTitle": "Quick estimate",
   "publishPanel.estimateNote":
-    "A rough read on where you stand — the checklist below is what actually decides if you can publish.",
+    "A rough read on where you stand. The checklist below is what actually decides if you can publish.",
   "publishPanel.deleteCopy":
     "Deleting this persona removes it, and everything on it, for good.",
   "publishPanel.deleteCta": "Delete this persona",
@@ -1523,15 +1534,15 @@ export const subprofiles: Catalog = {
   // Persona audit remediation (2026-08-11)
   "section.countLabel_one": "{count} item",
   "section.countLabel_other": "{count} items",
-  "page.ogImageAlt": "{name} — {craft} on QueerPulse",
+  "page.ogImageAlt": "{name}, {craft} on QueerPulse",
   "peopleModal.followersCountOnlyTitle": "Followers stay private",
   "peopleModal.followersCountOnlyBody":
-    "{name} has {count} followers, but following is anonymous — we show the count, never who's behind it.",
+    "{name} has {count} followers, but following is anonymous. We show the count and keep every name private.",
   "publishPanel.saveFirstHint":
-    "Save your changes first — Publish checks your saved profile.",
+    "Save your changes first. Publish checks your saved profile.",
   "editor.errorTitle": "Couldn't load this persona",
   "editor.errorDescription":
-    "Something went wrong reaching the server. Nothing's lost — check your connection and try again.",
+    "Something went wrong reaching the server. Nothing's lost. Check your connection and try again.",
   "editor.errorRetry": "Try again",
   "metaForm.ctaLabelError": "Add a label so people know what this button does.",
   "metaForm.ctaUrlError": "Add a link for this button to point to.",
@@ -1539,11 +1550,11 @@ export const subprofiles: Catalog = {
   "metaForm.bioMinRemaining_other": "{count} characters more to publish",
   "metaForm.bioMinMet": "Long enough to publish",
   "pending.blockedName":
-    "This persona needs a name — add it on the Identity tab.",
+    "This persona needs a name. Add it on the Identity tab.",
   "pending.blockedHandle":
-    "That address is taken — pick another on the Address tab.",
+    "That address is taken. Pick another on the Address tab.",
   "newModal.toastHandleClaimFailed":
-    "That handle got taken just now — we've kept this linked to your profile for the moment. You can claim a new address from the editor.",
+    "That handle got taken just now. We've kept this linked to your profile for the moment. You can claim a new address from the editor.",
   "invite.loadMore": "Show more connections",
   "invite.loadingMore": "Loading…",
 

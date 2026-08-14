@@ -246,7 +246,7 @@ export function resolvedDtoToView(dto: ModReportDTO): ResolvedItem {
     outcome: res.outcomeLabel,
     outcomeTone: OUTCOME_TONE[res.action] ?? "jade",
     title: REASON_LABELS[dto.reasonCode],
-    preview: `Resolved by ${res.actorName} — ${res.note}`,
+    preview: `Resolved by ${res.actorName}: ${res.note}`,
     closed: closedLabel(res.closedAt),
     notified: res.notified.map((party) => NOTIFIED_LABEL[party]),
     status,

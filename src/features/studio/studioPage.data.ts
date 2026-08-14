@@ -139,7 +139,7 @@ export const HERO_TRACK = {
   year: "2026",
   place: "Sintra",
   description:
-    "A letter to the saint who never wrote back — solo voice and piano, in one take.",
+    "A letter to the saint who never wrote back, solo voice and piano, in one take.",
 };
 
 /** Live-session stats — mock numbers only; the surrounding sentences are chrome. */

@@ -36,10 +36,10 @@ export const settings: Catalog = {
   // ── Community terminology guide (settings.data.ts TERMS) ─────────────────
   "terms.queer.name": "Queer",
   "terms.queer.def":
-    "An umbrella term for sexual and gender identities that aren't heterosexual or cisgender. Reclaimed from a slur; usage varies — some older members may prefer not to use it.",
+    "An umbrella term for sexual and gender identities that aren't heterosexual or cisgender. Reclaimed from a slur; usage varies: some older members may prefer not to use it.",
   "terms.cisgender.name": "Cisgender",
   "terms.cisgender.def":
-    "Describes someone whose gender identity matches the sex they were assigned at birth. Not a value judgement — simply a neutral descriptor.",
+    "Describes someone whose gender identity matches the sex they were assigned at birth. It is a neutral descriptor, carrying no judgement.",
   "terms.nonBinary.name": "Non-binary",
   "terms.nonBinary.def":
     "A gender identity that sits outside the man/woman binary. Some non-binary people use they/them; always ask rather than assume.",
@@ -70,13 +70,13 @@ export const settings: Catalog = {
 
   // ── SettingsModals.tsx — SuggestEditModal (terminology guide) ────────────
   "modals.suggestEdit.ariaLabel": "Suggest an edit to {term}",
-  "modals.suggestEdit.success.title": "Thank you — <em>noted.</em>",
+  "modals.suggestEdit.success.title": "Thank you, <em>noted.</em>",
   "modals.suggestEdit.success.body":
     "Your suggested edit to <strong>{term}</strong> is with our community editors. Terminology changes are reviewed before going live; we'll let you know what happens.",
   "modals.suggestEdit.eyebrow": "Terminology · suggest an edit",
   "modals.suggestEdit.title": "Refine <em>{term}.</em>",
   "modals.suggestEdit.desc":
-    "This guide is edited by the community. Suggest a clearer wording or a correction — every change is reviewed before publishing.",
+    "This guide is edited by the community. Suggest a clearer wording or a correction. Every change is reviewed before publishing.",
   "modals.suggestEdit.wordingLabel": "Your suggested wording",
   "modals.suggestEdit.wordingPlaceholder": 'A clearer definition of "{term}"…',
   "modals.suggestEdit.whyLabel": "Why change it?",
@@ -92,13 +92,13 @@ export const settings: Catalog = {
     "Gathering your data and packaging it as a JSON file. This usually takes a moment…",
   "modals.dataExport.readyTitle": "Your export is <em>ready.</em>",
   "modals.dataExport.readyBody":
-    "We've packaged your data as <strong>{filename}</strong>. Nothing is emailed — you download it right here, on this page.",
+    "We've packaged your data as <strong>{filename}</strong>. Nothing is emailed. You download it right here, on this page.",
   "modals.dataExport.downloadCta": "Download {filename}",
 
   // ── SettingsPersonalisation.tsx — ProfileThemePane ───────────────────────
   "personalisation.theme.title": "Profile <em>theme.</em>",
   "personalisation.theme.sub":
-    "Personalise how your profile and directory card look. Pick a pride flag, cover style, and pattern — and choose what shows up next to your name.",
+    "Personalise how your profile and directory card look. Pick a pride flag, cover style, and pattern, and choose what shows up next to your name.",
 
   // ── SettingsPersonalisation.tsx — AccessibilityPane ──────────────────────
   "personalisation.accessibility.title": "Accessibility <em>preferences.</em>",
@@ -120,12 +120,12 @@ export const settings: Catalog = {
   // flagged in the sweep report for a coordinated follow-up.
   "interests.title": "Shape what you <em>see.</em>",
   "interests.sub":
-    "These are private — not shown on your profile. They help us surface gatherings, members, and content that's relevant to you. Change them any time.",
+    "These are private (not shown on your profile). They help us surface gatherings, members, and content that's relevant to you. Change them any time.",
   "interests.identities.heading": "Which identities feel like yours?",
   "interests.identities.skip": "Skip",
   "interests.identities.skipped": "Skipped",
   "interests.identities.helper":
-    "Select as many as feel right. We use these to suggest relevant communities and content — not to categorise you.",
+    "Select as many as feel right. We use these to suggest relevant communities and content. They are never used to categorise you.",
   // ── Per-identity discoverability (IdentitySections.tsx) ─────────────────
   // This copy asks someone to disclose. It states the consequence and the
   // audience plainly and does nothing to encourage the answer: no reach, no
@@ -134,7 +134,7 @@ export const settings: Catalog = {
   // switch off takes effect on the next search.
   "discoverable.heading": "Being found by identity",
   "discoverable.helper":
-    "Off unless you turn it on. Anything you turn on can be seen by other signed-in members when they filter the member directory — and nowhere else. Your identities stay off your profile either way.",
+    "Off unless you turn it on. Anything you turn on can be seen by other signed-in members when they filter the member directory, and nowhere else. Your identities stay off your profile either way.",
   "discoverable.retract":
     "Turn one off and you stop appearing in those searches straight away.",
   "discoverable.rowOn": "Members filtering by this can find you.",
@@ -146,25 +146,25 @@ export const settings: Catalog = {
     "Identities you've just added show up here once you save.",
   "discoverable.toast.removed": "You no longer appear in those searches.",
   "discoverable.error":
-    "Couldn't save that — nothing changed. Try again in a moment.",
+    "Couldn't save that. Nothing changed. Try again in a moment.",
 
   "interests.lookingFor.heading": "What are you looking for here?",
   "interests.lookingFor.helper": "Select as many as you like.",
   "interests.lookingFor.showOnProfile":
     "Show what I'm looking for on my profile",
   "interests.life.heading": "A bit about your life",
-  "interests.life.note": "(private — helps with local suggestions)",
+  "interests.life.note": "(private: helps with local suggestions)",
   "interests.life.cityLabel": "City / region",
   "interests.life.languagesLabel": "Languages",
   "interests.life.languagesPlaceholder": "e.g. Portuguese, English",
   "interests.life.ageLabel": "Your age range",
-  "interests.life.ageNote": "(optional — never shown to other members)",
+  "interests.life.ageNote": "(optional: never shown to other members)",
   "interests.reading.heading": "What do you like reading?",
   "interests.reading.frequencyHeading":
     "How often do you want to hear from us?",
   "interests.content.heading": "Content settings",
   "interests.content.helper":
-    "Turning these off never affects your community access — only your feed.",
+    "Turning these off never affects your community access, only your feed.",
   "interests.content.legalNote":
     "These preferences are private. Only you and QueerPulse can see them.",
 
@@ -234,7 +234,7 @@ export const settings: Catalog = {
   "notifications.messages.vouch.desc": "When someone vouches for you",
   "notifications.phonePush.title": "Phone notifications",
   "notifications.phonePush.desc":
-    "Get a nudge on your phone when someone messages you — even when QueerPulse is closed. Add QueerPulse to your home screen first.",
+    "Get a nudge on your phone when someone messages you, even when QueerPulse is closed. Add QueerPulse to your home screen first.",
   "notifications.phonePush.unsupported":
     "Your browser can’t show phone notifications yet.",
   "notifications.phonePush.blocked":
@@ -243,9 +243,9 @@ export const settings: Catalog = {
   "notifications.phonePush.test.desc":
     "Send a notification to your own devices to check everything's working.",
   "notifications.phonePush.test.action": "Send test",
-  "notifications.phonePush.test.sent": "Test sent — check your device",
+  "notifications.phonePush.test.sent": "Test sent. Check your device",
   "notifications.phonePush.test.error":
-    "Couldn't send the test — try again in a moment",
+    "Couldn't send the test. Try again in a moment",
   "notifications.communities.newPost.title": "New post in my communities",
   "notifications.communities.newPost.desc":
     "Activity in communities you've joined",
@@ -257,7 +257,7 @@ export const settings: Catalog = {
     "When someone mentions you in a post or discussion",
   "notifications.communities.weeklyDigest.title": "Weekly community digest",
   "notifications.communities.weeklyDigest.desc":
-    "A quiet summary of what's happening — one email, once a week",
+    "A quiet summary of what's happening: one email, once a week",
   "notifications.delivery.email.title": "Email notifications",
   "notifications.delivery.email.desc":
     "How often to batch and send notifications by email",
@@ -277,7 +277,7 @@ export const settings: Catalog = {
   "language.section.platformPreference": "Platform language preference",
   "language.interfaceLanguage.title": "Interface language",
   "language.interfaceLanguage.desc":
-    "The language QueerPulse uses for menus, labels, and system messages. Português is still being translated across the platform — some pages stay in English for now.",
+    "The language QueerPulse uses for menus, labels, and system messages. Português is still being translated across the platform. Some pages stay in English for now.",
   "language.section.terminologyGuide": "Community terminology guide",
   "language.searchPlaceholder": "Search terms…",
 
@@ -311,7 +311,7 @@ export const settings: Catalog = {
   "data.section.personalisation": "Personalisation",
   "data.searchPersonalisation.title": "Search personalisation",
   "data.searchPersonalisation.desc":
-    "Use your interests and connections to improve suggested members and gatherings. A product preference — this stays on your account, not tracking.",
+    "Use your interests and connections to improve suggested members and gatherings. This is a product preference that stays on your account, kept separate from tracking.",
   "data.section.dangerZone": "Danger zone",
   "data.deactivate.title": "Deactivate account",
   "data.deactivate.desc":
@@ -357,7 +357,7 @@ export const settings: Catalog = {
   "visibility.featuredConsent.description":
     "Public, opted-in members may be picked to appear on the homepage from time to time. Turn it off whenever you'd rather stay out of the spotlight.",
   "visibility.featuredConsent.disabledHint":
-    'Set your visibility to "Open to connect" first — only public profiles can be featured.',
+    'Set your visibility to "Open to connect" first. Only public profiles can be featured.',
   "visibility.newArrivals.title": 'Show me in "New arrivals"',
   "visibility.newArrivals.desc":
     "Let the community know you've recently joined",
@@ -389,7 +389,7 @@ export const settings: Catalog = {
   // ── MyUploadsPane.tsx — signed-in member's own uploaded images ──────────
   "uploads.title": "My uploads",
   "uploads.intro":
-    "Every picture you’ve uploaded. Delete any you don’t need — including accidental double-uploads.",
+    "Every picture you’ve uploaded. Delete any you don’t need, including accidental double-uploads.",
   "uploads.demoOnly":
     "Your uploads appear here when you’re signed in to the live app.",
   "uploads.loading": "Loading your uploads…",
@@ -460,7 +460,7 @@ export const settings: Catalog = {
   "editProfile.identity.locationOptional": "optional",
   "editProfile.identity.locationPlaceholder": "e.g. Mouraria, Intendente…",
   "editProfile.identity.locationHint":
-    "Neighbourhood-level only — never exact address.",
+    "Neighbourhood-level only. Never exact address.",
 
   // ── EditProfileSections.tsx — PronounsSection ────────────────────────────
   "editProfile.pronouns.title": "Pronouns <em>& name</em>",
@@ -470,7 +470,7 @@ export const settings: Catalog = {
   "editProfile.pronouns.writeOwnLabel": "Write your own",
   "editProfile.pronouns.writeOwnPlaceholder": "Or write your own…",
   "editProfile.pronouns.hint":
-    "You can select multiple chips above. Pronouns are shown on your profile only — not in meta tags or URLs.",
+    "You can select multiple chips above. Pronouns are shown on your profile only, never in meta tags or URLs.",
   "editProfile.pronouns.removeCustomAriaLabel": "Remove {pronoun}",
 
   // ── EditProfileSections.tsx — BioSection ─────────────────────────────────
@@ -518,36 +518,36 @@ export const settings: Catalog = {
   // ── UsernameSection.tsx ────────────────────────────────────────────────────
   "editProfile.username.title": "Your <em>username</em>",
   "editProfile.username.sub":
-    "This is your handle across QueerPulse — how people find your profile. Choose one that's yours; you can change it later, though old links won't point here anymore.",
+    "This is your handle across QueerPulse: how people find your profile. Choose one that's yours; you can change it later, though old links won't point here anymore.",
   "editProfile.username.fieldLabel": "Username",
   "editProfile.username.fieldHint":
-    "Lowercase letters, numbers and hyphens — 3 to 30 characters.",
+    "Lowercase letters, numbers and hyphens: 3 to 30 characters.",
   "editProfile.username.save": "Save username",
   "editProfile.username.saving": "Saving…",
   "editProfile.username.previewPrefix":
     "Your profile lives at <strong>/members/{handle}</strong>",
   "editProfile.username.toast.updated": "Username updated.",
   "editProfile.username.error.taken":
-    "Someone already goes by that — try another one.",
+    "Someone already goes by that. Try another one.",
   "editProfile.username.error.reserved":
-    "That word's kept for the platform — try another.",
+    "That word's kept for the platform. Try another.",
   "editProfile.username.error.invalid":
-    "That username isn't allowed — check the format and try again.",
+    "That username isn't allowed. Check the format and try again.",
   "editProfile.username.error.generic":
-    "We couldn't update your username just now — try again.",
+    "We couldn't update your username just now. Try again.",
 
   // ── UsernameField.tsx / usernameField.data.ts ────────────────────────────
   "usernameField.defaultLabel": "Username",
   "usernameField.placeholder": "yourname",
   "usernameField.checking": "Checking…",
-  "usernameField.free": "Looks free — this one can be yours.",
+  "usernameField.free": "Looks free. This one can be yours.",
   "usernameField.yours": "This is your handle.",
   "usernameField.reason.invalid":
-    "Handles are 3–30 characters — lowercase letters, numbers and hyphens.",
+    "Handles are 3–30 characters: lowercase letters, numbers and hyphens.",
   "usernameField.reason.reserved":
-    "That word's kept for the platform — try another.",
+    "That word's kept for the platform. Try another.",
   "usernameField.reason.taken":
-    "Someone already goes by that — try another one.",
+    "Someone already goes by that. Try another one.",
 
   // ── SessionsPage.tsx — chrome (mock session records stay English: demo
   // fallback for GET /account/sessions, live device/UA content) ────────────
@@ -557,7 +557,7 @@ export const settings: Catalog = {
   "sessions.eyebrow": "Security · Active sessions",
   "sessions.h1": "Where you're <em>signed in</em> right now.",
   "sessions.lead":
-    "Every device with an active session. If something here looks unfamiliar, sign it out — and read <a>what to do next</a>.",
+    "Every device with an active session. If something here looks unfamiliar, sign it out, and read <a>what to do next</a>.",
   "sessions.bulk.onlyDevice": "This is the only device you're signed in on.",
   "sessions.bulk.multi_one":
     "You're signed in on <strong>{count} device</strong>. Anything you don't recognise, sign it out.",
@@ -576,7 +576,7 @@ export const settings: Catalog = {
     "Rather than show you a list we can't stand behind, we've shown you nothing. Try again in a moment.",
   "sessions.empty.none.title": "No active sessions",
   "sessions.empty.none.desc":
-    "Nothing is signed in right now — not even this device, which usually means your session is about to be refreshed.",
+    "Nothing is signed in right now, not even this device, which usually means your session is about to be refreshed.",
   "sessions.toast.signedOut":
     "Session ended. If that wasn't you, review your active sessions and sign out anything you don't recognise.",
   "sessions.toast.signedOutError":
@@ -585,7 +585,7 @@ export const settings: Catalog = {
   "sessions.toast.signedOutAllError":
     "We couldn't sign the others out. Try again.",
   "sessions.footNote":
-    "<strong>Something looks wrong?</strong> Sign out anything you don't recognise, then <a>tell us what happened</a> — we'll help you lock things down.",
+    "<strong>Something looks wrong?</strong> Sign out anything you don't recognise, then <a>tell us what happened</a>. We'll help you lock things down.",
 
   // ── DataExportPage.tsx — hero + toast + outro ────────────────────────────
   "dataExport.hero.eyebrow": "Your data · GDPR Art. 20",
@@ -607,7 +607,7 @@ export const settings: Catalog = {
     "Select the data types you want included in your archive.",
   "dataExport.steps.step2.label": "Confirm your identity",
   "dataExport.steps.step2.desc":
-    "We ask you to confirm it's you, right here — no email, no password.",
+    "We ask you to confirm it's you, right here. No email, no password.",
   "dataExport.steps.step3.label": "Download your archive",
   "dataExport.steps.step3.desc":
     "It's built straight away and downloads from this page.",
@@ -644,7 +644,7 @@ export const settings: Catalog = {
   // ── DataExportSections.tsx — DataExportStatus ────────────────────────────
   "dataExport.status.ready.title": "Your archive is ready",
   "dataExport.status.ready.body":
-    "It's ready to download now. Nothing was emailed — this stays between you and this page.",
+    "It's ready to download now. Nothing was emailed. This stays between you and this page.",
   "dataExport.status.ready.bodyWithExpiry":
     "It's ready to download now. Nothing was emailed. We'll keep it here until <strong>{date}</strong>, then clear it out.",
   "dataExport.status.expired.title": "That link has expired",
@@ -652,11 +652,11 @@ export const settings: Catalog = {
     "We don't keep archives around indefinitely. Ask again and we'll build you a fresh one.",
   "dataExport.status.failed.title": "That didn't work",
   "dataExport.status.failed.body":
-    "We couldn't build your archive just now — nothing left your account. Try again in a moment.",
+    "We couldn't build your archive just now. Nothing left your account. Try again in a moment.",
   "dataExport.status.retry": "Request again",
   "dataExport.status.building.title": "Building your archive",
   "dataExport.status.building.body":
-    "We're gathering your data and packaging it up. This only takes a moment — stay on this page and your archive will be ready to download right here.",
+    "We're gathering your data and packaging it up. This only takes a moment. Stay on this page and your archive will be ready to download right here.",
   "dataExport.status.download": "Download {filename}",
 
   // ── DataExportSections.tsx — DataExportIncluded ──────────────────────────
@@ -688,7 +688,7 @@ export const settings: Catalog = {
     "Your notification preferences, privacy settings, language selection, and any other account configuration you've set.",
   "dataExport.accordion.payments.title": "Payments (if applicable)",
   "dataExport.accordion.payments.body":
-    "If you have contributed to any paid events or the community fund, a record of transaction dates and amounts. No card details are stored — payments are processed by Stripe.",
+    "If you have contributed to any paid events or the community fund, a record of transaction dates and amounts. No card details are stored. Payments are processed by Stripe.",
 
   // ── dataExport.data.ts — shared accordion tag dictionary ─────────────────
   "dataExport.tag.name": "name",
@@ -723,7 +723,7 @@ export const settings: Catalog = {
   "dataExport.tag.amounts": "amounts",
   "dataExport.tag.dates": "dates",
   "dataExport.demoArchiveNote":
-    "Demo export generated in-browser — no personal data left this device.",
+    "Demo export generated in-browser. No personal data left this device.",
 
   // ── SaveButton.tsx — reusable save control, shared across several panes ──
   "saveButton.defaultLabel": "Save changes",
@@ -766,7 +766,7 @@ export const settings: Catalog = {
     "Stops background orbs, pulse dots, and loading spinners from animating.",
   "a11y.preview.liveLabel": "Live preview",
   "a11y.preview.cardText":
-    "This card animates on load — toggle motion settings to see the effect.",
+    "This card animates on load. Toggle motion settings to see the effect.",
   "a11y.section.reading.eyebrow": "Reading",
   "a11y.section.reading.desc":
     "Adjust how content is displayed for comfortable reading.",
@@ -791,7 +791,7 @@ export const settings: Catalog = {
     "Keeps the navigation bar always visible while scrolling.",
   "a11y.toggle.skipLink.title": "Skip to content link",
   "a11y.toggle.skipLink.desc":
-    'On by default. Press Tab and a "Skip to main content" link appears at the top, so you can jump straight past the navigation. Turning it off removes that shortcut — the link stays hidden until it\'s focused, so leaving it on costs you nothing.',
+    'On by default. Press Tab and a "Skip to main content" link appears at the top, so you can jump straight past the navigation. Turning it off removes that shortcut. The link stays hidden until it\'s focused, so leaving it on costs you nothing.',
 
   // ── DeleteAccountPage.tsx / DeleteAccountSection.tsx / DeleteAccountSections.tsx
   // — the off-ramp flow. Precision matters (danger zone) — matches the wording
@@ -822,7 +822,7 @@ export const settings: Catalog = {
   "deleteAccount.confirm.cancelBtn": "Cancel",
   "deleteAccount.pending.cancelling": "Cancelling…",
   "deleteAccount.pending.cancelBtn": "Cancel deletion",
-  "deleteAccount.toast.cancelled": "Deletion cancelled — welcome back.",
+  "deleteAccount.toast.cancelled": "Deletion cancelled. Welcome back.",
   "deleteAccount.toast.cancelError":
     "We couldn't cancel that just now. Try again.",
   "deleteAccount.options.deactivate.title": "Deactivate",
@@ -836,7 +836,7 @@ export const settings: Catalog = {
   "deleteAccount.pending.banner":
     "<strong>Your account is scheduled for deletion.</strong> Everything is hidden now and will be permanently erased on <strong>{date}</strong>. Changed your mind? You can still cancel and pick up where you left off.",
   "deleteAccount.wh.deactivate.profileHidden":
-    "Your <strong>profile is hidden</strong> immediately — no other member can find or view it.",
+    "Your <strong>profile is hidden</strong> immediately. No other member can find or view it.",
   "deleteAccount.wh.deactivate.dataPreserved":
     "Your <strong>data is fully preserved</strong>: messages, posts, history remain intact.",
   "deleteAccount.wh.deactivate.reactivateInstantly":
@@ -848,13 +848,13 @@ export const settings: Catalog = {
   "deleteAccount.wh.delete.queuedForDeletion":
     "<strong>All your data is queued for deletion</strong> and permanently erased within 30 days.",
   "deleteAccount.wh.delete.messagesDeleted":
-    "Messages you sent <strong>are deleted from all conversations</strong> — recipients lose them too.",
+    "Messages you sent <strong>are deleted from all conversations</strong>. Recipients lose them too.",
   "deleteAccount.wh.delete.postsRemoved":
-    "Your forum posts are <strong>permanently removed</strong> — not anonymised, deleted.",
+    "Your forum posts are <strong>permanently removed</strong>. The content is deleted outright.",
   "deleteAccount.wh.delete.emailSuppressed":
     "Your email address is <strong>added to a suppression list</strong> so we don't accidentally re-create your account.",
   "deleteAccount.wh.delete.exportFirst":
-    "You can request a <strong>data archive before deleting</strong> — do that first.",
+    "You can request a <strong>data archive before deleting</strong>. Do that first.",
   "deleteAccount.phrase.deactivate": "deactivate my account",
   "deleteAccount.phrase.delete": "delete my account",
   "deleteAccount.confirmHint.deactivate":
@@ -869,14 +869,14 @@ export const settings: Catalog = {
   "destructiveFlow.backToHome": "Back to QueerPulse",
   "destructiveFlow.error.title": "That didn't <em>go through.</em>",
   "destructiveFlow.error.body":
-    "We couldn't complete this just now — nothing was changed. Check your connection and try again, or come back in a moment.",
+    "We couldn't complete this just now. Nothing was changed. Check your connection and try again, or come back in a moment.",
   "destructiveFlow.error.close": "Close",
   "destructiveFlow.error.tryAgain": "Try again",
   "destructiveFlow.confirm.notNow": "Not now",
   "destructiveFlow.deactivate.eyebrow": "Deactivate account",
   "destructiveFlow.deactivate.title": "Hide your profile <em>for now?</em>",
   "destructiveFlow.deactivate.body":
-    "Your profile becomes invisible and notifications stop. <strong>Nothing is deleted</strong> — sign back in any time and you pick up exactly where you left off.",
+    "Your profile becomes invisible and notifications stop. <strong>Nothing is deleted</strong>. Sign back in any time and you pick up exactly where you left off.",
   "destructiveFlow.deactivate.confirmLabel": "Deactivate",
   "destructiveFlow.deactivate.loadingText": "Deactivating your account…",
   "destructiveFlow.deactivate.resultTitle": "You're <em>signed off.</em>",
@@ -890,7 +890,7 @@ export const settings: Catalog = {
   "destructiveFlow.delete.loadingText": "Scheduling your account for deletion…",
   "destructiveFlow.delete.resultTitle": "It's <em>scheduled.</em>",
   "destructiveFlow.delete.resultBody":
-    "Your account is scheduled for deletion. You have <strong>30 days</strong> to change your mind — just sign back in with Google and we'll stop the erasure. After that, your data is permanently erased. Take care of yourself.",
+    "Your account is scheduled for deletion. You have <strong>30 days</strong> to change your mind. Just sign back in with Google and we'll stop the erasure. After that, your data is permanently erased. Take care of yourself.",
 
   // ── ThemeStudio.tsx / profileTheme.data.ts — profile theme picker. Pride
   // flag NAMES (FLAG_SWATCHES.label) are deliberately left in English: they're
@@ -909,7 +909,7 @@ export const settings: Catalog = {
   "themeStudio.showLevelToggle": "Show level on profile",
   "themeStudio.previewLabel": "Preview",
   "themeStudio.previewHintTop":
-    "Updates live as you pick a theme. Saved to this browser as a preview — it isn't shown on your public profile yet.",
+    "Updates live as you pick a theme. Saved to this browser as a preview. It isn't shown on your public profile yet.",
   "themeStudio.profileCardLabel": "Profile card",
   "themeStudio.directoryCardLabel": "Directory card",
   "themeStudio.directoryHint":
@@ -940,7 +940,7 @@ export const settings: Catalog = {
   "linkProvider.cancel": "Cancel",
   "linkProvider.linkedTitle": "{provider} <em>linked.</em>",
   "linkProvider.linkedSub":
-    "You can now sign in to QueerPulse with {provider}. Revoke it any time from this page — your messages and memberships were never shared.",
+    "You can now sign in to QueerPulse with {provider}. Revoke it any time from this page. Your messages and memberships were never shared.",
   "linkProvider.done": "Done",
 
   // ── IntegrationsModal.tsx ─────────────────────────────────────────────────
@@ -948,7 +948,7 @@ export const settings: Catalog = {
   "integrationsModal.eyebrow": "Connect another",
   "integrationsModal.title": "Available <em>integrations.</em>",
   "integrationsModal.desc":
-    "Each integration is scoped narrowly — none can read your DMs, drafts, billing, or community memberships.",
+    "Each integration is scoped narrowly. None can read your DMs, drafts, billing, or community memberships.",
   "integrationsModal.connectedTag": "Connected",
   "integrationsModal.connectCta": "Connect",
 
@@ -1003,7 +1003,7 @@ export const settings: Catalog = {
   "security.process.step2.note": "Target: 5 working days",
   "security.process.step3.title": "Fix",
   "security.process.step3.text":
-    "For confirmed vulnerabilities, we'll fix and deploy a patch. The timeline depends on severity — critical issues are treated as emergencies.",
+    "For confirmed vulnerabilities, we'll fix and deploy a patch. The timeline depends on severity. Critical issues are treated as emergencies.",
   "security.process.step3.note":
     "Critical: <72h · High: <7 days · Medium/Low: next release",
   "security.process.step4.title": "Disclosure",
@@ -1024,7 +1024,7 @@ export const settings: Catalog = {
   "security.pgp.label": "PGP public key",
   "security.pgp.copyCta": "Copy key",
   "security.pgp.copied": "PGP key copied.",
-  "security.pgp.copyFailed": "Copy failed — select and copy manually.",
+  "security.pgp.copyFailed": "Copy failed. Select and copy manually.",
 
   "security.outro.titleTop": "Security is",
   "security.outro.titleEm": "community work.",

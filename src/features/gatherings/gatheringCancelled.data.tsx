@@ -19,7 +19,7 @@ export const REFUND_PRICE_EUR = 5;
 export const CANCELLATION_REASON = "Host illness · cancelled ";
 export const EVENT_VENUE_LINE = "Largo do Carmo · Lisbon";
 export const EXPLAINER_P1 =
-  "Marta is out sick — she dropped us a message yesterday and we waited 24h hoping a co-host could step in. ";
+  "Marta is out sick. She dropped us a message yesterday and we waited 24h hoping a co-host could step in. ";
 export const EXPLAINER_EM = "Nobody available this week.";
 export const EXPLAINER_P2 =
   " We're not rescheduling immediately because the studio's painting work starts Monday, but the next visit is already on the calendar for ";
@@ -29,7 +29,7 @@ export const REFUND_NOTE =
 export const NOTE_QUOTE_P1 = "\"I'm so sorry, especially to the three of you";
 export const NOTE_QUOTE_EM = "who travelled in.";
 export const NOTE_P1 =
-  "It's a chest cold and not anything dramatic, but I lose my voice the moment I try to talk for more than ten minutes — and a studio visit where I can't talk is a tour, not a visit.";
+  "It's a chest cold and not anything dramatic, but I lose my voice the moment I try to talk for more than ten minutes, and a studio visit where I can't talk is just a tour.";
 export const NOTE_P2 =
   "July 19 will happen. The painting is done by then and we'll have the new riso press set up. Promise.";
 
@@ -63,7 +63,7 @@ export const ALTS: {
     date: new Date(2026, 5, 22),
     title: (
       <>
-        {"Sunday risograph workshop — "}
+        {"Sunday risograph workshop · "}
         <em>{"Bairro Alto"}</em>
       </>
     ),
@@ -77,7 +77,7 @@ export const ALTS: {
     date: new Date(2026, 5, 28),
     title: (
       <>
-        {"Portfolio night — "}
+        {"Portfolio night · "}
         <em>{"creatives only"}</em>
       </>
     ),

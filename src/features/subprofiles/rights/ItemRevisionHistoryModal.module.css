@@ -50,6 +50,22 @@
   color: var(--ink);
 }
 
+/* One translation inside a poem snapshot preview; successive versions are
+   separated so their verse doesn't run together. */
+.previewVersion + .previewVersion {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px dashed var(--line);
+}
+
+.previewVersionLabel {
+  margin: 0 0 0.3rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
 .previewTitle {
   margin: 0 0 0.3rem;
   font-weight: 700;

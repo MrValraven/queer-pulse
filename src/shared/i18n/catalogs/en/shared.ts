@@ -23,7 +23,7 @@ export const shared: Catalog = {
   "consent.banner.ariaLabel": "Cookie and privacy choices",
   "consent.banner.title": "A quiet word about <em>cookies.</em>",
   "consent.banner.body":
-    "We only store what keeps you logged in and safe by default. Error reporting stays off unless you say yes — no ads, no analytics, no profiling, ever. Change your mind any time in settings. <a>Read the policy</a>.",
+    "We only store what keeps you logged in and safe by default. Error reporting stays off unless you say yes: no ads, no analytics, no profiling, ever. Change your mind any time in settings. <a>Read the policy</a>.",
 
   // Consent actions, shared by the banner and the preference center
   "consent.actions.rejectNonEssential": "Reject non-essential",
@@ -35,10 +35,10 @@ export const shared: Catalog = {
   "consent.preferences.eyebrow": "Privacy",
   "consent.preferences.title": "Your <em>choices.</em>",
   "consent.preferences.sub":
-    "Necessary cookies keep you logged in and safe — they're always on. Everything else is up to you, and you can change it any time.",
+    "Necessary cookies keep you logged in and safe. They're always on. Everything else is up to you, and you can change it any time.",
   "consent.preferences.necessary.title": "Strictly necessary",
   "consent.preferences.necessary.desc":
-    "Your session and CSRF cookies, plus theme and language stored on your device. Required to run the platform — never used to track you.",
+    "Your session and CSRF cookies, plus theme and language stored on your device. Required to run the platform. Never used to track you.",
   "consent.preferences.necessary.alwaysOnAria": "Always on",
   "consent.preferences.rows.monitoring.title": "Error & crash reporting",
   "consent.preferences.rows.monitoring.desc":
@@ -47,7 +47,7 @@ export const shared: Catalog = {
   // Feedback: AuthLoader / RouteFallback / ErrorFallback / RoomLoader
   "feedback.errorFallback.title": "Something broke on our <em>end</em>",
   "feedback.errorFallback.body":
-    "Nothing you did caused this, and nothing's lost. Try again, or head back home — we're already looking into it.",
+    "Nothing you did caused this, and nothing's lost. Try again, or head back home. We're already looking into it.",
   "feedback.errorFallback.tryAgain": "Try again",
   "feedback.errorFallback.reference": "Reference: {referenceId}",
 
@@ -62,11 +62,11 @@ export const shared: Catalog = {
   // resolves it — AuthProvider itself sits above I18nProvider in the provider
   // tree, so it cannot call t() directly).
   "auth.error.server":
-    "We couldn't load your account — QueerPulse's server hit an error ({status}). It's on us, not you. Try again in a moment.",
+    "We couldn't load your account. QueerPulse's server hit an error ({status}). It's on us. Try again in a moment.",
   "auth.error.network":
     "We couldn't reach QueerPulse to load your account. Check your connection and try again in a moment.",
   "auth.error.expired":
-    "Your session expired — please sign in again to pick up where you left off.",
+    "Your session expired. Please sign in again to pick up where you left off.",
 
   // Provider-level fallback error toasts (ProfileProvider.tsx / SocialProvider.tsx)
   "profile.saveError": "We couldn't save your profile. Please try again.",
@@ -254,12 +254,12 @@ export const shared: Catalog = {
   "megaNav.community.feature.eyebrow": "Community",
   "megaNav.community.feature.title": "Find your people.",
   "megaNav.community.feature.body":
-    "A member directory, forums, and gatherings — the everyday connective tissue of the network.",
+    "A member directory, forums, and gatherings: the everyday connective tissue of the network.",
   "megaNav.community.feature.cta": "Browse members",
   "megaNav.community.featurePublic.eyebrow": "Community",
   "megaNav.community.featurePublic.title": "Organise together.",
   "megaNav.community.featurePublic.body":
-    "Campaigns, mutual aid, and volunteer crews — work you can show up for, no invite needed.",
+    "Campaigns, mutual aid, and volunteer crews: work you can show up for, no invite needed.",
   "megaNav.community.featurePublic.cta": "Get involved",
   "megaNav.community.col.people.head": "People",
   "megaNav.community.col.people.membersDirectory": "Members directory",
@@ -268,7 +268,6 @@ export const shared: Catalog = {
   "megaNav.community.col.gather.allGatherings": "Gatherings",
   "megaNav.community.col.gather.events": "Events",
   "megaNav.community.col.gather.hostGathering": "Host a gathering",
-  "megaNav.community.col.gather.howCommunitiesWork": "How communities work",
   "megaNav.community.col.organise.head": "Organise",
   "megaNav.community.col.organise.activismVolunteering":
     "Activism & Volunteering",
@@ -284,7 +283,7 @@ export const shared: Catalog = {
   // copy below.
   "megaNav.lisbon.feature.title": "Find your local spaces.",
   "megaNav.lisbon.feature.body":
-    "Bars, clinics, salons, and shops that welcome you — every listing reviewed, with verified spaces clearly badged.",
+    "Bars, clinics, salons, and shops that welcome you: every listing reviewed, with verified spaces clearly badged.",
   "megaNav.lisbon.feature.cta": "Browse local spaces",
   "megaNav.lisbon.featurePublic.eyebrow": "Lisbon",
   // Reframed (Task 11): safe-spaces is the trust hub (how verification works +
@@ -293,7 +292,7 @@ export const shared: Catalog = {
   // instead of repeating "places that welcome you" from the feature above.
   "megaNav.lisbon.featurePublic.title": "How we verify local spaces.",
   "megaNav.lisbon.featurePublic.body":
-    "Every listing is reviewed before it earns the verified badge — see how it works, and which spaces have been delisted.",
+    "Every listing is reviewed before it earns the verified badge. See how it works, and which spaces have been delisted.",
   "megaNav.lisbon.featurePublic.cta": "See how verification works",
   "megaNav.lisbon.col.discover.head": "Discover",
   // Reframed (Task 11): "Local directory" (was "Business Directory") to match
@@ -311,7 +310,7 @@ export const shared: Catalog = {
   "megaNav.resources.feature.eyebrow": "Support",
   "megaNav.resources.feature.title": "Help when you need it.",
   "megaNav.resources.feature.body":
-    "Health, safety, and rights — plus a library to learn at your own pace.",
+    "Health, safety, and rights, plus a library to learn at your own pace.",
   "megaNav.resources.feature.cta": "Open the library",
   "megaNav.resources.col.health.head": "Health & safety",
   "megaNav.resources.col.health.mentalHealth": "Mental Health",
@@ -332,7 +331,7 @@ export const shared: Catalog = {
   "megaNav.culture.feature.eyebrow": "The Magazine",
   "megaNav.culture.feature.title": "Read the new issue.",
   "megaNav.culture.feature.body":
-    "Essays, interviews, reviews and reportage from the community — published the first of every month.",
+    "Essays, interviews, reviews and reportage from the community, published the first of every month.",
   "megaNav.culture.feature.cta": "Open Issue 18",
   "megaNav.culture.col.magazine.head": "The Magazine",
   "megaNav.culture.col.magazine.currentIssue": "Current issue",
@@ -352,7 +351,7 @@ export const shared: Catalog = {
   "megaNav.work.feature.eyebrow": "Your workspace",
   "megaNav.work.feature.title": "Your Work, in one place.",
   "megaNav.work.feature.body":
-    "Track applications, mentors, and grants — and show up to work exactly as yourself.",
+    "Track applications, mentors, and grants, and show up to work exactly as yourself.",
   "megaNav.work.feature.cta": "Open your workspace",
   "megaNav.work.col.career.head": "Career",
   "megaNav.work.col.career.yourWork": "Your Work",
@@ -463,4 +462,18 @@ export const shared: Catalog = {
   "calendar.preset.today": "Today",
   "calendar.preset.tomorrow": "Tomorrow",
   "calendar.preset.nextWeek": "Next week",
+
+  // reframe.*: pan/zoom crop control (ImageReframer.tsx, PhotoReframeModal.tsx,
+  // useImageReframerState.ts) shown when a member reframes a photo on upload.
+  "reframe.title": "Reframe photo",
+  "reframe.save": "Save",
+  "reframe.cancel": "Cancel",
+  "reframe.zoom": "Zoom",
+  "reframe.reset": "Reset",
+  "reframe.alt": "Photo to reframe",
+  "reframe.frame": "Reframe area",
+  "reframe.ratio.group": "Aspect ratio",
+  "reframe.ratio.original": "Original",
+  "reframe.ratio.square": "Square",
+  "reframe.ratio.native": "Cover shape",
 };

@@ -35,7 +35,7 @@ export function CinemaMast() {
           </div>
           <div className={styles.mastMeta}>
             <div className={styles.issue}>
-              {fmt.date(PROGRAMME_WEEK_START, { day: "numeric" })} —{" "}
+              {fmt.date(PROGRAMME_WEEK_START, { day: "numeric" })} to{" "}
               {fmt.date(PROGRAMME_WEEK_END, { day: "numeric", month: "long" })}
             </div>
             <div className={styles.mastTag}>

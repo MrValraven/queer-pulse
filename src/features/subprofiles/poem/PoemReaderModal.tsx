@@ -1,13 +1,14 @@
-import { useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { FiCopy, FiLink, FiX } from "react-icons/fi";
+import { SegmentedControl } from "../../../shared/components/ui";
 import { useScrollLock, useShareLink } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useLightboxDialog } from "../useLightboxDialog";
 import type { SubprofileItemView } from "../api/subprofiles.adapters";
 import { WorkRightsFooter } from "../rights/WorkRightsFooter";
 import { PoemBlocksView } from "./PoemBlocksView";
-import { normalizePoemBlocks, poemToPlainText } from "./poemModel";
+import { normalizePoemVersions, poemToPlainText } from "./poemModel";
 import styles from "./PoemReaderModal.module.css";
 
 const NO_MOVE = () => {};
@@ -46,7 +47,32 @@ export function PoemReaderModal({
   });
 
   const meta = [item.subtitle, item.date].filter(Boolean).join(" · ");
-  const poemPlainText = poemToPlainText(normalizePoemBlocks(item.structured?.poem ?? null));
+
+  // Named translations of this poem (always ≥1; a single-version poem reads as
+  // one default version). Readers cycle the rest via the tab strip below.
+  const versions = useMemo(
+    () =>
+      normalizePoemVersions(
+        item.structured?.poemVersions ?? null,
+        item.structured?.poem ?? null,
+      ),
+    [item.structured],
+  );
+  const [activeId, setActiveId] = useState<string>(() => versions[0]!.id);
+  const activeIndex = Math.max(
+    0,
+    versions.findIndex((version) => version.id === activeId),
+  );
+  const activeVersion = versions[activeIndex]!;
+
+  function versionLabel(version: (typeof versions)[number], index: number): string {
+    return (
+      version.label.trim() ||
+      t("subprofiles:poem.versions.untitled", { index: index + 1 })
+    );
+  }
+
+  const poemPlainText = poemToPlainText(activeVersion.blocks);
 
   return createPortal(
     <div
@@ -89,7 +115,7 @@ export function PoemReaderModal({
             <button
               type="button"
               className={styles.actionButton}
-              onClick={() => copyShareLink(shareUrl)}
+              onClick={() => void copyShareLink(shareUrl)}
               aria-label={t("subprofiles:poem.reader.copyLinkAria", {
                 title: item.title,
               })}
@@ -99,7 +125,7 @@ export function PoemReaderModal({
             <button
               type="button"
               className={styles.actionButton}
-              onClick={() => copyPoemText(poemPlainText || item.description || "")}
+              onClick={() => void copyPoemText(poemPlainText || item.description || "")}
               aria-label={t("subprofiles:poem.reader.copy")}
             >
               <FiCopy aria-hidden /> {t("subprofiles:poem.reader.copy")}
@@ -108,9 +134,21 @@ export function PoemReaderModal({
         </header>
 
         <div className={styles.body}>
+          {versions.length > 1 && (
+            <SegmentedControl
+              className={styles.versions}
+              label={t("subprofiles:poem.versions.readerAria")}
+              options={versions.map((version, index) => ({
+                value: version.id,
+                label: versionLabel(version, index),
+              }))}
+              value={activeVersion.id}
+              onChange={setActiveId}
+            />
+          )}
           <PoemBlocksView
-            blocks={item.structured?.poem ?? null}
-            description={item.description}
+            blocks={activeVersion.blocks}
+            description={activeIndex === 0 ? item.description : undefined}
           />
           <WorkRightsFooter authorName={authorName} createdAtISO={item.createdAt} />
         </div>

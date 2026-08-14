@@ -9,6 +9,7 @@ import type {
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import type { HandleAvailability } from "../settings/api/useHandleAvailability";
 import type { MetaSnapshot } from "./subprofileEditorDiff";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 
 export interface SubprofileMetaEditor {
   displayName: string;
@@ -27,6 +28,12 @@ export interface SubprofileMetaEditor {
    */
   avatarPreview: string | null;
   setAvatarPreview: (value: string | null) => void;
+  /** Saved reframe crop for the CURRENTLY COMMITTED `subprofile.avatarUrl` —
+   *  display-only, mirrors `avatarUrl` without a save-payload role (crop is
+   *  persisted separately, keyed by the upload). `ImageUploadField` itself
+   *  handles overlaying a FRESH pick's own crop internally, so there's no
+   *  separate "preview crop" to thread through here. */
+  avatarCrop: CropRect | undefined;
   link: LinkVisibility;
   setLink: (value: LinkVisibility) => void;
   visibility: Visibility;
@@ -301,6 +308,7 @@ export function useSubprofileMetaEditor(
     setAvatarUrl,
     avatarPreview,
     setAvatarPreview,
+    avatarCrop: subprofile.avatarCrop,
     link,
     setLink,
     visibility,

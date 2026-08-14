@@ -51,7 +51,7 @@ ${t("marketing:pressKit.readme.contentsHeading")}
 
 ${t("marketing:pressKit.readme.pressDeskHeading")}
 ----------
-press@queerpulse.pt · +351 21 314 08 22 (${t("marketing:pressKit.readme.hours")})
+hello@queerpulse.com · +351 21 314 08 22 (${t("marketing:pressKit.readme.hours")})
 ${t("marketing:pressKit.readme.responseTime")}
 
 (${t("marketing:pressKit.readme.prototypeNote")})
@@ -151,6 +151,6 @@ export function assetFor(
       title === t("marketing:pressKit.downloads.boilerplate.title") ||
       /boilerplate/i.test(title)
         ? buildBoilerTxt(t)
-        : `QUEERPULSE — ${title.toUpperCase()}\n\n${description}\n\n${t("marketing:pressKit.placeholderFile.line1")}\n${t("marketing:pressKit.placeholderFile.line2")}\n\npress@queerpulse.pt\n`,
+        : `QUEERPULSE: ${title.toUpperCase()}\n\n${description}\n\n${t("marketing:pressKit.placeholderFile.line1")}\n${t("marketing:pressKit.placeholderFile.line2")}\n\nhello@queerpulse.com\n`,
   };
 }

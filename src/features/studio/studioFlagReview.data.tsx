@@ -65,7 +65,7 @@ export const FLAGS: Flag[] = [
     reason: (
       <>
         "The remix credits DJ Carrasco but the original vocal is by someone
-        uncredited. <em>The split table doesn't list them</em> — they should be
+        uncredited. <em>The split table doesn't list them.</em> They should be
         getting paid."
       </>
     ),

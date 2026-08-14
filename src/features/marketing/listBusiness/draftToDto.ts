@@ -32,10 +32,13 @@ export function draftToDto(draft: ListingDraft): CreateListingDto {
     tags: draft.tags,
     goodFor: draft.goodFor,
     langs: draft.langs,
-    address: draft.address.trim(),
-    geocoded: draft.geocoded,
-    latitude: draft.latitude,
-    longitude: draft.longitude,
+    online: draft.online,
+    // An online-only listing carries no location: never ship a stale address or
+    // pin the member typed before switching the toggle on.
+    address: draft.online ? "" : draft.address.trim(),
+    geocoded: draft.online ? false : draft.geocoded,
+    latitude: draft.online ? null : draft.latitude,
+    longitude: draft.online ? null : draft.longitude,
     hours: normalizeHours(draft.hours),
     hoursNote: draft.hoursNote.trim(),
     social: draft.social,

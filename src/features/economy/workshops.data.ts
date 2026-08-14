@@ -131,7 +131,7 @@ export const WORKSHOPS: Workshop[] = [
       { label: "Solidarity · 1 slot", amount: "€60", sliding: true },
     ],
     about: [
-      "Six structured 3-hour sessions, every Tuesday from 19:00 to 22:00. Each session is one third lecture, two thirds hands on the machine. You leave each week with something physical — a print, a test sheet, eventually the bound zine.",
+      "Six structured 3-hour sessions, every Tuesday from 19:00 to 22:00. Each session is one third lecture, two thirds hands on the machine. You leave each week with something physical: a print, a test sheet, eventually the bound zine.",
       "Group cap is eight people so that everyone gets real machine time. No watching over someone's shoulder. If you've never printed anything, you'll be fine. If you're an experienced designer who's just never done riso, you'll also be fine.",
     ],
     sessions: [
@@ -250,7 +250,7 @@ export const WORKSHOPS: Workshop[] = [
     format: "Workshop · 5 weeks · group of 6",
     mode: "In-person",
     blurb:
-      "You can centre clay and pull a wall — now learn to throw tall, throw thin, and glaze like you mean it. Five Thursday evenings in the Graça studio for people who've thrown before.",
+      "You can centre clay and pull a wall. Now learn to throw tall, throw thin, and glaze like you mean it. Five Thursday evenings in the Graça studio for people who've thrown before.",
     heroPlaceholder: "Wheel + tall vessel in progress",
     heroTint: "plum",
     spotsFilled: 3,
@@ -265,7 +265,7 @@ export const WORKSHOPS: Workshop[] = [
       { label: "Solidarity · 1 slot", amount: "€50", sliding: true },
     ],
     about: [
-      "Five 3-hour sessions, Thursdays 18:30 to 21:30. This isn't a first class — you should already be able to centre and pull a basic cylinder. We spend the whole course on the things that go wrong once you get ambitious: height, weight, and glaze.",
+      "Five 3-hour sessions, Thursdays 18:30 to 21:30. This isn't a first class: you should already be able to centre and pull a basic cylinder. We spend the whole course on the things that go wrong once you get ambitious: height, weight, and glaze.",
       "Six people, six wheels, one kiln. You'll throw a full set of pieces across the weeks and glaze them together on the last night. Everything you make comes home with you.",
     ],
     sessions: [
@@ -309,7 +309,7 @@ export const WORKSHOPS: Workshop[] = [
       {
         label: "Clay",
         detail:
-          "Stoneware for the whole course — throw as much as you can use.",
+          "Stoneware for the whole course: throw as much as you can use.",
         included: true,
         tag: "included",
       },
@@ -336,7 +336,7 @@ export const WORKSHOPS: Workshop[] = [
       {
         label: "A prior class",
         detail:
-          "You should have thrown before — even once. This picks up after the basics.",
+          "You should have thrown before, even once. This picks up after the basics.",
       },
     ],
     pastWork: [
@@ -355,7 +355,7 @@ export const WORKSHOPS: Workshop[] = [
       name: "Estúdio Graça",
       address: "Calçada do Monte 18, 1170-250 Lisboa · Graça",
       access:
-        "One step at the entrance — ask and we'll ramp it. Gender-free bathroom. 5-minute walk from Graça tram.",
+        "One step at the entrance. Ask and we'll ramp it. Gender-free bathroom. 5-minute walk from Graça tram.",
     },
     tags: ["Ceramics", "Glaze", "Hands-on"],
     source: {
@@ -374,7 +374,7 @@ export const WORKSHOPS: Workshop[] = [
     format: "Workshop · 4 weeks · group of 8",
     mode: "Hybrid",
     blurb:
-      "Everyone has forty unfinished projects. Over four weeks you'll take one idea from loop to a mastered, released track — and put it out. In-person in Bairro Alto, with online check-ins between sessions.",
+      "Everyone has forty unfinished projects. Over four weeks you'll take one idea from loop to a mastered, released track, and put it out. In-person in Bairro Alto, with online check-ins between sessions.",
     heroPlaceholder: "Studio · Ableton session on screen",
     heroTint: "jade",
     spotsFilled: 6,
@@ -439,7 +439,7 @@ export const WORKSHOPS: Workshop[] = [
       {
         label: "A release",
         detail:
-          "We help you put the finished track out — Bandcamp, SoundCloud, wherever.",
+          "We help you put the finished track out: Bandcamp, SoundCloud, wherever.",
         included: true,
         tag: "your track",
       },

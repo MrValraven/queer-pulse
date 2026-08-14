@@ -74,7 +74,7 @@ export const MOCK_PARTNER_APPLICATIONS: PartnerApplicationDTO[] = [
     since: "Applying · 2026",
     eyebrow: "Partner · Mutual-aid fund",
     tagline:
-      "Small money in trans hands, fast — no gatekeeping letters, no waiting for a grant cycle.",
+      "Small money in trans hands, fast. No gatekeeping letters, no waiting for a grant cycle.",
     about: [
       "The Transfeminist Mutual Fund pools monthly member contributions and disburses micro-grants decided by a rotating trans committee.",
     ],

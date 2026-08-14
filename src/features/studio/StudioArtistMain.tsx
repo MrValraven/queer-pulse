@@ -20,7 +20,7 @@ export function StudioArtistMain({ tab }: { tab: ArtistTabId }) {
         <p>
           Mariana Sol writes letters set to a piano so patient it sometimes
           forgets to play. Born in Beja, based in Sintra. Her work moves between
-          fado's grammar and something quieter — the song you hum doing the
+          fado's grammar and something quieter, the song you hum doing the
           dishes.
         </p>
         <p>

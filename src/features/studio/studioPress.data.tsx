@@ -60,7 +60,7 @@ export const BIO_SHORT =
   "Mariana Sol is a Sintra-born singer and composer working at the seam between fado and devotional song. Her 2026 album Cidade dos santos has been played 142,000 times on the QueerPulse co-op, paying her €7,100 directly.";
 
 export const BIO_LONG =
-  "Mariana Sol grew up in the hills above Sintra, in a house where her grandmother sang the rosary like a torch song. She writes fado that refuses church — hymns for queer congregations that never had a building.\n\nHer debut Cidade dos santos (2026) arrived on QueerPulse Studio, the listener-owned co-op, where she keeps her masters and 80% of every play. She performs the Wednesday listening room from a converted garage, tipped in real time by a room of several hundred.";
+  "Mariana Sol grew up in the hills above Sintra, in a house where her grandmother sang the rosary like a torch song. She writes fado that refuses church: hymns for queer congregations that never had a building.\n\nHer debut Cidade dos santos (2026) arrived on QueerPulse Studio, the listener-owned co-op, where she keeps her masters and 80% of every play. She performs the Wednesday listening room from a converted garage, tipped in real time by a room of several hundred.";
 
 /** Rich (JSX) renders of the two bios for on-page display. */
 export const BIO_SHORT_RICH: ReactNode = (
@@ -76,7 +76,7 @@ export const BIO_LONG_RICH: ReactNode = (
     <p>
       Mariana Sol grew up in the hills above Sintra, in a house where her
       grandmother sang the rosary like a torch song. She writes{" "}
-      <em>fado that refuses church</em> — hymns for queer congregations that
+      <em>fado that refuses church</em>: hymns for queer congregations that
       never had a building.
     </p>
     <p>

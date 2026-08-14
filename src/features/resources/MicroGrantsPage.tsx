@@ -5,7 +5,7 @@ import { Button, FadeIn, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
-import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import {
   CRITERIA_KEYS,
   CURRENT,
@@ -20,7 +20,7 @@ import { PanelSignupModal } from "./PanelSignupModal";
 import { ContributeStrip, MicroGrantsHero } from "./MicroGrantsSections";
 import styles from "./MicroGrantsPage.module.css";
 
-const INVITE = routes.requestInvite;
+const INVITE = requestInvitePath("micro_grants");
 
 export function MicroGrantsPage() {
   const { t } = useTranslation();

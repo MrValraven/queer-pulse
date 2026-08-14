@@ -80,6 +80,9 @@
   transform: rotate(90deg);
   color: var(--accent-ink);
 }
+.accReveal {
+  overflow: hidden;
+}
 .accA {
   font-size: 14.5px;
   color: var(--ink-60);

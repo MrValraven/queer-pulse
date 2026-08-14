@@ -383,3 +383,32 @@ export async function processImage(
     decoded.cleanup();
   }
 }
+
+export interface AspectConfig {
+  aspect: number | "free";
+  aspectLabel: string;
+  allowFreeform: boolean;
+}
+
+/**
+ * Per-kind crop aspect config for the reframe UI. Locked aspects match each
+ * kind's rendered shape (avatars/group avatars are always circular/square
+ * crops; story/community covers and listing photos are full-bleed 2:1
+ * banners). Work images and gathering photos render at whatever aspect the
+ * member frames, so they stay freeform.
+ */
+export const CROP_CONFIG: Record<UploadKind, AspectConfig> = {
+  avatar: { aspect: 1, aspectLabel: "1:1", allowFreeform: false },
+  "group-avatar": { aspect: 1, aspectLabel: "1:1", allowFreeform: false },
+  "story-cover": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
+  "community-cover": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
+  "listing-photo": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
+  "work-image": { aspect: "free", aspectLabel: "free", allowFreeform: true },
+  "gathering-photo": { aspect: "free", aspectLabel: "free", allowFreeform: true },
+};
+
+/** Minimum output pixel dimensions for the crop, derived from `UPLOAD_LIMITS`. */
+export function getMinOutput(kind: UploadKind): { width: number; height: number } {
+  const limit = UPLOAD_LIMITS[kind];
+  return { width: limit.minWidth ?? 1, height: limit.minHeight ?? 1 };
+}

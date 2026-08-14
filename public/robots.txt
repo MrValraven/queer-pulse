@@ -1,6 +1,6 @@
 # QueerPulse robots policy
 #
-# Posture: DELIBERATELY QUIET. Only the public-service surface is indexed —
+# Posture: DELIBERATELY QUIET. Only the public-service surface is indexed:
 # resources, safety, about/governance, policies and the local arrival guides.
 # The magazine, cinema, studio, activism, archive and sustainer surfaces are
 # intentionally NOT indexed; they rely on word-of-mouth and direct sharing.
@@ -92,7 +92,7 @@ Disallow: /sustainer
 #
 # Retrieval crawlers fetch a page at answer time and cite it with a link back,
 # so a person asking an AI for queer healthcare guidance in Lisbon can still be
-# pointed here — and the words stay on our domain. Training crawlers absorb
+# pointed here, and the words stay on our domain. Training crawlers absorb
 # community writing into model weights without attribution; our members did not
 # consent to being training data.
 #
@@ -103,7 +103,7 @@ Disallow: /sustainer
 
 # --- Retrieval / citation: allowed, but ONLY on the quiet public surface ---
 #
-# A crawler that matches a specific User-agent group obeys ONLY that group —
+# A crawler that matches a specific User-agent group obeys ONLY that group:
 # per-agent groups do NOT inherit the `User-agent: *` rules above. So these
 # agents must be given the full Disallow list again, or naming them here would
 # hand them the gated member surface. Stacking the User-agent lines applies one

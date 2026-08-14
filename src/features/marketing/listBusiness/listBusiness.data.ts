@@ -445,6 +445,10 @@ export interface ListingDraft {
   tags: string[]; // <=6
   goodFor: string[]; // GOODFOR ids
   langs: string[];
+  /** Online-only business — no physical location. When true the wizard skips
+   *  the address/pin (and neighbourhood) requirements and the listing carries
+   *  no coordinates. */
+  online: boolean;
   address: string;
   geocoded: boolean;
   latitude: number | null;

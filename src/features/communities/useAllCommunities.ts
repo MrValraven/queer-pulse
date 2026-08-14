@@ -80,7 +80,7 @@ export function buildCreatedDetail(c: CreatedCommunity): CommunityDetail {
     tags: [typeLabelFor(c.type), ...(c.tagline ? [c.tagline] : [])],
     organiser,
     nextEvent: {
-      dd: "—",
+      dd: "-",
       mm: "soon",
       title: "First gathering, to be announced",
       meta: "Once a few people are in",
@@ -89,7 +89,7 @@ export function buildCreatedDetail(c: CreatedCommunity): CommunityDetail {
     },
     topicThread: {
       votes: 1,
-      title: `Welcome to ${c.name} — say hello`,
+      title: `Welcome to ${c.name}: say hello`,
       author: organiser,
       time: "just now",
       replyCount: 0,

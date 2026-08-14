@@ -88,7 +88,7 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
     type: "ban",
     subject: "@anon_4471",
     reason:
-      "Doxxing — home address shared with a threat. Member offered safety resources.",
+      "Doxxing: home address shared with a threat. Member offered safety resources.",
     when: "9 min ago",
     range: "today",
   },

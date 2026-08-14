@@ -252,7 +252,7 @@ export const SKIN_META: Record<SkinFamily, SkinMeta> = {
   gallery: {
     name: "Gallery",
     face: "EB Garamond",
-    note: "Museum-grade air. Every item is a wall label — title, date, medium, accession number.",
+    note: "Museum-grade air. Every item is a wall label: title, date, medium, accession number.",
     kinds: [
       "Curator",
       "Gallerist",

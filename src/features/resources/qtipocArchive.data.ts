@@ -30,11 +30,11 @@ export const PIECES: ArchivePiece[] = [
     kind: "Oral",
     year: "2025",
     blurb:
-      "Recorded reflections behind the map — what each spot means, in people's own voices.",
+      "Recorded reflections behind the map: what each spot means, in people's own voices.",
     tint: "jade",
   },
   {
-    title: '"A visibility gap" — responses',
+    title: '"A visibility gap": responses',
     kind: "Document",
     year: "2024",
     blurb:

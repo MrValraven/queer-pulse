@@ -27,11 +27,11 @@ export const members: Catalog = {
   "upload.error.unsupportedType":
     "That image type isn't supported. Use a JPEG, PNG, WebP or GIF.",
   "upload.error.tooLarge":
-    "That image is too large — keep it under {maxLabel}.",
+    "That image is too large. Keep it under {maxLabel}.",
   "upload.error.decodeFailed":
     "We couldn't read that image. Try a different file.",
   "upload.error.tooSmall":
-    "This image is too small — it needs to be at least {minWidth} × {minHeight}px.",
+    "This image is too small. It needs to be at least {minWidth} × {minHeight}px.",
   "upload.error.stripFailed":
     "We couldn't safely process that image, so we didn't upload it. Try a different file.",
   "upload.error.retry": "We couldn't upload that image. Please try again.",
@@ -82,7 +82,7 @@ export const members: Catalog = {
   "workItem.yearLabel": "Work year",
   "workItem.linkPlaceholder": "Link (optional, e.g. https://bandcamp.com/…)",
   "workItem.linkLabel": "Work link",
-  "workItem.linkedNote": "Links to a QueerPulse page — not editable here.",
+  "workItem.linkedNote": "Links to a QueerPulse page. Not editable here.",
   "workItem.remove": "Remove",
 
   // ── Profile page states (ProfilePage) ──────────────────────────────────────
@@ -108,7 +108,7 @@ export const members: Catalog = {
   // ── Profile hero (ProfileSections) ─────────────────────────────────────────
   "profile.hero.verifiedBadge": "Verified member",
   "profile.hero.viewPhotoAria": "View photo of {name}",
-  "profile.hero.curatorLink": "Cinema curator — view programming profile",
+  "profile.hero.curatorLink": "Cinema curator: view programming profile",
   "profile.hero.memberSince": "Member since {since}",
   "profile.hero.location": "{hood}, Lisbon",
   "profile.hero.editCta": "Edit profile",
@@ -155,14 +155,14 @@ export const members: Catalog = {
   "content.now.subtitle": "What {first} is in the middle of",
   "content.now.openLabel": "Open to",
   "content.work.title": "Selected work",
-  "content.work.subtitle": "A few things, not a portfolio dump",
+  "content.work.subtitle": "A few things, handpicked",
   "content.board.title": "On the board",
   "content.board.subtitle": "What {first} is asking for and offering right now",
   "content.board.looking": "Looking",
   "content.board.offering": "Offering",
   "content.skills.title": "Skills & offerings",
   "content.skills.subtitle":
-    "What {first} can help with — and swap on the barter board",
+    "What {first} can help with, and swap on the barter board",
   "content.skills.barterCta": "See the full barter board",
   "content.groups.title": "Groups & circles",
   "content.groups.subtitle": "Where {first} shows up in the community",
@@ -228,7 +228,7 @@ export const members: Catalog = {
   // ── Now status + Open to (ProfileNowField, OpenToEditor) ───────────────────
   "profileEdit.now.label": "Now",
   "profileEdit.now.help":
-    "What you're in the middle of. Change it as often as you like — leave it empty and this section stays off your profile.",
+    "What you're in the middle of. Change it as often as you like. Leave it empty and this section stays off your profile.",
   "profileEdit.now.placeholder":
     "Finishing a zine, learning to weld, looking for a rehearsal room…",
   "profileEdit.openTo.label": "Open to",
@@ -246,7 +246,7 @@ export const members: Catalog = {
     "Show what I'm looking for on my profile",
 
   // ── Edit bar (ProfileEditBar) ───────────────────────────────────────────────
-  "profileEdit.bar.unsaved": "You're editing your profile — unsaved changes",
+  "profileEdit.bar.unsaved": "You're editing your profile, unsaved changes",
   "profileEdit.bar.discard": "Discard",
   "profileEdit.bar.saving": "Saving…",
   "profileEdit.bar.tryAgain": "Try again",
@@ -278,7 +278,7 @@ export const members: Catalog = {
 
   // ── Skills editor (SkillsEditor) ────────────────────────────────────────────
   "profileEdit.skills.subtitle":
-    "What you can help with — and swap on the barter board",
+    "What you can help with, and swap on the barter board",
   "profileEdit.skills.add": "Add",
   "profileEdit.skills.namePlaceholder": "A skill or service…",
   "profileEdit.skills.nameLabel": "Skill or service",
@@ -303,7 +303,7 @@ export const members: Catalog = {
   "hero.vouch.by": "Vouched for by <b>{names}</b>.",
   "hero.vouch.onlyNumberMatters": "That's the only number that matters here.",
   "hero.vouch.emptySelf":
-    "No vouches yet. They'll appear here as people who know you add their name — the only number that matters.",
+    "No vouches yet. They'll appear here as people who know you add their name. The only number that matters.",
   "hero.vouch.emptyOther":
     "No vouches for {first} yet. If you know them, yours could be the first.",
 
@@ -326,7 +326,7 @@ export const members: Catalog = {
   "publicBySlug.activityEmpty": "Nothing public just yet.",
   "publicBySlug.joinTitle": "QueerPulse is invite-only",
   "publicBySlug.joinBody":
-    "A place queer Lisbon gathers — no ads, no algorithm. You need someone to bring you in, or you can ask us directly.",
+    "A place queer Lisbon gathers: no ads, no algorithm. You need someone to bring you in, or you can ask us directly.",
   "publicBySlug.notFound.metaTitle": "Not found · QueerPulse",
   "publicBySlug.notFound.title": "Nothing at this link",
   "publicBySlug.notFound.description":
@@ -345,7 +345,7 @@ export const members: Catalog = {
   "publicProfile.locked.postsTitle":
     "Posts, replies, and DMs are <em>members-only.</em>",
   "publicProfile.locked.postsBody":
-    "QueerPulse keeps day-to-day community life behind a sign-in to protect members. Become one and {first}'s feed unlocks immediately — including the ability to message {first}.",
+    "QueerPulse keeps day-to-day community life behind a sign-in to protect members. Become one and {first}'s feed unlocks immediately, including the ability to message {first}.",
   "publicProfile.requestInviteArrow": "Request an invite",
   "publicProfile.locked.connectionsHeading": "Connections",
   "publicProfile.locked.connectionsTitle":
@@ -354,14 +354,14 @@ export const members: Catalog = {
     "To protect members' networks, we don't show connection lists publicly. Sign in to see your mutuals with {first}.",
   "publicProfile.bottomCta.title": "Want the <em>full picture?</em>",
   "publicProfile.bottomCta.body":
-    "QueerPulse is invite-based — {firstName} can vouch for you if you've met in person. Or request an invite from us directly.",
+    "QueerPulse is invite-based. {firstName} can vouch for you if you've met in person. Or request an invite from us directly.",
   "publicProfile.bottomCta.vouchCta": "Ask {firstName} to vouch",
 
   // ── Public profile sections (PublicProfileSections) ─────────────────────────
   "publicProfile.preview.ownerLabel":
     "Preview of your public profile · this is how non-members would see you",
   "publicProfile.preview.notYet":
-    "Public profiles aren't open yet — this preview is only visible to you.",
+    "Public profiles aren't open yet. This preview is only visible to you.",
   "publicProfile.pill.live": "On",
   "publicProfile.pill.off": "Off",
   "publicProfile.preview.backToProfile": "Back to your profile",
@@ -380,32 +380,32 @@ export const members: Catalog = {
   "publicProfile.control.locked.title":
     "A public profile is something you <em>grow into.</em>",
   "publicProfile.control.locked.lede":
-    "Public profiles are for members who help carry the public side of QueerPulse — writers, hosts, organisers. Here's where you are:",
+    "Public profiles are for members who help carry the public side of QueerPulse: writers, hosts, organisers. Here's where you are:",
   "publicProfile.control.locked.progress":
-    "{met} of {total} met — keep showing up and this unlocks on its own.",
+    "{met} of {total} met. Keep showing up and this unlocks on its own.",
   "publicProfile.control.unlocked.eyebrow": "Public profile · unlocked",
   "publicProfile.control.unlocked.title":
     "You can share a <em>public profile.</em>",
   "publicProfile.control.unlocked.lede":
-    "A public profile will let people who aren't members yet find your writing, your events, and a way to reach you — without opening the rest of the community.",
+    "A public profile will let people who aren't members yet find your writing, your events, and a way to reach you, without opening the rest of the community.",
   "publicProfile.control.notYet":
     "Public profiles aren't open yet, so nothing here is published anywhere and nobody outside QueerPulse can see you. We're remembering what you choose, and it's what we'll turn on for you the day they open.",
   "publicProfile.control.switchLabel": "Show a public profile",
-  "publicProfile.control.statusOn": "On — saved for when public profiles open.",
-  "publicProfile.control.statusOff": "Off — nothing of yours goes public.",
+  "publicProfile.control.statusOn": "On: saved for when public profiles open.",
+  "publicProfile.control.statusOff": "Off: nothing of yours goes public.",
   "publicProfile.control.viewCta": "Preview your public profile",
   "publicProfile.control.toast.hidden":
-    "Saved — your profile stays members-only",
+    "Saved: your profile stays members-only",
   "publicProfile.control.toast.live":
-    "Saved — we'll turn this on when public profiles open",
+    "Saved: we'll turn this on when public profiles open",
   "publicProfile.control.toast.failed":
-    "We couldn't save that — your preference is unchanged. Try again in a moment.",
+    "We couldn't save that. Your preference is unchanged. Try again in a moment.",
   "publicProfile.control.checking.title": "Checking <em>where you are</em>",
   "publicProfile.control.checking.body":
-    "One moment — we're totting up your contributions, vouches, and time here.",
+    "One moment. We're totting up your contributions, vouches, and time here.",
   "publicProfile.control.error.title": "We couldn't check just now",
   "publicProfile.control.error.body":
-    "Something got in the way of loading your progress. It's not you — try again in a moment.",
+    "Something got in the way of loading your progress. It's not you. Try again in a moment.",
   "publicProfile.control.error.retry": "Try again",
 
   // ── Public-profile hero badge (PublicProfileBadge) ──────────────────────────
@@ -430,7 +430,7 @@ export const members: Catalog = {
   "publicProfile.eligibility.actions.heading": "What moves you forward",
   "publicProfile.eligibility.action.verify": "Verify your identity",
   "publicProfile.eligibility.action.tenure":
-    "Keep showing up — time does this one",
+    "Keep showing up. Time does this one",
   "publicProfile.eligibility.action.host":
     "Publish a piece or host an open event",
   "publicProfile.eligibility.action.vouch":
@@ -439,7 +439,7 @@ export const members: Catalog = {
   "publicProfile.eligibility.action.points": "+{points}",
   "publicProfile.eligibility.family.amount": "{points} / {cap}",
   "publicProfile.eligibility.standing.blocked":
-    "This can't open right now. Nothing else to do here — it'll sort itself out.",
+    "This can't open right now. Nothing else to do here. It'll sort itself out.",
 
   // ── Public-profile contribution stat labels (currentUserPublic.data) ──────
   "publicProfile.stat.poemsPublished": "Poems published",
@@ -450,7 +450,7 @@ export const members: Catalog = {
   // ── Public-profile live empty state (no contributions yet) ──────────────────
   "publicProfile.emptyLive.title": "Your public story starts here",
   "publicProfile.emptyLive.description":
-    "As you publish writing, host events and gather vouches, they'll show up here for the wider world to see. Nothing public yet — start contributing to the community.",
+    "As you publish writing, host events and gather vouches, they'll show up here for the wider world to see. Nothing public yet. Start contributing to the community.",
   "publicProfile.emptyLive.cta": "Explore gatherings",
 
   // ── Global search (SearchPage) ──────────────────────────────────────────────
@@ -483,7 +483,7 @@ export const members: Catalog = {
   "search.resultCount_other": `<b>{count}</b> results for "<b>{query}</b>"`,
   "search.empty.title": "Nothing found",
   "search.empty.body":
-    "Try a different word — member name, neighbourhood, skill, or type of gathering.",
+    "Try a different word: member name, neighbourhood, skill, or type of gathering.",
   "search.hero.label": "Search",
   "search.hero.title": "Find anyone, anything <em>in the community.</em>",
   "search.hero.placeholder": "Members, gatherings, communities, board posts…",
@@ -495,7 +495,7 @@ export const members: Catalog = {
   "directory.memberCountSuffix_other": "members,",
   "directory.findSuffix": "exactly.",
   "directory.lead":
-    "Filter by what they offer, where they're based, what they're <b>open to</b>. The same data goes both ways — members appear here because they opted in to be findable for these reasons.",
+    "Filter by what they offer, where they're based, what they're <b>open to</b>. The same data goes both ways. Members appear here because they opted in to be findable for these reasons.",
   "directory.toast.filtersCleared": "Filters cleared",
   "directory.showingPrefix": "Showing",
   "directory.showingOf": "of",
@@ -513,10 +513,10 @@ export const members: Catalog = {
   "directory.clearFiltersCta": "Clear filters",
   "directory.emptyAll.title": "No members here yet",
   "directory.emptyAll.description":
-    "This directory is still filling up. As people join QueerPulse and opt in to being findable, they'll show up here — check back soon.",
+    "This directory is still filling up. As people join QueerPulse and opt in to being findable, they'll show up here. Check back soon.",
   "directory.error.title": "We couldn't load the directory",
   "directory.error.description":
-    "Something went wrong finding members just now — this isn't an empty directory. Give it another try in a moment.",
+    "Something went wrong finding members just now. This isn't an empty directory. Give it another try in a moment.",
   "directory.error.retry": "Try again",
   "directory.loadingMore": "Loading…",
   "directory.loadMoreCta": "Load more members",
@@ -689,7 +689,7 @@ export const members: Catalog = {
   "commandPalette.escKey": "esc",
   "commandPalette.placeholder": "Search members, gatherings, communities…",
   "commandPalette.signInBody": "Sign in to search across QueerPulse.",
-  "commandPalette.noMatches": "No matches — try another word.",
+  "commandPalette.noMatches": "No matches. Try another word.",
   "commandPalette.seeAllResults": "See all results for “<b>{query}</b>”",
   "commandPalette.openFullSearch": "Open full search",
 
@@ -721,7 +721,7 @@ export const members: Catalog = {
     "QueerPulse is invite-and-vouch for a reason. Members vouching for members is how we stay small and trusted.",
   "vouch.means.council.title": "It's seen by the council",
   "vouch.means.council.body":
-    "Your note goes to the membership council alongside their application — not posted publicly.",
+    "Your note goes to the membership council alongside their application. Not posted publicly.",
 
   // ── Vouch-for-a-member relationship options (vouchMember.data.ts) ──────────
   "vouch.relationship.collaborated": "We've collaborated",
@@ -735,12 +735,12 @@ export const members: Catalog = {
   "vouch.modal.close": "Close",
   "vouch.modal.success.title": "That's <em>{first}</em>, backed.",
   "vouch.modal.success.body":
-    "Your face just joined <b>{first}</b>'s circle of vouches — that's how trust travels here. Member by member, name by name.",
+    "Your face just joined <b>{first}</b>'s circle of vouches. That's how trust travels here. Member by member, name by name.",
   "vouch.modal.success.doneCta": "Done",
   "vouch.modal.form.eyebrow": "Add your vouch",
   "vouch.modal.form.title": "Stand behind <em>{first}</em>",
   "vouch.modal.form.sub":
-    "A vouch is you, publicly, saying you know {first} and trust them in community spaces. It carries weight here — QueerPulse is invite-and-vouch, and your name goes on their profile beside the others who've backed them.",
+    "A vouch is you, publicly, saying you know {first} and trust them in community spaces. It carries weight here. QueerPulse is invite-and-vouch, and your name goes on their profile beside the others who've backed them.",
   "vouch.modal.form.relationshipLabel": "How do you know {first}?",
   "vouch.modal.form.relationshipHint": "select all that apply",
   "vouch.modal.form.endorseLabel": "What can you vouch they're great at?",
@@ -748,13 +748,13 @@ export const members: Catalog = {
   "vouch.modal.form.noteLabel": "Your note",
   "vouch.modal.form.notePlaceholder":
     "How do you know {first}, and what should other members know?",
-  "vouch.modal.form.noteOptional": "Optional — but a note means more",
+  "vouch.modal.form.noteOptional": "Optional, but a note means more",
   "vouch.modal.form.charsCount_one": "{count} character",
   "vouch.modal.form.charsCount_other": "{count} characters",
   "vouch.modal.form.cancel": "Cancel",
   "vouch.modal.form.sending": "Sending your vouch…",
   "vouch.modal.form.anonymousLabel":
-    "Vouch anonymously — your name stays hidden from other members",
+    "Vouch anonymously. Your name stays hidden from other members",
   "vouch.modal.error": "We couldn't save your vouch. Please try again.",
 
   // ── Drafts tabs/sort/status vocab (drafts.data.tsx) ─────────────────────────
@@ -821,14 +821,14 @@ export const members: Catalog = {
     'Nothing in your drafts matches "{query}". Try a different word, or clear the search.',
   "drafts.empty.allCaughtUpTitle": "All caught up.",
   "drafts.empty.allCaughtUpText":
-    "No drafts left — nothing half-written waiting on you. When you start something and step away, it'll be saved here.",
+    "No drafts left. Nothing half-written waiting on you. When you start something and step away, it'll be saved here.",
   "drafts.empty.startCta": "Start something new",
   "drafts.toast.deleted_one": "Draft deleted",
   "drafts.toast.deleted_other": "{count} drafts deleted",
   "drafts.toast.undo": "Undo",
-  "drafts.toast.kept": "Draft kept — 30 more days",
+  "drafts.toast.kept": "Draft kept: 30 more days",
   "drafts.dangerNote":
-    "<b>About the 90-day rule:</b> drafts you haven't touched in 87+ days get an email reminder, then auto-delete on day 90. You can extend any draft 30 days at a time. <em>This is to keep your drafts list honest — not to lose work.</em>",
+    "<b>About the 90-day rule:</b> drafts you haven't touched in 87+ days get an email reminder, then auto-delete on day 90. You can extend any draft 30 days at a time. <em>This keeps your drafts list honest while protecting your work.</em>",
 
   // ── Draft row (DraftRow) ─────────────────────────────────────────────────────
   "drafts.row.selectAriaLabel": "Select draft",
@@ -874,7 +874,7 @@ export const members: Catalog = {
     "Couldn't add that to your collection. Try again.",
   "collections.toast.removed": "Removed from collection",
   "collections.toast.removeError": "Couldn't remove that item. Try again.",
-  "collections.newCollection.defaultMeta": "Just created — start adding saves",
+  "collections.newCollection.defaultMeta": "Just created. Start adding saves",
   "collections.updatedJustNow": "Updated just now",
   // Live-mode collection card chrome (values come from the server).
   "collections.live.updated": "Updated {time}",
@@ -942,7 +942,7 @@ export const members: Catalog = {
   "savedByYou.heading": "Saved by you · live across QueerPulse",
   "savedByYou.empty.title": "Nothing saved yet",
   "savedByYou.empty.description":
-    "Save articles, films, jobs and posts as you explore — they'll gather here so you can come back to them and sort them into collections.",
+    "Save articles, films, jobs and posts as you explore. They'll gather here so you can come back to them and sort them into collections.",
   "savedByYou.empty.browseMagazineCta": "Browse the magazine",
   "savedByYou.empty.exploreCinemaCta": "Explore cinema",
   "savedByYou.count_one": "{count} saved",
@@ -971,7 +971,7 @@ export const members: Catalog = {
   "places.awaitingReview": "Awaiting review",
   "places.empty.title": "No places yet",
   "places.empty.description":
-    "Run a studio, shop, clinic or space in Lisbon? List it in the directory — once it's live, it'll show up here too.",
+    "Run a studio, shop, clinic or space in Lisbon? List it in the directory. Once it's live, it'll show up here too.",
   "places.empty.action": "List my business",
 
   // ── Badges page chrome (BadgesPage, BadgesSections) ─────────────────────────
@@ -995,7 +995,7 @@ export const members: Catalog = {
     "Something went wrong reaching your recognition. Please try again in a moment.",
   "badges.emptyTitle": "No badges yet",
   "badges.emptyDescription":
-    "Show up, host, and take part — your first badges land here as you go.",
+    "Show up, host, and take part. Your first badges land here as you go.",
 
   // ── Perks page chrome (PerksPage, PerksSections) ────────────────────────────
   "perks.page.backToBadges": "Badges & level",
@@ -1013,19 +1013,19 @@ export const members: Catalog = {
   "perks.sidebar.xpSummary":
     "{xp} / {xpMax} XP · {xpToNext} to Level {nextLevel}",
   "perks.sidebar.nextUnlockNote":
-    "Next perks unlock at <strong>Level {nextLevel} · {nextName}</strong> — host without approval & an increased invite quota.",
+    "Next perks unlock at <strong>Level {nextLevel} · {nextName}</strong>: host without approval & an increased invite quota.",
   "perks.sidebar.seeAllBadgesCta": "See all badges & levels",
   "perks.sidebar.explainedTitle": "Perks explained",
   "perks.sidebar.suggestTitle": "Suggest a perk",
   "perks.sidebar.suggestPlaceholder": "Share an idea…",
   "perks.sidebar.sendSuggestionCta": "Send suggestion",
   "perks.sidebar.suggestUnavailableToast":
-    "Perk suggestions aren't open yet — thanks for your patience.",
+    "Perk suggestions aren't open yet. Thanks for your patience.",
   "perks.claim.alreadyActive": "Already active",
   "perks.claim.active": "Active",
   "perks.claim.claimed": "Claimed",
   "perks.claim.unavailableToast":
-    "Claiming perks isn't available yet — we're still wiring this up.",
+    "Claiming perks isn't available yet. We're still wiring this up.",
 
   // ── Your network (ProfileNetworkStats chips + NetworkListModal) — owner-only ─
   "network.title": "Your network",

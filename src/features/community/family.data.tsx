@@ -1,4 +1,5 @@
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 
 export type TabId = "adoption" | "ivf" | "coparenting" | "donors" | "legal";
 
@@ -6,7 +7,7 @@ export const LEGAL = routes.legal;
 export const TRANS_HUB = routes.transHub;
 export const FORUM = routes.forum;
 export const MENTORSHIP = routes.mentorship;
-export const INVITE = routes.requestInvite;
+export const INVITE = requestInvitePath("family");
 
 export interface InfoCard {
   eyebrowKey: string;
@@ -164,7 +165,7 @@ export const TABS: Tab[] = [
     ],
     note: {
       quote:
-        '"The social worker we worked with was completely unfazed by us being a same-sex couple. The process was slow but fair. Having a lawyer from the start made everything less stressful — worth every euro."',
+        '"The social worker we worked with was completely unfazed by us being a same-sex couple. The process was slow but fair. Having a lawyer from the start made everything less stressful. Worth every euro."',
       attribution: "Member, Arroios",
     },
     noteLabelKey: "family.tab.adoption.noteLabel",
@@ -198,7 +199,7 @@ export const TABS: Tab[] = [
         context: "Independent social worker",
         stars: 5,
         quote:
-          '"Specifically experienced with LGBTQ+ families. Worth contacting directly before you start the official process — she helped us understand what to expect."',
+          '"Specifically experienced with LGBTQ+ families. Worth contacting directly before you start the official process. She helped us understand what to expect."',
       },
     ],
   },
@@ -241,7 +242,7 @@ export const TABS: Tab[] = [
     ],
     note: {
       quote:
-        '"We went private after a 14-month SNS wait. The clinic was completely straightforward with us — no awkward questions, no assumptions. We have a daughter now. The process was hard but the people were good."',
+        '"We went private after a 14-month SNS wait. The clinic was completely straightforward with us: no awkward questions, no assumptions. We have a daughter now. The process was hard but the people were good."',
       attribution: "Member, Mouraria",
     },
     noteLabelKey: "family.tab.ivf.noteLabel",
@@ -255,7 +256,7 @@ export const TABS: Tab[] = [
         context: "Private · Marquês de Pombal",
         stars: 5,
         quote:
-          "\"Genuinely affirming from the first call. The team treated us as a couple — not a 'special case'. Two members of our community are now parents thanks to them.\"",
+          "\"Genuinely affirming from the first call. The team treated us as a couple (not a 'special case'). Two members of our community are now parents thanks to them.\"",
       },
       {
         initials: "IM",
@@ -307,7 +308,7 @@ export const TABS: Tab[] = [
     ],
     note: {
       quote:
-        "\"We met through this community, spent six months getting to know each other as people first, and then started the process. Our daughter is two now. It's unconventional but it's working — the key was having the hard conversations early.\"",
+        "\"We met through this community, spent six months getting to know each other as people first, and then started the process. Our daughter is two now. It's unconventional but it's working. The key was having the hard conversations early.\"",
       attribution: "Co-parent pair, Graça + Marvila",
     },
     noteLabelKey: "family.tab.coparenting.noteLabel",
@@ -345,7 +346,7 @@ export const TABS: Tab[] = [
     ],
     note: {
       quote:
-        '"We used an anonymous clinic donor and never had any ambiguity about parenthood. Both of us are on the birth certificate. For people considering a known donor — please get a lawyer before you start, not after."',
+        '"We used an anonymous clinic donor and never had any ambiguity about parenthood. Both of us are on the birth certificate. For people considering a known donor, please get a lawyer before you start, not after."',
       attribution: "Member, Príncipe Real",
     },
     noteLabelKey: "family.tab.donors.noteLabel",

@@ -32,10 +32,10 @@
 
 /* The row currently held under the pointer (via the grip drag handle). Lifts
    it above its neighbours with a shadow so it reads as "picked up" while the
-   list reshuffles underneath. No layout change so the swap stays smooth. The
-   `transform` is deliberately left to the FLIP reorder animation
-   (`useReorderAnimation`), which owns inline `transform` on every row to glide
-   it into its new slot — a scale here would fight that inline value. */
+   list reshuffles underneath. No `transform` here on purpose: motion owns the
+   row's inline `transform` for both the drag offset (following the finger) and
+   the `layout` glide into its new slot, so a transform in this rule would fight
+   that inline value. Shadow / z-index / border only. */
 .dragging {
   position: relative;
   z-index: 1;

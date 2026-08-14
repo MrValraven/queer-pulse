@@ -33,31 +33,31 @@ export function negotiationAngles(app: Application): NegotiationAngle[] {
       id: "collaborative",
       nameKey: "economy:negotiate.angle.collaborative.name",
       blurbKey: "economy:negotiate.angle.collaborative.blurb",
-      draft: `Hi ${recruiter} — thank you, I'm genuinely thrilled about ${co} and the scope you've described. I'd love to find a package I can fully commit to, and I was hoping we could bring the base nearer €47k. I'm flexible on how we get there and happy to talk it through — I want this to feel right for both of us.`,
+      draft: `Hi ${recruiter}, thank you, I'm genuinely thrilled about ${co} and the scope you've described. I'd love to find a package I can fully commit to, and I was hoping we could bring the base nearer €47k. I'm flexible on how we get there and happy to talk it through. I want this to feel right for both of us.`,
     },
     {
       id: "market",
       nameKey: "economy:negotiate.angle.market.name",
       blurbKey: "economy:negotiate.angle.market.blurb",
-      draft: `Hi ${recruiter} — thank you for the offer; I'm excited about the role. Looking at comparable roles in Lisbon, the mid-point sits noticeably higher, so I'd like to align the base to around €47–48k given the responsibility this position carries. I'm confident in the value I'll bring and happy to walk through my reasoning.`,
+      draft: `Hi ${recruiter}, thank you for the offer; I'm excited about the role. Looking at comparable roles in Lisbon, the mid-point sits noticeably higher, so I'd like to align the base to around €47–48k given the responsibility this position carries. I'm confident in the value I'll bring and happy to walk through my reasoning.`,
     },
     {
       id: "bundle",
       nameKey: "economy:negotiate.angle.bundle.name",
       blurbKey: "economy:negotiate.angle.bundle.blurb",
-      draft: `Hi ${recruiter} — I'd really like to make this work. If there's limited room on base, could we look at the whole package — a few extra holiday days, a larger learning budget, or the four-day week protected in writing? I'm flexible, and I'd love to find the combination that gets us both to yes.`,
+      draft: `Hi ${recruiter}, I'd really like to make this work. If there's limited room on base, could we look at the whole package: a few extra holiday days, a larger learning budget, or the four-day week protected in writing? I'm flexible, and I'd love to find the combination that gets us both to yes.`,
     },
     {
       id: "enthusiastic",
       nameKey: "economy:negotiate.angle.enthusiastic.name",
       blurbKey: "economy:negotiate.angle.enthusiastic.blurb",
-      draft: `Hi ${recruiter} — my honest answer is yes, I want to join ${co}. The one thing I'd love to revisit is the base: could we get to €47k? Everything else looks great, and if we can land that, I'm ready to sign and get started.`,
+      draft: `Hi ${recruiter}, my honest answer is yes, I want to join ${co}. The one thing I'd love to revisit is the base: could we get to €47k? Everything else looks great, and if we can land that, I'm ready to sign and get started.`,
     },
     {
       id: "time",
       nameKey: "economy:negotiate.angle.time.name",
       blurbKey: "economy:negotiate.angle.time.blurb",
-      draft: `Hi ${recruiter} — thank you so much for this, it means a lot. It's an important decision and I'd like to give it the consideration it deserves; could I take until the end of the week to come back to you properly? I'm very enthusiastic and want to respond thoughtfully rather than quickly.`,
+      draft: `Hi ${recruiter}, thank you so much for this, it means a lot. It's an important decision and I'd like to give it the consideration it deserves; could I take until the end of the week to come back to you properly? I'm very enthusiastic and want to respond thoughtfully rather than quickly.`,
     },
   ];
 }
@@ -90,7 +90,7 @@ export function followedUpPatch(): Partial<Application> {
     badge: { kind: "in-review", label: "Followed up", pulse: true },
     status: (
       <>
-        <b>Follow-up sent just now.</b> They've been nudged gently — you'll
+        <b>Follow-up sent just now.</b> They've been nudged gently. You'll
         usually hear back within a couple of days.
       </>
     ),
@@ -114,7 +114,7 @@ export function submittedDraftPatch(): Partial<Application> {
     ],
     status: (
       <>
-        Submitted just now. Their stated turnaround is 7 days — we'll watch the
+        Submitted just now. Their stated turnaround is 7 days. We'll watch the
         clock for you.
       </>
     ),

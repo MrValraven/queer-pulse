@@ -15,6 +15,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import {
   FORMAT_FILTERS,
   GENRE_FILTERS,
@@ -231,7 +232,7 @@ export function ReadingGroupsPage() {
         }
         sub={t("community:readingGroups.outro.sub")}
       >
-        <Button to={routes.requestInvite} variant="primary" size="lg">
+        <Button to={requestInvitePath("reading_groups")} variant="primary" size="lg">
           {t("community:readingGroups.outro.cta")}
         </Button>
       </Outro>

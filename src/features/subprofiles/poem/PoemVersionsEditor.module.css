@@ -1,0 +1,83 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.tabs {
+  flex-wrap: wrap;
+}
+.addBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.addBtn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.nameField {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1 1 14rem;
+  min-width: 0;
+  padding: 0 0.6rem;
+  border: 1px solid rgba(45, 27, 61, 0.14);
+  border-radius: 10px;
+  background: var(--paper);
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+.nameField:focus-within {
+  border-color: var(--accent);
+}
+.nameField input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding: 0.45rem 0;
+  color: var(--ink);
+  font: inherit;
+}
+.nameField input:focus {
+  outline: none;
+}
+.ctrlBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid rgba(45, 27, 61, 0.14);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.ctrlBtn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.ctrlBtn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}

@@ -15,7 +15,7 @@ export interface CoHostRole {
 export const ROLES: CoHostRole[] = [
   {
     ic: "G",
-    title: "Greet at the door, 18:30 — 19:30",
+    title: "Greet at the door, 18:30 to 19:30",
     description: "Check names against the RSVP list. Anika will join you by 19:00.",
     permKey: "gatherings:cohostInvite.permRequired",
     permCls: "permYes",
@@ -79,4 +79,4 @@ export const COMMITMENTS: CoHostCommitment[] = [
 ];
 
 export const OUTCLAUSE_REST =
-  "— no shame, no penalty, just send Anika a one-line message. We've all had a Thursday go sideways.";
+  ": no shame, no penalty, just send Anika a one-line message. We've all had a Thursday go sideways.";

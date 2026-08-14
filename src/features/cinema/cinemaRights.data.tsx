@@ -81,7 +81,7 @@ export const sections: RightsSection[] = [
             choose. We hold no exclusivity over any territory, format, or
             distribution channel. The contract uses the term “non-exclusive
             licence” precisely. You are granting us the right to show your film
-            on our platform — you are not transferring or limiting your
+            on our platform. You are not transferring or limiting your
             ownership or right to show it elsewhere.
             <span className="highlight">
               <strong>In the contract:</strong> “The Filmmaker grants QueerPulse
@@ -139,7 +139,7 @@ export const sections: RightsSection[] = [
         a: (
           <>
             <strong>Every Monday</strong>, for all transactions in the previous
-            7-day period. There is no minimum threshold — if you earned €0.80
+            7-day period. There is no minimum threshold: if you earned €0.80
             this week, we send €0.80. Payment is by IBAN transfer or Stripe,
             your choice. Statements are available in your Studio dashboard in
             real time.
@@ -152,8 +152,8 @@ export const sections: RightsSection[] = [
           <>
             Gross transaction value × 80%. So a €3.00 rental = €2.40 to you. A
             €8.00 purchase = €6.40 to you. Payment processing fees (Stripe/SEPA)
-            are covered by the remaining 20% —{" "}
-            <em>they are not deducted from your 80%.</em> Tips are 100% — no
+            are covered by the remaining 20%.{" "}
+            <em>They are not deducted from your 80%.</em> Tips are 100%. No
             processing fees are deducted from tips.
           </>
         ),
@@ -206,7 +206,7 @@ export const sections: RightsSection[] = [
         a: (
           <>
             Because the contract is non-exclusive, selling distribution rights
-            to another platform doesn't affect your agreement with us — unless
+            to another platform doesn't affect your agreement with us, unless
             the new deal requires exclusivity in a territory, in which case
             contact us and we'll geo-restrict accordingly. We never require
             first-refusal or matching rights.
@@ -224,8 +224,8 @@ export const sections: RightsSection[] = [
         q: "Can the co-op edit or re-cut my film?",
         a: (
           <>
-            No. We never alter your film — no re-cuts, no colour changes, no
-            trims — without your <strong>written consent</strong>. The only
+            No. We never alter your film (no re-cuts, no colour changes, no
+            trims) without your <strong>written consent</strong>. The only
             processing we do is technical: transcoding for streaming and
             generating captions, and even those we run past you before they go
             live.
@@ -253,7 +253,7 @@ export const sections: RightsSection[] = [
         q: "Are content warnings and tags mine to set?",
         a: (
           <>
-            Yes — and we honour them as submitted. You decide the content
+            Yes, and we honour them as submitted. You decide the content
             warnings and identity tags that appear on your film. We won't add or
             remove a warning without asking you first, and we never re-tag a
             film to change how it's marketed.
@@ -264,8 +264,8 @@ export const sections: RightsSection[] = [
         q: "Can I ask for my film to be taken down temporarily?",
         a: (
           <>
-            Yes. If you need the film pulled — for a festival window, a re-edit,
-            or any personal reason — tell us and we remove it from the catalogue
+            Yes. If you need the film pulled (for a festival window, a re-edit,
+            or any personal reason), tell us and we remove it from the catalogue
             within <strong>48 hours</strong>, no questions asked. It stays down
             until you ask us to restore it. Taking a film down doesn't end your
             contract.
@@ -285,7 +285,7 @@ export const sections: RightsSection[] = [
           <>
             One click in your Studio dashboard, or an email to the rights team.
             We remove the film at the end of a{" "}
-            <strong>30-day notice period</strong> — there is no penalty and no
+            <strong>30-day notice period</strong>. There is no penalty and no
             exit fee. If you need it gone sooner for an urgent reason, ask;
             we'll do our best.
           </>
@@ -307,8 +307,8 @@ export const sections: RightsSection[] = [
         a: (
           <>
             Yes. You can export your full earnings history, viewing statistics,
-            and statements from your Studio dashboard at any time — as CSV or
-            PDF — whether or not you're leaving. Your data is yours.
+            and statements from your Studio dashboard at any time, as CSV or
+            PDF, whether or not you're leaving. Your data is yours.
           </>
         ),
       },
@@ -316,7 +316,7 @@ export const sections: RightsSection[] = [
         q: "When can the co-op terminate my agreement?",
         a: (
           <>
-            Only for <strong>material breach</strong> — for example, if the film
+            Only for <strong>material breach</strong>: for example, if the film
             contains content you misrepresented on submission, or you don't
             actually hold the rights you told us you held. Even then, we give
             you written notice and a chance to put it right before anything
@@ -335,7 +335,7 @@ export const sections: RightsSection[] = [
         q: "Do I have to pay for captions?",
         a: (
           <>
-            No. Captioning is funded by the co-op out of the 20% — it is{" "}
+            No. Captioning is funded by the co-op out of the 20%. It is{" "}
             <em>never</em> skimmed from your 80%. Every film gets captions
             before it goes live, and we run them past you first so names and
             spellings are right.
@@ -351,7 +351,7 @@ export const sections: RightsSection[] = [
         a: (
           <>
             Where it's feasible, yes, and we fund it the same way we fund
-            captions. It's opt-in — tell us at submission or later, and we'll
+            captions. It's opt-in: tell us at submission or later, and we'll
             arrange described audio for your film.
           </>
         ),
@@ -371,7 +371,7 @@ export const sections: RightsSection[] = [
         q: "How do I request a specific accessible format?",
         a: (
           <>
-            Email <strong>rights@queerpulse.pt</strong> or raise it from your
+            Email <strong>hello@queerpulse.com</strong> or raise it from your
             Studio dashboard. Whether it's described audio, a specific caption
             format, or an alternative statement layout, a human will sort it out
             with you.
@@ -393,7 +393,7 @@ export const contact = {
   ),
   body: (
     <>
-      Write to <strong>rights@queerpulse.pt</strong> — a human will reply
+      Write to <strong>hello@queerpulse.com</strong>. A human will reply
       within 48 hours, in English or Portuguese. We don't use template responses
       for legal questions.
     </>

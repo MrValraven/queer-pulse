@@ -41,7 +41,7 @@ export const notifications: Catalog = {
   // Sent when a new home goes live that matches a saved search with alerts on.
   // System-driven (no actor); `title`/`area` come from the payload.
   "type.housing_listing_match.text":
-    "A new home in {area} matches your saved search — {title}.",
+    "A new home in {area} matches your saved search: {title}.",
   "type.housing_listing_match.meta": "Housing alert",
 
   "type.promoted_to_member.text": "You're a full member now. Welcome in.",
@@ -101,7 +101,7 @@ export const notifications: Catalog = {
   "type.event_reminder.text": "A gathering you're going to is coming up.",
   "type.event_reminder.meta": "Gathering reminder",
 
-  "type.waitlist_promoted.text": "A spot opened up — you're off the waitlist.",
+  "type.waitlist_promoted.text": "A spot opened up. You're off the waitlist.",
   "type.waitlist_promoted.meta": "Gathering waitlist",
 
   "type.event_cancelled.text":
@@ -143,7 +143,7 @@ export const notifications: Catalog = {
   "type.join_request_received.meta": "Join request",
 
   "type.join_request_approved.text":
-    "You're in — your request to join was approved.",
+    "You're in. Your request to join was approved.",
   "type.join_request_approved.meta": "Join request",
 
   "type.join_request_declined.text":
@@ -241,6 +241,16 @@ export const notifications: Catalog = {
   "type.subprofile_credit.text": "{subprofileName} credited you on {itemTitle}.",
   "type.subprofile_credit.meta": "Persona credit",
 
+  // Sent when the XP/badge awarding engine credits a member across a level
+  // threshold. System-driven (no actor); {level}/{name} come from the payload.
+  "type.xp_level_up.text": "You reached Level {level}, {name}.",
+  "type.xp_level_up.meta": "Level up",
+
+  // Sent when the XP/badge awarding engine grants a member a badge.
+  // System-driven (no actor); {badgeName} comes from the payload.
+  "type.badge_earned.text": "You earned the {badgeName} badge.",
+  "type.badge_earned.meta": "Badge earned",
+
   "type.unknown.text": "You have a new notification.",
   "type.unknown.meta": "Notification",
 
@@ -253,7 +263,7 @@ export const notifications: Catalog = {
   "page.empty.description": "No notifications in this category.",
   "page.error.title": "We couldn't load your notifications",
   "page.error.description":
-    "Something went wrong reaching the server. This isn't an empty inbox — try again in a moment.",
+    "Something went wrong reaching the server. This isn't an empty inbox. Try again in a moment.",
   "page.error.retry": "Try again",
 
   // Filter tabs (data.tsx's notificationTabs + the link-style Mentions tab)
@@ -329,7 +339,7 @@ export const notifications: Catalog = {
   "mentions.eyebrow": "Mentions · {handle}",
   "mentions.heading": "When somebody <em>tagged you in.</em>",
   "mentions.lead":
-    "Posts, replies, and articles that @-mention you. Distinct from Notifications — this is just the mentions thread.",
+    "Posts, replies, and articles that @-mention you. Distinct from Notifications. This is just the mentions thread.",
   "mentions.tabs.all": "All",
   "mentions.tabs.unread": "Unread",
   "mentions.tabs.posts": "In posts",
@@ -343,7 +353,7 @@ export const notifications: Catalog = {
   "mentions.markAllReadToast": "All marked as read",
   "mentions.empty.title": "No mentions here",
   "mentions.empty.description":
-    "Nothing in this view right now. When someone tags you, it’ll show up here — no need to go looking.",
+    "Nothing in this view right now. When someone tags you, it’ll show up here. No need to go looking.",
   // Live has no mentions inbox endpoint yet — shown instead of a silent empty
   // list so the surface reads as honestly unfinished, not broken (MentionsPanel).
   "mentions.comingSoon.title": "Mentions are on the way",
@@ -388,7 +398,7 @@ export const notifications: Catalog = {
   "deepLink.summary.gathering": "Your RSVP to {event} was accepted",
   "deepLink.summary.reply": "{name} replied to your post",
   "deepLink.summary.mention": "{name} mentioned you in a post",
-  "deepLink.summary.moderation": "An update on your account — appeal {ref}",
+  "deepLink.summary.moderation": "An update on your account: appeal {ref}",
   "deepLink.connection.toastConnected": "Connected with {name}",
   "deepLink.connection.toastDeclined": "Request declined",
   "deepLink.connection.connectedTitle": "You’re <em>connected</em>",
@@ -401,7 +411,7 @@ export const notifications: Catalog = {
   "deepLink.connection.mutualConnections_other": "{count} mutual connections",
   "deepLink.connection.accept": "Accept",
   "deepLink.connection.decline": "Decline",
-  "deepLink.connection.notNow": "Not now — decide later",
+  "deepLink.connection.notNow": "Not now, decide later",
   "deepLink.connection.remindLaterToast": "We’ll remind you later",
   "deepLink.gathering.badge": "You’re in",
   "deepLink.gathering.guestListConfirmed": "You’re on the guest list.",

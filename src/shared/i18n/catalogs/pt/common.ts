@@ -27,8 +27,8 @@ export const common: Catalog = {
 
   // Falhas de escrita otimista — mostradas quando um guardar/remover é revertido
   // porque a chamada à API falhou (SavedProvider, DraftsProvider).
-  "toast.saveFailed": "Não foi possível guardar — verifica a ligação e tenta de novo.",
-  "toast.removeFailed": "Não foi possível atualizar — verifica a ligação e tenta de novo.",
+  "toast.saveFailed": "Não foi possível guardar. Verifica a ligação e tenta de novo.",
+  "toast.removeFailed": "Não foi possível atualizar. Verifica a ligação e tenta de novo.",
 
   // Estado de erro de carregamento (falha de fetch em modo live) — reutilizável
   // por páginas que trocam todo o conteúdo por um erro com repetição, em vez de

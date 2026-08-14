@@ -88,7 +88,7 @@ function GatheringPhotosHero() {
           </em>
         </h1>
         <p className={styles.dek}>
-          {PHOTOS_DEK} <em>{PHOTOS_DEK_EMPHASIS}</em> {PHOTOS_DEK_SUFFIX}
+          {PHOTOS_DEK} <em>{PHOTOS_DEK_EMPHASIS}</em>{PHOTOS_DEK_SUFFIX}
         </p>
         <div className={styles.meta}>
           <span>
@@ -184,7 +184,7 @@ function GatheringPhotosFooter() {
             components={{
               em: <em />,
               // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- element template; <Translation> clones it with the link text at render time.
-              mailLink: <a href="mailto:photos@queerpulse.pt" />,
+              mailLink: <a href="mailto:hello@queerpulse.com" />,
               privLink: <Link to={routes.privacy} />,
             }}
           />

@@ -89,7 +89,7 @@ export const DISB: DisbursementRow[] = [
       </>
     ),
     csvName: "Withheld by request",
-    note: "One month's rent for a member between tours — confidential",
+    note: "One month's rent for a member between tours, confidential",
     amount: 600,
   },
   {
@@ -145,7 +145,7 @@ export const DISB: DisbursementRow[] = [
       </>
     ),
     csvName: "Instrument replacement",
-    note: "A stolen accordion, replaced within a week — no application form",
+    note: "A stolen accordion, replaced within a week, no application form",
     amount: 900,
   },
 ];
@@ -204,7 +204,7 @@ export const DISB_MORE: DisbursementRow[] = [
       </>
     ),
     csvName: "Withheld by request",
-    note: "Medical costs for a member — confidential",
+    note: "Medical costs for a member, confidential",
     amount: 750,
   },
   {

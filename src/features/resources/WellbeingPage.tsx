@@ -3,7 +3,7 @@ import { PageShell } from "../../shared/components/layout";
 import { Button, FeatureHelp, Outro, SubpageIndex } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import {
   PageMeta,
   JsonLd,
@@ -102,7 +102,7 @@ export function WellbeingPage() {
         }
         sub={t("resources:wellbeing.outro.sub")}
       >
-        <Button to={routes.requestInvite} variant="primary" size="lg">
+        <Button to={requestInvitePath("wellbeing")} variant="primary" size="lg">
           {t("resources:wellbeing.outro.cta")}
         </Button>
       </Outro>

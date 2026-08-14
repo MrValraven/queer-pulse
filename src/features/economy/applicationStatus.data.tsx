@@ -80,21 +80,21 @@ export const APPS: Application[] = [
         from: "them",
         name: "Marta",
         when: "26 Jun",
-        text: "Thanks Sofia — your application's with me now. I'll come back to you within the week.",
+        text: "Thanks Sofia, your application's with me now. I'll come back to you within the week.",
       },
     ],
     submission: {
       date: "Submitted 26 Jun, 09:14",
       role: "Junior Graphic Designer",
       coverLetter:
-        "I've followed Atelier Pulso's identity work for years — the Casa da Música rebrand especially. I'd bring a typographic eye, a love of risograph texture, and three years of editorial layout to your team.",
+        "I've followed Atelier Pulso's identity work for years, the Casa da Música rebrand especially. I'd bring a typographic eye, a love of risograph texture, and three years of editorial layout to your team.",
       attachments: [
         "Sofia-Marques-CV.pdf",
         "Portfolio-2026.pdf",
         "Cover-letter.pdf",
       ],
       answers: [
-        { q: "Earliest start date?", a: "Two weeks' notice — early July." },
+        { q: "Earliest start date?", a: "Two weeks' notice, early July." },
         { q: "Portfolio link", a: "sofiamarques.work" },
       ],
     },
@@ -139,12 +139,12 @@ export const APPS: Application[] = [
         from: "them",
         name: "João",
         when: "9 Jun",
-        text: "Really strong first round. We'd like to invite you to a round two — does Wed 11 Jun at 16:00 work?",
+        text: "Really strong first round. We'd like to invite you to a round two. Does Wed 11 Jun at 16:00 work?",
       },
       {
         from: "you",
         when: "9 Jun",
-        text: "It does — thank you! See you both then.",
+        text: "It does, thank you! See you both then.",
       },
       {
         from: "system",
@@ -157,7 +157,7 @@ export const APPS: Application[] = [
       when: "Wednesday 11 June 2026, 16:00–17:00 WEST",
       durationMin: 60,
       location: "Google Meet (link sent the morning of)",
-      attendees: ["João Tavares — CTO", "Liv Andersson — Design lead"],
+      attendees: ["João Tavares, CTO", "Liv Andersson, Design lead"],
       notes:
         "A portfolio walk-through plus a short whiteboard exercise. They've shared the brief in advance.",
     },
@@ -188,7 +188,7 @@ export const APPS: Application[] = [
       {
         label: "Offer · respond by 14 Jun",
         state: "active",
-        hint: "They've made you a formal offer — the decision is now yours. Next: accept, decline, or negotiate before the deadline.",
+        hint: "They've made you a formal offer. The decision is now yours. Next: accept, decline, or negotiate before the deadline.",
       },
     ],
     status: (
@@ -219,7 +219,7 @@ export const APPS: Application[] = [
         from: "them",
         name: "Inês",
         when: "15 May",
-        text: "Sofia — your portfolio is wonderful. Could we talk this Thursday afternoon?",
+        text: "Sofia, your portfolio is wonderful. Could we talk this Thursday afternoon?",
       },
       {
         from: "you",
@@ -235,7 +235,7 @@ export const APPS: Application[] = [
         from: "them",
         name: "Inês",
         when: "8 Jun",
-        text: "It was unanimous — we'd love to offer you the role. Full details are on the way.",
+        text: "It was unanimous. We'd love to offer you the role. Full details are on the way.",
       },
       {
         from: "system",
@@ -246,13 +246,13 @@ export const APPS: Application[] = [
     offer: {
       salary: "€42,000 / year (pro-rata, 4 days)",
       holiday: "25 days + public holidays",
-      start: "Flexible — ideally September 2026",
+      start: "Flexible, ideally September 2026",
       respondBy: "Saturday 14 June 2026",
       market:
-        "Editorial leads in Lisbon earn €40–52k. Your offer sits at the lower-middle — there's room.",
+        "Editorial leads in Lisbon earn €40–52k. Your offer sits at the lower-middle. There's room.",
       terms: [
         "Permanent contract after a 3-month settling period",
-        "Hybrid — two days in the Lisbon studio",
+        "Hybrid: two days in the Lisbon studio",
         "€600 yearly learning budget",
         "Full editorial sign-off on the print quarterly",
       ],
@@ -276,7 +276,7 @@ export const APPS: Application[] = [
       {
         label: "Offer · respond by 20 Jun",
         state: "active",
-        hint: "They've made you a formal offer — the decision is now yours. Next: accept, decline, or negotiate before the deadline.",
+        hint: "They've made you a formal offer. The decision is now yours. Next: accept, decline, or negotiate before the deadline.",
       },
     ],
     status: (
@@ -305,7 +305,7 @@ export const APPS: Application[] = [
         "Senior designers in Lisbon earn €44–58k. This sits comfortably in range.",
       terms: [
         "Permanent from day one",
-        "Hybrid — three days in the studio",
+        "Hybrid: three days in the studio",
         "€800 yearly learning budget",
         "Private health insurance included",
       ],
@@ -333,7 +333,7 @@ export const APPS: Application[] = [
     accent: "overdue",
     status: (
       <>
-        Submitted <b>28 May</b> · their stated turnaround was 10 days —{" "}
+        Submitted <b>28 May</b> · their stated turnaround was 10 days.{" "}
         <b>11 days in</b>, a nudge is more than fair.
       </>
     ),
@@ -386,7 +386,7 @@ export const APPS: Application[] = [
         { q: "Notice period", a: "Available immediately." },
         {
           q: "Comfortable fully remote?",
-          a: "Yes — home studio set up in Lisbon.",
+          a: "Yes, home studio set up in Lisbon.",
         },
       ],
     },
@@ -409,14 +409,14 @@ export const APPS: Application[] = [
     status: (
       <>
         They went with someone with more motion experience.{" "}
-        <b>Left a kind, specific note</b> — worth reading.
+        <b>Left a kind, specific note</b>, worth reading.
       </>
     ),
     badge: { kind: "rejected", label: "Closed · 21 May" },
     actions: [{ label: "Read their note", kind: "note", arrow: true }],
     note: {
       from: "Rui · Solar Lisboa",
-      body: "Sofia — this was genuinely close. Your editorial work was the strongest in the round, and the panel kept coming back to your type choices. We chose a candidate with more motion experience because the role leans 60% into animation this year. Please apply again when we open the print-led brief in the autumn — I'll personally flag your name. Thank you for the care you put into the task.",
+      body: "Sofia, this was genuinely close. Your editorial work was the strongest in the round, and the panel kept coming back to your type choices. We chose a candidate with more motion experience because the role leans 60% into animation this year. Please apply again when we open the print-led brief in the autumn. I'll personally flag your name. Thank you for the care you put into the task.",
     },
   },
   {
@@ -435,7 +435,7 @@ export const APPS: Application[] = [
       { label: "—", state: "" },
     ],
     status: (
-      <>You withdrew this one — accepted the Pixel Mode interview instead.</>
+      <>You withdrew this one, accepting the Pixel Mode interview instead.</>
     ),
     badge: { kind: "rejected", label: "Withdrawn" },
     actions: [],
@@ -453,8 +453,8 @@ export const APPS: Application[] = [
     stages: [],
     status: (
       <>
-        Draft started <b>2 days ago</b> · 60% complete · closes <b>18 Jun</b> —
-        don't forget.
+        Draft started <b>2 days ago</b> · 60% complete · closes <b>18 Jun</b>.
+        Don't forget.
       </>
     ),
     badge: { kind: "draft", label: "Draft · 60%" },

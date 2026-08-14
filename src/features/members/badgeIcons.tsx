@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { FiAward } from "react-icons/fi";
+import { FiAward, FiFlag } from "react-icons/fi";
 
 /**
  * Maps a backend badge `key` to its icon. Badges are hand-drawn per key, so
@@ -9,6 +9,7 @@ import { FiAward } from "react-icons/fi";
  * Extend as the catalogue grows (keep the keys in sync with the backend).
  */
 const BADGE_ICONS: Record<string, ReactNode> = {
+  "first-steps": <FiFlag aria-hidden />,
   // "first-gathering": <svg …/>,
   // "three-company": <svg …/>,
 };

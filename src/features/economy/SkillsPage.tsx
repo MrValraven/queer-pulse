@@ -10,7 +10,7 @@ import {
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useWorkshops } from "../../app/providers/useWorkshops";
 import { SKILLS, SKILL_FILTERS } from "./skills.data";
@@ -189,7 +189,7 @@ export function SkillsPage() {
         }
         sub={t("economy:skills.outro.sub")}
       >
-        <Button to={routes.requestInvite} variant="primary" size="lg">
+        <Button to={requestInvitePath("skills")} variant="primary" size="lg">
           {t("economy:skills.outro.cta")}
         </Button>
       </Outro>

@@ -173,7 +173,7 @@ export const REPORT_REASONS = [
 
 export type ReportReason = (typeof REPORT_REASONS)[number];
 
-export const SAFETY_EMAIL = "safety@queerpulse.pt";
+export const SAFETY_EMAIL = "hello@queerpulse.com";
 
 export interface FeedReply {
   id: string;
@@ -218,13 +218,13 @@ export const FEED_POST: FeedPost = {
   authorTint: "coral",
   time: "2 hours ago",
   context: "Trans & Non-Binary Network",
-  body: "Anyone have recommendations for a queer-friendly GP in Lisbon? Preferably someone familiar with trans healthcare — I'm tired of having to explain myself from scratch every visit. Grateful for any leads, DM or reply here.",
+  body: "Anyone have recommendations for a queer-friendly GP in Lisbon? Preferably someone familiar with trans healthcare. I'm tired of having to explain myself from scratch every visit. Grateful for any leads, DM or reply here.",
   likeCount: 12,
   replies: [
     {
       id: "r1",
       author: "Joana P.",
-      body: "Dr. Marta Reis at Clínica Arco — genuinely lovely and experienced.",
+      body: "Dr. Marta Reis at Clínica Arco, genuinely lovely and experienced.",
     },
     {
       id: "r2",
@@ -239,7 +239,7 @@ export const FEED_POST: FeedPost = {
     {
       id: "r4",
       author: "Iris L.",
-      body: "Following — looking for the same near Almada.",
+      body: "Following. Looking for the same near Almada.",
     },
   ],
 };

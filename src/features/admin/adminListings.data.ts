@@ -27,6 +27,7 @@ function demoListing(overrides: Partial<ListingDTO> & Pick<
     tags: [],
     goodFor: [],
     langs: ["pt", "en"],
+    online: false,
     address: "",
     geocoded: false,
     latitude: null,
@@ -78,7 +79,7 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
       tagline: "The little wine room that wants you to stay one more glass.",
       whatItIs: [
         { id: "wit-d1", text:
-          "Maison Du Tiago is a small natural-wine bar and kitchen — a handful of tables, an opinionated list, and a menu that changes with the market." },
+          "Maison Du Tiago is a small natural-wine bar and kitchen: a handful of tables, an opinionated list, and a menu that changes with the market." },
         { id: "wit-d2", text:
           "It's built for the slow evening: a second date, a birthday for six, or a Tuesday that quietly becomes something. Tell the room what you like and let them pour." },
       ],
@@ -120,8 +121,8 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
       cats: ["culture"],
       price: "€",
       blurb:
-        "A community culture house in Arroios — readings, workshops, and a free-entry programme that bets on queer artists early.",
-      tagline: "A house that keeps the door — and the programme — open.",
+        "A community culture house in Arroios: readings, workshops, and a free-entry programme that bets on queer artists early.",
+      tagline: "A house that keeps the door, and the programme, open.",
       whatItIs: [
         { id: "wit-c1", text:
           "Casa Viva is an artist-run culture house: a reading room, a small hall for workshops and launches, and a programme that leans toward emerging queer and feminist work." },
@@ -166,7 +167,7 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
       cats: ["food"],
       price: "€",
       blurb:
-        "A sunlit corner café in Graça — good coffee, better pastéis, and a room that never makes anyone feel like a question mark.",
+        "A sunlit corner café in Graça: good coffee, better pastéis, and a room that never makes anyone feel like a question mark.",
       tagline: "Your morning table in Graça, held for you.",
       whatItIs: [
         { id: "wit-a1", text:
@@ -378,7 +379,7 @@ export const DEMO_LISTING_HISTORY: Record<string, ListingHistoryDTO> = {
         fromStatus: "question",
         toStatus: "review",
         reason:
-          "Thanks for confirming the street number — back in the queue for a final look before we publish.",
+          "Thanks for confirming the street number. Back in the queue for a final look before we publish.",
         actor: DEMO_MODERATOR,
         createdAt: "2026-07-28T16:40:00.000Z",
       },
@@ -395,8 +396,8 @@ export const DEMO_LISTING_HISTORY: Record<string, ListingHistoryDTO> = {
     questions: [
       {
         id: "q-0007-1",
-        body: "Hi! Before we publish this, could you confirm the street number — R. da Escola Politécnica 60, or 60A?",
-        answer: "It's 60 — no A. Thanks for double-checking!",
+        body: "Hi! Before we publish this, could you confirm the street number: R. da Escola Politécnica 60, or 60A?",
+        answer: "It's 60, no A. Thanks for double-checking!",
         answeredAt: "2026-07-28T16:35:00.000Z",
         askedBy: DEMO_MODERATOR,
         createdAt: "2026-07-28T14:00:00.000Z",
@@ -418,7 +419,7 @@ export const DEMO_LISTING_HISTORY: Record<string, ListingHistoryDTO> = {
     questions: [
       {
         id: "q-0006-1",
-        body: "Quick one — is entry genuinely free for every event, or just some of the programme?",
+        body: "Quick one: is entry genuinely free for every event, or just some of the programme?",
         answer: null,
         answeredAt: null,
         askedBy: DEMO_MODERATOR,

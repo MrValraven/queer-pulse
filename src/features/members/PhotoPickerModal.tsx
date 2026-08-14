@@ -5,8 +5,10 @@ import {
   Modal,
   ConfirmDialog,
   ImageSlot,
+  PhotoReframeModal,
   SkeletonLine,
 } from "../../shared/components/ui";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ImageProcessingError } from "./api/uploadProcessing";
@@ -130,8 +132,10 @@ interface PhotoPickerModalProps {
    * `onPick`/`onPickGoogle`) — used to tell whether a deleted gallery item is
    * the one currently showing, so the hero can be cleared with it. */
   currentValue?: string;
-  /** value = key to persist, previewUrl = absolute/blob URL to show now. */
-  onPick: (value: string, previewUrl: string) => void;
+  /** value = key to persist, previewUrl = absolute/blob URL to show now, crop =
+   *  the reframe crop just applied to this upload (undefined for a past-upload
+   *  or Google pick, which carry no fresh crop). */
+  onPick: (value: string, previewUrl: string, crop?: CropRect) => void;
   /** Only relevant when a `googlePhoto` is offered; omit for slots (persona
    * avatar/cover/item image) that have no Google source. */
   onPickGoogle?: (url: string) => void;
@@ -167,16 +171,22 @@ export function PhotoPickerModal({
   const [progress, setProgress] = useState(0);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<MyMediaItem | null>(null);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
 
-  async function handleFile(file: File) {
+  /** Shared tail of both upload paths (direct GIF path + post-reframe path):
+   * runs the upload, hands the result to the caller's `onPick`, and closes
+   * the picker on success; surfaces `ImageProcessingError` via `t()` on
+   * failure. */
+  async function uploadAndFinish(file: File, crop?: CropRect) {
     setUploadError(null);
     setProgress(0);
     setUploading(true);
     try {
-      const { key, previewUrl } = await uploadImage(file, {
+      const { key, previewUrl, crop: appliedCrop } = await uploadImage(file, {
         onProgress: (percent) => setProgress(percent),
+        crop,
       });
-      onPick(key, previewUrl);
+      onPick(key, previewUrl, appliedCrop);
       onClose();
     } catch (error) {
       setUploadError(
@@ -187,6 +197,23 @@ export function PhotoPickerModal({
     } finally {
       setUploading(false);
     }
+  }
+
+  async function handleFile(file: File) {
+    // GIFs bypass the reframer entirely (animation would be destroyed by the
+    // crop/re-encode path) and upload directly, as before.
+    if (file.type === "image/gif") {
+      await uploadAndFinish(file);
+      return;
+    }
+    setPendingFile(file);
+  }
+
+  async function handleCropConfirmed(crop: CropRect) {
+    if (!pendingFile) return;
+    const fileToUpload = pendingFile;
+    setPendingFile(null);
+    await uploadAndFinish(fileToUpload, crop);
   }
 
   function confirmDelete() {
@@ -267,6 +294,15 @@ export function PhotoPickerModal({
           event.target.value = "";
         }}
       />
+
+      {pendingFile && (
+        <PhotoReframeModal
+          file={pendingFile}
+          kind={kind}
+          onCancel={() => setPendingFile(null)}
+          onConfirm={(crop) => void handleCropConfirmed(crop)}
+        />
+      )}
 
       {pendingDelete && (
         <ConfirmDialog

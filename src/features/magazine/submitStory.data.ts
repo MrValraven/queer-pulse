@@ -112,7 +112,7 @@ export const INITIAL_DRAFT = {
   tags: "",
   headline: "The city keeps changing around us",
   deck: "",
-  body: `The apartment I grew up thinking I could afford no longer exists in the neighbourhood I grew up in. This isn't a complaint — it's a map coordinate. Where you can live shapes who you can be around, and who you can be around shapes everything else.
+  body: `The apartment I grew up thinking I could afford no longer exists in the neighbourhood I grew up in. This isn't a complaint. It's a map coordinate. Where you can live shapes who you can be around, and who you can be around shapes everything else.
 
 I have been tracking this for three years: not with data, but with the particular cartography of knowing who has left. The restaurant where Catarina worked. The street where six of my friends used to live within walking distance of each other. The squat that became a hotel.
 

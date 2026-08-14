@@ -63,7 +63,7 @@ export function FamilyTabContent({ tab }: { tab: Tab }) {
                 {tab.noteLabelKey && (
                   <strong>{t(`community:${tab.noteLabelKey}`)} </strong>
                 )}
-                {tab.note.quote} — <strong>{tab.note.attribution}</strong>
+                {tab.note.quote} <strong>{tab.note.attribution}</strong>
               </div>
             </div>
           ) : (

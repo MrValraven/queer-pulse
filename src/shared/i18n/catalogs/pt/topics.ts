@@ -44,13 +44,13 @@ export const topics: Catalog = {
     "Publicações, perguntas e recomendações com a etiqueta <strong>#{tag}</strong> de toda a comunidade QueerPulse.",
   "fallback.postMeta": "Sê quem começa",
   "fallback.postTitle":
-    "Ainda ninguém publicou com <em>#{tag}</em> — queres começar a conversa?",
+    "Ainda ninguém publicou com <em>#{tag}</em>. Queres começar a conversa?",
   "fallback.postBody":
     "Os tópicos crescem quando alguém dá o primeiro passo. Publica uma pergunta, uma recomendação ou um recurso com #{tag} e aparece aqui mesmo.",
   "fallback.postStats": "<b>0</b> publicações · à tua espera",
 
   "notFound.title": "Este tópico não está aqui",
   "notFound.description":
-    "Não encontrámos um tópico para essa etiqueta — pode ter sido renomeado ou removido. Volta ao fórum para veres onde a conversa continua.",
+    "Não encontrámos um tópico para essa etiqueta. Pode ter sido renomeado ou removido. Volta ao fórum para veres onde a conversa continua.",
   "notFound.backCta": "Voltar ao fórum",
 };

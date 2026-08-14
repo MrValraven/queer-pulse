@@ -136,7 +136,7 @@ const healthcare: Topic = {
           <em>GP in Lisbon?</em>
         </>
       ),
-      body: "Preferably someone familiar with trans healthcare — I'm tired of having to explain myself from scratch every appointment. Mine retired in March…",
+      body: "Preferably someone familiar with trans healthcare. I'm tired of having to explain myself from scratch every appointment. Mine retired in March…",
       stats: (
         <>
           <b>42</b> relate · <b>18</b> replies
@@ -177,7 +177,7 @@ const healthcare: Topic = {
       category: "event",
       title: (
         <>
-          Open clinic night — <em>bring your prescription questions.</em>
+          Open clinic night: <em>bring your prescription questions.</em>
         </>
       ),
       body: "Dr. Inês Pereira and a pharmacist from Farmácia do Carmo take over the back room of Café Beirão for two hours of free, no-records consultation. 22 spots, RSVP required.",
@@ -223,7 +223,7 @@ const healthcare: Topic = {
           Dr. Hugo Marques (USF Sé) <em>takes new patients quarterly.</em>
         </>
       ),
-      body: "Public system, slow but worth it. Window opens 15 June — set a reminder, his slots fill in 3 days. He doesn't do \"the talk\" if you're trans; he just gets on with care.",
+      body: "Public system, slow but worth it. Window opens 15 June. Set a reminder, his slots fill in 3 days. He doesn't do \"the talk\" if you're trans; he just gets on with care.",
       stats: (
         <>
           <b>67</b> relate · <b>22</b> replies
@@ -240,7 +240,7 @@ const healthcare: Topic = {
       kind: "warn",
       category: "recommendation",
       title: <>A clinic near Saldanha I would not return to.</>,
-      body: "Not naming publicly — happy to DM. Technically polite but I left feeling like a case study, not a patient. Posting because someone might be heading there as we speak.",
+      body: "Not naming publicly, happy to DM. Technically polite but I left feeling like a case study rather than a patient. Posting because someone might be heading there as we speak.",
       stats: (
         <>
           <b>28</b> relate · <b>14</b> replies
@@ -303,7 +303,7 @@ const trans: Topic = {
   title: tagTitle("tr", "ans"),
   sub: (
     <>
-      Everything trans and non-binary life in Lisbon touches — legal name
+      Everything trans and non-binary life in Lisbon touches: legal name
       changes, hormones, community, joy. Curated by{" "}
       <a href={routes.transHub}>Trans Hub</a>.
     </>
@@ -348,7 +348,7 @@ const trans: Topic = {
       category: "event",
       title: (
         <>
-          Name-change clinic — <em>bring your paperwork, leave with a plan.</em>
+          Name-change clinic: <em>bring your paperwork, leave with a plan.</em>
         </>
       ),
       body: "Volunteers who've been through it sit with you one-to-one and map your exact route. Free, trans-led, no records kept. 16 spots.",
@@ -370,7 +370,7 @@ const trans: Topic = {
       category: "resource",
       title: (
         <>
-          The 2026 <em>trans starter kit</em> — one link, everything in it.
+          The 2026 <em>trans starter kit</em>: one link, everything in it.
         </>
       ),
       body: "Hormones, healthcare, legal, housing, and the people to ask. If you're newly out or newly arrived, start here. We keep it current so you don't have to dig.",
@@ -494,7 +494,7 @@ const mentalhealth: Topic = {
       category: "event",
       title: (
         <>
-          Thursday peer circle — <em>no fixing, just being heard.</em>
+          Thursday peer circle: <em>no fixing, just being heard.</em>
         </>
       ),
       body: "A facilitated, confidential room for whatever you're carrying. Drop in when you need it, no commitment. Held by trained community facilitators.",
@@ -538,7 +538,7 @@ const mentalhealth: Topic = {
           On burnout, chosen family, and <em>the therapy of showing up.</em>
         </>
       ),
-      body: "What community care can and can't replace — and why the answer isn't to carry it all yourself. An honest look at where support really comes from.",
+      body: "What community care can and can't replace, and why the answer isn't to carry it all yourself. An honest look at where support really comes from.",
       stats: (
         <>
           <b>201</b> reads · <b>38</b> bookmarks
@@ -581,7 +581,7 @@ const mentalhealth: Topic = {
     },
   ],
   resources: {
-    body: "24 vetted therapists, helplines, and peer rooms — checked for queer-affirming practice by Wellbeing moderators.",
+    body: "24 vetted therapists, helplines, and peer rooms, checked for queer-affirming practice by Wellbeing moderators.",
     ctaLabel: "Browse Wellbeing",
     href: routes.wellbeing,
   },
@@ -637,7 +637,7 @@ const housing: Topic = {
       category: "event",
       title: (
         <>
-          Co-op info night — <em>could we buy a building together?</em>
+          Co-op info night: <em>could we buy a building together?</em>
         </>
       ),
       body: "Nine of us, one shared dream of never being priced out again. Come hear where the numbers actually landed and whether there's room for you in round two.",
@@ -662,7 +662,7 @@ const housing: Topic = {
           <em>actually put queer-friendly in writing.</em>
         </>
       ),
-      body: "Rare, I know. Fair rent, no weirdness about who visits, fixed the boiler in a day. Happy to pass the contact to anyone searching — just ask.",
+      body: "Rare, I know. Fair rent, no weirdness about who visits, fixed the boiler in a day. Happy to pass the contact to anyone searching, just ask.",
       stats: (
         <>
           <b>34</b> relate · <b>16</b> replies
@@ -680,7 +680,7 @@ const housing: Topic = {
       kind: "warn",
       category: "recommendation",
       title: <>Heads up on a "queer-friendly" listing near Intendente.</>,
-      body: "Photos gorgeous, reality less so — pushback the moment my partner and I viewed together. Not naming publicly, happy to DM anyone considering it.",
+      body: "Photos gorgeous, reality less so. Pushback the moment my partner and I viewed together. Not naming publicly, happy to DM anyone considering it.",
       stats: (
         <>
           <b>27</b> relate · <b>21</b> replies
@@ -752,7 +752,7 @@ const nightlife: Topic = {
       category: "event",
       title: (
         <>
-          Warehouse party Friday —{" "}
+          Warehouse party Friday:{" "}
           <em>trans DJs only, door policy that means it.</em>
         </>
       ),
@@ -817,7 +817,7 @@ const nightlife: Topic = {
       kind: "warn",
       category: "recommendation",
       title: <>A promoter I'd steer clear of after last weekend.</>,
-      body: "Ignored a clear safety issue at the door. Not naming the venue publicly yet — reported to mods, happy to DM details so you can make your own call.",
+      body: "Ignored a clear safety issue at the door. Not naming the venue publicly yet, reported to mods, happy to DM details so you can make your own call.",
       stats: (
         <>
           <b>39</b> relate · <b>28</b> replies

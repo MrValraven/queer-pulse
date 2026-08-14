@@ -16,7 +16,7 @@ function downloadIcs(app: Application) {
     "VERSION:2.0",
     "PRODID:-//QueerPulse//Applications//EN",
     "BEGIN:VEVENT",
-    `SUMMARY:${i?.title ?? app.title} — ${app.companyName}`,
+    `SUMMARY:${i?.title ?? app.title}, ${app.companyName}`,
     "DTSTART:20260611T150000Z",
     "DTEND:20260611T160000Z",
     `LOCATION:${i?.location ?? ""}`,
@@ -36,7 +36,7 @@ function googleCalUrl(app: Application) {
   const i = app.interview;
   const params = new URLSearchParams({
     action: "TEMPLATE",
-    text: `${i?.title ?? app.title} — ${app.companyName}`,
+    text: `${i?.title ?? app.title}, ${app.companyName}`,
     dates: "20260611T150000Z/20260611T160000Z",
     details: i?.notes ?? "",
     location: i?.location ?? "",

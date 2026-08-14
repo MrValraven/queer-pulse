@@ -35,7 +35,7 @@ export const system: Catalog = {
   "notFound.links.help.label": "Help & FAQ",
   "notFound.links.help.sub": "Get answers",
   "notFound.links.contact.label": "Contact us",
-  "notFound.links.contact.sub": "hello@queerpulse.pt",
+  "notFound.links.contact.sub": "hello@queerpulse.com",
   "notFound.searchPlaceholder": "Search the platform…",
   "notFound.searchCta": "Search",
 
@@ -45,7 +45,7 @@ export const system: Catalog = {
   "placeholder.eyebrow": "Coming soon",
   "placeholder.title": "{title} is <em>on the way.</em>",
   "placeholder.sub":
-    "This part of QueerPulse is still being built. The homepage is live — explore members, gatherings, and the community there in the meantime.",
+    "This part of QueerPulse is still being built. The homepage is live. Explore members, gatherings, and the community there in the meantime.",
   "placeholder.backCta": "Back to home",
 
   // ── AccountBannedPage.tsx ─────────────────────────────────────────────────
@@ -57,10 +57,10 @@ export const system: Catalog = {
     "Your active Sustainer membership has been <b>refunded pro-rated</b> to the card on file.",
   "accountBanned.violation.title": "Reason · referenced from your case file",
   "accountBanned.violation.body":
-    "<b>§02·06</b> — Weaponising platform access against members. The pattern of behaviour was documented across <b>8 separate incidents</b> over four months and reviewed by two independent moderators.",
+    "<b>§02·06</b>: Weaponising platform access against members. The pattern of behaviour was documented across <b>8 separate incidents</b> over four months and reviewed by two independent moderators.",
   "accountBanned.whatNow.row1.title": "You can appeal this decision once",
   "accountBanned.whatNow.row1.body":
-    "Open within 14 days of removal. Reviewed by the Assembly's standing appeals panel — different humans than your case moderators. Response within 21 days.",
+    "Open within 14 days of removal. Reviewed by the Assembly's standing appeals panel, different humans than your case moderators. Response within 21 days.",
   "accountBanned.whatNow.row2.title":
     "Your data is removed from the platform within 30 days",
   "accountBanned.whatNow.row2.body":
@@ -75,19 +75,19 @@ export const system: Catalog = {
   "accountBanned.actions.appealCta": "File the appeal",
   "accountBanned.actions.eraseCta": "Request full data erasure",
   "accountBanned.foot":
-    "If you believe this was the result of coordinated false reports, please include the names you suspect in the appeal — we investigate this carefully. <a>Re-read the Code of Conduct</a>",
+    "If you believe this was the result of coordinated false reports, please include the names you suspect in the appeal. We investigate this carefully. <a>Re-read the Code of Conduct</a>",
 
   // ── AccountLockedPage.tsx ─────────────────────────────────────────────────
   "accountLocked.kicker": "Account locked · temporary",
   "accountLocked.heading": "Your account is <em>on pause.</em>",
   "accountLocked.lead":
-    "We spotted unusual sign-in activity on your account and locked it as a precaution. You're not in trouble — we'd rather over-react than risk it.",
+    "We spotted unusual sign-in activity on your account and locked it as a precaution. You're not in trouble. We'd rather over-react than risk it.",
   "accountLocked.reason1":
     "<b>5 failed sign-in attempts</b> in the last 12 minutes, from two devices.",
   "accountLocked.reason2":
-    "<b>New location:</b> attempt from <b>Madrid, Spain</b> — you usually sign in from Lisbon.",
+    "<b>New location:</b> attempt from <b>Madrid, Spain</b>. You usually sign in from Lisbon.",
   "accountLocked.reason3":
-    "<b>Lock will lift automatically</b> in 23 minutes — or use one of the options below to unlock now.",
+    "<b>Lock will lift automatically</b> in 23 minutes, or use one of the options below to unlock now.",
   "accountLocked.whatNow.contact.title": "Contact the team",
   "accountLocked.whatNow.contact.desc":
     "If none of the above work, write to us and we'll verify you by hand.",
@@ -103,7 +103,7 @@ export const system: Catalog = {
   // Live-mode lead (real suspended member) — the specifics live in the reason
   // block below, sourced from the moderator's note, so this stays general.
   "accountSuspended.leadLive":
-    "Your account is paused while a moderation decision stands. Here's what happened — and how to respond.",
+    "Your account is paused while a moderation decision stands. Here's what happened, and how to respond.",
   "accountSuspended.reason.title": "Why your account was paused",
   "accountSuspended.details.action": "Action",
   "accountSuspended.details.actionValue": "{days}-day suspension",
@@ -130,7 +130,7 @@ export const system: Catalog = {
   "geoRestricted.eyebrow": "Region restricted",
   "geoRestricted.h1": "QueerPulse isn't <em>fully available</em> here yet.",
   "geoRestricted.lead":
-    "It looks like you're connecting from a country where some QueerPulse features are restricted — most often because we don't have moderators in your timezone, or because we're working through local legal review. <em>Crisis support and safety resources are still open to you.</em>",
+    "It looks like you're connecting from a country where some QueerPulse features are restricted: most often because we don't have moderators in your timezone, or because we're working through local legal review. <em>Crisis support and safety resources are still open to you.</em>",
   "geoRestricted.why.title": "Why this happens",
   "geoRestricted.why.body":
     "We open access to a new region only when we have <em>at least one moderator in-country</em> and have reviewed the local legal framework for queer expression. It is intentionally slow. We don't want to advertise queer community to a place where members would be put at risk by joining.",
@@ -153,14 +153,14 @@ export const system: Catalog = {
   "interestsEditor.closeAria": "Close",
   "interestsEditor.success.title": "Interests <em>updated.</em>",
   "interestsEditor.success.sub_one":
-    "We've noted your {count} interest. A vouching member with overlapping interests will pick up your request — keeping these current can speed up the match.",
+    "We've noted your {count} interest. A vouching member with overlapping interests will pick up your request. Keeping these current can speed up the match.",
   "interestsEditor.success.sub_other":
-    "We've noted your {count} interests. A vouching member with overlapping interests will pick up your request — keeping these current can speed up the match.",
+    "We've noted your {count} interests. A vouching member with overlapping interests will pick up your request. Keeping these current can speed up the match.",
   "interestsEditor.success.doneCta": "Done",
   "interestsEditor.eyebrow": "Invite request · interests",
   "interestsEditor.title": "Update your <em>interests.</em>",
   "interestsEditor.desc":
-    "We match your request to a vouching member with overlapping interests. Pick the ones that fit — the more honest, the better the match.",
+    "We match your request to a vouching member with overlapping interests. Pick the ones that fit. The more honest, the better the match.",
   "interestsEditor.count_one": "{count} selected",
   "interestsEditor.count_other": "{count} selected",
   "interestsEditor.pickAtLeastTwo": "pick at least 2",
@@ -187,15 +187,15 @@ export const system: Catalog = {
   "inviteState.expired.eyebrow": "Invite expired",
   "inviteState.expired.heading": "This link has <em>timed out.</em>",
   "inviteState.expired.lead":
-    "Invites stay live for a while, and yours was sent a bit too long ago — so the slot we held for you has rotated back into the pool. The quickest way in is a fresh nudge from the person who vouched for you.",
+    "Invites stay live for a while, and yours was sent a bit too long ago, so the slot we held for you has rotated back into the pool. The quickest way in is a fresh nudge from the person who vouched for you.",
   "inviteState.used.eyebrow": "Invite already used",
   "inviteState.used.heading": "This invite has <em>already been opened.</em>",
   "inviteState.used.lead":
-    "Someone has already joined with this link — most likely you, on another device. If that was you, just sign in. If it wasn't, let the team know and we'll take a look.",
+    "Someone has already joined with this link. Most likely you, on another device. If that was you, just sign in. If it wasn't, let the team know and we'll take a look.",
   "inviteState.revoked.eyebrow": "Invite withdrawn",
   "inviteState.revoked.heading": "This invite was <em>called back.</em>",
   "inviteState.revoked.lead":
-    "The person who sent this invite, or a community steward, withdrew it before it was used. No harm done — you can ask for a new one whenever you're ready.",
+    "The person who sent this invite, or a community steward, withdrew it before it was used. No harm done. You can ask for a new one whenever you're ready.",
   "inviteState.notFound.eyebrow": "Invite not found",
   "inviteState.notFound.heading": "We couldn't <em>place this link.</em>",
   "inviteState.notFound.lead":
@@ -203,7 +203,7 @@ export const system: Catalog = {
   "inviteState.inviterInactive.eyebrow": "Inviter no longer active",
   "inviteState.inviterInactive.heading": "The person who invited you has <em>moved on.</em>",
   "inviteState.inviterInactive.lead":
-    "Whoever sent this invite is no longer active on QueerPulse, so their link can't bring you in. Nothing you did — ask another member you know for a fresh invite, or request one and we'll take it from there.",
+    "Whoever sent this invite is no longer active on QueerPulse, so their link can't bring you in. Nothing you did. Ask another member you know for a fresh invite, or request one and we'll take it from there.",
   "inviteState.details.expiredOn": "Expired",
   "inviteState.details.vouchedBy": "Vouched by",
   "inviteState.actions.requestNew": "Request a fresh invite",
@@ -221,7 +221,7 @@ export const system: Catalog = {
     "Invite-only. 247 members. Not trying to grow for growth's sake.",
   "inviteLanding.what.noAds.strong": "No ads. No algorithm.",
   "inviteLanding.what.noAds.rest":
-    "A platform that works for you, not for advertisers.",
+    "A platform that works for you, funded by the community.",
   "inviteLanding.what.community.strong": "Real community.",
   "inviteLanding.what.community.rest":
     "Forum, events, a monthly magazine, and a mental health fund.",
@@ -238,7 +238,7 @@ export const system: Catalog = {
   "inviteLanding.card.inviterNoteNoSince": "invited you",
   "inviteLanding.card.heading": "You belong <em>here.</em>",
   "inviteLanding.card.headerNote":
-    "This invitation was created for you personally — it's yours, and yours alone.",
+    "This invitation was created for you personally. It's yours, and yours alone.",
   "inviteLanding.card.noteFrom": "A note from {name}",
   "inviteLanding.card.tokenLabel": "Your invite code",
   "inviteLanding.card.validFor_one": "Valid for {count} day",
@@ -256,7 +256,7 @@ export const system: Catalog = {
   "maintenance.eyebrow": "Scheduled maintenance",
   "maintenance.heading": "Be right <em>back.</em>",
   "maintenance.lead":
-    "We're shipping the <b>2.5 release</b> — better moderation tools, an upgraded crisis chat, and faster image uploads. Should be back in about <em>20 minutes</em>.",
+    "We're shipping the <b>2.5 release</b>: better moderation tools, an upgraded crisis chat, and faster image uploads. Should be back in about <em>20 minutes</em>.",
   "maintenance.info.startedLabel": "Started",
   "maintenance.info.startedValue": "14:00 <em>WET</em>",
   "maintenance.info.backByLabel": "Back by",
@@ -275,7 +275,7 @@ export const system: Catalog = {
   "offline.eyebrow": "No connection",
   "offline.h1": "You're <em>offline.</em>",
   "offline.lead":
-    "No signal, or we can't reach our servers right now. <b>Pages you've already opened</b> on this device may still load — try one below.",
+    "No signal, or we can't reach our servers right now. <b>Pages you've already opened</b> on this device may still load. Try one below.",
   "offline.tryTitle": "Try a page you've opened before",
   "offline.links.feed.label": "Community feed",
   "offline.links.feed.sub": "The latest from your community",
@@ -313,14 +313,14 @@ export const system: Catalog = {
   "pendingReview.actions.vouchCta": "Ask a member to vouch",
   "pendingReview.actions.updateInterestsCta": "Update my interests",
   "pendingReview.foot.knowMember":
-    "Already know a member who can vouch? <a>Send them a one-click vouch link</a> — bumps you ahead in the queue.",
+    "Already know a member who can vouch? <a>Send them a one-click vouch link</a>. Bumps you ahead in the queue.",
   "pendingReview.foot.withdraw": "Want to withdraw? <a>Write to the team</a>.",
 
   // ── PwaPromptPage.tsx ─────────────────────────────────────────────────────
   "pwaPrompt.kicker": "Add to home screen · no app store needed",
   "pwaPrompt.heading": "Keep <em>QueerPulse</em> a tap away.",
   "pwaPrompt.lead":
-    "Install the web app on your phone in 30 seconds. <em>Same as a regular app</em> — but no app-store account, no tracking, no review. Just a shortcut that opens crisis chat, your ticket, and the safe-spaces map in one tap.",
+    "Install the web app on your phone in 30 seconds. <em>Same as a regular app</em>, but no app-store account, no tracking, no review. Just a shortcut that opens crisis chat, your ticket, and the safe-spaces map in one tap.",
   "pwaPrompt.features.push.label": "Push notifications",
   "pwaPrompt.features.push.detail":
     "· RSVPs, replies, mentions · granular & quiet",
@@ -371,7 +371,7 @@ export const system: Catalog = {
   "serverError.heading.maintenance.line1": "Planned maintenance.",
   "serverError.heading.maintenance.line2": "<em>Back soon.</em>",
   "serverError.sub.error":
-    "This is our fault, not yours. We've been automatically notified and we're looking at it.",
+    "This is our fault. We've been automatically notified and we're looking at it.",
   "serverError.sub.maintenance":
     "We're upgrading the platform. Shouldn't be long. We appreciate your patience.",
   "serverError.status.maintenance":
@@ -413,9 +413,9 @@ export const system: Catalog = {
   "status.services.fileStorage.desc": "Profile photos & attachments",
   "status.uptime.sectionEye": "90-day uptime",
   "status.uptime.pct": "{pct}% uptime",
-  "status.uptime.tooltip.operational": "Operational — {date}",
-  "status.uptime.tooltip.partial": "Partial outage — {date}",
-  "status.uptime.tooltip.outage": "Outage — {date}",
+  "status.uptime.tooltip.operational": "Operational: {date}",
+  "status.uptime.tooltip.partial": "Partial outage: {date}",
+  "status.uptime.tooltip.outage": "Outage: {date}",
   "status.uptime.axis.ninetyDaysAgo": "90 days ago",
   "status.uptime.axis.sixtyDaysAgo": "60 days ago",
   "status.uptime.axis.thirtyDaysAgo": "30 days ago",
@@ -433,7 +433,7 @@ export const system: Catalog = {
   "status.incidents.emailDelay.text":
     "Notification emails were delayed by up to 45 minutes for a 2-hour window. All queued emails were delivered after the issue was resolved.",
   "status.incidents.dbUpgrade.title":
-    "Scheduled maintenance — database upgrade",
+    "Scheduled maintenance: database upgrade",
   "status.incidents.dbUpgrade.text":
     "2-hour maintenance window for PostgreSQL major version upgrade. The platform was in read-only mode during this period.",
   "status.subscribe.title": "Get notified during incidents",
@@ -465,7 +465,7 @@ export const system: Catalog = {
   "verificationNeeded.magicLink.confirmCta": "I've opened the link",
   "verificationNeeded.magicLink.resendCountdown": "Resend in {seconds}s",
   "verificationNeeded.magicLink.resendCta": "Resend link",
-  "verificationNeeded.success.title": "It's you — <em>verified.</em>",
+  "verificationNeeded.success.title": "It's you, <em>verified.</em>",
   "verificationNeeded.success.sub":
     "Re-authentication confirmed. Taking you on to cancel your membership…",
   "verificationNeeded.success.continueCta": "Continue now",

@@ -344,7 +344,7 @@ const RAW_EDGES: Omit<VouchEdge, "id">[] = [
     from: "kai",
     to: "ines",
     date: "2025-11",
-    reason: "Met at a Maré gig — instant trust.",
+    reason: "Met at a Maré gig, instant trust.",
   },
   {
     from: "theo",
@@ -421,7 +421,7 @@ const RAW_EDGES: Omit<VouchEdge, "id">[] = [
     from: "priv",
     to: "ines",
     date: "2024-03",
-    reason: "Private member — details withheld by their choice.",
+    reason: "Private member: details withheld by their choice.",
   },
   {
     from: "vera",

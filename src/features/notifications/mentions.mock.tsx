@@ -40,7 +40,7 @@ const MENTION_SEEDS: MentionSeed[] = [
     unread: true,
     content: (
       <>
-        "Thanks <mark>@tomás</mark> — Inês's mobile was the right answer. Got
+        "Thanks <mark>@tomás</mark>, Inês's mobile was the right answer. Got
         the slot. <em>Calling tomorrow morning to confirm.</em>"
       </>
     ),
@@ -67,7 +67,7 @@ const MENTION_SEEDS: MentionSeed[] = [
     content: (
       <>
         "<mark>@tomás</mark>, your Issue 5 piece on the four-day week comes up
-        here too — particularly the section about clinic schedules. Worth
+        here too, particularly the section about clinic schedules. Worth
         re-reading."
       </>
     ),
@@ -93,7 +93,7 @@ const MENTION_SEEDS: MentionSeed[] = [
     unread: true,
     content: (
       <>
-        "<mark>@tomás</mark> — bringing the Issue 10 spreads for live edit on
+        "<mark>@tomás</mark>, bringing the Issue 10 spreads for live edit on
         Thu 26 Jun. Hope you can make it. <em>Bring a red pen.</em>"
       </>
     ),
@@ -117,8 +117,8 @@ const MENTION_SEEDS: MentionSeed[] = [
     when: (fmt) => fmt.relativeTime(-1, "day"),
     content: (
       <>
-        "For anyone going to <mark>@tomás</mark>'s portfolio night on Wed —
-        bring three pieces, not five, and at least one that you think is bad."
+        "For anyone going to <mark>@tomás</mark>'s portfolio night on Wed.
+        Bring three pieces, not five, and at least one that you think is bad."
       </>
     ),
     whereText: "Creatives community",
@@ -135,7 +135,7 @@ const MENTION_SEEDS: MentionSeed[] = [
     when: (fmt) => fmt.relativeTime(-1, "day"),
     content: (
       <>
-        "<mark>@tomás</mark> ran a great session at the riso night — recommend
+        "<mark>@tomás</mark> ran a great session at the riso night. Recommend
         if you're new to the medium."
       </>
     ),
@@ -173,7 +173,7 @@ const MENTION_SEEDS: MentionSeed[] = [
     when: (fmt) => fmt.date(new Date(2026, 5, 13), { weekday: "short" }),
     content: (
       <>
-        "<mark>@tomás</mark> — your Issue 5 long-read is the piece that got me
+        "<mark>@tomás</mark>, your Issue 5 long-read is the piece that got me
         into riso. Full circle."
       </>
     ),
@@ -196,7 +196,7 @@ const MENTION_SEEDS: MentionSeed[] = [
     when: (fmt) => fmt.date(new Date(2026, 5, 12), { weekday: "short" }),
     content: (
       <>
-        "<mark>@tomás</mark> — could you message me about the post-march
+        "<mark>@tomás</mark>, could you message me about the post-march
         decompression event? Want to co-host."
       </>
     ),

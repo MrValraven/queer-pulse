@@ -9,6 +9,7 @@ import {
   FiMusic,
 } from "react-icons/fi";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
+import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import type { VisibilityMode } from "../../../shared/components/ui/VisibilityBadge";
 import { routes } from "../../../app/routeMap";
 import type { OpenToEntry } from "../openTo.data";
@@ -25,7 +26,7 @@ export interface WorkItem {
   title: string;
   year: string;
   image?: string;
-  /** Where the card points — a platform entity or an external URL. Unlinked
+  /** Where the card points, a platform entity or an external URL. Unlinked
    *  items render as plain cards, exactly as before. */
   link?: WorkLink;
 }
@@ -92,23 +93,28 @@ export interface Member {
   tint: AvatarTint;
   /** Profile photo URL (e.g. Unsplash). When absent, the avatar shows initials. */
   photo?: string;
+  /** Saved reframe crop for `photo` (fractions of the source image), when the
+   *  member cropped their avatar in the reframe editor. Absent = uncropped
+   *  (today's `object-fit: cover` rendering). Only meaningful alongside a
+   *  square/circle avatar box, never pass it into a non-square portrait box. */
+  avatarCrop?: CropRect;
   verified: boolean;
   since: string;
   bio: string;
   now: string;
-  /** What this member is open to — shared presets plus their own words.
+  /** What this member is open to, shared presets plus their own words.
    *  Presets are translatable and drive the directory filter; customs are the
    *  member's phrasing and are display-only. */
   openTo: OpenToEntry[];
   work: WorkItem[];
-  /** Social / web links the member surfaces on their profile. Optional — most
+  /** Social / web links the member surfaces on their profile. Optional, most
    *  members have none; default to `[]` wherever read. */
   socials?: SocialLink[];
   /** Private "which identities feel like yours" preference (Settings → Interests).
    *  Not shown on the profile; drives content/community suggestions. */
   identities?: string[];
   /** Private "what are you looking for here" preference (Settings → Interests).
-   *  Fixed taxonomy, private — distinct from the public `openTo` blurbs. */
+   *  Fixed taxonomy, private, distinct from the public `openTo` blurbs. */
   lookingFor?: string[];
   /** Whether `lookingFor` is shown on the profile to other viewers. Owner-only
    *  control; defaults to false (private) when absent. */
@@ -145,7 +151,7 @@ export interface Member {
 }
 
 /**
- * Prototype seed members — invented people who keep the demo populated while the
+ * Prototype seed members, invented people who keep the demo populated while the
  * real community grows. Real members live in `./realMembers` and are merged in
  * below; when there are enough of them, this object is what gets deleted.
  */
@@ -185,7 +191,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Programming",
-        title: "Iberian queer cinema, 1974–now — collection",
+        title: "Iberian queer cinema, 1974–now, collection",
         year: "2025",
         image:
           "https://images.unsplash.com/photo-1753944847480-92f369a5f00e?q=80&w=600&auto=format&fit=crop",
@@ -204,7 +210,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       },
       {
         category: "Programming",
-        title: "Queer elders: portrait films — collection",
+        title: "Queer elders: portrait films, collection",
         year: "2024",
         image:
           "https://images.unsplash.com/photo-1711479898431-9031deb4ff0e?q=80&w=800&auto=format&fit=crop",
@@ -270,11 +276,11 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "The most Portuguese film in the archive. Coded silence that accumulates until the very last scene.",
       },
       book: {
-        title: "The Celluloid Closet — Vito Russo",
+        title: "The Celluloid Closet, Vito Russo",
         note: "Taught me that programming is a way of arguing with history.",
       },
       song: {
-        title: "'Canção de Engate' — António Variações",
+        title: "'Canção de Engate', António Variações",
         note: "The sound of a Lisbon that was learning to say our name out loud.",
       },
       moment: {
@@ -303,7 +309,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1506863530036-1efeddceb993?q=80&w=1044&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     verified: true,
     since: "2024",
-    bio: "I design identities and editorial systems for cultural institutions, small presses and the occasional brave restaurant. Most of my work starts with a long conversation and a worse-for-wear notebook. I run a studio off the garden in Príncipe Real — the door's usually open.",
+    bio: "I design identities and editorial systems for cultural institutions, small presses and the occasional brave restaurant. Most of my work starts with a long conversation and a worse-for-wear notebook. I run a studio off the garden in Príncipe Real. The door's usually open.",
     now: "Wrapping a visual identity for a queer-run bookshop opening in Anjos this autumn, and slowly setting type for a riso zine about Lisbon's disappearing tascas.",
     openTo: [
       { kind: "preset", id: "collaborating" },
@@ -318,21 +324,21 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Identity",
-        title: "Livraria Devagar — bookshop identity",
+        title: "Livraria Devagar, bookshop identity",
         year: "2025",
         image:
           "https://images.unsplash.com/photo-1680020556897-4495277f8efc?q=80&w=600&auto=format&fit=crop",
       },
       {
         category: "Editorial",
-        title: "Tasca — a riso zine on vanishing taverns",
+        title: "Tasca, a riso zine on vanishing taverns",
         year: "2025",
         image:
           "https://images.unsplash.com/photo-1731174218715-9b4d23795265?q=80&w=800&auto=format&fit=crop",
       },
       {
         category: "Type",
-        title: "Pulso Display — a variable serif",
+        title: "Pulso Display, a variable serif",
         year: "2024",
         image:
           "https://images.unsplash.com/photo-1736613212084-4b7e6d94bc34?q=80&w=800&auto=format&fit=crop",
@@ -393,16 +399,16 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "The first film that made me feel like my confusion was the point.",
       },
       book: {
-        title: "Ways of Seeing — John Berger",
+        title: "Ways of Seeing, John Berger",
         note: "Changed how I look at everything I design.",
       },
       song: {
-        title: "'Lança Perfume' — Rita Lee",
+        title: "'Lança Perfume', Rita Lee",
         note: "My mother played it on Saturday mornings. I didn't know what it meant. I still don't. I love it.",
       },
       moment: {
         title: "My first risograph print, 2017",
-        note: "Pulling a sheet from the drum and seeing it hadn't worked perfectly — and realising that was better.",
+        note: "Pulling a sheet from the drum and seeing it hadn't worked perfectly, and realising that was better.",
       },
     },
   },
@@ -420,7 +426,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://plus.unsplash.com/premium_photo-1682144187125-b55e638cf286?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     verified: true,
     since: "2024",
-    bio: "I build infrastructure for things that should last. Mostly backend, mostly Rust. I care a lot about systems that don't burn people out — technical or otherwise. Based in a warehouse in Marvila with too many plants.",
+    bio: "I build infrastructure for things that should last. Mostly backend, mostly Rust. I care a lot about systems that don't burn people out, technical or otherwise. Based in a warehouse in Marvila with too many plants.",
     now: "Building a low-cost infrastructure toolkit for queer-run nonprofits. Looking for a collaborator who knows their way around DevOps.",
     openTo: [
       { kind: "preset", id: "mentoring" },
@@ -434,7 +440,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Open source",
-        title: "Fern — a lightweight job queue in Rust",
+        title: "Fern, a lightweight job queue in Rust",
         year: "2025",
         image:
           "https://images.unsplash.com/photo-1737028512200-beec1a39e2f0?q=80&w=800&auto=format&fit=crop",
@@ -496,11 +502,11 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "Not for the sci-fi. For the silence. For what it says about building things that outlast you.",
       },
       book: {
-        title: "The Dispossessed — Ursula K. Le Guin",
+        title: "The Dispossessed, Ursula K. Le Guin",
         note: "The first book that made anarchism feel like an engineering problem.",
       },
       song: {
-        title: "'Music For Airports' — Brian Eno",
+        title: "'Music For Airports', Brian Eno",
         note: "I put it on when I need to think without thinking.",
       },
       moment: {
@@ -523,7 +529,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://plus.unsplash.com/premium_photo-1690587673708-d6ba8a1579a5?q=80&w=679&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     verified: true,
     since: "2023",
-    bio: "I make documentaries about people who would never think to be documented. Slow, quiet, observational work — usually shot in Lisbon, occasionally somewhere with better light. I edit in a borrowed room in Alfama with a view I will never deserve.",
+    bio: "I make documentaries about people who would never think to be documented. Slow, quiet, observational work, usually shot in Lisbon, occasionally somewhere with better light. I edit in a borrowed room in Alfama with a view I will never deserve.",
     now: "Post-production on a 28-minute doc about the last remaining tascas in Lisbon. Looking for a composer.",
     openTo: [
       { kind: "preset", id: "collaborating" },
@@ -533,14 +539,14 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Documentary",
-        title: "O Café das Seis — portrait of a Mouraria café",
+        title: "O Café das Seis, portrait of a Mouraria café",
         year: "2024",
         image:
           "https://images.unsplash.com/photo-1770462594767-c64faffea172?q=80&w=800&auto=format&fit=crop",
       },
       {
         category: "Short doc",
-        title: "After the Factory — Marvila changing",
+        title: "After the Factory, Marvila changing",
         year: "2023",
         image:
           "https://images.unsplash.com/photo-1772110204334-b2e9c346515e?q=80&w=800&auto=format&fit=crop",
@@ -595,11 +601,11 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "Watching someone do dishes for 20 minutes and feeling everything.",
       },
       book: {
-        title: "Camera Lucida — Roland Barthes",
+        title: "Camera Lucida, Roland Barthes",
         note: "He describes grief and calls it photography. I've never recovered.",
       },
       song: {
-        title: "'Canto Moço' — Sérgio Godinho",
+        title: "'Canto Moço', Sérgio Godinho",
         note: "My grandmother used to hum it. I only found out what it was after she died.",
       },
       moment: {
@@ -622,7 +628,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1710787051760-1bd406b7c535?q=80&w=760&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     verified: false,
     since: "2025",
-    bio: "I run a supper club out of my home in Mouraria every few weeks — twelve seats, no menu, whatever came in that week. I ferment things obsessively and think deeply about food as hospitality, not spectacle.",
+    bio: "I run a supper club out of my home in Mouraria every few weeks, twelve seats, no menu, whatever came in that week. I ferment things obsessively and think deeply about food as hospitality rather than spectacle.",
     now: "Planning the 13th edition of the Mouraria supper club. Working on a small fermentation guide for the community.",
     openTo: [
       { kind: "custom", label: "Catering collaborations" },
@@ -632,7 +638,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Supper club",
-        title: "Queer Supper Club — 12 editions in Mouraria",
+        title: "Queer Supper Club, 12 editions in Mouraria",
         year: "2024–25",
         image:
           "https://images.unsplash.com/photo-1772482360229-d93a8ef2de07?q=80&w=800&auto=format&fit=crop",
@@ -678,11 +684,11 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "A film about ramen that is actually about love and obsession and why both are worth it.",
       },
       book: {
-        title: "The Omnivore's Dilemma — Michael Pollan",
+        title: "The Omnivore's Dilemma, Michael Pollan",
         note: "Made me furious in all the right ways.",
       },
       song: {
-        title: "'Estranha Forma de Vida' — Amália Rodrigues",
+        title: "'Estranha Forma de Vida', Amália Rodrigues",
         note: "I don't agree with everything she stood for but no one has ever meant it more.",
       },
       moment: {
@@ -705,7 +711,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1614204424926-196a80bf0be8?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     verified: true,
     since: "2024",
-    bio: "I work with LGBTQ+ adults navigating identity, relationships and the weight of being visible in a world that sometimes asks too much of us. My practice is in Estrela. I'm on QueerPulse because community matters for mental health — including mine.",
+    bio: "I work with LGBTQ+ adults navigating identity, relationships and the weight of being visible in a world that sometimes asks too much of us. My practice is in Estrela. I'm on QueerPulse because community matters for mental health, including mine.",
     now: "Running a monthly peer support group for queer professionals. Currently full but keeping a waitlist.",
     openTo: [
       { kind: "custom", label: "Peer consultations" },
@@ -749,11 +755,11 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "A film about looking and being looked at. I think about it in every session.",
       },
       book: {
-        title: "The Body Keeps the Score — Bessel van der Kolk",
-        note: "Not as therapy gospel — as a starting point for asking better questions.",
+        title: "The Body Keeps the Score, Bessel van der Kolk",
+        note: "A starting point for asking better questions rather than therapy gospel.",
       },
       song: {
-        title: "'Pessoa' — Dead Combo",
+        title: "'Pessoa', Dead Combo",
         note: "Lisbon in 6 minutes. No words needed.",
       },
       moment: {
@@ -776,7 +782,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1547646034-d37a03ebaba3?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     verified: false,
     since: "2025",
-    bio: "I shoot portraits on film — mostly medium format, mostly natural light, mostly people who have never liked having their photograph taken. I have a studio in Cais do Sodré that smells like fixer and old wood. Come and visit.",
+    bio: "I shoot portraits on film, mostly medium format, mostly natural light, mostly people who have never liked having their photograph taken. I have a studio in Cais do Sodré that smells like fixer and old wood. Come and visit.",
     now: "Offering free portrait sessions for trans and nonbinary community members. No agenda, just a good photo.",
     openTo: [
       { kind: "preset", id: "commissions" },
@@ -786,7 +792,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Portrait series",
-        title: "Faces of the Bairro — 40 portraits in Mouraria",
+        title: "Faces of the Bairro, 40 portraits in Mouraria",
         year: "2024",
         image:
           "https://images.unsplash.com/photo-1773136355382-e27d8cc9ae22?q=80&w=800&auto=format&fit=crop",
@@ -841,15 +847,15 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     ],
     shapings: {
       film: {
-        title: "The Ballad of Sexual Dependency — Nan Goldin",
-        note: "Not a film — a slideshow. Changed what I thought a portrait was allowed to be.",
+        title: "The Ballad of Sexual Dependency, Nan Goldin",
+        note: "A slideshow rather than a film. Changed what I thought a portrait was allowed to be.",
       },
       book: {
-        title: "Ways of Seeing — John Berger",
+        title: "Ways of Seeing, John Berger",
         note: "Keeps ending up in other people's lists. There's a reason.",
       },
       song: {
-        title: "'Strange Fruit' — Billie Holiday",
+        title: "'Strange Fruit', Billie Holiday",
         note: "The most political photograph I've ever heard.",
       },
       moment: {
@@ -872,7 +878,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     verified: true,
     since: "2024",
-    bio: "I've shipped products at two fintechs and one very strange startup. I'm interested in what it means to build ethically — not as a marketing position but as a daily practice. I live in Arroios, walk everywhere, and am genuinely good at spotting the real problem.",
+    bio: "I've shipped products at two fintechs and one very strange startup. I'm interested in what it means to build ethically as a daily practice rather than a marketing position. I live in Arroios, walk everywhere, and am genuinely good at spotting the real problem.",
     now: "Between roles, thinking carefully about what's next. Looking for a June–August sublet while I figure it out.",
     openTo: [
       { kind: "preset", id: "clientWork" },
@@ -938,14 +944,14 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     shapings: {
       film: {
         title: "The Social Network",
-        note: "I know. But it was the first time I saw building a product as drama, not engineering.",
+        note: "I know. But it was the first time I saw building a product as drama rather than engineering.",
       },
       book: {
-        title: "Invisible Cities — Italo Calvino",
+        title: "Invisible Cities, Italo Calvino",
         note: "A product manager's secret handbook disguised as poetry.",
       },
       song: {
-        title: "'Killing Me Softly' — Lauryn Hill",
+        title: "'Killing Me Softly', Lauryn Hill",
         note: "I listened to The Miseducation on repeat for one entire year.",
       },
       moment: {
@@ -968,7 +974,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1747173790110-e53942765d2c?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     verified: false,
     since: "2025",
-    bio: "I make ceramics in a studio in Graça — functional pieces with a slow, considered aesthetic. I teach occasional workshops and am almost always covered in clay. The studio has two spare desks and good afternoon light.",
+    bio: "I make ceramics in a studio in Graça. Functional pieces with a slow, considered aesthetic. I teach occasional workshops and am almost always covered in clay. The studio has two spare desks and good afternoon light.",
     now: "Preparing a small exhibition of functional pieces for late summer. Also testing new glaze formulas that keep going wrong in interesting ways.",
     openTo: [
       { kind: "preset", id: "studioVisits" },
@@ -978,7 +984,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Collection",
-        title: "Slow Objects — functional ceramics collection",
+        title: "Slow Objects, functional ceramics collection",
         year: "2025",
         image:
           "https://plus.unsplash.com/premium_photo-1670523428691-401adf274515?q=80&w=800&auto=format&fit=crop",
@@ -1037,11 +1043,11 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "A documentary about a one-room school. Slow and full of care. Everything I want my work to be.",
       },
       book: {
-        title: "Zen and the Art of Motorcycle Maintenance — Pirsig",
+        title: "Zen and the Art of Motorcycle Maintenance, Pirsig",
         note: "I read it twice, understood it differently each time.",
       },
       song: {
-        title: "'Aqui Estou Eu' — José Mário Branco",
+        title: "'Aqui Estou Eu', José Mário Branco",
         note: "Learned it as a child at a school play. Still know every word.",
       },
       moment: {
@@ -1064,7 +1070,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://plus.unsplash.com/premium_photo-1733971878574-4d1d01489603?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     verified: true,
     since: "2023",
-    bio: "I produce electronic music and mix live sets — mostly for queer club nights but occasionally for things that don't have a name yet. I have a small studio above a café in Bairro Alto that I share with two other producers. The hours are unsociable but the music is worth it.",
+    bio: "I produce electronic music and mix live sets, mostly for queer club nights but occasionally for things that don't have a name yet. I have a small studio above a café in Bairro Alto that I share with two other producers. The hours are unsociable but the music is worth it.",
     now: "Working on a new EP and scoring music for Sofia's documentary. Open to new live set commissions for late 2026.",
     openTo: [
       { kind: "preset", id: "commissions" },
@@ -1074,7 +1080,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Production",
-        title: "'Pulso' — debut EP, self-released",
+        title: "'Pulso', debut EP, self-released",
         year: "2025",
         image:
           "https://plus.unsplash.com/premium_photo-1682545693253-c9491d190b8f?q=80&w=800&auto=format&fit=crop",
@@ -1121,7 +1127,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       {
         icon: FiMessageCircle,
         title: "Replied in the Forum",
-        sub: "Scoring a documentary — rate advice? · 6 days ago",
+        sub: "Scoring a documentary, rate advice? · 6 days ago",
         to: routes.forum,
       },
     ],
@@ -1131,11 +1137,11 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "Before I knew what a ballroom was. After I knew who I was.",
       },
       book: {
-        title: "Invisible Man — Ralph Ellison",
+        title: "Invisible Man, Ralph Ellison",
         note: "About invisibility as political condition. I return to it every year.",
       },
       song: {
-        title: "'Strings of Life' — Derrick May",
+        title: "'Strings of Life', Derrick May",
         note: "The first time I heard a synthesizer cry.",
       },
       moment: {
@@ -1146,7 +1152,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
   },
 
   // ── The wider community ───────────────────────────────────────────────────
-  // Fully realised members — directory cards, connections, reviewers, magazine
+  // Fully realised members, directory cards, connections, reviewers, magazine
   // contributors. Each is a complete profile so any surface (Connect modal,
   // profile page, directory) has real content. Kept here so a change propagates
   // everywhere.
@@ -1170,7 +1176,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=800&auto=format&fit=crop",
     verified: true,
     since: "2023",
-    bio: "I design public-service tools that don't make people feel stupid — forms, booking flows, the boring stuff that decides whether someone gets help. I came to UX from a screen-reader habit and never left accessibility behind. Most weeks you'll find me sketching flows at a café table in Arroios with too many post-its.",
+    bio: "I design public-service tools that don't make people feel stupid: forms, booking flows, the boring stuff that decides whether someone gets help. I came to UX from a screen-reader habit and never left accessibility behind. Most weeks you'll find me sketching flows at a café table in Arroios with too many post-its.",
     now: "Rebuilding the appointment booking flow for a trans health clinic so it works on a five-year-old Android.",
     openTo: [
       { kind: "preset", id: "mentoring" },
@@ -1180,7 +1186,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Product",
-        title: "Acessível — public-form toolkit",
+        title: "Acessível, public-form toolkit",
         year: "2025",
       },
       {
@@ -1214,12 +1220,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "It put words to why I'd always felt the 'average user' was a lie.",
       },
       song: {
-        title: "This Must Be the Place — Talking Heads",
+        title: "This Must Be the Place, Talking Heads",
         note: "My grounding song; I play it before every difficult meeting.",
       },
       moment: {
         title: "First clinic launch",
-        note: "Watching a stranger book their own appointment without asking for help — I cried in the waiting room.",
+        note: "Watching a stranger book their own appointment without asking for help. I cried in the waiting room.",
       },
     },
     skills: [
@@ -1260,7 +1266,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800&auto=format&fit=crop",
     verified: true,
     since: "2022",
-    bio: "I'm an architect obsessed with the question of who gets to stay in a neighbourhood. I work mostly on co-housing and on turning forgotten warehouses in Marvila into spaces queer collectives can actually afford. I cook for everyone who comes through the studio — it's how I think.",
+    bio: "I'm an architect obsessed with the question of who gets to stay in a neighbourhood. I work mostly on co-housing and on turning forgotten warehouses in Marvila into spaces queer collectives can actually afford. I cook for everyone who comes through the studio. It's how I think.",
     now: "Drawing up a shared-kitchen co-living scheme for a queer elders' housing pilot.",
     openTo: [
       { kind: "preset", id: "collaborating" },
@@ -1270,7 +1276,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Project",
-        title: "Armazém 7 — collective workspace conversion",
+        title: "Armazém 7, collective workspace conversion",
         year: "2025",
       },
       {
@@ -1280,7 +1286,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       },
       {
         category: "Exhibition",
-        title: "Who Stays — housing & belonging",
+        title: "Who Stays, housing & belonging",
         year: "2023",
       },
     ],
@@ -1297,14 +1303,14 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     shapings: {
       film: {
         title: "Koyaanisqatsi",
-        note: "It rewired how I see cities — as something breathing, not something built.",
+        note: "It rewired how I see cities as something breathing rather than something built.",
       },
       book: {
         title: "The Death and Life of Great American Cities",
         note: "Jacobs taught me to trust the sidewalk over the master plan.",
       },
       song: {
-        title: "Águas de Março — Elis & Tom",
+        title: "Águas de Março, Elis & Tom",
         note: "The song I hum on every site at the moment the light is right.",
       },
       moment: {
@@ -1354,7 +1360,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     verified: false,
     since: "2024",
     bio: "I translate between Slovene, English and Portuguese for a living, and I write poems that get stuck in the gaps between those languages. Mouraria feels like home because everyone here is from somewhere else too. I'm she or they, depending on the day and the language.",
-    now: "Finishing a poetry collection about queerness and migration — the working title keeps changing.",
+    now: "Finishing a poetry collection about queerness and migration. The working title keeps changing.",
     openTo: [
       { kind: "custom", label: "Bilingual reading series" },
       { kind: "preset", id: "swaps" },
@@ -1393,12 +1399,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "Maggie Nelson showed me a single colour could hold a whole heartbreak.",
       },
       song: {
-        title: "Plovi Plovi — Severina (slow version)",
+        title: "Plovi Plovi, Severina (slow version)",
         note: "A song from home I only learned to love once I'd left it.",
       },
       moment: {
         title: "Reading in three languages",
-        note: "The first night an audience laughed at the same line in two tongues — I felt unsplit.",
+        note: "The first night an audience laughed at the same line in two tongues. I felt unsplit.",
       },
     },
     skills: [
@@ -1439,7 +1445,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop",
     verified: true,
     since: "2021",
-    bio: "I help groups have the hard conversations without falling apart — facilitation, mediation, the slow work of trust. They/them, always. After a decade in social-sector roles I mostly spend my energy now helping the next people through the door not burn out in year one.",
+    bio: "I help groups have the hard conversations without falling apart: facilitation, mediation, the slow work of trust. They/them, always. After a decade in social-sector roles I mostly spend my energy now helping the next people through the door not burn out in year one.",
     now: "Running a six-week facilitation lab for people moving into community work for the first time.",
     openTo: [
       { kind: "preset", id: "mentoring" },
@@ -1449,7 +1455,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Programme",
-        title: "First Year — onboarding for new organisers",
+        title: "First Year, onboarding for new organisers",
         year: "2025",
       },
       {
@@ -1476,15 +1482,15 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     shapings: {
       film: {
         title: "Pride",
-        note: "It's the politics I believe in — unlikely solidarity that actually changes a vote.",
+        note: "It's the politics I believe in: unlikely solidarity that actually changes a vote.",
       },
       book: {
         title: "Emergent Strategy",
-        note: "adrienne maree brown gave me permission to organise like a garden, not a machine.",
+        note: "adrienne maree brown gave me permission to organise like a garden rather than a machine.",
       },
       song: {
-        title: "Ella's Song — Sweet Honey in the Rock",
-        note: "'We who believe in freedom cannot rest' — my whole ethic in one line.",
+        title: "Ella's Song, Sweet Honey in the Rock",
+        note: "'We who believe in freedom cannot rest', my whole ethic in one line.",
       },
       moment: {
         title: "Mediating a near-split collective",
@@ -1529,7 +1535,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800&auto=format&fit=crop",
     verified: true,
     since: "2022",
-    bio: "I'm a clinical psychologist in Porto working mostly with queer and trans clients — the kind of care I wish had existed when I was twenty. My practice in Cedofeita is small and slow on purpose. I also supervise psychologists retraining toward affirming practice, because there still aren't enough of us.",
+    bio: "I'm a clinical psychologist in Porto working mostly with queer and trans clients: the kind of care I wish had existed when I was twenty. My practice in Cedofeita is small and slow on purpose. I also supervise psychologists retraining toward affirming practice, because there still aren't enough of us.",
     now: "Building a referral network of affirming therapists across the north of Portugal.",
     openTo: [
       { kind: "preset", id: "clientWork" },
@@ -1539,7 +1545,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Practice",
-        title: "Consultório Cedofeita — affirming therapy",
+        title: "Consultório Cedofeita, affirming therapy",
         year: "2022",
       },
       {
@@ -1573,7 +1579,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "Judith Herman is the spine of how I hold a session.",
       },
       song: {
-        title: "Both Sides Now — Joni Mitchell",
+        title: "Both Sides Now, Joni Mitchell",
         note: "I put it on after a heavy day to remember the same thing can be seen many ways.",
       },
       moment: {
@@ -1619,8 +1625,8 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=800&auto=format&fit=crop",
     verified: false,
     since: "Apr 2026",
-    bio: "I'm a filmmaker who just landed in Lisbon and fell straight into Cais do Sodré at 4am. They/them. I make documentaries about the places that disappear when the lights come up — right now, the queer dancefloors of southern Europe before they're priced out of existence.",
-    now: "Shooting a documentary on queer nightlife across Lisbon, Barcelona and Naples — chasing the rooms before they close.",
+    bio: "I'm a filmmaker who just landed in Lisbon and fell straight into Cais do Sodré at 4am. They/them. I make documentaries about the places that disappear when the lights come up: right now, the queer dancefloors of southern Europe before they're priced out of existence.",
+    now: "Shooting a documentary on queer nightlife across Lisbon, Barcelona and Naples, chasing the rooms before they close.",
     openTo: [
       { kind: "preset", id: "interviewees" },
       { kind: "custom", label: "Fixers & local guides" },
@@ -1630,7 +1636,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       { category: "Film", title: "Last Call (in production)", year: "2026" },
       {
         category: "Short",
-        title: "Smoke Room — Malmö queer techno",
+        title: "Smoke Room, Malmö queer techno",
         year: "2024",
       },
     ],
@@ -1659,7 +1665,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "Muñoz made me believe nightlife is a rehearsal for a better world.",
       },
       song: {
-        title: "Mestre — DJ Marfox",
+        title: "Mestre, DJ Marfox",
         note: "The first track that made me understand Lisbon has its own dancefloor language.",
       },
       moment: {
@@ -1705,7 +1711,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=800&auto=format&fit=crop",
     verified: true,
     since: "2023",
-    bio: "I'm a physiotherapist who does trans-affirming bodywork and post-surgical rehab — the kind of touch-based care that has to be built on consent, slowly. My room in Estrela is quiet and warm and you keep on whatever clothes you want. I believe a body in pain deserves to feel safe before it feels better.",
+    bio: "I'm a physiotherapist who does trans-affirming bodywork and post-surgical rehab, the kind of touch-based care that has to be built on consent, slowly. My room in Estrela is quiet and warm and you keep on whatever clothes you want. I believe a body in pain deserves to feel safe before it feels better.",
     now: "Putting together a movement class for people recovering from top surgery.",
     openTo: [
       { kind: "preset", id: "clientWork" },
@@ -1714,7 +1720,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Practice",
-        title: "Estrela Bodywork — affirming physio",
+        title: "Estrela Bodywork, affirming physio",
         year: "2023",
       },
       {
@@ -1736,14 +1742,14 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     shapings: {
       film: {
         title: "The Diving Bell and the Butterfly",
-        note: "It taught me the body is never just an obstacle — it's a whole inner world.",
+        note: "It taught me the body is a whole inner world, far more than an obstacle.",
       },
       book: {
         title: "Care Work",
-        note: "Leah Lakshmi Piepzna-Samarasinha reframed care as something we build together, not buy.",
+        note: "Leah Lakshmi Piepzna-Samarasinha reframed care as something we build together rather than buy.",
       },
       song: {
-        title: "Lovely Day — Bill Withers",
+        title: "Lovely Day, Bill Withers",
         note: "I play it low during sessions; shoulders drop the moment it starts.",
       },
       moment: {
@@ -1807,7 +1813,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Organising",
-        title: "Welcome Desk — weekly drop-in for new arrivals",
+        title: "Welcome Desk, weekly drop-in for new arrivals",
         year: "2023",
       },
       {
@@ -1841,7 +1847,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "It put words to the kind of grief people carry in silently from the waiting room.",
       },
       song: {
-        title: "Ya Rayah — Rachid Taha",
+        title: "Ya Rayah, Rachid Taha",
         note: "My father sang it; now it's what plays when the drop-in finally empties out and I tidy up.",
       },
       moment: {
@@ -1899,7 +1905,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1521252659862-eec69941b071?q=80&w=800&auto=format&fit=crop",
     verified: true,
     since: "2021",
-    bio: "I organise tenants in Marvila and Graça — knocking on doors, sitting with people the night before an eviction, helping neighbours realise they have more power together than alone. My dream is a proper queer housing co-op where nobody's lease depends on staying closeted to a landlord. I've been priced out of three flats myself, so this isn't theory for me.",
+    bio: "I organise tenants in Marvila and Graça: knocking on doors, sitting with people the night before an eviction, helping neighbours realise they have more power together than alone. My dream is a proper queer housing co-op where nobody's lease depends on staying closeted to a landlord. I've been priced out of three flats myself, so this isn't theory for me.",
     now: "Drafting the bylaws for Lisbon's first explicitly queer-friendly housing co-op.",
     openTo: [
       { kind: "custom", label: "People who've run co-ops before" },
@@ -1909,7 +1915,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Organising",
-        title: "Marvila Tenants' Union — co-founder",
+        title: "Marvila Tenants' Union, co-founder",
         year: "2021",
       },
       {
@@ -1938,7 +1944,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "Jane Jacobs taught me to defend the messy, lived-in street against the developers.",
       },
       song: {
-        title: "Grândola, Vila Morena — Zeca Afonso",
+        title: "Grândola, Vila Morena, Zeca Afonso",
         note: "We sang it on a balcony the night we stopped an eviction; it still gives me chills.",
       },
       moment: {
@@ -1977,7 +1983,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       {
         icon: FiEdit3,
         title: "Wrote up the co-op proposal",
-        sub: "Draft v3 — feedback welcome",
+        sub: "Draft v3, feedback welcome",
         to: routes.magazine,
       },
     ],
@@ -1996,7 +2002,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?q=80&w=800&auto=format&fit=crop",
     verified: true,
     since: "2020",
-    bio: "I do sexual-health and harm-reduction outreach across Cais do Sodré and Bairro Alto — testing tents, naloxone, PrEP navigation, and a lot of just listening at 3am. I trained as a nurse but found my place out on the street where the clinic walls scare people off. No judgement, ever; that's the whole job.",
+    bio: "I do sexual-health and harm-reduction outreach across Cais do Sodré and Bairro Alto: testing tents, naloxone, PrEP navigation, and a lot of just listening at 3am. I trained as a nurse but found my place out on the street where the clinic walls scare people off. No judgement, ever; that's the whole job.",
     now: "Setting up a no-appointment rapid-testing night that runs after the bars close.",
     openTo: [
       { kind: "custom", label: "Volunteers comfortable with late nights" },
@@ -2006,7 +2012,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Health",
-        title: "Street outreach — Cais do Sodré",
+        title: "Street outreach, Cais do Sodré",
         year: "2020",
       },
       {
@@ -2033,14 +2039,14 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     shapings: {
       film: {
         title: "120 BPM",
-        note: "It showed me activism as love and rage in the same breath — that's how the work feels.",
+        note: "It showed me activism as love and rage in the same breath. That's how the work feels.",
       },
       book: {
         title: "How to Survive a Plague",
         note: "David France reminded me that the people who changed everything were ordinary and terrified.",
       },
       song: {
-        title: "Smalltown Boy — Bronski Beat",
+        title: "Smalltown Boy, Bronski Beat",
         note: "It plays in my head every time a scared kid finds the testing tent.",
       },
       moment: {
@@ -2056,7 +2062,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     ],
     groups: [
       {
-        name: "GAT — Grupo de Ativistas em Tratamentos",
+        name: "GAT, Grupo de Ativistas em Tratamentos",
         role: "Outreach worker",
       },
       { name: "Cais do Sodré Night Crew", role: "Coordinator" },
@@ -2102,7 +2108,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1582896911227-c966f6e7fb93?q=80&w=800&auto=format&fit=crop",
     verified: true,
     since: "2021",
-    bio: "I'm a lawyer who gives away the hours I was trained never to give away. Most of my pro-bono work is queer family law and discrimination — the cases people can't afford to bring and can't afford to lose. I split my time between a small practice in Estrela and a lot of other people's kitchen tables. The law is only protection if you can actually reach it, so I spend as much time explaining rights as I do defending them.",
+    bio: "I'm a lawyer who gives away the hours I was trained never to give away. Most of my pro-bono work is queer family law and discrimination: the cases people can't afford to bring and can't afford to lose. I split my time between a small practice in Estrela and a lot of other people's kitchen tables. The law is only protection if you can actually reach it, so I spend as much time explaining rights as I do defending them.",
     now: "Running a free monthly rights clinic and training a new cohort of lawyers to take LGBTQ+ cases without fumbling the parts that matter.",
     openTo: [
       { kind: "preset", id: "referrals" },
@@ -2112,12 +2118,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Casework",
-        title: "60+ pro-bono cases — discrimination & family law",
+        title: "60+ pro-bono cases, discrimination & family law",
         year: "2021–25",
       },
       {
         category: "Training",
-        title: "Taking LGBTQ+ cases — a course for lawyers",
+        title: "Taking LGBTQ+ cases, a course for lawyers",
         year: "2025",
       },
       {
@@ -2147,11 +2153,11 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "I watched it too young to follow the law in it, old enough to feel the injustice. Both stuck.",
       },
       book: {
-        title: "Just Mercy — Bryan Stevenson",
+        title: "Just Mercy, Bryan Stevenson",
         note: "The clearest argument I know that the law is only as just as the people willing to do the unpaid hours.",
       },
       song: {
-        title: "Ne Me Quitte Pas — Jacques Brel",
+        title: "Ne Me Quitte Pas, Jacques Brel",
         note: "What I play after a family-law hearing, when I need to feel something other than the case file.",
       },
       moment: {
@@ -2209,17 +2215,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1499887142886-791eca5918cd?q=80&w=800&auto=format&fit=crop",
     verified: false,
     since: "2023",
-    bio: "I make zines and queer comics, mostly printed on a temperamental risograph in a shared Mouraria studio that always smells of soy ink. My work is soft and a bit absurd — lesbian saints, fluorescent saudade, dogs who give good advice. I teach risograph and bookbinding workshops because watching someone print their first page never gets old.",
+    bio: "I make zines and queer comics, mostly printed on a temperamental risograph in a shared Mouraria studio that always smells of soy ink. My work is soft and a bit absurd: lesbian saints, fluorescent saudade, dogs who give good advice. I teach risograph and bookbinding workshops because watching someone print their first page never gets old.",
     now: "Finishing a 40-page riso comic about my grandmother's kitchen and coming out to her.",
     openTo: [
       { kind: "custom", label: "Writers who want their words illustrated" },
       { kind: "custom", label: "A second hand for workshop days" },
-      { kind: "custom", label: "Trades — prints for almost anything" },
+      { kind: "custom", label: "Trades, prints for almost anything" },
     ],
     work: [
       {
         category: "Comics",
-        title: "Santa Solidão — riso zine, 2-colour",
+        title: "Santa Solidão, riso zine, 2-colour",
         year: "2024",
       },
       {
@@ -2253,8 +2259,8 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "Alison Bechdel showed me a comic could hold a whole complicated family and a coming-out at once.",
       },
       song: {
-        title: "Estranha Forma de Vida — Amália Rodrigues",
-        note: "Fado about loving wrongly — it's secretly the soundtrack to my whole comic.",
+        title: "Estranha Forma de Vida, Amália Rodrigues",
+        note: "Fado about loving wrongly. It's secretly the soundtrack to my whole comic.",
       },
       moment: {
         title: "Selling out my first print run at a tiny fair in Anjos",
@@ -2305,7 +2311,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?q=80&w=800&auto=format&fit=crop",
     verified: true,
     since: "2022",
-    bio: "Galician mother, Portuguese father, raised between Vigo and Lisbon — I shoot documentary work and the queer nightlife that raised me, mostly in Príncipe Real and the basements of Cais do Sodré. I'm interested in the hour after the lights come up, when everyone's tender and honest. I shoot film because waiting for the contact sheet keeps me humble.",
+    bio: "Galician mother, Portuguese father, raised between Vigo and Lisbon. I shoot documentary work and the queer nightlife that raised me, mostly in Príncipe Real and the basements of Cais do Sodré. I'm interested in the hour after the lights come up, when everyone's tender and honest. I shoot film because waiting for the contact sheet keeps me humble.",
     now: "Editing a year-long photo essay on Lisbon's last few queer dance floors before they're sold off.",
     openTo: [
       { kind: "custom", label: "Venues to document before they close" },
@@ -2315,7 +2321,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Photography",
-        title: "Última Pista — nightlife photo essay",
+        title: "Última Pista, nightlife photo essay",
         year: "2025",
       },
       {
@@ -2337,14 +2343,14 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     shapings: {
       film: {
         title: "Shiva Baby",
-        note: "A whole comedy of queer panic in one room — it taught me how much a single space can hold.",
+        note: "A whole comedy of queer panic in one room. It taught me how much a single space can hold.",
       },
       book: {
         title: "On Photography",
         note: "Sontag made me distrust my own camera in a way that made me a better photographer.",
       },
       song: {
-        title: "Bigmouth Strikes Again — The Smiths",
+        title: "Bigmouth Strikes Again, The Smiths",
         note: "First thing I ever danced to in a queer club; I shoot to find that feeling again.",
       },
       moment: {
@@ -2399,7 +2405,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1463453091185-61582044d556?q=80&w=800&auto=format&fit=crop",
     verified: false,
     since: "2023",
-    bio: "Frontend engineer by day, accessibility nerd by conviction — I believe a website that locks out a screen-reader user is just a broken website. I spend my evenings building tools for small queer nonprofits who can't afford a dev. I'm trans and quietly so; this profile stays private for now, and that's allowed to be okay.",
+    bio: "Frontend engineer by day, accessibility nerd by conviction. I believe a website that locks out a screen-reader user is just a broken website. I spend my evenings building tools for small queer nonprofits who can't afford a dev. I'm trans and quietly so; this profile stays private for now, and that's allowed to be okay.",
     now: "Rebuilding a trans-healthcare directory so it actually works on a cheap phone with a screen reader.",
     openTo: [
       {
@@ -2439,19 +2445,19 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     shapings: {
       film: {
         title: "Hackers",
-        note: "Cheesy and beloved — it's the first time I saw a screen as somewhere you could be free.",
+        note: "Cheesy and beloved. It's the first time I saw a screen as somewhere you could be free.",
       },
       book: {
         title: "Design Justice",
         note: "Sasha Costanza-Chock gave me the language for why I build the way I build.",
       },
       song: {
-        title: "Windowlicker — Aphex Twin",
+        title: "Windowlicker, Aphex Twin",
         note: "Glitchy and tender; it's what's in my headphones at 1am when the code finally compiles.",
       },
       moment: {
         title: "Watching a blind user navigate something I built, smoothly",
-        note: "I sat there grinning like an idiot — that's the whole point.",
+        note: "I sat there grinning like an idiot. That's the whole point.",
       },
     },
     skills: [
@@ -2498,7 +2504,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1485893086445-ed75865251e0?q=80&w=800&auto=format&fit=crop",
     verified: true,
     since: "2021",
-    bio: "I curate contemporary shows and, more stubbornly, I build a queer archive — flyers, love letters, club photos, the things institutions never thought worth keeping. I work between a white-cube gallery in Príncipe Real and a damp storage room in Estrela full of other people's history. My job is making sure we're not erased twice: once while living, once after.",
+    bio: "I curate contemporary shows and, more stubbornly, I build a queer archive: flyers, love letters, club photos, the things institutions never thought worth keeping. I work between a white-cube gallery in Príncipe Real and a damp storage room in Estrela full of other people's history. My job is making sure we're not erased twice: once while living, once after.",
     now: "Curating an exhibition built entirely from donated queer ephemera from the 80s and 90s.",
     openTo: [
       {
@@ -2511,12 +2517,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     work: [
       {
         category: "Curation",
-        title: "Antes de Nós — queer ephemera exhibition",
+        title: "Antes de Nós, queer ephemera exhibition",
         year: "2026",
       },
       {
         category: "Archive",
-        title: "Arquivo Cor-de-Rosa — founding curator",
+        title: "Arquivo Cor-de-Rosa, founding curator",
         year: "2021",
       },
     ],
@@ -2538,14 +2544,14 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     shapings: {
       film: {
         title: "The Watermelon Woman",
-        note: "Cheryl Dunye invented an archive because none existed — that's literally my job description.",
+        note: "Cheryl Dunye invented an archive because none existed. That's literally my job description.",
       },
       book: {
         title: "Cruising Utopia",
         note: "José Muñoz taught me to treat the archive as a place where the future is also kept.",
       },
       song: {
-        title: "It's a Sin — Pet Shop Boys",
+        title: "It's a Sin, Pet Shop Boys",
         note: "It belongs to the people whose flyers I file; I play it loud while cataloguing.",
       },
       moment: {
@@ -2598,7 +2604,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1542596594-649edbc13630?q=80&w=800&auto=format&fit=crop",
     verified: true,
     since: "2023",
-    bio: "I report on the slow machinery of LGBTQ+ rights in Portugal — the bills that stall, the clinics that quietly close, the names that never make the headline. I work out of a shared desk in Arroios with too much coffee and a wall of sticky notes. If a story matters and nobody's chasing it, that's usually where you'll find me.",
+    bio: "I report on the slow machinery of LGBTQ+ rights in Portugal: the bills that stall, the clinics that quietly close, the names that never make the headline. I work out of a shared desk in Arroios with too much coffee and a wall of sticky notes. If a story matters and nobody's chasing it, that's usually where you'll find me.",
     now: "Filing a months-long investigation into waiting times at gender-affirming care services across the public system.",
     openTo: [
       { kind: "custom", label: "Confidential tips" },
@@ -2632,7 +2638,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "It taught me to distrust my own charm with a source.",
       },
       song: {
-        title: "Quero-te Tanto — Linda Martini",
+        title: "Quero-te Tanto, Linda Martini",
         note: "The track I play when a piece finally goes to the editor.",
       },
       moment: {
@@ -2710,14 +2716,14 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     shapings: {
       film: {
         title: "Tangerine",
-        note: "Shot on a phone, full of fury and tenderness — it gave me permission to make rough, honest things.",
+        note: "Shot on a phone, full of fury and tenderness. It gave me permission to make rough, honest things.",
       },
       book: {
         title: "Stone Butch Blues",
-        note: "I read it in one weekend in a Mouraria flat and cried at the union scenes, not the romance.",
+        note: "I read it in one weekend in a Mouraria flat and cried at the union scenes rather than the romance.",
       },
       song: {
-        title: "Drone Bomb Me — Anohni",
+        title: "Drone Bomb Me, Anohni",
         note: "It holds grief and politics in the same breath, which is what I'm always failing to do in essays.",
       },
       moment: {
@@ -2763,7 +2769,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1554151228-14d9def656e4?q=80&w=800&auto=format&fit=crop",
     verified: true,
     since: "2023",
-    bio: "I help queer tenants who are being pushed out of their homes — by landlords, by rent hikes, by the slow violence of a city selling itself off. I trained as a paralegal and now I split my time between a legal-aid desk in Marvila and people's kitchen tables. Housing is a queer issue; nobody comes out of a home they can't afford.",
+    bio: "I help queer tenants who are being pushed out of their homes: by landlords, by rent hikes, by the slow violence of a city selling itself off. I trained as a paralegal and now I split my time between a legal-aid desk in Marvila and people's kitchen tables. Housing is a queer issue; nobody comes out of a home they can't afford.",
     now: "Building a small fund and a buddy system so nobody faces an eviction hearing alone.",
     openTo: [
       { kind: "custom", label: "Volunteer note-takers for hearings" },
@@ -2795,14 +2801,14 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     shapings: {
       film: {
         title: "Sorry to Bother You",
-        note: "Absurd and furious about who the city is built for — I quote it more than I should.",
+        note: "Absurd and furious about who the city is built for. I quote it more than I should.",
       },
       book: {
-        title: "Evicted — Matthew Desmond",
+        title: "Evicted, Matthew Desmond",
         note: "It put data under what I already felt at every kitchen table.",
       },
       song: {
-        title: "Vayorken — Capicua",
+        title: "Vayorken, Capicua",
         note: "A Porto verse about belonging to a place that keeps trying to price you out.",
       },
       moment: {
@@ -2884,14 +2890,14 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     shapings: {
       film: {
         title: "Crip Camp",
-        note: "The first time I saw disabled people on screen who were funny, horny and dangerous — not brave.",
+        note: "The first time I saw disabled people on screen who were funny, horny and dangerous rather than brave.",
       },
       book: {
-        title: "Care Work — Leah Lakshmi Piepzna-Samarasinha",
-        note: "It reframed access as love, not logistics, and I've never recovered.",
+        title: "Care Work, Leah Lakshmi Piepzna-Samarasinha",
+        note: "It reframed access as love rather than logistics, and I've never recovered.",
       },
       song: {
-        title: "Human — Sevdaliza",
+        title: "Human, Sevdaliza",
         note: "A song about bodies and being seen that I play on hard pain days.",
       },
       moment: {
@@ -2951,7 +2957,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       },
       {
         category: "Album",
-        title: "Ferry Crossings — field recordings",
+        title: "Ferry Crossings, field recordings",
         year: "2025",
       },
     ],
@@ -2973,14 +2979,14 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     shapings: {
       film: {
         title: "Berberian Sound Studio",
-        note: "A whole film about a Foley artist losing his mind — it made my obsessive job feel almost glamorous.",
+        note: "A whole film about a Foley artist losing his mind. It made my obsessive job feel almost glamorous.",
       },
       book: {
-        title: "The Soundscape — R. Murray Schafer",
+        title: "The Soundscape, R. Murray Schafer",
         note: "It taught me to listen to a street the way others read a page.",
       },
       song: {
-        title: "Yüce Dağ Başında — Altın Gün",
+        title: "Yüce Dağ Başında, Altın Gün",
         note: "Anatolian psych-folk that sounds like my grandmother's kitchen rewired for a dancefloor.",
       },
       moment: {
@@ -3001,7 +3007,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       {
         icon: FiMusic,
         title: "Joined QueerPulse",
-        sub: "New this week — say hi",
+        sub: "New this week, say hi",
         to: routes.culture,
       },
       {
@@ -3031,7 +3037,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=800&auto=format&fit=crop",
     verified: false,
     since: "Jun 2026",
-    bio: "I make contemporary dance about queer bodies refusing to behave — work that's tender, sweaty and a little feral. I rehearse in a borrowed studio in Estrela and improvise on the kitchen floor when I can't afford the space. Just landed in this community and looking for dancers who'd rather risk falling than stay safe.",
+    bio: "I make contemporary dance about queer bodies refusing to behave: work that's tender, sweaty and a little feral. I rehearse in a borrowed studio in Estrela and improvise on the kitchen floor when I can't afford the space. Just landed in this community and looking for dancers who'd rather risk falling than stay safe.",
     now: "Developing a duet about waiting rooms and longing, set to almost no music at all.",
     openTo: [
       { kind: "custom", label: "Dancers for a new devised piece" },
@@ -3061,11 +3067,11 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "Wenders filming Bausch's dancers in the rain rewired what I thought a body could say.",
       },
       book: {
-        title: "The Argonauts — Maggie Nelson",
-        note: "It reads like choreography — bodies, theory and love all moving at once.",
+        title: "The Argonauts, Maggie Nelson",
+        note: "It reads like choreography: bodies, theory and love all moving at once.",
       },
       song: {
-        title: "Fado de Cada Um — Júlio Resende",
+        title: "Fado de Cada Um, Júlio Resende",
         note: "A piano fado I warm up to; it makes my spine honest.",
       },
       moment: {
@@ -3086,7 +3092,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       {
         icon: FiCalendar,
         title: "Joined QueerPulse",
-        sub: "New this week — say hi",
+        sub: "New this week, say hi",
         to: routes.event,
       },
       {
@@ -3150,7 +3156,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "It showed me that care and activism in a crisis are the same muscle.",
       },
       song: {
-        title: "Downtown — Honey Dijon",
+        title: "Downtown, Honey Dijon",
         note: "The track that means the floor is happy and my night is going well.",
       },
       moment: {
@@ -3171,7 +3177,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       {
         icon: FiCalendar,
         title: "Joined QueerPulse",
-        sub: "New this week — say hi",
+        sub: "New this week, say hi",
         to: routes.event,
       },
       {
@@ -3198,7 +3204,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=800&auto=format&fit=crop",
     verified: true,
     since: "2024",
-    bio: "I'm a librarian by trade and one of the people who keeps the forum a kind place to be — part-time, on a small honorarium, accountable to the council like the rest of the team. Moderation, for me, is mostly cataloguing of a different sort: keeping the useful things findable and making sure nobody gets lost or shouted down on the way in.",
+    bio: "I'm a librarian by trade and one of the people who keeps the forum a kind place to be, part-time, on a small honorarium, accountable to the council like the rest of the team. Moderation, for me, is mostly cataloguing of a different sort: keeping the useful things findable and making sure nobody gets lost or shouted down on the way in.",
     now: "Moderating the forum a few hours a week, and keeping the community resource guide tidy so new arrivals can actually find what they need.",
     openTo: [
       { kind: "custom", label: "Reporting something quietly" },
@@ -3233,11 +3239,11 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         note: "Three lives, one thread, held together by care. I rewatch it when a week has been heavy.",
       },
       book: {
-        title: "The Library Book — Susan Orlean",
+        title: "The Library Book, Susan Orlean",
         note: "A reminder that a library is a community holding itself together in public.",
       },
       song: {
-        title: "Casa — Mariza",
+        title: "Casa, Mariza",
         note: "Home as a feeling you can carry. I play it on the walk back from a long shift.",
       },
       moment: {
@@ -3306,7 +3312,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       {
         category: "Fullstack Developer",
         title:
-          "Broadvoice — real-time VoIP systems (React, Node, NestJS, Apache Kafka)",
+          "Broadvoice, real-time VoIP systems (React, Node, NestJS, Apache Kafka)",
         year: "2022–2025",
         image:
           "https://plus.unsplash.com/premium_photo-1732115973557-47e5c91ba6e9?q=80&w=800&auto=format&fit=crop",
@@ -3314,7 +3320,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       {
         category: "Fullstack Developer",
         title:
-          "AAUE, Universidade de Évora — web platforms & a custom CMS (Vue, React, Node)",
+          "AAUE, Universidade de Évora, web platforms & a custom CMS (Vue, React, Node)",
         year: "2020–2022",
         image:
           "https://plus.unsplash.com/premium_photo-1737392496893-07869d657a6e?q=80&w=800&auto=format&fit=crop",
@@ -3373,7 +3379,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     shapings: {
       film: {
         title: "Star Wars",
-        note: "An odd, deep love for the lore — worldbuilding is my favourite kind of magic.",
+        note: "An odd, deep love for the lore. Worldbuilding is my favourite kind of magic.",
       },
       book: {
         title: "The Player's Handbook (D&D 5e)",
@@ -3385,14 +3391,14 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       },
       moment: {
         title: "Seeing people safe to be themselves",
-        note: "Pride parades, heavy metal concerts — I get teary knowing they'll never be alone.",
+        note: "Pride parades, heavy metal concerts. I get teary knowing they'll never be alone.",
       },
     },
   },
 };
 
 /**
- * The canonical member registry — the single source of truth for every recurring
+ * The canonical member registry, the single source of truth for every recurring
  * person on the platform (names, avatars, tints, roles, bios, vouchers, …).
  * Pages should read from here (via the helpers below) rather than re-typing a
  * member's details inline, so a change here propagates everywhere.
@@ -3412,8 +3418,8 @@ export const MEMBERS: Record<string, Member> = Object.fromEntries(
 
 export const defaultProfileSlug = "ines";
 
-/** Slug of the currently logged-in user ("self"). All self-surfaces — the nav
- * account chip, the feed greeting, "My profile", edit-profile, badges — read
+/** Slug of the currently logged-in user ("self"). All self-surfaces, the nav
+ * account chip, the feed greeting, "My profile", edit-profile, badges, read
  * their identity from here so the logged-in user is shown consistently. */
 export const currentUserSlug = "tiago";
 /** The currently logged-in user object. */

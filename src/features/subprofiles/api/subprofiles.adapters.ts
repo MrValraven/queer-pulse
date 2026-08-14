@@ -1,4 +1,5 @@
 import type { IconType } from "react-icons";
+import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import type {
   AccentKey,
   AffiliationDTO,
@@ -88,6 +89,9 @@ export interface SubprofileView {
   handle: string | null;
   displayName: string;
   avatarUrl: string | null;
+  /** Saved reframe crop for `avatarUrl` — the persona avatar editor's circle
+   *  slot is a true square, so it's safe to render directly. */
+  avatarCrop?: CropRect;
   tagline: string;
   bio: string;
   coverUrl: string | null;
@@ -235,6 +239,7 @@ export function subprofileToView(dto: SubprofileDTO): SubprofileView {
     handle: dto.handle,
     displayName: dto.displayName,
     avatarUrl: dto.avatarUrl,
+    avatarCrop: dto.avatarCrop ?? undefined,
     tagline: dto.tagline ?? "",
     bio: dto.bio ?? "",
     coverUrl: dto.coverUrl,

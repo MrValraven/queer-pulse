@@ -7,6 +7,7 @@ import {
 import { API_BASE_URL } from "../../../shared/api/config";
 import { validateAuthUser } from "../../../shared/api/validation";
 import { TERMS_VERSION } from "./ageAttestation.api";
+import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 
 /**
  * `deactivated` covers BOTH member-initiated pauses and the 30-day erasure
@@ -69,6 +70,9 @@ export interface AuthUser {
     lastName: string;
     pronouns?: string;
     avatarUrl?: string | null;
+    /** Saved reframe crop for `avatarUrl` (fractions of the source image),
+     *  when the member cropped their avatar in the reframe editor. */
+    avatarCrop?: CropRect | null;
   };
 }
 

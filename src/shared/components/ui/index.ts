@@ -99,3 +99,4 @@ export {
 export { DatePicker, type DatePickerProps, type DateRange } from "./DatePicker";
 export { Calendar, type CalendarProps } from "./Calendar";
 export { RangeCalendar, type RangeCalendarProps } from "./RangeCalendar";
+export { default as PhotoReframeModal } from "./PhotoReframeModal";

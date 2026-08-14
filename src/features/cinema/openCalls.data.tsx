@@ -52,7 +52,7 @@ export const commissions: Commission[] = [
       <>
         <p>
           A commissioned short (10–25 min) responding to the January 2026
-          flooding of the Tagus plain — from a queer perspective, however you
+          flooding of the Tagus plain, from a queer perspective, however you
           interpret that. The film does not have to be about the flood itself:
           it can be about what survives, what's lost, what's still being built
           in the months after.
@@ -175,7 +175,7 @@ export const smallCalls: SmallCall[] = [
     kicker: "Residency · 2 weeks",
     titlePre: "Two weeks at ",
     titleEm: "Casa do Comum",
-    body: "Paid two-week residency at Casa do Comum in Lisbon — working space, accommodation, and daily access to the queer archive. Open to filmmakers at any stage. No deliverable required: come to make, think, or rest.",
+    body: "Paid two-week residency at Casa do Comum in Lisbon: working space, accommodation, and daily access to the queer archive. Open to filmmakers at any stage. No deliverable required: come to make, think, or rest.",
     meta: [
       {
         v: (
@@ -203,7 +203,7 @@ export const smallCalls: SmallCall[] = [
     kicker: "Mentorship · ongoing",
     titlePre: "First feature, ",
     titleEm: "any stage",
-    body: "Paired one-to-one mentorship with a working queer filmmaker — development, pre-production, rough cut feedback. 4 months, 8 sessions. Mentors include Maria Vasconcelos, Akin Diallo, and Laila Hassan.",
+    body: "Paired one-to-one mentorship with a working queer filmmaker: development, pre-production, rough cut feedback. 4 months, 8 sessions. Mentors include Maria Vasconcelos, Akin Diallo, and Laila Hassan.",
     meta: [
       { v: "Free", k: "Cost" },
       { v: <em>15 Jul</em>, k: "Deadline" },

@@ -21,7 +21,7 @@ export const help: Catalog = {
   "admin.listings.title":
     "Estabelecimentos",
   "admin.listings.intro":
-    "A mesa de revisão dos estabelecimentos submetidos pelos membros — os espaços, cafés e lojas queer-friendly que as pessoas adicionam ao mapa. És tu que decides o que fica visível.",
+    "A mesa de revisão dos estabelecimentos submetidos pelos membros: os espaços, cafés e lojas queer-friendly que as pessoas adicionam ao mapa. És tu que decides o que fica visível.",
   "admin.listings.use":
     "Filtra por estado: Em revisão, Pergunta ou No ar.\nAbre um estabelecimento para veres as fotos, os detalhes e quem o submeteu.\nColoca-o No ar, envia uma pergunta rápida ao dono, ou remove-o.",
   "admin.listings.demo":
@@ -45,7 +45,7 @@ export const help: Catalog = {
   "auth.onboarding.title":
     "Boas-vindas",
   "auth.onboarding.intro":
-    "Este assistente curto e guiado configura o teu perfil assim que entras. Em poucos passos adicionas uma foto, aceitas as normas da comunidade, dizes-nos o que te traz cá e escolhes algumas comunidades a seguir — para que a rede seja tua desde o primeiro dia.",
+    "Este assistente curto e guiado configura o teu perfil assim que entras. Em poucos passos adicionas uma foto, aceitas as normas da comunidade, dizes-nos o que te traz cá e escolhes algumas comunidades a seguir, para que a rede seja tua desde o primeiro dia.",
   "auth.onboarding.use":
     "Segue os passos \"Passo X de N\" pela ordem; podes voltar atrás a qualquer momento.\nAdiciona uma foto e escolhe as intenções que combinam contigo.\nEscolhe algumas comunidades para entrares e termina no ecrã \"está tudo pronto\".",
   "auth.onboarding.demo":
@@ -61,15 +61,15 @@ export const help: Catalog = {
   "communities.hub.title":
     "Comunidades",
   "communities.hub.intro":
-    "É aqui que encontras a tua gente. As comunidades são grupos geridos pelos membros à volta de um interesse, identidade ou causa em comum — explora-as e junta-te às que te fizerem sentir em casa.",
+    "É aqui que encontras a tua gente. As comunidades são grupos geridos pelos membros à volta de um interesse, identidade ou causa em comum. Explora-as e junta-te às que te fizerem sentir em casa.",
   "communities.hub.use":
-    "Percorre os cartões para veres do que trata cada comunidade.\nToca num filtro de categoria para filtrar pelo ambiente — social, artes, ativismo, apoio e mais.\nAbre uma para leres a página completa, ou carrega em Juntar-me para te tornares membro.",
+    "Percorre os cartões para veres do que trata cada comunidade.\nToca num filtro de categoria para filtrar pelo ambiente: social, artes, ativismo, apoio e mais.\nAbre uma para leres a página completa, ou carrega em Juntar-me para te tornares membro.",
   "communities.hub.demo":
     "grupos como o Queer Runners Lisboa para corridas ao fim de semana ou o Rainbow Arts Collective para quem cria.",
   "community.detail.title":
     "Comunidade",
   "community.detail.intro":
-    "A página de uma comunidade — quem faz parte, do que trata e tudo o que lá acontece. Daqui podes juntar-te, guardá-la para depois, ou explorar os separadores.",
+    "A página de uma comunidade: quem faz parte, do que trata e tudo o que lá acontece. Daqui podes juntar-te, guardá-la para depois, ou explorar os separadores.",
   "community.detail.use":
     "Lê a introdução e os detalhes para perceberes o espírito do grupo.\nJunta-te para poderes publicar e confirmar presença, ou guarda-a para voltares depois.\nUsa os separadores para explorar o pulso, a discussão, os membros e os eventos.",
   "community.detail.demo":
@@ -77,7 +77,7 @@ export const help: Catalog = {
   "community.events.title":
     "Eventos",
   "community.events.intro":
-    "Tudo o que reúne a comunidade — o próximo encontro em cima, com os anteriores e os seus resumos por baixo. É assim que um grupo passa do online para o presencial.",
+    "Tudo o que reúne a comunidade: o próximo encontro em cima, com os anteriores e os seus resumos por baixo. É assim que um grupo passa do online para o presencial.",
   "community.events.use":
     "Vê o próximo evento e confirma presença para garantires o teu lugar.\nPercorre os eventos passados para veres o que o grupo já fez.\nAbre qualquer evento para os detalhes completos e a localização.",
   "community.events.demo":
@@ -85,15 +85,15 @@ export const help: Catalog = {
   "community.forum.title":
     "Discussão",
   "community.forum.intro":
-    "O mural de conversa da comunidade. Os membros abrem tópicos para colocar dúvidas, partilhar novidades e organizar coisas em conjunto — pesquisa o que já existe, ou acrescenta o teu.",
+    "O mural de conversa da comunidade. Os membros abrem tópicos para colocar dúvidas, partilhar novidades e organizar coisas em conjunto. Pesquisa o que já existe, ou acrescenta o teu.",
   "community.forum.use":
     "Pesquisa ou filtra para encontrares um tópico que te interesse.\nAbre um tópico para leres as respostas e acrescentares a tua.\nCria uma nova publicação na caixa em baixo (só membros).",
   "community.forum.demo":
-    "um tópico como \"Encontro de junho — onde devíamos ir?\" onde os membros dão as suas ideias.",
+    "um tópico como \"Encontro de junho: onde devíamos ir?\" onde os membros dão as suas ideias.",
   "connect.connections.title":
     "Ligações",
   "connect.connections.intro":
-    "Este é o teu centro de relações — todas as pessoas com quem estás ligado, além dos pedidos, recomendações e bloqueios à volta delas. É como acompanhas o teu círculo aqui.",
+    "Este é o teu centro de relações: todas as pessoas com quem estás ligado, além dos pedidos, recomendações e bloqueios à volta delas. É como acompanhas o teu círculo aqui.",
   "connect.connections.use":
     "Muda de separador para veres ligações, pedidos recebidos e enviados, recomendações ou bloqueios.\nAceita ou recusa os pedidos à tua espera.\nEnvia mensagem a uma ligação ou convida alguém novo.",
   "connect.connections.demo":
@@ -109,7 +109,7 @@ export const help: Catalog = {
   "economy.grants.title":
     "Financiamentos",
   "economy.grants.intro":
-    "Um mapa selecionado de financiamento para projetos e pessoas queer — de micro apoios comunitários a fundações portuguesas e programas da UE. Poupa-te a procura e mostra para que serve realmente cada fundo.",
+    "Um mapa selecionado de financiamento para projetos e pessoas queer: de micro apoios comunitários a fundações portuguesas e programas da UE. Poupa-te a procura e mostra para que serve realmente cada fundo.",
   "economy.grants.use":
     "Filtra por destinatário: pessoas, organizações, artes ou âmbito da UE.\nAbre um apoio para ver o valor, o estado do prazo e como enquadrar uma candidatura.\nLê o guia breve sobre como escrever uma candidatura forte e honesta.",
   "economy.grants.demo":
@@ -117,7 +117,7 @@ export const help: Catalog = {
   "economy.hub.title":
     "Economia",
   "economy.hub.intro":
-    "O centro de Economia é onde vive a vida profissional da comunidade — uma base para encontrar trabalho, desenvolver uma atividade em freelance e perceber o que é uma remuneração justa. Reúne a incubadora, as ferramentas de freelancer e a transparência salarial num só lugar.",
+    "O centro de Economia é onde vive a vida profissional da comunidade: uma base para encontrar trabalho, desenvolver uma atividade em freelance e perceber o que é uma remuneração justa. Reúne a incubadora, as ferramentas de freelancer e a transparência salarial num só lugar.",
   "economy.hub.use":
     "Alterna entre os separadores Incubadora, Freelance e Salários para explorar cada vertente.\nExplora empregos de gestão queer ou abre as ferramentas de freelancer de que precisas.\nConsulta as tabelas salariais para confirmar quanto deve pagar uma função.",
   "economy.hub.demo":
@@ -125,15 +125,15 @@ export const help: Catalog = {
   "economy.jobs.title":
     "Empregos",
   "economy.jobs.intro":
-    "Um mural de empregos em locais de gestão queer, liderança queer e genuinamente inclusivos — cada anúncio traz sinais de segurança para saberes ao que vais. É onde a comunidade contrata a comunidade.",
+    "Um mural de empregos em locais de gestão queer, liderança queer e genuinamente inclusivos. Cada anúncio traz sinais de segurança para saberes ao que vais. É onde a comunidade contrata a comunidade.",
   "economy.jobs.use":
-    "Filtra por categoria como design, tecnologia ou cuidado para afinar o mural.\nAbre um anúncio para ler toda a função, a proposta e quem analisa as candidaturas.\nGuarda os que gostas e candidata-te — ou publica o teu com “Publicar vaga”.",
+    "Filtra por categoria como design, tecnologia ou cuidado para afinar o mural.\nAbre um anúncio para ler toda a função, a proposta e quem analisa as candidaturas.\nGuarda os que gostas e , ou publica o teu com “Publicar vaga”.",
   "economy.jobs.demo":
     "um anúncio como Junior Graphic Designer no Atelier Pulso, um estúdio de gestão queer no Príncipe Real, onde as candidaturas são lidas pela própria fundadora.",
   "economy.skills.title":
     "Competências",
   "economy.skills.intro":
-    "Um mural de partilha de competências onde os membros oferecem o que sabem e pedem o que querem aprender — de branding a engenharia backend até olaria em torno. É ensino entre pares, não um mercado, e tudo é partilhado dentro da comunidade.",
+    "Um mural de partilha de competências onde os membros oferecem o que sabem e pedem o que querem aprender: de branding a engenharia backend até olaria em torno. É ensino entre pares, gratuito e partilhado dentro da comunidade.",
   "economy.skills.use":
     "Explora por categoria ou vê em “A oferecer” e “A querer aprender”.\nContacta um membro cuja oferta corresponda ao que precisas.\nPartilha a tua própria competência ou anuncia um workshop para outros participarem.",
   "economy.skills.demo":
@@ -141,31 +141,31 @@ export const help: Catalog = {
   "economy.tools.title":
     "Gerador de faturas",
   "economy.tools.intro":
-    "Um gerador de faturas gratuito que transforma os teus dados numa fatura-recibo pronta a imprimir, diretamente no navegador — sem conta e sem que os dados saiam do teu dispositivo. Feito para freelancers a lidar com o trabalho independente em Portugal.",
+    "Um gerador de faturas gratuito que transforma os teus dados numa fatura-recibo pronta a imprimir, diretamente no navegador. Sem conta e sem que os dados saiam do teu dispositivo. Feito para freelancers a lidar com o trabalho independente em Portugal.",
   "economy.tools.use":
     "Preenche os teus dados e os do cliente e adiciona as linhas do trabalho.\nDefine a taxa de IVA, ou marca-te como isento se for o caso.\nDescarrega o PDF para imprimir ou enviar.",
   "economy.tools.demo":
-    "uma fatura de exemplo começa com uma linha como “Brand identity — logo + guidelines” a €1.200, para veres o formato antes de editar o teu.",
+    "uma fatura de exemplo começa com uma linha como “Brand identity: logo + guidelines” a €1.200, para veres o formato antes de editar o teu.",
   "events.detail.title":
     "Evento",
   "events.detail.intro":
-    "A página completa de um encontro — o que é, quando e onde acontece, quem organiza e quantos lugares restam. Tudo o que precisas para decidir se vais.",
+    "A página completa de um encontro: o que é, quando e onde acontece, quem organiza e quantos lugares restam. Tudo o que precisas para decidir se vais.",
   "events.detail.use":
     "Lê a descrição e confirma a data, o bairro e quem organiza.\nVê a linha de lugares para saber quanto espaço ainda há.\nToca no botão principal para reservar lugar, confirmar presença ou enviar mensagem a quem organiza.\nDescobre mais encontros na secção ao fundo.",
   "events.detail.demo":
-    "uma página como Inside Beatriz's Ceramics Studio na Graça, organizada pela Beatriz — um domingo tranquilo com o forno, chá e barro para tocar, limitado a poucas pessoas.",
+    "uma página como Inside Beatriz's Ceramics Studio na Graça, organizada pela Beatriz: um domingo tranquilo com o forno, chá e barro para tocar, limitado a poucas pessoas.",
   "events.hub.title":
     "Eventos",
   "events.hub.intro":
-    "É aqui que descobres o que se passa na comunidade queer — encontros que organizamos e outros criados por pessoas da rede, tudo num só lugar. É a forma mais rápida de ver o que há esta noite, esta semana ou mais para o fim do mês.",
+    "É aqui que descobres o que se passa na comunidade queer: encontros que organizamos e outros criados por pessoas da rede, tudo num só lugar. É a forma mais rápida de ver o que há esta noite, esta semana ou mais para o fim do mês.",
   "events.hub.use":
     "Começa em Destaques para uma seleção do que vale mesmo a pena.\nMuda para Explorar para percorrer tudo o que aí vem e carregar mais à medida que desces.\nAbre o Calendário para ver os eventos organizados por data.\nToca em qualquer evento para ler os detalhes e confirmar presença.",
   "events.hub.demo":
-    "o destaque principal pode mostrar algo como o Queer Supper Club №12 na Mouraria — doze lugares, vinho trazido pelos convidados, morada partilhada na manhã do evento.",
+    "o destaque principal pode mostrar algo como o Queer Supper Club №12 na Mouraria: doze lugares, vinho trazido pelos convidados, morada partilhada na manhã do evento.",
   "feed.hub.title":
     "Feed",
   "feed.hub.intro":
-    "O teu feed é a página inicial — um pulso contínuo do que as tuas comunidades, encontros e pessoas estão a publicar, para saberes sempre o que se passa sem teres de procurar.",
+    "O teu feed é a página inicial: um pulso contínuo do que as tuas comunidades, encontros e pessoas estão a publicar, para saberes sempre o que se passa sem teres de procurar.",
   "feed.hub.use":
     "Muda de separador para filtrares por comunidades, encontros, novas pessoas ou publicações.\nDesliza para te pores a par da atividade mais recente.\nGosta, responde ou liga-te diretamente a partir de um cartão.\nAbre a barra lateral para veres membros sugeridos e encontros a chegar.",
   "feed.hub.demo":
@@ -173,7 +173,7 @@ export const help: Catalog = {
   "forum.hub.title":
     "Fórum",
   "forum.hub.intro":
-    "O fórum é onde a comunidade pensa em voz alta em conjunto — conversas mais longas sobre habitação, saúde, ativismo, artes e o dia a dia, organizadas para encontrares e acompanhares o que te interessa.",
+    "O fórum é onde a comunidade pensa em voz alta em conjunto: conversas mais longas sobre habitação, saúde, ativismo, artes e o dia a dia, organizadas para encontrares e acompanhares o que te interessa.",
   "forum.hub.use":
     "Percorre os tópicos mais recentes ou escolhe uma categoria na barra lateral para afinar o tema.\nOrdena por mais recentes ou mais ativos para veres o que está a mexer agora.\nToca num tópico para leres a discussão completa e responderes.\nUsa Nova publicação para começares a tua própria conversa.",
   "forum.hub.demo":
@@ -181,15 +181,15 @@ export const help: Catalog = {
   "forum.thread.title":
     "Tópico",
   "forum.thread.intro":
-    "Esta é uma discussão completa — a publicação original no topo, seguida das respostas de toda a gente. É o sítio para leres a conversa inteira e acrescentares a tua voz.",
+    "Esta é uma discussão completa: a publicação original no topo, seguida das respostas de toda a gente. É o sítio para leres a conversa inteira e acrescentares a tua voz.",
   "forum.thread.use":
     "Lê a publicação original e as respostas por baixo.\nGosta ou guarda as publicações que queres recordar, e ordena as respostas das mais antigas ou mais recentes.\nEscreve na caixa de resposta para responderes ao tópico, ou responde por baixo de um comentário para manteres um sub-tópico junto.\nUsa a opção de denúncia se algo violar as regras da comunidade.",
   "forum.thread.demo":
-    "um tópico como \"Trans-affirming healthcare in Lisbon — the full guide\", onde os membros partilham clínicas acolhedoras e respondem às perguntas uns dos outros.",
+    "um tópico como \"Trans-affirming healthcare in Lisbon: the full guide\", onde os membros partilham clínicas acolhedoras e respondem às perguntas uns dos outros.",
   "governance.hub.title":
     "Governação",
   "governance.hub.intro":
-    "A janela aberta para a forma como o QueerPulse é gerido — quem decide, como o dinheiro é gasto e como a comunidade se mantém segura. A transparência é o objetivo central.",
+    "A janela aberta para a forma como o QueerPulse é gerido: quem decide, como o dinheiro é gasto e como a comunidade se mantém segura. A transparência é o objetivo central.",
   "governance.hub.use":
     "Usa a navegação lateral para saltar entre saúde, moderação, o conselho, princípios, finanças e decisões.\nLê o resumo trimestral de saúde para veres como a plataforma está.\nAbre um documento fundador, como a constituição ou o relatório de transparência, para todos os detalhes.",
   "governance.hub.demo":
@@ -197,15 +197,15 @@ export const help: Catalog = {
   "home.landing.title":
     "Boas-vindas",
   "home.landing.intro":
-    "Esta é a porta de entrada da QueerPulse — uma rede pequena, gerida pelos membros, para pessoas queer em Lisboa, onde cada membro entra por recomendação em vez de correr atrás de seguidores. A página inicial é a tua visita guiada ao que vais encontrar: pessoas, comunidades, encontros e apoio.",
+    "Esta é a porta de entrada da QueerPulse: uma rede pequena, gerida pelos membros, para pessoas queer em Lisboa, onde cada membro entra por recomendação em vez de correr atrás de seguidores. A página inicial é a tua visita guiada ao que vais encontrar: pessoas, comunidades, encontros e apoio.",
   "home.landing.use":
     "Lê o destaque e desce a página para ver quem cá está e para que serve a rede.\nPede um convite para começar a tua adesão.\nExplora membros e comunidades para ganhares uma ideia antes de entrares.",
   "home.landing.demo":
-    "a página de entrada dá o tom com frases como \"As tuas pessoas, aqui mesmo em Lisboa\" — uma rede por recomendação, não mais um feed.",
+    "a página de entrada dá o tom com frases como \"As tuas pessoas, aqui mesmo em Lisboa\": uma rede por recomendação, de pessoas que conheces mesmo.",
   "housing.flatmates.title":
     "Colegas de casa",
   "housing.flatmates.intro":
-    "Perfis de pessoas que procuram partilhar casa — tanto quem oferece um quarto como quem procura um. É uma forma mais tranquila de encontrar colegas de casa que combinam contigo, ainda antes de haver contrato.",
+    "Perfis de pessoas que procuram partilhar casa: tanto quem oferece um quarto como quem procura um. É uma forma mais tranquila de encontrar colegas de casa que combinam contigo, ainda antes de haver contrato.",
   "housing.flatmates.use":
     "Filtra por zona, orçamento, data de entrada e etiquetas de estilo de vida.\nLê um perfil para saberes como é viver com essa pessoa.\nDiz olá para iniciares uma conversa.\nPublica o teu próprio perfil para que te encontrem.",
   "housing.flatmates.demo":
@@ -213,7 +213,7 @@ export const help: Catalog = {
   "housing.hub.title":
     "Habitação",
   "housing.hub.intro":
-    "Casas e quartos partilhados pela e para a comunidade, para encontrares onde viver entre pessoas que te entendem. Muda para o separador Colegas de casa para encontrares as pessoas, não só os quartos.",
+    "Casas e quartos partilhados pela e para a comunidade, para encontrares onde viver entre pessoas que te entendem. Muda para o separador Colegas de casa para encontrares as pessoas por detrás dos quartos.",
   "housing.hub.use":
     "Explora o separador Habitação para quartos, apartamentos e subarrendamentos.\nUsa os filtros para corresponderem ao teu orçamento, zona e datas.\nAbre um anúncio para veres fotos e enviares mensagem a quem publica.\nMuda para Colegas de casa para encontrares alguém com quem partilhar.",
   "housing.hub.demo":
@@ -221,7 +221,7 @@ export const help: Catalog = {
   "housing.listing.title":
     "Anúncio de habitação",
   "housing.listing.intro":
-    "Todos os detalhes de uma casa ou quarto — fotos, preço, o que está incluído e quem oferece. É aqui que entras em contacto e dás o próximo passo.",
+    "Todos os detalhes de uma casa ou quarto: fotos, preço, o que está incluído e quem oferece. É aqui que entras em contacto e dás o próximo passo.",
   "housing.listing.use":
     "Vê as fotos e lê o que está a ser oferecido.\nConfirma o preço, o bairro e a data de entrada.\nGuarda o anúncio ou envia mensagem diretamente a quem publica.\nDenuncia se algo não parecer certo.",
   "housing.listing.demo":
@@ -229,7 +229,7 @@ export const help: Catalog = {
   "local.directory.title":
     "Diretório local",
   "local.directory.intro":
-    "Um mapa vivo de espaços geridos por pessoas queer e amigos da comunidade pela cidade — cafés, livrarias, estúdios, bares e serviços que valem a pena. É assim que encontras os sítios onde podes simplesmente ser quem és.",
+    "Um mapa vivo de espaços geridos por pessoas queer e amigos da comunidade pela cidade: cafés, livrarias, estúdios, bares e serviços que valem a pena. É assim que encontras os sítios onde podes simplesmente ser quem és.",
   "local.directory.use":
     "Pesquisa ou escolhe uma categoria para afinar a lista.\nAbre a gaveta Refinar para filtrar por ambiente ou verificação de espaço seguro.\nAlterna entre Lista e Mapa para explorar como preferires.\nToca num espaço para veres todos os detalhes.",
   "local.directory.demo":
@@ -237,7 +237,7 @@ export const help: Catalog = {
   "local.directoryDetail.title":
     "Detalhes do espaço",
   "local.directoryDetail.intro":
-    "Tudo sobre um espaço do diretório — fotos, horários, o que o torna acolhedor e como lá chegar. É aqui que decides se é o teu tipo de sítio.",
+    "Tudo sobre um espaço do diretório: fotos, horários, o que o torna acolhedor e como lá chegar. É aqui que decides se é o teu tipo de sítio.",
   "local.directoryDetail.use":
     "Lê a descrição, os horários e o estado de espaço seguro.\nGuarda o espaço ou abre-o no mapa.\nUsa as ligações de denúncia ou sugerir alteração se algo estiver errado.\nAbre um espaço relacionado para continuares a explorar por perto.",
   "local.directoryDetail.demo":
@@ -257,11 +257,11 @@ export const help: Catalog = {
   "marketing.about.use":
     "Lê \"Porque existimos\" para veres a falha que esta rede veio preencher.\nCompara a nossa forma de trabalhar com as plataformas habituais no lado a lado.\nAbre a Governação ou o Contacto no fundo para veres quem a gere e falares connosco.",
   "marketing.about.demo":
-    "os valores dizem-no com clareza — pequena por opção, sem economia de anúncios ou de dados, e o valor fica com a comunidade.",
+    "os valores dizem-no com clareza: pequena por opção, sem economia de anúncios ou de dados, e o valor fica com a comunidade.",
   "members.hub.title":
     "Membros",
   "members.hub.intro":
-    "Este é o diretório da comunidade — toda a lista de membros num só sítio, para encontrares as pessoas que realmente queres conhecer. É aqui que a ligação começa.",
+    "Este é o diretório da comunidade: toda a lista de membros num só sítio, para encontrares as pessoas que realmente queres conhecer. É aqui que a ligação começa.",
   "members.hub.use":
     "Pesquisa ou percorre a grelha de membros.\nAbre os Filtros para afinar por identidade, bairro, área ou idioma.\nToca num cartão para ler o perfil de alguém e fazer contacto.",
   "members.hub.demo":
@@ -269,7 +269,7 @@ export const help: Catalog = {
   "members.profile.title":
     "Perfil público",
   "members.profile.intro":
-    "Este é o perfil público de um membro — a versão de alguém que qualquer pessoa na web pode ler, mesmo sem conta. É a forma de te apresentares para além das paredes da comunidade.",
+    "Este é o perfil público de um membro: a versão de alguém que qualquer pessoa na web pode ler, mesmo sem conta. É a forma de te apresentares para além das paredes da comunidade.",
   "members.profile.use":
     "Lê a bio, os pronomes e os links no topo.\nExplora o trabalho e os contributos públicos em baixo.\nPede um convite se ainda não fores membro.",
   "members.profile.demo":
@@ -297,11 +297,11 @@ export const help: Catalog = {
   "myevents.hub.use":
     "Usa os separadores para filtrar por vais, organizas, guardados ou convites.\nAbre um evento para ver os detalhes ou gerir a tua presença.\nAceita ou recusa convites diretamente na lista.\nMuda para o calendário para veres a tua semana num relance.",
   "myevents.hub.demo":
-    "podes ver o Trans Joy Picnic no Jardim da Estrela entre os teus planos — mantas, petiscos para partilhar e um cantinho tranquilo se precisares.",
+    "podes ver o Trans Joy Picnic no Jardim da Estrela entre os teus planos: mantas, petiscos para partilhar e um cantinho tranquilo se precisares.",
   "notifications.hub.title":
     "Notificações",
   "notifications.hub.intro":
-    "Tudo o que aconteceu enquanto estiveste ausente — respostas, menções, novos membros, atualizações de eventos e mais, reunido num só sítio.",
+    "Tudo o que aconteceu enquanto estiveste ausente: respostas, menções, novos membros, atualizações de eventos e mais, reunido num só sítio.",
   "notifications.hub.use":
     "Percorre para veres a atividade recente e mais antiga.\nUsa os separadores para filtrar por tipo, ou abre Menções para veres onde foste marcado.\nToca numa notificação para saltares diretamente para ela.\nCarrega em Marcar tudo como lido para limpares o indicador.",
   "notifications.hub.demo":
@@ -311,7 +311,7 @@ export const help: Catalog = {
   "resources.hub.intro":
     "Um diretório de cuidado e apoio para a comunidade queer: terapeutas afirmativos, apoio entre pares, linhas de crise e orientação de redução de riscos, reunidos num só lugar. Recorre aqui quando tu ou alguém que amas precisar de ajuda.",
   "resources.hub.use":
-    "Salta para a secção de que precisas — terapeutas, apoio entre pares, crise ou redução de riscos.\nAbre o perfil de um terapeuta para veres a sua abordagem e como o contactar.\nGuarda as linhas de crise para as teres à mão quando precisares depressa.",
+    "Salta para a secção de que precisas: terapeutas, apoio entre pares, crise ou redução de riscos.\nAbre o perfil de um terapeuta para veres a sua abordagem e como o contactar.\nGuarda as linhas de crise para as teres à mão quando precisares depressa.",
   "resources.hub.demo":
     "encontras terapeutas afirmativos como a Dra. Marta Seabra, a par de linhas de apoio como a SOS Voz Amiga e a ILGA Portugal.",
   "safety.hub.title":
@@ -349,7 +349,7 @@ export const help: Catalog = {
   "subprofiles.detail.title":
     "Persona",
   "subprofiles.detail.intro":
-    "Esta é a página de uma persona — uma montra autónoma para um único ofício, com a sua própria apresentação, trabalho e contacto. Se estiver ligada a um membro, vês quem está por detrás.",
+    "Esta é a página de uma persona: uma montra autónoma para um único ofício, com a sua própria apresentação, trabalho e contacto. Se estiver ligada a um membro, vês quem está por detrás.",
   "subprofiles.detail.use":
     "Lê a frase de apresentação e a bio no destaque.\nPercorre as secções com o trabalho, lançamentos ou portefólio.\nApoia, segue ou envia mensagem se quiseres ligar-te.",
   "subprofiles.detail.demo":
@@ -357,7 +357,7 @@ export const help: Catalog = {
   "subprofiles.hub.title":
     "Personas",
   "subprofiles.hub.intro":
-    "Uma persona é uma página pública dedicada a um lado da tua vida — a tua música, a tua arte, o teu ofício — separada do teu perfil principal. Este diretório deixa-te explorar as de todos.",
+    "Uma persona é uma página pública dedicada a um lado da tua vida (a tua música, a tua arte, o teu ofício) separada do teu perfil principal. Este diretório deixa-te explorar as de todos.",
   "subprofiles.hub.use":
     "Filtra por área, como músico, escritor ou artista visual.\nPesquisa por nome ou adiciona etiquetas para afinar.\nAtiva \"aberto a colaborações\" para encontrar quem quer juntar-se a projetos.",
   "subprofiles.hub.demo":
@@ -365,7 +365,7 @@ export const help: Catalog = {
   "topics.hub.title":
     "Tema",
   "topics.hub.intro":
-    "Um tema reúne num só sítio todas as publicações marcadas com a mesma etiqueta — um feed de hashtag onde podes acompanhar um assunto que te interessa em toda a plataforma.",
+    "Um tema reúne num só sítio todas as publicações marcadas com a mesma etiqueta: um feed de hashtag onde podes acompanhar um assunto que te interessa em toda a plataforma.",
   "topics.hub.use":
     "Lê as publicações reunidas neste tema.\nSegue o tema para o teres à mão e receberes mais dele no teu feed.\nUsa Escrever uma publicação para acrescentares o teu contributo.\nExplora temas e recursos relacionados na barra lateral.",
   "topics.hub.demo":

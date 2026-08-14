@@ -44,7 +44,7 @@ export const forum: Catalog = {
   "hero.eyebrow": "A Praça Pública · aberta a todas as pessoas da comunidade",
   "hero.title": "Os <em>comuns</em>",
   "hero.lead":
-    "A única comunidade a que todas as pessoas aqui pertencem — perguntas, propostas, guias, e o trabalho lento de construir um movimento. Cuidem-se. Estás à procura de uma sala mais pequena?",
+    "A única comunidade a que todas as pessoas aqui pertencem: perguntas, propostas, guias, e o trabalho lento de construir um movimento. Cuidem-se. Estás à procura de uma sala mais pequena?",
   "hero.findCommunitiesCta": "Encontra as tuas comunidades",
   newPostCta: "+ Nova publicação",
 
@@ -59,7 +59,7 @@ export const forum: Catalog = {
   "firstPost.eyebrow": "Ainda não publicaste nada",
   "firstPost.title": "Todas as pessoas foram <em>novas</em> um dia.",
   "firstPost.body":
-    "O fórum só é tão bom quanto aquilo que as pessoas trazem para ele. Não precisas de nada grandioso — uma pergunta, uma recomendação, algo que reparaste. Tudo conta. Aqui ficam algumas coisas que costumam ser úteis partilhar:",
+    "O fórum só é tão bom quanto aquilo que as pessoas trazem para ele. Não precisas de nada grandioso: uma pergunta, uma recomendação, algo que reparaste. Tudo conta. Aqui ficam algumas coisas que costumam ser úteis partilhar:",
   "firstPost.writeCta": "Escreve a tua primeira publicação",
   "firstPost.maybeLater": "Talvez mais tarde",
   "firstPost.dismissAria": "Dispensar",
@@ -81,7 +81,7 @@ export const forum: Catalog = {
   "compose.titlePlaceholder": "Um título claro e específico",
   "compose.categoryFieldLabel": "Categoria",
   "compose.communityFieldLabel": "Publicar numa comunidade (opcional)",
-  "compose.communityNone": "Nenhuma — publicação global",
+  "compose.communityNone": "Nenhuma (publicação global)",
   "compose.postFieldLabel": "Publicação",
   "compose.postPlaceholder": "Escreve a tua publicação…",
   "compose.cancel": "Cancelar",
@@ -91,7 +91,7 @@ export const forum: Catalog = {
   "compose.tagsFieldLabel": "Etiquetas",
   "compose.tagsPlaceholder": "Adiciona uma etiqueta e pressiona Enter",
   "compose.tagsHint":
-    "Até {max} etiquetas — mantém-nas simples, como #habitação ou #saúde.",
+    "Até {max} etiquetas. Mantém-nas simples, como #habitação ou #saúde.",
   "compose.removeTagAria": "Remover etiqueta {tag}",
 
   // ── Pesquisa do fórum ───────────────────────────────────────────────────
@@ -115,7 +115,7 @@ export const forum: Catalog = {
   "threadList.emptyFiltered.description":
     "Não há publicações aqui neste momento. Experimenta outra categoria, ou começa tu a conversa.",
   "threadList.emptyFiltered.action": "Ver todas as publicações",
-  "threadList.emptyAll.title": "Sossegado por aqui — por agora",
+  "threadList.emptyAll.title": "Sossegado por aqui, por agora",
   "threadList.emptyAll.description":
     "Os comuns estão abertos a todas as pessoas da comunidade. Sê quem começa a conversa.",
   "threadList.emptyAll.action": "Escrever uma publicação",
@@ -130,20 +130,20 @@ export const forum: Catalog = {
   repliesCount_other: "{formatted} respostas",
 
   // ── ReportReplyModal ────────────────────────────────────────────────────
-  "reportReply.confirmTitle": "Obrigade — <em>estamos a tratar disso.</em>",
+  "reportReply.confirmTitle": "Obrigade. <em>Estamos a tratar disso.</em>",
   "reportReply.confirmBody":
     "Uma pessoa moderadora vai dar uma vista de olhos. As denúncias mantêm-se privadas, e {name} não vai saber que foste tu a denunciar.",
   "reportReply.done": "Concluído",
   "reportReply.title": "Denunciar esta resposta",
   "reportReply.sub":
-    "Conta a uma pessoa moderadora o que está errado com a resposta de {name}. Isto é privado — ninguém é notificado de que denunciaste.",
+    "Conta a uma pessoa moderadora o que está errado com a resposta de {name}. Isto é privado. Ninguém é notificado de que denunciaste.",
   "reportReply.reasonGroupAria": "Motivo da denúncia",
   "reportReply.cancel": "Cancelar",
   "reportReply.sending": "A enviar…",
   "reportReply.sendCta": "Enviar denúncia",
   "reportReply.errorTitle": "Não foi enviada",
   "reportReply.errorBody":
-    "Não foi possível enviar a tua denúncia agora — nada foi submetido. Verifica a tua ligação e tenta novamente.",
+    "Não foi possível enviar a tua denúncia agora. Nada foi submetido. Verifica a tua ligação e tenta novamente.",
   "reportReply.retryCta": "Tentar novamente",
 
   // ── ThreadComposer ──────────────────────────────────────────────────────
@@ -175,14 +175,14 @@ export const forum: Catalog = {
   "threadPage.breadcrumbForum": "Fórum",
   "threadPage.replyPostedToast": "Resposta publicada",
   "threadPage.replyFailedToast":
-    "Não foi possível publicar a tua resposta — tenta novamente daqui a pouco.",
+    "Não foi possível publicar a tua resposta. Tenta novamente daqui a pouco.",
   "threadPage.notFound.title": "Este tópico não está aqui",
   "threadPage.notFound.description":
     "Pode ter sido removido ou o link pode estar quebrado. Volta ao fórum para encontrares as conversas atuais.",
   "threadPage.notFound.backCta": "Voltar ao fórum",
   "threadPage.error.title": "Não foi possível carregar este tópico",
   "threadPage.error.description":
-    "Algo correu mal do nosso lado — a culpa não é tua. Tenta novamente daqui a pouco.",
+    "Algo correu mal do nosso lado. A culpa não é tua. Tenta novamente daqui a pouco.",
   "threadPage.error.retryCta": "Tentar novamente",
 
   // ── ThreadReplies / ModeratorByline ─────────────────────────────────────
@@ -191,7 +191,7 @@ export const forum: Catalog = {
   "byline.noRole": "Escrito por <name>{name}</name> · em nome da equipa",
   "replies.emptyTitle": "Ainda sem respostas",
   "replies.emptyDescription":
-    "Esta publicação está à espera da primeira voz. Sê quem responde primeiro — uma resposta cuidada vale muito.",
+    "Esta publicação está à espera da primeira voz. Sê quem responde primeiro. Uma resposta cuidada vale muito.",
   "replies.emptyAction": "Escrever uma resposta",
   "replies.mostHelpfulBadge": "Mais útil",
   "replies.opBadge": "OP",
@@ -244,7 +244,7 @@ export const forum: Catalog = {
   // ── Delete confirmation ───────────────────────────────────────────────────
   "deleteConfirm.title": "Eliminar esta publicação?",
   "deleteConfirm.body":
-    "Fica escondida do tópico. Podes restaurá-la mais tarde — não se perde nada.",
+    "Fica escondida do tópico. Podes restaurá-la mais tarde. Não se perde nada.",
   "deleteConfirm.confirm": "Eliminar",
   "deleteConfirm.cancel": "Manter",
   "deleteConfirm.deleting": "A eliminar…",

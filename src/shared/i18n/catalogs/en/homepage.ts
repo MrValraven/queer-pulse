@@ -10,7 +10,7 @@ import type { Catalog } from "../../types";
 export const homepage: Catalog = {
   // ── Page meta ──────────────────────────────────────────────────────────────
   "meta.title":
-    "QueerPulse — Lisbon's queer community, online and in real life",
+    "QueerPulse: Lisbon's queer community, online and in real life",
   "meta.description":
     "An invite-only queer community for Lisbon, in person as much as online: gatherings, skill swaps, and mutual support, among people who show up for each other.",
 
@@ -30,23 +30,23 @@ export const homepage: Catalog = {
   "manifesto.body1":
     "QueerPulse exists because we were tired of platforms that treat queer people as a market segment instead of a community. Every feature here was built because someone needed it.",
   "manifesto.body2":
-    "Membership is invite-only and vouched — not because we don't trust you, but because trust is the whole point. Everyone in the room chose to be here, for each other.",
+    "Membership is invite-only and vouched, because trust is the whole point. Everyone in the room chose to be here, for each other.",
   "manifesto.safetyCta": "How we keep this safe",
   "manifesto.assurance.vouched.title": "Invited or vouched",
   "manifesto.assurance.vouched.description":
-    "Every member arrives through a vouch or a reviewed invite request — never an open sign-up.",
+    "Every member arrives through a vouch or a reviewed invite request.",
   "manifesto.assurance.safeSpaces.title": "Safe spaces we've been to",
   "manifesto.assurance.safeSpaces.description":
     "Venues our mod team visits in person, re-verified on a date you can see.",
   "manifesto.assurance.encrypted.title": "End-to-end encrypted",
   "manifesto.assurance.encrypted.description":
-    "Direct messages are encrypted — private conversations stay private.",
+    "Direct messages are encrypted: private conversations stay private.",
   "manifesto.assurance.privacy.title": "You control what's visible",
   "manifesto.assurance.privacy.description":
     "Set your profile, photos, and activity to public, members-only, or just for you.",
   "manifesto.assurance.moderation.title": "Moderated around the clock",
   "manifesto.assurance.moderation.description":
-    "Reports get a real response, usually within hours — not days.",
+    "Reports get a real response, usually within hours.",
 
   // ── TrustStrip ─────────────────────────────────────────────────────────────
   "trustStrip.vouched": "Invite-only & vouched",
@@ -66,7 +66,7 @@ export const homepage: Catalog = {
   "painPoints.hero1.question": '"Where do I even meet people who get it?"',
   "painPoints.hero1.heading": "So we built <em>the network.</em>",
   "painPoints.hero1.body":
-    "Every member here is vouched for by someone already inside — no swiping, no cold DMs, no proving yourself to strangers.",
+    "Every member here is vouched for by someone already inside: no swiping, no cold DMs, no proving yourself to strangers.",
   "painPoints.hero1.builtLabel": "We built the vouch network",
   "painPoints.hero1.cta": "Meet the community",
 
@@ -76,35 +76,35 @@ export const homepage: Catalog = {
     '"I need a favour, but I don\'t know who to ask."',
   "painPoints.exchange1.heading": "So we built <em>the board.</em>",
   "painPoints.exchange1.body":
-    "Post what you need or what you can offer — from a spare room to a same-day translation — and let the community answer.",
+    "Post what you need or what you can offer, from a spare room to a same-day translation, and let the community answer.",
   "painPoints.exchange1.cta": "Browse the board",
 
   "painPoints.exchange2.question":
     '"I want to spend my money with people like me."',
   "painPoints.exchange2.heading": "So we built <em>the directory.</em>",
   "painPoints.exchange2.body":
-    "Queer-owned shops, studios, and services across Lisbon — easy to find, easy to support.",
+    "Queer-owned shops, studios, and services across Lisbon: easy to find, easy to support.",
   "painPoints.exchange2.cta": "Browse the directory",
 
   "painPoints.exchange3.question":
     '"I want to host something, I just don\'t know how."',
   "painPoints.exchange3.heading": "So we built <em>a way to host.</em>",
   "painPoints.exchange3.body":
-    "A step-by-step guide to running your first supper club, workshop, or screening — with community support behind you.",
+    "A step-by-step guide to running your first supper club, workshop, or screening, with community support behind you.",
   "painPoints.exchange3.cta": "Start hosting",
 
   "painPoints.exchange4.question":
-    '"I have a skill to teach — and one I want to learn."',
-  "painPoints.exchange4.heading": "So we built <em>skill swaps.</em>",
+    '"I have a skill to teach, and one I want to learn."',
+  "painPoints.exchange4.heading": "So we're building <em>skill swaps.</em>",
   "painPoints.exchange4.body":
-    "Trade what you know for what you need. No invoices, no algorithm — just people teaching each other.",
-  "painPoints.exchange4.cta": "Explore skill swaps",
+    "Trade what you know for what you need. No invoices, no algorithm: just people teaching each other. Coming soon.",
+  "painPoints.exchange4.cta": "See it on the roadmap",
 
   "painPoints.hero2.eyebrow": "The gap we felt hardest",
   "painPoints.hero2.question": '"What if I\'m not okay?"',
   "painPoints.hero2.heading": "So we built <em>a safety net.</em>",
   "painPoints.hero2.body":
-    "Therapists who get it, peer support that doesn't judge, and crisis lines that pick up — all vetted by the community that needs them.",
+    "Therapists who get it, peer support that doesn't judge, and crisis lines that pick up: all vetted by the community that needs them.",
   "painPoints.hero2.builtLabel": "We built the wellbeing hub",
   "painPoints.hero2.cta": "See wellbeing resources",
 
@@ -114,26 +114,26 @@ export const homepage: Catalog = {
     '"I want to do something, not just post about it."',
   "painPoints.exchange5.heading": "So we built <em>a way to act.</em>",
   "painPoints.exchange5.body":
-    "Local campaigns, mutual aid, and organising — real ways to make something happen, together.",
+    "Local campaigns, mutual aid, and organising: real ways to make something happen, together.",
   "painPoints.exchange5.cta": "Get involved",
 
   "painPoints.exchange6.question": '"Do I actually know my rights here?"',
   "painPoints.exchange6.heading": "So we built <em>plain-language guides.</em>",
   "painPoints.exchange6.body":
-    "Clear legal information for LGBTQ+ life in Portugal — no law degree required.",
+    "Clear legal information for LGBTQ+ life in Portugal: no law degree required.",
   "painPoints.exchange6.cta": "Read the guides",
 
   "painPoints.exchange7.question": '"Will I actually be safe at this job?"',
-  "painPoints.exchange7.heading": "So we built <em>employer reviews.</em>",
+  "painPoints.exchange7.heading": "So we're building <em>employer reviews.</em>",
   "painPoints.exchange7.body":
-    "Honest ratings from queer employees, so you know before you accept the offer.",
-  "painPoints.exchange7.cta": "Read employer reviews",
+    "Honest ratings from queer employees, so you know before you accept the offer. Coming soon.",
+  "painPoints.exchange7.cta": "See it on the roadmap",
 
   // ── Discovery (member highlight) ─────────────────────────────────────────
   "discovery.eyebrow": "{count}+ members and counting",
-  "discovery.title": "Real people, <em>not a directory.</em>",
+  "discovery.title": "Everyone here is <em>real.</em>",
   "discovery.sub":
-    "Every profile here belongs to a real, vouched member of the Lisbon queer community — not a stock photo, not a bot.",
+    "Every face here is a genuine, vouched member of queer Lisbon: a real portrait of someone you could actually say hello to.",
   "discovery.exploreMembersCta": "Explore members",
   "discovery.footNote": "New faces join every week.",
   "discovery.verifiedBadge": "Verified",
@@ -145,7 +145,7 @@ export const homepage: Catalog = {
   "membersExplainer.title": "Members <em>power</em> QueerPulse",
   "membersExplainer.titlePlain": "Members power QueerPulse",
   "membersExplainer.lede":
-    "The member directory opens up once you're in. Here's why we keep it that way — and how to join.",
+    "The member directory opens up once you're in. Here's why we keep it that way, and how to join.",
   "membersExplainer.pillars.vouched.title": "Real people, vouched in",
   "membersExplainer.pillars.vouched.body":
     "Every member is invited and vouched for by someone already here. No bots, no strangers scraping the list.",
@@ -161,15 +161,15 @@ export const homepage: Catalog = {
   "discovery.featureMemberAria": "Show {name}",
 
   // ── Live sections (admin-curated, real data — see Live* section components) ─
-  "liveDiscovery.eyebrow": "Curated by our team",
+  "liveDiscovery.eyebrow": "Chosen by our team",
   "liveCommunities.sub":
-    "A few communities our team wanted you to see — real rooms, kept by real people.",
+    "A few communities our team wanted you to see: real rooms, kept by real people.",
   "liveCommunities.memberCount": "{count} members",
 
   // ── Gatherings (homepage teaser) ──────────────────────────────────────────
   "gatherings.title": "Meet in <em>real rooms.</em>",
   "gatherings.subtitle":
-    "Dinners, workshops, screenings, and walks — real gatherings happening across Lisbon this month.",
+    "Dinners, workshops, screenings, and walks: real gatherings happening across Lisbon this month.",
   "gatherings.spots.seatsLeft": "seats left",
   "gatherings.spots.spotsLeft": "spots left",
   "gatherings.spots.going": "going",
@@ -179,7 +179,7 @@ export const homepage: Catalog = {
   // ── Stories ────────────────────────────────────────────────────────────────
   "stories.title": "Told in <em>our own words.</em>",
   "stories.subtitle":
-    "Essays, profiles, and reporting from inside the community — no outside gaze, no explaining ourselves.",
+    "Essays, profiles, and reporting from inside the community: no outside gaze, no explaining ourselves.",
   "stories.imagePlaceholder": "story image",
 
   // ── ChangeMakers ───────────────────────────────────────────────────────────
@@ -195,7 +195,7 @@ export const homepage: Catalog = {
   "communities.title":
     "Community is stronger <em>when communities connect.</em>",
   "communities.sub":
-    "Search or filter the list, then open any community to see the whole room — what it is, what it does, who's inside, and what you unlock by joining.",
+    "Search or filter the list, then open any community to see the whole room: what it is, what it does, who's inside, and what you unlock by joining.",
   "communities.howCommunitiesWorkCta": "How communities work",
   "communities.resultCount.all": "<b>{count}</b> communities",
   "communities.resultCount.shown": "<b>{count}</b> of {total} communities",
@@ -230,10 +230,10 @@ export const homepage: Catalog = {
   "communities.rail.noMatches": "No matches",
   "communities.rail.emptyTitle": "No communities match.",
   "communities.rail.emptyBody": "Try a broader filter or clear your search.",
-  "communities.rail.privateNoHeadcount": "Private — no headcount shown",
+  "communities.rail.privateNoHeadcount": "Private: no headcount shown",
   "communities.clearFiltersCta": "Clear filters",
 
-  "communities.spotlight.emptyTitle": "Nothing here — yet.",
+  "communities.spotlight.emptyTitle": "Nothing here, yet.",
   "communities.spotlight.emptyBody":
     "No community matches those filters. Widen your search, or start the one that's missing.",
   "communities.spotlight.startCommunityCta": "Start a community",
@@ -252,25 +252,25 @@ export const homepage: Catalog = {
   "communities.room.resources": "guides & library",
 
   // ── Newsletter ─────────────────────────────────────────────────────────────
-  "newsletter.title": "Stay connected. <em>Weekly, not daily.</em>",
+  "newsletter.title": "Stay connected. <em>Once a week.</em>",
   "newsletter.subtitle":
-    "The QueerPulse digest lands every Thursday — new members to meet, upcoming gatherings, open skill swaps, and one piece of writing worth your time. No noise.",
+    "The QueerPulse digest lands every Thursday: new members to meet, upcoming gatherings, open skill swaps, and one piece of writing worth your time. No noise.",
   "newsletter.emailRequiredToast": "Please enter your email",
-  "newsletter.subscribedToast": "You're on the list — see you Thursday",
+  "newsletter.subscribedToast": "You're on the list, see you Thursday",
   "newsletter.success.title": "You're on the list, <em>almost.</em>",
   "newsletter.success.body":
     "We'll start sending the <strong>Weekly digest</strong> to <strong>{email}</strong> every Thursday.",
   "newsletter.success.checkInboxNote":
-    "You're all set — no confirmation email needed. You can change or stop this anytime from your settings.",
+    "You're all set: no confirmation email needed. You can change or stop this anytime from your settings.",
   "newsletter.success.useDifferentEmailCta": "Use a different email",
   "newsletter.emailPlaceholder": "your@email.com",
   "newsletter.subscribeCta": "Subscribe",
   "newsletter.note": "Members only · no spam · unsubscribe anytime",
   "newsletter.comingSoon":
-    "The weekly digest isn't sending yet — we're still building it. Once it's live, you'll be able to subscribe right here.",
+    "The weekly digest isn't sending yet. We're still building it. Once it's live, you'll be able to subscribe right here.",
   // Live double-opt-in: honest "confirm from your inbox" messaging, distinct from
   // the demo flow above (which fakes an instant subscribe with no email).
-  "newsletter.live.success.title": "Almost there — <em>check your inbox.</em>",
+  "newsletter.live.success.title": "Almost there, <em>check your inbox.</em>",
   "newsletter.live.success.body":
     "We just sent a confirmation link to <strong>{email}</strong>. Open it and you'll start getting the Weekly digest every Thursday.",
   "newsletter.live.success.checkInboxNote":

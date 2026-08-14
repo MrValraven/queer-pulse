@@ -61,7 +61,7 @@ export function PrivacyPage() {
               components={{ strong: <strong /> }}
             />
           ),
-          email: "privacy@queerpulse.pt",
+          email: "hello@queerpulse.com",
         }}
         related={
           <SubpageIndex

@@ -16,7 +16,7 @@ export const shared: Catalog = {
   "consent.banner.ariaLabel": "Escolhas de cookies e privacidade",
   "consent.banner.title": "Uma palavra breve sobre <em>cookies.</em>",
   "consent.banner.body":
-    "Só guardamos o que é necessário para manteres a sessão iniciada e em segurança, por predefinição. Os relatórios de erros ficam desligados a menos que digas que sim — sem anúncios, sem análise de comportamento, sem perfilagem, nunca. Muda de ideias quando quiseres, nas definições. <a>Lê a política</a>.",
+    "Só guardamos o que é necessário para manteres a sessão iniciada e em segurança, por predefinição. Os relatórios de erros ficam desligados a menos que digas que sim: sem anúncios, sem análise de comportamento, sem perfilagem, nunca. Muda de ideias quando quiseres, nas definições. <a>Lê a política</a>.",
 
   "consent.actions.rejectNonEssential": "Rejeitar não essenciais",
   "consent.actions.choose": "Escolher",
@@ -27,10 +27,10 @@ export const shared: Catalog = {
   "consent.preferences.eyebrow": "Privacidade",
   "consent.preferences.title": "As tuas <em>escolhas.</em>",
   "consent.preferences.sub":
-    "Os cookies estritamente necessários mantêm a tua sessão iniciada e em segurança — estão sempre ativos. O resto depende de ti, e podes alterá-lo quando quiseres.",
+    "Os cookies estritamente necessários mantêm a tua sessão iniciada e em segurança. Estão sempre ativos. O resto depende de ti, e podes alterá-lo quando quiseres.",
   "consent.preferences.necessary.title": "Estritamente necessários",
   "consent.preferences.necessary.desc":
-    "Os teus cookies de sessão e CSRF, mais o tema e o idioma guardados no teu dispositivo. Necessários para o funcionamento da plataforma — nunca usados para te seguir.",
+    "Os teus cookies de sessão e CSRF, mais o tema e o idioma guardados no teu dispositivo. Necessários para o funcionamento da plataforma. Nunca usados para te seguir.",
   "consent.preferences.necessary.alwaysOnAria": "Sempre ativo",
   "consent.preferences.rows.monitoring.title": "Erros e falhas",
   "consent.preferences.rows.monitoring.desc":
@@ -39,7 +39,7 @@ export const shared: Catalog = {
   // Feedback: AuthLoader / RouteFallback / ErrorFallback / RoomLoader
   "feedback.errorFallback.title": "Algo correu mal do nosso <em>lado</em>",
   "feedback.errorFallback.body":
-    "Não foi nada que tenhas feito, e nada se perdeu. Tenta outra vez, ou volta ao início — já estamos a tratar disto.",
+    "Não foi nada que tenhas feito, e nada se perdeu. Tenta outra vez, ou volta ao início. Já estamos a tratar disto.",
   "feedback.errorFallback.tryAgain": "Tentar outra vez",
   "feedback.errorFallback.reference": "Referência: {referenceId}",
 
@@ -52,11 +52,11 @@ export const shared: Catalog = {
 
   // Auth session-load failure
   "auth.error.server":
-    "Não conseguimos carregar a tua conta — o servidor da QueerPulse teve um erro ({status}). A responsabilidade é nossa, não tua. Tenta outra vez daqui a pouco.",
+    "Não conseguimos carregar a tua conta. O servidor da QueerPulse teve um erro ({status}). A responsabilidade é nossa. Tenta outra vez daqui a pouco.",
   "auth.error.network":
     "Não conseguimos contactar a QueerPulse para carregar a tua conta. Verifica a tua ligação e tenta outra vez daqui a pouco.",
   "auth.error.expired":
-    "A tua sessão expirou — inicia sessão outra vez para continuares de onde ficaste.",
+    "A tua sessão expirou. Inicia sessão outra vez para continuares de onde ficaste.",
 
   // Provider-level fallback error toasts
   "profile.saveError": "Não conseguimos guardar o teu perfil. Tenta outra vez.",
@@ -242,12 +242,12 @@ export const shared: Catalog = {
   "megaNav.community.feature.eyebrow": "Comunidade",
   "megaNav.community.feature.title": "Encontra a tua gente.",
   "megaNav.community.feature.body":
-    "Um diretório de pessoas, fóruns e convívios — o tecido de ligação do dia a dia da rede.",
+    "Um diretório de pessoas, fóruns e convívios: o tecido de ligação do dia a dia da rede.",
   "megaNav.community.feature.cta": "Explorar pessoas",
   "megaNav.community.featurePublic.eyebrow": "Comunidade",
   "megaNav.community.featurePublic.title": "Organizar em conjunto.",
   "megaNav.community.featurePublic.body":
-    "Campanhas, ajuda mútua e equipas de voluntariado — trabalho onde podes participar, sem precisares de convite.",
+    "Campanhas, ajuda mútua e equipas de voluntariado: trabalho onde podes participar, sem precisares de convite.",
   "megaNav.community.featurePublic.cta": "Participar",
   "megaNav.community.col.people.head": "Pessoas",
   "megaNav.community.col.people.membersDirectory": "Diretório de pessoas",
@@ -258,8 +258,6 @@ export const shared: Catalog = {
   "megaNav.community.col.gather.allGatherings": "Convívios",
   "megaNav.community.col.gather.events": "Eventos",
   "megaNav.community.col.gather.hostGathering": "Organizar um convívio",
-  "megaNav.community.col.gather.howCommunitiesWork":
-    "Como funcionam as comunidades",
   "megaNav.community.col.organise.head": "Organizar",
   "megaNav.community.col.organise.activismVolunteering":
     "Ativismo e Voluntariado",
@@ -271,12 +269,12 @@ export const shared: Catalog = {
   "megaNav.lisbon.feature.eyebrow": "Lisboa",
   "megaNav.lisbon.feature.title": "Encontra os teus espaços locais.",
   "megaNav.lisbon.feature.body":
-    "Bares, clínicas, salões e lojas que te acolhem — todos revistos, com os espaços verificados bem identificados.",
+    "Bares, clínicas, salões e lojas que te acolhem: todos revistos, com os espaços verificados bem identificados.",
   "megaNav.lisbon.feature.cta": "Explorar espaços locais",
   "megaNav.lisbon.featurePublic.eyebrow": "Lisboa",
   "megaNav.lisbon.featurePublic.title": "Como verificamos os espaços locais.",
   "megaNav.lisbon.featurePublic.body":
-    "Cada espaço é revisto antes de receber o selo de verificado — vê como funciona, e quais foram removidos.",
+    "Cada espaço é revisto antes de receber o selo de verificado. Vê como funciona, e quais foram removidos.",
   "megaNav.lisbon.featurePublic.cta": "Ver como funciona a verificação",
   "megaNav.lisbon.col.discover.head": "Descobrir",
   "megaNav.lisbon.col.discover.businessDirectory": "Diretório local",
@@ -291,7 +289,7 @@ export const shared: Catalog = {
   "megaNav.resources.feature.eyebrow": "Apoio",
   "megaNav.resources.feature.title": "Ajuda quando precisares.",
   "megaNav.resources.feature.body":
-    "Saúde, segurança e direitos — mais uma biblioteca para aprenderes ao teu ritmo.",
+    "Saúde, segurança e direitos, mais uma biblioteca para aprenderes ao teu ritmo.",
   "megaNav.resources.feature.cta": "Abrir a biblioteca",
   "megaNav.resources.col.health.head": "Saúde e segurança",
   "megaNav.resources.col.health.mentalHealth": "Saúde mental",
@@ -312,7 +310,7 @@ export const shared: Catalog = {
   "megaNav.culture.feature.eyebrow": "A Revista",
   "megaNav.culture.feature.title": "Lê a nova edição.",
   "megaNav.culture.feature.body":
-    "Ensaios, entrevistas, críticas e reportagens da comunidade — publicados no primeiro dia de cada mês.",
+    "Ensaios, entrevistas, críticas e reportagens da comunidade, publicados no primeiro dia de cada mês.",
   "megaNav.culture.feature.cta": "Abrir a Edição 18",
   "megaNav.culture.col.magazine.head": "A Revista",
   "megaNav.culture.col.magazine.currentIssue": "Edição atual",
@@ -332,7 +330,7 @@ export const shared: Catalog = {
   "megaNav.work.feature.eyebrow": "O teu espaço de trabalho",
   "megaNav.work.feature.title": "O teu Trabalho, num só lugar.",
   "megaNav.work.feature.body":
-    "Acompanha candidaturas, mentorias e apoios — e aparece no trabalho exatamente como és.",
+    "Acompanha candidaturas, mentorias e apoios, e aparece no trabalho exatamente como és.",
   "megaNav.work.feature.cta": "Abrir o teu espaço de trabalho",
   "megaNav.work.col.career.head": "Carreira",
   "megaNav.work.col.career.yourWork": "O teu Trabalho",
@@ -441,4 +439,19 @@ export const shared: Catalog = {
   "calendar.preset.today": "Hoje",
   "calendar.preset.tomorrow": "Amanhã",
   "calendar.preset.nextWeek": "Próxima semana",
+
+  // reframe.*: controlo de pan/zoom para recorte (ImageReframer.tsx,
+  // PhotoReframeModal.tsx, useImageReframerState.ts), mostrado quando alguém
+  // reenquadra uma foto ao enviá-la.
+  "reframe.title": "Reenquadrar foto",
+  "reframe.save": "Guardar",
+  "reframe.cancel": "Cancelar",
+  "reframe.zoom": "Zoom",
+  "reframe.reset": "Repor",
+  "reframe.alt": "Foto para reenquadrar",
+  "reframe.frame": "Área de reenquadramento",
+  "reframe.ratio.group": "Proporção",
+  "reframe.ratio.original": "Original",
+  "reframe.ratio.square": "Quadrado",
+  "reframe.ratio.native": "Forma da capa",
 };

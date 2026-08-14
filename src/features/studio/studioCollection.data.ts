@@ -10,7 +10,7 @@ export const COLLECTION = {
   count: "28 tracks",
   hours: "1h 54m",
   blurb:
-    "The songs that actually get played — at Purex, at the Anjos back room, at every house party that goes past 4am. Curated from the catalogue, paid to the artists on every listen.",
+    "The songs that actually get played: at Purex, at the Anjos back room, at every house party that goes past 4am. Curated from the catalogue, paid to the artists on every listen.",
 };
 
 export interface CollTrack {

@@ -53,7 +53,7 @@ export function StudioSolidarityFundPage() {
                 fallback chain. Flagged in the sweep report. */}
             <p>
               If you're a member having a hard month, the emergency strand is a
-              short form and a fast yes —{" "}
+              short form and a fast yes:{" "}
               <em>no portfolio, no means test, no shame</em>. Transcribers and
               translators are paid per accepted piece; grants open each quarter.
             </p>

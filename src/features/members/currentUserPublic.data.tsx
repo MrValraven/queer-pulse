@@ -67,7 +67,7 @@ export const CURRENT_USER_PUBLIC: PublicContributions = {
       kicker: "Recurring · 3rd Thursday",
       title: (
         <>
-          Queer devs & makers — <em>build night.</em>
+          Queer devs & makers: <em>build night.</em>
         </>
       ),
       meta: "Arroios · 19:00 · open to 20 people",

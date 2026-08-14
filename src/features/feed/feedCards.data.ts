@@ -34,7 +34,7 @@ export const DEMO_MEMBER = {
   hood: "Cais do Sodré",
   occupation: "Filmmaker",
   quote:
-    "Shooting a documentary on queer nightlife across Lisbon, Barcelona and Naples — here to find interviewees and people who still cook Sunday lunch.",
+    "Shooting a documentary on queer nightlife across Lisbon, Barcelona and Naples. Here to find interviewees and people who still cook Sunday lunch.",
   tags: ["Film & Documentary", "Nightlife", "Archive"],
   commonCommunities: [
     { initials: "TN", tint: "coral" as AvatarTint },
@@ -50,11 +50,11 @@ export const DEMO_GATHERING = {
   slug: "queer-book-club",
   day: "19",
   month: "JUL",
-  title: "Queer Book Club — July",
+  title: "Queer Book Club: July",
   venue: "LX Factory, Alcântara",
   host: "QueerPulse",
   quote:
-    "This month: a queer classic in the courtyard. Come even if you didn't finish — nobody checks.",
+    "This month: a queer classic in the courtyard. Come even if you didn't finish. Nobody checks.",
   going: 12,
   capacity: 16,
   price: "Free",

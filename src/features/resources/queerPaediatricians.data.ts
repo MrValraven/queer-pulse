@@ -13,7 +13,7 @@ export const PROVIDERS: Provider[] = [
     practice: "Clínica Arroios",
     neighbourhood: "Arroios",
     notedFor:
-      "Both my kids see her — brilliant and completely matter-of-fact about two mums on the form. Talks to both parents equally, every visit.",
+      "Both my kids see her, brilliant and completely matter-of-fact about two mums on the form. Talks to both parents equally, every visit.",
     tags: ["Two-parent forms", "PT · EN"],
     checked: "Checked Jun 2026",
   },

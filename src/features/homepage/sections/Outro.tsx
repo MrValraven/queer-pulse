@@ -1,7 +1,7 @@
 import { Button, Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { routes } from "../../../app/routeMap";
+import { requestInvitePath } from "../../auth/api/joinRequestSource";
 import styles from "./Outro.module.css";
 
 export function Outro() {
@@ -21,7 +21,7 @@ export function Outro() {
             {t("homepage:outro.sub")}
           </Reveal>
           <Reveal delay={140}>
-            <Button size="lg" to={routes.requestInvite}>
+            <Button size="lg" to={requestInvitePath("homepage_outro")}>
               {t("homepage:outro.cta")}
             </Button>
           </Reveal>

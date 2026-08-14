@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiArrowRight, FiMapPin } from "react-icons/fi";
+import { FiArrowRight, FiGlobe, FiMapPin } from "react-icons/fi";
 import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -61,7 +61,15 @@ export function LocalBusinessCard({
         <div className={s.name}>{place.name}</div>
         <div className={s.cat}>{categoryLabel(t, place.cat)}</div>
         <div className={s.hood}>
-          <FiMapPin /> {place.hood}
+          {place.online ? (
+            <>
+              <FiGlobe /> {t("marketing:directory.card.online")}
+            </>
+          ) : (
+            <>
+              <FiMapPin /> {place.hood}
+            </>
+          )}
         </div>
       </div>
       <div className={s.desc}>{place.desc}</div>

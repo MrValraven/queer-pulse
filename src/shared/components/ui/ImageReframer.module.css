@@ -1,0 +1,126 @@
+.reframer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm, 14px);
+}
+
+.ratioRow {
+  flex-wrap: wrap;
+}
+
+.stage {
+  display: flex;
+  justify-content: center;
+}
+
+.frame {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  max-height: 60vh;
+  overflow: hidden;
+  border-radius: var(--radius-panel);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  background: rgba(var(--plum-rgb), 0.06);
+  touch-action: none;
+  cursor: grab;
+  outline-offset: 3px;
+}
+
+.frame:focus-visible {
+  outline: 2px solid var(--accent);
+}
+
+.dragging {
+  cursor: grabbing;
+}
+
+.image {
+  position: absolute;
+  max-width: none;
+  transition: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Smooths wheel/slider/chip-driven jumps; live pointer drag stays
+   transition-free (via .dragging) so the image tracks the pointer exactly. */
+@media (prefers-reduced-motion: no-preference) {
+  .frame:not(.dragging) .image {
+    transition: left 0.12s var(--ease), top 0.12s var(--ease);
+  }
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs, 9px);
+}
+
+.zoomRange {
+  flex: 1;
+  height: 26px;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.zoomRange::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.16);
+}
+
+.zoomRange::-moz-range-track {
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.16);
+}
+
+.zoomRange::-webkit-slider-thumb {
+  appearance: none;
+  margin-top: -8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--paper);
+  box-shadow: 0 1px 4px rgba(var(--plum-rgb), 0.3);
+}
+
+.zoomRange::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--paper);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 1px 4px rgba(var(--plum-rgb), 0.3);
+}
+
+.resetButton {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  background: var(--paper);
+  color: var(--ink-60);
+  cursor: pointer;
+  transition: color 0.16s var(--ease), border-color 0.16s var(--ease);
+}
+
+@media (hover: hover) {
+  .resetButton:hover {
+    color: var(--text-strong);
+    border-color: rgba(var(--line-rgb), 0.28);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resetButton {
+    transition: none;
+  }
+}

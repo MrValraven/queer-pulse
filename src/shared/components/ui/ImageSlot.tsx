@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { resolveAvatarSrc } from "../../lib/avatarUrl";
 import { useTranslation } from "../../i18n/useTranslation";
+import { cropToImgStyle, type CropRect } from "./cropGeometry";
 import styles from "./ImageSlot.module.css";
 
 export type ImageSlotTint = "default" | "coral" | "jade" | "plum";
@@ -32,6 +33,11 @@ interface ImageSlotProps {
    *  the camelCase `fetchPriority` prop). Pair with `loading="eager"` on the
    *  one genuine above-the-fold hero per page — never on a grid/list thumbnail. */
   fetchPriority?: "high" | "auto";
+  /** Sub-rect of the source image to display (normalized 0-1 fractions), e.g.
+   *  from the photo-reframe crop editor. Only meaningful for our own storage-key
+   *  images; only pass it when the caller actually has a saved crop. Absent =
+   *  today's unchanged `object-fit: cover` rendering. */
+  crop?: CropRect;
 }
 
 /**
@@ -54,8 +60,17 @@ export function ImageSlot({
   style,
   loading = "lazy",
   fetchPriority,
+  crop,
 }: ImageSlotProps) {
   const { t } = useTranslation();
+  // Present only when a crop rect is passed: positions the <img> as an
+  // absolutely-placed sub-rect inside the (already overflow-hidden,
+  // position-relative) `.slot` box, overriding the default cover fit so the
+  // crop math isn't re-cropped by the browser. Absent = no inline style at
+  // all, i.e. today's `.slot img { object-fit: cover }` behavior.
+  const cropImgStyle: CSSProperties | undefined = crop
+    ? { position: "absolute", objectFit: "fill", ...cropToImgStyle(crop) }
+    : undefined;
   const borderRadius = shape === "circle" ? "50%" : radius;
   // Only Google/OAuth avatar URLs are rewritten (for a crisp 2× crop); every
   // other src — Unsplash covers, magazine art — passes through unchanged.
@@ -82,6 +97,7 @@ export function ImageSlot({
           fetchPriority={fetchPriority}
           decoding="async"
           referrerPolicy="no-referrer"
+          style={cropImgStyle}
         />
       ) : initials ? (
         <span className={styles.initials} style={{ fontSize: 22 }}>

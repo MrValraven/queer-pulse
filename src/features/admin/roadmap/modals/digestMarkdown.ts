@@ -52,7 +52,7 @@ export function buildDigestMarkdown(
     ...(declined.length > 0
       ? declined.map(
           (idea) =>
-            `- ${idea.text}${idea.declineNote ? ` — ${idea.declineNote}` : ""}`,
+            `- ${idea.text}${idea.declineNote ? `: ${idea.declineNote}` : ""}`,
         )
       : ["- —"]),
     "",

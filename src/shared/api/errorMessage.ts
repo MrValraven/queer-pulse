@@ -60,7 +60,7 @@ export function describeError(action: string, error: unknown): string {
   const reason = reasonFor(error);
   if (reason) {
     const withoutTrailingPeriod = reason.replace(/\.$/, "");
-    return `${action} — ${withoutTrailingPeriod}.`;
+    return `${action}: ${withoutTrailingPeriod}.`;
   }
-  return `${action} — please try again.`;
+  return `${action}. Please try again.`;
 }

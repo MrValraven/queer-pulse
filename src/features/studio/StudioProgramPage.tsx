@@ -63,7 +63,7 @@ export function StudioProgramPage() {
               <Translation
                 i18nKey="studio:program.header.title"
                 components={{ em: <em /> }}
-                values={{ weekNumber: 24, dateRange: "15 — 21 June" }}
+                values={{ weekNumber: 24, dateRange: "15 to 21 June" }}
               />
             </h1>
             <div className={s.sub}>

@@ -3,9 +3,10 @@ import { Button, HubBackLink } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import styles from "./MicroGrantsPage.module.css";
 
-const INVITE = routes.requestInvite;
+const INVITE = requestInvitePath("micro_grants");
 // The last entry ("Other") is chrome and resolves via t(); the currency
 // amounts are locale-invariant values, not translated words.
 const CONTRIBUTE_AMOUNTS = ["€5", "€10", "€20", "€50"];

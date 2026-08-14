@@ -458,7 +458,7 @@ const SLUG_FACETS: Record<string, MemberFacet> = {
   tomas: {
     discipline: "food",
     profession: "supperClubHost",
-    bio: "Runs a twelve-seat supper club in Mouraria — no menu, lots of fermentation.",
+    bio: "Runs a twelve-seat supper club in Mouraria. No menu, lots of fermentation.",
   },
   mariana: {
     discipline: "healthcare",
@@ -598,7 +598,7 @@ const SLUG_FACETS: Record<string, MemberFacet> = {
   tiago: {
     discipline: "tech",
     profession: "softwareEngineer",
-    bio: "Fullstack developer bringing useful — and sometimes silly — web ideas to life.",
+    bio: "Fullstack developer bringing useful, and sometimes silly, web ideas to life.",
   },
 };
 

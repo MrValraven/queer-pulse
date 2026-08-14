@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import { Button } from "../../shared/components/ui";
+import { Button, PhotoReframeModal } from "../../shared/components/ui";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUploadImage } from "../members/api/useUploadImage";
 import { ImageProcessingError } from "../members/api/uploadProcessing";
@@ -40,6 +41,7 @@ export function IdentityPhotoField({
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
 
   function clearPreview() {
     if (previewUrl) {
@@ -48,13 +50,15 @@ export function IdentityPhotoField({
     }
   }
 
-  async function handlePickPhoto(file: File) {
+  /** Shared tail of both upload paths (direct GIF path + post-reframe path). */
+  async function uploadAndApply(file: File, crop?: CropRect) {
     setUploadError(null);
     setUploadProgress(0);
     setUploading(true);
     try {
       const { key, previewUrl: newPreviewUrl } = await uploadAvatar(file, {
         onProgress: (percent) => setUploadProgress(percent),
+        crop,
       });
       // One photo at a time here — the previous local preview is now stale.
       if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -69,6 +73,23 @@ export function IdentityPhotoField({
     } finally {
       setUploading(false);
     }
+  }
+
+  function handlePickPhoto(file: File) {
+    // GIFs bypass the reframer entirely (animation would be destroyed by the
+    // crop/re-encode path) and upload directly, as before.
+    if (file.type === "image/gif") {
+      void uploadAndApply(file);
+      return;
+    }
+    setPendingFile(file);
+  }
+
+  async function handleCropConfirmed(crop: CropRect) {
+    if (!pendingFile) return;
+    const fileToUpload = pendingFile;
+    setPendingFile(null);
+    await uploadAndApply(fileToUpload, crop);
   }
 
   // Guard the photo URL before dropping it into CSS `url(...)`. A local preview
@@ -167,10 +188,18 @@ export function IdentityPhotoField({
         hidden
         onChange={(e) => {
           const file = e.target.files?.[0];
-          if (file) void handlePickPhoto(file);
+          if (file) handlePickPhoto(file);
           e.target.value = "";
         }}
       />
+      {pendingFile && (
+        <PhotoReframeModal
+          file={pendingFile}
+          kind="avatar"
+          onCancel={() => setPendingFile(null)}
+          onConfirm={(crop) => void handleCropConfirmed(crop)}
+        />
+      )}
     </>
   );
 }

@@ -39,7 +39,7 @@ export function StudioAlbumSidebar({ onTip }: { onTip: () => void }) {
           </Link>
         </div>
         <div className={styles.splitHint}>
-          If you buy at €8 — <em>€6.40 to Mariana</em>, €0.80 to the solidarity
+          If you buy at €8: <em>€6.40 to Mariana</em>, €0.80 to the solidarity
           fund, €0.80 to the platform, processing absorbed.
         </div>
       </div>

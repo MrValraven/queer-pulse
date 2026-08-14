@@ -59,7 +59,7 @@ export const COMPANIES: Company[] = [
       { label: "HR awareness", percent: 78, score: "7.8" },
     ],
     quote:
-      '"Generally good. The team is fine — leadership is still catching up. They have an ERG but it needs more budget and teeth."',
+      '"Generally good. The team is fine. Leadership is still catching up. They have an ERG but it needs more budget and teeth."',
     meta: ["14 reviews", "Last updated 2 weeks ago"],
     reviews: [
       {
@@ -67,7 +67,7 @@ export const COMPANIES: Company[] = [
         meta: ["Engineering", "2 weeks ago"],
       },
       {
-        text: '"The ERG is real but under-resourced — it runs on volunteers. Trans healthcare in the plan is decent though."',
+        text: '"The ERG is real but under-resourced. It runs on volunteers. Trans healthcare in the plan is decent though."',
         meta: ["Design", "1 month ago"],
       },
       {
@@ -123,11 +123,11 @@ export const COMPANIES: Company[] = [
       { label: "HR awareness", percent: 88, score: "8.8" },
     ],
     quote:
-      '"Genuinely queer-led culture. My pronouns were on my contract. No one made a big deal of it — it was just how it worked there."',
+      '"Genuinely queer-led culture. My pronouns were on my contract. No one made a big deal of it. It was just how it worked there."',
     meta: ["6 reviews", "Last updated 3 weeks ago"],
     reviews: [
       {
-        text: '"Founder is trans and it shows in every policy — gender-neutral facilities, real healthcare, flexible time for appointments."',
+        text: '"Founder is trans and it shows in every policy: gender-neutral facilities, real healthcare, flexible time for appointments."',
         meta: ["Creative", "3 weeks ago"],
       },
       {
@@ -135,7 +135,7 @@ export const COMPANIES: Company[] = [
         meta: ["Account", "1 month ago"],
       },
       {
-        text: '"Small team, so pay is below the big agencies — but the safety is worth a lot. Be clear-eyed about the trade."',
+        text: '"Small team, so pay is below the big agencies, but the safety is worth a lot. Be clear-eyed about the trade."',
         meta: ["Strategy", "2 months ago"],
       },
     ],

@@ -49,7 +49,7 @@ export const VENUES: Venue[] = [
     name: "Trumps",
     type: "Club · Bar",
     hood: "Príncipe Real",
-    note: "One step at the main entrance — manageable for some wheelchair users with staff assistance, but requires asking. Inside access is good once you're in. Accessible bathroom on the ground floor.",
+    note: "One step at the main entrance: manageable for some wheelchair users with staff assistance, but requires asking. Inside access is good once you're in. Accessible bathroom on the ground floor.",
     features: [
       { label: "1 step at entry (staff help available)", cls: "partial" },
       { label: "Accessible bathroom", cls: "yes" },

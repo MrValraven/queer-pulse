@@ -141,13 +141,13 @@ export const feed: Catalog = {
     ", e a nossa equipa de segurança já tem a tua denúncia",
   "moderation.blockDialog.title": "Bloquear {name}?",
   "moderation.blockDialog.sub":
-    "Não vai poder enviar-te mensagens, ver o teu perfil, ou encontrar-te — e qualquer ligação entre vocês será removida. Isto funciona nos dois sentidos.",
+    "Não vai poder enviar-te mensagens, ver o teu perfil, ou encontrar-te, e qualquer ligação entre vocês será removida. Isto funciona nos dois sentidos.",
   "moderation.blockDialog.alsoReportLabel":
     "Denunciar também {name} à nossa equipa de segurança",
   "moderation.blockDialog.submitCta": "Bloquear {name}",
 
   "moderation.reportConfirm.title":
-    "Obrigade — <em>estamos a tratar disso</em>",
+    "Obrigade, <em>estamos a tratar disso</em>",
   "moderation.reportConfirm.body":
     "A nossa equipa de moderação vai rever esta publicação sobre {name}. Para algo urgente, contacta-nos diretamente em {email}.",
   "moderation.reportDialog.title": "Denunciar esta publicação",

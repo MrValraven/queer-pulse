@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AdminDrawer } from "./ui";
-import { Button, SkeletonLine } from "../../shared/components/ui";
+import { Button, PhotoReframeModal, SkeletonLine } from "../../shared/components/ui";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUploadImage } from "../members/api/useUploadImage";
@@ -40,6 +41,7 @@ export function AdminBotEditorDrawer({ bot, onClose }: Props) {
   );
   const [uploading, setUploading] = useState(false);
   const [usernameError, setUsernameError] = useState<string | null>(null);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
   const previewToRevoke = useRef<string | null>(null);
   const seededRef = useRef(false);
 
@@ -73,10 +75,11 @@ export function AdminBotEditorDrawer({ bot, onClose }: Props) {
     };
   }, []);
 
-  async function handlePickAvatar(file: File) {
+  /** Shared tail of both upload paths (direct GIF path + post-reframe path). */
+  async function uploadAndApply(file: File, crop?: CropRect) {
     setUploading(true);
     try {
-      const { key, previewUrl } = await uploadAvatar(file);
+      const { key, previewUrl } = await uploadAvatar(file, { crop });
       if (previewToRevoke.current) URL.revokeObjectURL(previewToRevoke.current);
       previewToRevoke.current = previewUrl;
       setAvatarPreview(previewUrl);
@@ -93,6 +96,23 @@ export function AdminBotEditorDrawer({ bot, onClose }: Props) {
     } finally {
       setUploading(false);
     }
+  }
+
+  function handlePickAvatar(file: File) {
+    // GIFs bypass the reframer entirely (animation would be destroyed by the
+    // crop/re-encode path) and upload directly, as before.
+    if (file.type === "image/gif") {
+      void uploadAndApply(file);
+      return;
+    }
+    setPendingFile(file);
+  }
+
+  async function handleCropConfirmed(crop: CropRect) {
+    if (!pendingFile) return;
+    const fileToUpload = pendingFile;
+    setPendingFile(null);
+    await uploadAndApply(fileToUpload, crop);
   }
 
   function handleSave() {
@@ -146,37 +166,47 @@ export function AdminBotEditorDrawer({ bot, onClose }: Props) {
   }
 
   return (
-    <AdminDrawer
-      label={title}
-      onClose={onClose}
-      head={<strong>{title}</strong>}
-      foot={
-        <div className={styles.foot}>
-          <Button variant="ghost" onClick={onClose}>
-            {t("admin:bots.cancel")}
-          </Button>
-          <Button
-            variant="primary"
-            onClick={handleSave}
-            disabled={!form || updateBot.isPending || uploading}
-          >
-            {t("admin:bots.save")}
-          </Button>
-        </div>
-      }
-    >
-      {!form || isLoading ? (
-        <SkeletonLine />
-      ) : (
-        <AdminBotEditorFields
-          form={form}
-          setForm={updateForm}
-          avatarPreview={avatarPreview}
-          uploading={uploading}
-          onPickAvatar={(file) => void handlePickAvatar(file)}
-          usernameError={usernameError}
+    <>
+      <AdminDrawer
+        label={title}
+        onClose={onClose}
+        head={<strong>{title}</strong>}
+        foot={
+          <div className={styles.foot}>
+            <Button variant="ghost" onClick={onClose}>
+              {t("admin:bots.cancel")}
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleSave}
+              disabled={!form || updateBot.isPending || uploading}
+            >
+              {t("admin:bots.save")}
+            </Button>
+          </div>
+        }
+      >
+        {!form || isLoading ? (
+          <SkeletonLine />
+        ) : (
+          <AdminBotEditorFields
+            form={form}
+            setForm={updateForm}
+            avatarPreview={avatarPreview}
+            uploading={uploading}
+            onPickAvatar={handlePickAvatar}
+            usernameError={usernameError}
+          />
+        )}
+      </AdminDrawer>
+      {pendingFile && (
+        <PhotoReframeModal
+          file={pendingFile}
+          kind="avatar"
+          onCancel={() => setPendingFile(null)}
+          onConfirm={(crop) => void handleCropConfirmed(crop)}
         />
       )}
-    </AdminDrawer>
+    </>
   );
 }

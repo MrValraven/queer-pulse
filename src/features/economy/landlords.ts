@@ -46,7 +46,7 @@ export const LANDLORDS: Landlord[] = [
       "A steady, hands-off Arroios landlord who fixes things fast and minds his own business.",
     about: [
       "Senhor Costa has owned a handful of rooms and small flats around Arroios for decades. He is, by every account members have given, the kind of landlord you hope for and rarely get: responsive, fair, and entirely uninterested in your private life beyond whether the rent is paid and the place is cared for.",
-      "He works on a handshake-then-contract basis — clear written tenancy, no surprises, repairs handled within days. He has never, members report, dropped by unannounced.",
+      "He works on a handshake-then-contract basis: clear written tenancy, no surprises, repairs handled within days. He has never, members report, dropped by unannounced.",
     ],
     areas: [
       "Rooms in shared flats · Arroios",
@@ -73,7 +73,7 @@ export const LANDLORDS: Landlord[] = [
         name: "Jonas Ferreira",
         tint: "jade",
         stars: 5,
-        text: "Clear contract, fair deposit, returned in full. He is exactly as advertised — unremarkable in the best possible way.",
+        text: "Clear contract, fair deposit, returned in full. He is exactly as advertised, unremarkable in the best possible way.",
         when: "Recommended Jan 2026",
       },
       {
@@ -86,7 +86,7 @@ export const LANDLORDS: Landlord[] = [
       },
     ],
     rentingNote:
-      "Senhor Costa lists through the community board and word of mouth. Ask for a written contract (he always provides one) and exchange references — he expects it too.",
+      "Senhor Costa lists through the community board and word of mouth. Ask for a written contract (he always provides one) and exchange references. He expects it too.",
   },
   {
     slug: "ana-ferreira",
@@ -99,9 +99,9 @@ export const LANDLORDS: Landlord[] = [
     stars: 5,
     note: '"Has been renting to queer tenants for 15 years. Genuinely lovely. Contracts are clear and fair."',
     tagline:
-      "A Mouraria landlady who has rented to queer tenants for fifteen years — warm, fair, unbothered.",
+      "A Mouraria landlady who has rented to queer tenants for fifteen years: warm, fair, unbothered.",
     about: [
-      "Ana Ferreira owns several studio flats in Mouraria and has been renting to queer tenants, deliberately and warmly, for fifteen years. Members describe her as genuinely lovely — the kind of landlady who remembers your name and asks how you are and means it.",
+      "Ana Ferreira owns several studio flats in Mouraria and has been renting to queer tenants, deliberately and warmly, for fifteen years. Members describe her as genuinely lovely, the kind of landlady who remembers your name and asks how you are and means it.",
       "Her contracts are clear and fair, her deposits reasonable and returned, and she has a long memory for good tenants. Several members have rented from her twice.",
     ],
     areas: [
@@ -134,7 +134,7 @@ export const LANDLORDS: Landlord[] = [
       },
     ],
     rentingNote:
-      "Ana prefers an introduction through the community. Request one and mention you found her on the QueerPulse board — she likes knowing tenants come vouched.",
+      "Ana prefers an introduction through the community. Request one and mention you found her on the QueerPulse board. She likes knowing tenants come vouched.",
   },
   {
     slug: "familia-rodrigues",
@@ -147,9 +147,9 @@ export const LANDLORDS: Landlord[] = [
     stars: 4,
     note: '"Older couple, very traditional but completely respectful. No problems. Good building, quiet street."',
     tagline:
-      "A traditional Graça couple — old-fashioned, scrupulously respectful, and entirely reliable.",
+      "A traditional Graça couple: old-fashioned, scrupulously respectful, and entirely reliable.",
     about: [
-      "The Rodrigues family own a well-kept building on a quiet Graça street. They are an older, traditional couple — not the people you'll be having drinks with — but members are unanimous that they are completely respectful, fair, and without fuss.",
+      "The Rodrigues family own a well-kept building on a quiet Graça street. They are an older, traditional couple (not the people you'll be having drinks with), but members are unanimous that they are completely respectful, fair, and without fuss.",
       "The building is solid and the street is quiet. They keep things in good repair and expect the same care in return. Four stars rather than five only because they are formal and a little slow to warm up, not for any problem.",
     ],
     areas: [
@@ -182,7 +182,7 @@ export const LANDLORDS: Landlord[] = [
       },
     ],
     rentingNote:
-      "The Rodrigues family rent long-term only and value references and stability. Approach formally, bring your documents (NIF, proof of income), and be patient — they are slow but solid.",
+      "The Rodrigues family rent long-term only and value references and stability. Approach formally, bring your documents (NIF, proof of income), and be patient. They are slow but solid.",
   },
   {
     slug: "paulo-matos",
@@ -198,7 +198,7 @@ export const LANDLORDS: Landlord[] = [
       "A queer landlord in Cais do Sodré who screens for tenant safety as carefully as for rent.",
     about: [
       "Paulo Matos is queer himself and rents rooms in a couple of shared flats around Cais do Sodré. What members single out is his screening: he has an explicit policy of never renting to anyone he thinks would make his other tenants uncomfortable. The result is consistently good houses.",
-      "He is responsive, fair on deposits, and genuinely invested in the flats being good places to live. He treats the community as a feature, not a risk.",
+      "He is responsive, fair on deposits, and genuinely invested in the flats being good places to live. He treats the community as an asset.",
     ],
     areas: [
       "Rooms in shared flats · Cais do Sodré",
@@ -230,7 +230,7 @@ export const LANDLORDS: Landlord[] = [
       },
     ],
     rentingNote:
-      "Paulo fills rooms through the community and a short chat to check fit — both ways. Reach out, tell him a little about yourself, and ask who else is in the flat.",
+      "Paulo fills rooms through the community and a short chat to check fit, both ways. Reach out, tell him a little about yourself, and ask who else is in the flat.",
   },
 ];
 

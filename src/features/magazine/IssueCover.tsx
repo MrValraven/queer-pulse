@@ -146,7 +146,7 @@ export function IssueCover({
             <p>
               Twelve writers, three months, fourteen interviews, two clinics
               visited at 2am. The result is an issue we could only have made
-              together — Sara Pinheiro's cover piece on the trans health
+              together: Sara Pinheiro's cover piece on the trans health
               protocol, an interview with the woman who fixed an entire clinic
               by being <em>kind on purpose</em>.
             </p>

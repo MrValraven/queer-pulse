@@ -129,7 +129,7 @@ export const RESOURCES: Resource[] = [
   },
   {
     cat: "legal",
-    name: "APAV — Victim Support",
+    name: "APAV: Victim Support",
     description: "Free, confidential support for crime victims. 24-hour line: 116 006.",
     cost: "free",
     internal: false,
@@ -157,7 +157,7 @@ export const RESOURCES: Resource[] = [
   {
     cat: "housing",
     name: "Queer Flatmates",
-    description: "Community-curated flatmate matching — safe, vetted, connected to the network.",
+    description: "Community-curated flatmate matching: safe, vetted, connected to the network.",
     cost: "free",
     internal: true,
     link: routes.housing,
@@ -220,7 +220,7 @@ export const RESOURCES: Resource[] = [
   {
     cat: "identity",
     name: "Family Resources",
-    description: "For queer people navigating family — estrangement, coming out, chosen family.",
+    description: "For queer people navigating family: estrangement, coming out, chosen family.",
     cost: "free",
     internal: true,
     link: routes.wellbeing,
@@ -229,7 +229,7 @@ export const RESOURCES: Resource[] = [
   {
     cat: "safety",
     name: "Safety & Visibility Guide",
-    description: "How to manage visibility online and offline — for people who need to be careful.",
+    description: "How to manage visibility online and offline, for people who need to be careful.",
     cost: "free",
     internal: true,
     link: routes.safety,
@@ -247,7 +247,7 @@ export const RESOURCES: Resource[] = [
   {
     cat: "safety",
     name: "Emergency",
-    description: "Immediate safety resources — crisis lines, emergency housing, urgent support.",
+    description: "Immediate safety resources: crisis lines, emergency housing, urgent support.",
     cost: "free",
     internal: true,
     link: routes.safety,
@@ -256,7 +256,7 @@ export const RESOURCES: Resource[] = [
   {
     cat: "community",
     name: "Reading Groups",
-    description: "Small queer book clubs across Lisbon and online — fiction, theory, memoir, poetry.",
+    description: "Small queer book clubs across Lisbon and online: fiction, theory, memoir, poetry.",
     cost: "free",
     internal: true,
     link: routes.communities,
@@ -265,7 +265,7 @@ export const RESOURCES: Resource[] = [
   {
     cat: "community",
     name: "Monthly Magazine",
-    description: "Interviews, essays, reviews, and community life — published the first of every month.",
+    description: "Interviews, essays, reviews, and community life, published the first of every month.",
     cost: "free",
     internal: true,
     link: routes.magazine,

@@ -4,6 +4,7 @@ import type {
   PoemLine,
   PoemNoteBlock,
   PoemStanzaBlock,
+  PoemVersion,
 } from "../api/subprofiles.api";
 import { normalizePoemBlocks, poemLineIsEmpty } from "./poemModel";
 
@@ -31,6 +32,19 @@ export const newNote = (lines: PoemLine[] = []): PoemNoteBlock => ({
   kind: "note",
   id: nextPoemBlockId(),
   lines,
+});
+
+/** A fresh poem translation/version — empty label + empty body by default (the
+ *  poet names it and writes into it). Ids are PERSISTED (round-trip through
+ *  `structured.poemVersions`), so `crypto.randomUUID()` for the same reason as
+ *  block ids above. */
+export const newPoemVersion = (
+  label = "",
+  blocks: PoemBlock[] = [],
+): PoemVersion => ({
+  id: nextPoemBlockId(),
+  label,
+  blocks,
 });
 
 /** True when the poem has at least one stanza/note with a non-empty line (a

@@ -86,7 +86,7 @@ export const MENTORS: Mentor[] = [
     quote: "I'll tell you what's working before I tell you what's not.",
     why: "Inês has built a studio from nothing and hired junior designers herself, so she knows both sides of the table. She mentors people who want to do good work slowly, and she's honest without being harsh.",
     charge:
-      "Free for QueerPulse members — she takes one mentee a quarter as a way of giving back. A coffee or a drink when you meet is welcome, never expected.",
+      "Free for QueerPulse members: she takes one mentee a quarter as a way of giving back. A coffee or a drink when you meet is genuinely optional.",
     reach:
       "Request a match through the mentorship form and mention you'd like Inês specifically. She replies within a few days and always does a short intro call before committing.",
     fitFor: [
@@ -97,15 +97,15 @@ export const MENTORS: Mentor[] = [
     fitNot: [
       "You want help landing a corporate in-house role fast",
       "You only want portfolio polish with no conversation",
-      "You haven't made any work yet — start, then come back",
+      "You haven't made any work yet. Start, then come back",
     ],
     eyebrow: "Mentor · Design career & studio building",
     languages: "PT · EN",
     commitment: "Ongoing, informal",
     cadence: "Monthly + async",
     howParas: [
-      "I take one mentee a quarter and I go slow on purpose. We meet monthly, usually in person over coffee, with a thread open between sessions for the small questions. I'll look at your actual work, not a tidied-up portfolio.",
-      "I'll tell you what's working before I tell you what's not — but I will tell you both. I'm most useful to people who already make things and want to make them better, not to people still waiting to start.",
+      "I take one mentee a quarter and I go slow on purpose. We meet monthly, usually in person over coffee, with a thread open between sessions for the small questions. I'll look at your actual work, the real in-progress thing.",
+      "I'll tell you what's working before I tell you what's not, but I will tell you both. I'm most useful to people who already make things and want to make them better, the ones who are past waiting to start.",
     ],
     process: [
       {
@@ -131,7 +131,7 @@ export const MENTORS: Mentor[] = [
     ],
     price: {
       main: "Free",
-      sub: "one mentee a quarter · coffee on you welcome, never expected",
+      sub: "one mentee a quarter · coffee on you, no obligation",
     },
     sideRows: [
       { label: "Capacity", value: "1 open spot this quarter" },
@@ -154,7 +154,7 @@ export const MENTORS: Mentor[] = [
     button: "Request a match",
     quote:
       "Most engineering careers stall for non-engineering reasons. Let's fix those.",
-    why: "Rui has gone from junior to senior and mentored open-source contributors along the way. He's good at the unglamorous parts — code-review habits, navigating teams, asking for the raise.",
+    why: "Rui has gone from junior to senior and mentored open-source contributors along the way. He's good at the unglamorous parts: code-review habits, navigating teams, asking for the raise.",
     charge:
       "Free. Rui mentors two people a quarter and asks only that you pay it forward later.",
     reach:
@@ -174,7 +174,7 @@ export const MENTORS: Mentor[] = [
     commitment: "Ongoing",
     cadence: "Async + calls",
     howParas: [
-      "I mentor two people a quarter, mostly in writing with a call when it helps. Send me what you're stuck on — a PR, a decision, a conversation with your lead you're dreading — and we work it through async, then talk if we need to.",
+      "I mentor two people a quarter, mostly in writing with a call when it helps. Send me what you're stuck on (a PR, a decision, a conversation with your lead you're dreading) and we work it through async, then talk if we need to.",
       "Most engineering careers stall for non-engineering reasons: code-review habits, reading a team, asking for the raise. That unglamorous stuff is what I'm actually good at.",
     ],
     process: [
@@ -191,12 +191,12 @@ export const MENTORS: Mentor[] = [
       {
         number: "03",
         title: "Work it in writing",
-        description: "Most of our back-and-forth is async — a PR, a plan, a hard message. You get a real answer, not a vibe.",
+        description: "Most of our back-and-forth is async: a PR, a plan, a hard message. You get a real, concrete answer.",
       },
       {
         number: "04",
         title: "Talk when it matters",
-        description: "We jump on a call for the big decisions — a job move, a raise, a team you're struggling to read.",
+        description: "We jump on a call for the big decisions: a job move, a raise, a team you're struggling to read.",
       },
     ],
     price: {
@@ -223,7 +223,7 @@ export const MENTORS: Mentor[] = [
     cap: "Waitlist only right now",
     button: "Join waitlist",
     quote: "Work is where a lot of us hide. Mentorship can be where we stop.",
-    why: "Mariana is a clinical psychologist who runs a peer-support group for queer professionals. She mentors on the human side of careers — burnout, coming out at work, identity and ambition.",
+    why: "Mariana is a clinical psychologist who runs a peer-support group for queer professionals. She mentors on the human side of careers: burnout, coming out at work, identity and ambition.",
     charge:
       "Sliding-scale barter or free on the waitlist. Because this is close to her clinical work, she keeps numbers small and takes people as space opens.",
     reach:
@@ -234,7 +234,7 @@ export const MENTORS: Mentor[] = [
       "Those whose identity and work feel in tension",
     ],
     fitNot: [
-      "You're in acute crisis — this isn't therapy; see Wellbeing",
+      "You're in acute crisis. This isn't therapy; see Wellbeing",
       "You want tactical career-ladder advice only",
       "You need weekly clinical support",
     ],
@@ -243,8 +243,8 @@ export const MENTORS: Mentor[] = [
     commitment: "Waitlist intake",
     cadence: "Regular check-ins",
     howParas: [
-      "I keep this small and close to my clinical training, so I take people as space opens rather than all at once. When we work together, we go at the human side of your career — the parts that don't fit on a CV.",
-      "This isn't therapy, and I'll be clear about that line. But if work is where you've been hiding — burnout, coming out, the gap between who you are and what you do — this is the room to stop.",
+      "I keep this small and close to my clinical training, so I take people as space opens rather than all at once. When we work together, we go at the human side of your career, the parts that don't fit on a CV.",
+      "This isn't therapy, and I'll be clear about that line. But if work is where you've been hiding (burnout, coming out, the gap between who you are and what you do), this is the room to stop.",
     ],
     process: [
       {
@@ -313,8 +313,8 @@ export const MENTORS: Mentor[] = [
     commitment: "Quarterly intake",
     cadence: "Monthly + homework",
     howParas: [
-      "I take one mentee a quarter and I like structure. We start by turning your vague goal into an actual plan, then meet to keep you honest about it. Expect a little homework between calls — that's where the work happens.",
-      "I switched industries twice, so I know how scary and how doable a move is. I'm direct, I'm organised, and I'm best for people who want a map, not just encouragement.",
+      "I take one mentee a quarter and I like structure. We start by turning your vague goal into an actual plan, then meet to keep you honest about it. Expect a little homework between calls: that's where the work happens.",
+      "I switched industries twice, so I know how scary and how doable a move is. I'm direct, I'm organised, and I'm best for people who want a real map to follow.",
     ],
     process: [
       {
@@ -364,7 +364,7 @@ export const MENTORS: Mentor[] = [
     quote: "Funding and finishing are the hard parts. Making is the easy bit.",
     why: "Sofia makes documentaries and has navigated grants, co-productions, and the long middle of a creative project. She mentors people stuck in the part nobody warns you about.",
     charge:
-      "Barter — she'll mentor in exchange for help on her own projects (research, transcription, a second pair of eyes). Money never changes hands.",
+      "Barter: she'll mentor in exchange for help on her own projects (research, transcription, a second pair of eyes). Money never changes hands.",
     reach:
       "Request a match and tell her what you're working on. She prefers to meet in person at least once early on.",
     fitFor: [
@@ -382,7 +382,7 @@ export const MENTORS: Mentor[] = [
     commitment: "Project-length",
     cadence: "Through the project",
     howParas: [
-      "I mentor two people at a time, and it works best as a trade — I help with your project, you lend a hand on mine. Research, transcription, a second pair of eyes. Money never changes hands between us.",
+      "I mentor two people at a time, and it works best as a trade: I help with your project, you lend a hand on mine. Research, transcription, a second pair of eyes. Money never changes hands between us.",
       "Making is the easy part. Funding and finishing are where people stall, and that's exactly the stretch I've learned to survive. I'll meet you in the unglamorous middle.",
     ],
     process: [
@@ -394,7 +394,7 @@ export const MENTORS: Mentor[] = [
       {
         number: "02",
         title: "We meet in person, at least once",
-        description: "I like to start face to face if we can — a coffee, a walk. Some things only come out that way.",
+        description: "I like to start face to face if we can: a coffee, a walk. Some things only come out that way.",
       },
       {
         number: "03",
@@ -404,7 +404,7 @@ export const MENTORS: Mentor[] = [
       {
         number: "04",
         title: "Through the long middle",
-        description: "We check in on a rhythm through the hard part — funding, structure, the will to finish.",
+        description: "We check in on a rhythm through the hard part: funding, structure, the will to finish.",
       },
     ],
     price: {
@@ -442,7 +442,7 @@ export const MENTORS: Mentor[] = [
       "Advocacy-minded members",
     ],
     fitNot: [
-      "You need urgent legal representation — see Legal Resources",
+      "You need urgent legal representation: see Legal Resources",
       "You want help with a specific live case",
       "You're after billable legal advice",
     ],
@@ -451,7 +451,7 @@ export const MENTORS: Mentor[] = [
     commitment: "Quarterly intake",
     cadence: "As questions come",
     howParas: [
-      "I take one mentee a quarter and treat it as part of my advocacy. We work on the shape of a legal career, or on understanding rights you're trying to use — at work, with the state, in your own life.",
+      "I take one mentee a quarter and treat it as part of my advocacy. We work on the shape of a legal career, or on understanding rights you're trying to use: at work, with the state, in your own life.",
       "Knowing your rights is half of using them, so I'll help you see the map clearly. But if something's urgent or live, I'll point you straight to Legal Resources rather than make you wait for a match.",
     ],
     process: [
@@ -463,12 +463,12 @@ export const MENTORS: Mentor[] = [
       {
         number: "02",
         title: "A first call to place you",
-        description: "We work out what you actually need — mentorship, or a resource that will help you faster.",
+        description: "We work out what you actually need: mentorship, or a resource that will help you faster.",
       },
       {
         number: "03",
-        title: "Understanding, not dependence",
-        description: "The goal is that you leave able to read the situation yourself, not needing me to read it for you.",
+        title: "Understanding that lasts",
+        description: "The goal is that you leave able to read the situation yourself, handling it without me.",
       },
       {
         number: "04",

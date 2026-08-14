@@ -92,10 +92,10 @@ export function AdminApprovedPartners() {
                   </div>
                   <div className={styles.rowMeta}>
                     {partner.testimonialQuote
-                      ? `"${partner.testimonialQuote}" — ${
+                      ? `"${partner.testimonialQuote}" (${
                           partner.testimonialAuthor ??
                           t("admin:approvedPartners.unattributed")
-                        }`
+                        })`
                       : t("admin:approvedPartners.noTestimonial")}
                   </div>
                 </div>

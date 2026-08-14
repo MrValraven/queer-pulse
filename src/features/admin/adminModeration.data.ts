@@ -201,7 +201,7 @@ export const EMERGENCY_REPORTS: ModReport[] = [
     titleEm: "private trans status",
     titleAfter: "was posted in a public thread",
     preview:
-      '"Everyone should know that [name] used to go by…" — reported as deliberate outing in the Lisbon Queers open forum.',
+      '"Everyone should know that [name] used to go by…" Reported as deliberate outing in the Lisbon Queers open forum.',
     reporterName: "anonymous",
     reportedName: "@reblanco",
     priorReports: { kind: "count", count: 1 },
@@ -210,7 +210,7 @@ export const EMERGENCY_REPORTS: ModReport[] = [
     detail: {
       contentAuthor: "RB · @reblanco · in Lisbon Queers · public thread",
       excerpt:
-        '"Everyone should know that @[redacted name] used to go by a different name before transitioning — just so you all have the full picture of who you’re dealing with."',
+        '"Everyone should know that @[redacted name] used to go by a different name before transitioning, just so you all have the full picture of who you’re dealing with."',
       redactionNote:
         "A deadname has been automatically redacted from this view. The affected member’s legacy identity is never shown to moderators.",
       thread: [
@@ -234,7 +234,7 @@ export const EMERGENCY_REPORTS: ModReport[] = [
           initials: "TM",
           tone: "violet",
           time: "2:23pm",
-          body: "this is completely out of line — please take this down",
+          body: "this is completely out of line, please take this down",
         },
       ],
       people: [
@@ -349,9 +349,9 @@ export const OTHER_REPORTS: ModReport[] = [
     detail: {
       contentAuthor: "rosa-amarga-cafe · listed by @lreis",
       excerpt:
-        '"Rosa Amarga — a queer-owned café in Cedofeita. Coffee, zines and a small library. Open Wed–Sun."',
+        '"Rosa Amarga, a queer-owned café in Cedofeita. Coffee, zines and a small library. Open Wed–Sun."',
       disputeReason:
-        "I've run Rosa Amarga since we opened in 2022. This listing was created by someone who used to work a few shifts here and left last year — they've listed themselves as the owner and set the contact to their own number. I'd like the listing corrected and the ownership handed back to the café.",
+        "I've run Rosa Amarga since we opened in 2022. This listing was created by someone who used to work a few shifts here and left last year. They've listed themselves as the owner and set the contact to their own number. I'd like the listing corrected and the ownership handed back to the café.",
       listingEvidence:
         "Business registration (NIF 5xx xxx xxx) in my name, the lease for the Rua de Cedofeita space, and the café's verified Instagram (@rosaamarga) which links back to this profile. Happy to send scans to the safety team.",
       contactEmail: "ines@rosaamarga.pt",
@@ -414,11 +414,11 @@ export const APPEALS: Appeal[] = [
       by: "Inês M.",
       when: "2 days ago",
       reason:
-        '"Hostile comment in a public thread — restricted for a week after a prior warning."',
+        '"Hostile comment in a public thread: restricted for a week after a prior warning."',
       category: "coral",
     },
     argument:
-      '"That thread was three close friends roasting each other — we do it constantly. Whoever reported it doesn\'t know us. I get how it looked from outside, but muting me for a week feels heavy for an in-joke. Ask Théo or Sofia, they were there."',
+      '"That thread was three close friends roasting each other. We do it constantly. Whoever reported it doesn\'t know us. I get how it looked from outside, but muting me for a week feels heavy for an in-joke. Ask Théo or Sofia, they were there."',
     supporters: [
       { initials: "TM", name: "Théo M.", tone: "violet" },
       { initials: "SA", name: "Sofia A.", tone: "jade" },
@@ -446,7 +446,7 @@ export const APPEALS: Appeal[] = [
       category: "danger",
     },
     argument:
-      "\"The person who reported me started it — they'd been needling me for days. I snapped once and got removed; they're still posting. I'm not asking for them to be punished, just for someone to read the whole thread, not only my last message.\"",
+      "\"The person who reported me started it. They'd been needling me for days. I snapped once and got removed; they're still posting. I'm not asking for them to be punished, just for someone to read the whole thread, not only my last message.\"",
     supporters: [],
   },
   {
@@ -471,7 +471,7 @@ export const APPEALS: Appeal[] = [
       category: "coral",
     },
     argument:
-      "\"It was a GoFundMe for a member's top surgery, posted because someone asked how to help. I should've added context — that's on me — but calling it spam stings. Happy to repost it properly.\"",
+      "\"It was a GoFundMe for a member's top surgery, posted because someone asked how to help. I should've added context, that's on me, but calling it spam stings. Happy to repost it properly.\"",
     supporters: [{ initials: "KS", name: "Kai S.", tone: "plum" }],
   },
 ];
@@ -487,7 +487,7 @@ export const RESOLVED: ResolvedItem[] = [
     outcomeTone: "jade",
     title: "Harassment in Trans & Friends",
     preview:
-      'Resolved by Inês M. — "Repeated DMs after a clear no. Restricted for 7 days; member notified with the policy excerpt."',
+      'Resolved by Inês M., "Repeated DMs after a clear no. Restricted for 7 days; member notified with the policy excerpt."',
     closed: "Closed 2 min ago",
     notified: ["Member notified"],
     status: { tone: "jade", key: "admin:moderation.status.logged" },
@@ -500,7 +500,7 @@ export const RESOLVED: ResolvedItem[] = [
     outcomeTone: "coral",
     title: 'Reported "spam" was a member’s own event',
     preview:
-      'Dismissed by Júlia S. — "Genuine community gathering, not promotion. No action; reporter thanked for caution."',
+      'Dismissed by Júlia S., "Genuine community gathering, not promotion. No action; reporter thanked for caution."',
     closed: "Closed 1h ago",
     notified: ["Member notified", "Reporter notified"],
     status: { tone: "jade", key: "admin:moderation.status.logged" },
@@ -513,7 +513,7 @@ export const RESOLVED: ResolvedItem[] = [
     outcomeTone: "danger",
     title: "Doxxing with intent to intimidate",
     preview:
-      'Resolved by Júlia S. — "Address + threat. Content removed within 9 minutes, account banned, member offered safety resources."',
+      'Resolved by Júlia S., "Address + threat. Content removed within 9 minutes, account banned, member offered safety resources."',
     closed: "Closed yesterday",
     notified: ["Affected member supported"],
     status: { tone: "jade", key: "admin:moderation.status.logged" },

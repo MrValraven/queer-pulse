@@ -31,6 +31,10 @@ export interface BuildingItem {
   requested?: boolean;
   committed?: boolean;
   latestSlip?: RoadmapSlip | null;
+  /** Optional bullet list of the sub-features this item will bring — used for
+   *  a bundled surface (e.g. the Work & Economy hub) where one card stands in
+   *  for a whole cluster of pages. */
+  features?: string[];
 }
 
 export interface PlannedItem {
@@ -79,7 +83,7 @@ export const HERO_STATS: {
   jade?: boolean;
 }[] = [
   { label: "12 shipped this year", value: "12", note: "since launch", jade: true },
-  { label: "4 in progress", value: "4", note: "building now" },
+  { label: "5 in progress", value: "5", note: "building now" },
   { label: "5 planned", value: "5", note: "next up" },
 ];
 
@@ -126,6 +130,28 @@ export const SHIPPED: ShippedItem[] = [
 
 export const BUILDING: BuildingItem[] = [
   {
+    id: "work-and-economy",
+    category: "Work & Economy",
+    name: "Work & Economy hub",
+    description:
+      "A home for queer work and mutual aid: find jobs, mentors and grants, swap skills, and price your freelance work fairly. We're finishing it now and will open it soon.",
+    stage: "Coming soon",
+    eta: "~Q4 2026",
+    progress: 25,
+    features: [
+      "Job Board with queer-affirming employers",
+      "Skills & Learning workshops",
+      "Mentorship matching",
+      "Employer Reviews from the community",
+      "Skills Exchange for bartering time and talent",
+      "Solidarity Pricing tools",
+      "Grants for queer projects",
+      "How our economy works, explained",
+      "Offer a skill to the community",
+      "Your Work, a personal workspace",
+    ],
+  },
+  {
     id: "mobile-app-beta",
     category: "Platform",
     name: "Mobile app beta",
@@ -137,7 +163,7 @@ export const BUILDING: BuildingItem[] = [
     latestSlip: {
       from: "Q2 2026",
       to: "Q3 2026",
-      reason: "App Store review took longer than planned — wanted a stable build before opening the beta wider.",
+      reason: "App Store review took longer than planned: wanted a stable build before opening the beta wider.",
     },
   },
   {
@@ -185,14 +211,14 @@ export const PLANNED: PlannedItem[] = [
     id: "anon-qa",
     category: "Members",
     name: "Anonymous Q&A threads",
-    description: "Ask questions anonymously within communities. No names — just honest answers.",
+    description: "Ask questions anonymously within communities. No names, just honest answers.",
     votes: 98,
   },
   {
     id: "group-messaging",
     category: "Messaging",
     name: "Group messaging",
-    description: "Create threads with multiple members — for planning gatherings, projects, or just chatting.",
+    description: "Create threads with multiple members, for planning gatherings, projects, or just chatting.",
     votes: 76,
   },
   {
@@ -233,7 +259,7 @@ export const BACKLOG: BacklogItem[] = [
     id: "multi-language-ui",
     category: "Platform",
     name: "Multi-language interface",
-    description: "Beyond EN/PT — community-sourced translations for the whole app, not just the marketing pages.",
+    description: "Beyond EN/PT: community-sourced translations for the whole app, every screen beyond the marketing pages.",
     votes: 12,
   },
 ];
@@ -252,7 +278,7 @@ export const NOT_BUILDING: NotBuildingItem[] = [
     id: "not-dating-features",
     category: "Members",
     reason: "scope",
-    note: "General dating features are out of scope — QueerPulse focuses on community and connection, not matchmaking.",
+    note: "General dating features are out of scope. QueerPulse focuses on community and connection.",
     votes: 41,
   },
 ];

@@ -46,7 +46,7 @@ export const community: Catalog = {
   "caregivers.lesson.wrongThing.langs": "PT + EN",
   "caregivers.lesson.pronouns.title": "Pronouns & <em>names</em>, simply",
   "caregivers.lesson.pronouns.body":
-    "What to do, what not to do, what to do when you slip. <em>Not a politics piece — a practice one.</em> Written by Yara R.",
+    "What to do, what not to do, what to do when you slip. <em>A practical piece, on what to actually do.</em> Written by Yara R.",
   "caregivers.lesson.pronouns.readTime": "3 min read",
   "caregivers.lesson.pronouns.langs": "PT + EN",
   "caregivers.lesson.transitioning.title":
@@ -67,15 +67,15 @@ export const community: Catalog = {
   "caregivers.faq.childCameOut.q":
     "My child just came out and I don't know what to say. <em>Help.</em>",
   "caregivers.faq.childCameOut.a":
-    "<strong>Take a breath. Say \"thank you for telling me.\" Then ask \"is there anything you'd like from me right now?\"</strong> That's it. You don't need to know the language. You don't need to have a plan. <em>This is a long conversation, not a single one.</em> Come back later with questions — they will be ready, and the room is here too.",
+    "<strong>Take a breath. Say \"thank you for telling me.\" Then ask \"is there anything you'd like from me right now?\"</strong> That's it. You don't need to know the language. You don't need to have a plan. <em>This is a long conversation, one that continues.</em> Come back later with questions. They will be ready, and the room is here too.",
   "caregivers.faq.partnerTransitioning.q":
     "My partner is transitioning and I'm scared we'll grow apart.",
   "caregivers.faq.partnerTransitioning.a":
-    "This fear is shared by a lot of people in your position, and it's not shameful. <em>You're allowed to feel it.</em> What helps: talk to other partners who've been through this — see the support rooms below. What also helps: keep doing the small things that have always been yours together. Transition changes a lot. It doesn't have to change everything.",
+    "This fear is shared by a lot of people in your position, and it's not shameful. <em>You're allowed to feel it.</em> What helps: talk to other partners who've been through this, see the support rooms below. What also helps: keep doing the small things that have always been yours together. Transition changes a lot. It doesn't have to change everything.",
   "caregivers.faq.wrongPronouns.q":
     "I keep using the wrong pronouns. Will my friend forgive me?",
   "caregivers.faq.wrongPronouns.a":
-    "Probably. What helps most: correct yourself <em>without making it about you</em>. \"She — sorry, they — said.\" Move on. Don't apologise three sentences later. Don't ask them to absolve you. Just keep practising. <strong>The effort is what they'll remember.</strong>",
+    "Probably. What helps most: correct yourself <em>without making it about you</em>. \"She (sorry, they) said.\" Move on. Don't apologise three sentences later. Don't ask them to absolve you. Just keep practising. <strong>The effort is what they'll remember.</strong>",
   "caregivers.faq.grandchildQueer.q":
     "My grandchild is queer and my children won't speak to them. <em>What do I do?</em>",
   "caregivers.faq.grandchildQueer.a":
@@ -102,10 +102,10 @@ export const community: Catalog = {
   "caregivers.room.youthWorkers.meta": "14 in the room",
 
   // Caregivers — Don't say / Do say
-  "caregivers.dontDoSay.eyebrow": "— a small list —",
+  "caregivers.dontDoSay.eyebrow": "A small list",
   "caregivers.dontDoSay.heading": "Don't say. <em>Do say.</em>",
   "caregivers.dontDoSay.lead":
-    "A few of the things we wish people had been told. Not exhaustive, not a script — just a few opening moves that help.",
+    "A few of the things we wish people had been told. Just a few opening moves that help, offered lightly.",
   "caregivers.dontDoSay.dontHeading": "Don't <em>say</em>",
   "caregivers.dontDoSay.doHeading": "Do <em>say</em>",
   "caregivers.dontSay.1": '"Are you sure?"',
@@ -129,7 +129,7 @@ export const community: Catalog = {
   "changemakers.hero.title":
     "People making the future <em>liveable</em> for all of us.",
   "changemakers.hero.lead":
-    "They're not full-time activists. They're designers, lawyers, carers, and teachers who also happen to be changing things — neighbourhood by neighbourhood, policy by policy, one hard conversation at a time.",
+    "They're not full-time activists. They're designers, lawyers, carers, and teachers who also happen to be changing things: neighbourhood by neighbourhood, policy by policy, one hard conversation at a time.",
   "changemakers.stat.profiled": "Change makers profiled so far",
   "changemakers.stat.causeAreas": "Cause areas active in Lisbon",
   "changemakers.stat.peopleHelped": "People directly helped by their work",
@@ -150,9 +150,9 @@ export const community: Catalog = {
   "changemakers.nominate.namePlaceholder": "Their name…",
   "changemakers.nominate.submitCta": "Nominate them",
   "changemakers.nominate.submitPending": "Sending…",
-  "changemakers.nominate.successToast": "Thank you — we'll look into {name}.",
+  "changemakers.nominate.successToast": "Thank you. We'll look into {name}.",
   "changemakers.nominate.errorToast":
-    "Couldn't send your nomination — please try again.",
+    "Couldn't send your nomination. Please try again.",
 
   // ── Change Maker story page (ChangemakerStoryPage.tsx) ────────────────────
   "changemakerStory.backCta": "Change Makers",
@@ -174,7 +174,7 @@ export const community: Catalog = {
     "Create the first profile to start populating the public directory.",
   "changemakers.admin.statsTitle": "Hero stats",
   "changemakers.admin.statsHint":
-    "These two figures aren't derived from profiles — set them by hand.",
+    "These two figures aren't derived from profiles. Set them by hand.",
   "changemakers.admin.peopleHelpedLabel": "People helped",
   "changemakers.admin.activeCampaignsLabel": "Active campaigns",
   "changemakers.admin.statsSaveCta": "Save stats",
@@ -227,7 +227,7 @@ export const community: Catalog = {
   "comingOut.hero.eyebrow": "Coming-Out Support · Private space",
   "comingOut.hero.title": "A place to say it <em>before you say it.</em>",
   "comingOut.hero.lead":
-    'A private, low-visibility space for people navigating coming out — at work, to family, or to themselves. There\'s no pressure to be "out" to join, and nothing here is visible from your public profile.',
+    'A private, low-visibility space for people navigating coming out, at work, to family, or to themselves. There\'s no pressure to be "out" to join, and nothing here is visible from your public profile.',
   "comingOut.privacy.heading": "Built for <em>privacy</em>, first.",
   "comingOut.privacy.lead":
     "This space carries additional controls beyond the rest of QueerPulse. They exist so you can be here without it costing you anything elsewhere.",
@@ -242,22 +242,22 @@ export const community: Catalog = {
     "Stricter moderation, no screenshots, no outside sharing. The first rule and the last.",
   "comingOut.privacy.noPressure.title": 'No pressure to be "out"',
   "comingOut.privacy.noPressure.body":
-    "Join at any stage — including not-yet and not-sure. You can leave the moment you're ready.",
+    "Join at any stage, including not-yet and not-sure. You can leave the moment you're ready.",
   "comingOut.stages.heading": "However you <em>need to use it.</em>",
   "comingOut.stages.lead":
     "Facilitated with a light hand by Mariana, a clinical psychologist who holds confidentiality as the first rule and the last.",
   "comingOut.stage.readFirst.title": "Just for you, first",
   "comingOut.stage.readFirst.body":
-    "Some people only read. That's a full and valid way to be here — no one will ask you to post.",
+    "Some people only read. That's a full and valid way to be here. No one will ask you to post.",
   "comingOut.stage.saySafely.title": "Say it somewhere safe",
   "comingOut.stage.saySafely.body":
     "Try the words out loud here before you say them for real. The weekly circle holds space for exactly that.",
   "comingOut.stage.moveOn.title": "Move through, and out",
   "comingOut.stage.moveOn.body":
-    "People graduate out of this space when they no longer need it. That's the whole point — not a goodbye.",
+    "People graduate out of this space when they no longer need it. That's the whole point, not a goodbye.",
   "comingOut.outro.title": "You don't owe a <em>perfect speech.</em>",
   "comingOut.outro.sub":
-    "Saying the true thing badly is still saying the true thing. Enter the space whenever you're ready — and leave the moment you are.",
+    "Saying the true thing badly is still saying the true thing. Enter the space whenever you're ready, and leave the moment you are.",
   "comingOut.outro.enterCta": "Enter the space",
   "comingOut.outro.communitiesCta": "See all communities",
 
@@ -265,11 +265,11 @@ export const community: Catalog = {
   "dating.hero.cat": "Dating & Relationships · Lisbon",
   "dating.hero.title": "Connection, <em>on your own terms.</em>",
   "dating.hero.sub":
-    "The app landscape, dating culture in Lisbon, relationship structures, legal recognition — and where the community actually meets when it's not on a phone screen.",
+    "The app landscape, dating culture in Lisbon, relationship structures, legal recognition, and where the community actually meets when it's not on a phone screen.",
 
   "dating.apps.heading": "Apps in <em>Lisbon</em>",
   "dating.apps.lead":
-    "What the community actually uses — honest takes, not marketing copy.",
+    "What the community actually uses: honest takes from the community.",
   "dating.app.grindr.audience": "Gay & bi men · Trans masc",
   "dating.app.grindr.body":
     "Still the highest user density for gay and bi men in Lisbon. Works. The culture varies enormously by who's on at any given time.",
@@ -288,7 +288,7 @@ export const community: Catalog = {
     '"The Lisbon pool is smaller but the vibe is better. More likely to result in an actual conversation."',
   "dating.app.her.audience": "Queer women · Non-binary",
   "dating.app.her.body":
-    "The main app for queer women and non-binary people in Lisbon. Smaller pool but genuinely community-oriented — has event listings and groups beyond just dating.",
+    "The main app for queer women and non-binary people in Lisbon. Smaller pool but genuinely community-oriented: has event listings and groups beyond just dating.",
   "dating.app.her.tag1": "Community-first",
   "dating.app.her.tag2": "Events & groups",
   "dating.app.her.tag3": "All relationships",
@@ -296,7 +296,7 @@ export const community: Catalog = {
     '"Not huge in Lisbon but the quality of connections is better. Worth having alongside Tinder."',
   "dating.app.feeld.audience": "All genders · ENM · Kink-adjacent",
   "dating.app.feeld.body":
-    "The go-to for ethical non-monogamy, open relationships, and kink in Lisbon. Very identity-inclusive. Growing fast in the community — well-used at events and socials too.",
+    "The go-to for ethical non-monogamy, open relationships, and kink in Lisbon. Very identity-inclusive. Growing fast in the community. Well-used at events and socials too.",
   "dating.app.feeld.tag1": "ENM",
   "dating.app.feeld.tag2": "Kink-adjacent",
   "dating.app.feeld.tag3": "Identity-inclusive",
@@ -305,7 +305,7 @@ export const community: Catalog = {
     "\"Best app for anyone who doesn't want to fit into a neat box. The community here uses it more than anywhere I've lived.\"",
   "dating.app.hornet.audience": "Gay & bi men · Community-focused",
   "dating.app.hornet.body":
-    "More community-oriented than Grindr — has news, stories, and group features. Better for people who want to know the city as well as date in it. Active in Lisbon.",
+    "More community-oriented than Grindr: has news, stories, and group features. Better for people who want to know the city as well as date in it. Active in Lisbon.",
   "dating.app.hornet.tag1": "Community features",
   "dating.app.hornet.tag2": "Local news",
   "dating.app.hornet.tag3": "More than hookups",
@@ -325,13 +325,13 @@ export const community: Catalog = {
     "Things the community wishes someone had told them before they started dating here.",
   "dating.culture.smallCommunity.title": "It's a small community",
   "dating.culture.smallCommunity.text":
-    "Lisbon's queer community is intimate. You will meet the same people at events, through apps, and through friends within weeks of arriving. This is mostly wonderful — but it also means that how you treat people echoes. Be kind.",
+    "Lisbon's queer community is intimate. You will meet the same people at events, through apps, and through friends within weeks of arriving. This is mostly wonderful. But it also means that how you treat people echoes. Be kind.",
   "dating.culture.slowerPace.title": "Pace is slower",
   "dating.culture.slowerPace.text":
-    "Portuguese social and dating culture is generally slower than northern European or North American norms. Expect longer warm-up periods, more emphasis on in-person chemistry, and less pressure to define things quickly. This is a feature, not a bug.",
+    "Portuguese social and dating culture is generally slower than northern European or North American norms. Expect longer warm-up periods, more emphasis on in-person chemistry, and less pressure to define things quickly. This is part of the appeal.",
   "dating.culture.languageGap.title": "The language gap is real",
   "dating.culture.languageGap.text":
-    "Dating across a language barrier is a specific experience. Some people find it freeing; others find it exhausting. The queer expat community is large enough that you can absolutely date within it — but you'll miss the broader community if you only date other expats.",
+    "Dating across a language barrier is a specific experience. Some people find it freeing; others find it exhausting. The queer expat community is large enough that you can absolutely date within it. But you'll miss the broader community if you only date other expats.",
   "dating.culture.eventsMatter.title": "Events are how people actually meet",
   "dating.culture.eventsMatter.text":
     "Apps matter less here than in some cities. A significant portion of relationships in the QueerPulse community started at a community event, through a mutual introduction, or at a forum gathering. Show up to things.",
@@ -342,7 +342,7 @@ export const community: Catalog = {
   "dating.structure.monogamy.label": "Monogamy",
   "dating.structure.monogamy.title": "One person, fully",
   "dating.structure.monogamy.text":
-    "Completely valid and common. The community doesn't assume non-monogamy is more progressive — it's a preference, not a hierarchy. The legal protections in Portugal are strongest for married monogamous couples, which is worth knowing if legal recognition matters to you.",
+    "Completely valid and common. The community doesn't assume non-monogamy is more progressive. It's simply a preference. The legal protections in Portugal are strongest for married monogamous couples, which is worth knowing if legal recognition matters to you.",
   "dating.structure.enm.label": "Ethical non-monogamy",
   "dating.structure.enm.title": "Open relationships",
   "dating.structure.enm.text":
@@ -350,24 +350,24 @@ export const community: Catalog = {
   "dating.structure.polyamory.label": "Polyamory",
   "dating.structure.polyamory.title": "Multiple loving relationships",
   "dating.structure.polyamory.text":
-    "A distinct culture from ENM — more focused on multiple committed relationships than open/casual structures. There's an active poly community in Lisbon with regular social events and forum support. Legally complex in Portugal — particularly for housing, healthcare, and family situations.",
+    "A distinct culture from ENM, more focused on multiple committed relationships than open/casual structures. There's an active poly community in Lisbon with regular social events and forum support. Legally complex in Portugal, particularly for housing, healthcare, and family situations.",
   "dating.structure.relationshipAnarchy.label": "Relationship anarchy",
   "dating.structure.relationshipAnarchy.title": "No hierarchy, no rules",
   "dating.structure.relationshipAnarchy.text":
-    "Relationships defined entirely by the people in them, without reference to conventional categories. RA is quietly common in the Lisbon queer community — most people won't call it that, but the practice is widespread.",
+    "Relationships defined entirely by the people in them, without reference to conventional categories. RA is quietly common in the Lisbon queer community. Most people won't call it that, but the practice is widespread.",
   "dating.structure.queerplatonic.label": "Queerplatonic",
   "dating.structure.queerplatonic.title": "Deep non-romantic partnership",
   "dating.structure.queerplatonic.text":
-    "A committed, close relationship without romantic or sexual components. QPRs can include cohabitation, shared finances, and the kind of partnership that marriage typically describes — just without the romantic framing. Increasingly visible in the community.",
+    "A committed, close relationship without romantic or sexual components. QPRs can include cohabitation, shared finances, and the kind of partnership that marriage typically describes, just without the romantic framing. Increasingly visible in the community.",
   "dating.structure.soloPolyamory.label": "Solo polyamory",
   "dating.structure.soloPolyamory.title": "Your own anchor",
   "dating.structure.soloPolyamory.text":
-    'Multiple connections without a primary partner or "escalator" trajectory. Common among people who moved to Lisbon independently and value their autonomy. Works well with the city\'s social rhythm — events and community without cohabitation pressure.',
+    'Multiple connections without a primary partner or "escalator" trajectory. Common among people who moved to Lisbon independently and value their autonomy. Works well with the city\'s social rhythm: events and community without cohabitation pressure.',
 
   "dating.recognition.heading": "Legal <em>recognition in Portugal</em>",
   "dating.recognition.sameSexMarriage.title": "Same-sex marriage",
   "dating.recognition.sameSexMarriage.text":
-    "Full legal recognition since 2010. All the same rights as opposite-sex marriage — inheritance, residency, healthcare decisions, joint adoption.",
+    "Full legal recognition since 2010. All the same rights as opposite-sex marriage: inheritance, residency, healthcare decisions, joint adoption.",
   "dating.recognition.sameSexMarriage.status": "Full recognition since 2010",
   "dating.recognition.civilPartnership.title":
     "Civil partnership / União de facto",
@@ -378,18 +378,18 @@ export const community: Catalog = {
   "dating.recognition.nonMonogamous.text":
     "No legal recognition for multiple-partner relationships. Practical solutions exist (wills, powers of attorney, cohabitation agreements) but require deliberate legal planning.",
   "dating.recognition.nonMonogamous.status":
-    "No automatic recognition — plan ahead",
+    "No automatic recognition: plan ahead",
   "dating.recognition.legalCta": "Legal advice for relationships",
 
   "dating.social.heading": "Meet people <em>in person.</em>",
   "dating.social.lead":
-    "Apps are fine. But the QueerPulse community tends to actually meet at events — socials, dinners, gatherings specifically for connection. Less transactional than a dating app; more honest about what you're there for.",
+    "Apps are fine. But the QueerPulse community tends to actually meet at events: socials, dinners, gatherings specifically for connection. Less transactional than a dating app; more honest about what you're there for.",
   "dating.social.upcomingEventsCta": "See upcoming events",
   "dating.social.forumThreadCta": "Social forum thread",
   "dating.event.singlesDinner.name": "Queer Singles Dinner",
   "dating.event.singlesDinner.detail": "Monthly · Mouraria · 12–16 people",
   "dating.event.singlesDinner.note":
-    "Hosted dinners for single members. No agenda, no pressure — just a good meal and the chance to meet people properly.",
+    "Hosted dinners for single members. No agenda, no pressure: just a good meal and the chance to meet people properly.",
   "dating.event.enmPolySocial.name": "ENM & Poly Social",
   "dating.event.enmPolySocial.detail": "Bi-monthly · Arroios · Ongoing",
   "dating.event.enmPolySocial.note":
@@ -408,13 +408,13 @@ export const community: Catalog = {
   "family.hero.cat": "Family Building · Portugal",
   "family.hero.title": "Building your family, <em>your way.</em>",
   "family.hero.sub":
-    "Practical, honest information about adoption, assisted reproduction, co-parenting, and legal parenthood in Portugal — from the community, for the community.",
+    "Practical, honest information about adoption, assisted reproduction, co-parenting, and legal parenthood in Portugal. From the community, for the community.",
   "family.hero.legalNote":
-    "Community information, not legal advice. Laws change — always verify with a specialist.",
+    "Community information to start from. Laws change, so always verify with a specialist.",
 
   "family.situations.heading": "Where are you <em>starting from?</em>",
   "family.situations.lead":
-    "Optional — pick a situation to highlight what's most relevant, or just browse everything below. No need to decide anything to read.",
+    "Optional: pick a situation to highlight what's most relevant, or just browse everything below. No need to decide anything to read.",
   "family.situation.twoWomen.name": "Two women",
   "family.situation.twoWomen.desc":
     "IVF or IUI with donor sperm, joint legal parenthood from birth.",
@@ -439,7 +439,7 @@ export const community: Catalog = {
   "family.situation.lookingForCoparent.desc":
     "Community-matched co-parenting, legal frameworks, shared custody.",
   "family.situation.lookingForCoparent.to": "See: Co-parenting",
-  "family.browseFreely.cta": "I'm just exploring — show me everything",
+  "family.browseFreely.cta": "I'm just exploring, show me everything",
 
   "family.tab.adoption.label": "Adoption",
   "family.tab.ivf.label": "IVF & Assisted Reproduction",
@@ -449,7 +449,7 @@ export const community: Catalog = {
 
   "family.tab.adoption.headTitle": "Adoption in <em>Portugal</em>",
   "family.tab.adoption.headText":
-    "Same-sex couples have had full adoption rights in Portugal since October 2016, including joint adoption and stepchild adoption. The process is long but navigable — here's what the community has learned.",
+    "Same-sex couples have had full adoption rights in Portugal since October 2016, including joint adoption and stepchild adoption. The process is long but navigable. Here's what the community has learned.",
   "family.tab.adoption.card.law.eyebrow": "The law",
   "family.tab.adoption.card.law.title": "Who can adopt",
   "family.tab.adoption.card.law.body":
@@ -457,7 +457,7 @@ export const community: Catalog = {
   "family.tab.adoption.card.process.eyebrow": "The process",
   "family.tab.adoption.card.process.title": "How it works",
   "family.tab.adoption.card.process.body":
-    "Applications go through SCML (Santa Casa da Misericórdia de Lisboa) or your local Social Security office. You'll have interviews, a home study, and background checks. The process is the same for same-sex couples — though experiences vary.",
+    "Applications go through SCML (Santa Casa da Misericórdia de Lisboa) or your local Social Security office. You'll have interviews, a home study, and background checks. The process is the same for same-sex couples, though experiences vary.",
   "family.tab.adoption.card.process.note": "Typical timeline: 12–36 months",
   "family.tab.adoption.card.international.eyebrow": "International adoption",
   "family.tab.adoption.card.international.title": "Adopting from abroad",
@@ -475,22 +475,22 @@ export const community: Catalog = {
 
   "family.tab.ivf.headTitle": "IVF & <em>Assisted Reproduction</em>",
   "family.tab.ivf.headText":
-    "Portugal has some of the most progressive assisted reproduction laws in Europe. Since 2016, IVF and IUI are available to all women — including single women and female same-sex couples — through both the public SNS and private clinics.",
+    "Portugal has some of the most progressive assisted reproduction laws in Europe. Since 2016, IVF and IUI are available to all women, including single women and female same-sex couples, through both the public SNS and private clinics.",
   "family.tab.ivf.card.public.eyebrow": "Public (SNS)",
   "family.tab.ivf.card.public.title": "What the state covers",
   "family.tab.ivf.card.public.body":
-    "SNS covers assisted reproduction (IVF, IUI) for women up to age 40, including female same-sex couples. Treatment is heavily subsidised. Waitlists can be long — 12–24 months in Lisbon. Hospital de Santa Maria and Maternidade Alfredo da Costa are the main centres.",
+    "SNS covers assisted reproduction (IVF, IUI) for women up to age 40, including female same-sex couples. Treatment is heavily subsidised. Waitlists can be long: 12–24 months in Lisbon. Hospital de Santa Maria and Maternidade Alfredo da Costa are the main centres.",
   "family.tab.ivf.card.public.note": "Average co-pay: €200–600 per cycle",
   "family.tab.ivf.card.private.eyebrow": "Private clinics",
   "family.tab.ivf.card.private.title": "Going private",
   "family.tab.ivf.card.private.body":
-    "Private clinics are significantly faster and offer more treatment flexibility. Costs range from €3,000–7,000 per IVF cycle, less for IUI. Several Lisbon clinics are known for experience with LGBTQ+ patients — community recommendations below.",
+    "Private clinics are significantly faster and offer more treatment flexibility. Costs range from €3,000–7,000 per IVF cycle, less for IUI. Several Lisbon clinics are known for experience with LGBTQ+ patients: community recommendations below.",
   "family.tab.ivf.card.private.note": "IUI: €800–1,500 · IVF: €3,000–7,000",
   "family.tab.ivf.card.transMen.eyebrow": "Trans men",
   "family.tab.ivf.card.transMen.title":
     "If you haven't had reproductive surgery",
   "family.tab.ivf.card.transMen.body":
-    "Trans men who haven't had reproductive surgeries can access egg freezing or IVF. Portuguese clinics vary in experience — ask specifically. Legal gender recognition does not affect access to fertility treatment. Community members have documented their experiences in the forum.",
+    "Trans men who haven't had reproductive surgeries can access egg freezing or IVF. Portuguese clinics vary in experience. Ask specifically. Legal gender recognition does not affect access to fertility treatment. Community members have documented their experiences in the forum.",
   "family.tab.ivf.card.transMen.linkLabel": "Trans Hub resources",
   "family.tab.ivf.card.surrogacy.eyebrow": "Surrogacy",
   "family.tab.ivf.card.surrogacy.title": "A complex landscape",
@@ -501,17 +501,17 @@ export const community: Catalog = {
   "family.tab.ivf.reviewHead": "Community-recommended <em>clinics</em>",
 
   "family.tab.coparenting.headTitle":
-    "Co-parenting — <em>together, differently</em>",
+    "Co-parenting: <em>together, differently</em>",
   "family.tab.coparenting.headText":
-    "Co-parenting means raising a child with someone you're not in a romantic relationship with. It can work beautifully with clear agreements, honest communication, and legal frameworks that protect everyone — including the child.",
+    "Co-parenting means raising a child with someone you're not in a romantic relationship with. It can work beautifully with clear agreements, honest communication, and legal frameworks that protect everyone, including the child.",
   "family.tab.coparenting.card.whatItMeans.eyebrow": "What it means",
   "family.tab.coparenting.card.whatItMeans.title": "How co-parenting works",
   "family.tab.coparenting.card.whatItMeans.body":
-    "Two or more people agree to parent a child together without being a couple. Arrangements vary enormously — from a single primary home with regular visits, to fully shared 50/50 custody. What matters is that agreements are clear, documented, and legally robust before the child is born.",
+    "Two or more people agree to parent a child together without being a couple. Arrangements vary enormously: from a single primary home with regular visits, to fully shared 50/50 custody. What matters is that agreements are clear, documented, and legally robust before the child is born.",
   "family.tab.coparenting.card.findingCoparent.eyebrow": "Finding a co-parent",
   "family.tab.coparenting.card.findingCoparent.title": "Within the community",
   "family.tab.coparenting.card.findingCoparent.body":
-    "QueerPulse runs a Co-parent Connections board for members who want to find a co-parent within the community. It's not a matching algorithm — it's a notice board. Post your intentions, meet people over time, have honest conversations before anything is decided.",
+    "QueerPulse runs a Co-parent Connections board for members who want to find a co-parent within the community. It's a notice board. Post your intentions, meet people over time, have honest conversations before anything is decided.",
   "family.tab.coparenting.card.findingCoparent.linkLabel":
     "Co-parent Connections board",
   "family.tab.coparenting.card.legalFrameworks.eyebrow": "Legal frameworks",
@@ -532,20 +532,20 @@ export const community: Catalog = {
 
   "family.tab.donors.headTitle": "Donor <em>questions</em>",
   "family.tab.donors.headText":
-    "Whether you're thinking about a known or unknown donor, sperm or egg donation — the legal implications vary significantly depending on your situation. Here's a clear-eyed overview.",
+    "Whether you're thinking about a known or unknown donor, sperm or egg donation, the legal implications vary significantly depending on your situation. Here's a clear-eyed overview.",
   "family.tab.donors.card.knownVsUnknown.eyebrow": "Known vs. unknown",
   "family.tab.donors.card.knownVsUnknown.title": "A fundamental choice",
   "family.tab.donors.card.knownVsUnknown.body":
-    "An unknown donor means the clinic handles everything; legal parenthood does not attach to the donor. A known donor is more complex legally — they may or may not have parental rights, depending on what agreements are in place before donation. This is where legal advice is most important.",
+    "An unknown donor means the clinic handles everything; legal parenthood does not attach to the donor. A known donor is more complex legally: they may or may not have parental rights, depending on what agreements are in place before donation. This is where legal advice is most important.",
   "family.tab.donors.card.spermDonation.eyebrow": "Sperm donation",
   "family.tab.donors.card.spermDonation.title": "Options in Portugal",
   "family.tab.donors.card.spermDonation.body":
-    "Sperm donation is available through licensed fertility clinics (anonymous bank donors) or via known donors with legal documentation. Home insemination using a known donor sits in a legal grey area — parenthood claims are uncertain without clinic involvement and prior legal agreements.",
+    "Sperm donation is available through licensed fertility clinics (anonymous bank donors) or via known donors with legal documentation. Home insemination using a known donor sits in a legal grey area: parenthood claims are uncertain without clinic involvement and prior legal agreements.",
   "family.tab.donors.card.eggDonation.eyebrow": "Egg donation",
   "family.tab.donors.card.eggDonation.title":
     "For same-sex couples and single men",
   "family.tab.donors.card.eggDonation.body":
-    "Egg donation is available through licensed private clinics in Portugal. Donors are anonymous under Portuguese law. Wait times for matched donors vary — 3–12 months is typical. The birth mother (or gestational carrier) is the legal mother unless an alternative legal route is established.",
+    "Egg donation is available through licensed private clinics in Portugal. Donors are anonymous under Portuguese law. Wait times for matched donors vary: 3–12 months is typical. The birth mother (or gestational carrier) is the legal mother unless an alternative legal route is established.",
   "family.tab.donors.card.legalParenthood.eyebrow": "Legal parenthood",
   "family.tab.donors.card.legalParenthood.title": "Who is the legal parent?",
   "family.tab.donors.card.legalParenthood.body":
@@ -555,7 +555,7 @@ export const community: Catalog = {
 
   "family.tab.legal.headTitle": "Legal <em>parenthood</em>",
   "family.tab.legal.headText":
-    "Portuguese law has advanced significantly in recent years. Since 2022, both same-sex parents can be registered at birth without adoption in most cases. Here's what that means in practice — and where gaps remain.",
+    "Portuguese law has advanced significantly in recent years. Since 2022, both same-sex parents can be registered at birth without adoption in most cases. Here's what that means in practice, and where gaps remain.",
   "family.tab.legal.card.birthRegistration.eyebrow": "Birth registration",
   "family.tab.legal.card.birthRegistration.title":
     "Both parents on the certificate",
@@ -573,13 +573,13 @@ export const community: Catalog = {
   "family.tab.legal.card.transParents.title":
     "Gender recognition and parenthood",
   "family.tab.legal.card.transParents.body":
-    "A trans man who gives birth is legally the father if his legal gender has been changed to male. A trans woman whose partner carries the child can be registered as the mother. Portuguese law has accommodated these situations, though administrative practice varies — document everything.",
+    "A trans man who gives birth is legally the father if his legal gender has been changed to male. A trans woman whose partner carries the child can be registered as the mother. Portuguese law has accommodated these situations, though administrative practice varies. Document everything.",
   "family.tab.legal.card.transParents.linkLabel": "Trans Hub legal resources",
   "family.tab.legal.card.secondParentAdoption.eyebrow":
     "Second-parent adoption",
   "family.tab.legal.card.secondParentAdoption.title": "Still a valid route",
   "family.tab.legal.card.secondParentAdoption.body":
-    "Second-parent adoption remains available and is sometimes the clearer option — especially for children born before the 2022 updates, or in complex international situations. It also applies to children born in other countries whose parentage Portugal may not automatically recognise.",
+    "Second-parent adoption remains available and is sometimes the clearer option, especially for children born before the 2022 updates, or in complex international situations. It also applies to children born in other countries whose parentage Portugal may not automatically recognise.",
   "family.tab.legal.step.legalStatus.title":
     "Establish your legal status as a couple",
   "family.tab.legal.step.legalStatus.text":
@@ -608,7 +608,7 @@ export const community: Catalog = {
 
   "family.talk.heading": "Talk to someone who's <em>been there.</em>",
   "family.talk.body":
-    "The Queer Parent Network connects people who are building families with members who've already been through it — same routes, similar situations. Not professionals. Just people who've done it and want to help.",
+    "The Queer Parent Network connects people who are building families with members who've already been through it: same routes, similar situations. Not professionals. Just people who've done it and want to help.",
   "family.talk.findMentorCta": "Find a peer mentor",
   "family.talk.networkCta": "Queer Parent Network",
   "family.talk.forumCta.heading": "Questions the page <em>doesn't answer?</em>",
@@ -630,7 +630,7 @@ export const community: Catalog = {
   "parentNetwork.heading":
     "For the families <em>often overlooked</em> in queer spaces.",
   "parentNetwork.lead":
-    "LGBTQ+ parents, co-parents, and people navigating parenthood — biological, adoptive, chosen, and everything in between. Less a forum, more a standing arrangement between families who help each other through the practical and the heavy alike.",
+    "LGBTQ+ parents, co-parents, and people navigating parenthood: biological, adoptive, chosen, and everything in between. Less a forum, more a standing arrangement between families who help each other through the practical and the heavy alike.",
   "parentNetwork.stat.parents": "parents & co-parents",
   "parentNetwork.stat.meetups": "meetups a month",
   "parentNetwork.stat.kids": "kids in the playdate group",
@@ -645,7 +645,7 @@ export const community: Catalog = {
     "A standing playdate group, swap-sitting between trusted members, and weekend gatherings where no one has to explain their family.",
   "parentNetwork.offer.vent.title": "A place to vent",
   "parentNetwork.offer.vent.body":
-    "Co-parenting logistics, surrogacy and adoption journeys, and the small daily things — with people who actually get it.",
+    "Co-parenting logistics, surrogacy and adoption journeys, and the small daily things, with people who actually get it.",
   "parentNetwork.comingUp.heading": "Coming up <em>soon.</em>",
   "parentNetwork.comingUp.lead":
     "Most months bring a daytime playdate and an evening for the grown-ups. Kids welcome unless we say otherwise.",
@@ -670,7 +670,7 @@ export const community: Catalog = {
     "Every group chooses its own reading. We do not tell you what matters.",
   "readingGroups.why.small.title": "Small by design",
   "readingGroups.why.small.desc":
-    "Groups cap at 6–8 people. Real conversations, not lectures.",
+    "Groups cap at 6–8 people. Real conversations among a small group.",
   "readingGroups.why.mixed.title": "Mixed formats",
   "readingGroups.why.mixed.desc":
     "In-person in cafés and homes. Online for those outside Lisbon or with access needs.",
@@ -691,11 +691,11 @@ export const community: Catalog = {
   "readingGroups.card.formatPrefix.online": "Online · ",
   "readingGroups.empty.title": "No groups match those filters",
   "readingGroups.empty.description":
-    "Nothing fits this genre and format combination yet — try widening your filters, or start a group around the book you want to read.",
+    "Nothing fits this genre and format combination yet. Try widening your filters, or start a group around the book you want to read.",
   "readingGroups.empty.clearFiltersCta": "Clear filters",
   "readingGroups.liveEmpty.title": "No reading groups yet",
   "readingGroups.liveEmpty.description":
-    "No groups have been listed yet. Be the first — propose one below and gather your people around a book.",
+    "No groups have been listed yet. Be the first: propose one below and gather your people around a book.",
   "readingGroups.outro.title": "Books build <em>community.</em>",
   "readingGroups.outro.sub":
     "QueerPulse reading groups have been running since 2024. Some have turned into friendships, some into collaborations, two into bands.",
@@ -713,7 +713,7 @@ export const community: Catalog = {
 
   "readingGroups.waitlist.heading": "You're on the <em>waitlist.</em>",
   "readingGroups.waitlist.sub":
-    "We'll let you know the moment a spot opens up — no need to keep checking back.",
+    "We'll let you know the moment a spot opens up. No need to keep checking back.",
   "readingGroups.waitlist.position": "You're #{position}",
 
   "readingGroups.listGroup.heading": "Start your <em>own group.</em>",
@@ -721,10 +721,10 @@ export const community: Catalog = {
     "Pick a book. Say how many people you want. Say where and when. We will list it here and match you with members who want to read the same thing.",
   "readingGroups.listGroup.bookLabel": "Book title & author",
   "readingGroups.listGroup.bookPlaceholder":
-    "e.g. Giovanni's Room — James Baldwin",
+    "e.g. Giovanni's Room by James Baldwin",
   "readingGroups.listGroup.whyLabel": "Why this book?",
   "readingGroups.listGroup.whyPlaceholder":
-    "One sentence — what made you choose it?",
+    "One sentence: what made you choose it?",
   "readingGroups.listGroup.formatLabel": "Format",
   "readingGroups.listGroup.formatOption.inPerson": "In-person",
   "readingGroups.listGroup.formatOption.online": "Online",
@@ -733,9 +733,9 @@ export const community: Catalog = {
   "readingGroups.listGroup.submitCta": "List my group",
   "readingGroups.listGroup.submitPending": "Listing…",
   "readingGroups.listGroup.successToast":
-    "Group listed — we'll find your readers",
+    "Group listed. We'll find your readers",
   "readingGroups.listGroup.errorToast":
-    "Couldn't list your group — please try again.",
+    "Couldn't list your group. Please try again.",
   "readingGroups.listGroup.successHeading": "Your group is <em>listed.</em>",
   "readingGroups.listGroup.successBody":
     "<strong>{book}</strong> is live at the top of the directory. We'll start matching you with members who want to read the same thing.",

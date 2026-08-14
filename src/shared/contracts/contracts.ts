@@ -9,6 +9,7 @@ import type {
   SubmissionStatus,
   Visibility,
 } from "./enums";
+import type { CropRect } from "../components/ui/cropGeometry";
 
 export type ReportSubjectType =
   | "user"
@@ -263,6 +264,10 @@ export interface ConversationResponse {
   title: string | null;
   /** Group avatar URL (null for DMs). */
   avatarUrl: string | null;
+  /** Saved reframe crop for `avatarUrl` (fractions of the source image),
+   *  when the group's avatar was cropped in the reframe editor. Null/absent
+   *  for DMs and for an uncropped group avatar. */
+  avatarCrop?: CropRect | null;
   /** Active member count for a group; 0 for DMs. */
   memberCount: number;
   /** Group member roster (empty for DMs). */

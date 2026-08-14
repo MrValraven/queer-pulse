@@ -2,7 +2,7 @@ import { PageShell } from "../../shared/components/layout";
 import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { HOW } from "./solidarity.data";
 import { SolidarityDirectory } from "./SolidarityDirectory";
 import styles from "./SolidarityPage.module.css";
@@ -55,7 +55,7 @@ export function SolidarityPage() {
         }
         sub={t("economy:solidarity.outro.sub")}
       >
-        <Button to={routes.requestInvite} variant="primary" size="lg">
+        <Button to={requestInvitePath("solidarity")} variant="primary" size="lg">
           {t("economy:solidarity.outro.cta")}
         </Button>
       </Outro>

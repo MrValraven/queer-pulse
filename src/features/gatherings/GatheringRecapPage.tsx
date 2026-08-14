@@ -2,7 +2,12 @@ import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { FiCamera, FiCheck } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import { EmptyState, SkeletonLine } from "../../shared/components/ui";
+import {
+  EmptyState,
+  PhotoReframeModal,
+  SkeletonLine,
+} from "../../shared/components/ui";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useFormat } from "../../shared/i18n/format";
@@ -128,6 +133,7 @@ function DemoGatheringRecap() {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [submittedPhotos, setSubmittedPhotos] = useState<SubmittedPhoto[]>([]);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
 
   // "Submit yours" opens a real file picker. The picked file is validated,
   // EXIF-stripped and uploaded (durable in live mode); the caption is then
@@ -144,11 +150,11 @@ function DemoGatheringRecap() {
   // preview is revoked here. Anything actually added to the gallery is left
   // for `useUploadImage`'s own unmount sweep to revoke when this page goes
   // away.
-  async function handleFile(file: File | undefined) {
-    if (!file) return;
+  /** Shared tail of both upload paths (direct GIF path + post-reframe path). */
+  async function uploadAndStage(file: File, crop?: CropRect) {
     setUploading(true);
     try {
-      const { key, previewUrl } = await uploadPhoto(file);
+      const { key, previewUrl } = await uploadPhoto(file, { crop });
       if (uploadedPhoto.current) {
         URL.revokeObjectURL(uploadedPhoto.current.previewUrl);
       }
@@ -164,6 +170,24 @@ function DemoGatheringRecap() {
     } finally {
       setUploading(false);
     }
+  }
+
+  function handleFile(file: File | undefined) {
+    if (!file) return;
+    // GIFs bypass the reframer entirely (animation would be destroyed by the
+    // crop/re-encode path) and upload directly, as before.
+    if (file.type === "image/gif") {
+      void uploadAndStage(file);
+      return;
+    }
+    setPendingFile(file);
+  }
+
+  async function handleCropConfirmed(crop: CropRect) {
+    if (!pendingFile) return;
+    const fileToUpload = pendingFile;
+    setPendingFile(null);
+    await uploadAndStage(fileToUpload, crop);
   }
 
   function addPhoto(photo: RecapPhoto) {
@@ -185,7 +209,7 @@ function DemoGatheringRecap() {
         <div className="wrap">
           <div className={styles.eyebrow}>{t("gatherings:recap.eyebrow")}</div>
           <div className={styles.title}>
-            {RECAP_EVENT_TITLE} — <em>{RECAP_EVENT_SUBTITLE}</em>
+            {RECAP_EVENT_TITLE}: <em>{RECAP_EVENT_SUBTITLE}</em>
           </div>
           <div className={styles.meta}>
             {fmt.date(RECAP_EVENT_DATE, {
@@ -231,7 +255,7 @@ function DemoGatheringRecap() {
         hidden
         aria-label={t("gatherings:recap.submitYoursCta")}
         onChange={(e) => {
-          void handleFile(e.target.files?.[0]);
+          handleFile(e.target.files?.[0]);
           e.target.value = "";
         }}
       />
@@ -240,6 +264,15 @@ function DemoGatheringRecap() {
         <PhotoUploadModal
           onClose={() => setUploadOpen(false)}
           onSubmit={addPhoto}
+        />
+      )}
+
+      {pendingFile && (
+        <PhotoReframeModal
+          file={pendingFile}
+          kind="gathering-photo"
+          onCancel={() => setPendingFile(null)}
+          onConfirm={(crop) => void handleCropConfirmed(crop)}
         />
       )}
     </AppShell>

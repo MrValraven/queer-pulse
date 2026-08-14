@@ -22,7 +22,7 @@ export function StudioFundFlows() {
             a trust commitment (§6 of the i18n sweep brief), left for a native
             pt-PT reviewer. Renders in English via the fallback chain. */}
         No new fee funds this. It's the overflow of a system designed to
-        overflow toward people —{" "}
+        overflow toward people:{" "}
         <em>never the artist's 80%, never your tips</em>.
       </div>
       <div className={s.flow2}>

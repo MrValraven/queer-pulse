@@ -6,7 +6,7 @@ import type { Catalog } from "../../types";
  * Notas de tradução:
  * - Registo `tu`, caloroso, nunca `você`.
  * - "Members" → *pessoas*, nunca *membros*. "Vouching member" → *pessoa
- *   avalizadora* (do verbo *avalizar*, já glossado).
+ *   que dá votos de confiança* (verbo: *dar um voto de confiança*).
  * - Onde uma frase teria de genderizar um particípio dirigido a quem lê
  *   ("convidado/a", "avisado/a"), preferimos reformular sem participio
  *   (verbo pessoal: "convidou-te", "vais receber um aviso") em vez de recorrer
@@ -39,7 +39,7 @@ export const system: Catalog = {
   "notFound.links.help.label": "Ajuda e perguntas frequentes",
   "notFound.links.help.sub": "Encontra respostas",
   "notFound.links.contact.label": "Contacta-nos",
-  "notFound.links.contact.sub": "hello@queerpulse.pt",
+  "notFound.links.contact.sub": "hello@queerpulse.com",
   "notFound.searchPlaceholder": "Pesquisar na plataforma…",
   "notFound.searchCta": "Pesquisar",
 
@@ -47,7 +47,7 @@ export const system: Catalog = {
   "placeholder.eyebrow": "Brevemente",
   "placeholder.title": "{title} está <em>a caminho.</em>",
   "placeholder.sub":
-    "Esta parte da QueerPulse ainda está a ser construída. A página inicial já está no ar — explora as pessoas, os convívios e a comunidade por lá, entretanto.",
+    "Esta parte da QueerPulse ainda está a ser construída. A página inicial já está no ar. Explora as pessoas, os convívios e a comunidade por lá, entretanto.",
   "placeholder.backCta": "Voltar ao início",
 
   // ── AccountBannedPage.tsx ─────────────────────────────────────────────────
@@ -59,10 +59,10 @@ export const system: Catalog = {
     "A tua subscrição Sustainer ativa foi <b>reembolsada proporcionalmente</b> para o cartão registado.",
   "accountBanned.violation.title": "Motivo · referente ao teu processo",
   "accountBanned.violation.body":
-    "<b>§02·06</b> — Uso da plataforma como arma contra outras pessoas da comunidade. O padrão de comportamento foi documentado em <b>8 incidentes distintos</b> ao longo de quatro meses e revisto por duas pessoas moderadoras independentes.",
+    "<b>§02·06</b>: Uso da plataforma como arma contra outras pessoas da comunidade. O padrão de comportamento foi documentado em <b>8 incidentes distintos</b> ao longo de quatro meses e revisto por duas pessoas moderadoras independentes.",
   "accountBanned.whatNow.row1.title": "Podes recorrer desta decisão uma vez",
   "accountBanned.whatNow.row1.body":
-    "Abre o recurso no prazo de 14 dias após a remoção. É revisto pelo painel permanente de recursos da Assembleia — pessoas diferentes das que trataram o teu processo. Resposta em 21 dias.",
+    "Abre o recurso no prazo de 14 dias após a remoção. É revisto pelo painel permanente de recursos da Assembleia, pessoas diferentes das que trataram o teu processo. Resposta em 21 dias.",
   "accountBanned.whatNow.row2.title":
     "Os teus dados são removidos da plataforma no prazo de 30 dias",
   "accountBanned.whatNow.row2.body":
@@ -76,19 +76,19 @@ export const system: Catalog = {
   "accountBanned.actions.appealCta": "Apresentar o recurso",
   "accountBanned.actions.eraseCta": "Pedir a eliminação total dos dados",
   "accountBanned.foot":
-    "Se achas que isto resultou de denúncias falsas coordenadas, inclui no recurso os nomes que suspeitas — investigamos isto com cuidado. <a>Relê o Código de Conduta</a>",
+    "Se achas que isto resultou de denúncias falsas coordenadas, inclui no recurso os nomes que suspeitas. Investigamos isto com cuidado. <a>Relê o Código de Conduta</a>",
 
   // ── AccountLockedPage.tsx ─────────────────────────────────────────────────
   "accountLocked.kicker": "Conta bloqueada · temporário",
   "accountLocked.heading": "A tua conta está <em>em pausa.</em>",
   "accountLocked.lead":
-    "Detetámos atividade de início de sessão fora do habitual na tua conta e bloqueámo-la por precaução. Não estás em sarilhos — preferimos reagir a mais do que arriscar.",
+    "Detetámos atividade de início de sessão fora do habitual na tua conta e bloqueámo-la por precaução. Não estás em sarilhos. Preferimos reagir a mais do que arriscar.",
   "accountLocked.reason1":
     "<b>5 tentativas de início de sessão falhadas</b> nos últimos 12 minutos, a partir de dois dispositivos.",
   "accountLocked.reason2":
-    "<b>Nova localização:</b> tentativa a partir de <b>Madrid, Espanha</b> — costumas iniciar sessão a partir de Lisboa.",
+    "<b>Nova localização:</b> tentativa a partir de <b>Madrid, Espanha</b>. Costumas iniciar sessão a partir de Lisboa.",
   "accountLocked.reason3":
-    "<b>O bloqueio vai levantar-se automaticamente</b> dentro de 23 minutos — ou usa uma das opções abaixo para desbloquear já.",
+    "<b>O bloqueio vai levantar-se automaticamente</b> dentro de 23 minutos, ou usa uma das opções abaixo para desbloquear já.",
   "accountLocked.whatNow.contact.title": "Contactar a equipa",
   "accountLocked.whatNow.contact.desc":
     "Se nada disto resultar, escreve-nos e verificamos-te manualmente.",
@@ -104,7 +104,7 @@ export const system: Catalog = {
   // Texto de introdução em modo real (membro mesmo suspenso) — os detalhes ficam
   // no bloco de motivo abaixo, vindos da nota de moderação, por isso é geral.
   "accountSuspended.leadLive":
-    "A tua conta está em pausa enquanto uma decisão de moderação se mantém. Aqui está o que aconteceu — e como responder.",
+    "A tua conta está em pausa enquanto uma decisão de moderação se mantém. Aqui está o que aconteceu, e como responder.",
   "accountSuspended.reason.title": "Porque é que a tua conta foi pausada",
   "accountSuspended.details.action": "Ação",
   "accountSuspended.details.actionValue": "Suspensão de {days} dias",
@@ -135,7 +135,7 @@ export const system: Catalog = {
   "geoRestricted.h1":
     "A QueerPulse ainda não está <em>totalmente disponível</em> aqui.",
   "geoRestricted.lead":
-    "Parece que estás a ligar-te a partir de um país onde algumas funcionalidades da QueerPulse estão restritas — normalmente porque não temos pessoas moderadoras no teu fuso horário, ou porque ainda estamos a analisar o enquadramento legal local. <em>O apoio em crise e os recursos de segurança continuam abertos para ti.</em>",
+    "Parece que estás a ligar-te a partir de um país onde algumas funcionalidades da QueerPulse estão restritas: normalmente porque não temos pessoas moderadoras no teu fuso horário, ou porque ainda estamos a analisar o enquadramento legal local. <em>O apoio em crise e os recursos de segurança continuam abertos para ti.</em>",
   "geoRestricted.why.title": "Porque é que isto acontece",
   "geoRestricted.why.body":
     "Só abrimos acesso a uma nova região quando temos <em>pelo menos uma pessoa moderadora no país</em> e revemos o enquadramento legal local para a expressão queer. É intencionalmente lento. Não queremos divulgar a comunidade queer num lugar onde as pessoas ficariam em risco ao entrar.",
@@ -159,14 +159,14 @@ export const system: Catalog = {
   "interestsEditor.closeAria": "Fechar",
   "interestsEditor.success.title": "Interesses <em>atualizados.</em>",
   "interestsEditor.success.sub_one":
-    "Registámos o teu {count} interesse. Uma pessoa avalizadora com interesses em comum vai tratar do teu pedido — mantê-los atualizados pode acelerar o processo.",
+    "Registámos o teu {count} interesse. Uma pessoa que dá votos de confiança com interesses em comum vai tratar do teu pedido. Mantê-los atualizados pode acelerar o processo.",
   "interestsEditor.success.sub_other":
-    "Registámos os teus {count} interesses. Uma pessoa avalizadora com interesses em comum vai tratar do teu pedido — mantê-los atualizados pode acelerar o processo.",
+    "Registámos os teus {count} interesses. Uma pessoa que dá votos de confiança com interesses em comum vai tratar do teu pedido. Mantê-los atualizados pode acelerar o processo.",
   "interestsEditor.success.doneCta": "Concluído",
   "interestsEditor.eyebrow": "Pedido de convite · interesses",
   "interestsEditor.title": "Atualiza os teus <em>interesses.</em>",
   "interestsEditor.desc":
-    "Associamos o teu pedido a uma pessoa avalizadora com interesses em comum. Escolhe os que se aplicam — quanto mais sinceros, melhor a correspondência.",
+    "Associamos o teu pedido a uma pessoa que dá votos de confiança com interesses em comum. Escolhe os que se aplicam. Quanto mais sinceros, melhor a correspondência.",
   "interestsEditor.count_one": "{count} selecionado",
   "interestsEditor.count_other": "{count} selecionados",
   "interestsEditor.pickAtLeastTwo": "escolhe pelo menos 2",
@@ -193,15 +193,15 @@ export const system: Catalog = {
   "inviteState.expired.eyebrow": "Convite expirado",
   "inviteState.expired.heading": "Esta ligação <em>expirou.</em>",
   "inviteState.expired.lead":
-    "Os convites ficam válidos durante algum tempo, e o teu foi enviado há demasiado tempo — por isso o lugar que reservámos para ti voltou para a bolsa geral. A forma mais rápida de entrar é um novo empurrão de quem te avalizou.",
+    "Os convites ficam válidos durante algum tempo, e o teu foi enviado há demasiado tempo, por isso o lugar que reservámos para ti voltou para a bolsa geral. A forma mais rápida de entrar é um novo empurrão de quem te deu um voto de confiança.",
   "inviteState.used.eyebrow": "Convite já usado",
   "inviteState.used.heading": "Este convite <em>já foi aberto.</em>",
   "inviteState.used.lead":
-    "Alguém já entrou com esta ligação — muito provavelmente tu, noutro dispositivo. Se foste tu, é só entrar. Se não foste, avisa a equipa e nós vamos verificar.",
+    "Alguém já entrou com esta ligação. Muito provavelmente tu, noutro dispositivo. Se foste tu, é só entrar. Se não foste, avisa a equipa e nós vamos verificar.",
   "inviteState.revoked.eyebrow": "Convite retirado",
   "inviteState.revoked.heading": "Este convite foi <em>anulado.</em>",
   "inviteState.revoked.lead":
-    "Quem enviou este convite, ou um moderador da comunidade, retirou-o antes de ser usado. Não faz mal — podes pedir um novo sempre que quiseres.",
+    "Quem enviou este convite, ou um moderador da comunidade, retirou-o antes de ser usado. Não faz mal. Podes pedir um novo sempre que quiseres.",
   "inviteState.notFound.eyebrow": "Convite não encontrado",
   "inviteState.notFound.heading": "Não conseguimos <em>reconhecer esta ligação.</em>",
   "inviteState.notFound.lead":
@@ -209,9 +209,9 @@ export const system: Catalog = {
   "inviteState.inviterInactive.eyebrow": "Quem convidou já não está ativo",
   "inviteState.inviterInactive.heading": "A pessoa que te convidou <em>já não está por cá.</em>",
   "inviteState.inviterInactive.lead":
-    "Quem enviou este convite já não está ativo no QueerPulse, por isso a ligação não te consegue trazer para dentro. Não foi nada que tenhas feito — pede um novo convite a outra pessoa que conheças, ou pede um e nós tratamos do resto.",
+    "Quem enviou este convite já não está ativo no QueerPulse, por isso a ligação não te consegue trazer para dentro. Não foi nada que tenhas feito. Pede um novo convite a outra pessoa que conheças, ou pede um e nós tratamos do resto.",
   "inviteState.details.expiredOn": "Expirou",
-  "inviteState.details.vouchedBy": "Aval de",
+  "inviteState.details.vouchedBy": "Voto de confiança de",
   "inviteState.actions.requestNew": "Pedir um novo convite",
   "inviteState.actions.signIn": "Entrar",
   "inviteState.actions.contact": "Falar com a equipa",
@@ -227,7 +227,7 @@ export const system: Catalog = {
     "Só por convite. 247 pessoas. Sem pressa de crescer por crescer.",
   "inviteLanding.what.noAds.strong": "Sem anúncios. Sem algoritmo.",
   "inviteLanding.what.noAds.rest":
-    "Uma plataforma que trabalha para ti, não para anunciantes.",
+    "Uma plataforma que trabalha para ti, financiada pela comunidade.",
   "inviteLanding.what.community.strong": "Comunidade a sério.",
   "inviteLanding.what.community.rest":
     "Fórum, eventos, uma revista mensal e um fundo de saúde mental.",
@@ -244,7 +244,7 @@ export const system: Catalog = {
   "inviteLanding.card.inviterNoteNoSince": "convidou-te",
   "inviteLanding.card.heading": "Tu pertences <em>aqui.</em>",
   "inviteLanding.card.headerNote":
-    "Este convite foi criado só para ti, pessoalmente — é teu, só teu.",
+    "Este convite foi criado só para ti, pessoalmente. É teu, só teu.",
   "inviteLanding.card.noteFrom": "Uma nota de {name}",
   "inviteLanding.card.tokenLabel": "O teu código de convite",
   "inviteLanding.card.validFor_one": "Válido durante {count} dia",
@@ -262,7 +262,7 @@ export const system: Catalog = {
   "maintenance.eyebrow": "Manutenção agendada",
   "maintenance.heading": "Já <em>voltamos.</em>",
   "maintenance.lead":
-    "Estamos a lançar a <b>versão 2.5</b> — melhores ferramentas de moderação, um chat de crise renovado e envios de imagens mais rápidos. Deve voltar dentro de cerca de <em>20 minutos</em>.",
+    "Estamos a lançar a <b>versão 2.5</b>: melhores ferramentas de moderação, um chat de crise renovado e envios de imagens mais rápidos. Deve voltar dentro de cerca de <em>20 minutos</em>.",
   "maintenance.info.startedLabel": "Início",
   "maintenance.info.startedValue": "14:00 <em>WET</em>",
   "maintenance.info.backByLabel": "De volta às",
@@ -282,7 +282,7 @@ export const system: Catalog = {
   "offline.eyebrow": "Sem ligação",
   "offline.h1": "Estás <em>offline.</em>",
   "offline.lead":
-    "Sem sinal, ou não conseguimos contactar os nossos servidores neste momento. <b>As páginas que já abriste</b> neste dispositivo podem ainda carregar — experimenta uma abaixo.",
+    "Sem sinal, ou não conseguimos contactar os nossos servidores neste momento. <b>As páginas que já abriste</b> neste dispositivo podem ainda carregar. Experimenta uma abaixo.",
   "offline.tryTitle": "Experimenta uma página que já abriste",
   "offline.links.feed.label": "Feed da comunidade",
   "offline.links.feed.sub": "As novidades da tua comunidade",
@@ -298,7 +298,7 @@ export const system: Catalog = {
   "pendingReview.kicker": "Pedido de convite · em fila de espera",
   "pendingReview.heading": "Estás em <em>{position}.º</em> lugar na fila.",
   "pendingReview.lead":
-    "Abrimos a comunidade em grupos. O teu pedido para <b>{email}</b> está na fila e uma pessoa avalizadora vai revê-lo dentro de <b>~ 3 semanas</b>.",
+    "Abrimos a comunidade em grupos. O teu pedido para <b>{email}</b> está na fila e uma pessoa que dá votos de confiança vai revê-lo dentro de <b>~ 3 semanas</b>.",
   "pendingReview.position.title": "A tua posição",
   "pendingReview.position.body":
     "Em {total} na fila · admitimos <b>cerca de {perMonth} por mês</b> · previsão para ti: <b>{eta}</b>",
@@ -306,7 +306,7 @@ export const system: Catalog = {
   "pendingReview.timeline.step1.title": "Pedido recebido · {date}",
   "pendingReview.timeline.step1.desc":
     "Inscreveste-te · registámos o teu interesse",
-  "pendingReview.timeline.step2.title": "À espera de uma pessoa avalizadora",
+  "pendingReview.timeline.step2.title": "À espera de uma pessoa que dá votos de confiança",
   "pendingReview.timeline.step2.desc":
     "Uma pessoa da comunidade está a comparar os teus interesses · isto demora 2 a 3 semanas",
   "pendingReview.timeline.step3.title": "Chamada breve de confirmação · 15 min",
@@ -317,17 +317,17 @@ export const system: Catalog = {
   "pendingReview.timeline.step4.desc":
     "Vais receber uma ligação de utilização única para ativar a tua conta",
   "pendingReview.actions.magazineCta": "Ler a revista",
-  "pendingReview.actions.vouchCta": "Pedir um aval a alguém da comunidade",
+  "pendingReview.actions.vouchCta": "Pedir um voto de confiança a alguém da comunidade",
   "pendingReview.actions.updateInterestsCta": "Atualizar os meus interesses",
   "pendingReview.foot.knowMember":
-    "Já conheces alguém que te possa avalizar? <a>Envia-lhe uma ligação de aval num clique</a> — isso adianta-te na fila.",
+    "Já conheces alguém que te possa dar um voto de confiança? <a>Envia-lhe uma ligação de voto de confiança num clique</a>. Isso adianta-te na fila.",
   "pendingReview.foot.withdraw": "Queres desistir? <a>Escreve à equipa</a>.",
 
   // ── PwaPromptPage.tsx ─────────────────────────────────────────────────────
   "pwaPrompt.kicker": "Adicionar ao ecrã principal · sem loja de aplicações",
   "pwaPrompt.heading": "Mantém a <em>QueerPulse</em> a um toque de distância.",
   "pwaPrompt.lead":
-    "Instala a aplicação web no teu telemóvel em 30 segundos. <em>Igual a uma aplicação normal</em> — mas sem conta de loja de aplicações, sem rastreio, sem revisão. Só um atalho que abre o chat de crise, o teu bilhete e o mapa de espaços seguros num toque.",
+    "Instala a aplicação web no teu telemóvel em 30 segundos. <em>Igual a uma aplicação normal</em>, mas sem conta de loja de aplicações, sem rastreio, sem revisão. Só um atalho que abre o chat de crise, o teu bilhete e o mapa de espaços seguros num toque.",
   "pwaPrompt.features.push.label": "Notificações push",
   "pwaPrompt.features.push.detail":
     "· confirmações, respostas, menções · detalhadas e discretas",
@@ -380,7 +380,7 @@ export const system: Catalog = {
   "serverError.heading.maintenance.line1": "Manutenção planeada.",
   "serverError.heading.maintenance.line2": "<em>Já voltamos.</em>",
   "serverError.sub.error":
-    "A responsabilidade é nossa, não tua. Já fomos notificados automaticamente e estamos a analisar o problema.",
+    "A responsabilidade é nossa. Já fomos notificados automaticamente e estamos a analisar o problema.",
   "serverError.sub.maintenance":
     "Estamos a atualizar a plataforma. Não deve demorar muito. Agradecemos a tua paciência.",
   "serverError.status.maintenance":
@@ -424,9 +424,9 @@ export const system: Catalog = {
   "status.services.fileStorage.desc": "Fotos de perfil e anexos",
   "status.uptime.sectionEye": "Disponibilidade dos últimos 90 dias",
   "status.uptime.pct": "{pct}% de disponibilidade",
-  "status.uptime.tooltip.operational": "Operacional — {date}",
-  "status.uptime.tooltip.partial": "Indisponibilidade parcial — {date}",
-  "status.uptime.tooltip.outage": "Indisponibilidade — {date}",
+  "status.uptime.tooltip.operational": "Operacional: {date}",
+  "status.uptime.tooltip.partial": "Indisponibilidade parcial: {date}",
+  "status.uptime.tooltip.outage": "Indisponibilidade: {date}",
   "status.uptime.axis.ninetyDaysAgo": "Há 90 dias",
   "status.uptime.axis.sixtyDaysAgo": "Há 60 dias",
   "status.uptime.axis.thirtyDaysAgo": "Há 30 dias",
@@ -444,7 +444,7 @@ export const system: Catalog = {
   "status.incidents.emailDelay.text":
     "Os emails de notificação atrasaram-se até 45 minutos durante uma janela de 2 horas. Todos os emails em fila foram entregues assim que o problema foi resolvido.",
   "status.incidents.dbUpgrade.title":
-    "Manutenção agendada — atualização da base de dados",
+    "Manutenção agendada: atualização da base de dados",
   "status.incidents.dbUpgrade.text":
     "Janela de manutenção de 2 horas para uma atualização de versão maior do PostgreSQL. A plataforma esteve em modo só de leitura durante este período.",
   "status.subscribe.title": "Recebe avisos durante incidentes",
@@ -477,7 +477,7 @@ export const system: Catalog = {
   "verificationNeeded.magicLink.confirmCta": "Já abri a ligação",
   "verificationNeeded.magicLink.resendCountdown": "Reenviar em {seconds}s",
   "verificationNeeded.magicLink.resendCta": "Reenviar ligação",
-  "verificationNeeded.success.title": "És mesmo tu — <em>confirmado.</em>",
+  "verificationNeeded.success.title": "És mesmo tu, <em>confirmado.</em>",
   "verificationNeeded.success.sub":
     "Verificação confirmada. A encaminhar-te para cancelares a subscrição…",
   "verificationNeeded.success.continueCta": "Continuar agora",

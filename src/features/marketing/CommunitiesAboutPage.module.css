@@ -1,10 +1,17 @@
+.heroActions {
+  margin-block-start: clamp(20px, 3vw, 28px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+}
+
 .page {
   max-width: var(--maxw-page);
   margin: 0 auto;
-  padding: 64px 28px 0;
+  padding: clamp(48px, 7vw, 76px) 28px 0;
   display: flex;
   flex-direction: column;
-  gap: 64px;
+  gap: clamp(56px, 8vw, 88px);
 }
 
 .section {
@@ -18,57 +25,175 @@
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
-  margin-bottom: 32px;
+  margin-block-end: clamp(24px, 4vw, 36px);
 }
 
-.lede {
-  font-size: 16px;
-  color: var(--ink);
-  line-height: 1.75;
-  max-width: 62ch;
-  text-wrap: pretty;
-}
-
-.grid {
+/* ── What: feature pillars ─────────────────────────────────────────────── */
+.pillars {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
-  gap: 18px;
+  gap: var(--gap-grid);
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.card {
+.pillar {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
-  padding: 24px;
+  padding: clamp(22px, 3vw, 28px);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
-.icon {
-  width: 26px;
-  height: 26px;
-  color: var(--accent);
-  flex: none;
+.pillarChip {
+  display: inline-grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
 }
 
-.cardTitle {
+.pillarChip svg {
+  width: 22px;
+  height: 22px;
+}
+
+.pillarTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: 19px;
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 
-.cardBody {
-  font-size: 14px;
+.pillarBody {
+  font-size: 15px;
   color: var(--ink-60);
   line-height: 1.65;
+  text-wrap: pretty;
 }
 
-:global([data-theme="dark"]) .card {
+/* ── How: numbered, connected steps ────────────────────────────────────── */
+.steps {
+  --mark-size: 52px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 66ch;
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--mark-size) 1fr;
+  column-gap: clamp(16px, 2.5vw, 22px);
+  align-items: start;
+  padding-block-end: clamp(22px, 3.5vw, 34px);
+}
+
+.step:last-child {
+  padding-block-end: 0;
+}
+
+/* Rail connecting one mark to the next (drawn behind the opaque marks). */
+.step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(var(--mark-size) / 2 - 1px);
+  inset-block: var(--mark-size) 0;
+  width: 2px;
+  background: rgba(var(--line-rgb), 0.16);
+}
+
+.stepMark {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: var(--mark-size);
+  height: var(--mark-size);
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.stepText {
+  padding-block-start: 6px;
+}
+
+.stepTitle {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 19px;
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+}
+
+.stepIcon {
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+  flex: none;
+}
+
+.stepBody {
+  margin-block-start: 6px;
+  font-size: 15px;
+  color: var(--ink-60);
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+/* ── Why: pull-quote ───────────────────────────────────────────────────── */
+.whySection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(12px, 2vw, 18px);
+  padding-block: clamp(8px, 2vw, 24px);
+}
+
+.whyEyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.whyQuote {
+  margin: 0;
+  max-width: 26ch;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(24px, 3.4vw, 40px);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  text-wrap: balance;
+}
+
+.whyQuote em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+
+:global([data-theme="dark"]) .pillar {
   border-color: rgba(var(--cream-rgb), 0.1);
 }

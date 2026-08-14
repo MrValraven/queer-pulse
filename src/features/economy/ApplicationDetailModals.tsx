@@ -15,10 +15,10 @@ function downloadAttachment(
   fmt: Formatters,
 ) {
   const body = [
-    `QueerPulse — application attachment (preview copy)`,
+    `QueerPulse, application attachment (preview copy)`,
     ``,
     `File: ${fileName}`,
-    `Application: ${app.title} — ${app.companyName}`,
+    `Application: ${app.title}, ${app.companyName}`,
     `Generated: ${fmt.date(new Date(), { day: "2-digit", month: "2-digit", year: "numeric" })} ${fmt.time(new Date())}`,
     ``,
     `This is a simulated download from the QueerPulse prototype. In a live`,
@@ -46,7 +46,7 @@ export function SubmissionModal({
         {t("economy:applicationStatus.submission.eyebrow")}
       </div>
       <h2 className={styles.title}>
-        {app.title} <em>— {app.companyName}</em>
+        {app.title}<em>, {app.companyName}</em>
       </h2>
       <p className={styles.sub}>{s?.date}</p>
 

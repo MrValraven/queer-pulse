@@ -16,7 +16,7 @@ export const ORGS: Org[] = [
     href: "https://www.instagram.com/casat.lisboa",
   },
   {
-    name: "Djass — Afrodescendentes",
+    name: "Djass: Afrodescendentes",
     mission:
       "Association defending the rights and visibility of people of African descent in Portugal.",
     offers: "Advocacy, cultural programming, community events.",

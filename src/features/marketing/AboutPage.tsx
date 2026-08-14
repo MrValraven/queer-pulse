@@ -5,6 +5,7 @@ import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import {
   CONTRAST_THEM_KEYS,
   CONTRAST_US_KEYS,
@@ -182,7 +183,7 @@ export function AboutPage() {
         }
         sub={t("marketing:about.outro.sub")}
       >
-        <Button size="lg" to={routes.requestInvite}>
+        <Button size="lg" to={requestInvitePath("about")}>
           {t("marketing:about.outro.cta")}
         </Button>
       </Outro>

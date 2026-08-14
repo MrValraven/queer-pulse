@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 import { FiImage, FiX } from "react-icons/fi";
+import { PhotoReframeModal } from "../../shared/components/ui";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUploadImage } from "../members/api/useUploadImage";
 import styles from "./SubmitStoryPage.module.css";
@@ -25,18 +27,20 @@ export function SubmitStoryCover({
   );
   const [progress, setProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
 
   function revokeCoverPreview() {
     if (cover) URL.revokeObjectURL(cover.previewUrl);
   }
 
-  async function pick(file: File | undefined) {
-    if (!file) return;
+  /** Shared tail of both upload paths (direct GIF path + post-reframe path). */
+  async function uploadAndApply(file: File, crop?: CropRect) {
     setError(null);
     setProgress(0);
     try {
       const { key, previewUrl } = await uploadCover(file, {
         onProgress: (p) => setProgress(p),
+        crop,
       });
       // Single-slot picker — the previous preview (if any) is now stale, so
       // revoke it right away instead of leaving it to the hook's unmount sweep.
@@ -52,6 +56,24 @@ export function SubmitStoryCover({
     } finally {
       setProgress(null);
     }
+  }
+
+  function pick(file: File | undefined) {
+    if (!file) return;
+    // GIFs bypass the reframer entirely (animation would be destroyed by the
+    // crop/re-encode path) and upload directly, as before.
+    if (file.type === "image/gif") {
+      void uploadAndApply(file);
+      return;
+    }
+    setPendingFile(file);
+  }
+
+  async function handleCropConfirmed(crop: CropRect) {
+    if (!pendingFile) return;
+    const fileToUpload = pendingFile;
+    setPendingFile(null);
+    await uploadAndApply(fileToUpload, crop);
   }
 
   function remove() {
@@ -73,10 +95,19 @@ export function SubmitStoryCover({
         aria-label={t("magazine:submitStory.cover.addCta")}
         hidden
         onChange={(e) => {
-          void pick(e.target.files?.[0]);
+          pick(e.target.files?.[0]);
           e.target.value = "";
         }}
       />
+
+      {pendingFile && (
+        <PhotoReframeModal
+          file={pendingFile}
+          kind="story-cover"
+          onCancel={() => setPendingFile(null)}
+          onConfirm={(crop) => void handleCropConfirmed(crop)}
+        />
+      )}
 
       {cover ? (
         <div className={styles.coverPreview}>

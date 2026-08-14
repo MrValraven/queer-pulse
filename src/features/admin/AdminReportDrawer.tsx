@@ -163,7 +163,7 @@ function ReportAudit({ reportId }: { reportId: string }) {
               <FiClock aria-hidden />
               <span>
                 <strong>{e.actorName}</strong> · {e.action.replace(/_/g, " ")}
-                {e.note ? ` — ${e.note}` : ""}
+                {e.note ? `: ${e.note}` : ""}
               </span>
               <time>{fmt.date(new Date(e.at))}</time>
             </li>

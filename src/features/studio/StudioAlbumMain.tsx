@@ -84,7 +84,7 @@ export function StudioAlbumMain({ tab }: { tab: AlbumTabId }) {
           <p>
             I wrote eleven songs and recorded ten in a kitchen in Anjos with one
             cellist, one engineer, and an upright piano that belonged to my
-            landlady. Track nine has my grandmother in it — a field recording I
+            landlady. Track nine has my grandmother in it, a field recording I
             made of her humming, before she knew I was recording.
           </p>
           <p>
@@ -103,16 +103,16 @@ export function StudioAlbumMain({ tab }: { tab: AlbumTabId }) {
       {tab === "credits" && (
         <div className={styles.prose}>
           <p>
-            <strong style={{ color: "var(--text)" }}>Mariana Sol</strong> —
+            <strong style={{ color: "var(--text)" }}>Mariana Sol</strong>:
             voice, piano, words on all 11 tracks · 85% of writer share
           </p>
           <p>
-            João Anjos — cello (2, 7, 11) · Coro de Outubro — choir (4) · Inês
-            T. — percussion (7)
+            João Anjos: cello (2, 7, 11) · Coro de Outubro: choir (4) · Inês
+            T.: percussion (7)
           </p>
           <p>
-            {memberName("sofia")} — engineer + mix · Pedro G. — mastering ·
-            Helena P. — lyric translation,{" "}
+            {memberName("sofia")}: engineer + mix · Pedro G.: mastering ·
+            Helena P.: lyric translation,{" "}
             <em>paid from the solidarity fund.</em>
           </p>
           <p>

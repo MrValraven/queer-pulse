@@ -62,9 +62,9 @@ export const REASON_LABELS: Record<ReasonCode, string> = {
   venue_accessibility: "An accessibility problem",
   housing_unsafe: "Unsafe, discriminatory, or misrepresented housing",
   housing_scam: "Scam or fake listing",
-  not_affirming: "Not LGBTQ+ affirming — broke the community pledge",
+  not_affirming: "Not LGBTQ+ affirming: broke the community pledge",
   off_platform: "Asked to pay or move off-platform",
-  other: "Something else — explained in detail",
+  other: "Something else, explained in detail",
 };
 
 /**

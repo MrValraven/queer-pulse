@@ -3,6 +3,7 @@ import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import styles from "./JoinVouchCallout.module.css";
 
 /**
@@ -27,7 +28,7 @@ export function JoinVouchCallout() {
         </div>
         <p className={styles.text}>{t("gatherings:vouchCallout.body")}</p>
         <div className={styles.actions}>
-          <Button variant="ghost-dark" to={routes.requestInvite}>
+          <Button variant="ghost-dark" to={requestInvitePath("gathering_vouch")}>
             {t("gatherings:vouchCallout.requestInviteCta")}
           </Button>
           <Button variant="ghost-dark" to={routes.safety}>

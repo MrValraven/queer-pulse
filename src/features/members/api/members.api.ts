@@ -8,7 +8,6 @@ import {
 import { validateProfile } from "../../../shared/api/validation";
 import type { VouchRelationship } from "../vouchMember.data";
 import type { CommunityType } from "../../homepage/data/types";
-
 export type Visibility = "open" | "network" | "private";
 
 /** One "open to" entry on the wire: a shared preset id, or the member's words. */

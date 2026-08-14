@@ -192,7 +192,7 @@ export function SubprofilePage() {
     return (
       <PageShell>
         <PageMeta
-          title={`${t(PAGE_STATE_COPY[pageState].titleKey)} — QueerPulse`}
+          title={`${t(PAGE_STATE_COPY[pageState].titleKey)} · QueerPulse`}
           noIndex
         />
         <SubprofilePageStates state={pageState} />
@@ -224,7 +224,7 @@ export function SubprofilePage() {
   return (
     <PageShell>
       <PageMeta
-        title={`${data.displayName} · ${craftLabel} — QueerPulse`}
+        title={`${data.displayName} · ${craftLabel} · QueerPulse`}
         description={(data.tagline || data.bio || "").slice(0, 160) || undefined}
         image={cardImage}
         imageAlt={cardImageAlt}

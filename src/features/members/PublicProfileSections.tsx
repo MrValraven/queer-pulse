@@ -7,6 +7,7 @@ import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { curatorSlugForName } from "../cinema/cinemaCurator.data";
 import { SocialLinksRow } from "./SocialLinksRow";
 import type { Member } from "./data/members";
@@ -102,7 +103,7 @@ export function PublicPreviewBar({
         <Button variant="ghost-dark" to={routes.signIn}>
           {t("common:cta.signIn")}
         </Button>
-        <Button variant="primary" to={routes.requestInvite}>
+        <Button variant="primary" to={requestInvitePath("public_profile")}>
           {t("common:cta.requestInvite")}
         </Button>
       </div>
@@ -204,7 +205,7 @@ export function PublicProfileHead({
         </div>
 
         <div className={styles.ctaRow}>
-          <Button variant="primary" to={routes.requestInvite}>
+          <Button variant="primary" to={requestInvitePath("public_profile")}>
             {t("members:publicProfile.head.requestInviteCta")}
           </Button>
           <div className={styles.ctaNote}>
@@ -295,7 +296,7 @@ export function BottomCta({ firstName }: { firstName: string }) {
         <p>{t("members:publicProfile.bottomCta.body", { firstName })}</p>
       </div>
       <div className={styles.bottomCtaActions}>
-        <Button variant="primary" to={routes.requestInvite}>
+        <Button variant="primary" to={requestInvitePath("public_profile")}>
           {t("common:cta.requestInvite")}
         </Button>
         <Button variant="ghost-dark" to={routes.vouch}>

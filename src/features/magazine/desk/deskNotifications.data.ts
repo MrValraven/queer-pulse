@@ -41,7 +41,7 @@ export const DESK_NOTIFICATIONS: DeskNotification[] = [
   },
   {
     who: "Rui Alves",
-    what: "has not been paid — filed 21 days ago",
+    what: "has not been paid, filed 21 days ago",
     when: "Sun 09:00",
     route: "money",
     tone: "warn",

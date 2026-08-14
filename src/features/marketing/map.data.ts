@@ -50,7 +50,7 @@ export const VENUES: Venue[] = [
     accessible: true,
     address: "Rua da Palmeira 38",
     hours: "11pm – 6am",
-    note: "The longest-running queer bar in Lisbon. Come for the drag shows on weekends — they are unmissable.",
+    note: "The longest-running queer bar in Lisbon. Come for the drag shows on weekends. They are unmissable.",
     beenHere: 247,
   },
   {

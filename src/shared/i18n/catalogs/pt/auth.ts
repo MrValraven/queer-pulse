@@ -187,9 +187,9 @@ export const auth: Catalog = {
     "Algo correu mal ao gerar o teu link — tenta outra vez.",
   "invite.link.formNote": "Este link funciona uma vez, para uma pessoa.",
   "invite.link.defaultVouch":
-    "Uma comunidade queer discreta e avalizada em Lisboa — sem anúncios, sem algoritmo. Acho que ias pertencer aqui.",
+    "Uma comunidade queer discreta e avalizada em Lisboa. Sem anúncios, sem algoritmo. Acho que ias pertencer aqui.",
   "invite.link.shareMessage":
-    "{senderFirst} convidou-te para o QueerPulse — uma comunidade queer discreta e avalizada. O teu convite pessoal: {url}",
+    "{senderFirst} convidou-te para o QueerPulse, uma comunidade queer discreta e avalizada. O teu convite pessoal: {url}",
 
   "invite.ready.headline": "O teu convite está <em>pronto</em>",
   "invite.ready.sub":
@@ -584,6 +584,11 @@ export const auth: Catalog = {
   "gettingStarted.lede":
     "Alguns primeiros passos para encontrares a tua gente e te instalares. Sem pressa — pela ordem que quiseres, quando quiseres.",
   "gettingStarted.progress": "{done} de {total} feitos",
+  "gettingStarted.levelStrip.eyebrow": "O teu nível",
+  "gettingStarted.levelStrip.progress": "{xp} de {xpMax} XP",
+  "gettingStarted.levelStrip.hint": "Cada passo que concluis dá XP para o teu próximo nível.",
+  "gettingStarted.stepXp": "+{xp} XP",
+  "gettingStarted.success.badge": "Ganhaste o crachá First Steps.",
   "gettingStarted.meterAria": "{done} de {total} primeiros passos feitos",
   "gettingStarted.checking": "A verificar o teu progresso…",
   "gettingStarted.doneLabel": "Feito",

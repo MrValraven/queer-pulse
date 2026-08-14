@@ -15,14 +15,14 @@ export const gatherings: Catalog = {
   "landing.hero.eyebrow": "Gatherings",
   "landing.hero.title": "The community, <em>in the same room.</em>",
   "landing.hero.lead":
-    "Supper clubs, mixers, studio visits, screenings, and skill swaps — real-world gatherings across Lisbon, hosted by members for members. This is where the platform stops being a screen.",
+    "Supper clubs, mixers, studio visits, screenings, and skill swaps: real-world gatherings across Lisbon, hosted by members for members. This is where the platform stops being a screen.",
 
   "landing.ways.title": "Find your way <em>in.</em>",
   "landing.ways.lead":
     "Whether you're turning up for the first time or hosting your tenth supper club, start here.",
   "landing.ways.browse.title": "Browse what's on",
   "landing.ways.browse.body":
-    "Supper clubs, mixers, studio visits, screenings, and skill swaps — filter by neighbourhood, type, and date.",
+    "Supper clubs, mixers, studio visits, screenings, and skill swaps: filter by neighbourhood, type, and date.",
   "landing.ways.browse.cta": "See all events",
   "landing.ways.calendar.title": "The calendar view",
   "landing.ways.calendar.body":
@@ -30,7 +30,7 @@ export const gatherings: Catalog = {
   "landing.ways.calendar.cta": "Open the calendar",
   "landing.ways.host.title": "Host your own",
   "landing.ways.host.body":
-    "A step-by-step guide to running a supper club, workshop, or screening — with partner spaces and member support.",
+    "A step-by-step guide to running a supper club, workshop, or screening, with partner spaces and member support.",
   "landing.ways.host.cta": "Host a gathering",
   "landing.ways.recap.title": "Relive the last one",
   "landing.ways.recap.body":
@@ -43,7 +43,7 @@ export const gatherings: Catalog = {
 
   "landing.outro.title": "Bring people <em>together.</em>",
   "landing.outro.sub":
-    "Every gathering started with one member deciding to host. The platform handles the rest — tickets, sliding scale, and a listing on the board.",
+    "Every gathering started with one member deciding to host. The platform handles the rest: tickets, sliding scale, and a listing on the board.",
   "landing.outro.browseCta": "Browse all events",
   "landing.outro.hostCta": "Host a gathering",
 
@@ -143,7 +143,7 @@ export const gatherings: Catalog = {
   "event.guidelines.body1":
     "This is a private QueerPulse event. Everyone here has been invited because someone vouched for them or because they are already a member. The Code of Care applies. Be warm. Be present. Don't take photos of people without asking.",
   "event.guidelines.body2":
-    "The sliding scale is not a suggestion — if you can pay the higher tier, please do. It directly subsidises someone else's ticket.",
+    "The sliding scale is not a suggestion. If you can pay the higher tier, please do. It directly subsidises someone else's ticket.",
   "event.hero.viewProfileCta": "View profile",
   "event.save.cta": "Save event",
   "event.save.saved": "Saved",
@@ -168,7 +168,7 @@ export const gatherings: Catalog = {
   "event.rsvp.headTitleFull": "This gathering is full",
   "event.rsvp.headTitle": "Reserve your place",
   "event.rsvp.headSubFull":
-    "Join the waitlist — we'll email you if a spot opens.",
+    "Join the waitlist. We'll email you if a spot opens.",
   "event.rsvp.headSub": "Pay what you can. All tiers include everything.",
   "event.rsvp.spotsRemaining_one": "<strong>{count} spot</strong> remaining",
   "event.rsvp.spotsRemaining_other": "<strong>{count} spots</strong> remaining",
@@ -177,19 +177,19 @@ export const gatherings: Catalog = {
   "event.rsvp.emailPlaceholder": "Your email *",
   "event.rsvp.dietaryPlaceholder": "Dietary requirements (optional)",
   "event.rsvp.requiredHintFull":
-    "Name and email are required — we send your waitlist update there.",
+    "Name and email are required. We send your waitlist update there.",
   "event.rsvp.requiredHint":
-    "Name and email are required — we send your confirmation there.",
+    "Name and email are required. We send your confirmation there.",
   "event.rsvp.joinWaitlistCta": "Join the waitlist",
   "event.rsvp.reserveCta": "Reserve my place",
   "event.rsvp.disabledHint": "Enter your name and a valid email to continue",
   "event.rsvp.noteFull":
     "We'll email you the moment a spot opens. Leaving the waitlist is one click.",
-  "event.rsvp.confirmationEmailNote": "Your place is saved — you'll find it under your gatherings.",
+  "event.rsvp.confirmationEmailNote": "Your place is saved. You'll find it under your gatherings.",
   "event.rsvp.cancelPolicy": "You can cancel up to 48 hours before the event.",
   "event.rsvp.waitlistTitle": "You're <em>#{position}</em> on the waitlist.",
   "event.rsvp.waitlistBody":
-    "This gathering is full, but we'll <strong>email {email}</strong> the moment a spot opens — usually within a day or two of someone cancelling.",
+    "This gathering is full, but we'll <strong>email {email}</strong> the moment a spot opens, usually within a day or two of someone cancelling.",
   "event.rsvp.waitlistMeta": "You can leave the waitlist at any time.",
   "event.rsvp.leaveWaitlistCta": "Leave the waitlist",
   "event.rsvp.reservedTitle": "You're <em>going.</em>",
@@ -244,13 +244,13 @@ export const gatherings: Catalog = {
   "rsvp.calendar.appleCta": "Apple / .ics",
   "rsvp.calendar.downloadedToast": "Calendar file downloaded.",
   "rsvp.viewDetailsCta": "View gathering details",
-  "rsvp.inviteCta": "Tell a friend — copy invite link",
+  "rsvp.inviteCta": "Tell a friend: copy invite link",
   "rsvp.inviteCopiedToast":
     "Invite link copied. Share it with someone who should come.",
   "rsvp.coc.title": "What to <em>expect</em>",
   "rsvp.coc.affirming.strong": "This is an affirming space.",
   "rsvp.coc.affirming.rest":
-    "Bring your whole self — including the parts you usually have to leave at the door. Queer identity, trans experience, neurodivergence, disability: you're welcome as you are.",
+    "Bring your whole self, including the parts you usually have to leave at the door. Queer identity, trans experience, neurodivergence, disability: you're welcome as you are.",
   "rsvp.coc.consent.strong": "We practise active consent.",
   "rsvp.coc.consent.rest":
     "Ask before touching, check before sharing photos, and take cues from each other. When in doubt, ask.",
@@ -291,39 +291,39 @@ export const gatherings: Catalog = {
   "cohostInvite.outclauseBold":
     "If something comes up, you can step back any time before the day-of",
   "cohostInvite.sleepCta": "Sleep on it",
-  "cohostInvite.snoozedToast": "Snoozed — will remind you tomorrow",
+  "cohostInvite.snoozedToast": "Snoozed. Will remind you tomorrow",
   "cohostInvite.declineCta": "Decline politely",
-  "cohostInvite.acceptCta": "Yes — co-host with {host}",
+  "cohostInvite.acceptCta": "Yes, co-host with {host}",
   "cohostInvite.acceptedToast":
-    "You're co-hosting with {host} — host tools unlocked",
+    "You're co-hosting with {host}. Host tools unlocked",
   "cohostInvite.declinedToast":
     "Polite no sent to {host}. She'll find another second pair of hands.",
   "cohostInvite.actionMeta":
-    "Either choice messages {host} directly. She'll see your decision but not be notified by push — <b>this is meant to be relaxed</b>.",
+    "Either choice messages {host} directly. She'll see your decision but not be notified by push. <b>This is meant to be relaxed</b>.",
   "cohostInvite.openMessagesCta": "Open messages",
 
   // GatheringCancelledPage
   "cancelled.back": "Back to calendar",
   "cancelled.stampTitle": "This event has been cancelled.",
   "cancelled.stampBody":
-    "You were on the list — here's everything that happens next.",
+    "You were on the list. Here's everything that happens next.",
   "cancelled.explainerTitle": "Why it was cancelled",
   "cancelled.hostSentLabel": "host · sent the cancellation",
   "cancelled.sendWellWishesCta": "Send well-wishes",
   "cancelled.infoTitle": "What happens <em>for you</em>",
-  "cancelled.refundTitle": "Your {price} ticket is refunded — automatically",
+  "cancelled.refundTitle": "Your {price} ticket is refunded, automatically",
   "cancelled.headcountTitle": "You've been removed from the headcount",
   "cancelled.headcountBody":
     "The studio knew exactly who was coming. Nothing else to do.",
   "cancelled.rescheduleTitle": "{date} visit is open for RSVPs",
   "cancelled.rescheduleBody":
-    "You can lock in {date} right now — {host} usually opens it later, but we're early because of this. <a>Skip to it ↓</a>",
+    "You can lock in {date} right now. {host} usually opens it later, but we're early because of this. <a>Skip to it ↓</a>",
   "cancelled.concernTitle": "Something feels off?",
   "cancelled.concernBody":
     "If you have concerns about the cancellation or want to flag a pattern, talk to the team",
   "cancelled.noteEyebrow": "A short note · from {host}",
   "cancelled.noteSentVia": "sent {time} via the host tools",
-  "cancelled.altHeading": "Next visit, or — something else this weekend",
+  "cancelled.altHeading": "Next visit, or something else this weekend",
   "cancelled.altRsvpsOpen": "RSVPs open",
   "cancelled.calendarCta": "Calendar",
   "cancelled.rsvpCta": "RSVP to {date}",
@@ -333,7 +333,7 @@ export const gatherings: Catalog = {
   "calendar.eyebrow": "Community Calendar",
   "calendar.heroTitle": "Everything happening <em>in one place.</em>",
   "calendar.heroSub":
-    "Every QueerPulse gathering and community-run event across Lisbon — dinners, workshops, support circles, screenings, and more — in one shared calendar.",
+    "Every QueerPulse gathering and community-run event across Lisbon (dinners, workshops, support circles, screenings, and more) in one shared calendar.",
   "calendar.prevMonth": "Previous month",
   "calendar.nextMonth": "Next month",
   "calendar.upcomingTitle": "All upcoming events",
@@ -355,7 +355,7 @@ export const gatherings: Catalog = {
   // Events
   "events.eyebrow": "What's on",
   "events.subtitle":
-    "Every event here is hosted by QueerPulse or by people in the community — browse the season and find your people.",
+    "Every event here is hosted by QueerPulse or by people in the community. Browse the season and find your people.",
   "events.categoryAll": "All events",
   "events.categoryQueerpulse": "QueerPulse",
   "events.categoryCommunity": "Community",
@@ -370,7 +370,7 @@ export const gatherings: Catalog = {
   "events.priceRange": "{min}–{max}",
   "events.emptyTitle": "Nothing on just yet",
   "events.emptyDescription":
-    "No events are scheduled right now. New gatherings and partner events land here all the time — check back soon.",
+    "No events are scheduled right now. New gatherings and partner events land here all the time. Check back soon.",
   "events.emptyFilterTitle": "Nothing in this category yet",
   "events.emptyFilterDescription":
     "No events match this filter for the season. Try another category, or browse everything that's on.",
@@ -420,7 +420,7 @@ export const gatherings: Catalog = {
   "recap.upload.addPhotoCta": "Add photo",
   "recap.upload.confirmTitle": "Added to <em>the recap</em>",
   "recap.upload.confirmBody":
-    "Thanks for sharing — your photo is now in the gallery for everyone who was there.",
+    "Thanks for sharing. Your photo is now in the gallery for everyone who was there.",
   "recap.upload.doneCta": "Done",
   "recap.upload.defaultCaption": "A moment from the day",
 
@@ -444,9 +444,9 @@ export const gatherings: Catalog = {
   "photos.slideshowCta": "Slideshow",
   "photos.policyTitle": "How we handle <em>gathering photos</em>",
   "photos.policyBody1":
-    "Every photo here was taken by an attending member with consent from the people in the frame. <b>Faces are blurred by default</b> unless the person specifically opted in by name. This isn't a privacy nicety — it's how we make sure people show up next time.",
+    "Every photo here was taken by an attending member with consent from the people in the frame. <b>Faces are blurred by default</b> unless the person specifically opted in by name. This isn't a privacy nicety. It's how we make sure people show up next time.",
   "photos.policyBody2":
-    'If you see yourself in a photo and want it removed (or unblurred), email <mailLink>photos@queerpulse.pt</mailLink> — we\'ll handle it within 24 hours, no questions. <em>You can also untick "appear in event photos" globally</em> in <privLink>Privacy settings</privLink>.',
+    'If you see yourself in a photo and want it removed (or unblurred), email <mailLink>hello@queerpulse.com</mailLink>. We\'ll handle it within 24 hours, no questions. <em>You can also untick "appear in event photos" globally</em> in <privLink>Privacy settings</privLink>.',
   "photos.photographersTitle": "Photographers <em>this event</em>",
   "photos.readRecapCta": "Read the recap",
   "photos.nextClinicCta": "Next clinic · {date}",
@@ -474,7 +474,7 @@ export const gatherings: Catalog = {
   "create.tip.capacity":
     "Be honest about accessibility. Attendees plan around it. Only tick what you can genuinely confirm.",
   "create.tip.pricing":
-    "QueerPulse takes 0% of ticket revenue. Every euro goes to you. The sliding scale is required — it makes the community more accessible.",
+    "QueerPulse takes 0% of ticket revenue. Every euro goes to you. The sliding scale is required: it makes the community more accessible.",
   "create.tip.review":
     "Once you publish, you can still edit the listing. You cannot reduce capacity below the number of existing RSVPs.",
 
@@ -519,7 +519,7 @@ export const gatherings: Catalog = {
   "create.confirm.codeOfCare":
     "This gathering follows the QueerPulse Code of Care.",
   "create.confirm.slidingScale":
-    "The sliding scale (if ticketed) is genuine — the free tier will be honoured.",
+    "The sliding scale (if ticketed) is genuine. The free tier will be honoured.",
   "create.confirm.accessibility":
     "The accessibility information I've provided is accurate to the best of my knowledge.",
 
@@ -528,7 +528,7 @@ export const gatherings: Catalog = {
   "create.title": "Create your <em>gathering.</em>",
   "create.lead":
     "Fill in the details below and your event will be live on the QueerPulse gatherings board immediately.",
-  "create.toast.publishError": "Couldn't publish your gathering — try again.",
+  "create.toast.publishError": "Couldn't publish your gathering. Try again.",
   "create.toast.published": "Your gathering is live",
   "create.success.title": "Your gathering <em>is live.</em>",
   "create.success.body":
@@ -557,7 +557,7 @@ export const gatherings: Catalog = {
   "create.step1.typeRequired": "Pick a format to get started.",
   "create.step1.titleLabel": "Event title",
   "create.step1.titlePlaceholder":
-    "A clear, specific title — not a pun, not a mystery",
+    "A clear, specific title that says exactly what it is",
   "create.step1.titleRequired":
     "Give your gathering a name so people know what they're coming to.",
   "create.step1.descLabel": "Short description",
@@ -567,7 +567,7 @@ export const gatherings: Catalog = {
   // CreateGatheringSteps.tsx — step 2: date & place
   "create.step2.title": "When and <em>where?</em>",
   "create.step2.sub":
-    "The location is only shared with confirmed attendees — not shown on the public listing.",
+    "The location is only shared with confirmed attendees and stays off the public listing.",
   "create.step2.dateLabel": "Date",
   "create.step2.dateRequired":
     "Pick a date and start time in the future so people can plan to come.",
@@ -592,25 +592,25 @@ export const gatherings: Catalog = {
   "create.step3.capLabel": "Capacity",
   "create.step3.capPlaceholder": "Max attendees",
   "create.step3.langLabel": "Language",
-  "create.step3.accessLabel": "Accessibility — what can you confirm?",
+  "create.step3.accessLabel": "Accessibility: what can you confirm?",
   "create.step3.accessHint":
     "Only tick what you can genuinely confirm. Attendees will rely on this information.",
   "create.step3.notesLabel": "Accessibility notes (optional)",
   "create.step3.notesPlaceholder":
-    "Anything else attendees should know — steps, parking, sound level…",
+    "Anything else attendees should know: steps, parking, sound level…",
   "create.step3.communityLabel": "Post to a community (optional)",
-  "create.step3.communityNone": "None — public gathering",
+  "create.step3.communityNone": "None (public gathering)",
 
   // AudienceScopeField.tsx — shared by the create wizard (step 3) and the
   // manage-gathering edit modal.
   "audienceScope.label": "Who can see this gathering?",
-  "audienceScope.hint": "Choose how wide this reaches — you can change it anytime.",
+  "audienceScope.hint": "Choose how wide this reaches. You can change it anytime.",
   "audienceScope.members.label": "Public",
   "audienceScope.members.helper":
     "Anyone on QueerPulse can find this and RSVP.",
   "audienceScope.extendedNetwork.label": "Connections of connections",
   "audienceScope.extendedNetwork.helper":
-    "People your connections know can find this — friends of friends, not strangers.",
+    "People your connections know can find this: friends of friends only.",
   "audienceScope.network.label": "Network only",
   "audienceScope.network.helper": "Only people you're connected to.",
   "audienceScope.community.label": "Community members",
@@ -623,9 +623,9 @@ export const gatherings: Catalog = {
   "create.step4.title": "Tickets and <em>pricing.</em>",
   "create.step4.sub":
     "QueerPulse takes 0% of ticket revenue. All money goes directly to you. Sliding scale is mandatory for any paid event.",
-  "create.step4.freeLabel": "Free event — no tickets needed",
+  "create.step4.freeLabel": "Free event, no tickets needed",
   "create.step4.tiersHint":
-    "Set three tiers. The sliding scale is not optional — if your event is paid, all three tiers must be offered. Members choose their tier privately.",
+    "Set three tiers. The sliding scale is not optional. If your event is paid, all three tiers must be offered. Members choose their tier privately.",
   "create.step4.priceColHead": "Price / person",
   "create.step4.spotsColHead": "Spots",
   "create.step4.tier.solidarity.name": "Free / solidarity",
@@ -647,12 +647,12 @@ export const gatherings: Catalog = {
     "e.g. Shared dinner and wine, materials provided, just your time",
   "create.step4.bringLabel": "Anything to bring / prepare?",
   "create.step4.bringPlaceholder":
-    "Optional — e.g. Bring something to share, wear comfortable shoes",
+    "Optional: e.g. Bring something to share, wear comfortable shoes",
 
   // CreateGatheringSteps.tsx — step 5: review
   "create.step5.title": "Review and <em>publish.</em>",
   "create.step5.sub": "Check the details before your gathering goes live.",
-  "create.step5.accessEmpty": "None specified yet — add what you can confirm",
+  "create.step5.accessEmpty": "None specified yet. Add what you can confirm",
   "create.step5.dateTimeValue": "{date} at {time}",
   "create.step5.locationValue": "{venue}, {hood}",
   "create.step5.capacityValue": "{cap} people · {lang}",
@@ -666,14 +666,14 @@ export const gatherings: Catalog = {
   "create.step5.row.accessibility": "Accessibility",
   "create.step5.pricingFree": "Free event",
   "create.step5.pricingSliding": "Sliding scale · Free / {std} / {sup}",
-  "create.step5.confirmHeading": "Before you publish — confirm all three",
+  "create.step5.confirmHeading": "Before you publish: confirm all three",
   "create.step5.confirmIntro":
     "Tick each box to confirm. The <strong>Publish gathering</strong> button stays disabled until all three are checked.",
-  "create.step5.allSet": "All set — you can publish now.",
+  "create.step5.allSet": "All set. You can publish now.",
   "create.step5.progress_one":
-    "<num>{checkedCount}</num> of 3 confirmed — tick the last box to publish.",
+    "<num>{checkedCount}</num> of 3 confirmed. Tick the last box to publish.",
   "create.step5.progress_other":
-    "<num>{checkedCount}</num> of 3 confirmed — tick the remaining <remaining>{count}</remaining> boxes to publish.",
+    "<num>{checkedCount}</num> of 3 confirmed. Tick the remaining <remaining>{count}</remaining> boxes to publish.",
 
   // hostPage.data.ts — hero type chips
   "host.hero.type.supperClub": "Supper club",
@@ -687,7 +687,7 @@ export const gatherings: Catalog = {
   // hostPage.data.ts — type cards (step 1)
   "host.typeCard.supperClub.title": "Supper club",
   "host.typeCard.supperClub.body":
-    "Intimate, hosted in your home or borrowed kitchen. 8–14 people. The model Tomás uses — and it works because it's personal.",
+    "Intimate, hosted in your home or borrowed kitchen. 8–14 people. The model Tomás uses, and it works because it's personal.",
   "host.typeCard.studioVisit.title": "Studio visit",
   "host.typeCard.studioVisit.body":
     "Open your workspace to people who'd genuinely want to see it. Low logistics, high value. Works especially well for makers.",
@@ -718,7 +718,7 @@ export const gatherings: Catalog = {
   // HostSteps.tsx — step 2
   "host.step2.title": "Find the <em>right space</em>",
   "host.step2.body":
-    "Your home is usually the best option for small gatherings — it's free, flexible, and signals that this is a community event, not a commercial one. For larger events, the network has access to several partner spaces across the city.",
+    "Your home is usually the best option for small gatherings. It's free, flexible, and signals that this is a community gathering rather than a commercial event. For larger events, the network has access to several partner spaces across the city.",
   "host.step2.list.small":
     "<b>Under 12 people:</b> home or studio is ideal. Ask the board if you need a kitchen or a projector you don't have.",
   "host.step2.list.medium":
@@ -732,18 +732,18 @@ export const gatherings: Catalog = {
   // HostSteps.tsx — step 3
   "host.step3.title": "Invite people <em>thoughtfully</em>",
   "host.step3.body":
-    'Gatherings work because the room is curated, not because it\'s large. Think about who you\'re inviting and why — not "who do I owe" but "who would get something from being in this room together."',
+    'Gatherings work because the room is curated, whatever its size. Think about who you\'re inviting and why: focus on "who would get something from being in this room together" over "who do I owe."',
   "host.step3.list.clear":
     "Be clear about what the event is, how long, and what people should bring or expect.",
   "host.step3.list.location":
-    "Share the location only with confirmed attendees — not in the public listing.",
+    "Share the location only with confirmed attendees, keeping it off the public listing.",
   "host.step3.list.cap":
     "Set a realistic cap and stick to it. Turning people away is fine. Overcrowding isn't.",
 
   // HostSteps.tsx — step 4
   "host.step4.title": "On the <em>day</em>",
   "host.step4.body":
-    "The most important thing is not the logistics — it's the atmosphere when people arrive. The first ten minutes determine whether someone feels welcome or like they've walked into the wrong room.",
+    "What matters most is the atmosphere when people arrive, more than the logistics. The first ten minutes determine whether someone feels welcome or like they've walked into the wrong room.",
   "host.step4.list.greet":
     "Greet people at the door. Introduce people to each other by name and with a reason.",
   "host.step4.list.activity":
@@ -757,7 +757,7 @@ export const gatherings: Catalog = {
   // HostSteps.tsx — step 5
   "host.step5.title": "After it's <em>over</em>",
   "host.step5.body1":
-    "Write a brief note on the gathering listing — what happened, how it went. This helps people who couldn't make it and gives future hosts a sense of what works.",
+    "Write a brief note on the gathering listing: what happened, how it went. This helps people who couldn't make it and gives future hosts a sense of what works.",
   "host.step5.body2":
     "If you want to make it recurring, list it on the QueerPulse gatherings board. We'll help you find attendees and build the kind of trusted event that becomes a fixture in the community's calendar.",
   "host.step5.cta": "Tell us how it went",
@@ -816,8 +816,8 @@ export const gatherings: Catalog = {
   "dashboard.guestList.checkInManuallyCta": "Check in manually",
   "dashboard.guestList.checkedInChip": "Checked in {time}",
   "dashboard.guestList.expectedChip": "Expected",
-  "dashboard.guestList.waitlistToggle_one": "{count} on waitlist — promote",
-  "dashboard.guestList.waitlistToggle_other": "{count} on waitlist — promote",
+  "dashboard.guestList.waitlistToggle_one": "{count} on waitlist. Promote",
+  "dashboard.guestList.waitlistToggle_other": "{count} on waitlist. Promote",
   "dashboard.guestList.promoteCta": "Promote",
   "dashboard.guestList.promotedToast": "{name} promoted to guest list",
   "dashboard.waitlist.position": "#{position} on waitlist",
@@ -832,7 +832,7 @@ export const gatherings: Catalog = {
   "dashboard.stats.messageSentToast_one": "Message sent to {count} guest",
   "dashboard.stats.messageSentToast_other": "Message sent to {count} guests",
   "dashboard.stats.startingCta": 'Send "We\'re starting"',
-  "dashboard.stats.startingSentToast": "We're starting — sent to all guests",
+  "dashboard.stats.startingSentToast": "We're starting. Sent to all guests",
   "dashboard.stats.wrappedTitle": "Event <em>wrapped</em>",
   "dashboard.stats.wrappedText_one":
     "Check-in is closed and a follow-up has been sent to all {count} attendee with the recap and photo link.",
@@ -845,7 +845,7 @@ export const gatherings: Catalog = {
   "dashboard.stats.endEventCta": "End event & send follow-up",
   "dashboard.stats.readyNote": "Ready to send the follow-up",
   "dashboard.stats.notReadyNote": "Mark the gathering as wrapped to enable",
-  "dashboard.stats.followUpToast": "Follow-up sent — check-in closed",
+  "dashboard.stats.followUpToast": "Follow-up sent. Check-in closed",
 
   // ── Manage page header (ManageGatheringPage) ────────────────────────────────
   "manage.eyebrow": "Hosting",
@@ -863,7 +863,7 @@ export const gatherings: Catalog = {
   // ── Manage: live-mode coming-soon (host tools not wired yet) ─────────────────
   "manageComingSoon.title": "Host tools are <em>coming soon</em>",
   "manageComingSoon.description":
-    "Managing a gathering from here isn't live yet. You can still browse and RSVP to what's happening — the hosting dashboard lands soon.",
+    "Managing a gathering from here isn't live yet. You can still browse and RSVP to what's happening. The hosting dashboard lands soon.",
   "manageComingSoon.browseCta": "Browse gatherings",
   "manageComingSoon.backHome": "Back to home",
 
@@ -872,16 +872,16 @@ export const gatherings: Catalog = {
   "prototypeComingSoon.backHome": "Back to home",
   "eventComingSoon.title": "This gathering is <em>coming soon</em>",
   "eventComingSoon.description":
-    "This is a preview of how a gathering looks — it isn't a live event yet, so there's nothing here to RSVP to. Browse what's actually happening and reserve your spot there.",
+    "This is a preview of how a gathering looks. It isn't a live event yet, so there's nothing here to RSVP to. Browse what's actually happening and reserve your spot there.",
   "rsvpComingSoon.title": "RSVPs are <em>coming soon</em>",
   "rsvpComingSoon.description":
-    "This confirmation page is part of the prototype and isn't tied to a live RSVP yet. Browse what's on and reserve a real spot — your confirmation will land here once hosting is live.",
+    "This confirmation page is part of the prototype and isn't tied to a live RSVP yet. Browse what's on and reserve a real spot. Your confirmation will land here once hosting is live.",
   "cohostInviteComingSoon.title": "Co-hosting is <em>coming soon</em>",
   "cohostInviteComingSoon.description":
-    "Inviting and accepting a co-host isn't live yet. Browse what's happening in the meantime — co-hosting tools land alongside the hosting dashboard soon.",
+    "Inviting and accepting a co-host isn't live yet. Browse what's happening in the meantime. Co-hosting tools land alongside the hosting dashboard soon.",
   "recapComingSoon.title": "Recaps are <em>coming soon</em>",
   "recapComingSoon.description":
-    "Sharing photos and notes from a gathering isn't live yet, so nothing you add here would be saved. Browse what's on — recaps arrive with the hosting tools soon.",
+    "Sharing photos and notes from a gathering isn't live yet, so nothing you add here would be saved. Browse what's on. Recaps arrive with the hosting tools soon.",
 
   // ── Manage: overview tab ─────────────────────────────────────────────────────
   "manage.overview.stat.going": "Going",
@@ -995,7 +995,7 @@ export const gatherings: Catalog = {
   "manage.messageModal.eyebrow": "Message attendees",
   "manage.messageModal.title": "Write to your guests",
   "manage.messageModal.sub":
-    "This reaches everyone who's confirmed for this gathering. Keep it short — a venue note, a schedule change, or a warm hello.",
+    "This reaches everyone who's confirmed for this gathering. Keep it short: a venue note, a schedule change, or a warm hello.",
   "manage.messageModal.subjectLabel": "Subject",
   "manage.messageModal.subjectPlaceholder":
     "e.g. One small change to the start time",
@@ -1014,7 +1014,7 @@ export const gatherings: Catalog = {
   "manage.invite.eyebrow": "Invite members",
   "manage.invite.title": "Bring the <em>right people</em> in",
   "manage.invite.sub":
-    "Pick the members you'd like at this gathering. They'll get a warm invite they can accept or pass on — no pressure either way.",
+    "Pick the members you'd like at this gathering. They'll get a warm invite they can accept or pass on, no pressure either way.",
   "manage.invite.searchLabel": "Search members to invite",
   "manage.invite.noneSelected": "No one selected yet",
   "manage.invite.selectedCount_one": "<b>{count}</b> selected",
@@ -1042,7 +1042,7 @@ export const gatherings: Catalog = {
   "cohost.panelTitle": "Cohosts",
   "cohost.addCta": "Add cohost",
   "cohost.panelDesc":
-    "Cohosts can edit this gathering, message guests and manage RSVPs. You stay the lead host — cancelling and the host fund stay with you.",
+    "Cohosts can edit this gathering, message guests and manage RSVPs. You stay the lead host. Cancelling and the host fund stay with you.",
   "cohost.emptyState":
     "No cohosts yet. Adding one means you're not carrying the night alone.",
   "cohost.addedToast": "{name} added as a cohost",
@@ -1056,7 +1056,7 @@ export const gatherings: Catalog = {
   "cohost.addModal.eyebrow": "Add a cohost",
   "cohost.addModal.title": "Share the <em>load</em>",
   "cohost.addModal.sub":
-    "A cohost can edit the page, message guests and manage RSVPs alongside you. Pick someone you trust — they'll be asked to accept.",
+    "A cohost can edit the page, message guests and manage RSVPs alongside you. Pick someone you trust. They'll be asked to accept.",
   "cohost.addModal.searchLabel": "Search members to add as cohost",
   "cohost.picker.searchLabelDefault": "Search members",
   "cohost.picker.placeholder": "Search by name or role…",
@@ -1070,7 +1070,7 @@ export const gatherings: Catalog = {
   "qr.scanningCta": "Scanning…",
   "qr.allCheckedInCta": "Everyone is checked in",
   "qr.simulateCta": "Simulate scan",
-  "qr.demoNote": "Demo mode — no real camera is used.",
+  "qr.demoNote": "Demo mode. No real camera is used.",
   "qr.closeAria": "Close",
   "qr.success.ariaLabel": "Checked in",
   "qr.success.title": "Checked <em>in.</em>",
@@ -1086,9 +1086,9 @@ export const gatherings: Catalog = {
     "Zipping {count} photos and applying consent-based blurring.",
   "album.success.title": "Album <em>ready.</em>",
   "album.success.sub_one":
-    "We've zipped all <b>{count} photo</b> into <b>album.zip</b> and started the download. Faces stay blurred unless the person opted in by name — that's baked into the export.",
+    "We've zipped all <b>{count} photo</b> into <b>album.zip</b> and started the download. Faces stay blurred unless the person opted in by name. That's baked into the export.",
   "album.success.sub_other":
-    "We've zipped all <b>{count} photos</b> into <b>album.zip</b> and started the download. Faces stay blurred unless the person opted in by name — that's baked into the export.",
+    "We've zipped all <b>{count} photos</b> into <b>album.zip</b> and started the download. Faces stay blurred unless the person opted in by name. That's baked into the export.",
   "album.success.meta_one": "album.zip · {count} photo",
   "album.success.meta_other": "album.zip · {count} photos",
   "album.success.doneCta": "Done",
@@ -1117,18 +1117,18 @@ export const gatherings: Catalog = {
   "hub.highlights.heading": "Worth showing up for",
   "hub.browse.heading": "Everything that's on",
   "hub.browse.loadMore": "Show more",
-  "hub.browse.empty": "Nothing matches that filter — try another.",
+  "hub.browse.empty": "Nothing matches that filter. Try another.",
   "hub.browse.searchLabel": "Search events",
   "hub.browse.searchPlaceholder": "Search by name or neighbourhood",
   "hub.browse.searchEmpty": "No events match your search.",
   "hub.calendar.heading": "The month at a glance",
   "hub.host.title": "Hosting <em>something</em>?",
   "hub.host.body":
-    "A supper, a reading, a protest, a party — whatever you're hosting, we'll help people find it.",
+    "A supper, a reading, a protest, a party: whatever you're hosting, we'll help people find it.",
   "hub.host.cta": "Host a gathering",
   "hub.ways.heading": "Ways to gather",
   "hub.empty.title": "Nothing on the calendar yet.",
-  "hub.empty.body": "New gatherings turn up here all the time — you could host the first.",
+  "hub.empty.body": "New gatherings turn up here all the time. You could host the first.",
   "hub.card.cta": "See it",
   "hub.loading": "Finding what's on…",
 
@@ -1147,10 +1147,10 @@ export const gatherings: Catalog = {
   "lineup.saveCta": "Save lineup",
   "lineup.saving": "Saving…",
   "lineup.savedToast": "Lineup saved",
-  "lineup.errorToast": "We couldn't save that just now — try again.",
+  "lineup.errorToast": "We couldn't save that just now. Try again.",
 
   "performerNudge.body":
-    "You performed as {name} — {craft}. Want a page for that?",
+    "You performed as {name}, {craft}. Want a page for that?",
   "performerNudge.startCta": "Start it",
   "performerNudge.dismissCta": "Not now",
 };

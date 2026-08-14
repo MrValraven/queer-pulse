@@ -23,10 +23,10 @@ export const culture: Catalog = {
   "hero.eyebrow": "Lisbon scene & radio",
   "hero.title": "Lisbon's queer <em>scene</em>.",
   "hero.lead":
-    "The clubs, commissions, showcases, and radio that make up the city's queer cultural life — community-curated, ever-changing.",
+    "The clubs, commissions, showcases, and radio that make up the city's queer cultural life: community-curated, ever-changing.",
   "outro.title": "Make something <em>with us.</em>",
   "outro.sub":
-    "Culture isn't what happens at events. It's what we build between them — quietly, consistently, together.",
+    "Culture is what we build between events, quietly, consistently, together.",
   "outro.submitWorkCta": "Submit your work",
   "outro.exploreCommunitiesCta": "Explore communities",
 
@@ -53,7 +53,7 @@ export const culture: Catalog = {
   // ── Commission board ───────────────────────────────────────────────────
   "commissions.heading": "Creative <em>commissions.</em>",
   "commissions.sub":
-    "I'm making something — come help me make it better. More structured than the open board.",
+    "I'm making something. Come help me make it better. More structured than the open board.",
   "commissions.postProjectCta": "+ Post a project",
   "commissions.cat.photo": "Photography",
   "commissions.cat.music": "Music",
@@ -69,7 +69,7 @@ export const culture: Catalog = {
   // ── Art showcase ───────────────────────────────────────────────────────
   "showcase.heading": "Member <em>work.</em>",
   "showcase.sub":
-    "Rotating exhibition — 8 works shown at a time. Submissions reviewed monthly.",
+    "Rotating exhibition: 8 works shown at a time. Submissions reviewed monthly.",
   "showcase.submitWorkCta": "+ Submit your work",
   "showcase.emptyLive.title": "Featured work coming soon",
   "showcase.emptyLive.description":
@@ -78,7 +78,7 @@ export const culture: Catalog = {
   // ── Radio ──────────────────────────────────────────────────────────────
   "radio.heading": "Community <em>radio.</em>",
   "radio.sub":
-    "Ambient cultural presence — curated by rotating DJs. No algorithm. No ads.",
+    "Ambient cultural presence, curated by rotating DJs. No algorithm. No ads.",
   "radio.submitPlaylistCta": "Submit a playlist",
   "radio.emptyLive.title": "Radio schedule coming soon",
   "radio.emptyLive.description":
@@ -137,7 +137,7 @@ export const culture: Catalog = {
     "Your call for collaborators is in the queue. We keep the board small and intentional, so every post is read by a human first.",
   "postProject.success.step1": "A moderator reviews new posts within 48 hours.",
   "postProject.success.step2":
-    "Once live, you'll get interest by email — first replies usually arrive within a week.",
+    "Once live, you'll get interest by email. First replies usually arrive within a week.",
 
   // ── Submit your work modal ─────────────────────────────────────────────
   "submitWork.title": "Submit your <em>work</em>",
@@ -178,13 +178,13 @@ export const culture: Catalog = {
   "submitPlaylist.success.body":
     "Thank you for offering to take a turn on community radio. We rotate guest DJs so the sound stays human.",
   "submitPlaylist.success.step1":
-    "A curator listens to every submission — no algorithm, no skips.",
+    "A curator listens to every submission: no algorithm, no skips.",
   "submitPlaylist.success.step2":
     "If it's a fit, we'll book you a slot and email you by <strong>{date}</strong>.",
 
   // ── Commission interest modal ───────────────────────────────────────────
   "commissionInterest.errorToast":
-    "Couldn't send your interest — please try again.",
+    "Couldn't send your interest. Please try again.",
   "commissionInterest.eyebrow": "Express interest",
   "commissionInterest.title": "Reach out to <em>{name}</em>",
   "commissionInterest.sub":
@@ -201,7 +201,7 @@ export const culture: Catalog = {
   "commissionInterest.success.step2":
     "If they want to move forward, we'll introduce you by email.",
   "commissionInterest.success.step3":
-    "No pressure either way — collaborations here are always a yes from both sides.",
+    "No pressure either way. Collaborations here are always a yes from both sides.",
 
   // ── Chip options (looking-for / mediums / vibes) ────────────────────────
   "options.lookingFor.writer": "Writer",

@@ -43,17 +43,17 @@ export const cinema: Catalog = {
   "footer.about.publicLedger": "Registo público",
   "footer.about.access": "Acesso",
   "footer.about.queerpulse": "QueerPulse",
-  "footer.copyright": "© {year} QueerPulse Cinema Co-op CRL — Lisboa",
+  "footer.copyright": "© {year} QueerPulse Cinema Co-op CRL, Lisboa",
   "footer.split": "80% de cada aluguer vai para quem fez o filme.",
 
   // ── Página de entrada (CinemaPage.tsx) ─────────────────────────────────────
   "meta.title":
-    "QueerPulse Cinema — uma cooperativa de cinema queer, feita pela comunidade",
+    "QueerPulse Cinema: uma cooperativa de cinema queer, feita pela comunidade",
   "meta.description":
-    "Vê cinema queer em streaming, descobre coleções com curadoria e apoia filmes feitos aqui — o QueerPulse Cinema, uma cooperativa de cinema comunitária em Lisboa.",
+    "Vê cinema queer em streaming, descobre coleções com curadoria e apoia filmes feitos aqui. O QueerPulse Cinema, uma cooperativa de cinema comunitária em Lisboa.",
 
   // CinemaHero.tsx — CinemaMast / AskStrip / CinemaCover
-  "mast.issueLabel": "Programação — Semana {week} · {year}",
+  "mast.issueLabel": "Programação: Semana {week} · {year}",
   "mast.tagline":
     "Um teatro, um arquivo, uma cooperativa. <em>Oitenta por cento de cada aluguer</em> vai para quem fez o filme.",
   "mast.sectionNav.thisWeek": "Esta semana",
@@ -65,7 +65,7 @@ export const cinema: Catalog = {
   "mast.sectionNav.series": "Séries",
   "mast.sectionNav.openCalls": "Chamadas abertas",
   "ask.text":
-    "Não sabes o que ver? Diz-nos como te sentes e escolhemos um filme por ti — sem algoritmos, só curadoria.",
+    "Não sabes o que ver? Diz-nos como te sentes e escolhemos um filme por ti, escolhido pela curadoria em vez de um algoritmo.",
   "ask.cta": "Pergunta à sala",
   "cover.nowShowing": "Em exibição",
   "cover.freeForSustainers": "Grátis para sustentadores",
@@ -94,7 +94,7 @@ export const cinema: Catalog = {
   "programme.notebook.readMoreCta": "Ler a nota completa",
   "collectionsSection.title": "Explora uma <em>coleção</em>",
   "collectionsSection.lead":
-    "A curadoria constrói isto devagar, ao longo de meses. Não são playlists — são argumentos.",
+    "A curadoria constrói isto devagar, ao longo de meses. Cada uma é um argumento.",
   "collectionsSection.allCta": "Todas as coleções",
   "collectionsSection.totalSuffix": "no total",
   "madeHere.title": "Feito <em>aqui</em>",
@@ -130,12 +130,12 @@ export const cinema: Catalog = {
   "openCallsStrip.eyebrow_other": "{count} chamadas abertas agora",
   "openCallsStrip.title": "Faz a <em>próxima</em>.",
   "openCallsStrip.body":
-    "Encomendas, residências e mentorias — financiadas por sustentadores, pagas pela cooperativa. <em>{count} chamadas abertas · {amount} disponíveis esta temporada.</em>",
+    "Encomendas, residências e mentorias: financiadas por sustentadores, pagas pela cooperativa. <em>{count} chamadas abertas · {amount} disponíveis esta temporada.</em>",
   "openCallsStrip.cta": "Ver todas as chamadas abertas",
   "aboutStrip.eyebrow": "A cooperativa",
   "aboutStrip.title": "Um teatro, um arquivo, <em>uma sala</em>.",
   "aboutStrip.body":
-    "Programado por pessoas queer, pago a pessoas queer, governado por quem faz os filmes e por quem sustenta o projeto. Lê o que o QueerPulse Cinema realmente é — a escritura, a divisão, o conselho de curadoria.",
+    "Programado por pessoas queer, pago a pessoas queer, governado por quem faz os filmes e por quem sustenta o projeto. Lê o que o QueerPulse Cinema realmente é: a escritura, a divisão, o conselho de curadoria.",
   "aboutStrip.cta": "Lê a história da cooperativa",
   "outro.title": "Vê <em>em conjunto</em>.",
   "outro.sub": "O Cinema é uma sala com gente dentro. A sala está aberta.",
@@ -145,7 +145,7 @@ export const cinema: Catalog = {
   "browse.hero.eyebrow": "O catálogo completo",
   "browse.hero.title": "Explora <em>tudo</em>",
   "browse.hero.lead":
-    "{count} filmes, programados por pessoas queer e pagos a pessoas queer. Filtra por acesso, formato, idioma e estado de espírito — nunca por um algoritmo.",
+    "{count} filmes, programados por pessoas queer e pagos a pessoas queer. Filtra por acesso, formato, idioma e estado de espírito, guiado pela curadoria em vez de um algoritmo.",
   "browse.filters.heading": "Filtrar <em>e</em> ordenar",
   "browse.filters.clearAll": "Limpar tudo",
   "browse.filters.groupAccess": "Acesso",
@@ -189,7 +189,7 @@ export const cinema: Catalog = {
   "browse.results.inCatalogue": " no catálogo",
   "browse.empty.title": "Nenhum filme corresponde a estes filtros",
   "browse.empty.description":
-    "Tenta afrouxar um filtro ou dois — o catálogo é vasto, mas estas escolhas são específicas.",
+    "Tenta afrouxar um filtro ou dois. O catálogo é vasto, mas estas escolhas são específicas.",
   "browse.empty.clearCta": "Limpar filtros",
 
   // ── Chrome partilhado de relação entre filmes (data.ts filmRelationReason) ─
@@ -318,7 +318,7 @@ export const cinema: Catalog = {
   "collectionsIndex.outro.cta": "Abrir uma coleção",
   "collectionsIndex.card.curatedBy": "Com curadoria de",
   "collectionsIndex.propose.toast":
-    "Envia a tua tese de 200 palavras para curators@queerpulse.pt — o conselho responde em 3 semanas.",
+    "Envia a tua tese de 200 palavras para hello@queerpulse.com. O conselho responde em 3 semanas.",
   "collectionsIndex.propose.cta": "Propor uma coleção",
   "collectionsIndex.propose.meetCouncilCta": "Conhecer o conselho",
 
@@ -343,7 +343,7 @@ export const cinema: Catalog = {
   "curator.aside.otherCuratorsHeading": "Outras pessoas da curadoria",
   "curator.aside.contactHeading": "Contacto",
   "curator.aside.contactBody":
-    "Para questões de imprensa, propostas de exibição ou sugestões de coleção — contacta {name} através da cooperativa.",
+    "Para questões de imprensa, propostas de exibição ou sugestões de coleção, contacta {name} através da cooperativa.",
   "curator.aside.contactCta": "Contactar {name}",
   "curator.aside.proposeHeading": "Propor uma coleção",
   "curator.aside.proposeBody":
@@ -372,9 +372,9 @@ export const cinema: Catalog = {
   "filmmaker.main.upcomingEventsTitle": "Próximos eventos <em>de {name}</em>",
   "filmmaker.aside.tipHeading": "Dar gorjeta a {name}",
   "filmmaker.aside.tipSub":
-    "100% vai para {name} — a cooperativa não retém nada de uma gorjeta. As gorjetas ajudam a continuar a fazer trabalho.",
+    "100% vai para {name}. A cooperativa não retém nada de uma gorjeta. As gorjetas ajudam a continuar a fazer trabalho.",
   "filmmaker.aside.sendCta": "Enviar {amount}",
-  "filmmaker.aside.tippedToast": "{amount} a caminho de {name} — obrigade",
+  "filmmaker.aside.tippedToast": "{amount} a caminho de {name}. Obrigade",
   "filmmaker.aside.tippedNote_one":
     "<strong>{count} pessoa</strong> deu gorjeta a {name} este mês.",
   "filmmaker.aside.tippedNote_other":
@@ -391,14 +391,14 @@ export const cinema: Catalog = {
   // transparência são conteúdo editorial/comunitário desta página e ficam
   // em inglês ─────────────────────────────────────────────────────────────
   "shorts.toast.savedToWatchlist": "Adicionado à tua lista para ver",
-  "shorts.toast.linkCopiedShare": "Link copiado — partilha “{label}”",
+  "shorts.toast.linkCopiedShare": "Link copiado. Partilha “{label}”",
   "shorts.outro.title": "Dá uma gorjeta a <em>quem fez o filme</em>.",
   "shorts.outro.sub":
     "100% vai para essa pessoa. Sem taxas. Sem mínimo. Vê primeiro, decide depois.",
   "shorts.outro.browseCta": "Ver todos os filmes da comunidade",
   "shorts.header.eyebrow": "Filmes da comunidade · todos grátis para ver",
   "shorts.header.sub":
-    "Curtas, médias-metragens e documentários feitos por pessoas da QueerPulse. <em>Grátis para ver, pago para fazer.</em> Dá uma gorjeta a quem fez o filme — 100% vai para essa pessoa.",
+    "Curtas, médias-metragens e documentários feitos por pessoas da QueerPulse. <em>Grátis para ver, pago para fazer.</em> Dá uma gorjeta a quem fez o filme. 100% vai para essa pessoa.",
   "shorts.curatorNote.readPastNotesCta": "ler notas anteriores",
   "shorts.accessNote.body":
     "<strong>Todos os filmes têm legendas.</strong> As notas de conteúdo aparecem em cada filme, e os trabalhos com audiodescrição estão marcados com <em>AD</em>. Filtra pelas tuas necessidades de acesso abaixo.",
@@ -417,7 +417,7 @@ export const cinema: Catalog = {
   "shorts.shelf.becauseYouTipped.cta": "Página de {maker}",
   "shorts.shelf.firstFilm.title": "O primeiro <em>filme de alguém</em>",
   "shorts.shelf.firstFilm.sub":
-    "As estreias merecem uma primeira audiência — sê tu essa pessoa",
+    "As estreias merecem uma primeira audiência. Sê tu essa pessoa",
   "shorts.shelf.firstFilm.cta": "Ver todas as estreias",
   "shorts.shelf.mostTipped.title": "Mais <em>gorjetas</em>",
   "shorts.shelf.mostTipped.sub":
@@ -430,16 +430,16 @@ export const cinema: Catalog = {
     "{minutes} min restantes · {maker}",
   "shorts.shelf.programmes.title": "Ver por <em>programação</em>",
   "shorts.shelf.programmes.sub":
-    "Conjuntos de curtas com curadoria de membros — uma forma de começar quando não sabes por onde ir",
+    "Conjuntos de curtas com curadoria de membros, uma forma de começar quando não sabes por onde ir",
   "shorts.shelf.programmes.cta": "Todas as programações",
   "shorts.shelf.programmes.shareAriaLabel": "Partilhar programação",
   "shorts.shelf.meetMakers.title": "Conhece quem <em>faz os filmes</em>",
   "shorts.shelf.meetMakers.sub":
-    "Todos os filmes aqui têm uma pessoa por trás — diz olá",
+    "Todos os filmes aqui têm uma pessoa por trás. Diz olá",
   "shorts.shelf.meetMakers.cta": "Todas as pessoas cineastas",
   "shorts.catalog.title": "Explora o <em>catálogo completo</em>",
   "shorts.catalog.sub":
-    "Todos os filmes da comunidade — filtra, ordena e pesquisa à tua maneira",
+    "Todos os filmes da comunidade: filtra, ordena e pesquisa à tua maneira",
   "shorts.catalog.cta": "Abrir em Explorar",
   "shorts.catalog.searchPlaceholder": "Pesquisar filmes, pessoas ou temas…",
   "shorts.catalog.searchAriaLabel": "Pesquisar filmes",
@@ -450,9 +450,9 @@ export const cinema: Catalog = {
   "shorts.catalog.surpriseCta": "Surpreende-me",
   "shorts.catalog.surpriseToast": "Experimenta este → {title}",
   "shorts.catalog.allFilmsChip": "Todos os filmes",
-  "shorts.catalog.empty.title": "Nada corresponde — ainda",
+  "shorts.catalog.empty.title": "Nada corresponde, ainda",
   "shorts.catalog.empty.body":
-    "Nenhum filme corresponde a essa combinação. Alivia um filtro, ou diz-nos o que gostavas que existisse — encomendamos a partir de pedidos de membros.",
+    "Nenhum filme corresponde a essa combinação. Alivia um filtro, ou diz-nos o que gostavas que existisse. Encomendamos a partir de pedidos de membros.",
   "shorts.catalog.empty.clearCta": "Limpar filtros",
   "shorts.catalog.empty.suggestCta": "Sugerir um filme",
   "shorts.catalog.count_one": "<em>{count}</em> filme · todos grátis para ver",
@@ -466,7 +466,7 @@ export const cinema: Catalog = {
   "shorts.card.noContentNotes": "sem notas de conteúdo",
   "shorts.watchParties.title": "Ver <em>em conjunto</em>",
   "shorts.watchParties.sub":
-    "Salas ao vivo onde o conjunto todo passa de uma vez — quem fez os filmes está no chat",
+    "Salas ao vivo onde o conjunto todo passa de uma vez, quem fez os filmes está no chat",
   "shorts.watchParties.hostCta": "Organizar uma",
   "shorts.watchParties.nextBadge": "A seguir",
   "shorts.watchParties.goingCount_one": "{count} confirmada",
@@ -477,7 +477,7 @@ export const cinema: Catalog = {
   "shorts.vote.title": "Programa o <em>próximo conjunto</em>",
   "shorts.vote.yourPickLabel": "A tua escolha",
   "shorts.vote.voteCta": "Votar",
-  "shorts.vote.countedToast": "Voto contabilizado — obrigade",
+  "shorts.vote.countedToast": "Voto contabilizado. Obrigade",
   "shorts.transparency.heading": "Para onde foi o dinheiro · junho",
   "shorts.transparency.ledgerCta": "Ver o registo aberto",
   "shorts.submitCta.eyebrow": "O teu filme podia estar aqui",
@@ -517,16 +517,16 @@ export const cinema: Catalog = {
   "about.hero.eyebrow": "QueerPulse Cinema · a cooperativa",
   "about.hero.title": "Um teatro, um arquivo, <em>uma cooperativa</em>.",
   "about.hero.sub":
-    "O QueerPulse Cinema não é uma plataforma de streaming. É uma sala — programada por pessoas queer, <em>paga a pessoas queer</em>, governada por quem faz os filmes e por quem a sustenta.",
+    "O QueerPulse Cinema é uma sala: programada por pessoas queer, <em>paga a pessoas queer</em>, governada por quem faz os filmes e por quem a sustenta.",
   "about.deed.label": "A <em>escritura</em> · em linguagem simples",
   "about.deed.p1":
     "O QueerPulse Cinema existe porque as plataformas de streaming não foram feitas para nós. Ficam com 70%. Mostram os nossos filmes entre coisas que nunca escolheríamos. Enterram as nossas comunidades em etiquetas de identidade única e armadilhas algorítmicas.",
   "about.deed.p2":
     "Por isso construímos algo diferente. <strong>80% de cada aluguer ou compra</strong> vai para quem fez o filme, pago na segunda-feira seguinte. 100% de cada gorjeta vai diretamente para essa pessoa. A divisão é igual para todas as pessoas cineastas, sem exceções, nunca.",
   "about.deed.p3":
-    "O contrato não é exclusivo. <em>Ficas com o teu filme.</em> Podes mostrá-lo em qualquer outro lugar. Não impomos exclusividade, nem território exclusivo, nem direito de preferência. Não somos donos dele — estamo-lo a exibir.",
+    "O contrato não é exclusivo. <em>Ficas com o teu filme.</em> Podes mostrá-lo em qualquer outro lugar. Não impomos exclusividade, nem território exclusivo, nem direito de preferência. Apenas o estamos a exibir.",
   "about.deed.p4":
-    "O conselho de curadoria — seis pessoas, com rotação anual — programa o catálogo. Recebem um estipêndio votado por sustentadores do escalão patrono. O registo é público. O fundo de encomendas é público. O cálculo da divisão é público.",
+    "O conselho de curadoria (seis pessoas, com rotação anual) programa o catálogo. Recebem um estipêndio votado por sustentadores do escalão patrono. O registo é público. O fundo de encomendas é público. O cálculo da divisão é público.",
   "about.deed.p5": "<em>É este o acordo, por inteiro.</em>",
   "about.principles.title": "Seis <em>princípios</em>",
   "about.principles.p1.title": "Quem faz o filme <em>vem primeiro</em>",
@@ -534,7 +534,7 @@ export const cinema: Catalog = {
     "80% de cada transação, pago semanalmente. 100% das gorjetas. A divisão é igual para todas as pessoas. Sem exceções. Sem renegociação. <em>Está na escritura.</em>",
   "about.principles.p2.title": "Programar é <em>autoria</em>",
   "about.principles.p2.body":
-    "A curadoria não modera. É autora — escreve introduções, constrói argumentos, programa sequências. Os nomes de quem cura estão em tudo o que escolhem.",
+    "A curadoria é autora: escreve introduções, constrói argumentos, programa sequências. Os nomes de quem cura estão em tudo o que escolhem.",
   "about.principles.p3.title": "O acesso é <em>prioridade</em>",
   "about.principles.p3.body":
     "Todos os filmes têm legendas. A audiodescrição cresce todas as semanas. Notas de conteúdo com marcação temporal em cada título. Faixas de língua gestual sempre que possível. Isto não é um extra.",
@@ -551,7 +551,7 @@ export const cinema: Catalog = {
   "about.split.body1":
     "Quando alugas um filme por {rentPrice}, {filmmakerShare} vai para quem o fez. São 80%. Os restantes 20% cobrem o processamento de pagamentos (Stripe/IBAN, cerca de 12%) e os custos de alojamento de vídeo e legendagem (cerca de 8%).",
   "about.split.body2":
-    "Numa compra direta de {buyPrice}, aplica-se a mesma divisão 80/20: <em>{buyFilmmakerShare} para quem fez o filme.</em> Nas gorjetas, 100% vai para essa pessoa — não retemos nada de uma gorjeta.",
+    "Numa compra direta de {buyPrice}, aplica-se a mesma divisão 80/20: <em>{buyFilmmakerShare} para quem fez o filme.</em> Nas gorjetas, 100% vai para essa pessoa. Não retemos nada de uma gorjeta.",
   "about.split.body3":
     "O fundo da biblioteca de sustentadores é distribuído mensalmente com base nos minutos vistos, com 80% a ir para quem faz os filmes a partir da receita das subscrições, depois dos custos da plataforma.",
   "about.split.viewAccountsCta": "Ver as contas públicas completas",
@@ -564,7 +564,7 @@ export const cinema: Catalog = {
     "As gorjetas são 100% para quem fez o filme. Sem dedução.",
   "about.council.title": "O conselho de <em>curadoria</em>",
   "about.council.sub":
-    "Seis pessoas que programam o cinema. Alternam todos os anos — nomeadas pela comunidade, confirmadas por voto de sustentadores. Cada uma traz uma geografia, um foco e um olhar diferentes.",
+    "Seis pessoas que programam o cinema. Alternam todos os anos, nomeadas pela comunidade, confirmadas por voto de sustentadores. Cada uma traz uma geografia, um foco e um olhar diferentes.",
   "about.gov.ledgerTitle": "Registo <em>público</em> · {month}",
   "about.gov.ledger.sustainers": "Sustentadores",
   "about.gov.ledger.paidToFilmmakers": "Pago a cineastas este mês",
@@ -601,7 +601,7 @@ export const cinema: Catalog = {
   "rights.hero.eyebrow": "Para cineastas · os teus direitos",
   "rights.hero.title": "O teu filme <em>continua teu</em>.",
   "rights.hero.sub":
-    "Tudo sobre como a cooperativa trata o teu trabalho — a divisão, o contrato, o que podemos e não podemos fazer, como sais se quiseres. <em>Linguagem simples, sem asteriscos.</em>",
+    "Tudo sobre como a cooperativa trata o teu trabalho: a divisão, o contrato, o que podemos e não podemos fazer, como sais se quiseres. <em>Linguagem simples, sem asteriscos.</em>",
   "rights.hero.shortVersionHeading": "A versão resumida",
   "rights.shortVersion.revenueSplit.label": "Divisão de receita",
   "rights.shortVersion.revenueSplit.value": "<em>80</em>% para ti",
@@ -630,11 +630,11 @@ export const cinema: Catalog = {
   "rights.section.access.title": "<em>Acessibilidade</em>",
   "rights.contractCard.eyebrow": "O contrato, em linguagem simples",
   "rights.contractCard.title":
-    "Aquilo a que te comprometes — e aquilo a que <em>nós</em> nos comprometemos.",
+    "Aquilo a que te comprometes, e aquilo a que <em>nós</em> nos comprometemos.",
   "rights.contractCard.point.pay": "Pagamos-te 80% de cada transação",
   "rights.contractCard.point.tips": "100% das gorjetas vão para ti, sem taxas",
   "rights.contractCard.point.nonExclusive":
-    "Não-exclusivo — mostra-o noutros sítios também",
+    "Não-exclusivo: mostra-o noutros sítios também",
   "rights.contractCard.point.territory":
     "Escolhes os territórios onde servimos o filme",
   "rights.contractCard.point.consent":
@@ -653,10 +653,10 @@ export const cinema: Catalog = {
   // ficam em inglês, tal como o precedente dos dados fictícios no resto deste
   // ficheiro. ─────────────────────────────────────────────────────────────
   "openCalls.hero.sub":
-    "Encomendas, residências e mentorias — financiadas por sustentadores, pagas pela cooperativa, distribuídas através do Cinema. <em>Só para cineastas queer. Qualquer pessoa pode candidatar-se.</em>",
+    "Encomendas, residências e mentorias: financiadas por sustentadores, pagas pela cooperativa, distribuídas através do Cinema. <em>Só para cineastas queer. Qualquer pessoa pode candidatar-se.</em>",
   "openCalls.hero.seasonLabel": "Temporada 3 · primavera/verão 2026",
   "openCalls.hero.sidebarNote":
-    "Financiado pelas subscrições de sustentadores. O fundo cresce todos os meses — cada novo sustentador acrescenta ~{amount} ao fundo da próxima temporada.",
+    "Financiado pelas subscrições de sustentadores. O fundo cresce todos os meses. Cada novo sustentador acrescenta ~{amount} ao fundo da próxima temporada.",
   "openCalls.hero.stat.totalAvailable": "Total disponível",
   "openCalls.hero.stat.activeCalls": "Chamadas ativas",
   "openCalls.hero.stat.applicationsSoFar": "Candidaturas até agora",
@@ -667,7 +667,7 @@ export const cinema: Catalog = {
     "Cada sustentador, com {price}/mês, contribui com ~{poolShare} por mês para o fundo de encomendas. O total do fundo é público.",
   "openCalls.how.step2.title": "A curadoria <em>define as chamadas</em>",
   "openCalls.how.step2.body":
-    "Em cada temporada, o conselho de curadoria escreve os termos — abertos, específicos, enraizados nos filmes que querem ver existir.",
+    "Em cada temporada, o conselho de curadoria escreve os termos: abertos, específicos, enraizados nos filmes que querem ver existir.",
   "openCalls.how.step3.title": "Cineastas <em>candidatam-se</em>",
   "openCalls.how.step3.body":
     "As candidaturas são avaliadas pelo conselho de curadoria. Decisões em 14 dias. Feedback por escrito, aceite ou não.",
@@ -683,7 +683,7 @@ export const cinema: Catalog = {
   "openCalls.card.applyNowCta": "Candidatar-te agora",
   "openCalls.card.downloadBriefCta": "Descarregar termos (PDF)",
   "openCalls.card.downloadToast":
-    "Os termos em PDF estão a ser descarregados — verifica os teus ficheiros.",
+    "Os termos em PDF estão a ser descarregados. Verifica os teus ficheiros.",
   "openCalls.card.applyCta": "Candidatar-te",
   "openCalls.outro.title": "Financia a <em>próxima</em> chamada.",
   "openCalls.outro.sub":
@@ -702,7 +702,7 @@ export const cinema: Catalog = {
   "membership.tier.free.tag": "Grátis · sempre",
   "membership.tier.free.name": "A <em>porta</em>",
   "membership.tier.free.desc":
-    "A porta está aberta. Filmes da comunidade, curtas do Feito aqui, e filmes selecionados no escalão gratuito — sem conta necessária. Sem limite de tempo.",
+    "A porta está aberta. Filmes da comunidade, curtas do Feito aqui, e filmes selecionados no escalão gratuito. Sem conta necessária. Sem limite de tempo.",
   "membership.tier.free.feature1":
     "Todos os filmes do escalão gratuito (40+ no catálogo)",
   "membership.tier.free.feature2": "Todas as curtas do Feito aqui",
@@ -718,7 +718,7 @@ export const cinema: Catalog = {
     "Tudo no Cinema, e ainda os teus {price} financiam diretamente o fundo de encomendas, o fundo de legendagem e o estipêndio da curadoria. O número é transparente.",
   "membership.tier.sustainer.feature1": "Tudo no escalão Grátis",
   "membership.tier.sustainer.feature2":
-    "Biblioteca completa de sustentadores — 142 filmes",
+    "Biblioteca completa de sustentadores, 142 filmes",
   "membership.tier.sustainer.feature3":
     "Downloads offline (títulos de sustentador)",
   "membership.tier.sustainer.feature4":
@@ -726,7 +726,7 @@ export const cinema: Catalog = {
   "membership.tier.sustainer.feature5":
     "Vota nas chamadas abertas e encomendas",
   "membership.tier.sustainer.feature6":
-    "Bloco de notas da curadoria — ensaios completos",
+    "Bloco de notas da curadoria, ensaios completos",
   "membership.tier.sustainer.feature7":
     "Acesso a cópias de festival (screeners)",
   "membership.tier.sustainer.cta": "Torna-te sustentador · {price}/mês",
@@ -751,14 +751,14 @@ export const cinema: Catalog = {
   "membership.tier.patron.note": "Cancela quando quiseres.",
   "membership.pays.title": "Para onde o dinheiro <em>vai mesmo</em>",
   "membership.pays.sub":
-    "Publicamos o detalhe completo trimestralmente. Aqui está a versão resumida — números honestos, atualizados mensalmente.",
+    "Publicamos o detalhe completo trimestralmente. Aqui está a versão resumida, números honestos, atualizados mensalmente.",
   "membership.pays.filmmakers.title": "Pago a <em>cineastas</em>",
   "membership.pays.filmmakers.body":
     "80% de cada aluguer ou compra vai diretamente para quem fez o filme. As gorjetas são 100% deles. O fundo de sustentadores é distribuído mensalmente por minuto visto.",
   "membership.pays.filmmakers.numSub": "Este mês · para cineastas",
   "membership.pays.commissioning.title": "Fundo de <em>encomendas</em>",
   "membership.pays.commissioning.body":
-    "~20% das subscrições de sustentadores entra no fundo de encomendas — chamadas abertas, residências e apoio à legendagem para cineastas da comunidade.",
+    "~20% das subscrições de sustentadores entra no fundo de encomendas: chamadas abertas, residências e apoio à legendagem para cineastas da comunidade.",
   "membership.pays.commissioning.numSub": "Disponível esta temporada",
   "membership.pays.curators.title": "Curadoria e <em>legendas</em>",
   "membership.pays.curators.body":
@@ -788,10 +788,10 @@ export const cinema: Catalog = {
   "submit.header.eyebrow": "Para cineastas · submissão aberta",
   "submit.header.title": "Submete <em>o teu</em> filme.",
   "submit.header.sub":
-    "O Cinema está aberto a qualquer cineasta queer — pessoa da comunidade ou não. Cinco passos, 20 minutos. Escolhes o teu modelo de receita. A divisão é igual para todos: 80% de cada aluguer ou compra vem para ti.",
+    "O Cinema está aberto a qualquer cineasta queer, pessoa da comunidade ou não. Cinco passos, 20 minutos. Escolhes o teu modelo de receita. A divisão é igual para todos: 80% de cada aluguer ou compra vem para ti.",
   "submit.promise.heading": "A promessa, em números",
   "submit.promise.note":
-    "Não-exclusivo significa que podes continuar a mostrar noutros sítios — festivais, o teu próprio site, outras plataformas. Não impomos aprisionamento.",
+    "Não-exclusivo significa que podes continuar a mostrar noutros sítios: festivais, o teu próprio site, outras plataformas. Não impomos aprisionamento.",
   "submit.promise.row.yourShareRent": "A tua parte de cada aluguer",
   "submit.promise.row.yourShareBuy": "A tua parte de cada compra",
   "submit.promise.row.yourShareTip": "A tua parte de cada gorjeta",
@@ -833,23 +833,23 @@ export const cinema: Catalog = {
   "submit.success.em": "na fila.",
   "submit.success.closeLabel": "Voltar ao Cinema",
   "submit.success.step1":
-    "Uma pessoa vê-o em 10–14 dias — todas as submissões, sem exceções.",
+    "Uma pessoa vê-o em 10–14 dias, todas as submissões, sem exceções.",
   "submit.success.step2":
     "Respondemos sempre, com notas específicas se for uma recusa.",
   "submit.success.step3":
     "Se for um sim, és pago em 7 dias de cada aluguer, compra e gorjeta.",
   "submit.success.body":
-    "Obrigade por nos confiares o teu filme. Não-exclusivo significa que nada muda para ti noutros sítios — continua a mostrá-lo onde quiseres enquanto o vemos.",
+    "Obrigade por nos confiares o teu filme. Não-exclusivo significa que nada muda para ti noutros sítios. Continua a mostrá-lo onde quiseres enquanto o vemos.",
   "submit.success.anotherCta": "Submeter outro filme",
   "submit.comingSoon.title": "As submissões ainda",
   "submit.comingSoon.em": "não estão abertas.",
   "submit.comingSoon.body":
-    "O Made Here ainda não recebe filmes, por isso nada do que escreveres aqui é enviado ou guardado. Estamos a construir o processo de submissão — volta em breve e, entretanto, vê o que a cooperativa já está a exibir.",
+    "O Made Here ainda não recebe filmes, por isso nada do que escreveres aqui é enviado ou guardado. Estamos a construir o processo de submissão. Volta em breve e, entretanto, vê o que a cooperativa já está a exibir.",
   "submit.comingSoon.closeLabel": "Ver o cinema",
   "submit.aside.nextHeading": "O que acontece a seguir",
   "submit.aside.accessHeading": "Norma de acessibilidade",
   "submit.aside.accessBody":
-    "Pedimos legendas — mas também ajudamos a consegui-las. Se não puderes pagar a legendagem, contacta-nos. Temos um pequeno fundo de legendagem para cineastas da comunidade.",
+    "Pedimos legendas, mas também ajudamos a consegui-las. Se não puderes pagar a legendagem, contacta-nos. Temos um pequeno fundo de legendagem para cineastas da comunidade.",
   "submit.aside.accessCta": "A nossa norma de acesso",
   "submit.aside.openCallHeading": "Chamada aberta ativa",
   "submit.aside.applyCta": "Candidatar-te à encomenda",
@@ -858,7 +858,7 @@ export const cinema: Catalog = {
     "Todas as submissões são vistas por uma pessoa, em 10–14 dias.",
   "submit.aside.next.point2.strong": "Respondemos sempre.",
   "submit.aside.next.point2.rest":
-    "Se não aceitarmos, dizemos porquê especificamente — nunca uma recusa genérica.",
+    "Se não aceitarmos, dizemos porquê especificamente, com palavras nossas.",
   "submit.aside.next.point3.strong": "Contrato não-exclusivo.",
   "submit.aside.next.point3.rest":
     "Mantens todos os teus outros direitos. Podes continuar a mostrar o filme noutros sítios.",
@@ -872,7 +872,7 @@ export const cinema: Catalog = {
   // placeholders/texto de ajuda de cada passo.
   "submit.form.step1.heading": "Conta-nos sobre <em>o teu filme</em>",
   "submit.form.step1.sub":
-    "Informação básica — visível na página pública do filme",
+    "Informação básica, visível na página pública do filme",
   "submit.form.step1.title.label": "Título do filme",
   "submit.form.step1.title.placeholder": "ex.: A luz entre os quartos",
   "submit.form.step1.originalTitle.label": "Título original",
@@ -886,7 +886,7 @@ export const cinema: Catalog = {
   "submit.form.step1.format.ariaLabel": "Formato",
   "submit.form.step1.synopsis.label": "Sinopse",
   "submit.form.step1.synopsis.why":
-    "Escrita por ti, com a tua própria voz. 80–200 palavras. Não é um pitch — descreve o filme como se estivesses a escrever a alguém que ainda não o viu.",
+    "Escrita por ti, com a tua própria voz. 80–200 palavras. Não é um pitch. Descreve o filme como se estivesses a escrever a alguém que ainda não o viu.",
   "submit.form.step1.synopsis.placeholder":
     "Um filme paciente e generoso sobre pessoas queer idosas da classe trabalhadora de Lisboa, feito ao longo de três anos nas cozinhas que as criaram…",
   "submit.form.step1.statement.label": "Nota de realização",
@@ -902,7 +902,7 @@ export const cinema: Catalog = {
     "Só de autoidentificação. Ajudam quem vê a encontrar mais trabalho das tuas comunidades. Nunca obrigatório. Marca o que quiseres mostrar.",
   "submit.form.step1.contentNotes.label": "Notas de conteúdo",
   "submit.form.step1.contentNotes.why":
-    "Mostramo-las em destaque, com códigos de tempo se conseguires indicá-los. Pensa nelas como informação, não avisos — ajudam quem vê a decidir se esta é a noite certa para o teu filme.",
+    "Mostramo-las em destaque, com códigos de tempo se conseguires indicá-los. Pensa nelas como informação: ajudam quem vê a decidir se esta é a noite certa para o teu filme.",
   "submit.form.step1.poster.label": "Carregar cartaz / imagem principal",
   "submit.form.step1.poster.why":
     "Proporção 3:4 preferida. Mínimo 1800px de altura. Usado na página do teu filme e na grelha do catálogo.",
@@ -914,7 +914,7 @@ export const cinema: Catalog = {
 
   "submit.form.step2.heading": "Materiais de <em>acessibilidade</em>",
   "submit.form.step2.sub":
-    "Legendas, audiodescrição, línguas gestuais. Ajudamos se estiveres com dificuldades — ninguém fica de fora por causa do custo.",
+    "Legendas, audiodescrição, línguas gestuais. Ajudamos se estiveres com dificuldades. Ninguém fica de fora por causa do custo.",
   "submit.form.step2.captions.label": "Já tens legendas?",
   "submit.form.step2.captions.why":
     "Legendamos todos os filmes antes de ficarem disponíveis. Se não tiveres legendas, o nosso fundo de acessibilidade pode fazê-las por ti.",
@@ -1058,7 +1058,7 @@ export const cinema: Catalog = {
 
   // "submit.widgets.*" — ContentNotesBuilder + PosterUpload (CinemaSubmitWidgets.tsx).
   "submit.widgets.contentNotes.head":
-    "Adiciona uma linha por tema — com o máximo de detalhe possível",
+    "Adiciona uma linha por tema, com o máximo de detalhe possível",
   "submit.widgets.contentNotes.topicPlaceholder": "ex.: Luto",
   "submit.widgets.contentNotes.detailPlaceholder":
     "ex.: Discussão sobre luto e a morte de uma pessoa querida",
@@ -1112,9 +1112,9 @@ export const cinema: Catalog = {
   "watch.overlay.ariaLabel": "Notas de conteúdo antes de veres",
   "watch.overlay.heading": "Antes de <em>veres</em>",
   "watch.overlay.sub_one":
-    "Este filme tem {count} nota de conteúdo. Faz uma pausa — depois decide quando estiveres pronto.",
+    "Este filme tem {count} nota de conteúdo. Faz uma pausa, depois decide quando estiveres pronto.",
   "watch.overlay.sub_other":
-    "Este filme tem {count} notas de conteúdo. Faz uma pausa — depois decide quando estiveres pronto.",
+    "Este filme tem {count} notas de conteúdo. Faz uma pausa, depois decide quando estiveres pronto.",
   "watch.overlay.readyCta": "Estou pronto · reproduzir o filme",
   "watch.overlay.backCta": "Voltar à página do filme",
   "watch.tab.filmInfo": "Informação do filme",
@@ -1151,7 +1151,7 @@ export const cinema: Catalog = {
   "live.signIn.cta": "Iniciar sessão",
   "live.empty.title": "O programa está calmo neste momento",
   "live.empty.description":
-    "Ainda não há filmes a passar. Volta em breve — há títulos novos todas as semanas.",
+    "Ainda não há filmes a passar. Volta em breve. Há títulos novos todas as semanas.",
   "live.error.title": "O programa não carregou",
   "live.error.description":
     "Algo correu mal ao carregar o catálogo. Tenta novamente daqui a pouco.",
@@ -1174,7 +1174,7 @@ export const cinema: Catalog = {
   // de filme). Browse e Watch estão ativos, por isso apontamos para o catálogo.
   "comingSoon.title": "Esta bobina ainda está na montagem",
   "comingSoon.description":
-    "As coleções, os perfis de realizadores e os convites abertos ainda estão em produção. Os filmes já estão ativos — explora o catálogo e carrega em play.",
+    "As coleções, os perfis de realizadores e os convites abertos ainda estão em produção. Os filmes já estão ativos. Explora o catálogo e carrega em play.",
   "comingSoon.browseCta": "Explorar filmes",
   "comingSoon.backHome": "Voltar ao início",
 };

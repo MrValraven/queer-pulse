@@ -15,7 +15,7 @@ export const messages: Catalog = {
   "thread.clearSearch": "Limpar pesquisa",
   "thread.emptyTitle": "Ainda sem conversas",
   "thread.emptyDescription":
-    "Quando começares uma conversa, ela fica aqui — um espaço tranquilo e privado só para ti e para quem contactares.",
+    "Quando começares uma conversa, ela fica aqui: um espaço tranquilo e privado só para ti e para quem contactares.",
   "thread.newMessage": "Nova mensagem",
   "thread.presenceOnline": "Online agora",
   "thread.menuAria": "Opções da conversa",
@@ -37,9 +37,9 @@ export const messages: Catalog = {
   "thread.tabEmptyGroups": "Ainda sem conversas de grupo",
   "deleteChat.confirmTitle": "Apagar esta conversa?",
   "deleteChat.confirmBody":
-    "Desaparece da tua caixa de entrada e limpa a tua cópia. {name} mantém a dele(a) — e se te enviar mensagem outra vez, a conversa volta só com as mensagens novas.",
+    "Desaparece da tua caixa de entrada e limpa a tua cópia. {name} mantém a dele(a), e se te enviar mensagem outra vez, a conversa volta só com as mensagens novas.",
   "deleteChat.confirmBodyGeneric":
-    "Desaparece da tua caixa de entrada e limpa a tua cópia. A outra pessoa mantém a dela — e se te enviar mensagem outra vez, a conversa volta só com as mensagens novas.",
+    "Desaparece da tua caixa de entrada e limpa a tua cópia. A outra pessoa mantém a dela, e se te enviar mensagem outra vez, a conversa volta só com as mensagens novas.",
   "deleteChat.confirmCta": "Apagar conversa",
   "deleteChat.cancelCta": "Cancelar",
 
@@ -49,15 +49,15 @@ export const messages: Catalog = {
   "gif.searchPlaceholder": "Procurar GIFs",
   "gif.loading": "A carregar GIFs…",
   "gif.empty": "Nenhum GIF encontrado",
-  "gif.error": "Não foi possível carregar os GIFs — tenta de novo",
+  "gif.error": "Não foi possível carregar os GIFs. Tenta de novo",
   "gif.loadMore": "Ver mais",
   "gif.poweredBy": "Com tecnologia KLIPY",
   "gif.comingSoonTitle": "Os GIFs estão a chegar",
-  "gif.comingSoonHint": "Estamos a preparar a pesquisa de GIFs — volta em breve para dar movimento às tuas mensagens.",
+  "gif.comingSoonHint": "Estamos a preparar a pesquisa de GIFs. Volta em breve para dar movimento às tuas mensagens.",
 
   // Connection status strip (ConnectionStatusBanner) at the top of the open
   // thread — surfaces when the member is offline or the socket is reconnecting.
-  "connection.offline": "Estás offline — as mensagens serão enviadas quando voltares a ligar-te.",
+  "connection.offline": "Estás offline. As mensagens serão enviadas quando voltares a ligar-te.",
   "connection.reconnecting": "A reconectar…",
 
   // Atalhos — o "?" no compositor que lista os símbolos de menção. Tocar numa
@@ -105,7 +105,7 @@ export const messages: Catalog = {
   "conversation.loadingOlder": "A carregar mensagens anteriores…",
   "conversation.typing": "{name} está a escrever…",
   "conversation.officialNotice":
-    "Esta é uma conversa automática — as respostas não são monitorizadas.",
+    "Esta é uma conversa automática. As respostas não são monitorizadas.",
   "conversation.blockedNotice":
     "Bloqueaste {name}. Desbloqueia esta pessoa a partir do perfil dela para enviares uma mensagem.",
   "conversation.composerPlaceholder": "Mensagem para {name}…",
@@ -116,7 +116,7 @@ export const messages: Catalog = {
   "conversation.backToList": "Voltar às conversas",
   "conversation.emptyPanelTitle": "As tuas mensagens ficam aqui",
   "conversation.emptyPanelBody":
-    "Escolhe uma conversa à esquerda, ou começa uma nova — um espaço tranquilo e privado só para ti e para quem contactares.",
+    "Escolhe uma conversa à esquerda, ou começa uma nova: um espaço tranquilo e privado só para ti e para quem contactares.",
   "day.today": "Hoje",
   "day.yesterday": "Ontem",
   // Rótulo só para leitores de ecrã do separador de dia; `day` é o cabeçalho
@@ -187,7 +187,7 @@ export const messages: Catalog = {
   "starred.title": "Mensagens guardadas",
   "starred.open": "Mensagens guardadas",
   "starred.close": "Fechar",
-  "starred.sub": "Mensagens que guardaste — só tu as vês.",
+  "starred.sub": "Mensagens que guardaste. Só tu as vês.",
   "starred.loading": "A carregar as tuas mensagens guardadas…",
   "starred.empty":
     "Ainda não guardaste nada. Guarda uma mensagem para a manteres aqui.",
@@ -266,5 +266,5 @@ export const messages: Catalog = {
   "conversation.reportMemberAction": "Denunciar {name}",
   "report.memberTitle": "Denunciar {name}?",
   "conversation.contactSafetyNotice":
-    "Mantém a conversa aqui até confiares em alguém. Nunca envies dinheiro, nem partilhes dados bancários — anúncios verdadeiros não pedem isso.",
+    "Mantém a conversa aqui até confiares em alguém. Nunca envies dinheiro, nem partilhes dados bancários. Anúncios verdadeiros não pedem isso.",
 };

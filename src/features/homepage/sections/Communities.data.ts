@@ -79,7 +79,7 @@ export const spotlightCommunities: SpotlightCommunity[] = [
     railName: "Queer Runners Lisboa",
     sub: "Run the city together",
     photo: "Riverside run, last Sunday",
-    desc: "Slow jogs and fast friendships. We run the city together every Sunday at everyone's pace and brunch after — newcomers always get a buddy, and nobody runs alone.",
+    desc: "Slow jogs and fast friendships. We run the city together every Sunday at everyone's pace and brunch after. Newcomers always get a buddy, and nobody runs alone.",
     quote: "Nobody has ever once asked me to prove I belong here.",
     photoSrc:
       "https://images.unsplash.com/photo-1656387978687-dea3f486f9f0?q=80&w=1631&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -133,7 +133,7 @@ export const spotlightCommunities: SpotlightCommunity[] = [
     railName: "Trans & Non-Binary Hub",
     sub: "Docs, HRT, plain warmth",
     photo: "Name-change clinic evening",
-    desc: "The city's biggest trans, non-binary and questioning space — sharing documents know-how, HRT and healthcare experience, and steady warmth from people who've walked it.",
+    desc: "The city's biggest trans, non-binary and questioning space, sharing documents know-how, HRT and healthcare experience, and steady warmth from people who've walked it.",
     quote: "The first space I didn't have to explain myself in.",
     photoSrc:
       "https://images.unsplash.com/photo-1656408455261-e7e915a3285c?q=80&w=1430&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -180,9 +180,9 @@ export const spotlightCommunities: SpotlightCommunity[] = [
     name: "Rainbow Arts Collective",
     railName: "Rainbow Arts Collective",
     sub: "Make things together",
-    photo: "Studio wall — members' work",
-    desc: "A working collective of painters, zinemakers, filmmakers and poets — members share pieces in progress, run crits, and open their studios for late nights of making.",
-    quote: "I found my collaborators here, not just an audience.",
+    photo: "Studio wall, members' work",
+    desc: "A working collective of painters, zinemakers, filmmakers and poets. Members share pieces in progress, run crits, and open their studios for late nights of making.",
+    quote: "I found real collaborators here, people who make things with me.",
     photoSrc:
       "https://images.unsplash.com/photo-1566661983838-6f38e8698883?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     by: {
@@ -230,7 +230,7 @@ export const spotlightCommunities: SpotlightCommunity[] = [
     sub: "QTIBIPOC mutual care & joy",
     photo: "Sunday cookout, full table",
     desc: "A QTIBIPOC community built on mutual care, cooking together, and joy that doesn't need explaining. Aid and housing threads run alongside the good times.",
-    quote: "Somewhere I can bring my whole self — and get fed.",
+    quote: "Somewhere I can bring my whole self, and get fed.",
     photoSrc:
       "https://images.unsplash.com/photo-1691857930568-059f0dba3ad2?q=80&w=1462&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     by: {
@@ -277,7 +277,7 @@ export const spotlightCommunities: SpotlightCommunity[] = [
     railName: "Queer Youth 18–25",
     sub: "Finding your feet",
     photo: "Study & chill co-working",
-    desc: "For younger queers finding their footing in Lisbon — study sessions, cheap-eats hangs, and the kind of advice you wish someone had given you at eighteen.",
+    desc: "For younger queers finding their footing in Lisbon: study sessions, cheap-eats hangs, and the kind of advice you wish someone had given you at eighteen.",
     quote: "I moved here alone at nineteen. Not anymore.",
     photoSrc:
       "https://images.unsplash.com/photo-1628873990671-ebb286caa69e?q=80&w=1026&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -325,7 +325,7 @@ export const spotlightCommunities: SpotlightCommunity[] = [
     railName: "Queer Parents",
     sub: "Parents & chosen family",
     photo: "Playground picnic",
-    desc: "Parents and chosen family swapping playgrounds, school and clinic recommendations, and the occasional survival tip — plus real weekend plans you can bring the kids to.",
+    desc: "Parents and chosen family swapping playgrounds, school and clinic recommendations, and the occasional survival tip, plus real weekend plans you can bring the kids to.",
     quote: "Our kids have a whole extra family now.",
     photoSrc:
       "https://images.unsplash.com/photo-1648254799751-398eba5d64d1?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -372,7 +372,7 @@ export const spotlightCommunities: SpotlightCommunity[] = [
     railName: "Disabled Queers",
     sub: "Access comes first",
     photo: "Sensory-friendly hang",
-    desc: "Access comes first, always — every plan is built around what people actually need, from sensory-friendly hangs to benefits and admin know-how and spoons-aware check-ins.",
+    desc: "Access comes first, always: every plan is built around what people actually need, from sensory-friendly hangs to benefits and admin know-how and spoons-aware check-ins.",
     quote: "Plans are built around what I actually need. Every time.",
     photoSrc:
       "https://images.unsplash.com/photo-1783626860180-c5138d52db0a?q=80&w=1096&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -421,7 +421,7 @@ export const spotlightCommunities: SpotlightCommunity[] = [
     photo: "Packing solidarity boxes",
     photoSrc:
       "https://images.unsplash.com/photo-1777028541220-48d7e950bbb3?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    desc: "Neighbours helping neighbours, never charity. Emergency funds, paperwork buddying and housing support, organised transparently by the people who need it most.",
+    desc: "Neighbours helping neighbours, as equals. Emergency funds, paperwork buddying and housing support, organised transparently by the people who need it most.",
     quote: "When my landlord evicted me, they had a plan by morning.",
     by: {
       initials: "A",
@@ -471,7 +471,7 @@ export const spotlightCommunities: SpotlightCommunity[] = [
     railName: "Queer Elders 50+",
     sub: "Coffee, memory, mischief",
     photo: "Coffee, cards, laughing",
-    desc: "The ones who made the road we walk, still very much walking it — weekly coffee, oral-history evenings, and a friendly help desk for tech and admin.",
+    desc: "The ones who made the road we walk, still very much walking it: weekly coffee, oral-history evenings, and a friendly help desk for tech and admin.",
     quote:
       "At sixty-two, I've made more queer friends this year than in my whole life.",
     photoSrc:

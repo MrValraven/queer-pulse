@@ -103,6 +103,7 @@ function groupConversationToView(dto: ConversationResponse): Conversation {
     initials: groupInitials(title),
     tint: "plum",
     avatarUrl: dto.avatarUrl ?? undefined,
+    avatarCrop: dto.avatarCrop ?? undefined,
     name: title,
     pronouns: "",
     connectedSince: "",

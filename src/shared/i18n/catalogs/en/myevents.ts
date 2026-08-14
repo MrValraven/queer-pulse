@@ -14,7 +14,7 @@ export const myevents: Catalog = {
   "page.eyebrow": "Your account · Events",
   "page.title": "Your <em>events</em>",
   "page.sub":
-    "Everything you're going to, everything you're running — gathered in one warm place.",
+    "Everything you're going to, everything you're running: gathered in one warm place.",
   "header.settingsAria": "Event preferences",
   "header.notifAria": "Notifications",
   "header.createCta": "Create a gathering",
@@ -65,7 +65,7 @@ export const myevents: Catalog = {
 
   // ── Offline banner ─────────────────────────────────────────────────────────
   "offline.banner":
-    "You're offline — showing your saved events. We'll sync any changes when you're back.",
+    "You're offline. Showing your saved events. We'll sync any changes when you're back.",
 
   // ── Agenda grouping (myEvents.agenda.ts → EventAgenda) ────────────────────
   "agenda.today": "Today",
@@ -85,34 +85,34 @@ export const myevents: Catalog = {
   // "no events" — see EventAgenda).
   "agenda.error.title": "We couldn't load your <em>events</em>",
   "agenda.error.description":
-    "Something went wrong reaching your calendar. Your events are safe — this is just a hiccup on our side.",
+    "Something went wrong reaching your calendar. Your events are safe. This is just a hiccup on our side.",
   "agenda.error.retry": "Try again",
 
   // ── Empty states (empties.data.tsx, Pattern B) ────────────────────────────
   "empties.upcoming.title": "Nothing on the calendar <em>yet</em>",
   "empties.upcoming.sub":
-    "When you say yes to a gathering or host one of your own, it'll land right here. There's always something on — have a look when you're ready.",
+    "When you say yes to a gathering or host one of your own, it'll land right here. There's always something on. Have a look when you're ready.",
   "empties.upcoming.browseCta": "Browse gatherings",
   "empties.upcoming.hostCta": "Host your own",
   "empties.going.title": "No RSVPs <em>right now</em>",
   "empties.going.sub":
-    "You haven't said yes to anything coming up. Browse what's on — a film night, a picnic, a quiet book club — and say yes to one.",
+    "You haven't said yes to anything coming up. Browse what's on (a film night, a picnic, a quiet book club) and say yes to one.",
   "empties.going.cta": "See what's on",
   "empties.hosting.title": "You're not hosting <em>anything</em>",
   "empties.hosting.sub":
-    "The best gatherings start with one person deciding to make space. Yours could be a small dinner or a whole picnic — we'll help you run it.",
+    "The best gatherings start with one person deciding to make space. Yours could be a small dinner or a whole picnic. We'll help you run it.",
   "empties.hosting.cta": "Create a gathering",
   "empties.waitlisted.title": "No waitlists <em>right now</em>",
   "empties.waitlisted.sub":
-    "When a gathering you want is full, join its waitlist and we'll keep your place — we'll let you know if a spot opens.",
+    "When a gathering you want is full, join its waitlist and we'll keep your place. We'll let you know if a spot opens.",
   "empties.waitlisted.cta": "Browse gatherings",
-  "empties.past.title": "No history <em>here</em> — but you're early",
+  "empties.past.title": "No history <em>here</em>, but you're early",
   "empties.past.sub":
     "Once you've been to your first gathering, it'll live here as a quiet record of where you've been and who you met.",
   "empties.past.cta": "Find your first one",
   "empties.saved.title": "Nothing saved or <em>pending</em>",
   "empties.saved.sub":
-    "Bookmark gatherings you're not sure about yet, and any invites from other members will wait for you here — no rush, no pressure.",
+    "Bookmark gatherings you're not sure about yet, and any invites from other members will wait for you here. No rush, no pressure.",
   "empties.saved.cta": "Browse gatherings",
   "empties.day.title": "Nothing on <em>this day</em>",
   "empties.day.sub":
@@ -145,7 +145,7 @@ export const myevents: Catalog = {
   "soon.startsInHours": "Starts in {hours}h",
   "soon.startsInHoursMins": "Starts in {hours}h {mins}m",
   "soon.checkInCta": "Check in",
-  "soon.checkedInToast": "Checked in — have a lovely time",
+  "soon.checkedInToast": "Checked in. Have a lovely time",
   "soon.ticketCta": "Ticket",
 
   // ── Status badges (EventCardBadges) ───────────────────────────────────────
@@ -162,7 +162,7 @@ export const myevents: Catalog = {
   "badges.inPhotos_one": "You're in {count} photo",
   "badges.inPhotos_other": "You're in {count} photos",
   "badges.saved": "Saved",
-  "badges.invitedTakeYourTime": "Invited — take your time",
+  "badges.invitedTakeYourTime": "Invited. Take your time",
   "badges.youInvited": "You invited {invitee}",
   "badges.waitlistSuffix_one": " · {count} waitlist",
   "badges.waitlistSuffix_other": " · {count} waitlist",
@@ -185,7 +185,7 @@ export const myevents: Catalog = {
   "side.leaveNoteToast": "Opening your note…",
   "side.receiptCta": "Receipt",
   "side.joinWaitlistCta": "Join waitlist",
-  "side.joinWaitlistToast": "Added to the waitlist — we'll be in touch",
+  "side.joinWaitlistToast": "Added to the waitlist. We'll be in touch",
   "side.rsvpCta": "RSVP",
   "side.removeCta": "Remove",
   "side.removedFromSavedToast": "Removed from saved",
@@ -197,7 +197,7 @@ export const myevents: Catalog = {
   "bookmark.save": "Save",
   "bookmark.saved": "Saved",
   "bookmark.saveAria": "Save this event",
-  "bookmark.savedAria": "Saved — remove from your events",
+  "bookmark.savedAria": "Saved. Remove from your events",
   "bookmark.savedToast": "Saved to your events",
   "bookmark.removedToast": "Removed from saved",
 
@@ -246,7 +246,7 @@ export const myevents: Catalog = {
   "alert.seeWhatChangedToast": "Showing the full change history",
   "conflict.clashesWith": "Clashes with {title}",
   "conflict.body":
-    "at the same time. You can only be in one place — you might want to let one go.",
+    "at the same time. You can only be in one place. You might want to let one go.",
   "edge.cancelledTitle": "The host cancelled this gathering.",
   "edge.cancelledBody": "Your RSVP was released —",
   "edge.findSomethingSimilar": "find something similar",
@@ -287,7 +287,7 @@ export const myevents: Catalog = {
   "calSubscribe.feedTitle": "Subscribe to your feed",
   "calSubscribe.feedSub": "Auto-syncs with Google or Apple Calendar",
   "calSubscribe.feedToast":
-    "Feed link copied — add it in Google or Apple Calendar",
+    "Feed link copied. Add it in Google or Apple Calendar",
   "calSubscribe.exportTitle": "Export this month",
   "calSubscribe.exportSub": "Download a one-time .ics file",
   "calSubscribe.exportToast": "{month} events downloaded as .ics",
@@ -295,7 +295,7 @@ export const myevents: Catalog = {
   // ── Recommendations strip (Discovery) ─────────────────────────────────────
   "discovery.title": "You might <em>like</em>",
   "discovery.imGoingCta": "I'm going",
-  "discovery.imGoingToast": "You're going — added to your events",
+  "discovery.imGoingToast": "You're going. Added to your events",
   "discovery.saveCta": "Save",
   "discovery.saveToast": "Saved for later",
   "discovery.hideCta": "Hide",
@@ -304,7 +304,7 @@ export const myevents: Catalog = {
   "insights.eyebrow": "Your year so far",
   "insights.emptyStat": "Your year <em>starts</em> here",
   "insights.emptySub":
-    "Once you go to your first gathering, it'll gather here — a quiet count of where you've been this year.",
+    "Once you go to your first gathering, it'll gather here: a quiet count of where you've been this year.",
   "insights.emptyCta": "Find your first one",
   "insights.stat_one": "<em>{count}</em> gathering",
   "insights.stat_other": "<em>{count}</em> gatherings",
@@ -316,8 +316,8 @@ export const myevents: Catalog = {
 
   // ── Overflow menu (MoreMenu) ───────────────────────────────────────────────
   "moreMenu.share": "Share this event",
-  "moreMenu.shareToast": "Event link copied — share it anywhere",
-  "moreMenu.shareCopyFailToast": "Couldn't copy the link — try again",
+  "moreMenu.shareToast": "Event link copied. Share it anywhere",
+  "moreMenu.shareCopyFailToast": "Couldn't copy the link. Try again",
   "moreMenu.inviteFriend": "Invite a friend",
   "moreMenu.messageHost": "Message the host",
   "moreMenu.openGroupChat": "Open group chat",
@@ -326,7 +326,7 @@ export const myevents: Catalog = {
   "moreMenu.transferTicket": "Transfer ticket",
   "moreMenu.transferToast": "Choose who to transfer your ticket to…",
   "moreMenu.requestRefund": "Request a refund",
-  "moreMenu.refundToast": "Refund requested — 3–5 days back to your card",
+  "moreMenu.refundToast": "Refund requested: 3–5 days back to your card",
   "moreMenu.addToWallet": "Add to Apple Wallet",
   "moreMenu.walletToast": "Added to Apple Wallet",
   "moreMenu.connectWithMet": "Connect with who you met",
@@ -381,17 +381,17 @@ export const myevents: Catalog = {
   "rsvpModal.guestNamePlaceholder": "Your guest's name (optional)",
   "rsvpModal.contributionLabel": "Your contribution",
   "rsvpModal.slidingHint":
-    "This one's pay-what-you-can — choose what works for you, no questions asked.",
-  "rsvpModal.contribution.free": "€0 — I need this to be free right now",
-  "rsvpModal.contribution.supported": "€5 — supported rate",
-  "rsvpModal.contribution.standard": "€10 — standard",
-  "rsvpModal.contribution.payItForward": "€15 — pay it forward",
+    "This one's pay-what-you-can. Choose what works for you, no questions asked.",
+  "rsvpModal.contribution.free": "€0: I need this to be free right now",
+  "rsvpModal.contribution.supported": "€5: supported rate",
+  "rsvpModal.contribution.standard": "€10: standard",
+  "rsvpModal.contribution.payItForward": "€15: pay it forward",
   "rsvpModal.accessNeeds": "Access needs",
   "rsvpModal.accessPlaceholder":
     "Step-free route, a quiet spot, BSL, anything that helps you be there comfortably…",
   "rsvpModal.dietaryNeeds": "Dietary needs",
   "rsvpModal.dietaryPlaceholder":
-    "Allergies, vegan, halal, kosher — for events where food is shared…",
+    "Allergies, vegan, halal, kosher, for events where food is shared…",
   "rsvpModal.whoSees": "Who can see you're going?",
   "rsvpModal.visibility.everyone": "Everyone",
   "rsvpModal.visibility.connections": "Connections",
@@ -403,17 +403,17 @@ export const myevents: Catalog = {
     "Only the host sees your access & dietary notes. You can change all of this any time.",
   "rsvpModal.cancelCta": "Cancel",
   "rsvpModal.saveCta": "Save",
-  "rsvpModal.savedToast": "Saved — only the host can see this",
+  "rsvpModal.savedToast": "Saved. Only the host can see this",
 
   // ── Event preferences modal (EventSettingsModal) ──────────────────────────
   "settingsModal.eyebrow": "Preferences",
   "settingsModal.title": "How your events <em>reach you</em>",
   "settingsModal.comingSoonNote":
-    "Calendar sync and tickets are still on the way — you'll be able to connect them once they're live.",
+    "Calendar sync and tickets are still on the way. You'll be able to connect them once they're live.",
   "settingsModal.pushLiveNote":
     "Reminder timing, phone push, your default visibility, and email are all live. Calendar sync and tickets are a preview of what's coming.",
   "settingsModal.pushLiveDesc":
-    "On this device — a notification when an event you're going to is about to start.",
+    "On this device: a notification when an event you're going to is about to start.",
   "settingsModal.pushUnsupported":
     "This browser doesn't support push notifications.",
   "settingsModal.pushBlocked":
@@ -460,12 +460,12 @@ export const myevents: Catalog = {
   "reportModal.noteLabel": "Anything we should know?",
   "reportModal.noteOptional": "(optional)",
   "reportModal.notePlaceholder":
-    "Share what happened in your own words — only the safety team sees this.",
+    "Share what happened in your own words. Only the safety team sees this.",
   "reportModal.privacyNote":
     "Reports are confidential. The host is never told who reported them.",
   "reportModal.cancelCta": "Cancel",
   "reportModal.sendCta": "Send report",
-  "reportModal.sentToast": "Report sent — our safety team takes it from here",
+  "reportModal.sentToast": "Report sent. Our safety team takes it from here",
 
   // ── Block-host confirm (BlockHostConfirm) ─────────────────────────────────
   "blockModal.eyebrow": "Block",
@@ -477,19 +477,19 @@ export const myevents: Catalog = {
     "You won't see events from this host again, and they won't be able to invite you. You can undo this any time in your settings.",
   "blockModal.cancelCta": "Cancel",
   "blockModal.confirmCta": "Block",
-  "blockModal.blockedToast": "Blocked — you won't see their events again",
+  "blockModal.blockedToast": "Blocked. You won't see their events again",
 
   // ── Toasts from RSVP/notification lifecycle (useMyEventsState.ts) ────────
-  "toast.reminderSet": "Reminder set — {lead} before",
+  "toast.reminderSet": "Reminder set: {lead} before",
   "toast.reminderOff": "Reminder off",
-  "toast.markedMaybe": "Marked as maybe — the host can see you're tentative",
-  "toast.fullyIn": "You're fully in — see you there",
-  "toast.rsvpGoing": "You're going — see you there",
-  "toast.invitationDeclined": "Invitation declined — that's okay.",
+  "toast.markedMaybe": "Marked as maybe. The host can see you're tentative",
+  "toast.fullyIn": "You're fully in. See you there",
+  "toast.rsvpGoing": "You're going. See you there",
+  "toast.invitationDeclined": "Invitation declined. That's okay.",
   "toast.placeReleased":
-    "Your place was released — the next person on the waitlist will hear from us.",
+    "Your place was released. The next person on the waitlist will hear from us.",
   "toast.leftWaitlist": "You've left the waitlist.",
-  "toast.skippedThisOne": "Skipped this one — you're still in the series.",
+  "toast.skippedThisOne": "Skipped this one. You're still in the series.",
   "toast.leftWholeSeries": "Left the whole series.",
   "toast.preferencesSaved": "Preferences saved",
 };

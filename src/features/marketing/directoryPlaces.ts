@@ -106,6 +106,9 @@ export interface DirectoryPlace {
   /** IANA timezone the venue's `hours` are expressed in, so "Open now" is
    * correct regardless of the visitor's own timezone. Absent → Europe/Lisbon. */
   timezone?: string;
+  /** Online-only business (no physical location). When true the card shows an
+   * "Online" badge instead of a neighbourhood and the place never pins the map. */
+  online?: boolean;
   /** Map pin from the listing; absent for demo places (they use BUSINESS_COORDS). */
   latitude?: number | null;
   longitude?: number | null;
@@ -194,7 +197,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       "Window onto Príncipe Real",
     ],
     whatItIs: [
-      "Inês runs Atelier Pulso as a one-and-a-half-person studio doing brand identity and editorial design — mostly for cultural institutions, small presses, and queer projects that need to look as serious as they are.",
+      "Inês runs Atelier Pulso as a one-and-a-half-person studio doing brand identity and editorial design, mostly for cultural institutions, small presses, and queer projects that need to look as serious as they are.",
       "It is genuinely open by appointment: message ahead and you can come look at the print archive, talk about a project, or just see how a real working studio runs. Riso and letterpress on site.",
     ],
     goodFor: [
@@ -204,7 +207,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       { label: "Quick same-day jobs", yes: false },
     ],
     hoursType: "appointment",
-    hoursNote: "Open by appointment — message to arrange a time.",
+    hoursNote: "Open by appointment. Message to arrange a time.",
     owner: {
       name: memberName("ines"),
       initials: MEMBERS.ines!.initials,
@@ -252,7 +255,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     member: "tomas",
     av: "QS",
     tint: C,
-    desc: "Monthly intimate dinners hosted by Tomás Beto — twelve seats, seasonal menu, honest cooking. The most important table in Mouraria.",
+    desc: "Monthly intimate dinners hosted by Tomás Beto: twelve seats, seasonal menu, honest cooking. The most important table in Mouraria.",
     tagline:
       "Twelve seats, one long table, and the best night out you can have sitting down.",
     pills: ["Supper club", "Monthly · ticketed", "€€€", "Dietary-friendly"],
@@ -265,17 +268,17 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       "Dessert course",
     ],
     whatItIs: [
-      "Once a month Tomás Beto opens his Mouraria home and cooks a seasonal menu for twelve strangers who leave as something closer to friends. No menu choices, no separate tables — one seating, one conversation.",
+      "Once a month Tomás Beto opens his Mouraria home and cooks a seasonal menu for twelve strangers who leave as something closer to friends. No menu choices, no separate tables: one seating, one conversation.",
       "Tickets go fast and the list is half community, half newcomers placed deliberately next to people they should meet. Tell him your dietary needs when you book and they're simply handled.",
     ],
     goodFor: [
       { label: "Meeting people without the bar", yes: true },
       { label: "A special-occasion dinner", yes: true },
       { label: "Solo diners (you'll be seated well)", yes: true },
-      { label: "Walk-ins — it's ticketed only", yes: false },
+      { label: "Walk-ins: it's ticketed only", yes: false },
     ],
     hoursType: "appointment",
-    hoursNote: "Monthly seatings — book a seat for the next dinner.",
+    hoursNote: "Monthly seatings. Book a seat for the next dinner.",
     owner: {
       name: memberName("tomas"),
       initials: MEMBERS.tomas!.initials,
@@ -290,7 +293,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     upcoming: [
       {
         when: "Sat 21 Jun · 20:00",
-        title: "June dinner — early summer, the market decides",
+        title: "June dinner: early summer, the market decides",
         // Maps to the real demo gathering "Queer Supper Club №12" (same
         // host, Tomás) so the deep link resolves to a real event page
         // instead of gatheringDetails' silent default fallback.
@@ -299,7 +302,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       },
       {
         when: "Sat 19 Jul · 20:00",
-        title: "July dinner — stone fruit & the grill",
+        title: "July dinner: stone fruit & the grill",
         // No second demo supper-club slug exists; "sober-queers-supper" is
         // the closest distinct supper-club-themed demo gathering.
         slug: "sober-queers-supper",
@@ -340,7 +343,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: P,
     desc: "Ceramics studio producing functional pieces with a slow aesthetic. Workshop sessions monthly. Spare desks to share.",
     tagline:
-      "A slow ceramics studio in Graça — and a couple of spare wheels for the right people.",
+      "A slow ceramics studio in Graça, and a couple of spare wheels for the right people.",
     pills: ["Ceramics studio", "Workshops monthly", "€€", "Step-free"],
     rating: { score: "4.8", count: 19 },
     gallery: [
@@ -350,7 +353,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       "Glaze tests",
     ],
     whatItIs: [
-      "Beatriz makes functional ceramics — mugs, plates, the odd commission — with an unhurried hand, and runs the studio as a quietly social place rather than a sealed workshop.",
+      "Beatriz makes functional ceramics (mugs, plates, the odd commission) with an unhurried hand, and runs the studio as a quietly social place rather than a sealed workshop.",
       "Once a month she opens it for a beginners' workshop, and there are usually a couple of spare desks to rent if you have your own practice and want company while you work.",
     ],
     goodFor: [
@@ -360,7 +363,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       { label: "Drop-in without booking", yes: false },
     ],
     hoursType: "studio",
-    hoursNote: "Studio hours Tue–Sat; workshops monthly — book ahead.",
+    hoursNote: "Studio hours Tue–Sat; workshops monthly. Book ahead.",
     owner: {
       name: memberName("beatriz"),
       initials: MEMBERS.beatriz!.initials,
@@ -407,7 +410,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     owned: false,
     av: "OD",
     tint: J,
-    desc: "LGBTQ+-affirming mental health support — therapy, peer groups, crisis support. Sliding scale fees. Portuguese and English.",
+    desc: "LGBTQ+-affirming mental health support: therapy, peer groups, crisis support. Sliding scale fees. Portuguese and English.",
     tagline:
       "Mental health support that doesn't make you explain yourself first.",
     pills: [
@@ -419,7 +422,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     rating: { score: "4.9", count: 88 },
     gallery: ["Reception", "Therapy room", "Group room", "Intendente entrance"],
     whatItIs: [
-      "Opus Diversus is an LGBTQ+-affirming mental health practice offering individual therapy, peer-support groups, and crisis support, with clinicians who are trained in — and many of whom share — queer and trans experience.",
+      "Opus Diversus is an LGBTQ+-affirming mental health practice offering individual therapy, peer-support groups, and crisis support, with clinicians who are trained in, and many of whom share, queer and trans experience.",
       "Fees are sliding-scale and nobody is turned away for money. Sessions run in Portuguese and English, and the trans-care pathway is genuinely competent rather than improvised.",
     ],
     goodFor: [
@@ -435,7 +438,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       initials: "OD",
       tint: J,
       role: "Partner organisation",
-      bio: "A collective practice and a QueerPulse health partner — they also train our peer-support volunteers.",
+      bio: "A collective practice and a QueerPulse health partner. They also train our peer-support volunteers.",
       inQueerPulse: false,
       first: "the team",
     },
@@ -488,7 +491,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: P,
     desc: "Queer-run independent bookshop with a strong feminist and LGBTQ+ section. Regular readings, launches, and community events.",
     tagline:
-      "The bookshop that keeps the section you came for at the front, not the back.",
+      "The bookshop that keeps the section you came for right at the front.",
     pills: ["Bookshop", "Events space", "€€", "Step-free"],
     rating: { score: "4.9", count: 54 },
     gallery: [
@@ -498,7 +501,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       "Event night",
     ],
     whatItIs: [
-      "Bertha is a small queer-run independent bookshop where the feminist and LGBTQ+ titles aren't a shamefaced shelf in the corner — they're the front table, curated by people who've read them.",
+      "Bertha is a small queer-run independent bookshop where the feminist and LGBTQ+ titles hold the front table, curated by people who've read them.",
       "Most weeks there's a reading, a launch, or a book club squeezed between the stacks. The staff recommendations are dangerous to your wallet and good for your soul.",
     ],
     goodFor: [
@@ -550,11 +553,11 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     safeSpaceVerifier: "Mod team · 2 visits",
     safeSpaceReVerifiedAt: "12 May 2026",
     safeSpaceSub:
-      "A queer-run bookshop that keeps the section you came for at the front — verified for how it treats the people who walk in, not just what's on the shelves.",
+      "A queer-run bookshop that keeps the section you came for at the front. Verified for how it treats the people who walk in, beyond what's on the shelves.",
     safeSpacePromises: [
       {
         title: "Queer & feminist titles, front and centre.",
-        desc: "Not a shamefaced shelf in the corner — the front table, curated by booksellers who've actually read the books.",
+        desc: "The front table, curated by booksellers who've actually read the books.",
       },
       {
         title: "A safe room for readings & launches.",
@@ -562,7 +565,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       },
       {
         title: "Names & pronouns honoured.",
-        desc: "On a reservation, a book order, or just a chat at the till — you're called what you ask to be called.",
+        desc: "On a reservation, a book order, or just a chat at the till, you're called what you ask to be called.",
       },
       {
         title: "Incidents reported to moderation within 48h.",
@@ -586,7 +589,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     upcoming: [
       {
         when: "Fri 13 Jun · 19:00",
-        title: "Reading — new queer poetry in translation",
+        title: "Reading: new queer poetry in translation",
         // No dedicated demo "reading" gathering; the closest distinct
         // literary demo event is the book club.
         slug: "queer-book-club",
@@ -642,14 +645,14 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       "Mouraria street tables",
     ],
     whatItIs: [
-      "Mouraria Velha isn't a queer business and would never call itself one — it's a family pastelaria that's been on the corner for sixty years. What it is, is reliably, unremarkably kind to everyone who walks in.",
+      "Mouraria Velha isn't a queer business and would never call itself one. It's a family pastelaria that's been on the corner for sixty years. What it is, is reliably, unremarkably kind to everyone who walks in.",
       "The community adopted it for exactly that: no second glances, no misgendering, just a galão, a warm pastel de nata, and the dona who remembers your order. Sometimes the bar is simply that.",
     ],
     goodFor: [
       { label: "A no-stress neighbourhood coffee", yes: true },
       { label: "Bringing visiting family", yes: true },
       { label: "Cheap, excellent pastéis", yes: true },
-      { label: "Late nights — closes early", yes: false },
+      { label: "Late nights: closes early", yes: false },
     ],
     hoursType: "cafe",
     hoursNote: "Open daily, early. Closes by evening.",
@@ -766,7 +769,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     rating: { score: "4.6", count: 31 },
     gallery: ["Open floor", "Quiet room", "Kitchen", "Intendente square"],
     whatItIs: [
-      "Espaço Intendente is a community coworking space — not queer-owned, but one that wrote an explicit inclusion policy, trained its staff, and de-gendered its bathrooms before anyone asked.",
+      "Espaço Intendente is a community coworking space, not queer-owned, but one that wrote an explicit inclusion policy, trained its staff, and de-gendered its bathrooms before anyone asked.",
       "Day passes are cheap, monthly desks are accessible, and the noticeboard is half freelance gigs and half queer events. A solid, low-drama place to actually get work done.",
     ],
     goodFor: [
@@ -832,7 +835,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     savedCount: 18,
     gallery: ["The bar", "Small plates", "Wine wall", "Arroios corner"],
     whatItIs: [
-      "A Farinha is a queer-owned natural wine bar and small-plates kitchen in Arroios — a short, seasonal menu, a long, opinionated wine list, and staff who actually want to talk you through it.",
+      "A Farinha is a queer-owned natural wine bar and small-plates kitchen in Arroios: a short, seasonal menu, a long, opinionated wine list, and staff who actually want to talk you through it.",
       "It's the place for a second date, a celebration, or a slow Tuesday that turns into something. Tell them what you like and let them pour; they rarely miss.",
     ],
     goodFor: [
@@ -889,7 +892,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     safeSpacePromises: [
       {
         title: "Staff intervene, every time.",
-        desc: "Marco and Renato brief every hire to step in on harassment without waiting to be asked — they'll walk a customer out before they walk you out.",
+        desc: "Marco and Renato brief every hire to step in on harassment without waiting to be asked. They'll walk a customer out before they walk you out.",
       },
       {
         title: "A table for the awkward first date.",
@@ -914,7 +917,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       {
         name: memberName("sofia-castano"),
         byline: "she/her · 3 visits",
-        text: "Brought my mother here to test the waters. She relaxed within ten minutes — that's the room doing its job.",
+        text: "Brought my mother here to test the waters. She relaxed within ten minutes. That's the room doing its job.",
         when: "Vouched 22 Mar 2026",
       },
     ],
@@ -961,7 +964,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       "Cais do Sodré light",
     ],
     whatItIs: [
-      "André shoots portraits on analog film — medium format, real grain, a studio on site — and is unusually good at the thing portrait photographers claim and rarely deliver: making people feel safe enough to look like themselves.",
+      "André shoots portraits on analog film (medium format, real grain, a studio on site) and is unusually good at the thing portrait photographers claim and rarely deliver: making people feel safe enough to look like themselves.",
       "Community members get priority booking and a sliding scale, and he keeps a standing offer for free affirming portraits during transition milestones. Just ask.",
     ],
     goodFor: [
@@ -1035,8 +1038,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       "Estrela entrance",
     ],
     whatItIs: [
-      "Clínica da Estrela is an ordinary general practice that happens to have two genuinely LGBTQ+-affirming GPs and a trans-competent endocrinologist on its books — which, in this city, is anything but ordinary.",
-      "It accepts SNS referrals and private appointments, and the front desk has been briefed so the first hurdle — being booked in under the right name — isn't a hurdle at all.",
+      "Clínica da Estrela is an ordinary general practice that happens to have two genuinely LGBTQ+-affirming GPs and a trans-competent endocrinologist on its books. In this city, that's anything but ordinary.",
+      "It accepts SNS referrals and private appointments, and the front desk has been briefed so the first hurdle, being booked in under the right name, isn't a hurdle at all.",
     ],
     goodFor: [
       { label: "An affirming regular GP", yes: true },
@@ -1100,7 +1103,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     gallery: ["Main hall", "Current show", "Project room", "Marvila exterior"],
     whatItIs: [
       "Lume is an artist-run gallery in a Marvila warehouse, programming queer and feminist work with a deliberate bias toward emerging artists who don't yet have a commercial gallery behind them.",
-      "Entry is free, the openings are generous, and the project room is often someone's first-ever solo show. It works in partnership with the Rainbow Arts Collective — the collective is frequently where Lume's next show begins.",
+      "Entry is free, the openings are generous, and the project room is often someone's first-ever solo show. It works in partnership with the Rainbow Arts Collective. The collective is frequently where Lume's next show begins.",
     ],
     goodFor: [
       { label: "Seeing emerging queer art", yes: true },
@@ -1128,7 +1131,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     upcoming: [
       {
         when: "Sat 28 Jun · 18:00",
-        title: "Opening — group show, eight emerging artists",
+        title: "Opening: group show, eight emerging artists",
         // Closest real demo gathering with an emerging-artists showcase feel.
         slug: "portfolio-night",
         startAt: "2026-06-28T18:00:00",
@@ -1152,7 +1155,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         tint: P,
         byline: "she/her · artist",
         stars: 5,
-        text: "They gave me my first solo room and treated it like it mattered. Openings feel like a community, not a market.",
+        text: "They gave me my first solo room and treated it like it mattered. Openings here feel like a community coming together.",
         helpful: 8,
       },
     ],
@@ -1167,7 +1170,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: C,
     desc: "Queer-owned barbershop known for trans haircuts done right. No awkward questions. No gendered pricing.",
     tagline:
-      "A barbershop where the cut you ask for is the cut you get — no negotiation.",
+      "A barbershop where the cut you ask for is the cut you get. No negotiation.",
     pills: ["Barbershop", "Walk-in & booking", "€€", "Ground floor"],
     rating: { score: "5.0", count: 71 },
     savedCount: 41,
@@ -1179,7 +1182,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     ],
     whatItIs: [
       "Navalha is a queer-owned barbershop that built its reputation on the thing a lot of barbers fumble: giving trans and non-binary clients the haircut they actually asked for, without the interrogation or the flinch.",
-      "Pricing is by service, never by gender or hair length, and the chairs are run by barbers who can talk you through a big change or just give you the usual in comfortable quiet.",
+      "Pricing is by service, the same whatever your gender or hair length, and the chairs are run by barbers who can talk you through a big change or just give you the usual in comfortable quiet.",
     ],
     goodFor: [
       { label: "Trans & non-binary cuts done right", yes: true },
@@ -1232,7 +1235,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         tint: C,
         byline: "she/her · quarterly",
         stars: 4,
-        text: "Booked online, in the chair five minutes later, out with the best fade I've had in Lisbon. Docking one star only because a Saturday walk-in queue got long — book ahead if you can.",
+        text: "Booked online, in the chair five minutes later, out with the best fade I've had in Lisbon. Docking one star only because a Saturday walk-in queue got long. Book ahead if you can.",
         helpful: 22,
       },
       {
@@ -1262,7 +1265,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         tint: J,
         byline: "he/they · first visit",
         stars: 3,
-        text: "The cut itself was solid, and nobody blinked when I said \"no, shorter than that.\" Felt a little rushed near the end though — would've liked five more minutes on the beard line.",
+        text: "The cut itself was solid, and nobody blinked when I said \"no, shorter than that.\" Felt a little rushed near the end though. Would've liked five more minutes on the beard line.",
         helpful: 2,
       },
     ],
@@ -1287,8 +1290,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       "Waiting bench",
     ],
     whatItIs: [
-      "Salão Mouraria isn't a queer business — it's a long-standing neighbourhood salon whose owner simply treats trans and queer clients with the same easy warmth as everyone else, and got recommended around until it became one of ours.",
-      "It's affordable, bilingual enough, and unbothered. Not a destination so much as a reliable, kind local — which is sometimes exactly the thing.",
+      "Salão Mouraria isn't a queer business. It's a long-standing neighbourhood salon whose owner simply treats trans and queer clients with the same easy warmth as everyone else, and got recommended around until it became one of ours.",
+      "It's affordable, bilingual enough, and unbothered. Just a reliable, kind local, which is sometimes exactly the thing.",
     ],
     goodFor: [
       { label: "An affordable trim, no fuss", yes: true },
@@ -1303,7 +1306,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       initials: "SM",
       tint: J,
       role: "Owner",
-      bio: "Has run the salon for decades. Community-vouched ally rather than a member — and entirely lovely.",
+      bio: "Has run the salon for decades. Community-vouched ally rather than a member, and entirely lovely.",
       inQueerPulse: false,
       first: "Dona Lúcia",
     },
@@ -1340,7 +1343,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     owned: true,
     av: "SC",
     tint: P,
-    desc: "Gender-neutral pricing on every service — never more based on hair length or gender. Clean space, good music.",
+    desc: "Gender-neutral pricing on every service, the same whatever your hair length or gender. Clean space, good music.",
     tagline:
       "One price list, no gender column. Revolutionary how rare that still is.",
     pills: ["Hair studio", "Gender-neutral pricing", "€€", "Step-free"],
@@ -1422,7 +1425,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     ],
     whatItIs: [
       "Academia Livre isn't queer-owned, but it consulted trans members of the community when it refitted, and it shows: gender-neutral, private-stall changing rooms on every floor, a no-body-shaming policy with teeth, and staff trained to enforce it.",
-      "It's a normal, well-equipped gym in every other respect — which is the point. The radical part is just being able to work out and shower without strategising.",
+      "It's a normal, well-equipped gym in every other respect, which is the point. The radical part is just being able to work out and shower without strategising.",
     ],
     goodFor: [
       { label: "Changing without strategising", yes: true },
@@ -1491,7 +1494,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       "Tea after class",
     ],
     whatItIs: [
-      "Corpo Livre is a queer- and feminist-centred fitness studio built around small classes and a deliberate absence: no mirrors, no scales, no before-and-after talk. Movement for how it feels, not how it looks.",
+      "Corpo Livre is a queer- and feminist-centred fitness studio built around small classes and a deliberate absence: no mirrors, no scales, no before-and-after talk. Movement for how it feels in your body.",
       "Classes are capped low so instructors actually know you, and the culture is body-neutral by design rather than by slogan. Strength, mobility, and the radical novelty of not being watched.",
     ],
     goodFor: [
@@ -1501,7 +1504,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       { label: "Anonymous big-box workouts", yes: false },
     ],
     hoursType: "gym",
-    hoursNote: "Class times Mon–Sat — book a spot.",
+    hoursNote: "Class times Mon–Sat. Book a spot.",
     owner: {
       name: "Mariana & Júlia",
       initials: "CL",
@@ -1550,7 +1553,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: C,
     desc: "Yoga, capoeira, and weights in a converted Alfama warehouse. Queer-run, sliding-scale memberships.",
     tagline:
-      "Yoga, capoeira, and iron under one Alfama roof — pay what you can.",
+      "Yoga, capoeira, and iron under one Alfama roof. Pay what you can.",
     pills: ["Movement studio", "Sliding scale", "€", "Ramp access"],
     rating: { score: "4.8", count: 36 },
     gallery: [
@@ -1561,7 +1564,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     ],
     whatItIs: [
       "Movimento is a queer-run movement space in a converted Alfama warehouse that refuses to specialise: yoga at dawn, capoeira in the evening, free weights in between, all in one generous room.",
-      "Memberships are sliding-scale and nobody checks your maths, so the room ends up genuinely mixed — which is half the point. Come for one discipline, get curious about another.",
+      "Memberships are sliding-scale and nobody checks your maths, so the room ends up genuinely mixed, which is half the point. Come for one discipline, get curious about another.",
     ],
     goodFor: [
       { label: "Mixing yoga, capoeira & weights", yes: true },
@@ -1589,7 +1592,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     upcoming: [
       {
         when: "Sun 15 Jun · 10:00",
-        title: "Open capoeira roda — all levels, free",
+        title: "Open capoeira roda: all levels, free",
         // Closest real demo gathering: free, all-levels group movement.
         slug: "queer-runners-run",
         startAt: "2026-06-15T10:00:00",
@@ -1613,7 +1616,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         tint: C,
         byline: "he/him · capoeira",
         stars: 5,
-        text: "The roda on Sundays is pure joy and properly mixed — ages, bodies, levels. Sliding scale means everyone's actually there.",
+        text: "The roda on Sundays is pure joy and properly mixed: ages, bodies, levels. Sliding scale means everyone's actually there.",
         helpful: 8,
       },
     ],
@@ -1669,75 +1672,75 @@ export function hoursRows(
   const hoursByType: Record<HoursType, (string | null)[]> = {
     cafe: [
       null,
-      "08:00 — 20:00",
-      "08:00 — 20:00",
-      "08:00 — 20:00",
-      "08:00 — 23:00",
-      "09:00 — 23:00",
-      "09:00 — 18:00",
+      "08:00 to 20:00",
+      "08:00 to 20:00",
+      "08:00 to 20:00",
+      "08:00 to 23:00",
+      "09:00 to 23:00",
+      "09:00 to 18:00",
     ],
     restaurant: [
       null,
-      "19:00 — 23:30",
-      "19:00 — 23:30",
-      "19:00 — 23:30",
-      "19:00 — 24:00",
-      "19:00 — 24:00",
-      "13:00 — 16:00",
+      "19:00 to 23:30",
+      "19:00 to 23:30",
+      "19:00 to 23:30",
+      "19:00 to 24:00",
+      "19:00 to 24:00",
+      "13:00 to 16:00",
     ],
     bar: [
       null,
-      "17:00 — 00:00",
-      "17:00 — 00:00",
-      "17:00 — 01:00",
-      "17:00 — 02:00",
-      "17:00 — 02:00",
-      "16:00 — 23:00",
+      "17:00 to 00:00",
+      "17:00 to 00:00",
+      "17:00 to 01:00",
+      "17:00 to 02:00",
+      "17:00 to 02:00",
+      "16:00 to 23:00",
     ],
     clinic: [
-      "09:00 — 18:00",
-      "09:00 — 18:00",
-      "09:00 — 18:00",
-      "09:00 — 18:00",
-      "09:00 — 18:00",
-      "09:00 — 13:00",
+      "09:00 to 18:00",
+      "09:00 to 18:00",
+      "09:00 to 18:00",
+      "09:00 to 18:00",
+      "09:00 to 18:00",
+      "09:00 to 13:00",
       null,
     ],
     shop: [
       null,
-      "11:00 — 19:00",
-      "11:00 — 19:00",
-      "11:00 — 19:00",
-      "11:00 — 19:00",
-      "11:00 — 19:00",
+      "11:00 to 19:00",
+      "11:00 to 19:00",
+      "11:00 to 19:00",
+      "11:00 to 19:00",
+      "11:00 to 19:00",
       null,
     ],
     gym: [
-      "07:00 — 22:00",
-      "07:00 — 22:00",
-      "07:00 — 22:00",
-      "07:00 — 22:00",
-      "07:00 — 22:00",
-      "09:00 — 19:00",
-      "09:00 — 19:00",
+      "07:00 to 22:00",
+      "07:00 to 22:00",
+      "07:00 to 22:00",
+      "07:00 to 22:00",
+      "07:00 to 22:00",
+      "09:00 to 19:00",
+      "09:00 to 19:00",
     ],
     gallery: [
       null,
       null,
-      "14:00 — 20:00",
-      "14:00 — 20:00",
-      "14:00 — 20:00",
-      "12:00 — 20:00",
-      "12:00 — 19:00",
+      "14:00 to 20:00",
+      "14:00 to 20:00",
+      "14:00 to 20:00",
+      "12:00 to 20:00",
+      "12:00 to 19:00",
     ],
     appointment: [null, null, null, null, null, null, null],
     studio: [
       null,
-      "10:00 — 19:00",
-      "10:00 — 19:00",
-      "10:00 — 19:00",
-      "10:00 — 19:00",
-      "11:00 — 17:00",
+      "10:00 to 19:00",
+      "10:00 to 19:00",
+      "10:00 to 19:00",
+      "10:00 to 19:00",
+      "11:00 to 17:00",
       null,
     ],
   };

@@ -29,11 +29,11 @@ const BRAND_QUEER = "Queer";
 const BRAND_PULSE = "Pulse";
 
 function renderGatheringTitle(title: string) {
-  const idx = title.indexOf("—");
+  const idx = title.indexOf(":");
   if (idx === -1) return title;
   return (
     <>
-      {title.slice(0, idx).trim()} — <em>{title.slice(idx + 1).trim()}</em>
+      {title.slice(0, idx).trim()}: <em>{title.slice(idx + 1).trim()}</em>
     </>
   );
 }

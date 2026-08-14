@@ -22,7 +22,7 @@ export const SHOWS: Show[] = [
     when: "February 2026",
     venue: "Atelier Pulso",
     blurb:
-      "A winter of glazes — including the deep coral that took four tries and nearly got abandoned.",
+      "A winter of glazes, including the deep coral that took four tries and nearly got abandoned.",
     tint: "jade",
   },
   {

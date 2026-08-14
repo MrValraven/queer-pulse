@@ -1,5 +1,6 @@
 import { useId } from "react";
 import { type ImageSlotTint } from "../../../shared/components/ui";
+import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { type PhotoKey } from "./listBusiness.data";
 import type { ListingForm } from "./useListingForm";
@@ -53,7 +54,10 @@ export function ListingPhotoGallery({
   uploadPhoto,
 }: {
   form: ListingForm;
-  uploadPhoto: (file: File) => Promise<{ key: string; previewUrl: string }>;
+  uploadPhoto: (
+    file: File,
+    options?: { crop?: CropRect },
+  ) => Promise<{ key: string; previewUrl: string }>;
 }) {
   const { t } = useTranslation();
   const fieldId = useId();

@@ -26,6 +26,12 @@ export interface JoinRequestDTO {
   ageAttestedAt: string;
   /** Which Terms version's eligibility clause was affirmed. */
   termsVersion: string;
+  /**
+   * Which frontend entry point the applicant came through (a stable key from
+   * {@link JoinRequestSource}, e.g. "skills"). Null for a direct visit or a
+   * legacy row. Shown as a "came from" line in the mod queue.
+   */
+  source: string | null;
   /** ISO timestamp the request was submitted. */
   createdAt: string;
   reviewedAt: string | null;
@@ -53,6 +59,12 @@ export interface CreateJoinRequestInput {
   termsVersion: string;
   /** Optional stronger record; server rejects a DOB computing to age < 18. */
   dateOfBirth?: string;
+  /**
+   * Which CTA sent the applicant here (a {@link JoinRequestSource} key). Omitted
+   * for a direct visit to the request page. Attribution only — the backend
+   * length-caps it and never treats it as identity.
+   */
+  source?: string;
 }
 
 /** The narrow 201 echo of a submitted request — no PII is read back. */

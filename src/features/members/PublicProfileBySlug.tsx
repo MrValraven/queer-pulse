@@ -12,6 +12,7 @@ import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { leadingInitials } from "../../shared/lib/initials";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { usePublicProfileBySlug } from "./api/usePublicProfile";
 import {
   PublicProfileActivity,
@@ -134,7 +135,7 @@ export function PublicProfileBySlug({ slug }: { slug: string }) {
             <p>{t("members:publicBySlug.joinBody")}</p>
           </div>
           <div className={styles.bottomCtaActions}>
-            <Button variant="primary" to={routes.requestInvite}>
+            <Button variant="primary" to={requestInvitePath("public_profile")}>
               {t("common:cta.requestInvite")}
             </Button>
           </div>

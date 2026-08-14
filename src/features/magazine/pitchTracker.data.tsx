@@ -92,7 +92,7 @@ export const PITCHES: Pitch[] = [
       author: "Marta",
       body: (
         <>
-          Love the structure. The Rui quote in §3 needs more setup — can you
+          Love the structure. The Rui quote in §3 needs more setup. Can you
           give me 80 words of context before it? Otherwise we&rsquo;re nearly
           there.
         </>
@@ -127,7 +127,7 @@ export const PITCHES: Pitch[] = [
       <>
         A follow-up to my Issue 5 long-read. Atelier Pulso a year on.{" "}
         <em>What&rsquo;s working, what isn&rsquo;t, what they&rsquo;d undo.</em>{" "}
-        I want to talk to the two new hires especially — they joined after the
+        I want to talk to the two new hires especially. They joined after the
         change.
       </>
     ),
@@ -160,7 +160,7 @@ export const PITCHES: Pitch[] = [
       author: "Marta",
       body: (
         <>
-          Commissioned! Take the space you need on the draft — <em>4 August</em>{" "}
+          Commissioned! Take the space you need on the draft. <em>4 August</em>{" "}
           is soft. Shout if you want a reporting stipend for the venue visits.
         </>
       ),
@@ -238,7 +238,7 @@ export const PITCHES: Pitch[] = [
       author: "Marta",
       body: (
         <>
-          Beautifully argued and a piece we&rsquo;d want to publish — but we ran
+          Beautifully argued and a piece we&rsquo;d want to publish, but we ran
           Catarina&rsquo;s piece on chosen family this issue and it covers half
           this ground. <em>Re-pitch in 6 months?</em> The terrain will have
           shifted by then.

@@ -79,7 +79,7 @@ export function WatchSidePanel() {
           <div className={styles.spNote}>
             "A patient, generous film about Lisbon's working-class queer elders.{" "}
             <em>Stay for the second hour.</em>"
-            <span className="who">— João Ribeiro, programmer</span>
+            <span className="who">João Ribeiro, programmer</span>
           </div>
           <div className={styles.spFacts}>
             {FACTS.map(([factKey, factValue]) => (

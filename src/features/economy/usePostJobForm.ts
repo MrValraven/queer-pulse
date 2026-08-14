@@ -232,7 +232,7 @@ export function usePostJobForm() {
           lookingFor: state.tags,
           offer: state.benefits,
           aboutCompany: company.tagline,
-          reviewerNote: `Posted by ${role} at ${company.nameText}. New listing — not yet community-reviewed.`,
+          reviewerNote: `Posted by ${role} at ${company.nameText}. New listing. Not yet community-reviewed.`,
         },
       };
     },

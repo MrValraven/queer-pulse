@@ -18,13 +18,13 @@ export function CuratorNote() {
           {t("cinema:shorts.curatorNote.eyebrow", { week: 27 })}
         </div>
         <p className={styles.cnBody}>
-          This week is about <em>staying</em> — films where nobody leaves the
+          This week is about <em>staying</em>: films where nobody leaves the
           room, or wishes they hadn't. Start with <em>The first Sunday</em> if
           you only have half an hour, then let it lead you outward. Everything
           here was made by someone you could meet.
         </p>
         <p className={styles.cnSign}>
-          — João Reis, community programmer ·{" "}
+          João Reis, community programmer ·{" "}
           <Link to={routes.cinemaAbout}>
             {t("cinema:shorts.curatorNote.readPastNotesCta")}
           </Link>
@@ -95,7 +95,7 @@ export function Spotlight({ shelf }: { shelf: ShortsShelf }) {
         <div className={styles.spGoal}>
           <div className={styles.spGoalTop}>
             <span className={styles.gLead}>
-              Tips so far: <b>€340</b> of €500 — funds the collective's next
+              Tips so far: <b>€340</b> of €500, funds the collective's next
               shoot
             </span>
             <span className={styles.gPct}>68%</span>
@@ -127,14 +127,14 @@ export function Spotlight({ shelf }: { shelf: ShortsShelf }) {
         <div className={styles.spReact}>
           <span className={styles.rNote}>
             “I cried into my coffee. In the good way.”{" "}
-            <span className={styles.who}>— Marta, sustainer</span>
+            <span className={styles.who}>Marta, sustainer</span>
           </span>
           <span className={styles.rMore}>+ 22 notes</span>
         </div>
         <div className={styles.spNudge}>
           <span className={styles.nDot} aria-hidden />
           <span>
-            Sustainers funded this film through the spring pool — and they fund
+            Sustainers funded this film through the spring pool, and they fund
             the €2.5k open grant.{" "}
             <Link to={routes.cinemaMembership}>
               {t("cinema:shorts.spotlight.becomeSustainerCta")}{" "}

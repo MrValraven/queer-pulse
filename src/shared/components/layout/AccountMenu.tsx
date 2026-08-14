@@ -8,6 +8,7 @@ import {
   type NavMode,
 } from "../../../app/providers/navModeContext";
 import { routes } from "../../../app/routeMap";
+import { isComingSoonLink } from "../../../app/authGate";
 import {
   useTeamRole,
   type TeamRole,
@@ -238,7 +239,7 @@ function AccountMenuPanel({
 
       <div className={styles.scroll}>
         {ACCOUNT_GROUPS.map((group) => group.filter(
-          (item) => !item.liveOnly || !demoMode,
+          (item) => (!item.liveOnly || !demoMode) && !isComingSoonLink(item.to),
         ))
           .filter((group) => group.length > 0)
           .map((group, groupIndex) => (

@@ -39,7 +39,7 @@ export const decks: Record<string, SlideDeck> = {
             A decade on one <em>corner</em>
           </>
         ),
-        body: "Seven of them met at a language exchange in 2016. This is what the next ten years did to a chosen family — one slide at a time.",
+        body: "Seven of them met at a language exchange in 2016. This is what the next ten years did to a chosen family, one slide at a time.",
       },
       {
         layout: "image",
@@ -85,7 +85,7 @@ export const decks: Record<string, SlideDeck> = {
         tint: "plum",
         prompt: <>What held them together for ten years?</>,
         hidden:
-          "Not affection — affection comes and goes. The accumulated evidence that you showed up when it was inconvenient.",
+          "Not affection. Affection comes and goes. The accumulated evidence that you showed up when it was inconvenient.",
       },
       {
         layout: "text",

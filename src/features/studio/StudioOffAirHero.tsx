@@ -38,10 +38,10 @@ export function StudioOffAirHero() {
         </h1>
 
         <p className={styles.signoff}>
-          "We played fourteen songs and paid fourteen people. Go to sleep — the
+          "We played fourteen songs and paid fourteen people. Go to sleep. The
           catalogue stays open, and we'll be back when the kettle's on."
           <span className={styles.signoffWho}>
-            — Sara Marques, closing the Wednesday set at 01:58
+            Sara Marques, closing the Wednesday set at 01:58
           </span>
         </p>
 

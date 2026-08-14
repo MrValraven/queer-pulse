@@ -1,6 +1,11 @@
 import { useRef, useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
-import { ImageSlot, type ImageSlotTint } from "../../../shared/components/ui";
+import {
+  ImageSlot,
+  PhotoReframeModal,
+  type ImageSlotTint,
+} from "../../../shared/components/ui";
+import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ImageProcessingError } from "../../members/api/uploadProcessing";
 import { isPastableImageUrl } from "./listBusiness.data";
@@ -12,7 +17,10 @@ interface ListingPhotoFieldProps {
   wide?: boolean;
   placeholder: string;
   displayValue: string;
-  uploadPhoto: (file: File) => Promise<{ key: string; previewUrl: string }>;
+  uploadPhoto: (
+    file: File,
+    options?: { crop?: CropRect },
+  ) => Promise<{ key: string; previewUrl: string }>;
   onResolved: (persist: string, preview: string) => void;
   onRemove: () => void;
 }
@@ -39,12 +47,14 @@ export function ListingPhotoField({
   const [urlText, setUrlText] = useState("");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
 
-  async function pickFile(file: File) {
+  /** Shared tail of both upload paths (direct GIF path + post-reframe path). */
+  async function uploadAndApply(file: File, crop?: CropRect) {
     setError(null);
     setUploading(true);
     try {
-      const { key, previewUrl } = await uploadPhoto(file);
+      const { key, previewUrl } = await uploadPhoto(file, { crop });
       setUrlText("");
       onResolved(key, previewUrl);
     } catch (uploadFailure) {
@@ -56,6 +66,23 @@ export function ListingPhotoField({
     } finally {
       setUploading(false);
     }
+  }
+
+  function pickFile(file: File) {
+    // GIFs bypass the reframer entirely (animation would be destroyed by the
+    // crop/re-encode path) and upload directly, as before.
+    if (file.type === "image/gif") {
+      void uploadAndApply(file);
+      return;
+    }
+    setPendingFile(file);
+  }
+
+  async function handleCropConfirmed(crop: CropRect) {
+    if (!pendingFile) return;
+    const fileToUpload = pendingFile;
+    setPendingFile(null);
+    await uploadAndApply(fileToUpload, crop);
   }
 
   function applyUrl(nextUrl: string) {
@@ -141,10 +168,18 @@ export function ListingPhotoField({
         hidden
         onChange={(event) => {
           const file = event.target.files?.[0];
-          if (file) void pickFile(file);
+          if (file) pickFile(file);
           event.target.value = "";
         }}
       />
+      {pendingFile && (
+        <PhotoReframeModal
+          file={pendingFile}
+          kind="listing-photo"
+          onCancel={() => setPendingFile(null)}
+          onConfirm={(crop) => void handleCropConfirmed(crop)}
+        />
+      )}
     </div>
   );
 }

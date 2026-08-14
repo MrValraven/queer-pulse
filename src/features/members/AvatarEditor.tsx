@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
 import { ImageSlot, type ImageSlotTint } from "../../shared/components/ui";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -20,6 +21,7 @@ import styles from "./ProfileEdit.module.css";
  */
 export function AvatarEditor({
   photo,
+  photoCrop,
   initials,
   tint,
   name,
@@ -28,6 +30,11 @@ export function AvatarEditor({
   variant = "card",
 }: {
   photo?: string;
+  /** Saved reframe crop for `photo` (the currently-committed avatar), shown
+   *  until the member picks a new one this session. Only ever applied for the
+   *  `"circle"` variant, whose box is a true square — the `"card"` variant's
+   *  portrait box isn't the crop's own aspect, so it always renders uncropped. */
+  photoCrop?: CropRect;
   initials: string;
   tint: ImageSlotTint;
   name: string;
@@ -44,6 +51,9 @@ export function AvatarEditor({
   // The URL currently shown in the hero: blob OR an absolute gallery/Google
   // URL. Only ever revoked when it equals `localPreview` (a blob).
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
+  // The crop that came back alongside a fresh device-upload pick this session
+  // (undefined for a gallery/Google pick, which carries no fresh crop).
+  const [selectedCrop, setSelectedCrop] = useState<CropRect | undefined>();
   // The value most recently handed to `onChange` this session (key or URL) —
   // used to tell the picker which gallery item is "currently applied", so
   // deleting it can also clear the hero. Falls back to `photo` (the value
@@ -54,10 +64,11 @@ export function AvatarEditor({
   // one-tap fill in the picker whenever the member has one on file.
   const googlePhoto = user?.profile.avatarUrl ?? undefined;
 
-  function handlePick(value: string, previewUrl: string) {
+  function handlePick(value: string, previewUrl: string, crop?: CropRect) {
     if (localPreview) URL.revokeObjectURL(localPreview); // only revoke blob previews
     setLocalPreview(previewUrl.startsWith("blob:") ? previewUrl : null);
     setSelectedUrl(previewUrl); // absolute URL to show immediately for gallery picks
+    setSelectedCrop(crop);
     setAppliedValue(value);
     onChange(value);
   }
@@ -66,6 +77,7 @@ export function AvatarEditor({
     if (localPreview) URL.revokeObjectURL(localPreview);
     setLocalPreview(null);
     setSelectedUrl(url);
+    setSelectedCrop(undefined);
     setAppliedValue(url);
     onChange(url);
     showToast(t("members:avatar.googleAdded"), "success");
@@ -75,11 +87,17 @@ export function AvatarEditor({
     if (localPreview) URL.revokeObjectURL(localPreview);
     setLocalPreview(null);
     setSelectedUrl(null);
+    setSelectedCrop(undefined);
     setAppliedValue(undefined);
     onRemove();
   }
 
   const displayedPhoto = selectedUrl ?? photo;
+  // Only the true-square "circle" variant's box matches a 1:1 avatar crop's
+  // own pixel aspect — the "card" portrait box never does, so it always
+  // renders the full (uncropped) image via ImageSlot's default object-fit:cover.
+  const displayedCrop =
+    variant === "circle" ? (selectedUrl ? selectedCrop : photoCrop) : undefined;
 
   const actions = (
     <>
@@ -129,6 +147,7 @@ export function AvatarEditor({
               height="100%"
               srcSize={176}
               placeholder={name}
+              crop={displayedCrop}
             />
           </div>
         </div>

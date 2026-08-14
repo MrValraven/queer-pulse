@@ -14,16 +14,16 @@ export const connect: Catalog = {
   "tabs.incoming": "Pedidos recebidos",
   "tabs.sent": "Enviados",
   "tabs.blocked": "Bloqueios",
-  "tabs.vouched": "Avais",
+  "tabs.vouched": "Votos de confiança",
 
   // Cabeçalho da página (ConnectionsPage)
   "page.eyebrow": "A tua rede",
   "page.title": "Pessoas que <em>conheceste mesmo.</em>",
   "page.lead":
-    "A QueerPulse não faz seguidores. Ligas-te a pessoas quando já as conheceste — num convívio, através de alguém, ou porque te avalizaram. Qualidade em vez de quantidade.",
+    "A QueerPulse não faz seguidores. Ligas-te a pessoas quando já as conheceste: num convívio, através de alguém, ou porque te deram um voto de confiança. Qualidade em vez de quantidade.",
   "page.inviteCta": "Convidar alguém",
   "page.note":
-    "<b>Sem contagem de seguidores, de propósito.</b> Se procuras “seguir as publicações de alguém” sem te ligares primeiro, usa antes o feed de Comunidades. As ligações são bidirecionais — desbloqueiam mensagens e atualizações marcadas.",
+    "<b>Sem contagem de seguidores, de propósito.</b> Se procuras “seguir as publicações de alguém” sem te ligares primeiro, usa antes o feed de Comunidades. As ligações são bidirecionais: desbloqueiam mensagens e atualizações marcadas.",
   "page.loadMoreLoading": "A carregar…",
   "page.loadMore": "Carregar mais",
 
@@ -57,7 +57,7 @@ export const connect: Catalog = {
   "card.mutuals_other": "<b>{count}</b> pessoas em comum",
   "card.connectedSince": "Ligação desde <b>{since}</b>",
   "card.tagsMoreTitle": "Também: {list}",
-  "card.noMutuals": "Sem pessoas em comum — revê com atenção",
+  "card.noMutuals": "Sem pessoas em comum: revê com atenção",
   "card.sentAgo": "Enviado <b>{sentAgo}</b>",
   "card.introducedBy": "Apresentado por <a>{name}</a>",
   "card.reason": "Sobre <b>{reason}</b>",
@@ -71,14 +71,14 @@ export const connect: Catalog = {
     "Não pode enviar-te mensagens nem ver as tuas atualizações.",
 
   // Emblema + nota de aval (connections.data.ts, resolvido pelo componente)
-  "vouch.forYou": "Avalizou-te",
-  "vouch.byYou": "Avalizaste",
-  "vouch.mutual": "Aval mútuo",
-  "vouch.bothWays": "Aval nos dois sentidos",
+  "vouch.forYou": "Deu-te um voto de confiança",
+  "vouch.byYou": "Deste um voto de confiança",
+  "vouch.mutual": "Voto de confiança mútuo",
+  "vouch.bothWays": "Voto de confiança nos dois sentidos",
 
   // Introdução do separador Avais (ConnectionsPanels)
   "panelIntro.vouched":
-    "Pessoas que avalizaste, ou que te avalizaram. <em>Avalizar é um gesto pequeno mas significativo</em> — fica associado ao perfil dessa pessoa.",
+    "Pessoas a quem deste um voto de confiança, ou que to deram. <em>Dar um voto de confiança é um gesto pequeno mas significativo</em>. Fica associado ao perfil dessa pessoa.",
 
   // Separador Todas as ligações (ConnectionsAllTab)
   "allTab.searchPlaceholder": "Pesquisar por nome, função ou comunidade",
@@ -128,7 +128,7 @@ export const connect: Catalog = {
   "form.messageLabel": "A tua mensagem",
   "form.messagePlaceholder": "Escreve com naturalidade. Não há modelo.",
   "form.note":
-    "Se ainda não estão ligados, isto chega como um pedido — essa pessoa decide se quer abrir a conversa. De qualquer forma, fica só entre vocês os dois.",
+    "Se ainda não estão ligados, isto chega como um pedido: essa pessoa decide se quer abrir a conversa. De qualquer forma, fica só entre vocês os dois.",
   "form.cancel": "Cancelar",
   "form.sendingLabel": "A enviar…",
   "form.send": "Enviar",
@@ -151,7 +151,7 @@ export const connect: Catalog = {
   "notice.close": "Fechar",
   "notice.alreadyPending.title": "Já <em>lhe escreveste.</em>",
   "notice.alreadyPending.body":
-    "A tua mensagem já está à espera de {name}. Vão abrir a conversa quando quiserem — não precisas de enviar outra vez.",
+    "A tua mensagem já está à espera de {name}. Vão abrir a conversa quando quiserem. Não precisas de enviar outra vez.",
   "notice.alreadyConnected.title": "Já estão <em>ligados.</em>",
   "notice.alreadyConnected.body":
     "Tu e {name} já estão ligados. Abre as mensagens para continuar a conversa.",

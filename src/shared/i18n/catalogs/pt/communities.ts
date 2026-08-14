@@ -37,11 +37,11 @@ export const communities: Catalog = {
   "discover.hero.eyebrow": "Comunidades e Coletivos",
   "discover.hero.title": "Encontra a tua <em>gente.</em>",
   "discover.hero.lead":
-    "Um diretório vivo de comunidades e coletivos queer por toda a Lisboa. Clubes sociais, coletivos de artes, grupos de ativismo, equipas desportivas, círculos de apoio e redes profissionais — algo para o momento em que estás agora.",
+    "Um diretório vivo de comunidades e coletivos queer por toda a Lisboa. Clubes sociais, coletivos de artes, grupos de ativismo, equipas desportivas, círculos de apoio e redes profissionais: algo para o momento em que estás agora.",
   "discover.hero.cta": "Ir para o teu hub",
   "discover.empty.none.title": "Ainda sem comunidades",
   "discover.empty.none.description":
-    "O diretório ainda está a dar os primeiros passos. Sê das primeiras pessoas a juntar a tua gente — começa uma comunidade e o resto segue-se.",
+    "O diretório ainda está a dar os primeiros passos. Sê das primeiras pessoas a juntar a tua gente. Começa uma comunidade e o resto segue-se.",
   "discover.empty.none.cta": "Começar uma comunidade",
   "discover.empty.filtered.title": "Nada corresponde aos teus filtros",
   "discover.empty.filtered.description":
@@ -51,7 +51,7 @@ export const communities: Catalog = {
   "discover.loadMoreCta": "Carregar mais comunidades",
   "discover.outro.title": "Não encontraste o <em>espaço certo?</em>",
   "discover.outro.sub":
-    "Sugere uma comunidade para o diretório, ou publica no quadro para encontrares pessoas com os mesmos interesses — e talvez comecem algo juntas.",
+    "Sugere uma comunidade para o diretório, ou publica no quadro para encontrares pessoas com os mesmos interesses, e talvez comecem algo juntas.",
   "discover.outro.cta": "Ver o quadro",
 
   // ── Cartão de comunidade / textos do botão de entrada ─────────────────────
@@ -74,12 +74,13 @@ export const communities: Catalog = {
     "Isto é o que tem estado a acontecer nas tuas {count} comunidades.",
   "hub.discoverCta": "Descobrir comunidades",
   "hub.startCta": "Começar uma comunidade",
+  "hub.howItWorksCta": "Como funcionam as comunidades",
   "hub.empty.title": "Ainda não te juntaste a nenhuma comunidade",
   "hub.empty.description":
-    "Explora por interesse e encontra o teu lugar — sem pressa.",
+    "Explora por interesse e encontra o teu lugar. Sem pressa.",
   "hub.digest.label": "Esta semana, em silêncio",
   "hub.digest.note":
-    "Sem notificações a mais — só a semana das tuas comunidades num relance.",
+    "Sem notificações a mais: só a semana das tuas comunidades num relance.",
   "hub.digest.posts": "novas publicações",
   "hub.digest.active": "pessoas ativas",
   "hub.digest.events": "eventos a caminho",
@@ -129,7 +130,7 @@ export const communities: Catalog = {
   "detail.share.copiedToast": "Link copiado para a área de transferência.",
   "detail.leave.confirm.title": "Sair de {name}?",
   "detail.leave.confirm.body":
-    "Deixas de ver o pulso e os convívios desta comunidade. Podes voltar sempre que quiseres — só precisas de entrar de novo.",
+    "Deixas de ver o pulso e os convívios desta comunidade. Podes voltar sempre que quiseres. Só precisas de entrar de novo.",
   "detail.leave.confirm.cancel": "Ficar",
   "detail.leave.confirm.confirmCta": "Sair da comunidade",
   "detail.hero.andMore": "e mais {count}",
@@ -194,14 +195,14 @@ export const communities: Catalog = {
   "detail.discussion.empty.searchMore":
     "Nenhuma das discussões carregadas corresponde. Carrega mais para pesquisar as restantes.",
   "detail.discussion.searchScopeNote":
-    "A pesquisar apenas as discussões já carregadas — carrega mais para alargar.",
+    "A pesquisar apenas as discussões já carregadas. Carrega mais para alargar.",
   "detail.discussion.startedToast": "Discussão iniciada.",
   "detail.discussion.loadMore": "Carregar mais",
 
   // ── Separador Eventos (hub completo) ──────────────────────────────────────
   "detail.events.upcoming": "Próximos convívios",
   "detail.events.noUpcoming":
-    "Ainda não há convívios no calendário — volta em breve.",
+    "Ainda não há convívios no calendário. Volta em breve.",
   "detail.events.past": "Convívios passados",
   "detail.events.recapCta": "Ler retrospetiva",
   "detail.events.rsvpCta": "Confirmar presença",
@@ -216,7 +217,7 @@ export const communities: Catalog = {
   "detail.roster.showingOf_one": "A mostrar {shown} de {count} pessoa",
   "detail.roster.showingOf_other": "A mostrar {shown} de {count} pessoas",
   "detail.roster.searchScopeNote":
-    "A pesquisar apenas as pessoas já carregadas — carrega mais para alargar.",
+    "A pesquisar apenas as pessoas já carregadas. Carrega mais para alargar.",
   "detail.roster.loadMoreCta": "Carregar mais pessoas",
   "detail.roster.loadingMore": "A carregar…",
 
@@ -224,14 +225,14 @@ export const communities: Catalog = {
   "detail.modtools.joinRequests.label": "Pessoas a pedir para entrar",
   "detail.modtools.joinRequests.empty.title": "Sem pedidos à espera",
   "detail.modtools.joinRequests.empty.description":
-    "Está tudo em dia — os novos pedidos aparecem aqui.",
+    "Está tudo em dia. Os novos pedidos aparecem aqui.",
   "detail.modtools.joinRequests.requestedAgo": "Pedido enviado há {time}",
   "detail.modtools.joinRequests.approveCta": "Aprovar",
   "detail.modtools.joinRequests.declineCta": "Recusar",
   "detail.modtools.reports.label": "Publicações denunciadas",
   "detail.modtools.reports.empty.title": "Tudo em ordem",
   "detail.modtools.reports.empty.description":
-    "Nada foi assinalado — a comunidade cuida de si mesma.",
+    "Nada foi assinalado. A comunidade cuida de si mesma.",
   "detail.modtools.reports.meta":
     "De {author} · denunciado por {reporter} · há {time}",
   "detail.modtools.reports.removeCta": "Remover publicação",
@@ -240,7 +241,7 @@ export const communities: Catalog = {
   "detail.modtools.members.makeModCta": "Tornar mod",
   "detail.modtools.members.removeCta": "Remover da comunidade",
   "detail.modtools.members.ownerTag": "Responsável",
-  "detail.modtools.toast.approved": "{name} aprovade — dá-lhe as boas-vindas.",
+  "detail.modtools.toast.approved": "{name} aprovade. Dá-lhe as boas-vindas.",
   "detail.modtools.toast.declined":
     "O pedido de {name} não foi aprovado desta vez.",
   "detail.modtools.toast.postRemoved":
@@ -251,7 +252,7 @@ export const communities: Catalog = {
 
   // ── Separador Pulso (hub completo) ────────────────────────────────────────
   "detail.pulse.joinHint":
-    "Podes ler à vontade — junta-te a {name} para participar.",
+    "Podes ler à vontade. Junta-te a {name} para participar.",
   "detail.pulse.composerPlaceholder": "Partilha algo com {name}…",
   "detail.pulse.shareCta": "Partilhar",
   "detail.pulse.pinnedAnnouncement": "Anúncio fixado",
@@ -282,7 +283,7 @@ export const communities: Catalog = {
   "badges.reaction.celebrate": "Celebrar",
   "badges.reaction.support": "Apoio",
   "badges.reaction.fire": "Fogo",
-  "badges.reaction.ariaLabel": "{label} — {count}",
+  "badges.reaction.ariaLabel": "{label}: {count}",
 
   // ── Modal de adesão ────────────────────────────────────────────────────────
   "join.close": "Fechar",
@@ -297,10 +298,10 @@ export const communities: Catalog = {
   "join.about.eyebrow": "Um pouco sobre ti",
   "join.about.title": "Como deve a comunidade conhecer-te?",
   "join.about.hint":
-    "Opcional — um pouco de contexto ajuda as pessoas a saberem quem és.",
+    "Opcional: um pouco de contexto ajuda as pessoas a saberem quem és.",
   "join.about.namePlaceholder": "O teu nome",
   "join.about.pronounsPlaceholder": "Pronomes, se quiseres partilhar",
-  "join.about.aboutPlaceholder": "Uma frase sobre ti — o que te traz até aqui?",
+  "join.about.aboutPlaceholder": "Uma frase sobre ti: o que te traz até aqui?",
   "join.involvement.eyebrow": "Quase pronto",
   "join.involvement.title": "Como gostarias de participar?",
   "join.involvement.emailPlaceholder": "O teu endereço de email",
@@ -309,7 +310,7 @@ export const communities: Catalog = {
   "join.involvement.joinCta": "Junta-te à comunidade",
   "join.involvement.updates.label": "Só quero saber das novidades",
   "join.involvement.updates.desc":
-    "Só notícias e eventos — sem qualquer compromisso",
+    "Só notícias e eventos: sem qualquer compromisso",
   "join.involvement.active.label": "Membro ativo",
   "join.involvement.active.desc": "Vou aos eventos e junto-me ao grupo",
   "join.involvement.organise.label": "Ajudar a organizar",
@@ -317,7 +318,7 @@ export const communities: Catalog = {
   "join.done.requestTitle": "O teu pedido está com a moderação",
   "join.done.welcomeTitle": "Bem-vinde a {name}",
   "join.done.requestBody":
-    "Obrigade por partilhares — a moderação de <strong>{name}</strong> vai ler o teu pedido e dar-te as boas-vindas. Avisamos-te de qualquer forma.",
+    "Obrigade por partilhares. A moderação de <strong>{name}</strong> vai ler o teu pedido e dar-te as boas-vindas. Avisamos-te de qualquer forma.",
   "join.done.joinedBody":
     "Já fazes parte de <strong>{name}</strong>. Alguém vai entrar em contacto para te ajudar a instalar-te.",
   "join.done.doneCta": "Concluído",
@@ -327,7 +328,7 @@ export const communities: Catalog = {
   "start.hero.eyebrow": "Comunidades e Coletivos · fundar um espaço",
   "start.hero.title": "Começa uma <em>comunidade.</em>",
   "start.hero.lead":
-    "Um lugar para a tua gente se juntar — social, de apoio, criativo, ou algo que só tu sabes nomear. <strong>Nada fica público até estares pronte.</strong>",
+    "Um lugar para a tua gente se juntar: social, de apoio, criativo, ou algo que só tu sabes nomear. <strong>Nada fica público até estares pronte.</strong>",
   "start.next.begin": "Vamos começar",
   "start.next.people": "A seguir: as pessoas",
   "start.next.door": "A seguir: a porta",
@@ -365,17 +366,17 @@ export const communities: Catalog = {
   "start.panel.open.title":
     "Toda a comunidade começou com ⟪uma pessoa⟫ a abrir uma porta.",
   "start.panel.open.lead":
-    "Este espaço é teu para abrires. Vai passo a passo — nada fica público até ao último passo, e podes sair e voltar sempre que quiseres.",
+    "Este espaço é teu para abrires. Vai passo a passo. Nada fica público até ao último passo, e podes sair e voltar sempre que quiseres.",
   "start.panel.why.thread": "Porquê",
   "start.panel.why.eyebrow": "Capítulo um · o coração",
   "start.panel.why.title": "Vamos começar pelo ⟪porquê.⟫",
   "start.panel.why.lead":
-    "Antes de tudo o resto — para que serve este espaço, e para quem é? Diz isso claramente. É o que as pessoas leem primeiro.",
+    "Antes de tudo o resto: para que serve este espaço, e para quem é? Diz isso claramente. É o que as pessoas leem primeiro.",
   "start.panel.who.thread": "Quem",
   "start.panel.who.eyebrow": "Capítulo dois · as pessoas",
   "start.panel.who.title": "Quem estás a ⟪juntar?⟫",
   "start.panel.who.lead":
-    "As pessoas que este espaço quer acolher. Sê específica/o e acolhedor/a — isto ajuda as pessoas certas a saberem que é para elas.",
+    "As pessoas que este espaço quer acolher. Sê específica/o e acolhedor/a. Isto ajuda as pessoas certas a saberem que é para elas.",
   "start.panel.safety.thread": "Segurança",
   "start.panel.safety.eyebrow": "Capítulo três · a porta",
   "start.panel.safety.title": "Quem pode ⟪encontrar⟫ este espaço?",
@@ -390,7 +391,7 @@ export const communities: Catalog = {
   "start.panel.tone.eyebrow": "Capítulo cinco · a cultura",
   "start.panel.tone.title": "Define ⟪o tom.⟫",
   "start.panel.tone.lead":
-    "Todo o espaço tem uma cultura. Aqui tens um pequeno pacto para começar — mantém o que serve, acrescenta as tuas próprias palavras.",
+    "Todo o espaço tem uma cultura. Aqui tens um pequeno pacto para começar. Mantém o que serve, acrescenta as tuas próprias palavras.",
   "start.panel.feeling.thread": "Sentir",
   "start.panel.feeling.eyebrow": "Capítulo seis · a sensação",
   "start.panel.feeling.title": "Dá-lhe ⟪uma sensação.⟫",
@@ -405,21 +406,21 @@ export const communities: Catalog = {
   "start.panel.confirm.eyebrow": "O último passo",
   "start.panel.confirm.title": "Pronte para ⟪abrir as portas?⟫",
   "start.panel.confirm.lead":
-    "Aqui está o espaço todo, num relance. Nada aqui é definitivo — podes mudar tudo depois de entrares.",
+    "Aqui está o espaço todo, num relance. Nada aqui é definitivo. Podes mudar tudo depois de entrares.",
 
   // ── Capítulo 0 — Abertura ──────────────────────────────────────────────────
   "start.opening.reassure":
-    "<strong>Nada do que fazes aqui é público até ao último passo.</strong> Tem o teu tempo, salta o que não tens a certeza, e muda de ideias sempre que quiseres. Fundar uma comunidade é uma coisa grande e generosa — não há uma forma errada de começar.",
+    "<strong>Nada do que fazes aqui é público até ao último passo.</strong> Tem o teu tempo, salta o que não tens a certeza, e muda de ideias sempre que quiseres. Fundar uma comunidade é uma coisa grande e generosa. Não há uma forma errada de começar.",
   "start.opening.signed":
     "Vais ser a sua primeira pessoa responsável, <strong>{name}</strong>.",
 
   // ── Capítulo 1 — Porquê ────────────────────────────────────────────────────
   "start.why.nameLabel": "Dá um nome à tua comunidade",
   "start.why.namePlaceholder": "ex.: Nadadoras Sáficas de Domingo",
-  "start.why.collisionHead": "Já há alguns espaços parecidos com este —",
+  "start.why.collisionHead": "Já há alguns espaços parecidos com este:",
   "start.why.purposeLabel": "Para que é?",
   "start.why.purposePlaceholder":
-    "Diz claramente — o que acontece aqui, e porque é que importa.",
+    "Diz claramente: o que acontece aqui, e porque é que importa.",
   "start.why.purposeHint":
     "Isto é a primeira coisa que as pessoas leem. Uma ou duas frases calorosas chegam bem.",
   "start.why.kindLabel": "Que tipo de espaço é?",
@@ -471,7 +472,7 @@ export const communities: Catalog = {
   "start.access.private.join":
     "Só com convite, e ninguém de fora sabe que existe.",
   "start.access.private.note":
-    "Para espaços em que ser encontrade é, em si, um risco — grupos de coming-out, sobreviventes, pessoas ainda não assumidas.",
+    "Para espaços em que ser encontrade é, em si, um risco: grupos de coming-out, sobreviventes, pessoas ainda não assumidas.",
 
   // ── Capítulo 4 — Gestão ────────────────────────────────────────────────────
   "start.running.stewardsHeading": "Pessoas responsáveis",
@@ -512,22 +513,22 @@ export const communities: Catalog = {
 
   // ── Capítulo 5 — Tom ───────────────────────────────────────────────────────
   "start.tone.covenantIntro":
-    '"Aqui cuidamos umas das outras. Calor primeiro, sempre — e sem espaço para quem tornar este lugar inseguro."',
+    '"Aqui cuidamos umas das outras. Calor primeiro, sempre, e sem espaço para quem tornar este lugar inseguro."',
   "start.tone.addPlaceholder": "Acrescenta um valor por tuas palavras",
   "start.tone.addCta": "Adicionar",
   "start.tone.wrongHeading": "Quando algo corre mal",
   "start.tone.wrongSub":
-    "Não vais ter de improvisar. Toda a comunidade começa com a mesma escala gentil — podes ajustá-la depois, lá dentro.",
+    "Não vais ter de improvisar. Toda a comunidade começa com a mesma escala gentil. Podes ajustá-la depois, lá dentro.",
 
   // ── Sugestões de regras do pacto ──────────────────────────────────────────
   "start.rulePreset.warmth":
-    "Trata toda a gente com calor e respeito — sem preconceito, nunca.",
+    "Trata toda a gente com calor e respeito: sem preconceito, nunca.",
   "start.rulePreset.confidentiality":
     "O que se partilha aqui fica aqui. Sem capturas de ecrã, sem expor ninguém.",
   "start.rulePreset.consent":
     "O consentimento primeiro. Pergunta antes de fotos, marcações ou apresentações.",
   "start.rulePreset.welcome":
-    "Quem chega de novo recebe boas-vindas, não um teste.",
+    "Quem chega de novo recebe boas-vindas calorosas.",
 
   // ── Escala de resolução de conflitos ──────────────────────────────────────
   "start.ladder.quietWord.title": "Uma palavra em privado",
@@ -545,24 +546,24 @@ export const communities: Catalog = {
   "start.tint.plum": "Ameixa profundo",
   "start.feeling.coverLabel": "Uma imagem de capa",
   "start.feeling.coverHint":
-    "Opcional — uma foto larga que recebe as pessoas no cartão da tua comunidade. Pelo menos 1200 × 600px.",
+    "Opcional: uma foto larga que recebe as pessoas no cartão da tua comunidade. Pelo menos 1200 × 600px.",
   "start.feeling.taglineLabel": "Uma frase de assinatura",
   "start.feeling.taglinePlaceholder": "Uma linha que capta a sensação do lugar",
   "start.feeling.taglineHint":
-    "Curta e calorosa — fica por baixo do nome da tua comunidade.",
+    "Curta e calorosa. Fica por baixo do nome da tua comunidade.",
 
   // ── Capítulo 7 — Pessoas ───────────────────────────────────────────────────
   "start.people.label": "Pessoas que adorarias ver aqui",
   "start.people.hint":
-    "Vão receber um convite caloroso quando abrires — sem pressão, sem spam.",
+    "Vão receber um convite caloroso quando abrires: sem pressão, sem spam.",
   "start.people.empty":
     "Ainda não estás em contacto com ninguém. Assim que te ligares a pessoas, poderás convidá-las aqui.",
   "start.people.seedNote":
-    "Também podes partilhar o link da tua comunidade assim que abrir — é muitas vezes assim que as primeiras dez pessoas chegam de verdade.",
+    "Também podes partilhar o link da tua comunidade assim que abrir. É muitas vezes assim que as primeiras dez pessoas chegam de verdade.",
 
   // ── Capítulo 8 — Confirmar ─────────────────────────────────────────────────
   "start.confirm.lead":
-    "Aqui está o espaço todo, num relance. Nada aqui é definitivo — podes mudar tudo depois de entrares.",
+    "Aqui está o espaço todo, num relance. Nada aqui é definitivo. Podes mudar tudo depois de entrares.",
   "start.confirm.handleLabel": "O endereço da tua comunidade",
   "start.confirm.editCta": "Editar",
   "start.confirm.notSetYet": "Ainda não definido",
@@ -601,7 +602,7 @@ export const communities: Catalog = {
   "start.preview.purposePlaceholder": "Para que é este espaço?",
   "start.preview.insideLabel": "O que está incluído",
   "start.preview.foundingMembers": "Pessoas fundadoras",
-  "start.preview.footNote": "Nada é público ainda — só tu consegues ver isto.",
+  "start.preview.footNote": "Nada é público ainda. Só tu consegues ver isto.",
   "start.preview.handleFallback": "a-tua-comunidade",
 
   // ── Opções de categoria (chips + distintivos do assistente) ───────────────
@@ -628,18 +629,18 @@ export const communities: Catalog = {
   "start.success.invitesOnWay_one": "{count} convite caloroso a caminho.",
   "start.success.invitesOnWay_other": "{count} convites calorosos a caminho.",
   "start.success.inviteWheneverReady":
-    "Convida pessoas quando estiveres pronte — sem pressa.",
+    "Convida pessoas quando estiveres pronte. Sem pressa.",
   "start.success.postFirstHello":
     "Publica um primeiro olá para que ninguém entre numa sala vazia.",
   "start.success.backToHub": "Voltar ao teu hub",
   "start.success.startAnother": "Começar outra",
   "start.success.body":
-    "Abriste algo real hoje. {name} já tem uma casa na QueerPulse — uma porta para a tua gente atravessar. Vai dizer o primeiro olá.",
+    "Abriste algo real hoje. {name} já tem uma casa na QueerPulse, uma porta para a tua gente atravessar. Vai dizer o primeiro olá.",
 
   // ── Notificações (StartCommunityPage) ─────────────────────────────────────
   "start.toast.createError":
-    "Não foi possível abrir a tua comunidade — tenta novamente.",
-  "start.toast.created": "{name} está no ar — bem-vinde, responsável",
+    "Não foi possível abrir a tua comunidade. Tenta novamente.",
+  "start.toast.created": "{name} está no ar. Bem-vinde, responsável",
 
   // ── Texto composto no adaptador (api/communities.adapters.ts, useAllCommunities.ts) ──
   "common.count.members_one": "{count} pessoa",
@@ -659,7 +660,7 @@ export const communities: Catalog = {
   "detail.topicThread.welcomeTitle": "Bem-vinde a {name}",
   "detail.topicThread.recently": "recentemente",
   "detail.topicThread.justNow": "agora mesmo",
-  "detail.topicThread.welcomeSayHello": "Bem-vinde a {name} — diz olá",
+  "detail.topicThread.welcomeSayHello": "Bem-vinde a {name}. Diz olá",
   "detail.topicThread.beginningPost":
     "Isto é o início de {name}. Apresenta-te e diz-nos o que te trouxe até aqui.",
   "detail.organiser.founder": "Pessoa fundadora",
@@ -686,5 +687,5 @@ export const communities: Catalog = {
   "edit.rules.addPlaceholder": "Adiciona um valor partilhado…",
   "edit.rules.remove": "Remover regra",
   "edit.toast.saved": "Alterações guardadas",
-  "edit.toast.error": "Não foi possível guardar as alterações — tenta de novo.",
+  "edit.toast.error": "Não foi possível guardar as alterações. Tenta de novo.",
 };

@@ -44,6 +44,7 @@ function blankDraft(seed?: ListingSeed): ListingDraft {
     tags: [],
     goodFor: [],
     langs: [],
+    online: false,
     address: "",
     geocoded: false,
     latitude: null,
@@ -303,7 +304,8 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
       add(s1, "marketing:listBusiness.missing.name", ANCHOR.name);
     if (!draft.cats.length)
       add(s1, "marketing:listBusiness.missing.cats", ANCHOR.cats);
-    if (!draft.hood)
+    // Neighbourhood is optional for an online-only business (no physical area).
+    if (!draft.online && !draft.hood)
       add(s1, "marketing:listBusiness.missing.hood", ANCHOR.hood);
     if (isClaim && !draft.badge)
       add(s1, "marketing:listBusiness.missing.badge", ANCHOR.badge);
@@ -319,9 +321,11 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
       add(s2, "marketing:listBusiness.missing.whatItIs", ANCHOR.whatItIs);
 
     const s3: MissingField[] = [];
-    if (!draft.address.trim())
+    // An online-only business has no physical location, so neither an address
+    // nor a resolved pin is required. Both paths still need them otherwise.
+    if (!draft.online && !draft.address.trim())
       add(s3, "marketing:listBusiness.missing.address", ANCHOR.address);
-    if (draft.latitude === null || draft.longitude === null)
+    if (!draft.online && (draft.latitude === null || draft.longitude === null))
       add(s3, "marketing:listBusiness.missing.pin", ANCHOR.address);
     if (isClaim && !anyDayOpen(draft.hours))
       add(s3, "marketing:listBusiness.missing.hours", ANCHOR.hours);

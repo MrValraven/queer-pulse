@@ -276,7 +276,7 @@ export function GovernanceSection() {
   );
 }
 
-const REPORT_TEXT = `QueerPulse — Annual Transparency Report 2025
+const REPORT_TEXT = `QueerPulse: Annual Transparency Report 2025
 ============================================
 
 This is a mock export from the QueerPulse prototype. The full 84-page report
@@ -285,11 +285,11 @@ is summarised below.
 WHERE THE MONEY CAME FROM (2025): €278,400
 WHERE IT WENT: €267,420 spent · €10,980 carried to reserves
 MODERATION: 184 actions logged · median response 4.2h
-GOVERNMENT/LEGAL DATA REQUESTS: see §04 — no informal asks complied with.
+GOVERNMENT/LEGAL DATA REQUESTS: see §04. No informal asks complied with.
 
-Prepared by Catarina Vaz & André Bento.
-Independently audited by Dra. Helena Faria, Faria Auditoria.
-Questions: transparency@queerpulse.pt
+Prepared by the QueerPulse volunteer team (Catarina Vaz & André Bento).
+Figures self-reported; not independently audited.
+Questions: hello@queerpulse.com
 `;
 
 const REPORT_CSV = `section,metric,value
@@ -318,7 +318,7 @@ export function Signoff() {
           components={{
             em: <em />,
             // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- false positive: an element template for <Translation>, which clones it with the translated children (its accessible name) at render.
-            a: <a href="mailto:transparency@queerpulse.pt" />,
+            a: <a href="mailto:hello@queerpulse.com" />,
           }}
         />
       </p>
@@ -343,21 +343,6 @@ export function Signoff() {
           <div className={styles.signName}>André Bento</div>
           <div className={styles.signRole}>
             {t("marketing:transparency.signoff.role.andre")}
-          </div>
-        </div>
-        <div
-          className={styles.signAv}
-          style={{
-            background: "rgba(247,243,238,.10)",
-            color: "rgba(247,243,238,.8)",
-          }}
-        >
-          HF
-        </div>
-        <div>
-          <div className={styles.signName}>Dra. Helena Faria</div>
-          <div className={styles.signRole}>
-            {t("marketing:transparency.signoff.role.auditor")}
           </div>
         </div>
       </div>

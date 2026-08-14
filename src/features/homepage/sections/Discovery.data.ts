@@ -25,17 +25,17 @@ export const featuredSpotlights: FeaturedSpotlight[] = [
   {
     key: "gabriella",
     quote:
-      "I'm a Londoner in Lisbon, looking to collaborate with others who centre community, compassion and growth — in a world designed to isolate.",
+      "I'm a Londoner in Lisbon, looking to collaborate with others who centre community, compassion and growth, in a world designed to isolate.",
   },
   {
     key: "philippine",
     quote:
-      "I've spent my life bridging worlds — dance stages, runways, and now venture. Come find me if you're building something sustainable and don't know where to start.",
+      "I've spent my life bridging worlds: dance stages, runways, and now venture. Come find me if you're building something sustainable and don't know where to start.",
   },
   {
     key: "ines",
     quote:
-      "I'm around for anyone rethinking a wordmark — or who just wants to argue about serifs over coffee.",
+      "I'm around for anyone rethinking a wordmark, or who just wants to argue about serifs over coffee.",
   },
   {
     key: "sofia",

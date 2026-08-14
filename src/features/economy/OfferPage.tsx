@@ -44,7 +44,7 @@ const MAIN: Offer = {
   slug: "zine-collab",
   kind: "looking",
   title: "A collaborator for a queer zine launching in September",
-  body: "I'm putting together a risograph zine about queer life across Lisbon's bairros and I'm looking for one more person to make it with — ideally someone who writes or illustrates and wants a real say in the editorial direction, not just a commission. It's unpaid for now but everything we make is split evenly, and I have studio access and print connections. Come with opinions.",
+  body: "I'm putting together a risograph zine about queer life across Lisbon's bairros and I'm looking for one more person to make it with, ideally someone who writes or illustrates and wants a real say in the editorial direction, with genuine ownership. It's unpaid for now but everything we make is split evenly, and I have studio access and print connections. Come with opinions.",
   owner: {
     first: "Inês",
     last: "Tavares",

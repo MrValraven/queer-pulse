@@ -186,8 +186,8 @@ export const admin: Catalog = {
   // Shared 403 copy for the admin editor panels (org tiers, housing co-ops).
   "common.panelForbidden": "This panel is for admins only.",
   // Toggle aria-labels shared by the org-tier and housing-coop row lists.
-  "common.featuredToggleLabel": "Featured — {name}",
-  "common.publishedToggleLabel": "Published — {name}",
+  "common.featuredToggleLabel": "Featured: {name}",
+  "common.publishedToggleLabel": "Published: {name}",
   // Breadcrumb root for the top-level admin panel (used by pages nested one
   // level below /admin, e.g. the partner-applications queue).
   "common.adminBreadcrumb": "Admin",
@@ -203,13 +203,13 @@ export const admin: Catalog = {
   "dashboard.header.titleClearLine1": "You're",
   "dashboard.header.titleClearLine2": "all <em>caught up</em>.",
   "dashboard.header.subEmergencies_one":
-    "One is flagged as a safety emergency — start there. Everything else is steady, and you're holding the whole network together.",
+    "One is flagged as a safety emergency. Start there. Everything else is steady, and you're holding the whole network together.",
   "dashboard.header.subEmergencies_other":
-    "{count} are flagged as safety emergencies — start there. Everything else is steady, and you're holding the whole network together.",
+    "{count} are flagged as safety emergencies. Start there. Everything else is steady, and you're holding the whole network together.",
   "dashboard.header.subCalm":
-    "Nothing's flagged urgent — work down the queue at your own pace. You're holding the whole network steady.",
+    "Nothing's flagged urgent. Work down the queue at your own pace. You're holding the whole network steady.",
   "dashboard.header.subClear":
-    "Every open item has a human decision attached. Go rest — the network's safe in your hands.",
+    "Every open item has a human decision attached. Go rest. The network's safe in your hands.",
   "dashboard.header.moderationCta": "Open moderation",
 
   "dashboard.metrics.activeMembers.label": "Active members",
@@ -238,7 +238,7 @@ export const admin: Catalog = {
   "dashboard.triage.title": "Needs <em>a human</em>",
   "dashboard.triage.sortedToast": "Sorted by urgency",
   "dashboard.triage.safetyEmergencies.title": "Safety emergencies",
-  "dashboard.triage.safetyEmergencies.sub": "Outing & doxxing —",
+  "dashboard.triage.safetyEmergencies.sub": "Outing & doxxing",
   "dashboard.triage.safetyEmergencies.subEm": "handle these first",
   "dashboard.triage.openReports.title": "Open reports",
   "dashboard.triage.openReports.sub": "Harassment, spam, vouch-abuse",
@@ -311,7 +311,7 @@ export const admin: Catalog = {
   "members.header.titleLine1": "{total} people,",
   "members.header.titleLine2": "each one <em>vouched for</em>.",
   "members.header.sub":
-    "Not rows in a table — members someone trusted enough to bring in. Pronouns and chosen names are the only names shown here. {count} people are waiting to be welcomed in.",
+    "These aren't rows in a table. They're members someone trusted enough to bring in. Pronouns and chosen names are the only names shown here. {count} people are waiting to be welcomed in.",
   "members.header.exportCta": "Export",
   "members.filterAriaLabel": "Filter members",
   "members.searchPlaceholder": "Search by name…",
@@ -337,7 +337,7 @@ export const admin: Catalog = {
   "members.verify.approvedToast": "{name} was welcomed in",
   "members.verify.declinedToast": "{name}'s request wasn't approved this time",
   "members.verify.errorToast":
-    "Could not save that decision — please try again",
+    "Could not save that decision. Please try again",
   "members.verify.mutualLine": "Named {name} as a mutual",
   "members.verify.noMutual": "No mutual named yet",
   "members.verify.appliedToday": "Applied today",
@@ -348,16 +348,46 @@ export const admin: Catalog = {
   "members.verify.emailLabel": "Email",
   "members.verify.cityLabel": "City",
   "members.verify.noCity": "Not given",
+  // Which page the applicant came through on their way to the request form.
+  "members.verify.sourceLabel": "Came from",
+  "members.verify.source.homepage_hero": "Homepage hero",
+  "members.verify.source.homepage_outro": "Homepage closing invite",
+  "members.verify.source.members_explainer": "Members explainer",
+  "members.verify.source.sign_in": "Sign-in page",
+  "members.verify.source.barter": "Barter board",
+  "members.verify.source.employer_reviews": "Employer reviews",
+  "members.verify.source.skills": "Skills directory",
+  "members.verify.source.solidarity_directory": "Solidarity directory",
+  "members.verify.source.solidarity": "Solidarity page",
+  "members.verify.source.public_profile": "A member's public profile",
+  "members.verify.source.about": "About page",
+  "members.verify.source.directory": "Directory",
+  "members.verify.source.partners": "Partners page",
+  "members.verify.source.arriving": "Arriving guide",
+  "members.verify.source.communities_about": "Communities explainer",
+  "members.verify.source.accessibility": "Accessibility page",
+  "members.verify.source.wellbeing": "Wellbeing resources",
+  "members.verify.source.trans_hub": "Trans hub",
+  "members.verify.source.legal": "Legal guide",
+  "members.verify.source.micro_grants": "Micro-grants",
+  "members.verify.source.queer_101": "Queer 101",
+  "members.verify.source.magazine": "Magazine",
+  "members.verify.source.status": "Status page",
+  "members.verify.source.gathering_vouch": "Gathering vouch callout",
+  "members.verify.source.family": "Family page",
+  "members.verify.source.reading_groups": "Reading groups",
+  "members.verify.source.direct": "Opened the invite page directly",
+  "members.verify.source.other": "Another page",
   "members.verify.ageAttested": "18+ confirmed {date} · Terms v{version}",
   "members.verify.ageAttestedUnknown": "18+ confirmed · Terms v{version}",
   // Approved: no email is ever sent by the platform — say so, plainly.
   "members.verify.approvedLabel": "Welcomed in",
   "members.verify.sendYourself":
-    "Nothing has been emailed. Send this invite link to {email} yourself — it's the only way they get in.",
+    "Nothing has been emailed. Send this invite link to {email} yourself. It's the only way they get in.",
   "members.verify.copyLink": "Copy link",
   "members.verify.copiedLink": "Copied",
-  "members.verify.copiedToast": "Invite link copied — now send it to them",
-  "members.verify.copyFailed": "Could not copy the link — select it and copy",
+  "members.verify.copiedToast": "Invite link copied. Now send it to them",
+  "members.verify.copyFailed": "Could not copy the link. Select it and copy",
   "members.verify.noInviteCode":
     "No invite code came back. Refresh the queue, or ask an admin to reissue it.",
 
@@ -369,19 +399,19 @@ export const admin: Catalog = {
   "members.drawer.removeCta": "Remove member…",
   "members.drawer.reasonRequiredToast": "A reason is required before removal",
   "members.drawer.glanceTitle": "At a glance",
-  "members.drawer.graphTitle": "Vouch graph — trust both ways",
+  "members.drawer.graphTitle": "Vouch graph: trust both ways",
   "members.drawer.graphAriaLabel": "Open the full trust network",
   "members.drawer.exploreCta": "Explore network",
   "members.drawer.communitiesTitle": "Communities",
   "members.drawer.contributionsTitle": "Contribution history",
   "members.drawer.removePanel.title": "Removing a member is permanent.",
   "members.drawer.removePanel.keepCta": "Keep member",
-  "members.drawer.removePanel.continueCta": "I understand — continue",
+  "members.drawer.removePanel.continueCta": "I understand, continue",
   "members.drawer.messageSentToast": "Message sent",
   "members.drawer.missingReasonToast":
-    "A reason is required — {name} will see it",
+    "A reason is required. {name} will see it",
   "members.drawer.restrictedToast":
-    "Restricted · {duration} · {scope} — {name} notified",
+    "Restricted · {duration} · {scope} · {name} notified",
   "members.drawer.restrictionUndoneToast": "Restriction reversed.",
   // Shown in live mode where verify / message / restrict have no backend
   // endpoint yet — the drawer stays honest instead of faking success (demo
@@ -397,7 +427,7 @@ export const admin: Catalog = {
   "members.suspension.liftedToast": "{name} has been reinstated.",
   "members.suspension.confirm.title": "Reinstate {name}?",
   "members.suspension.confirm.body":
-    "This lifts {name}'s suspension and restores full access immediately. It's logged in the audit trail under your name — you can suspend again if needed.",
+    "This lifts {name}'s suspension and restores full access immediately. It's logged in the audit trail under your name. You can suspend again if needed.",
   "members.suspension.confirm.confirmCta": "Lift suspension",
   "members.role.sectionTitle": "Role & permissions",
   "members.role.currentLabel": "Current role",
@@ -410,7 +440,7 @@ export const admin: Catalog = {
   "members.role.setAs.moderator": "Make moderator",
   "members.role.setAs.admin": "Make admin",
   "members.role.selfNote":
-    "You can't change your own role — ask another admin to do it.",
+    "You can't change your own role. Ask another admin to do it.",
   "members.role.systemNote":
     "This is the QueerPulse house account. Its role is fixed and can't be changed here.",
   "members.role.updatedToast": "{name} is now {role}.",
@@ -427,20 +457,20 @@ export const admin: Catalog = {
   "staffRoles.grantsLabel": "Staff roles",
   "staffRoles.magazineEditor.label": "Magazine Editor",
   "staffRoles.magazineEditor.desc":
-    "Runs the editorial desk — publish pieces, manage decks, review pitches.",
+    "Runs the editorial desk: publish pieces, manage decks, review pitches.",
   "staffRoles.magazineWriter.label": "Magazine Writer",
   "staffRoles.magazineWriter.desc":
     "Drafts and submits pieces for editorial review.",
   "staffRoles.adminSuperset": "Admins already have every staff capability.",
   "staffRoles.systemLocked": "System accounts can't hold staff roles.",
 
-  "members.timeline.title": "Moderation history — for & against",
+  "members.timeline.title": "Moderation history: for & against",
   "members.timeline.auditLinkCta": "Every entry in the audit log",
 
   "members.sealed.sectionTitle": "Identity & privacy",
   "members.sealed.title": "No prior name is stored",
   "members.sealed.body":
-    "QueerPulse keeps no record of anyone's earlier name — that's why nothing shows here. It never appears in a report, in this view, or to any admin. The member alone decides how they're known.",
+    "QueerPulse keeps no record of anyone's earlier name. That's why nothing shows here. It never appears in a report, in this view, or to any admin. The member alone decides how they're known.",
 
   "members.message.eyebrow": "Reaching out",
   "members.message.title": "Message <em>{name}</em>",
@@ -451,7 +481,7 @@ export const admin: Catalog = {
   "members.message.placeholder":
     "Write to {name}… a check-in, a heads-up, an offer of support.",
   "members.message.transparency":
-    "Admin messages are clearly labelled as official — never disguised as a peer. {name} can always reply.",
+    "Admin messages are clearly labelled as official and never disguised as a peer. {name} can always reply.",
   "members.message.sendCta": "Send message",
 
   "members.restrict.eyebrow": "Limiting access, carefully",
@@ -462,7 +492,7 @@ export const admin: Catalog = {
   "members.restrict.applyCta": "Apply restriction",
   "members.restrict.notePlaceholder": "A note for {name} (they will see it)…",
   "members.restrict.transparency":
-    "{name} keeps full access to support and appeals. A restriction limits posting — it never cuts someone off from help.",
+    "{name} keeps full access to support and appeals. A restriction limits posting. It never cuts someone off from help.",
   "members.restrict.duration.24h": "24h",
   "members.restrict.duration.7d": "7 days",
   "members.restrict.duration.30d": "30 days",
@@ -472,7 +502,7 @@ export const admin: Catalog = {
   "members.restrict.reason.harassment": "Repeated harassment after a warning",
   "members.restrict.reason.misgendering": "Misgendering / deadnaming",
   "members.restrict.reason.hostile": "Hostile or abusive conduct",
-  "members.restrict.reason.other": "Other — explain below",
+  "members.restrict.reason.other": "Other: explain below",
 
   "members.status.verified": "Verified",
   "members.status.openReports_one": "{count} open report",
@@ -499,13 +529,13 @@ export const admin: Catalog = {
   "members.glance.memberFor.months_one": "{count}mo",
   "members.glance.memberFor.months_other": "{count}mo",
   "members.detail.graphNote_one":
-    "{count} member vouches for {name}. A mutual graph is a sign of trust — not a metric to optimise.",
+    "{count} member vouches for {name}. A mutual graph is a sign of trust. Honour it, and let the numbers be.",
   "members.detail.graphNote_other":
-    "{count} members vouch for {name}. A mutual graph is a sign of trust — not a metric to optimise.",
+    "{count} members vouch for {name}. A mutual graph is a sign of trust. Honour it, and let the numbers be.",
   "members.detail.graphNoteMutual_one":
-    "{count} member vouches for {name}, who vouches for {given} in return. A mutual graph is a sign of trust — not a metric to optimise.",
+    "{count} member vouches for {name}, who vouches for {given} in return. A mutual graph is a sign of trust. Honour it, and let the numbers be.",
   "members.detail.graphNoteMutual_other":
-    "{count} members vouch for {name}, who vouches for {given} in return. A mutual graph is a sign of trust — not a metric to optimise.",
+    "{count} members vouch for {name}, who vouches for {given} in return. A mutual graph is a sign of trust. Honour it, and let the numbers be.",
   "members.detail.removeBody":
     "This ends {name}'s membership, hides their content, and notifies them with your reason and the right to appeal. Their vouches for others stay valid. This is logged in the audit trail under your name.",
   "members.communities.role.owner": "owner",
@@ -598,7 +628,7 @@ export const admin: Catalog = {
   "adminInvites.row.from": "From {name}",
   "adminInvites.row.toMember": "accepted by {name}",
   "adminInvites.row.toEmail": "sent to {email}",
-  "adminInvites.row.toAnyone": "open link — no recipient yet",
+  "adminInvites.row.toAnyone": "open link, no recipient yet",
   "adminInvites.row.sent": "Sent {date}",
   "adminInvites.row.expires": "expires {date}",
   "adminInvites.loadMore": "Load more",
@@ -608,7 +638,7 @@ export const admin: Catalog = {
   "adminCommissionInterests.header.eyebrow": "Culture",
   "adminCommissionInterests.header.title": "Commission board <em>interest</em>",
   "adminCommissionInterests.header.sub":
-    "Every member who reached out about a Commission Board project — which brief, who they want to work with, and their note. Filter by category.",
+    "Every member who reached out about a Commission Board project: which brief, who they want to work with, and their note. Filter by category.",
   "adminCommissionInterests.empty":
     "No commission interest matches this filter yet.",
   "adminCommissionInterests.error":
@@ -625,7 +655,7 @@ export const admin: Catalog = {
   "adminChangemakerNominations.header.eyebrow": "Community",
   "adminChangemakerNominations.header.title": "Who members <em>put forward</em>",
   "adminChangemakerNominations.header.sub":
-    "Every name members have nominated for the Change Makers directory, newest first — a shortlist to review.",
+    "Every name members have nominated for the Change Makers directory, newest first. A shortlist to review.",
   "adminChangemakerNominations.empty": "No nominations yet.",
   "adminChangemakerNominations.error":
     "We couldn't load nominations. Please try again.",
@@ -639,7 +669,7 @@ export const admin: Catalog = {
   "adminReadingGroupProposals.header.eyebrow": "Community",
   "adminReadingGroupProposals.header.title": "Groups members <em>want to start</em>",
   "adminReadingGroupProposals.header.sub":
-    "Every “Start your own group” a member has submitted — the book, why, format, and size. Filter by format.",
+    "Every “Start your own group” a member has submitted: the book, why, format, and size. Filter by format.",
   "adminReadingGroupProposals.empty":
     "No reading group proposals match this filter yet.",
   "adminReadingGroupProposals.error":
@@ -670,7 +700,7 @@ export const admin: Catalog = {
   "adminConcerns.header.eyebrow": "Trust & safety",
   "adminConcerns.header.title": "What members <em>are flagging</em>",
   "adminConcerns.header.sub":
-    "Every concern submitted through the governance form — reports, appeals, and issues. Filter by triage status, then mark each one reviewing, resolved, or dismissed.",
+    "Every concern submitted through the governance form: reports, appeals, and issues. Filter by triage status, then mark each one reviewing, resolved, or dismissed.",
   "adminConcerns.empty": "No concerns match this filter yet.",
   "adminConcerns.error": "We couldn't load concerns. Please try again.",
   "adminConcerns.filter.all": "All",
@@ -700,7 +730,7 @@ export const admin: Catalog = {
   "adminMagazineSubmissions.header.eyebrow": "Magazine",
   "adminMagazineSubmissions.header.title": "Reader <em>pitches</em>",
   "adminMagazineSubmissions.header.sub":
-    "Every story pitch readers have sent the magazine — the working title, format, pitch, and where it sits. Filter by status.",
+    "Every story pitch readers have sent the magazine: the working title, format, pitch, and where it sits. Filter by status.",
   "adminMagazineSubmissions.empty":
     "No submissions match this filter yet.",
   "adminMagazineSubmissions.error":
@@ -731,7 +761,7 @@ export const admin: Catalog = {
     "Every place a member has added to the directory. Move a listing forward when it's ready, or send it back with a quick question.",
   "adminListings.emptyQueue.title": "You're all <em>caught up</em>",
   "adminListings.emptyQueue.body":
-    "Every submission has found its place — nothing's waiting on you right now. New listings will land here the moment someone adds one.",
+    "Every submission has found its place. Nothing's waiting on you right now. New listings will land here the moment someone adds one.",
   "adminListings.unknownSubmitter": "Unknown member",
   // Secondary, subtle meta-line text — a moderator triaging the queue can
   // see how long a listing has been waiting without opening it.
@@ -764,7 +794,7 @@ export const admin: Catalog = {
   "adminListings.ask.sub": "We'll send this to {name} as a message.",
   "adminListings.ask.label": "Your question",
   "adminListings.ask.helper":
-    "Keep it warm and specific — they'll get it as a direct message and can reply right there.",
+    "Keep it warm and specific. They'll get it as a direct message and can reply right there.",
   "adminListings.ask.placeholder":
     "Hi! Before we publish this, could you confirm…",
   "adminListings.ask.send": "Send question",
@@ -772,7 +802,7 @@ export const admin: Catalog = {
   "adminListings.ask.sent": "Your question is on its way to {name}.",
   "adminListings.ask.action": "send your question",
   "adminListings.ask.noSubmitter":
-    "This listing has no member to contact — there's no one to send a question to.",
+    "This listing has no member to contact. There's no one to send a question to.",
   "adminListings.view.queue": "Submissions",
   "adminListings.view.editSuggestions": "Edit suggestions",
   "adminListings.remove.cta": "Remove",
@@ -781,7 +811,7 @@ export const admin: Catalog = {
   "adminListings.remove.confirm.body":
     "This permanently deletes the listing and can't be undone. The submitter won't be notified.",
   "adminListings.remove.confirm.liveWarning":
-    "This listing is live — removing it also takes it off the public directory immediately.",
+    "This listing is live. Removing it also takes it off the public directory immediately.",
   "adminListings.remove.confirm.confirmCta": "Remove listing",
   "adminListings.remove.toast.removed": "{name} was removed.",
   "adminListings.loadMoreCta": "Load more",
@@ -870,9 +900,9 @@ export const admin: Catalog = {
   "media.delete.confirmBody":
     "This removes the stored file from the bucket for good. If a profile, listing, or post still points at it, that image will stop loading. This can't be undone.",
   "media.delete.confirmBodyInUse_one":
-    "This file is still referenced in {count} place, listed below. Deleting it now will break that image — it'll stop loading. This can't be undone.",
+    "This file is still referenced in {count} place, listed below. Deleting it now will break that image. It'll stop loading. This can't be undone.",
   "media.delete.confirmBodyInUse_other":
-    "This file is still referenced in {count} places, listed below. Deleting it now will break those images — they'll stop loading. This can't be undone.",
+    "This file is still referenced in {count} places, listed below. Deleting it now will break those images. They'll stop loading. This can't be undone.",
   "media.delete.confirm": "Delete file",
   "media.delete.pending": "Deleting…",
   "media.delete.success": "File deleted",
@@ -897,9 +927,9 @@ export const admin: Catalog = {
   "media.references.inUseBadge": "In use ({count})",
   "media.references.orphanBadge": "No references",
   "media.references.heading": "Referenced in",
-  "media.references.empty": "No references found — safe to delete.",
+  "media.references.empty": "No references found. Safe to delete.",
   "media.references.unverified":
-    "Unverified — some reference checks couldn’t run, so this may still be in use. Reload before deleting.",
+    "Unverified. Some reference checks couldn’t run, so this may still be in use. Reload before deleting.",
   "media.references.degradedBanner":
     "Some reference checks couldn’t run, so an empty “No references” is unverified for this page. Reload before treating any file as an orphan.",
 
@@ -934,7 +964,7 @@ export const admin: Catalog = {
   "moderation.header.title_other": "{count} need you <em>first</em>.",
   "moderation.header.titleClear": "Nobody's <em>waiting</em>.",
   "moderation.header.sub":
-    "Reports are ordered by who's most at risk — not by what arrived first. Outing and doxxing always rise to the top, with a tighter 1-hour clock. Every action records a reason the member will read.",
+    "Reports are ordered by who's most at risk, so the greatest danger comes first regardless of when it arrived. Outing and doxxing always rise to the top, with a tighter 1-hour clock. Every action records a reason the member will read.",
   "moderation.tabs.open": "Open",
   "moderation.tabs.appeals": "Appeals",
   "moderation.tabs.resolved": "Resolved",
@@ -970,13 +1000,13 @@ export const admin: Catalog = {
   "moderation.caughtUp.titleLine1": "You're <em>caught up</em>.",
   "moderation.caughtUp.titleLine2": "Nothing needs you right now.",
   "moderation.caughtUp.sub":
-    "Every open report has a human decision attached to it, and every affected member has been told what happened and why. Go rest — the network is safe in your hands.",
+    "Every open report has a human decision attached to it, and every affected member has been told what happened and why. Go rest. The network is safe in your hands.",
   "moderation.caughtUp.backCta": "Back to overview",
   "moderation.caughtUp.replayCta": "Replay the queue",
   "moderation.backToast": "Heading back to the overview.",
 
   "moderation.appealsIntro":
-    "An appeal is a member asking you to look again. Read the original decision, hear them out, then <em>uphold or overturn</em> — with a reason of your own. Overturning a colleague's call is normal and healthy.",
+    "An appeal is a member asking you to look again. Read the original decision, hear them out, then <em>uphold or overturn</em>, with a reason of your own. Overturning a colleague's call is normal and healthy.",
   "moderation.appeal.by": "Appeal by",
   "moderation.appeal.decidedBy": "Decided by",
   "moderation.appeal.supportersFlag_one": "{count} backing them",
@@ -985,7 +1015,7 @@ export const admin: Catalog = {
   "moderation.resolvedSection": "Recently resolved",
   "moderation.resolvedEmpty": "Nothing resolved yet. Closed reports land here.",
 
-  "moderation.reportDrawer.label": "Report — {title}",
+  "moderation.reportDrawer.label": "Report: {title}",
   "moderation.reportDrawer.title": "A private trans status was outed",
   "moderation.reportDrawer.cancelCta": "Cancel",
   "moderation.reportDrawer.escalateCta": "Escalate to safety team",
@@ -1005,12 +1035,12 @@ export const admin: Catalog = {
   "moderation.reportDrawer.auditTitle": "Action history",
   "moderation.reportDrawer.auditEmpty":
     "No actions recorded yet. Every decision you make is logged here.",
-  "moderation.reportDrawer.decisionTitle": "Take a decision — protective first",
+  "moderation.reportDrawer.decisionTitle": "Take a decision: protective first",
   "moderation.reportDrawer.reasonTitle":
-    "Reason — required, shown to the member",
+    "Reason: required, shown to the member",
   "moderation.reportDrawer.reasonAriaLabel": "Reason",
   "moderation.reportDrawer.notePlaceholder":
-    "Add a human note. The member will read this — write it the way you’d want to be spoken to.",
+    "Add a human note. The member will read this. Write it the way you’d want to be spoken to.",
   "moderation.reportDrawer.noteAriaLabel": "Note to the member",
   "moderation.reportDrawer.transparency":
     "{name} will be told exactly what was actioned and why, with a link to appeal. Nothing happens silently.",
@@ -1021,10 +1051,10 @@ export const admin: Catalog = {
   "moderation.reportDrawer.confirmedToast":
     "{name} {verb}. The member has been notified.",
 
-  "moderation.appealDrawer.label": "Appeal — {name}",
+  "moderation.appealDrawer.label": "Appeal: {name}",
   "moderation.appealDrawer.chooseToast": "Choose uphold or overturn",
   "moderation.appealDrawer.reasonRequiredToast":
-    "A reason is required — the member will read it",
+    "A reason is required. The member will read it",
   "moderation.appealDrawer.cancelCta": "Cancel",
   "moderation.appealDrawer.recordCta": "Record decision",
   "moderation.appealDrawer.originalTitle": "The original decision",
@@ -1034,7 +1064,7 @@ export const admin: Catalog = {
   "moderation.appealDrawer.argumentTitle": "Their argument",
   "moderation.appealDrawer.supportersTitle": "Who's backing them",
   "moderation.appealDrawer.noSupport":
-    "No other members have weighed in. That's neither for nor against — many appeals stand alone.",
+    "No other members have weighed in. That's neither for nor against. Many appeals stand alone.",
   "moderation.appealDrawer.decisionTitle": "Your decision",
   "moderation.appealDrawer.decisionAriaLabel": "Decision",
   "moderation.appealDrawer.uphold": "Uphold",
@@ -1043,9 +1073,9 @@ export const admin: Catalog = {
   "moderation.appealDrawer.overturnSub": "Lift it & restore the member",
   "moderation.appealDrawer.reasonAriaLabel": "Reason for your decision",
   "moderation.appealDrawer.reasonPlaceholder":
-    "Explain your decision in your own words — the member will read this.",
+    "Explain your decision in your own words. The member will read this.",
   "moderation.appealDrawer.transparency":
-    "Appeals are logged like any decision. If you overturn, {name} is told privately and kindly — not blamed.",
+    "Appeals are logged like any decision. If you overturn, {name} is told privately and kindly, and no one is blamed.",
 
   "moderation.severity.emergency": "Emergency",
   "moderation.severity.high": "High",
@@ -1076,7 +1106,7 @@ export const admin: Catalog = {
     "Outing / sharing private identity without consent",
   "moderation.reasons.doxxing": "Sharing personal or location data (doxxing)",
   "moderation.reasons.harassment": "Targeted harassment of a member",
-  "moderation.reasons.other": "Other — explain below",
+  "moderation.reasons.other": "Other: explain below",
 
   "moderation.priorReports.count_one": "{count} prior report",
   "moderation.priorReports.count_other": "{count} prior reports",
@@ -1118,7 +1148,7 @@ export const admin: Catalog = {
   "moderation.queue.verb.actioned": "Actioned",
   "moderation.queue.restoredToast": "Restored the report.",
   "moderation.queue.serviceErrorToast":
-    "Couldn't reach the safety service — restored.",
+    "Couldn't reach the safety service. Restored.",
   "moderation.queue.bulkToast_one": "{count} report {verb}",
   "moderation.queue.bulkToast_other": "{count} reports {verb}",
   "moderation.queue.bulkVerb.dismissed": "dismissed",
@@ -1138,7 +1168,7 @@ export const admin: Catalog = {
   "communities.grid.titleLine1Unknown": "Spaces,",
   "communities.grid.titleLine2": "each <em>tended to</em>.",
   "communities.grid.sub":
-    "Every community has a moderator who knows it by name. Health is how steady each one feels — reports answered, members held, no one slipping through.",
+    "Every community has a moderator who knows it by name. Health is how steady each one feels: reports answered, members held, no one slipping through.",
   "communities.grid.loadError": "Couldn’t load the communities.",
   "communities.grid.healthAriaLabel": "Health {score}, see breakdown",
   "communities.grid.needsHand": "· needs a hand",
@@ -1148,7 +1178,7 @@ export const admin: Catalog = {
   "communities.grid.sparklineAriaLabel": "Weekly activity, latest {value}",
   "communities.grid.emptyTitle": "No spaces <em>yet</em>.",
   "communities.grid.emptyText":
-    "Spaces here come from members, not admins — when the first one takes shape, its health, its moderators, and its queue will show up right here.",
+    "Spaces here are built by members. When the first one takes shape, its health, its moderators, and its queue will show up right here.",
   // Activity classification the health math computes server-side (chrome,
   // not fetched free text) — see adminCommunities.adapters.ts.
   "communities.activityLabel.quiet": "Quiet",
@@ -1174,11 +1204,11 @@ export const admin: Catalog = {
   "communities.detail.supportBanner.title":
     "This community could use <em>a hand</em>.",
   "communities.detail.supportBanner.textAlone":
-    "A health score this low is a call for support, not a mark against the mods. {name} is stewarding {members} members almost alone.",
+    "A health score this low is a call for support for the moderators. {name} is stewarding {members} members almost alone.",
   "communities.detail.supportBanner.textThin":
-    "A health score this low is a call for support, not a mark against the mods. {name} is stewarding {members} members with a thin team.",
+    "A health score this low is a call for support for the moderators. {name} is stewarding {members} members with a thin team.",
   "communities.detail.supportBanner.textNone":
-    "A health score this low is a call for support, not a mark against the mods. This community currently has no moderator at all, and {members} members are relying on it.",
+    "A health score this low is a call for support for the moderators. This community currently has no moderator at all, and {members} members are relying on it.",
   "communities.detail.supportBanner.offerCta": "Offer support",
   "communities.detail.stat.members": "Members",
   "communities.detail.stat.activeThisWeek": "Active this week",
@@ -1193,7 +1223,7 @@ export const admin: Catalog = {
 
   "communities.queue.emptyTitle": "Nothing open, <em>nothing owed</em>.",
   "communities.queue.emptyText":
-    "This community takes care of itself — a {pct}% handled rate. Its moderators rarely need you.",
+    "This community takes care of itself: a {pct}% handled rate. Its moderators rarely need you.",
   "communities.queue.moreHandled":
     "+ {count} more being handled by the community's own moderators",
   "communities.queue.reviewCta": "Review",
@@ -1255,13 +1285,13 @@ export const admin: Catalog = {
   "communities.health.closeCta": "Close",
   "communities.health.notMeasured": "Not measured yet",
   "communities.health.intro":
-    "Health is a blend of four signals, weighted by community size. It's a thermometer, not a grade —",
+    "Health is a blend of four signals, weighted by community size. It's a thermometer, a reading of how the space feels.",
   "communities.health.breakdown.memberActivity.name": "Member activity",
   "communities.health.breakdown.memberActivity.desc":
-    "How alive the space feels — posts, replies, attendance",
+    "How alive the space feels: posts, replies, attendance",
   "communities.health.breakdown.reportResolution.name": "Report handling",
   "communities.health.breakdown.reportResolution.desc":
-    "Share of reports no longer sitting open — resolved or escalated",
+    "Share of reports no longer sitting open: resolved or escalated",
   "communities.health.breakdown.memberSentiment.name": "Member sentiment",
   "communities.health.breakdown.memberSentiment.desc":
     "Quiet pulse-check surveys and reaction signals",
@@ -1269,7 +1299,7 @@ export const admin: Catalog = {
   "communities.health.breakdown.safetyLoad.desc":
     "Inverse of harm reports relative to size",
   "communities.health.narrative.strong":
-    "A strong, balanced score. Nothing here needs your attention — keep doing what works.",
+    "A strong, balanced score. Nothing here needs your attention. Keep doing what works.",
   "communities.health.narrative.healthy":
     "Healthy overall, with one or two areas worth a gentle eye.",
   "communities.health.narrative.dragging":
@@ -1285,7 +1315,7 @@ export const admin: Catalog = {
   "communities.health.method.exampleSizeAdjust": "Adjusted for community size",
   "communities.health.method.examplePublished": "Published health",
   "communities.health.method.exampleNote":
-    "Weights shown are illustrative. The exact blend and the size adjustment are worked out nightly on our servers, so read this as the shape of the maths, not the precise formula.",
+    "Weights shown are illustrative. The exact blend and the size adjustment are worked out nightly on our servers, so read this as the shape of the maths, a rough picture of how it works.",
   "communities.health.method.sizeNote":
     "Community size matters. A small space is judged gently, so a quiet week or a single open report does not sink the score the way it would in a community many times its size.",
   "communities.health.method.bandsHeading": "Where the score sits",
@@ -1298,19 +1328,19 @@ export const admin: Catalog = {
 
   "communities.support.modalTitle": "Lend <em>{name}</em> a hand",
   "communities.support.intro":
-    "Pick how to help. You can do more than one — the moderators will see exactly what you offered.",
+    "Pick how to help. You can do more than one. The moderators will see exactly what you offered.",
   "communities.support.noteLabel": "A note for the moderators (optional)",
   "communities.support.notePlaceholder":
-    "We saw the score dip — what would actually help right now?",
+    "We saw the score dip. What would actually help right now?",
   "communities.support.cancelCta": "Cancel",
   "communities.support.sendCta": "Send support",
   "communities.support.sentToast": "Support sent to {name}'s moderators",
   "communities.support.withdrawnToast": "Support request withdrawn",
   "communities.support.option.message.title": "Message the moderators",
   "communities.support.option.message.sub":
-    "A warm check-in to {names} — how can we help?",
+    "A warm check-in to {names}. How can we help?",
   "communities.support.option.message.subNoMods":
-    "A warm check-in to its moderators — how can we help?",
+    "A warm check-in to its moderators. How can we help?",
   "communities.support.option.buddy.title": "Assign a staff buddy for 2 weeks",
   "communities.support.option.buddy.sub":
     "A Trust & Safety teammate co-moderates to take the load off.",
@@ -1326,10 +1356,10 @@ export const admin: Catalog = {
   "governance.header.eyebrow": "Governance & transparency",
   "governance.header.title": "Nothing here is <em>hidden</em>.",
   "governance.header.sub":
-    "Where the money comes from, where it goes, every rule change, and every action a moderator has ever taken — all open to the members who fund us.",
+    "Where the money comes from, where it goes, every rule change, and every action a moderator has ever taken, all open to the members who fund us.",
   "governance.header.publishCta": "Publish report",
   "governance.header.publishToast":
-    "Transparency report queued — members will be notified when it publishes.",
+    "Transparency report queued. Members will be notified when it publishes.",
   // Live mode (P3-7): publishing stamps the snapshot server-side.
   "governance.header.publishedToast": "Transparency report published.",
   "governance.header.publishError":
@@ -1350,7 +1380,7 @@ export const admin: Catalog = {
   "governance.finances.foot.reserve": "Held in the community reserve",
   "governance.finances.foot.solidarityRate": "Members on free or reduced rate",
   "governance.finances.empty":
-    "No published finance report yet — figures will appear here once one is published.",
+    "No published finance report yet. Figures will appear here once one is published.",
 
   "governance.finances.provenance.seeded": "Unverified",
   "governance.finances.provenance.manual": "Edited",
@@ -1407,7 +1437,7 @@ export const admin: Catalog = {
     "No advertising. No data sales. No venture money. <strong>Two-thirds comes straight from members.</strong>",
   "governance.spend.title": "Where it <em>goes</em>",
   "governance.spend.sub":
-    "{amount} / month — every euro accounted for, line by line.",
+    "{amount} / month: every euro accounted for, line by line.",
 
   "governance.chart.title": "Income vs spending <em>by quarter</em>",
   "governance.chart.sub":
@@ -1423,7 +1453,7 @@ export const admin: Catalog = {
 
   "governance.mrrPanel.live": "Sustainer MRR · live",
   "governance.mrrPanel.lead":
-    "Every euro comes from members, not advertisers or data sales. <em>We will never sell member data</em> — it's written into our constitution, not just our promises.",
+    "Every euro comes from members alone. <em>We will never sell member data</em>. That's written into our constitution, so it holds us to it.",
   "governance.mrrPanel.breakdown.care": "Care",
   "governance.mrrPanel.breakdown.platform": "Platform",
   "governance.mrrPanel.breakdown.mutualAid": "Mutual aid",
@@ -1437,12 +1467,12 @@ export const admin: Catalog = {
   "governance.policy.seeDiffCta": "See what changed",
   "governance.policy.principlesTitle": "Our <em>principles</em>",
   "governance.policy.transparencyNote":
-    "Policy changes are proposed in the open and ratified at the community assembly. Anyone can read the full edit history — nothing here is decided behind closed doors.",
+    "Policy changes are proposed in the open and ratified at the community assembly. Anyone can read the full edit history. Nothing here is decided behind closed doors.",
   "governance.policy.principle.noSell": "We will never sell member data.",
   "governance.policy.principle.visibility":
     "Visibility is always the member's choice.",
   "governance.policy.principle.noSilent":
-    "No silent removals — every action carries a reason.",
+    "No silent removals. Every action carries a reason.",
   "governance.policy.principle.accessNeverConditional":
     "Access is never conditional on ability to pay.",
 
@@ -1450,7 +1480,7 @@ export const admin: Catalog = {
   "governance.diff.title": "v4.1 → <em>v4.2</em>",
   "governance.diff.closeCta": "Close",
   "governance.diff.readFullCta": "Read full v4.2",
-  "governance.diff.introTitle": "Section 3 — Harm we treat as urgent.",
+  "governance.diff.introTitle": "Section 3: Harm we treat as urgent.",
   "governance.diff.introDate": "Ratified 12 Jun 2026, 89% in favour.",
   "governance.diff.note":
     "Proposed by the Trans & Friends moderators · voted on by the whole community at the Annual Assembly.",
@@ -1514,10 +1544,10 @@ export const admin: Catalog = {
   "partners.header.eyebrow": "Partnerships",
   "partners.header.title": "Who wants to <em>partner</em>.",
   "partners.header.sub":
-    "Organisations that applied to partner with QueerPulse. Read what they do, then approve them onto the public partners page or set the application aside — with a note they'll read.",
+    "Organisations that applied to partner with QueerPulse. Read what they do, then approve them onto the public partners page or set the application aside, with a note they'll read.",
   "partners.forbidden": "This queue is for admins only.",
-  "partners.loadError": "The queue couldn't load right now — please try again.",
-  "partners.errorToast": "Could not save that decision — please try again",
+  "partners.loadError": "The queue couldn't load right now. Please try again.",
+  "partners.errorToast": "Could not save that decision. Please try again",
   "partners.approvedToast": "{name} is now a partner",
   "partners.rejectedToast": "{name}'s application was set aside",
   "partners.emptyText":
@@ -1547,20 +1577,20 @@ export const admin: Catalog = {
   "modPanel.requests.sectionLabel": "Requests",
   "modPanel.requests.emptyTitle": "No requests waiting",
   "modPanel.requests.emptyDesc":
-    "You're all caught up — new requests will appear here.",
+    "You're all caught up. New requests will appear here.",
   "modPanel.requests.requestedAgo": "Requested {time} ago",
   "modPanel.requests.approveCta": "Approve",
   "modPanel.requests.declineCta": "Decline",
-  "modPanel.requests.approvedToast": "{name} approved — welcome them in.",
+  "modPanel.requests.approvedToast": "{name} approved. Welcome them in.",
   "modPanel.requests.declinedToast":
     "{name}'s request wasn't approved this time.",
   "modPanel.requests.approvedAllToast":
-    "All {count} requests approved — the community grows.",
+    "All {count} requests approved. The community grows.",
 
   "modPanel.reports.sectionLabel": "Reported posts",
   "modPanel.reports.emptyTitle": "All clear",
   "modPanel.reports.emptyDesc":
-    "Nothing has been flagged — the community looks after each other.",
+    "Nothing has been flagged. The community looks after each other.",
   "modPanel.reports.metaLine":
     "From {author} · flagged by {reporter} · {time} ago",
   "modPanel.reports.removeCta": "Remove post",
@@ -1572,7 +1602,7 @@ export const admin: Catalog = {
   "modPanel.reports.warnedToast": "A warning has been sent to {name}.",
   "modPanel.reports.dismissedToast": "Report dismissed.",
   "modPanel.reports.escalatedToast":
-    "Escalated to the QueerPulse team — it's now in the platform queue.",
+    "Escalated to the QueerPulse team. It's now in the platform queue.",
 
   "modPanel.members.searchPlaceholder": "Search members…",
   "modPanel.members.roleFilter.all": "All",
@@ -1637,7 +1667,7 @@ export const admin: Catalog = {
   "vouchGraph.pathbar.stepPath_other": "{count}-step trust path:",
   "vouchGraph.pathbar.noPath": "No trust path between {a} and {b}",
   "vouchGraph.pathbar.fromHint":
-    "Path from {name} — shift-click a second person",
+    "Path from {name}. Shift-click a second person",
   "vouchGraph.pathbar.clear": "clear",
 
   "vouchGraph.legend.safety.ring": "Suspected ring",
@@ -1669,22 +1699,22 @@ export const admin: Catalog = {
   "vouchGraph.modal.replayCta": "Replay",
   "vouchGraph.modal.replayStart": "Before anyone connected",
   "vouchGraph.modal.timeCutAriaLabel": "Connection timeline",
-  "vouchGraph.modal.verifyToast": "Trust basis attached — opening verification",
+  "vouchGraph.modal.verifyToast": "Trust basis attached. Opening verification",
   "vouchGraph.modal.citeToast": "Trust path cited in the audit log",
   "vouchGraph.modal.privateToast": "This member keeps their network private",
   "vouchGraph.modal.loadingTitle": "Loading trust network…",
   "vouchGraph.modal.emptyTitle": "No trust network yet",
   "vouchGraph.modal.emptyBody": "This member doesn't have any vouches on record.",
   "vouchGraph.modal.truncatedNotice":
-    "Showing the 500 most recent members — some connections may be hidden.",
+    "Showing the 500 most recent members. Some connections may be hidden.",
 
   "vouchGraph.inspector.emptyTitle": "Pick anyone",
   "vouchGraph.inspector.emptyBody":
     "Click a node to read who trusts them and what that trust is built on. Double-click to walk the network from there.",
-  "vouchGraph.inspector.sealed": "Legacy identity sealed — chosen name only",
+  "vouchGraph.inspector.sealed": "Legacy identity sealed, chosen name only",
   "vouchGraph.inspector.ringBanner.title": "Part of a suspected vouch ring",
   "vouchGraph.inspector.ringBanner.body":
-    "Five accounts created within an hour, vouching only for each other — a closed loop with no outside trust.",
+    "Five accounts created within an hour, vouching only for each other: a closed loop with no outside trust.",
   "vouchGraph.inspector.isolationBanner.title": "Trust isolation",
   "vouchGraph.inspector.isolationBanner.body":
     "Every vouch this member holds comes from new or flagged accounts. Verify with extra care.",
@@ -1694,7 +1724,7 @@ export const admin: Catalog = {
     "Open the member's moderation history before acting.",
   "vouchGraph.inspector.privateBanner.title": "Network kept private",
   "vouchGraph.inspector.privateBanner.body":
-    "This member has chosen to hide their vouch graph. Respect it — don't work around it.",
+    "This member has chosen to hide their vouch graph. Respect it. Don't work around it.",
   "vouchGraph.inspector.anonBanner.title": "Identity shielded",
   "vouchGraph.inspector.anonBanner.body":
     "An anonymous voucher. Their identity is protected and cannot be revealed.",
@@ -1775,7 +1805,7 @@ export const admin: Catalog = {
     "Blocks the platform for everyone except you and other admins. Members stay signed in and see a maintenance screen.",
   "settings.lockdown.allowMods": "Also allow moderators through",
   "settings.lockdown.allowModsSub":
-    "Useful during an incident — moderators are usually the people cleaning it up.",
+    "Useful during an incident. Moderators are usually the people cleaning it up.",
   "settings.lockdown.message.label": "Maintenance message",
   "settings.lockdown.message.placeholder":
     "What members will see while the platform is locked.",
@@ -1783,13 +1813,13 @@ export const admin: Catalog = {
     "You are an admin, so you will keep full access.",
 
   "settings.presets.label": "Start from a preset",
-  "settings.presets.hint": "Presets fill the box — edit freely before saving.",
+  "settings.presets.hint": "Presets fill the box. Edit freely before saving.",
 
   // Lockdown message presets. Selecting one FILLS the textarea; the saved value
   // is always free text, so the backend never needs to know presets exist.
   "settings.presets.lockdown.scheduled.label": "Scheduled maintenance",
   "settings.presets.lockdown.scheduled.body":
-    "QueerPulse is down for planned maintenance. We’ll be back shortly — thanks for your patience.",
+    "QueerPulse is down for planned maintenance. We’ll be back shortly. Thanks for your patience.",
   "settings.presets.lockdown.emergency.label": "Emergency maintenance",
   "settings.presets.lockdown.emergency.body":
     "We’ve taken QueerPulse offline briefly to fix an unexpected problem. We’re on it.",
@@ -1858,7 +1888,7 @@ export const admin: Catalog = {
   // ── System accounts (bots) ────────────────────────────────────────────────
   "bots.eyebrow": "Platform",
   "bots.title": "System accounts",
-  "bots.subtitle": "The voices that aren't a person — keep them current.",
+  "bots.subtitle": "The voices that aren't a person. Keep them current.",
   "bots.empty": "No system accounts yet.",
   "bots.edit": "Edit",
   "bots.editTitle": "Edit {name}",
@@ -1879,8 +1909,8 @@ export const admin: Catalog = {
   "bots.avatar.uploading": "Uploading…",
   "bots.save": "Save changes",
   "bots.cancel": "Cancel",
-  "bots.saved": "Saved — {name} is up to date.",
-  "bots.saveFailed": "That didn't save — check your connection and try again.",
+  "bots.saved": "Saved. {name} is up to date.",
+  "bots.saveFailed": "That didn't save. Check your connection and try again.",
   "bots.usernameTaken": "That handle is already taken.",
 
   // ── Partnership tiers (/admin/org-tiers) — page, form, fields, rows ────────
@@ -1888,15 +1918,15 @@ export const admin: Catalog = {
   // "Partnerships" reuses partners.header.eyebrow.
   "orgTier.title": "Partnership <em>tiers</em>",
   "orgTier.header.sub":
-    "Every tier on the For Organisations page, published or still in draft — create one, keep the pricing and copy current, and control what's live.",
+    "Every tier on the For Organisations page, published or still in draft: create one, keep the pricing and copy current, and control what's live.",
   "orgTier.newCta": "New tier",
   "orgTier.form.editEyebrow": "Edit tier",
   "orgTier.form.editTitle": "Edit tier",
   "orgTier.form.createTitle": "Create a partnership tier",
   "orgTier.form.createCta": "Create tier",
   "orgTier.loadError":
-    "The tier list couldn't load right now — please try again.",
-  "orgTier.empty": "No tiers yet — create the first one below.",
+    "The tier list couldn't load right now. Please try again.",
+  "orgTier.empty": "No tiers yet. Create the first one below.",
   "orgTier.delete.title": "Remove {name}?",
   "orgTier.delete.confirmCta": "Remove tier",
   "orgTier.delete.body":
@@ -1919,9 +1949,9 @@ export const admin: Catalog = {
   "orgTier.field.sortOrder": "Sort order",
   // CTA-behaviour option labels; the stored value is a canonical id
   // (toast/link/propose), never this label.
-  "orgTier.ctaOption.toast": "Toast — informational only",
-  "orgTier.ctaOption.link": "Link — navigates to a target",
-  "orgTier.ctaOption.propose": "Propose — opens the enquiry flow",
+  "orgTier.ctaOption.toast": "Toast: informational only",
+  "orgTier.ctaOption.link": "Link: navigates to a target",
+  "orgTier.ctaOption.propose": "Propose: opens the enquiry flow",
   "orgTier.toggle.featured.sub": "Highlighted as the recommended tier.",
   "orgTier.toggle.published.sub": "Visible on the For Organisations page.",
 
@@ -1937,7 +1967,7 @@ export const admin: Catalog = {
   // Partner names, testimonial quotes/authors stay English — DTO content.
   "approvedPartners.title": "Featured partners & testimonials",
   "approvedPartners.loadError":
-    "The partner list couldn't load right now — please try again.",
+    "The partner list couldn't load right now. Please try again.",
   "approvedPartners.empty": "No approved partners yet.",
   "approvedPartners.noTestimonial": "No testimonial yet",
   "approvedPartners.unattributed": "Unattributed",
@@ -1951,7 +1981,7 @@ export const admin: Catalog = {
   "partnerTestimonial.authorRequiredHint":
     "Add an author before saving a quote.",
   "partnerTestimonial.quoteNeedsAuthor":
-    "A quote needs an author — add one before saving",
+    "A quote needs an author. Add one before saving",
   "partnerTestimonial.updatedToast": "{name}'s testimonial was updated",
 
   // ── Housing co-ops (/admin/housing) — page, form, fields, rows ─────────────
@@ -1959,15 +1989,15 @@ export const admin: Catalog = {
   "housingCoop.title": "Housing <em>co-ops</em>",
   "housingCoop.header.eyebrow": "Local economy",
   "housingCoop.header.sub":
-    "Every co-op on the platform, published or still forming — create one, keep the details current, and clear the join-request queue below.",
+    "Every co-op on the platform, published or still forming: create one, keep the details current, and clear the join-request queue below.",
   "housingCoop.newCta": "New co-op",
   "housingCoop.form.editEyebrow": "Edit co-op",
   "housingCoop.form.editTitle": "Edit co-op",
   "housingCoop.form.createTitle": "Create a housing co-op",
   "housingCoop.form.createCta": "Create co-op",
   "housingCoop.loadError":
-    "The co-op list couldn't load right now — please try again.",
-  "housingCoop.empty": "No co-ops yet — create the first one below.",
+    "The co-op list couldn't load right now. Please try again.",
+  "housingCoop.empty": "No co-ops yet. Create the first one below.",
   "housingCoop.delete.title": "Remove {name}?",
   "housingCoop.delete.confirmCta": "Remove co-op",
   "housingCoop.delete.body":
@@ -1977,7 +2007,7 @@ export const admin: Catalog = {
   "housingCoop.toast.removed": "{name} was removed",
   "housingCoop.field.slug": "Slug",
   "housingCoop.field.name": "Name",
-  "housingCoop.field.nameEm": "Name — emphasised word",
+  "housingCoop.field.nameEm": "Name: emphasised word",
   "housingCoop.field.nameEmHint":
     "The one word styled in italic coral on the public card. Leave blank for none.",
   "housingCoop.field.city": "City",
@@ -1994,11 +2024,11 @@ export const admin: Catalog = {
   "housingCoop.field.monthly": "Monthly (EUR)",
   "housingCoop.field.cta": "Call to action",
   // Phase select option labels (long form). Stored value is a canonical id.
-  "housingCoop.phaseOption.forming": "Forming — finding the people",
+  "housingCoop.phaseOption.forming": "Forming: finding the people",
   "housingCoop.phaseOption.legal": "Legal incorporation",
   "housingCoop.phaseOption.finance": "Finance & structure",
   "housingCoop.phaseOption.property": "Finding the property",
-  "housingCoop.phaseOption.daily": "Daily life — operational",
+  "housingCoop.phaseOption.daily": "Daily life: operational",
   // Phase badge labels (short form, on the admin row). Same canonical ids.
   "housingCoop.phaseBadge.forming": "Forming",
   "housingCoop.phaseBadge.legal": "Legal",
@@ -2012,7 +2042,7 @@ export const admin: Catalog = {
   "housingCoop.toggle.operational.sub":
     "The co-op has moved in and is running day to day.",
   "housingCoop.toggle.sharesAreTarget.sub":
-    "Show the share amount as a goal, not a fixed price.",
+    "Show the share amount as a goal to aim for, instead of a fixed price.",
   "housingCoop.toggle.published.sub":
     "Visible in the public housing directory.",
   "housingCoop.row.households_one": "{count} household",
@@ -2027,9 +2057,9 @@ export const admin: Catalog = {
   // Applicant names, co-op names, notes stay English — DTO content.
   "housingRequests.title": "Join requests",
   "housingRequests.loadError":
-    "The join-request queue couldn't load right now — please try again.",
+    "The join-request queue couldn't load right now. Please try again.",
   "housingRequests.empty":
-    "Nothing waiting on you — every request has been triaged.",
+    "Nothing waiting on you. Every request has been triaged.",
   "housingRequests.unknownCoop": "Unknown co-op",
   "housingRequests.householdSize": "{size} in the household",
   "housingRequests.declineCta": "Decline",
@@ -2042,9 +2072,9 @@ export const admin: Catalog = {
     "Review who's asking to join the access-gated groups, and keep listings honest by hiding any that break the norms.",
   "housingGroups.requests.title": "Join requests",
   "housingGroups.requests.loadError":
-    "The join-request queue couldn't load right now — please try again.",
+    "The join-request queue couldn't load right now. Please try again.",
   "housingGroups.requests.empty":
-    "Nothing waiting on you — every request has been reviewed.",
+    "Nothing waiting on you. Every request has been reviewed.",
   "housingGroups.requests.unknownGroup": "Unknown group",
   "housingGroups.requests.mutuals_one": "{count} mutual connection",
   "housingGroups.requests.mutuals_other": "{count} mutual connections",
@@ -2053,9 +2083,9 @@ export const admin: Catalog = {
   "housingGroups.requests.error": "Couldn't save that decision",
   "housingGroups.listings.title": "Listings",
   "housingGroups.listings.loadError":
-    "The listings couldn't load right now — please try again.",
+    "The listings couldn't load right now. Please try again.",
   "housingGroups.listings.empty":
-    "No listings to review — nothing's been posted to a group yet.",
+    "No listings to review. Nothing's been posted to a group yet.",
   "housingGroups.listings.perMonth": "€{price} / mo",
   "housingGroups.listings.noGroup": "No group",
   "housingGroups.listings.hiddenChip": "Hidden",
@@ -2086,7 +2116,7 @@ export const admin: Catalog = {
   "roadmap.board.toast.created": "{name} added to the roadmap.",
   "roadmap.board.delete.title": "Remove {name}?",
   "roadmap.board.delete.body":
-    "This takes it off the roadmap for good — members won't see it in any column anymore.",
+    "This takes it off the roadmap for good. Members won't see it in any column anymore.",
   "roadmap.board.delete.confirmCta": "Remove item",
   "roadmap.board.modal.createEyebrow": "New item",
   "roadmap.board.modal.editEyebrow": "Edit item",
@@ -2122,7 +2152,7 @@ export const admin: Catalog = {
   // AdminRoadmapIdeasQueue.tsx, AdminRoadmapIdeaRows.tsx — member-submitted
   // idea triage + the published Top-ideas list the public page reads.
   "roadmap.ideas.pending.title": "Pending review",
-  "roadmap.ideas.pending.empty": "Nothing waiting — every idea's been triaged.",
+  "roadmap.ideas.pending.empty": "Nothing waiting. Every idea's been triaged.",
   "roadmap.ideas.published.title": "Published",
   "roadmap.ideas.published.empty": "Nothing published yet.",
   "roadmap.ideas.fromMemberTag": "From a member",
@@ -2155,7 +2185,7 @@ export const admin: Catalog = {
 
   // AdminRoadmapHeroStats.tsx — editable chip row for the public page's hero.
   "roadmap.heroStats.empty":
-    "No stat chips yet — add one below or auto-fill from item counts.",
+    "No stat chips yet. Add one below or auto-fill from item counts.",
   "roadmap.heroStats.autofillCta": "Auto-fill from item counts",
   "roadmap.heroStats.addCta": "Add stat",
   "roadmap.heroStats.removeRowCta": "Remove",
@@ -2198,7 +2228,7 @@ export const admin: Catalog = {
   "roadmap.page.eyebrow": "Roadmap",
   "roadmap.page.title": "Shape the <em>roadmap</em>",
   "roadmap.page.sub":
-    "Drag items between columns, triage what members asked for, and control exactly what the public page shows. A moved date always asks you for a reason — that is the point.",
+    "Drag items between columns, triage what members asked for, and control exactly what the public page shows. A moved date always asks you for a reason. That is the point.",
   "roadmap.page.newItemCta": "New item",
   "roadmap.page.draftDigestCta": "Draft digest",
   "roadmap.page.previewPublicCta": "Preview public page",
@@ -2248,16 +2278,16 @@ export const admin: Catalog = {
   "roadmap.board.addToColumnAriaLabel": "Add to {column}",
   "roadmap.board.emptyColumn": "Nothing here",
   "roadmap.board.wipOverMessage":
-    "Over the WIP limit of {limit} — something here is not really being built.",
+    "Over the WIP limit of {limit}. Something here is not really being built.",
   "roadmap.board.gripAriaLabel": "Drag to move or reorder",
   "roadmap.board.openCardAriaLabel": "Open {name}",
   "roadmap.board.selectCardAriaLabel": "Select {name}",
   "roadmap.board.flag.requested": "Members asked for this",
-  "roadmap.board.flag.committed": "Committed — this is a promise",
+  "roadmap.board.flag.committed": "Committed: this is a promise",
   "roadmap.board.flag.hidden": "Hidden from the public roadmap",
   "roadmap.board.flag.safetyGated":
     "Safety review required before this can go public",
-  "roadmap.board.flag.spike": "Unusual vote spike — possible brigading",
+  "roadmap.board.flag.spike": "Unusual vote spike: possible brigading",
   "roadmap.board.flag.slips": "Target moved {count}×",
   "roadmap.board.alert.blocked": "Blocked · {reason}",
   "roadmap.board.alert.waitingOn": "Waiting on {name}",
@@ -2303,7 +2333,7 @@ export const admin: Catalog = {
   "roadmap.drawer.saveEditCta": "Save",
   "roadmap.drawer.archiveCta": "Archive",
   "roadmap.drawer.auditNote":
-    "Every edit is logged. Members can see when a date moved and why — a roadmap that quietly slips is just a wishlist.",
+    "Every edit is logged. Members can see when a date moved and why. A roadmap that quietly slips is just a wishlist.",
   "roadmap.drawer.openAuditCta": "Open the audit log",
   "roadmap.drawer.deleteConfirm.title": 'Delete "{name}"?',
   "roadmap.drawer.deleteConfirm.body":
@@ -2322,10 +2352,10 @@ export const admin: Catalog = {
   "roadmap.drawer.commitment.confidence.hoping.desc":
     "We want this, no path yet",
   "roadmap.drawer.commitment.promiseToggle.title":
-    "This is a promise, not an exploration",
+    "This is a firm promise",
   "roadmap.drawer.commitment.promiseToggle.sub":
     'Committed items are labelled as promises publicly. Everything else reads as "we want to".',
-  "roadmap.drawer.commitment.slipHistoryTitle": "Date history — moved {count}×",
+  "roadmap.drawer.commitment.slipHistoryTitle": "Date history: moved {count}×",
   "roadmap.drawer.commitment.slipHistoryEmpty":
     "Never moved. Changing the target asks you for a public reason.",
 
@@ -2345,7 +2375,7 @@ export const admin: Catalog = {
   "roadmap.drawer.guide.reVerifyByLabel": "Re-verify by",
   "roadmap.drawer.guide.languagesLabel": "Languages",
   "roadmap.drawer.guide.reVerifyWarning":
-    "Re-verify due in {days} days. Health and legal facts rot — stale guidance is worse than none.",
+    "Re-verify due in {days} days. Health and legal facts rot. Stale guidance is worse than none.",
   "roadmap.drawer.guide.reVerifyOverdue_one":
     "Re-verify is overdue by {count} day.",
   "roadmap.drawer.guide.reVerifyOverdue_other":
@@ -2359,7 +2389,7 @@ export const admin: Catalog = {
 
   // Drawer · Blocked section
   "roadmap.drawer.blocked.title": "Blocked",
-  "roadmap.drawer.blocked.note": "shown publicly — blockers are not embarrassing",
+  "roadmap.drawer.blocked.note": "shown publicly. Blockers are not embarrassing",
   "roadmap.drawer.blocked.byLabel": "Blocked by",
   "roadmap.drawer.blocked.byPlaceholder": "Person or team",
   "roadmap.drawer.blocked.unblockCta": "Unblock",
@@ -2376,7 +2406,7 @@ export const admin: Catalog = {
   // Drawer · Capacity & money section
   "roadmap.drawer.capacity.title": "Capacity & money",
   "roadmap.drawer.capacity.note":
-    "volunteer items slip first — that is arithmetic, not blame",
+    "volunteer items slip first, which is just arithmetic",
   "roadmap.drawer.capacity.whoLabel": "Who is doing it",
   "roadmap.drawer.capacity.paidOption": "Paid work",
   "roadmap.drawer.capacity.volunteerOption": "Volunteer",
@@ -2444,17 +2474,17 @@ export const admin: Catalog = {
   "roadmap.modals.slipReason.body":
     "This reason is published on the public roadmap next to the item. Members forgive slipping dates; they do not forgive silent ones.",
   "roadmap.modals.slipReason.placeholder":
-    "e.g. Clinical reviewer availability — we would rather be late than wrong.",
+    "e.g. Clinical reviewer availability. We would rather be late than wrong.",
   "roadmap.modals.slipReason.confirmCta": "Move the date",
   "roadmap.modals.slipReason.cancelCta": "Keep it as it is",
   "roadmap.modals.slipReason.missingReasonToast":
-    "A moved date needs a reason — that is the whole point",
+    "A moved date needs a reason. That is the whole point",
 
   // Safety gate
   "roadmap.modals.safetyGate.eyebrow": "Safety gate",
   "roadmap.modals.safetyGate.title": "This needs a <em>safety review</em> first",
   "roadmap.modals.safetyGate.body":
-    "Flagged as sensitive. Housing, asylum and employer content can expose members — publishing it early is a real risk, not a process step.",
+    "Flagged as sensitive. Housing, asylum and employer content can expose members. Publishing it early is a genuine risk, so treat it as one.",
   "roadmap.modals.safetyGate.note":
     "Clearing is logged against your name. Only Trust & Safety should do this.",
   "roadmap.modals.safetyGate.confirmCta": "Clear review & publish",
@@ -2484,10 +2514,10 @@ export const admin: Catalog = {
     'appears under "Not building this, and why"',
   "roadmap.modals.decline.confirmCta": "Decline publicly",
   "roadmap.modals.decline.missingReasonToast":
-    "Write the reason — declining without one is silence",
+    "Write the reason. Declining without one is silence",
   "roadmap.modals.decline.reason.scope.label": "Outside what we are",
   "roadmap.modals.decline.reason.scope.wording":
-    "This is not what QueerPulse is for — it would pull us toward being a platform.",
+    "This is not what QueerPulse is for. It would pull us toward being a platform.",
   "roadmap.modals.decline.reason.unsafe.label": "Cannot build it safely",
   "roadmap.modals.decline.reason.unsafe.wording":
     "We could not ship this without putting members at risk. If that changes, we will revisit.",
@@ -2513,7 +2543,7 @@ export const admin: Catalog = {
   "roadmap.modals.notifyVoters.confirmCta": "Send once",
   "roadmap.modals.notifyVoters.cancelCta": "Not now",
   "roadmap.modals.notifyVoters.shippedMessage":
-    '"{name}" is live. You asked for this — thank you for saying so.',
+    '"{name}" is live. You asked for this. Thank you for saying so.',
   "roadmap.modals.notifyVoters.movedMessage":
     '"{name}" just moved to {column}.',
 
@@ -2537,7 +2567,7 @@ export const admin: Catalog = {
   "roadmap.modals.auditLog.exportCta": "Export CSV for governance",
   "roadmap.modals.auditLog.resetBoardCta": "Reset board",
   "roadmap.modals.auditLog.resetBoardHint":
-    "Resets this browser's demo board back to the seeded roadmap — every edit made in demo mode is undone. This can't be undone.",
+    "Resets this browser's demo board back to the seeded roadmap. Every edit made in demo mode is undone. This can't be undone.",
 
   // Shortcuts
   "roadmap.modals.shortcuts.eyebrow": "Keyboard",
@@ -2568,7 +2598,7 @@ export const admin: Catalog = {
   "roadmap.capacityView.unassignedActiveOk": "None urgent",
   "roadmap.capacityView.paidVsVolunteerLabel": "Paid vs. volunteer work",
   "roadmap.capacityView.paidVsVolunteerFoot":
-    "Volunteer items slip first — that is not a moral failing, it is arithmetic.",
+    "Volunteer items slip first. That is simply how the arithmetic works.",
   "roadmap.capacityView.needsFundingLabel": "Needs funding",
   "roadmap.capacityView.needsFundingEmpty": "Nothing is waiting on money.",
   "roadmap.capacityView.sustainerNote":
@@ -2579,7 +2609,7 @@ export const admin: Catalog = {
 
   // ── Guides view ─────────────────────────────────────────────────────────
   "roadmap.guidesView.subtitle":
-    "Resource guides that carry health, legal or safety information — track review status here, not just publish status.",
+    "Resource guides that carry health, legal or safety information: track both review status and publish status here.",
   "roadmap.guidesView.reVerifyWarning_one":
     "{count} guide needs re-verifying. Health and legal information rots. {names}.",
   "roadmap.guidesView.reVerifyWarning_other":
@@ -2599,7 +2629,7 @@ export const admin: Catalog = {
   "roadmap.ideasView.ageSuffix": "{age} ago",
   "roadmap.ideasView.submittedByMember": "From a member",
   "roadmap.ideasView.submittedByTeam": "From the team",
-  "roadmap.ideasView.voteSpike": "Vote spike — {votes} votes in {hours}h",
+  "roadmap.ideasView.voteSpike": "Vote spike: {votes} votes in {hours}h",
   "roadmap.ideasView.duplicateHint": "Looks like a duplicate of {name}",
   "roadmap.ideasView.mergeInsteadCta": "Merge instead",
   "roadmap.ideasView.votesLabel": "votes",
@@ -2607,7 +2637,7 @@ export const admin: Catalog = {
   "roadmap.ideasView.declineCta": "Decline",
   "roadmap.ideasView.emptyTitle": "Inbox zero",
   "roadmap.ideasView.emptyBody":
-    'Every member idea has been triaged. Declined ideas live under "Not building" with a reason attached — never silence.',
+    'Every member idea has been triaged. Declined ideas live under "Not building" with a reason attached.',
 
   // ── Not building view ───────────────────────────────────────────────────
   "roadmap.notBuildingView.publicBanner":
@@ -2625,20 +2655,20 @@ export const admin: Catalog = {
   "roadmap.archiveView.deleteForGoodCta": "Delete for good",
   "roadmap.archiveView.deleteConfirmTitle": 'Delete "{name}" for good?',
   "roadmap.archiveView.deleteConfirmBody":
-    "Deleting is forever — archiving keeps the history. This can't be undone.",
+    "Deleting is forever. Archiving keeps the history. This can't be undone.",
   "roadmap.archiveView.emptyTitle": "Archive is empty",
   "roadmap.archiveView.emptyBody":
-    "Archiving keeps the history without cluttering the board. Deleting is forever — prefer archive.",
+    "Archiving keeps the history without cluttering the board. Deleting is forever. Prefer archive.",
 
   // ── Hero stats view (redesign's editor — see note above roadmap.heroStats.*
   // for why this is a separate group from the current 3-tab editor) ───────
   "roadmap.heroStatsView.title": "Public <em>hero stats</em>",
   "roadmap.heroStatsView.previewLinkCta": "Preview public page",
   "roadmap.heroStatsView.subtitle":
-    "These four numbers sit at the top of the member-facing roadmap. Keep them honest — if a number needs a caveat, write it in the note and it shows as a tooltip.",
+    "These four numbers sit at the top of the member-facing roadmap. Keep them honest. If a number needs a caveat, write it in the note and it shows as a tooltip.",
   "roadmap.heroStatsView.captionPlaceholder": "Caveat / how it is counted",
   "roadmap.heroStatsView.noGrowthTheatre":
-    "No growth theatre. We publish counts, never follower numbers or vanity graphs. Any stat that cannot be explained in one line does not belong here.",
+    "No growth theatre. We publish counts and leave out follower numbers and vanity graphs. Any stat that cannot be explained in one line does not belong here.",
 
   // ── Public preview view ─────────────────────────────────────────────────
   "roadmap.publicPreview.banner_one":
@@ -2662,11 +2692,11 @@ export const admin: Catalog = {
   "roadmap.publicPreview.requestedTag": "You asked for this",
   "roadmap.publicPreview.committedTag": "Committed",
   "roadmap.publicPreview.noPublicNoteFallback":
-    "No public note yet — members won't see anything here until you add one.",
-  "roadmap.publicPreview.movedOnce": "Moved once — {from} → {to}.",
-  "roadmap.publicPreview.movedMultiple": "Moved {count}× — {from} → {to}.",
+    "No public note yet. Members won't see anything here until you add one.",
+  "roadmap.publicPreview.movedOnce": "Moved once: {from} → {to}.",
+  "roadmap.publicPreview.movedMultiple": "Moved {count}×: {from} → {to}.",
   "roadmap.publicPreview.blockedNote": "Blocked on {by}.",
-  "roadmap.publicPreview.noDateHonest": "No date — honestly",
+  "roadmap.publicPreview.noDateHonest": "No date, honestly",
   "roadmap.publicPreview.liveLabel": "Live",
   "roadmap.publicPreview.editItemTooltip": "Edit this item",
   "roadmap.publicPreview.copyPermalinkTooltip": "Copy permalink",
@@ -2697,26 +2727,26 @@ export const admin: Catalog = {
   "roadmap.toasts.deleted": '"{name}" deleted',
   "roadmap.toasts.bulkDeleted_one": "{count} item deleted",
   "roadmap.toasts.bulkDeleted_other": "{count} items deleted",
-  "roadmap.toasts.saved": "Saved — public roadmap updated",
-  "roadmap.toasts.dateMoved": "Date moved — members will see the reason",
+  "roadmap.toasts.saved": "Saved. Public roadmap updated",
+  "roadmap.toasts.dateMoved": "Date moved. Members will see the reason",
   "roadmap.toasts.safetyCleared": "Safety cleared and published",
   "roadmap.toasts.merged_one":
-    'Merged — {votes} vote moved, and {name} was told where it went',
+    'Merged. {votes} vote moved, and {name} was told where it went',
   "roadmap.toasts.merged_other":
-    'Merged — {votes} votes moved, and {name} was told where it went',
-  "roadmap.toasts.promoted_one": '"{name}" promoted — {votes} voter notified',
+    'Merged. {votes} votes moved, and {name} was told where it went',
+  "roadmap.toasts.promoted_one": '"{name}" promoted. {votes} voter notified',
   "roadmap.toasts.promoted_other":
-    '"{name}" promoted — {votes} voters notified',
+    '"{name}" promoted. {votes} voters notified',
   "roadmap.toasts.promoteError": "Couldn't promote that idea",
-  "roadmap.toasts.declined": "Declined publicly with a reason — {name} was told",
+  "roadmap.toasts.declined": "Declined publicly with a reason. {name} was told",
   "roadmap.toasts.reopened": '"{name}" is back in the ideas queue',
   "roadmap.toasts.reopenError": "Couldn't reopen that idea",
   "roadmap.toasts.notified_one":
-    "{count} voter notified — one email, no follow-ups",
+    "{count} voter notified. One email, no follow-ups",
   "roadmap.toasts.notified_other":
-    "{count} voters notified — one email, no follow-ups",
+    "{count} voters notified. One email, no follow-ups",
   "roadmap.toasts.digestCopied":
-    "Digest copied — paste it into the monthly email",
+    "Digest copied. Paste it into the monthly email",
   "roadmap.toasts.permalinkCopied": "Copied {url}",
   "roadmap.toasts.rssInfo": "RSS: {url}",
   "roadmap.toasts.auditExported": "Audit log exported for governance",
@@ -2735,9 +2765,9 @@ export const admin: Catalog = {
   "landing.tabs.changemaker": "Changemakers",
 
   "landing.helper.member":
-    "Only public members who've opted in to be featured show up here — nobody appears without saying yes first.",
+    "Only public members who've opted in to be featured show up here. Nobody appears without saying yes first.",
   "landing.helper.community":
-    "Any published community can be featured — pick the ones you'd want a first-time visitor to see.",
+    "Any published community can be featured. Pick the ones you'd want a first-time visitor to see.",
   "landing.helper.changemaker":
     "Published changemaker profiles are ready to feature here.",
 
@@ -2746,10 +2776,10 @@ export const admin: Catalog = {
   "landing.picker.addCta": "Add",
   "landing.picker.submitCta": "Add to homepage",
   "landing.picker.addedToast": "Added to the homepage",
-  "landing.picker.addError": "Couldn't add — try again",
+  "landing.picker.addError": "Couldn't add. Try again",
   "landing.picker.noResults": 'No matches for "{search}".',
   "landing.picker.empty.member":
-    "Nobody eligible right now — members need to opt in before they can appear here.",
+    "Nobody eligible right now. Members need to opt in before they can appear here.",
   "landing.picker.empty.community":
     "No published communities are eligible yet.",
   "landing.picker.empty.changemaker":
@@ -2757,38 +2787,38 @@ export const admin: Catalog = {
 
   "landing.editor.quoteLabel": "Quote",
   "landing.editor.quoteHelper":
-    "A short line in their own words — what QueerPulse means to them.",
+    "A short line in their own words: what QueerPulse means to them.",
   "landing.editor.quotePlaceholder":
     '"This is the first place I felt fully myself."',
   "landing.editor.blurbLabel": "Blurb",
   "landing.editor.blurbHelperOptional":
-    "Optional — a line about what makes this community worth joining.",
+    "Optional: a line about what makes this community worth joining.",
   "landing.editor.blurbPlaceholder": "A line or two, in your own words.",
   "landing.editor.causeLabel": "Cause",
   "landing.editor.causePlaceholder": "e.g. Housing justice",
   "landing.editor.tagsLabel": "Tags",
   "landing.editor.tagsHelper":
-    "Comma-separated — shown as small labels under their name.",
+    "Comma-separated: shown as small labels under their name.",
   "landing.editor.tagsPlaceholder": "housing, mutual aid, organizing",
   "landing.editor.editCta": "Edit copy",
   "landing.editor.collapseCta": "Close",
   "landing.editor.save": "Save",
   "landing.editor.savedToast": "Copy saved",
-  "landing.editor.saveError": "Couldn't save — try again",
+  "landing.editor.saveError": "Couldn't save. Try again",
 
   "landing.list.activeToggleAria": "Show {name} on the live homepage",
   "landing.list.activeToggleLabel": "Live",
   "landing.list.inactivePill": "Hidden by you",
   "landing.list.moveUpAria": "Move {name} up",
   "landing.list.moveDownAria": "Move {name} down",
-  "landing.list.reorderError": "Couldn't reorder — try again",
-  "landing.list.activeToggleError": "Couldn't update — try again",
+  "landing.list.reorderError": "Couldn't reorder. Try again",
+  "landing.list.activeToggleError": "Couldn't update. Try again",
   "landing.list.previewEmpty":
-    "No copy yet — add some so this reads well on the homepage.",
+    "No copy yet. Add some so this reads well on the homepage.",
   "landing.list.unknownTarget": "This profile no longer exists",
   "landing.list.empty.member.title": "No members featured yet",
   "landing.list.empty.member.body":
-    "Search for a public member on the left and add them — their quote will appear here, ready to edit.",
+    "Search for a public member on the left and add them. Their quote will appear here, ready to edit.",
   "landing.list.empty.community.title": "No communities featured yet",
   "landing.list.empty.community.body":
     "Search for a published community on the left and add it to the homepage.",
@@ -2802,15 +2832,15 @@ export const admin: Catalog = {
     "This takes them off the live homepage. You can feature them again anytime.",
   "landing.remove.confirm": "Remove",
   "landing.remove.toast": "Removed from the homepage",
-  "landing.remove.error": "Couldn't remove — try again",
+  "landing.remove.error": "Couldn't remove. Try again",
 
   // Backend-classified `hiddenReason` on an already-featured slot — see
   // `landingFeatures.adapters.ts`'s `HIDDEN_REASON_KEY`.
-  "landing.hidden.consent_revoked": "Hidden — consent withdrawn",
-  "landing.hidden.went_private": "Hidden — profile went private",
-  "landing.hidden.unpublished": "Hidden — unpublished",
-  "landing.hidden.not_public": "Hidden — no longer public",
-  "landing.hidden.deleted": "Hidden — profile deleted",
+  "landing.hidden.consent_revoked": "Hidden: consent withdrawn",
+  "landing.hidden.went_private": "Hidden: profile went private",
+  "landing.hidden.unpublished": "Hidden: unpublished",
+  "landing.hidden.not_public": "Hidden: no longer public",
+  "landing.hidden.deleted": "Hidden: profile deleted",
 
   // ── Live homepage preview (AdminLandingPreview) ─────────────────────────
   "landing.preview.eyebrow": "Homepage preview",
@@ -2838,10 +2868,10 @@ export const admin: Catalog = {
   "pressKit.fields.title": "Headline",
   "pressKit.fields.titlePlaceholder": "The piece's headline, as published.",
   "pressKit.fields.meta": "Detail",
-  "pressKit.fields.metaHelper": "Byline, length or format — shown under the headline.",
+  "pressKit.fields.metaHelper": "Byline, length or format: shown under the headline.",
   "pressKit.fields.metaPlaceholder": "e.g. Long-form feature · by Ana Sá Lopes",
   "pressKit.fields.url": "Link",
-  "pressKit.fields.urlHelper": "Optional — leave blank if there's no online version.",
+  "pressKit.fields.urlHelper": "Optional: leave blank if there's no online version.",
   "pressKit.fields.urlPlaceholder": "https://…",
   "pressKit.fields.name": "Name",
   "pressKit.fields.namePlaceholder": "e.g. Marta Reis",
@@ -2855,17 +2885,17 @@ export const admin: Catalog = {
   "pressKit.fields.languages": "Languages",
   "pressKit.fields.languagesPlaceholder": "e.g. EN / PT",
   "pressKit.fields.avatarUrl": "Photo",
-  "pressKit.fields.avatarUrlHelper": "Optional — a link to their headshot.",
+  "pressKit.fields.avatarUrlHelper": "Optional: a link to their headshot.",
   "pressKit.fields.avatarUrlPlaceholder": "https://…",
 
   "pressKit.add.coverage.cta": "Add coverage",
   "pressKit.add.coverage.submit": "Add to press kit",
   "pressKit.add.coverage.toast": "Coverage added",
-  "pressKit.add.coverage.error": "Couldn't add — try again",
+  "pressKit.add.coverage.error": "Couldn't add. Try again",
   "pressKit.add.team.cta": "Add contact",
   "pressKit.add.team.submit": "Add to press kit",
   "pressKit.add.team.toast": "Contact added",
-  "pressKit.add.team.error": "Couldn't add — try again",
+  "pressKit.add.team.error": "Couldn't add. Try again",
 
   "pressKit.list.inactivePill": "Hidden by you",
   "pressKit.list.previewEmpty": "No detail yet.",
@@ -2873,8 +2903,8 @@ export const admin: Catalog = {
   "pressKit.list.moveDownAria": "Move {name} down",
   "pressKit.list.activeToggleAria": "Show {name} on the public press kit",
   "pressKit.list.activeToggleLabel": "Live",
-  "pressKit.list.activeToggleError": "Couldn't update — try again",
-  "pressKit.list.reorderError": "Couldn't reorder — try again",
+  "pressKit.list.activeToggleError": "Couldn't update. Try again",
+  "pressKit.list.reorderError": "Couldn't reorder. Try again",
   "pressKit.list.empty.coverage.title": "No coverage featured yet",
   "pressKit.list.empty.coverage.body":
     "Add a press piece above to show it on the public press kit.",
@@ -2886,12 +2916,12 @@ export const admin: Catalog = {
   "pressKit.editor.close": "Close",
   "pressKit.editor.save": "Save",
   "pressKit.editor.savedToast": "Saved",
-  "pressKit.editor.saveError": "Couldn't save — try again",
+  "pressKit.editor.saveError": "Couldn't save. Try again",
 
   "pressKit.remove.cta": "Remove",
   "pressKit.remove.confirm": "Remove",
   "pressKit.remove.toast": "Removed from the press kit",
-  "pressKit.remove.error": "Couldn't remove — try again",
+  "pressKit.remove.error": "Couldn't remove. Try again",
   "pressKit.remove.coverage.title": "Remove this coverage?",
   "pressKit.remove.coverage.body":
     "It will no longer appear on the public press kit. You can add it back later.",
@@ -2901,7 +2931,7 @@ export const admin: Catalog = {
 
   "pressKit.facts.title": "Facts (auto)",
   "pressKit.facts.sub":
-    "Derived from platform data — shown on the public press kit, not editable here.",
+    "Derived from platform data. Shown on the public press kit, not editable here.",
   "pressKit.facts.empty": "No facts available yet.",
 
   // ── Housing listing integrity (Wave B1) — risk-sorted moderation queue ──

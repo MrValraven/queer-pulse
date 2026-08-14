@@ -326,6 +326,13 @@
 
 /* ── section pane: collapsed item-row list (Task 5) ──────────────────── */
 .itemrow {
+  /* Every row is positioned (not static) so that during a drag-reorder the
+     lifted row's `z-index` (set on `.dragging`) can reliably paint ABOVE its
+     neighbours. motion's `layout` glide transforms each moving neighbour,
+     which spawns a stacking context; without a position here a static dragged
+     row loses the z-fight against that transformed sibling and the two rows
+     overlay messily. `relative` with no offsets is layout-neutral. */
+  position: relative;
   display: flex;
   gap: 14px;
   align-items: flex-start;

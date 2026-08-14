@@ -227,7 +227,7 @@ export function SecurityPage() {
                 <p>{t("settings:security.report.body")}</p>
                 <Button
                   variant="ghost-dark"
-                  href="mailto:security@queerpulse.pt"
+                  href="mailto:hello@queerpulse.com"
                 >
                   {t("settings:security.report.cta")}
                 </Button>
@@ -263,7 +263,7 @@ export function SecurityPage() {
         <Button
           variant="primary"
           size="lg"
-          href="mailto:security@queerpulse.pt"
+          href="mailto:hello@queerpulse.com"
         >
           {t("settings:security.outro.cta")}
         </Button>

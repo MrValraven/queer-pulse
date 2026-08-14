@@ -38,7 +38,7 @@ export const forum: Catalog = {
   "hero.eyebrow": "The Public Square · open to every member",
   "hero.title": "The <em>commons</em>",
   "hero.lead":
-    "The one community everyone here belongs to — questions, proposals, guides, and the slow work of building a movement. Take care of each other. Looking for a smaller room?",
+    "The one community everyone here belongs to: questions, proposals, guides, and the slow work of building a movement. Take care of each other. Looking for a smaller room?",
   "hero.findCommunitiesCta": "Find your communities",
   newPostCta: "+ New post",
 
@@ -53,7 +53,7 @@ export const forum: Catalog = {
   "firstPost.eyebrow": "You haven't posted yet",
   "firstPost.title": "Everyone was <em>new</em> once.",
   "firstPost.body":
-    "The forum is only as good as what people bring to it. You don't need something big — a question, a recommendation, something you noticed. It all counts. Here are a few things people often find useful to share:",
+    "The forum is only as good as what people bring to it. You don't need something big: a question, a recommendation, something you noticed. It all counts. Here are a few things people often find useful to share:",
   "firstPost.writeCta": "Write your first post",
   "firstPost.maybeLater": "Maybe later",
   "firstPost.dismissAria": "Dismiss",
@@ -75,7 +75,7 @@ export const forum: Catalog = {
   "compose.titlePlaceholder": "A clear, specific title",
   "compose.categoryFieldLabel": "Category",
   "compose.communityFieldLabel": "Post to a community (optional)",
-  "compose.communityNone": "None — global thread",
+  "compose.communityNone": "None (global thread)",
   "compose.postFieldLabel": "Post",
   "compose.postPlaceholder": "Write your post…",
   "compose.cancel": "Cancel",
@@ -84,7 +84,7 @@ export const forum: Catalog = {
   // ── ComposeThreadModal · tags field ─────────────────────────────────────
   "compose.tagsFieldLabel": "Tags",
   "compose.tagsPlaceholder": "Add a tag and press Enter",
-  "compose.tagsHint": "Up to {max} tags — keep them simple, like #housing or #health.",
+  "compose.tagsHint": "Up to {max} tags. Keep them simple, like #housing or #health.",
   "compose.removeTagAria": "Remove tag {tag}",
 
   // ── Forum search ────────────────────────────────────────────────────────
@@ -108,7 +108,7 @@ export const forum: Catalog = {
   "threadList.emptyFiltered.description":
     "No posts here right now. Try another category, or start the conversation yourself.",
   "threadList.emptyFiltered.action": "Show all posts",
-  "threadList.emptyAll.title": "Quiet in here — for now",
+  "threadList.emptyAll.title": "Quiet in here, for now",
   "threadList.emptyAll.description":
     "The commons is open to every member. Be the one to start the conversation.",
   "threadList.emptyAll.action": "Write a post",
@@ -123,20 +123,20 @@ export const forum: Catalog = {
   repliesCount_other: "{formatted} replies",
 
   // ── ReportReplyModal ────────────────────────────────────────────────────
-  "reportReply.confirmTitle": "Thank you — <em>we're on it.</em>",
+  "reportReply.confirmTitle": "Thank you. <em>We're on it.</em>",
   "reportReply.confirmBody":
     "A moderator will take a look. Reports stay private, and {name} won't know it came from you.",
   "reportReply.done": "Done",
   "reportReply.title": "Report this reply",
   "reportReply.sub":
-    "Let a moderator know what's wrong with {name}'s reply. This is private — no one is notified that you reported it.",
+    "Let a moderator know what's wrong with {name}'s reply. This is private. No one is notified that you reported it.",
   "reportReply.reasonGroupAria": "Reason for reporting",
   "reportReply.cancel": "Cancel",
   "reportReply.sending": "Sending…",
   "reportReply.sendCta": "Send report",
   "reportReply.errorTitle": "That didn't send",
   "reportReply.errorBody":
-    "We couldn't send your report just now — nothing was submitted. Check your connection and try again.",
+    "We couldn't send your report just now. Nothing was submitted. Check your connection and try again.",
   "reportReply.retryCta": "Try again",
 
   // ── ThreadComposer ──────────────────────────────────────────────────────
@@ -168,14 +168,14 @@ export const forum: Catalog = {
   "threadPage.breadcrumbForum": "Forum",
   "threadPage.replyPostedToast": "Reply posted",
   "threadPage.replyFailedToast":
-    "Couldn't post your reply — try again in a moment.",
+    "Couldn't post your reply. Try again in a moment.",
   "threadPage.notFound.title": "This thread isn't here",
   "threadPage.notFound.description":
     "It may have been removed, or the link might be broken. Head back to the forum to find current conversations.",
   "threadPage.notFound.backCta": "Back to the forum",
   "threadPage.error.title": "Couldn't load this thread",
   "threadPage.error.description":
-    "Something went wrong on our end — this isn't your fault. Try again in a moment.",
+    "Something went wrong on our end. This isn't your fault. Try again in a moment.",
   "threadPage.error.retryCta": "Try again",
 
   // ── ThreadReplies / ModeratorByline ─────────────────────────────────────
@@ -184,7 +184,7 @@ export const forum: Catalog = {
   "byline.noRole": "Written by <name>{name}</name> · on behalf of the team",
   "replies.emptyTitle": "No replies yet",
   "replies.emptyDescription":
-    "This thread is waiting for its first voice. Be the first to reply — a thoughtful answer goes a long way.",
+    "This thread is waiting for its first voice. Be the first to reply. A thoughtful answer goes a long way.",
   "replies.emptyAction": "Write a reply",
   "replies.mostHelpfulBadge": "Most helpful",
   "replies.opBadge": "OP",
@@ -237,7 +237,7 @@ export const forum: Catalog = {
   // ── Delete confirmation ───────────────────────────────────────────────────
   "deleteConfirm.title": "Delete this post?",
   "deleteConfirm.body":
-    "It’ll be hidden from the thread. You can restore it later — nothing is lost.",
+    "It’ll be hidden from the thread. You can restore it later. Nothing is lost.",
   "deleteConfirm.confirm": "Delete",
   "deleteConfirm.cancel": "Keep it",
   "deleteConfirm.deleting": "Deleting…",

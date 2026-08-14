@@ -5,6 +5,7 @@ import {
   RadioCardGroup,
   Toggle,
 } from "../../../shared/components/ui";
+import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
@@ -64,7 +65,10 @@ export function StepPhotosYou({
 }: {
   form: ListingForm;
   userName: string;
-  uploadPhoto: (file: File) => Promise<{ key: string; previewUrl: string }>;
+  uploadPhoto: (
+    file: File,
+    options?: { crop?: CropRect },
+  ) => Promise<{ key: string; previewUrl: string }>;
 }) {
   const { t } = useTranslation();
   const { draft, set, toggleIn } = form;

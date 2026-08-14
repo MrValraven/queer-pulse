@@ -57,6 +57,7 @@ function profileFromAuth(
     last,
     pronouns: p.pronouns?.trim() || base.pronouns,
     photo: p.avatarUrl ?? base.photo,
+    avatarCrop: p.avatarCrop ?? base.avatarCrop,
     initials,
   };
 }
@@ -207,6 +208,11 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       // behaviour, which in that mode already holds a locally fetchable
       // object URL (see `useUploadImage`'s demo-mode branch).
       photo: savedProfile?.avatarUrl ?? draft.photo,
+      // The PATCH /profiles/me response never carries `avatarCrop` (the
+      // backend's `ProfileCard`/`MemberCard` shapes don't have it — only the
+      // `/auth/me` response does), so this always falls through to the draft
+      // value already held from the editor.
+      avatarCrop: draft.avatarCrop,
       first: draft.first.trim() || prev.first,
       last: draft.last.trim() || prev.last,
       role: draft.role.trim(),

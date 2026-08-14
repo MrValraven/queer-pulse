@@ -37,7 +37,7 @@ export const emptyLine = (): LineItem => ({
 export const initialLineItems: LineItem[] = [
   {
     id: newId(),
-    description: "Brand identity — logo + guidelines",
+    description: "Brand identity: logo + guidelines",
     quantity: 1,
     unit: 1200,
   },

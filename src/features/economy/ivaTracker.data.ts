@@ -44,7 +44,7 @@ export function newId(): string {
 export const IVA_SEED: IvaEntry[] = [
   {
     id: "seed-brand-studio",
-    label: "Brand identity — Lupa Studio",
+    label: "Brand identity, Lupa Studio",
     amount: 3200,
     date: "2026-02-12",
   },

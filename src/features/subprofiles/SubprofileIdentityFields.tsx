@@ -1,4 +1,5 @@
 import { FormField } from "../../shared/components/ui";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ImageUploadField } from "./ImageUploadField";
 import { MIN_BIO } from "./subprofileEditor.data";
@@ -7,6 +8,10 @@ interface SubprofileIdentityFieldsProps {
   avatarUrl: string;
   onAvatarUrlChange: (value: string) => void;
   onAvatarPreviewChange: (value: string | null) => void;
+  /** Saved reframe crop for the committed `avatarUrl` — `ImageUploadField`
+   *  overlays a fresh pick's own crop internally, so this only needs the
+   *  saved value. */
+  avatarCrop?: CropRect;
   displayName: string;
   onDisplayNameChange: (value: string) => void;
   nameMissing: boolean;
@@ -27,6 +32,7 @@ export function SubprofileIdentityFields({
   avatarUrl,
   onAvatarUrlChange,
   onAvatarPreviewChange,
+  avatarCrop,
   displayName,
   onDisplayNameChange,
   nameMissing,
@@ -52,6 +58,7 @@ export function SubprofileIdentityFields({
       <FormField label={t("subprofiles:metaForm.avatarLabel")}>
         <ImageUploadField
           value={avatarUrl}
+          crop={avatarCrop}
           kind="avatar"
           circle
           size={120}

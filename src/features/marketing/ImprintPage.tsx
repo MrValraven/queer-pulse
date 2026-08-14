@@ -6,42 +6,20 @@ import type { TFunction } from "../../shared/i18n/types";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { IMPRINT_TOC, IMPRINT_ENTITY } from "./ImprintPage.data";
-import s from "./LegalDoc.module.css";
 
 /**
- * The legally required imprint / Impressum: who operates QueerPulse, how to
- * reach a real person, and the jurisdiction we answer to. Mirrors the
- * `TermsPage` i18n pattern — each `<p>` body is a `t()` call, and the
- * placeholder legal-entity details are interpolated from {@link IMPRINT_ENTITY}
- * (all marked TODO for the maintainer to fill before launch).
+ * The legally required imprint / Impressum: who runs QueerPulse, how to reach a
+ * real person, and the jurisdiction we answer to. Mirrors the `TermsPage` i18n
+ * pattern — each `<p>` body is a `t()` call. QueerPulse is run by volunteers
+ * with no registered legal entity yet, so there are no registration details to
+ * interpolate; the only entity value is the contact email in {@link IMPRINT_ENTITY}.
  */
 function buildImprintSections(t: TFunction): LegalSection[] {
   return [
     {
       id: "operator",
       title: t("marketing:imprint.operator.title"),
-      body: (
-        <>
-          <p>
-            {t("marketing:imprint.operator.p1", {
-              legalName: IMPRINT_ENTITY.legalName,
-            })}
-          </p>
-          <p>
-            {t("marketing:imprint.operator.registry", {
-              registryNumber: IMPRINT_ENTITY.registryNumber,
-            })}
-          </p>
-          <p>
-            {t("marketing:imprint.operator.address", {
-              registeredAddress: IMPRINT_ENTITY.registeredAddress,
-            })}
-          </p>
-          <div className={s.highlight}>
-            <p>{t("marketing:imprint.operator.todo")}</p>
-          </div>
-        </>
-      ),
+      body: <p>{t("marketing:imprint.operator.p1")}</p>,
     },
     {
       id: "contact",
@@ -63,25 +41,12 @@ function buildImprintSections(t: TFunction): LegalSection[] {
     {
       id: "representation",
       title: t("marketing:imprint.representation.title"),
-      body: (
-        <p>
-          {t("marketing:imprint.representation.p1", {
-            representative: IMPRINT_ENTITY.representative,
-            legalName: IMPRINT_ENTITY.legalName,
-          })}
-        </p>
-      ),
+      body: <p>{t("marketing:imprint.representation.p1")}</p>,
     },
     {
       id: "hosting",
       title: t("marketing:imprint.hosting.title"),
-      body: (
-        <p>
-          {t("marketing:imprint.hosting.p1", {
-            hostingProvider: IMPRINT_ENTITY.hostingProvider,
-          })}
-        </p>
-      ),
+      body: <p>{t("marketing:imprint.hosting.p1")}</p>,
     },
     {
       id: "jurisdiction",

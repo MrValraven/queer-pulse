@@ -109,7 +109,7 @@ function UploadReferenceList({ references }: { references: MediaReference[] }) {
         {references.map((reference, index) => {
           const href = mediaReferenceHref(reference);
           const label = t(mediaReferenceLabelKey(reference.type));
-          const text = reference.label ? `${label} — ${reference.label}` : label;
+          const text = reference.label ? `${label}: ${reference.label}` : label;
           return (
             <li key={`${reference.type}-${reference.entityId}-${index}`}>
               {href ? <Link to={href}>{text}</Link> : <span>{text}</span>}

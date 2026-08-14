@@ -9,7 +9,7 @@ export const SENT_INVITES: SentInviteDTO[] = [
     id: "d1f7a0c2-1a2b-4c3d-8e4f-000000000001",
     code: "QP-7F3K-2026",
     status: "used",
-    note: "You'd genuinely belong here — no ads, no algorithm.",
+    note: "You'd genuinely belong here: no ads, no algorithm.",
     vouch: null,
     email: null,
     createdAt: "2026-06-18T10:42:00.000Z",

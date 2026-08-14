@@ -163,7 +163,7 @@ export function CinemaSubmitStep3({ form }: { form: SubmitForm }) {
           </span>
           <span className={styles.confirmText}>
             <strong>I hold the rights to distribute this film</strong>,
-            including music, archival footage, and anyone who appears in it — or
+            including music, archival footage, and anyone who appears in it, or
             I'm authorised by those who do.
           </span>
         </button>

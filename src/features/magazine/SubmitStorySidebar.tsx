@@ -51,7 +51,7 @@ export function SubmitStorySidebar() {
           {t("magazine:submitStory.sidebar.questionsBody")}
         </p>
         <Button
-          href="mailto:magazine@queerpulse.pt"
+          href="mailto:hello@queerpulse.com"
           variant="ghost"
           style={{ width: "100%", justifyContent: "center" }}
         >

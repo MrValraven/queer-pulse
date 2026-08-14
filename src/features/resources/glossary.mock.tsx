@@ -19,7 +19,7 @@ export const BLOCKS: LetterBlock[] = [
         typeKind: "",
         def: (
           <>
-            Umbrella terms for people on the aromantic or asexual spectra —
+            Umbrella terms for people on the aromantic or asexual spectra,
             including grey-ace, demi, and aro-but-allosexual.{" "}
             <em>Not the same as celibate.</em> See also{" "}
             <b>romantic orientation</b>.
@@ -27,8 +27,8 @@ export const BLOCKS: LetterBlock[] = [
         ),
         defPt: (
           <>
-            Termos abrangentes para pessoas nos espetros arromântico ou assexual
-            — incluindo grey-ace, demi e aro-mas-alossexual.{" "}
+            Termos abrangentes para pessoas nos espetros arromântico ou
+            assexual, incluindo grey-ace, demi e aro-mas-alossexual.{" "}
             <em>Não é o mesmo que celibato.</em> Ver também{" "}
             <b>orientação romântica</b>.
           </>
@@ -88,7 +88,7 @@ export const BLOCKS: LetterBlock[] = [
         def: (
           <>
             A central Lisbon neighbourhood that, since the late 2010s, has
-            hosted much of the city's organised queer community space —
+            hosted much of the city's organised queer community space,
             including Café Beirão, Clínica do Largo, and the Trans Hub office.{" "}
             <b>Not a "gayborhood" in the Castro sense.</b> The community is
             woven into the existing residential fabric.
@@ -97,9 +97,9 @@ export const BLOCKS: LetterBlock[] = [
         defPt: (
           <>
             Um bairro central de Lisboa que, desde o final da década de 2010,
-            acolhe grande parte do espaço comunitário queer organizado da cidade
-            — incluindo o Café Beirão, a Clínica do Largo e o escritório do
-            Trans Hub. <b>Não é um "gayborhood" ao estilo de Castro.</b> A
+            acolhe grande parte do espaço comunitário queer organizado da
+            cidade, incluindo o Café Beirão, a Clínica do Largo e o escritório
+            do Trans Hub. <b>Não é um "gayborhood" ao estilo de Castro.</b> A
             comunidade está entrelaçada no tecido residencial existente.
           </>
         ),
@@ -112,7 +112,7 @@ export const BLOCKS: LetterBlock[] = [
         typeKind: "essential",
         def: (
           <>
-            As in AFAB / AMAB — the sex marker placed on a person's birth
+            As in AFAB / AMAB: the sex marker placed on a person's birth
             certificate. The phrasing emphasises that this was a decision{" "}
             <em>made by others</em>, often without examination. Useful in
             medical contexts; less needed in social ones.
@@ -120,7 +120,7 @@ export const BLOCKS: LetterBlock[] = [
         ),
         defPt: (
           <>
-            Como em AFAB / AMAB — o marcador de sexo colocado na certidão de
+            Como em AFAB / AMAB: o marcador de sexo colocado na certidão de
             nascimento. A expressão sublinha que foi uma decisão{" "}
             <em>tomada por outros</em>, muitas vezes sem reflexão. Útil em
             contextos médicos; menos necessária nos sociais.
@@ -187,7 +187,7 @@ export const BLOCKS: LetterBlock[] = [
             Long-standing terms for masc and femme presentations within queer
             (particularly lesbian and trans-masc) communities.{" "}
             <em>Identity, not costume.</em> Discussions about who can use them
-            are ongoing — we don't adjudicate.
+            are ongoing. We don't adjudicate.
           </>
         ),
         defPt: (
@@ -195,7 +195,7 @@ export const BLOCKS: LetterBlock[] = [
             Termos antigos para apresentações masc e femme dentro das
             comunidades queer (em particular lésbicas e trans-masc).{" "}
             <em>Identidade, não fantasia.</em> As discussões sobre quem os pode
-            usar continuam — não as arbitramos.
+            usar continuam. Não as arbitramos.
           </>
         ),
         search: "butch femme masc presentation lesbian apresentação lésbica",
@@ -212,17 +212,17 @@ export const BLOCKS: LetterBlock[] = [
         typeKind: "essential",
         def: (
           <>
-            Short for cisgender — describing a person whose gender matches the
+            Short for cisgender, describing a person whose gender matches the
             one they were assigned at birth.{" "}
-            <em>Not an insult, not a slur, just a descriptor</em> — symmetric to
+            <em>Not an insult, not a slur, just a descriptor</em>, symmetric to
             "trans". Latin: <i>cis-</i> means "on this side of".
           </>
         ),
         defPt: (
           <>
-            Abreviatura de cisgénero — descreve uma pessoa cujo género
+            Abreviatura de cisgénero, descreve uma pessoa cujo género
             corresponde ao que lhe foi atribuído à nascença.{" "}
-            <em>Não é insulto nem ofensa, apenas um descritor</em> — simétrico a
+            <em>Não é insulto nem ofensa, apenas um descritor</em>, simétrico a
             "trans". Do latim: <i>cis-</i> significa "deste lado de".
           </>
         ),
@@ -266,7 +266,7 @@ export const BLOCKS: LetterBlock[] = [
           <>
             The ongoing act of disclosing a non-heterosexual or non-cisgender
             identity. <em>Not a one-time event.</em> Most queer people come out
-            hundreds of times — to coworkers, to taxi drivers, to landlords, to
+            hundreds of times: to coworkers, to taxi drivers, to landlords, to
             GPs.
           </>
         ),
@@ -274,7 +274,7 @@ export const BLOCKS: LetterBlock[] = [
           <>
             O ato contínuo de revelar uma identidade não-heterossexual ou
             não-cisgénero. <em>Não é um acontecimento único.</em> A maioria das
-            pessoas queer assume-se centenas de vezes — a colegas, a taxistas, a
+            pessoas queer assume-se centenas de vezes: a colegas, a taxistas, a
             senhorios, a médicos de família.
           </>
         ),
@@ -304,7 +304,7 @@ export const BLOCKS: LetterBlock[] = [
         def: (
           <>
             The name a trans person no longer uses, typically the one assigned
-            at birth. <em>Don't use it</em> — even with permission, even in the
+            at birth. <em>Don't use it</em>, even with permission, even in the
             past tense, even at a doctor's office. Lei n.º 38/2018 permits
             self-determination of name on most records in Portugal.
           </>
@@ -312,7 +312,7 @@ export const BLOCKS: LetterBlock[] = [
         defPt: (
           <>
             O nome que uma pessoa trans já não usa, normalmente o atribuído à
-            nascença. <em>Não o uses</em> — nem com permissão, nem no passado,
+            nascença. <em>Não o uses</em>, nem com permissão, nem no passado,
             nem no consultório médico. A Lei n.º 38/2018 permite a
             autodeterminação do nome na maioria dos registos em Portugal.
           </>
@@ -359,7 +359,7 @@ export const BLOCKS: LetterBlock[] = [
             <b>member onboarding</b> (you vouch for who you're inviting),{" "}
             <b>safe spaces</b> (you vouch a venue lives up to the pact), and{" "}
             <b>service offers</b> (you vouch a therapist or skill-provider is
-            what they say). Vouches are personal — they accumulate, they don't
+            what they say). Vouches are personal. They accumulate, they don't
             get rated.
           </>
         ),
@@ -370,7 +370,7 @@ export const BLOCKS: LetterBlock[] = [
             <b>entrada de membros</b> (abonas por quem convidas),{" "}
             <b>espaços seguros</b> (abonas que um espaço cumpre o pacto) e{" "}
             <b>ofertas de serviços</b> (abonas que um terapeuta ou prestador é o
-            que diz). Os abonos são pessoais — acumulam-se, não são avaliados.
+            que diz). Os abonos são pessoais. Acumulam-se, não são avaliados.
           </>
         ),
         search: "vouch trust onboarding safe spaces abonar confiança",

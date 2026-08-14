@@ -35,6 +35,8 @@ export function dtoToDraft(dto: ListingDTO): ListingDraft {
     tags: dto.tags,
     goodFor: dto.goodFor,
     langs: dto.langs,
+    // Legacy rows predate the flag; treat a missing value as a physical listing.
+    online: dto.online ?? false,
     address: dto.address,
     geocoded: dto.geocoded,
     latitude: dto.latitude,

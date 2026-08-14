@@ -137,7 +137,7 @@ export const MEMBERS: Member[] = [
     where: ["London / Lagos", "composer & archivist", "since 2025"],
     bio: (
       <>
-        Builds the long mixes nobody else has time for —{" "}
+        Builds the long mixes nobody else has time for:{" "}
         <em>trans composers 1972 to now</em>. Believes a playlist is an argument
         and a citation is a kindness.
       </>
@@ -190,7 +190,7 @@ export const MEMBERS: Member[] = [
     where: ["Lisbon", "sound archivist", "since 2024"],
     bio: (
       <>
-        Keeper of the <em>Lisbon dyke-bar standards</em> archive — field
+        Keeper of the <em>Lisbon dyke-bar standards</em> archive: field
         recordings, bootlegs, the songs that only existed in one room on one
         night.
       </>
@@ -249,7 +249,7 @@ export const MEMBERS: Member[] = [
     note: (
       <>
         "Gave the spring grant to seven first-timers this week. Not one has a
-        manager. <em>Good.</em> The point was never to find the ready — it was
+        manager. <em>Good.</em> The point was never to find the ready. It was
         to make people ready."
       </>
     ),
@@ -293,7 +293,7 @@ export const MEMBERS: Member[] = [
     where: ["Dakar / Paris", "artist-curator", "since 2025"],
     bio: (
       <>
-        The only working touring artist on the council — programs from the road.
+        The only working touring artist on the council. Programs from the road.
         Recuses from any vote on his own releases.
       </>
     ),

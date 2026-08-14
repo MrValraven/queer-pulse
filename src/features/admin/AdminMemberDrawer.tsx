@@ -51,7 +51,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
     <>
       {/* drawer + its modals */}
       <AdminDrawer
-        label={`${member.name} — member detail`}
+        label={`${member.name}, member detail`}
         onClose={onClose}
         head={
           <div className={styles.dHead}>

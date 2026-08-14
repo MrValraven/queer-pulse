@@ -17,40 +17,37 @@ import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { useSubmitInquiry } from "./api/useSubmitInquiry";
 import s from "./ContactPage.module.css";
 
+const CONTACT_EMAIL = "hello@queerpulse.com";
+
 const ROUTES: {
   icon: IconType;
   background: string;
   titleKey: string;
   descKey: string;
-  email: string;
 }[] = [
   {
     icon: FiMail,
     background: "rgba(232,119,90,.12)",
     titleKey: "marketing:contact.routes.general.title",
     descKey: "marketing:contact.routes.general.desc",
-    email: "hello@queerpulse.pt",
   },
   {
     icon: FiShield,
     background: "rgba(74,140,111,.12)",
     titleKey: "marketing:contact.routes.safety.title",
     descKey: "marketing:contact.routes.safety.desc",
-    email: "safe@queerpulse.pt",
   },
   {
     icon: FiFileText,
     background: "rgba(45,27,61,.08)",
     titleKey: "marketing:contact.routes.press.title",
     descKey: "marketing:contact.routes.press.desc",
-    email: "press@queerpulse.pt",
   },
   {
     icon: FiUsers,
     background: "rgba(232,119,90,.1)",
     titleKey: "marketing:contact.routes.partnerships.title",
     descKey: "marketing:contact.routes.partnerships.desc",
-    email: "partners@queerpulse.pt",
   },
 ];
 
@@ -110,9 +107,9 @@ export function ContactPage() {
             <div className={s.routes}>
               {ROUTES.map((r) => (
                 <a
-                  key={r.email}
+                  key={r.titleKey}
                   className={s.route}
-                  href={`mailto:${r.email}`}
+                  href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t(r.titleKey))}`}
                   aria-label={t(r.titleKey)}
                 >
                   <span className={s.routeIcon} style={{ background: r.background }}>
@@ -122,7 +119,8 @@ export function ContactPage() {
                     <h3>{t(r.titleKey)}</h3>
                     <p>{t(r.descKey)}</p>
                     <span className={s.rLink}>
-                      {r.email} <FiArrowRight aria-hidden />
+                      {t("marketing:contact.routes.cta")}{" "}
+                      <FiArrowRight aria-hidden />
                     </span>
                   </div>
                 </a>

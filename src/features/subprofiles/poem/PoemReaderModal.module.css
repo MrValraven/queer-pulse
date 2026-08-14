@@ -1,7 +1,9 @@
 .scrim {
   position: fixed;
   inset: 0;
-  z-index: 80;
+  /* Match the shared full-screen dialog layer (Modal.module.css) so the scrim
+     covers the nav (z-index 100) instead of the nav bleeding over the modal. */
+  z-index: 220;
   display: grid;
   place-items: center;
   padding: clamp(1rem, 4vw, 3rem);
@@ -85,6 +87,14 @@
   margin: 0 auto;
   font-family: var(--serif);
   font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+}
+/* Translation tab strip, centered above the verse. Uses the UI font (the body
+   is serif) and flex-wraps when there are several languages. */
+.versions {
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0 auto clamp(1.25rem, 3vw, 1.75rem);
+  font-family: var(--sans);
 }
 @keyframes scrimIn {
   from { opacity: 0; }

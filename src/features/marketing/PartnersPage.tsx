@@ -13,6 +13,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { type Region } from "./partnerDetails";
 import { usePartners } from "./api/usePartners";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import s from "./PartnersPage.module.css";
 
@@ -210,9 +211,9 @@ export function PartnersPage() {
               <Button
                 size="lg"
                 variant="ghost"
-                href="mailto:partners@queerpulse.pt"
+                href="mailto:hello@queerpulse.com"
               >
-                partners@queerpulse.pt
+                hello@queerpulse.com
               </Button>
             </div>
           </div>
@@ -228,7 +229,7 @@ export function PartnersPage() {
         }
         sub={t("marketing:partners.outro.sub")}
       >
-        <Button size="lg" to={routes.requestInvite}>
+        <Button size="lg" to={requestInvitePath("partners")}>
           {t("common:cta.requestInvite")}
         </Button>
       </Outro>

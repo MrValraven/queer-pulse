@@ -60,7 +60,7 @@ export const CALLS: Call[] = [
     titlePost: " night",
     brief: (
       <>
-        We're scoring the June 28th broadcast — a 90-minute live room marking
+        We're scoring the June 28th broadcast, a 90-minute live room marking
         the anniversary. We want <em>one original track</em>, 3–6 minutes, that
         holds the room between speakers. Yours to keep and re-release.
       </>
@@ -104,14 +104,14 @@ export const CALLS: Call[] = [
     name: "D. Okoye",
     seat: "Council · seat 4",
     tags: [{ label: "Grant", cls: "tagGrantCall" }],
-    titlePre: "Spring grant — ",
+    titlePre: "Spring grant: ",
     titleEm: "trans composers",
     titlePost: " strand",
     brief: (
       <>
         Unrestricted €1,200 grants for trans and non-binary composers working in
-        any form — score, ambient, choral, club. No deliverable required; we
-        fund the <em>practice</em>, not a product. Twelve grants this round.
+        any form: score, ambient, choral, club. No deliverable required; we
+        fund the <em>practice</em> itself. Twelve grants this round.
       </>
     ),
     amount: 1200,
@@ -142,7 +142,7 @@ export const CALLS: Call[] = [
     name: "Yara Reis",
     seat: "Council · seat 3",
     tags: [{ label: "Residency", cls: "tagResidency" }],
-    titlePre: "Casa do Comum — ",
+    titlePre: "Casa do Comum: ",
     titleEm: "August",
     titlePost: " residency",
     brief: (

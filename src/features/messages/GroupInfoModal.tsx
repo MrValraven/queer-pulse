@@ -95,6 +95,7 @@ export function GroupInfoModal({
             />
             <GroupAvatarField
               currentAvatarUrl={active.avatarUrl}
+              currentAvatarCrop={active.avatarCrop}
               groupName={active.name}
               onChange={setAvatarUrl}
             />

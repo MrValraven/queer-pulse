@@ -19,7 +19,6 @@ import {
   withUid,
 } from "./subprofileSectionEditorRows";
 import { useRowDragReorder } from "./useRowDragReorder";
-import { useReorderAnimation } from "./useReorderAnimation";
 import { EditorItemRow } from "./EditorItemRow";
 import { SubprofileItemDrawer } from "./SubprofileItemDrawer";
 import { AddGalleryPhotosModal } from "./AddGalleryPhotosModal";
@@ -72,12 +71,14 @@ export function SubprofileSectionEditor({
   function move(uid: string, dir: -1 | 1) {
     setSectionRows(section.section, moveRow(rows, uid, dir));
   }
+  // Pointer-capture grip drag reorders the array at each midpoint; motion's
+  // `layout` on every row (see EditorItemRow) glides the rows into place for
+  // BOTH drag swaps and up/down button presses, so no separate FLIP pass is
+  // needed. Slot-swap (not motion's floating `drag`) avoids the residual-
+  // transform overlap that `drag` + `layout` can leave.
   const { containerRef, draggingIndex, gripHandlers } = useRowDragReorder(
     (from, to) => setSectionRows(section.section, reorderRow(rows, from, to)),
   );
-  // FLIP-animate the list so drag swaps AND up/down button presses glide the
-  // rows into place instead of snapping. Keyed on the current row order.
-  useReorderAnimation(containerRef, rows.map((r) => r._uid).join(","));
   function insertExamples() {
     setSectionRows(section.section, buildTemplateItems(section.section, t).map(withUid));
   }
@@ -120,7 +121,6 @@ export function SubprofileSectionEditor({
           <EditorItemRow
             key={row._uid}
             item={row}
-            flipKey={row._uid}
             canFeature={canFeature}
             isFirst={index === 0}
             isLast={index === rows.length - 1}

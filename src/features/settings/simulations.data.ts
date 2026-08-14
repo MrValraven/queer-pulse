@@ -20,17 +20,17 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
     flows: [
       {
         title: "Join QueerPulse",
-        description: "The full join journey end to end — open your invitation, create your account, complete new-member onboarding, and finish on the welcome tour.",
+        description: "The full join journey end to end: open your invitation, create your account, complete new-member onboarding, and finish on the welcome tour.",
         to: routes.inviteLanding,
       },
       {
         title: "Invite someone to QueerPulse",
-        description: "Step into a member’s shoes and bring someone in — spend your monthly invite, write the vouch, and send it by email or a shareable link.",
+        description: "Step into a member’s shoes and bring someone in: spend your monthly invite, write the vouch, and send it by email or a shareable link.",
         to: routes.invite,
       },
       {
         title: "Request an invite",
-        description: "Walk through asking to join — the form a prospective member fills in when they don’t yet have an invitation.",
+        description: "Walk through asking to join: the form a prospective member fills in when they don’t yet have an invitation.",
         to: routes.requestInvite,
         preview: true,
       },
@@ -58,7 +58,7 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
     flows: [
       {
         title: "Sign in",
-        description: "The returning-member sign-in screen — email and password entry into the platform.",
+        description: "The returning-member sign-in screen: email and password entry into the platform.",
         to: routes.signIn,
       },
       {
@@ -79,7 +79,7 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
       },
       {
         title: "Host a gathering",
-        description: "The whole host journey — from the host pitch through creating, publishing and inviting a co-organiser to your gathering.",
+        description: "The whole host journey: from the host pitch through creating, publishing and inviting a co-organiser to your gathering.",
         to: routes.host,
       },
       {
@@ -124,7 +124,7 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
     flows: [
       {
         title: "Your data rights",
-        description: "Exercise your data rights — request a full export of your data or file a formal GDPR access request.",
+        description: "Exercise your data rights: request a full export of your data or file a formal GDPR access request.",
         to: routes.dataExport,
       },
       {
@@ -189,7 +189,7 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
     flows: [
       {
         title: "Upload & get paid",
-        description: "Walk the creator journey — uploading work and setting up payouts.",
+        description: "Walk the creator journey: uploading work and setting up payouts.",
         to: routes.studioUpload,
       },
       {
@@ -204,7 +204,7 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
       },
       {
         title: "Moderation queue",
-        description: "Step into the creator-side moderation flow — triage, flag review and council.",
+        description: "Step into the creator-side moderation flow: triage, flag review and council.",
         to: routes.studioTriage,
       },
     ],

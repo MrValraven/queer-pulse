@@ -10,10 +10,15 @@ import type {
 } from "../../features/members/data/members";
 import type { OpenToEntry } from "../../features/members/openTo.data";
 import type { UpdateProfileDTO } from "../../features/members/api/members.api";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 
 /** The editable subset of the logged-in member's profile. */
 export interface ProfileDraft {
   photo?: string;
+  /** Saved reframe crop for `photo` — display-only (never sent in the PATCH
+   *  body; the backend persists a fresh crop separately, keyed by the upload's
+   *  storage key, when the member picks a new photo). */
+  avatarCrop?: CropRect;
   first: string;
   last: string;
   role: string;
@@ -57,6 +62,7 @@ export interface ProfileDraft {
 export function toDraft(m: Member): ProfileDraft {
   return {
     photo: m.photo,
+    avatarCrop: m.avatarCrop,
     first: m.first,
     last: m.last,
     role: m.role,

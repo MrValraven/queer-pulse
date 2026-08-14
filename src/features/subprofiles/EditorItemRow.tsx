@@ -7,28 +7,36 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 import type { PointerEvent as ReactPointerEvent } from "react";
+import { m } from "motion/react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useMotionPrefs } from "../../app/providers/MotionProvider";
 import { formatMonthYear } from "../../shared/lib/date";
 import { ImageSlot } from "../../shared/components/ui";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 import styles from "./EditorItemRow.module.css";
 
+/** Reorder glide, tuned to the repo's motion tokens (`--dur-base` / `--ease`
+ *  in styles/tokens/effects.css) so the drag/arrow reflow matches every other
+ *  transition in the app. Instant under reduced motion — the reorder itself is
+ *  a control, not decoration, so only the glide is suppressed. */
+const LAYOUT_EASE = [0.22, 0.68, 0.16, 1] as const;
+const LAYOUT_DURATION = 0.25;
+
 interface GripDragHandlers {
+  /** Only `onPointerDown` arms the drag — the move/up lifecycle is owned by
+   *  window listeners in `useRowDragReorder` (survives motion `layout`
+   *  dropping the grip's pointer capture). */
   onPointerDown: (event: ReactPointerEvent) => void;
-  onPointerMove: (event: ReactPointerEvent) => void;
-  onPointerUp: (event: ReactPointerEvent) => void;
-  onPointerCancel: (event: ReactPointerEvent) => void;
 }
 
 interface EditorItemRowProps {
   item: SubprofileItemView;
-  /** Stable per-row id used as the FLIP key for reorder animation. */
-  flipKey: string;
   /** Whether this section supports a spotlight item at all (false for `links`). */
   canFeature: boolean;
   isFirst: boolean;
   isLast: boolean;
-  /** Pointer handlers that turn the grip into a real drag handle. */
+  /** Pointer-capture handlers that turn the grip into the drag handle
+   *  (`useRowDragReorder`). */
   gripHandlers: GripDragHandlers;
   /** True while this row is the one being dragged (lifts it visually). */
   isDragging: boolean;
@@ -40,19 +48,25 @@ interface EditorItemRowProps {
 }
 
 /**
- * One collapsed row in a section's `.itemrow` list (Task 5) — a decorative
- * grip, the item's title + a compact subtitle line, and `.iact` action
- * buttons: feature-star toggle, move up/down, edit (opens the item drawer),
- * remove. Distinct from the PUBLIC `SubprofileItemRow` (which renders a
- * published item on the live persona page). Presentational only — all state
- * lives in `SubprofileSectionEditor`. Two reorder paths: pointer drag via the
- * grip handle (`gripHandlers`, mouse/touch/pen — see `useRowDragReorder`) and
- * the up/down buttons (the keyboard/assistive-tech path, so the grip can stay
- * `aria-hidden`).
+ * One collapsed row in a section's `.itemrow` list — a grip drag handle, the
+ * item's title + a compact subtitle line, and `.iact` action buttons:
+ * feature-star toggle, move up/down, edit (opens the item drawer), remove.
+ * Distinct from the PUBLIC `SubprofileItemRow` (which renders a published item
+ * on the live persona page). Presentational only — all state lives in
+ * `SubprofileSectionEditor`.
+ *
+ * Rendered as an `m.div` with `layout`: pointer-capture on the grip
+ * (`gripHandlers`, mouse/touch/pen — see `useRowDragReorder`) reorders the
+ * array at each midpoint, and motion's `layout` glides every row into its new
+ * slot. The up/down buttons stay the keyboard/assistive-tech path (so the grip
+ * can remain `aria-hidden`). We drive the drag with pointer capture rather than
+ * motion's `drag` gesture on purpose: `drag` floats the row at an arbitrary
+ * offset that fights `layout` and can leave a residual transform (rows overlay)
+ * — a discrete slot-swap can't. (Motion's `Reorder` isn't an option either:
+ * it's incompatible with the app's `LazyMotion strict`.)
  */
 export function EditorItemRow({
   item,
-  flipKey,
   canFeature,
   isFirst,
   isLast,
@@ -65,14 +79,20 @@ export function EditorItemRow({
   onRemove,
 }: EditorItemRowProps) {
   const { t, language } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
   const subtitle = [item.subtitle, item.meta, formatMonthYear(item.date, language)]
     .filter(Boolean)
     .join(" · ");
 
   return (
-    <div
+    <m.div
       className={isDragging ? `itemrow ${styles.dragging}` : "itemrow"}
-      data-flip-key={flipKey}
+      layout
+      transition={{
+        layout: reducedMotion
+          ? { duration: 0 }
+          : { duration: LAYOUT_DURATION, ease: LAYOUT_EASE },
+      }}
     >
       <span
         className="grip"
@@ -158,6 +178,6 @@ export function EditorItemRow({
           <FiTrash2 size={15} aria-hidden />
         </button>
       </div>
-    </div>
+    </m.div>
   );
 }

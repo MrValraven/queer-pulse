@@ -166,7 +166,7 @@ export function CinemaSubmitReview({
             {draft.agreed && <FiCheck size={13} />}
           </span>
           <span className={styles.confirmText}>
-            <strong>I agree to the co-op distribution terms</strong> — 80% of
+            <strong>I agree to the co-op distribution terms</strong>: 80% of
             every rent and buy comes to me, 100% of tips, paid weekly,
             non-exclusive, cancellable anytime.
           </span>

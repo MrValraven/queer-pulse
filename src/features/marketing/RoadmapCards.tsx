@@ -70,6 +70,18 @@ export function BuildingCard({ item }: { item: BuildingItem }) {
       <div className={styles.rcCat}>{item.category}</div>
       <h3 className={styles.rcName}>{item.name}</h3>
       <p className={styles.rcDesc}>{item.description}</p>
+      {item.features && item.features.length > 0 && (
+        <div className={styles.featureBlock}>
+          <div className={styles.featureLabel}>
+            {t("marketing:roadmap.card.plannedFeatures")}
+          </div>
+          <ul className={styles.featureList}>
+            {item.features.map((feature) => (
+              <li key={feature}>{feature}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       {(item.requested || item.committed) && (
         <div className={styles.rcFooter} style={{ marginBottom: 4 }}>
           {item.requested && (

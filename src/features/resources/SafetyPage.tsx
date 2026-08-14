@@ -175,7 +175,7 @@ export function SafetyPage() {
         }
         sub={t("resources:safety.outro.sub")}
       >
-        <Button href="mailto:hello@queerpulse.pt" variant="primary" size="lg">
+        <Button href="mailto:hello@queerpulse.com" variant="primary" size="lg">
           {t("resources:safety.outro.cta")}
         </Button>
       </Outro>

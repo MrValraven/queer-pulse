@@ -34,7 +34,7 @@ export const RACE_VOICES: Voice[] = [
     name: "Amara M.",
     context: "Black British queer woman · Mouraria · Member since 2024",
     quote:
-      "\"Lisbon's queer spaces are mostly white and mostly European. That's not unusual — most cities are like this — but it's worth knowing before you arrive expecting something different. The community within QueerPulse is more mixed than the general scene, which is why I'm still here.\"",
+      "\"Lisbon's queer spaces are mostly white and mostly European. That's not unusual (most cities are like this), but it's worth knowing before you arrive expecting something different. The community within QueerPulse is more mixed than the general scene, which is why I'm still here.\"",
   },
   {
     initials: "RS",
@@ -43,7 +43,7 @@ export const RACE_VOICES: Voice[] = [
     name: "Ravi S.",
     context: "South Asian non-binary · Arroios · Member since 2023",
     quote:
-      "\"Portugal has its own relationship with race that's different from the UK or the US — the coloniality is present but discussed differently. I've had to learn a new set of social codes while also not having the language to describe them yet. The forum's been useful for that.\"",
+      "\"Portugal has its own relationship with race that's different from the UK or the US. The coloniality is present but discussed differently. I've had to learn a new set of social codes while also not having the language to describe them yet. The forum's been useful for that.\"",
   },
   {
     initials: "DF",
@@ -52,7 +52,7 @@ export const RACE_VOICES: Voice[] = [
     name: "Diallo F.",
     context: "Afro-Portuguese queer man · Cais do Sodré · Member since 2022",
     quote:
-      "\"I grew up here and the queer community felt very white to me for a long time. That's changing slowly, especially in certain spaces and with certain generations. The intersection of Afro-Portuguese identity and queerness is something I'm still figuring out how to talk about — and I appreciate that this community actually wants to have the conversation.\"",
+      "\"I grew up here and the queer community felt very white to me for a long time. That's changing slowly, especially in certain spaces and with certain generations. The intersection of Afro-Portuguese identity and queerness is something I'm still figuring out how to talk about, and I appreciate that this community actually wants to have the conversation.\"",
   },
 ];
 export const RACE_INFO: InfoCard[] = [
@@ -89,7 +89,7 @@ export const FAITH_VOICES: Voice[] = [
     name: "Leila K.",
     context: "Queer Muslim · Graça · Member since 2024",
     quote:
-      "\"I was very nervous about being out as both Muslim and queer in Lisbon. The queer community here has been more curious than hostile, but I've also had to explain myself in ways that straight people in the same community never do. It's exhausting sometimes — but the people who get it, really get it.\"",
+      "\"I was very nervous about being out as both Muslim and queer in Lisbon. The queer community here has been more curious than hostile, but I've also had to explain myself in ways that straight people in the same community never do. It's exhausting sometimes, but the people who get it, really get it.\"",
   },
   {
     initials: "MT",
@@ -155,7 +155,7 @@ export const CLASS_VOICE: Voice = {
   name: "Joana B.",
   context: "Queer woman · Porto-born, Lisbon resident · Member since 2023",
   quote:
-    "\"I grew up working class in Porto. Moving to Lisbon and entering queer expat spaces felt like moving to another country again. The cultural codes around travel, careers, aesthetics — I had to learn them from scratch and pretend I'd always known them. That's exhausting. The spaces in this community that acknowledge class exist feel like taking a breath.\"",
+    "\"I grew up working class in Porto. Moving to Lisbon and entering queer expat spaces felt like moving to another country again. The cultural codes around travel, careers, aesthetics: I had to learn them from scratch and pretend I'd always known them. That's exhausting. The spaces in this community that acknowledge class exist feel like taking a breath.\"",
 };
 
 export const COMMUNITY_INFO: InfoCard[] = [

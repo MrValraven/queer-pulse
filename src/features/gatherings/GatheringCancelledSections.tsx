@@ -55,7 +55,7 @@ export function CancelledEventCard() {
           <div className={styles.eventMeta}>
             <span>
               {fmt.date(EVENT_START, { weekday: "short" })}{" "}
-              {fmt.time(EVENT_START)} — {fmt.time(EVENT_END)}
+              {fmt.time(EVENT_START)} to {fmt.time(EVENT_END)}
             </span>
             <span className={styles.dot} />
             <span>{EVENT_VENUE_LINE}</span>
@@ -184,7 +184,7 @@ export function CancelledHostNote() {
       <p>{NOTE_P1}</p>
       <p>{NOTE_P2}</p>
       <div className={styles.noteSign}>
-        — <b>{HOST_NAME}</b> ·{" "}
+        <b>{HOST_NAME}</b> ·{" "}
         {t("gatherings:cancelled.noteSentVia", { time: cancelledAgo })}
       </div>
     </div>

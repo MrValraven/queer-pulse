@@ -8,6 +8,7 @@ import {
   getJoinRequests,
   type JoinRequestDTO,
 } from "../../auth/api/joinRequest.api";
+import { sourceLabelKey } from "../../auth/api/joinRequestSource";
 import type { AvatarTone } from "../ui";
 
 /** Presentation-normalized join request for the mod review queue. */
@@ -24,6 +25,11 @@ export interface JoinRequestView {
   message: string;
   /** "18+ confirmed on 1 Jul 2026 · Terms v2.4" — the attestation record. */
   ageLine: string;
+  /**
+   * Friendly name of the CTA the applicant came through — e.g. "Homepage hero",
+   * or "Opened the invite page directly" when no source was recorded. Always set.
+   */
+  sourceLabel: string;
   /** Pre-formatted "Applied 2 days ago". */
   appliedLine: string;
   /** Set once approved; the reviewer builds the invite link from it. */
@@ -86,6 +92,7 @@ export function dtoToView(
     city: dto.city,
     message: dto.message,
     ageLine: ageLine(dto, t, locale),
+    sourceLabel: t(sourceLabelKey(dto.source)),
     appliedLine: appliedLine(dto.createdAt, t),
     inviteCode: dto.inviteCode,
   };

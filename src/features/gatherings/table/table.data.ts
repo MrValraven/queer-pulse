@@ -42,7 +42,7 @@ export const SEATS: Seat[] = [
     tint: "coral",
     intro: "Sound designer. Always arrives with the night's best playlist.",
     interests: ["Music", "Film"],
-    connection: "Regular — 6th supper",
+    connection: "Regular, 6th supper",
   },
   {
     x: 70,
@@ -98,6 +98,6 @@ export const SEATS: Seat[] = [
     intro:
       "Illustrator. Draws everyone at the table by the time dessert lands.",
     interests: ["Drawing", "Wine"],
-    connection: "Regular — 4th supper",
+    connection: "Regular, 4th supper",
   },
 ];

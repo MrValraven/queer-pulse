@@ -7,7 +7,7 @@ import type { Catalog } from "../../types";
  *
  * Registo: tu (nunca você). Formas inclusivas por reformulação neutra primeiro
  * — nenhuma destas frases concorda em género com a pessoa destinatária. Ver
- * `docs/i18n/glossary-pt.md`: Gatherings → Convívios, Vouch → Avalizar,
+ * `docs/i18n/glossary-pt.md`: Gatherings → Convívios, Vouch → dar um voto de confiança,
  * "bem-vinde" como forma neutra.
  */
 export const notifications: Catalog = {
@@ -21,21 +21,22 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> aceitou o teu pedido de ligação.",
   "type.connection_accepted.meta": "Ligação",
 
-  "type.vouch_received.text": "Alguém te avalizou.",
-  "type.vouch_received.textNamed": "<profile>{name}</profile> avalizou-te.",
-  "type.vouch_received.meta": "Aval",
+  "type.vouch_received.text": "Alguém te deu um voto de confiança.",
+  "type.vouch_received.textNamed": "<profile>{name}</profile> deu-te um voto de confiança.",
+  "type.vouch_received.meta": "Voto de confiança",
 
-  // Enviada a quem gere o espaço quando alguém o avaliza. Um aval anónimo não
-  // resolve autor e mantém o `.text` genérico (nunca o nomeia).
-  "type.safe_space_vouch.text": "Alguém avalizou o teu espaço seguro.",
+  // Enviada a quem gere o espaço quando alguém lhe dá um voto de confiança. Um
+  // voto de confiança anónimo não resolve autor e mantém o `.text` genérico
+  // (nunca o nomeia).
+  "type.safe_space_vouch.text": "Alguém deu um voto de confiança ao teu espaço seguro.",
   "type.safe_space_vouch.textNamed":
-    "<profile>{name}</profile> avalizou o teu espaço seguro.",
+    "<profile>{name}</profile> deu um voto de confiança ao teu espaço seguro.",
   "type.safe_space_vouch.meta": "Espaço seguro",
 
   // Enviada quando uma nova casa fica disponível e corresponde a uma procura
   // guardada com alertas ativos. Do sistema (sem autor); `title`/`area` vêm do payload.
   "type.housing_listing_match.text":
-    "Uma nova casa em {area} corresponde à tua procura guardada — {title}.",
+    "Uma nova casa em {area} corresponde à tua procura guardada: {title}.",
   "type.housing_listing_match.meta": "Alerta de casa",
 
   "type.promoted_to_member.text": "Já fazes parte da comunidade. Bem-vinde.",
@@ -99,7 +100,7 @@ export const notifications: Catalog = {
   "type.event_reminder.meta": "Lembrete de convívio",
 
   "type.waitlist_promoted.text":
-    "Abriu uma vaga — já não estás em lista de espera.",
+    "Abriu uma vaga. Já não estás em lista de espera.",
   "type.waitlist_promoted.meta": "Lista de espera",
 
   "type.event_cancelled.text": "Um convívio em que vais estar foi cancelado.",
@@ -141,7 +142,7 @@ export const notifications: Catalog = {
   "type.join_request_received.meta": "Pedido de entrada",
 
   "type.join_request_approved.text":
-    "Estás dentro — o teu pedido para entrar foi aprovado.",
+    "Estás dentro. O teu pedido para entrar foi aprovado.",
   "type.join_request_approved.meta": "Pedido de entrada",
 
   "type.join_request_declined.text":
@@ -238,6 +239,16 @@ export const notifications: Catalog = {
   "type.subprofile_credit.text": "{subprofileName} creditou-te em {itemTitle}.",
   "type.subprofile_credit.meta": "Crédito de persona",
 
+  // Enviada quando o motor de XP/crachás credita um membro ao ultrapassar um
+  // nível. Do sistema (sem autor); {level}/{name} vêm do payload.
+  "type.xp_level_up.text": "Chegaste ao Nível {level}, {name}.",
+  "type.xp_level_up.meta": "Subida de nível",
+
+  // Enviada quando o motor de XP/crachás atribui um crachá a um membro. Do
+  // sistema (sem autor); {badgeName} vem do payload.
+  "type.badge_earned.text": "Ganhaste o crachá {badgeName}.",
+  "type.badge_earned.meta": "Crachá ganho",
+
   "type.unknown.text": "Tens uma nova notificação.",
   "type.unknown.meta": "Notificação",
 
@@ -250,7 +261,7 @@ export const notifications: Catalog = {
   "page.empty.description": "Sem notificações nesta categoria.",
   "page.error.title": "Não conseguimos carregar as tuas notificações",
   "page.error.description":
-    "Algo correu mal ao contactar o servidor. Isto não é uma caixa vazia — tenta novamente daqui a pouco.",
+    "Algo correu mal ao contactar o servidor. Isto não é uma caixa vazia. Tenta novamente daqui a pouco.",
   "page.error.retry": "Tentar novamente",
 
   // Separadores de filtro (notificationTabs em data.tsx + o separador Menções)
@@ -323,7 +334,7 @@ export const notifications: Catalog = {
   "mentions.eyebrow": "Menções · {handle}",
   "mentions.heading": "Quando alguém <em>te menciona.</em>",
   "mentions.lead":
-    "Posts, respostas e artigos que te mencionam com @. Distinto das Notificações — esta é só a conversa de menções.",
+    "Posts, respostas e artigos que te mencionam com @. Distinto das Notificações. Esta é só a conversa de menções.",
   "mentions.tabs.all": "Todas",
   "mentions.tabs.unread": "Não lidas",
   "mentions.tabs.posts": "Em posts",
@@ -337,7 +348,7 @@ export const notifications: Catalog = {
   "mentions.markAllReadToast": "Tudo marcado como lido",
   "mentions.empty.title": "Sem menções por aqui",
   "mentions.empty.description":
-    "Não há nada nesta vista por agora. Quando alguém te mencionar, aparece aqui — não precisas de andar à procura.",
+    "Não há nada nesta vista por agora. Quando alguém te mencionar, aparece aqui. Não precisas de andar à procura.",
   // Live ainda não tem endpoint de caixa de menções — mostrado em vez de uma
   // lista vazia silenciosa, para ler como honestamente por terminar (MentionsPanel).
   "mentions.comingSoon.title": "As menções estão a caminho",
@@ -383,7 +394,7 @@ export const notifications: Catalog = {
   "deepLink.summary.reply": "{name} respondeu ao teu post",
   "deepLink.summary.mention": "{name} mencionou-te num post",
   "deepLink.summary.moderation":
-    "Uma atualização sobre a tua conta — recurso {ref}",
+    "Uma atualização sobre a tua conta: recurso {ref}",
   "deepLink.connection.toastConnected": "Ligação feita com {name}",
   "deepLink.connection.toastDeclined": "Pedido recusado",
   "deepLink.connection.connectedTitle": "A ligação está <em>feita</em>",
@@ -396,7 +407,7 @@ export const notifications: Catalog = {
   "deepLink.connection.mutualConnections_other": "{count} ligações em comum",
   "deepLink.connection.accept": "Aceitar",
   "deepLink.connection.decline": "Recusar",
-  "deepLink.connection.notNow": "Agora não — decidir depois",
+  "deepLink.connection.notNow": "Agora não, decidir depois",
   "deepLink.connection.remindLaterToast": "Lembramos-te mais tarde",
   "deepLink.gathering.badge": "Vais",
   "deepLink.gathering.guestListConfirmed": "Estás na lista de convidados.",

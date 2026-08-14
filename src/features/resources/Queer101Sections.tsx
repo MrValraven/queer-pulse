@@ -5,6 +5,7 @@ import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { ResourceHero } from "./ResourceHero";
 import {
   FAQ,
@@ -230,7 +231,7 @@ export function Queer101Outro() {
       }
       sub={t("resources:queer101.outro.sub")}
     >
-      <Button to={routes.requestInvite} variant="primary" size="lg">
+      <Button to={requestInvitePath("queer_101")} variant="primary" size="lg">
         {t("resources:queer101.outro.joinCta")}
       </Button>
       <Button to={routes.communities} variant="ghost-dark" size="lg">

@@ -25,7 +25,7 @@ export interface SlidingScale {
 export const DEFAULT_SCALE: SlidingScale = {
   service: "",
   intro:
-    "Pay the tier that fits your means right now — no proof, no justification. " +
+    "Pay the tier that fits your means right now, no proof, no justification. " +
     "Choosing higher keeps this work accessible to people who need the supported rate.",
   tiers: [
     {
@@ -33,7 +33,7 @@ export const DEFAULT_SCALE: SlidingScale = {
       name: "Supported",
       price: "€60",
       forWhom:
-        "If money is tight or you're under-resourced — students, between jobs, " +
+        "If money is tight or you're under-resourced: students, between jobs, " +
         "carrying more than your share. This rate is for you, no questions asked.",
     },
     {

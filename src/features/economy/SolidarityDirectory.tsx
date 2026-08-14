@@ -7,6 +7,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { useMemberContact } from "../connect/useMemberContact";
 import {
   PRACTITIONERS,
@@ -228,7 +229,7 @@ export function SolidarityDirectory() {
               <p>{t("economy:solidarityDirectory.register.body")}</p>
             </div>
             <div className={styles.rsCta}>
-              <Button to={routes.requestInvite} variant="primary" size="lg">
+              <Button to={requestInvitePath("solidarity_directory")} variant="primary" size="lg">
                 {t("economy:solidarityDirectory.register.cta")}
               </Button>
               <Link to={routes.contact} className={styles.rsCtaLink}>

@@ -156,7 +156,7 @@ export const CHAT: Msg[] = [
     text: (
       <>
         welcome in. tonight: twelve tracks, mostly piano, some choir. don't
-        shuffle — <em>i'll know</em>.
+        shuffle. <em>i'll know</em>.
       </>
     ),
     time: "21:01 · pinned",

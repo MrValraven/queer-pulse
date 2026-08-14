@@ -41,7 +41,7 @@ export function RecapCard() {
   return (
     <FeedCardShell accent="ink">
       <FeedCardHead label={t("feed:card.recap.eyebrow")} />
-      <div className={styles.name}>Pride Brunch — June Edition</div>
+      <div className={styles.name}>Pride Brunch, June Edition</div>
       <div className={styles.meta}>
         You attended · 3 days ago · 38 people were there
       </div>

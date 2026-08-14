@@ -45,7 +45,7 @@ export function CinemaSubmitAside() {
           {t("cinema:submit.aside.openCallHeading")}
         </div>
         <div className={styles.saJadeTitle}>
-          Lisbon, after the flood — <em>€2,500 commission</em>
+          Lisbon, after the flood: <em>€2,500 commission</em>
         </div>
         <div className={styles.saJadeBody}>
           Short film commission, closes 21 June. 13 applications so far.

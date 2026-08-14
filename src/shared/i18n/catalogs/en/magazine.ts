@@ -32,9 +32,9 @@ export const magazine: Catalog = {
   "masthead.nav.write": "Write for us",
 
   // ── MagazinePage ─────────────────────────────────────────────────────────
-  "landing.meta.title": "The Magazine — QueerPulse",
+  "landing.meta.title": "The Magazine: QueerPulse",
   "landing.meta.description":
-    "Essays, features, interviews and criticism from queer Lisbon — the QueerPulse magazine.",
+    "Essays, features, interviews and criticism from queer Lisbon: the QueerPulse magazine.",
   "landing.inIssueAriaLabel": "In this issue",
   "landing.inIssueLabel": "In this issue",
   "landing.nav.features": "Features",
@@ -47,7 +47,7 @@ export const magazine: Catalog = {
 
   // ── MagazineCover ────────────────────────────────────────────────────────
   "cover.coverAlt": "Cover portrait",
-  "cover.coverPlaceholder": "Cover portrait — full bleed, dramatic lighting",
+  "cover.coverPlaceholder": "Cover portrait: full bleed, dramatic lighting",
   "cover.coverImageLabel": "Cover · June 2026",
   "cover.kicker": "Cover story · Feature",
   "cover.byline": "By",
@@ -72,7 +72,7 @@ export const magazine: Catalog = {
   "sections.archive.allCta": "All past issues",
   "sections.submit.title": "Write for <em>the magazine.</em>",
   "sections.submit.body":
-    "We publish essays, features, reviews, interviews, and criticism from community members. No formal credentials required — just something worth saying.",
+    "We publish essays, features, reviews, interviews, and criticism from community members. No formal credentials required: just something worth saying.",
   "sections.submit.cta": "Pitch us",
   "sections.verdict.essential": "Essential",
   "sections.verdict.recommended": "Recommended",
@@ -80,15 +80,15 @@ export const magazine: Catalog = {
   // the fabricated article rails (the demo mock stays in demo mode).
   "sections.emptyLive.title": "The magazine is coming soon",
   "sections.emptyLive.description":
-    "Our first issue is on the way. We're lining up essays, features, interviews and reviews from the community — check back soon, or pitch us something to run in it.",
+    "Our first issue is on the way. We're lining up essays, features, interviews and reviews from the community. Check back soon, or pitch us something to run in it.",
 
   // ── ArticlePage ──────────────────────────────────────────────────────────
-  "article.notFoundMetaTitle": "Article not found — QueerPulse Magazine",
+  "article.notFoundMetaTitle": "Article not found: QueerPulse Magazine",
   "article.notFoundTitle": "We couldn't find that piece.",
   "article.notFoundBody":
     "The article may have moved, or the link may be incomplete.",
   "article.notFoundCta": "Back to the magazine",
-  "article.pageTitleSuffix": " — QueerPulse Magazine",
+  "article.pageTitleSuffix": ": QueerPulse Magazine",
   "article.backToMagazine": "Magazine",
   "article.relatedHeading": "Keep <em>reading</em>",
 
@@ -150,7 +150,7 @@ export const magazine: Catalog = {
   "deck.editor.addSlide": "Add slide",
   "deck.editor.addSlideLayout": "Layout",
   "deck.editor.addSlideHint":
-    "Every slide is the reader's real component — this preview cannot drift.",
+    "Every slide is the reader's real component. This preview cannot drift.",
   "deck.editor.moveUp": "Move up",
   "deck.editor.moveDown": "Move down",
   "deck.editor.removeSlide": "Remove slide",
@@ -195,7 +195,7 @@ export const magazine: Catalog = {
   "deck.editor.previewEmpty": "Add a slide to preview",
   "deck.editor.preview.title": "Preview",
   "deck.editor.preview.emptySlide": "Start filling in this slide to see it here.",
-  "deck.editor.budget.headingOver": "Too long — it will clip on a phone",
+  "deck.editor.budget.headingOver": "Too long. It will clip on a phone",
   "deck.editor.budget.headingOk": "Fits on the narrowest phone",
   "deck.editor.budget.bodyOver": "A slide is not a paragraph",
   "deck.editor.budget.bodyOk": "Short enough to read at a glance",
@@ -203,7 +203,7 @@ export const magazine: Catalog = {
   "deck.editor.saved": "Draft saved",
   "deck.editor.publishedToast": "Deck published",
   "deck.editor.deletedToast": "Deck deleted",
-  "deck.editor.saveError": "We couldn't save your deck — please try again.",
+  "deck.editor.saveError": "We couldn't save your deck. Please try again.",
   "deck.editor.backToDashboard": "Back to dashboard",
   "deck.editor.metaTitle": "Deck details",
   "deck.editor.untitled": "Untitled deck",
@@ -214,7 +214,7 @@ export const magazine: Catalog = {
   "deck.editor.slidesCount": "{count} of {max} · click a slide to edit",
   "deck.editor.slidesCapped": "40-slide maximum reached",
   "deck.editor.publish.notNowNote":
-    "This ships as soon as you press Publish — deck scheduling isn't wired up yet.",
+    "This ships as soon as you press Publish. Deck scheduling isn't wired up yet.",
   "deck.editor.publish.checklist.cover": "Cover slide set",
   "deck.editor.publish.checklist.source":
     "Source line on every stat slide (optional)",
@@ -253,7 +253,7 @@ export const magazine: Catalog = {
   // Live mode: shown when there is no published issue to read yet.
   "issue.emptyLiveTitle": "This issue isn't out yet",
   "issue.emptyLiveBody":
-    "The current issue is still being put together. Check back soon — or pitch us a piece to run in it.",
+    "The current issue is still being put together. Check back soon, or pitch us a piece to run in it.",
 
   // ── IssueContents ────────────────────────────────────────────────────────
   "contents.heading.coverStory": "Cover story",
@@ -269,8 +269,8 @@ export const magazine: Catalog = {
   "contents.print.eyebrow": "Print edition",
   "contents.print.heading": "Hold it <em>in your hands.</em>",
   "contents.print.body":
-    "Issue {issue} is available as a <b>limited print run</b> — {pages} pages, risograph cover, printed in Marvila. Members get it at cost; proceeds fund the next issue's contributors.",
-  "contents.print.orderCta": "Order the print edition — {price}",
+    "Issue {issue} is available as a <b>limited print run</b>: {pages} pages, risograph cover, printed in Marvila. Members get it at cost; proceeds fund the next issue's contributors.",
+  "contents.print.orderCta": "Order the print edition: {price}",
   "contents.print.readOnlineCta": "Read online free",
   "contents.print.imageAlt": "Print edition mockup · Issue {issue}",
 
@@ -278,7 +278,7 @@ export const magazine: Catalog = {
   "issues.eyebrow": "Magazine · all editions",
   "issues.heroTitle": "Nine issues, <em>quarterly</em>, since 2024.",
   "issues.heroDek":
-    "A magazine that takes its time. Risograph print, free in PDF, paid in paper. Each issue circles a single question — health, work, the city, what we owe each other. Sustainer members get them in the mail.",
+    "A magazine that takes its time. Risograph print, free in PDF, paid in paper. Each issue circles a single question: health, work, the city, what we owe each other. Sustainer members get them in the mail.",
   "issues.stats.issuesPublished_one": "{count} issue published",
   "issues.stats.issuesPublished_other": "{count} issues published",
   "issues.stats.articlesArchived_one": "{count} article archived",
@@ -298,7 +298,7 @@ export const magazine: Catalog = {
   "issues.archiveRetryCta": "Try again",
   "issues.archiveEmptyTitle": "No issues to show yet.",
   "issues.archiveEmptyBody":
-    "The archive is still being set — the first editions will land here soon.",
+    "The archive is still being set. The first editions will land here soon.",
 
   // ── AuthorPage ───────────────────────────────────────────────────────────
   "author.notFoundTitle": "We couldn't find that writer.",
@@ -457,13 +457,13 @@ export const magazine: Catalog = {
   "editor.modals.chase.cancel": "Cancel",
   "editor.modals.chase.send": "Send nudge",
   "editor.modals.chase.softHint":
-    "Softer tone — this is one of their first pieces with us.",
+    "Softer tone: this is one of their first pieces with us.",
   "editor.modals.chase.messageAria": "Message to contributor",
   "editor.modals.chase.offerExtension": "Offer a deadline extension",
   "editor.modals.chase.bodyNewVoice":
-    "Hi {name} — no pressure at all, just checking in on “{title}”. How's it feeling? Happy to hop on a call or push the date if that would help. We're really glad to have you in this issue.",
+    "Hi {name}, no pressure at all, just checking in on “{title}”. How's it feeling? Happy to hop on a call or push the date if that would help. We're really glad to have you in this issue.",
   "editor.modals.chase.bodyReturning":
-    "Hi {name} — gentle nudge on “{title}”, currently at {stage} and due {due}. Let me know if anything's getting in the way, and we'll sort it together.",
+    "Hi {name}, gentle nudge on “{title}”, currently at {stage} and due {due}. Let me know if anything's getting in the way, and we'll sort it together.",
   "editor.modals.handoff.eyebrow": "Hand off",
   "editor.modals.handoff.title": "Pass “{title}”",
   "editor.modals.handoff.cancel": "Cancel",
@@ -471,9 +471,9 @@ export const magazine: Catalog = {
   "editor.modals.handoff.handTo": "Hand to",
   "editor.modals.handoff.noteLabel": "Note",
   "editor.modals.handoff.noteWriterWaiting":
-    "@{editor} handing this over — it's at {stage}, still waiting on the writer. Shout if you want context.",
+    "@{editor} handing this over. It's at {stage}, still waiting on the writer. Shout if you want context.",
   "editor.modals.handoff.noteReady":
-    "@{editor} handing this over — it's at {stage}, ready for your eyes. Shout if you want context.",
+    "@{editor} handing this over. It's at {stage}, ready for your eyes. Shout if you want context.",
   "editor.modals.shortcuts.eyebrow": "Keyboard",
   "editor.modals.shortcuts.title": "Shortcuts",
   "editor.modals.shortcuts.gotIt": "Got it",
@@ -531,7 +531,7 @@ export const magazine: Catalog = {
   "editor.decks.columnStatus": "Status",
   "editor.decks.emptyTitle": "No decks yet",
   "editor.decks.emptyBody":
-    "Interactive slide decks you create will show up here — start one and publish it whenever it's ready.",
+    "Interactive slide decks you create will show up here. Start one and publish it whenever it's ready.",
   "editor.decks.new": "New deck",
   "editor.decks.statusPublished": "Published",
   "editor.decks.statusDraft": "Draft",
@@ -593,7 +593,7 @@ export const magazine: Catalog = {
   "desk.header.layoutAria": "Desk layout",
   "desk.header.highlightsEyebrow": "Standalone highlights",
   "desk.header.highlightsMeta":
-    "Pieces that run on their own across the platform — not tied to any one issue.",
+    "Pieces that run on their own across the platform, not tied to any one issue.",
 
   // ── DeskTrackTabs (Highlights ⇄ Issue) ───────────────────────────────────
   "desk.trackTabs.highlights": "Highlights",
@@ -605,7 +605,7 @@ export const magazine: Catalog = {
   "desk.reassign.makeStandalone": "Make standalone",
   "desk.reassign.addedToIssueToast": "Added to issue {number}.",
   "desk.reassign.madeStandaloneToast": "Now a standalone highlight.",
-  "desk.reassign.failedToast": "That didn't save — give it another try.",
+  "desk.reassign.failedToast": "That didn't save. Give it another try.",
 
   // ── NeedsStrip ───────────────────────────────────────────────────────────
   "desk.needsStrip.lateDue": "Late · due {due}",
@@ -702,7 +702,7 @@ export const magazine: Catalog = {
     "Nothing has been commissioned yet. Start the pipeline with your first piece.",
   "desk.states.commissionPiece": "Commission a piece",
   "desk.states.errorBand":
-    "Could not reach the pipeline — showing what we last had.",
+    "Could not reach the pipeline. Showing what we last had.",
   "desk.states.tryAgain": "Try again",
 
   // ── CommandPalette ───────────────────────────────────────────────────────
@@ -723,7 +723,7 @@ export const magazine: Catalog = {
   "desk.notifications.subhead":
     "What happened on the desk while you were away.",
   "desk.notifications.empty":
-    "You're all caught up — nothing new since you last looked.",
+    "You're all caught up. Nothing new since you last looked.",
   "desk.notifications.markAllRead": "Mark all as read",
 
   // ── MagazineDeskShell (the editor's left rail) ───────────────────────────
@@ -732,7 +732,7 @@ export const magazine: Catalog = {
   "deskShell.nav.desk": "Desk",
   "deskShell.nav.pitches": "Pitches",
   "deskShell.nav.issue": "Issue",
-  "deskShell.bellCountAria": "Since Friday — {count} new",
+  "deskShell.bellCountAria": "Since Friday: {count} new",
   "deskShell.openNow": "Open now",
   "deskShell.newPiece": "New piece",
   "deskShell.kbdHintSuffix": "to jump · ? for keys",
@@ -749,7 +749,7 @@ export const magazine: Catalog = {
   "desk.modals.commission.titleFromScratch": "Write the brief",
   "desk.modals.commission.sendBrief": "Send the brief",
   "desk.modals.commission.bodyFromPitch":
-    "You're commissioning {byline}'s pitch — set the essentials below, and the brief goes straight to them.",
+    "You're commissioning {byline}'s pitch. Set the essentials below, and the brief goes straight to them.",
   "desk.modals.commission.bodyFromScratch":
     "Set the essentials below, and we'll get a brief in front of a writer.",
   "desk.modals.commission.angleLabel": "The angle",
@@ -766,18 +766,18 @@ export const magazine: Catalog = {
   "desk.modals.pass.title": "Pass on “{title}”",
   "desk.modals.pass.send": "Send it",
   "desk.modals.pass.body":
-    "A pass lands easier with a real reason. Pick a starting point below, or write your own — either way, the writer hears from you, not a form.",
+    "A pass lands easier with a real reason. Pick a starting point below, or write your own. Either way, the writer hears from a real person.",
   "desk.modals.pass.startingPoints": "Starting points",
 
   // ── ChaseModal (Phase 7 Wave F: embeds PieceThread, no separate compose step) ─
   "desk.modals.chase.title": "Chase {name}",
-  "desk.modals.chase.body": "A quick, human nudge — not a deadline threat.",
+  "desk.modals.chase.body": "A quick, human nudge to keep things moving gently.",
 
   // ── HandoffModal ─────────────────────────────────────────────────────────
   "desk.modals.handoff.title": "Hand off",
   "desk.modals.handoff.cta": "Hand off",
   "desk.modals.handoff.body":
-    "Hand “{title}” to another editor — they pick up right where you left off.",
+    "Hand “{title}” to another editor. They pick up right where you left off.",
   "desk.modals.handoff.toLabel": "To",
 
   // ── DeskView ─────────────────────────────────────────────────────────────
@@ -895,7 +895,7 @@ export const magazine: Catalog = {
   "piece.care.askForReadToast": "Asked for a sensitivity read.",
   "piece.care.peopleHeading": "People in this piece",
   "piece.care.peopleSubline":
-    "Consent is per person, not per piece. Publish is blocked until every row is settled.",
+    "Consent is collected per person, row by row. Publish is blocked until every row is settled.",
   "piece.care.contentNotesHeading": "Content notes",
   "piece.care.contentNotesSubline":
     "Shown to readers above the piece. Written by the author, checked by you.",
@@ -945,7 +945,7 @@ export const magazine: Catalog = {
   "submitStory.intro.eyebrow": "Pitch a story",
   "submitStory.intro.title": "Got something <em>worth telling?</em>",
   "submitStory.intro.lead":
-    "The QueerPulse magazine is written by the community. You don't need a byline or an agent — just a story that matters and an honest way of telling it.",
+    "The QueerPulse magazine is written by the community. You don't need a byline or an agent: just a story that matters and an honest way of telling it.",
   "submitStory.intro.lookingFor.specific.title":
     "The specific over the general",
   "submitStory.intro.lookingFor.specific.body":
@@ -955,14 +955,14 @@ export const magazine: Catalog = {
     "Rooted here, but we publish diaspora and visitor voices too. Place matters; borders less so.",
   "submitStory.intro.lookingFor.pay.title": "We pay, always",
   "submitStory.intro.lookingFor.pay.body":
-    'Every published piece is paid fairly — rates shared upfront, no "exposure" ever.',
+    'Every published piece is paid fairly: rates shared upfront, no "exposure" ever.',
   "submitStory.intro.stepsHeading": "What happens next",
   "submitStory.intro.step.reply":
-    "A reply within two weeks — yes, no, or let's talk.",
+    "A reply within two weeks: yes, no, or let's talk.",
   "submitStory.intro.step.assigned":
     "If it's a yes, an editor is assigned and you agree a rate and deadline.",
   "submitStory.intro.step.copyright":
-    "You keep the copyright. We license it, we don't own it.",
+    "You keep the copyright. We only license it.",
 
   // ── SubmitStorySidebar ─────────────────────────────────────────────────
   "submitStory.sidebar.guidelinesHeading": "Editorial guidelines",
@@ -976,7 +976,7 @@ export const magazine: Catalog = {
   "submitStory.sidebar.guideline.noPromo.detail":
     "The magazine doesn't carry advertising or sponsored pieces.",
   "submitStory.sidebar.guideline.language.term": "Portuguese or English",
-  "submitStory.sidebar.guideline.language.detail": "— we publish both.",
+  "submitStory.sidebar.guideline.language.detail": "We publish both.",
   "submitStory.sidebar.guideline.deadlines.term": "Deadlines are firm.",
   "submitStory.sidebar.guideline.deadlines.detail":
     "Late submissions go to the following issue.",
@@ -1000,7 +1000,7 @@ export const magazine: Catalog = {
   "submitStory.success.timeline.readsEvery":
     "An editor reads every pitch personally.",
   "submitStory.success.timeline.hearBy":
-    "You'll hear from us by <strong>{date}</strong> — yes, no, or let's talk.",
+    "You'll hear from us by <strong>{date}</strong>: yes, no, or let's talk.",
   "submitStory.success.timeline.ifYes":
     "If it's a yes, we agree a rate and deadline together.",
   "submitStory.success.backCta": "Back to the magazine",
@@ -1048,9 +1048,9 @@ export const magazine: Catalog = {
   "submitStory.writer.wordCount_other": "{count} words",
 
   // ── SubmitStoryEditor ──────────────────────────────────────────────────
-  "submitStory.editor.draftSaved": "Draft saved — it'll be here when you come back.",
+  "submitStory.editor.draftSaved": "Draft saved. It'll be here when you come back.",
   "submitStory.editor.draftSaveError":
-    "We couldn't save your draft — your browser may be blocking storage.",
+    "We couldn't save your draft. Your browser may be blocking storage.",
   "submitStory.resume.text":
     "You left a story unfinished. <b>Pick up where you left off?</b>",
   "submitStory.resume.startFresh": "Start fresh",
@@ -1060,9 +1060,9 @@ export const magazine: Catalog = {
   "submitStory.editor.needHeadlineError":
     "Your story needs a headline before it goes to editors.",
   "submitStory.editor.minWordsError":
-    "A little more to go — at least {min} words before you submit.",
+    "A little more to go: at least {min} words before you submit.",
   "submitStory.editor.submitError":
-    "Couldn't submit your story right now — please try again.",
+    "Couldn't submit your story right now. Please try again.",
   "submitStory.editor.saveDraftCta": "Save draft",
   "submitStory.editor.submittingCta": "Submitting…",
   "submitStory.editor.submitCta": "Submit for review",
@@ -1119,7 +1119,7 @@ export const magazine: Catalog = {
     "No pitches here right now. Switch tabs, or start something new from the New pitch button above.",
   "pitchTracker.page.withdrawnToast": "Pitch withdrawn",
   "pitchTracker.page.undoCta": "Undo",
-  "pitchTracker.page.stubToast": "{label} — coming soon in this prototype",
+  "pitchTracker.page.stubToast": "{label}: coming soon in this prototype",
 
   // ── Shared stage-rail vocabulary (PitchStages.tsx) ──────────────────────
   "pitchTracker.stage.pitched": "Pitched",
@@ -1157,14 +1157,14 @@ export const magazine: Catalog = {
   "printOrder.closeAria": "Close",
   "printOrder.success.title": "It's on its <em>way to you.</em>",
   "printOrder.success.body_one":
-    "{count} copy of <b>{issue}</b> reserved from the print run. We'll email <b>{email}</b> when it ships from Marvila — usually within a week. Thank you for funding the next issue's contributors.",
+    "{count} copy of <b>{issue}</b> reserved from the print run. We'll email <b>{email}</b> when it ships from Marvila, usually within a week. Thank you for funding the next issue's contributors.",
   "printOrder.success.body_other":
-    "{count} copies of <b>{issue}</b> reserved from the print run. We'll email <b>{email}</b> when it ships from Marvila — usually within a week. Thank you for funding the next issue's contributors.",
+    "{count} copies of <b>{issue}</b> reserved from the print run. We'll email <b>{email}</b> when it ships from Marvila, usually within a week. Thank you for funding the next issue's contributors.",
   "printOrder.success.doneCta": "Done",
   "printOrder.eyebrow": "Print edition · {issue}",
   "printOrder.title": "Order the <em>print run.</em>",
   "printOrder.lead":
-    "{pages} pages, risograph cover, printed in Marvila. <b>€{price} at cost</b> — proceeds fund the next issue's contributors.",
+    "{pages} pages, risograph cover, printed in Marvila. <b>€{price} at cost</b>. Proceeds fund the next issue's contributors.",
   "printOrder.copiesLabel": "Copies",
   "printOrder.fewerCopiesAria": "Fewer copies",
   "printOrder.moreCopiesAria": "More copies",
@@ -1174,7 +1174,7 @@ export const magazine: Catalog = {
   "printOrder.emailPlaceholder": "you@example.com",
   "printOrder.cancelCta": "Cancel",
   "printOrder.placingCta": "Placing your order…",
-  "printOrder.placeCta": "Place order — €{total}",
+  "printOrder.placeCta": "Place order: €{total}",
 
   // ══════════════════ Story showcase pages ══════════════════════════════════
   // StoryPage/StoryTomasPage/StorySafetyPage + their *Article components are
@@ -1193,7 +1193,7 @@ export const magazine: Catalog = {
   "story.outro.tomas.title":
     "Want to join Tomás's table? <em>Join the room first.</em>",
   "story.outro.tomas.sub":
-    "The supper club, the network, the gatherings — it all starts with an invitation from someone who knows you.",
+    "The supper club, the network, the gatherings: it all starts with an invitation from someone who knows you.",
   "story.outro.safety.title": "Read it and think it sounds <em>right?</em>",
   "story.outro.safety.sub":
     "We're not for everyone. But if this resonates, you might be for us.",
@@ -1221,7 +1221,7 @@ export const magazine: Catalog = {
   "write.header.sendOnToast": "Sending isn't wired up yet.",
   "write.header.publishToast": "Publishing isn't wired up yet.",
   "write.header.savedSaving": "Saving…",
-  "write.header.savedError": "Couldn't save — will retry",
+  "write.header.savedError": "Couldn't save, will retry",
   "write.header.savedOk": "All changes saved",
   "write.header.issueScheduled": "Scheduled in an issue",
 
@@ -1236,7 +1236,7 @@ export const magazine: Catalog = {
   // ── ArticleDocument ───────────────────────────────────────────────────────
   "write.document.headlinePlaceholder": "Headline",
   "write.document.standfirstPlaceholder":
-    "Standfirst — the one or two sentences under the headline",
+    "Standfirst: the one or two sentences under the headline",
   "write.document.addBlockHint": "or type / in an empty paragraph",
 
   // ── Block kinds (blockKinds.ts is not a component — these are translated
@@ -1314,7 +1314,7 @@ export const magazine: Catalog = {
   "write.publish.schedule": "Schedule",
   "write.publish.withIssue": "With issue",
   "write.publish.scheduleNote":
-    "Scheduling a date and time is coming soon — ships as a draft for now.",
+    "Scheduling a date and time is coming soon. Ships as a draft for now.",
   "write.publish.issueNote": "Ships automatically when its issue goes out.",
   "write.publish.checklistHeading": "Before it ships · {done}/{total}",
   "write.publish.cta": "Publish",
@@ -1322,7 +1322,7 @@ export const magazine: Catalog = {
   "write.publish.checklist.alts": "Alt text on every image",
   "write.publish.checklist.altsPending": "Alt text on every image (none yet)",
   "write.publish.checklist.sensitivity":
-    "Sensitivity read — handled in the piece record",
+    "Sensitivity read: handled in the piece record",
   "write.publish.checklist.source": "Source line on the stat row (optional)",
 
   // ── ArticleMetaRail ────────────────────────────────────────────────────────
@@ -1381,7 +1381,7 @@ export const magazine: Catalog = {
   "write.versions.diff.sub": "\"{label}\" by {author} · {when}",
   "write.versions.diff.loading": "Loading version…",
   "write.versions.diff.error": "Couldn't load this version.",
-  "write.versions.diff.empty": "Nothing to compare — this version has no blocks.",
+  "write.versions.diff.empty": "Nothing to compare. This version has no blocks.",
   "write.versions.diff.before": "This version",
   "write.versions.diff.now": "Current draft",
   "write.versions.diff.status.unchanged": "Unchanged",
@@ -1416,7 +1416,7 @@ export const magazine: Catalog = {
   "issue.ship.notYet": "Not yet",
   "issue.ship.shipIt": "Ship it",
   "issue.ship.warnNote":
-    "Pieces still behind the publish gate will hold and publish later — the issue does not wait for them.",
+    "Pieces still behind the publish gate will hold and publish later. The issue does not wait for them.",
 
   // ── IssueTabsNav ─────────────────────────────────────────────────────────
   "issue.tabs.ariaLabel": "Issue production sections",
@@ -1433,7 +1433,7 @@ export const magazine: Catalog = {
   "issue.pages.spare_other": "{count} pages spare",
 
   // ── RunningOrderTab ──────────────────────────────────────────────────────
-  "issue.runOrder.deckNoPageCount": "Deck — no page count",
+  "issue.runOrder.deckNoPageCount": "Deck: no page count",
   "issue.runOrder.pagesPrefix": "pp. {pages}",
   "issue.runOrder.laidOut": "Laid out",
   "issue.runOrder.inLayout": "In layout",
@@ -1468,7 +1468,7 @@ export const magazine: Catalog = {
   "issue.digest.scheduleToast": "The digest will go out with the issue.",
   "issue.digest.socialHeading": "Social out",
   "issue.digest.socialAltHint":
-    "Alt text is copied from the image, never left empty.",
+    "Alt text is copied from the image, so it's always filled in.",
 
   // ── ArchiveTab ───────────────────────────────────────────────────────────
   "issue.archive.heading": "Archive",
@@ -1499,7 +1499,7 @@ export const magazine: Catalog = {
   "writer.tabs.ariaLabel": "Writer workspace tabs",
   "writer.page.errorTitle": "Your workspace didn't load",
   "writer.page.errorDescription":
-    "Something went wrong fetching your assignments — try refreshing the page.",
+    "Something went wrong fetching your assignments. Try refreshing the page.",
 
   // ── AssignmentCard ───────────────────────────────────────────────────────
   "writer.work.emptyTitle": "No assignments yet",
@@ -1515,7 +1515,7 @@ export const magazine: Catalog = {
   "writer.work.fileDraft": "File a draft",
   "writer.work.readBrief": "Read the brief",
   "writer.work.readBriefToast":
-    "The full brief lives on the piece record — coming soon here.",
+    "The full brief lives on the piece record. Coming soon here.",
   "writer.work.messageEditor": "Message editor",
   "writer.work.activeBadge": "Active",
   "writer.work.setActive": "Use for byline & terms",
@@ -1523,7 +1523,7 @@ export const magazine: Catalog = {
   // ── WriterPitchesTab ─────────────────────────────────────────────────────
   "writer.pitches.emptyTitle": "No pitches yet",
   "writer.pitches.emptyDescription":
-    "Send one below — a person reads every pitch, and answers within 5 days.",
+    "Send one below. A person reads every pitch, and answers within 5 days.",
   "writer.pitches.sentMeta": "Sent {sent} · answered within 5 days",
   "writer.pitches.formHeading": "Pitch something",
   "writer.pitches.titleLabel": "Working title",
@@ -1544,11 +1544,11 @@ export const magazine: Catalog = {
   // ── AgreedTermsCard ──────────────────────────────────────────────────────
   "writer.terms.heading": "What you agreed to",
   "writer.terms.body":
-    "Every commission carries the same terms — fee, kill fee, deadline, and what happens if the piece changes shape.",
+    "Every commission carries the same terms: fee, kill fee, deadline, and what happens if the piece changes shape.",
   "writer.terms.killFeeLabel": "Kill fee",
   "writer.terms.rightsLabel": "Rights",
   "writer.terms.editsLabel": "Edits",
-  "writer.terms.emptyState": "No active commission yet — terms show up once you have one.",
+  "writer.terms.emptyState": "No active commission yet. Terms show up once you have one.",
 
   // ── BylineSafetyCard ─────────────────────────────────────────────────────
   "writer.byline.heading": "Your safety",
@@ -1563,10 +1563,10 @@ export const magazine: Catalog = {
   "writer.fileDraft.cancel": "Cancel",
   "writer.fileDraft.submit": "File it",
   "writer.fileDraft.body":
-    "Paste it, drop a document, or write it here. It arrives on the desk as blocks, not as a wall of formatting.",
+    "Paste it, drop a document, or write it here. It arrives on the desk as clean blocks, ready to edit.",
   "writer.fileDraft.fieldLabel": "Draft",
   "writer.fileDraft.fieldHelper":
-    "Uploading a document is coming soon — pasting works today.",
+    "Uploading a document is coming soon. Pasting works today.",
   "writer.fileDraft.placeholder": "Paste your draft here…",
   "writer.fileDraft.wordCountWithTarget":
     "Word count is checked against your brief ({target} words). Over is fine.",
@@ -1580,14 +1580,14 @@ export const magazine: Catalog = {
   "writer.editorMessage.heading": "From your editor",
   "writer.editorMessage.fromLabel": "{name}",
   "writer.editorMessage.loading": "Loading…",
-  "writer.editorMessage.noMessagesYet": "No messages yet — say hello.",
+  "writer.editorMessage.noMessagesYet": "No messages yet. Say hello.",
   "writer.editorMessage.emptyState": "No active commission yet.",
 
   // ── PieceThread (shared editor↔writer message thread, Phase 7 Wave F) ──
   "pieceThread.you": "You",
   "pieceThread.emptyTitle": "No messages yet",
-  "pieceThread.emptyDescription": "Say hello — chases and questions live here now, not in email.",
-  "pieceThread.errorState": "Couldn't load this thread — try again in a moment.",
+  "pieceThread.emptyDescription": "Say hello. Chases and questions live here now, instead of email.",
+  "pieceThread.errorState": "Couldn't load this thread. Try again in a moment.",
   "pieceThread.composerAria": "Message",
   "pieceThread.composerPlaceholder": "Write a message…",
   "pieceThread.send": "Send",

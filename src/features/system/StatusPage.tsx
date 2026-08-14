@@ -4,7 +4,7 @@ import { Button, EmptyState, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { routes } from "../../app/routeMap";
+import { requestInvitePath } from "../auth/api/joinRequestSource";
 import {
   StatusHero,
   ServicesGrid,
@@ -53,7 +53,7 @@ export function StatusPage() {
         }
         sub={t("system:status.outro.sub")}
       >
-        <Button size="lg" to={routes.requestInvite}>
+        <Button size="lg" to={requestInvitePath("status")}>
           {t("system:status.outro.cta")}
         </Button>
       </Outro>

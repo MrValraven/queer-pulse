@@ -135,12 +135,12 @@ export const feed: Catalog = {
     ", and our safety team has your report",
   "moderation.blockDialog.title": "Block {name}?",
   "moderation.blockDialog.sub":
-    "They won't be able to message you, see your profile, or find you — and any connection between you will be removed. This works both ways.",
+    "They won't be able to message you, see your profile, or find you, and any connection between you will be removed. This works both ways.",
   "moderation.blockDialog.alsoReportLabel":
     "Also report {name} to our safety team",
   "moderation.blockDialog.submitCta": "Block {name}",
 
-  "moderation.reportConfirm.title": "Thank you — <em>we're on it</em>",
+  "moderation.reportConfirm.title": "Thank you, <em>we're on it</em>",
   "moderation.reportConfirm.body":
     "Our moderation team will review this post about {name}. For anything urgent, reach us directly at {email}.",
   "moderation.reportDialog.title": "Report this post",

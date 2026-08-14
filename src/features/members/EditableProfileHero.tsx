@@ -44,6 +44,7 @@ export function EditableProfileHero({
           <Reveal className={base.portraitWrap}>
             <AvatarEditor
               photo={draft.photo}
+              photoCrop={draft.avatarCrop}
               initials={profile.initials}
               tint={resolveTint(profile.tint)}
               name={`${draft.first} ${draft.last}`}

@@ -31,9 +31,9 @@ export interface DefaultMeta {
 
 export const defaultMeta: DefaultMeta = {
   siteName: "QueerPulse",
-  title: "QueerPulse — a queer professional network, rooted in Lisbon",
+  title: "QueerPulse: a queer professional network, rooted in Lisbon",
   description:
-    "QueerPulse — a quiet, vouched-for network for LGBTQ+ professionals, creatives and community in Lisbon. No ads, no algorithm.",
+    "QueerPulse: a quiet, vouched-for network for LGBTQ+ professionals, creatives and community in Lisbon. No ads, no algorithm.",
   image: "/og-default.png",
   twitterCard: "summary_large_image",
   twitterHandle: "@queerpulse",

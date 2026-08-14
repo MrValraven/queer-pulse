@@ -40,6 +40,10 @@ export interface GettingStartedStep {
   icon: IconType;
 }
 
+// XP granted per completed getting-started step (mirrors the backend
+// XP_RULES getting-started rule perUnit; see recognition.scoring.ts).
+export const GETTING_STARTED_STEP_XP = 25;
+
 export const GETTING_STARTED_STEPS: GettingStartedStep[] = [
   {
     key: "profile",

@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import { Button, SkeletonLine } from "../../shared/components/ui";
+import { Button, PhotoReframeModal, SkeletonLine } from "../../shared/components/ui";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUploadImage } from "../members/api/useUploadImage";
@@ -36,20 +37,39 @@ export function GatheringPhotosLive({
   const uploadImage = useUploadImage("gathering-photo");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
 
-  async function onPickFile(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    event.target.value = "";
-    if (!file) return;
+  /** Shared tail of both upload paths (direct GIF path + post-reframe path). */
+  async function uploadAndAttach(file: File, crop?: CropRect) {
     setUploading(true);
     try {
-      const { key } = await uploadImage(file);
+      const { key } = await uploadImage(file, { crop });
       await attachPhoto.mutateAsync({ key });
     } catch {
       showToast(t("gatherings:photos.uploadError"), "error");
     } finally {
       setUploading(false);
     }
+  }
+
+  function onPickFile(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    // GIFs bypass the reframer entirely (animation would be destroyed by the
+    // crop/re-encode path) and upload directly, as before.
+    if (file.type === "image/gif") {
+      void uploadAndAttach(file);
+      return;
+    }
+    setPendingFile(file);
+  }
+
+  async function handleCropConfirmed(crop: CropRect) {
+    if (!pendingFile) return;
+    const fileToUpload = pendingFile;
+    setPendingFile(null);
+    await uploadAndAttach(fileToUpload, crop);
   }
 
   return (
@@ -63,7 +83,7 @@ export function GatheringPhotosLive({
               accept="image/*"
               hidden
               aria-label={t("gatherings:photos.addCta")}
-              onChange={(event) => void onPickFile(event)}
+              onChange={onPickFile}
             />
             <Button
               variant="primary"
@@ -118,6 +138,15 @@ export function GatheringPhotosLive({
           ))
         )}
       </div>
+
+      {pendingFile && (
+        <PhotoReframeModal
+          file={pendingFile}
+          kind="gathering-photo"
+          onCancel={() => setPendingFile(null)}
+          onConfirm={(crop) => void handleCropConfirmed(crop)}
+        />
+      )}
     </div>
   );
 }

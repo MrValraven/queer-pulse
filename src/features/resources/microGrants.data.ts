@@ -54,15 +54,15 @@ export const CRITERIA_KEYS = [
 export const CURRENT: Grant[] = [
   {
     amount: "€800",
-    name: "Corpo Presente — touring exhibition costs",
-    description: "Lena Ferraz's embroidered textile works touring queer community spaces in Lisbon — covering transport, installation materials, and printing a proper catalogue.",
+    name: "Corpo Presente: touring exhibition costs",
+    description: "Lena Ferraz's embroidered textile works touring queer community spaces in Lisbon, covering transport, installation materials, and printing a proper catalogue.",
     tags: ["art", "trans", "textile"],
     status: "in-progress",
     statusLabel: "In progress",
   },
   {
     amount: "€500",
-    name: "Queer reading group starter kit — 12 groups",
+    name: "Queer reading group starter kit: 12 groups",
     description: "Books, hosting costs, and printed materials for 12 new reading groups across Lisbon. Each group gets a library of 6 titles to start from.",
     tags: ["reading", "community", "education"],
     status: "in-progress",
@@ -71,7 +71,7 @@ export const CURRENT: Grant[] = [
   {
     amount: "€1,200",
     name: "GAT Lisboa volunteer supplies (naloxone + testing kits)",
-    description: "Topping up the harm reduction supply stock at GAT Lisboa — naloxone kits, rapid test strips, and safer sex supplies for the next quarter of outreach nights.",
+    description: "Topping up the harm reduction supply stock at GAT Lisboa: naloxone kits, rapid test strips, and safer sex supplies for the next quarter of outreach nights.",
     tags: ["harm reduction", "health", "community"],
     status: "in-progress",
     statusLabel: "In progress",
@@ -89,7 +89,7 @@ export const PAST: Grant[] = [
   },
   {
     amount: "€400",
-    name: "Supper club sliding-scale meals — 6 editions",
+    name: "Supper club sliding-scale meals: 6 editions",
     description: "Subsidising twelve seats per supper club edition for community members in financial difficulty. Six months of monthly dinners.",
     tags: ["food", "community", "access"],
     status: "awarded",
@@ -97,7 +97,7 @@ export const PAST: Grant[] = [
   },
   {
     amount: "€900",
-    name: "Harm reduction zine — 2,000 copies",
+    name: "Harm reduction zine: 2,000 copies",
     description: "Printing and distribution of a queer harm reduction zine across Lisbon venues, clinics, and community spaces. Plain language, honest, no moralising.",
     tags: ["harm reduction", "print", "health"],
     status: "awarded",
@@ -105,7 +105,7 @@ export const PAST: Grant[] = [
   },
   {
     amount: "€350",
-    name: "Emergency deaf/HoH queer group — interpreter fees",
+    name: "Emergency deaf/HoH queer group: interpreter fees",
     description: "Covering sign language interpreter costs for four community events to make them accessible to deaf and hard-of-hearing members.",
     tags: ["accessibility", "deaf", "community"],
     status: "awarded",
@@ -143,7 +143,7 @@ export const PANEL = [
   { title: memberName("beatriz"), body: "Ceramicist · Graça" },
   {
     title: "+ 2 community members",
-    body: "Rotating seats — open to any member who hasn't applied this round",
+    body: "Rotating seats, open to any member who hasn't applied this round",
   },
 ];
 

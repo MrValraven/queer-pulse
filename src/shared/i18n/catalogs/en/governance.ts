@@ -15,7 +15,7 @@ export const governance: Catalog = {
   // ── Meta (search/AI) ────────────────────────────────────────────────────
   "page.meta.title": "How QueerPulse is governed: council, finances, appeals",
   "page.meta.description":
-    "How QueerPulse is run — community health reports, moderation and appeals, the advisory council, platform principles, quarterly finances, and how to raise a concern.",
+    "How QueerPulse is run: community health reports, moderation and appeals, the advisory council, platform principles, quarterly finances, and how to raise a concern.",
 
   // ── Side nav ────────────────────────────────────────────────────────────
   "nav.health": "Community health",
@@ -35,7 +35,7 @@ export const governance: Catalog = {
   // ── Governing documents (footer index) ─────────────────────────────────
   "governingDocs.constitution.label": "Constitution",
   "governingDocs.constitution.blurb":
-    "The formal organising document — twelve plain-language articles.",
+    "The formal organising document, twelve plain-language articles.",
   "governingDocs.codeOfConduct.label": "Code of Conduct",
   "governingDocs.codeOfConduct.blurb":
     "What we expect of each other, and what happens when it's breached.",
@@ -51,7 +51,7 @@ export const governance: Catalog = {
   "sections.health.prose1":
     "Twelve reports were filed this quarter. All were reviewed within 48 hours. Three resulted in member removal (repeated Code of Care violations after warning). Eight were resolved with direct communication and no formal action.",
   "sections.health.prose2":
-    "Two moderation appeals were filed. One was upheld — we had made the wrong call and reversed it. We publish this because transparency is how trust gets built.",
+    "Two moderation appeals were filed. One was upheld. We had made the wrong call and reversed it. We publish this because transparency is how trust gets built.",
 
   "health.stat.activeMembers.label": "Active members",
   "health.stat.retention.label": "Member retention rate",
@@ -79,7 +79,7 @@ export const governance: Catalog = {
 
   "steps.reportFiled.title": "Report filed",
   "steps.reportFiled.text":
-    "Any member can report another member, a gathering, a board post, or any content. Reports are confidential — the reported person is not told who filed the report.",
+    "Any member can report another member, a gathering, a board post, or any content. Reports are confidential. The reported person is not told who filed the report.",
   "steps.review.title": "Review within 48 hours",
   "steps.review.text":
     "The moderation team reviews the report within 48 hours. For urgent safety issues, same-day. The person who filed is updated at each stage.",
@@ -139,7 +139,7 @@ export const governance: Catalog = {
   "sections.finances.eventsHeading": "How event finances work",
   "sections.finances.surplusHeading": "What we do with the surplus.",
   "sections.finances.surplusBody":
-    "Quarterly surpluses go into an operational reserve. Our target is three months of running costs — ~{target}.",
+    "Quarterly surpluses go into an operational reserve. Our target is three months of running costs, ~{target}.",
   "sections.finances.reserveProgress":
     "Operational reserve: {current} of {target} target",
   "sections.finances.surplusRedirect":
@@ -149,24 +149,24 @@ export const governance: Catalog = {
   "sections.finances.partnerScope.mentalHealthFund": "the Mental Health Fund",
   "sections.finances.partnerScope.communityEvents": "community events",
   "sections.finances.noCorporateFunding":
-    "We do not accept funding from corporations, brands, or government bodies whose interests could conflict with community autonomy. If that ever changes, we'll say so here first — and the community will vote on it.",
+    "We do not accept funding from corporations, brands, or government bodies whose interests could conflict with community autonomy. If that ever changes, we'll say so here first, and the community will vote on it.",
 
   // ── Decision log ────────────────────────────────────────────────────────
   "sections.decisions.eyebrow": "Recent decisions",
   "sections.decisions.title": "What changed and <em>why.</em>",
 
   "decisions.slidingScale.lead":
-    "May 2026 — Sliding scale introduced for gatherings.",
+    "May 2026: Sliding scale introduced for gatherings.",
   "decisions.slidingScale.body":
     "Following a forum discussion by Catarina Vaz, the council agreed to implement a sliding scale for all paid gatherings. 23 members participated.",
-  "decisions.forumLaunched.lead": "April 2026 — Forum launched.",
+  "decisions.forumLaunched.lead": "April 2026: Forum launched.",
   "decisions.forumLaunched.body":
     "Following member requests for a place to discuss longer-form topics. Categories and guidelines co-designed with 12 members over three weeks.",
   "decisions.visibilityDefaults.lead":
-    "March 2026 — Visibility defaults made more conservative.",
+    "March 2026: Visibility defaults made more conservative.",
   "decisions.visibilityDefaults.body":
     'New members now default to "network only" instead of "open", and can open up when comfortable.',
-  "decisions.languageToggle.lead": "February 2026 — Language toggle added.",
+  "decisions.languageToggle.lead": "February 2026: Language toggle added.",
   "decisions.languageToggle.body":
     "PT/EN toggle added to all pages following requests from Portuguese-speaking members.",
 

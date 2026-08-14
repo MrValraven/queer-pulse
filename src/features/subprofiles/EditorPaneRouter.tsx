@@ -57,15 +57,19 @@ export function EditorPaneRouter({
   // Switching rail panes only swaps `hidden` on already-mounted panels, so a
   // screen-reader user gets no signal that the content changed. Move focus to
   // the new pane's heading on each switch (but not the initial mount, which
-  // would otherwise steal focus + scroll on page load).
+  // would otherwise steal focus + scroll on page load and flash the focus ring).
+  //
+  // We compare against the PREVIOUS pane value rather than a "did mount" flag:
+  // the flag guard is defeated by StrictMode's double-invoked effects (the ref
+  // survives the simulated remount, so the replay focuses on first load). Seeding
+  // the ref with the initial pane means the first run — and its StrictMode replay
+  // — both see an unchanged pane and skip; focus only moves on a real switch.
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const didMountRef = useRef(false);
+  const prevPaneRef = useRef(pane);
   useEffect(() => {
-    if (!didMountRef.current) {
-      didMountRef.current = true;
-      return;
-    }
-    headingRef.current?.focus();
+    if (prevPaneRef.current === pane) return;
+    prevPaneRef.current = pane;
+    headingRef.current?.focus({ preventScroll: true });
   }, [pane]);
 
   return (
@@ -80,6 +84,7 @@ export function EditorPaneRouter({
       <div hidden={pane !== "identity"} className="ed-grid">
         <SubprofileIdentityFields
           avatarUrl={meta.avatarUrl}
+          avatarCrop={meta.avatarCrop}
           onAvatarUrlChange={meta.setAvatarUrl}
           onAvatarPreviewChange={meta.setAvatarPreview}
           displayName={meta.displayName}

@@ -1045,6 +1045,25 @@
   color: var(--ink-40);
   line-height: 1.5;
 }
+.onlineToggleRow {
+  margin-bottom: 14px;
+}
+.onlineNote {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border-radius: 12px;
+  background: rgba(var(--plum-rgb), 0.04);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--plum);
+}
+.onlineNote svg {
+  flex-shrink: 0;
+  color: var(--jade);
+}
 
 /* ===== Gallery ===== */
 .galGrid {

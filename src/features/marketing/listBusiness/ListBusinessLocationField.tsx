@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { FiCheck } from "react-icons/fi";
-import { Button, FormField } from "../../../shared/components/ui";
+import { FiCheck, FiGlobe } from "react-icons/fi";
+import { Button, CheckLine, FormField } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { LocationPickerMap } from "../LocationPickerMap";
@@ -264,6 +264,22 @@ export function ListBusinessLocationField({
 
   return (
     <>
+      <div className={styles.onlineToggleRow}>
+        <CheckLine
+          checked={draft.online}
+          onChange={(online) => set({ online })}
+          title={t("marketing:listBusiness.step3.onlineOnly.title")}
+          sub={t("marketing:listBusiness.step3.onlineOnly.sub")}
+        />
+      </div>
+
+      {draft.online ? (
+        <div className={styles.onlineNote} role="note">
+          <FiGlobe aria-hidden />
+          <span>{t("marketing:listBusiness.step3.onlineOnly.note")}</span>
+        </div>
+      ) : (
+        <>
       <AddressLocateSection
         address={draft.address}
         hood={draft.hood}
@@ -309,6 +325,8 @@ export function ListBusinessLocationField({
             </button>
           )}
         </div>
+      )}
+        </>
       )}
     </>
   );

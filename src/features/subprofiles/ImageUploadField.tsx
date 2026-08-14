@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
 import { ConfirmDialog, ImageSlot } from "../../shared/components/ui";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type UploadKind } from "../members/api/useUploadImage";
 import { PhotoPickerModal } from "../members/PhotoPickerModal";
@@ -8,6 +9,12 @@ import styles from "./SubprofileEditor.module.css";
 
 interface ImageUploadFieldProps {
   value: string;
+  /** Saved reframe crop for `value` (the currently-committed image), shown
+   *  until a fresh pick this session supersedes it. Pass this ONLY when the
+   *  rendered slot's box is locked to the crop's own pixel aspect (e.g. a
+   *  `circle` avatar slot where `width === height`) — never for a freeform
+   *  (work-image) slot, whose box aspect doesn't match an arbitrary crop. */
+  crop?: CropRect;
   onChange: (key: string) => void;
   /**
    * Optional: report the local, immediately-renderable preview URL to the
@@ -44,6 +51,7 @@ interface ImageUploadFieldProps {
  */
 export function ImageUploadField({
   value,
+  crop,
   onChange,
   onPreviewChange,
   kind,
@@ -54,9 +62,13 @@ export function ImageUploadField({
   const { t } = useTranslation();
   const [pickerOpen, setPickerOpen] = useState(false);
   const [confirmRemoveOpen, setConfirmRemoveOpen] = useState(false);
-  // The picked (key, previewUrl) pair. Shown only while `pick.key === value`;
-  // once the parent reverts `value` the pick is stale (see below).
-  const [pick, setPick] = useState<{ key: string; url: string } | null>(null);
+  // The picked (key, previewUrl, crop) triple. Shown only while `pick.key ===
+  // value`; once the parent reverts `value` the pick is stale (see below).
+  const [pick, setPick] = useState<{
+    key: string;
+    url: string;
+    crop?: CropRect;
+  } | null>(null);
   const resolvedPlaceholder =
     placeholder ?? t("subprofiles:imageUpload.defaultPlaceholder");
 
@@ -65,6 +77,9 @@ export function ImageUploadField({
   // hidden. Its blob URL is revoked when the pick is replaced or on unmount (the
   // cleanup below) — never left showing, never leaked.
   const previewUrl = pick && pick.key === value ? pick.url : null;
+  // The crop to render: a fresh pick's own crop while it's showing, else the
+  // saved crop the parent passed in for the currently-committed `value`.
+  const displayedCrop = pick && pick.key === value ? pick.crop : crop;
 
   useEffect(() => {
     // Revoke the previous pick's blob when it's replaced, and the last one on
@@ -74,10 +89,10 @@ export function ImageUploadField({
     return () => URL.revokeObjectURL(pick.url);
   }, [pick]);
 
-  function handlePick(key: string, newPreviewUrl: string) {
+  function handlePick(key: string, newPreviewUrl: string, newCrop?: CropRect) {
     // Single-slot field — replacing `pick` revokes the previous blob via the
     // effect cleanup above.
-    setPick({ key, url: newPreviewUrl });
+    setPick({ key, url: newPreviewUrl, crop: newCrop });
     onChange(key);
     onPreviewChange?.(newPreviewUrl);
   }
@@ -105,6 +120,11 @@ export function ImageUploadField({
         height={size}
         radius={14}
         placeholder={resolvedPlaceholder}
+        // `circle` is the only mode where width===height, matching a locked
+        // 1:1 avatar crop's own pixel aspect — the non-circle mode (cover /
+        // work-image) box isn't guaranteed to match its crop's aspect, so it
+        // always renders uncropped regardless of what the caller passed in.
+        crop={circle ? displayedCrop : undefined}
       />
       <div className={styles.imgActions}>
         <button

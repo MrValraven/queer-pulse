@@ -38,9 +38,9 @@ export interface VettedGroup {
 }
 
 const SHARED_NORMS = [
-  "No hate speech — transphobia, racism, whorephobia, serophobia get you removed.",
+  "No hate speech: transphobia, racism, whorephobia, serophobia get you removed.",
   "Every listing states the rent, up front. No \"message me for price\".",
-  "Every listing describes accessibility honestly — stairs, lift, step-free, bathroom.",
+  "Every listing describes accessibility honestly: stairs, lift, step-free, bathroom.",
   "No brokers, no agencies, no finder's fees. Neighbours helping neighbours.",
   "What's shared here stays here. Don't screenshot people out of the group.",
 ];
@@ -55,7 +55,7 @@ const SHARED_SCREENING: GroupScreeningQuestion[] = [
   },
   {
     id: "values",
-    prompt: "Our house rules are on this page — anything there you'd push back on?",
+    prompt: "Our house rules are on this page. Anything there you'd push back on?",
     required: true,
   },
 ];
@@ -122,7 +122,7 @@ export const VETTED_GROUPS: VettedGroup[] = [
     nameEm: "queer housing",
     city: "Lisbon",
     blurb:
-      "Accessible, affordable housing for disabled queer and trans folks — every listing here has to spell out access honestly, because we need it to.",
+      "Accessible, affordable housing for disabled queer and trans folks. Every listing here has to spell out access honestly, because we need it to.",
     isAccessGated: true,
     memberCount: 58,
     norms: SHARED_NORMS,

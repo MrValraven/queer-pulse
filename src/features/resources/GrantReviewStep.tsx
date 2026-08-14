@@ -70,7 +70,7 @@ export function ReviewStep({
           {t("resources:microGrants.apply.review.budgetLabel")}
         </div>
         <div className={styles.reviewVal}>
-          <strong>€{total.toFixed(0)}</strong> — {budgetItems}
+          <strong>€{total.toFixed(0)}</strong>, {budgetItems}
         </div>
       </div>
       <div className={styles.reviewBlock}>

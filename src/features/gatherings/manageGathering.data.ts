@@ -24,10 +24,10 @@ export const GATHERING_DETAILS = [
   },
 ];
 
-export const GATHERING_TITLE = "Pride Brunch — June Edition";
+export const GATHERING_TITLE = "Pride Brunch: June Edition";
 
 export const GATHERING_DESCRIPTION =
-  "A slow, joyful Pride-week brunch for queer Lisbon. Good food, no agenda, no strangers for long. We'll have the terrace to ourselves from 11am. Bring your people, or come solo — you'll leave with new ones.";
+  "A slow, joyful Pride-week brunch for queer Lisbon. Good food, no agenda, no strangers for long. We'll have the terrace to ourselves from 11am. Bring your people, or come solo. You'll leave with new ones.";
 
 export const ATTENDEE_COUNT = 14;
 
@@ -132,7 +132,7 @@ export const PREVIOUS_MESSAGES = [
     subject: "What to bring",
     sentAt: new Date(2026, 6, 15),
     preview:
-      "Just yourselves — food and drinks are covered. We'll have a small quiet corner for anyone who needs a break from the crowd…",
+      "Just yourselves. Food and drinks are covered. We'll have a small quiet corner for anyone who needs a break from the crowd…",
     openedCount: 9,
   },
 ];

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiArrowRight, FiHeart } from "react-icons/fi";
+import { FiArrowRight, FiGlobe, FiHeart } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -36,16 +36,23 @@ interface Props {
   ownerRef?: string;
 }
 
-export function DirectorySpaceAside({
-  place,
-  preview = false,
-  ownerRef,
-}: Props) {
+/** The listing's location block: an "Online business" panel for an online-only
+ *  listing, otherwise the mini-map (or decorative placeholder) plus the address
+ *  line. Kept out of `DirectorySpaceAside` so that component stays focused. */
+function AsideLocation({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
-  const igUrl = place.social.instagram
-    ? `https://instagram.com/${place.social.instagram.replace(/^@/, "")}`
-    : undefined;
+
+  if (place.online) {
+    return (
+      <div className={s.onlinePlace}>
+        <FiGlobe aria-hidden />
+        <div>
+          <strong className={s.addrName}>{place.name}</strong>
+          <span>{t("marketing:directory.detail.onlineBusiness")}</span>
+        </div>
+      </div>
+    );
+  }
 
   // Live listings carry their pin on the DTO; demo places have it hand-placed
   // in BUSINESS_COORDS by slug (same fallback order as localPlaces.ts). When
@@ -63,25 +70,43 @@ export function DirectorySpaceAside({
     !!address && address.toLowerCase() !== place.name.trim().toLowerCase();
 
   return (
+    <>
+      <div className={s.map}>
+        {coords ? (
+          <LocationMiniMap
+            latitude={coords.latitude}
+            longitude={coords.longitude}
+            ariaLabel={t("marketing:directory.detail.mapAria", {
+              name: place.name,
+            })}
+          />
+        ) : (
+          <DirectoryMapPlaceholder />
+        )}
+      </div>
+      <div className={s.addr}>
+        <strong className={s.addrName}>{place.name}</strong>
+        {showAddress && place.address}
+      </div>
+    </>
+  );
+}
+
+export function DirectorySpaceAside({
+  place,
+  preview = false,
+  ownerRef,
+}: Props) {
+  const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  const igUrl = place.social.instagram
+    ? `https://instagram.com/${place.social.instagram.replace(/^@/, "")}`
+    : undefined;
+
+  return (
     <aside className={s.side}>
       <div className={s.sideCard}>
-        <div className={s.map}>
-          {coords ? (
-            <LocationMiniMap
-              latitude={coords.latitude}
-              longitude={coords.longitude}
-              ariaLabel={t("marketing:directory.detail.mapAria", {
-                name: place.name,
-              })}
-            />
-          ) : (
-            <DirectoryMapPlaceholder />
-          )}
-        </div>
-        <div className={s.addr}>
-          <strong className={s.addrName}>{place.name}</strong>
-          {showAddress && place.address}
-        </div>
+        <AsideLocation place={place} />
         {place.savedCount != null && place.savedCount > 0 && (
           <div className={s.savedSignal}>
             <FiHeart aria-hidden />

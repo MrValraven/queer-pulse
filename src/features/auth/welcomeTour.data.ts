@@ -35,7 +35,7 @@ export const VOUCH = {
   initials: "IT",
   name: memberName("ines"),
   role: "Graphic Designer · Príncipe Real",
-  note: "Knew you'd be a great fit. Looking forward to seeing you at the next gathering — I might finally have someone to talk type with.",
+  note: "Knew you'd be a great fit. Looking forward to seeing you at the next gathering. I might finally have someone to talk type with.",
 };
 
 /**
@@ -128,7 +128,7 @@ export const TOUR_COMMUNITIES = [
   },
   {
     name: "Queer & of Colour",
-    description: "An intersectional space — race and queerness aren't separate.",
+    description: "An intersectional space: race and queerness aren't separate.",
   },
   {
     name: "Queer Elders (50+)",
@@ -140,7 +140,7 @@ export const TOUR_COMMUNITIES = [
   },
   {
     name: "Disabled Queers",
-    description: "Disability, chronic illness, and queerness — both identities belong.",
+    description: "Disability, chronic illness, and queerness: both identities belong.",
   },
   {
     name: "Queer Mental Health Peer Support",

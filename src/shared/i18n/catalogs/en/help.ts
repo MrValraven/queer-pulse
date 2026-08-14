@@ -29,7 +29,7 @@ export const help: Catalog = {
   "admin.listings.title":
     "Listings",
   "admin.listings.intro":
-    "The review desk for member-submitted directory listings — the queer-friendly venues, cafés, and shops people add to the map. You decide what goes live.",
+    "The review desk for member-submitted directory listings: the queer-friendly venues, cafés, and shops people add to the map. You decide what goes live.",
   "admin.listings.use":
     "Filter by status: In review, Question, or Live.\nOpen a listing to preview its photos, details, and who submitted it.\nMove it to Live, send the owner a quick question, or remove it.",
   "admin.listings.demo":
@@ -53,7 +53,7 @@ export const help: Catalog = {
   "auth.onboarding.title":
     "Onboarding",
   "auth.onboarding.intro":
-    "This short, guided wizard sets up your profile the moment you join. Over a few steps you add a photo, agree to the community norms, tell us what brings you here, and pick a few communities to follow — so the network feels like yours from day one.",
+    "This short, guided wizard sets up your profile the moment you join. Over a few steps you add a photo, agree to the community norms, tell us what brings you here, and pick a few communities to follow, so the network feels like yours from day one.",
   "auth.onboarding.use":
     "Follow the \"Step X of N\" steps in order; you can go back at any point.\nAdd a photo and choose the intentions that fit you.\nPick a few communities to join, then finish on the \"you're all set\" screen.",
   "auth.onboarding.demo":
@@ -69,15 +69,15 @@ export const help: Catalog = {
   "communities.hub.title":
     "Communities",
   "communities.hub.intro":
-    "This is where you find your people. Communities are member-run groups built around a shared interest, identity or cause — browse them, then join the ones that feel like home.",
+    "This is where you find your people. Communities are member-run groups built around a shared interest, identity or cause. Browse them, then join the ones that feel like home.",
   "communities.hub.use":
-    "Skim the cards to see what each community is about.\nTap a category chip to filter by vibe — social, arts, activism, support and more.\nOpen one to read its full page, or hit Join to become a member.",
+    "Skim the cards to see what each community is about.\nTap a category chip to filter by vibe: social, arts, activism, support and more.\nOpen one to read its full page, or hit Join to become a member.",
   "communities.hub.demo":
     "groups like Queer Runners Lisboa for weekend runs or Rainbow Arts Collective for makers.",
   "community.detail.title":
     "Community",
   "community.detail.intro":
-    "The home page of a single community — who's in it, what it's about, and everything happening inside. From here you can join, save it for later, or dive into its tabs.",
+    "The home page of a single community: who's in it, what it's about, and everything happening inside. From here you can join, save it for later, or dive into its tabs.",
   "community.detail.use":
     "Read the intro and meta to get a feel for the group.\nJoin to unlock posting and RSVPs, or save it to revisit later.\nUse the tabs to explore the pulse, discussion, members and events.",
   "community.detail.demo":
@@ -85,7 +85,7 @@ export const help: Catalog = {
   "community.events.title":
     "Events",
   "community.events.intro":
-    "Everything the community is gathering for — the next meet-up up top, with past ones and their recaps below. This is how a group turns online into offline.",
+    "Everything the community is gathering for: the next meet-up up top, with past ones and their recaps below. This is how a group turns online into offline.",
   "community.events.use":
     "Check the upcoming event and RSVP to save your spot.\nBrowse past events to see what the group has done.\nOpen any event for the full details and location.",
   "community.events.demo":
@@ -93,15 +93,15 @@ export const help: Catalog = {
   "community.forum.title":
     "Discussion",
   "community.forum.intro":
-    "The community's conversation board. Members start threads to ask questions, share news and plan things together — search what's there, or add your own.",
+    "The community's conversation board. Members start threads to ask questions, share news and plan things together. Search what's there, or add your own.",
   "community.forum.use":
     "Search or filter to find a thread that interests you.\nOpen a thread to read the replies and add yours.\nStart a new post from the box at the bottom (members only).",
   "community.forum.demo":
-    "a thread like \"June meetup — where should we go?\" where members weigh in with ideas.",
+    "a thread like \"June meetup: where should we go?\" where members weigh in with ideas.",
   "connect.connections.title":
     "Connections",
   "connect.connections.intro":
-    "This is your relationship hub — everyone you're connected to, plus the requests, vouches and blocks around them. It's how you keep track of your circle here.",
+    "This is your relationship hub: everyone you're connected to, plus the requests, vouches and blocks around them. It's how you keep track of your circle here.",
   "connect.connections.use":
     "Switch tabs to see connections, incoming and sent requests, vouches or blocks.\nAccept or decline requests waiting for you.\nMessage a connection or invite someone new.",
   "connect.connections.demo":
@@ -117,7 +117,7 @@ export const help: Catalog = {
   "economy.grants.title":
     "Grants",
   "economy.grants.intro":
-    "A curated map of funding for queer projects and people — from community micro grants to Portuguese foundations and EU programmes. It saves you the hunt and shows what each fund is really for.",
+    "A curated map of funding for queer projects and people: from community micro grants to Portuguese foundations and EU programmes. It saves you the hunt and shows what each fund is really for.",
   "economy.grants.use":
     "Filter by who it's for: individuals, organisations, arts, or EU-wide.\nOpen a grant to see the amount, deadline status, and how to frame an application.\nRead the short guide on writing a strong, honest application.",
   "economy.grants.demo":
@@ -125,7 +125,7 @@ export const help: Catalog = {
   "economy.hub.title":
     "Economy",
   "economy.hub.intro":
-    "The Economy hub is where the community's working life lives — a home base for finding jobs, growing a freelance practice, and learning what fair pay looks like. It gathers the incubator, the freelancer toolkit, and salary transparency in one place.",
+    "The Economy hub is where the community's working life lives: a home base for finding jobs, growing a freelance practice, and learning what fair pay looks like. It gathers the incubator, the freelancer toolkit, and salary transparency in one place.",
   "economy.hub.use":
     "Switch between the Incubator, Freelance, and Salary tabs to explore each side.\nBrowse queer-run jobs or open the freelancer tools you need.\nCheck the salary tables to sanity-check what a role should pay.",
   "economy.hub.demo":
@@ -133,15 +133,15 @@ export const help: Catalog = {
   "economy.jobs.title":
     "Jobs",
   "economy.jobs.intro":
-    "A jobs board for roles at queer-run, queer-led, and genuinely inclusive workplaces — every listing carries safety signals so you know what you're walking into. It's where the community hires the community.",
+    "A jobs board for roles at queer-run, queer-led, and genuinely inclusive workplaces. Every listing carries safety signals so you know what you're walking into. It's where the community hires the community.",
   "economy.jobs.use":
-    "Filter by category like design, tech, or care to narrow the board.\nOpen a listing to read the full role, the offer, and who reviews applications.\nBookmark the ones you like, then apply — or post your own with “Post a job”.",
+    "Filter by category like design, tech, or care to narrow the board.\nOpen a listing to read the full role, the offer, and who reviews applications.\nBookmark the ones you like, , or post your own with “Post a job”.",
   "economy.jobs.demo":
     "a listing like Junior Graphic Designer at Atelier Pulso, a queer-run studio in Príncipe Real, where applications are read by the founder herself.",
   "economy.skills.title":
     "Skills",
   "economy.skills.intro":
-    "A skill-share board where members offer what they know and ask for what they want to learn — from branding to backend engineering to wheel-throwing. It's peer teaching, not a marketplace, and everything is shared within the community.",
+    "A skill-share board where members offer what they know and ask for what they want to learn: from branding to backend engineering to wheel-throwing. It's peer teaching, kept free and shared within the community.",
   "economy.skills.use":
     "Browse by category, or look under “Offering” and “Looking to learn”.\nReach out to a member whose offer fits what you need.\nShare your own skill, or list a workshop for others to join.",
   "economy.skills.demo":
@@ -149,31 +149,31 @@ export const help: Catalog = {
   "economy.tools.title":
     "Invoice generator",
   "economy.tools.intro":
-    "A free invoice generator that turns your details into a print-ready fatura-recibo, right in the browser — no account, no data leaves your device. Built for freelancers navigating Portuguese self-employment.",
+    "A free invoice generator that turns your details into a print-ready fatura-recibo, right in the browser. No account, no data leaves your device. Built for freelancers navigating Portuguese self-employment.",
   "economy.tools.use":
     "Fill in your details and your client's, then add line items for the work.\nSet the IVA rate, or mark yourself exempt if that applies.\nDownload the PDF to print or send.",
   "economy.tools.demo":
-    "a sample invoice starts with a line like “Brand identity — logo + guidelines” at €1,200, so you can see the layout before editing your own.",
+    "a sample invoice starts with a line like “Brand identity: logo + guidelines” at €1,200, so you can see the layout before editing your own.",
   "events.detail.title":
     "Event",
   "events.detail.intro":
-    "The full page for a single gathering — what it is, when and where it happens, who's hosting, and how many spots are left. Everything you need to decide whether to come along.",
+    "The full page for a single gathering: what it is, when and where it happens, who's hosting, and how many spots are left. Everything you need to decide whether to come along.",
   "events.detail.use":
     "Read the description and check the date, neighbourhood, and host.\nGlance at the spots line to see how much room is left.\nTap the main button to reserve a seat, RSVP, or message the host.\nBrowse more gatherings from the rail at the bottom.",
   "events.detail.demo":
-    "a page like Inside Beatriz's Ceramics Studio in Graça, hosted by Beatriz — a slow Sunday with the kiln, tea, and clay to touch, limited to a handful of people.",
+    "a page like Inside Beatriz's Ceramics Studio in Graça, hosted by Beatriz: a slow Sunday with the kiln, tea, and clay to touch, limited to a handful of people.",
   "events.hub.title":
     "Events",
   "events.hub.intro":
-    "This is where you find out what's on across the queer community — gatherings we host and ones run by people in the network, all in one place. It's the fastest way to see what's happening tonight, this week, or later this month.",
+    "This is where you find out what's on across the queer community: gatherings we host and ones run by people in the network, all in one place. It's the fastest way to see what's happening tonight, this week, or later this month.",
   "events.hub.use":
     "Start on Highlights for a hand-picked few worth showing up for.\nSwitch to Browse to scroll everything upcoming and load more as you go.\nOpen Calendar to see events laid out by date.\nTap any event to read the details and RSVP.",
   "events.hub.demo":
-    "the lead spot might feature something like Queer Supper Club №12 in Mouraria — twelve seats, wine brought by guests, address shared the morning of.",
+    "the lead spot might feature something like Queer Supper Club №12 in Mouraria: twelve seats, wine brought by guests, address shared the morning of.",
   "feed.hub.title":
     "Feed",
   "feed.hub.intro":
-    "Your feed is the home timeline — a running pulse of what your communities, gatherings and people are posting, so you always know what's happening without hunting for it.",
+    "Your feed is the home timeline: a running pulse of what your communities, gatherings and people are posting, so you always know what's happening without hunting for it.",
   "feed.hub.use":
     "Switch tabs to filter by communities, gatherings, new people or posts.\nScroll to catch up on the latest activity.\nLike, reply or connect straight from a card.\nOpen the sidebar to see suggested members and upcoming gatherings.",
   "feed.hub.demo":
@@ -181,7 +181,7 @@ export const help: Catalog = {
   "forum.hub.title":
     "Forum",
   "forum.hub.intro":
-    "The forum is where the community thinks out loud together — longer conversations about housing, health, activism, arts and everyday life, organised so you can find and follow what matters to you.",
+    "The forum is where the community thinks out loud together: longer conversations about housing, health, activism, arts and everyday life, organised so you can find and follow what matters to you.",
   "forum.hub.use":
     "Browse the latest threads, or pick a category in the sidebar to narrow the topic.\nSort by newest or most active to see what's moving right now.\nTap a thread to read the full discussion and add your reply.\nUse New post to start your own conversation.",
   "forum.hub.demo":
@@ -189,15 +189,15 @@ export const help: Catalog = {
   "forum.thread.title":
     "Thread",
   "forum.thread.intro":
-    "This is a single discussion in full — the original post at the top, followed by everyone's replies. It's the place to read the whole conversation and add your own voice.",
+    "This is a single discussion in full: the original post at the top, followed by everyone's replies. It's the place to read the whole conversation and add your own voice.",
   "forum.thread.use":
     "Read the original post and the replies beneath it.\nLike or bookmark posts you want to remember, and sort replies oldest or newest.\nWrite in the reply box to answer the thread, or reply under a specific comment to keep a sub-thread together.\nUse the report option if something breaks the community guidelines.",
   "forum.thread.demo":
-    "a thread like \"Trans-affirming healthcare in Lisbon — the full guide\", where members share affirming clinics and answer each other's questions.",
+    "a thread like \"Trans-affirming healthcare in Lisbon: the full guide\", where members share affirming clinics and answer each other's questions.",
   "governance.hub.title":
     "Governance",
   "governance.hub.intro":
-    "The open window into how QueerPulse is run — who decides, how money is spent, and how the community stays safe. Transparency is the whole point.",
+    "The open window into how QueerPulse is run: who decides, how money is spent, and how the community stays safe. Transparency is the whole point.",
   "governance.hub.use":
     "Use the side nav to jump between health, moderation, the council, principles, finances, and decisions.\nRead the quarterly health snapshot to see how the platform is doing.\nOpen a governing document, like the constitution or transparency report, for the full detail.",
   "governance.hub.demo":
@@ -205,15 +205,15 @@ export const help: Catalog = {
   "home.landing.title":
     "Welcome",
   "home.landing.intro":
-    "This is the front door to QueerPulse — a small, member-run network for queer people in Lisboa, where every member is vouched in rather than chasing followers. The homepage is your quick tour of what you'll find inside: people, communities, gatherings and support.",
+    "This is the front door to QueerPulse: a small, member-run network for queer people in Lisboa, where every member is vouched in rather than chasing followers. The homepage is your quick tour of what you'll find inside: people, communities, gatherings and support.",
   "home.landing.use":
     "Read the hero and scroll down to see who's here and what the network is for.\nRequest an invite to start your own membership.\nExplore members and communities to get a feel before you join.",
   "home.landing.demo":
-    "the landing sets the tone with lines like \"Your people, right here in Lisboa\" — a vouched-in network, not another feed.",
+    "the landing sets the tone with lines like \"Your people, right here in Lisboa\": a vouched-in network of people you actually know.",
   "housing.flatmates.title":
     "Flatmates",
   "housing.flatmates.intro":
-    "Profiles of people looking to share a home — both those offering a room and those seeking one. It's a gentler way to find housemates who actually fit, before there's even a lease.",
+    "Profiles of people looking to share a home: both those offering a room and those seeking one. It's a gentler way to find housemates who actually fit, before there's even a lease.",
   "housing.flatmates.use":
     "Filter by area, budget, move-in date and lifestyle tags.\nRead a profile to see what someone's like to live with.\nSay hello to start a conversation.\nPost your own profile so others can find you.",
   "housing.flatmates.demo":
@@ -221,7 +221,7 @@ export const help: Catalog = {
   "housing.hub.title":
     "Housing",
   "housing.hub.intro":
-    "Homes and rooms shared by and for the community, so you can find a place to live among people who get you. Switch to the Flatmates tab to find the people, not just the rooms.",
+    "Homes and rooms shared by and for the community, so you can find a place to live among people who get you. Switch to the Flatmates tab to find the people behind the rooms.",
   "housing.hub.use":
     "Browse the Housing tab for rooms, flats and sublets.\nUse the filters to match your budget, area and dates.\nOpen a listing to see photos and message the host.\nSwitch to Flatmates to find someone to share with.",
   "housing.hub.demo":
@@ -229,7 +229,7 @@ export const help: Catalog = {
   "housing.listing.title":
     "Housing listing",
   "housing.listing.intro":
-    "The full details of one home or room — photos, price, what's included and who's offering it. This is where you get in touch and take the next step.",
+    "The full details of one home or room: photos, price, what's included and who's offering it. This is where you get in touch and take the next step.",
   "housing.listing.use":
     "Look through the photos and read what's on offer.\nCheck the price, neighbourhood and move-in date.\nSave the listing or message the host directly.\nReport it if something doesn't seem right.",
   "housing.listing.demo":
@@ -237,7 +237,7 @@ export const help: Catalog = {
   "local.directory.title":
     "Local directory",
   "local.directory.intro":
-    "A living map of queer-run and queer-loving places across the city — cafés, bookshops, studios, bars and services worth your time. It's how you find the spots where you can just be yourself.",
+    "A living map of queer-run and queer-loving places across the city: cafés, bookshops, studios, bars and services worth your time. It's how you find the spots where you can just be yourself.",
   "local.directory.use":
     "Search or pick a category to narrow the list.\nOpen the Refine drawer to filter by vibe or safe-space verification.\nSwitch between List and Map to browse the way you prefer.\nTap a place to see its full details.",
   "local.directory.demo":
@@ -245,7 +245,7 @@ export const help: Catalog = {
   "local.directoryDetail.title":
     "Place details",
   "local.directoryDetail.intro":
-    "Everything about one place in the directory — photos, opening hours, what makes it welcoming, and how to get there. This is where you decide if it's your kind of spot.",
+    "Everything about one place in the directory: photos, opening hours, what makes it welcoming, and how to get there. This is where you decide if it's your kind of spot.",
   "local.directoryDetail.use":
     "Read the description, hours and safe-space status.\nSave the place or open it on the map.\nUse the report or suggest-edit links if something's off.\nOpen a related place to keep exploring nearby.",
   "local.directoryDetail.demo":
@@ -265,11 +265,11 @@ export const help: Catalog = {
   "marketing.about.use":
     "Read \"Why we exist\" to see the gap this network was built to fill.\nCompare how we work against typical platforms in the side-by-side.\nOpen Governance or Contact from the bottom to see who runs it and reach us.",
   "marketing.about.demo":
-    "the values spell it out plainly — small by design, no ad or data economy, and the value stays with the community.",
+    "the values spell it out plainly: small by design, no ad or data economy, and the value stays with the community.",
   "members.hub.title":
     "Members",
   "members.hub.intro":
-    "This is the community directory — the whole membership in one place, so you can find the people you'd actually want to know. It's where connection starts.",
+    "This is the community directory: the whole membership in one place, so you can find the people you'd actually want to know. It's where connection starts.",
   "members.hub.use":
     "Search or scroll the grid of members.\nOpen Filters to narrow by identity, neighbourhood, discipline or language.\nTap a card to read someone's profile and reach out.",
   "members.hub.demo":
@@ -277,7 +277,7 @@ export const help: Catalog = {
   "members.profile.title":
     "Public profile",
   "members.profile.intro":
-    "This is a member's public profile — the version of someone that the open web can read, even without an account. It's how you introduce yourself beyond the community walls.",
+    "This is a member's public profile: the version of someone that the open web can read, even without an account. It's how you introduce yourself beyond the community walls.",
   "members.profile.use":
     "Read the bio, pronouns and links up top.\nBrowse their public work and contributions below.\nRequest an invite if you're not a member yet.",
   "members.profile.demo":
@@ -305,11 +305,11 @@ export const help: Catalog = {
   "myevents.hub.use":
     "Use the pills to filter by going, hosting, saved, or invited.\nOpen an event to see its details or manage your RSVP.\nAccept or decline invitations right from the list.\nSwitch to the calendar to see your week at a glance.",
   "myevents.hub.demo":
-    "you might see the Trans Joy Picnic at Jardim da Estrela among your plans — blankets, snacks to share, and a quiet corner if you need one.",
+    "you might see the Trans Joy Picnic at Jardim da Estrela among your plans: blankets, snacks to share, and a quiet corner if you need one.",
   "notifications.hub.title":
     "Notifications",
   "notifications.hub.intro":
-    "Everything that happened while you were away — replies, mentions, new members, event updates and more, gathered in one place.",
+    "Everything that happened while you were away: replies, mentions, new members, event updates and more, gathered in one place.",
   "notifications.hub.use":
     "Scroll to catch up on recent and earlier activity.\nUse the tabs to filter by type, or open Mentions to see where you were tagged.\nTap a notification to jump straight to it.\nHit Mark all read to clear the badge.",
   "notifications.hub.demo":
@@ -319,7 +319,7 @@ export const help: Catalog = {
   "resources.hub.intro":
     "A directory of care and support for the queer community: affirming therapists, peer support, crisis lines and harm-reduction guidance, gathered in one place. Turn here when you or someone you love needs help.",
   "resources.hub.use":
-    "Jump to the section you need — therapists, peer support, crisis or harm reduction.\nOpen a therapist's profile to see their approach and how to reach them.\nSave the crisis lines so they're there when you need them fast.",
+    "Jump to the section you need: therapists, peer support, crisis or harm reduction.\nOpen a therapist's profile to see their approach and how to reach them.\nSave the crisis lines so they're there when you need them fast.",
   "resources.hub.demo":
     "you can find affirming therapists like Dra. Marta Seabra, alongside helplines such as SOS Voz Amiga and ILGA Portugal.",
   "safety.hub.title":
@@ -357,7 +357,7 @@ export const help: Catalog = {
   "subprofiles.detail.title":
     "Persona",
   "subprofiles.detail.intro":
-    "This is one persona's own page — a self-contained showcase for a single craft, with its own tagline, work and contact. If it's linked to a member, you'll see who's behind it.",
+    "This is one persona's own page: a self-contained showcase for a single craft, with its own tagline, work and contact. If it's linked to a member, you'll see who's behind it.",
   "subprofiles.detail.use":
     "Read the tagline and bio in the hero.\nScroll the sections for their work, releases or portfolio.\nEndorse, follow, or message them if you'd like to connect.",
   "subprofiles.detail.demo":
@@ -365,7 +365,7 @@ export const help: Catalog = {
   "subprofiles.hub.title":
     "Personas",
   "subprofiles.hub.intro":
-    "A persona is a focused public page for one side of your life — your music, your art, your craft — kept apart from your main profile. This directory lets you browse everyone's.",
+    "A persona is a focused public page for one side of your life (your music, your art, your craft) kept apart from your main profile. This directory lets you browse everyone's.",
   "subprofiles.hub.use":
     "Filter by craft, like musician, writer or visual artist.\nSearch by name or add tags to narrow the results.\nToggle \"open to collabs\" to find people ready to team up.",
   "subprofiles.hub.demo":
@@ -373,7 +373,7 @@ export const help: Catalog = {
   "topics.hub.title":
     "Topic",
   "topics.hub.intro":
-    "A topic gathers every post tagged with the same theme in one place — a hashtag feed where you can follow a subject you care about across the whole platform.",
+    "A topic gathers every post tagged with the same theme in one place: a hashtag feed where you can follow a subject you care about across the whole platform.",
   "topics.hub.use":
     "Read the posts collected under this topic.\nFollow the topic to keep it close and get more of it in your feed.\nUse Write a post to add your own contribution.\nExplore related topics and resources from the sidebar.",
   "topics.hub.demo":

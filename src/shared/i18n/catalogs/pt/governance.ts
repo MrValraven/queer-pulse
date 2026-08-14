@@ -18,7 +18,7 @@ export const governance: Catalog = {
   // ── Meta (pesquisa/IA) ──────────────────────────────────────────────────
   "page.meta.title": "Como a QueerPulse é gerida: conselho, finanças, recursos",
   "page.meta.description":
-    "Como a QueerPulse é gerida — relatórios de saúde da comunidade, moderação e recursos, o conselho consultivo, princípios da plataforma, finanças trimestrais, e como levantar uma preocupação.",
+    "Como a QueerPulse é gerida: relatórios de saúde da comunidade, moderação e recursos, o conselho consultivo, princípios da plataforma, finanças trimestrais, e como levantar uma preocupação.",
 
   // ── Navegação lateral ───────────────────────────────────────────────────
   "nav.health": "Saúde da comunidade",
@@ -38,7 +38,7 @@ export const governance: Catalog = {
   // ── Documentos de governação (índice de rodapé) ────────────────────────
   "governingDocs.constitution.label": "Constituição",
   "governingDocs.constitution.blurb":
-    "O documento organizativo formal — doze artigos em linguagem simples.",
+    "O documento organizativo formal, doze artigos em linguagem simples.",
   "governingDocs.codeOfConduct.label": "Código de Conduta",
   "governingDocs.codeOfConduct.blurb":
     "O que esperamos umas das outras, e o que acontece quando é violado.",
@@ -50,12 +50,12 @@ export const governance: Catalog = {
 
   // ── Saúde da comunidade ─────────────────────────────────────────────────
   "sections.health.eyebrow":
-    "Relatório de Saúde da Comunidade — 2.º trimestre 2026",
+    "Relatório de Saúde da Comunidade, 2.º trimestre 2026",
   "sections.health.title": "Os <em>números,</em> com honestidade.",
   "sections.health.prose1":
     "Foram apresentadas doze denúncias este trimestre. Todas foram revistas dentro de 48 horas. Três resultaram no afastamento de pessoas da comunidade (violações repetidas do Código de Cuidado após aviso). Oito foram resolvidas com comunicação direta e sem ação formal.",
   "sections.health.prose2":
-    "Foram apresentadas duas contestações a decisões de moderação. Uma foi aceite — tínhamos tomado a decisão errada e revertemo-la. Publicamos isto porque a transparência é como se constrói a confiança.",
+    "Foram apresentadas duas contestações a decisões de moderação. Uma foi aceite. Tínhamos tomado a decisão errada e revertemo-la. Publicamos isto porque a transparência é como se constrói a confiança.",
 
   "health.stat.activeMembers.label": "Pessoas ativas",
   "health.stat.retention.label": "Taxa de retenção de pessoas",
@@ -82,7 +82,7 @@ export const governance: Catalog = {
 
   "steps.reportFiled.title": "Denúncia apresentada",
   "steps.reportFiled.text":
-    "Qualquer pessoa da comunidade pode denunciar outra pessoa, um convívio, uma publicação do fórum, ou qualquer conteúdo. As denúncias são confidenciais — a pessoa denunciada não é informada de quem a apresentou.",
+    "Qualquer pessoa da comunidade pode denunciar outra pessoa, um convívio, uma publicação do fórum, ou qualquer conteúdo. As denúncias são confidenciais. A pessoa denunciada não é informada de quem a apresentou.",
   "steps.review.title": "Revisão em 48 horas",
   "steps.review.text":
     "A equipa de moderação revê a denúncia no prazo de 48 horas. Para questões de segurança urgentes, no mesmo dia. Quem apresentou a denúncia é informado em cada etapa.",
@@ -145,7 +145,7 @@ export const governance: Catalog = {
   "sections.finances.eventsHeading": "Como funcionam as finanças dos convívios",
   "sections.finances.surplusHeading": "O que fazemos com o excedente.",
   "sections.finances.surplusBody":
-    "Os excedentes trimestrais entram numa reserva operacional. A nossa meta é três meses de custos de funcionamento — cerca de {target}.",
+    "Os excedentes trimestrais entram numa reserva operacional. A nossa meta é três meses de custos de funcionamento, cerca de {target}.",
   "sections.finances.reserveProgress":
     "Reserva operacional: {current} de uma meta de {target}",
   "sections.finances.surplusRedirect":
@@ -155,25 +155,25 @@ export const governance: Catalog = {
   "sections.finances.partnerScope.mentalHealthFund": "o Fundo de Saúde Mental",
   "sections.finances.partnerScope.communityEvents": "eventos comunitários",
   "sections.finances.noCorporateFunding":
-    "Não aceitamos financiamento de empresas, marcas, ou entidades governamentais cujos interesses possam entrar em conflito com a autonomia da comunidade. Se isso alguma vez mudar, diremo-lo aqui primeiro — e a comunidade vai votar sobre isso.",
+    "Não aceitamos financiamento de empresas, marcas, ou entidades governamentais cujos interesses possam entrar em conflito com a autonomia da comunidade. Se isso alguma vez mudar, diremo-lo aqui primeiro, e a comunidade vai votar sobre isso.",
 
   // ── Registo de decisões ─────────────────────────────────────────────────
   "sections.decisions.eyebrow": "Decisões recentes",
   "sections.decisions.title": "O que mudou e <em>porquê.</em>",
 
   "decisions.slidingScale.lead":
-    "Maio de 2026 — Introduzida escala progressiva para os convívios.",
+    "Maio de 2026: Introduzida escala progressiva para os convívios.",
   "decisions.slidingScale.body":
     "Na sequência de uma discussão no fórum iniciada por Catarina Vaz, o conselho concordou em implementar uma escala progressiva para todos os convívios pagos. 23 pessoas participaram.",
-  "decisions.forumLaunched.lead": "Abril de 2026 — Fórum lançado.",
+  "decisions.forumLaunched.lead": "Abril de 2026: Fórum lançado.",
   "decisions.forumLaunched.body":
     "Na sequência de pedidos da comunidade por um espaço para discutir temas mais longos. Categorias e diretrizes co-desenhadas com 12 pessoas ao longo de três semanas.",
   "decisions.visibilityDefaults.lead":
-    "Março de 2026 — Predefinições de visibilidade tornadas mais conservadoras.",
+    "Março de 2026: Predefinições de visibilidade tornadas mais conservadoras.",
   "decisions.visibilityDefaults.body":
     'Quem chega agora à comunidade passa a ter, por predefinição, "apenas rede" em vez de "aberto", podendo abrir mais quando se sentir confortável.',
   "decisions.languageToggle.lead":
-    "Fevereiro de 2026 — Alternador de idioma adicionado.",
+    "Fevereiro de 2026: Alternador de idioma adicionado.",
   "decisions.languageToggle.body":
     "Alternador PT/EN adicionado a todas as páginas, na sequência de pedidos de pessoas lusófonas.",
 

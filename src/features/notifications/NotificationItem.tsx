@@ -63,7 +63,7 @@ export function NotificationItem({
               typeof notification.text === "string"
                 ? notification.text
                 : notification.meta
-            } — ${t(
+            }. ${t(
               rowGoesToProfile
                 ? "notifications:actions.viewProfile"
                 : "notifications:actions.viewThread",
