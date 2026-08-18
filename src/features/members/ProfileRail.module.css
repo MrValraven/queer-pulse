@@ -1,8 +1,8 @@
 /* The profile hero's left column: portrait, meta line, trust signals,
-   network chips, owner rail controls, section-jump nav. Sits in the same
-   340px column `ProfilePage.module.css`'s `.pheroGrid` already reserves for
-   the hero portrait today — this module doesn't own the grid itself (that's
-   `ProfileHero`/Task 6's job), just the column's own content rhythm.
+   network chips, owner rail controls, section-jump nav. Sits in the rail
+   column `ProfilePage.module.css`'s `.pageGrid` reserves (300px) — this
+   module doesn't own the grid itself (that's `ProfileHero`/Task 6's job),
+   just the column's own content rhythm.
 
    `ProfilePage.module.css` (the still-live `ProfileHero`) already has its own
    `.portraitWrap` class. CSS Modules scope class names per file, so there is

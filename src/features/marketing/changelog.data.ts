@@ -93,10 +93,34 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "profile-shapings-editor",
+        category: "fix",
+        date: "18 Aug 2026",
+        ...entryKeys("profile-shapings-editor"),
+        tag: { labelKey: "marketing:changelog.tag.members", to: routes.members },
+      },
+      {
+        id: "xp-breakdown",
+        category: "feature",
+        date: "18 Aug 2026",
+        ...entryKeys("xp-breakdown"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gettingStarted",
+          to: routes.gettingStarted,
+        },
+      },
+      {
         id: "profile-hero-rail-redesign",
         category: "improvement",
         date: "18 Aug 2026",
         ...entryKeys("profile-hero-rail-redesign"),
+        tag: { labelKey: "marketing:changelog.tag.members", to: routes.members },
+      },
+      {
+        id: "profile-rail-stats-redesign",
+        category: "improvement",
+        date: "18 Aug 2026",
+        ...entryKeys("profile-rail-stats-redesign"),
         tag: { labelKey: "marketing:changelog.tag.members", to: routes.members },
       },
       {

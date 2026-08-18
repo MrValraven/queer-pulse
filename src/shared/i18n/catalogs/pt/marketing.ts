@@ -1901,10 +1901,23 @@ export const marketing: Catalog = {
   "changelog.entries.governance-editable-finances.body":
     "Os administradores passam a poder corrigir os valores no separador de Finanças da governação, em vez de estarem fixos. Cada número tem uma pequena etiqueta que mostra a sua origem: um valor de exemplo por verificar, um valor introduzido por um administrador, ou um valor calculado (como o excedente). As correções ficam registadas, por isso é sempre claro quem alterou o quê e quando.",
 
+  "changelog.entries.profile-shapings-editor.title":
+    "Edita a secção \"O que me formou\"",
+  "changelog.entries.profile-shapings-editor.body":
+    "O filme, o livro, a música e o momento que te formaram já podem ser adicionados e editados no teu perfil, tal como as tuas outras listas. Antes só era possível ver.",
+
+  "changelog.entries.xp-breakdown.title": "Vê o que rendeu o teu XP",
+  "changelog.entries.xp-breakdown.body":
+    "A página de Primeiros passos mostra agora as principais fontes por trás do teu XP atual, e a página de Crachás detalha cada fonte — perfil, comunidades, avais, encontros e mais — com quanto cada uma já te deu e o que ainda está por ganhar.",
+
   "changelog.entries.profile-hero-rail-redesign.title":
     "Hero e barra lateral do perfil redesenhados",
   "changelog.entries.profile-hero-rail-redesign.body":
     "A tua página de perfil tem agora um hero mais limpo e uma nova barra lateral: os sinais de confiança (verificado, equipa, votos de confiança) vêm agora com uma explicação em linguagem simples, e uma navegação por secções permite a quem visita saltar direto para o que procura, sem precisar de percorrer a página toda.",
+  "changelog.entries.profile-rail-stats-redesign.title":
+    "As tuas estatísticas de perfil, num relance",
+  "changelog.entries.profile-rail-stats-redesign.body":
+    "As tuas ligações, votos de confiança dados e recebidos aparecem agora como números claramente identificados em vez de pastilhas só com ícones, por isso são legíveis sem precisar de passar o rato por cima — e os teus controlos de privacidade (quem vê o quê, esconder-me, os teus dados) passaram para um menu de definições no topo do teu perfil, junto ao botão Editar.",
   "changelog.entries.profile-who-sees-what-controls.title":
     "Escolhe exatamente quem vê o quê no teu perfil",
   "changelog.entries.profile-who-sees-what-controls.body":

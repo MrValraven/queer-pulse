@@ -191,12 +191,12 @@ export const members: Catalog = {
   "profile.trust.vouchesDescription":
     "Outros membros que deram, pessoalmente, um voto de confiança à entrada desta pessoa na comunidade.",
 
-  // ── Controlos da barra lateral (ProfileRailControls — Task 5) ───────────────
+  // ── Menu de definições do perfil (ProfileSettingsMenu) ──────────────────────
+  "profile.rail.settingsMenuAria": "Definições do perfil",
   "profile.rail.whoSeesWhat": "Quem vê o quê",
   "profile.rail.bringMeBack": "Voltar a ficar visível",
   "profile.rail.hideMe24h": "Ficar oculto 24h",
   "profile.rail.yourData": "Os teus dados",
-  "profile.rail.yourDataSub": "Descarrega ou gere o que guardamos",
 
   // ── Modal do código QR do perfil (ProfileQrModal) ────────────────────────────
   "profile.qr.title": "O código QR do teu perfil",
@@ -406,6 +406,14 @@ export const members: Catalog = {
   "profileEdit.groups.roleLabel": "O teu papel",
   "profileEdit.groups.removeLabel": "Remover {name}",
 
+  // ── Editor do que te formou (ShapingsEditor) ────────────────────────────────
+  "profileEdit.shapings.subtitle":
+    "Até um filme, um livro, uma música e um momento que te formaram",
+  "profileEdit.shapings.titlePlaceholder": "Título",
+  "profileEdit.shapings.titleLabel": "Título: {label}",
+  "profileEdit.shapings.notePlaceholder": "Porque ficou contigo",
+  "profileEdit.shapings.noteLabel": "Nota: {label}",
+
   // ── Linha de votos de confiança no cabeçalho (HeroVouchRow) ────────────────
   "hero.vouch.namesPlusYou": "{names}, e tu",
   "hero.vouch.youOnly": "tu",
@@ -535,9 +543,15 @@ export const members: Catalog = {
   "publicProfile.eligibility.tenure.remaining_other": "faltam {count} dias",
   "publicProfile.eligibility.family.contribution.label":
     "Contribuição pública",
+  "publicProfile.eligibility.family.contribution.hint":
+    "Publicar textos, organizar eventos abertos e oficinas",
   "publicProfile.eligibility.family.trust.label": "Confiança da comunidade",
+  "publicProfile.eligibility.family.trust.hint":
+    "Apadrinhamentos, recomendações e ligações de outros membros",
   "publicProfile.eligibility.family.participation.label":
     "Participação constante",
+  "publicProfile.eligibility.family.participation.hint":
+    "Ir a encontros, publicar e manter-te ativo recentemente",
   "publicProfile.eligibility.progress.pct":
     "{pct}% do caminho para um perfil público",
   "publicProfile.eligibility.gates.heading": "Primeiro, o essencial",
@@ -1130,6 +1144,26 @@ export const members: Catalog = {
   "badges.emptyTitle": "Ainda sem emblemas",
   "badges.emptyDescription":
     "Aparece, organiza e participa. Os teus primeiros emblemas surgem aqui à medida que avanças.",
+
+  // ── Detalhe de XP ("o que rendeu XP") ───────────────────────────────────────
+  "badges.xpBreakdown.heading": "O que <em>rendeu</em> XP",
+  "badges.xpBreakdown.sub": "Todas as fontes de XP, ganhas ou ainda por ganhar.",
+  "badges.xpBreakdown.progress": "{units} de {cap}",
+  "badges.xpBreakdown.amount": "+{xp} XP",
+  "badges.xpBreakdown.sources.profile": "Perfil completo",
+  "badges.xpBreakdown.sources.communities": "Comunidades a que te juntaste",
+  "badges.xpBreakdown.sources.personas": "Personas publicadas",
+  "badges.xpBreakdown.sources.vouches": "Avais que deste",
+  "badges.xpBreakdown.sources.connections": "Ligações feitas",
+  "badges.xpBreakdown.sources.events": "Convívios em que participaste",
+  "badges.xpBreakdown.sources.posts": "Publicações na comunidade",
+  "badges.xpBreakdown.sources.endorsements": "Endossos recebidos",
+  "badges.xpBreakdown.sources.workshops": "Workshops que deste",
+  "badges.xpBreakdown.sources.tenure": "Dias na QueerPulse",
+  "badges.xpBreakdown.sources.verified": "Verificado",
+  "badges.xpBreakdown.sources.gettingStarted": "Passos dos primeiros dias",
+  "badges.xpBreakdown.sources.badges": "Bónus de emblemas",
+  "badges.xpBreakdown.sources.other": "Outro",
 
   // ── Chrome da página de vantagens (PerksPage, PerksSections) ───────────────
   "perks.page.backToBadges": "Emblemas e nível",

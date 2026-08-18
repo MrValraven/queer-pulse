@@ -242,9 +242,9 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       // The rail's 24h-hide instant-save toggle (Task 17) — same reasoning as
       // the visibility switches above: committed from `draft` directly rather
       // than from `savedProfile`, since the backend response (`ProfileDTO`)
-      // doesn't carry `hiddenUntil` back either. `ProfileRailControls` reads
+      // doesn't carry `hiddenUntil` back either. `ProfileSettingsMenu` reads
       // this off the COMMITTED profile (via `resolvedProfile.hiddenUntil` in
-      // `ProfilePage.tsx`), so without this the rail label would never flip.
+      // `ProfilePage.tsx`), so without this the menu label would never flip.
       hiddenUntil: draft.hiddenUntil,
       privateNetwork: draft.privateNetwork,
       featuredConsent: draft.featuredConsent,

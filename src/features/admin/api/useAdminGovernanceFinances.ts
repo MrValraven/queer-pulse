@@ -48,6 +48,7 @@ async function buildDemoAdminFinances(): Promise<AdminFinanceResponseDTO> {
     items: [],
     total: { label: "", amount: String(ledgerRow.amount) },
     source: "seeded",
+    enabled: true,
   });
 
   const latest: AdminFinanceLatest = {
@@ -115,6 +116,7 @@ function applyLedgerEdits(
       next.source = "manual";
     }
     if (edit.note !== undefined) next.note = edit.note;
+    if (edit.enabled !== undefined) next.enabled = edit.enabled;
     return next;
   });
 }

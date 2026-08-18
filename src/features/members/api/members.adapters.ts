@@ -206,7 +206,7 @@ export function profileToMember(dto: ProfileDTO): Member {
     // Owner-only self-hide timestamp (Task 17) — absent from the DTO for any
     // non-owner viewer (backend never sends it), so this stays `undefined` on
     // another member's profile and only carries a real value on the owner's
-    // own fetch, matching `ProfileRailControls`' `resolvedProfile.hiddenUntil` read.
+    // own fetch, matching `ProfileSettingsMenu`'s `resolvedProfile.hiddenUntil` read.
     hiddenUntil: dto.hiddenUntil,
     discipline: dto.discipline ?? [],
     profession: dto.profession ?? [],

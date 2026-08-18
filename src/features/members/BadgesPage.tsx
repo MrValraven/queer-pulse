@@ -11,6 +11,7 @@ import {
   LockedBadges,
   PerksLadder,
 } from "./BadgesSections";
+import { XpBreakdownSection } from "./XpBreakdownSection";
 import { useRecognition } from "./api/useRecognition";
 import { useProfileData } from "../../app/providers/useProfile";
 import styles from "./BadgesPage.module.css";
@@ -51,6 +52,7 @@ export function BadgesPage() {
   } else {
     body = (
       <>
+        <XpBreakdownSection />
         <EarnedBadges />
         <LockedBadges />
         <PerksLadder />

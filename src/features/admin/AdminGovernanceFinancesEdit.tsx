@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, FormField, Modal } from "../../shared/components/ui";
+import { Button, FormField, Modal, Toggle } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -19,6 +19,7 @@ interface LineDraft {
   label: string;
   amount: string;
   note: string;
+  enabled: boolean;
 }
 
 function toLineDrafts(lines: AdminFinLine[]): LineDraft[] {
@@ -26,6 +27,7 @@ function toLineDrafts(lines: AdminFinLine[]): LineDraft[] {
     label: line.label,
     amount: line.amount,
     note: line.note,
+    enabled: line.enabled ?? true,
   }));
 }
 
@@ -53,6 +55,10 @@ function ledgerDiff(
     }
     if (draft.note !== source.note) {
       edit.note = draft.note;
+      changed = true;
+    }
+    if (draft.enabled !== (source.enabled ?? true)) {
+      edit.enabled = draft.enabled;
       changed = true;
     }
     if (changed) edits.push(edit);
@@ -279,32 +285,58 @@ function LedgerEditor({
       <legend className={styles.editLegend}>{t(`admin:${titleKey}`)}</legend>
       <div className={styles.editLines}>
         {lines.map((line, index) => (
-          <div key={index} className={styles.editLineRow}>
-            <span className={styles.editLineLabel}>{line.label}</span>
-            <FormField
-              label={t("admin:governance.finances.edit.field.lineAmount")}
-              className={styles.editLineAmount}
-            >
-              <input
-                type="text"
-                value={line.amount}
-                onChange={(event) =>
-                  onChange(index, { amount: event.target.value })
-                }
+          <div
+            key={index}
+            className={[
+              styles.editLineRow,
+              !line.enabled && styles.editLineRowDisabled,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            <div className={styles.editLineHead}>
+              <span className={styles.editLineLabel}>{line.label}</span>
+              <Toggle
+                checked={line.enabled}
+                onChange={(enabled) => onChange(index, { enabled })}
+                label={t("admin:governance.finances.edit.field.lineEnabled", {
+                  label: line.label,
+                })}
               />
-            </FormField>
-            <FormField
-              label={t("admin:governance.finances.edit.field.lineNote")}
-              className={styles.editLineNote}
-            >
-              <input
-                type="text"
-                value={line.note}
-                onChange={(event) =>
-                  onChange(index, { note: event.target.value })
-                }
-              />
-            </FormField>
+            </div>
+            {!line.enabled && (
+              <p className={styles.editLineHint}>
+                {t("admin:governance.finances.edit.field.lineDisabledHint")}
+              </p>
+            )}
+            <div className={styles.editLineFields}>
+              <FormField
+                label={t("admin:governance.finances.edit.field.lineAmount")}
+                className={styles.editLineAmount}
+              >
+                <input
+                  type="text"
+                  value={line.amount}
+                  disabled={!line.enabled}
+                  onChange={(event) =>
+                    onChange(index, { amount: event.target.value })
+                  }
+                />
+              </FormField>
+              <FormField
+                label={t("admin:governance.finances.edit.field.lineNote")}
+                className={styles.editLineNote}
+              >
+                <input
+                  type="text"
+                  value={line.note}
+                  disabled={!line.enabled}
+                  onChange={(event) =>
+                    onChange(index, { note: event.target.value })
+                  }
+                />
+              </FormField>
+            </div>
           </div>
         ))}
       </div>

@@ -14,6 +14,7 @@ import { ProfileBoundaryNote } from "./ProfileBoundaryNote";
 import { ProfileHeroActions } from "./ProfileHeroActions";
 import { ProfileNamePronunciation } from "./ProfileNamePronunciation";
 import { ProfileSafetyMenu } from "./ProfileSafetyMenu";
+import { ProfileSettingsMenu } from "./ProfileSettingsMenu";
 import { PublicProfileBadge } from "./PublicProfileBadge";
 import { SocialLinksRow } from "./SocialLinksRow";
 import { VISIBILITY_LABEL_KEY } from "./profileSections.data";
@@ -33,6 +34,14 @@ interface ProfileHeroMainProps {
   onEditLinks?: () => void;
   /** Preview your profile as a visitor (only used on your own profile). */
   onPreview?: () => void;
+  /** Open the "Who sees what" visibility sheet (only used on your own profile). */
+  onOpenWhoSeesWhat?: () => void;
+  /** Open the account-data sheet (only used on your own profile). */
+  onOpenAccountData?: () => void;
+  /** Toggle the 24h hide-me switch (only used on your own profile). */
+  onToggleHidden?: () => void;
+  /** Whether — and until when — the profile is currently hidden. */
+  hiddenUntil?: string | null;
 }
 
 /**
@@ -54,6 +63,10 @@ export function ProfileHeroMain({
   onEdit,
   onEditLinks,
   onPreview,
+  onOpenWhoSeesWhat,
+  onOpenAccountData,
+  onToggleHidden,
+  hiddenUntil = null,
 }: ProfileHeroMainProps) {
   const { t } = useTranslation();
   const { hasVouched, removeVouch } = useVouch();
@@ -151,6 +164,17 @@ export function ProfileHeroMain({
             slug={profile.slug}
             firstName={profile.first}
             onWithdrawVouch={vouched ? () => removeVouch(profile.slug) : undefined}
+          />
+        )}
+        {/* The settings-menu counterpart: only on your own profile, and only
+            once it's genuinely `isSelf` (not the visitor preview — same gate
+            the edit CTA above already uses). */}
+        {isSelf && onOpenWhoSeesWhat && onOpenAccountData && onToggleHidden && (
+          <ProfileSettingsMenu
+            onOpenWhoSeesWhat={onOpenWhoSeesWhat}
+            onOpenAccountData={onOpenAccountData}
+            onToggleHidden={onToggleHidden}
+            hiddenUntil={hiddenUntil}
           />
         )}
       </div>

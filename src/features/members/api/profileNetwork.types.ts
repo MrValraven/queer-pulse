@@ -7,12 +7,14 @@
 
 /** One person in a network group — a connection or a voucher. */
 export interface NetworkPerson {
-  /** Member slug the row links to (`/members/:slug`). */
+  /** Member slug the row links to (`/members/:slug`). Empty for an anonymous voucher. */
   slug: string;
-  /** First + last name, trimmed. */
+  /** First + last name, trimmed. Empty for an anonymous voucher. */
   name: string;
   avatarUrl?: string;
   pronouns?: string;
+  /** The voucher vouched anonymously; render an un-linked, un-named row. */
+  anonymous?: boolean;
   /** ISO timestamp of the action (connected / vouched); `null` when unknown. */
   at: string | null;
 }

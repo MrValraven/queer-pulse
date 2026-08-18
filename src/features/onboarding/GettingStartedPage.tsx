@@ -9,6 +9,7 @@ import { routes } from "../../app/routeMap";
 import { useGettingStarted, type GettingStartedStepState } from "./useGettingStarted";
 import { GETTING_STARTED_STEP_XP } from "./gettingStarted.data";
 import { LevelXpStrip } from "./LevelXpStrip";
+import { XpSourcesTeaser } from "./XpSourcesTeaser";
 import { SideQuests } from "./SideQuests";
 import styles from "./GettingStartedPage.module.css";
 
@@ -137,6 +138,7 @@ export function GettingStartedPage() {
         ) : (
           <>
             <LevelXpStrip />
+            <XpSourcesTeaser />
             <ProgressMeter
               done={completedCount}
               total={totalCount}

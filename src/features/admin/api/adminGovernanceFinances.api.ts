@@ -58,11 +58,13 @@ export interface AdminFinanceResponseDTO {
 
 // ── Update payloads ─────────────────────────────────────────────────────────
 
-/** One correction to a single income/expense ledger row, addressed by index. */
+/** One correction to a single income/expense ledger row, addressed by index.
+ *  `enabled` toggles whether the row renders on the dashboard at all. */
 export interface FinanceLedgerEdit {
   index: number;
   amount?: string;
   note?: string;
+  enabled?: boolean;
 }
 
 /** Partial update — only the fields present are written and audited. `surplus`

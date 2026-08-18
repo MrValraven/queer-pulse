@@ -211,6 +211,9 @@ export interface FinLine {
   width: number;
   items: { name: string; period: string; amount: string }[];
   total: { label: string; amount: string };
+  /** Whether this row renders on the admin Finances tab. Absent means
+   *  enabled. Not read by the public transparency page. */
+  enabled?: boolean;
 }
 
 export const INCOME: FinLine[] = [

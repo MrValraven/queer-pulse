@@ -15,6 +15,15 @@ export interface RecognitionLevel {
   nextName: string;
 }
 
+/** One XP source row — see `XpBreakdownItemDTO`. */
+export interface XpBreakdownItem {
+  key: string;
+  units: number;
+  cap: number;
+  perUnit: number;
+  xp: number;
+}
+
 /** The domain model the profile card, badges page and perks page all render. */
 export interface Recognition {
   level: RecognitionLevel;
@@ -30,6 +39,7 @@ export interface Recognition {
     ladder: PerkLadderRow[];
     availableCount: number;
   };
+  xpBreakdown: XpBreakdownItem[];
 }
 
 /** A zeroed Recognition used in live mode while the fetch is in flight or has
@@ -50,6 +60,7 @@ export const emptyRecognition: Recognition = {
   levelLadder: [],
   badges: { earned: [], locked: [], earnedCount: 0, discoverCount: 0 },
   perks: { groups: [], ladder: [], availableCount: 0 },
+  xpBreakdown: [],
 };
 
 function badgeFromDto(b: BadgeDTO): Badge {
@@ -107,5 +118,12 @@ export function recognitionToModel(dto: RecognitionDTO): Recognition {
         perks: r.perks,
       })),
     },
+    xpBreakdown: dto.xpBreakdown.map((item) => ({
+      key: item.key,
+      units: item.units,
+      cap: item.cap,
+      perUnit: item.perUnit,
+      xp: item.xp,
+    })),
   };
 }

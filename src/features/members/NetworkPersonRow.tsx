@@ -31,17 +31,20 @@ export function NetworkPersonRow({
   const label = relative
     ? t(meta.labelKey, { time: relative })
     : t(meta.labelNoTimeKey);
+  // An anonymous voucher has no slug — render an un-linked, generically-named
+  // row instead of a broken link to `/members/`. Mirrors `HeroVouchRow`.
+  const anonName = t("members:hero.vouch.anonymous");
 
   return (
     <li className={styles.row}>
       <MemberIdentity
         person={{
-          slug: person.slug,
-          name: person.name,
-          avatarUrl: person.avatarUrl,
+          slug: person.anonymous ? undefined : person.slug,
+          name: person.anonymous ? anonName : person.name,
+          avatarUrl: person.anonymous ? undefined : person.avatarUrl,
         }}
         secondary={label}
-        to={`/members/${person.slug}`}
+        to={person.anonymous ? undefined : `/members/${person.slug}`}
         size={38}
       />
     </li>

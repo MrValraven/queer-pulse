@@ -1512,6 +1512,7 @@ export const admin: Catalog = {
   "governance.finances.provenance.manual.hintPlain": "Entered by an admin.",
   "governance.finances.provenance.computed.hint":
     "Calculated from income minus spending. Not edited directly.",
+  "governance.finances.provenance.notVerifiedCta": "Not verified · Edit",
   "governance.finances.edit.cta": "Edit figures",
   "governance.finances.edit.lastEdited": "Last corrected by {name} on {date}",
   "governance.finances.edit.neverEdited":
@@ -1534,6 +1535,9 @@ export const admin: Catalog = {
     "Calculated automatically: income minus spending.",
   "governance.finances.edit.field.lineAmount": "Amount",
   "governance.finances.edit.field.lineNote": "Note",
+  "governance.finances.edit.field.lineEnabled": "Show {label} on the dashboard",
+  "governance.finances.edit.field.lineDisabledHint":
+    "Hidden from the dashboard until turned back on.",
   "governance.finances.edit.notePlaceholder":
     "Why are you changing these? Saved to the audit trail.",
   "governance.finances.edit.save": "Save corrections",

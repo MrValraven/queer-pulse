@@ -95,11 +95,14 @@ div.backBar {
 
 /* Page-level rail layout: the left column (portrait, trust signals, owner
    controls, section-jump nav — `ProfileRail`) runs alongside the WHOLE page's
-   content (hero text + every below-hero section), not just the hero row. The
-   340px/56px values mirror `.pheroGrid` above so the rail's edge lines up
-   with the hero portrait it used to sit beside. Desktop read-mode only; edit
-   mode (`EditableProfileHero`) keeps its own self-contained `.pheroGrid`
-   layout unchanged.
+   content (hero text + every below-hero section), not just the hero row.
+   Narrower than `.pheroGrid`'s 340px/56px (edit mode's own portrait-beside-
+   form split, where the wider column earns its keep): the rail's own content
+   here is a short nav list, not a form, so the 340/56 pairing left a wide
+   dead gutter down the page — 300px/40px keeps the portrait a comfortable
+   width while balancing the two columns. Desktop read-mode only; edit mode
+   (`EditableProfileHero`) keeps its own self-contained `.pheroGrid` layout
+   unchanged.
 
    Only the section-jump nav at the bottom of `ProfileRail` is sticky (see
    `.snav` in `ProfileRail.module.css`) — the portrait/trust/owner-controls
@@ -114,8 +117,8 @@ div.backBar {
    space and dropping out of the sticky flow partway down. */
 .pageGrid {
   display: grid;
-  grid-template-columns: 340px 1fr;
-  gap: 56px;
+  grid-template-columns: 300px 1fr;
+  gap: 40px;
 }
 .railCol {
   min-width: 0;

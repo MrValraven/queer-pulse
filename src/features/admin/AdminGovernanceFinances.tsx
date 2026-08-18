@@ -8,6 +8,7 @@ import {
   StatTile,
 } from "../../shared/components/ui";
 import { useCountUp } from "../../shared/hooks/useCountUp";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -97,7 +98,7 @@ export function AdminGovernanceFinances() {
       <StatGrid columns={4} className={styles.statGrid}>
         {stats.map((stat, index) => (
           <FadeIn key={stat.labelKey} delay={index * 70}>
-            <FinanceStatCard stat={stat} />
+            <FinanceStatCard stat={stat} onEdit={() => setEditing(true)} />
           </FadeIn>
         ))}
       </StatGrid>
@@ -108,13 +109,13 @@ export function AdminGovernanceFinances() {
 
       <FadeIn delay={160}>
         <div className={styles.ledgerGrid}>
-          <IncomeLedgerCard latest={latest} />
-          <SpendLedgerCard latest={latest} />
+          <IncomeLedgerCard latest={latest} onEdit={() => setEditing(true)} />
+          <SpendLedgerCard latest={latest} onEdit={() => setEditing(true)} />
         </div>
       </FadeIn>
 
       <FadeIn delay={200}>
-        <LiveMrrPanel latest={latest} />
+        <LiveMrrPanel latest={latest} onEdit={() => setEditing(true)} />
       </FadeIn>
 
       {editing && (
@@ -185,13 +186,45 @@ function FinancesEmpty() {
   );
 }
 
-function FinanceStatCard({ stat }: { stat: FinanceStat }) {
+/** True once a figure has been human-verified (edited or derived) rather than
+ *  left as an unreviewed seed placeholder. */
+function isVerified(source: string | undefined): boolean {
+  return source !== undefined && source !== "seeded";
+}
+
+/** In live mode, a still-seeded figure never renders as if it were real data —
+ *  it shows this empty state with a direct path to correct it instead. Demo
+ *  mode is exempt: every demo figure starts `seeded` on purpose, to
+ *  demonstrate the provenance badge, so it keeps showing its number. */
+function NotVerifiedPlaceholder({ onEdit }: { onEdit: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <span className={styles.notVerified}>
+      <span className={styles.notVerifiedDash} aria-hidden>
+        –
+      </span>
+      <button type="button" className={styles.notVerifiedCta} onClick={onEdit}>
+        {t("admin:governance.finances.provenance.notVerifiedCta")}
+      </button>
+    </span>
+  );
+}
+
+function FinanceStatCard({
+  stat,
+  onEdit,
+}: {
+  stat: FinanceStat;
+  onEdit: () => void;
+}) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const { demoMode } = useDemoMode();
   const { labelKey, value, prefix, suffix, comma, jade, footKey, footValues } =
     stat;
   const countValue = useCountUp(value, { durationMs: 1200 });
   const display = comma ? fmt.number(countValue) : String(countValue);
+  const showPlaceholder = !demoMode && !isVerified(stat.source);
 
   return (
     <StatTile
@@ -202,15 +235,19 @@ function FinanceStatCard({ stat }: { stat: FinanceStat }) {
         </span>
       }
       value={
-        <span
-          className={[styles.statNum, jade && styles.statNumJade]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          {prefix}
-          {display}
-          {suffix && <small>{suffix}</small>}
-        </span>
+        showPlaceholder ? (
+          <NotVerifiedPlaceholder onEdit={onEdit} />
+        ) : (
+          <span
+            className={[styles.statNum, jade && styles.statNumJade]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {prefix}
+            {display}
+            {suffix && <small>{suffix}</small>}
+          </span>
+        )
       }
       hint={
         <span className={styles.statFoot}>
@@ -221,7 +258,19 @@ function FinanceStatCard({ stat }: { stat: FinanceStat }) {
   );
 }
 
-function IncomeLedgerCard({ latest }: { latest: AdminFinanceLatest }) {
+/** Rows an admin has turned off don't clutter the dashboard — they stay
+ *  editable (and re-enableable) from the Edit dialog only. */
+function enabledLines(lines: AdminFinLine[]): AdminFinLine[] {
+  return lines.filter((line) => line.enabled !== false);
+}
+
+function IncomeLedgerCard({
+  latest,
+  onEdit,
+}: {
+  latest: AdminFinanceLatest;
+  onEdit: () => void;
+}) {
   const { t } = useTranslation();
   const fmt = useFormat();
   return (
@@ -240,8 +289,8 @@ function IncomeLedgerCard({ latest }: { latest: AdminFinanceLatest }) {
         </p>
       </div>
       <div className={styles.meters}>
-        {latest.income.map((line, i) => (
-          <Meter key={line.label} line={line} colorIndex={i} />
+        {enabledLines(latest.income).map((line, i) => (
+          <Meter key={line.label} line={line} colorIndex={i} onEdit={onEdit} />
         ))}
       </div>
       <p className={styles.ledgerNote}>
@@ -254,7 +303,13 @@ function IncomeLedgerCard({ latest }: { latest: AdminFinanceLatest }) {
   );
 }
 
-function SpendLedgerCard({ latest }: { latest: AdminFinanceLatest }) {
+function SpendLedgerCard({
+  latest,
+  onEdit,
+}: {
+  latest: AdminFinanceLatest;
+  onEdit: () => void;
+}) {
   const { t } = useTranslation();
   const fmt = useFormat();
   return (
@@ -273,17 +328,27 @@ function SpendLedgerCard({ latest }: { latest: AdminFinanceLatest }) {
         </p>
       </div>
       <div className={styles.meters}>
-        {latest.expense.map((line, i) => (
-          <Meter key={line.label} line={line} colorIndex={i} />
+        {enabledLines(latest.expense).map((line, i) => (
+          <Meter key={line.label} line={line} colorIndex={i} onEdit={onEdit} />
         ))}
       </div>
     </div>
   );
 }
 
-function Meter({ line, colorIndex }: { line: AdminFinLine; colorIndex: number }) {
+function Meter({
+  line,
+  colorIndex,
+  onEdit,
+}: {
+  line: AdminFinLine;
+  colorIndex: number;
+  onEdit: () => void;
+}) {
   const fmt = useFormat();
+  const { demoMode } = useDemoMode();
   const color = ledgerColorAt(colorIndex);
+  const showPlaceholder = !demoMode && !isVerified(line.source);
   return (
     <div className={styles.meter}>
       <div className={styles.meterTop}>
@@ -291,25 +356,41 @@ function Meter({ line, colorIndex }: { line: AdminFinLine; colorIndex: number })
           {line.label}
           {line.source === "manual" && <FinanceSourceBadge source="manual" />}
         </span>
-        <span className={styles.meterAmount}>
-          {fmt.currency(financeAmount(line.amount))}
-        </span>
+        {showPlaceholder ? (
+          <NotVerifiedPlaceholder onEdit={onEdit} />
+        ) : (
+          <span className={styles.meterAmount}>
+            {fmt.currency(financeAmount(line.amount))}
+          </span>
+        )}
       </div>
       <div className={styles.meterTrack}>
         <div
           className={[styles.meterFill, styles[`meter_${color}`]].join(" ")}
-          style={{ width: `${line.width}%` }}
+          style={{ width: `${showPlaceholder ? 0 : line.width}%` }}
         />
       </div>
     </div>
   );
 }
 
-function LiveMrrPanel({ latest }: { latest: AdminFinanceLatest }) {
+function LiveMrrPanel({
+  latest,
+  onEdit,
+}: {
+  latest: AdminFinanceLatest;
+  onEdit: () => void;
+}) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const { demoMode } = useDemoMode();
   const mrr = useCountUp(latest.mrr, { durationMs: 1400 });
-  const breakdown = latest.expense.slice(0, 5);
+  // Only verified, enabled expense lines appear here — this panel reads as
+  // authoritative ("live"), so it never surfaces an unreviewed placeholder.
+  const breakdown = enabledLines(latest.expense)
+    .filter((line) => demoMode || isVerified(line.source))
+    .slice(0, 5);
+  const mrrUnverified = !demoMode && !isVerified(latest.sources.mrr);
 
   return (
     <aside className={styles.panel}>
@@ -317,7 +398,17 @@ function LiveMrrPanel({ latest }: { latest: AdminFinanceLatest }) {
         <span className={styles.panelLiveDot} aria-hidden />
         {t("admin:governance.mrrPanel.live")}
       </span>
-      <div className={styles.panelNum}>€{fmt.number(mrr)}</div>
+      {mrrUnverified ? (
+        <button
+          type="button"
+          className={styles.panelNumPlaceholder}
+          onClick={onEdit}
+        >
+          {t("admin:governance.finances.provenance.notVerifiedCta")}
+        </button>
+      ) : (
+        <div className={styles.panelNum}>€{fmt.number(mrr)}</div>
+      )}
       <p className={styles.panelLead}>
         <Translation
           i18nKey="admin:governance.mrrPanel.lead"

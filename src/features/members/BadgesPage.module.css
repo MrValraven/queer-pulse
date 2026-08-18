@@ -429,6 +429,64 @@
   margin-top: 8px;
 }
 
+/* XP breakdown ("what you did to earn it") */
+.xpBreakdownList {
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.xpRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
+}
+.xpRow:last-child {
+  border-bottom: none;
+}
+.xpRowIcon {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(var(--plum-rgb), 0.07);
+  color: var(--ink-60);
+  font-size: 15px;
+}
+.xpRowEarned .xpRowIcon {
+  background: rgba(var(--jade-rgb), 0.12);
+  color: var(--jade);
+}
+.xpRowBody {
+  flex: 1;
+  min-width: 0;
+}
+.xpRowLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.xpRowMeta {
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+.xpRowAmount {
+  flex: none;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-40);
+}
+.xpRowEarned .xpRowAmount {
+  color: var(--accent);
+}
+
 /* Full-width loading state for the recognition fetch (live mode). */
 .stateWrap {
   display: flex;

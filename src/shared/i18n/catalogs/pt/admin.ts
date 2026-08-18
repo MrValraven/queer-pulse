@@ -1539,6 +1539,7 @@ export const admin: Catalog = {
     "Introduzido por um administrador.",
   "governance.finances.provenance.computed.hint":
     "Calculado a partir da receita menos a despesa. Não é editado diretamente.",
+  "governance.finances.provenance.notVerifiedCta": "Por verificar · Editar",
   "governance.finances.edit.cta": "Editar valores",
   "governance.finances.edit.lastEdited": "Última correção por {name} em {date}",
   "governance.finances.edit.neverEdited":
@@ -1561,6 +1562,9 @@ export const admin: Catalog = {
     "Calculado automaticamente: receita menos despesa.",
   "governance.finances.edit.field.lineAmount": "Valor",
   "governance.finances.edit.field.lineNote": "Nota",
+  "governance.finances.edit.field.lineEnabled": "Mostrar {label} no painel",
+  "governance.finances.edit.field.lineDisabledHint":
+    "Oculto do painel até voltar a ser ativado.",
   "governance.finances.edit.notePlaceholder":
     "Porque está a alterar estes valores? Guardado no registo de auditoria.",
   "governance.finances.edit.save": "Guardar correções",

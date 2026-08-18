@@ -23,10 +23,12 @@ export const PROFILE_SECTION_NAV_ITEMS: readonly ProfileSectionNavItem[] = [
     id: "also-working-as",
     labelKey: "members:profile.nav.subprofiles",
     // Subprofiles are resolved by their own hook (useSubprofiles), keyed off
-    // the viewer/owner, not a field on `Member` — ProfileRail only receives
-    // `profile: Member`, so there's no reliable signal here. Always shown;
-    // see the task report's concerns section.
-    isVisible: () => true,
+    // the viewer/owner, not a field on `Member`. `ProfileSectionNav`
+    // (ProfileRail.tsx) resolves this id's real visibility itself via the
+    // same hooks/logic `ProfileSubprofilesSection` uses, and overrides this
+    // fallback — which stays `false` (hide unless proven visible) so a bug
+    // in that override can't silently regress to "always show".
+    isVisible: () => false,
   },
   {
     id: "now",
@@ -80,7 +82,8 @@ export const PROFILE_SECTION_NAV_ITEMS: readonly ProfileSectionNavItem[] = [
     id: "places",
     labelKey: "members:profile.nav.places",
     // Places are resolved by their own hook (useMemberListings), not a field
-    // on `Member` — same limitation as "also working as" above.
-    isVisible: () => true,
+    // on `Member` — same as "also working as" above: `ProfileSectionNav`
+    // overrides this fallback with the real value.
+    isVisible: () => false,
   },
 ];

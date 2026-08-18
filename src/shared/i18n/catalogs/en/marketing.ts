@@ -1852,10 +1852,23 @@ export const marketing: Catalog = {
   "changelog.entries.governance-editable-finances.body":
     "Admins can now correct the figures on the governance Finances tab instead of them being fixed. Every number carries a small tag showing where it comes from: an unverified placeholder, a value an admin entered, or one that is calculated (like the surplus). Corrections are recorded, so it is always clear who changed what and when.",
 
+  "changelog.entries.profile-shapings-editor.title":
+    "Edit your \"What shaped me\" section",
+  "changelog.entries.profile-shapings-editor.body":
+    "The film, book, song, and moment that shaped you can now be added and edited from your profile, alongside your other lists. It was previously view-only.",
+
+  "changelog.entries.xp-breakdown.title": "See what earned your XP",
+  "changelog.entries.xp-breakdown.body":
+    "Getting Started now shows the top sources behind your current XP, and the Badges page breaks down every source — profile, communities, vouches, gatherings, and more — with how much each has earned you and what's still open.",
+
   "changelog.entries.profile-hero-rail-redesign.title":
     "Profile hero and rail redesigned",
   "changelog.entries.profile-hero-rail-redesign.body":
     "Your profile page has a cleaner hero and a new side rail: trust signals (verified, staff, vouch count) now come with a plain-language explainer, and a section nav lets visitors jump straight to what they're looking for, no scrolling required.",
+  "changelog.entries.profile-rail-stats-redesign.title":
+    "Your profile stats, at a glance",
+  "changelog.entries.profile-rail-stats-redesign.body":
+    "Your connections, vouches given and vouches received now show as clearly labeled numbers instead of icon-only pills, so they're readable without a hover — and your privacy controls (who sees what, hide me, your data) moved into a settings menu at the top of your profile, right next to Edit.",
   "changelog.entries.profile-who-sees-what-controls.title":
     "Choose exactly who sees what on your profile",
   "changelog.entries.profile-who-sees-what-controls.body":

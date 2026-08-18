@@ -133,8 +133,8 @@ export function ProfilePage() {
   const useMobileLayout = isMobile;
   const ownerSlug = isSelf ? (selfSlug ?? "") : (slug ?? "");
 
-  // Desktop-only rail control (see `ProfileRailControls`/`ProfileRail`'s
-  // `realSelf` gate) — only ever reachable when `isSelf && !previewing &&
+  // Desktop-only settings-menu control (see `ProfileSettingsMenu`/
+  // `ProfileHeroMain`'s `isSelf` gate) — only ever reachable when `isSelf && !previewing &&
   // !isEditing`, i.e. exactly when `ProfileHero` (not `EditableProfileHero`)
   // is on screen. `useProfileEditGuard`'s dirty-navigation warning only
   // activates when `isEditing && isDirty`, and the provider defines
@@ -170,6 +170,7 @@ export function ProfilePage() {
                 skills: draft.skills,
                 groups: draft.groups,
                 board: draft.board,
+                shapings: draft.shapings,
                 update: (patch) => updateDraft(patch),
               }
             : undefined
@@ -239,10 +240,6 @@ export function ProfilePage() {
                 profile={resolvedProfile}
                 self={isSelf}
                 asVisitor={isSelf && previewing}
-                onOpenWhoSeesWhat={() => setWhoSeesWhatOpen(true)}
-                onOpenAccountData={() => setAccountDataOpen(true)}
-                onToggleHidden={toggleHidden}
-                hiddenUntil={resolvedProfile.hiddenUntil ?? null}
               />
             </div>
             <div className={styles.pageCol}>
@@ -256,6 +253,10 @@ export function ProfilePage() {
                   setPreviewing(true);
                   window.scrollTo({ top: 0 });
                 }}
+                onOpenWhoSeesWhat={() => setWhoSeesWhatOpen(true)}
+                onOpenAccountData={() => setAccountDataOpen(true)}
+                onToggleHidden={toggleHidden}
+                hiddenUntil={resolvedProfile.hiddenUntil ?? null}
               />
 
               {/* "Also as…" — the owner's linked + published personas, surfaced

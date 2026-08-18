@@ -220,13 +220,14 @@
 }
 .familyHead {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
 }
 .familyIcon {
   flex: none;
   width: 26px;
   height: 26px;
+  margin-block-start: 1px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -238,14 +239,28 @@
   width: 14px;
   height: 14px;
 }
+.familyText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
 .familyLabel {
   font-weight: 600;
   font-size: 14.5px;
   color: var(--ink);
   min-width: 0;
 }
+.familyHint {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--ink-40);
+  text-wrap: pretty;
+}
 .familyAmount {
+  flex: none;
   margin-inline-start: auto;
+  margin-block-start: 1px;
   font-variant-numeric: tabular-nums;
   color: var(--ink-60);
   font-size: 0.85rem;

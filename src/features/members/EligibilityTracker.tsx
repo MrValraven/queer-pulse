@@ -24,6 +24,13 @@ const FAMILY_ICON: Record<FamilyScore["key"], IconType> = {
   participation: FiUsers,
 };
 
+/** What counts toward each family — shown under the label so the number isn't a black box. */
+const FAMILY_HINT: Record<FamilyScore["key"], string> = {
+  contribution: "members:publicProfile.eligibility.family.contribution.hint",
+  trust: "members:publicProfile.eligibility.family.trust.hint",
+  participation: "members:publicProfile.eligibility.family.participation.hint",
+};
+
 /** Icon per next-action family (gate actions are filtered out before render). */
 const ACTION_ICON: Record<NextAction["family"], IconType> = {
   contribution: FiEdit3,
@@ -49,7 +56,10 @@ function FamilyBar({ family }: { family: FamilyScore }) {
         <span className={styles.familyIcon} aria-hidden>
           <Icon />
         </span>
-        <span className={styles.familyLabel}>{t(family.labelKey)}</span>
+        <span className={styles.familyText}>
+          <span className={styles.familyLabel}>{t(family.labelKey)}</span>
+          <span className={styles.familyHint}>{t(FAMILY_HINT[family.key])}</span>
+        </span>
         <span className={styles.familyAmount}>
           {t("members:publicProfile.eligibility.family.amount", {
             points: family.points,

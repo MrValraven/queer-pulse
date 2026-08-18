@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Tooltip } from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfileNetwork } from "./api/useProfileNetwork";
 import type {
@@ -8,16 +8,16 @@ import type {
 } from "./api/profileNetwork.types";
 import { NETWORK_GROUP_META } from "./profileNetwork.data";
 import { NetworkListModal } from "./NetworkListModal";
+import { ProfileTrustModal } from "./ProfileTrustModal";
 import styles from "./ProfileNetworkStats.module.css";
 
 /**
- * One network chip: the group's icon + its true count, wrapped in a keyboard-
- * accessible `Tooltip` that names the group. The chip is a button — clicking it
- * opens the full-list `NetworkListModal` for that group. The count is the
- * headline, so it reads the server-true `group.total` (see `useProfileNetwork`),
- * not just the loaded page length.
+ * One network stat: the group's true count and its name, both always
+ * visible (a hover-only tooltip can't reach touch devices, and an icon alone
+ * is ambiguous at a glance). The block is a button — clicking it opens the
+ * full-list `NetworkListModal` for that group.
  */
-function NetworkStatChip({
+function NetworkStatBlock({
   group,
   onOpen,
 }: {
@@ -30,45 +30,48 @@ function NetworkStatChip({
   const title = t(meta.titleKey);
 
   return (
-    <Tooltip label={title}>
-      <button
-        type="button"
-        className={styles.chip}
-        // The visible tooltip names the group; the button's own accessible name
-        // must carry the group AND the count (it's the action's headline).
-        aria-label={t("members:network.viewAllAria", {
-          count: group.total,
-          group: title,
-        })}
-        onClick={() => onOpen(group.key)}
-      >
-        <Icon aria-hidden className={styles.chipIcon} />
-        <span className={styles.chipCount}>{group.total}</span>
-      </button>
-    </Tooltip>
+    <button
+      type="button"
+      className={styles.stat}
+      aria-label={t("members:network.viewAllAria", {
+        count: group.total,
+        group: title,
+      })}
+      onClick={() => onOpen(group.key)}
+    >
+      <span className={styles.statValue}>{group.total}</span>
+      <span className={styles.statLabel}>
+        <Icon aria-hidden className={styles.statIcon} />
+        {title}
+      </span>
+    </button>
   );
 }
 
 /**
- * The compact "Your network" chip row in the profile hero — a private,
- * owner-only summary of the three trust groups (Connected / You vouched for /
- * Vouched for you) as icon + count chips. Each chip opens the full people list
- * in `NetworkListModal`. Chips whose count is 0 are skipped; if all three are 0
- * (or the data is still loading) the row renders nothing, matching how the
- * sibling hero meta stays quiet until it has something to show.
+ * The profile rail's "trust & network" zone, owner-only: the three network
+ * groups (Connected / You vouched for / Vouched for you) as always-labeled
+ * stat blocks, each opening its full people list in `NetworkListModal`, plus
+ * the "What these mean" trigger for `ProfileTrustModal`. This replaces the
+ * old icon-only chip row *and* the separate `ProfileTrustSignals` vouch-count
+ * line for a real self — that line duplicated the "Vouched for you" count
+ * here once the two counts were reconciled (see `useProfileNetwork`'s
+ * `receivedPeople`), so a visiting `ProfileRail` renders `ProfileTrustSignals`
+ * instead of this component, and a real self renders this instead of that.
  *
- * Owner-only: the caller gates this on the same self/not-previewing signal the
- * old below-hero section used, so it never shows on another member's profile.
+ * A count of 0 is shown, not hidden — honesty over a tidier-looking row, the
+ * same reasoning `ProfileTrustSignals` used for "0 vouches".
  */
 export function ProfileNetworkStats({ ownerSlug }: { ownerSlug: string }) {
+  const { t } = useTranslation();
   const { groups, loading } = useProfileNetwork(ownerSlug);
-  const [openGroupKey, setOpenGroupKey] = useState<NetworkGroupKey | null>(null);
+  const [openGroupKey, setOpenGroupKey] = useState<NetworkGroupKey | null>(
+    null,
+  );
+  const [explainerOpen, setExplainerOpen] = useState(false);
 
-  const populatedGroups = groups.filter((group) => group.total > 0);
-
-  // Render nothing while loading or when there's no network to show — the row
-  // should never flash an empty shell.
-  if (loading || populatedGroups.length === 0) return null;
+  // Render nothing while loading — the row should never flash an empty shell.
+  if (loading) return null;
 
   const openGroup =
     openGroupKey === null
@@ -76,19 +79,31 @@ export function ProfileNetworkStats({ ownerSlug }: { ownerSlug: string }) {
       : (groups.find((group) => group.key === openGroupKey) ?? null);
 
   return (
-    <div className={styles.chips}>
-      {populatedGroups.map((group) => (
-        <NetworkStatChip
-          key={group.key}
-          group={group}
-          onOpen={setOpenGroupKey}
-        />
-      ))}
+    <div className={styles.zone}>
+      <div className={styles.stats}>
+        {groups.map((group) => (
+          <NetworkStatBlock
+            key={group.key}
+            group={group}
+            onOpen={setOpenGroupKey}
+          />
+        ))}
+      </div>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => setExplainerOpen(true)}
+      >
+        {t("members:profile.trust.explainCta")}
+      </Button>
       {openGroup && (
         <NetworkListModal
           group={openGroup}
           onClose={() => setOpenGroupKey(null)}
         />
+      )}
+      {explainerOpen && (
+        <ProfileTrustModal onClose={() => setExplainerOpen(false)} />
       )}
     </div>
   );

@@ -153,6 +153,26 @@
 [data-theme="dark"] .meterAmount {
   color: var(--ink);
 }
+.notVerified {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.notVerifiedDash {
+  font-family: var(--serif);
+  font-size: 17px;
+  color: var(--ink-40);
+}
+.notVerifiedCta {
+  border: 0;
+  background: none;
+  padding: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--amber-ink);
+  text-decoration: underline;
+  cursor: pointer;
+}
 .meterTrack {
   height: 10px;
   border-radius: 999px;
@@ -226,6 +246,18 @@
   line-height: 1;
   letter-spacing: -0.02em;
   color: rgba(var(--cream-rgb), 1);
+}
+.panelNumPlaceholder {
+  align-self: flex-start;
+  border: 0;
+  background: none;
+  padding: 0;
+  font-family: var(--serif);
+  font-size: clamp(18px, 2.4vw, 22px);
+  font-style: italic;
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
 }
 .panelLead {
   font-size: 14px;
@@ -1069,6 +1101,28 @@
   gap: 14px;
 }
 .editLineRow {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  transition: opacity 0.15s var(--ease, ease);
+}
+.editLineRowDisabled {
+  opacity: 0.55;
+}
+.editLineHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.editLineHint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink-60);
+}
+.editLineFields {
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px;
@@ -1079,12 +1133,9 @@
   color: var(--ink);
 }
 @media (min-width: 620px) {
-  .editLineRow {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1.6fr);
+  .editLineFields {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
     align-items: end;
-  }
-  .editLineLabel {
-    padding-block-end: 10px;
   }
 }
 .ovSection {

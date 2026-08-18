@@ -75,12 +75,25 @@ export interface PerksDTO {
   ladder: PerkLadderRowDTO[];
 }
 
+/** One "what you did to earn it" row — a signal category (e.g. `"vouches"`)
+ *  or the synthetic `"badges"` bonus row. `key` is a stable id the frontend
+ *  resolves to a label/icon itself (see `xpBreakdown.data.ts`) — no display
+ *  text crosses the wire. Owner-only: `[]` on another member's recognition. */
+export interface XpBreakdownItemDTO {
+  key: string;
+  units: number;
+  cap: number;
+  perUnit: number;
+  xp: number;
+}
+
 /** The full Recognition payload: level, badges and perks for one member. */
 export interface RecognitionDTO {
   level: LevelDTO;
   levelLadder: LevelLadderRowDTO[];
   badges: BadgesDTO;
   perks: PerksDTO;
+  xpBreakdown: XpBreakdownItemDTO[];
 }
 
 /** Own recognition (GET /me/recognition) or another member's public subset

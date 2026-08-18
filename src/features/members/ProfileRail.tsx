@@ -2,10 +2,12 @@ import { useState } from "react";
 import { FiCheckCircle } from "react-icons/fi";
 import { ImageSlot, Reveal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useProfileSubprofiles } from "../subprofiles/api/usePublicSubprofile";
+import { useSubprofiles } from "../subprofiles/api/useSubprofiles";
 import type { Member } from "./data/members";
+import { useMemberListings } from "./api/useMemberListings";
 import { ProfileNetworkStats } from "./ProfileNetworkStats";
 import { ProfilePhotoViewer } from "./ProfilePhotoViewer";
-import { ProfileRailControls } from "./ProfileRailControls";
 import { ProfileTrustSignals } from "./ProfileTrustSignals";
 import { PROFILE_SECTION_NAV_ITEMS } from "./profileSectionNav.data";
 import { useSectionScrollSpy } from "./useSectionScrollSpy";
@@ -18,19 +20,16 @@ interface ProfileRailProps {
   self?: boolean;
   /** When true, render your own profile exactly as a visitor would see it. */
   asVisitor?: boolean;
-  onOpenWhoSeesWhat: () => void;
-  onOpenAccountData: () => void;
-  onToggleHidden: () => void;
-  hiddenUntil: string | null;
 }
 
 /**
  * The profile hero's left column: portrait, location/member-since meta,
- * trust signals, the owner's private network chips, owner-only rail
- * controls, and a desktop section-jump nav. Composes `ProfileTrustSignals`
- * (Task 4), `ProfileRailControls` (Task 5) and the existing
- * `ProfileNetworkStats`. Not yet wired into `ProfileHero` — that lands with
- * Task 6, which decomposes `ProfileHero` into `ProfileRail` + `ProfileHeroMain`.
+ * trust signals, the owner's private network stats, and a desktop
+ * section-jump nav. Composes `ProfileTrustSignals`/`ProfileNetworkStats`.
+ * The owner-only settings (who sees what / hide me / your data) live in
+ * `ProfileSettingsMenu`, in the hero's `ctaRow` (`ProfileHeroMain.tsx`) —
+ * they moved out of an always-visible rail card into a top-of-profile kebab
+ * menu, mirroring the visitor-facing `ProfileSafetyMenu` in the same row.
  *
  * `photoVisible`/`hoodVisible` (backend Task 7) haven't reached the FE
  * `Member` type/mapper yet, so the portrait and location render ungated here,
@@ -41,10 +40,6 @@ export function ProfileRail({
   profile,
   self = false,
   asVisitor = false,
-  onOpenWhoSeesWhat,
-  onOpenAccountData,
-  onToggleHidden,
-  hiddenUntil,
 }: ProfileRailProps) {
   const { t } = useTranslation();
   const realSelf = self && !asVisitor;
@@ -105,20 +100,16 @@ export function ProfileRail({
         )}
       </div>
 
-      <ProfileTrustSignals profile={profile} />
-
-      {realSelf && <ProfileNetworkStats ownerSlug={profile.slug} />}
-
-      {realSelf && (
-        <ProfileRailControls
-          onOpenWhoSeesWhat={onOpenWhoSeesWhat}
-          onOpenAccountData={onOpenAccountData}
-          onToggleHidden={onToggleHidden}
-          hiddenUntil={hiddenUntil}
-        />
+      {/* A real self's own network numbers (below) already include their
+          vouch count, so showing both here would repeat the same fact twice
+          in two different styles — a visitor only ever sees the vouch line. */}
+      {realSelf ? (
+        <ProfileNetworkStats ownerSlug={profile.slug} />
+      ) : (
+        <ProfileTrustSignals profile={profile} />
       )}
 
-      <ProfileSectionNav profile={profile} />
+      <ProfileSectionNav profile={profile} isSelf={realSelf} />
 
       {photoOpen && profile.photo && (
         <ProfilePhotoViewer
@@ -139,10 +130,47 @@ export function ProfileRail({
  * `--mobile` breakpoint (see `.snav` in `ProfileRail.module.css`) — mobile
  * has no equivalent jump list today.
  */
-function ProfileSectionNav({ profile }: { profile: Member }) {
+function ProfileSectionNav({
+  profile,
+  isSelf,
+}: {
+  profile: Member;
+  isSelf: boolean;
+}) {
   const { t } = useTranslation();
+
+  // "also-working-as" and "places" aren't fields on `Member`, so their
+  // visibility can't come from a static predicate over `profile` like every
+  // other nav item — resolve them here via the same hooks/logic their
+  // section bodies use (ProfileSubprofilesSection, PlacesSection), so the
+  // nav link never points at a section that doesn't actually render.
+  const subprofilesOwnerQuery = useSubprofiles({ enabled: isSelf });
+  const subprofilesPublicQuery = useProfileSubprofiles(profile.slug);
+  const subprofilesLoading = isSelf
+    ? subprofilesOwnerQuery.isLoading
+    : subprofilesPublicQuery.isLoading;
+  const hasSubprofiles = isSelf
+    ? (subprofilesOwnerQuery.data?.length ?? 0) > 0
+    : (subprofilesPublicQuery.data?.length ?? 0) > 0;
+  // Mirrors ProfileSubprofilesSection: hidden while loading; the owner
+  // always gets a section (personas or the empty-state prompt), a visitor
+  // only when there's at least one persona to show.
+  const showAlsoWorkingAs = !subprofilesLoading && (isSelf || hasSubprofiles);
+
+  const visitorPlaces = useMemberListings(profile.slug);
+  // Mirrors PlacesSection: the owner always gets a section (places or the
+  // empty-state prompt), a visitor only when there's at least one place.
+  const showPlaces = isSelf || visitorPlaces.length > 0;
+
+  const dynamicVisibility: Record<string, boolean> = {
+    "also-working-as": showAlsoWorkingAs,
+    places: showPlaces,
+  };
+
   const visibleItems = PROFILE_SECTION_NAV_ITEMS.filter((item) =>
-    item.isVisible(profile),
+    item.id in dynamicVisibility
+      ? dynamicVisibility[item.id]
+      : item.isVisible(profile),
   );
   const sectionIds = visibleItems.map((item) => item.id);
   const activeSectionId = useSectionScrollSpy(sectionIds);

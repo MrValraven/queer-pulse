@@ -18,6 +18,7 @@ import { WorkEditor } from "./WorkEditor";
 import { BoardEditor } from "./BoardEditor";
 import { SkillsEditor } from "./SkillsEditor";
 import { GroupsEditor } from "./GroupsEditor";
+import { ShapingsEditor } from "./ShapingsEditor";
 import styles from "./ProfilePage.module.css";
 
 export function Section({
@@ -60,6 +61,14 @@ export interface ProfileHeroProps {
   onEditLinks?: () => void;
   /** Preview your profile as a visitor (only used on your own profile). */
   onPreview?: () => void;
+  /** Open the "Who sees what" visibility sheet (only used on your own profile). */
+  onOpenWhoSeesWhat?: () => void;
+  /** Open the account-data sheet (only used on your own profile). */
+  onOpenAccountData?: () => void;
+  /** Toggle the 24h hide-me switch (only used on your own profile). */
+  onToggleHidden?: () => void;
+  /** Whether — and until when — the profile is currently hidden. */
+  hiddenUntil?: string | null;
 }
 
 /**
@@ -81,6 +90,10 @@ export function ProfileHero({
   onEdit,
   onEditLinks,
   onPreview,
+  onOpenWhoSeesWhat,
+  onOpenAccountData,
+  onToggleHidden,
+  hiddenUntil,
 }: ProfileHeroProps) {
   return (
     <header className={styles.phero}>
@@ -93,6 +106,10 @@ export function ProfileHero({
             onEdit={onEdit}
             onEditLinks={onEditLinks}
             onPreview={onPreview}
+            onOpenWhoSeesWhat={onOpenWhoSeesWhat}
+            onOpenAccountData={onOpenAccountData}
+            onToggleHidden={onToggleHidden}
+            hiddenUntil={hiddenUntil}
           />
           {/* Raw `self` (not `isSelf`): mutual connections stay hidden even
               while previewing your own profile as a visitor would see it —
@@ -110,12 +127,14 @@ export interface ProfileContentEdit {
   skills: MemberProfile["skills"];
   groups: MemberProfile["groups"];
   board: MemberProfile["board"];
+  shapings: MemberProfile["shapings"];
   update: (
     patch: Partial<{
       work: MemberProfile["work"];
       skills: MemberProfile["skills"];
       groups: MemberProfile["groups"];
       board: MemberProfile["board"];
+      shapings: MemberProfile["shapings"];
     }>,
   ) => void;
 }
@@ -128,8 +147,8 @@ export function ProfileContent({
   profile: MemberProfile;
   isSelf?: boolean;
   /** When set (edit mode), the editable sections become inline editors bound to
-   *  the draft. Sections with no editor (Shapings, Activity, Related) are hidden
-   *  while editing rather than shown read-only with no affordance. */
+   *  the draft. Sections with no editor (Activity, Related) are hidden while
+   *  editing rather than shown read-only with no affordance. */
   edit?: ProfileContentEdit;
 }) {
   return (
@@ -170,7 +189,14 @@ export function ProfileContent({
       ) : (
         <GroupsSection profile={profile} />
       )}
-      {!edit && <ShapingsSection profile={profile} />}
+      {edit ? (
+        <ShapingsEditor
+          shapings={edit.shapings}
+          onChange={(shapings) => edit.update({ shapings })}
+        />
+      ) : (
+        <ShapingsSection profile={profile} />
+      )}
       {!edit && <ActivitySection profile={profile} />}
       {!edit && <RelatedSection profile={profile} />}
     </div>

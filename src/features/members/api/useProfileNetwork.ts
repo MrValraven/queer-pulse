@@ -82,17 +82,22 @@ export function useProfileNetwork(ownerSlug: string): {
     [connectionsList.views],
   );
 
+  // Anonymous vouchers used to be dropped here, which let this group's count
+  // (and the profile rail's stat block) drift below the true backend
+  // `vouchCount` total whenever a member had one. They're kept now — mapped
+  // through with `anonymous: true` — so `NetworkPersonRow` can render them as
+  // an un-linked "Anonymous" row (mirroring `HeroVouchRow`'s same handling)
+  // instead of silently vanishing from the count.
   const receivedPeople = useMemo<NetworkPerson[]>(
     () =>
       sortNewestFirst(
-        (receivedVouchers.data ?? [])
-          .filter((face) => !face.anonymous && face.slug !== "")
-          .map((face) => ({
-            slug: face.slug,
-            name: face.name,
-            avatarUrl: face.avatarUrl,
-            at: face.createdAt ?? null,
-          })),
+        (receivedVouchers.data ?? []).map((face) => ({
+          slug: face.slug,
+          name: face.name,
+          avatarUrl: face.avatarUrl,
+          anonymous: face.anonymous,
+          at: face.createdAt ?? null,
+        })),
       ),
     [receivedVouchers.data],
   );

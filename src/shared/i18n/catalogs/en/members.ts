@@ -189,12 +189,12 @@ export const members: Catalog = {
   "profile.trust.vouchesDescription":
     "Other members who have personally vouched for this person joining the community.",
 
-  // ── Owner rail controls (ProfileRailControls — Task 5) ──────────────────────
+  // ── Owner profile settings menu (ProfileSettingsMenu) ───────────────────────
+  "profile.rail.settingsMenuAria": "Profile settings",
   "profile.rail.whoSeesWhat": "Who sees what",
   "profile.rail.bringMeBack": "Bring me back",
   "profile.rail.hideMe24h": "Hide me for 24h",
   "profile.rail.yourData": "Your data",
-  "profile.rail.yourDataSub": "Download or manage what we keep",
 
   // ── Profile QR modal (ProfileQrModal) ───────────────────────────────────────
   "profile.qr.title": "Your profile QR code",
@@ -403,6 +403,14 @@ export const members: Catalog = {
   "profileEdit.groups.roleLabel": "Your role",
   "profileEdit.groups.removeLabel": "Remove {name}",
 
+  // ── Shapings editor (ShapingsEditor) ────────────────────────────────────────
+  "profileEdit.shapings.subtitle":
+    "Up to one film, book, song and moment that shaped you",
+  "profileEdit.shapings.titlePlaceholder": "Title",
+  "profileEdit.shapings.titleLabel": "{label} title",
+  "profileEdit.shapings.notePlaceholder": "Why it stuck with you",
+  "profileEdit.shapings.noteLabel": "{label} note",
+
   // ── Hero vouch row (HeroVouchRow) ───────────────────────────────────────────
   "hero.vouch.namesPlusYou": "{names}, plus you",
   "hero.vouch.youOnly": "you",
@@ -530,9 +538,15 @@ export const members: Catalog = {
   "publicProfile.eligibility.tenure.remaining_one": "{count} day to go",
   "publicProfile.eligibility.tenure.remaining_other": "{count} days to go",
   "publicProfile.eligibility.family.contribution.label": "Public contribution",
+  "publicProfile.eligibility.family.contribution.hint":
+    "Publishing pieces, hosting open events & workshops",
   "publicProfile.eligibility.family.trust.label": "Community trust",
+  "publicProfile.eligibility.family.trust.hint":
+    "Vouches, endorsements & connections from other members",
   "publicProfile.eligibility.family.participation.label":
     "Sustained participation",
+  "publicProfile.eligibility.family.participation.hint":
+    "Attending gatherings, posting & staying active recently",
   "publicProfile.eligibility.progress.pct":
     "{pct}% of the way to a public profile",
   "publicProfile.eligibility.gates.heading": "First, the essentials",
@@ -1115,6 +1129,28 @@ export const members: Catalog = {
   "badges.emptyTitle": "No badges yet",
   "badges.emptyDescription":
     "Show up, host, and take part. Your first badges land here as you go.",
+
+  // ── XP breakdown ("what you did to earn it") — the backend returns a
+  //    stable `key` per source (unlike badge names above), so these labels
+  //    ARE translated client-side. See xpBreakdown.data.ts. ──
+  "badges.xpBreakdown.heading": "What <em>earned</em> it",
+  "badges.xpBreakdown.sub": "Every source of XP, earned or still open.",
+  "badges.xpBreakdown.progress": "{units} of {cap}",
+  "badges.xpBreakdown.amount": "+{xp} XP",
+  "badges.xpBreakdown.sources.profile": "Profile complete",
+  "badges.xpBreakdown.sources.communities": "Communities joined",
+  "badges.xpBreakdown.sources.personas": "Personas published",
+  "badges.xpBreakdown.sources.vouches": "Vouches given",
+  "badges.xpBreakdown.sources.connections": "Connections made",
+  "badges.xpBreakdown.sources.events": "Gatherings attended",
+  "badges.xpBreakdown.sources.posts": "Community posts",
+  "badges.xpBreakdown.sources.endorsements": "Endorsements received",
+  "badges.xpBreakdown.sources.workshops": "Workshops taught",
+  "badges.xpBreakdown.sources.tenure": "Days on QueerPulse",
+  "badges.xpBreakdown.sources.verified": "Verified",
+  "badges.xpBreakdown.sources.gettingStarted": "Getting-started steps",
+  "badges.xpBreakdown.sources.badges": "Badge bonuses",
+  "badges.xpBreakdown.sources.other": "Other",
 
   // ── Perks page chrome (PerksPage, PerksSections) ────────────────────────────
   "perks.page.backToBadges": "Badges & level",
