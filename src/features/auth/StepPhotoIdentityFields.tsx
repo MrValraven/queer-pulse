@@ -6,6 +6,10 @@ import styles from "./OnboardingPage.module.css";
 export const BIO_MAX_LENGTH = 160;
 
 interface IdentityFieldsProps {
+  firstName: string;
+  onFirstNameChange: (value: string) => void;
+  lastName: string;
+  onLastNameChange: (value: string) => void;
   pronouns: string;
   onPronounsChange: (value: string) => void;
   bio: string;
@@ -13,15 +17,21 @@ interface IdentityFieldsProps {
 }
 
 /**
- * The pronouns + short-bio fields tacked onto `StepPhoto` — real signup only
- * collects what Google OAuth supplies (email, name, avatar), so this is the
- * one moment onboarding asks a member to say a little about who they are.
- * Both fields are optional, mirroring the photo above it: `StepPhoto` only
- * ever writes what the member actually typed, so leaving either blank changes
+ * The name, pronouns and short-bio fields tacked onto `StepPhoto`. Name comes
+ * prefilled from Google but is editable here, since not everyone wants members
+ * to see their Google account name. Pronouns and bio are the one moment
+ * onboarding asks a member to say a little about who they are — real signup
+ * only collects what Google OAuth supplies (email, name, avatar). Pronouns and
+ * bio are optional, mirroring the photo above them: `StepPhoto` only ever
+ * writes what the member actually typed, so leaving either blank changes
  * nothing. Split into its own file to keep `StepPhoto` under the 200-line
  * component limit.
  */
 export function IdentityFields({
+  firstName,
+  onFirstNameChange,
+  lastName,
+  onLastNameChange,
   pronouns,
   onPronounsChange,
   bio,
@@ -30,6 +40,27 @@ export function IdentityFields({
   const { t } = useTranslation();
   return (
     <div className={styles.identityFields}>
+      <div className={styles.nameRow}>
+        <FormField label={t("auth:onboarding.stepPhoto.firstName.label")}>
+          <input
+            type="text"
+            autoComplete="given-name"
+            value={firstName}
+            onChange={(event) => onFirstNameChange(event.target.value)}
+          />
+        </FormField>
+        <FormField label={t("auth:onboarding.stepPhoto.lastName.label")}>
+          <input
+            type="text"
+            autoComplete="family-name"
+            value={lastName}
+            onChange={(event) => onLastNameChange(event.target.value)}
+          />
+        </FormField>
+      </div>
+      <p className={styles.nameHint}>
+        {t("auth:onboarding.stepPhoto.name.helper")}
+      </p>
       <FormField
         label={t("auth:onboarding.stepPhoto.pronouns.label")}
         helper={t("auth:onboarding.stepPhoto.pronouns.helper")}

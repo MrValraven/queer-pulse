@@ -11,6 +11,7 @@ import { ImageProcessingError } from "../members/api/uploadProcessing";
 import { useUpdateProfile } from "../members/api/useUpdateProfile";
 import type { UpdateProfileDTO } from "../members/api/members.api";
 import { IdentityFields } from "./StepPhotoIdentityFields";
+import { StepPhotoPreview } from "./StepPhotoPreview";
 import { SkipLink, type StepProps } from "./OnboardingStepChrome";
 import styles from "./OnboardingPage.module.css";
 
@@ -33,6 +34,13 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Name pre-fills from the Google account but is editable here — not every
+  // member wants strangers seeing their Google account name.
+  const initialFirstName = user?.profile.firstName ?? "";
+  const initialLastName = user?.profile.lastName ?? "";
+  const [firstName, setFirstName] = useState(initialFirstName);
+  const [lastName, setLastName] = useState(initialLastName);
 
   // Pronouns and a short bio: the two identity fields signup never asks for
   // (only what Google OAuth supplies), added to this step rather than an extra
@@ -88,10 +96,14 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
   }
 
   async function handleContinue() {
+    const trimmedFirstName = firstName.trim();
+    const trimmedLastName = lastName.trim();
     const trimmedPronouns = pronouns.trim();
     const trimmedBio = bio.trim();
     const updates: UpdateProfileDTO = {};
     if (pendingKey) updates.avatarUrl = pendingKey;
+    if (trimmedFirstName !== initialFirstName) updates.firstName = trimmedFirstName;
+    if (trimmedLastName !== initialLastName) updates.lastName = trimmedLastName;
     if (trimmedPronouns && trimmedPronouns !== initialPronouns) {
       updates.pronouns = trimmedPronouns;
     }
@@ -160,13 +172,29 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
         )}
       </div>
       <IdentityFields
+        firstName={firstName}
+        onFirstNameChange={setFirstName}
+        lastName={lastName}
+        onLastNameChange={setLastName}
         pronouns={pronouns}
         onPronounsChange={setPronouns}
         bio={bio}
         onBioChange={setBio}
       />
+      <StepPhotoPreview
+        firstName={firstName}
+        lastName={lastName}
+        fallbackInitials={initials}
+        slug={user?.profile.slug}
+        photo={shownPhoto}
+        pronouns={pronouns}
+        bio={bio}
+      />
       <div className={styles.nav}>
-        <Button onClick={() => void handleContinue()} disabled={uploading || saving}>
+        <Button
+          onClick={() => void handleContinue()}
+          disabled={uploading || saving || !firstName.trim()}
+        >
           {t("auth:onboarding.stepPhoto.continue")}
         </Button>
         <SkipLink onSkip={onNext} />

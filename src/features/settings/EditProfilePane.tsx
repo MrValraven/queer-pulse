@@ -69,12 +69,13 @@ export function EditProfilePane({
         .filter(Boolean)
     : [];
 
-  function setName(displayName: string) {
-    const trimmed = displayName.trimStart();
-    const idx = trimmed.indexOf(" ");
-    const first = idx === -1 ? trimmed : trimmed.slice(0, idx);
-    const last = idx === -1 ? "" : trimmed.slice(idx + 1);
-    updateDraft({ first, last });
+  function handleFirstNameChange(value: string) {
+    updateDraft({ first: value });
+    onChange("identity");
+  }
+
+  function handleLastNameChange(value: string) {
+    updateDraft({ last: value });
     onChange("identity");
   }
 
@@ -117,12 +118,14 @@ export function EditProfilePane({
   return (
     <>
       <IdentitySection
-        displayName={`${draft.first} ${draft.last}`.trim()}
+        firstName={draft.first}
+        lastName={draft.last}
         location={draft.hood}
         photo={draft.photo}
         googlePhoto={googlePhoto}
         pronouns={selectedPronouns}
-        onNameChange={setName}
+        onFirstNameChange={handleFirstNameChange}
+        onLastNameChange={handleLastNameChange}
         onLocationChange={(v) => {
           updateDraft({ hood: v });
           onChange("identity");

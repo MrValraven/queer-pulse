@@ -455,9 +455,10 @@ export const settings: Catalog = {
     "JPG ou PNG · máx. 5 MB · funciona melhor em formato quadrado",
   "editProfile.identity.photoHint.google":
     "Podemos recuperar a foto da conta com que iniciaste sessão.",
-  "editProfile.identity.displayNameLabel": "Nome de apresentação",
-  "editProfile.identity.displayNameHint":
-    "O teu nome de apresentação é o que as pessoas leem; o teu nome de utilizador abaixo é a tua identificação.",
+  "editProfile.identity.firstNameLabel": "Nome próprio",
+  "editProfile.identity.lastNameLabel": "Apelido",
+  "editProfile.identity.nameHint":
+    "O teu nome é o que as pessoas leem; o teu nome de utilizador abaixo é a tua identificação.",
   "editProfile.identity.locationLabel": "Localização em Lisboa",
   "editProfile.identity.locationOptional": "opcional",
   "editProfile.identity.locationPlaceholder": "ex.: Mouraria, Intendente…",

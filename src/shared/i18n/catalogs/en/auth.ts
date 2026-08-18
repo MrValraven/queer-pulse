@@ -356,6 +356,11 @@ export const auth: Catalog = {
     "We couldn't add that photo. Please try again.",
   "onboarding.stepPhoto.saveError":
     "We couldn't save that just now. Please try again.",
+  "onboarding.stepPhoto.firstName.label": "First name",
+  "onboarding.stepPhoto.lastName.label": "Last name",
+  "onboarding.stepPhoto.name.helper":
+    "This is what members will see on your profile. We pulled it from your Google account, but you can change it.",
+  "onboarding.stepPhoto.preview.caption": "How your profile card will look",
   "onboarding.stepPhoto.pronouns.label": "Pronouns",
   "onboarding.stepPhoto.pronouns.helper":
     "However you'd like members to refer to you. Totally optional.",

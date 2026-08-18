@@ -9,7 +9,8 @@ import { IdentityPhotoField } from "./EditProfileIdentityFields";
 import styles from "./EditProfilePage.module.css";
 
 interface IdentitySectionProps {
-  displayName: string;
+  firstName: string;
+  lastName: string;
   location: string;
   photo?: string;
   /** Avatar from the member's social login, offered as a one-tap restore. */
@@ -17,7 +18,8 @@ interface IdentitySectionProps {
   /** The member's pronoun set — the personal block keeps name, pronouns, and
    * location together rather than splitting pronouns into its own section. */
   pronouns: string[];
-  onNameChange: (v: string) => void;
+  onFirstNameChange: (v: string) => void;
+  onLastNameChange: (v: string) => void;
   onLocationChange: (v: string) => void;
   onPronounsChange: (next: string[]) => void;
   /** Called with the persistable storage key once an uploaded photo resolves. */
@@ -27,12 +29,14 @@ interface IdentitySectionProps {
 }
 
 export function IdentitySection({
-  displayName,
+  firstName,
+  lastName,
   location,
   photo,
   googlePhoto,
   pronouns,
-  onNameChange,
+  onFirstNameChange,
+  onLastNameChange,
   onLocationChange,
   onPronounsChange,
   onPhotoChange,
@@ -41,6 +45,7 @@ export function IdentitySection({
 }: IdentitySectionProps) {
   const { t } = useTranslation();
   const fieldId = useId();
+  const displayName = `${firstName} ${lastName}`.trim();
 
   return (
     <div className={styles.section} id="identity">
@@ -62,18 +67,36 @@ export function IdentitySection({
         onRemove={onRemove}
       />
       <div className={styles.field}>
-        <label className={styles.fieldLabel} htmlFor={`${fieldId}-name`}>
-          {t("settings:editProfile.identity.displayNameLabel")}
-        </label>
-        <input
-          id={`${fieldId}-name`}
-          className={styles.fieldInput}
-          type="text"
-          value={displayName}
-          onChange={(e) => onNameChange(e.target.value)}
-        />
+        <div className={styles.fieldRow}>
+          <div>
+            <label className={styles.fieldLabel} htmlFor={`${fieldId}-first`}>
+              {t("settings:editProfile.identity.firstNameLabel")}
+            </label>
+            <input
+              id={`${fieldId}-first`}
+              className={styles.fieldInput}
+              type="text"
+              autoComplete="given-name"
+              value={firstName}
+              onChange={(e) => onFirstNameChange(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className={styles.fieldLabel} htmlFor={`${fieldId}-last`}>
+              {t("settings:editProfile.identity.lastNameLabel")}
+            </label>
+            <input
+              id={`${fieldId}-last`}
+              className={styles.fieldInput}
+              type="text"
+              autoComplete="family-name"
+              value={lastName}
+              onChange={(e) => onLastNameChange(e.target.value)}
+            />
+          </div>
+        </div>
         <div className={styles.fieldHint}>
-          {t("settings:editProfile.identity.displayNameHint")}
+          {t("settings:editProfile.identity.nameHint")}
         </div>
       </div>
       <PronounField

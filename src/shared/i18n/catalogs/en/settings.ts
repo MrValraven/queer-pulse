@@ -443,9 +443,10 @@ export const settings: Catalog = {
     "JPG or PNG · max 5 MB · square works best",
   "editProfile.identity.photoHint.google":
     "We can bring back the photo from the account you signed in with.",
-  "editProfile.identity.displayNameLabel": "Display name",
-  "editProfile.identity.displayNameHint":
-    "Your display name is what people read; your username below is your handle.",
+  "editProfile.identity.firstNameLabel": "First name",
+  "editProfile.identity.lastNameLabel": "Last name",
+  "editProfile.identity.nameHint":
+    "Your name is what people read; your username below is your handle.",
   "editProfile.identity.locationLabel": "Location in Lisbon",
   "editProfile.identity.locationOptional": "optional",
   "editProfile.identity.locationPlaceholder": "e.g. Mouraria, Intendente…",
