@@ -55,22 +55,28 @@ export function ReportsTab({ living }: { living: LivingCommunity }) {
             </div>
             <p className={styles.reportExcerpt}>"{rep.postExcerpt}"</p>
             <div className={styles.modMeta}>
-              {t("admin:modPanel.reports.metaLine", {
-                author: rep.author.name,
-                reporter: rep.reporter.name,
-                time: rep.time,
-              })}
+              {rep.author && rep.reporter
+                ? t("admin:modPanel.reports.metaLine", {
+                    author: rep.author.name,
+                    reporter: rep.reporter.name,
+                    time: rep.time,
+                  })
+                : t("admin:modPanel.reports.metaLiveLine", {
+                    time: rep.time,
+                  })}
             </div>
             <div className={styles.modActions} style={{ marginTop: 12 }}>
               <Button variant="primary" onClick={() => removeReport(rep.id)}>
                 {t("admin:modPanel.reports.removeCta")}
               </Button>
-              <Button
-                variant="ghost"
-                onClick={() => warnAuthor(rep.id, rep.author.name)}
-              >
-                {t("admin:modPanel.reports.warnCta")}
-              </Button>
+              {rep.author && (
+                <Button
+                  variant="ghost"
+                  onClick={() => warnAuthor(rep.id, rep.author!.name)}
+                >
+                  {t("admin:modPanel.reports.warnCta")}
+                </Button>
+              )}
               <Button variant="ghost" onClick={() => dismissReport(rep.id)}>
                 {t("admin:modPanel.reports.dismissCta")}
               </Button>

@@ -493,6 +493,8 @@ export const gatheringDashboardPath = (slug: string): string =>
   `${gatheringPath(slug)}/dashboard`;
 export const manageGatheringPath = (slug: string): string =>
   `${gatheringPath(slug)}/manage`;
+export const gatheringPhotosPath = (slug: string): string =>
+  `${gatheringPath(slug)}/photos`;
 export const coHostInvitePath = (slug: string, inviteId: string): string =>
   `${gatheringPath(slug)}/co-host-invite/${inviteId}`;
 

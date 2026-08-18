@@ -3,7 +3,17 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { OrganizationPickerField } from "./OrganizationPickerField";
 import type { Cause, Commit } from "./api/volunteering.api";
 import type { PostOpportunityForm } from "./usePostOpportunityForm";
-import { CAUSE_OPTIONS, COMMIT_OPTIONS } from "./postVolunteerOpportunity.data";
+import {
+  CAUSE_OPTIONS,
+  COMMIT_OPTIONS,
+  MAX_DESCRIPTION_LENGTH,
+  MAX_LOCATION_LENGTH,
+  MAX_ORGANIZATION_LENGTH,
+  MAX_ROLE_LENGTH,
+  MAX_SKILL_LENGTH,
+  MAX_SKILLS_COUNT,
+  MAX_TIME_LENGTH,
+} from "./postVolunteerOpportunity.data";
 import styles from "./PostVolunteerOpportunityPage.module.css";
 
 /** Required core fields: who, what, where, and how big the ask is. */
@@ -20,17 +30,29 @@ export function PostOpportunityCoreFields({
         {t("marketing:postOpportunity.core.basicsHeading")}
       </div>
 
-      <OrganizationPickerField
+      <FormField
+        label={t("marketing:postOpportunity.core.orgLabel")}
         required
         error={errorFor("org")}
+        labelAside={`${state.org.length}/${MAX_ORGANIZATION_LENGTH}`}
+      >
+        <input
+          type="text"
+          value={state.org}
+          onChange={(e) => set("org", e.target.value)}
+          maxLength={MAX_ORGANIZATION_LENGTH}
+          placeholder={t("marketing:postOpportunity.core.orgPlaceholder")}
+        />
+      </FormField>
+
+      <OrganizationPickerField
         value={{
           partnerSlug: state.partnerSlug,
           communitySlug: state.communitySlug,
         }}
-        onChange={(next, meta) => {
+        onChange={(next) => {
           set("partnerSlug", next.partnerSlug);
           set("communitySlug", next.communitySlug);
-          set("org", meta.name);
         }}
       />
 
@@ -38,11 +60,13 @@ export function PostOpportunityCoreFields({
         label={t("marketing:postOpportunity.core.roleLabel")}
         required
         error={errorFor("role")}
+        labelAside={`${state.role.length}/${MAX_ROLE_LENGTH}`}
       >
         <input
           type="text"
           value={state.role}
           onChange={(e) => set("role", e.target.value)}
+          maxLength={MAX_ROLE_LENGTH}
           placeholder={t("marketing:postOpportunity.core.rolePlaceholder")}
         />
       </FormField>
@@ -89,11 +113,13 @@ export function PostOpportunityCoreFields({
           label={t("marketing:postOpportunity.core.timeLabel")}
           required
           error={errorFor("time")}
+          labelAside={`${state.time.length}/${MAX_TIME_LENGTH}`}
         >
           <input
             type="text"
             value={state.time}
             onChange={(e) => set("time", e.target.value)}
+            maxLength={MAX_TIME_LENGTH}
             placeholder={t("marketing:postOpportunity.core.timePlaceholder")}
           />
         </FormField>
@@ -102,11 +128,13 @@ export function PostOpportunityCoreFields({
           label={t("marketing:postOpportunity.core.locationLabel")}
           required
           error={errorFor("location")}
+          labelAside={`${state.location.length}/${MAX_LOCATION_LENGTH}`}
         >
           <input
             type="text"
             value={state.location}
             onChange={(e) => set("location", e.target.value)}
+            maxLength={MAX_LOCATION_LENGTH}
             placeholder={t(
               "marketing:postOpportunity.core.locationPlaceholder",
             )}
@@ -138,18 +166,23 @@ export function PostOpportunityCoreFields({
         required
         error={errorFor("description")}
         helper={t("marketing:postOpportunity.core.descHelper")}
+        labelAside={`${state.description.length}/${MAX_DESCRIPTION_LENGTH}`}
       >
         <textarea
           rows={3}
           value={state.description}
           onChange={(e) => set("description", e.target.value)}
+          maxLength={MAX_DESCRIPTION_LENGTH}
           placeholder={t("marketing:postOpportunity.core.descPlaceholder")}
         />
       </FormField>
 
       <FormField
         label={t("marketing:postOpportunity.core.skillsLabel")}
-        helper={t("marketing:postOpportunity.core.skillsHelper")}
+        helper={t("marketing:postOpportunity.core.skillsHelper", {
+          maxCount: MAX_SKILLS_COUNT,
+          maxLength: MAX_SKILL_LENGTH,
+        })}
       >
         <input
           type="text"

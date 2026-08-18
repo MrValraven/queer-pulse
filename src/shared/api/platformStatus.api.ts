@@ -11,10 +11,12 @@ export interface PlatformStatusDTO {
   locked: boolean;
   lockdownMessage: string | null;
   registrationClosedMessage: string | null;
-  /** The community-guidelines revision currently in force. The single source
-   *  of truth is the backend's `CURRENT_GUIDELINES_VERSION`
-   *  (`queerpulse-backend/src/users/users.service.ts`) — read it from here
-   *  rather than hardcoding a local copy that can drift out of sync. */
+  /**
+   * The community-guidelines revision currently in effect, mirroring the
+   * backend's `CURRENT_GUIDELINES_VERSION` (`users.service.ts`). The
+   * onboarding wizard reads this instead of hardcoding its own copy — see
+   * `postCompleteOnboarding` in `features/auth/api/auth.api.ts`.
+   */
   guidelinesVersion: string;
 }
 

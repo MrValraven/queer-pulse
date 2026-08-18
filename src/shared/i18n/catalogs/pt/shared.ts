@@ -278,7 +278,7 @@ export const shared: Catalog = {
     "Cada espaço é revisto antes de receber o selo de verificado. Vê como funciona, e quais foram removidos.",
   "megaNav.lisbon.featurePublic.cta": "Ver como funciona a verificação",
   "megaNav.lisbon.col.discover.head": "Descobrir",
-  "megaNav.lisbon.col.discover.businessDirectory": "Diretório local",
+  "megaNav.lisbon.col.discover.businessDirectory": "Diretório de negócios locais",
   "megaNav.lisbon.col.discover.partners": "Parceiros",
   "megaNav.lisbon.col.livingHere.head": "Viver aqui",
   "megaNav.lisbon.col.livingHere.housing": "Habitação",
@@ -378,7 +378,6 @@ export const shared: Catalog = {
   "footerData.base.privacy": "Privacidade",
   "footerData.base.cookies": "Cookies",
   "footerData.base.guidelines": "Diretrizes da comunidade",
-  "footerData.base.accessibility": "Acessibilidade",
   "footerData.base.security": "Segurança",
   "footerData.base.imprint": "Informação legal",
 

@@ -39,10 +39,16 @@ export const communities: Catalog = {
   "discover.hero.lead":
     "Um diretório vivo de comunidades e coletivos queer por toda a Lisboa. Clubes sociais, coletivos de artes, grupos de ativismo, equipas desportivas, círculos de apoio e redes profissionais: algo para o momento em que estás agora.",
   "discover.hero.cta": "Ir para o teu hub",
+  "discover.search.placeholder": "Pesquisar comunidades por nome ou foco",
+  "discover.search.ariaLabel": "Pesquisar comunidades",
   "discover.empty.none.title": "Ainda sem comunidades",
   "discover.empty.none.description":
     "O diretório ainda está a dar os primeiros passos. Sê das primeiras pessoas a juntar a tua gente. Começa uma comunidade e o resto segue-se.",
   "discover.empty.none.cta": "Começar uma comunidade",
+  "discover.empty.search.title": "Nada corresponde à tua pesquisa",
+  "discover.empty.search.description":
+    "Tenta outra palavra, ou limpa a pesquisa para veres todo o diretório.",
+  "discover.empty.search.cta": "Limpar pesquisa",
   "discover.empty.filtered.title": "Nada corresponde aos teus filtros",
   "discover.empty.filtered.description":
     "Ainda não há comunidades nesta categoria. Volta a todas as comunidades para veres tudo por Lisboa.",
@@ -148,6 +154,8 @@ export const communities: Catalog = {
   "detail.tabs.discussion": "Discussão",
   "detail.tabs.events": "Eventos",
   "detail.tabs.modtools": "Ferramentas de moderação",
+  // Mostrado a um dono/moderador num separador escondido dos membros.
+  "detail.hiddenFromMembers": "Escondido dos membros — só donos e moderadores veem este separador.",
 
   // ── Rótulos partilhados de Sobre / Sobre+Recursos ─────────────────────────
   "detail.about.whoFor": "Para quem é",
@@ -292,15 +300,13 @@ export const communities: Catalog = {
   "join.intro.eyebrow.request": "A pedir para entrar",
   "join.intro.eyebrow.invite": "A entrar com um convite",
   "join.intro.eyebrow.public": "A Junta-te",
-  "join.intro.invitePlaceholder": "Introduz o teu código de convite",
-  "join.intro.verifyCta": "Verificar e continuar",
+  "join.intro.inviteHint":
+    "Esta comunidade é só com convite, por isso o teu pedido segue para a moderação para ser revisto, tal como qualquer pedido para entrar.",
   "join.intro.continueCta": "Continuar",
   "join.about.eyebrow": "Um pouco sobre ti",
   "join.about.title": "Como deve a comunidade conhecer-te?",
   "join.about.hint":
     "Opcional: um pouco de contexto ajuda as pessoas a saberem quem és.",
-  "join.about.namePlaceholder": "O teu nome",
-  "join.about.pronounsPlaceholder": "Pronomes, se quiseres partilhar",
   "join.about.aboutPlaceholder": "Uma frase sobre ti: o que te traz até aqui?",
   "join.involvement.eyebrow": "Quase pronto",
   "join.involvement.title": "Como gostarias de participar?",
@@ -504,12 +510,8 @@ export const communities: Catalog = {
   "start.feature.discussion.desc": "Um quadro partilhado para tópicos.",
   "start.feature.events.label": "Eventos",
   "start.feature.events.desc": "Convívios e um calendário.",
-  "start.feature.rooms.label": "Salas",
-  "start.feature.rooms.desc": "Subcanais para temas.",
   "start.feature.roster.label": "Lista de pessoas",
   "start.feature.roster.desc": "Uma lista visível de quem está aqui.",
-  "start.feature.library.label": "Recursos",
-  "start.feature.library.desc": "Ficheiros e links partilhados.",
 
   // ── Capítulo 5 — Tom ───────────────────────────────────────────────────────
   "start.tone.covenantIntro":

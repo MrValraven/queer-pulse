@@ -18,7 +18,6 @@ export const settings: Catalog = {
   "nav.group.privacyData": "Privacy & data",
   "nav.group.account": "Account",
   "nav.group.personalisation": "Personalisation",
-  "nav.group.prototype": "Prototype",
   "nav.group.dangerZone": "Danger zone",
   "nav.item.notifications": "Notifications",
   "nav.item.language": "Language & terminology",
@@ -30,7 +29,6 @@ export const settings: Catalog = {
   "nav.item.accessibility": "Accessibility",
   "nav.item.interests": "Interests",
   "nav.item.uploads": "My uploads",
-  "nav.item.simulations": "Simulations",
   "nav.item.deleteAccount": "Delete account",
 
   // ── Community terminology guide (settings.data.ts TERMS) ─────────────────
@@ -49,6 +47,8 @@ export const settings: Catalog = {
 
   // ── SettingsPage.tsx (save bar + delete-account confirm hand-off) ────────
   "page.saveBar.unsaved": "You have unsaved changes.",
+  "page.saveBar.changesCount_one": "{count} change",
+  "page.saveBar.changesCount_other": "{count} changes",
   "page.saveBar.discard": "Discard",
   "page.saveBar.save": "Save changes",
   "page.saveBar.savedToast": "Settings saved",
@@ -56,6 +56,12 @@ export const settings: Catalog = {
     "We couldn't save your changes. Please try again.",
   "page.leaveConfirm":
     "You have unsaved changes here. Leave without saving them?",
+
+  // ── SettingsSaveBar.tsx — "what changed" disclosure (settings.data.ts
+  //    changeLabelKey()). Most entries reuse an existing label elsewhere in
+  //    the app; these two have no list-friendly existing label to reuse.
+  "changes.interests.identities": "Identities",
+  "changes.interests.lookingFor": "What you're looking for",
 
   // ── SettingsControls.tsx — DeleteAccountModal (first confirm step) ───────
   "controls.deleteModal.title": "Delete your account?",
@@ -196,15 +202,6 @@ export const settings: Catalog = {
   "interests.contentSetting.sexualityIdentity":
     "Sexuality & identity exploration content",
 
-  // ── SimulationPreviewModal.tsx ────────────────────────────────────────────
-  "previewModal.ariaLabel": "Preview: {title}",
-  "previewModal.kicker": "Preview",
-  "previewModal.deviceGroupAriaLabel": "Preview width",
-  "previewModal.mobile": "Mobile",
-  "previewModal.desktop": "Desktop",
-  "previewModal.openFullScreen": "Open full screen",
-  "previewModal.closeAriaLabel": "Close preview",
-
   // ── SettingsPanes.tsx — NotificationsPane ────────────────────────────────
   "notifications.title": "Notification <em>preferences.</em>",
   "notifications.sub":
@@ -326,13 +323,6 @@ export const settings: Catalog = {
   "data.export.full.title": "Preparing your full export",
   "data.export.messages.title": "Preparing your messages",
   "data.export.messages.note": "Plain export of your full message history.",
-
-  // ── SettingsPanes.tsx — SimulationsPane ───────────────────────────────────
-  "simulations.title": "Flow <em>simulations.</em>",
-  "simulations.sub":
-    "Preview key member journeys end to end. State screens open in a device-frame preview right here; richer flows launch the real screens so you can walk through them exactly as someone else would.",
-  "simulations.preview": "Preview",
-  "simulations.start": "Start simulation",
 
   // ── SettingsPanes.tsx — VisibilityPane (who can find/reach you) ─────────
   // "v" ids (open/network/private) are the stored value — never translate the
@@ -596,8 +586,7 @@ export const settings: Catalog = {
   "dataExport.toast.selectType": "Select at least one data type.",
   "dataExport.outro.titleLine1": "Questions about",
   "dataExport.outro.titleLine2": "your data?",
-  "dataExport.outro.sub":
-    "Write to us and a real person will get back to you.",
+  "dataExport.outro.sub": "Write to us and a real person will get back to you.",
   "dataExport.outro.cta": "Contact us",
 
   // ── DataExportSections.tsx — DataExportSteps ─────────────────────────────
@@ -973,7 +962,7 @@ export const settings: Catalog = {
   "security.scope.title": "What's <em>in scope.</em>",
   "security.scope.inLabel": "In scope",
   "security.scope.outLabel": "Out of scope",
-  "security.scope.in.1": "queerpulse.pt and *.queerpulse.pt",
+  "security.scope.in.1": "queerpulse.com and *.queerpulse.com",
   "security.scope.in.2": "Authentication & session management",
   "security.scope.in.3": "Data access & privilege escalation",
   "security.scope.in.4": "Stored and reflected XSS",
@@ -1028,7 +1017,6 @@ export const settings: Catalog = {
 
   "security.outro.titleTop": "Security is",
   "security.outro.titleEm": "community work.",
-  "security.outro.sub":
-    "Thank you to everyone who helps keep QueerPulse safe.",
+  "security.outro.sub": "Thank you to everyone who helps keep QueerPulse safe.",
   "security.outro.cta": "Contact the security team",
 };

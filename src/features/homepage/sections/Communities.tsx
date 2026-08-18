@@ -3,7 +3,7 @@ import { FiArrowRight } from "react-icons/fi";
 import { Button, Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { routes } from "../../../app/routeMap";
+import { useHowCommunitiesWorkModal } from "../../marketing/useHowCommunitiesWorkModal";
 import { spotlightCommunities } from "./Communities.data";
 import { useCommunityFilters } from "./useCommunityFilters";
 import { CommunitiesToolbar } from "./CommunitiesToolbar";
@@ -13,6 +13,7 @@ import styles from "./Communities.module.css";
 
 export function Communities() {
   const { t } = useTranslation();
+  const { openModal, modalElement } = useHowCommunitiesWorkModal();
   const { state, patch, clear, visible, total, langOptions, hoodOptions } =
     useCommunityFilters();
 
@@ -55,7 +56,7 @@ export function Communities() {
               <p className={styles.sub}>{t("homepage:communities.sub")}</p>
             </div>
             <div className={styles.headRight}>
-              <Button variant="ghost" to={routes.aboutCommunities}>
+              <Button variant="ghost" onClick={openModal}>
                 {t("homepage:communities.howCommunitiesWorkCta")}{" "}
                 <FiArrowRight aria-hidden />
               </Button>
@@ -102,6 +103,7 @@ export function Communities() {
           </div>
         </Reveal>
       </div>
+      {modalElement}
     </section>
   );
 }

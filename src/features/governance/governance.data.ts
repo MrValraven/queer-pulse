@@ -35,11 +35,6 @@ export const GOVERNING_DOCS = [
     to: routes.codeOfConduct,
     blurbKey: "governance:governingDocs.codeOfConduct.blurb",
   },
-  {
-    labelKey: "governance:governingDocs.transparencyReport.label",
-    to: routes.transparencyReport,
-    blurbKey: "governance:governingDocs.transparencyReport.blurb",
-  },
 ];
 
 /**
@@ -303,7 +298,7 @@ export const EXPENSE: FinLine[] = [
     width: 26,
     items: [
       {
-        name: "Domain registration (queerpulse.pt + .com)",
+        name: "Domain registration (queerpulse.com)",
         period: "€3/mo",
         amount: "€9",
       },

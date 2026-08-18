@@ -5,6 +5,7 @@ import type { ChatMessage, Conversation } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
 import type { GroupMemberPick } from "./NewGroupModal";
 import { buildRecipientConversation } from "./recipient";
+import { clearDraft, loadDraft, saveDraft } from "./drafts";
 import {
   buildDemoGroupConversation,
   nextLocalId,
@@ -114,6 +115,16 @@ export function useMessageCreation({
     startConversation.mutate(recipient.slug, {
       onSuccess: (conversation) => {
         if (!conversation) return;
+        // The Composer remounts on `activeId` change (it's keyed by conversation
+        // id), so whatever was typed into the placeholder — including text
+        // seeded by an invite/share deep-link — is stored under the
+        // placeholder's id. Re-key it to the real id the server just assigned
+        // before that remount happens, or it's silently dropped on this swap.
+        const pendingDraft = loadDraft(recipient.id);
+        if (pendingDraft) {
+          saveDraft(conversation.id, pendingDraft);
+          clearDraft(recipient.id);
+        }
         // Swap the placeholder for the real conversation row and repoint the
         // open thread at its UUID. Keeping the real row in `extraThreads`
         // bridges the gap until the inbox refetch surfaces it (dedupe in
@@ -281,12 +292,17 @@ export function useMessageCreation({
   const location = useLocation();
   const navigate = useNavigate();
   const pendingRecipient = (
-    location.state as { to?: { slug: string; name: string } } | null
+    location.state as
+      | { to?: { slug: string; name: string; text?: string } }
+      | null
   )?.to;
 
   // One-shot: honor a "Message <member>" deep-link. Open the existing thread for
   // that slug, or seed+start a new one. Clear the state so back/refresh doesn't
   // re-fire. Works in both modes; live also find-or-creates via startThread.
+  // An optional `text` (e.g. "invite a friend to this gathering") seeds the
+  // composer's draft rather than sending automatically, so the inviter can
+  // still edit or add a note before hitting send.
   useEffect(() => {
     if (!pendingRecipient) return;
     const existingThread = allThreads.find(
@@ -295,10 +311,15 @@ export function useMessageCreation({
     if (existingThread) {
       // One-shot "Message <member>" deep-link; cleared via navigate replace below.
       openThread(existingThread.id);
+      if (pendingRecipient.text)
+        saveDraft(existingThread.id, pendingRecipient.text);
     } else {
-      startThread(
-        buildRecipientConversation(pendingRecipient.slug, pendingRecipient.name),
+      const recipient = buildRecipientConversation(
+        pendingRecipient.slug,
+        pendingRecipient.name,
       );
+      startThread(recipient);
+      if (pendingRecipient.text) saveDraft(recipient.id, pendingRecipient.text);
     }
     void navigate(location.pathname, { replace: true, state: null });
     // eslint-disable-next-line react-hooks/exhaustive-deps

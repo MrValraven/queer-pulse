@@ -6,7 +6,9 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDebouncedValue } from "../../shared/hooks";
 import { useArticleDraft } from "./api/useArticleDraft";
 import { useArticleMutations } from "./api/useArticleMutations";
+import { usePieceMutations } from "./api/usePieceMutations";
 import { usePieceRecord } from "./api/usePieceRecord";
+import { nextPieceStage, STAGE_DTO_TO_VIEW } from "./api/pieces.adapters";
 import type { ArticleBlock, ArticleDraftDto } from "./api/pieces.api";
 import { ArticleDocument } from "./desk/editor/ArticleDocument";
 import { ArticleReaderPreview } from "./desk/editor/ArticleReaderPreview";
@@ -71,6 +73,7 @@ export function ArticleEditorPage() {
   const { article, isLoading, isError } = useArticleDraft(pieceId);
   const { record } = usePieceRecord(pieceId);
   const { save } = useArticleMutations(pieceId);
+  const { moveStage } = usePieceMutations();
   const { showToast } = useToast();
   const docRef = useRef<HTMLDivElement | null>(null);
   const lastSavedRef = useRef<DraftSnapshot | null>(null);
@@ -180,6 +183,14 @@ export function ArticleEditorPage() {
     ? t("magazine:write.header.issueScheduled")
     : t("magazine:piece.header.notScheduled");
   const publishStub = () => showToast(t("magazine:write.header.publishToast"));
+  const nextStage = record ? nextPieceStage(record.stage) : null;
+  const sendOnLabel = nextStage
+    ? t("magazine:write.header.sendOnTo", { stage: STAGE_DTO_TO_VIEW[nextStage] })
+    : t("magazine:write.header.sendOn");
+  const handleSendOn = () => {
+    if (!nextStage) return;
+    moveStage.mutate({ id: pieceId, stage: nextStage });
+  };
 
   function handleSlashOpen(element: HTMLElement, index: number) {
     const rect = element.getBoundingClientRect();
@@ -232,7 +243,9 @@ export function ArticleEditorPage() {
           onModeChange={setMode}
           publishDisabled={publishDisabled}
           onPublish={publishStub}
-          onSendOn={() => showToast(t("magazine:write.header.sendOnToast"))}
+          sendOnLabel={sendOnLabel}
+          sendOnDisabled={!nextStage || moveStage.isPending}
+          onSendOn={handleSendOn}
         />
 
         <div className={styles.ework}>

@@ -235,7 +235,7 @@ export const help: Catalog = {
   "housing.listing.demo":
     "a listing like a sunny one-bed in Príncipe Real, posted by a community member.",
   "local.directory.title":
-    "Local directory",
+    "Local Business directory",
   "local.directory.intro":
     "A living map of queer-run and queer-loving places across the city: cafés, bookshops, studios, bars and services worth your time. It's how you find the spots where you can just be yourself.",
   "local.directory.use":

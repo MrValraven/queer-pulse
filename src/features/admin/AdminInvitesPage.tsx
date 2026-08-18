@@ -170,14 +170,16 @@ export function AdminInvitesPage() {
           }
           sub={t("admin:adminInvites.header.sub")}
           actions={
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setQuotaModalOpen(true)}
-            >
-              <FiSliders aria-hidden />
-              {t("admin:adminInvites.quota.manageCta")}
-            </Button>
+            inviterOptions.length > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setQuotaModalOpen(true)}
+              >
+                <FiSliders aria-hidden />{" "}
+                {t("admin:adminInvites.quota.manageCta")}
+              </Button>
+            )
           }
         />
       </FadeIn>

@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
+import { routes } from "../../../app/routeMap";
 import { Button, Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { routes } from "../../../app/routeMap";
+import { useHowCommunitiesWorkModal } from "../../marketing/useHowCommunitiesWorkModal";
 import { useLandingFeaturesPublic } from "../api/useLandingFeatures";
 import { FeaturedCommunityCard } from "./FeaturedCommunityCard";
 import { landingCommunityToView } from "./communitySpotlightView";
@@ -48,6 +49,7 @@ function EmptySpotlight({ onClear }: { onClear: () => void }) {
  */
 export function LiveCommunities() {
   const { t } = useTranslation();
+  const { openModal, modalElement } = useHowCommunitiesWorkModal();
   const { communities, isLoading } = useLandingFeaturesPublic();
 
   const views = useMemo(
@@ -96,7 +98,7 @@ export function LiveCommunities() {
               <p className={styles.sub}>{t("homepage:liveCommunities.sub")}</p>
             </div>
             <div>
-              <Button variant="ghost" to={routes.aboutCommunities}>
+              <Button variant="ghost" onClick={openModal}>
                 {t("homepage:communities.howCommunitiesWorkCta")}{" "}
                 <FiArrowRight aria-hidden />
               </Button>
@@ -138,6 +140,7 @@ export function LiveCommunities() {
           </div>
         </Reveal>
       </div>
+      {modalElement}
     </section>
   );
 }

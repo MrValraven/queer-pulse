@@ -58,6 +58,8 @@ export const enNamespaceLoaders: Partial<
   studio: () => import("./en/studio").then((module) => module.studio),
   cinema: () => import("./en/cinema").then((module) => module.cinema),
   settings: () => import("./en/settings").then((module) => module.settings),
+  simulations: () =>
+    import("./en/simulations").then((module) => module.simulations),
   admin: () => import("./en/admin").then((module) => module.admin),
   safety: () => import("./en/safety").then((module) => module.safety),
   feed: () => import("./en/feed").then((module) => module.feed),
@@ -96,6 +98,8 @@ export const ptNamespaceLoaders: Partial<
   studio: () => import("./pt/studio").then((module) => module.studio),
   cinema: () => import("./pt/cinema").then((module) => module.cinema),
   settings: () => import("./pt/settings").then((module) => module.settings),
+  simulations: () =>
+    import("./pt/simulations").then((module) => module.simulations),
   admin: () => import("./pt/admin").then((module) => module.admin),
   safety: () => import("./pt/safety").then((module) => module.safety),
   feed: () => import("./pt/feed").then((module) => module.feed),
@@ -152,6 +156,7 @@ const en: Record<Namespace, Catalog> = {
   studio: PENDING_CATALOG,
   cinema: PENDING_CATALOG,
   settings: PENDING_CATALOG,
+  simulations: PENDING_CATALOG,
   admin: PENDING_CATALOG,
   safety: PENDING_CATALOG,
   feed: PENDING_CATALOG,
@@ -189,6 +194,7 @@ const pt: Record<Namespace, Catalog> = {
   studio: PENDING_CATALOG,
   cinema: PENDING_CATALOG,
   settings: PENDING_CATALOG,
+  simulations: PENDING_CATALOG,
   admin: PENDING_CATALOG,
   safety: PENDING_CATALOG,
   feed: PENDING_CATALOG,

@@ -13,9 +13,6 @@ const RoadmapPage = lazyNamed(() => import("./RoadmapPage"), "RoadmapPage");
 const PressArchivePage = lazyNamed(() => import("./PressArchivePage"), "PressArchivePage");
 const ForOrganisationsPage = lazyNamed(() => import("./ForOrganisationsPage"), "ForOrganisationsPage");
 const PressKitPage = lazyNamed(() => import("./PressKitPage"), "PressKitPage");
-const CommunitiesAboutPage = lazyNamed(() => import("./CommunitiesAboutPage"), "CommunitiesAboutPage");
-const TransparencyReportPage = lazyNamed(() => import("./TransparencyReportPage"), "TransparencyReportPage");
-const AccessibilityPage = lazyNamed(() => import("./AccessibilityPage"), "AccessibilityPage");
 const GuidelinesPage = lazyNamed(() => import("./GuidelinesPage"), "GuidelinesPage");
 const AboutPage = lazyNamed(() => import("./AboutPage"), "AboutPage");
 const ContactPage = lazyNamed(() => import("./ContactPage"), "ContactPage");
@@ -37,7 +34,6 @@ const VisasPage = lazyNamed(() => import("./VisasPage"), "VisasPage");
 const ArrivingPage = lazyNamed(() => import("./ArrivingPage"), "ArrivingPage");
 const CookiesPage = lazyNamed(() => import("./CookiesPage"), "CookiesPage");
 const ImprintPage = lazyNamed(() => import("./ImprintPage"), "ImprintPage");
-const DonatePage = lazyNamed(() => import("./DonatePage"), "DonatePage");
 
 /** Marketing, policy, roadmap/press, about/help/volunteer, partners, activism,
  *  and the public "local" surfaces (visas/arriving/directory/business listing). */
@@ -53,10 +49,6 @@ export function marketingRoutes() {
         element={<ForOrganisationsPage />}
       />
       <Route path={routes.pressKit} element={<PressKitPage />} />
-      <Route
-        path={routes.aboutCommunities}
-        element={<CommunitiesAboutPage />}
-      />
       <Route path={routes.privacy} element={<PrivacyPage />} />
       <Route path={routes.terms} element={<TermsPage />} />
       <Route path={routes.dsar} element={<DsarPage />} />
@@ -64,11 +56,6 @@ export function marketingRoutes() {
       <Route path={routes.imprint} element={<ImprintPage />} />
       <Route path={routes.constitution} element={<ConstitutionPage />} />
       <Route path={routes.codeOfConduct} element={<CodeOfConductPage />} />
-      <Route
-        path={routes.transparencyReport}
-        element={<TransparencyReportPage />}
-      />
-      <Route path={routes.accessibility} element={<AccessibilityPage />} />
       <Route path={routes.guidelines} element={<GuidelinesPage />} />
 
       {/* Marketing / content */}
@@ -85,7 +72,6 @@ export function marketingRoutes() {
         element={<VolunteerOpportunityPage />}
       />
       <Route path={routes.platforms} element={<PlatformsPage />} />
-      <Route path={routes.donate} element={<DonatePage />} />
       <Route path={routes.partners} element={<PartnersPage />} />
       <Route
         path={routes.partnerApply}

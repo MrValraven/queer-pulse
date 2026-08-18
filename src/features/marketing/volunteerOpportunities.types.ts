@@ -1,7 +1,28 @@
 import { type ReactNode } from "react";
+import type { Cause, Commit } from "./api/volunteering.api";
 
 export type VolunteerCause = "Rights" | "Health" | "Youth" | "Housing" | "Arts";
 export type VolunteerCommit = "low" | "medium";
+
+/** The poster's "edit this opportunity" modal draft — see
+ *  `EditOpportunityModal`/`EditOpportunityFields`. Lowercase API `cause`/
+ *  `commit` (not the Title-case view-model versions) since it round-trips
+ *  straight into `UpdateOpportunityDto` via `draftToUpdateDto`. */
+export interface OpportunityEditDraft {
+  org: string;
+  role: string;
+  cause: Cause;
+  commit: Commit;
+  time: string;
+  location: string;
+  skills: string;
+  description: string;
+  spotsTotal: string;
+  /** "" for none — mutually exclusive with `communitySlug`, see
+   *  `OrganizationPickerField`. */
+  partnerSlug: string;
+  communitySlug: string;
+}
 
 export interface TeamMember {
   initials: string;
@@ -48,6 +69,9 @@ export interface VolunteerOpportunity {
   /** `slug`, when present (live mode), links the card to the partner's page;
    *  mock data omits it, so the card falls back to the generic partners hub. */
   partner: { name: string; text: ReactNode; slug?: string } | null;
+  /* ---- community card (optional; mutually exclusive with `partner` in
+   *  practice — see `OrganizationPickerField`) ---- */
+  community: { name: string; slug?: string } | null;
 }
 
 export const C = "var(--accent-ink)";

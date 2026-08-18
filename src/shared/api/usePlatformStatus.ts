@@ -2,7 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { getPlatformStatus, type PlatformStatusDTO } from "./platformStatus.api";
 
-/** Demo: everything open. The prototype is never "closed". */
+/**
+ * Demo: everything open. The prototype is never "closed". `guidelinesVersion`
+ * is a static literal here (no backend to read it from in demo mode) — that
+ * is expected demo-fallback duplication, not the drift this field exists to
+ * remove, since `postCompleteOnboarding` is never called in demo mode anyway.
+ */
 const DEMO_STATUS: PlatformStatusDTO = {
   registrationOpen: true,
   joinRequestsOpen: true,

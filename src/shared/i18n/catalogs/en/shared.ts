@@ -296,10 +296,10 @@ export const shared: Catalog = {
     "Every listing is reviewed before it earns the verified badge. See how it works, and which spaces have been delisted.",
   "megaNav.lisbon.featurePublic.cta": "See how verification works",
   "megaNav.lisbon.col.discover.head": "Discover",
-  // Reframed (Task 11): "Local directory" (was "Business Directory") to match
-  // the directory's new role as the single browse surface, and to read the same
-  // as the "Local directory" global-search entry (search.data.ts).
-  "megaNav.lisbon.col.discover.businessDirectory": "Local directory",
+  // "Local Business directory" — keep this in sync with the global-search
+  // entry (search.data.ts), the FeatureHelp title (help.ts), and the PWA
+  // manifest shortcut (vite.config.ts), which all name the same page.
+  "megaNav.lisbon.col.discover.businessDirectory": "Local Business directory",
   "megaNav.lisbon.col.discover.partners": "Partners",
   "megaNav.lisbon.col.livingHere.head": "Living here",
   "megaNav.lisbon.col.livingHere.housing": "Housing",
@@ -401,7 +401,6 @@ export const shared: Catalog = {
   "footerData.base.privacy": "Privacy",
   "footerData.base.cookies": "Cookies",
   "footerData.base.guidelines": "Community guidelines",
-  "footerData.base.accessibility": "Accessibility",
   "footerData.base.security": "Security",
   "footerData.base.imprint": "Legal notice",
 

@@ -42,9 +42,6 @@ export const governance: Catalog = {
   "governingDocs.codeOfConduct.label": "Código de Conduta",
   "governingDocs.codeOfConduct.blurb":
     "O que esperamos umas das outras, e o que acontece quando é violado.",
-  "governingDocs.transparencyReport.label": "Relatório de transparência",
-  "governingDocs.transparencyReport.blurb":
-    "Ações de moderação, finanças e pedidos de dados, em aberto.",
   "subpageIndex.eyebrow": "Documentos de governação",
   "subpageIndex.title": "Lê a letra pequena.",
 

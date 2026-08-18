@@ -9,25 +9,21 @@ export function JoinStepIntro({
   community,
   isRequest,
   isInvite,
-  inviteCode,
-  setInviteCode,
   onNext,
 }: {
   community: JoinModalCommunity;
   isRequest: boolean;
   isInvite: boolean;
-  inviteCode: string;
-  setInviteCode: (v: string) => void;
   onNext: () => void;
 }) {
   const { t } = useTranslation();
   return (
     <div>
       <div className={styles.eye}>
-        {isRequest
-          ? t("communities:join.intro.eyebrow.request")
-          : isInvite
-            ? t("communities:join.intro.eyebrow.invite")
+        {isInvite
+          ? t("communities:join.intro.eyebrow.invite")
+          : isRequest
+            ? t("communities:join.intro.eyebrow.request")
             : t("communities:join.intro.eyebrow.public")}
       </div>
       <div className={styles.title}>{community.name}</div>
@@ -45,28 +41,10 @@ export function JoinStepIntro({
         </div>
       )}
       {isInvite && (
-        <div className={styles.fields}>
-          <input
-            className={styles.input}
-            type="text"
-            autoComplete="off"
-            autoCapitalize="characters"
-            enterKeyHint="next"
-            aria-label={t("communities:join.intro.invitePlaceholder")}
-            placeholder={t("communities:join.intro.invitePlaceholder")}
-            value={inviteCode}
-            onChange={(e) => setInviteCode(e.target.value)}
-          />
-        </div>
+        <p className={styles.hint}>{t("communities:join.intro.inviteHint")}</p>
       )}
-      <Button
-        variant="primary"
-        onClick={onNext}
-        disabled={isInvite && !inviteCode.trim()}
-      >
-        {isInvite
-          ? t("communities:join.intro.verifyCta")
-          : t("communities:join.intro.continueCta")}
+      <Button variant="primary" onClick={onNext}>
+        {t("communities:join.intro.continueCta")}
       </Button>
     </div>
   );
@@ -122,7 +100,7 @@ export function JoinStepAbout({
         />
         <textarea
           className={styles.textarea}
-          rows={3}
+          rows={4}
           aria-label={t("communities:join.about.aboutPlaceholder")}
           placeholder={t("communities:join.about.aboutPlaceholder")}
           value={aboutText}

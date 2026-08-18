@@ -78,151 +78,6 @@ export const marketing: Catalog = {
     "The best way to understand QueerPulse is to be inside it.",
   "about.outro.cta": "Request an invite",
 
-  // ── Accessibility ──────────────────────────────────────────────────────
-  "accessibility.meta.title": "Accessible queer spaces in Lisbon, reviewed",
-  "accessibility.meta.description":
-    "Real accessibility information for queer venues in Lisbon, reviewed by disabled community members rather than guessed at, plus how to request an accommodation directly.",
-  "accessibility.backLabel": "Help",
-  "accessibility.category": "Accessibility",
-  "accessibility.hero.title": "Access <em>shouldn't be a maybe.</em>",
-  "accessibility.hero.sub":
-    "Real accessibility information for queer spaces in Lisbon, reviewed firsthand by disabled members who have been there. Plus how to request an accommodation from us directly.",
-  "accessibility.hero.accomCta": "Request an accommodation",
-  "accessibility.hero.spacesCta": "See accessible spaces",
-  "accessibility.hero.note":
-    "Every venue below was reviewed by a disabled community member before it was listed.",
-  "accessibility.spaces.title": "Accessible <em>spaces</em>",
-  "accessibility.spaces.body":
-    "Filter by the access feature that matters to you. Every listing reflects what a disabled member actually found there, firsthand.",
-  "accessibility.spaces.filterLabel": "Filter by:",
-  "accessibility.spaces.emptyTitle": "No spaces match that filter yet",
-  "accessibility.spaces.emptyBody":
-    "Try a different feature, or flag a venue you'd like reviewed.",
-  "accessibility.filters.all": "All spaces",
-  "accessibility.filters.stepFree": "Step-free",
-  "accessibility.filters.accessibleBathroom": "Accessible bathroom",
-  "accessibility.filters.seating": "Seating",
-  "accessibility.filters.hearingLoop": "Hearing loop",
-  "accessibility.filters.sensoryFriendly": "Sensory-friendly",
-  "accessibility.filters.carerWelcome": "Carer welcome",
-  "accessibility.commitments.title": "Our <em>commitments</em>",
-  "accessibility.commitments.body":
-    "What we already do, and what we're still working on: no rounding up.",
-  "accessibility.commitments.captions.title": "Live captions",
-  "accessibility.commitments.captions.body":
-    "Community events with a spoken program get live captions on request.",
-  "accessibility.commitments.captions.status": "Available on request",
-  "accessibility.commitments.lgp.title": "LGP interpretation",
-  "accessibility.commitments.lgp.body":
-    "Portuguese Sign Language interpretation for flagship events, booked in advance.",
-  "accessibility.commitments.lgp.status": "Flagship events only",
-  "accessibility.commitments.seating.title": "Seating, always",
-  "accessibility.commitments.seating.body":
-    "Every QueerPulse-run event guarantees seated space for anyone who needs it: no exceptions.",
-  "accessibility.commitments.seating.status": "Guaranteed",
-  "accessibility.commitments.sensory.title": "Sensory-friendly slots",
-  "accessibility.commitments.sensory.body":
-    "Lower-volume, lower-crowd windows at select gatherings for members who need them.",
-  "accessibility.commitments.sensory.status": "Selected events",
-  "accessibility.commitments.carers.title": "Carer welcome",
-  "accessibility.commitments.carers.body":
-    "Support people and carers attend free at any QueerPulse event.",
-  "accessibility.commitments.carers.status": "Always free",
-  "accessibility.commitments.platform.title": "An accessible platform",
-  "accessibility.commitments.platform.body":
-    "Screen-reader support, keyboard navigation and reduced-motion are built into the product itself from the start.",
-  "accessibility.commitments.platform.status": "In progress",
-  "accessibility.commitments.accomTitle": "Need something we haven't listed?",
-  "accessibility.commitments.accomBody":
-    "Tell us what you need for a specific event and we'll do what we can, however last-minute.",
-  "accessibility.commitments.accomCta": "Request an accommodation",
-  "accessibility.resources.title": "Related <em>resources</em>",
-  "accessibility.resources.body":
-    "Support that goes beyond what QueerPulse itself can offer.",
-  "accessibility.resources.openingToast": "Opening resource…",
-  "accessibility.resources.benefits.eyebrow": "Financial",
-  "accessibility.resources.benefits.title": "Disability benefits, explained",
-  "accessibility.resources.benefits.body":
-    "A plain-language guide to Portuguese disability benefits and how to apply.",
-  "accessibility.resources.benefits.link": "Read the guide",
-  "accessibility.resources.healthcare.eyebrow": "Healthcare",
-  "accessibility.resources.healthcare.title":
-    "Finding accessible, affirming care",
-  "accessibility.resources.healthcare.body":
-    "Vetted clinicians and clinics who take both accessibility and gender-affirming care seriously.",
-  "accessibility.resources.healthcare.link": "See the list",
-  "accessibility.resources.legal.eyebrow": "Legal",
-  "accessibility.resources.legal.title": "Know your rights",
-  "accessibility.resources.legal.body":
-    "What Portuguese law actually guarantees disabled people, and who to call when it isn't honoured.",
-  "accessibility.resources.legal.link": "Read more",
-  "accessibility.resources.mentalHealth.eyebrow": "Mental health",
-  "accessibility.resources.mentalHealth.title":
-    "Support for chronic illness and disability",
-  "accessibility.resources.mentalHealth.body":
-    "Peer groups and therapists who understand the overlap between queerness and disability.",
-  "accessibility.resources.mentalHealth.link": "Find support",
-  "accessibility.peer.title": "Peer <em>mentorship</em>",
-  "accessibility.peer.body":
-    "Disabled members supporting each other, pairing newer members with someone who's navigated the same systems.",
-  "accessibility.peer.joinCta": "Join as a mentee",
-  "accessibility.peer.joiningToast":
-    "You're on the list. We'll match you soon.",
-  "accessibility.peer.mentorCta": "Become a mentor",
-  "accessibility.outro.title": "Access is a <em>practice,</em> not a policy.",
-  "accessibility.outro.sub":
-    "Tell us where we're falling short. We'd rather know.",
-  "accessibility.outro.cta": "Request an invite",
-  "accessibility.venue.reviewedBy_one": "Reviewed by {count} disabled member",
-  "accessibility.venue.reviewedBy_other":
-    "Reviewed by {count} disabled members",
-  "accessibility.venue.operatedBadge": "QueerPulse-operated space",
-  "accessibility.venue.flagCta": "Flag an issue",
-  "accessibility.flagIssues.stepFree": "Step-free access",
-  "accessibility.flagIssues.bathroom": "Accessible bathroom",
-  "accessibility.flagIssues.seating": "Seating",
-  "accessibility.flagIssues.hearingLoop": "Hearing loop",
-  "accessibility.flagIssues.sensory": "Sensory environment",
-  "accessibility.flagIssues.staff": "Staff attitude",
-  "accessibility.flagIssues.other": "Something else",
-  "accessibility.flagModal.ariaLabel": "Flag an accessibility issue",
-  "accessibility.flagModal.title": "Flag an accessibility issue",
-  "accessibility.flagModal.sub":
-    "Tell us what happened. This goes straight to the space and to our accessibility team.",
-  "accessibility.flagModal.venueLabel": "Venue",
-  "accessibility.flagModal.issueTypeLabel": "What kind of issue?",
-  "accessibility.flagModal.issueTypePlaceholder": "Choose an issue type",
-  "accessibility.flagModal.whatHappenedLabel": "What happened?",
-  "accessibility.flagModal.whatHappenedPlaceholder":
-    "Describe what you ran into",
-  "accessibility.flagModal.whenLabel": "When?",
-  "accessibility.flagModal.whenPlaceholder": "e.g. last weekend, 14 May",
-  "accessibility.flagModal.submitCta": "Submit",
-  "accessibility.flagModal.cancelCta": "Cancel",
-  "accessibility.flagModal.doneTitle": "Thanks. <em>We've got it.</em>",
-  "accessibility.flagModal.doneBody":
-    "We'll follow up with the venue and update this listing if anything changes.",
-  "accessibility.flagModal.closeCta": "Close",
-  "accessibility.accomModal.ariaLabel": "Request an accommodation",
-  "accessibility.accomModal.title": "Request an accommodation",
-  "accessibility.accomModal.sub":
-    "Tell us what you need for a specific event, the more notice, the more we can do.",
-  "accessibility.accomModal.nameLabel": "Your name",
-  "accessibility.accomModal.namePlaceholder": "Your name",
-  "accessibility.accomModal.eventLabel": "Which event?",
-  "accessibility.accomModal.eventPlaceholder": "Event name or date",
-  "accessibility.accomModal.needLabel": "What do you need?",
-  "accessibility.accomModal.needPlaceholder":
-    "e.g. captions, a quiet room, step-free access",
-  "accessibility.accomModal.contactLabel": "Best way to reach you",
-  "accessibility.accomModal.contactPlaceholder": "Email or phone",
-  "accessibility.accomModal.submitCta": "Send request",
-  "accessibility.accomModal.cancelCta": "Cancel",
-  "accessibility.accomModal.doneTitle": "Got it. <em>We're on it.</em>",
-  "accessibility.accomModal.doneBody":
-    "Someone from the team will follow up before the event.",
-  "accessibility.accomModal.closeCta": "Close",
-
   // ── Activism ───────────────────────────────────────────────────────────
   "activism.backToVolunteer": "Back to Volunteering",
   "activism.hero.eyebrow": "Activism",
@@ -752,10 +607,6 @@ export const marketing: Catalog = {
   "help.stillStuck.body":
     "A real person reads every message that comes through here.",
   "help.stillStuck.cta": "Contact us",
-  "help.subpageIndex.title": "Related",
-  "help.subpageIndex.accessibility.label": "Accessibility",
-  "help.subpageIndex.accessibility.blurb":
-    "Accessible spaces, accommodations, and our access commitments.",
 
   // ── Shared legal-doc chrome (Terms / Privacy) ─────────────────────────
   "legal.eyebrow": "Legal",
@@ -1780,75 +1631,6 @@ export const marketing: Catalog = {
   // ── Shared hub back-link label (Governance section) ────────────────────
   "hub.governanceLabel": "Governance",
 
-  // ── Transparency Report — page chrome. The euro figures, allocation
-  //    breakdown, moderation rows, government requests, named mistakes and
-  //    governance stats are the year's actual audited figures — left
-  //    English; see the sweep report.
-  "transparency.meta.title": "QueerPulse's 2025 transparency report",
-  "transparency.meta.description":
-    "QueerPulse's 2025 transparency report, where €278,400 came from and went, moderation actions, government data requests, and the mistakes we're naming.",
-  "transparency.tabs.money": "Money",
-  "transparency.tabs.people": "People",
-  "transparency.tabs.moderation": "Moderation",
-  "transparency.tabs.requests": "Gov requests",
-  "transparency.tabs.mistakes": "Mistakes",
-  "transparency.tabs.governance": "How decisions get made",
-  "transparency.hero.eyebrow": "Annual transparency report · 2025",
-  "transparency.hero.title":
-    "Every <em>euro,</em> every <em>moderation,</em> every <em>mistake.</em>",
-  "transparency.hero.dek":
-    "The numbers behind QueerPulse in 2025, finances, moderation actions, government requests, and the things we got wrong. <em>Published by the QueerPulse volunteer team</em> on 14 May 2026.",
-  "transparency.hero.meta.raised": "Total raised",
-  "transparency.hero.meta.toPrograms": "To programs",
-  "transparency.hero.meta.activeMembers": "Active members",
-  "transparency.hero.meta.mistakesNamed": "Public mistakes named",
-  "transparency.yearSwitch.inProgress": "in progress",
-  "transparency.live.title": "Our first transparency report is coming soon",
-  "transparency.live.description":
-    "We'll publish our figures here once our first reporting period closes: where the money came from and went, moderation actions, government requests, and the mistakes we name.",
-  "transparency.money.title":
-    "Where the money <em>came from,</em> and where it <em>went.</em>",
-  "transparency.money.sub":
-    "All figures in euros, calendar year 2025, self-reported by the volunteer team and available on request as an itemised CSV.",
-  "transparency.money.sourcesHeading": "Where the €278,400 came from",
-  "transparency.money.spentLabel":
-    "Spent in 2025 · 96.1% of receipts · €10,980 surplus carried to reserves",
-  "transparency.people.title": "The <em>people</em> behind the numbers.",
-  "transparency.people.sub":
-    "Members at year-end, growth, who actually shows up. We don't celebrate big numbers, only the right ones.",
-  "transparency.moderation.title": "Moderation, <em>by the numbers.</em>",
-  "transparency.moderation.sub":
-    "What was reported, what we acted on, and how long it took. Every action logged; full anonymised log available to any member on request.",
-  "transparency.moderation.colReason": "Reason for moderation action",
-  "transparency.moderation.colCount": "Count",
-  "transparency.moderation.colYoy": "YoY",
-  "transparency.moderation.colPct": "% of all",
-  "transparency.moderation.breakdown":
-    "Action breakdown: <b>96 posts/comments removed</b>, <b>52 warnings issued</b>, <b>23 temporary suspensions</b> (median 7 days), <b>9 permanent bans</b>, <b>4 cases referred to ILGA</b> for legal handling.",
-  "transparency.requests.title":
-    "Government & legal <em>requests</em> for member data.",
-  "transparency.requests.sub":
-    "Every request we received from any government or legal entity in 2025. We comply with valid Portuguese court orders. <em>We do not comply with informal asks.</em>",
-  "transparency.mistakes.title": "Things we got <em>wrong</em> in 2025.",
-  "transparency.mistakes.sub":
-    "Published because we want this section to be the easiest part of the report to write next year. <em>Naming our own mistakes is the price of being trusted.</em>",
-  "transparency.governance.title": "How <em>decisions</em> got made.",
-  "transparency.governance.sub":
-    "Boring meeting minutes are the foundation of trust. Here's how QueerPulse's governance actually worked in 2025.",
-  "transparency.governance.seeMore":
-    "For full meeting minutes, the constitution, the Sustainer agreement, and the formal organisational chart, see Governance.",
-  "transparency.signoff.title":
-    "Signed in <em>good faith,</em> and ready for questions.",
-  "transparency.signoff.body":
-    "This report was prepared by Catarina Vaz and André Bento and reviewed by the wider volunteer team. <em>Errors are ours.</em> Questions, corrections, or concerns: <a>hello@queerpulse.com</a>. A real person reads them within 48 hours.",
-  "transparency.signoff.role.catarina":
-    "Co-treasurer · drafted finance + mistakes",
-  "transparency.signoff.role.andre":
-    "Co-treasurer · drafted moderation + governance",
-  "transparency.signoff.role.auditor": "Independent auditor",
-  "transparency.signoff.downloadPdf": "Download PDF (84 pages)",
-  "transparency.signoff.downloadCsv": "Download raw CSV",
-
   // ── Changelog — page chrome. The 19 dated release entries (title/body/tag)
   //    are historical release notes — left English due to volume; flagged in
   //    the sweep report rather than rushed.
@@ -1893,7 +1675,6 @@ export const marketing: Catalog = {
   "changelog.tag.employerReviews": "Read employer reviews",
   "changelog.tag.studio": "Visit the Studio",
   "changelog.tag.search": "Try global search",
-  "changelog.tag.donate": "See where money goes",
   "changelog.tag.volunteer": "Find a way in",
   "changelog.tag.postVolunteer": "Post an opportunity",
   "changelog.tag.comingOut": "Read the coming-out guide",
@@ -2051,6 +1832,18 @@ export const marketing: Catalog = {
   "changelog.entries.side-quests-getting-started.body":
     "Finishing the getting-started checklist used to be a dead end. Now it opens onto side quests: the badges you haven't earned yet, each with a button straight to where you'd go to work on it, plus any perk you've unlocked but haven't claimed. Four new badges came with it, for exploring the Local directory, saving articles, joining a second community, and filling out your Work Profile.",
 
+  "changelog.entries.join-request-invite-email.title":
+    "Approved applicants now get an invite email",
+  "changelog.entries.join-request-invite-email.body":
+    "Approving a join request used to only mint an invite link inside the admin queue, so an applicant only got in if the reviewer copied that link and emailed it by hand. Approval now sends the invite link straight to the applicant automatically. Copying the link is still there as a manual backup.",
+  "changelog.entries.article-editor-header-and-send-on.title":
+    "Article editor header fixed, and Send on now works",
+  "changelog.entries.article-editor-header-and-send-on.body":
+    "The article editor's toolbar was sticking 76px below the top of the screen instead of right at it, so scrolled text showed through above and below it. It now sits flush against the top. \"Send on\" also used to just show a toast, and now actually moves the piece to its next editorial stage.",
+  "changelog.entries.gathering-rsvp-fix.title": "RSVP buttons now confirm your spot",
+  "changelog.entries.gathering-rsvp-fix.body": "Tapping \"I'm going\" on a gathering's page wasn't visibly doing anything. It now confirms right away, with a toast and a Cancel RSVP option in the same spot.",
+  "changelog.entries.add-to-calendar-modal.title": "Add gatherings to your calendar",
+  "changelog.entries.add-to-calendar-modal.body": "\"Add to calendar\" on a gathering you're going to or hosting now opens a picker for Google Calendar or a downloadable .ics file that works with Apple Calendar, Outlook, and most other calendar apps.",
   "changelog.entries.recognition-xp.title": "Earn XP, levels, and badges",
   "changelog.entries.recognition-xp.body": "Your activity now earns experience toward levels and badges. Finishing your getting started checklist, joining communities, attending gatherings, and connecting with members all move you up. Track your progress on the Badges page.",
 
@@ -3830,6 +3623,7 @@ export const marketing: Catalog = {
   "volunteer.signups.closedTag": "This opportunity is closed",
   "volunteer.signups.closing": "Closing…",
   "volunteer.signups.closeCta": "Close opportunity",
+  "volunteer.signups.reviewCta": "{{count}} to review",
   "volunteer.adapter.eyebrow": "Volunteer · {cause} · {org}",
   "volunteer.adapter.recruitingNow": "Recruiting now",
   "volunteer.adapter.closedNotRecruiting": "Closed · not recruiting",
@@ -3888,6 +3682,7 @@ export const marketing: Catalog = {
     "Pick a community you own or moderate, or an approved partner org.",
   "postOpportunity.core.orgEmptyState":
     "You'll need to own or moderate a community, or be an approved partner, before you can post an opportunity on their behalf.",
+  "postOpportunity.core.orgPlaceholder": "e.g. your organisation",
   "postOpportunity.core.orgLinkLabel": "Link to an organisation",
   "postOpportunity.core.orgLinkHelper":
     "Optional: attach this post to a community you own or moderate, or an approved partner.",
@@ -3915,17 +3710,28 @@ export const marketing: Catalog = {
     "What the volunteer will help with, in plain language.",
   "postOpportunity.core.skillsLabel": "Skills",
   "postOpportunity.core.skillsHelper":
-    "Comma-separated, shown as hashtags on the card.",
+    "Comma-separated, shown as hashtags on the card. Up to {maxCount}, {maxLength} characters each.",
   "postOpportunity.core.skillsPlaceholder":
     "Communication, Languages, Event support",
+  "postOpportunity.edit.eyebrow": "Volunteer · Edit",
+  "postOpportunity.edit.title": "Edit this <em>opportunity.</em>",
+  "postOpportunity.edit.sub":
+    "Update the details volunteers see on the listing.",
+  "postOpportunity.edit.saveCta": "Save changes",
+  "postOpportunity.edit.cancelCta": "Cancel",
+  "postOpportunity.edit.successToast": "Your changes are saved.",
+  "postOpportunity.edit.errorToast":
+    "Couldn't save your changes. Please try again.",
   "postOpportunity.rich.summary": "Add more detail (optional)",
   "postOpportunity.rich.whyHeading": "Why it matters",
   "postOpportunity.rich.whyLabel": "Why this role matters",
-  "postOpportunity.rich.whyHelper": "One paragraph per line.",
+  "postOpportunity.rich.whyHelper":
+    "One paragraph per line. Up to {maxCount} paragraphs, {maxLength} characters each.",
   "postOpportunity.rich.whyPlaceholder":
     "What changes because someone shows up for this.",
   "postOpportunity.rich.goodForLabel": "Who's good for this",
-  "postOpportunity.rich.goodForHelper": "One paragraph per line.",
+  "postOpportunity.rich.goodForHelper":
+    "One paragraph per line. Up to {maxCount} paragraphs, {maxLength} characters each.",
   "postOpportunity.rich.goodForPlaceholder":
     "The temperament and skills that fit, as much as the CV.",
   "postOpportunity.rich.tasksHeading": "What they'll actually do",
@@ -4005,6 +3811,9 @@ export const marketing: Catalog = {
     "Returning volunteers: <a>use last year's profile</a> · skips the screen.",
   "volunteerDetail.sidebar.partnershipLabel": "In partnership with",
   "volunteerDetail.sidebar.partnershipLink": "About the partnership",
+  "volunteerDetail.sidebar.communityLabel": "Organised with",
+  "volunteerDetail.sidebar.communityLink": "About this community",
+  "volunteerDetail.sidebar.editCta": "Edit this opportunity",
   "volunteerDetail.sidebar.notRightFit": "Not the right fit?",
   "volunteerDetail.sidebar.otherWays": "Other ways to help right now:",
   "volunteerDetail.sidebar.fundInstead": "Fund this work instead",
@@ -4038,93 +3847,6 @@ export const marketing: Catalog = {
   "partnerDetail.sidebar.becomeBody":
     "Are you an org that ought to be operationally connected to QueerPulse? We're small and slow about this, write to us.",
   "partnerDetail.sidebar.becomeCta": "Get in touch",
-
-  // ── Donate — page chrome. All platform-authored (amounts/allocation/trust
-  //    copy are QueerPulse's own fixed figures, not fetched user content).
-  "donate.meta.title": "Donate to QueerPulse: where every euro goes",
-  "donate.meta.description":
-    "Support QueerPulse with a monthly or one-off gift, funding mutual aid, gatherings, platform safety and paid creative work, with allocation reported every quarter.",
-  "donate.hero.eyebrow": "Support QueerPulse",
-  "donate.hero.title": "Members keep this <em>alive.</em>",
-  "donate.hero.lead":
-    "No ads, no investors, no data sold. QueerPulse runs on the people who use it, and every euro goes back into mutual aid, gatherings, and paying queer creatives fairly.",
-  "donate.toggle.monthly": "Monthly",
-  "donate.toggle.oneOff": "One-off",
-  "donate.amounts.coffee": "a coffee",
-  "donate.amounts.mostChosen": "most chosen",
-  "donate.amounts.sustainsMember": "sustains a member",
-  "donate.amounts.fundsGathering": "funds a gathering",
-  "donate.giveCta.monthly": "Give {amount} / month",
-  "donate.giveCta.oneOff": "Give {amount}",
-  "donate.allocation.title": "Where it <em>actually goes.</em>",
-  "donate.allocation.lead":
-    "Not overheads and salaries for people you'll never meet. Here's the real split.",
-  "donate.allocation.mutualAid.label": "Direct mutual aid",
-  "donate.allocation.mutualAid.body":
-    "Emergency housing, crisis support, and micro-grants paid straight to members in need.",
-  "donate.allocation.gatherings.label": "Gatherings & spaces",
-  "donate.allocation.gatherings.body":
-    "Venue hire, sliding-scale tickets, and the newcomer events that keep the door open.",
-  "donate.allocation.platform.label": "Platform & safety",
-  "donate.allocation.platform.body":
-    "Moderation, the crisis chat line, and keeping the lights on: no ads, no data sold.",
-  "donate.allocation.magazine.label": "The magazine & studio",
-  "donate.allocation.magazine.body":
-    "Paying queer writers, artists, and musicians fairly for the work they make here.",
-  "donate.trust.title": "You can <em>trust the numbers.</em>",
-  "donate.trust.lead":
-    "Transparency isn't a nice-to-have here. It's the deal.",
-  "donate.trust.reported.title": "Every euro is reported",
-  "donate.trust.reported.body":
-    "Quarterly figures published in the open, see exactly where it went.",
-  "donate.trust.noAds.title": "No ads, no data sold",
-  "donate.trust.noAds.body":
-    "We are funded entirely by members. Your support is the whole model.",
-  "donate.trust.membersDecide.title": "Members decide",
-  "donate.trust.membersDecide.body":
-    "The community council votes on how the solidarity fund is spent each quarter.",
-  "donate.outro.title": "Or give your <em>time instead.</em>",
-  "donate.outro.sub":
-    "Money is one way in. Volunteering, hosting, and showing up are just as much the point.",
-  "donate.outro.volunteerCta": "Volunteer with us",
-  "donate.outro.readFiguresCta": "Read the figures",
-
-  // ── Donate modal — payment form chrome (prototype, no real charge).
-  "donateModal.title": "Confirm your <em>gift.</em>",
-  "donateModal.sub": "No ads, no investors, just members keeping this alive.",
-  "donateModal.row.monthlyGift": "Monthly gift",
-  "donateModal.row.oneOffGift": "One-off gift",
-  "donateModal.row.feeCovered": "Processing fee covered",
-  "donateModal.row.chargedToday": "Charged today",
-  "donateModal.amount.monthly": "{amount} / month",
-  "donateModal.checkLabel": "Cover the {pct}% processing fee",
-  "donateModal.checkHint": "So 100% of your {amount} reaches the community.",
-  "donateModal.field.nameOnCard": "Name on card",
-  "donateModal.field.namePlaceholder": "Alex Rivera",
-  "donateModal.field.emailReceipt": "Email for receipt",
-  "donateModal.field.emailPlaceholder": "you@example.com",
-  "donateModal.field.cardNumber": "Card number",
-  "donateModal.field.cardNumberPlaceholder": "1234 5678 9012 3456",
-  "donateModal.field.expiry": "Expiry",
-  "donateModal.field.expiryPlaceholder": "MM / YY",
-  "donateModal.field.cvc": "CVC",
-  "donateModal.processing": "Processing…",
-  "donateModal.submitCta.monthly": "Donate {amount} / month",
-  "donateModal.submitCta.oneOff": "Donate {amount}",
-  "donateModal.secure":
-    "Encrypted & secure. This is a prototype. No real charge is made.",
-  "donateModal.success.title": "You're in.",
-  "donateModal.success.emMonthly": "See you next month.",
-  "donateModal.success.emOneOff": "Thank you.",
-  "donateModal.success.closeLabel": "Done",
-  "donateModal.success.bodyMonthly":
-    "Your {amount} / month goes straight to mutual aid, gatherings, and paying queer creatives fairly. Cancel anytime from your account, no questions asked.",
-  "donateModal.success.bodyOneOff":
-    "Your {amount} goes straight to mutual aid, gatherings, and paying queer creatives fairly. We'll email your receipt shortly.",
-  "donateModal.comingSoon.title": "Giving isn't <em>live yet</em>",
-  "donateModal.comingSoon.body":
-    "We're still setting up secure payments, so we can't take donations here just yet. Nothing was charged. In the meantime, you can see exactly where every pound of community money goes.",
-  "donateModal.comingSoon.figuresCta": "See where the money goes",
 
   // ── Contact — page chrome. All platform-authored form/routing copy.
   "contact.meta.title": "Contact QueerPulse: general, safety, press, partners",
@@ -4313,6 +4035,9 @@ export const marketing: Catalog = {
   //    (`directoryPlaces.ts`: names, taglines, reviews, owner bios) are each
   //    business's own content — left English, same precedent as mock member
   //    bios/reviews elsewhere.
+  "directory.meta.title": "Local Business directory | QueerPulse",
+  "directory.meta.description":
+    "Queer-owned businesses and queer-friendly professionals in Lisbon, vetted and maintained by the community.",
   "directory.hero.eyebrow": "Queer business directory",
   "directory.hero.title": "Find your <em>people's places.</em>",
   "directory.hero.sub":

@@ -205,6 +205,42 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         },
       },
       {
+        id: "join-request-invite-email",
+        category: "fix",
+        date: "18 Aug 2026",
+        ...entryKeys("join-request-invite-email"),
+      },
+      {
+        id: "article-editor-header-and-send-on",
+        category: "fix",
+        date: "18 Aug 2026",
+        ...entryKeys("article-editor-header-and-send-on"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineDesk",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "gathering-rsvp-fix",
+        category: "fix",
+        date: "18 Aug 2026",
+        ...entryKeys("gathering-rsvp-fix"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "add-to-calendar-modal",
+        category: "feature",
+        date: "18 Aug 2026",
+        ...entryKeys("add-to-calendar-modal"),
+        tag: {
+          labelKey: "marketing:changelog.tag.myEvents",
+          to: routes.myEvents,
+        },
+      },
+      {
         id: "recognition-xp",
         category: "feature",
         date: "14 Aug 2026",
@@ -217,7 +253,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("communities-explained"),
         tag: {
           labelKey: "marketing:changelog.tag.aboutCommunities",
-          to: routes.aboutCommunities,
+          to: routes.communities,
         },
       },
       {
@@ -730,7 +766,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("how-communities-work-page"),
         tag: {
           labelKey: "marketing:changelog.tag.aboutCommunities",
-          to: routes.aboutCommunities,
+          to: routes.communities,
         },
       },
       {
@@ -2586,7 +2622,6 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "fix",
         date: "30 Jul 2026",
         ...entryKeys("donate-honest-live"),
-        tag: { labelKey: "marketing:changelog.tag.donate", to: routes.donate },
       },
       {
         id: "gathering-manage-coming-soon",

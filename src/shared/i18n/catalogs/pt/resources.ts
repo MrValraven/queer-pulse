@@ -41,7 +41,8 @@ export const resources: Catalog = {
   "suggestEdit.success.title": "Sugestão <em>recebida.</em>",
   "suggestEdit.success.sub":
     "A equipa editorial vê as sugestões semanalmente e discute alterações maiores na assembleia mensal. Este é um documento vivo precisamente por causa de sugestões como a tua.",
-  "suggestEdit.comingSoon.title": "As edições ainda não estão <em>abertas.</em>",
+  "suggestEdit.comingSoon.title":
+    "As edições ainda não estão <em>abertas.</em>",
   "suggestEdit.comingSoon.sub":
     "As sugestões ao glossário ainda não estão ligadas à equipa editorial no site em produção, por isso não chegariam a ninguém. Preferimos ser honestes a fingir um recibo. Volta cá em breve.",
   "suggestEdit.body.intro":
@@ -466,7 +467,7 @@ export const resources: Catalog = {
   "pronounsGuide.table.chosenName.who": "Só tu",
   "pronounsGuide.table.username.field": "Nome de utilizador",
   "pronounsGuide.table.username.use":
-    "Identificador do URL (queerpulse.pt/@nomedeutilizador)",
+    "Identificador do URL (queerpulse.com/@nomedeutilizador)",
   "pronounsGuide.table.username.who": "Alterável uma vez por ano",
   "pronounsGuide.table.legalName.field": "Nome legal",
   "pronounsGuide.table.legalName.use":
@@ -941,8 +942,7 @@ export const resources: Catalog = {
 
   // ── SoberPage (+ SoberSections.tsx + soberPage.data.ts) ─────────────────
   "sober.hero.backLink": "Hub de Bem-estar",
-  "sober.meta.title":
-    "Sóbrie e queer em Lisboa: eventos e espaços sem álcool",
+  "sober.meta.title": "Sóbrie e queer em Lisboa: eventos e espaços sem álcool",
   "sober.meta.description":
     "Uma vida social queer plena sem álcool — eventos e espaços em Lisboa que não giram à volta do bar, e apoio entre pares para quem está em recuperação, a explorar a sobriedade, ou simplesmente não bebe.",
 
@@ -1026,7 +1026,8 @@ export const resources: Catalog = {
     "Um coordenador vai confirmar a listagem sem álcool e adicioná-la ao calendário dentro de um dia. Vais receber a checklist de anfitrião por email.",
   "sober.host.success.attendSub":
     "Guardámos o teu lugar. A localização privada e um lembrete simpático vão chegar-te no dia anterior — nada é partilhado publicamente.",
-  "sober.host.comingSoon.title": "Os convívios sem álcool estão <em>a chegar.</em>",
+  "sober.host.comingSoon.title":
+    "Os convívios sem álcool estão <em>a chegar.</em>",
   "sober.host.comingSoon.sub":
     "Organizar e confirmar presença ainda não está ligado no site em produção, por isso nada do que escreveres aqui chegaria a uma coordenação. Em vez de fingir, dizemo-lo com clareza — isto abre em breve.",
   "sober.host.intro":
@@ -1316,7 +1317,8 @@ export const resources: Catalog = {
   "microGrants.apply.success.sub":
     "Vamos confirmar a receção por email dentro de 24 horas. O painel de avaliação reúne-se em meados de julho. Terás uma resposta antes de 31 de julho, seja qual for o resultado.",
   "microGrants.apply.success.closeCta": "Fechar",
-  "microGrants.apply.comingSoon.title": "As candidaturas abrem <em>em breve.</em>",
+  "microGrants.apply.comingSoon.title":
+    "As candidaturas abrem <em>em breve.</em>",
   "microGrants.apply.comingSoon.sub":
     "A receção de candidaturas ainda não está ligada no site em produção, por isso nada do que escrevesses aqui chegaria ao painel de avaliação. Preferimos dizê-lo com clareza a fingir um recibo. A ronda do 2.º trimestre abre em breve — volta cá, ou contacta o coletivo se for urgente.",
 
@@ -1400,7 +1402,8 @@ export const resources: Catalog = {
   "microGrants.panel.success.title": "Estás na <em>lista.</em>",
   "microGrants.panel.success.sub":
     "Obrigade. A coordenação do painel avalia as novas pessoas voluntárias antes de cada trimestre e contacta-te antes de a ronda do 3.º trimestre abrir. Os painéis rodam para o trabalho se manter partilhado.",
-  "microGrants.panel.comingSoon.title": "Ainda não aceitamos <em>inscrições.</em>",
+  "microGrants.panel.comingSoon.title":
+    "Ainda não aceitamos <em>inscrições.</em>",
   "microGrants.panel.comingSoon.sub":
     "A inscrição no painel ainda não está ligada no site em produção, por isso este formulário não chegaria a ninguém. Não quisemos fingir o contrário. O painel abre a novas pessoas voluntárias antes de cada trimestre — volta cá em breve.",
   "microGrants.panel.intro":
@@ -2355,10 +2358,6 @@ export const resources: Catalog = {
   "intersectionality.org3.text":
     "A principal organização de direitos LGBTQ+ de Portugal. Trabalha explicitamente na interseção entre direitos LGBTQ+ e migração/raça. Apoio jurídico e advocacia.",
   "intersectionality.org3.link": "Recursos jurídicos",
-  "intersectionality.org4.focus": "Deficiência",
-  "intersectionality.org4.text":
-    "Consulta a página de Acessibilidade da QueerPulse para recursos específicos sobre deficiência para pessoas queer e com deficiência em Lisboa.",
-  "intersectionality.org4.link": "Página de Acessibilidade",
 
   "intersectionality.outro.title": "Tudo o que és <em>pertence aqui.</em>",
   "intersectionality.outro.sub":
@@ -2368,7 +2367,8 @@ export const resources: Catalog = {
 
   // ── Section J: honestidade em modo live — sem prestadores "verificados"
   //    fabricados nem submissões falsas na API real (o demo mantém o mock) ──
-  "therapistProfilePage.live.title": "Este diretório ainda está a ser construído.",
+  "therapistProfilePage.live.title":
+    "Este diretório ainda está a ser construído.",
   "therapistProfilePage.live.body":
     "Estamos a verificar terapeutas afirmativos para pessoas queer em Lisboa antes de qualquer perfil ficar visível aqui, para que cada um seja alguém em quem podes confiar. Ainda não há nada para marcar.",
   "therapistProfilePage.live.cta": "Voltar à saúde mental",

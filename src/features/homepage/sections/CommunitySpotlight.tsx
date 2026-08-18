@@ -16,6 +16,7 @@ import {
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { linkToPath, routes } from "../../../app/routeMap";
+import { useHowCommunitiesWorkModal } from "../../marketing/useHowCommunitiesWorkModal";
 import type {
   CommunityAccess,
   FullCommunity,
@@ -104,6 +105,7 @@ function QuietSpotlight({ community: d }: { community: QuietCommunity }) {
 
 function FullSpotlight({ community: d }: { community: FullCommunity }) {
   const { t } = useTranslation();
+  const { openModal, modalElement } = useHowCommunitiesWorkModal();
   const access = ACCESS[d.access];
   const AccessIcon = access.icon;
   return (
@@ -267,13 +269,14 @@ function FullSpotlight({ community: d }: { community: FullCommunity }) {
             </span>
           </div>
           <div className={styles.actions}>
-            <Button variant="primary" to={routes.aboutCommunities}>
+            <Button variant="primary" onClick={openModal}>
               {t("homepage:communities.howCommunitiesWorkCta")}{" "}
               <FiArrowRight aria-hidden />
             </Button>
           </div>
         </div>
       </div>
+      {modalElement}
     </article>
   );
 }

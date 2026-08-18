@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -25,19 +24,6 @@ export function CinemaSubmitAside() {
             </div>
           </div>
         ))}
-      </div>
-
-      <div className={styles.saCard}>
-        <div className={styles.saHead}>
-          {t("cinema:submit.aside.accessHeading")}
-        </div>
-        <div className={styles.saBody}>
-          {t("cinema:submit.aside.accessBody")}
-        </div>
-        <Link to={routes.accessibility} className={styles.saLink}>
-          {t("cinema:submit.aside.accessCta")}{" "}
-          <FiArrowRight aria-hidden />
-        </Link>
       </div>
 
       <div className={`${styles.saCard} ${styles.saJade}`}>

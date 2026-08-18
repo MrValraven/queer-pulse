@@ -137,6 +137,16 @@
   flex-direction: column;
   gap: 8px;
 }
+.repFieldItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.repFieldCount {
+  font-size: 12px;
+  color: var(--ink-40);
+  text-align: right;
+}
 .repFields input {
   font-family: var(--sans);
   font-size: 16px;

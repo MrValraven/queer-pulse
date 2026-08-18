@@ -381,10 +381,12 @@ export const admin: Catalog = {
   "members.verify.source.other": "Another page",
   "members.verify.ageAttested": "18+ confirmed {date} · Terms v{version}",
   "members.verify.ageAttestedUnknown": "18+ confirmed · Terms v{version}",
-  // Approved: no email is ever sent by the platform — say so, plainly.
+  // Approved: an invite email now goes out automatically; the copy-link
+  // option below stays as a manual backup, so say so plainly, not that
+  // nothing was sent.
   "members.verify.approvedLabel": "Welcomed in",
   "members.verify.sendYourself":
-    "Nothing has been emailed. Send this invite link to {email} yourself. It's the only way they get in.",
+    "An invite email is on its way to {email}. You can also copy the link below and send it yourself as a backup.",
   "members.verify.copyLink": "Copy link",
   "members.verify.copiedLink": "Copied",
   "members.verify.copiedToast": "Invite link copied. Now send it to them",
@@ -711,6 +713,22 @@ export const admin: Catalog = {
   "adminInvites.drawer.dateTime": "{date} at {time}",
   "adminInvites.drawer.inviteMessageLabel": "Invite message",
   "adminInvites.drawer.vouchMessageLabel": "Vouch message",
+  "adminInvites.quota.manageCta": "Manage invite quotas",
+  "adminInvites.quota.modalEyebrow": "Resource limits",
+  "adminInvites.quota.modalTitle": "Invite quotas",
+  "adminInvites.quota.modalHint":
+    "Set how many invites a member can send per month. Leave a field empty and clear it to use the platform default.",
+  "adminInvites.quota.sentCount": "{count} sent",
+  "adminInvites.quota.fieldLabel": "Monthly quota",
+  "adminInvites.quota.defaultPlaceholder": "Default",
+  "adminInvites.quota.inputAriaLabel": "Monthly invite quota for {name}",
+  "adminInvites.quota.saveCta": "Save",
+  "adminInvites.quota.saveAriaLabel": "Save invite quota for {name}",
+  "adminInvites.quota.clearCta": "Clear override",
+  "adminInvites.quota.clearAriaLabel": "Clear invite quota override for {name}",
+  "adminInvites.quota.invalid": "Enter a whole number of 0 or more, or clear the field.",
+  "adminInvites.quota.saved": "Saved {name}'s invite quota.",
+  "adminInvites.quota.cleared": "{name} is back on the default invite quota.",
 
   "adminCommissionInterests.title": "Commission <em>interest</em>",
   "adminCommissionInterests.header.eyebrow": "Culture",
@@ -1695,6 +1713,9 @@ export const admin: Catalog = {
     "Nothing has been flagged. The community looks after each other.",
   "modPanel.reports.metaLine":
     "From {author} · flagged by {reporter} · {time} ago",
+  // Live reports carry no author/reporter identity (leaner backend shape) —
+  // this is the fallback when those fields are missing.
+  "modPanel.reports.metaLiveLine": "Flagged · {time} ago",
   "modPanel.reports.removeCta": "Remove post",
   "modPanel.reports.warnCta": "Warn author",
   "modPanel.reports.dismissCta": "Dismiss",

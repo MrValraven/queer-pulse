@@ -201,7 +201,8 @@ export const system: Catalog = {
   "inviteState.notFound.lead":
     "This invite link doesn't match anything on our side. It may have been mistyped or cut short when it was shared. Ask for a fresh one and we'll get you in.",
   "inviteState.inviterInactive.eyebrow": "Inviter no longer active",
-  "inviteState.inviterInactive.heading": "The person who invited you has <em>moved on.</em>",
+  "inviteState.inviterInactive.heading":
+    "The person who invited you has <em>moved on.</em>",
   "inviteState.inviterInactive.lead":
     "Whoever sent this invite is no longer active on QueerPulse, so their link can't bring you in. Nothing you did. Ask another member you know for a fresh invite, or request one and we'll take it from there.",
   "inviteState.details.expiredOn": "Expired",
@@ -375,9 +376,9 @@ export const system: Catalog = {
   "serverError.sub.maintenance":
     "We're upgrading the platform. Shouldn't be long. We appreciate your patience.",
   "serverError.status.maintenance":
-    "<strong>Planned downtime.</strong> Follow <a>status.queerpulse.pt</a> for updates.",
+    "<strong>Planned downtime.</strong> Follow <a>status.queerpulse.com</a> for updates.",
   "serverError.status.error":
-    "<strong>Our team has been alerted.</strong> Check <a>status.queerpulse.pt</a> for live updates.",
+    "<strong>Our team has been alerted.</strong> Check <a>status.queerpulse.com</a> for live updates.",
   "serverError.actions.retryCta": "Try again",
   "serverError.actions.homeCta": "Go to homepage",
   "serverError.actions.statusCta": "Check platform status",
@@ -432,8 +433,7 @@ export const system: Catalog = {
   "status.incidents.emailDelay.title": "Email notification delays",
   "status.incidents.emailDelay.text":
     "Notification emails were delayed by up to 45 minutes for a 2-hour window. All queued emails were delivered after the issue was resolved.",
-  "status.incidents.dbUpgrade.title":
-    "Scheduled maintenance: database upgrade",
+  "status.incidents.dbUpgrade.title": "Scheduled maintenance: database upgrade",
   "status.incidents.dbUpgrade.text":
     "2-hour maintenance window for PostgreSQL major version upgrade. The platform was in read-only mode during this period.",
   "status.subscribe.title": "Get notified during incidents",

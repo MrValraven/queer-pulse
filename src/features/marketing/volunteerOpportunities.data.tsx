@@ -133,6 +133,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         </>
       ),
     },
+    community: null,
   },
 
   {
@@ -274,6 +275,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         </>
       ),
     },
+    community: null,
   },
 
   {
@@ -416,6 +418,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         </>
       ),
     },
+    community: null,
   },
   {
     slug: "housing-advocate",
@@ -550,6 +553,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         </>
       ),
     },
+    community: null,
   },
 
   {
@@ -669,6 +673,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       </>
     ),
     partner: null,
+    community: null,
   },
 
   {
@@ -792,5 +797,6 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       </>
     ),
     partner: null,
+    community: null,
   },
 ];

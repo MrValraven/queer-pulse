@@ -104,7 +104,6 @@ export const gatherings: Catalog = {
   // ── In-event RSVP control (GatheringRsvpControl) ──────────────────────────
   // RSVP é uma ação dentro do detalhe do encontro: a ação principal, o estado
   // confirmado "vais estar lá" / lista de espera, e o cancelamento.
-  "rsvpControl.goingCta": "Eu vou",
   "rsvpControl.waitlistCta": "Entrar na lista de espera",
   "rsvpControl.pendingCta": "Um momento…",
   "rsvpControl.goingTitle": "Vais <em>estar lá</em>",
@@ -114,6 +113,9 @@ export const gatherings: Catalog = {
   "rsvpControl.waitlistPosition": "És o número {position} na fila",
   "rsvpControl.waitlistNote": "Avisamos-te assim que abrir uma vaga.",
   "rsvpControl.cancelCta": "Cancelar presença",
+  "rsvpControl.goingToast": "Vais estar lá",
+  "rsvpControl.waitlistToast": "Estás na lista de espera",
+  "rsvpControl.cancelledToast": "Presença cancelada",
 
   // ── Linha de detalhe de quem vai (attendeeMeta) ───────────────────────────
   // Os pronomes ao lado são as palavras da própria pessoa — não se traduzem.
@@ -129,6 +131,7 @@ export const gatherings: Catalog = {
   // Shared/cross-page chrome
   "common.backToGatherings": "Convívios",
   "common.hostedBy": "Organização de",
+  "common.connectCta": "Ligar",
 
   // EventPage — About / Details / Guidelines / hero / members-only / pills
   "event.about.title": "Sobre este convívio",

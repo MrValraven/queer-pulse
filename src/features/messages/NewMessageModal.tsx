@@ -17,6 +17,10 @@ interface NewMessageModalProps {
   /** Forward mode only: the caller's active group conversations, shown as a
    *  second "Groups" section below People. Omitted (empty) in "new" mode. */
   groups?: Conversation[];
+  /** Overrides the mode's default title/sub, for other single-recipient
+   *  picker use cases (e.g. inviting a friend to a gathering). */
+  title?: string;
+  sub?: string;
 }
 
 /**
@@ -86,6 +90,8 @@ export function NewMessageModal({
   onPick,
   mode = "new",
   groups = [],
+  title,
+  sub,
 }: NewMessageModalProps) {
   const { t } = useTranslation();
   const isForward = mode === "forward";
@@ -137,8 +143,14 @@ export function NewMessageModal({
 
   return (
     <Modal
-      title={isForward ? t("messages:forward.title") : t("messages:newMessage.title")}
-      sub={isForward ? t("messages:forward.sub") : t("messages:newMessage.sub")}
+      title={
+        title ??
+        (isForward ? t("messages:forward.title") : t("messages:newMessage.title"))
+      }
+      sub={
+        sub ??
+        (isForward ? t("messages:forward.sub") : t("messages:newMessage.sub"))
+      }
       onClose={onClose}
     >
       <SearchInput

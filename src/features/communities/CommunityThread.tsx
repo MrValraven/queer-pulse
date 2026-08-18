@@ -226,18 +226,6 @@ function useCommunityThreadState(
     showToast(t("communities:detail.thread.restoredToast"), "success");
   }
 
-  function runRestoreReply(replyId: string) {
-    if (demoMode) {
-      setReplyOverrides((prev) => ({
-        ...prev,
-        [replyId]: { ...prev[replyId], deleted: false },
-      }));
-    } else if (data.id) {
-      restoreReply.mutate({ postId: data.id, replyId }, { onError });
-    }
-    showToast(t("communities:detail.thread.restoredToast"), "success");
-  }
-
   function runTogglePinOp() {
     const next = !opPinned;
     if (demoMode) {
@@ -284,6 +272,18 @@ function useCommunityThreadState(
       subjectId: reply.id,
       subjectType: "reply",
     });
+  }
+
+  function runRestoreReply(replyId: string) {
+    if (demoMode) {
+      setReplyOverrides((prev) => ({
+        ...prev,
+        [replyId]: { ...prev[replyId], deleted: false },
+      }));
+    } else if (data.id) {
+      restoreReply.mutate({ postId: data.id, replyId }, { onError });
+    }
+    showToast(t("communities:detail.thread.restoredToast"), "success");
   }
 
   return {

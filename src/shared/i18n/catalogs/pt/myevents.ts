@@ -205,6 +205,10 @@ export const myevents: Catalog = {
   "tools.remindMe": "Lembrar-me",
   "tools.addToCalendar": "Adicionar ao calendário",
   "tools.addedToCalendarToast": "Adicionado ao teu calendário",
+  "tools.addToCalendarModalTitle": "Adicionar ao calendário",
+  "tools.addToCalendarBody": "Escolhe como queres adicionar este evento.",
+  "tools.addToCalendarGoogle": "Google Calendar",
+  "tools.addToCalendarIcs": "Apple Calendar, Outlook e outros",
   "tools.moreOptionsAria": "Mais opções",
   "tools.more": "Mais",
   "tools.switchToGoing": "Mudar para vou",
@@ -320,6 +324,9 @@ export const myevents: Catalog = {
   "moreMenu.shareCopyFailToast":
     "Não foi possível copiar o link. Tenta de novo",
   "moreMenu.inviteFriend": "Convidar um amigo",
+  "moreMenu.invitePickerTitle": "Convidar um amigo",
+  "moreMenu.invitePickerSub": "Envia-lhe o evento para se juntar a ti",
+  "moreMenu.inviteMessageText": "Vem comigo a {title}: {link}",
   "moreMenu.messageHost": "Enviar mensagem a quem organiza",
   "moreMenu.openGroupChat": "Abrir conversa de grupo",
   "moreMenu.changeToGoing": "Mudar para vou",
@@ -329,8 +336,6 @@ export const myevents: Catalog = {
   "moreMenu.requestRefund": "Pedir reembolso",
   "moreMenu.refundToast":
     "Reembolso pedido: 3 a 5 dias até voltar ao teu cartão",
-  "moreMenu.addToWallet": "Adicionar à Apple Wallet",
-  "moreMenu.walletToast": "Adicionado à Apple Wallet",
   "moreMenu.connectWithMet": "Ligar-te a quem conheceste",
   "moreMenu.connectWithMetToast": "A mostrar pessoas que conheceste aqui…",
   "moreMenu.reportEvent": "Denunciar este evento",
@@ -409,6 +414,16 @@ export const myevents: Catalog = {
   "rsvpModal.cancelCta": "Cancelar",
   "rsvpModal.saveCta": "Guardar",
   "rsvpModal.savedToast": "Guardado. Só quem organiza vê isto",
+
+  // ── Ticket modal (EventTicketModal) ───────────────────────────────────────
+  "ticketModal.eyebrow": "O teu bilhete",
+  "ticketModal.statusLabel": "Estado",
+  "ticketModal.whereLabel": "Onde",
+  "ticketModal.online": "Online",
+  "ticketModal.priceLabel": "Preço",
+  "ticketModal.withLabel": "Quem vai",
+  "ticketModal.addToCalendarCta": "Adicionar ao calendário",
+  "ticketModal.addedToCalendarToast": "Adicionado ao teu calendário",
 
   // ── Event preferences modal (EventSettingsModal) ──────────────────────────
   "settingsModal.eyebrow": "Preferências",

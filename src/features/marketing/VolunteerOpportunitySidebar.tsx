@@ -8,13 +8,12 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { VolunteerSignupsCard } from "./VolunteerSignupsCard";
 import { VolunteerSignupModal } from "./VolunteerSignupModal";
+import { VolunteerOrganizationCard } from "./VolunteerOrganizationCard";
 import { routes } from "../../app/routeMap";
 import styles from "./VolunteerOpportunityPage.module.css";
 
 const MEMBER = routes.members;
 const MESSAGES = routes.messages;
-const PARTNER = routes.partner;
-const DONATE = routes.donate;
 
 export function VolunteerOpportunitySidebar({
   opp,
@@ -31,6 +30,7 @@ export function VolunteerOpportunitySidebar({
   onCloseOpportunity,
   closing,
   closed,
+  onEdit,
   alternatives,
 }: {
   opp: VolunteerOpportunity;
@@ -47,13 +47,11 @@ export function VolunteerOpportunitySidebar({
   onCloseOpportunity: () => void;
   closing: boolean;
   closed: boolean;
+  onEdit: () => void;
   alternatives: VolunteerOpportunity[];
 }) {
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState(false);
-  const partnerTo = opp.partner?.slug
-    ? `${routes.partners}/${opp.partner.slug}`
-    : PARTNER;
 
   return (
     <aside className={styles.side}>
@@ -150,49 +148,40 @@ export function VolunteerOpportunitySidebar({
       )}
 
       {isPoster && (
-        <VolunteerSignupsCard
-          signups={signups}
-          loading={signupsLoading}
-          onClose={onCloseOpportunity}
-          closing={closing}
-          closed={closed}
-          opportunitySlug={opp.slug}
-        />
+        <>
+          <Button variant="ghost" className={styles.ctaBtn} onClick={onEdit}>
+            {t("marketing:volunteerDetail.sidebar.editCta")}
+          </Button>
+          <VolunteerSignupsCard
+            signups={signups}
+            loading={signupsLoading}
+            onClose={onCloseOpportunity}
+            closing={closing}
+            closed={closed}
+            opportunitySlug={opp.slug}
+          />
+        </>
       )}
 
-      {opp.partner && (
+      <VolunteerOrganizationCard opp={opp} />
+
+      {alternatives.length > 0 && (
         <div className={styles.card}>
           <div className={styles.cardLabel}>
-            {t("marketing:volunteerDetail.sidebar.partnershipLabel")}
+            {t("marketing:volunteerDetail.sidebar.notRightFit")}
           </div>
-          <span className={styles.partnerPill}>{opp.partner.name}</span>
-          <p className={styles.partnerText}>{opp.partner.text}</p>
-          <Link to={partnerTo} className={styles.partnerLink}>
-            {t("marketing:volunteerDetail.sidebar.partnershipLink")}{" "}
-            <FiArrowRight aria-hidden />
-          </Link>
+          <p className={styles.altText}>
+            {t("marketing:volunteerDetail.sidebar.otherWays")}
+          </p>
+          <div className={styles.altList}>
+            {alternatives.map((a) => (
+              <Link key={a.slug} to={`${routes.volunteer}/opportunity/${a.slug}`}>
+                <FiArrowRight aria-hidden /> {a.role} · {a.org}
+              </Link>
+            ))}
+          </div>
         </div>
       )}
-
-      <div className={styles.card}>
-        <div className={styles.cardLabel}>
-          {t("marketing:volunteerDetail.sidebar.notRightFit")}
-        </div>
-        <p className={styles.altText}>
-          {t("marketing:volunteerDetail.sidebar.otherWays")}
-        </p>
-        <div className={styles.altList}>
-          {alternatives.map((a) => (
-            <Link key={a.slug} to={`${routes.volunteer}/opportunity/${a.slug}`}>
-              <FiArrowRight aria-hidden /> {a.role} · {a.org}
-            </Link>
-          ))}
-          <Link to={DONATE}>
-            <FiArrowRight aria-hidden />{" "}
-            {t("marketing:volunteerDetail.sidebar.fundInstead")}
-          </Link>
-        </div>
-      </div>
     </aside>
   );
 }

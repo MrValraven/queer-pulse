@@ -12,6 +12,7 @@ import {
   FiSettings,
   FiSliders,
 } from "react-icons/fi";
+import { SECTION_LABEL_KEYS } from "./editProfileNav.data";
 
 export type PaneId =
   | "notifications"
@@ -113,6 +114,38 @@ export const NAV: { groupKey: string; items: NavItem[] }[] = [
     ],
   },
 ];
+
+/**
+ * Resolves a `SettingsPage.tsx` change-tracking key (see `markChanged`) to the
+ * i18n key whose text already names that field elsewhere in the app, for the
+ * save bar's "what changed" disclosure (`SettingsSaveBar.tsx`). Reuses
+ * existing labels — the profile pane's own section nav, the Visibility
+ * pane's toggle labels — rather than duplicating copy; only the two Interests
+ * fields (whose only existing labels are full questions, not list-friendly)
+ * get a dedicated key.
+ */
+export function changeLabelKey(key: string): string {
+  const sectionKey = SECTION_LABEL_KEYS[key];
+  if (sectionKey) return sectionKey;
+  switch (key) {
+    case "visibility.audience":
+      return "settings:visibility.section.whoCanSee";
+    case "visibility.privateNetwork":
+      return "settings:visibility.privateNetwork.label";
+    case "visibility.featuredConsent":
+      return "settings:visibility.featuredConsent.label";
+    case "interests.identities":
+      return "settings:changes.interests.identities";
+    case "interests.lookingFor":
+      return "settings:changes.interests.lookingFor";
+    case "theme.appearance":
+      return "settings:nav.item.profileTheme";
+    case "accessibility.preferences":
+      return "settings:nav.item.accessibility";
+    default:
+      return key;
+  }
+}
 
 export const TERMS = [
   { nameKey: "settings:terms.queer.name", defKey: "settings:terms.queer.def" },

@@ -6,7 +6,6 @@ export const FORUM = routes.forum;
 export const SOBER = routes.sober;
 export const REPORT = routes.report;
 export const LEGAL = routes.legal;
-export const ACCESSIBILITY = routes.accessibility;
 export const GOVERNANCE = routes.governance;
 export const CONTACT = routes.contact;
 
@@ -238,15 +237,6 @@ export const ORGS: Org[] = [
     name: "ILGA Portugal",
     textKey: "resources:intersectionality.org3.text",
     link: { labelKey: "resources:intersectionality.org3.link", href: LEGAL },
-  },
-  {
-    focusKey: "resources:intersectionality.org4.focus",
-    name: "Accessibility resources",
-    textKey: "resources:intersectionality.org4.text",
-    link: {
-      labelKey: "resources:intersectionality.org4.link",
-      href: ACCESSIBILITY,
-    },
   },
 ];
 

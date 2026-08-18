@@ -218,6 +218,9 @@ export const forum: Catalog = {
   "postMenu.delete": "Eliminar",
   "postMenu.restore": "Restaurar",
   "postMenu.history": "Ver histórico de edições",
+  "postMenu.pin": "Fixar",
+  "postMenu.unpin": "Desafixar",
+  "postMenu.report": "Denunciar",
   "postMenu.ariaLabel": "Ações da publicação",
 
   // ── Edited mark / deleted-post tombstone ─────────────────────────────────

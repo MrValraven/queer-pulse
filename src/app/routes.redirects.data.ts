@@ -79,8 +79,10 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/solidarity", routes.solidarity],
   // Auth
   ["/sign-in", routes.signIn],
-  // The old create-account prototype is gone — the real live-mode journey is
-  // invite → Google → onboarding, so send this straight to sign-in.
+  // `/create-account` fronted the old CreateAccountPage prototype — a dead
+  // surface removed because the real live-mode journey is invite → Google
+  // OAuth → /auth/onboarding, with no standalone account-creation form.
+  // Send old bookmarks/links to sign-in, the actual entry point.
   ["/create-account", routes.signIn],
   ["/invite", routes.invite],
   ["/request-invite", routes.requestInvite],
@@ -89,8 +91,10 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   // the canonical path (not the `/auth/welcome` alias, which only redirects here
   // again) so it lands in one hop and under the one-time gate.
   ["/welcome", routes.onboarding],
-  // The standalone welcome-tour prototype is gone; the real onboarding wizard
-  // is its replacement.
+  // `/welcome-tour` fronted the orphaned WelcomeTourPage — a "faithful port" of
+  // the old static welcome page that was never wired into the real journey and
+  // wasn't even gated. Removed; send old bookmarks/links to the real one-time
+  // onboarding wizard instead of a route that no longer exists.
   ["/welcome-tour", routes.onboarding],
   // About
   ["/contact", routes.contact],
@@ -101,7 +105,6 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/press-kit", routes.pressKit],
   ["/for-organisations", routes.forOrganisations],
   ["/platforms", routes.platforms],
-  ["/donate", routes.donate],
   ["/volunteer", routes.volunteer],
   // Activism merged into Volunteering: the standalone /activism page is now the
   // "organising guide" nested under Volunteer. Keep the old top-level URL alive.
@@ -115,15 +118,11 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/cookies", routes.cookies],
   ["/constitution", routes.constitution],
   ["/code-of-conduct", routes.codeOfConduct],
-  ["/transparency-report", routes.transparencyReport],
-  ["/accessibility", routes.accessibility],
   ["/guidelines", routes.guidelines],
   // Hub re-parenting (2026-07-05): old paths → new hub-nested homes
   ["/policies/constitution", routes.constitution],
   ["/policies/code-of-conduct", routes.codeOfConduct],
-  ["/policies/transparency-report", routes.transparencyReport],
   ["/about/changelog", routes.changelog],
-  ["/policies/accessibility", routes.accessibility],
   ["/about/press-archive", routes.pressArchive],
   ["/policies/dsar", routes.dsar],
   // System

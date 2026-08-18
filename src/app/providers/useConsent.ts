@@ -28,6 +28,7 @@ export interface ConsentValue {
   acceptAll: (source?: ConsentSource) => void;
   rejectAll: (source?: ConsentSource) => void;
   openPreferences: () => void;
+  closePreferences: () => void;
 }
 
 export const ConsentContext = createContext<ConsentValue | null>(null);

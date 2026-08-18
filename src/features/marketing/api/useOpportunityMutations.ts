@@ -4,8 +4,10 @@ import {
   closeOpportunity,
   createOpportunity,
   signUpForOpportunity,
+  updateOpportunity,
   withdrawSignup,
   type CreateOpportunityDto,
+  type UpdateOpportunityDto,
 } from "./volunteering.api";
 import { opportunityKeys } from "./opportunityKeys";
 
@@ -34,6 +36,33 @@ export function useCreateOpportunity() {
       return { slug: res.slug };
     },
     onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: opportunityKeys.listRoot,
+      });
+    },
+  });
+}
+
+/** PATCH /volunteering/:slug — poster edits an opportunity they posted. Demo
+ * mode keeps the "saving…" beat with no network; the calling page applies
+ * the draft to its own local view of the opportunity either way (there's no
+ * mock store to refetch from), matching `useCloseOpportunity`'s reliance on
+ * mutation state rather than query data for the demo-mode reflection. */
+export function useUpdateOpportunity(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, UpdateOpportunityDto>({
+    mutationFn: async (dto) => {
+      if (demoMode) {
+        await new Promise((r) => setTimeout(r, 500));
+        return;
+      }
+      await updateOpportunity(slug, dto);
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: opportunityKeys.detailRoot,
+      });
       void queryClient.invalidateQueries({
         queryKey: opportunityKeys.listRoot,
       });

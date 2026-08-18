@@ -16,15 +16,20 @@ export interface ArticleEditorHeaderProps {
   onModeChange: (mode: EditorMode) => void;
   publishDisabled: boolean;
   onPublish: () => void;
+  sendOnLabel: string;
+  sendOnDisabled: boolean;
   onSendOn: () => void;
 }
 
 /**
  * The editor's sticky `.ebar` header: back to the piece record, the plain-
  * text title + "Article · {section} · {issue}" sub-line + saved indicator,
- * the Draft/Shape/Read mode seg, a Send-on stub, and Publish (disabled by
- * the same `articlePublishChecklist` the `PublishRail` renders). Extracted
- * from `ArticleEditorPage` purely to keep that file under the 200-line cap.
+ * the Draft/Shape/Read mode seg, Send on (advances the piece to its next
+ * pipeline stage via `moveStage` — disabled once it's already at "Ready",
+ * the last stage), and Publish (still a stub — real publishing happens at
+ * issue production, disabled by the same `articlePublishChecklist` the
+ * `PublishRail` renders). Extracted from `ArticleEditorPage` purely to keep
+ * that file under the 200-line cap.
  */
 export function ArticleEditorHeader({
   pieceId,
@@ -36,6 +41,8 @@ export function ArticleEditorHeader({
   onModeChange,
   publishDisabled,
   onPublish,
+  sendOnLabel,
+  sendOnDisabled,
   onSendOn,
 }: ArticleEditorHeaderProps) {
   const { t } = useTranslation();
@@ -70,8 +77,8 @@ export function ArticleEditorHeader({
         onChange={(value) => onModeChange(value as EditorMode)}
       />
       <div className={styles.right}>
-        <Button variant="ghost" size="sm" onClick={onSendOn}>
-          {t("magazine:write.header.sendOn")}
+        <Button variant="ghost" size="sm" disabled={sendOnDisabled} onClick={onSendOn}>
+          {sendOnLabel}
         </Button>
         <Button variant="plum" size="sm" disabled={publishDisabled} onClick={onPublish}>
           {t("magazine:write.header.publish")}

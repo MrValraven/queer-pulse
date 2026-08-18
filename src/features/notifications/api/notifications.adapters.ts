@@ -6,7 +6,7 @@ import {
   routes,
   thread,
 } from "../../../app/routeMap";
-import { coHostInvitePath } from "../../gatherings/data";
+import { coHostInvitePath, gatheringPath } from "../../gatherings/data";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Formatters } from "../../../shared/i18n/format";
@@ -210,7 +210,7 @@ function sourceHrefFromPayload(
   if (payload.source === "event") {
     const eventSlug = payload.eventSlug;
     return typeof eventSlug === "string" && eventSlug
-      ? `${routes.gatherings}/${eventSlug}`
+      ? gatheringPath(eventSlug)
       : undefined;
   }
   if (payload.source === "job") {

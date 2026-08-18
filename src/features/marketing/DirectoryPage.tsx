@@ -4,6 +4,7 @@ import { Button, FeatureHelp, Outro, Reveal } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { PageMeta } from "../../shared/seo/PageMeta";
 import { routes } from "../../app/routeMap";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { useLocalPlaces } from "./api/useLocalPlaces";
@@ -50,6 +51,10 @@ export function DirectoryPage() {
 
   return (
     <PageShell>
+      <PageMeta
+        title={t("marketing:directory.meta.title")}
+        description={t("marketing:directory.meta.description")}
+      />
       <PageHero
         eyebrow={t("marketing:directory.hero.eyebrow")}
         title={

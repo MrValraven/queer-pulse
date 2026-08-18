@@ -62,7 +62,6 @@ const GATED_PATTERNS: string[] = [
   "/gatherings",
   "/gatherings/*",
   "/rsvp",
-  "/rsvp-ticket",
   "/host",
   "/create-gathering",
   // Forum

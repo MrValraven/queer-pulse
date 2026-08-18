@@ -31,7 +31,13 @@ export const TOTAL_STEPS = 7;
 // widely-recognised English pronoun-set convention (he/him, she/her, they/them
 // …) rather than translated, the same way a member's own pronouns are never
 // translated on their profile. Quick-pick chips in `StepPhotoIdentityFields`.
-export const PRONOUNS = ["he/him", "she/her", "they/them", "she/they", "he/they"];
+export const PRONOUNS = [
+  "he/him",
+  "she/her",
+  "they/them",
+  "she/they",
+  "he/they",
+];
 
 export const NORMS = [
   {

@@ -103,7 +103,6 @@ export const gatherings: Catalog = {
   // ── In-event RSVP control (GatheringRsvpControl) ──────────────────────────
   // RSVP is an action inside the gathering detail: the primary action, its
   // confirmed "you're going" / waitlist state, and cancellation.
-  "rsvpControl.goingCta": "I'm going",
   "rsvpControl.waitlistCta": "Join the waitlist",
   "rsvpControl.pendingCta": "One moment…",
   "rsvpControl.goingTitle": "You're <em>going</em>",
@@ -113,6 +112,9 @@ export const gatherings: Catalog = {
   "rsvpControl.waitlistPosition": "You're number {position} in line",
   "rsvpControl.waitlistNote": "We'll let you know the moment a spot opens.",
   "rsvpControl.cancelCta": "Cancel RSVP",
+  "rsvpControl.goingToast": "You're going",
+  "rsvpControl.waitlistToast": "You're on the waitlist",
+  "rsvpControl.cancelledToast": "RSVP cancelled",
 
   // ── Attendee meta line (attendeeMeta in api/events.adapters.ts) ───────────
   // The pronouns beside these are the person's own words and stay untranslated.
@@ -128,6 +130,7 @@ export const gatherings: Catalog = {
   // Shared/cross-page chrome
   "common.backToGatherings": "Gatherings",
   "common.hostedBy": "Hosted by",
+  "common.connectCta": "Connect",
 
   // EventPage — About / Details / Guidelines / hero / members-only / pills
   "event.about.title": "About this gathering",

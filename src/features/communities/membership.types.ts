@@ -5,7 +5,8 @@ export type CommunityRole = "owner" | "mod" | "member";
  * How a community gates joining (and whether it shows in Discover).
  * - `public`  — instant join, listed in Discover.
  * - `request` — submit a request that lands in the mods' queue; listed.
- * - `invite`  — needs an invite link/code; listed but gated.
+ * - `invite`  — reviewed the same as `request` (no real invite-code check on
+ *   the backend); listed but gated.
  * - `private` — hidden from Discover unless you're invited (e.g. coming-out).
  */
 export type AccessTier = "public" | "request" | "invite" | "private";

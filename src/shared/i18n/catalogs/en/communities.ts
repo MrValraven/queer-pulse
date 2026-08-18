@@ -35,10 +35,16 @@ export const communities: Catalog = {
   "discover.hero.lead":
     "A living directory of queer communities and collectives across Lisbon. Social clubs, arts collectives, activist groups, sports teams, support circles, and professional networks: something for where you are right now.",
   "discover.hero.cta": "Go to your hub",
+  "discover.search.placeholder": "Search communities by name or focus",
+  "discover.search.ariaLabel": "Search communities",
   "discover.empty.none.title": "No communities yet",
   "discover.empty.none.description":
     "The directory is still finding its feet. Be one of the first to gather your people. Start a community and others will follow.",
   "discover.empty.none.cta": "Start a community",
+  "discover.empty.search.title": "Nothing matches your search",
+  "discover.empty.search.description":
+    "Try a different word, or clear your search to browse the whole directory.",
+  "discover.empty.search.cta": "Clear search",
   "discover.empty.filtered.title": "Nothing matches your filters",
   "discover.empty.filtered.description":
     "No communities in this category yet. Switch back to all communities to see everything across Lisbon.",
@@ -143,6 +149,9 @@ export const communities: Catalog = {
   "detail.tabs.discussion": "Discussion",
   "detail.tabs.events": "Events",
   "detail.tabs.modtools": "Mod tools",
+  // Shown to an owner/mod on a tab they've hidden from members (the
+  // "events"/"roster" feature toggles, or "show roster to members").
+  "detail.hiddenFromMembers": "Hidden from members — only owners and mods can see this tab.",
 
   // ── About / About+Resources shared section labels ─────────────────────────
   "detail.about.whoFor": "Who this is for",
@@ -285,15 +294,13 @@ export const communities: Catalog = {
   "join.intro.eyebrow.request": "Asking to join",
   "join.intro.eyebrow.invite": "Joining with an invitation",
   "join.intro.eyebrow.public": "Joining",
-  "join.intro.invitePlaceholder": "Enter your invite code",
-  "join.intro.verifyCta": "Verify & continue",
+  "join.intro.inviteHint":
+    "This community is invite-only, so your request goes to the mods for review, the same as anyone else asking to join.",
   "join.intro.continueCta": "Continue",
   "join.about.eyebrow": "A bit about you",
   "join.about.title": "How should the community know you?",
   "join.about.hint":
     "Optional: a little context helps people know who you are.",
-  "join.about.namePlaceholder": "Your name",
-  "join.about.pronounsPlaceholder": "Pronouns, if you'd like to share",
   "join.about.aboutPlaceholder":
     "A sentence about yourself: what brings you here?",
   "join.involvement.eyebrow": "Almost done",
@@ -495,12 +502,8 @@ export const communities: Catalog = {
   "start.feature.discussion.desc": "A shared board for threads.",
   "start.feature.events.label": "Events",
   "start.feature.events.desc": "Gatherings and a calendar.",
-  "start.feature.rooms.label": "Rooms",
-  "start.feature.rooms.desc": "Sub-channels for topics.",
   "start.feature.roster.label": "Member roster",
   "start.feature.roster.desc": "A visible list of who's here.",
-  "start.feature.library.label": "Resources",
-  "start.feature.library.desc": "Shared files and links.",
 
   // ── Chapter 5 — Tone ───────────────────────────────────────────────────────
   "start.tone.covenantIntro":

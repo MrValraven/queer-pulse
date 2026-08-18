@@ -451,7 +451,11 @@ export function DataPane({
   );
 }
 
-export function VisibilityPane({ onChange }: { onChange: () => void }) {
+export function VisibilityPane({
+  onChange,
+}: {
+  onChange: (key?: string) => void;
+}) {
   const { t } = useTranslation();
   const { draft, updateDraft } = useProfileEdit();
   return (
@@ -476,7 +480,7 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
                 checked={draft.visibility === o.v}
                 onChange={() => {
                   updateDraft({ visibility: o.v });
-                  onChange();
+                  onChange("visibility.audience");
                 }}
               />
               <div>
@@ -495,7 +499,7 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
             checked={draft.privateNetwork}
             onChange={(next) => {
               updateDraft({ privateNetwork: next });
-              onChange();
+              onChange("visibility.privateNetwork");
             }}
           />
           <ConsentToggleRow
@@ -506,7 +510,7 @@ export function VisibilityPane({ onChange }: { onChange: () => void }) {
             disabledHint={t("settings:visibility.featuredConsent.disabledHint")}
             onChange={(next) => {
               updateDraft({ featuredConsent: next });
-              onChange();
+              onChange("visibility.featuredConsent");
             }}
           />
           <ToggleRow

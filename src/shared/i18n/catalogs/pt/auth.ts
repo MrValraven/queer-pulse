@@ -81,51 +81,6 @@ export const auth: Catalog = {
   "signIn.closed.body":
     "Podes continuar a entrar numa conta já existente, aqui em baixo.",
 
-  // ── Criar conta ──
-  "createAccount.eyebrow": "Quase lá",
-  "createAccount.title": "Cria a tua <em>conta</em>",
-  "createAccount.vouchText":
-    "<strong>{name}</strong> convidou-te para o QueerPulse.",
-  "createAccount.requiredLegend": "Os campos com <req>*</req> são obrigatórios",
-  "createAccount.legalNote":
-    "Tens de ter 18 anos ou mais para te juntares (consulta a nossa <eligibility>política de elegibilidade</eligibility>). Ao continuar, aceitas os nossos <terms>Termos</terms> e a <privacy>Política de Privacidade</privacy>.",
-  "createAccount.signinPrompt": "Já tens conta? <signin>Entrar</signin>",
-  "createAccount.submit": "Criar conta",
-  "createAccount.section.account": "Conta",
-  "createAccount.section.about": "Sobre ti",
-  "createAccount.section.visibility": "Visibilidade",
-  "createAccount.field.firstName.label": "Primeiro nome",
-  "createAccount.field.firstName.placeholder": "Alex",
-  "createAccount.field.lastName.label": "Apelido",
-  "createAccount.field.lastName.placeholder": "Morais",
-  "createAccount.field.email.label": "Email",
-  "createAccount.field.email.helper":
-    "Da tua conta Google — não pode ser alterado aqui.",
-  "createAccount.field.displayName.label": "Nome a mostrar",
-  "createAccount.field.displayName.helper":
-    "Como vais aparecer em todo o QueerPulse.",
-  "createAccount.field.displayName.placeholder": "Como queres que te chamem?",
-  "createAccount.field.pronouns.label": "Pronomes",
-  "createAccount.field.pronouns.placeholder": "ex.: ela/dela",
-  "createAccount.field.location.label": "Localização",
-  "createAccount.field.location.placeholder": "Lisboa",
-  "createAccount.field.bio.label": "Bio",
-  "createAccount.field.bio.placeholder": "Umas palavras sobre ti",
-  "createAccount.error.firstRequired":
-    "Falta o teu primeiro nome — importas-te de o adicionar?",
-  "createAccount.error.lastRequired":
-    "Falta o teu apelido — importas-te de o adicionar?",
-  "createAccount.error.inviteRedeemFailed":
-    "Não conseguimos confirmar o teu convite, mas a tua conta está pronta — já estás dentro.",
-  "createAccount.visibility.open.label": "Disponível para ligações",
-  "createAccount.visibility.open.sub":
-    "Qualquer pessoa na rede pode ver o teu perfil e dizer olá",
-  "createAccount.visibility.network.label": "Só a rede",
-  "createAccount.visibility.network.sub":
-    "Alcançável através de ligações em comum",
-  "createAccount.visibility.private.label": "Em privado por agora",
-  "createAccount.visibility.private.sub": "Contacto quando estiver preparade",
-
   // ── Ilustração "lareira" na página de entrada ──
   "communityArt.ariaLabel":
     "Ilustração de pessoas da comunidade a aproximarem-se de um centro acolhedor e caloroso",
@@ -313,6 +268,11 @@ export const auth: Catalog = {
   "requestInvite.sending": "A enviar o teu pedido…",
   "requestInvite.submitError":
     "Não foi possível enviar o teu pedido — tenta outra vez",
+  // 429: o formulário público tem um limite de 3 pedidos/hora por IP. Tentar
+  // de imediato não vai resultar, por isso a mensagem define a expectativa
+  // com clareza em vez de convidar a essa tentativa.
+  "requestInvite.rateLimitedError":
+    "Atingiste o limite por agora. Espera um pouco e tenta novamente.",
   "requestInvite.under18BackLabel": "Voltar ao formulário",
   "requestInvite.sent.title": "Estás na <em>lista.</em>",
   "requestInvite.sent.sub_withName":
@@ -377,7 +337,7 @@ export const auth: Catalog = {
 
   "onboarding.stepPhoto.heading": "Põe um rosto ao <em>nome</em>",
   "onboarding.stepPhoto.body":
-    "Uma foto ajuda as pessoas a sentirem-se confortáveis a ligar-se a ti. Podes sempre adicionar isto depois.",
+    "Uma foto e alguns detalhes rápidos ajudam as pessoas a sentirem-se confortáveis a ligar-se a ti. Podes sempre adicionar ou mudar isto depois.",
   "onboarding.stepPhoto.captionPreview":
     "Ótimo aspeto — toca na foto para a alterar",
   "onboarding.stepPhoto.captionGoogle":
@@ -392,7 +352,17 @@ export const auth: Catalog = {
   "onboarding.stepPhoto.uploadError":
     "Não conseguimos adicionar essa foto. Tenta novamente.",
   "onboarding.stepPhoto.saveError":
-    "Não conseguimos guardar a tua foto. Tenta novamente.",
+    "Não conseguimos guardar isso agora. Tenta novamente.",
+  "onboarding.stepPhoto.pronouns.label": "Pronomes",
+  "onboarding.stepPhoto.pronouns.helper":
+    "Como preferires que as outras pessoas se refiram a ti. Totalmente opcional.",
+  "onboarding.stepPhoto.pronouns.placeholder": "ex.: they/them",
+  "onboarding.stepPhoto.pronouns.quickPickLabel":
+    "Escolhas rápidas de pronomes",
+  "onboarding.stepPhoto.bio.label": "Uma linha sobre ti",
+  "onboarding.stepPhoto.bio.helper":
+    "Aparece no teu perfil. Podes mudar isto a qualquer momento nas Definições.",
+  "onboarding.stepPhoto.bio.placeholder": "Conta um pouco sobre quem és",
 
   "onboarding.stepNorms.heading": "Este é um espaço <em>cuidado</em>",
   "onboarding.stepNorms.norm.bePresent.title": "Está presente",
@@ -450,6 +420,9 @@ export const auth: Catalog = {
 
   "onboarding.stepDone.heading": "Já fazes <em>parte disto</em>",
   "onboarding.stepDone.cta": "Ir para o meu início",
+  "onboarding.stepDone.notifications.title": "Fica a par de tudo",
+  "onboarding.stepDone.notifications.desc":
+    "Recebe notificações de mensagens, convites e lembretes de convívios no teu telemóvel. Podes mudar isto a qualquer momento nas Definições.",
   "onboarding.quickStart.browseDirectory.title":
     "Explora o diretório de pessoas",
   "onboarding.quickStart.browseDirectory.desc":
@@ -459,123 +432,17 @@ export const auth: Catalog = {
   "onboarding.quickStart.magazine.title": "Lê a revista da comunidade",
   "onboarding.quickStart.magazine.desc":
     "Publicada no primeiro dia de cada mês",
+  "onboarding.quickStart.gettingStarted.title":
+    "Vê a tua lista de primeiros passos",
+  "onboarding.quickStart.gettingStarted.desc":
+    "Alguns pequenos marcos para te ajudarem a instalar-te",
 
-  // ── Tour de boas-vindas (fluxo separado de 6 passos, em /welcome-tour) ──
-  "tour.skipSetup": "Saltar configuração",
-  "tour.stepLabel": "Passo {current} de {total}",
-  "tour.allSet": "Já estás dentro!",
-  "tour.nav.back": "Voltar",
-  "tour.nav.continue": "Continuar",
-
-  "tour.welcome.eyebrow": "Já estás dentro",
-  "tour.welcome.heading": "Bem-vinde ao <em>QueerPulse.</em>",
-  "tour.welcome.body":
-    "Alguém na comunidade achou que pertencias aqui — e foi assim que todas as pessoas chegaram. Ainda bem que chegaste.",
-  "tour.welcome.q101Label": "Ainda a encontrar as palavras?",
-  "tour.welcome.q101Body":
-    "Se estás a explorar de novo a tua identidade — não só a chegar a Lisboa — o <q101>Queer 101</q101> é um lugar tranquilo para começar. Não precisas de conta para o ler.",
-  "tour.welcome.cta": "Vamos preparar-te",
-
-  "tour.profile.eyebrow": "O teu perfil",
-  "tour.profile.heading": "Conta-nos um pouco sobre <em>ti.</em>",
-  "tour.profile.body":
-    "É assim que a comunidade te vai conhecer. Podes mudar tudo depois.",
-  "tour.profile.namePlaceholder": "O teu nome",
-  "tour.profile.pronounsPlaceholder": "Pronomes (opcional)",
-  "tour.profile.rolePlaceholder": "O que fazes — o teu papel ou prática",
-  "tour.profile.neighbourhoodDefault": "O teu bairro em Lisboa",
-  "tour.profile.visibilityLabel": "Quão visível queres estar?",
-
-  "tour.visibility.open.title": "Disponível para ligações",
-  "tour.visibility.open.desc":
-    "Qualquer pessoa na rede pode ver o teu perfil e dizer olá",
-  "tour.visibility.network.title": "Só a rede",
-  "tour.visibility.network.desc": "Alcançável através de ligações em comum",
-  "tour.visibility.private.title": "Em privado por agora",
-  "tour.visibility.private.desc": "Contacto quando estiver preparade",
-
-  "tour.interests.eyebrow": "O teu mundo",
-  "tour.interests.heading": "O que é que te <em>importa?</em>",
-  "tour.interests.body":
-    "Usamos isto para sugerir ligações, convívios e comunidades. Seleciona quantos quiseres.",
-  "tour.interest.design": "Design",
-  "tour.interest.tech": "Tecnologia",
-  "tour.interest.film": "Cinema",
-  "tour.interest.music": "Música",
-  "tour.interest.activism": "Ativismo",
-  "tour.interest.wellbeing": "Bem-estar",
-  "tour.interest.food": "Gastronomia",
-  "tour.interest.sports": "Desporto",
-  "tour.interest.writing": "Escrita",
-  "tour.interest.craft": "Artesanato",
-  "tour.interest.policy": "Políticas públicas",
-  "tour.interest.community": "Comunidade",
-
-  "tour.communities.eyebrow": "Os teus espaços",
-  "tour.communities.heading": "Que comunidades <em>te chamam?</em>",
-  "tour.communities.body":
-    "Junta-te agora ou explora depois — podes sempre mudar isto. As tuas escolhas são privadas.",
-
-  "tour.connections.eyebrow": "Primeiras ligações",
-  "tour.connections.heading":
-    "Três pessoas que valem <em>a pena cumprimentar.</em>",
-  "tour.connections.body":
-    "Estas são pessoas que costumam receber bem quem chega. Uma mensagem rápida já faz diferença.",
-  "tour.connections.sayHello": "Diz olá",
-  "tour.connections.sent": "Enviado",
-
-  "tour.explore.eyebrow": "Já está tudo pronto",
-  "tour.explore.heading": "Bem-vinde à <em>comunidade.</em>",
-  "tour.explore.body":
-    "Já fazes parte, oficialmente. Aqui está por onde começar — não há resposta certa, só o que te chama mais atenção.",
-  "tour.explore.cta": "Ir para o QueerPulse",
-
-  "tour.exploreCard.members.name": "Pessoas",
-  "tour.exploreCard.members.desc": "Explora e diz olá a pessoas na rede",
-  "tour.exploreCard.gatherings.name": "Convívios",
-  "tour.exploreCard.gatherings.desc":
-    "Confirma presença em algo a acontecer perto de ti",
-  "tour.exploreCard.communities.name": "Comunidades",
-  "tour.exploreCard.communities.desc":
-    "Encontra um grupo ativo para te juntares",
-  "tour.exploreCard.culture.name": "Cultura",
-  "tour.exploreCard.culture.desc":
-    "Clube do livro, mostra de arte, mural de encomendas, rádio",
-  "tour.exploreCard.economy.name": "Economia",
-  "tour.exploreCard.economy.desc":
-    "Incubadora, ferramentas freelance, transparência salarial",
-  "tour.exploreCard.queer101.name": "Queer 101",
-  "tour.exploreCard.queer101.desc":
-    "Ainda a explorar a tua identidade? Um lugar tranquilo para começar",
-  "tour.exploreCard.volunteer.name": "Voluntariado",
-  "tour.exploreCard.volunteer.desc":
-    "Encontra uma forma de retribuir à comunidade local",
-  "tour.exploreCard.arriving.name": "Chegaste a Lisboa?",
-  "tour.exploreCard.arriving.desc":
-    "Um guia para te instalares na cena queer local",
-  "tour.exploreCard.sexualHealth.name": "Saúde sexual",
-  "tour.exploreCard.sexualHealth.desc":
-    "Testes, PrEP, recursos de VIH — específicos e diretos",
-  "tour.exploreCard.safeSpaces.name": "Espaços seguros",
-  "tour.exploreCard.safeSpaces.desc":
-    "Locais validados pela comunidade — conquistados, não autodeclarados",
-  "tour.exploreCard.sober.name": "Sobriedade social",
-  "tour.exploreCard.sober.desc":
-    "Uma vida social plena, sem o álcool no centro",
-
-  "tour.neighbourhood.principeReal": "Príncipe Real",
-  "tour.neighbourhood.mouraria": "Mouraria",
-  "tour.neighbourhood.bairroAlto": "Bairro Alto",
-  "tour.neighbourhood.caisDoSodre": "Cais do Sodré",
-  "tour.neighbourhood.arroios": "Arroios",
-  "tour.neighbourhood.alfama": "Alfama",
-  "tour.neighbourhood.graca": "Graça",
-  "tour.neighbourhood.marvila": "Marvila",
-  "tour.neighbourhood.estrela": "Estrela",
-  "tour.neighbourhood.intendente": "Intendente",
+  // ── `tour.neighbourhood.elsewhere` é o único sobrevivente do Tour de
+  //    boas-vindas removido (antigo /welcome-tour, uma superfície morta
+  //    "porte fiel"): o `hoodLabel()` de listBusiness.data.ts continua a
+  //    resolver a opção "outro sítio" do dropdown de bairro através desta
+  //    string partilhada do catálogo. ──
   "tour.neighbourhood.elsewhere": "Outro sítio em Lisboa",
-  "tour.neighbourhood.newToLisbon":
-    "Novo em Lisboa — ainda a encontrar o meu caminho",
 
   // ── Primeiros passos — a lista em /account/getting-started. Cada passo é
   //    detetado a partir de dados reais da conta (ver useGettingStarted). ──

@@ -119,6 +119,10 @@ export function useRsvp(slug: string) {
       if (ctx) queryClient.setQueryData(ctx.key, ctx.prev);
     },
     onSettled: () => {
+      // Demo keeps the optimistic head-count patch (no server to reconcile
+      // with, see useToggleEventBookmark below); refetching would overwrite it
+      // from the static mock's untouched goingCount.
+      if (demoMode) return;
       void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
       // Scope to THIS event's attendees only — the app-wide `attendeesRoot`
       // prefix would refetch every mounted attendees dashboard and reset each
@@ -156,6 +160,8 @@ export function useUnrsvp(slug: string) {
       if (ctx) queryClient.setQueryData(ctx.key, ctx.prev);
     },
     onSettled: () => {
+      // Demo keeps the optimistic head-count patch (see useRsvp above).
+      if (demoMode) return;
       void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
       // Scope to THIS event's attendees only (see useRsvp) — avoids resetting
       // every mounted attendees dashboard's `loadMore` paging.

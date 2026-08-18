@@ -4,6 +4,7 @@ import {
   personaPath,
   communityPath,
 } from "../../app/routeMap";
+import { gatheringPath } from "../../features/gatherings/data";
 
 /**
  * Every place an uploaded image can be in use. Mirrors the backend
@@ -89,9 +90,9 @@ export function mediaReferenceHref(reference: MediaReference): string | null {
     case "showcase":
       return slug ? `${routes.members}/${slug}` : null;
     case "event-cover":
-      return slug ? `${routes.gatherings}/${slug}` : null;
+      return slug ? gatheringPath(slug) : null;
     case "event-photo":
-      return slug ? `${routes.gatherings}/${slug}/photos` : null;
+      return slug ? `${gatheringPath(slug)}/photos` : null;
     case "listing":
       return slug ? businessPath(slug) : null;
     case "persona-avatar":

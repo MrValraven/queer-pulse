@@ -13,6 +13,7 @@ import {
   type ReactNode,
 } from "react";
 import { apiAvailable, demoConfigured } from "../../shared/api/config";
+import { isSandbox } from "../../shared/sandbox/sandbox";
 
 interface DemoModeValue {
   /** When true, the app renders mock data and never hits the network. */
@@ -30,9 +31,13 @@ const DemoModeContext = createContext<DemoModeValue | null>(null);
 const STORAGE_KEY = "qp.demoMode.v1";
 
 /** The toggle only means something when demo is opted into AND live is reachable. */
-const toggleable = demoConfigured && apiAvailable;
+const toggleable = demoConfigured && apiAvailable && !isSandbox();
 
 function readInitial(): boolean {
+  // A dev-only simulation sandbox instance is offline by construction: force
+  // demo on regardless of build-time opt-in, so every data hook, auth, and
+  // realtime short-circuit to mocks. Dev-gated inside isSandbox().
+  if (isSandbox()) return true;
   // Demo is an explicit build-time opt-in. A missing/typo'd VITE_API_URL must
   // never be read as "the operator wanted demo" — that inference is the bug.
   if (!demoConfigured) return false;

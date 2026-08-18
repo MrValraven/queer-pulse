@@ -6,6 +6,12 @@ import {
   PostOpportunityTasks,
   PostOpportunityTeamFields,
 } from "./PostOpportunityRichSections";
+import {
+  MAX_GOOD_FOR_COUNT,
+  MAX_GOOD_FOR_LENGTH,
+  MAX_WHY_COUNT,
+  MAX_WHY_LENGTH,
+} from "./postVolunteerOpportunity.data";
 import styles from "./PostVolunteerOpportunityPage.module.css";
 
 /** Optional depth: the story, the tasks, the honest commitment, contact. */
@@ -29,7 +35,10 @@ export function PostOpportunityRichFields({
         </div>
         <FormField
           label={t("marketing:postOpportunity.rich.whyLabel")}
-          helper={t("marketing:postOpportunity.rich.whyHelper")}
+          helper={t("marketing:postOpportunity.rich.whyHelper", {
+            maxCount: MAX_WHY_COUNT,
+            maxLength: MAX_WHY_LENGTH,
+          })}
         >
           <textarea
             rows={3}
@@ -41,7 +50,10 @@ export function PostOpportunityRichFields({
 
         <FormField
           label={t("marketing:postOpportunity.rich.goodForLabel")}
-          helper={t("marketing:postOpportunity.rich.goodForHelper")}
+          helper={t("marketing:postOpportunity.rich.goodForHelper", {
+            maxCount: MAX_GOOD_FOR_COUNT,
+            maxLength: MAX_GOOD_FOR_LENGTH,
+          })}
         >
           <textarea
             rows={3}

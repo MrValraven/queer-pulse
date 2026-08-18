@@ -1,8 +1,11 @@
 /**
- * PLATFORM-LEVEL join requests: a stranger with no account asking to join
- * QueerPulse itself. Do not confuse this with the COMMUNITY-LEVEL join
- * request hook in `src/features/communities/api/useJoinRequests.ts` — same
- * name, same approve/decline shape, entirely different backend module.
+ * PLATFORM-LEVEL join requests: strangers with no account asking to join
+ * QueerPulse itself (the mod/admin review queue). Do not confuse this hook
+ * with `src/features/communities/api/useJoinRequests.ts`, which lists
+ * COMMUNITY-LEVEL join requests, existing members asking to join one gated
+ * community. Same name, same vocabulary (approve/decline), unrelated data:
+ * this one reads `GET /join-requests`, the other `GET
+ * /communities/:slug/join-requests`.
  */
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";

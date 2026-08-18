@@ -10,6 +10,7 @@ import { EventAgenda } from "./EventAgenda";
 import { CalendarCard } from "./CalendarCard";
 import { AcceptInviteConfirm } from "./AcceptInviteConfirm";
 import { RsvpDetailsModal } from "./RsvpDetailsModal";
+import { EventTicketModal } from "./EventTicketModal";
 import { EventSettingsModal } from "./EventSettingsModal";
 import { SeriesScopeModal } from "./SeriesScopeModal";
 import { ReportEventModal } from "./ReportEventModal";
@@ -48,6 +49,7 @@ export function MyEventsBody() {
           local state run per open. */}
       <AcceptInviteConfirm />
       {c.details.open && <RsvpDetailsModal key={c.details.eventId ?? "none"} />}
+      {c.ticket.open && <EventTicketModal key={c.ticket.eventId ?? "none"} />}
       {c.settingsOpen && <EventSettingsModal />}
       {c.scope.open && <SeriesScopeModal />}
       {c.report.open && <ReportEventModal key={c.report.eventId ?? "none"} />}

@@ -41,7 +41,12 @@ export function OnboardingPage() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { markOnboarded } = useAuth();
-  const { data: platformStatus } = usePlatformStatus();
+  // The revision to stamp on completion — read from the live platform status
+  // rather than a hardcoded local constant, so the frontend never drifts from
+  // the backend's own CURRENT_GUIDELINES_VERSION. `postCompleteOnboarding`
+  // treats `undefined` (query not yet settled) as "use the server's current
+  // version", which is the correct answer either way.
+  const guidelinesVersion = usePlatformStatus().data?.guidelinesVersion;
 
   // Seven steps in total, indexed 0–6. Step 0 is the warm "let's begin" intro,
   // counted as Step 1 so the "Step X of N" label is honest and continuous.
@@ -72,7 +77,7 @@ export function OnboardingPage() {
     if (demoMode || stampedRef.current) return;
     if (step !== TOTAL_STEPS - 1) return;
     stampedRef.current = true;
-    void postCompleteOnboarding(platformStatus?.guidelinesVersion)
+    void postCompleteOnboarding(guidelinesVersion)
       .then(({ onboardedAt }) => {
         // Reflect the stamp on the cached user immediately, so the one-time gate
         // won't replay the wizard later in this session (e.g. browser autofill of
@@ -92,7 +97,7 @@ export function OnboardingPage() {
           safeStorage.remove(`${ONBOARDING_STEP_KEY}.u.${persistScope}`);
         }
       });
-  }, [step, demoMode, markOnboarded, persistScope, platformStatus?.guidelinesVersion]);
+  }, [step, demoMode, markOnboarded, persistScope, guidelinesVersion]);
 
   // Focus management: on each step transition the `key={step}` remount drops
   // focus to <body>, so keyboard and screen-reader users lose their place. Move

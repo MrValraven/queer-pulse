@@ -15,6 +15,7 @@ import { MyUploadsPane } from "./MyUploadsPane";
 import { ProfileThemePane, AccessibilityPane } from "./SettingsPersonalisation";
 import { InterestsPane } from "./InterestsPane";
 import { DeleteAccountModal } from "./SettingsControls";
+import { SettingsSaveBar } from "./SettingsSaveBar";
 import {
   AccountPane,
   DataPane,
@@ -38,6 +39,11 @@ export function SettingsPage() {
   })();
   const [pane, setPane] = useState<PaneId>(initialPane);
   const [dirty, setDirty] = useState(false);
+  // Which fields changed, in the order they were touched — feeds the save
+  // bar's "what changed" disclosure. Only panes backed by real persisted
+  // state (profile draft, theme draft) pass a key; cosmetic/coming-soon
+  // controls elsewhere still mark the page dirty but report nothing here.
+  const [changedKeys, setChangedKeys] = useState<string[]>([]);
   const [showDelete, setShowDelete] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
   const openedRef = useRef(false);
@@ -88,7 +94,12 @@ export function SettingsPage() {
     [],
   );
 
-  const markChanged = () => setDirty(true);
+  const markChanged = (key?: string) => {
+    setDirty(true);
+    if (key) {
+      setChangedKeys((prev) => (prev.includes(key) ? prev : [...prev, key]));
+    }
+  };
 
   // Warn before a dirty Settings pane is abandoned — in-app navigation and hard
   // tab-close both prompt. Previously the save bar was the only signal and a
@@ -104,9 +115,16 @@ export function SettingsPage() {
       }
       discardTheme();
       setDirty(false);
+      setChangedKeys([]);
     },
   });
 
+  // The "Flow simulations" settings pane is retired in favour of the
+  // dedicated /simulations sandbox (dev-only). A stray `?pane=simulations`
+  // link (bookmarked or shared before the move) redirects there instead of
+  // rendering a removed pane. Dev-safe: /simulations itself is a no-op route
+  // in production (see features/simulations/routes.tsx), so this never opens
+  // anything in a shipped build.
   if (params.get("pane") === "simulations") {
     return <Navigate to={routes.simulations} replace />;
   }
@@ -157,10 +175,14 @@ export function SettingsPage() {
             {pane === "visibility" && <VisibilityPane onChange={markChanged} />}
             {pane === "profile" && <EditProfilePane onChange={markChanged} />}
             {pane === "profile-theme" && (
-              <ProfileThemePane onChange={markChanged} />
+              <ProfileThemePane
+                onChange={() => markChanged("theme.appearance")}
+              />
             )}
             {pane === "accessibility" && (
-              <AccessibilityPane onChange={markChanged} />
+              <AccessibilityPane
+                onChange={() => markChanged("accessibility.preferences")}
+              />
             )}
             {pane === "interests" && <InterestsPane onChange={markChanged} />}
             {pane === "account" && <AccountPane onChange={markChanged} />}
@@ -171,49 +193,35 @@ export function SettingsPage() {
       </div>
 
       {dirty && (
-        <div className={styles.saveBar}>
-          <p>{saveError ?? t("settings:page.saveBar.unsaved")}</p>
-          <div style={{ display: "flex", gap: 10 }}>
-            <button
-              type="button"
-              className={styles.discard}
-              onClick={() => {
-                if (openedRef.current) {
-                  cancelEditing();
-                  openedRef.current = false;
+        <SettingsSaveBar
+          changedKeys={changedKeys}
+          saveError={saveError}
+          isSaving={isSaving}
+          onDiscard={() => {
+            if (openedRef.current) {
+              cancelEditing();
+              openedRef.current = false;
+            }
+            discardTheme();
+            setDirty(false);
+            setChangedKeys([]);
+          }}
+          onSave={() =>
+            void (async () => {
+              if (openedRef.current) {
+                const ok = await save();
+                if (!ok) {
+                  showToast(t("settings:page.saveBar.saveErrorToast"), "error");
+                  return;
                 }
-                discardTheme();
-                setDirty(false);
-              }}
-            >
-              {t("settings:page.saveBar.discard")}
-            </button>
-            <button
-              type="button"
-              className={styles.saveBtn}
-              disabled={isSaving}
-              onClick={() =>
-                void (async () => {
-                  if (openedRef.current) {
-                    const ok = await save();
-                    if (!ok) {
-                      showToast(
-                        t("settings:page.saveBar.saveErrorToast"),
-                        "error",
-                      );
-                      return;
-                    }
-                  }
-                  commitTheme();
-                  setDirty(false);
-                  showToast(t("settings:page.saveBar.savedToast"), "success");
-                })()
               }
-            >
-              {t("settings:page.saveBar.save")}
-            </button>
-          </div>
-        </div>
+              commitTheme();
+              setDirty(false);
+              setChangedKeys([]);
+              showToast(t("settings:page.saveBar.savedToast"), "success");
+            })()
+          }
+        />
       )}
 
       {showDelete && (

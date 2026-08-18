@@ -6,9 +6,12 @@ import type {
   OpportunityCardDTO,
   OpportunityDetailDTO,
   SignupStatus,
+  UpdateOpportunityDto,
   VolunteerSignupDTO,
 } from "./volunteering.api";
+import type { OrganizationOption } from "./useOrganizationOptions";
 import type {
+  OpportunityEditDraft,
   VolunteerCause,
   VolunteerOpportunity,
   TeamMember,
@@ -64,6 +67,14 @@ const TEAM_TINTS = [
 
 const commitLabel = (c: OpportunityCardDTO["commit"]) =>
   c === "low" ? "Low commitment" : "Medium commitment";
+
+/** Comma-separated input → trimmed, non-empty entries. Mirrors
+ *  `usePostOpportunityForm`'s identical (file-local, unexported) helper. */
+const splitCommas = (s: string) =>
+  s
+    .split(",")
+    .map((x) => x.trim())
+    .filter(Boolean);
 
 /** A member ref → the mock `TeamMember` shape ("Who's already in"). */
 function memberToTeam(
@@ -129,6 +140,9 @@ export function cardToOpportunity(
     partner: dto.partner
       ? { name: dto.partner.name, text: "", slug: dto.partner.slug }
       : null,
+    community: dto.community
+      ? { name: dto.community.name, slug: dto.community.slug }
+      : null,
   };
 }
 
@@ -181,6 +195,121 @@ export function detailToOpportunity(
           text: `In partnership with ${dto.partner.name}.`,
           slug: dto.partner.slug,
         }
+      : null,
+  };
+}
+
+// ── opportunity → edit draft, and back ───────────────────────────────────────
+
+/** The current opportunity → the edit modal's starting draft. */
+export function opportunityToEditDraft(
+  opp: VolunteerOpportunity,
+): OpportunityEditDraft {
+  return {
+    org: opp.org,
+    role: opp.role,
+    cause: causeToLower(opp.cause),
+    commit: opp.commit,
+    time: opp.time,
+    location: opp.location,
+    skills: opp.skills.join(", "),
+    description: opp.description,
+    spotsTotal: String(Number(/\/\s*(\d+)/.exec(opp.spotsFilled)?.[1] ?? 0)),
+    partnerSlug: opp.partner?.slug ?? "",
+    communitySlug: opp.community?.slug ?? "",
+  };
+}
+
+/** The edit draft → PATCH /volunteering/:slug body. Every field is sent
+ * (never conditionally omitted): the draft always represents the FULL
+ * desired state, so `""` for `partnerSlug`/`communitySlug` explicitly clears
+ * the link rather than leaving it untouched (see `UpdateOpportunityDto`). */
+export function draftToUpdateDto(
+  draft: OpportunityEditDraft,
+): UpdateOpportunityDto {
+  return {
+    org: draft.org.trim(),
+    role: draft.role.trim(),
+    cause: draft.cause,
+    commit: draft.commit,
+    time: draft.time.trim(),
+    location: draft.location.trim(),
+    skills: splitCommas(draft.skills),
+    desc: draft.description.trim(),
+    spotsTotal: Number.parseInt(draft.spotsTotal, 10),
+    partnerSlug: draft.partnerSlug,
+    communitySlug: draft.communitySlug,
+  };
+}
+
+/**
+ * The edit draft applied to the currently-rendered opportunity, so the
+ * detail page reflects a save immediately without waiting on a refetch —
+ * load-bearing in demo mode, where there's no server to refetch from at all
+ * (mirrors `useCloseOpportunity`'s reliance on mutation state over query
+ * data for its demo-mode reflection). `organizationOptions` resolves the
+ * picked `partnerSlug`/`communitySlug` back to a display name.
+ */
+export function applyEditDraft(
+  base: VolunteerOpportunity,
+  draft: OpportunityEditDraft,
+  organizationOptions: OrganizationOption[],
+): VolunteerOpportunity {
+  const cause = causeToTitle(draft.cause);
+  const skills = splitCommas(draft.skills);
+  const spotsTotal = Number.parseInt(draft.spotsTotal, 10);
+  const filledMatch = /(\d+)\s*\/\s*\d+/.exec(base.spotsFilled);
+  const filled = filledMatch ? Number(filledMatch[1]) : 0;
+  const spotsOpen = Math.max(spotsTotal - filled, 0);
+  const partnerOption = draft.partnerSlug
+    ? organizationOptions.find(
+        (o) => o.kind === "partner" && o.slug === draft.partnerSlug,
+      )
+    : undefined;
+  const communityOption = draft.communitySlug
+    ? organizationOptions.find(
+        (o) => o.kind === "community" && o.slug === draft.communitySlug,
+      )
+    : undefined;
+
+  return {
+    ...base,
+    org: draft.org,
+    avatar: orgBadgeInitials(draft.org),
+    role: draft.role,
+    cause,
+    commit: draft.commit,
+    time: draft.time,
+    location: draft.location,
+    skills,
+    description: draft.description,
+    sub: draft.description,
+    eyebrow: `Volunteer · ${cause} · ${draft.org}`,
+    titleLead: `${draft.role} · `,
+    titleEm: `${draft.org}.`,
+    stats: [
+      { value: <b>{draft.time}</b>, label: "Per week" },
+      { value: <b>{commitLabel(draft.commit)}</b>, label: "Commitment" },
+      { value: <b>{spotsOpen}</b>, label: "Spots still open" },
+    ],
+    spotsFilled: `${filled} / ${spotsTotal}`,
+    spotsPct: spotsTotal > 0 ? Math.round((filled / spotsTotal) * 100) : 0,
+    applyRole: `${draft.role} · ${draft.org}`,
+    spots: [
+      { label: "Role", value: `${draft.role} · ${draft.org}` },
+      { label: "Commitment", value: commitLabel(draft.commit) },
+      { label: "Per week", value: draft.time },
+      { label: "Location", value: draft.location },
+    ],
+    partner: partnerOption
+      ? {
+          name: partnerOption.name,
+          text: `In partnership with ${partnerOption.name}.`,
+          slug: partnerOption.slug,
+        }
+      : null,
+    community: communityOption
+      ? { name: communityOption.name, slug: communityOption.slug }
       : null,
   };
 }

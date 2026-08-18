@@ -49,8 +49,9 @@ export interface AdminInviteInviterDTO {
   name: string;
   avatarUrl?: string | null;
   count: number;
-  /** This member's monthly invite-quota override, or `null` if they use the
-   *  platform default (`User.inviteMonthlyQuota`, admin-editable). */
+  /** This inviter's per-member monthly invite quota override. `null` means no
+   *  override — they use the platform-wide default. Editable inline from the
+   *  oversight page via {@link patchAdminInviteQuota}. */
   inviteMonthlyQuota: number | null;
 }
 
@@ -76,10 +77,26 @@ export const getAdminInvites = (parameters: {
 export const getAdminInviteInviters = () =>
   apiGet<AdminInviteInviterDTO[]>("/admin/invites/inviters");
 
-/** Admin sets (or clears, with `quota: null`) a member's monthly invite-quota
- *  override. `PATCH /admin/members/:memberId/invite-quota`, Admin role only. */
-export const patchAdminInviteQuota = (memberId: string, quota: number | null) =>
-  apiPatch<{ inviteMonthlyQuota: number | null }>(
-    `/admin/members/${memberId}/invite-quota`,
+/** The shape returned after setting or clearing a member's invite quota
+ *  override. Mirrors the backend's `updateInviteQuota` response. */
+export interface AdminInviteQuotaDTO {
+  userId: string;
+  slug: string;
+  inviteMonthlyQuota: number | null;
+}
+
+/**
+ * Set (or, with `quota: null`, clear) one member's monthly invite quota
+ * override. Admin-only. Lives on `AdminMembersController` on the backend
+ * (`PATCH /admin/members/:memberSlug/invite-quota`) — declared here rather
+ * than in `adminMembers.api.ts` because the only consumer is this page's
+ * inviter list, which already carries `inviteMonthlyQuota` on each row.
+ */
+export const patchAdminInviteQuota = (
+  memberSlug: string,
+  quota: number | null,
+) =>
+  apiPatch<AdminInviteQuotaDTO>(
+    `/admin/members/${memberSlug}/invite-quota`,
     { quota },
   );

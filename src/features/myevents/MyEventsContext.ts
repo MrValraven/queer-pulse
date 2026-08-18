@@ -104,6 +104,9 @@ export interface MyEventsValue {
   details: { open: boolean; eventId: string | null };
   openDetails: (id: string) => void;
   closeDetails: () => void;
+  ticket: { open: boolean; eventId: string | null };
+  openTicket: (id: string) => void;
+  closeTicket: () => void;
   settingsOpen: boolean;
   openSettings: () => void;
   closeSettings: () => void;

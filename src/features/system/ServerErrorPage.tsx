@@ -132,7 +132,7 @@ export function ServerErrorPage() {
                   components={{
                     strong: <strong />,
                     // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- element template; <Translation> clones it with the link text at render time.
-                    a: <a href="https://status.queerpulse.pt" />,
+                    a: <a href="https://status.queerpulse.com" />,
                   }}
                 />
               ) : (

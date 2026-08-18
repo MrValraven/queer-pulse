@@ -1,15 +1,20 @@
 import { Link } from "react-router-dom";
 import { FiUsers } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Avatar, Button } from "../../shared/components/ui";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { photoOf } from "../communities/communityPeople";
+import type { Tint } from "../communities/communityDetails";
 import type { SignupRow } from "./api/volunteering.adapters";
 import { routes } from "../../app/routeMap";
 import styles from "./VolunteerOpportunityPage.module.css";
 
 /**
- * Poster-only roster of everyone who signed up (GET /volunteering/:slug/signups),
- * plus the poster's "Close opportunity" control (POST …/close). Only mounted
- * when the viewer is the poster; hidden entirely in demo mode (no live roster).
+ * Poster-only roster of CONFIRMED volunteers (GET /volunteering/:slug/signups,
+ * filtered to `status === "accepted"`) plus the "Close opportunity" control.
+ * Pending applications aren't reviewed here — a link to the manage-applicants
+ * dashboard (`VolunteerApplicantsDashboardPage`) handles that. Only mounted
+ * when the viewer is the poster.
  */
 export function VolunteerSignupsCard({
   signups,
@@ -17,14 +22,20 @@ export function VolunteerSignupsCard({
   onClose,
   closing,
   closed,
+  opportunitySlug,
 }: {
   signups: SignupRow[];
   loading: boolean;
   onClose: () => void;
   closing: boolean;
   closed: boolean;
+  opportunitySlug: string;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  const accepted = signups.filter((row) => row.status === "accepted");
+  const pendingCount = signups.filter((row) => row.status === "pending").length;
+
   return (
     <div className={styles.card}>
       <div className={styles.cardLabel}>
@@ -35,33 +46,41 @@ export function VolunteerSignupsCard({
         <p className={styles.altText}>
           {t("marketing:volunteer.signups.loading")}
         </p>
-      ) : signups.length === 0 ? (
+      ) : accepted.length === 0 ? (
         <p className={styles.altText}>
           {t("marketing:volunteer.signups.empty")}
         </p>
       ) : (
         <div className={styles.signupList}>
-          {signups.map((row) => {
+          {accepted.map((row) => {
             const inner = (
               <>
-                <span
-                  className={styles.signupAv}
-                  style={{ background: row.background, color: row.color }}
-                >
-                  {row.initials}
-                </span>
+                <Avatar
+                  initials={row.initials}
+                  size={36}
+                  src={
+                    row.person
+                      ? // `photoOf` wants the communities-local `Person` (narrower
+                        // `Tint`); `row.person` is the shared `refs.Person`
+                        // (`AvatarTint`, a superset). `photoOf` only reads
+                        // `avatarUrl`/`slug`, never `tint`, so this narrowing is
+                        // safe — same precedent as `refToPerson` in
+                        // communities/api/communities.adapters.ts.
+                        photoOf(
+                          { ...row.person, tint: row.person.tint as Tint },
+                          demoMode,
+                        )
+                      : undefined
+                  }
+                />
                 <span className={styles.signupBody}>
                   <b>{row.name}</b>
-                  {row.note ? (
-                    <span className={styles.signupNote}>{row.note}</span>
-                  ) : (
-                    row.when && (
-                      <span className={styles.signupNote}>
-                        {t("marketing:volunteer.signups.signedUp", {
-                          when: row.when,
-                        })}
-                      </span>
-                    )
+                  {row.when && (
+                    <span className={styles.signupNote}>
+                      {t("marketing:volunteer.signups.signedUp", {
+                        when: row.when,
+                      })}
+                    </span>
                   )}
                 </span>
               </>
@@ -81,6 +100,15 @@ export function VolunteerSignupsCard({
             );
           })}
         </div>
+      )}
+
+      {pendingCount > 0 && (
+        <Link
+          to={`${routes.manageVolunteerApplicants}?opportunity=${opportunitySlug}`}
+          className={styles.reviewLink}
+        >
+          {t("marketing:volunteer.signups.reviewCta", { count: pendingCount })}
+        </Link>
       )}
 
       <div className={styles.posterActions}>

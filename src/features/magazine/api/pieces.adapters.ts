@@ -32,6 +32,27 @@ export const STAGE_VIEW_TO_DTO: Record<Stage, PieceStage> = {
   Ready: "ready",
 };
 
+/** The 7 editorial stages in pipeline order — mirrors `DEMO_STAGES`, in the
+ *  backend's own codes. Drives "the next stage after this one" (the article
+ *  editor's header "Send on" button). */
+export const PIECE_STAGE_ORDER: PieceStage[] = [
+  "commissioned",
+  "drafting",
+  "in_review",
+  "edit",
+  "sensitivity_read",
+  "layout",
+  "ready",
+];
+
+/** The stage right after `stage` in `PIECE_STAGE_ORDER`, or `null` when
+ *  already at the last one ("ready" — nothing further to hand off to). */
+export function nextPieceStage(stage: PieceStage): PieceStage | null {
+  const index = PIECE_STAGE_ORDER.indexOf(stage);
+  if (index === -1 || index === PIECE_STAGE_ORDER.length - 1) return null;
+  return PIECE_STAGE_ORDER[index + 1] ?? null;
+}
+
 /** Maps a backend piece row to the desk UI's `Piece` view shape. */
 export function pieceDtoToView(pieceDto: PieceListItemDto): Piece {
   const stage = STAGE_DTO_TO_VIEW[pieceDto.stage];

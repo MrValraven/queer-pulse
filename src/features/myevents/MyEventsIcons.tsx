@@ -123,13 +123,6 @@ export const Icons: Record<string, ReactNode> = {
       strokeLinejoin="round"
     />,
   ),
-  wallet: mk(
-    <>
-      <rect x="2" y="4" width="12" height="9" rx="1.6" />
-      <path d="M11 8.5h1.5M2 6.5h9a1 1 0 0 1 0 2" />
-    </>,
-    { strokeWidth: 1.4, strokeLinejoin: "round" },
-  ),
   connect: mk(
     <path
       d="M6.5 9.5 9.5 6.5M6 5l1-1a2.5 2.5 0 0 1 3.5 3.5l-1 1M10 11l-1 1A2.5 2.5 0 0 1 5.5 8.5l1-1"

@@ -112,7 +112,7 @@ export default defineConfig({
             url: "/feed",
           },
           {
-            name: "Local directory",
+            name: "Local Business directory",
             short_name: "Directory",
             description: "Find queer-owned places and spaces",
             url: "/local/directory",

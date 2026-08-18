@@ -70,12 +70,22 @@ export interface PublicEligibility {
 
 // ── Tuning knobs (single source of truth) ───────────────────────────────────
 export const TARGET_SCORE = 100;
-// Deliberate policy, not an arbitrary number: on an invite-only, trust-first
-// platform, public visibility is something earned over time, not something a
-// new member can rush by being maximally active in week one. The backend
-// (queerpulse-backend/src/public-eligibility/public-eligibility.service.ts)
-// only computes raw tenure days and points back here rather than duplicating
-// the threshold.
+/**
+ * A hard gate (see `buildGates`), not a scoring input: no amount of activity
+ * lets a member unlock a public profile before this many days on the
+ * platform. This is deliberate policy, not an arbitrary number or a bug.
+ * QueerPulse is invite-only and trust-first, so public visibility (being
+ * discoverable and citable outside the platform's own membership) is
+ * something earned over time, not something a brand-new member can rush by
+ * racking up posts and events in their first week. Ninety days is roughly a
+ * season: long enough to demonstrate you're a real, sustained presence here
+ * rather than a fast-moving account optimizing for exposure, short enough
+ * that a genuinely engaged member isn't locked out for a year. The backend's
+ * `PublicEligibilityService` (`public-eligibility.service.ts`) only supplies
+ * the raw `tenureDays` signal; this frontend constant is the sole place the
+ * 90-day threshold itself is applied, so there is no backend copy to keep in
+ * sync.
+ */
 export const TENURE_FLOOR_DAYS = 90;
 export const CAP = { contribution: 50, trust: 35, participation: 30 } as const;
 export const RECENCY_MONTHS = 6;

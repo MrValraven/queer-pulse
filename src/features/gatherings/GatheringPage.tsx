@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FiArrowLeft, FiArrowRight, FiCalendar } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, EmptyState, FeatureHelp, SkeletonLine, Tag } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useMemberContact } from "../connect/useMemberContact";
@@ -18,8 +20,10 @@ import {
   gatheringDetails,
   gatheringKind,
   resolveGathering,
+  type GatheringDetail,
 } from "./data";
 import { useEvent } from "./api/useEvent";
+import { useRsvp, useUnrsvp } from "./api/useEventMutations";
 
 import styles from "./GatheringPage.module.css";
 
@@ -71,6 +75,7 @@ export function GatheringPage() {
   const { slug: param } = useParams();
   const { t } = useTranslation();
   const fmt = useFormat();
+  const { showToast } = useToast();
   const { demoMode } = useDemoMode();
   const simLoading = useSimulatedLoad();
   const { data, isLoading } = useEvent(param);
@@ -82,10 +87,24 @@ export function GatheringPage() {
     : (data?.gathering ?? null);
   const loading = demoMode ? simLoading : isLoading;
   const { connected, contact } = useMemberContact(gathering?.hostSlug ?? "");
+  const rsvp = useRsvp(gathering?.slug ?? "");
+  const unrsvp = useUnrsvp(gathering?.slug ?? "");
+  // Local optimistic mirror of `myRsvpStatus`: the mutation no-ops the network
+  // call in demo, so the confirmed state has to be held here (re-synced when a
+  // live refetch resolves new server truth) — same pattern as
+  // GatheringBookmarkButton's "Save" toggle and the sidebar's RSVP control.
+  const [rsvpStatus, setRsvpStatus] = useState<GatheringDetail["myRsvpStatus"]>(
+    gathering?.myRsvpStatus ?? null,
+  );
+  useEffect(
+    () => setRsvpStatus(gathering?.myRsvpStatus ?? null),
+    [gathering?.myRsvpStatus],
+  );
 
   if (!gathering) return <GatheringUnavailable loading={loading} />;
 
   const kind = gatheringKind(gathering);
+  const rsvpConfirmed = rsvpStatus === "going" || rsvpStatus === "waitlisted";
 
   // The "more gatherings" rail is mock-only; live has no list endpoint here, so
   // it stays empty rather than leaking demo gatherings into production.
@@ -146,16 +165,47 @@ export function GatheringPage() {
               <div className={styles.cta}>
                 <Button
                   size="lg"
-                  onClick={() =>
-                    contact({
-                      slug: gathering.hostSlug,
-                      name: gathering.host,
-                    })
-                  }
+                  disabled={rsvp.isPending || unrsvp.isPending}
+                  onClick={() => {
+                    if (rsvpConfirmed) {
+                      setRsvpStatus(null);
+                      unrsvp.mutate(undefined, {
+                        onSuccess: () =>
+                          showToast(
+                            t("gatherings:rsvpControl.cancelledToast"),
+                            "success",
+                          ),
+                        onError: () =>
+                          setRsvpStatus(gathering.myRsvpStatus ?? null),
+                      });
+                      return;
+                    }
+                    const next = gathering.isFull ? "waitlisted" : "going";
+                    setRsvpStatus(next);
+                    rsvp.mutate("going", {
+                      onSuccess: () =>
+                        showToast(
+                          t(
+                            next === "waitlisted"
+                              ? "gatherings:rsvpControl.waitlistToast"
+                              : "gatherings:rsvpControl.goingToast",
+                          ),
+                          "success",
+                        ),
+                      onError: () =>
+                        setRsvpStatus(gathering.myRsvpStatus ?? null),
+                    });
+                  }}
                 >
-                  {connected
-                    ? t("connect:contact.message")
-                    : t(gathering.ctaKey)}{" "}
+                  {rsvpConfirmed
+                    ? t("gatherings:rsvpControl.cancelCta")
+                    : rsvp.isPending
+                      ? t("gatherings:rsvpControl.pendingCta")
+                      : t(
+                          gathering.isFull
+                            ? "gatherings:rsvpControl.waitlistCta"
+                            : gathering.ctaKey,
+                        )}{" "}
                   <FiArrowRight aria-hidden />
                 </Button>
                 <GatheringBookmarkButton

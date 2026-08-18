@@ -548,3 +548,11 @@
   font-weight: 600;
   color: var(--ink-40);
 }
+.reviewLink {
+  display: block;
+  margin: 0.75rem 0;
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

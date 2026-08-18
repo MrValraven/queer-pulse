@@ -453,7 +453,7 @@ export const resources: Catalog = {
     "Emails from QueerPulse, internal comms",
   "pronounsGuide.table.chosenName.who": "Only you",
   "pronounsGuide.table.username.field": "Username",
-  "pronounsGuide.table.username.use": "URL handle (queerpulse.pt/@username)",
+  "pronounsGuide.table.username.use": "URL handle (queerpulse.com/@username)",
   "pronounsGuide.table.username.who": "Changeable once/year",
   "pronounsGuide.table.legalName.field": "Legal name",
   "pronounsGuide.table.legalName.use":
@@ -1683,8 +1683,7 @@ export const resources: Catalog = {
   "disabilityHealthcare.outro.askCta": "Ask the group",
 
   // ── FirstMeetupGuidePage (+ firstMeetupGuide.data.ts) ───────────────────
-  "firstMeetupGuide.meta.title":
-    "Your first QueerPulse meetup: what to expect",
+  "firstMeetupGuide.meta.title": "Your first QueerPulse meetup: what to expect",
   "firstMeetupGuide.meta.description":
     "What actually happens at a first in-person meetup, what 'no agenda' really means, and honest answers to the questions newcomers are too nervous to ask.",
   "firstMeetupGuide.hero.eyebrow": "Queer Social",
@@ -2345,10 +2344,6 @@ export const resources: Catalog = {
   "intersectionality.org3.text":
     "Portugal's main LGBTQ+ rights organisation. Works explicitly on the intersection of LGBTQ+ rights and migration/race. Legal support and advocacy.",
   "intersectionality.org3.link": "Legal resources",
-  "intersectionality.org4.focus": "Disability",
-  "intersectionality.org4.text":
-    "See the QueerPulse Accessibility page for disability-specific resources for queer and disabled members in Lisbon.",
-  "intersectionality.org4.link": "Accessibility page",
 
   "intersectionality.outro.title": "All of you <em>belongs here.</em>",
   "intersectionality.outro.sub":
@@ -2363,8 +2358,7 @@ export const resources: Catalog = {
     "We're verifying queer-affirming therapists in Lisbon before any profile goes live here, so every listing is one you can trust. There's nothing to book yet.",
   "therapistProfilePage.live.cta": "Back to mental health",
 
-  "queerPaediatricians.live.title":
-    "Verified paediatricians are coming soon.",
+  "queerPaediatricians.live.title": "Verified paediatricians are coming soon.",
   "queerPaediatricians.live.body":
     "We're still confirming which paediatric practices are genuinely queer- and trans-affirming before we list them. Rather than show unverified names, we're waiting until every profile is one you can trust.",
   "queerPaediatricians.live.cta": "Ask the community",
@@ -2380,8 +2374,7 @@ export const resources: Catalog = {
   "sexualHealth.guides.ask.liveBody":
     "Anonymous questions aren't open yet — we're setting up a safe way for the community's health volunteers to answer them. Check back soon.",
 
-  "accessibleLisbon.live.title":
-    "Verified accessible spaces are coming soon.",
+  "accessibleLisbon.live.title": "Verified accessible spaces are coming soon.",
   "accessibleLisbon.live.body":
     "We're confirming step-free access, accessible bathrooms and staff training with each venue before we list it, so every space here is one members have checked.",
   "accessibleLisbon.live.cta": "Find gatherings",

@@ -19,10 +19,11 @@ const CreateGatheringPage = lazyNamed(() => import("./CreateGatheringPage"), "Cr
 /** The gatherings surface: calendar, events, a gathering's detail + management
  *  sub-pages, RSVP, hosting, and the gatherings index.
  *
- *  RSVP (`/rsvp`, `/rsvp-ticket`), the recap, the `/manage` dashboard, and the
- *  cohost invite are all really wired: each resolves the real event/invite off
- *  the route and drives the existing hooks against it, keeping its colocated
- *  `*.data.ts` mock as the demo fallback.
+ *  RSVP (`/rsvp`), the recap, the `/manage` dashboard, and the cohost invite
+ *  are all really wired: each resolves the real event/invite off the route
+ *  (or, for RSVP, the `?event=` slug) and drives the existing rsvp / un-rsvp /
+ *  update / cancel / cohost / attach-photo hooks against that real id, keeping
+ *  its colocated
  *
  *  One prototype stays demo-only and resolves to an honest coming-soon in LIVE
  *  mode: the standalone `/event` detail, pinned to a single mock event with no
@@ -78,15 +79,12 @@ export function gatheringRoutes(demoMode: boolean) {
         element={demoMode ? <EventPage /> : <GatheringComingSoon variant="event" />}
       />
       {/* RSVP is now an action INSIDE the gathering detail (GatheringRsvpControl),
-          so the standalone confirmation page is retired in LIVE: `/rsvp` and
-          `/rsvp-ticket` redirect to the originating gathering (`?event=<slug>`)
-          or the events board. Demo keeps the static reading-group confirmation. */}
+          so the standalone confirmation page is retired in LIVE: `/rsvp`
+          redirects to the originating gathering (`?event=<slug>`) or the
+          events board. Demo keeps the static reading-group confirmation. The
+          ticket itself lives in EventTicketModal (My Events), not a route. */}
       <Route
         path={routes.rsvp}
-        element={demoMode ? <RsvpPage /> : <RsvpRedirect />}
-      />
-      <Route
-        path={routes.rsvpTicket}
         element={demoMode ? <RsvpPage /> : <RsvpRedirect />}
       />
       <Route path={routes.host} element={<HostPage />} />

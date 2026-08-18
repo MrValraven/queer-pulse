@@ -1,12 +1,12 @@
 import type { Catalog } from "../../types";
 
 /**
- * Auth surfaces: sign-in, create-account, invite (send + landing chrome),
- * onboarding, the welcome tour, request-invite, magic-link, confirm-email,
- * and the shared 18+ attestation / under-18 block. Content that in live mode
- * arrives over the wire (a fictional inviter's vouch quote, a member's own
- * bio/role, a community's own name/description) is deliberately left in
- * English elsewhere in the feature — see docs/i18n/extraction-brief.md §1.
+ * Auth surfaces: sign-in, invite (send + landing chrome), onboarding,
+ * request-invite, magic-link, confirm-email, and the shared 18+ attestation /
+ * under-18 block. Content that in live mode arrives over the wire (a
+ * fictional inviter's vouch quote, a member's own bio/role, a community's own
+ * name/description) is deliberately left in English elsewhere in the feature
+ * — see docs/i18n/extraction-brief.md §1.
  */
 export const auth: Catalog = {
   // ── Shared chrome reused across several auth screens ──
@@ -81,52 +81,6 @@ export const auth: Catalog = {
   "signIn.closed.title": "New accounts are paused",
   "signIn.closed.body":
     "You can still sign in to an existing account below.",
-
-  // ── Create account ──
-  "createAccount.eyebrow": "Almost there",
-  "createAccount.title": "Create your <em>account</em>",
-  "createAccount.vouchText":
-    "<strong>{name}</strong> invited you to QueerPulse.",
-  "createAccount.requiredLegend": "Fields marked <req>*</req> are required",
-  "createAccount.legalNote":
-    "You must be 18 or older to join (see our <eligibility>eligibility policy</eligibility>). By continuing, you agree to our <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
-  "createAccount.signinPrompt":
-    "Already have an account? <signin>Sign in</signin>",
-  "createAccount.submit": "Create account",
-  "createAccount.section.account": "Account",
-  "createAccount.section.about": "About you",
-  "createAccount.section.visibility": "Visibility",
-  "createAccount.field.firstName.label": "First name",
-  "createAccount.field.firstName.placeholder": "Alex",
-  "createAccount.field.lastName.label": "Last name",
-  "createAccount.field.lastName.placeholder": "Morais",
-  "createAccount.field.email.label": "Email",
-  "createAccount.field.email.helper":
-    "From your Google account — can't be changed here.",
-  "createAccount.field.displayName.label": "Display name",
-  "createAccount.field.displayName.helper":
-    "How you'll appear across QueerPulse.",
-  "createAccount.field.displayName.placeholder": "What should people call you?",
-  "createAccount.field.pronouns.label": "Pronouns",
-  "createAccount.field.pronouns.placeholder": "e.g. she/her",
-  "createAccount.field.location.label": "Location",
-  "createAccount.field.location.placeholder": "Lisbon",
-  "createAccount.field.bio.label": "Bio",
-  "createAccount.field.bio.placeholder": "A few words about you",
-  "createAccount.error.firstRequired":
-    "Your first name is missing — mind adding it?",
-  "createAccount.error.lastRequired":
-    "Your last name is missing — mind adding it?",
-  "createAccount.error.inviteRedeemFailed":
-    "We couldn't confirm your invite, but your account is ready — you're in.",
-  "createAccount.visibility.open.label": "Open to connect",
-  "createAccount.visibility.open.sub":
-    "Anyone in the network can see your profile and say hello",
-  "createAccount.visibility.network.label": "Network only",
-  "createAccount.visibility.network.sub":
-    "Reachable through mutual connections",
-  "createAccount.visibility.private.label": "Keep it quiet for now",
-  "createAccount.visibility.private.sub": "I'll reach out when I'm ready",
 
   // ── The abstract "gathered hearth" illustration on the sign-in art tile ──
   "communityArt.ariaLabel":
@@ -314,6 +268,11 @@ export const auth: Catalog = {
   "requestInvite.submit": "Send my request",
   "requestInvite.sending": "Sending your request…",
   "requestInvite.submitError": "Could not send your request — please try again",
+  // 429: the public form throttles at 3 requests/hour per IP. An immediate
+  // retry can't succeed, so this sets the expectation plainly rather than
+  // inviting one.
+  "requestInvite.rateLimitedError":
+    "You've reached the limit for now. Please wait a while and try again.",
   "requestInvite.under18BackLabel": "Back to the form",
   "requestInvite.sent.title": "You're on the <em>list.</em>",
   "requestInvite.sent.sub_withName":
@@ -381,7 +340,7 @@ export const auth: Catalog = {
 
   "onboarding.stepPhoto.heading": "Put a face to the <em>name</em>",
   "onboarding.stepPhoto.body":
-    "A photo helps members feel comfortable connecting with you. You can always add this later.",
+    "A photo and a few quick details help members feel comfortable connecting with you. You can always add or change these later.",
   "onboarding.stepPhoto.captionPreview":
     "Looking good — tap the photo to change it",
   "onboarding.stepPhoto.captionGoogle":
@@ -396,7 +355,16 @@ export const auth: Catalog = {
   "onboarding.stepPhoto.uploadError":
     "We couldn't add that photo. Please try again.",
   "onboarding.stepPhoto.saveError":
-    "We couldn't save your photo. Please try again.",
+    "We couldn't save that just now. Please try again.",
+  "onboarding.stepPhoto.pronouns.label": "Pronouns",
+  "onboarding.stepPhoto.pronouns.helper":
+    "However you'd like members to refer to you. Totally optional.",
+  "onboarding.stepPhoto.pronouns.placeholder": "e.g. they/them",
+  "onboarding.stepPhoto.pronouns.quickPickLabel": "Quick pick a pronoun set",
+  "onboarding.stepPhoto.bio.label": "A line about you",
+  "onboarding.stepPhoto.bio.helper":
+    "Shows on your profile. You can change it anytime in Settings.",
+  "onboarding.stepPhoto.bio.placeholder": "Say a little about who you are",
 
   "onboarding.stepNorms.heading": "This is a <em>cared-for</em> space",
   "onboarding.stepNorms.norm.bePresent.title": "Be present",
@@ -450,6 +418,9 @@ export const auth: Catalog = {
 
   "onboarding.stepDone.heading": "You're <em>part of it</em> now",
   "onboarding.stepDone.cta": "Go to my home",
+  "onboarding.stepDone.notifications.title": "Stay in the loop",
+  "onboarding.stepDone.notifications.desc":
+    "Get notified about messages, invites, and gathering reminders on your phone. Change this anytime in Settings.",
   "onboarding.quickStart.browseDirectory.title": "Browse the member directory",
   "onboarding.quickStart.browseDirectory.desc":
     "Members across Lisbon and beyond",
@@ -458,120 +429,16 @@ export const auth: Catalog = {
     "Real-world events for the community",
   "onboarding.quickStart.magazine.title": "Read the community magazine",
   "onboarding.quickStart.magazine.desc": "Published the first of every month",
+  "onboarding.quickStart.gettingStarted.title":
+    "See your getting-started checklist",
+  "onboarding.quickStart.gettingStarted.desc":
+    "A few small milestones to help you settle in",
 
-  // ── Welcome tour (the separate 6-step guided tour at /welcome-tour) ──
-  "tour.skipSetup": "Skip setup",
-  "tour.stepLabel": "Step {current} of {total}",
-  "tour.allSet": "You're in!",
-  "tour.nav.back": "Back",
-  "tour.nav.continue": "Continue",
-
-  "tour.welcome.eyebrow": "You're in",
-  "tour.welcome.heading": "Welcome to <em>QueerPulse.</em>",
-  "tour.welcome.body":
-    "Somebody in the community thought you belonged here — and that's how everyone arrived. We're glad you made it.",
-  "tour.welcome.q101Label": "Still finding the language?",
-  "tour.welcome.q101Body":
-    "If you're newly exploring your identity — not just new to Lisbon — <q101>Queer 101</q101> is a quiet place to start. No account needed to read it.",
-  "tour.welcome.cta": "Let's set you up",
-
-  "tour.profile.eyebrow": "Your profile",
-  "tour.profile.heading": "Tell us a little about <em>yourself.</em>",
-  "tour.profile.body":
-    "This is how the community will know you. You can change everything later.",
-  "tour.profile.namePlaceholder": "Your name",
-  "tour.profile.pronounsPlaceholder": "Pronouns (optional)",
-  "tour.profile.rolePlaceholder": "What you do — your role or practice",
-  "tour.profile.neighbourhoodDefault": "Your neighbourhood in Lisbon",
-  "tour.profile.visibilityLabel": "How visible would you like to be?",
-
-  "tour.visibility.open.title": "Open to connect",
-  "tour.visibility.open.desc":
-    "Anyone in the network can see your profile and say hello",
-  "tour.visibility.network.title": "Network only",
-  "tour.visibility.network.desc": "Reachable through mutual connections",
-  "tour.visibility.private.title": "Keep it quiet for now",
-  "tour.visibility.private.desc": "I'll reach out when I'm ready",
-
-  "tour.interests.eyebrow": "Your world",
-  "tour.interests.heading": "What matters <em>to you?</em>",
-  "tour.interests.body":
-    "We use this to suggest connections, gatherings, and communities. Select as many as you like.",
-  "tour.interest.design": "Design",
-  "tour.interest.tech": "Tech",
-  "tour.interest.film": "Film",
-  "tour.interest.music": "Music",
-  "tour.interest.activism": "Activism",
-  "tour.interest.wellbeing": "Wellbeing",
-  "tour.interest.food": "Food",
-  "tour.interest.sports": "Sports",
-  "tour.interest.writing": "Writing",
-  "tour.interest.craft": "Craft",
-  "tour.interest.policy": "Policy",
-  "tour.interest.community": "Community",
-
-  "tour.communities.eyebrow": "Your spaces",
-  "tour.communities.heading": "Which communities <em>call to you?</em>",
-  "tour.communities.body":
-    "Join now or explore later — you can always change this. Your choices are private.",
-
-  "tour.connections.eyebrow": "First connections",
-  "tour.connections.heading": "Three people worth <em>saying hello to.</em>",
-  "tour.connections.body":
-    "These are members who often welcome new arrivals. A quick message goes a long way.",
-  "tour.connections.sayHello": "Say hello",
-  "tour.connections.sent": "Sent",
-
-  "tour.explore.eyebrow": "You're all set",
-  "tour.explore.heading": "Welcome to the <em>community.</em>",
-  "tour.explore.body":
-    "You're officially in. Here's where to go first — there's no right answer, just what calls to you.",
-  "tour.explore.cta": "Go to QueerPulse",
-
-  "tour.exploreCard.members.name": "Members",
-  "tour.exploreCard.members.desc":
-    "Browse and say hello to people in the network",
-  "tour.exploreCard.gatherings.name": "Gatherings",
-  "tour.exploreCard.gatherings.desc": "RSVP to something happening near you",
-  "tour.exploreCard.communities.name": "Communities",
-  "tour.exploreCard.communities.desc": "Find an ongoing group to join",
-  "tour.exploreCard.culture.name": "Culture",
-  "tour.exploreCard.culture.desc":
-    "Book club, art showcase, commission board, radio",
-  "tour.exploreCard.economy.name": "Economy",
-  "tour.exploreCard.economy.desc":
-    "Incubator, freelance tools, salary transparency",
-  "tour.exploreCard.queer101.name": "Queer 101",
-  "tour.exploreCard.queer101.desc":
-    "Still exploring your identity? A quiet place to start",
-  "tour.exploreCard.volunteer.name": "Volunteer",
-  "tour.exploreCard.volunteer.desc":
-    "Find a way to give back to the local community",
-  "tour.exploreCard.arriving.name": "New to Lisbon?",
-  "tour.exploreCard.arriving.desc":
-    "A guide to settling into the queer scene here",
-  "tour.exploreCard.sexualHealth.name": "Sexual health",
-  "tour.exploreCard.sexualHealth.desc":
-    "Testing, PrEP, HIV resources — queer-specific & direct",
-  "tour.exploreCard.safeSpaces.name": "Safe spaces",
-  "tour.exploreCard.safeSpaces.desc":
-    "Community-verified venues — earned, not self-declared",
-  "tour.exploreCard.sober.name": "Sober & social",
-  "tour.exploreCard.sober.desc":
-    "A full social life, without alcohol at the centre",
-
-  "tour.neighbourhood.principeReal": "Príncipe Real",
-  "tour.neighbourhood.mouraria": "Mouraria",
-  "tour.neighbourhood.bairroAlto": "Bairro Alto",
-  "tour.neighbourhood.caisDoSodre": "Cais do Sodré",
-  "tour.neighbourhood.arroios": "Arroios",
-  "tour.neighbourhood.alfama": "Alfama",
-  "tour.neighbourhood.graca": "Graça",
-  "tour.neighbourhood.marvila": "Marvila",
-  "tour.neighbourhood.estrela": "Estrela",
-  "tour.neighbourhood.intendente": "Intendente",
+  // ── `tour.neighbourhood.elsewhere` is the only survivor of the removed
+  //    Welcome tour (formerly /welcome-tour, a dead "faithful port" surface):
+  //    listBusiness.data.ts's `hoodLabel()` still resolves the neighbourhood
+  //    dropdown's catch-all option through this shared catalog string. ──
   "tour.neighbourhood.elsewhere": "Elsewhere in Lisbon",
-  "tour.neighbourhood.newToLisbon": "New to Lisbon — still finding my feet",
 
   // ── Getting started — the first-steps checklist at /account/getting-started.
   //    Each step is auto-detected from real account data (see useGettingStarted). ──

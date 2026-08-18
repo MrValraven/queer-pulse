@@ -13,9 +13,10 @@ import styles from "./AdminMembersPage.module.css";
  *
  * Approval also sends the applicant an invite email automatically
  * (`join_request_approved` template, fired best-effort after the approval
- * transaction commits). This link stays visible as a manual backup in case
- * that send fails or the applicant's inbox swallows it, which is why their
- * email address is repeated right next to it.
+ * transaction commits). This card's copy link stays as a manual backup for
+ * when that send fails, bounces, or is slow to arrive, or a reviewer wants
+ * to hand it over some other way, which is why the applicant's email
+ * address is still repeated right next to it.
  */
 export function JoinRequestApprovedCard({ item }: { item: JoinRequestView }) {
   const { t } = useTranslation();

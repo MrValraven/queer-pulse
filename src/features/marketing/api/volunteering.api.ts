@@ -22,6 +22,7 @@ export interface OpportunityCardDTO {
   slug: string;
   org: string;
   partner: { slug: string; name: string } | null;
+  community: { slug: string; name: string } | null;
   role: string;
   cause: Cause;
   commit: Commit;
@@ -112,6 +113,15 @@ export interface CreateOpportunityDto {
   handle?: string;
 }
 
+/** PATCH /volunteering/:slug body — everything from create except the
+ * creation-only `handle`/`team` fields (mirrors the backend's
+ * `UpdateOpportunityDto`). Every field is optional: absent leaves it
+ * unchanged, present (including `""` for `partnerSlug`/`communitySlug`)
+ * replaces/clears it. */
+export type UpdateOpportunityDto = Partial<
+  Omit<CreateOpportunityDto, "handle" | "team">
+>;
+
 // ── Raw calls (one per endpoint) ─────────────────────────────────────────────
 
 export async function getOpportunities(
@@ -133,6 +143,11 @@ export const getOpportunity = (slug: string) =>
 
 export const createOpportunity = (dto: CreateOpportunityDto) =>
   apiPost<OpportunityDetailDTO>("/volunteering", dto);
+
+export const updateOpportunity = (
+  slug: string,
+  dto: UpdateOpportunityDto,
+) => apiPatch<OpportunityDetailDTO>(`/volunteering/${slug}`, dto);
 
 export const closeOpportunity = (slug: string) =>
   apiPost<OpportunityDetailDTO>(`/volunteering/${slug}/close`);

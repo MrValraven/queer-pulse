@@ -143,9 +143,10 @@ export function isJoinRequestsClosedError(err: unknown): boolean {
 }
 
 /**
- * True when the public submit route's per-IP throttle (3/hour) tripped. An
- * immediate retry will fail again for up to an hour, so the UI must not
- * suggest one — see {@link isDuplicateJoinRequest} for the sibling special case.
+ * True when the public submit route's per-IP throttle (3 requests/hour, see
+ * the `@Throttle` on `JoinRequestsController.submit`) tripped. An immediate
+ * retry will fail again for up to an hour, so the UI must not suggest one —
+ * see {@link isDuplicateJoinRequest} for the sibling special case.
  */
 export function isRateLimitedError(err: unknown): boolean {
   return err instanceof ApiError && err.status === 429;

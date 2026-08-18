@@ -132,11 +132,11 @@ export const PAGE_SEARCH_ITEMS: SearchItem[] = [
   },
   {
     t: "page",
-    name: "Local directory",
+    name: "Local Business directory",
     sub: "Queer-friendly places and businesses",
     href: routes.directory,
     icon: FiMapPin,
-    kw: "local directory businesses places venues shops map spaces",
+    kw: "local business directory businesses places venues shops map spaces",
   },
   {
     t: "page",

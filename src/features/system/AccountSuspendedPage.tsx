@@ -104,7 +104,7 @@ export function AccountSuspendedPage() {
             <Translation
               i18nKey="system:accountSuspended.foot"
               values={{ percent: OVERTURNED_PERCENT }}
-              components={{ a: <Link to={routes.transparencyReport} /> }}
+              components={{ a: <Link to={routes.governance} /> }}
             />
           ) : undefined
         }

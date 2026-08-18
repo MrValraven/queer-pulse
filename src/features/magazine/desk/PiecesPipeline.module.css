@@ -31,6 +31,7 @@
 }
 
 .prow {
+  position: relative;
   border-bottom: 1px solid var(--line);
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease);
@@ -122,11 +123,25 @@
   font-weight: 600;
 }
 
+/* The row's action buttons routinely need more room than the fixed 96px
+   track they sit in (3-4 pill buttons vs. a column sized for the "Due"
+   column's width). Rather than reserving that width in the grid — which
+   would permanently starve the title column even while the buttons are
+   hidden — they're pulled out of grid flow and overlaid on hover/focus,
+   on an opaque surface so they cleanly cover the stage/due text underneath
+   instead of drawing over it (the ghost buttons' own fill is transparent,
+   so a translucent wash tint here would still let that text show through). */
 .rowActs {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
+  align-items: center;
   gap: 5px;
-  justify-content: flex-end;
+  background: var(--paper);
   opacity: 0;
+  pointer-events: none;
   transition: opacity var(--dur-fast) var(--ease);
 }
 
@@ -134,6 +149,7 @@
 .prow:focus-visible .rowActs,
 .prow[data-focus="true"] .rowActs {
   opacity: 1;
+  pointer-events: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -151,5 +167,15 @@
   .prow {
     grid-template-columns: 1fr;
     gap: 10px;
+  }
+
+  /* No hover on touch — the stacked card shows its actions in normal flow,
+     always on, instead of the desktop hover-revealed overlay. */
+  .rowActs {
+    position: static;
+    flex-wrap: wrap;
+    background: none;
+    opacity: 1;
+    pointer-events: auto;
   }
 }

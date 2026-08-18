@@ -1,10 +1,15 @@
-import type { MouseEvent, ReactNode } from "react";
+import { useState, type MouseEvent, type ReactNode } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
-import { gatheringPath } from "../gatherings/data";
+import {
+  gatheringPath,
+  manageGatheringPath,
+  gatheringPhotosPath,
+} from "../gatherings/data";
+import { AddToCalendarModal } from "./AddToCalendarModal";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { Icons } from "./MyEventsIcons";
@@ -16,16 +21,27 @@ const GATHERING = linkToPath("QueerPulse Gathering.html");
 /** The specific gathering detail page for this event, or the generic listing. */
 const detailPath = (ev: MyEvent) =>
   ev.slug ? gatheringPath(ev.slug) : GATHERING;
-const TICKET = linkToPath("QueerPulse RSVP Ticket.html");
 const MANAGE = linkToPath("QueerPulse Manage Gathering.html");
+/** The specific gathering's manage page for this event, or the generic prototype page. */
+const managePath = (ev: MyEvent) =>
+  ev.slug ? manageGatheringPath(ev.slug) : MANAGE;
 const PHOTOS = linkToPath("QueerPulse Gathering Photos.html");
+/** The specific gathering's photo album for this event, or the generic prototype page. */
+const photosPath = (ev: MyEvent) =>
+  ev.slug ? gatheringPhotosPath(ev.slug) : PHOTOS;
 const RECEIPT = linkToPath("QueerPulse Receipt.html");
 
 /** Right-hand action column, varying by category. */
 export function EventSide({ ev }: { ev: MyEvent }) {
   const { t } = useTranslation();
-  const { rsvpSaved, acceptInvite, declineInvite, softRemove, toast } =
-    useMyEvents();
+  const {
+    rsvpSaved,
+    acceptInvite,
+    declineInvite,
+    softRemove,
+    toast,
+    openTicket,
+  } = useMyEvents();
   return (
     <div className={sx("ev-actions")}>
       {ev.category === "going" &&
@@ -36,7 +52,7 @@ export function EventSide({ ev }: { ev: MyEvent }) {
         ) : (
           <>
             {ev.ticket && (
-              <Button variant="ghost" to={TICKET}>
+              <Button variant="ghost" onClick={() => openTicket(ev.id)}>
                 {t("myevents:side.viewTicket")}
               </Button>
             )}
@@ -49,7 +65,7 @@ export function EventSide({ ev }: { ev: MyEvent }) {
 
       {ev.category === "hosting" && (
         <>
-          <Button variant="primary" to={MANAGE}>
+          <Button variant="primary" to={managePath(ev)}>
             {t("myevents:side.manageCta")}
           </Button>
           <Link className={sx("ev-link")} to={detailPath(ev)}>
@@ -69,7 +85,7 @@ export function EventSide({ ev }: { ev: MyEvent }) {
       {ev.category === "past" && (
         <>
           {ev.photos ? (
-            <Link className={sx("ev-link")} to={PHOTOS}>
+            <Link className={sx("ev-link")} to={photosPath(ev)}>
               {t("myevents:side.seePhotosCta")}{" "}
               <FiArrowRight aria-hidden />
             </Link>
@@ -133,7 +149,7 @@ export function EventSide({ ev }: { ev: MyEvent }) {
       )}
 
       {ev.category === "sent" && (
-        <Link className={sx("ev-link")} to={MANAGE}>
+        <Link className={sx("ev-link")} to={managePath(ev)}>
           {t("myevents:side.manageInviteCta")}{" "}
           <FiArrowRight aria-hidden />
         </Link>
@@ -176,6 +192,7 @@ export function EventTools({
 }) {
   const { t } = useTranslation();
   const c = useMyEvents();
+  const [calOpen, setCalOpen] = useState(false);
   const onMore = (e: MouseEvent<HTMLButtonElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
     c.openMore(ev.id, r.left, r.bottom + 6);
@@ -191,14 +208,13 @@ export function EventTools({
     </ToolBtn>
   );
   const Cal = (
-    <ToolBtn
-      onClick={() =>
-        c.toast(t("myevents:tools.addedToCalendarToast"), "success")
-      }
-    >
+    <ToolBtn onClick={() => setCalOpen(true)}>
       {Icons.cal}
       {t("myevents:tools.addToCalendar")}
     </ToolBtn>
+  );
+  const CalModal = calOpen && (
+    <AddToCalendarModal ev={ev} onClose={() => setCalOpen(false)} />
   );
   const MoreBtn = (
     <button
@@ -222,41 +238,47 @@ export function EventTools({
   if (ev.category === "going") {
     if (ev.cancelled) return null;
     return (
-      <div className={sx("card-tools")}>
-        {Bell}
-        {DayofBtn}
-        {ev.maybe && (
-          <ToolBtn onClick={() => c.setGoing(ev.id)}>
-            {Icons.check}
-            {t("myevents:tools.switchToGoing")}
+      <>
+        <div className={sx("card-tools")}>
+          {Bell}
+          {DayofBtn}
+          {ev.maybe && (
+            <ToolBtn onClick={() => c.setGoing(ev.id)}>
+              {Icons.check}
+              {t("myevents:tools.switchToGoing")}
+            </ToolBtn>
+          )}
+          {Cal}
+          <ToolBtn onClick={() => c.openDetails(ev.id)}>
+            {Icons.edit}
+            {t("myevents:tools.yourDetails")}
           </ToolBtn>
-        )}
-        {Cal}
-        <ToolBtn onClick={() => c.openDetails(ev.id)}>
-          {Icons.edit}
-          {t("myevents:tools.yourDetails")}
-        </ToolBtn>
-        <ToolBtn danger onClick={() => c.cantGo(ev.id)}>
-          {Icons.x}
-          {t("myevents:tools.cantMakeIt")}
-        </ToolBtn>
-        {MoreBtn}
-      </div>
+          <ToolBtn danger onClick={() => c.cantGo(ev.id)}>
+            {Icons.x}
+            {t("myevents:tools.cantMakeIt")}
+          </ToolBtn>
+          {MoreBtn}
+        </div>
+        {CalModal}
+      </>
     );
   }
   if (ev.category === "hosting") {
     return (
-      <div className={sx("card-tools")}>
-        {Bell}
-        {Cal}
-        {!ev.cohost && (
-          <Link className={sx("tool-btn")} to={MANAGE}>
-            {Icons.plus}
-            {t("myevents:tools.inviteCoHost")}
-          </Link>
-        )}
-        {MoreBtn}
-      </div>
+      <>
+        <div className={sx("card-tools")}>
+          {Bell}
+          {Cal}
+          {!ev.cohost && (
+            <Link className={sx("tool-btn")} to={managePath(ev)}>
+              {Icons.plus}
+              {t("myevents:tools.inviteCoHost")}
+            </Link>
+          )}
+          {MoreBtn}
+        </div>
+        {CalModal}
+      </>
     );
   }
   if (ev.category === "waitlisted") {

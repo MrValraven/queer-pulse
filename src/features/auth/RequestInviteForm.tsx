@@ -120,8 +120,9 @@ export function RequestInviteForm({
         showToast(t("auth:requestInvite.closedError"), "error");
         return;
       }
-      // 429: the per-IP throttle tripped. An immediate retry will fail again
-      // for up to an hour, so this must not read like the generic error below.
+      // 429: the per-IP throttle (3/hour). An immediate retry will just fail
+      // again, so say so plainly instead of the generic "try again" — that
+      // would invite the very retry that can't succeed for up to an hour.
       if (isRateLimitedError(err)) {
         showToast(t("auth:requestInvite.rateLimitedError"), "error");
         return;

@@ -53,57 +53,65 @@ export function VolunteerOpportunityMain({
         </div>
       </section>
 
-      <section className={styles.sec}>
-        <h2>
-          <Translation
-            i18nKey="marketing:volunteerDetail.main.commitmentTitle"
-            components={{ em: <em /> }}
-          />
-        </h2>
-        <div className={styles.commitGrid}>
-          {opp.commitments.map((c) => (
-            <div className={styles.commit} key={c.b}>
-              <b>{c.b}</b>
-              <span>{c.s}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className={styles.sec}>
-        <h2>
-          <Translation
-            i18nKey="marketing:volunteerDetail.main.goodForTitle"
-            components={{ em: <em /> }}
-          />
-        </h2>
-        {opp.goodFor.map((p, i) => (
-          <p key={i}>{p}</p>
-        ))}
-      </section>
-
-      <section className={styles.sec}>
-        <h2>
-          <Translation
-            i18nKey="marketing:volunteerDetail.main.teamTitle"
-            components={{ em: <em /> }}
-          />
-        </h2>
-        <p className={styles.teamIntro}>{opp.teamIntro}</p>
-        <div className={styles.teamRow}>
-          {opp.team.map((m) => (
-            <Link to={MEMBER} className={styles.teamPill} key={m.name}>
-              <div
-                className={styles.av}
-                style={{ background: m.background, color: m.color }}
-              >
-                {m.initials}
+      {opp.commitments.length > 0 && (
+        <section className={styles.sec}>
+          <h2>
+            <Translation
+              i18nKey="marketing:volunteerDetail.main.commitmentTitle"
+              components={{ em: <em /> }}
+            />
+          </h2>
+          <div className={styles.commitGrid}>
+            {opp.commitments.map((c) => (
+              <div className={styles.commit} key={c.b}>
+                <b>{c.b}</b>
+                <span>{c.s}</span>
               </div>
-              {m.name}
-            </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {opp.goodFor.length > 0 && (
+        <section className={styles.sec}>
+          <h2>
+            <Translation
+              i18nKey="marketing:volunteerDetail.main.goodForTitle"
+              components={{ em: <em /> }}
+            />
+          </h2>
+          {opp.goodFor.map((p, i) => (
+            <p key={i}>{p}</p>
           ))}
-        </div>
-      </section>
+        </section>
+      )}
+
+      {(opp.teamIntro || opp.team.length > 0) && (
+        <section className={styles.sec}>
+          <h2>
+            <Translation
+              i18nKey="marketing:volunteerDetail.main.teamTitle"
+              components={{ em: <em /> }}
+            />
+          </h2>
+          {opp.teamIntro && <p className={styles.teamIntro}>{opp.teamIntro}</p>}
+          {opp.team.length > 0 && (
+            <div className={styles.teamRow}>
+              {opp.team.map((m) => (
+                <Link to={MEMBER} className={styles.teamPill} key={m.name}>
+                  <div
+                    className={styles.av}
+                    style={{ background: m.background, color: m.color }}
+                  >
+                    {m.initials}
+                  </div>
+                  {m.name}
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
     </div>
   );
 }

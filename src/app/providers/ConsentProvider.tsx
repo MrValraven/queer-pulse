@@ -16,7 +16,6 @@ import {
   type ConsentCategories,
   type ConsentSource,
 } from "../../shared/api/consent.api";
-import { ConsentPreferences } from "../../shared/components/consent/ConsentPreferences";
 import {
   ConsentContext,
   type ConsentValue,
@@ -124,6 +123,7 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
     [setConsent],
   );
   const openPreferences = useCallback(() => setPrefsOpen(true), []);
+  const closePreferences = useCallback(() => setPrefsOpen(false), []);
 
   const value = useMemo<ConsentValue>(
     () => ({
@@ -135,6 +135,7 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
       acceptAll,
       rejectAll,
       openPreferences,
+      closePreferences,
     }),
     [
       consent,
@@ -145,22 +146,17 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
       acceptAll,
       rejectAll,
       openPreferences,
+      closePreferences,
     ],
   );
 
+  // The preference-center modal itself is NOT rendered here: this provider sits
+  // above I18nProvider in App.tsx (it needs auth/demo state, which is above
+  // I18nProvider too), so a modal rendered as a sibling of `children` here would
+  // sit outside I18nProvider's subtree and its useTranslation() would throw. It
+  // is mounted instead by ConsentPreferencesGate, alongside ConsentBanner, which
+  // IS inside I18nProvider's subtree.
   return (
-    <ConsentContext.Provider value={value}>
-      {children}
-      {prefsOpen && (
-        <ConsentPreferences
-          consent={consent}
-          onSave={(next) => {
-            setConsent(next, "preference_center");
-            setPrefsOpen(false);
-          }}
-          onClose={() => setPrefsOpen(false)}
-        />
-      )}
-    </ConsentContext.Provider>
+    <ConsentContext.Provider value={value}>{children}</ConsentContext.Provider>
   );
 }

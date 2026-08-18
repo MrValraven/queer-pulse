@@ -125,7 +125,7 @@
 
 .ebar {
   position: sticky;
-  top: 76px;
+  top: 0;
   z-index: 20;
   display: flex;
   align-items: center;
@@ -196,7 +196,7 @@
   flex-direction: column;
   gap: 14px;
   position: sticky;
-  top: 150px;
+  top: 74px;
 }
 
 @media (max-width: 700px) {

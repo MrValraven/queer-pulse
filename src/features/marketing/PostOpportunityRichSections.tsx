@@ -3,6 +3,18 @@ import { FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { defaultApplyRole, type PostOpportunityForm } from "./usePostOpportunityForm";
 import { useTeamMemberOptions } from "./useTeamMemberOptions";
+import {
+  MAX_APPLY_ROLE_LENGTH,
+  MAX_COMMITMENT_DETAIL_LENGTH,
+  MAX_COMMITMENT_LABEL_LENGTH,
+  MAX_HANDLE_LENGTH,
+  MAX_PARTNER_SLUG_LENGTH,
+  MAX_TASK_DESCRIPTION_LENGTH,
+  MAX_TASK_TITLE_LENGTH,
+  MAX_TEAM_COUNT,
+  MAX_TEAM_INTRO_LENGTH,
+  MAX_TEAM_SLUG_LENGTH,
+} from "./postVolunteerOpportunity.data";
 import styles from "./PostVolunteerOpportunityPage.module.css";
 
 /** Repeating "what you'd actually do" task rows. */
@@ -18,28 +30,44 @@ export function PostOpportunityTasks({ form }: { form: PostOpportunityForm }) {
       {state.tasks.map((task, index) => (
         <div className={styles.repRow} key={index}>
           <div className={styles.repFields}>
-            <input
-              type="text"
-              value={task.title}
-              onChange={(e) => setTask(index, { title: e.target.value })}
-              placeholder={t(
-                "marketing:postOpportunity.rich.taskTitlePlaceholder",
-              )}
-              aria-label={t("marketing:postOpportunity.rich.taskTitleAria", {
-                index: index + 1,
-              })}
-            />
-            <input
-              type="text"
-              value={task.description}
-              onChange={(e) => setTask(index, { description: e.target.value })}
-              placeholder={t(
-                "marketing:postOpportunity.rich.taskDetailPlaceholder",
-              )}
-              aria-label={t("marketing:postOpportunity.rich.taskDetailAria", {
-                index: index + 1,
-              })}
-            />
+            <div className={styles.repFieldItem}>
+              <input
+                type="text"
+                value={task.title}
+                onChange={(e) => setTask(index, { title: e.target.value })}
+                maxLength={MAX_TASK_TITLE_LENGTH}
+                placeholder={t(
+                  "marketing:postOpportunity.rich.taskTitlePlaceholder",
+                )}
+                aria-label={t(
+                  "marketing:postOpportunity.rich.taskTitleAria",
+                  { index: index + 1 },
+                )}
+              />
+              <span className={styles.repFieldCount}>
+                {task.title.length}/{MAX_TASK_TITLE_LENGTH}
+              </span>
+            </div>
+            <div className={styles.repFieldItem}>
+              <input
+                type="text"
+                value={task.description}
+                onChange={(e) =>
+                  setTask(index, { description: e.target.value })
+                }
+                maxLength={MAX_TASK_DESCRIPTION_LENGTH}
+                placeholder={t(
+                  "marketing:postOpportunity.rich.taskDetailPlaceholder",
+                )}
+                aria-label={t(
+                  "marketing:postOpportunity.rich.taskDetailAria",
+                  { index: index + 1 },
+                )}
+              />
+              <span className={styles.repFieldCount}>
+                {task.description.length}/{MAX_TASK_DESCRIPTION_LENGTH}
+              </span>
+            </div>
           </div>
           {state.tasks.length > 1 && (
             <button
@@ -79,33 +107,46 @@ export function PostOpportunityCommitments({
       {state.commitments.map((commitment, index) => (
         <div className={styles.repRow} key={index}>
           <div className={styles.repFields}>
-            <input
-              type="text"
-              value={commitment.label}
-              onChange={(e) =>
-                setCommitment(index, { label: e.target.value })
-              }
-              placeholder={t(
-                "marketing:postOpportunity.rich.commitLabelPlaceholder",
-              )}
-              aria-label={t("marketing:postOpportunity.rich.commitLabelAria", {
-                index: index + 1,
-              })}
-            />
-            <input
-              type="text"
-              value={commitment.detail}
-              onChange={(e) =>
-                setCommitment(index, { detail: e.target.value })
-              }
-              placeholder={t(
-                "marketing:postOpportunity.rich.commitDetailPlaceholder",
-              )}
-              aria-label={t(
-                "marketing:postOpportunity.rich.commitDetailAria",
-                { index: index + 1 },
-              )}
-            />
+            <div className={styles.repFieldItem}>
+              <input
+                type="text"
+                value={commitment.label}
+                onChange={(e) =>
+                  setCommitment(index, { label: e.target.value })
+                }
+                maxLength={MAX_COMMITMENT_LABEL_LENGTH}
+                placeholder={t(
+                  "marketing:postOpportunity.rich.commitLabelPlaceholder",
+                )}
+                aria-label={t(
+                  "marketing:postOpportunity.rich.commitLabelAria",
+                  { index: index + 1 },
+                )}
+              />
+              <span className={styles.repFieldCount}>
+                {commitment.label.length}/{MAX_COMMITMENT_LABEL_LENGTH}
+              </span>
+            </div>
+            <div className={styles.repFieldItem}>
+              <input
+                type="text"
+                value={commitment.detail}
+                onChange={(e) =>
+                  setCommitment(index, { detail: e.target.value })
+                }
+                maxLength={MAX_COMMITMENT_DETAIL_LENGTH}
+                placeholder={t(
+                  "marketing:postOpportunity.rich.commitDetailPlaceholder",
+                )}
+                aria-label={t(
+                  "marketing:postOpportunity.rich.commitDetailAria",
+                  { index: index + 1 },
+                )}
+              />
+              <span className={styles.repFieldCount}>
+                {commitment.detail.length}/{MAX_COMMITMENT_DETAIL_LENGTH}
+              </span>
+            </div>
           </div>
           {state.commitments.length > 1 && (
             <button
@@ -150,18 +191,25 @@ export function PostOpportunityTeamFields({
       <div className={styles.sectionHead}>
         {t("marketing:postOpportunity.rich.teamHeading")}
       </div>
-      <FormField label={t("marketing:postOpportunity.rich.teamIntroLabel")}>
+      <FormField
+        label={t("marketing:postOpportunity.rich.teamIntroLabel")}
+        labelAside={`${state.teamIntro.length}/${MAX_TEAM_INTRO_LENGTH}`}
+      >
         <input
           type="text"
           value={state.teamIntro}
           onChange={(e) => set("teamIntro", e.target.value)}
+          maxLength={MAX_TEAM_INTRO_LENGTH}
           placeholder={t("marketing:postOpportunity.rich.teamIntroPlaceholder")}
         />
       </FormField>
 
       <FormField
         label={t("marketing:postOpportunity.rich.teamLabel")}
-        helper={t("marketing:postOpportunity.rich.teamHelper")}
+        helper={t("marketing:postOpportunity.rich.teamHelper", {
+          maxCount: MAX_TEAM_COUNT,
+          maxLength: MAX_TEAM_SLUG_LENGTH,
+        })}
       >
         <Select
           multiple
@@ -177,11 +225,13 @@ export function PostOpportunityTeamFields({
         <FormField
           label={t("marketing:postOpportunity.rich.applyRoleLabel")}
           helper={t("marketing:postOpportunity.rich.applyRoleHelper")}
+          labelAside={`${state.applyRole.length}/${MAX_APPLY_ROLE_LENGTH}`}
         >
           <input
             type="text"
             value={applyRoleValue}
             onChange={(e) => set("applyRole", e.target.value)}
+            maxLength={MAX_APPLY_ROLE_LENGTH}
             placeholder={t(
               "marketing:postOpportunity.rich.applyRolePlaceholder",
             )}
@@ -191,11 +241,13 @@ export function PostOpportunityTeamFields({
         <FormField
           label={t("marketing:postOpportunity.rich.partnerSlugLabel")}
           helper={t("marketing:postOpportunity.rich.partnerSlugHelper")}
+          labelAside={`${state.partnerSlug.length}/${MAX_PARTNER_SLUG_LENGTH}`}
         >
           <input
             type="text"
             value={state.partnerSlug}
             onChange={(e) => set("partnerSlug", e.target.value)}
+            maxLength={MAX_PARTNER_SLUG_LENGTH}
             placeholder={t(
               "marketing:postOpportunity.rich.partnerSlugPlaceholder",
             )}
@@ -206,11 +258,13 @@ export function PostOpportunityTeamFields({
       <FormField
         label={t("marketing:postOpportunity.rich.handleLabel")}
         helper={t("marketing:postOpportunity.rich.handleHelper")}
+        labelAside={`${state.handle.length}/${MAX_HANDLE_LENGTH}`}
       >
         <input
           type="text"
           value={state.handle}
           onChange={(e) => set("handle", e.target.value)}
+          maxLength={MAX_HANDLE_LENGTH}
           placeholder={t("marketing:postOpportunity.rich.handlePlaceholder")}
         />
       </FormField>

@@ -129,6 +129,14 @@
   top: calc(100% + 6px);
   left: 0;
   right: 0;
+  /* A compact `size="sm"` trigger (e.g. a "Viewing as" picker hugging a short
+     name, or the directory's "Sort" control) can be narrower than an option
+     row needs once it carries the larger option font + a check icon —
+     without a floor, that forces the label to wrap, and the app's global
+     `overflow-wrap: anywhere` (mobile overflow fix) then breaks it mid-word.
+     180px clears the widest real option row seen so far ("By neighbourhood"
+     needs ~167px including its check-icon lane). */
+  min-width: 180px;
   z-index: 40;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);

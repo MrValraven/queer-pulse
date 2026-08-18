@@ -13,6 +13,9 @@ export interface MyEventsModals {
   details: { open: boolean; eventId: string | null };
   openDetails: (id: string) => void;
   closeDetails: () => void;
+  ticket: { open: boolean; eventId: string | null };
+  openTicket: (id: string) => void;
+  closeTicket: () => void;
   settingsOpen: boolean;
   openSettings: () => void;
   closeSettings: () => void;
@@ -27,6 +30,10 @@ export interface MyEventsModals {
 /** Details modal, settings modal + preferences, and the row "more" menu. */
 export function useMyEventsModals({ toast, t }: ModalsDeps): MyEventsModals {
   const [details, setDetails] = useState<{
+    open: boolean;
+    eventId: string | null;
+  }>({ open: false, eventId: null });
+  const [ticket, setTicket] = useState<{
     open: boolean;
     eventId: string | null;
   }>({ open: false, eventId: null });
@@ -46,6 +53,14 @@ export function useMyEventsModals({ toast, t }: ModalsDeps): MyEventsModals {
   );
   const closeDetails = useCallback(
     () => setDetails((d) => ({ ...d, open: false })),
+    [],
+  );
+  const openTicket = useCallback(
+    (id: string) => setTicket({ open: true, eventId: id }),
+    [],
+  );
+  const closeTicket = useCallback(
+    () => setTicket((d) => ({ ...d, open: false })),
     [],
   );
   const openSettings = useCallback(() => setSettingsOpen(true), []);
@@ -79,6 +94,9 @@ export function useMyEventsModals({ toast, t }: ModalsDeps): MyEventsModals {
     details,
     openDetails,
     closeDetails,
+    ticket,
+    openTicket,
+    closeTicket,
     settingsOpen,
     openSettings,
     closeSettings,

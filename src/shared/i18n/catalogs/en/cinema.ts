@@ -817,10 +817,6 @@ export const cinema: Catalog = {
     "Made Here isn't taking films over the wire yet, so nothing you enter here is sent or stored. We're building the submission pipeline now. Check back soon, and browse what the co-op is already screening in the meantime.",
   "submit.comingSoon.closeLabel": "Browse the cinema",
   "submit.aside.nextHeading": "What happens next",
-  "submit.aside.accessHeading": "Accessibility standard",
-  "submit.aside.accessBody":
-    "We ask for captions, but we also help source them. If you can't afford captioning, contact us. We have a small captioning fund for community filmmakers.",
-  "submit.aside.accessCta": "Our access standard",
   "submit.aside.openCallHeading": "Open call active",
   "submit.aside.applyCta": "Apply for the commission",
   "submit.aside.next.point1.strong": "We watch it.",

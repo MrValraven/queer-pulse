@@ -256,10 +256,10 @@
   }
 }
 
-/* ── Invite quota overrides modal ──────────────────────────── */
+/* ── Invite quota modal ────────────────────────────────────── */
 
 .quotaHint {
-  margin: 0 0 18px;
+  margin: 0 0 16px;
   font-size: 14px;
   line-height: 1.5;
   color: var(--ink-60);
@@ -278,9 +278,9 @@
   flex-wrap: wrap;
   gap: 12px;
   padding: 12px 14px;
-  border-radius: 14px;
   background: rgba(var(--plum-rgb), 0.05);
   border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 14px;
 }
 
 .quotaRowInfo {
@@ -303,33 +303,34 @@
 
 .quotaRowControls {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 8px;
 }
 
 .quotaField {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  gap: 8px;
 }
 
 .quotaFieldLabel {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-60);
+  white-space: nowrap;
 }
 
 .quotaInput {
-  width: 84px;
-  height: 36px;
-  padding: 0 10px;
-  border-radius: 8px;
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  background: var(--paper);
-  color: var(--text-strong);
+  width: 5.5rem;
+  padding: 7px 10px;
   font-size: 14px;
+  font-family: inherit;
+  color: var(--text-strong);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 8px;
 }
 
 .quotaInput:focus-visible {
@@ -342,12 +343,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   border-radius: 8px;
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  background: rgba(var(--plum-rgb), 0.05);
-  color: var(--ink);
+  background: transparent;
+  color: var(--ink-60);
   cursor: pointer;
   transition:
     background 0.16s var(--ease),
@@ -364,6 +365,12 @@
   box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.2);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .quotaClearButton {
+    transition: none;
+  }
+}
+
 :global([data-theme="dark"]) .quotaRow {
   background: rgba(var(--cream-rgb), 0.05);
   border-color: rgba(var(--cream-rgb), 0.1);
@@ -377,11 +384,5 @@
 
   .quotaRowControls {
     justify-content: space-between;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .quotaClearButton {
-    transition: none;
   }
 }

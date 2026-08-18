@@ -46,6 +46,7 @@ import { AuthErrorToast } from "../shared/components/feedback/AuthErrorToast";
 import { QueryErrorToastBridge } from "../shared/components/feedback/QueryErrorToastBridge";
 import { ErrorBoundary } from "../shared/components/feedback/ErrorBoundary";
 import { ConsentBanner } from "../shared/components/consent/ConsentBanner";
+import { ConsentPreferencesGate } from "../shared/components/consent/ConsentPreferencesGate";
 import { PwaUpdatePrompt } from "../shared/components/system/PwaUpdatePrompt";
 import { OfflineGate } from "../features/system/OfflineGate";
 import { ScrollManager } from "./ScrollManager";
@@ -222,6 +223,7 @@ export function App() {
           </ShellFrameProvider>
           <RoomLoader />
           <ConsentBanner />
+          <ConsentPreferencesGate />
           <AuthErrorToast />
           <PwaUpdatePrompt />
           <QueryErrorToastBridge />

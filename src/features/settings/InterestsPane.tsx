@@ -20,7 +20,11 @@ import {
 } from "./interests.data";
 import styles from "./InterestsPane.module.css";
 
-export function InterestsPane({ onChange }: { onChange: () => void }) {
+export function InterestsPane({
+  onChange,
+}: {
+  onChange: (key?: string) => void;
+}) {
   const { t } = useTranslation();
   const { draft, updateDraft } = useProfileEdit();
   const uid = useId();
@@ -40,7 +44,9 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
       }
       sub={t("settings:interests.sub")}
     >
-      <PrivateIdentitiesSection onChange={onChange} />
+      <PrivateIdentitiesSection
+        onChange={() => onChange("interests.identities")}
+      />
       {/* Directly below the chips it reads from — see the doc comment there. */}
       <DiscoverableIdentitiesSection />
 
@@ -66,7 +72,7 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
               ? draft.lookingFor.filter((x) => x !== label)
               : [...draft.lookingFor, label];
             updateDraft({ lookingFor: next });
-            onChange();
+            onChange("interests.lookingFor");
           }}
         />
         <div className={styles.showOnProfileRow}>
@@ -74,7 +80,7 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             checked={draft.lookingForPublic}
             onChange={(checked) => {
               updateDraft({ lookingForPublic: checked });
-              onChange();
+              onChange("interests.lookingFor");
             }}
             label={t("settings:interests.lookingFor.showOnProfile")}
           />
@@ -89,21 +95,35 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             {t("settings:interests.life.note")}
           </span>
         </div>
-        <div className={styles.field}>
-          <label htmlFor={`${uid}-city`}>
-            {t("settings:interests.life.cityLabel")}
-          </label>
-          {/* The member's real location (empty if unset) — never a hardcoded
-              "Lisbon, Portugal" that would show as everyone's city in live.
-              The field is coming-soon/disabled (no dedicated city pref yet),
-              so it reflects `draft.hood` read-only rather than persisting. */}
-          <input
-            id={`${uid}-city`}
-            type="text"
-            value={draft.hood}
-            disabled
-            readOnly
-          />
+        <div className={styles.worldGrid}>
+          <div className={styles.field}>
+            <label htmlFor={`${uid}-city`}>
+              {t("settings:interests.life.cityLabel")}
+            </label>
+            {/* The member's real location (empty if unset) — never a hardcoded
+                "Lisbon, Portugal" that would show as everyone's city in live.
+                The field is coming-soon/disabled (no dedicated city pref yet),
+                so it reflects `draft.hood` read-only rather than persisting. */}
+            <input
+              id={`${uid}-city`}
+              type="text"
+              value={draft.hood}
+              disabled
+              readOnly
+            />
+          </div>
+          <div className={styles.field}>
+            <label htmlFor={`${uid}-languages`}>
+              {t("settings:interests.life.languagesLabel")}
+            </label>
+            <input
+              id={`${uid}-languages`}
+              type="text"
+              placeholder={t("settings:interests.life.languagesPlaceholder")}
+              disabled
+              onChange={() => onChange()}
+            />
+          </div>
         </div>
         <div className={styles.field}>
           <label htmlFor={`${uid}-age`}>

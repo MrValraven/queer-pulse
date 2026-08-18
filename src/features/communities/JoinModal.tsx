@@ -49,9 +49,14 @@ export function JoinModal({
   const [step, setStep] = useState(1);
   const [involvement, setInvolvement] = useState("active");
   const [aboutText, setAboutText] = useState("");
-  const [inviteCode, setInviteCode] = useState("");
 
-  const isRequest = tier === "request" || tier === "private";
+  // `invite` gets the same pending-request treatment as `request`/`private`:
+  // the backend has no invite-code concept, so an invite-tier join is just a
+  // request an owner/mod reviews (see `communities.service.ts#join`). `isInvite`
+  // stays separate purely so the intro step can name the invite context in its
+  // eyebrow/hint copy.
+  const isRequest =
+    tier === "request" || tier === "private" || tier === "invite";
   const isInvite = tier === "invite";
 
   const total = 2;
@@ -93,8 +98,6 @@ export function JoinModal({
           community={community}
           isRequest={isRequest}
           isInvite={isInvite}
-          inviteCode={inviteCode}
-          setInviteCode={setInviteCode}
           onNext={() => setStep(2)}
         />
       )}

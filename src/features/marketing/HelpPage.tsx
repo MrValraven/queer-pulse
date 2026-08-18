@@ -3,7 +3,7 @@ import { AnimatePresence, m } from "motion/react";
 import { Link } from "react-router-dom";
 import { useMotionPrefs } from "../../app/providers/MotionProvider";
 import { PageHero, PageShell } from "../../shared/components/layout";
-import { Button, SubpageIndex } from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -295,17 +295,6 @@ export function HelpPage() {
           </div>
         </div>
       </div>
-
-      <SubpageIndex
-        title={t("marketing:help.subpageIndex.title")}
-        items={[
-          {
-            label: t("marketing:help.subpageIndex.accessibility.label"),
-            to: routes.accessibility,
-            blurb: t("marketing:help.subpageIndex.accessibility.blurb"),
-          },
-        ]}
-      />
     </PageShell>
   );
 }

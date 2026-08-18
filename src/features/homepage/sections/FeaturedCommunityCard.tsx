@@ -16,7 +16,7 @@ import type { IconType } from "react-icons";
 import { Button, ImageSlot } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { routes } from "../../../app/routeMap";
+import { useHowCommunitiesWorkModal } from "../../marketing/useHowCommunitiesWorkModal";
 import type {
   AccessTier,
   CommunityType,
@@ -123,7 +123,13 @@ function FeatureChips({ features }: { features: string[] }) {
   );
 }
 
-function CommunityCard({ view }: { view: CommunitySpotlightView }) {
+function CommunityCard({
+  view,
+  onHowItWorksClick,
+}: {
+  view: CommunitySpotlightView;
+  onHowItWorksClick: () => void;
+}) {
   const { t } = useTranslation();
   const access = ACCESS[view.accessTier];
   const AccessIcon = access.icon;
@@ -206,7 +212,7 @@ function CommunityCard({ view }: { view: CommunitySpotlightView }) {
             </span>
           </div>
           <div className={spot.actions}>
-            <Button variant="primary" to={routes.aboutCommunities}>
+            <Button variant="primary" onClick={onHowItWorksClick}>
               {t("homepage:communities.howCommunitiesWorkCta")}{" "}
               <FiArrowRight aria-hidden />
             </Button>
@@ -230,12 +236,14 @@ export function FeaturedCommunityCard({
 }: {
   items: CommunitySpotlightView[];
 }) {
+  const { openModal, modalElement } = useHowCommunitiesWorkModal();
   if (items.length === 0) return null;
   return (
     <div className={styles.list}>
       {items.map((view) => (
-        <CommunityCard key={view.key} view={view} />
+        <CommunityCard key={view.key} view={view} onHowItWorksClick={openModal} />
       ))}
+      {modalElement}
     </div>
   );
 }

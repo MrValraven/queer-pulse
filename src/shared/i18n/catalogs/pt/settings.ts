@@ -14,7 +14,6 @@ export const settings: Catalog = {
   "nav.group.privacyData": "Privacidade e dados",
   "nav.group.account": "Conta",
   "nav.group.personalisation": "Personalização",
-  "nav.group.prototype": "Protótipo",
   "nav.group.dangerZone": "Zona de perigo",
   "nav.item.notifications": "Notificações",
   "nav.item.language": "Idioma e terminologia",
@@ -26,7 +25,6 @@ export const settings: Catalog = {
   "nav.item.accessibility": "Acessibilidade",
   "nav.item.interests": "Interesses",
   "nav.item.uploads": "As minhas imagens",
-  "nav.item.simulations": "Simulações",
   "nav.item.deleteAccount": "Eliminar conta",
 
   // ── Guia de terminologia da comunidade (settings.data.ts TERMS) ──────────
@@ -45,6 +43,8 @@ export const settings: Catalog = {
 
   // ── SettingsPage.tsx (barra de guardar + confirmação de eliminação) ──────
   "page.saveBar.unsaved": "Tens alterações por guardar.",
+  "page.saveBar.changesCount_one": "{count} alteração",
+  "page.saveBar.changesCount_other": "{count} alterações",
   "page.saveBar.discard": "Descartar",
   "page.saveBar.save": "Guardar alterações",
   "page.saveBar.savedToast": "Definições guardadas",
@@ -52,6 +52,12 @@ export const settings: Catalog = {
     "Não foi possível guardar as tuas alterações. Tenta novamente.",
   "page.leaveConfirm":
     "Tens alterações por guardar aqui. Queres sair sem as guardar?",
+
+  // ── SettingsSaveBar.tsx — disclosure "o que mudou" (settings.data.ts
+  //    changeLabelKey()). A maioria reutiliza um rótulo já existente; estas
+  //    duas não têm um rótulo existente que resulte bem numa lista.
+  "changes.interests.identities": "Identidades",
+  "changes.interests.lookingFor": "O que procuras",
 
   // ── SettingsControls.tsx — DeleteAccountModal (primeira confirmação) ─────
   "controls.deleteModal.title": "Eliminar a tua conta?",
@@ -196,15 +202,6 @@ export const settings: Catalog = {
   "interests.contentSetting.sexualityIdentity":
     "Conteúdo sobre exploração da sexualidade e identidade",
 
-  // ── SimulationPreviewModal.tsx ────────────────────────────────────────────
-  "previewModal.ariaLabel": "Pré-visualização: {title}",
-  "previewModal.kicker": "Pré-visualização",
-  "previewModal.deviceGroupAriaLabel": "Largura da pré-visualização",
-  "previewModal.mobile": "Telemóvel",
-  "previewModal.desktop": "Computador",
-  "previewModal.openFullScreen": "Abrir em ecrã inteiro",
-  "previewModal.closeAriaLabel": "Fechar pré-visualização",
-
   // ── SettingsPanes.tsx — NotificationsPane ────────────────────────────────
   "notifications.title": "Preferências de <em>notificações.</em>",
   "notifications.sub":
@@ -232,7 +229,8 @@ export const settings: Catalog = {
   "notifications.messages.sayHello.title": "Recebeste um «Olá»",
   "notifications.messages.sayHello.desc": "Quando alguém te acena no perfil",
   "notifications.messages.vouch.title": "Votos de confiança",
-  "notifications.messages.vouch.desc": "Quando alguém te dá um voto de confiança",
+  "notifications.messages.vouch.desc":
+    "Quando alguém te dá um voto de confiança",
   "notifications.phonePush.title": "Notificações no telemóvel",
   "notifications.phonePush.desc":
     "Recebe um aviso no telemóvel quando alguém te envia mensagem, mesmo com o QueerPulse fechado. Adiciona primeiro o QueerPulse ao ecrã principal.",
@@ -244,7 +242,8 @@ export const settings: Catalog = {
   "notifications.phonePush.test.desc":
     "Envia uma notificação para os teus dispositivos para confirmar que está tudo a funcionar.",
   "notifications.phonePush.test.action": "Enviar teste",
-  "notifications.phonePush.test.sent": "Teste enviado. Confirma no teu dispositivo",
+  "notifications.phonePush.test.sent":
+    "Teste enviado. Confirma no teu dispositivo",
   "notifications.phonePush.test.error":
     "Não foi possível enviar o teste. Tenta daqui a pouco",
   "notifications.communities.newPost.title":
@@ -330,13 +329,6 @@ export const settings: Catalog = {
   "data.export.messages.title": "A preparar as tuas mensagens",
   "data.export.messages.note":
     "Exportação simples do teu histórico completo de mensagens.",
-
-  // ── SettingsPanes.tsx — SimulationsPane ───────────────────────────────────
-  "simulations.title": "Simulações de <em>fluxos.</em>",
-  "simulations.sub":
-    "Pré-visualiza as principais jornadas de uma pessoa da comunidade, do início ao fim. Os ecrãs de estado abrem numa pré-visualização em moldura de dispositivo aqui mesmo; os fluxos mais elaborados abrem os ecrãs reais para os percorreres exatamente como qualquer outra pessoa.",
-  "simulations.preview": "Pré-visualizar",
-  "simulations.start": "Iniciar simulação",
 
   // ── SettingsPanes.tsx — VisibilityPane (quem pode encontrar/contactar-te)
   // Os ids "open"/"network"/"private" são o valor guardado — nunca traduzir
@@ -424,7 +416,8 @@ export const settings: Catalog = {
   "uploads.delete.cta": "Apagar imagem",
   "uploads.delete.cancel": "Cancelar",
   "uploads.delete.toast.success": "Imagem apagada.",
-  "uploads.delete.toast.error": "Não conseguimos apagar essa imagem. Tenta novamente.",
+  "uploads.delete.toast.error":
+    "Não conseguimos apagar essa imagem. Tenta novamente.",
 
   // ── EditProfileSidebar.tsx / editProfileNav.data.tsx ─────────────────────
   "editProfile.nav.group.profile": "Perfil",
@@ -607,8 +600,7 @@ export const settings: Catalog = {
   "dataExport.toast.selectType": "Seleciona pelo menos um tipo de dados.",
   "dataExport.outro.titleLine1": "Perguntas sobre",
   "dataExport.outro.titleLine2": "os teus dados?",
-  "dataExport.outro.sub":
-    "Escreve-nos e uma pessoa real responde-te.",
+  "dataExport.outro.sub": "Escreve-nos e uma pessoa real responde-te.",
   "dataExport.outro.cta": "Contacta-nos",
 
   // ── DataExportSections.tsx — DataExportSteps ─────────────────────────────
@@ -980,7 +972,7 @@ export const settings: Catalog = {
   "security.scope.title": "O que está <em>no âmbito.</em>",
   "security.scope.inLabel": "No âmbito",
   "security.scope.outLabel": "Fora do âmbito",
-  "security.scope.in.1": "queerpulse.pt e *.queerpulse.pt",
+  "security.scope.in.1": "queerpulse.com e *.queerpulse.com",
   "security.scope.in.2": "Autenticação e gestão de sessões",
   "security.scope.in.3": "Acesso a dados e escalada de privilégios",
   "security.scope.in.4": "XSS armazenado e refletido",
@@ -995,7 +987,8 @@ export const settings: Catalog = {
   "security.scope.out.5":
     "Infraestrutura de terceiros (Hetzner, Postmark, Backblaze)",
   "security.scope.out.6": "Clickjacking em páginas não sensíveis",
-  "security.scope.out.7": "Cabeçalhos de segurança em falta (apenas comunicação)",
+  "security.scope.out.7":
+    "Cabeçalhos de segurança em falta (apenas comunicação)",
 
   "security.process.eyebrow": "Processo",
   "security.process.aria": "O que acontece depois de comunicares",

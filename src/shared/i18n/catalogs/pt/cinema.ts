@@ -847,10 +847,6 @@ export const cinema: Catalog = {
     "O Made Here ainda não recebe filmes, por isso nada do que escreveres aqui é enviado ou guardado. Estamos a construir o processo de submissão. Volta em breve e, entretanto, vê o que a cooperativa já está a exibir.",
   "submit.comingSoon.closeLabel": "Ver o cinema",
   "submit.aside.nextHeading": "O que acontece a seguir",
-  "submit.aside.accessHeading": "Norma de acessibilidade",
-  "submit.aside.accessBody":
-    "Pedimos legendas, mas também ajudamos a consegui-las. Se não puderes pagar a legendagem, contacta-nos. Temos um pequeno fundo de legendagem para cineastas da comunidade.",
-  "submit.aside.accessCta": "A nossa norma de acesso",
   "submit.aside.openCallHeading": "Chamada aberta ativa",
   "submit.aside.applyCta": "Candidatar-te à encomenda",
   "submit.aside.next.point1.strong": "Vemo-lo.",

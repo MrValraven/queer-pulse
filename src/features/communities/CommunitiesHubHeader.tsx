@@ -1,6 +1,7 @@
 import { Button, FeatureHelp } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { useHowCommunitiesWorkModal } from "../marketing/useHowCommunitiesWorkModal";
 import { CommunitiesTopTabs } from "./CommunitiesTopTabs";
 import type { TopTab } from "./useCommunitiesTopTab";
 import styles from "./CommunitiesHubHeader.module.css";
@@ -20,6 +21,7 @@ export function CommunitiesHubHeader({
   onChange: (next: TopTab) => void;
 }) {
   const { t } = useTranslation();
+  const { openModal, modalElement } = useHowCommunitiesWorkModal();
 
   return (
     <header className={styles.header}>
@@ -33,7 +35,7 @@ export function CommunitiesHubHeader({
             <CommunitiesTopTabs active={active} onChange={onChange} />
           </div>
           <div className={styles.actions}>
-            <Button variant="ghost" to={routes.aboutCommunities}>
+            <Button variant="ghost" onClick={openModal}>
               {t("communities:hub.howItWorksCta")}
             </Button>
             <Button variant="primary" to={routes.startCommunity}>
@@ -42,6 +44,7 @@ export function CommunitiesHubHeader({
           </div>
         </div>
       </div>
+      {modalElement}
     </header>
   );
 }

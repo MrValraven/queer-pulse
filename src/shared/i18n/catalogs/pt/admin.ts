@@ -389,10 +389,12 @@ export const admin: Catalog = {
   "members.verify.source.other": "Outra página",
   "members.verify.ageAttested": "18+ confirmado a {date} · Termos v{version}",
   "members.verify.ageAttestedUnknown": "18+ confirmado · Termos v{version}",
-  // Aprovado: a plataforma não envia qualquer email — dizê-lo com clareza.
+  // Aprovado: agora é enviado um email de convite automaticamente; a opção
+  // de copiar a ligação abaixo mantém-se como recurso manual, por isso
+  // dizê-lo com clareza, não que nada foi enviado.
   "members.verify.approvedLabel": "Recebide na comunidade",
   "members.verify.sendYourself":
-    "Não foi enviado nenhum email. Envia tu esta ligação de convite para {email}. É a única forma de entrarem.",
+    "Um email de convite está a caminho de {email}. Também podes copiar a ligação abaixo e enviá-la tu mesme, como reforço.",
   "members.verify.copyLink": "Copiar ligação",
   "members.verify.copiedLink": "Copiada",
   "members.verify.copiedToast": "Ligação de convite copiada. Agora envia-lha",
@@ -723,6 +725,22 @@ export const admin: Catalog = {
   "adminInvites.drawer.dateTime": "{date} às {time}",
   "adminInvites.drawer.inviteMessageLabel": "Mensagem do convite",
   "adminInvites.drawer.vouchMessageLabel": "Mensagem de recomendação",
+  "adminInvites.quota.manageCta": "Gerir quotas de convites",
+  "adminInvites.quota.modalEyebrow": "Limites de recursos",
+  "adminInvites.quota.modalTitle": "Quotas de convites",
+  "adminInvites.quota.modalHint":
+    "Define quantos convites um membro pode enviar por mês. Limpa o campo para usar o valor predefinido da plataforma.",
+  "adminInvites.quota.sentCount": "{count} enviados",
+  "adminInvites.quota.fieldLabel": "Quota mensal",
+  "adminInvites.quota.defaultPlaceholder": "Predefinido",
+  "adminInvites.quota.inputAriaLabel": "Quota mensal de convites de {name}",
+  "adminInvites.quota.saveCta": "Guardar",
+  "adminInvites.quota.saveAriaLabel": "Guardar quota de convites de {name}",
+  "adminInvites.quota.clearCta": "Repor predefinição",
+  "adminInvites.quota.clearAriaLabel": "Repor a quota de convites de {name} para a predefinição",
+  "adminInvites.quota.invalid": "Introduz um número inteiro de 0 ou mais, ou limpa o campo.",
+  "adminInvites.quota.saved": "Quota de convites de {name} guardada.",
+  "adminInvites.quota.cleared": "{name} voltou à quota de convites predefinida.",
 
   "adminCommissionInterests.title": "Interesse em <em>encomendas</em>",
   "adminCommissionInterests.header.eyebrow": "Cultura",
@@ -1721,6 +1739,7 @@ export const admin: Catalog = {
     "Nada foi sinalizado. A comunidade cuida de si própria.",
   "modPanel.reports.metaLine":
     "De {author} · sinalizado por {reporter} · há {time}",
+  "modPanel.reports.metaLiveLine": "Sinalizado · há {time}",
   "modPanel.reports.removeCta": "Remover publicação",
   "modPanel.reports.warnCta": "Avisar autoria",
   "modPanel.reports.dismissCta": "Rejeitar",

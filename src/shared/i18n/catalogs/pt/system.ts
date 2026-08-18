@@ -203,11 +203,13 @@ export const system: Catalog = {
   "inviteState.revoked.lead":
     "Quem enviou este convite, ou um moderador da comunidade, retirou-o antes de ser usado. Não faz mal. Podes pedir um novo sempre que quiseres.",
   "inviteState.notFound.eyebrow": "Convite não encontrado",
-  "inviteState.notFound.heading": "Não conseguimos <em>reconhecer esta ligação.</em>",
+  "inviteState.notFound.heading":
+    "Não conseguimos <em>reconhecer esta ligação.</em>",
   "inviteState.notFound.lead":
     "Esta ligação de convite não corresponde a nada do nosso lado. Pode ter sido mal copiada ou cortada ao ser partilhada. Pede um novo convite e nós tratamos de te pôr lá dentro.",
   "inviteState.inviterInactive.eyebrow": "Quem convidou já não está ativo",
-  "inviteState.inviterInactive.heading": "A pessoa que te convidou <em>já não está por cá.</em>",
+  "inviteState.inviterInactive.heading":
+    "A pessoa que te convidou <em>já não está por cá.</em>",
   "inviteState.inviterInactive.lead":
     "Quem enviou este convite já não está ativo no QueerPulse, por isso a ligação não te consegue trazer para dentro. Não foi nada que tenhas feito. Pede um novo convite a outra pessoa que conheças, ou pede um e nós tratamos do resto.",
   "inviteState.details.expiredOn": "Expirou",
@@ -306,7 +308,8 @@ export const system: Catalog = {
   "pendingReview.timeline.step1.title": "Pedido recebido · {date}",
   "pendingReview.timeline.step1.desc":
     "Inscreveste-te · registámos o teu interesse",
-  "pendingReview.timeline.step2.title": "À espera de uma pessoa que dá votos de confiança",
+  "pendingReview.timeline.step2.title":
+    "À espera de uma pessoa que dá votos de confiança",
   "pendingReview.timeline.step2.desc":
     "Uma pessoa da comunidade está a comparar os teus interesses · isto demora 2 a 3 semanas",
   "pendingReview.timeline.step3.title": "Chamada breve de confirmação · 15 min",
@@ -317,7 +320,8 @@ export const system: Catalog = {
   "pendingReview.timeline.step4.desc":
     "Vais receber uma ligação de utilização única para ativar a tua conta",
   "pendingReview.actions.magazineCta": "Ler a revista",
-  "pendingReview.actions.vouchCta": "Pedir um voto de confiança a alguém da comunidade",
+  "pendingReview.actions.vouchCta":
+    "Pedir um voto de confiança a alguém da comunidade",
   "pendingReview.actions.updateInterestsCta": "Atualizar os meus interesses",
   "pendingReview.foot.knowMember":
     "Já conheces alguém que te possa dar um voto de confiança? <a>Envia-lhe uma ligação de voto de confiança num clique</a>. Isso adianta-te na fila.",
@@ -384,9 +388,9 @@ export const system: Catalog = {
   "serverError.sub.maintenance":
     "Estamos a atualizar a plataforma. Não deve demorar muito. Agradecemos a tua paciência.",
   "serverError.status.maintenance":
-    "<strong>Interrupção planeada.</strong> Acompanha em <a>status.queerpulse.pt</a> para atualizações.",
+    "<strong>Interrupção planeada.</strong> Acompanha em <a>status.queerpulse.com</a> para atualizações.",
   "serverError.status.error":
-    "<strong>A nossa equipa já foi alertada.</strong> Consulta <a>status.queerpulse.pt</a> para atualizações em direto.",
+    "<strong>A nossa equipa já foi alertada.</strong> Consulta <a>status.queerpulse.com</a> para atualizações em direto.",
   "serverError.actions.retryCta": "Tentar outra vez",
   "serverError.actions.homeCta": "Ir para a página inicial",
   "serverError.actions.statusCta": "Ver o estado da plataforma",
@@ -397,7 +401,8 @@ export const system: Catalog = {
   "status.hero.allOperational": "Todos os sistemas operacionais",
   "status.hero.title": "Estado da <em>plataforma</em>",
   "status.hero.sub": "Atualizado agora mesmo · Atualiza a cada 60 s",
-  "status.hero.subLive": "A monitorização pública de disponibilidade está a caminho.",
+  "status.hero.subLive":
+    "A monitorização pública de disponibilidade está a caminho.",
   "status.live.title": "O relatório de estado em tempo real está quase aí",
   "status.live.description":
     "Estamos a preparar a monitorização pública de disponibilidade, o estado dos serviços e o histórico de incidentes. Volta em breve.",

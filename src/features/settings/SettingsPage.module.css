@@ -381,54 +381,6 @@
   line-height: 1.55;
 }
 
-/* Save bar */
-.saveBar {
-  position: fixed;
-  bottom: calc(max(24px, env(safe-area-inset-bottom)) + var(--bottom-inset));
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 90;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-  border-radius: var(--radius-pill);
-  padding: 12px 14px 12px 24px;
-  box-shadow: 0 18px 40px -18px rgba(var(--plum-rgb), 0.6);
-  animation: qpToastIn 0.3s var(--ease);
-}
-.saveBar p {
-  font-size: 14px;
-  color: rgba(var(--cream-rgb), 0.85);
-}
-.discard {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: rgba(var(--cream-rgb), 0.7);
-  padding: 11px 16px;
-}
-@media (hover: hover) {
-  .discard:hover {
-    color: rgba(var(--cream-rgb), 1);
-  }
-}
-.saveBtn {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 600;
-  background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
-  border: none;
-  border-radius: 999px;
-  padding: 11px 22px;
-  cursor: pointer;
-}
-
 /* Delete modal */
 .overlay {
   position: fixed;

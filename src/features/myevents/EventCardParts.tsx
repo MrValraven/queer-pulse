@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-import { linkToPath } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
@@ -110,7 +108,7 @@ export function FriendsLine({ ev }: { ev: MyEvent }) {
 /** Today's "starts in / happening now" bar with quick links. */
 export function SoonBar({ ev }: { ev: MyEvent }) {
   const { t } = useTranslation();
-  const { toast } = useMyEvents();
+  const { toast, openTicket } = useMyEvents();
   if (!isToday(ev) || !COMMITTED[ev.category] || ev.cancelled) return null;
   const lab = soonLabel(ev, t);
   if (!lab) return null;
@@ -149,12 +147,13 @@ export function SoonBar({ ev }: { ev: MyEvent }) {
       {ev.ticket && (
         <>
           <span className={sx("soon-sep")}>·</span>
-          <Link
+          <button
+            type="button"
             className={sx("soon-link")}
-            to={linkToPath("QueerPulse RSVP Ticket.html")}
+            onClick={() => openTicket(ev.id)}
           >
             {t("myevents:soon.ticketCta")}
-          </Link>
+          </button>
         </>
       )}
     </div>

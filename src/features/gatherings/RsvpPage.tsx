@@ -33,9 +33,9 @@ function RsvpFrame({ children }: { children: ReactNode }) {
 /**
  * The standalone RSVP confirmation is now DEMO-ONLY: in live mode RSVP is an
  * action inside the gathering detail (`GatheringRsvpControl`), and the router
- * redirects `/rsvp` + `/rsvp-ticket` to the gathering (see `RsvpRedirect`), so
- * this page only ever mounts in demo. It keeps the static reading-group
- * confirmation prototype; the footer "cancel" runs the demo-safe un-RSVP no-op.
+ * redirects `/rsvp` to the gathering (see `RsvpRedirect`), so this page only
+ * ever mounts in demo. It keeps the static reading-group confirmation
+ * prototype; the footer "cancel" runs the demo-safe un-RSVP no-op.
  */
 export function RsvpPage() {
   const { t } = useTranslation();

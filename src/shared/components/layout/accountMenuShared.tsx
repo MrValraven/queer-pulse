@@ -8,11 +8,11 @@ import {
   FiPlayCircle,
 } from "react-icons/fi";
 import { useTranslation } from "../../i18n/useTranslation";
+import { isSandbox } from "../../sandbox/sandbox";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useMyCommunities } from "../../../features/communities/api/useMyCommunities";
 import { useHasStaffRole } from "../../../features/auth/api/useMyStaffRoles";
 import { routes, modPanel } from "../../../app/routeMap";
-import { isSandbox } from "../../sandbox/sandbox";
 import {
   DEMO_MOD_SLUG,
   type TeamRole,
@@ -161,8 +161,9 @@ export function AccountMenuControls({
   /** Hide the navigation-layout (mega/sidebar) switch — not applicable in
    * contexts (e.g. a mobile account sheet) that don't have that choice. */
   showNavModeSwitch?: boolean;
-  /** Closes the surrounding menu/sheet when the dev-only simulations link is
-   * clicked, matching how every other `<Link>` in these surfaces behaves. */
+  /** Closes the menu/sheet after the dev-only "Flow simulations" link
+   * navigates. Optional since only the Link needs it, unlike the buttons
+   * below which never leave the page. */
   onNavigate?: () => void;
 }) {
   const { t } = useTranslation();
@@ -193,10 +194,19 @@ export function AccountMenuControls({
             : t("shared:accountMenu.controls.noApi")}
         </span>
       </button>
+      {/* Dev-only entry point into the /simulations sandbox (see
+          features/simulations/routes.tsx, which is itself a no-op in
+          production): sits next to the demo-data toggle above since both are
+          maintainer/dev tooling, not member-facing account settings.
+          Hidden with !isSandbox() so a sandbox instance (itself a full app
+          instance running inside another simulation's iframe) cannot open
+          this link and recurse into /simulations from within itself. */}
       {import.meta.env.DEV && !isSandbox() && (
         <Link to={routes.simulations} className={styles.item} onClick={onNavigate}>
           <FiPlayCircle aria-hidden className={styles.itemIcon} />
-          <span className={styles.itemLabel}>{t("simulations:home.title")}</span>
+          <span className={styles.itemLabel}>
+            {t("simulations:home.title")}
+          </span>
         </Link>
       )}
       {/* Demo-only: in live mode the team role is the real `useAuth().role`,

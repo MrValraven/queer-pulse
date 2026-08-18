@@ -85,157 +85,6 @@ export const marketing: Catalog = {
     "A melhor forma de perceber a QueerPulse é estar dentro dela.",
   "about.outro.cta": "Pedir um convite",
 
-  // ── Acessibilidade ─────────────────────────────────────────────────────
-  "accessibility.meta.title": "Espaços queer acessíveis em Lisboa, revistos",
-  "accessibility.meta.description":
-    "Informação real de acessibilidade sobre espaços queer em Lisboa, revista por pessoas com deficiência da comunidade e não adivinhada — e como pedir uma adaptação diretamente.",
-  "accessibility.backLabel": "Ajuda",
-  "accessibility.category": "Acessibilidade",
-  "accessibility.hero.title": "O acesso <em>não devia ser um talvez.</em>",
-  "accessibility.hero.sub":
-    "Informação real de acessibilidade sobre espaços queer em Lisboa — revista por pessoas com deficiência, não adivinhada. E como pedir-nos uma adaptação diretamente.",
-  "accessibility.hero.accomCta": "Pedir uma adaptação",
-  "accessibility.hero.spacesCta": "Ver espaços acessíveis",
-  "accessibility.hero.note":
-    "Cada espaço abaixo foi revisto por uma pessoa da comunidade com deficiência antes de ser listado.",
-  "accessibility.spaces.title": "Espaços <em>acessíveis</em>",
-  "accessibility.spaces.body":
-    "Filtra pela característica de acesso que importa para ti. Cada ficha reflete o que uma pessoa com deficiência convíviou lá, não o que o espaço afirma sobre si próprio.",
-  "accessibility.spaces.filterLabel": "Filtrar por:",
-  "accessibility.spaces.emptyTitle": "Ainda não há espaços com este filtro",
-  "accessibility.spaces.emptyBody":
-    "Experimenta outra característica, ou assinala um espaço que gostarias de ver revisto.",
-  "accessibility.filters.all": "Todos os espaços",
-  "accessibility.filters.stepFree": "Sem degraus",
-  "accessibility.filters.accessibleBathroom": "Casa de banho acessível",
-  "accessibility.filters.seating": "Lugares sentados",
-  "accessibility.filters.hearingLoop": "Aro magnético",
-  "accessibility.filters.sensoryFriendly": "Sensorialmente amigável",
-  "accessibility.filters.carerWelcome": "Acompanhantes bem-vindes",
-  "accessibility.commitments.title": "Os nossos <em>compromissos</em>",
-  "accessibility.commitments.body":
-    "O que já fazemos e aquilo em que ainda estamos a trabalhar — sem arredondar para cima.",
-  "accessibility.commitments.captions.title": "Legendagem ao vivo",
-  "accessibility.commitments.captions.body":
-    "Eventos comunitários com programa falado têm legendagem ao vivo a pedido.",
-  "accessibility.commitments.captions.status": "Disponível a pedido",
-  "accessibility.commitments.lgp.title": "Interpretação em LGP",
-  "accessibility.commitments.lgp.body":
-    "Interpretação em Língua Gestual Portuguesa nos eventos principais, reservada com antecedência.",
-  "accessibility.commitments.lgp.status": "Só eventos principais",
-  "accessibility.commitments.seating.title": "Lugares sentados, sempre",
-  "accessibility.commitments.seating.body":
-    "Todos os eventos organizados pela QueerPulse garantem lugar sentado para quem precisar — sem exceções.",
-  "accessibility.commitments.seating.status": "Garantido",
-  "accessibility.commitments.sensory.title": "Momentos sensorialmente calmos",
-  "accessibility.commitments.sensory.body":
-    "Janelas com menos volume e menos gente em convívios selecionados, para quem precisa.",
-  "accessibility.commitments.sensory.status": "Eventos selecionados",
-  "accessibility.commitments.carers.title": "Acompanhantes bem-vindes",
-  "accessibility.commitments.carers.body":
-    "Pessoas de apoio e acompanhantes entram gratuitamente em qualquer evento da QueerPulse.",
-  "accessibility.commitments.carers.status": "Sempre gratuito",
-  "accessibility.commitments.platform.title": "Uma plataforma acessível",
-  "accessibility.commitments.platform.body":
-    "Suporte a leitores de ecrã, navegação por teclado e redução de movimento fazem parte do produto, não são acrescentados depois.",
-  "accessibility.commitments.platform.status": "Em curso",
-  "accessibility.commitments.accomTitle":
-    "Precisas de algo que não está na lista?",
-  "accessibility.commitments.accomBody":
-    "Diz-nos o que precisas para um evento específico e fazemos o que pudermos, mesmo em cima da hora.",
-  "accessibility.commitments.accomCta": "Pedir uma adaptação",
-  "accessibility.resources.title": "Recursos <em>relacionados</em>",
-  "accessibility.resources.body":
-    "Apoio que vai além do que a própria QueerPulse consegue oferecer.",
-  "accessibility.resources.openingToast": "A abrir recurso…",
-  "accessibility.resources.benefits.eyebrow": "Financeiro",
-  "accessibility.resources.benefits.title":
-    "Prestações por deficiência, explicadas",
-  "accessibility.resources.benefits.body":
-    "Um guia em linguagem simples sobre prestações por deficiência em Portugal e como te candidatares.",
-  "accessibility.resources.benefits.link": "Ler o guia",
-  "accessibility.resources.healthcare.eyebrow": "Saúde",
-  "accessibility.resources.healthcare.title":
-    "Encontrar cuidados acessíveis e afirmativos",
-  "accessibility.resources.healthcare.body":
-    "Clínicos e clínicas avaliados que levam a sério tanto a acessibilidade como os cuidados afirmativos de género.",
-  "accessibility.resources.healthcare.link": "Ver a lista",
-  "accessibility.resources.legal.eyebrow": "Legal",
-  "accessibility.resources.legal.title": "Conhece os teus direitos",
-  "accessibility.resources.legal.body":
-    "O que a lei portuguesa garante mesmo a pessoas com deficiência, e a quem recorrer quando não é cumprida.",
-  "accessibility.resources.legal.link": "Ler mais",
-  "accessibility.resources.mentalHealth.eyebrow": "Saúde mental",
-  "accessibility.resources.mentalHealth.title":
-    "Apoio para doença crónica e deficiência",
-  "accessibility.resources.mentalHealth.body":
-    "Grupos de entreajuda e terapeutas que percebem a sobreposição entre ser queer e ter uma deficiência.",
-  "accessibility.resources.mentalHealth.link": "Encontrar apoio",
-  "accessibility.peer.title": "Mentoria entre <em>pares</em>",
-  "accessibility.peer.body":
-    "Pessoas com deficiência a apoiarem-se mutuamente — juntando quem chega agora a alguém que já navegou os mesmos sistemas.",
-  "accessibility.peer.joinCta": "Juntar-me como pessoa mentorada",
-  "accessibility.peer.joiningToast":
-    "Estás na lista — juntamos-te a alguém em breve.",
-  "accessibility.peer.mentorCta": "Oferecer mentoria",
-  "accessibility.outro.title":
-    "O acesso é uma <em>prática,</em> não uma política.",
-  "accessibility.outro.sub": "Diz-nos onde estamos a falhar. Preferimos saber.",
-  "accessibility.outro.cta": "Pedir um convite",
-  "accessibility.venue.reviewedBy_one":
-    "Revisto por {count} pessoa com deficiência",
-  "accessibility.venue.reviewedBy_other":
-    "Revisto por {count} pessoas com deficiência",
-  "accessibility.venue.operatedBadge": "Espaço operado pela QueerPulse",
-  "accessibility.venue.flagCta": "Assinalar um problema",
-  "accessibility.flagIssues.stepFree": "Acesso sem degraus",
-  "accessibility.flagIssues.bathroom": "Casa de banho acessível",
-  "accessibility.flagIssues.seating": "Lugares sentados",
-  "accessibility.flagIssues.hearingLoop": "Aro magnético",
-  "accessibility.flagIssues.sensory": "Ambiente sensorial",
-  "accessibility.flagIssues.staff": "Atitude da equipa",
-  "accessibility.flagIssues.other": "Outra coisa",
-  "accessibility.flagModal.ariaLabel":
-    "Assinalar um problema de acessibilidade",
-  "accessibility.flagModal.title": "Assinalar um problema de acessibilidade",
-  "accessibility.flagModal.sub":
-    "Diz-nos o que aconteceu — isto vai diretamente para o espaço e para a nossa equipa de acessibilidade.",
-  "accessibility.flagModal.venueLabel": "Espaço",
-  "accessibility.flagModal.issueTypeLabel": "Que tipo de problema?",
-  "accessibility.flagModal.issueTypePlaceholder": "Escolhe um tipo de problema",
-  "accessibility.flagModal.whatHappenedLabel": "O que aconteceu?",
-  "accessibility.flagModal.whatHappenedPlaceholder":
-    "Descreve o que encontraste",
-  "accessibility.flagModal.whenLabel": "Quando?",
-  "accessibility.flagModal.whenPlaceholder":
-    "ex.: no fim de semana passado, 14 de maio",
-  "accessibility.flagModal.submitCta": "Enviar",
-  "accessibility.flagModal.cancelCta": "Cancelar",
-  "accessibility.flagModal.doneTitle": "Obrigade — <em>já tratámos disto.</em>",
-  "accessibility.flagModal.doneBody":
-    "Vamos falar com o espaço e atualizar esta ficha se algo mudar.",
-  "accessibility.flagModal.closeCta": "Fechar",
-  "accessibility.accomModal.ariaLabel": "Pedir uma adaptação",
-  "accessibility.accomModal.title": "Pedir uma adaptação",
-  "accessibility.accomModal.sub":
-    "Diz-nos o que precisas para um evento específico — quanto mais aviso, mais conseguimos fazer.",
-  "accessibility.accomModal.nameLabel": "O teu nome",
-  "accessibility.accomModal.namePlaceholder": "O teu nome",
-  "accessibility.accomModal.eventLabel": "Que evento?",
-  "accessibility.accomModal.eventPlaceholder": "Nome ou data do evento",
-  "accessibility.accomModal.needLabel": "De que precisas?",
-  "accessibility.accomModal.needPlaceholder":
-    "ex.: legendagem, uma sala tranquila, acesso sem degraus",
-  "accessibility.accomModal.contactLabel": "Melhor forma de te contactar",
-  "accessibility.accomModal.contactPlaceholder": "Email ou telemóvel",
-  "accessibility.accomModal.submitCta": "Enviar pedido",
-  "accessibility.accomModal.cancelCta": "Cancelar",
-  "accessibility.accomModal.doneTitle":
-    "Recebido — <em>já estamos a tratar.</em>",
-  "accessibility.accomModal.doneBody":
-    "Alguém da equipa vai falar contigo antes do evento.",
-  "accessibility.accomModal.closeCta": "Fechar",
-
   // ── Ativismo ───────────────────────────────────────────────────────────
   "activism.backToVolunteer": "Voltar a Voluntariado",
   "activism.hero.eyebrow": "Ativismo",
@@ -774,10 +623,6 @@ export const marketing: Catalog = {
   "help.stillStuck.body":
     "Uma pessoa a sério lê todas as mensagens que chegam por aqui.",
   "help.stillStuck.cta": "Contacta-nos",
-  "help.subpageIndex.title": "Relacionado",
-  "help.subpageIndex.accessibility.label": "Acessibilidade",
-  "help.subpageIndex.accessibility.blurb":
-    "Espaços acessíveis, adaptações e os nossos compromissos de acesso.",
 
   // ── Chrome partilhado (Termos / Privacidade) ──────────────────────────
   "legal.eyebrow": "Legal",
@@ -1830,76 +1675,6 @@ export const marketing: Catalog = {
   // ── Etiqueta partilhada de regresso ao hub (secção Governação) ─────────
   "hub.governanceLabel": "Governação",
 
-  // ── Relatório de Transparência — chrome da página. Os valores em euros,
-  //    a repartição do orçamento, as linhas de moderação, os pedidos
-  //    governamentais, os erros nomeados e as estatísticas de governação
-  //    são os números auditados reais do ano — ficam em inglês; ver o
-  //    relatório da varredura.
-  "transparency.meta.title": "Relatório de transparência de 2025 da QueerPulse",
-  "transparency.meta.description":
-    "O relatório de transparência de 2025 da QueerPulse — de onde vieram e para onde foram os 278.400 €, ações de moderação, pedidos governamentais e os erros que assumimos.",
-  "transparency.tabs.money": "Dinheiro",
-  "transparency.tabs.people": "Pessoas",
-  "transparency.tabs.moderation": "Moderação",
-  "transparency.tabs.requests": "Pedidos governamentais",
-  "transparency.tabs.mistakes": "Erros",
-  "transparency.tabs.governance": "Como se decide",
-  "transparency.hero.eyebrow": "Relatório anual de transparência · 2025",
-  "transparency.hero.title":
-    "Cada <em>euro,</em> cada <em>moderação,</em> cada <em>erro.</em>",
-  "transparency.hero.dek":
-    "Os números por trás da QueerPulse em 2025 — finanças, ações de moderação, pedidos governamentais, e o que fizemos mal. <em>Publicado pela equipa de voluntários da QueerPulse</em> a 14 de maio de 2026.",
-  "transparency.hero.meta.raised": "Total angariado",
-  "transparency.hero.meta.toPrograms": "Para programas",
-  "transparency.hero.meta.activeMembers": "Pessoas ativas",
-  "transparency.hero.meta.mistakesNamed": "Erros públicos nomeados",
-  "transparency.yearSwitch.inProgress": "em curso",
-  "transparency.live.title": "O nosso primeiro relatório de transparência está quase a chegar",
-  "transparency.live.description":
-    "Vamos publicar aqui os nossos números assim que fechar o nosso primeiro período de reporte: de onde veio e para onde foi o dinheiro, ações de moderação, pedidos governamentais e os erros que assumimos.",
-  "transparency.money.title":
-    "De onde <em>veio</em> o dinheiro, e para onde <em>foi.</em>",
-  "transparency.money.sub":
-    "Todos os valores em euros, ano civil de 2025, reportados pela própria equipa de voluntários e disponíveis a pedido como CSV detalhado.",
-  "transparency.money.sourcesHeading": "De onde vieram os 278 400 €",
-  "transparency.money.spentLabel":
-    "Gasto em 2025 · 96,1% das receitas · 10 980 € de excedente transitado para reservas",
-  "transparency.people.title": "As <em>pessoas</em> por trás dos números.",
-  "transparency.people.sub":
-    "Pessoas no fim do ano, crescimento, quem realmente aparece. Não celebramos números grandes — só os certos.",
-  "transparency.moderation.title": "Moderação, <em>em números.</em>",
-  "transparency.moderation.sub":
-    "O que foi denunciado, sobre o que agimos, e quanto tempo demorou. Toda a ação fica registada; o registo completo e anonimizado está disponível a qualquer pessoa da comunidade que o peça.",
-  "transparency.moderation.colReason": "Motivo da ação de moderação",
-  "transparency.moderation.colCount": "Contagem",
-  "transparency.moderation.colYoy": "Face ao ano anterior",
-  "transparency.moderation.colPct": "% do total",
-  "transparency.moderation.breakdown":
-    "Repartição das ações: <b>96 publicações/comentários removidos</b>, <b>52 avisos emitidos</b>, <b>23 suspensões temporárias</b> (mediana de 7 dias), <b>9 remoções permanentes</b>, <b>4 casos encaminhados para a ILGA</b> para tratamento legal.",
-  "transparency.requests.title":
-    "Pedidos <em>governamentais e legais</em> de dados de pessoas da comunidade.",
-  "transparency.requests.sub":
-    "Todos os pedidos que recebemos de qualquer entidade governamental ou legal em 2025. Cumprimos ordens judiciais portuguesas válidas. <em>Não cumprimos pedidos informais.</em>",
-  "transparency.mistakes.title": "Coisas que fizemos <em>mal</em> em 2025.",
-  "transparency.mistakes.sub":
-    "Publicado porque queremos que esta secção seja a parte mais fácil de escrever no relatório do próximo ano. <em>Nomear os nossos próprios erros é o preço de sermos dignos de confiança.</em>",
-  "transparency.governance.title": "Como se <em>tomaram</em> as decisões.",
-  "transparency.governance.sub":
-    "Atas de reunião aborrecidas são a base da confiança. Eis como a governação da QueerPulse funcionou de facto em 2025.",
-  "transparency.governance.seeMore":
-    "Para as atas completas, a constituição, o acordo de Apoiante, e o organograma formal, consulta Governação.",
-  "transparency.signoff.title":
-    "Assinado de <em>boa-fé,</em> e pronto para perguntas.",
-  "transparency.signoff.body":
-    "Este relatório foi preparado por Catarina Vaz e André Bento e revisto pela restante equipa de voluntários. <em>Os erros são nossos.</em> Perguntas, correções ou preocupações: <a>hello@queerpulse.com</a>. Uma pessoa a sério lê tudo no espaço de 48 horas.",
-  "transparency.signoff.role.catarina":
-    "Co-tesouraria · redigiu finanças + erros",
-  "transparency.signoff.role.andre":
-    "Co-tesouraria · redigiu moderação + governação",
-  "transparency.signoff.role.auditor": "Auditora independente",
-  "transparency.signoff.downloadPdf": "Descarregar PDF (84 páginas)",
-  "transparency.signoff.downloadCsv": "Descarregar CSV em bruto",
-
   // ── Registo de alterações — chrome da página. As 18 entradas datadas
   //    (título/corpo/tag) são notas de lançamento históricas — ficam em
   //    inglês por causa do volume; sinalizado no relatório em vez de feito
@@ -1945,7 +1720,6 @@ export const marketing: Catalog = {
   "changelog.tag.employerReviews": "Ler avaliações de empregadores",
   "changelog.tag.studio": "Visitar o Studio",
   "changelog.tag.search": "Experimentar a pesquisa global",
-  "changelog.tag.donate": "Ver para onde vai o dinheiro",
   "changelog.tag.volunteer": "Encontra o teu caminho",
   "changelog.tag.postVolunteer": "Publicar oportunidade",
   "changelog.tag.notifications": "Abrir as tuas notificações",
@@ -2103,6 +1877,22 @@ export const marketing: Catalog = {
   "changelog.entries.side-quests-getting-started.body":
     "Terminar a lista de primeiros passos costumava ser um beco sem saída. Agora abre-se em missões secundárias: os crachás que ainda não ganhaste, cada um com um botão direto para onde precisas de ir, mais qualquer regalia que já desbloqueaste mas ainda não reclamaste. Vieram também quatro novos crachás, para explorares o diretório Local, guardares artigos, entrares numa segunda comunidade e preencheres o teu Perfil de Trabalho.",
 
+  "changelog.entries.join-request-invite-email.title":
+    "Quem é aprovade agora recebe um email de convite",
+  "changelog.entries.join-request-invite-email.body":
+    "Aprovar um pedido de participação só criava uma ligação de convite na fila de administração, por isso quem se candidatava só entrava se a pessoa responsável pela revisão copiasse essa ligação e a enviasse à mão por email. A aprovação agora envia a ligação de convite diretamente para quem se candidatou, de forma automática. Copiar a ligação continua disponível como recurso manual.",
+  "changelog.entries.article-editor-header-and-send-on.title":
+    "Cabeçalho do editor de artigos corrigido, e o botão Enviar já funciona",
+  "changelog.entries.article-editor-header-and-send-on.body":
+    "A barra do editor de artigos ficava fixa a 76px do topo do ecrã em vez de encostada a ele, o que deixava texto a passar por trás dela, por cima e por baixo. Agora fica encostada ao topo. O botão \"Enviar\" também só mostrava uma notificação, e agora avança mesmo a peça para a fase editorial seguinte.",
+  "changelog.entries.gathering-rsvp-fix.title":
+    "Confirmar presença nos encontros já funciona",
+  "changelog.entries.gathering-rsvp-fix.body":
+    "Tocar em \"Eu vou\" na página de um encontro não mostrava confirmação nenhuma. Agora confirma logo, com uma notificação rápida e a opção de Cancelar presença no mesmo sítio.",
+  "changelog.entries.add-to-calendar-modal.title":
+    "Adiciona encontros ao teu calendário",
+  "changelog.entries.add-to-calendar-modal.body":
+    "\"Adicionar ao calendário\" num encontro a que vais ou que organizas abre agora um seletor para o Google Calendar ou um ficheiro .ics para transferir, compatível com o Apple Calendar, o Outlook e a maioria dos outros calendários.",
   "changelog.entries.recognition-xp.title": "Ganha XP, níveis e crachás",
   "changelog.entries.recognition-xp.body": "A tua atividade passa a dar experiência para níveis e crachás. Concluir a tua lista de primeiros passos, entrar em comunidades, ir a encontros e ligar-te a membros faz-te subir. Acompanha o teu progresso na página de Crachás.",
 
@@ -3885,6 +3675,7 @@ export const marketing: Catalog = {
   "volunteer.signups.closedTag": "Esta oportunidade está encerrada",
   "volunteer.signups.closing": "A encerrar…",
   "volunteer.signups.closeCta": "Encerrar oportunidade",
+  "volunteer.signups.reviewCta": "{{count}} para rever",
   "volunteer.adapter.eyebrow": "Voluntariado · {cause} · {org}",
   "volunteer.adapter.recruitingNow": "A recrutar agora",
   "volunteer.adapter.closedNotRecruiting": "Encerrado · sem recrutamento",
@@ -3945,6 +3736,7 @@ export const marketing: Catalog = {
     "Escolha uma comunidade que possui ou modera, ou uma organização parceira aprovada.",
   "postOpportunity.core.orgEmptyState":
     "Precisa de possuir ou moderar uma comunidade, ou ser uma organização parceira aprovada, antes de poder publicar uma oportunidade em nome dela.",
+  "postOpportunity.core.orgPlaceholder": "ex.: a sua organização",
   "postOpportunity.core.orgLinkLabel": "Associar a uma organização",
   "postOpportunity.core.orgLinkHelper":
     "Opcional: associe esta publicação a uma comunidade que possui ou modera, ou a uma organização parceira aprovada.",
@@ -3973,17 +3765,28 @@ export const marketing: Catalog = {
     "Com o que é que a pessoa voluntária vai ajudar, em linguagem simples.",
   "postOpportunity.core.skillsLabel": "Competências",
   "postOpportunity.core.skillsHelper":
-    "Separadas por vírgulas — mostradas como hashtags no cartão.",
+    "Separadas por vírgulas — mostradas como hashtags no cartão. Até {maxCount}, {maxLength} carateres cada.",
   "postOpportunity.core.skillsPlaceholder":
     "Comunicação, Idiomas, Apoio a eventos",
+  "postOpportunity.edit.eyebrow": "Voluntariado · Editar",
+  "postOpportunity.edit.title": "Editar esta <em>oportunidade.</em>",
+  "postOpportunity.edit.sub":
+    "Atualiza os detalhes que as pessoas voluntárias veem no anúncio.",
+  "postOpportunity.edit.saveCta": "Guardar alterações",
+  "postOpportunity.edit.cancelCta": "Cancelar",
+  "postOpportunity.edit.successToast": "As tuas alterações estão guardadas.",
+  "postOpportunity.edit.errorToast":
+    "Não foi possível guardar as alterações. Tenta novamente.",
   "postOpportunity.rich.summary": "Acrescentar mais detalhe (opcional)",
   "postOpportunity.rich.whyHeading": "Porque é que importa",
   "postOpportunity.rich.whyLabel": "Porque é que esta função importa",
-  "postOpportunity.rich.whyHelper": "Um parágrafo por linha.",
+  "postOpportunity.rich.whyHelper":
+    "Um parágrafo por linha. Até {maxCount} parágrafos, {maxLength} carateres cada.",
   "postOpportunity.rich.whyPlaceholder":
     "O que muda porque alguém apareceu para isto.",
   "postOpportunity.rich.goodForLabel": "Para quem é indicada",
-  "postOpportunity.rich.goodForHelper": "Um parágrafo por linha.",
+  "postOpportunity.rich.goodForHelper":
+    "Um parágrafo por linha. Até {maxCount} parágrafos, {maxLength} carateres cada.",
   "postOpportunity.rich.goodForPlaceholder":
     "O temperamento e as competências que encaixam — não só o currículo.",
   "postOpportunity.rich.tasksHeading": "O que vão fazer, na prática",
@@ -4065,6 +3868,9 @@ export const marketing: Catalog = {
     "Pessoas voluntárias antigas: <a>usa o perfil do ano passado</a> · salta este ecrã.",
   "volunteerDetail.sidebar.partnershipLabel": "Em parceria com",
   "volunteerDetail.sidebar.partnershipLink": "Sobre a parceria",
+  "volunteerDetail.sidebar.communityLabel": "Organizado com",
+  "volunteerDetail.sidebar.communityLink": "Sobre esta comunidade",
+  "volunteerDetail.sidebar.editCta": "Editar esta oportunidade",
   "volunteerDetail.sidebar.notRightFit": "Não é a vaga certa para ti?",
   "volunteerDetail.sidebar.otherWays": "Outras formas de ajudar agora:",
   "volunteerDetail.sidebar.fundInstead":
@@ -4101,96 +3907,6 @@ export const marketing: Catalog = {
   "partnerDetail.sidebar.becomeBody":
     "És uma organização que devia estar operacionalmente ligada à QueerPulse? Somos pequenos e lentos nisto — escreve-nos.",
   "partnerDetail.sidebar.becomeCta": "Entra em contacto",
-
-  // ── Donate — chrome da página. Tudo escrito pela própria plataforma (os
-  //    valores/alocação/confiança são números fixos da QueerPulse, não
-  //    conteúdo vindo de terceiros).
-  "donate.meta.title": "Doa à QueerPulse: para onde vai cada euro",
-  "donate.meta.description":
-    "Apoia a QueerPulse com um donativo mensal ou pontual — financia ajuda mútua, encontros, segurança da plataforma e trabalho criativo pago, com prestação de contas trimestral.",
-  "donate.hero.eyebrow": "Apoia a QueerPulse",
-  "donate.hero.title": "As pessoas mantêm isto <em>vivo.</em>",
-  "donate.hero.lead":
-    "Sem anúncios, sem investidores, sem venda de dados. A QueerPulse funciona graças a quem a usa — e cada euro volta para a ajuda mútua, os encontros e para pagar de forma justa as pessoas criativas queer da comunidade.",
-  "donate.toggle.monthly": "Mensal",
-  "donate.toggle.oneOff": "Pontual",
-  "donate.amounts.coffee": "um café",
-  "donate.amounts.mostChosen": "mais escolhido",
-  "donate.amounts.sustainsMember": "sustenta uma pessoa",
-  "donate.amounts.fundsGathering": "financia um encontro",
-  "donate.giveCta.monthly": "Dar {amount} / mês",
-  "donate.giveCta.oneOff": "Dar {amount}",
-  "donate.allocation.title": "Para onde <em>vai mesmo.</em>",
-  "donate.allocation.lead":
-    "Nada de despesas gerais e salários para pessoas que nunca vais conhecer. Aqui está a divisão real.",
-  "donate.allocation.mutualAid.label": "Ajuda mútua direta",
-  "donate.allocation.mutualAid.body":
-    "Alojamento de emergência, apoio em crise, e microapoios pagos diretamente a quem precisa.",
-  "donate.allocation.gatherings.label": "Encontros e espaços",
-  "donate.allocation.gatherings.body":
-    "Aluguer de espaços, bilhetes em escala solidária, e os encontros de boas-vindas que mantêm a porta aberta.",
-  "donate.allocation.platform.label": "Plataforma e segurança",
-  "donate.allocation.platform.body":
-    "Moderação, a linha de chat de crise, e manter tudo a funcionar — sem anúncios, sem venda de dados.",
-  "donate.allocation.magazine.label": "A revista e o Studio",
-  "donate.allocation.magazine.body":
-    "Pagar de forma justa a quem escreve, cria e faz música aqui.",
-  "donate.trust.title": "Podes <em>confiar nos números.</em>",
-  "donate.trust.lead": "Transparência aqui não é um extra — é o acordo.",
-  "donate.trust.reported.title": "Cada euro é reportado",
-  "donate.trust.reported.body":
-    "Números trimestrais publicados em aberto — vê exatamente para onde foram.",
-  "donate.trust.noAds.title": "Sem anúncios, sem venda de dados",
-  "donate.trust.noAds.body":
-    "Somos financiados por quem usa a plataforma, não por anunciantes. O teu apoio é todo o modelo.",
-  "donate.trust.membersDecide.title": "Quem está cá decide",
-  "donate.trust.membersDecide.body":
-    "O conselho da comunidade vota como o fundo de solidariedade é gasto a cada trimestre.",
-  "donate.outro.title": "Ou dá o teu <em>tempo, em vez disso.</em>",
-  "donate.outro.sub":
-    "O dinheiro é uma forma de ajudar. Ser voluntária ou voluntário, acolher encontros, e aparecer contam tanto quanto isso.",
-  "donate.outro.volunteerCta": "Faz voluntariado connosco",
-  "donate.outro.readFiguresCta": "Ver os números",
-
-  // ── Modal de doação — chrome do formulário de pagamento (protótipo, sem
-  //    cobrança real).
-  "donateModal.title": "Confirma a tua <em>doação.</em>",
-  "donateModal.sub":
-    "Sem anúncios, sem investidores — só pessoas a manter isto vivo.",
-  "donateModal.row.monthlyGift": "Doação mensal",
-  "donateModal.row.oneOffGift": "Doação pontual",
-  "donateModal.row.feeCovered": "Taxa de processamento coberta",
-  "donateModal.row.chargedToday": "Cobrado hoje",
-  "donateModal.amount.monthly": "{amount} / mês",
-  "donateModal.checkLabel": "Cobrir a taxa de processamento de {pct}%",
-  "donateModal.checkHint":
-    "Para que 100% dos teus {amount} cheguem à comunidade.",
-  "donateModal.field.nameOnCard": "Nome no cartão",
-  "donateModal.field.namePlaceholder": "Ana Silva",
-  "donateModal.field.emailReceipt": "Email para o recibo",
-  "donateModal.field.emailPlaceholder": "tu@exemplo.com",
-  "donateModal.field.cardNumber": "Número do cartão",
-  "donateModal.field.cardNumberPlaceholder": "1234 5678 9012 3456",
-  "donateModal.field.expiry": "Validade",
-  "donateModal.field.expiryPlaceholder": "MM / AA",
-  "donateModal.field.cvc": "CVC",
-  "donateModal.processing": "A processar…",
-  "donateModal.submitCta.monthly": "Doar {amount} / mês",
-  "donateModal.submitCta.oneOff": "Doar {amount}",
-  "donateModal.secure":
-    "Encriptado e seguro. Isto é um protótipo — não é feita nenhuma cobrança real.",
-  "donateModal.success.title": "Já estás dentro.",
-  "donateModal.success.emMonthly": "Até para o mês.",
-  "donateModal.success.emOneOff": "Obrigade.",
-  "donateModal.success.closeLabel": "Concluído",
-  "donateModal.success.bodyMonthly":
-    "Os teus {amount} / mês vão diretamente para a ajuda mútua, os encontros, e para pagar de forma justa as pessoas criativas queer da comunidade. Cancela quando quiseres a partir da tua conta — sem perguntas.",
-  "donateModal.success.bodyOneOff":
-    "Os teus {amount} vão diretamente para a ajuda mútua, os encontros, e para pagar de forma justa as pessoas criativas queer da comunidade. Enviamos o recibo por email em breve.",
-  "donateModal.comingSoon.title": "As doações ainda <em>não estão ativas</em>",
-  "donateModal.comingSoon.body":
-    "Ainda estamos a preparar os pagamentos seguros, por isso ainda não podemos aceitar doações aqui — não foi cobrado nada. Entretanto, podes ver exatamente para onde vai cada euro da comunidade.",
-  "donateModal.comingSoon.figuresCta": "Ver para onde vai o dinheiro",
 
   // ── Contacto — chrome da página. Todo o conteúdo é escrito pela plataforma
   //    (formulário/vias de contacto).
@@ -4388,6 +4104,9 @@ export const marketing: Catalog = {
   //    avaliações, biografias dos donos) são conteúdo próprio de cada
   //    negócio — ficam em inglês, o mesmo precedente das biografias/
   //    avaliações fictícias de pessoas noutras páginas.
+  "directory.meta.title": "Diretório de negócios locais | QueerPulse",
+  "directory.meta.description":
+    "Negócios queer e profissionais queer-friendly em Lisboa, avaliados e mantidos pela comunidade.",
   "directory.hero.eyebrow": "Diretório de negócios queer",
   "directory.hero.title": "Encontra <em>os lugares da tua gente.</em>",
   "directory.hero.sub":

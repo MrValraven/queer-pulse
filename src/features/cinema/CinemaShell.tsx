@@ -107,9 +107,6 @@ export function CinemaShell({ children }: { children: ReactNode }) {
                 <Link to={routes.governance}>
                   {t("cinema:footer.about.publicLedger")}
                 </Link>
-                <Link to={routes.accessibility}>
-                  {t("cinema:footer.about.access")}
-                </Link>
                 <Link to={routes.homepage}>
                   {t("cinema:footer.about.queerpulse")}
                 </Link>

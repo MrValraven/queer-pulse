@@ -1,9 +1,11 @@
 import {
   useEffect,
   useRef,
+  useState,
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
@@ -13,6 +15,7 @@ import { Icons } from "./MyEventsIcons";
 import { COMMITTED } from "./myEvents.helpers";
 import { routes } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
+import { NewMessageModal } from "../messages/NewMessageModal";
 import type { MyEvent } from "./myEvents.types";
 
 interface Item {
@@ -27,6 +30,7 @@ function buildItems(
   c: ReturnType<typeof useMyEvents>,
   nav: (path: string) => void,
   translate: TFunction,
+  openInvitePicker: () => void,
 ): (Item | "sep")[] {
   const closeAndToast =
     (msg: string, type: "success" | "info" = "info") =>
@@ -64,7 +68,10 @@ function buildItems(
     items.push({
       icon: Icons.invite,
       label: translate("myevents:moreMenu.inviteFriend"),
-      onClick: go(routes.invite),
+      onClick: () => {
+        c.closeMore();
+        openInvitePicker();
+      },
     });
   if (ev.category !== "past" && ev.category !== "hosting" && ev.category !== "sent")
     items.push({
@@ -107,14 +114,6 @@ function buildItems(
         "success",
       ),
     });
-    items.push({
-      icon: Icons.wallet,
-      label: translate("myevents:moreMenu.addToWallet"),
-      onClick: closeAndToast(
-        translate("myevents:moreMenu.walletToast"),
-        "success",
-      ),
-    });
   }
   if (ev.category === "past" && ev.connect)
     items.push({
@@ -153,6 +152,11 @@ export function MoreMenu() {
   const openerRef = useRef<HTMLElement | null>(null);
   const { open, eventId, x, y } = c.moreMenu;
   const { closeMore } = c;
+  // "Invite a friend" picks a connection here, then hands off to the messages
+  // feature's own deep-link (`location.state.to`) to open/start that thread
+  // with the event's link pre-filled — never sent silently, so the inviter can
+  // still add a note before hitting send.
+  const [invitingEvent, setInvitingEvent] = useState<MyEvent | null>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -218,34 +222,75 @@ export function MoreMenu() {
     items[nextIndex]?.focus();
   };
 
+  // Portal to <body> so the fixed-position menu is anchored to the viewport,
+  // never to a transformed ancestor. RouteTransition (and SwipeBackShell on
+  // mobile) keeps an inline `transform` on its wrapping `m.div` around every
+  // routed page, which establishes a containing block for `position: fixed`
+  // descendants — without the portal, `left`/`top` (computed from
+  // getBoundingClientRect, viewport-relative) resolve against that wrapper's
+  // box instead of the viewport, detaching the menu from its trigger button.
   return (
-    <div
-      ref={ref}
-      className={`${sx("more-menu")} ${open ? sx("show") : ""}`}
-      role="menu"
-      tabIndex={-1}
-      style={{ left, top: y }}
-      onKeyDown={onMenuKeyDown}
-    >
-      {open &&
-        ev &&
-        buildItems(ev, c, (path) => void navigate(path), t).map((it, i) =>
-          it === "sep" ? (
-            <div key={`s${i}`} className={sx("mm-sep")} />
-          ) : (
-            <button
-              key={it.label}
-              type="button"
-              role="menuitem"
-              tabIndex={-1}
-              className={sx(`mm-item${it.danger ? " danger" : ""}`)}
-              onClick={it.onClick}
-            >
-              {it.icon}
-              {it.label}
-            </button>
-          ),
-        )}
-    </div>
+    <>
+      {createPortal(
+        <div
+          ref={ref}
+          className={`${sx("more-menu")} ${open ? sx("show") : ""}`}
+          role="menu"
+          tabIndex={-1}
+          style={{ left, top: y }}
+          onKeyDown={onMenuKeyDown}
+        >
+          {open &&
+            ev &&
+            buildItems(
+              ev,
+              c,
+              (path) => void navigate(path),
+              t,
+              () => setInvitingEvent(ev),
+            ).map((it, i) =>
+              it === "sep" ? (
+                <div key={`s${i}`} className={sx("mm-sep")} />
+              ) : (
+                <button
+                  key={it.label}
+                  type="button"
+                  role="menuitem"
+                  tabIndex={-1}
+                  className={sx(`mm-item${it.danger ? " danger" : ""}`)}
+                  onClick={it.onClick}
+                >
+                  {it.icon}
+                  {it.label}
+                </button>
+              ),
+            )}
+        </div>,
+        document.body,
+      )}
+      {invitingEvent && (
+        <NewMessageModal
+          title={t("myevents:moreMenu.invitePickerTitle")}
+          sub={t("myevents:moreMenu.invitePickerSub")}
+          onClose={() => setInvitingEvent(null)}
+          onPick={(recipient) => {
+            const ev = invitingEvent;
+            setInvitingEvent(null);
+            if (!recipient.slug) return;
+            const origin =
+              typeof window !== "undefined" ? window.location.origin : "";
+            const link =
+              origin + (ev.slug ? gatheringPath(ev.slug) : routes.gatherings);
+            const text = t("myevents:moreMenu.inviteMessageText", {
+              title: ev.title,
+              link,
+            });
+            void navigate(routes.messages, {
+              state: { to: { slug: recipient.slug, name: recipient.name, text } },
+            });
+          }}
+        />
+      )}
+    </>
   );
 }

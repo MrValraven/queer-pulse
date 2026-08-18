@@ -95,12 +95,13 @@ export const postLogout = () => postUnversioned("/auth/logout");
  * final step; demo mode never calls it. Best-effort: the caller ignores
  * failures, since the gate and the migration's backfill cover the common cases.
  *
- * `guidelinesVersion` should be the revision the wizard actually displayed —
- * read via `usePlatformStatus()` (`guidelinesVersion` field, itself sourced
- * from the backend's `CURRENT_GUIDELINES_VERSION` in `users.service.ts`, the
- * single source of truth) rather than a locally hardcoded copy that could
- * drift out of sync. Optional: if the status query hasn't settled yet, the
- * backend's own `CompleteOnboardingDto` falls back to its current version.
+ * `guidelinesVersion` should be the value read from `GET /platform-status`
+ * (`usePlatformStatus().data?.guidelinesVersion`) — the single source of
+ * truth for the current revision, so this file no longer keeps its own
+ * hardcoded copy that could drift from the backend's
+ * `CURRENT_GUIDELINES_VERSION` (users.service.ts). Omit it (e.g. the status
+ * query hasn't resolved yet) and the backend falls back to its own current
+ * version, which is the correct answer either way.
  */
 export const postCompleteOnboarding = (guidelinesVersion?: string) =>
   apiPost<{ onboardedAt: string }>("/auth/onboarding/complete", {

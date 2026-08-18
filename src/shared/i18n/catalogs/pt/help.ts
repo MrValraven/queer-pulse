@@ -227,7 +227,7 @@ export const help: Catalog = {
   "housing.listing.demo":
     "um anúncio como um T1 soalheiro no Príncipe Real, publicado por um membro da comunidade.",
   "local.directory.title":
-    "Diretório local",
+    "Diretório de negócios locais",
   "local.directory.intro":
     "Um mapa vivo de espaços geridos por pessoas queer e amigos da comunidade pela cidade: cafés, livrarias, estúdios, bares e serviços que valem a pena. É assim que encontras os sítios onde podes simplesmente ser quem és.",
   "local.directory.use":
