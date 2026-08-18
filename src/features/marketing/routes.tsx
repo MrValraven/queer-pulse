@@ -20,6 +20,10 @@ const HelpPage = lazyNamed(() => import("./HelpPage"), "HelpPage");
 const VolunteerPage = lazyNamed(() => import("./VolunteerPage"), "VolunteerPage");
 const VolunteerOpportunityPage = lazyNamed(() => import("./VolunteerOpportunityPage"), "VolunteerOpportunityPage");
 const PostVolunteerOpportunityPage = lazyNamed(() => import("./PostVolunteerOpportunityPage"), "PostVolunteerOpportunityPage");
+const VolunteerApplicantsDashboardPage = lazyNamed(
+  () => import("./VolunteerApplicantsDashboardPage"),
+  "VolunteerApplicantsDashboardPage",
+);
 const DirectoryPage = lazyNamed(() => import("./DirectoryPage"), "DirectoryPage");
 const DirectorySpacePage = lazyNamed(() => import("./DirectorySpacePage"), "DirectorySpacePage");
 const VenueDetailPage = lazyNamed(() => import("./VenueDetailPage"), "VenueDetailPage");
@@ -66,6 +70,10 @@ export function marketingRoutes() {
       <Route
         path={routes.postVolunteer}
         element={<PostVolunteerOpportunityPage />}
+      />
+      <Route
+        path={routes.manageVolunteerApplicants}
+        element={<VolunteerApplicantsDashboardPage />}
       />
       <Route
         path="/about/volunteer/opportunity/:slug"

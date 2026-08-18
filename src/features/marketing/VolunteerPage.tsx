@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowRight, FiHeart, FiPlus } from "react-icons/fi";
+import { FiArrowRight, FiHeart, FiPlus, FiUsers } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import {
   Button,
@@ -9,6 +9,7 @@ import {
   Outro,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { useAuth } from "../../app/providers/authContext";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -73,6 +74,7 @@ function VolunteerCardSkeleton() {
 
 export function VolunteerPage() {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const simLoading = useSimulatedLoad();
   const [filter, setFilter] = useState("all");
 
@@ -131,6 +133,11 @@ export function VolunteerPage() {
           <Button to={routes.postVolunteer} variant="ghost-dark">
             <FiPlus aria-hidden /> {t("marketing:volunteer.hero.postCta")}
           </Button>
+          {user && (
+            <Button to={routes.manageVolunteerApplicants} variant="ghost-dark">
+              <FiUsers aria-hidden /> {t("marketing:volunteer.hero.manageCta")}
+            </Button>
+          )}
         </div>
       </PageHero>
 

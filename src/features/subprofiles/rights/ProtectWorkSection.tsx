@@ -93,21 +93,21 @@ export function ProtectWorkSection({ item, authorName }: ProtectWorkSectionProps
         <Button
           variant="ghost"
           disabled={isBuildingRecord}
-          onClick={() => withAuthorshipRecord(downloadRecord)}
+          onClick={() => void withAuthorshipRecord(downloadRecord)}
         >
           <FiDownload aria-hidden /> {t("subprofiles:protect.download")}
         </Button>
         <Button
           variant="ghost"
           disabled={isBuildingRecord}
-          onClick={() => withAuthorshipRecord(copyRecord)}
+          onClick={() => void withAuthorshipRecord(copyRecord)}
         >
           <FiCopy aria-hidden /> {t("subprofiles:protect.copy")}
         </Button>
         <Button
           variant="ghost"
           disabled={isBuildingRecord}
-          onClick={() => withAuthorshipRecord(emailRecord)}
+          onClick={() => void withAuthorshipRecord(emailRecord)}
         >
           <FiMail aria-hidden /> {t("subprofiles:protect.email")}
         </Button>

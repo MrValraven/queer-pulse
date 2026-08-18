@@ -55,6 +55,7 @@ const SMOKE_PATHS: ReadonlyArray<readonly [string, string]> = [
   ["subprofile editor", `${routes.subprofilesDashboard}/sp-tiago-draft/edit`],
   ["standalone persona (handle)", "/p/nightform"],
   ["nested linked persona", `${routes.members}/rui/engineering`],
+  ["manage volunteer applicants", routes.manageVolunteerApplicants],
 ];
 
 /** The route ErrorBoundary's branded fallback heading — its presence = a crash. */

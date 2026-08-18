@@ -118,7 +118,19 @@ export type NotificationKind =
   // System-driven, no actor. Flat copy — no payload-driven key branching,
   // like `xp_level_up`/`badge_earned`.
   | "writer_application_approved"
-  | "writer_application_declined";
+  | "writer_application_declined"
+  // Sent to the poster when a member applies to their volunteer opportunity
+  // (mirrors the backend `notifications_type_enum` value added in
+  // `AddVolunteerApplicationNotificationTypes1790700000000`, emitted from
+  // `VolunteeringService.signup`). Member-driven — carries `actorId` (the
+  // applicant) — with `opportunitySlug` on the payload for the deep link.
+  | "volunteer_application_received"
+  // Sent to the applicant when the poster accepts or declines them (mirrors
+  // the same migration, emitted from `VolunteeringService.decideSignup`).
+  // System-driven, no actor — the platform telling you about your own
+  // status, like `concern_update`. Payload carries `status`
+  // (`accepted`/`declined`) selecting the copy, plus `opportunitySlug`.
+  | "volunteer_application_decided";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -177,6 +189,10 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // your own submission — same tab as concern_update/moderation_outcome.
   writer_application_approved: "platform",
   writer_application_declined: "platform",
+  // A volunteer application landing / being decided is the platform's word,
+  // same tab as writer_application_approved/declined.
+  volunteer_application_received: "platform",
+  volunteer_application_decided: "platform",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */
@@ -269,6 +285,23 @@ function concernUpdateKeyFor(type: string, payload: unknown): string {
   return status === "resolved" || status === "dismissed"
     ? `concern_update.${status}`
     : "concern_update";
+}
+
+/**
+ * Resolve the i18n subkey a `volunteer_application_decided` notification's
+ * copy lives under. The row carries `payload.status` (`accepted | declined`,
+ * written by the backend when a poster decides on an applicant) — each gets
+ * its own headline, so the key branches to
+ * `volunteer_application_decided.<status>`. An unknown/missing status falls
+ * back to the flat `volunteer_application_decided.*` copy. Non-matching types
+ * pass through unchanged.
+ */
+function volunteerApplicationDecidedKeyFor(type: string, payload: unknown): string {
+  if (type !== "volunteer_application_decided") return type;
+  const status = (payload as { status?: string } | null)?.status;
+  return status === "accepted" || status === "declined"
+    ? `volunteer_application_decided.${status}`
+    : "volunteer_application_decided";
 }
 
 /**
@@ -390,6 +423,8 @@ export function formatNotification(
     key = concernUpdateKeyFor(type, payload);
   } else if (type === "verification_update") {
     key = verificationUpdateKeyFor(type, payload);
+  } else if (type === "volunteer_application_decided") {
+    key = volunteerApplicationDecidedKeyFor(type, payload);
   } else {
     // `mentionKeyFor` passes every non-`mention` type through unchanged.
     key = mentionKeyFor(type, payload);

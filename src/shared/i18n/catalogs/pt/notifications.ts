@@ -256,6 +256,19 @@ export const notifications: Catalog = {
     "A tua candidatura a escritor não foi aceite desta vez.",
   "type.writer_application_declined.meta": "Candidatura a escritor",
 
+  "type.volunteer_application_received.text":
+    "Alguém candidatou-se a uma das tuas oportunidades de voluntariado.",
+  "type.volunteer_application_received.meta": "Candidatura de voluntariado",
+  "type.volunteer_application_decided.accepted.text":
+    "A tua candidatura de voluntariado foi aceite.",
+  "type.volunteer_application_decided.accepted.meta": "Candidatura de voluntariado",
+  "type.volunteer_application_decided.declined.text":
+    "A tua candidatura de voluntariado não foi aceite desta vez.",
+  "type.volunteer_application_decided.declined.meta": "Candidatura de voluntariado",
+  "type.volunteer_application_decided.text":
+    "Há uma novidade sobre a tua candidatura de voluntariado.",
+  "type.volunteer_application_decided.meta": "Candidatura de voluntariado",
+
   "type.unknown.text": "Tens uma nova notificação.",
   "type.unknown.meta": "Notificação",
 

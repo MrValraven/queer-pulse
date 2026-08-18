@@ -93,6 +93,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "local-directory-sort-fix",
+        category: "fix",
+        date: "18 Aug 2026",
+        ...entryKeys("local-directory-sort-fix"),
+      },
+      {
         id: "side-quests-getting-started",
         category: "feature",
         date: "18 Aug 2026",

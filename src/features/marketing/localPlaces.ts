@@ -65,7 +65,7 @@ export const HOOD_TO_FREGUESIA: Record<string, string> = {
   Marvila: "Marvila",
 };
 
-/** The official parish names that have a polygon on the map. Source of truth: freguesias.data. */
+/** The official parish names that have a polygon on the map. Source of truth: shared/components/map/freguesias.data.ts. */
 export const FREGUESIA_NAMES: ReadonlySet<string> = new Set(
   FREGUESIAS.features.map((feature) => feature.properties.name),
 );

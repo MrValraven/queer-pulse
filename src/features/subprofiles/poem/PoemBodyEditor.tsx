@@ -215,13 +215,24 @@ export function PoemBodyEditor({
   );
 
   const stanzaTotal = blocks.filter((block) => block.kind === "stanza").length;
-  let stanzaCounter = 0;
+  // Precomputed once per render, outside the JSX-producing map below — a
+  // running counter mutated *inside* that map (and read back the same
+  // iteration via `blockAriaLabel`) is a render-purity violation the
+  // react-compiler lint flags, since it can't prove the mutation/read pair
+  // stays safe across memoization.
+  const stanzaIndexByBlockId = new Map<string, number>();
+  {
+    let counter = 0;
+    for (const block of blocks) {
+      if (block.kind === "stanza") stanzaIndexByBlockId.set(block.id, ++counter);
+    }
+  }
 
   function blockAriaLabel(block: PoemBlock): string {
     if (block.kind === "break") return t("subprofiles:poem.editor.blockLabel.break");
     if (block.kind === "note") return t("subprofiles:poem.editor.blockLabel.note");
     return t("subprofiles:poem.editor.blockLabel.stanza", {
-      index: stanzaCounter,
+      index: stanzaIndexByBlockId.get(block.id) ?? 0,
       total: stanzaTotal,
     });
   }
@@ -243,7 +254,6 @@ export function PoemBodyEditor({
         }}
       >
         {blocks.map((block, index) => {
-          if (block.kind === "stanza") stanzaCounter += 1;
           const isBreak = block.kind === "break";
           return (
             <div

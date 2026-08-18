@@ -258,6 +258,19 @@ export const notifications: Catalog = {
     "Your writer application wasn't accepted this time.",
   "type.writer_application_declined.meta": "Writer application",
 
+  "type.volunteer_application_received.text":
+    "Someone applied to volunteer for one of your opportunities.",
+  "type.volunteer_application_received.meta": "Volunteer application",
+  "type.volunteer_application_decided.accepted.text":
+    "Your volunteer application was accepted.",
+  "type.volunteer_application_decided.accepted.meta": "Volunteer application",
+  "type.volunteer_application_decided.declined.text":
+    "Your volunteer application wasn't accepted this time.",
+  "type.volunteer_application_decided.declined.meta": "Volunteer application",
+  "type.volunteer_application_decided.text":
+    "There's an update on your volunteer application.",
+  "type.volunteer_application_decided.meta": "Volunteer application",
+
   "type.unknown.text": "You have a new notification.",
   "type.unknown.meta": "Notification",
 

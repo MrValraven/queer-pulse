@@ -1901,6 +1901,11 @@ export const marketing: Catalog = {
   "changelog.entries.governance-editable-finances.body":
     "Os administradores passam a poder corrigir os valores no separador de Finanças da governação, em vez de estarem fixos. Cada número tem uma pequena etiqueta que mostra a sua origem: um valor de exemplo por verificar, um valor introduzido por um administrador, ou um valor calculado (como o excedente). As correções ficam registadas, por isso é sempre claro quem alterou o quê e quando.",
 
+  "changelog.entries.local-directory-sort-fix.title":
+    "Corrigido o menu de ordenação do Diretório de negócios locais",
+  "changelog.entries.local-directory-sort-fix.body":
+    "O menu Ordenar no Diretório de negócios locais (antes “Diretório local”) podia ficar tão estreito que as opções quebravam a meio da palavra. Agora há sempre espaço para mostrar “Em destaque”, “A–Z” e “Por bairro” numa única linha.",
+
   "changelog.entries.governance-chart-upgrade.title":
     "Um gráfico de receita vs. despesa mais claro na área de governação",
   "changelog.entries.governance-chart-upgrade.body":
@@ -3675,7 +3680,7 @@ export const marketing: Catalog = {
   "volunteer.signups.closedTag": "Esta oportunidade está encerrada",
   "volunteer.signups.closing": "A encerrar…",
   "volunteer.signups.closeCta": "Encerrar oportunidade",
-  "volunteer.signups.reviewCta": "{{count}} para rever",
+  "volunteer.signups.reviewCta": "{count} para rever",
   "volunteer.adapter.eyebrow": "Voluntariado · {cause} · {org}",
   "volunteer.adapter.recruitingNow": "A recrutar agora",
   "volunteer.adapter.closedNotRecruiting": "Encerrado · sem recrutamento",
@@ -3688,6 +3693,20 @@ export const marketing: Catalog = {
     "Candidatura submetida para {role}. A equipa entrará em contacto com os próximos passos.",
   "volunteer.adapter.inPartnershipWith": "Em parceria com {name}.",
   "volunteer.adapter.anonMember": "Uma pessoa da comunidade",
+  "volunteer.hero.manageCta": "Gerir candidaturas",
+  "volunteerManage.title": "Gerir candidaturas",
+  "volunteerManage.sub":
+    "Revê e decide sobre quem se inscreveu nas oportunidades que publicaste.",
+  "volunteerManage.loading": "A carregar as tuas oportunidades…",
+  "volunteerManage.empty": "Ainda não publicaste nenhuma oportunidade de voluntariado.",
+  "volunteerManage.loadingApplicants": "A carregar candidaturas…",
+  "volunteerManage.noApplicants": "Ainda ninguém se candidatou.",
+  "volunteerManage.pendingCount": "{count} pendentes",
+  "volunteerManage.status.pending": "Pendente",
+  "volunteerManage.status.accepted": "Aceite",
+  "volunteerManage.status.declined": "Recusada",
+  "volunteerManage.accept": "Aceitar",
+  "volunteerManage.decline": "Recusar",
 
   // ── Publicar uma oportunidade de voluntariado — chrome do formulário
   //    (tudo interface da plataforma).
@@ -3875,7 +3894,7 @@ export const marketing: Catalog = {
   "volunteerDetail.sidebar.otherWays": "Outras formas de ajudar agora:",
   "volunteerDetail.sidebar.fundInstead":
     "Financiar este trabalho em vez disso",
-  "volunteerDetail.signupModal.ariaLabel": "Candidatar a {{role}}",
+  "volunteerDetail.signupModal.ariaLabel": "Candidatar a {role}",
   "volunteerDetail.signupModal.eyebrow": "A tua candidatura",
   "volunteerDetail.signupModal.title":
     "Conta-nos porque serias uma boa escolha",

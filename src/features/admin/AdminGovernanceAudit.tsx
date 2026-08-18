@@ -96,7 +96,7 @@ export function AdminGovernanceAudit() {
         moderators={moderators}
         // P3-8: live now streams a real CSV from `GET /mod/audit.csv` honouring
         // the current filters; demo keeps the prototype's confirmation toast.
-        onExport={handleExport}
+        onExport={() => void handleExport()}
       />
 
       <div className={styles.auditCard}>

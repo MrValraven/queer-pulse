@@ -47,7 +47,15 @@ export function DiscussionTab({
   const { demoMode } = useDemoMode();
   const { user } = useAuth();
   const createPost = useCreatePost(slug);
-  const imageAttach = usePostImageAttach();
+  const {
+    image: attachedImage,
+    uploading: imageUploading,
+    error: imageError,
+    inputRef: imageInputRef,
+    handleFile: handleImageFile,
+    remove: removeAttachedImage,
+    openPicker: openImagePicker,
+  } = usePostImageAttach();
   const [searchTerm, setSearchTerm] = useState("");
   const [chip, setChip] = useState<Chip>("All");
   const [newPost, setNewPost] = useState("");
@@ -88,8 +96,8 @@ export function DiscussionTab({
     };
     setExtra((prev) => [optimisticThread, ...prev]);
     setNewPost("");
-    const stagedImageKey = imageAttach.image?.key;
-    imageAttach.remove();
+    const stagedImageKey = attachedImage?.key;
+    removeAttachedImage();
     showToast(t("communities:detail.discussion.startedToast"), "success");
     if (demoMode) return;
     createPost.mutate(
@@ -207,40 +215,40 @@ export function DiscussionTab({
                 onChange={(event) => setNewPost(event.target.value)}
                 style={{ width: "100%" }}
               />
-              {imageAttach.image && (
+              {attachedImage && (
                 <div className={styles.stagedImage}>
-                  <img src={imageAttach.image.previewUrl} alt="" />
+                  <img src={attachedImage.previewUrl} alt="" />
                   <button
                     type="button"
                     className={styles.stagedImageRemove}
                     aria-label={t("communities:common.removeImageAria")}
-                    onClick={imageAttach.remove}
+                    onClick={removeAttachedImage}
                   >
                     <FiX aria-hidden />
                   </button>
                 </div>
               )}
-              {imageAttach.error && (
+              {imageError && (
                 <p className={styles.imageAttachError} role="alert">
-                  {imageAttach.error}
+                  {imageError}
                 </p>
               )}
             </div>
             <input
-              ref={imageAttach.inputRef}
+              ref={imageInputRef}
               type="file"
               accept="image/*"
               className={styles.hiddenFileInput}
               onChange={(event) => {
-                void imageAttach.handleFile(event.target.files?.[0]);
+                void handleImageFile(event.target.files?.[0]);
               }}
             />
             <button
               type="button"
               className={styles.attachImageBtn}
               aria-label={t("communities:common.attachImageAria")}
-              disabled={imageAttach.uploading}
-              onClick={() => imageAttach.inputRef.current?.click()}
+              disabled={imageUploading}
+              onClick={openImagePicker}
             >
               <FiImage aria-hidden />
             </button>

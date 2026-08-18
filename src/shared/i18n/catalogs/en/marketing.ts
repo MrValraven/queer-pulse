@@ -1852,6 +1852,11 @@ export const marketing: Catalog = {
   "changelog.entries.governance-editable-finances.body":
     "Admins can now correct the figures on the governance Finances tab instead of them being fixed. Every number carries a small tag showing where it comes from: an unverified placeholder, a value an admin entered, or one that is calculated (like the surplus). Corrections are recorded, so it is always clear who changed what and when.",
 
+  "changelog.entries.local-directory-sort-fix.title":
+    "Fixed the Local Business directory's sort menu",
+  "changelog.entries.local-directory-sort-fix.body":
+    "The Sort dropdown on the Local Business directory (renamed from “Local directory”) could squeeze so narrow that its options wrapped mid-word. It now always has enough room to show “Featured”, “A–Z” and “By neighbourhood” on one line.",
+
   "changelog.entries.governance-chart-upgrade.title":
     "A clearer income-vs-spending chart in the governance area",
   "changelog.entries.governance-chart-upgrade.body":
@@ -3623,7 +3628,7 @@ export const marketing: Catalog = {
   "volunteer.signups.closedTag": "This opportunity is closed",
   "volunteer.signups.closing": "Closing…",
   "volunteer.signups.closeCta": "Close opportunity",
-  "volunteer.signups.reviewCta": "{{count}} to review",
+  "volunteer.signups.reviewCta": "{count} to review",
   "volunteer.adapter.eyebrow": "Volunteer · {cause} · {org}",
   "volunteer.adapter.recruitingNow": "Recruiting now",
   "volunteer.adapter.closedNotRecruiting": "Closed · not recruiting",
@@ -3636,6 +3641,20 @@ export const marketing: Catalog = {
     "Application submitted for {role}. The team will be in touch with next steps.",
   "volunteer.adapter.inPartnershipWith": "In partnership with {name}.",
   "volunteer.adapter.anonMember": "A member",
+  "volunteer.hero.manageCta": "Manage applicants",
+  "volunteerManage.title": "Manage applicants",
+  "volunteerManage.sub":
+    "Review and decide on people who signed up for opportunities you posted.",
+  "volunteerManage.loading": "Loading your opportunities…",
+  "volunteerManage.empty": "You haven't posted any volunteer opportunities yet.",
+  "volunteerManage.loadingApplicants": "Loading applicants…",
+  "volunteerManage.noApplicants": "No one has applied yet.",
+  "volunteerManage.pendingCount": "{count} pending",
+  "volunteerManage.status.pending": "Pending",
+  "volunteerManage.status.accepted": "Accepted",
+  "volunteerManage.status.declined": "Declined",
+  "volunteerManage.accept": "Accept",
+  "volunteerManage.decline": "Decline",
 
   // ── Post a Volunteer Opportunity — form chrome (all platform UI).
   "postOpportunity.hero.eyebrow": "Volunteer · Post a role",
@@ -3817,7 +3836,7 @@ export const marketing: Catalog = {
   "volunteerDetail.sidebar.notRightFit": "Not the right fit?",
   "volunteerDetail.sidebar.otherWays": "Other ways to help right now:",
   "volunteerDetail.sidebar.fundInstead": "Fund this work instead",
-  "volunteerDetail.signupModal.ariaLabel": "Apply to volunteer for {{role}}",
+  "volunteerDetail.signupModal.ariaLabel": "Apply to volunteer for {role}",
   "volunteerDetail.signupModal.eyebrow": "Your application",
   "volunteerDetail.signupModal.title": "Tell us why you'd be a good fit",
   "volunteerDetail.signupModal.sub":

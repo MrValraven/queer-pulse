@@ -32,7 +32,7 @@ export function SimulationPlayer() {
   // moved inside the iframe's own (same-origin) document.
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") navigate(routes.simulations);
+      if (event.key === "Escape") void navigate(routes.simulations);
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -117,7 +117,7 @@ export function SimulationPlayer() {
         src={withSandboxFlag(flow.to)}
         title={flow.title}
         device={device}
-        onEscape={() => navigate(routes.simulations)}
+        onEscape={() => void navigate(routes.simulations)}
       />
     </div>
   );

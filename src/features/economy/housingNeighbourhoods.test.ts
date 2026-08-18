@@ -6,11 +6,16 @@ import {
 
 describe("neighbourhoodCentroid", () => {
   it("resolves accent- and case-insensitively", () => {
-    expect(neighbourhoodCentroid("principe real")).toEqual({
-      latitude: 38.7176,
-      longitude: -9.1503,
+    expect(neighbourhoodCentroid("arroios")).toEqual({
+      latitude: 38.72984,
+      longitude: -9.13881,
     });
-    expect(neighbourhoodCentroid("Príncipe Real")).not.toBeNull();
+    expect(neighbourhoodCentroid("Arroios")).not.toBeNull();
+  });
+
+  it("resolves a name with diacritics case-insensitively", () => {
+    expect(neighbourhoodCentroid("misericordia")).not.toBeNull();
+    expect(neighbourhoodCentroid("Misericórdia")).not.toBeNull();
   });
 
   it("returns null for an unknown area", () => {
@@ -21,5 +26,9 @@ describe("neighbourhoodCentroid", () => {
     for (const entry of LISBON_HOUSING_NEIGHBOURHOODS) {
       expect(neighbourhoodCentroid(entry.name)).not.toBeNull();
     }
+  });
+
+  it("lists all 24 Lisbon freguesias", () => {
+    expect(LISBON_HOUSING_NEIGHBOURHOODS).toHaveLength(24);
   });
 });

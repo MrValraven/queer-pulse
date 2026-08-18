@@ -4,6 +4,7 @@ import { getOpportunity } from "./volunteering.api";
 import { opportunityKeys } from "./opportunityKeys";
 import { detailToOpportunity } from "./volunteering.adapters";
 import type { VolunteerOpportunity } from "../volunteerOpportunities";
+import { DEMO_POSTER_OPPORTUNITY_SLUG } from "../volunteerDemoPoster";
 
 export interface OpportunityResult {
   opportunity: VolunteerOpportunity | undefined;
@@ -49,7 +50,7 @@ export function useOpportunity(slug: string | undefined) {
           spotsTotal: total,
           isFull: false,
           status: "open",
-          isPoster: false,
+          isPoster: opp?.slug === DEMO_POSTER_OPPORTUNITY_SLUG,
           mySignup: false,
         };
       }

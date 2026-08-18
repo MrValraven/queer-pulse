@@ -8,7 +8,7 @@ export const DEMO_SAVED_SEARCHES: HousingSavedSearchDTO[] = [
     name: "One-bed, Príncipe Real, under €1,200",
     criteria: {
       type: "sublet",
-      area: "Príncipe Real",
+      area: "Misericórdia",
       priceMax: 1200,
       bedroomsMin: 1,
     },

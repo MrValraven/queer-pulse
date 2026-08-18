@@ -59,5 +59,13 @@ export function usePostImageAttach() {
     if (inputRef.current) inputRef.current.value = "";
   }
 
-  return { image, uploading, error, inputRef, handleFile, remove };
+  // Wraps the `.current` read so callers never touch the ref directly in
+  // JSX — reading `inputRef.current` inline (even inside an event handler)
+  // makes the eslint react-compiler rule treat every other property read off
+  // this same returned object as a render-time ref access too.
+  function openPicker() {
+    inputRef.current?.click();
+  }
+
+  return { image, uploading, error, inputRef, handleFile, remove, openPicker };
 }

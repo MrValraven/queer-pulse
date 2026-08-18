@@ -36,7 +36,7 @@ export function ArchiveCommunityModal({
             "success",
           );
           onClose();
-          navigate(routes.communities);
+          void navigate(routes.communities);
         },
         onError: () =>
           showToast(t("communities:detail.dangerZone.errorToast"), "error"),

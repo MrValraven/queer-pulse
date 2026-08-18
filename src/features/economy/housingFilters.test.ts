@@ -7,13 +7,13 @@ const arroios = HOUSING_LISTINGS.find((listing) => listing.hood === "Arroios")!;
 describe("matchesHousingFilters — areas", () => {
   it("matches when the listing's hood is one of the selected areas", () => {
     expect(
-      matchesHousingFilters(arroios, { type: "all", areas: ["Arroios", "Chiado"] }),
+      matchesHousingFilters(arroios, { type: "all", areas: ["Arroios", "Misericórdia"] }),
     ).toBe(true);
   });
 
   it("rejects when the listing's hood is not selected", () => {
     expect(
-      matchesHousingFilters(arroios, { type: "all", areas: ["Chiado"] }),
+      matchesHousingFilters(arroios, { type: "all", areas: ["Misericórdia"] }),
     ).toBe(false);
   });
 
