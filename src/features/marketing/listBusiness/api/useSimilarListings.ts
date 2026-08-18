@@ -17,6 +17,9 @@ import { getSimilarListings, type SimilarListing } from "./listings.api";
 export function useSimilarListings(
   name: string,
   coords?: { latitude: number; longitude: number } | null,
+  /** The listing being edited, so it doesn't surface as a duplicate of
+   *  itself when the wizard re-checks its own (unchanged) name. */
+  excludeRef?: string,
 ): SimilarListing[] {
   const { demoMode } = useDemoMode();
   const debouncedName = useDebouncedValue(name.trim(), 300);
@@ -29,6 +32,7 @@ export function useSimilarListings(
       debouncedName,
       coords?.latitude ?? null,
       coords?.longitude ?? null,
+      excludeRef ?? null,
     ],
     enabled: enabled && !demoMode,
     // A stale look-alike list is harmless; don't refetch aggressively.
@@ -37,7 +41,7 @@ export function useSimilarListings(
     // retype (new `debouncedName` → new queryKey) cancels the previous
     // keystroke's request at the network layer, not just in the query cache.
     queryFn: ({ signal }) =>
-      getSimilarListings(debouncedName, coords ?? undefined, signal),
+      getSimilarListings(debouncedName, coords ?? undefined, excludeRef, signal),
   });
 
   if (!enabled) return [];

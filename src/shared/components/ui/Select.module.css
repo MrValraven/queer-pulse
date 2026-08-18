@@ -7,6 +7,15 @@
 .container {
   position: relative;
 }
+/* While open, lift the whole control into its own explicit stacking rank so
+   the panel isn't painted under a later sibling field — a plain sibling can
+   transiently become its own stacking context too (e.g. mid entrance
+   animation on opacity/transform), and without this, two same-rank (auto)
+   contexts fall back to DOM order, letting a later field win. See the
+   fadein-row-stacking-context-clips-dropdown pattern. */
+.container.open {
+  z-index: 1;
+}
 
 /* ── Trigger ── */
 .trigger {

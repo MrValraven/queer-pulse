@@ -161,7 +161,9 @@ export function Select(props: SelectProps) {
   return (
     <div
       ref={containerRef}
-      className={[styles.container, className].filter(Boolean).join(" ")}
+      className={[styles.container, open && styles.open, className]
+        .filter(Boolean)
+        .join(" ")}
     >
       <button
         ref={triggerRef}

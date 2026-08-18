@@ -100,64 +100,68 @@ export function DirectorySpaceMain({ place, preview = false, ownerRef }: Props) 
         </section>
       )}
 
-      <section className={s.sec}>
-        <h2>{t("marketing:directory.detail.hoursTitle")}</h2>
-        <p className={s.subLine}>{place.hoursNote}</p>
-        {hasRealHours &&
-          (() => {
-            const status = openStatus(place.hours, venueNow);
-            if (status.state === "unknown") return null;
-            return (
-              <span
-                className={status.state === "open" ? s.openChip : s.closedChip}
-              >
-                {t(
-                  status.state === "open"
-                    ? "marketing:directory.detail.openNow"
-                    : "marketing:directory.detail.closedNow",
-                )}
-              </span>
-            );
-          })()}
-        {!hasRealHours && place.hoursType === "appointment" ? (
-          <div className={s.apptNote}>
-            <div className={s.featureIc}>
-              <svg viewBox="0 0 24 24">
-                <circle cx={12} cy={12} r={9} />
-                <path d="M12 7v5l3 2" />
-              </svg>
-            </div>
-            {place.hoursNote}
-          </div>
-        ) : (
-          <div className={s.hoursTable}>
-            {rows.map((row, index) => (
-              <div
-                key={row.dayKey}
-                className={[
-                  s.hoursRow,
-                  index === todayIdx && s.hoursToday,
-                  row.closed && s.hoursClosed,
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                <span className={s.hoursDay}>
-                  {t(`marketing:directory.days.${row.dayKey}`)}
-                  {index === todayIdx && (
-                    <span className={s.todayTag}>
-                      {t("marketing:directory.detail.today")}
-                    </span>
+      {!place.online && (
+        <section className={s.sec}>
+          <h2>{t("marketing:directory.detail.hoursTitle")}</h2>
+          <p className={s.subLine}>{place.hoursNote}</p>
+          {hasRealHours &&
+            (() => {
+              const status = openStatus(place.hours, venueNow);
+              if (status.state === "unknown") return null;
+              return (
+                <span
+                  className={
+                    status.state === "open" ? s.openChip : s.closedChip
+                  }
+                >
+                  {t(
+                    status.state === "open"
+                      ? "marketing:directory.detail.openNow"
+                      : "marketing:directory.detail.closedNow",
                   )}
                 </span>
-                <span>
-                  {row.val ?? t("marketing:directory.detail.hoursClosed")}
-                </span>
+              );
+            })()}
+          {!hasRealHours && place.hoursType === "appointment" ? (
+            <div className={s.apptNote}>
+              <div className={s.featureIc}>
+                <svg viewBox="0 0 24 24">
+                  <circle cx={12} cy={12} r={9} />
+                  <path d="M12 7v5l3 2" />
+                </svg>
               </div>
-            ))}
-          </div>
-        )}
-      </section>
+              {place.hoursNote}
+            </div>
+          ) : (
+            <div className={s.hoursTable}>
+              {rows.map((row, index) => (
+                <div
+                  key={row.dayKey}
+                  className={[
+                    s.hoursRow,
+                    index === todayIdx && s.hoursToday,
+                    row.closed && s.hoursClosed,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  <span className={s.hoursDay}>
+                    {t(`marketing:directory.days.${row.dayKey}`)}
+                    {index === todayIdx && (
+                      <span className={s.todayTag}>
+                        {t("marketing:directory.detail.today")}
+                      </span>
+                    )}
+                  </span>
+                  <span>
+                    {row.val ?? t("marketing:directory.detail.hoursClosed")}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       <DirectoryReviewsSection
         place={place}

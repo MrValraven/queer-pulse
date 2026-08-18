@@ -220,6 +220,8 @@ export function ListingWizard(props: ListingWizardProps) {
             )}
             <WizardFormPane
               mode={props.mode}
+              editRef={props.editRef}
+              editSlug={props.editSlug}
               form={form}
               step={step}
               savedAt={savedAt}

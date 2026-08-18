@@ -210,9 +210,11 @@ export function StepReview({
             ? t("marketing:listBusiness.step5.onlineBusiness")
             : draft.address}
         </Row>
-        <Row k={t("marketing:listBusiness.step5.row.hours")}>
-          {hoursSummary(draft)}
-        </Row>
+        {!draft.online && (
+          <Row k={t("marketing:listBusiness.step5.row.hours")}>
+            {hoursSummary(draft)}
+          </Row>
+        )}
         <Row k={t("marketing:listBusiness.step5.row.online")}>
           {onlineSummary(t, draft)}
         </Row>

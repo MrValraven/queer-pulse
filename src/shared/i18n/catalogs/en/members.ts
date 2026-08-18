@@ -195,12 +195,14 @@ export const members: Catalog = {
   "profile.rail.bringMeBack": "Bring me back",
   "profile.rail.hideMe24h": "Hide me for 24h",
   "profile.rail.yourData": "Your data",
+  "profile.rail.showQr": "Show QR code",
 
   // ── Profile QR modal (ProfileQrModal) ───────────────────────────────────────
   "profile.qr.title": "Your profile QR code",
-  "profile.qr.intro": "Scan this to open your public profile.",
+  "profile.qr.intro": "Scan this to open your profile.",
   "profile.qr.save": "Save to photos",
   "profile.qr.doneCta": "Done",
+  "profile.qr.mobileTriggerAria": "Show your profile QR code",
 
   // ── Profile stat row + content tabs (ProfileStatsRow, ProfileTabBar) ───────
   "profile.stats.vouches": "Vouches",

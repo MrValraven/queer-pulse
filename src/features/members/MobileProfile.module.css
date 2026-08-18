@@ -517,6 +517,24 @@
   justify-content: center;
 }
 
+/* Matches ProfileSettingsMenu's `.trigger` (desktop overflow-menu button) so
+   the mobile QR trigger reads as the same affordance family. */
+.qrButton {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(45, 27, 61, 0.14);
+  background: var(--paper);
+  color: var(--plum);
+  font-size: 20px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
 /* ── Visitor action cluster (MobileProfileActions) ───────────────────────── */
 .actionStack {
   display: flex;

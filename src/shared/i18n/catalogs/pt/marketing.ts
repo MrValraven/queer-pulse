@@ -1389,6 +1389,11 @@ export const marketing: Catalog = {
   "listBusiness.step3.em": "prático",
   "listBusiness.step3.sub":
     "Como as pessoas te encontram, quando estás aberto, e onde te contactar. Partilha só o que quiseres público.",
+  "listBusiness.step3.onlineOnly.title": "Este negócio é só online",
+  "listBusiness.step3.onlineOnly.sub":
+    "Partilha onde as pessoas te encontram online, em vez de uma morada.",
+  "listBusiness.step3.onlineOnly.note":
+    "Não precisas de morada. Adiciona o teu site ou redes sociais abaixo para que saibam como te contactar.",
   "listBusiness.step3.addressLabel": "Morada",
   "listBusiness.step3.addressHelper":
     "Rua e número chega — colocamos o pino a partir daí.",
@@ -1632,6 +1637,7 @@ export const marketing: Catalog = {
   // Coluna de pré-visualização ao vivo
   "listBusiness.preview.head":
     "Pré-visualização ao vivo · atualiza enquanto escreves",
+  "listBusiness.preview.addPhoto": "Adicionar foto de capa",
   "listBusiness.preview.placeholderName": "O teu lugar",
   "listBusiness.preview.placeholderMeta": "Categoria · bairro",
   "listBusiness.preview.placeholderBlurb":
@@ -1900,6 +1906,11 @@ export const marketing: Catalog = {
     "Valores financeiros editáveis, com indicação da origem de cada número",
   "changelog.entries.governance-editable-finances.body":
     "Os administradores passam a poder corrigir os valores no separador de Finanças da governação, em vez de estarem fixos. Cada número tem uma pequena etiqueta que mostra a sua origem: um valor de exemplo por verificar, um valor introduzido por um administrador, ou um valor calculado (como o excedente). As correções ficam registadas, por isso é sempre claro quem alterou o quê e quando.",
+
+  "changelog.entries.listing-preview-matches-card.title":
+    "A pré-visualização do anúncio agora corresponde ao cartão real do diretório",
+  "changelog.entries.listing-preview-matches-card.body":
+    "A pré-visualização ao vivo, ao adicionares ou editares um anúncio no diretório, mostra agora exatamente o mesmo cartão que aparece no diretório, incluindo a foto de capa. Se ainda não tiveres adicionado uma, a pré-visualização mostra um botão \"Adicionar foto de capa\" que te leva diretamente ao passo das fotos.",
 
   "changelog.entries.profile-shapings-editor.title":
     "Edita a secção \"O que me formou\"",

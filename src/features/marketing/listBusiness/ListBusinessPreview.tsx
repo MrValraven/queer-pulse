@@ -1,20 +1,24 @@
 import { useState } from "react";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiCamera } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { submittedToPlace } from "../api/directory.adapters";
+import { LocalBusinessCardBody } from "../LocalBusinessCardBody";
 import {
-  catLabel,
   DAYS,
   formatDayHours,
   goodForLabel,
   initials,
   langLabel,
-  PRICES,
+  PHOTO_KEYS,
+  slugify,
   type ListingDraft,
+  type PendingListing,
   type PhotoKey,
 } from "./listBusiness.data";
 import { ListBusinessFullPreview } from "./ListBusinessFullPreview";
 import styles from "./ListBusinessPage.module.css";
+import dirStyles from "../DirectoryPage.module.css";
 
 function hoursLine(draft: ListingDraft): string | null {
   const open = DAYS.filter((d) => draft.hours[d.id]?.open);
@@ -29,18 +33,47 @@ export function ListBusinessPreview({
   draft,
   userName,
   photoPreviews,
+  editSlug,
+  onAddPhoto,
 }: {
   draft: ListingDraft;
   userName: string;
   photoPreviews: Record<PhotoKey, string>;
+  /** Public slug of the listing being edited — present in edit mode, so the
+   *  preview's deterministic tint matches the real card's. Absent in create
+   *  mode, where the eventual slug doesn't exist yet. */
+  editSlug?: string;
+  /** Jumps the wizard to the photos step — wired to the preview's "add cover
+   *  photo" call to action when there's no photo yet. */
+  onAddPhoto: () => void;
 }) {
   const { t } = useTranslation();
   const [showFull, setShowFull] = useState(false);
   const hasCard = draft.name.trim().length > 0;
-  const price = PRICES.find((p) => p.id === draft.price);
   const wit = draft.whatItIs.filter((w) => w.text.trim());
   const hrs = hoursLine(draft);
   const showOwner = draft.visibility !== "anon" && draft.ownerName.trim();
+
+  // Same shape the real directory card renders from, so the preview can
+  // never drift from the live card again. `photoPreviews` (the just-uploaded
+  // blob URL) wins over the persisted `draft.photos` value, mirroring the
+  // wizard's own display convention (see ListingPhotoGallery).
+  const place = hasCard
+    ? submittedToPlace({
+        ...draft,
+        ref: "",
+        slug: editSlug || slugify(draft.name),
+        status: "review",
+        submittedBy: "",
+        photos: PHOTO_KEYS.reduce(
+          (acc, key) => {
+            acc[key] = photoPreviews[key] || draft.photos[key];
+            return acc;
+          },
+          {} as Record<PhotoKey, string>,
+        ),
+      } satisfies PendingListing)
+    : null;
 
   return (
     <aside className={styles.previewCol}>
@@ -49,75 +82,46 @@ export function ListBusinessPreview({
         {t("marketing:listBusiness.preview.head")}
       </div>
 
-      <div
-        className={[styles.dirCard, !hasCard && styles.dirCardEmpty]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        <div className={styles.dirTop}>
-          <span
-            className={[styles.dirAv, !hasCard && styles.dirAvEmpty]
-              .filter(Boolean)
-              .join(" ")}
-          >
-            {hasCard ? initials(draft.name) : "+"}
-          </span>
-          <div>
-            <div className={styles.dirName}>
-              {hasCard ? (
-                draft.name
-              ) : (
+      {place ? (
+        <div className={dirStyles.card}>
+          <LocalBusinessCardBody
+            place={place}
+            photoOverlay={
+              !place.photos?.wide && (
+                <Button
+                  variant="ghost-dark"
+                  size="sm"
+                  className={styles.previewAddPhotoBtn}
+                  onClick={onAddPhoto}
+                >
+                  <FiCamera aria-hidden />{" "}
+                  {t("marketing:listBusiness.preview.addPhoto")}
+                </Button>
+              )
+            }
+          />
+        </div>
+      ) : (
+        <div className={`${styles.dirCard} ${styles.dirCardEmpty}`}>
+          <div className={styles.dirTop}>
+            <span className={`${styles.dirAv} ${styles.dirAvEmpty}`}>+</span>
+            <div>
+              <div className={styles.dirName}>
                 <span className={styles.dirNamePh}>
                   {t("marketing:listBusiness.preview.placeholderName")}
                 </span>
-              )}
-            </div>
-            <div className={styles.dirMeta}>
-              {draft.cats.length || draft.hood
-                ? [draft.cats.map((c) => catLabel(t, c)).join(", "), draft.hood]
-                    .filter(Boolean)
-                    .join(" · ")
-                : t("marketing:listBusiness.preview.placeholderMeta")}
+              </div>
+              <div className={styles.dirMeta}>
+                {t("marketing:listBusiness.preview.placeholderMeta")}
+              </div>
             </div>
           </div>
-        </div>
 
-        {(draft.badge || price) && (
-          <div className={styles.dirBadgeRow}>
-            {draft.badge === "owned" && (
-              <span className={`${styles.dirBadge} ${styles.dirBadgeJade}`}>
-                {t("marketing:listBusiness.step1.owned.tag")}
-              </span>
-            )}
-            {draft.badge === "friendly" && (
-              <span className={`${styles.dirBadge} ${styles.dirBadgeCoral}`}>
-                {t("marketing:listBusiness.step1.friendly.tag")}
-              </span>
-            )}
-            {price && (
-              <span className={`${styles.dirBadge} ${styles.dirBadgePrice}`}>
-                {price.sym}
-              </span>
-            )}
+          <div className={`${styles.dirBlurb} ${styles.dirBlurbPh}`}>
+            {t("marketing:listBusiness.preview.placeholderBlurb")}
           </div>
-        )}
-
-        <div
-          className={[styles.dirBlurb, !draft.blurb && styles.dirBlurbPh]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          {draft.blurb || t("marketing:listBusiness.preview.placeholderBlurb")}
         </div>
-
-        {draft.tags.length > 0 && (
-          <div className={styles.dirTags}>
-            {draft.tags.map((tag) => (
-              <span key={tag}>{tag}</span>
-            ))}
-          </div>
-        )}
-      </div>
+      )}
 
       <div className={styles.pvDetail}>
         <div

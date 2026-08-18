@@ -8,9 +8,9 @@ import type { Member } from "./data/members";
 import styles from "./ProfileQrModal.module.css";
 
 /**
- * A real, scannable QR code encoding a member's public profile URL, plus a
- * "save to photos" PNG download. Renders via canvas (`QRCode.toCanvas`) so
- * the download can read pixels straight off it with `toDataURL` — the source
+ * A real, scannable QR code encoding a member's profile URL, plus a "save to
+ * photos" PNG download. Renders via canvas (`QRCode.toCanvas`) so the
+ * download can read pixels straight off it with `toDataURL` — the source
  * design's QR grid was a fake seeded-PRNG pattern for visual mockup only, not
  * an actual encoder, so it couldn't be ported as-is. Self-contained: only
  * mounted while open, so `Modal` owns the scroll-lock.
@@ -24,16 +24,18 @@ export function ProfileQrModal({
 }) {
   const { t } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  // `/members/:slug` is gated (see `GATED_PATTERNS` in authGate.ts) — a
-  // logged-out scanner would just get bounced to sign-in, defeating the
-  // point of a scannable profile QR. `/public-profile/:slug` is the one
-  // member surface meant to be readable without a session (see
-  // `PublicProfileBySlug.tsx`'s doc comment). `toAbsoluteUrl` resolves
-  // against the fixed `SITE_ORIGIN`, not whatever origin happened to serve
-  // this page, matching how `personaShareUrl` builds other shareable links.
-  // The profile is fixed for the modal's lifetime, so this is plain derived
-  // data — no state needed, and no dependency on navigation while open.
-  const url = toAbsoluteUrl(`${routes.publicProfile}/${profile.slug}`);
+  // Points at the normal `/members/:slug` profile, not the stripped-down
+  // `/public-profile/:slug` surface — deliberate: the primary use case is
+  // showing this to someone in person, and they land on the full profile
+  // once scanned. `/members/:slug` is gated (see `GATED_PATTERNS` in
+  // authGate.ts), so a logged-out scanner is bounced to sign-in first
+  // (redirected back to this profile afterward) rather than seeing anything
+  // immediately. `toAbsoluteUrl` resolves against the fixed `SITE_ORIGIN`,
+  // not whatever origin happened to serve this page, matching how
+  // `personaShareUrl` builds other shareable links. The profile is fixed for
+  // the modal's lifetime, so this is plain derived data — no state needed,
+  // and no dependency on navigation while open.
+  const url = toAbsoluteUrl(`${routes.members}/${profile.slug}`);
 
   useEffect(() => {
     if (!canvasRef.current) return;

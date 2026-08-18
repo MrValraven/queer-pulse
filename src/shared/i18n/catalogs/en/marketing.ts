@@ -1349,6 +1349,11 @@ export const marketing: Catalog = {
   "listBusiness.step3.em": "practical",
   "listBusiness.step3.sub":
     "How people find you, when you're open, and where to reach you. Share only what you want public.",
+  "listBusiness.step3.onlineOnly.title": "This business is online only",
+  "listBusiness.step3.onlineOnly.sub":
+    "Share where people find you online instead of a street address.",
+  "listBusiness.step3.onlineOnly.note":
+    "No street address needed. Add your website or socials below so people know how to reach you.",
   "listBusiness.step3.addressLabel": "Address",
   "listBusiness.step3.addressHelper":
     "Street and number is enough. We'll place the pin from there.",
@@ -1590,6 +1595,7 @@ export const marketing: Catalog = {
   "listBusiness.missing.consent": "both confirmations",
   // Live preview column
   "listBusiness.preview.head": "Live preview · updates as you type",
+  "listBusiness.preview.addPhoto": "Add cover photo",
   "listBusiness.preview.placeholderName": "Your place",
   "listBusiness.preview.placeholderMeta": "Category · neighbourhood",
   "listBusiness.preview.placeholderBlurb":
@@ -1851,6 +1857,11 @@ export const marketing: Catalog = {
     "Editable finance figures, with a note on where each number comes from",
   "changelog.entries.governance-editable-finances.body":
     "Admins can now correct the figures on the governance Finances tab instead of them being fixed. Every number carries a small tag showing where it comes from: an unverified placeholder, a value an admin entered, or one that is calculated (like the surplus). Corrections are recorded, so it is always clear who changed what and when.",
+
+  "changelog.entries.listing-preview-matches-card.title":
+    "The listing preview now matches your real directory card",
+  "changelog.entries.listing-preview-matches-card.body":
+    "The live preview when you add or edit a directory listing now renders the exact same card people see in the directory, cover photo included. If you haven't added one yet, the preview shows an \"Add cover photo\" button that jumps straight to the photos step.",
 
   "changelog.entries.profile-shapings-editor.title":
     "Edit your \"What shaped me\" section",

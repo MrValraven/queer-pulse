@@ -14,6 +14,8 @@ import styles from "./ListBusinessPage.module.css";
  *  (with its back/next footer), and the live preview column. */
 export function WizardFormPane({
   mode,
+  editRef,
+  editSlug,
   form,
   step,
   savedAt,
@@ -26,6 +28,11 @@ export function WizardFormPane({
   uploadPhoto,
 }: {
   mode: "create" | "edit";
+  /** Ref of the listing being edited — present in edit mode. */
+  editRef?: string;
+  /** Public slug of the listing being edited — present in edit mode; drives
+   *  the preview card's deterministic tint. */
+  editSlug?: string;
   form: ListingForm;
   step: number;
   savedAt: number | null;
@@ -63,7 +70,7 @@ export function WizardFormPane({
             {/* StepPath (the type/path choice) is create-only — an edit
                 seeds straight past it and never renders it again. */}
             {!isEdit && step === 0 && <StepPath form={form} userName={userName} />}
-            {step === 1 && <StepBasics form={form} />}
+            {step === 1 && <StepBasics form={form} editRef={editRef} />}
             {step === 2 && <StepStory form={form} />}
             {step === 3 && <StepPractical form={form} />}
             {step === 4 && (
@@ -97,6 +104,8 @@ export function WizardFormPane({
           draft={draft}
           userName={userName}
           photoPreviews={form.photoPreviews}
+          editSlug={editSlug}
+          onAddPhoto={() => goToStep(4)}
         />
       </div>
     </div>

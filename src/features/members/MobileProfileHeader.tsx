@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
+import { MdQrCode2 } from "react-icons/md";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MobileProfileActions } from "./MobileProfileActions";
@@ -10,6 +11,13 @@ import { ProfilePhotoViewer } from "./ProfilePhotoViewer";
 import type { MemberProfile } from "./data/memberProfiles";
 import type { Member } from "./data/members";
 import styles from "./MobileProfile.module.css";
+
+// Pulls in the `qrcode` package — lazy-load it so it's only fetched when the
+// button below is actually tapped (mirrors `ProfileSettingsMenu`'s desktop
+// counterpart).
+const ProfileQrModal = lazy(() =>
+  import("./ProfileQrModal").then((m) => ({ default: m.ProfileQrModal })),
+);
 
 function VerifiedCheck() {
   return (
@@ -60,6 +68,7 @@ export function MobileProfileHeader({
   const realSelf = self;
   const isSelf = realSelf && !asVisitor;
   const [photoOpen, setPhotoOpen] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
   const fullName = `${profile.first} ${profile.last}`;
   const avatarTint = profile.tint === "auth" ? "plum" : profile.tint;
   const avatar = (
@@ -141,6 +150,14 @@ export function MobileProfileHeader({
               onPreview={onPreview}
             />
           </div>
+          <button
+            type="button"
+            className={styles.qrButton}
+            aria-label={t("members:profile.qr.mobileTriggerAria")}
+            onClick={() => setQrOpen(true)}
+          >
+            <MdQrCode2 aria-hidden />
+          </button>
         </div>
       ) : (
         <MobileProfileActions
@@ -157,6 +174,12 @@ export function MobileProfileHeader({
           tint={avatarTint}
           onClose={() => setPhotoOpen(false)}
         />
+      )}
+
+      {qrOpen && (
+        <Suspense fallback={null}>
+          <ProfileQrModal profile={profile} onClose={() => setQrOpen(false)} />
+        </Suspense>
       )}
     </header>
   );

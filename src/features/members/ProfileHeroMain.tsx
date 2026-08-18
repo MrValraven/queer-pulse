@@ -171,6 +171,7 @@ export function ProfileHeroMain({
             the edit CTA above already uses). */}
         {isSelf && onOpenWhoSeesWhat && onOpenAccountData && onToggleHidden && (
           <ProfileSettingsMenu
+            profile={profile}
             onOpenWhoSeesWhat={onOpenWhoSeesWhat}
             onOpenAccountData={onOpenAccountData}
             onToggleHidden={onToggleHidden}

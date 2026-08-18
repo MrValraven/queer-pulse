@@ -16,7 +16,14 @@ import { StepBasicsBadgeField } from "./StepBasicsBadgeField";
 import styles from "./ListBusinessPage.module.css";
 
 /* ===== Step 1 — Basics ===== */
-export function StepBasics({ form }: { form: ListingForm }) {
+export function StepBasics({
+  form,
+  editRef,
+}: {
+  form: ListingForm;
+  /** The listing being edited — excluded from its own duplicate check. */
+  editRef?: string;
+}) {
   const { t } = useTranslation();
   const { draft, set, toggleCat } = form;
   // Live duplicate detection against the real directory — by name, and by
@@ -25,7 +32,7 @@ export function StepBasics({ form }: { form: ListingForm }) {
     draft.latitude !== null && draft.longitude !== null
       ? { latitude: draft.latitude, longitude: draft.longitude }
       : null;
-  const dups = useSimilarListings(draft.name, coords);
+  const dups = useSimilarListings(draft.name, coords, editRef);
   return (
     <div className={styles.stepBody}>
       <PaneHeader

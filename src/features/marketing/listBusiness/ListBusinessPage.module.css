@@ -1549,6 +1549,23 @@
   border-color: rgba(var(--line-rgb), 0.18);
   background: rgba(var(--plum-rgb), 0.015);
 }
+/* Centered over the card preview's empty photo slot — jumps straight to the
+   wizard's photos step instead of making the upload option easy to miss.
+   `.ghost-dark`'s cream-on-transparent look assumes a photo backdrop; the
+   empty slot is a pale tint, so this needs its own solid backing to read. */
+.previewAddPhotoBtn {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  background: rgba(var(--plum-rgb), 0.78) !important;
+}
+@media (hover: hover) {
+  .previewAddPhotoBtn:hover {
+    background: rgba(var(--plum-rgb), 0.9) !important;
+  }
+}
 .dirTop {
   display: flex;
   align-items: center;
@@ -1629,20 +1646,6 @@
 .dirBlurbPh {
   color: var(--ink-40);
   font-style: italic;
-}
-.dirTags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 14px;
-}
-.dirTags span {
-  font-size: 11.5px;
-  color: var(--ink-60);
-  background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 7px;
-  padding: 4px 9px;
-  font-weight: 500;
 }
 .pvDetail {
   background: var(--paper);
@@ -2237,7 +2240,6 @@
      existing nodes across keystrokes, so only freshly-mounted pieces animate
      (new tags, chips, what-it-is lines, badges, sections). --- */
   .dirBadge,
-  .dirTags span,
   .pdChips span,
   .pdWit li,
   .pdSec {

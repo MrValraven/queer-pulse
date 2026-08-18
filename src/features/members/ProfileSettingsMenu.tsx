@@ -1,10 +1,21 @@
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import { lazy, Suspense, useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { FiDownload, FiEye, FiEyeOff, FiMoreHorizontal } from "react-icons/fi";
+import { MdQrCode2 } from "react-icons/md";
 import { useOutsideDismiss } from "../../shared/hooks/useOutsideDismiss";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { Member } from "./data/members";
 import styles from "./ProfileSettingsMenu.module.css";
 
+// Pulls in the `qrcode` package — lazy-load it so the profile page's main
+// bundle doesn't pay for that dependency on every visit, only when the menu
+// item is actually clicked (same reasoning as `SubprofileShareCard`'s lazy
+// import in `MySubprofilesPage`).
+const ProfileQrModal = lazy(() =>
+  import("./ProfileQrModal").then((m) => ({ default: m.ProfileQrModal })),
+);
+
 interface ProfileSettingsMenuProps {
+  profile: Member;
   onOpenWhoSeesWhat: () => void;
   onOpenAccountData: () => void;
   onToggleHidden: () => void;
@@ -26,6 +37,7 @@ interface ProfileSettingsMenuProps {
  * re-inlining that listener a 16th time.
  */
 export function ProfileSettingsMenu({
+  profile,
   onOpenWhoSeesWhat,
   onOpenAccountData,
   onToggleHidden,
@@ -33,6 +45,7 @@ export function ProfileSettingsMenu({
 }: ProfileSettingsMenuProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -149,7 +162,26 @@ export function ProfileSettingsMenu({
             <FiDownload aria-hidden />
             {t("members:profile.rail.yourData")}
           </button>
+          <button
+            type="button"
+            role="menuitem"
+            tabIndex={-1}
+            className={styles.item}
+            onClick={() => {
+              setOpen(false);
+              setQrOpen(true);
+            }}
+          >
+            <MdQrCode2 aria-hidden />
+            {t("members:profile.rail.showQr")}
+          </button>
         </div>
+      )}
+
+      {qrOpen && (
+        <Suspense fallback={null}>
+          <ProfileQrModal profile={profile} onClose={() => setQrOpen(false)} />
+        </Suspense>
       )}
     </div>
   );

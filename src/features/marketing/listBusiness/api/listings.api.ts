@@ -89,13 +89,15 @@ export interface SimilarListing {
  * by name (fuzzy) and/or proximity to the given coordinates. Replaces the old
  * hardcoded 6-place seed match. Returns at most five.
  */
-/** GET /listings/similar?name=&lat=&lng= — accepts an `AbortSignal` (react-query
- *  forwards its `queryFn` signal here) so a fast retype in the wizard's name
- *  field cancels the previous keystroke's still-in-flight request instead of
- *  letting it run to completion. */
+/** GET /listings/similar?name=&lat=&lng=&excludeRef= — accepts an `AbortSignal`
+ *  (react-query forwards its `queryFn` signal here) so a fast retype in the
+ *  wizard's name field cancels the previous keystroke's still-in-flight
+ *  request instead of letting it run to completion. `excludeRef` is the
+ *  listing being edited, so it never surfaces as a duplicate of itself. */
 export function getSimilarListings(
   name: string,
   coords?: { latitude: number; longitude: number },
+  excludeRef?: string,
   signal?: AbortSignal,
 ): Promise<SimilarListing[]> {
   const params = new URLSearchParams({ name });
@@ -103,6 +105,7 @@ export function getSimilarListings(
     params.set("lat", String(coords.latitude));
     params.set("lng", String(coords.longitude));
   }
+  if (excludeRef) params.set("excludeRef", excludeRef);
   return apiGet<SimilarListing[]>(
     `/listings/similar?${params.toString()}`,
     undefined,

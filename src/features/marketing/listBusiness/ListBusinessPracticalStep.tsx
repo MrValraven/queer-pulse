@@ -54,7 +54,7 @@ export function StepPractical({ form }: { form: ListingForm }) {
 
       <ListBusinessLocationField draft={draft} set={set} />
 
-      <ListingHoursEditor form={form} />
+      {!draft.online && <ListingHoursEditor form={form} />}
 
       <h3 className={styles.groupH}>
         {t("marketing:listBusiness.step3.onlineHeading")}

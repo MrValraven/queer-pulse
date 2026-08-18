@@ -197,12 +197,14 @@ export const members: Catalog = {
   "profile.rail.bringMeBack": "Voltar a ficar visível",
   "profile.rail.hideMe24h": "Ficar oculto 24h",
   "profile.rail.yourData": "Os teus dados",
+  "profile.rail.showQr": "Mostrar código QR",
 
   // ── Modal do código QR do perfil (ProfileQrModal) ────────────────────────────
   "profile.qr.title": "O código QR do teu perfil",
-  "profile.qr.intro": "Digitaliza para abrir o teu perfil público.",
+  "profile.qr.intro": "Digitaliza para abrir o teu perfil.",
   "profile.qr.save": "Guardar nas fotos",
   "profile.qr.doneCta": "Concluído",
+  "profile.qr.mobileTriggerAria": "Mostrar o código QR do teu perfil",
 
   // ── Linha de estatísticas + separadores de conteúdo (ProfileStatsRow, ProfileTabBar) ──
   "profile.stats.vouches": "Votos de confiança",

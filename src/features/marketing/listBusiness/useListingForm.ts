@@ -327,11 +327,11 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
       add(s3, "marketing:listBusiness.missing.address", ANCHOR.address);
     if (!draft.online && (draft.latitude === null || draft.longitude === null))
       add(s3, "marketing:listBusiness.missing.pin", ANCHOR.address);
-    if (isClaim && !anyDayOpen(draft.hours))
+    // An online-only business has no hours editor to fill in, so neither an
+    // open day nor a well-formed interval is required.
+    if (!draft.online && isClaim && !anyDayOpen(draft.hours))
       add(s3, "marketing:listBusiness.missing.hours", ANCHOR.hours);
-    // A malformed open day (blank/zero-length/overlapping interval) blocks
-    // either path — you can't publish hours that don't parse.
-    if (!hoursValid(draft.hours))
+    if (!draft.online && !hoursValid(draft.hours))
       add(s3, "marketing:listBusiness.missing.hoursInvalid", ANCHOR.hours);
     // Socials are optional; this only fires when a filled one is malformed, so
     // the chip reads "fix the format", not "add socials" (item #10).
