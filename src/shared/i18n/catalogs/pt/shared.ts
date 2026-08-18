@@ -148,6 +148,7 @@ export const shared: Catalog = {
   "adminNav.items.commissionInterests": "Encomendas",
   "adminNav.items.readingGroupProposals": "Grupos de leitura",
   "adminNav.items.magazineSubmissions": "Propostas",
+  "adminNav.items.writerApplications": "Candidaturas a escritor",
   "adminNav.items.partnerships": "Parcerias",
   "adminNav.items.verifications": "Verificações",
   "adminNav.items.orgTiers": "Níveis de parceria",

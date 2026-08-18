@@ -6,6 +6,7 @@ import {
 } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
+import type { ReasonCode } from "../../safety/reportReasons";
 
 // ── Backend DTOs ─────────────────────────────────────────────────────────────
 // Shapes the NestJS communities domain returns. `MemberRef` (author / owner /
@@ -171,15 +172,24 @@ export interface CommunitiesQuery {
   type?: CommunityType;
   access?: AccessTier;
   page?: number;
+  /** Free-text search over name/tagline/purpose, ANDed with the filters above
+   *  (mirrors the backend's `ListCommunitiesQuery.q`). */
+  q?: string;
+  /** `newest` (default, `created_at DESC`) or `name` (A→Z, tie-broken by id so
+   *  pagination doesn't reshuffle) — mirrors the backend's
+   *  `ListCommunitiesQuery.sort`. Omit for the default. */
+  sort?: "newest" | "name";
 }
 
 export async function getCommunities(params: CommunitiesQuery = {}) {
-  const q = new URLSearchParams();
-  if (params.filter) q.set("filter", params.filter);
-  if (params.type) q.set("type", params.type);
-  if (params.access) q.set("access", params.access);
-  if (params.page) q.set("page", String(params.page));
-  const qs = q.toString();
+  const query = new URLSearchParams();
+  if (params.filter) query.set("filter", params.filter);
+  if (params.type) query.set("type", params.type);
+  if (params.access) query.set("access", params.access);
+  if (params.page) query.set("page", String(params.page));
+  if (params.q) query.set("q", params.q);
+  if (params.sort) query.set("sort", params.sort);
+  const qs = query.toString();
   const res = await apiGet<CommunityCardDTO[] | Paginated<CommunityCardDTO>>(
     `/communities${qs ? `?${qs}` : ""}`,
   );
@@ -205,10 +215,56 @@ export const archiveCommunity = (slug: string) =>
 export const unfreezeCommunity = (slug: string) =>
   apiPost<CommunityDetailDTO>(`/communities/${slug}/unfreeze`, {});
 
+/** POST /communities/:slug/freeze — an owner/mod manually pauses a community
+ *  ahead of a moderation review, symmetric to `unfreezeCommunity`. Idempotent;
+ *  returns the (now frozen) detail. */
+export const freezeCommunity = (slug: string) =>
+  apiPost<CommunityDetailDTO>(`/communities/${slug}/freeze`, {});
+
 /** POST /communities/:slug/transfer — owner hands the community to another
  *  member (who becomes owner; the caller is demoted to mod). */
 export const transferCommunityOwnership = (slug: string, memberSlug: string) =>
   apiPost<CommunityDetailDTO>(`/communities/${slug}/transfer`, { memberSlug });
+
+/** One open report on this community's own posts/replies (`GET
+ *  /communities/:slug/reports`, owner/mod-only). Deliberately leaner than the
+ *  platform admin queue's `ModReportDTO` (`features/admin/api/moderation.api.ts`):
+ *  no reporter/reported identity or content excerpt, just enough to triage —
+ *  see `communityReportToModReport`. */
+export interface CommunityReportDTO {
+  id: string;
+  subjectType: "post" | "reply";
+  subjectId: string;
+  reasonCode: ReasonCode;
+  severity: "emergency" | "high" | "medium" | "low";
+  status: "open" | "resolved" | "escalated";
+  createdAt: string;
+  slaDueAt: string;
+  acknowledgement: string;
+}
+
+/** GET /communities/:slug/reports — open reports whose subject is a post or
+ *  reply in this community (owner/mod only). */
+export const getCommunityReports = (slug: string) =>
+  apiGet<CommunityReportDTO[]>(`/communities/${slug}/reports`);
+
+/** PATCH /mod/reports/:id — dismiss a report from a community's reports
+ *  queue. Reuses the platform-wide moderation-action endpoint with a fixed
+ *  "dismiss" action and generic reason/note, mirroring the admin queue's own
+ *  plain-dismiss default (`useModerationQueue.ts`'s `resolveReport`).
+ *
+ *  NOTE: that endpoint is gated to a platform Moderator/Admin role
+ *  (`RolesGuard`), which a community-level owner/mod does not necessarily
+ *  hold — a plain community mod calling this can get a 403. That's a real,
+ *  unresolved backend authorization gap, not something to paper over here:
+ *  the call goes through as-is and a 403 surfaces as the normal global error
+ *  toast (`useCommunityMutations.ts`'s `useDismissCommunityReport`). */
+export const dismissReport = (id: string) =>
+  apiPatch<{ id: string; status: string }>(`/mod/reports/${id}`, {
+    action: "dismiss",
+    reasonCode: "other",
+    note: "",
+  });
 
 export async function getCommunityPosts(slug: string, page?: number) {
   const q = new URLSearchParams();
@@ -358,3 +414,65 @@ export const setMemberRole = (
  *  reconstruct the subset of pages already fetched). */
 export const getMyCommunities = () =>
   apiGet<MyCommunityDTO[]>("/me/communities");
+
+// ── Community pulse (upcoming events / recent threads / open opportunities) ──
+// Lean, hand-picked subsets of each feature module's own response shape
+// (`EventSummary`/`ForumThreadResponse`/`OpportunityCardDTO` on the backend) —
+// only the fields this compact surface renders, the same "richly type only
+// what's rendered" approach the rest of this file follows.
+
+export interface CommunityPulseEventDTO {
+  slug: string;
+  title: string;
+  startAt: string;
+  venue: string | null;
+  isOnline: boolean;
+  goingCount: number;
+}
+
+export interface CommunityPulseAuthorDTO {
+  handle: string;
+  displayName: string;
+  avatarUrl: string | null;
+}
+
+export interface CommunityPulseThreadDTO {
+  id: string;
+  slug: string;
+  title: string;
+  author: CommunityPulseAuthorDTO;
+  replyCount: number;
+}
+
+export interface CommunityPulseOpportunityDTO {
+  slug: string;
+  org: string;
+  role: string;
+}
+
+export interface CommunityPulseDTO {
+  upcomingEvents: CommunityPulseEventDTO[];
+  recentThreads: CommunityPulseThreadDTO[];
+  openOpportunities: CommunityPulseOpportunityDTO[];
+}
+
+/** GET /communities/:slug/pulse — the community's own upcoming events, recent
+ *  discussion threads, and open volunteer opportunities (any roster member). */
+export const getCommunityPulse = (slug: string) =>
+  apiGet<CommunityPulseDTO>(`/communities/${slug}/pulse`);
+
+/** `GET /communities/:slug/insights` response — plain aggregate counts
+ *  (owner/mod only). */
+export interface CommunityInsightsDTO {
+  memberCount: number;
+  newMembersThisWeek: number;
+  newMembersThisMonth: number;
+  postCount: number;
+  postsThisWeek: number;
+  activeMemberCount7d: number;
+}
+
+/** GET /communities/:slug/insights — aggregate membership/post-volume stats,
+ *  owner/mod only (403 for anyone else on the roster). */
+export const getCommunityInsights = (slug: string) =>
+  apiGet<CommunityInsightsDTO>(`/communities/${slug}/insights`);

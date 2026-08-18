@@ -9,6 +9,7 @@ import { routes } from "../../app/routeMap";
 import { useGettingStarted, type GettingStartedStepState } from "./useGettingStarted";
 import { GETTING_STARTED_STEP_XP } from "./gettingStarted.data";
 import { LevelXpStrip } from "./LevelXpStrip";
+import { SideQuests } from "./SideQuests";
 import styles from "./GettingStartedPage.module.css";
 
 /** The progress track above the checklist — a share of steps done, with a live
@@ -116,20 +117,23 @@ export function GettingStartedPage() {
         </header>
 
         {allDone ? (
-          <SuccessPanel
-            title={t("auth:gettingStarted.allDone.title")}
-            em={t("auth:gettingStarted.allDone.em")}
-            closeLabel={t("auth:gettingStarted.allDone.cta")}
-            onClose={() => {
-              void navigate(routes.feed);
-            }}
-            steps={[
-              ...steps.map((step) => t(step.titleKey)),
-              t("auth:gettingStarted.success.badge"),
-            ]}
-          >
-            {t("auth:gettingStarted.allDone.body")}
-          </SuccessPanel>
+          <>
+            <SuccessPanel
+              title={t("auth:gettingStarted.allDone.title")}
+              em={t("auth:gettingStarted.allDone.em")}
+              closeLabel={t("auth:gettingStarted.allDone.cta")}
+              onClose={() => {
+                void navigate(routes.feed);
+              }}
+              steps={[
+                ...steps.map((step) => t(step.titleKey)),
+                t("auth:gettingStarted.success.badge"),
+              ]}
+            >
+              {t("auth:gettingStarted.allDone.body")}
+            </SuccessPanel>
+            <SideQuests />
+          </>
         ) : (
           <>
             <LevelXpStrip />

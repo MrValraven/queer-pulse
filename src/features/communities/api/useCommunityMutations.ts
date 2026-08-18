@@ -3,6 +3,8 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useCommunityEdits } from "../../../app/providers/useCommunityEdits";
 import {
   archiveCommunity,
+  dismissReport,
+  freezeCommunity,
   unfreezeCommunity,
   createCommunity,
   createPost,
@@ -316,6 +318,50 @@ export function useUnfreezeCommunity() {
     onSuccess: (_data, { slug }) => {
       if (demoMode) return;
       void queryClient.invalidateQueries({ queryKey: ["community", slug] });
+    },
+  });
+}
+
+/** POST /communities/:slug/freeze — owner/mod manually pauses a community
+ *  ahead of a moderation review, from the mod panel danger zone. Live freezes
+ *  + invalidates the detail (the frozen banner then appears); demo is a no-op
+ *  the caller reflects with its own toast, mirroring `useUnfreezeCommunity`. */
+export function useFreezeCommunity() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<CommunityDetailDTO | null, Error, { slug: string }>({
+    // The danger-zone modal toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
+    mutationFn: async ({ slug }) => {
+      if (demoMode) return null;
+      return freezeCommunity(slug);
+    },
+    onSuccess: (_data, { slug }) => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: ["community", slug] });
+    },
+  });
+}
+
+/** PATCH /mod/reports/:id — dismiss one report from a community's reports
+ *  queue (ModToolsTab's "Reported posts" section). Demo is a no-op (the
+ *  caller keeps its own optimistic local removal); live PATCHes and
+ *  invalidates the community's reports query. Deliberately NO
+ *  `meta.silentError`: the endpoint this hits is platform Moderator/Admin-role
+ *  gated, which a community-level mod doesn't necessarily hold, so a 403 here
+ *  is a real possibility — it should surface as the normal global error toast
+ *  rather than be swallowed. */
+export function useDismissCommunityReport(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, { id: string }>({
+    mutationFn: async ({ id }) => {
+      if (demoMode) return;
+      await dismissReport(id);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: ["community-reports", slug] });
     },
   });
 }

@@ -1,3 +1,9 @@
+/**
+ * COMMUNITY-LEVEL join requests: an existing platform member asking to join
+ * one community. Do not confuse this with the PLATFORM-LEVEL join request
+ * hook in `src/features/admin/api/useJoinRequests.ts` — same name, same
+ * approve/decline shape, entirely different backend module.
+ */
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getJoinRequests } from "./communities.api";

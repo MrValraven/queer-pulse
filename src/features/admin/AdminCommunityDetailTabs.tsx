@@ -43,6 +43,11 @@ export function ScopedQueuePane({ community }: { community: Community }) {
 
   return (
     <div className={styles.pane}>
+      {community.truncated && (
+        <p className={styles.truncatedNotice}>
+          {t("admin:communities.queue.truncatedNotice")}
+        </p>
+      )}
       {shown.map((r) => (
         <ReportRow key={r.title} item={r} />
       ))}
@@ -102,8 +107,10 @@ export function MembersPane({ community }: { community: Community }) {
             // are demo-only chrome. On the live path a real moderator who
             // happens to share a fixture name must not get a stranger's
             // stock photo, and we must not claim a verification we don't have.
+            // Live avatars come from the moderator's own uploaded photo
+            // (`avatarUrl`); `AdminAvatar` falls back to initials when unset.
             verified={demoMode}
-            src={demoMode ? portrait(m.name) : undefined}
+            src={demoMode ? portrait(m.name) : (m.avatarUrl ?? undefined)}
             alt={m.name}
           />
           <div className={styles.memberMeta}>

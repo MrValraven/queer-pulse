@@ -17,29 +17,17 @@ import { INTENTS } from "./onboardingPage.data";
 import { type StepProps } from "./OnboardingStepChrome";
 import styles from "./OnboardingPage.module.css";
 
-/**
- * The warm defaults shown to a member who has never set intents — a friendly
- * starting point so the step is never blank. A member who ALREADY has
- * `lookingFor` (a replay of the wizard) is seeded from that instead, so
- * continuing preserves their choices rather than wiping them.
- */
-const PRESET_INTENTS = [
-  "Community",
-  "Professional connections",
-  "Creative collaboration",
-];
-
 export function StepIntents(props: StepProps) {
   const { user } = useAuth();
   const { demoMode } = useDemoMode();
   const ownSlug = user?.profile.slug;
 
   // Load the member's EXISTING `lookingFor` so a re-run of onboarding pre-selects
-  // it rather than overwriting it with the presets — defense-in-depth alongside
-  // the one-time gate. Live only: demo mode has no backend and the save no-ops,
-  // so a demo run simply uses the presets. The interactive form is gated until
-  // this settles so `useChipSet` is seeded with the right initial set on its
-  // first mount (its initial arg is read once and can't be re-seeded later).
+  // it rather than starting blank — defense-in-depth alongside the one-time
+  // gate. Live only: demo mode has no backend and the save no-ops, so a demo
+  // run simply starts blank. The interactive form is gated until this settles
+  // so `useChipSet` is seeded with the right initial set on its first mount
+  // (its initial arg is read once and can't be re-seeded later).
   const existingLookingFor = useQuery({
     queryKey: ["profile", demoMode, ownSlug, "looking-for"],
     enabled: !demoMode && Boolean(ownSlug),
@@ -50,8 +38,7 @@ export function StepIntents(props: StepProps) {
     return <StepIntentsLoading stepLabel={props.stepLabel} />;
   }
 
-  const existing = existingLookingFor.data ?? [];
-  const initialSelection = existing.length > 0 ? existing : PRESET_INTENTS;
+  const initialSelection = existingLookingFor.data ?? [];
 
   return <StepIntentsForm {...props} initialSelection={initialSelection} />;
 }

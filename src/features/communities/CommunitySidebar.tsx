@@ -12,6 +12,8 @@ import type { CommunityDetail, Tint } from "./communityDetails";
 import { photoOf } from "./communityPeople";
 import { AV_CLASS } from "./communityAvatar";
 import { leadingInitials } from "../../shared/lib/initials";
+import type { CommunityPulseResult } from "./api/useCommunityPulse";
+import { CommunityPulseSidebarCards } from "./CommunityPulseSidebarCards";
 import styles from "./CommunityDetailPage.module.css";
 
 const GATHERING = routes.gatherings;
@@ -26,9 +28,14 @@ const relTint = (t: string): Tint =>
 export function CommunitySidebar({
   detail,
   related,
+  communityPulse,
 }: {
   detail: CommunityDetail;
   related: Community[];
+  /** Recent discussion threads + open volunteer opportunities filed to this
+   *  community — renders as two compact cards below "Next gathering" (own
+   *  loading/error/empty handling; see `CommunityPulseSidebarCards`). */
+  communityPulse: CommunityPulseResult;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -111,6 +118,8 @@ export function CommunitySidebar({
           </Button>
         )}
       </div>
+
+      <CommunityPulseSidebarCards pulse={communityPulse} />
 
       {related.length > 0 && (
       <div className={styles.sbC}>

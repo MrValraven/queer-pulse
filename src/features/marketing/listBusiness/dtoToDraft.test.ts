@@ -48,6 +48,7 @@ function makeDto(overrides: Partial<ListingDTO> = {}): ListingDTO {
     notify: [],
     consentOuting: true,
     consentGuide: true,
+    queerOwnedVerified: false,
     ...overrides,
   };
 }

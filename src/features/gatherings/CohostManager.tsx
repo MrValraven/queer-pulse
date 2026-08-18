@@ -4,23 +4,22 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { AddCohostModal } from "./AddCohostModal";
+import { CohostInviteComposerModal } from "./CohostInviteComposerModal";
 import { INITIAL_COHOSTS, type CohostCandidate } from "./manageCohosts.data";
-import { useAddCohost, useRemoveCohost } from "./api/useEventMutations";
+import { useRemoveCohost } from "./api/useEventMutations";
 import styles from "./ManageCohosts.module.css";
 
 /**
  * Lists the event's cohosts and lets the host add/remove them. Owns the cohost
  * list as local state: the add/remove mutations are a no-op in demo and a real
- * call + invalidate in live. Demo seeds the mock cohosts; live starts empty —
- * the event detail DTO carries no cohost roster, so seeding from the mock would
+ * call + invalidate in live. Demo seeds the mock cohosts; live starts empty.
+ * The event detail DTO carries no cohost roster, so seeding from the mock would
  * leak demo personas into a real gathering.
  */
 export function CohostManager({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
-  const addCohost = useAddCohost(slug);
   const removeCohost = useRemoveCohost(slug);
   const [cohosts, setCohosts] = useState<CohostCandidate[]>(
     demoMode ? INITIAL_COHOSTS : [],
@@ -28,15 +27,9 @@ export function CohostManager({ slug }: { slug: string }) {
   const [addOpen, setAddOpen] = useState(false);
   const [confirming, setConfirming] = useState<string | null>(null);
 
-  const add = (candidate: CohostCandidate) => {
+  const handleInviteSent = (name: string) => {
     setAddOpen(false);
-    if (cohosts.some((c) => c.slug === candidate.slug)) return;
-    addCohost.mutate(candidate.slug);
-    setCohosts((prev) => [...prev, candidate]);
-    showToast(
-      t("gatherings:cohost.addedToast", { name: candidate.name }),
-      "success",
-    );
+    showToast(t("gatherings:cohost.inviteSentToast", { name }), "success");
   };
 
   const remove = (candidate: CohostCandidate) => {
@@ -111,9 +104,10 @@ export function CohostManager({ slug }: { slug: string }) {
       )}
 
       {addOpen && (
-        <AddCohostModal
+        <CohostInviteComposerModal
+          slug={slug}
           excludeSlugs={cohosts.map((c) => c.slug)}
-          onPick={add}
+          onSent={handleInviteSent}
           onClose={() => setAddOpen(false)}
         />
       )}

@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import type { CommunityRole } from "../membership.types";
 import { useAllCommunities } from "../useAllCommunities";
 import { useMyCommunities } from "./useMyCommunities";
 
@@ -19,23 +20,34 @@ export interface MyCommunityOption {
  * back to the static directory — consulted ONLY in demo, since resolving a
  * live slug against the mock directory could collide with an unrelated
  * community.
+ *
+ * `roles` narrows to communities where the viewer's standing is one of the
+ * given roles (e.g. `["owner", "mod"]` for a picker that requires speaking
+ * for the community, not just belonging to it) — omitted/empty keeps every
+ * membership, unchanged for existing "attach to any of my communities"
+ * callers (`ComposeThreadModal`, gathering creation).
  */
-export function useMyCommunityOptions(): MyCommunityOption[] {
+export function useMyCommunityOptions(
+  options: { roles?: CommunityRole[] } = {},
+): MyCommunityOption[] {
+  const { roles } = options;
   const { demoMode } = useDemoMode();
   const memberships = useMyCommunities();
   const communities = useAllCommunities();
 
   return useMemo(
     () =>
-      Object.entries(memberships).map(([slug, membership]) => {
-        const directoryEntry = demoMode
-          ? communities.find((community) => community.slug === slug)
-          : undefined;
-        return {
-          slug,
-          name: membership.name ?? directoryEntry?.name ?? slug,
-        };
-      }),
-    [memberships, communities, demoMode],
+      Object.entries(memberships)
+        .filter(([, membership]) => !roles?.length || roles.includes(membership.role))
+        .map(([slug, membership]) => {
+          const directoryEntry = demoMode
+            ? communities.find((community) => community.slug === slug)
+            : undefined;
+          return {
+            slug,
+            name: membership.name ?? directoryEntry?.name ?? slug,
+          };
+        }),
+    [memberships, communities, demoMode, roles],
   );
 }

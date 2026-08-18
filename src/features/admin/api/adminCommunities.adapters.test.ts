@@ -63,6 +63,7 @@ const baseModeratorDto: AdminCommunityModeratorDTO = {
   slug: "ines-martins",
   name: "Inês Martins",
   initials: "IM",
+  avatarUrl: null,
   role: "owner",
   joinedAt: "2023-03-15T00:00:00.000Z",
 };
@@ -88,6 +89,7 @@ const baseDetailDto: AdminCommunityDetailDTO = {
   resolvedPercentage: 100,
   moderators: [baseModeratorDto],
   scopedQueue: [baseQueueItemDto],
+  truncated: false,
 };
 
 describe("cardDtoToCommunity", () => {
@@ -175,6 +177,7 @@ describe("detailDtoToCommunity", () => {
             slug: "sofia-almeida",
             name: "Sofia Almeida",
             initials: "SA",
+            avatarUrl: null,
             role: "mod",
             joinedAt: "2024-06-01T00:00:00.000Z",
           },
@@ -239,5 +242,17 @@ describe("detailDtoToCommunity", () => {
       "Repeated unwanted DMs after being asked to stop",
     );
     expect(queueItem.meta).toBe("Open · overdue · 3h ago");
+  });
+
+  it("carries the detail endpoint's truncated flag through", () => {
+    const untruncated = detailDtoToCommunity(baseDetailDto, translate, fmt);
+    expect(untruncated.truncated).toBe(false);
+
+    const truncated = detailDtoToCommunity(
+      { ...baseDetailDto, truncated: true },
+      translate,
+      fmt,
+    );
+    expect(truncated.truncated).toBe(true);
   });
 });

@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { FiLock } from "react-icons/fi";
 import { Button, Sending } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { focusFirstErrorAfterRender } from "../../shared/lib/focusFirstError";
@@ -10,6 +11,7 @@ import { useCreateJoinRequest } from "./api/useCreateJoinRequest";
 import {
   isDuplicateJoinRequest,
   isJoinRequestsClosedError,
+  isRateLimitedError,
   isUnder18Error,
 } from "./api/joinRequest.api";
 import { parseJoinRequestSource } from "./api/joinRequestSource";
@@ -46,6 +48,7 @@ export function RequestInviteForm({
   const [mutual, setMutual] = useState("");
   const [mutualTouched, setMutualTouched] = useState(false);
   const [agreed, setAgreed] = useState(false);
+  const [shake, setShake] = useState(false);
   const [is18, setIs18] = useState(false);
   const [under18, setUnder18] = useState(false);
   // Flipped by the first rejected submit. Until then, only the blur-driven
@@ -91,18 +94,12 @@ export function RequestInviteForm({
       return;
     }
     try {
-      // The mutual email isn't a field on POST /join-requests, so fold it into
-      // the message rather than dropping it — the form asks for it so a reviewer
-      // can match the request to an existing member, and must actually see it.
-      const named = mutual.trim();
-      const message = named
-        ? `${why.trim()}\n\n${t("auth:requestInvite.field.mutual.messagePrefix", { name: named })}`
-        : why.trim();
       await createJoinRequest.mutateAsync({
         name: first.trim(),
         email: email.trim(),
         city: city.trim() || undefined,
-        message,
+        message: why.trim(),
+        mutualMemberEmail: mutual.trim() || undefined,
         source: source ?? undefined,
       });
       onSent("sent");
@@ -121,6 +118,12 @@ export function RequestInviteForm({
       // check in RequestInvitePage cannot catch this — the flag flipped mid-fill.
       if (isJoinRequestsClosedError(err)) {
         showToast(t("auth:requestInvite.closedError"), "error");
+        return;
+      }
+      // 429: the per-IP throttle tripped. An immediate retry will fail again
+      // for up to an hour, so this must not read like the generic error below.
+      if (isRateLimitedError(err)) {
+        showToast(t("auth:requestInvite.rateLimitedError"), "error");
         return;
       }
       showToast(t("auth:requestInvite.submitError"), "error");
@@ -159,17 +162,25 @@ export function RequestInviteForm({
         onMutualBlur={() => setMutualTouched(true)}
       />
 
-      <div className={styles.agreeRow}>
+      <div
+        className={`${styles.agreeRow} ${!agreed ? styles.locked : ""} ${shake ? styles.shake : ""}`}
+        onAnimationEnd={() => setShake(false)}
+      >
         {/* Read-only on purpose: reading the guidelines to the end is the only
             way to tick this. A direct click (or Space) can't toggle it — it's
             controlled by `agreed`, which only the guidelines' confirm button
-            flips (via `onRead`), so `preventDefault` blocks any manual toggle. */}
+            flips (via `onRead`), so `preventDefault` blocks any manual toggle.
+            A click while locked triggers a shake instead of doing nothing,
+            per design-best-practices: never leave a click silent. */}
         <input
           id="ri-agree"
           type="checkbox"
           checked={agreed}
           readOnly
-          onClick={(e) => e.preventDefault()}
+          onClick={(e) => {
+            e.preventDefault();
+            if (!agreed) setShake(true);
+          }}
           aria-invalid={consentMissing}
           aria-describedby={!agreed ? "ri-agree-hint" : undefined}
         />
@@ -182,7 +193,7 @@ export function RequestInviteForm({
       </div>
       {!agreed && (
         <p id="ri-agree-hint" className={styles.readHint}>
-          {t("auth:requestInvite.readHint")}
+          <FiLock aria-hidden /> {t("auth:requestInvite.readHint")}
         </p>
       )}
 

@@ -66,6 +66,15 @@ async function loadAdminTranslate(language: Language): Promise<TFunction> {
   };
 }
 
+/** `useAdminCommunities`'s query data — the adapted cards plus whether the
+ *  backend's scan behind them hit its cap (mirrors `useTrustNetwork`'s
+ *  `TrustGraphData.truncated`, folded into the returned data rather than a
+ *  second query). */
+export interface AdminCommunitiesResult {
+  communities: Community[];
+  truncated: boolean;
+}
+
 /**
  * Every community on the platform, for the admin grid. Demo mode returns the
  * colocated fixture and never hits the network — this is an admin-only
@@ -82,19 +91,26 @@ export function useAdminCommunities() {
   const { demoMode } = useDemoMode();
   const { language } = useTranslation();
   const fmt = useFormat();
-  return useQuery<Community[]>({
+  return useQuery<AdminCommunitiesResult>({
     queryKey: [ADMIN_COMMUNITIES_KEY, demoMode, language],
-    initialData: demoMode ? COMMUNITIES : undefined,
+    initialData: demoMode
+      ? { communities: COMMUNITIES, truncated: false }
+      : undefined,
     queryFn: async () => {
-      if (demoMode) return COMMUNITIES;
+      if (demoMode) return { communities: COMMUNITIES, truncated: false };
       // Map with a catalog-bound translator (namespace guaranteed loaded), not
       // the provider's lazy `t`, so the adapted result can't bake a raw
       // `admin:…` key when the fetch wins the namespace-load race.
-      const [cardDtos, translate] = await Promise.all([
+      const [listDto, translate] = await Promise.all([
         getAdminCommunities(),
         loadAdminTranslate(language),
       ]);
-      return cardDtos.map((cardDto) => cardDtoToCommunity(cardDto, translate, fmt));
+      return {
+        communities: listDto.items.map((cardDto) =>
+          cardDtoToCommunity(cardDto, translate, fmt),
+        ),
+        truncated: listDto.truncated,
+      };
     },
   });
 }

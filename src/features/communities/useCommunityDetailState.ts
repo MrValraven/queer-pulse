@@ -12,6 +12,7 @@ import { useRelatedCommunities } from "./api/useRelatedCommunities";
 import { useRoster } from "./api/useRoster";
 import { useCommunityPosts } from "./api/useCommunityPosts";
 import { useCommunityDiscussions } from "./api/useCommunityDiscussions";
+import { useCommunityPulse } from "./api/useCommunityPulse";
 import { useJoinCommunity, useRemoveMember } from "./api/useCommunityMutations";
 
 /**
@@ -59,6 +60,17 @@ export function useCommunityDetailState() {
   // treats as "leave the community yourself" (P1-11).
   const leaveMutation = useRemoveMember(slug ?? "");
   const related = useRelatedCommunities(slug, community?.type);
+  // `GET /communities/:slug/pulse` is roster-member-only (403 otherwise), so
+  // it's only enabled once the viewer's own membership is known — computed
+  // the same way `joined` is below, just ahead of that later derivation
+  // (which needs `community`/`detail` to already be resolved, i.e. after the
+  // early returns this hook call has to precede).
+  const isRosterMember = demoMode
+    ? slug
+      ? isMember(slug)
+      : false
+    : myRole != null;
+  const communityPulse = useCommunityPulse(slug, { enabled: isRosterMember });
 
   if (notFound) return { status: "notFound" as const };
   // A non-404 failure must render a retryable error state, not an eternal
@@ -67,9 +79,18 @@ export function useCommunityDetailState() {
   if (isLoading || !community || !detail) return { status: "loading" as const };
 
   // Compose the enriched hub: roster + posts arrive from their own endpoints
-  // (in demo they equal `baseLiving`'s, keeping this byte-for-byte).
+  // (in demo they equal `baseLiving`'s, keeping this byte-for-byte). Events
+  // are the one field demo mode does NOT take from `communityPulse` — demo
+  // keeps `baseLiving.events` (the `nextEventFromGathering`-mirrored mock),
+  // exactly as before this endpoint existed.
   const living = baseLiving
-    ? { ...baseLiving, roster, pinned: posts.pinned, pulse: posts.pulse }
+    ? {
+        ...baseLiving,
+        roster,
+        pinned: posts.pinned,
+        pulse: posts.pulse,
+        events: demoMode ? baseLiving.events : communityPulse.events,
+      }
     : undefined;
 
   // Discussion threads: real `community_post` data is the source of truth,
@@ -143,13 +164,13 @@ export function useCommunityDetailState() {
     );
   };
 
-  const onJoined = () => {
+  const onJoined = (note?: string) => {
     if (slug) join(slug);
-    joinMutation.mutate({});
+    joinMutation.mutate({ note });
   };
-  const onRequested = () => {
+  const onRequested = (note?: string) => {
     if (slug) requestToJoin(slug);
-    joinMutation.mutate({});
+    joinMutation.mutate({ note });
   };
   // Leave: demo drives the session provider (unchanged); live fires the real
   // DELETE with the viewer's own slug, then invalidates so the CTA flips back to
@@ -225,6 +246,7 @@ export function useCommunityDetailState() {
     discussionPaging,
     rosterResult,
     related,
+    communityPulse,
     leaveMutation,
     joining,
     setJoining,

@@ -1,8 +1,11 @@
 import { memberRefToPerson, type MemberRefDTO } from "../../../shared/api/refs";
+import type { Formatters } from "../../../shared/i18n/format";
 import type { Community } from "../../homepage/data/types";
 import type { CommunityDetail, Person, Reply, Thread, Tint } from "../communityDetails";
 import type {
+  CommunityEvent,
   LivingCommunity,
+  ModReport,
   ModRequest,
   Post,
   PostReply,
@@ -16,8 +19,12 @@ import type {
   CommunityDetailDTO,
   CommunityJoinRequestDTO,
   CommunityPostDTO,
+  CommunityPulseEventDTO,
+  CommunityPulseOpportunityDTO,
+  CommunityPulseThreadDTO,
   CommunityReactionSummary,
   CommunityReplyDTO,
+  CommunityReportDTO,
   CommunityType,
   CreateCommunityDto,
   RosterEntryDTO,
@@ -153,6 +160,7 @@ export function detailDtoToDetail(dto: CommunityDetailDTO): CommunityDetail {
       post: dto.purpose,
       replies: [],
     },
+    frozen: dto.frozen ?? false,
   };
 }
 
@@ -178,6 +186,8 @@ export function detailDtoToLiving(dto: CommunityDetailDTO): LivingCommunity {
     joinRequests: [],
     reports: [],
     frozen: dto.frozen ?? false,
+    features: dto.features,
+    rosterVisible: dto.rosterVisible,
   };
 }
 
@@ -255,6 +265,20 @@ export function joinRequestToModRequest(
   };
 }
 
+/** `GET /communities/:slug/reports` item → the mod-tools `ModReport`. Leaner
+ *  than the demo mock (no author/reporter/excerpt — the backend DTO doesn't
+ *  carry them): `ModReportedPosts` resolves `reasonCode` to a label at render
+ *  time via `REASON_LABEL_KEYS` and renders a plainer row for these. */
+export function communityReportToModReport(dto: CommunityReportDTO): ModReport {
+  return {
+    id: dto.id,
+    time: relTime(dto.createdAt),
+    reasonCode: dto.reasonCode,
+    subjectType: dto.subjectType,
+    subjectId: dto.subjectId,
+  };
+}
+
 /** The post body's first line, trimmed, as the discussion thread's heading.
  *  Community posts have no title (sub-project #2 decision: derive from body). */
 function headingFromBody(body: string): string {
@@ -272,6 +296,7 @@ function postReplyToThreadReply(reply: PostReply): Reply {
     initials: reply.author.initials,
     name: reply.author.name,
     tint: reply.author.tint,
+    authorSlug: reply.author.slug,
     text: reply.text,
     editedAt: reply.editedAt,
     deleted: reply.deleted,
@@ -411,7 +436,10 @@ export function applyDetailOverride(
   };
 }
 
-/** Merge a demo edit patch onto the enriched `LivingCommunity` (rules + tier). */
+/** Merge a demo edit patch onto the enriched `LivingCommunity` (rules, tier,
+ *  and the tab-visibility toggles — so a demo owner flipping "events"/"roster"
+ *  or "show roster to members" off in `EditCommunityModal` sees the hub tabs
+ *  react the same way a live edit does). */
 export function applyLivingOverride(
   living: LivingCommunity | undefined,
   patch: UpdateCommunityDto,
@@ -422,6 +450,11 @@ export function applyLivingOverride(
     rules: patch.rules !== undefined ? patch.rules : living.rules,
     accessTier:
       patch.accessTier !== undefined ? patch.accessTier : living.accessTier,
+    features: patch.features !== undefined ? patch.features : living.features,
+    rosterVisible:
+      patch.rosterVisible !== undefined
+        ? patch.rosterVisible
+        : living.rosterVisible,
   };
 }
 
@@ -448,6 +481,70 @@ export function editableToDraft(
     handle: "",
     consent: true,
   };
+}
+
+/** A recent discussion thread filed to this community — the sidebar's
+ *  "Recent discussions" card (`GET /communities/:slug/pulse`). */
+export interface CommunityPulseThread {
+  id: string;
+  slug: string;
+  title: string;
+  authorName: string;
+  replyCount: number;
+}
+
+/** An open volunteer opportunity filed to this community — the sidebar's
+ *  "Open opportunities" card (`GET /communities/:slug/pulse`). */
+export interface CommunityPulseOpportunity {
+  slug: string;
+  role: string;
+  org: string;
+}
+
+/** `GET /communities/:slug/pulse`'s `upcomingEvents` lane → an Events-tab row.
+ *  `fmt` drives localized day/month/weekday labels (no English-only hardcoding
+ *  here — this is live data, unlike the demo mock's own English-only registry,
+ *  see `nextGathering.ts`); `goingLabel` is the already-translated spots string
+ *  (reuses the gatherings feature's own `spots.going`/`spots.openToAll` copy —
+ *  see `useCommunityPulse`). */
+export function pulseEventToCommunityEvent(
+  dto: CommunityPulseEventDTO,
+  fmt: Formatters,
+  goingLabel: string,
+  onlineLabel: string,
+): CommunityEvent {
+  const start = new Date(dto.startAt);
+  const venue = dto.venue ?? (dto.isOnline ? onlineLabel : null);
+  const weekday = fmt.date(start, { weekday: "long" });
+  return {
+    id: dto.slug,
+    dd: fmt.date(start, { day: "numeric" }),
+    mm: fmt.date(start, { month: "short" }),
+    title: dto.title,
+    meta: venue ? `${weekday} · ${venue}` : weekday,
+    spots: goingLabel,
+    slug: dto.slug,
+  };
+}
+
+/** `recentThreads` lane → the sidebar's compact thread row. */
+export function pulseThreadToCard(
+  dto: CommunityPulseThreadDTO,
+): CommunityPulseThread {
+  return {
+    id: dto.id,
+    slug: dto.slug,
+    title: dto.title,
+    authorName: dto.author.displayName,
+    replyCount: dto.replyCount,
+  };
+}
+
+/** `openOpportunities` lane → the sidebar's compact opportunity row. */
+export function pulseOpportunityToCard(
+  dto: CommunityPulseOpportunityDTO,
+): CommunityPulseOpportunity {
+  return { slug: dto.slug, role: dto.role, org: dto.org };
 }
 
 /** Edit-modal draft → the PATCH /communities/:slug payload. Editable fields

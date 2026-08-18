@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
-import { FiShield, FiTool, FiLayout, FiEdit3, FiDatabase } from "react-icons/fi";
+import {
+  FiShield,
+  FiTool,
+  FiLayout,
+  FiEdit3,
+  FiDatabase,
+  FiPlayCircle,
+} from "react-icons/fi";
 import { useTranslation } from "../../i18n/useTranslation";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useMyCommunities } from "../../../features/communities/api/useMyCommunities";
 import { useHasStaffRole } from "../../../features/auth/api/useMyStaffRoles";
 import { routes, modPanel } from "../../../app/routeMap";
+import { isSandbox } from "../../sandbox/sandbox";
 import {
   DEMO_MOD_SLUG,
   type TeamRole,
@@ -140,6 +148,7 @@ export function AccountMenuControls({
   navMode,
   setNavMode,
   showNavModeSwitch = true,
+  onNavigate,
 }: {
   demoMode: boolean;
   available: boolean;
@@ -152,6 +161,9 @@ export function AccountMenuControls({
   /** Hide the navigation-layout (mega/sidebar) switch — not applicable in
    * contexts (e.g. a mobile account sheet) that don't have that choice. */
   showNavModeSwitch?: boolean;
+  /** Closes the surrounding menu/sheet when the dev-only simulations link is
+   * clicked, matching how every other `<Link>` in these surfaces behaves. */
+  onNavigate?: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -181,6 +193,12 @@ export function AccountMenuControls({
             : t("shared:accountMenu.controls.noApi")}
         </span>
       </button>
+      {import.meta.env.DEV && !isSandbox() && (
+        <Link to={routes.simulations} className={styles.item} onClick={onNavigate}>
+          <FiPlayCircle aria-hidden className={styles.itemIcon} />
+          <span className={styles.itemLabel}>{t("simulations:home.title")}</span>
+        </Link>
+      )}
       {/* Demo-only: in live mode the team role is the real `useAuth().role`,
           which the backend RolesGuard enforces — nothing to switch. */}
       {canSwitch && (

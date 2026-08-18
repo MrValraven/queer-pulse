@@ -15,7 +15,8 @@ export function AdminCommunityGrid({
   onOpen: (slug: string) => void;
   onHealth: (community: Community) => void;
 }) {
-  const { data: communityList, isLoading, isError } = useAdminCommunities();
+  const { data, isLoading, isError } = useAdminCommunities();
+  const communityList = data?.communities;
   const { t, language } = useTranslation();
 
   const communityCount = communityList?.length ?? 0;
@@ -83,6 +84,11 @@ export function AdminCommunityGrid({
   return (
     <>
       {header}
+      {data?.truncated && (
+        <p className={styles.truncatedNotice}>
+          {t("admin:communities.grid.truncatedNotice")}
+        </p>
+      )}
       <div className={styles.grid}>
         {communityList.map((community, communityIndex) => (
           <FadeIn key={community.slug} delay={Math.min(communityIndex, 8) * 60}>

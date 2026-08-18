@@ -9,8 +9,12 @@ import type {
   Polygon,
   MultiPolygon,
 } from "geojson";
-import { LISBON_BOUNDS, BRAND, buildWarmStyle } from "./lisbonMapStyle";
-import { FREGUESIAS } from "./freguesias.data";
+import {
+  GREATER_LISBON_BOUNDS,
+  BRAND,
+  buildWarmStyle,
+} from "../../shared/components/map/siteMapStyle";
+import { FREGUESIAS } from "../../shared/components/map/freguesias.data";
 import {
   createVenueMarkerManager,
   type VenueMarkerManager,
@@ -91,7 +95,7 @@ export function useLisbonMap({
         const map = new maplibregl.Map({
           container,
           style,
-          bounds: LISBON_BOUNDS,
+          bounds: GREATER_LISBON_BOUNDS,
           fitBoundsOptions: { padding: 24 },
           attributionControl: { compact: true },
         });
@@ -202,7 +206,7 @@ export function useLisbonMap({
     if (bounds) {
       map.fitBounds(bounds, { padding: 56, maxZoom: 15.5, duration: 700 });
     } else if (!selectedFreguesia) {
-      map.fitBounds(LISBON_BOUNDS, { padding: 24, duration: 700 });
+      map.fitBounds(GREATER_LISBON_BOUNDS, { padding: 24, duration: 700 });
     }
   }, [selectedFreguesia, ready]);
 

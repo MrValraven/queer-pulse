@@ -60,6 +60,8 @@ const KINDS: NotificationKind[] = [
   "event_cancelled",
   "event_updated",
   "introduction_made",
+  "writer_application_approved",
+  "writer_application_declined",
 ];
 
 describe("formatNotification", () => {
@@ -99,6 +101,12 @@ describe("formatNotification", () => {
     expect(formatNotification("promoted_to_member", {}, t).category).toBe(
       "platform",
     );
+  });
+
+  it("formats event_cohost_invite under the events category", () => {
+    const result = formatNotification("event_cohost_invite", {}, t);
+    expect(result.category).toBe("events");
+    expect(result.kind).toBe("event_cohost_invite");
   });
 
   it("treats the retired `new_message` kind as unknown, not a known kind", () => {

@@ -24,6 +24,9 @@ export interface DirectoryCardDTO {
   tint: Tint;
   av: string;
   owned: boolean;
+  /** Moderator-confirmed queer-owned badge, distinct from the self-reported
+   * `owned` claim above. Drives the "VERIFIED QUEER-OWNED" badge. */
+  queerOwnedVerified: boolean;
   memberFirst: string | null;
   /** Online-only business (no physical location). Absent on older payloads. */
   online?: boolean;

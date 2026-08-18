@@ -1,5 +1,6 @@
 import type { Person } from "./communityDetails";
 import type { AccessTier, CommunityRole } from "./membership.types";
+import type { ReasonCode } from "../safety/reportReasons";
 
 /** A named reaction; `key` maps to a react-icon in the ReactionBar. */
 export type ReactionKey = "heart" | "celebrate" | "support" | "fire";
@@ -109,14 +110,32 @@ export interface ModRequest {
   time: string;
 }
 
-/** A flagged post awaiting a mod decision. */
+/** A flagged post or reply awaiting a mod decision. Demo mocks populate the
+ *  rich fields below (`postExcerpt`/`author`/`reporter`/`reason`); live rows
+ *  come from the backend's leaner `GET /communities/:slug/reports` (owner/mod
+ *  only), which only ever carries the fields marked "live" — it has no
+ *  content excerpt or reporter/author identity. `ModReportedPosts` renders
+ *  whichever half is present. */
 export interface ModReport {
   id: string;
-  postExcerpt: string;
-  author: Person;
-  reason: string;
-  reporter: Person;
   time: string;
+  /** Demo-only excerpt of the flagged content. */
+  postExcerpt?: string;
+  /** Demo-only: who posted the flagged content. */
+  author?: Person;
+  /** Demo-only: who filed the report. */
+  reporter?: Person;
+  /** Demo-only free-text reason (the mock data authors this directly). */
+  reason?: string;
+  /** Live: the report's stable reason code — resolve to a label via
+   *  `REASON_LABEL_KEYS` + `t()` (see `../safety/reportReasons`). */
+  reasonCode?: ReasonCode;
+  /** Live: what got reported. "Remove" only wires up for `"post"` — a reply
+   *  report can still be dismissed, but this queue has no way to reach the
+   *  reply's parent post id to delete it (see `ModReportedPosts`). */
+  subjectType?: "post" | "reply";
+  /** Live: the post or reply id — the "Remove" action's delete target. */
+  subjectId?: string;
 }
 
 /** The enriched, "living" data layered on top of the base Community + CommunityDetail. */
@@ -139,4 +158,16 @@ export interface LivingCommunity {
    *  shows a "frozen, under review" banner and blocks new posts for members.
    *  Owner/mods lift it from the banner. */
   frozen?: boolean;
+  /** The founder/edit-modal feature toggles (⊆ "discussion"|"events"|"roster",
+   *  plus possibly legacy "rooms"/"library" values already persisted — see
+   *  `startCommunity.data.ts`'s `FEATURE_OPTIONS` comment). Drives whether the
+   *  Events and Members/Roster tabs render at all. `undefined` (demo mock data
+   *  that predates this field) is treated as "every feature on", matching the
+   *  behaviour before tabs were gated. */
+  features?: string[];
+  /** Owner/mod setting: whether the member roster is shown to fellow members
+   *  ("Show the member list to members" in the safety chapter / edit modal).
+   *  `undefined` (demo mock data) defaults to visible, matching prior
+   *  behaviour. */
+  rosterVisible?: boolean;
 }

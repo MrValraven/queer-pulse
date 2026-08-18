@@ -5,10 +5,12 @@ import {
   EmptyState,
   FadeIn,
   Reveal,
+  SearchInput,
+  Select,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useSimulatedLoad } from "../../shared/hooks";
+import { useDebouncedValue, useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { useCommunityMembership } from "../../app/providers/useCommunityMembership";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -19,6 +21,9 @@ import { getLiving } from "./livingCommunities.data";
 import { JoinModal } from "./JoinModal";
 import { CommunityCard } from "./CommunityCard";
 import styles from "./CommunitiesPage.module.css";
+
+type DiscoverSort = "newest" | "name";
+const SORT_OPTIONS: DiscoverSort[] = ["newest", "name"];
 
 const FILTERS: { value: "all" | CommunityType; labelKey: string }[] = [
   { value: "all", labelKey: "communities:category.all" },
@@ -47,13 +52,29 @@ function CommunityCardSkeleton() {
 
 export function CommunitiesDiscover() {
   const { t } = useTranslation();
+  const [searchInput, setSearchInput] = useState("");
+  // Search only fans out to the network once the member pauses typing for
+  // 300ms (same debounce timing as the other list-with-search controls, e.g.
+  // AdminListingsHeader) — every distinct debounced term is its own react-query
+  // key, so a fresh search naturally restarts pagination at page 1 instead of
+  // appending onto whatever the previous term had loaded.
+  const debouncedSearch = useDebouncedValue(searchInput, 300);
+  const q = debouncedSearch.trim();
+  // Unlike search, sort isn't debounced — it's a discrete pick, not typed
+  // text, so it fans out immediately. Same mechanism resets pagination to
+  // page 1 either way: it's part of the react-query key `useCommunities`
+  // builds from `params`, so a changed sort is a fresh key, not an append.
+  const [sort, setSort] = useState<DiscoverSort>("newest");
   const {
     items: communities,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
     isLoading,
-  } = useCommunities();
+  } = useCommunities({
+    q: q || undefined,
+    sort: sort === "newest" ? undefined : sort,
+  });
   const loading = useSimulatedLoad() || isLoading;
   const { isMember, join, requestToJoin } = useCommunityMembership();
   const { demoMode } = useDemoMode();
@@ -79,6 +100,31 @@ export function CommunitiesDiscover() {
     <>
       <div className={styles.body}>
         <div className="wrap">
+          <div className={styles.controlsRow}>
+            <SearchInput
+              className={styles.search}
+              value={searchInput}
+              onChange={setSearchInput}
+              placeholder={t("communities:discover.search.placeholder")}
+              ariaLabel={t("communities:discover.search.ariaLabel")}
+            />
+
+            <label className={styles.sort}>
+              <span className={styles.sortLabel}>
+                {t("communities:discover.sort.label")}
+              </span>
+              <Select
+                size="sm"
+                value={sort}
+                options={SORT_OPTIONS.map((option) => ({
+                  value: option,
+                  label: t(`communities:discover.sort.${option}`),
+                }))}
+                onChange={(next) => setSort((next as DiscoverSort) ?? sort)}
+              />
+            </label>
+          </div>
+
           <Reveal className={styles.filters}>
             {FILTERS.map((option) => (
               <button
@@ -98,7 +144,19 @@ export function CommunitiesDiscover() {
           </Reveal>
 
           {!loading && visible.length === 0 ? (
-            communities.length === 0 ? (
+            q && communities.length === 0 ? (
+              <EmptyState
+                icon={<FiUsers />}
+                title={t("communities:discover.empty.search.title")}
+                description={t(
+                  "communities:discover.empty.search.description",
+                )}
+                action={{
+                  label: t("communities:discover.empty.search.cta"),
+                  onClick: () => setSearchInput(""),
+                }}
+              />
+            ) : communities.length === 0 ? (
               <EmptyState
                 icon={<FiUsers />}
                 title={t("communities:discover.empty.none.title")}
@@ -175,13 +233,13 @@ export function CommunitiesDiscover() {
           }}
           tier={joiningTier}
           onClose={() => setJoining(null)}
-          onJoined={() => {
+          onJoined={(note) => {
             if (joining.slug) join(joining.slug);
-            joinMutation.mutate({});
+            joinMutation.mutate({ note });
           }}
-          onRequested={() => {
+          onRequested={(note) => {
             if (joining.slug) requestToJoin(joining.slug);
-            joinMutation.mutate({});
+            joinMutation.mutate({ note });
           }}
         />
       )}

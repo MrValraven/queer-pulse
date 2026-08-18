@@ -217,9 +217,6 @@ export const bookmarkEvent = (slug: string) =>
 export const unbookmarkEvent = (slug: string) =>
   apiDelete<{ bookmarked: false }>(`/events/${slug}/bookmark`);
 
-export const addCohost = (slug: string, cohostSlug: string) =>
-  apiPost<{ ok: true }>(`/events/${slug}/cohosts`, { slug: cohostSlug });
-
 export const removeCohost = (slug: string, cohostSlug: string) =>
   apiDelete<{ ok: true }>(`/events/${slug}/cohosts/${cohostSlug}`);
 
@@ -318,4 +315,68 @@ export const getEventLineup = (slug: string) =>
 /** PUT /events/:slug/lineup — host/co-host only, replace-all. */
 export const replaceEventLineup = (slug: string, entries: LineupEntryInput[]) =>
   apiPut<EventLineupDTO>(`/events/${slug}/lineup`, { entries });
+
+// ── Cohost invites (real invite → accept/decline lifecycle) ────────────────
+// Backend `CohostInviteDetailView` / `EventCohostInvitesService`.
+
+export type CohostInviteStatus = "pending" | "accepted" | "declined";
+
+export interface CohostInviteEventSummaryDTO {
+  slug: string;
+  title: string;
+  startAt: string;
+  endAt: string | null;
+  timezone: string;
+  venue: string | null;
+  isOnline: boolean;
+  goingCount: number;
+  waitlistCount: number;
+}
+
+export interface CohostInviteInviterDTO {
+  slug: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl: string | null;
+  hostedEventsCount: number;
+  mutualConnectionsCount: number;
+}
+
+/** GET /event-cohost-invites/:id response. */
+export interface CohostInviteDetailDTO {
+  id: string;
+  status: CohostInviteStatus;
+  role: string;
+  commitment: string;
+  message: string | null;
+  replyByDate: string | null;
+  createdAt: string;
+  event: CohostInviteEventSummaryDTO;
+  inviter: CohostInviteInviterDTO;
+}
+
+export const getCohostInvite = (id: string) =>
+  apiGet<CohostInviteDetailDTO>(`/event-cohost-invites/${id}`);
+
+export interface CreateCohostInviteDto {
+  inviteeSlug: string;
+  role: string;
+  commitment: string;
+  message?: string;
+  replyByDate?: string;
+}
+
+/** POST /events/:slug/cohost-invites — host/co-host sends a cohost invite. */
+export const createCohostInvite = (slug: string, dto: CreateCohostInviteDto) =>
+  apiPost<{ id: string; status: CohostInviteStatus }>(
+    `/events/${slug}/cohost-invites`,
+    dto,
+  );
+
+/** PATCH /event-cohost-invites/:id — the invitee accepts or declines. */
+export const respondCohostInvite = (id: string, action: "accept" | "decline") =>
+  apiPatch<{ id: string; status: CohostInviteStatus }>(
+    `/event-cohost-invites/${id}`,
+    { action },
+  );
 

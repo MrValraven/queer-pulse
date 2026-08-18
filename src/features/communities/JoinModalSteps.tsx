@@ -72,7 +72,30 @@ export function JoinStepIntro({
   );
 }
 
-export function JoinStepAbout({ onNext }: { onNext: () => void }) {
+/**
+ * "About you" + "level of involvement" in one step: the backend only stores
+ * one free-text `note` on the join/request (`JoinCommunityDto`), and asking
+ * for the applicant's email here would be re-collecting something the app
+ * already has (they're signed in to reach this wizard) with nowhere for it
+ * to go. `JoinModal.submit()` folds the involvement chip into `note` as a
+ * short leading tag, so this step's own job is just: a couple of optional
+ * words about you, plus a quick tap for how involved you'd like to be.
+ */
+export function JoinStepAbout({
+  isRequest,
+  involvement,
+  setInvolvement,
+  aboutText,
+  setAboutText,
+  onSubmit,
+}: {
+  isRequest: boolean;
+  involvement: string;
+  setInvolvement: (v: string) => void;
+  aboutText: string;
+  setAboutText: (v: string) => void;
+  onSubmit: () => void;
+}) {
   const { t } = useTranslation();
   return (
     <div>
@@ -80,6 +103,11 @@ export function JoinStepAbout({ onNext }: { onNext: () => void }) {
       <div className={styles.title}>{t("communities:join.about.title")}</div>
       <p className={styles.hint}>{t("communities:join.about.hint")}</p>
       <div className={styles.fields}>
+        {/* KNOWN GAP (pre-existing, out of scope for the involvement-step
+            fix): these two are uncontrolled and never sent anywhere — the
+            backend has no name/pronouns column on a join. Same "asking for
+            something that goes nowhere" issue the email field below used to
+            have; left alone here since it wasn't part of this task. */}
         <input
           className={styles.input}
           type="text"
@@ -97,41 +125,8 @@ export function JoinStepAbout({ onNext }: { onNext: () => void }) {
           rows={3}
           aria-label={t("communities:join.about.aboutPlaceholder")}
           placeholder={t("communities:join.about.aboutPlaceholder")}
-        />
-      </div>
-      <Button variant="primary" onClick={onNext}>
-        {t("communities:join.intro.continueCta")}
-      </Button>
-    </div>
-  );
-}
-
-export function JoinStepInvolvement({
-  isRequest,
-  involvement,
-  setInvolvement,
-  onSubmit,
-}: {
-  isRequest: boolean;
-  involvement: string;
-  setInvolvement: (v: string) => void;
-  onSubmit: () => void;
-}) {
-  const { t } = useTranslation();
-  return (
-    <div>
-      <div className={styles.eye}>
-        {t("communities:join.involvement.eyebrow")}
-      </div>
-      <div className={styles.title}>
-        {t("communities:join.involvement.title")}
-      </div>
-      <div className={styles.fields}>
-        <input
-          className={styles.input}
-          type="email"
-          aria-label={t("communities:join.involvement.emailPlaceholder")}
-          placeholder={t("communities:join.involvement.emailPlaceholder")}
+          value={aboutText}
+          onChange={(e) => setAboutText(e.target.value)}
         />
         <div>
           <div className={styles.invLabel}>

@@ -3,6 +3,12 @@ import { createRoot } from "react-dom/client";
 import "./styles/index.css";
 import { App } from "./app/App.tsx";
 import { initObservability } from "./shared/observability/sentry";
+import { isSandbox } from "./shared/sandbox/sandbox";
+import { installSandboxStorage } from "./shared/sandbox/sandboxStorage";
+
+// A dev-only simulation sandbox instance gets isolated in-memory storage so
+// its writes (auth, onboarding, dismissals) never leak to the real app.
+if (isSandbox()) installSandboxStorage();
 
 // Fire-and-forget: the dynamic `@sentry/react` import inside only resolves
 // when a DSN + prod build both hold, and must never block first paint.

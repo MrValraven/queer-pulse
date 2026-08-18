@@ -70,6 +70,12 @@ export interface PublicEligibility {
 
 // ── Tuning knobs (single source of truth) ───────────────────────────────────
 export const TARGET_SCORE = 100;
+// Deliberate policy, not an arbitrary number: on an invite-only, trust-first
+// platform, public visibility is something earned over time, not something a
+// new member can rush by being maximally active in week one. The backend
+// (queerpulse-backend/src/public-eligibility/public-eligibility.service.ts)
+// only computes raw tenure days and points back here rather than duplicating
+// the threshold.
 export const TENURE_FLOOR_DAYS = 90;
 export const CAP = { contribution: 50, trust: 35, participation: 30 } as const;
 export const RECENCY_MONTHS = 6;

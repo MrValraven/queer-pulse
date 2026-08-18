@@ -3,7 +3,7 @@ import type { TFunction } from "../../shared/i18n/types";
 import type { DirectoryPlace } from "./directoryPlaces";
 import type { Venue } from "./map.data";
 import { BUSINESS_COORDS } from "./businessCoords";
-import { FREGUESIAS } from "./freguesias.data";
+import { FREGUESIAS } from "../../shared/components/map/freguesias.data";
 
 export type LocalKind = "business" | "venue";
 

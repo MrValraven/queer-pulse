@@ -1,5 +1,5 @@
 import type { IconType } from "react-icons";
-import { FiBookOpen, FiCalendar, FiUsers } from "react-icons/fi";
+import { FiAward, FiBookOpen, FiCalendar, FiUsers } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 
 /**
@@ -27,6 +27,12 @@ export const ONBOARDING_PREVIEW = [
 // "Step X of N" indicator and progress bar across every step.
 export const TOTAL_STEPS = 7;
 
+// Self-identification shorthand the member picks for themselves — kept as the
+// widely-recognised English pronoun-set convention (he/him, she/her, they/them
+// …) rather than translated, the same way a member's own pronouns are never
+// translated on their profile. Quick-pick chips in `StepPhotoIdentityFields`.
+export const PRONOUNS = ["he/him", "she/her", "they/them", "she/they", "he/they"];
+
 export const NORMS = [
   {
     titleKey: "auth:onboarding.stepNorms.norm.bePresent.title",
@@ -48,8 +54,8 @@ export const NORMS = [
 
 /**
  * Chip options for "what brings you here". `value` is the stable English
- * identifier used for selection state (and the 3 preset defaults in
- * `StepIntents`); `labelKey` is what the chip displays, resolved via `t()`.
+ * identifier used for selection state; `labelKey` is what the chip displays,
+ * resolved via `t()`.
  */
 export const INTENTS: { value: string; labelKey: string }[] = [
   { value: "Community", labelKey: "auth:onboarding.intent.community" },
@@ -62,6 +68,7 @@ export const INTENTS: { value: string; labelKey: string }[] = [
     labelKey: "auth:onboarding.intent.professional",
   },
   { value: "Dating", labelKey: "auth:onboarding.intent.dating" },
+  { value: "Friendship", labelKey: "auth:onboarding.intent.friendship" },
   {
     value: "Resources & support",
     labelKey: "auth:onboarding.intent.resources",
@@ -74,6 +81,9 @@ export const INTENTS: { value: string; labelKey: string }[] = [
     value: "Creative collaboration",
     labelKey: "auth:onboarding.intent.creative",
   },
+  { value: "Media & culture", labelKey: "auth:onboarding.intent.media" },
+  { value: "Discussions", labelKey: "auth:onboarding.intent.discussions" },
+  { value: "Mentorship", labelKey: "auth:onboarding.intent.mentorship" },
 ];
 
 export const QUICK_STARTS: {
@@ -105,5 +115,16 @@ export const QUICK_STARTS: {
     iconBackground: "rgba(74,140,111,.08)",
     titleKey: "auth:onboarding.quickStart.magazine.title",
     descriptionKey: "auth:onboarding.quickStart.magazine.desc",
+  },
+  // The gamified 6-milestone checklist at /account/getting-started — a real
+  // next-steps surface a new member currently only discovers by chance via the
+  // account menu. Surfaced here so the wizard's own "you're set up" moment
+  // points straight at it.
+  {
+    to: routes.gettingStarted,
+    icon: FiAward,
+    iconBackground: "rgba(var(--accent-rgb), 0.1)",
+    titleKey: "auth:onboarding.quickStart.gettingStarted.title",
+    descriptionKey: "auth:onboarding.quickStart.gettingStarted.desc",
   },
 ];

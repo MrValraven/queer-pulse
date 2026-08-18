@@ -1,12 +1,14 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   getAdminInvites,
   getAdminInviteInviters,
+  patchAdminInviteQuota,
   type AdminInviteDTO,
   type AdminInviteInviterDTO,
   type AdminInviteStatus,
 } from "./adminInvites.api";
+import { useDemoAwareMutation } from "./demoAwareMutation";
 
 export type AdminInviteFilter = AdminInviteStatus | "all";
 
@@ -94,6 +96,10 @@ export function useAdminInviteInviters() {
               name: invite.inviter.name,
               avatarUrl: invite.inviter.avatarUrl ?? null,
               count: 1,
+              // Every demo inviter starts on the platform default; overrides
+              // only ever come from this session's own quota edits (see
+              // useUpdateInviteQuota's cache patch below).
+              inviteMonthlyQuota: null,
             });
           }
         }
@@ -105,4 +111,43 @@ export function useAdminInviteInviters() {
     },
   });
   return { inviters: query.data ?? [], isLoading: query.isLoading };
+}
+
+interface UpdateInviteQuotaVars {
+  slug: string;
+  quota: number | null;
+}
+
+/**
+ * Admin sets or clears one member's monthly invite-quota override — the only
+ * admin surface for `User.inviteMonthlyQuota`, previously a direct database
+ * edit. Patches the `admin-invite-inviters` cache directly on success in both
+ * modes (demo mode has no server to refetch from, so the patch is its source
+ * of truth; live mode gets the same immediate update rather than waiting on
+ * an invalidate + refetch round trip).
+ */
+export function useUpdateInviteQuota() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useDemoAwareMutation<
+    { inviteMonthlyQuota: number | null },
+    Error,
+    UpdateInviteQuotaVars
+  >({
+    demoMode,
+    demoLatencyMs: 0,
+    demoResult: ({ quota }) => ({ inviteMonthlyQuota: quota }),
+    live: ({ slug, quota }) => patchAdminInviteQuota(slug, quota),
+    onSuccess: (_data, { slug, quota }) => {
+      queryClient.setQueryData<AdminInviteInviterDTO[]>(
+        ["admin-invite-inviters", demoMode],
+        (current) =>
+          current?.map((inviter) =>
+            inviter.slug === slug
+              ? { ...inviter, inviteMonthlyQuota: quota }
+              : inviter,
+          ),
+      );
+    },
+  });
 }

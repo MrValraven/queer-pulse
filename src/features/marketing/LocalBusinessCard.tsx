@@ -43,9 +43,15 @@ export function LocalBusinessCard({
           {place.av}
         </span>
         <div className={s.badges}>
-          <span className={`${s.badge} ${place.owned ? s.owned : s.friendly}`}>
+          {/* Moderator-confirmed verification, not the owner's own
+              self-reported claim — see `queerOwnedVerified` on
+              `DirectoryPlace` (matches DirectorySpaceHeader's detail-page
+              badge). */}
+          <span
+            className={`${s.badge} ${place.queerOwnedVerified ? s.owned : s.friendly}`}
+          >
             {t(
-              place.owned
+              place.queerOwnedVerified
                 ? "marketing:directory.badge.queerOwned"
                 : "marketing:directory.badge.friendly",
             )}

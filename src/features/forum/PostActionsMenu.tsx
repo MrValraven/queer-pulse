@@ -18,6 +18,14 @@ interface PostActionsMenuProps {
   onDelete: () => void;
   onRestore: () => void;
   onHistory: () => void;
+  /** Mod-only: pin/unpin this post to the top of its feed. `pinned` reflects
+   *  the post's current state so the menu label toggles ("Pin" ↔ "Unpin"). */
+  canPin?: boolean;
+  pinned?: boolean;
+  onTogglePin?: () => void;
+  /** Any member may report someone else's post/reply — never their own. */
+  canReport?: boolean;
+  onReport?: () => void;
 }
 
 interface MenuAction {
@@ -36,6 +44,11 @@ export function PostActionsMenu({
   onDelete,
   onRestore,
   onHistory,
+  canPin,
+  pinned,
+  onTogglePin,
+  canReport,
+  onReport,
 }: PostActionsMenuProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -68,7 +81,15 @@ export function PostActionsMenu({
       ?.focus();
   }, [open]);
 
-  if (!canEdit && !canDelete && !canRestore && !canViewHistory) return null;
+  if (
+    !canEdit &&
+    !canDelete &&
+    !canRestore &&
+    !canViewHistory &&
+    !canPin &&
+    !canReport
+  )
+    return null;
 
   const close = () => {
     setOpen(false);
@@ -81,6 +102,11 @@ export function PostActionsMenu({
   };
 
   const actions: MenuAction[] = [
+    canPin && {
+      key: "pin",
+      label: t(pinned ? "forum:postMenu.unpin" : "forum:postMenu.pin"),
+      run: () => onTogglePin?.(),
+    },
     canEdit && {
       key: "edit",
       label: t("forum:postMenu.edit"),
@@ -101,6 +127,11 @@ export function PostActionsMenu({
       label: t("forum:postMenu.delete"),
       run: onDelete,
       danger: true,
+    },
+    canReport && {
+      key: "report",
+      label: t("forum:postMenu.report"),
+      run: () => onReport?.(),
     },
   ].filter((action): action is MenuAction => Boolean(action));
 

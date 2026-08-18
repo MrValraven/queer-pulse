@@ -27,6 +27,19 @@ export interface MemberCardDTO {
   openTo?: OpenToEntryDTO[];
   /** Neighbourhood / area shown as the profile's "hood". */
   location?: string;
+  /** Neighbourhood matched out of `location` against the curated list — see
+   *  the directory's `hoods` filter. `""`/absent when unset or unmatched. */
+  hood?: string | null;
+  /** Broad professional field(s) — drives the "What they do" filter. */
+  discipline?: string[];
+  /** Specific job(s) within `discipline` — drives the "Profession" filter. */
+  profession?: string[];
+  languages?: string[];
+  /** Directory identity facets this member has published — powers the
+   *  filter's per-option count badges. Not the identities themselves. */
+  identityFacets?: string[];
+  /** Years on QueerPulse, floor-rounded from `joinedAt`. */
+  years?: number;
 }
 
 export interface MembersPage {
@@ -183,6 +196,13 @@ export function getMembers(
     query?: string;
     tags?: string[];
     identities?: string[];
+    openTo?: string[];
+    hoods?: string[];
+    disciplines?: string[];
+    professions?: string[];
+    languages?: string[];
+    yearsFrom?: number;
+    yearsTo?: number;
     /** Server-side sort order; one of the `MemberSort` wire tokens
      *  (`recentlyJoined` | `closestMutuals` | `aToZ` | `mostVouched`). */
     sort?: string;
@@ -194,6 +214,16 @@ export function getMembers(
   if (params.tags?.length) q.set("tags", params.tags.join(","));
   if (params.identities?.length)
     q.set("identities", params.identities.join(","));
+  if (params.openTo?.length) q.set("openTo", params.openTo.join(","));
+  if (params.hoods?.length) q.set("hoods", params.hoods.join(","));
+  if (params.disciplines?.length)
+    q.set("disciplines", params.disciplines.join(","));
+  if (params.professions?.length)
+    q.set("professions", params.professions.join(","));
+  if (params.languages?.length) q.set("languages", params.languages.join(","));
+  if (params.yearsFrom !== undefined)
+    q.set("yearsFrom", String(params.yearsFrom));
+  if (params.yearsTo !== undefined) q.set("yearsTo", String(params.yearsTo));
   if (params.sort) q.set("sort", params.sort);
   if (params.page) q.set("page", String(params.page));
   const qs = q.toString();
@@ -232,6 +262,12 @@ export interface UpdateProfileDTO {
    *  homepage. Only meaningful when `visibility` is `"open"`. */
   featuredConsent?: boolean;
   tags?: string[];
+  /** Broad professional field(s) — see `DISCIPLINES` in
+   *  memberDirectoryFilter.data.ts. Implies its matching `profession`'s
+   *  parent field is included too; the backend reconciles either way. */
+  discipline?: string[];
+  profession?: string[];
+  languages?: string[];
   /** Ordered slugs of the communities the member has chosen to feature on
    *  their profile. */
   featuredCommunities?: string[];

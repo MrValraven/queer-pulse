@@ -1,17 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
-  addCohost,
   bookmarkEvent,
   cancelEvent,
+  createCohostInvite,
   createEvent,
   inviteToEvent,
   removeCohost,
+  respondCohostInvite,
   respondInvite,
   rsvpEvent,
   unbookmarkEvent,
   unrsvpEvent,
   updateEvent,
+  type CreateCohostInviteDto,
   type CreateEventDto,
   type UpdateEventDto,
 } from "./events.api";
@@ -220,21 +222,6 @@ export function useToggleEventBookmark(
   });
 }
 
-/** POST /events/:slug/cohosts — CoHostInvitePage / manage cohosts. */
-export function useAddCohost(slug: string) {
-  const { demoMode } = useDemoMode();
-  const queryClient = useQueryClient();
-  return useMutation<void, Error, string>({
-    mutationFn: async (cohostSlug) => {
-      if (demoMode) return;
-      await addCohost(slug, cohostSlug);
-    },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
-    },
-  });
-}
-
 /** DELETE /events/:slug/cohosts/:cohostSlug — remove a cohost. */
 export function useRemoveCohost(slug: string) {
   const { demoMode } = useDemoMode();
@@ -246,6 +233,41 @@ export function useRemoveCohost(slug: string) {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
+    },
+  });
+}
+
+/** POST /events/:slug/cohost-invites: send a cohost invite (manage to cohost composer). */
+export function useSendCohostInvite(slug: string) {
+  const { demoMode } = useDemoMode();
+  return useMutation<void, Error, CreateCohostInviteDto>({
+    mutationFn: async (dto) => {
+      if (demoMode) return;
+      await createCohostInvite(slug, dto);
+    },
+  });
+}
+
+/** PATCH /event-cohost-invites/:id: accept / decline an incoming cohost invite. */
+export function useRespondCohostInvite() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<
+    void,
+    Error,
+    { id: string; action: "accept" | "decline" }
+  >({
+    mutationFn: async ({ id, action }) => {
+      if (demoMode) return;
+      await respondCohostInvite(id, action);
+    },
+    onSuccess: (_data, { action }) => {
+      void queryClient.invalidateQueries({
+        queryKey: eventKeys.cohostInviteRoot,
+      });
+      if (action === "accept") {
+        void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
+      }
     },
   });
 }

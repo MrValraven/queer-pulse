@@ -25,6 +25,7 @@ export function FallbackHubTabs({
   threads,
   slug,
   isMember,
+  canModerate = false,
   discussionPaging,
 }: {
   detail: CommunityDetail;
@@ -34,10 +35,16 @@ export function FallbackHubTabs({
   threads: ThreadData[];
   slug: string;
   isMember: boolean;
+  /** Owner/mod — gates the pin/unpin action on each forum thread. */
+  canModerate?: boolean;
   discussionPaging: PulsePaging;
 }) {
   const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>("about");
+  // Same source LivingHubTabs reads (`living.frozen`) — this hub has no
+  // `living` object, so the flag lives on `detail` instead (see
+  // `detailDtoToDetail`/`CommunityDetail.frozen`).
+  const frozen = !!detail.frozen;
 
   // Simulate a short fetch when opening a data-heavy tab so its grid/threads
   // can skeleton then fade in (the About tab is static — no load needed).
@@ -91,6 +98,8 @@ export function FallbackHubTabs({
             threads={threads}
             slug={slug}
             isMember={isMember}
+            canModerate={canModerate}
+            frozen={frozen}
             loading={tabLoading}
             paging={discussionPaging}
           />

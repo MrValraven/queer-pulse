@@ -109,6 +109,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // storm of 401s (e.g. a tabful of queries refetching on focus) triggers ONE
   // reconcile rather than one per failed request.
   const reconciling = useRef<Promise<void> | null>(null);
+  // Whether this tab has ever confirmed a real session. A failed reconcile
+  // only means "your session expired" if there was a session to lose — without
+  // this, a never-signed-in visitor whose concurrent 401 (e.g. the consent or
+  // nudges bootstrap calls) trips reconcileSession gets falsely told their
+  // session "expired."
+  const wasEverLoggedIn = useRef(false);
 
   // A request's on-401 refresh coming back false is NOT authoritative proof the
   // session is gone. It routinely happens on a transient/racing refresh — a
@@ -129,6 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const freshUser = await fetchMe();
           setUser(freshUser);
           setLoggedIn(true);
+          wasEverLoggedIn.current = true;
           setAuthError(null);
           return;
         } catch {
@@ -138,7 +145,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       setUser(null);
       setLoggedIn(false);
-      setAuthError({ kind: "expired" });
+      // Only a tab that previously confirmed a real session can "expire" —
+      // otherwise this is just a never-signed-in visitor, same treatment as
+      // the bootstrap effect's own isSignedOut suppression below.
+      if (wasEverLoggedIn.current) {
+        setAuthError({ kind: "expired" });
+      }
     })().finally(() => {
       reconciling.current = null;
     });
@@ -182,6 +194,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!active) return;
         setUser(u);
         setLoggedIn(true);
+        wasEverLoggedIn.current = true;
         // A confirmed live session clears any stale error left by an earlier
         // recovered blip, so a "session expired" toast can never linger over it.
         setAuthError(null);

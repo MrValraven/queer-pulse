@@ -23,6 +23,7 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
     cat: dto.cat,
     hood: dto.hood,
     owned: dto.owned,
+    queerOwnedVerified: dto.queerOwnedVerified,
     member: dto.memberFirst ?? undefined,
     av: dto.av,
     tint: dto.tint,
@@ -74,6 +75,7 @@ export function detailDtoToPlace(
     cat: dto.cat,
     hood: dto.hood,
     owned: dto.owned,
+    queerOwnedVerified: dto.queerOwnedVerified,
     member: dto.memberFirst ?? undefined,
     av: dto.av,
     tint: dto.tint,
@@ -226,6 +228,9 @@ export function submittedToPlace(listing: PendingListing): DirectoryPlace {
     cat: listing.cats[0] ?? "",
     hood: listing.hood,
     owned: listing.linkToProfile,
+    // A freshly self-submitted listing has never been through moderator
+    // review, so it's never pre-verified.
+    queerOwnedVerified: false,
     member: listing.linkToProfile ? identity.first || undefined : undefined,
     av: initials(listing.name),
     tint,

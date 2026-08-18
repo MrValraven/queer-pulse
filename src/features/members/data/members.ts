@@ -127,6 +127,11 @@ export interface Member {
    *  homepage. Owner-only control; defaults to false when absent. Only
    *  meaningful when the profile's `visibility` is `"open"`. */
   featuredConsent?: boolean;
+  /** Broad professional field(s) — Settings → Interests. Ungated, like `tags`. */
+  discipline?: string[];
+  /** Specific job(s) within `discipline` — Settings → Interests. */
+  profession?: string[];
+  languages?: string[];
   board: BoardItem[];
   /** Member slugs of people who have vouched (cross-referenced into the registry). */
   vouchers: string[];

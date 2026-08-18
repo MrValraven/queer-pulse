@@ -8,14 +8,20 @@ import type { Community } from "./adminCommunities.data";
 // mocked directly (same convention as AdminSettingsHistory.test.tsx) to get
 // full control over loading/error/empty/populated states without a network.
 let communities: Community[] | undefined = [];
+let truncated = false;
 let isLoading = false;
 let isError = false;
 vi.mock("./api/useAdminCommunities", () => ({
-  useAdminCommunities: () => ({ data: communities, isLoading, isError }),
+  useAdminCommunities: () => ({
+    data: communities === undefined ? undefined : { communities, truncated },
+    isLoading,
+    isError,
+  }),
 }));
 
 beforeEach(() => {
   communities = [];
+  truncated = false;
   isLoading = false;
   isError = false;
 });
@@ -133,5 +139,20 @@ describe("AdminCommunityGrid", () => {
     expect(
       screen.queryByRole("button", { name: /new community/i }),
     ).not.toBeInTheDocument();
+  });
+
+  it("tells the admin honestly when the list hit a scan limit", async () => {
+    communities = [makeCommunity("a")];
+    truncated = true;
+    renderGrid();
+    expect(await screen.findByText(/scan limit/i)).toBeInTheDocument();
+  });
+
+  it("says nothing about a scan limit when the list isn't truncated", async () => {
+    communities = [makeCommunity("a")];
+    truncated = false;
+    renderGrid();
+    await screen.findByText(/One space,/);
+    expect(screen.queryByText(/scan limit/i)).not.toBeInTheDocument();
   });
 });

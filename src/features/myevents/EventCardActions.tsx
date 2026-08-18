@@ -18,7 +18,6 @@ const detailPath = (ev: MyEvent) =>
   ev.slug ? gatheringPath(ev.slug) : GATHERING;
 const TICKET = linkToPath("QueerPulse RSVP Ticket.html");
 const MANAGE = linkToPath("QueerPulse Manage Gathering.html");
-const COHOST = linkToPath("QueerPulse Co-host Invite.html");
 const PHOTOS = linkToPath("QueerPulse Gathering Photos.html");
 const RECEIPT = linkToPath("QueerPulse Receipt.html");
 
@@ -251,7 +250,7 @@ export function EventTools({
         {Bell}
         {Cal}
         {!ev.cohost && (
-          <Link className={sx("tool-btn")} to={COHOST}>
+          <Link className={sx("tool-btn")} to={MANAGE}>
             {Icons.plus}
             {t("myevents:tools.inviteCoHost")}
           </Link>

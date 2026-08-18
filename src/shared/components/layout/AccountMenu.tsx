@@ -292,6 +292,7 @@ function AccountMenuPanel({
           canSwitch={canSwitch}
           navMode={navMode}
           setNavMode={setNavMode}
+          onNavigate={onClose}
         />
       </div>
 

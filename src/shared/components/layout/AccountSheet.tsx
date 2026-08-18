@@ -278,6 +278,7 @@ function AccountSheetBody({
         navMode={navMode}
         setNavMode={setNavMode}
         showNavModeSwitch={false}
+        onNavigate={onNavigate}
       />
 
       <div className={menu.divider} />

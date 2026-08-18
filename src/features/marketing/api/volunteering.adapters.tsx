@@ -5,6 +5,7 @@ import type {
   Cause,
   OpportunityCardDTO,
   OpportunityDetailDTO,
+  SignupStatus,
   VolunteerSignupDTO,
 } from "./volunteering.api";
 import type {
@@ -194,10 +195,11 @@ export interface SignupRow {
   background: string;
   color: string;
   note: string | null;
+  status: SignupStatus;
   when: string;
 }
 
-/** A signup DTO → a render-ready row for the poster's "Who's signed up" list. */
+/** A signup DTO → a render-ready row for the poster's roster / manage-applicants views. */
 export function signupToRow(dto: VolunteerSignupDTO, i: number): SignupRow {
   const person = memberRefToPerson(dto.member);
   const tint = TEAM_TINTS[i % TEAM_TINTS.length]!;
@@ -215,6 +217,7 @@ export function signupToRow(dto: VolunteerSignupDTO, i: number): SignupRow {
     background: tint.bg,
     color: tint.color,
     note: dto.note,
+    status: dto.status,
     when,
   };
 }

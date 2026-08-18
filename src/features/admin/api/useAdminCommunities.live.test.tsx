@@ -16,6 +16,30 @@ import { server } from "../../../test/msw/server";
 import { API, API_V1 } from "../../../test/msw/handlers";
 import { TestProviders } from "../../../test/TestProviders";
 import { COMMUNITIES } from "../adminCommunities.data";
+import type { AdminCommunityCardDTO } from "./adminCommunities.api";
+
+/** A minimal card DTO for the truncated-scan test below — only the fields
+ *  `cardDtoToCommunity` actually reads matter for that assertion. */
+const truncatedScanCard: AdminCommunityCardDTO = {
+  slug: "trans-friends",
+  name: "Trans & Friends",
+  initials: "TR",
+  tone: "jade",
+  tag: "Peer support · private",
+  memberCount: 1204,
+  activityLabel: "High",
+  activePercentage: 68,
+  openReportCount: 1,
+  healthScore: 94,
+  healthBreakdown: {
+    memberActivity: 91,
+    reportResolution: 100,
+    memberSentiment: null,
+    safetyLoad: 90,
+  },
+  activitySparkline: [5, 6, 5, 7, 6, 8, 7, 9],
+  needsSupport: false,
+};
 // Statically imported (unlike the live-mode hook below, which is re-imported
 // per test via `loadLive()`) so this shares its module graph — and therefore
 // its `DemoModeContext`/`I18nContext` instances — with `TestProviders`, which
@@ -87,7 +111,8 @@ describe("useAdminCommunities (live mode via MSW)", () => {
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    const communities = result.current.data ?? [];
+    const communities = result.current.data?.communities ?? [];
+    expect(result.current.data?.truncated).toBe(false);
     expect(communities).toHaveLength(1);
     const community = communities[0]!;
     // The DTO ran through cardDtoToCommunity: formatted count, translated
@@ -103,9 +128,11 @@ describe("useAdminCommunities (live mode via MSW)", () => {
     expect(community.queue).toEqual([]);
   });
 
-  it("returns an empty array when the platform has no communities", async () => {
+  it("returns an empty list when the platform has no communities", async () => {
     server.use(
-      http.get(`${API_V1}/admin/communities`, () => HttpResponse.json([])),
+      http.get(`${API_V1}/admin/communities`, () =>
+        HttpResponse.json({ items: [], truncated: false }),
+      ),
     );
 
     const { useAdminCommunities: useAdminCommunitiesLive, wrapper } =
@@ -115,7 +142,24 @@ describe("useAdminCommunities (live mode via MSW)", () => {
     });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
-    expect(result.current.data).toEqual([]);
+    expect(result.current.data).toEqual({ communities: [], truncated: false });
+  });
+
+  it("surfaces a truncated list scan so the grid can notify the admin", async () => {
+    server.use(
+      http.get(`${API_V1}/admin/communities`, () =>
+        HttpResponse.json({ items: [truncatedScanCard], truncated: true }),
+      ),
+    );
+
+    const { useAdminCommunities: useAdminCommunitiesLive, wrapper } =
+      await loadLive();
+    const { result } = renderHook(() => useAdminCommunitiesLive(), {
+      wrapper,
+    });
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(result.current.data?.truncated).toBe(true);
   });
 });
 
@@ -132,6 +176,9 @@ describe("useAdminCommunities (demo mode)", () => {
     });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
-    expect(result.current.data).toEqual(COMMUNITIES);
+    expect(result.current.data).toEqual({
+      communities: COMMUNITIES,
+      truncated: false,
+    });
   });
 });

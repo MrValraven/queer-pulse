@@ -90,26 +90,21 @@ export const fetchMe = () =>
 // `.finally` regardless of the result.
 export const postLogout = () => postUnversioned("/auth/logout");
 /**
- * The community-guidelines revision the onboarding wizard shows alongside the
- * agreement checkbox. Kept in lock-step with the backend's
- * `CURRENT_GUIDELINES_VERSION` (users.service.ts) so the completion stamp records
- * the exact revision the member actually agreed to, rather than the server always
- * falling back to its own current version. Bump both together when the guidelines
- * change materially.
- */
-export const GUIDELINES_VERSION = "1.0";
-
-/**
  * Stamp the member as having finished onboarding (idempotent server-side — the
  * first completion time wins). Fired when a new member reaches the wizard's
  * final step; demo mode never calls it. Best-effort: the caller ignores
  * failures, since the gate and the migration's backfill cover the common cases.
- * Sends the guidelines revision the wizard displayed so the backend records the
- * version the member agreed to (it only falls back to its own on an empty body).
+ *
+ * `guidelinesVersion` should be the revision the wizard actually displayed —
+ * read via `usePlatformStatus()` (`guidelinesVersion` field, itself sourced
+ * from the backend's `CURRENT_GUIDELINES_VERSION` in `users.service.ts`, the
+ * single source of truth) rather than a locally hardcoded copy that could
+ * drift out of sync. Optional: if the status query hasn't settled yet, the
+ * backend's own `CompleteOnboardingDto` falls back to its current version.
  */
-export const postCompleteOnboarding = () =>
+export const postCompleteOnboarding = (guidelinesVersion?: string) =>
   apiPost<{ onboardedAt: string }>("/auth/onboarding/complete", {
-    guidelinesVersion: GUIDELINES_VERSION,
+    guidelinesVersion,
   });
 export const bootstrapCsrf = ensureCsrf;
 

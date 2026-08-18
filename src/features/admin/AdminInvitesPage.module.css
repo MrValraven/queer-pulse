@@ -255,3 +255,133 @@
     transition: none;
   }
 }
+
+/* ── Invite quota overrides modal ──────────────────────────── */
+
+.quotaHint {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.quotaList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quotaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(var(--plum-rgb), 0.05);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.quotaRowInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.quotaRowName {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.quotaRowCount {
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+
+.quotaRowControls {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.quotaField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.quotaFieldLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.quotaInput {
+  width: 84px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  background: var(--paper);
+  color: var(--text-strong);
+  font-size: 14px;
+}
+
+.quotaInput:focus-visible {
+  outline: none;
+  border-color: rgba(var(--plum-rgb), 0.4);
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.18);
+}
+
+.quotaClearButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  background: rgba(var(--plum-rgb), 0.05);
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background 0.16s var(--ease),
+    color 0.16s var(--ease);
+}
+
+.quotaClearButton:hover {
+  background: rgba(var(--plum-rgb), 0.12);
+  color: var(--text-strong);
+}
+
+.quotaClearButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.2);
+}
+
+:global([data-theme="dark"]) .quotaRow {
+  background: rgba(var(--cream-rgb), 0.05);
+  border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+@media (--sm) {
+  .quotaRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .quotaRowControls {
+    justify-content: space-between;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quotaClearButton {
+    transition: none;
+  }
+}

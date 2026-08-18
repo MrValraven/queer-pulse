@@ -13,6 +13,7 @@ import { mediaMax } from "../../shared/theme/breakpoints";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
+  ALL_OF_LISBON,
   EMPTY_FILTERS,
   SORT_PARAM,
   appliedChips,
@@ -72,6 +73,16 @@ export function MemberDirectoryFilterPage() {
   // id, so live mode returned nothing for every selection. `identities=` matches
   // each member's opt-in published set; members who have not published an
   // identity are simply not findable by it.
+  //
+  // Every facet is forwarded now — this used to stop at `identities`/`sort`,
+  // silently leaving the rest of the sidebar decorative in live mode (an
+  // audited P0). `ALL_OF_LISBON` is FE-only chrome meaning "no hood filter"
+  // and is stripped before the request; `yearsFrom`/`yearsTo` are only sent
+  // once the range has actually been narrowed from its full [0, 9] default —
+  // sending the untouched default would be a harmless no-op filter, but
+  // omitting it keeps the query key (and the request) identical to before a
+  // member ever touches the slider.
+  const hoods = filters.hoods.filter((h) => h !== ALL_OF_LISBON);
   const {
     items: sourceMembers,
     total: totalMembers,
@@ -83,6 +94,17 @@ export function MemberDirectoryFilterPage() {
     refetch,
   } = useMembers({
     identities: filters.identities,
+    openTo: filters.openTo,
+    hoods,
+    disciplines: filters.disciplines,
+    professions: filters.professions,
+    languages: filters.languages,
+    yearsFrom:
+      filters.yearsFrom !== EMPTY_FILTERS.yearsFrom
+        ? filters.yearsFrom
+        : undefined,
+    yearsTo:
+      filters.yearsTo !== EMPTY_FILTERS.yearsTo ? filters.yearsTo : undefined,
     // Live mode sorts server-side (sort is part of the query key, so changing it
     // refetches). Demo mode sorts in the browser and must NOT put sort in the key
     // — otherwise every sort change would refetch and flash the skeleton.
@@ -103,12 +125,12 @@ export function MemberDirectoryFilterPage() {
   // and the live cards carry no ranking fields to re-sort by anyway (they'd all
   // tie and scramble the server order). See `useMembers` / the directory API.
   const filtered = useMemo(() => {
-    // Live mode: the server does the filtering (identities travel through the
-    // query key; other facets are a documented no-op the thin card DTO can't
-    // satisfy). The DTO adapter defaults those facet fields to empty arrays, so
-    // re-running `matchesFilters` here would match nothing and empty the
-    // directory for ANY facet selection — trust the server and render its page
-    // as-is.
+    // Live mode: every facet now travels through the query key and the server
+    // does the actual filtering — `sourceMembers` already IS the filtered set.
+    // Re-running `matchesFilters` here would be redundant at best; at worst a
+    // client/server vocabulary drift (e.g. a hood match computed differently
+    // client-side than `neighbourhoods.ts`'s `matchNeighbourhood`) could
+    // silently narrow an already-correct server page. Trust the server.
     if (!demoMode) return sourceMembers;
     // Demo mode holds the whole mock list, which carries every facet field, so
     // it filters and sorts entirely in the browser.

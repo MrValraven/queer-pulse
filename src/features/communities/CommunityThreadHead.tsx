@@ -7,8 +7,9 @@ import { AV_CLASS } from "./communityAvatar";
 import styles from "./CommunityDetailPage.module.css";
 
 // The OP header: vote button + title + meta row + the OP's own actions menu.
-// Presentational only — all state (open/voted/edit/delete/restore/history)
-// lives in the CommunityThread orchestrator and is passed down as props.
+// Presentational only — all state (open/voted/edit/delete/restore/history/
+// pin/report) lives in the CommunityThread orchestrator and is passed down as
+// props.
 export function CommunityThreadHead({
   data,
   open,
@@ -17,14 +18,19 @@ export function CommunityThreadHead({
   onToggleVote,
   opDeleted,
   opEditedAt,
+  opPinned,
   opCanEdit,
   opCanDelete,
   opCanRestore,
   opCanViewHistory,
+  opCanPin,
+  opCanReport,
   onEditOp,
   onDeleteOp,
   onRestoreOp,
   onHistoryOp,
+  onTogglePinOp,
+  onReportOp,
 }: {
   data: ThreadData;
   open: boolean;
@@ -33,14 +39,19 @@ export function CommunityThreadHead({
   onToggleVote: () => void;
   opDeleted: boolean;
   opEditedAt: string | null;
+  opPinned: boolean;
   opCanEdit: boolean;
   opCanDelete: boolean;
   opCanRestore: boolean;
   opCanViewHistory: boolean;
+  opCanPin: boolean;
+  opCanReport: boolean;
   onEditOp: () => void;
   onDeleteOp: () => void;
   onRestoreOp: () => void;
   onHistoryOp: () => void;
+  onTogglePinOp: () => void;
+  onReportOp: () => void;
 }) {
   const { t } = useTranslation();
   const voteCount =
@@ -78,6 +89,12 @@ export function CommunityThreadHead({
         <span className={styles.vnum}>{voteCount}</span>
       </div>
       <div className={styles.thMain}>
+        {opPinned && !opDeleted && (
+          <div className={styles.pinFlag}>
+            <FiMessageCircle aria-hidden />{" "}
+            {t("communities:detail.pulse.pinnedAnnouncement")}
+          </div>
+        )}
         <div className={styles.thTitle}>
           {opDeleted ? t("communities:detail.thread.tombstone") : data.title}
         </div>
@@ -112,6 +129,11 @@ export function CommunityThreadHead({
               onDelete={onDeleteOp}
               onRestore={onRestoreOp}
               onHistory={onHistoryOp}
+              canPin={opCanPin}
+              pinned={opPinned}
+              onTogglePin={onTogglePinOp}
+              canReport={opCanReport}
+              onReport={onReportOp}
             />
           </span>
         </div>

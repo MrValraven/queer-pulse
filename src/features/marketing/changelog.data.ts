@@ -93,6 +93,118 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "side-quests-getting-started",
+        category: "feature",
+        date: "18 Aug 2026",
+        ...entryKeys("side-quests-getting-started"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gettingStarted",
+          to: routes.gettingStarted,
+        },
+      },
+      {
+        id: "member-directory-filters-fix",
+        category: "fix",
+        date: "18 Aug 2026",
+        ...entryKeys("member-directory-filters-fix"),
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
+      },
+      {
+        id: "directory-ownership-claims",
+        category: "feature",
+        date: "18 Aug 2026",
+        ...entryKeys("directory-ownership-claims"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "session-expired-toast-fix",
+        category: "fix",
+        date: "18 Aug 2026",
+        ...entryKeys("session-expired-toast-fix"),
+      },
+      {
+        id: "join-request-form-fix",
+        category: "fix",
+        date: "18 Aug 2026",
+        ...entryKeys("join-request-form-fix"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-pulse-and-insights",
+        category: "feature",
+        date: "18 Aug 2026",
+        ...entryKeys("community-pulse-and-insights"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "onboarding-identity-and-notifications",
+        category: "improvement",
+        date: "18 Aug 2026",
+        ...entryKeys("onboarding-identity-and-notifications"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gettingStarted",
+          to: routes.gettingStarted,
+        },
+      },
+      {
+        id: "getting-started-vouch-fix",
+        category: "fix",
+        date: "18 Aug 2026",
+        ...entryKeys("getting-started-vouch-fix"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gettingStarted",
+          to: routes.gettingStarted,
+        },
+      },
+      {
+        id: "admin-invite-quota-controls",
+        category: "improvement",
+        date: "18 Aug 2026",
+        ...entryKeys("admin-invite-quota-controls"),
+      },
+      {
+        id: "invite-approval-email",
+        category: "feature",
+        date: "18 Aug 2026",
+        ...entryKeys("invite-approval-email"),
+        tag: {
+          labelKey: "marketing:changelog.tag.requestInvite",
+          to: routes.requestInvite,
+        },
+      },
+      {
+        id: "join-request-mutual-member-field",
+        category: "improvement",
+        date: "18 Aug 2026",
+        ...entryKeys("join-request-mutual-member-field"),
+        tag: {
+          labelKey: "marketing:changelog.tag.requestInvite",
+          to: routes.requestInvite,
+        },
+      },
+      {
+        id: "post-opportunity-team-picker",
+        category: "improvement",
+        date: "18 Aug 2026",
+        ...entryKeys("post-opportunity-team-picker"),
+        tag: {
+          labelKey: "marketing:changelog.tag.postVolunteer",
+          to: routes.postVolunteer,
+        },
+      },
+      {
         id: "recognition-xp",
         category: "feature",
         date: "14 Aug 2026",

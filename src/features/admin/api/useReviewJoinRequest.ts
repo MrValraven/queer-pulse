@@ -9,7 +9,8 @@ import { useDemoAwareMutation } from "./demoAwareMutation";
 
 export interface ReviewJoinRequestVars {
   id: string;
-  status: "approved" | "declined";
+  status: "approved" | "declined" | "waitlisted";
+  declineReason?: string;
 }
 
 /** The stand-in row demo mode reviews when an id isn't in the mock queue. */
@@ -23,6 +24,7 @@ function demoRow(id: string): JoinRequestDTO {
     email: "",
     city: null,
     message: "",
+    mutualMemberEmail: null,
     status: "pending",
     ageAttestedAt: now,
     termsVersion: "2.4",
@@ -31,6 +33,11 @@ function demoRow(id: string): JoinRequestDTO {
     reviewedAt: null,
     reviewedBy: null,
     inviteCode: null,
+    declineReason: null,
+    flags: [],
+    priorDeclineCount: 0,
+    referenceMemberName: null,
+    referenceMemberSlug: null,
   };
 }
 
@@ -41,8 +48,9 @@ function demoRow(id: string): JoinRequestDTO {
  * so the reviewer flow — decision, then the copyable invite link — is fully
  * exercisable with no backend. Mod/Admin only.
  *
- * Approving returns the updated row carrying `inviteCode`. There is no email
- * service: the reviewer copies the link and sends it themselves.
+ * Approving returns the updated row carrying `inviteCode`. Approval also fires
+ * an automatic invite email; the reviewer can still copy the link as a manual
+ * backup if that doesn't land.
  */
 export function useReviewJoinRequest() {
   const { demoMode } = useDemoMode();
@@ -52,14 +60,16 @@ export function useReviewJoinRequest() {
     demoLatencyMs: 0,
     // AdminVerifyQueue toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
-    demoResult: ({ id, status }) => ({
+    demoResult: ({ id, status, declineReason }) => ({
       ...demoRow(id),
       status,
+      declineReason: status === "declined" ? (declineReason ?? null) : null,
       reviewedAt: new Date().toISOString(),
       reviewedBy: "demo-moderator",
       inviteCode: status === "approved" ? demoInviteCode(id) : null,
     }),
-    live: ({ id, status }) => reviewJoinRequest(id, status),
+    live: ({ id, status, declineReason }) =>
+      reviewJoinRequest(id, status, declineReason),
     // Invalidates in BOTH modes: the demo queue is served by a mock queryFn that
     // re-derives from the (now updated) registry on refetch, so the reviewed row
     // must drop there too — hence onSuccess, not onLiveSuccess.

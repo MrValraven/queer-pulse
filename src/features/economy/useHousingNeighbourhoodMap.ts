@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import maplibregl, { type StyleSpecification } from "maplibre-gl";
 import {
   buildWarmStyle,
-  LISBON_BOUNDS,
+  GREATER_LISBON_BOUNDS,
   MAP_STYLE_URL,
-} from "../marketing/lisbonMapStyle";
+} from "../../shared/components/map/siteMapStyle";
 import type { HousingCluster } from "./housingMapClusters";
 import styles from "./housingMap.module.css";
 
@@ -28,7 +28,7 @@ interface ManagedPin {
 
 /** Fit the camera to the clustered pins (or the whole city when there are none). */
 function boundsOf(clusters: HousingCluster[]): maplibregl.LngLatBoundsLike {
-  if (clusters.length === 0) return LISBON_BOUNDS;
+  if (clusters.length === 0) return GREATER_LISBON_BOUNDS;
   const bounds = new maplibregl.LngLatBounds();
   for (const cluster of clusters) {
     bounds.extend([cluster.longitude, cluster.latitude]);

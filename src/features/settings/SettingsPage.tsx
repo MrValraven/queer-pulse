@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Navigate, useSearchParams } from "react-router-dom";
 import { useProfileEdit } from "../../app/providers/useProfile";
 import { useProfileTheme } from "../../app/providers/useProfileTheme";
+import { routes } from "../../app/routeMap";
 import { useScrollLock, useUnsavedChangesGuard } from "../../shared/hooks";
 import { AppShell } from "../../shared/components/layout";
 import { FadeIn } from "../../shared/components/ui";
@@ -19,7 +20,6 @@ import {
   DataPane,
   LanguagePane,
   NotificationsPane,
-  SimulationsPane,
   VisibilityPane,
 } from "./SettingsPanes";
 import styles from "./SettingsPage.module.css";
@@ -107,6 +107,10 @@ export function SettingsPage() {
     },
   });
 
+  if (params.get("pane") === "simulations") {
+    return <Navigate to={routes.simulations} replace />;
+  }
+
   return (
     <AppShell>
       <div className={`wrap ${styles.page}`}>
@@ -161,7 +165,6 @@ export function SettingsPage() {
             {pane === "interests" && <InterestsPane onChange={markChanged} />}
             {pane === "account" && <AccountPane onChange={markChanged} />}
             {pane === "uploads" && <MyUploadsPane />}
-            {pane === "simulations" && <SimulationsPane />}
             {pane === "delete" && <DeleteAccountSection />}
           </FadeIn>
         </div>

@@ -624,4 +624,10 @@ export const auth: Catalog = {
   "gettingStarted.allDone.body":
     "You've done the essentials. The rest of QueerPulse is yours to wander — take your time.",
   "gettingStarted.allDone.cta": "Explore QueerPulse",
+  "gettingStarted.sideQuests.eyebrow": "Next up",
+  "gettingStarted.sideQuests.title": "Side <em>quests</em>",
+  "gettingStarted.sideQuests.lede":
+    "Now that you're settled in, here's what's still there to discover: a few more things to try, each with a badge or perk waiting at the end.",
+  "gettingStarted.sideQuests.cta": "Get started",
+  "gettingStarted.sideQuests.showMore": "Show {count} more",
 };

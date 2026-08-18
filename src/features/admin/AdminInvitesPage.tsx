@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { FiSliders } from "react-icons/fi";
 import { Button, FadeIn, Select, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { AdminPageHeader, AdminTabs, AdminChip } from "./ui";
@@ -13,6 +14,7 @@ import {
   type AdminInviteFilter,
 } from "./api/useAdminInvites";
 import { AdminInviteDrawer } from "./AdminInviteDrawer";
+import { AdminInviteQuotaModal } from "./AdminInviteQuotaModal";
 import { ADMIN_INVITE_STATUS_TONE } from "./adminInviteStatusTone";
 import type { AdminInviteDTO } from "./api/adminInvites.api";
 import styles from "./AdminInvitesPage.module.css";
@@ -121,6 +123,7 @@ export function AdminInvitesPage() {
   const [selectedInvite, setSelectedInvite] = useState<AdminInviteDTO | null>(
     null,
   );
+  const [quotaModalOpen, setQuotaModalOpen] = useState(false);
   // The sender filter runs server-side: `inviterSlug` is passed to the query so
   // it narrows the whole invite graph, not just the loaded pages, and its
   // options come from a dedicated inviters list covering every sender platform-
@@ -166,6 +169,16 @@ export function AdminInvitesPage() {
             />
           }
           sub={t("admin:adminInvites.header.sub")}
+          actions={
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setQuotaModalOpen(true)}
+            >
+              <FiSliders aria-hidden />
+              {t("admin:adminInvites.quota.manageCta")}
+            </Button>
+          }
         />
       </FadeIn>
 
@@ -242,6 +255,13 @@ export function AdminInvitesPage() {
         <AdminInviteDrawer
           invite={selectedInvite}
           onClose={() => setSelectedInvite(null)}
+        />
+      )}
+
+      {quotaModalOpen && (
+        <AdminInviteQuotaModal
+          inviters={inviters}
+          onClose={() => setQuotaModalOpen(false)}
         />
       )}
     </AdminShell>

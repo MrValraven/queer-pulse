@@ -60,7 +60,9 @@ export function useGettingStarted(): GettingStartedState {
     profile: Boolean(profile.photo) && profile.bio.trim().length > 0,
     community: Object.keys(memberships).length > 0,
     persona: (personas?.length ?? 0) > 0,
-    vouch: (signals?.vouchCount ?? 0) > 0,
+    // Vouches GIVEN, not received — a member auto-vouched by their inviter at
+    // signup must not see this step marked done before vouching for anyone.
+    vouch: (signals?.vouchesGivenCount ?? 0) > 0,
     connect: (signals?.connectionCount ?? 0) > 0,
     post: (signals?.communityPosts ?? 0) > 0,
   };

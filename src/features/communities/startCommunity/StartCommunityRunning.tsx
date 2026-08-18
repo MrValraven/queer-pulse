@@ -4,7 +4,6 @@ import {
   FiCalendar,
   FiGrid,
   FiUsers,
-  FiFolder,
   FiMessageCircle,
   FiPlus,
 } from "react-icons/fi";
@@ -20,9 +19,7 @@ import type { CohostCandidate } from "../../gatherings/manageCohosts.data";
 const FEATURE_ICON: Record<string, typeof FiCalendar> = {
   discussion: FiMessageCircle,
   events: FiCalendar,
-  rooms: FiGrid,
   roster: FiUsers,
-  library: FiFolder,
 };
 
 /** Chapter 4 — Running: co-stewards and what the community can do. */

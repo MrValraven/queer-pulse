@@ -11,9 +11,11 @@ import styles from "./AdminMembersPage.module.css";
  * What the reviewer sees straight after welcoming someone in: the invite link
  * built from their code, ready to copy.
  *
- * There is **no email service** — nothing has been sent to the applicant, and
- * the copy says so plainly. The reviewer sends this link themselves, which is
- * why their email address is repeated right next to it.
+ * Approval also sends the applicant an invite email automatically
+ * (`join_request_approved` template, fired best-effort after the approval
+ * transaction commits). This link stays visible as a manual backup in case
+ * that send fails or the applicant's inbox swallows it, which is why their
+ * email address is repeated right next to it.
  */
 export function JoinRequestApprovedCard({ item }: { item: JoinRequestView }) {
   const { t } = useTranslation();

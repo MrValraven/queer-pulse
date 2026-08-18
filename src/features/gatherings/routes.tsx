@@ -19,19 +19,15 @@ const CreateGatheringPage = lazyNamed(() => import("./CreateGatheringPage"), "Cr
 /** The gatherings surface: calendar, events, a gathering's detail + management
  *  sub-pages, RSVP, hosting, and the gatherings index.
  *
- *  RSVP (`/rsvp`, `/rsvp-ticket`), the recap, and the `/manage` dashboard are
- *  now really wired: each resolves the real event off the route (or, for RSVP,
- *  the `?event=` slug) and drives the existing rsvp / un-rsvp / update / cancel /
- *  cohost / attach-photo hooks against that real id, keeping its colocated
+ *  RSVP (`/rsvp`, `/rsvp-ticket`), the recap, the `/manage` dashboard, and the
+ *  cohost invite are all really wired: each resolves the real event/invite off
+ *  the route and drives the existing hooks against it, keeping its colocated
  *  `*.data.ts` mock as the demo fallback.
  *
- *  Two prototypes stay demo-only and resolve to an honest coming-soon in LIVE
- *  mode: the standalone `/event` detail and the co-host invite. The `/event`
- *  page is pinned to a single mock event with no live subject, and the co-host
- *  invite needs a net-new backend invite→accept entity (out of scope this pass),
- *  so neither has a real id a live write could target. The real event surface is
- *  `/gatherings/:slug` (really wired); every other route here is really wired
- *  too. */
+ *  One prototype stays demo-only and resolves to an honest coming-soon in LIVE
+ *  mode: the standalone `/event` detail, pinned to a single mock event with no
+ *  live subject. The real event surface is `/gatherings/:slug`; every other
+ *  route here is really wired too. */
 export function gatheringRoutes(demoMode: boolean) {
   return (
     <>
@@ -73,15 +69,9 @@ export function gatheringRoutes(demoMode: boolean) {
         path={`${routes.gatherings}/:slug/photos`}
         element={<GatheringPhotosPage />}
       />
-      {/* DEFERRED — stays gated in live. Unlike RSVP / recap / manage, a real
-          co-host invite needs a net-new backend entity + migration (an
-          invite → accept flow); there is no existing endpoint to target, so a
-          live write would have nowhere to go. Out of scope this pass. */}
       <Route
-        path={`${routes.gatherings}/:slug/co-host-invite`}
-        element={
-          demoMode ? <CoHostInvitePage /> : <GatheringComingSoon variant="cohost" />
-        }
+        path={`${routes.gatherings}/:slug/co-host-invite/:inviteId`}
+        element={<CoHostInvitePage />}
       />
       <Route
         path={routes.event}

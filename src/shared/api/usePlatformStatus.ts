@@ -9,6 +9,9 @@ const DEMO_STATUS: PlatformStatusDTO = {
   locked: false,
   lockdownMessage: null,
   registrationClosedMessage: null,
+  // Demo has no backend to read the real current version from; kept in step
+  // with the backend's own demo/live default by convention, not by import.
+  guidelinesVersion: "1.0",
 };
 
 /**

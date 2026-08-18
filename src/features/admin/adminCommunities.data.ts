@@ -163,11 +163,19 @@ export interface Moderator {
   name: string;
   pronouns: string;
   tone: AvatarTone;
+  /** The moderator's real profile photo. Set in live mode when the member
+   *  has one uploaded; absent in demo (fixtures use `portrait()` instead). */
+  avatarUrl?: string | null;
   /** Sub-line, e.g. "founded the community · 21 vouches". */
   role: string;
   /** The member's user id — set in live mode so the remove control can target
    *  the real roster row. Absent in demo (fixtures have no backend id). */
   memberId?: string;
+  /** The member's profile slug — set in live mode so the admin-override
+   *  actions (reassign owner, remove from community outright) can target the
+   *  real roster row by slug, matching the backend's `:memberSlug` route
+   *  params. Absent in demo (fixtures have no backend slug). */
+  slug?: string;
   /** Whether this moderator is the community's founder (owner). The founder
    *  cannot be demoted, so live mode hides their remove control. */
   isOwner?: boolean;
@@ -206,9 +214,14 @@ export interface Community {
    *  enforcement is a follow-up. */
   autoFreezeOnReports: boolean;
   /** True while the community is currently auto-frozen pending report review.
-   *  Read-only on the admin surface (staff lift a freeze from the community's
-   *  own mod panel). Optional: only the detail endpoint carries it. */
+   *  An admin can freeze/unfreeze it directly from the Settings tab, in
+   *  addition to staff lifting it from the community's own mod panel.
+   *  Optional: only the detail endpoint carries it. */
   frozen?: boolean;
+  /** True when the backend's report scan hit its scan cap while building this
+   *  community's detail — some of its reports may not be reflected in the
+   *  queue/health numbers above. Optional: only the detail endpoint carries it. */
+  truncated?: boolean;
   support: boolean;
   moderators: Moderator[];
   queue: QueueItem[];

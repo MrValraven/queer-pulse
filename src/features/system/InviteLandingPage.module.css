@@ -368,7 +368,14 @@
   margin-top: 14px;
 }
 
-.consentNote a {
+.consentNote a,
+.consentNote button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
   color: var(--accent-ink);
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -400,7 +407,14 @@
   color: rgba(var(--cream-rgb), 0.32);
 }
 
-.pageFooter a {
+.pageFooter a,
+.pageFooter button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
   color: rgba(var(--cream-rgb), 0.5);
   text-decoration: underline;
   text-underline-offset: 3px;

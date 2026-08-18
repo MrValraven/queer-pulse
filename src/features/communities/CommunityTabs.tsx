@@ -17,6 +17,7 @@ import type {
   Thread as ThreadData,
 } from "./communityDetails";
 import { CommunityThread } from "./CommunityThread";
+import { CommunityFrozenComposerNotice } from "./CommunityFrozenComposerNotice";
 import { photoOf } from "./communityPeople";
 import { AV_CLASS } from "./communityAvatar";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
@@ -168,12 +169,20 @@ export function ForumTab({
   threads,
   slug,
   isMember,
+  canModerate = false,
+  frozen = false,
   loading = false,
   paging,
 }: {
   threads: ThreadData[];
   slug: string;
   isMember: boolean;
+  /** Owner/mod — gates the pin/unpin action on each thread. */
+  canModerate?: boolean;
+  /** True while the community is auto-frozen — swaps the "start a thread"
+   *  composer (and each thread's reply bar) for an explanation instead of
+   *  leaving inputs open to a 403. */
+  frozen?: boolean;
   loading?: boolean;
   paging: PulsePaging;
 }) {
@@ -241,6 +250,9 @@ export function ForumTab({
         <CommunityThread
           data={thread}
           slug={slug}
+          isMember={isMember}
+          canModerate={canModerate}
+          frozen={frozen}
           key={thread.id ?? `local-${index}`}
         />
       ))}
@@ -249,7 +261,13 @@ export function ForumTab({
           key={thread.id ?? `thread-${index}`}
           delay={Math.min(index, 8) * 60}
         >
-          <CommunityThread data={thread} slug={slug} />
+          <CommunityThread
+            data={thread}
+            slug={slug}
+            isMember={isMember}
+            canModerate={canModerate}
+            frozen={frozen}
+          />
         </FadeIn>
       ))}
       {paging.hasNextPage && (
@@ -265,31 +283,36 @@ export function ForumTab({
           </Button>
         </div>
       )}
-      {isMember && (
-        <div className={styles.newPost}>
-          <div
-            className={[styles.rAv, styles.tPlum].join(" ")}
-            style={{ width: 30, height: 30 }}
-          >
-            Me
+      {isMember &&
+        (frozen ? (
+          <div style={{ marginTop: 16 }}>
+            <CommunityFrozenComposerNotice />
           </div>
-          <textarea
-            className={styles.npTa}
-            rows={1}
-            aria-label={t("communities:detail.forum.newPostPlaceholder")}
-            placeholder={t("communities:detail.forum.newPostPlaceholder")}
-            value={newPost}
-            onChange={(event) => setNewPost(event.target.value)}
-          />
-          <Button
-            variant="ghost"
-            onClick={post}
-            style={{ whiteSpace: "nowrap", fontSize: 13 }}
-          >
-            {t("communities:detail.forum.postCta")}
-          </Button>
-        </div>
-      )}
+        ) : (
+          <div className={styles.newPost}>
+            <div
+              className={[styles.rAv, styles.tPlum].join(" ")}
+              style={{ width: 30, height: 30 }}
+            >
+              Me
+            </div>
+            <textarea
+              className={styles.npTa}
+              rows={1}
+              aria-label={t("communities:detail.forum.newPostPlaceholder")}
+              placeholder={t("communities:detail.forum.newPostPlaceholder")}
+              value={newPost}
+              onChange={(event) => setNewPost(event.target.value)}
+            />
+            <Button
+              variant="ghost"
+              onClick={post}
+              style={{ whiteSpace: "nowrap", fontSize: 13 }}
+            >
+              {t("communities:detail.forum.postCta")}
+            </Button>
+          </div>
+        ))}
     </div>
   );
 }

@@ -1,5 +1,8 @@
 import { http, HttpResponse } from "msw";
-import type { AdminCommunityCardDTO } from "../../features/admin/api/adminCommunities.api";
+import type {
+  AdminCommunityCardDTO,
+  AdminCommunityListDTO,
+} from "../../features/admin/api/adminCommunities.api";
 import type { AdminBotSummaryDTO } from "../../features/admin/api/adminBots.api";
 import type { JobCardDTO } from "../../features/economy/api/jobs.api";
 import type { Paginated } from "../../shared/api/refs";
@@ -103,7 +106,10 @@ export const handlers = [
     return HttpResponse.json(body);
   }),
   http.get(`${API_V1}/admin/communities`, () =>
-    HttpResponse.json<AdminCommunityCardDTO[]>([adminCommunityCard]),
+    HttpResponse.json<AdminCommunityListDTO>({
+      items: [adminCommunityCard],
+      truncated: false,
+    }),
   ),
   http.get(`${API_V1}/admin/bots`, () =>
     HttpResponse.json<AdminBotSummaryDTO[]>([adminBotSummary]),

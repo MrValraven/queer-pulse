@@ -54,6 +54,7 @@ export const emptyRecognition: Recognition = {
 
 function badgeFromDto(b: BadgeDTO): Badge {
   return {
+    key: b.key,
     category: b.cat,
     name: b.name,
     when: b.context,

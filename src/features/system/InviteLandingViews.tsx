@@ -159,6 +159,8 @@ export function InviteCardView({
   is18,
   onIs18Change,
   onUnder18,
+  onOpenTerms,
+  onOpenPrivacy,
 }: {
   view: InviteView;
   onGoogle: () => void;
@@ -166,6 +168,8 @@ export function InviteCardView({
   is18: boolean;
   onIs18Change: (value: boolean) => void;
   onUnder18: () => void;
+  onOpenTerms: () => void;
+  onOpenPrivacy: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -299,8 +303,10 @@ export function InviteCardView({
             <Translation
               i18nKey="system:inviteLanding.card.consent"
               components={{
-                termsLink: <Link to={routes.terms} />,
-                privacyLink: <Link to={routes.privacy} />,
+                // eslint-disable-next-line jsx-a11y/control-has-associated-label -- false positive: an element template for <Translation>, which clones it with the translated children (its accessible name) at render.
+                termsLink: <button type="button" onClick={onOpenTerms} />,
+                // eslint-disable-next-line jsx-a11y/control-has-associated-label -- same as above.
+                privacyLink: <button type="button" onClick={onOpenPrivacy} />,
               }}
             />
           </p>
@@ -318,7 +324,8 @@ export function InviteCardView({
         <p>
           <Translation
             i18nKey="system:inviteLanding.card.notExpecting"
-            components={{ a: <Link to={routes.privacy} /> }}
+            // eslint-disable-next-line jsx-a11y/control-has-associated-label -- false positive: an element template for <Translation>, which clones it with the translated children (its accessible name) at render.
+            components={{ a: <button type="button" onClick={onOpenPrivacy} /> }}
           />
         </p>
       </div>

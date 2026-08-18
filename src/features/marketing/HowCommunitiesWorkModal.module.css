@@ -1,0 +1,58 @@
+.head {
+  margin-block-end: clamp(28px, 4vw, 40px);
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(24px, 3.4vw, 32px);
+  letter-spacing: -0.01em;
+  line-height: 1.12;
+  color: var(--text-strong);
+  margin: 6px 0 0;
+}
+
+.title em {
+  color: var(--accent-ink);
+  font-style: italic;
+}
+
+.lede {
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-60);
+  max-width: 52ch;
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(40px, 6vw, 56px);
+}
+
+.outro {
+  margin-block-start: clamp(40px, 6vw, 56px);
+  padding-block-start: clamp(24px, 4vw, 32px);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.outroTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 20px;
+  color: var(--text-strong);
+  margin: 0 0 6px;
+}
+
+.outroSub {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-60);
+  margin: 0 0 18px;
+  max-width: 46ch;
+}
+
+:global([data-theme="dark"]) .outro {
+  border-color: rgba(var(--cream-rgb), 0.1);
+}

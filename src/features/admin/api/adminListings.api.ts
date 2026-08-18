@@ -229,3 +229,12 @@ export interface ListingHistoryDTO {
  *  only. */
 export const getListingHistory = (ref: string) =>
   apiGet<ListingHistoryDTO>(`/listings/admin/${ref}/history`);
+
+/** PATCH /listings/:ref/queer-owned-verified — moderator-verified confirmation
+ *  of the "queer-owned" badge, distinct from the submitter's own self-reported
+ *  `linkToProfile` claim. Returns the updated listing. Moderator/Admin only. */
+export const setQueerOwnedVerified = (ref: string, verified: boolean) =>
+  apiPatch<ListingDTO>(
+    `/listings/${encodeURIComponent(ref)}/queer-owned-verified`,
+    { verified },
+  );

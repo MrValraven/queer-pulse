@@ -1,5 +1,6 @@
 import { FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { OrganizationPickerField } from "./OrganizationPickerField";
 import type { Cause, Commit } from "./api/volunteering.api";
 import type { PostOpportunityForm } from "./usePostOpportunityForm";
 import { CAUSE_OPTIONS, COMMIT_OPTIONS } from "./postVolunteerOpportunity.data";
@@ -19,18 +20,19 @@ export function PostOpportunityCoreFields({
         {t("marketing:postOpportunity.core.basicsHeading")}
       </div>
 
-      <FormField
-        label={t("marketing:postOpportunity.core.orgLabel")}
+      <OrganizationPickerField
         required
         error={errorFor("org")}
-      >
-        <input
-          type="text"
-          value={state.org}
-          onChange={(e) => set("org", e.target.value)}
-          placeholder={t("marketing:postOpportunity.core.orgPlaceholder")}
-        />
-      </FormField>
+        value={{
+          partnerSlug: state.partnerSlug,
+          communitySlug: state.communitySlug,
+        }}
+        onChange={(next, meta) => {
+          set("partnerSlug", next.partnerSlug);
+          set("communitySlug", next.communitySlug);
+          set("org", meta.name);
+        }}
+      />
 
       <FormField
         label={t("marketing:postOpportunity.core.roleLabel")}

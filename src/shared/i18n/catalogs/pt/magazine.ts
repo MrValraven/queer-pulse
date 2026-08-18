@@ -1614,4 +1614,33 @@ export const magazine: Catalog = {
   "pieceThread.composerPlaceholder": "Escreve uma mensagem…",
   "pieceThread.send": "Enviar",
   "pieceThread.sentToast": "Mensagem enviada.",
+
+  // ══════════════════ Candidatar a escrever ═══════════════════════════════
+  "applyToWrite.intro.eyebrow": "Escreve para nós",
+  "applyToWrite.intro.title": "Mostra-nos <em>o que sabes fazer.</em>",
+  "applyToWrite.intro.lead":
+    "Toda a história que chega a um editor começa aqui. Diz-nos porque queres escrever para a QueerPulse e partilha uma amostra da tua escrita: colada aqui, ou um link para algo que já publicaste.",
+  "applyToWrite.form.pitchNoteLabel": "Porque queres escrever para nós?",
+  "applyToWrite.form.pitchNotePlaceholder": "Uma ou duas frases chegam.",
+  "applyToWrite.form.sampleTextLabel": "Cola uma amostra de escrita",
+  "applyToWrite.form.sampleTextPlaceholder": "Cola aqui um texto teu.",
+  "applyToWrite.form.sampleLinkLabel": "…ou liga a algo que já publicaste",
+  "applyToWrite.form.sampleLinkPlaceholder": "https://",
+  "applyToWrite.form.sampleRequiredError":
+    "Inclui uma amostra de escrita: cola texto ou adiciona um link.",
+  "applyToWrite.form.submitCta": "Enviar candidatura",
+  "applyToWrite.form.submittingCta": "A enviar…",
+  "applyToWrite.form.submitError": "Algo correu mal. Tenta novamente.",
+  "applyToWrite.pending.title": "A tua candidatura está <em>em análise.</em>",
+  "applyToWrite.pending.body":
+    "Um editor vai ler a tua amostra e responder-te. Isto demora normalmente umas duas semanas.",
+  "applyToWrite.declined.title": "Desta vez não",
+  "applyToWrite.declined.body": "Obrigado por te candidatares. Desta vez não resultou.",
+  "applyToWrite.declined.reviewNoteLabel": "Da parte dos editores:",
+  "applyToWrite.declined.reapplyCta": "Candidatar de novo",
+  "applyToWrite.approved.title": "Já és uma pessoa escritora da QueerPulse",
+  "applyToWrite.approved.body":
+    "A tua candidatura foi aprovada. Vai à página de submissão para enviares a tua primeira proposta.",
+  "applyToWrite.approved.cta": "Começar a escrever",
+  "applyToWrite.backCta": "Voltar à revista",
 };

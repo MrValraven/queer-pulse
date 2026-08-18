@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { FiMoreVertical } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useListingModeration } from "./api/useListingModeration";
+import { useSetQueerOwnedVerified } from "./api/useSetQueerOwnedVerified";
 import { AskQuestionModal } from "./AskQuestionModal";
 import { RemoveListingConfirmModal } from "./RemoveListingConfirmModal";
 import { SendBackReasonModal } from "./SendBackReasonModal";
@@ -36,6 +38,7 @@ export function ListingModerationActions({
   onDone?: () => void;
 }) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const [asking, setAsking] = useState(false);
   const [confirmingRemove, setConfirmingRemove] = useState(false);
   const [sendingBack, setSendingBack] = useState(false);
@@ -53,6 +56,9 @@ export function ListingModerationActions({
     },
   });
   const buttonSize = variant === "row" ? "md" : undefined;
+  const setQueerOwnedVerified = useSetQueerOwnedVerified();
+  const queerOwnedVerifiedPending =
+    moderation.isPending || setQueerOwnedVerified.isPending;
 
   return (
     <>
@@ -83,6 +89,38 @@ export function ListingModerationActions({
           disabled={moderation.isPending}
         >
           {t("admin:adminListings.sendBackCta")}
+        </Button>
+      )}
+      {row.detail.linkToProfile && (
+        <Button
+          variant="ghost"
+          size={buttonSize}
+          disabled={queerOwnedVerifiedPending}
+          onClick={() =>
+            setQueerOwnedVerified.mutate(
+              { row, verified: !row.detail.queerOwnedVerified },
+              {
+                onSuccess: () => {
+                  showToast(
+                    t(
+                      row.detail.queerOwnedVerified
+                        ? "admin:adminListings.queerOwned.toast.unverified"
+                        : "admin:adminListings.queerOwned.toast.verified",
+                      { name: row.name },
+                    ),
+                    "success",
+                  );
+                  onDone?.();
+                },
+              },
+            )
+          }
+        >
+          {t(
+            row.detail.queerOwnedVerified
+              ? "admin:adminListings.queerOwned.unverifyCta"
+              : "admin:adminListings.queerOwned.verifyCta",
+          )}
         </Button>
       )}
       <OverflowMenu

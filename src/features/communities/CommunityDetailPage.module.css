@@ -236,6 +236,22 @@
   margin-bottom: 36px;
 }
 
+/* Owner/mod-only notice on a tab a founder has hidden from plain members
+   (the "events"/"roster" feature toggles, or "show roster to members"). */
+.hiddenNote {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--ink-40);
+  margin: -8px 0 18px;
+}
+.hiddenNote svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
 .aboutP {
   font-size: 16px;
   color: var(--ink-60);
@@ -457,6 +473,21 @@
 }
 .thMain {
   flex: 1;
+}
+.pinFlag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--jade);
+  margin-bottom: 6px;
+}
+.pinFlag svg {
+  width: 12px;
+  height: 12px;
 }
 .thTitle {
   font-family: var(--serif);

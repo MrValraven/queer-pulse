@@ -21,7 +21,11 @@ export interface JoinRequestDTO {
   city: string | null;
   /** The applicant's own words — why they want in (POST body `message`, 1–1000). */
   message: string;
-  status: "pending" | "approved" | "declined";
+  /** The email of a member already here who can vouch for the applicant, as a
+   *  structured field a reviewer can actually match — null when they named
+   *  nobody. */
+  mutualMemberEmail: string | null;
+  status: "pending" | "approved" | "declined" | "waitlisted";
   /** When the 18+ self-attestation was recorded. Shown in the mod queue. */
   ageAttestedAt: string;
   /** Which Terms version's eligibility clause was affirmed. */
@@ -41,6 +45,20 @@ export interface JoinRequestDTO {
    * the client builds the shareable link from the route map (`inviteLink`).
    */
   inviteCode: string | null;
+  /** Closed-set reason key the reviewer picked when declining. Null for
+   *  approvals, waitlists, and legacy declines that predate this field. */
+  declineReason: string | null;
+  /** Confidence-tiered triage signals — surfaced to a human reviewer, never
+   *  acted on automatically. See the backend's `join-request-flags.ts`. */
+  flags: string[];
+  /** How many times a request from this same email was previously declined,
+   *  regardless of how long ago. */
+  priorDeclineCount: number;
+  /** Set only when `mutualMemberEmail` resolved to a real active member at
+   *  submit time — the display name to show as corroboration. */
+  referenceMemberName: string | null;
+  /** The resolved member's profile slug, for a link. */
+  referenceMemberSlug: string | null;
 }
 
 /** Payload for a prospective member's request to join. */
@@ -53,6 +71,10 @@ export interface CreateJoinRequestInput {
   city?: string;
   /** The applicant's own words — why they want in (1–1000 chars). */
   message: string;
+  /** The email of a member already here who can vouch for the applicant — a
+   *  structured field a reviewer can match, distinct from the free-text
+   *  `message`. Omit when they named nobody. */
+  mutualMemberEmail?: string;
   /** The 18+ self-attestation (spec 06). Must be true; the backend re-validates. */
   ageAttested: true;
   /** Which Terms version's eligibility clause was affirmed. */
@@ -83,6 +105,7 @@ export interface CreateJoinRequestResult {
  * Failure modes the UI must handle rather than treat as a generic error:
  * - `409` — an open request already exists for that email ({@link isDuplicateJoinRequest})
  * - `403 { code: "UNDER_18" }` — a supplied DOB computes to under 18 ({@link isUnder18Error})
+ * - `429` — the public route's per-IP throttle (3/hour) tripped ({@link isRateLimitedError})
  */
 export const createJoinRequest = (input: CreateJoinRequestInput) =>
   apiPost<CreateJoinRequestResult>("/join-requests", input);
@@ -120,6 +143,15 @@ export function isJoinRequestsClosedError(err: unknown): boolean {
 }
 
 /**
+ * True when the public submit route's per-IP throttle (3/hour) tripped. An
+ * immediate retry will fail again for up to an hour, so the UI must not
+ * suggest one — see {@link isDuplicateJoinRequest} for the sibling special case.
+ */
+export function isRateLimitedError(err: unknown): boolean {
+  return err instanceof ApiError && err.status === 429;
+}
+
+/**
  * List join requests for the moderator queue (Mod/Admin only). Optional `status`
  * filters the queue (defaults to the backend's own default, typically "pending").
  */
@@ -131,14 +163,44 @@ export const getJoinRequests = (status?: JoinRequestDTO["status"]) =>
   );
 
 /**
- * A moderator's decision on a join request (Mod/Admin only). The approved
- * response carries `inviteCode` — there is no email service, so the reviewer
- * sends the resulting link themselves.
+ * A moderator's decision on a join request (Mod/Admin only). Declining
+ * requires `declineReason` — the backend rejects a decline with none.
+ * Approving also fires an automatic invite email; the approved response
+ * still carries `inviteCode` so the reviewer can send the resulting link
+ * themselves as a manual backup.
  */
 export const reviewJoinRequest = (
   id: string,
-  status: "approved" | "declined",
+  status: "approved" | "declined" | "waitlisted",
+  declineReason?: string,
 ) =>
   apiPatch<JoinRequestDTO>(`/join-requests/${encodeURIComponent(id)}`, {
     status,
+    declineReason,
   });
+
+export const JOIN_REQUEST_BULK_ACTION_CAP = 50;
+
+export interface BulkReviewResult {
+  succeeded: string[];
+  failed: { id: string; reason: string }[];
+}
+
+/** Bulk approve/decline/waitlist (Mod/Admin only), up to
+ *  `JOIN_REQUEST_BULK_ACTION_CAP` ids per call. Per-item result, not
+ *  all-or-nothing — check `failed` even on a 200. */
+export const bulkReviewJoinRequests = (
+  ids: string[],
+  status: "approved" | "declined" | "waitlisted",
+  declineReason?: string,
+) =>
+  apiPost<BulkReviewResult>("/join-requests/bulk", {
+    ids,
+    status,
+    declineReason,
+  });
+
+/** A random sample of past-reviewed requests, for the periodic peer quality
+ *  pass (Mod/Admin only). */
+export const sampleJoinRequests = (n = 10) =>
+  apiGet<JoinRequestDTO[]>(`/join-requests/sample?n=${n}`);

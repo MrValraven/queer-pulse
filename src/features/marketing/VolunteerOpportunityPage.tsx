@@ -51,10 +51,10 @@ export function VolunteerOpportunityPage() {
   const opp = data?.opportunity;
   const applied = signedUp ?? data?.mySignup ?? false;
 
-  const apply = () => {
+  const apply = (note: string) => {
     setError(null);
     signup.mutate(
-      {},
+      { note: note || undefined },
       {
         onSuccess: () => setSignedUp(true),
         onError: (e) => setError(signupErrorMessage(e, t)),

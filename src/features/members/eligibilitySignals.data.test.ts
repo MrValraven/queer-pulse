@@ -12,6 +12,7 @@ const dto: PublicEligibilitySignalsDto = {
   workshopsTaught: 1,
   publishedSubprofiles: 2,
   vouchCount: 3,
+  vouchesGivenCount: 1,
   endorsementCount: 4,
   connectionCount: 12,
   eventsAttended: 6,

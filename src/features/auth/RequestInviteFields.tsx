@@ -30,9 +30,9 @@ export interface RequestInviteFieldsProps {
   setWhy: (v: string) => void;
   /**
    * The email of a member already here who can vouch for them. Optional, but
-   * when given it must be a valid email — that's how a reviewer matches the
-   * request to a real member. Not a field on POST /join-requests — the form
-   * folds it into `message` so a reviewer actually sees it.
+   * when given it must be a valid email — sent as its own structured
+   * `mutualMemberEmail` field so a reviewer can match it directly, distinct
+   * from the free-text `message`.
    */
   mutual: string;
   setMutual: (v: string) => void;

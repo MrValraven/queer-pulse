@@ -1,6 +1,7 @@
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModeratorsRow } from "./AdminCommunityModerators";
+import { AdminOverridesZone } from "./AdminCommunityOverrides";
 import { AdminChip, AdminToggle } from "./ui";
 import { visLabelKey, type Community } from "./adminCommunities.data";
 import { useUpdateAdminCommunity } from "./api/useUpdateAdminCommunity";
@@ -123,6 +124,8 @@ export function SettingsPane({ community }: { community: Community }) {
           </div>
         </div>
       )}
+
+      <AdminOverridesZone community={community} />
     </div>
   );
 }

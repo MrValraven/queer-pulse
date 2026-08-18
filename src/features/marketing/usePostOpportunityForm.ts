@@ -1,4 +1,7 @@
 import { useCallback, useState } from "react";
+import { useAuth } from "../../app/providers/authContext";
+import { useMyCommunitiesResolving } from "../communities/api/useMyCommunities";
+import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions";
 import { useRequiredFieldValidation } from "../../shared/hooks/useWizardForm";
 import type {
   Cause,
@@ -29,8 +32,10 @@ export interface PostOpportunityState {
   why: string;
   goodFor: string;
   teamIntro: string;
-  team: string;
+  /** Slugs of connections/communities already on the team. */
+  team: string[];
   partnerSlug: string;
+  communitySlug: string;
   handle: string;
   tasks: TaskRow[];
   commitments: CommitmentRow[];
@@ -50,8 +55,9 @@ const EMPTY: PostOpportunityState = {
   why: "",
   goodFor: "",
   teamIntro: "",
-  team: "",
+  team: [],
   partnerSlug: "",
+  communitySlug: "",
   handle: "",
   tasks: [{ title: "", description: "" }],
   commitments: [{ label: "", detail: "" }],
@@ -67,6 +73,11 @@ const splitCommas = (s: string) =>
     .split(",")
     .map((x) => x.trim())
     .filter(Boolean);
+
+/** The "who applies as" fallback shown live once Role/Org are filled, and
+ *  used at submit time when the field itself was never touched. */
+export const defaultApplyRole = (role: string, org: string): string =>
+  [role.trim(), org.trim()].filter(Boolean).join(" · ");
 
 /** Fields that must be filled before the form can submit. */
 export type RequiredField =
@@ -89,6 +100,36 @@ const REQUIRED: RequiredField[] = [
  */
 export function usePostOpportunityForm() {
   const [state, setState] = useState<PostOpportunityState>(EMPTY);
+  const { user } = useAuth();
+  const stewardedCommunities = useMyCommunityOptions({ roles: ["owner", "mod"] });
+  const membershipsResolving = useMyCommunitiesResolving();
+
+  // Seed the contact handle + organisation from the poster's own account,
+  // each exactly once, by adjusting state during render (React's recommended
+  // pattern over a setState-in-effect — same latch shape as
+  // EndorseSubprofileModal's note prefill). The organisation prefill waits on
+  // `!membershipsResolving` so it doesn't latch onto the synchronous empty
+  // placeholder before the real membership list has loaded.
+  const [handlePrefilled, setHandlePrefilled] = useState(false);
+  if (!handlePrefilled && user) {
+    setHandlePrefilled(true);
+    if (!state.handle) {
+      setState((s) => ({ ...s, handle: `@${user.profile.slug}` }));
+    }
+  }
+
+  const [communitySlugPrefilled, setCommunitySlugPrefilled] = useState(false);
+  if (!communitySlugPrefilled && !membershipsResolving) {
+    setCommunitySlugPrefilled(true);
+    const [stewarded] = stewardedCommunities;
+    if (stewarded && !state.communitySlug && !state.partnerSlug) {
+      setState((s) => ({
+        ...s,
+        communitySlug: stewarded.slug,
+        org: stewarded.name,
+      }));
+    }
+  }
 
   const set = useCallback(
     <K extends keyof PostOpportunityState>(
@@ -153,7 +194,6 @@ export function usePostOpportunityForm() {
     const skills = splitCommas(state.skills);
     const why = splitLines(state.why);
     const goodFor = splitLines(state.goodFor);
-    const team = splitCommas(state.team);
     const tasks = state.tasks
       .filter((t) => t.title.trim())
       .map((t) => ({ title: t.title.trim(), desc: t.description.trim() }));
@@ -169,16 +209,19 @@ export function usePostOpportunityForm() {
       location: state.location.trim(),
       desc: state.description.trim(),
       spotsTotal: spotsNumber,
-      applyRole: state.applyRole.trim() || `${role} · ${org}`,
+      applyRole: state.applyRole.trim() || defaultApplyRole(role, org),
       ...(skills.length ? { skills } : {}),
       ...(why.length ? { why } : {}),
       ...(goodFor.length ? { goodFor } : {}),
       ...(state.teamIntro.trim() ? { teamIntro: state.teamIntro.trim() } : {}),
-      ...(team.length ? { team } : {}),
+      ...(state.team.length ? { team: state.team } : {}),
       ...(tasks.length ? { tasks } : {}),
       ...(commitments.length ? { commitments } : {}),
       ...(state.partnerSlug.trim()
         ? { partnerSlug: state.partnerSlug.trim() }
+        : {}),
+      ...(state.communitySlug.trim()
+        ? { communitySlug: state.communitySlug.trim() }
         : {}),
       ...(state.handle.trim() ? { handle: state.handle.trim() } : {}),
     };

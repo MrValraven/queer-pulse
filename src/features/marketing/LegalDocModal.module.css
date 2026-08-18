@@ -1,0 +1,11 @@
+.fullPageLink {
+  text-align: center;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.fullPageLink a {
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

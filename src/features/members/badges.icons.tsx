@@ -4,6 +4,7 @@ const s = (tint: BadgeTint) => `var(--${tint})`;
 
 export const earnedBadges: Badge[] = [
   {
+    key: "first-gathering",
     category: "Attendance",
     name: "First Gathering",
     when: "Pride Brunch · Jun 2025",
@@ -37,6 +38,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
+    key: "three-company",
     category: "Attendance",
     name: "Three's Company",
     when: "3 gatherings attended",
@@ -51,6 +53,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
+    key: "regular",
     category: "Attendance",
     name: "Regular",
     when: "5 gatherings in one year",
@@ -75,6 +78,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
+    key: "connector",
     category: "Community",
     name: "Connector",
     when: "10 connections made",
@@ -100,6 +104,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
+    key: "vouch",
     category: "Community",
     name: "Vouch",
     when: "Vouched for a new member",
@@ -125,6 +130,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
+    key: "thread-starter",
     category: "Community",
     name: "Thread Starter",
     when: "Started a community thread",
@@ -155,6 +161,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
+    key: "founding-member",
     category: "Platform",
     name: "Founding Member",
     when: "Joined in the first 500",
@@ -180,6 +187,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
+    key: "sustainer",
     category: "Platform",
     name: "Sustainer",
     when: "Supporting member · 6 months",
@@ -204,6 +212,7 @@ export const earnedBadges: Badge[] = [
     ),
   },
   {
+    key: "event-host",
     category: "Platform",
     name: "Event Host",
     when: "Hosted a QueerPulse gathering",
@@ -236,6 +245,7 @@ export const earnedBadges: Badge[] = [
 
 export const lockedBadges: Badge[] = [
   {
+    key: "decade",
     category: "Attendance",
     name: "Decade",
     when: "Attend 10 gatherings",
@@ -255,6 +265,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
+    key: "trusted-voice",
     category: "Community",
     name: "Trusted Voice",
     when: "Have your vouch accepted 3 times",
@@ -272,6 +283,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
+    key: "networker",
     category: "Community",
     name: "Networker",
     when: "Connect with 50 members",
@@ -291,6 +303,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
+    key: "serial-host",
     category: "Hosting",
     name: "Serial Host",
     when: "Host 3 approved gatherings",
@@ -315,6 +328,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
+    key: "secret-lock",
     category: "Platform",
     name: "???",
     when: "Legendary · Secret badge",
@@ -347,6 +361,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
+    key: "2-year-member",
     category: "Platform",
     name: "2-Year Member",
     when: "Active for 2 full years",
@@ -364,6 +379,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
+    key: "contributor",
     category: "Community",
     name: "Contributor",
     when: "Submit a member story",
@@ -394,6 +410,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
+    key: "secret-clock",
     category: "Platform",
     name: "???",
     when: "Legendary · Secret badge",
@@ -413,6 +430,7 @@ export const lockedBadges: Badge[] = [
     ),
   },
   {
+    key: "bridge-builder",
     category: "Community",
     name: "Bridge Builder",
     when: "Connect members across cities",

@@ -57,6 +57,11 @@ export interface ProfileDraft {
   /** Ordered slugs of the communities the member has chosen to feature on
    *  their profile — editable via the featured-communities picker. */
   featuredCommunities: string[];
+  /** Broad professional field(s) — Settings → Interests. */
+  discipline: string[];
+  /** Specific job(s) within `discipline` — Settings → Interests. */
+  profession: string[];
+  languages: string[];
 }
 
 export function toDraft(m: Member): ProfileDraft {
@@ -91,6 +96,9 @@ export function toDraft(m: Member): ProfileDraft {
     privateNetwork: m.privateNetwork ?? false,
     featuredConsent: m.featuredConsent ?? false,
     featuredCommunities: (m.featuredCommunities ?? []).map((ref) => ref.slug),
+    discipline: [...(m.discipline ?? [])],
+    profession: [...(m.profession ?? [])],
+    languages: [...(m.languages ?? [])],
   };
 }
 
@@ -139,6 +147,9 @@ export function draftToUpdateDto(
     privateNetwork: d.privateNetwork,
     featuredConsent: d.featuredConsent,
     featuredCommunities: d.featuredCommunities,
+    discipline: d.discipline,
+    profession: d.profession,
+    languages: d.languages,
   };
 }
 

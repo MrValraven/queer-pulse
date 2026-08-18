@@ -1,3 +1,9 @@
+/**
+ * PLATFORM-LEVEL join requests: a stranger with no account asking to join
+ * QueerPulse itself. Do not confuse this with the COMMUNITY-LEVEL join
+ * request hook in `src/features/communities/api/useJoinRequests.ts` — same
+ * name, same approve/decline shape, entirely different backend module.
+ */
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -23,6 +29,10 @@ export interface JoinRequestView {
   city: string | null;
   /** The applicant's own words — why they want in. */
   message: string;
+  /** The email of a member already here who can vouch for them, as a
+   *  structured field the reviewer can match directly — null when they named
+   *  nobody. */
+  mutualMemberEmail: string | null;
   /** "18+ confirmed on 1 Jul 2026 · Terms v2.4" — the attestation record. */
   ageLine: string;
   /**
@@ -32,8 +42,25 @@ export interface JoinRequestView {
   sourceLabel: string;
   /** Pre-formatted "Applied 2 days ago". */
   appliedLine: string;
+  /** Whole days since the request was submitted. */
+  daysWaiting: number;
   /** Set once approved; the reviewer builds the invite link from it. */
   inviteCode: string | null;
+  /** Confidence-tiered triage flags, already localized labels — computed here
+   *  so the card never has to know the raw flag keys. */
+  flagLabels: string[];
+  /** null when this is the applicant's first request on record. */
+  priorDeclineLine: string | null;
+  /** null when no reference was given, or it never resolved to a real member. */
+  referenceLine: string | null;
+  /** The resolved reference member's profile slug, for a link. Null when
+   *  `referenceLine` is null, or when it resolved but has no slug. */
+  referenceMemberSlug: string | null;
+  /** The raw review status. The pending/waitlisted queues never needed this
+   *  (they already know which queue they're rendering), but the quality-
+   *  sampling page mixes approved and declined rows, so it has to display
+   *  which is which. */
+  status: JoinRequestDTO["status"];
 }
 
 const TONES: AvatarTone[] = ["coral", "jade", "violet", "amber", "plum"];
@@ -77,12 +104,38 @@ function ageLine(dto: JoinRequestDTO, t: TFunction, locale: string): string {
   });
 }
 
+const FLAG_LABEL_KEYS: Record<string, string> = {
+  disposable_email: "admin:members.verify.flags.disposableEmail",
+  duplicate_message: "admin:members.verify.flags.duplicateMessage",
+  source_burst: "admin:members.verify.flags.sourceBurst",
+};
+
 export function dtoToView(
   dto: JoinRequestDTO,
   t: TFunction,
   locale: string,
 ): JoinRequestView {
   const name = dto.name.trim() || t("admin:members.verify.unnamedApplicant");
+  const createdAtMs = new Date(dto.createdAt).getTime();
+  const daysWaiting = Number.isNaN(createdAtMs)
+    ? 0
+    : Math.max(0, Math.floor((Date.now() - createdAtMs) / 86_400_000));
+  const flagLabels = dto.flags.map((flag) => t(FLAG_LABEL_KEYS[flag] ?? flag));
+  const priorDeclineLine =
+    dto.priorDeclineCount > 0
+      ? t("admin:members.verify.priorDeclineCount", {
+          count: dto.priorDeclineCount,
+        })
+      : null;
+  const referenceLine = dto.referenceMemberName
+    ? t("admin:members.verify.referenceResolved", {
+        name: dto.referenceMemberName,
+      })
+    : dto.mutualMemberEmail
+      ? t("admin:members.verify.referenceUnresolved", {
+          email: dto.mutualMemberEmail,
+        })
+      : null;
   return {
     id: dto.id,
     name,
@@ -91,10 +144,17 @@ export function dtoToView(
     email: dto.email,
     city: dto.city,
     message: dto.message,
+    mutualMemberEmail: dto.mutualMemberEmail,
     ageLine: ageLine(dto, t, locale),
     sourceLabel: t(sourceLabelKey(dto.source)),
     appliedLine: appliedLine(dto.createdAt, t),
+    daysWaiting,
     inviteCode: dto.inviteCode,
+    flagLabels,
+    priorDeclineLine,
+    referenceLine,
+    referenceMemberSlug: dto.referenceMemberSlug,
+    status: dto.status,
   };
 }
 

@@ -1592,4 +1592,33 @@ export const magazine: Catalog = {
   "pieceThread.composerPlaceholder": "Write a message…",
   "pieceThread.send": "Send",
   "pieceThread.sentToast": "Message sent.",
+
+  // ══════════════════ Apply to write ═══════════════════════════════════════
+  "applyToWrite.intro.eyebrow": "Write for us",
+  "applyToWrite.intro.title": "Show us <em>what you've got.</em>",
+  "applyToWrite.intro.lead":
+    "Every story that reaches an editor starts here. Tell us why you want to write for QueerPulse and share a sample of your writing: pasted in, or a link to something you've already published.",
+  "applyToWrite.form.pitchNoteLabel": "Why do you want to write for us?",
+  "applyToWrite.form.pitchNotePlaceholder": "A sentence or two is plenty.",
+  "applyToWrite.form.sampleTextLabel": "Paste a writing sample",
+  "applyToWrite.form.sampleTextPlaceholder": "Paste a piece of your writing here.",
+  "applyToWrite.form.sampleLinkLabel": "…or link to something you've published",
+  "applyToWrite.form.sampleLinkPlaceholder": "https://",
+  "applyToWrite.form.sampleRequiredError":
+    "Include a writing sample: paste some text or add a link.",
+  "applyToWrite.form.submitCta": "Send application",
+  "applyToWrite.form.submittingCta": "Sending…",
+  "applyToWrite.form.submitError": "Something went wrong. Try again.",
+  "applyToWrite.pending.title": "Your application is <em>under review.</em>",
+  "applyToWrite.pending.body":
+    "An editor will read your sample and get back to you. This usually takes a couple of weeks.",
+  "applyToWrite.declined.title": "Not this time",
+  "applyToWrite.declined.body": "Thanks for applying. This one wasn't a fit.",
+  "applyToWrite.declined.reviewNoteLabel": "From the editors:",
+  "applyToWrite.declined.reapplyCta": "Apply again",
+  "applyToWrite.approved.title": "You're a QueerPulse writer",
+  "applyToWrite.approved.body":
+    "Your application was approved. Head over to the submission page to send your first pitch.",
+  "applyToWrite.approved.cta": "Start writing",
+  "applyToWrite.backCta": "Back to the magazine",
 };

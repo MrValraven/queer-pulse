@@ -251,6 +251,13 @@ export const notifications: Catalog = {
   "type.badge_earned.text": "You earned the {badgeName} badge.",
   "type.badge_earned.meta": "Badge earned",
 
+  "type.writer_application_approved.text":
+    "Your writer application was approved. You can submit stories now.",
+  "type.writer_application_approved.meta": "Writer application",
+  "type.writer_application_declined.text":
+    "Your writer application wasn't accepted this time.",
+  "type.writer_application_declined.meta": "Writer application",
+
   "type.unknown.text": "You have a new notification.",
   "type.unknown.meta": "Notification",
 

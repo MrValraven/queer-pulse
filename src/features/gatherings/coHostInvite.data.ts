@@ -1,82 +1,37 @@
+import type { CohostInviteDetailDTO } from "./api/events.api";
+
 /**
- * Static content for the co-host invitation's "roles" and "commitments"
- * cards — organizer-authored narrative held as data (single source, and it
- * keeps this un-keyed chrome out of inline JSX).
+ * Demo-mode fallback for `useCohostInvite`: a fixed pending cohost invite so
+ * the `/co-host-invite/:inviteId` page has something to render standalone,
+ * with no backend. Replaces the old page-specific hardcoded constants
+ * (`INVITE_ID`, `HOST_NAME`, etc.) that lived directly in `CoHostInvitePage.tsx`.
  */
-
-export interface CoHostRole {
-  ic: string;
-  title: string;
-  description: string;
-  permKey: string;
-  permCls: "permYes" | "permNo";
-}
-
-export const ROLES: CoHostRole[] = [
-  {
-    ic: "G",
-    title: "Greet at the door, 18:30 to 19:30",
-    description: "Check names against the RSVP list. Anika will join you by 19:00.",
-    permKey: "gatherings:cohostInvite.permRequired",
-    permCls: "permYes",
+export const DEMO_COHOST_INVITE: CohostInviteDetailDTO = {
+  id: "cohost-anika-clinic",
+  status: "pending",
+  role: "greeter",
+  commitment: "light",
+  message:
+    "I'd love to do this with you. You're calmer than I am about the front-door bit and you know Sandra and Rui.",
+  replyByDate: new Date(2026, 5, 10).toISOString(),
+  createdAt: new Date(2026, 5, 8).toISOString(),
+  event: {
+    slug: "open-clinic-night",
+    title: "Open clinic night: bring your prescription questions",
+    startAt: new Date(2026, 5, 12, 19, 0).toISOString(),
+    endAt: new Date(2026, 5, 12, 21, 0).toISOString(),
+    timezone: "Europe/Lisbon",
+    venue: "the community café",
+    isOnline: false,
+    goingCount: 22,
+    waitlistCount: 14,
   },
-  {
-    ic: "R",
-    title: "Manage the room flow",
-    description: "Walk between Dr. Pereira and the pharmacist's tables so neither gets a queue.",
-    permKey: "gatherings:cohostInvite.permRequired",
-    permCls: "permYes",
+  inviter: {
+    slug: "anika",
+    firstName: "Anika",
+    lastName: "Kovač",
+    avatarUrl: null,
+    hostedEventsCount: 14,
+    mutualConnectionsCount: 11,
   },
-  {
-    ic: "M",
-    title: "Co-moderate questions",
-    description: "If a public Q&A breaks out, you and Anika tag-team it.",
-    permKey: "gatherings:cohostInvite.permRequired",
-    permCls: "permYes",
-  },
-  {
-    ic: "P",
-    title: "Edit the event page",
-    description: "Add/remove RSVPs, change time, send updates, post a recap after.",
-    permKey: "gatherings:cohostInvite.permGranted",
-    permCls: "permYes",
-  },
-  {
-    ic: "F",
-    title: "Access the host fund",
-    description: "€60 spending budget for tea/coffee, small first-aid kit, and after-snacks.",
-    permKey: "gatherings:cohostInvite.permHostOnly",
-    permCls: "permNo",
-  },
-  {
-    ic: "C",
-    title: "Cancel the event",
-    description: "This stays with Anika as the lead host.",
-    permKey: "gatherings:cohostInvite.permHostOnly",
-    permCls: "permNo",
-  },
-];
-
-export interface CoHostCommitment {
-  b: string;
-  s: string;
-}
-
-export const COMMITMENTS: CoHostCommitment[] = [
-  {
-    b: "~ 30 min prep",
-    s: "Read the runbook, message Anika once before. That's it.",
-  },
-  {
-    b: "2.5 hours on the night",
-    s: "Arrive 30 min early, stay 15 min after for tidy-up.",
-  },
-  { b: "~ 15 min after", s: "Write a short recap. Anika handles the post." },
-  {
-    b: "One ask post-event",
-    s: "If a follow-up question comes in, you'll see it & can reply.",
-  },
-];
-
-export const OUTCLAUSE_REST =
-  ": no shame, no penalty, just send Anika a one-line message. We've all had a Thursday go sideways.";
+};

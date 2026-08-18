@@ -18,8 +18,6 @@ import {
 import { PushNotificationRow } from "../push/PushNotificationRow";
 import { NOTIFICATION_PREFERENCE_CATEGORY } from "./api/notificationPreferences.api";
 import { useNotificationPreferences } from "./api/useNotificationPreferences";
-import { SIM_GROUPS, type SimFlow } from "./simulations.data";
-import { SimulationPreviewModal } from "./SimulationPreviewModal";
 import { DestructiveActionFlow } from "./DestructiveActionFlow";
 import { buildDestructiveFlow } from "./destructiveFlows.data";
 import {
@@ -447,59 +445,6 @@ export function DataPane({
         <DestructiveActionFlow
           content={destructiveFlow.deactivate}
           onClose={() => setDeactivateOpen(false)}
-        />
-      )}
-    </Pane>
-  );
-}
-
-export function SimulationsPane() {
-  const { t } = useTranslation();
-  const [preview, setPreview] = useState<SimFlow | null>(null);
-  return (
-    <Pane
-      title={
-        <Translation
-          i18nKey="settings:simulations.title"
-          components={{ em: <em /> }}
-        />
-      }
-      sub={t("settings:simulations.sub")}
-    >
-      {/* NOTE: SIM_GROUPS (simulations.data.ts) group labels and each flow's
-          title/desc are still hardcoded English — ~50 flows across 12
-          groups, out of this pass's priority order (account/privacy/
-          notifications/safety/accessibility first). Flagged for a follow-up
-          sweep rather than translated partially. */}
-      {SIM_GROUPS.map((g) => (
-        <Section key={g.label} label={g.label}>
-          <div className={styles.dataCards}>
-            {g.flows.map((f) =>
-              f.preview ? (
-                <DataCard
-                  key={f.title}
-                  title={f.title}
-                  description={f.description}
-                  button={t("settings:simulations.preview")}
-                  onClick={() => setPreview(f)}
-                />
-              ) : (
-                <DataCard
-                  key={f.title}
-                  title={f.title}
-                  description={f.description}
-                  button={t("settings:simulations.start")}
-                  to={f.to}
-                />
-              ),
-            )}
-          </div>
-        </Section>
-      ))}
-      {preview && (
-        <SimulationPreviewModal
-          flow={preview}
-          onClose={() => setPreview(null)}
         />
       )}
     </Pane>

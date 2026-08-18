@@ -317,6 +317,87 @@
   }
 }
 
+/* Pronouns + short bio, tacked onto the photo step (StepPhotoIdentityFields). */
+.identityFields {
+  margin-bottom: 6px;
+}
+.pronounChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -6px 0 22px;
+}
+.pronounChip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .pronounChip:hover {
+    border-color: rgba(var(--line-rgb), 0.24);
+    color: var(--text-strong);
+  }
+}
+.pronounChipSelected {
+  border-color: rgba(var(--accent-rgb), 0.4);
+  background: rgba(var(--accent-rgb), 0.08);
+  color: var(--accent-ink);
+}
+:global([data-theme="dark"]) .pronounChip {
+  background: rgba(var(--cream-rgb), 0.05);
+  border-color: rgba(var(--cream-rgb), 0.14);
+}
+
+/* A compact opt-in card on the final step (StepDone) — same footprint as a
+   .qsCard so it sits naturally beside the quick-start tiles. */
+.notifyCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 14px;
+  margin-bottom: 24px;
+}
+.notifyIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  background: rgba(var(--accent-rgb), 0.08);
+  color: var(--accent-ink);
+}
+.notifyBody {
+  flex: 1;
+}
+.notifyTitle {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.notifyDesc {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  margin-top: 1px;
+}
+
 .normCards {
   display: flex;
   flex-direction: column;
@@ -356,6 +437,15 @@
   gap: 11px;
   margin-bottom: 22px;
 }
+.agreeRow.locked {
+  cursor: not-allowed;
+}
+.agreeRow.locked input {
+  opacity: 0.55;
+}
+.agreeRow.shake {
+  animation: qpShake var(--dur-slow) var(--ease-std);
+}
 .agreeRow input {
   margin-top: 3px;
   accent-color: var(--accent);
@@ -373,6 +463,9 @@
   font-weight: 600;
 }
 .readHint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   margin: 6px 0 18px;
   font-size: 12.5px;
   color: var(--ink-60);
@@ -533,6 +626,22 @@
     box-shadow: 0 -10px 24px -14px rgba(var(--plum-rgb), 0.22);
   }
 }
+
+/* Same footprint as .nav, without the sticky-footer treatment — for steps
+   short enough that the CTA never risks the fold, so it just sits as part of
+   the card's normal flow instead of a pinned bar with its own shadow seam. */
+.navPlain {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+.navPlain :global(.btn),
+.navPlain > button {
+  width: 100%;
+  justify-content: center;
+}
+
 .back {
   display: inline-flex;
   align-items: center;
@@ -614,7 +723,8 @@
 }
 
 :global([data-theme="dark"]) .card,
-:global([data-theme="dark"]) .qsCard {
+:global([data-theme="dark"]) .qsCard,
+:global([data-theme="dark"]) .notifyCard {
   border-color: rgba(var(--cream-rgb), 0.1);
 }
 :global([data-theme="dark"]) .normCard {

@@ -172,7 +172,7 @@
     opacity var(--dur-fast) var(--ease);
 }
 
-/* The teardrop — brand accent (matches BRAND.accent in lisbonMapStyle.ts). The
+/* The teardrop — brand accent (matches BRAND.accent in shared/components/map/siteMapStyle.ts). The
    -45° rotation points the sharp corner straight down onto the shadow. */
 .pickerPin {
   position: absolute;

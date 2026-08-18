@@ -42,14 +42,19 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
             </h1>
             <p className={s.tagline}>{place.tagline}</p>
             <div className={s.metaRow}>
+              {/* Moderator-confirmed verification, not the owner's own
+                  self-reported claim (`place.owned`) — see
+                  `queerOwnedVerified` on `DirectoryPlace`. An unverified
+                  owned listing gets the plain "friendly" pill rather than
+                  a false "verified" claim. */}
               <span
                 className={[
                   s.pill,
-                  place.owned ? s.verified : s.friendlyPill,
+                  place.queerOwnedVerified ? s.verified : s.friendlyPill,
                 ].join(" ")}
               >
                 {t(
-                  place.owned
+                  place.queerOwnedVerified
                     ? "marketing:directory.detail.badge.verifiedOwned"
                     : "marketing:directory.detail.badge.friendly",
                 )}

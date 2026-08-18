@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { FiImage, FiX } from "react-icons/fi";
 import {
   Button,
   FadeIn,
@@ -15,7 +16,9 @@ import type { Thread as ThreadData } from "./communityDetails";
 import type { PulsePaging } from "./api/useCommunityPosts";
 import { viewerPerson } from "./communityPeople";
 import { useCreatePost } from "./api/useCommunityMutations";
+import { usePostImageAttach } from "./usePostImageAttach";
 import { CommunityThread } from "./CommunityThread";
+import { CommunityFrozenComposerNotice } from "./CommunityFrozenComposerNotice";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./CommunityHubTabs.module.css";
 
@@ -25,11 +28,18 @@ export function DiscussionTab({
   threads,
   slug,
   isMember,
+  canModerate = false,
+  frozen = false,
   paging,
 }: {
   threads: ThreadData[];
   slug: string;
   isMember: boolean;
+  /** Owner/mod — gates the pin/unpin action on each thread. */
+  canModerate?: boolean;
+  /** True while the community is auto-frozen — swaps the "start a thread"
+   *  composer for an explanation instead of leaving it open to a 403. */
+  frozen?: boolean;
   paging: PulsePaging;
 }) {
   const { t } = useTranslation();
@@ -37,6 +47,7 @@ export function DiscussionTab({
   const { demoMode } = useDemoMode();
   const { user } = useAuth();
   const createPost = useCreatePost(slug);
+  const imageAttach = usePostImageAttach();
   const [searchTerm, setSearchTerm] = useState("");
   const [chip, setChip] = useState<Chip>("All");
   const [newPost, setNewPost] = useState("");
@@ -77,10 +88,12 @@ export function DiscussionTab({
     };
     setExtra((prev) => [optimisticThread, ...prev]);
     setNewPost("");
+    const stagedImageKey = imageAttach.image?.key;
+    imageAttach.remove();
     showToast(t("communities:detail.discussion.startedToast"), "success");
     if (demoMode) return;
     createPost.mutate(
-      { body: text },
+      { body: text, image: stagedImageKey },
       {
         // On success the refetched page carries the real post, so drop all
         // optimistic entries.
@@ -138,7 +151,13 @@ export function DiscussionTab({
       ) : (
         shown.map((thread, index) => (
           <FadeIn key={thread.id ?? thread.title} delay={Math.min(index, 8) * 55}>
-            <CommunityThread data={thread} slug={slug} />
+            <CommunityThread
+              data={thread}
+              slug={slug}
+              isMember={isMember}
+              canModerate={canModerate}
+              frozen={frozen}
+            />
           </FadeIn>
         ))
       )}
@@ -165,31 +184,75 @@ export function DiscussionTab({
         </div>
       )}
 
-      {isMember && (
-        <div className={detail.newPost} style={{ marginTop: 16 }}>
-          <div
-            className={[detail.rAv, detail.tPlum].join(" ")}
-            style={{ width: 30, height: 30 }}
-          >
-            Me
+      {isMember &&
+        (frozen ? (
+          <div style={{ marginTop: 16 }}>
+            <CommunityFrozenComposerNotice />
           </div>
-          <textarea
-            className={detail.npTa}
-            rows={1}
-            aria-label={t("communities:detail.forum.newPostPlaceholder")}
-            placeholder={t("communities:detail.forum.newPostPlaceholder")}
-            value={newPost}
-            onChange={(event) => setNewPost(event.target.value)}
-          />
-          <Button
-            variant="ghost"
-            onClick={post}
-            style={{ whiteSpace: "nowrap", fontSize: 13 }}
-          >
-            {t("communities:detail.forum.postCta")}
-          </Button>
-        </div>
-      )}
+        ) : (
+          <div className={detail.newPost} style={{ marginTop: 16 }}>
+            <div
+              className={[detail.rAv, detail.tPlum].join(" ")}
+              style={{ width: 30, height: 30 }}
+            >
+              Me
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <textarea
+                className={detail.npTa}
+                rows={1}
+                aria-label={t("communities:detail.forum.newPostPlaceholder")}
+                placeholder={t("communities:detail.forum.newPostPlaceholder")}
+                value={newPost}
+                onChange={(event) => setNewPost(event.target.value)}
+                style={{ width: "100%" }}
+              />
+              {imageAttach.image && (
+                <div className={styles.stagedImage}>
+                  <img src={imageAttach.image.previewUrl} alt="" />
+                  <button
+                    type="button"
+                    className={styles.stagedImageRemove}
+                    aria-label={t("communities:common.removeImageAria")}
+                    onClick={imageAttach.remove}
+                  >
+                    <FiX aria-hidden />
+                  </button>
+                </div>
+              )}
+              {imageAttach.error && (
+                <p className={styles.imageAttachError} role="alert">
+                  {imageAttach.error}
+                </p>
+              )}
+            </div>
+            <input
+              ref={imageAttach.inputRef}
+              type="file"
+              accept="image/*"
+              className={styles.hiddenFileInput}
+              onChange={(event) => {
+                void imageAttach.handleFile(event.target.files?.[0]);
+              }}
+            />
+            <button
+              type="button"
+              className={styles.attachImageBtn}
+              aria-label={t("communities:common.attachImageAria")}
+              disabled={imageAttach.uploading}
+              onClick={() => imageAttach.inputRef.current?.click()}
+            >
+              <FiImage aria-hidden />
+            </button>
+            <Button
+              variant="ghost"
+              onClick={post}
+              style={{ whiteSpace: "nowrap", fontSize: 13 }}
+            >
+              {t("communities:detail.forum.postCta")}
+            </Button>
+          </div>
+        ))}
     </div>
   );
 }

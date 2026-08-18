@@ -9,6 +9,7 @@ import { routes } from "../../app/routeMap";
 import { type DirectoryPlace } from "./directoryPlaces";
 import { DirectorySuggestEditModal } from "./DirectorySuggestEditModal";
 import { DirectoryDisputeModal } from "./DirectoryDisputeModal";
+import { DirectoryClaimModal } from "./DirectoryClaimModal";
 import styles from "./DirectoryContestControl.module.css";
 
 interface Props {
@@ -18,18 +19,21 @@ interface Props {
   ownerRef?: string;
 }
 
-type Active = "menu" | "suggest" | "dispute";
+type Active = "menu" | "suggest" | "dispute" | "claim";
 
 /**
  * "Report / claim this listing" — the single member-facing entry, tucked in the
  * detail aside footer, for contesting or claiming a directory listing. Opening
  * it offers three paths: (a) suggest an edit (the existing `DirectorySuggestEdit`
- * flow, reused verbatim), (b) report/dispute the listing (the new
- * `DirectoryDisputeModal` → shared moderation pipeline), and (c) claim it (into
- * the list-a-business claim wizard). Critical for a queer platform: a venue can
- * be tagged "queer-friendly" via the suggest path WITHOUT its knowledge, so it
- * needs a way to contest or take ownership. Member-gated (dispute + claim both
- * require an account; suggest-edit already did) and hidden for owners.
+ * flow, reused verbatim), (b) report/dispute the listing (`DirectoryDisputeModal`
+ * → shared moderation pipeline), and (c) claim it — a real ownership request
+ * (`DirectoryClaimModal` → `POST /listings/:ref/claim`), reviewed by a
+ * moderator, NOT a bounce into the "list your business" create wizard (that
+ * would make a duplicate listing rather than claim the existing one). Critical
+ * for a queer platform: a venue can be tagged "queer-friendly" via the suggest
+ * path WITHOUT its knowledge, so it needs a way to contest or take ownership.
+ * Member-gated (dispute + claim both require an account; suggest-edit already
+ * did) and hidden for owners.
  */
 export function DirectoryContestControl({ place, ownerRef }: Props) {
   const { t } = useTranslation();
@@ -40,11 +44,13 @@ export function DirectoryContestControl({ place, ownerRef }: Props) {
   if (ownerRef || !user) return null;
 
   const close = () => setActive(null);
-  // A live dispute must be addressable by the listing's `ref`; demo never hits
-  // the network. Hide the dispute path when live and the detail DTO hasn't
-  // carried a ref (see useDisputeListing / DirectoryDetailDTO.ref).
+  // A live dispute/claim must be addressable by the listing's `ref`; demo
+  // never hits the network. Hide both paths when live and the detail DTO
+  // hasn't carried a ref (see useDisputeListing/useClaimListing,
+  // DirectoryDetailDTO.ref) — for a synthetic demo-only entry with no real
+  // ref, "claim" falls back to the create wizard below instead.
   const listingRef = place.ref ?? undefined;
-  const canDispute = demoMode || Boolean(listingRef);
+  const canFileAgainstListing = demoMode || Boolean(listingRef);
 
   return (
     <div className={styles.wrap}>
@@ -82,7 +88,7 @@ export function DirectoryContestControl({ place, ownerRef }: Props) {
               <FiChevronRight className={styles.optionChevron} aria-hidden />
             </button>
 
-            {canDispute && (
+            {canFileAgainstListing && (
               <button
                 type="button"
                 className={styles.option}
@@ -100,17 +106,35 @@ export function DirectoryContestControl({ place, ownerRef }: Props) {
               </button>
             )}
 
-            <Link to={routes.listBusiness} className={styles.option} onClick={close}>
-              <span className={styles.optionText}>
-                <span className={styles.optionTitle}>
-                  {t("marketing:directory.detail.contest.claim.title")}
+            {canFileAgainstListing ? (
+              <button
+                type="button"
+                className={styles.option}
+                onClick={() => setActive("claim")}
+              >
+                <span className={styles.optionText}>
+                  <span className={styles.optionTitle}>
+                    {t("marketing:directory.detail.contest.claim.title")}
+                  </span>
+                  <span className={styles.optionDesc}>
+                    {t("marketing:directory.detail.contest.claim.desc")}
+                  </span>
                 </span>
-                <span className={styles.optionDesc}>
-                  {t("marketing:directory.detail.contest.claim.desc")}
+                <FiChevronRight className={styles.optionChevron} aria-hidden />
+              </button>
+            ) : (
+              <Link to={routes.listBusiness} className={styles.option} onClick={close}>
+                <span className={styles.optionText}>
+                  <span className={styles.optionTitle}>
+                    {t("marketing:directory.detail.contest.claim.title")}
+                  </span>
+                  <span className={styles.optionDesc}>
+                    {t("marketing:directory.detail.contest.claim.desc")}
+                  </span>
                 </span>
-              </span>
-              <FiChevronRight className={styles.optionChevron} aria-hidden />
-            </Link>
+                <FiChevronRight className={styles.optionChevron} aria-hidden />
+              </Link>
+            )}
           </div>
         </Modal>
       )}
@@ -125,6 +149,14 @@ export function DirectoryContestControl({ place, ownerRef }: Props) {
 
       {active === "dispute" && (
         <DirectoryDisputeModal
+          listingRef={listingRef ?? place.slug}
+          placeName={place.name}
+          onClose={close}
+        />
+      )}
+
+      {active === "claim" && (
+        <DirectoryClaimModal
           listingRef={listingRef ?? place.slug}
           placeName={place.name}
           onClose={close}

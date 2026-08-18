@@ -1,4 +1,4 @@
-import { apiGet } from "../../../shared/api/client";
+import { apiGet, apiPatch } from "../../../shared/api/client";
 
 /**
  * Admin invite oversight (`/admin/invites`, admin-only). Lists every invite on
@@ -49,6 +49,9 @@ export interface AdminInviteInviterDTO {
   name: string;
   avatarUrl?: string | null;
   count: number;
+  /** This member's monthly invite-quota override, or `null` if they use the
+   *  platform default (`User.inviteMonthlyQuota`, admin-editable). */
+  inviteMonthlyQuota: number | null;
 }
 
 /** Paginated invite list for the admin panel, optionally filtered by status and
@@ -72,3 +75,11 @@ export const getAdminInvites = (parameters: {
 /** Every member who has sent an invite, for the sender filter's dropdown. */
 export const getAdminInviteInviters = () =>
   apiGet<AdminInviteInviterDTO[]>("/admin/invites/inviters");
+
+/** Admin sets (or clears, with `quota: null`) a member's monthly invite-quota
+ *  override. `PATCH /admin/members/:memberId/invite-quota`, Admin role only. */
+export const patchAdminInviteQuota = (memberId: string, quota: number | null) =>
+  apiPatch<{ inviteMonthlyQuota: number | null }>(
+    `/admin/members/${memberId}/invite-quota`,
+    { quota },
+  );

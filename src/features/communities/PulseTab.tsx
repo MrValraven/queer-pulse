@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { FiSend, FiCornerUpLeft, FiMessageCircle } from "react-icons/fi";
+import { FiSend, FiCornerUpLeft, FiMessageCircle, FiImage, FiX } from "react-icons/fi";
 import {
   Avatar,
   Button,
@@ -13,6 +13,8 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { PostActionsMenu } from "../forum/PostActionsMenu";
+import { ReportReplyModal } from "../forum/ReportReplyModal";
 import type {
   LivingCommunity,
   Post,
@@ -30,9 +32,20 @@ import {
   useReact,
   useReply,
   useUnreact,
+  useUpdatePost,
 } from "./api/useCommunityMutations";
 import type { PulsePaging } from "./api/useCommunityPosts";
+import { usePostImageAttach } from "./usePostImageAttach";
+import { CommunityFrozenComposerNotice } from "./CommunityFrozenComposerNotice";
 import styles from "./PulseTab.module.css";
+
+// The content currently being reported — mirrors the shape `ReportReplyModal`
+// (shared with the forum) already expects.
+type ReportTarget = {
+  authorName: string;
+  subjectId: string;
+  subjectType: "post" | "reply";
+};
 
 function toggle(reactions: Reaction[], key: ReactionKey): Reaction[] {
   return reactions.map((r) =>
@@ -48,8 +61,12 @@ function PulsePost({
   isMember,
   viewer,
   pinned = false,
+  canModerate = false,
   onReactPost,
   onReplyPost,
+  onTogglePin,
+  onReportPost,
+  onReportReply,
 }: {
   post: Post;
   roleOf: (p: Post["author"]) => ReturnType<ReturnType<typeof roleLookup>>;
@@ -59,11 +76,24 @@ function PulsePost({
    *  name/avatar rather than a generic "You". */
   viewer: Person | null;
   pinned?: boolean;
+  /** Owner/mod — gates the pin/unpin action. */
+  canModerate?: boolean;
   /** Persist a reaction toggle (no-op in demo — local state owns the UI). */
   onReactPost?: (id: string, key: ReactionKey, willReact: boolean) => void;
   /** Persist a reply (no-op in demo). `onDone` fires when the live mutation
-   *  succeeds so the caller can clear its optimistic reply copy. */
-  onReplyPost?: (id: string, text: string, onDone?: () => void) => void;
+   *  succeeds so the caller can clear its optimistic reply copy; `onFailed`
+   *  fires on error so the caller can roll the optimistic reply back. */
+  onReplyPost?: (
+    id: string,
+    text: string,
+    onDone?: () => void,
+    onFailed?: () => void,
+  ) => void;
+  onTogglePin?: (post: Post) => void;
+  onReportPost?: (post: Post) => void;
+  /** Member-only report on a reply that isn't the viewer's own — the same
+   *  generic reports flow as `onReportPost`, just for a reply subject. */
+  onReportReply?: (reply: PostReply) => void;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -91,16 +121,19 @@ function PulsePost({
   const sendReply = () => {
     const text = replyDraft.trim();
     if (!text) return;
-    setAdded((prev) => [
-      ...prev,
-      {
-        author: viewer ?? { initials: "Me", name: "You", tint: "plum" },
-        text,
-        time: t("communities:common.justNow"),
-      },
-    ]);
+    const optimisticReply: PostReply = {
+      author: viewer ?? { initials: "Me", name: "You", tint: "plum" },
+      text,
+      time: t("communities:common.justNow"),
+    };
+    setAdded((prev) => [...prev, optimisticReply]);
     setReplyDraft("");
-    onReplyPost?.(post.id, text, () => setAdded([]));
+    onReplyPost?.(
+      post.id,
+      text,
+      () => setAdded([]),
+      () => setAdded((prev) => prev.filter((r) => r !== optimisticReply)),
+    );
   };
   const replyAction = t("communities:detail.pulse.replyAction");
   const replyLabel = replyCount
@@ -114,6 +147,20 @@ function PulsePost({
     post.time === justNow
       ? justNow
       : t("communities:common.timeAgo", { time: post.time });
+  // Live "is this my post" check — no DTO flag says so directly (`canEdit` is
+  // also true for a mod editing someone else's post), so compare the
+  // viewer's own slug to the author's. Drives hiding "Report" on your own post.
+  const isOwnPost = demoMode
+    ? post.author.name === "You"
+    : !!viewer?.slug && viewer.slug === post.author.slug;
+  const canPin = canModerate && !post.deleted;
+  const canReport = isMember && !isOwnPost && !post.deleted;
+  // Same own-content check as `isOwnPost`, applied per-reply since replies
+  // don't share the post's flags.
+  const isOwnReply = (reply: PostReply) =>
+    demoMode
+      ? reply.author.name === "You"
+      : !!viewer?.slug && viewer.slug === reply.author.slug;
   return (
     <article
       className={[styles.post, pinned && styles.pinned]
@@ -142,6 +189,25 @@ function PulsePost({
           </div>
           <div className={styles.pTime}>{timeLabel}</div>
         </div>
+        {(canPin || canReport) && (
+          <span className={styles.pMenu}>
+            <PostActionsMenu
+              canEdit={false}
+              canDelete={false}
+              canRestore={false}
+              canViewHistory={false}
+              onEdit={() => {}}
+              onDelete={() => {}}
+              onRestore={() => {}}
+              onHistory={() => {}}
+              canPin={canPin}
+              pinned={!!post.pinned}
+              onTogglePin={() => onTogglePin?.(post)}
+              canReport={canReport}
+              onReport={() => onReportPost?.(post)}
+            />
+          </span>
+        )}
       </header>
       <p className={styles.pBody}>{post.body}</p>
       {post.image && (
@@ -185,19 +251,42 @@ function PulsePost({
           )
         )}
       </div>
-      {replies.map((rep, i) => (
-        <div className={styles.reply} key={`${rep.author.name}-${i}`}>
-          <div className={[styles.rAv, AV_CLASS[rep.author.tint]].join(" ")}>
-            {rep.author.initials}
+      {replies.map((rep, i) => {
+        const canReportReply = isMember && !isOwnReply(rep) && !rep.deleted;
+        return (
+          <div className={styles.reply} key={`${rep.author.name}-${i}`}>
+            <div
+              className={[styles.rAv, AV_CLASS[rep.author.tint]].join(" ")}
+            >
+              {rep.author.initials}
+            </div>
+            <div className={styles.rBody}>
+              <div className={styles.rHead}>
+                <span className={styles.rName}>{rep.author.name}</span>{" "}
+                <MemberStaffBadge slug={rep.author.slug} />{" "}
+                <span className={styles.rTime}>{rep.time}</span>
+                {canReportReply && (
+                  <span className={styles.rMenu}>
+                    <PostActionsMenu
+                      canEdit={false}
+                      canDelete={false}
+                      canRestore={false}
+                      canViewHistory={false}
+                      onEdit={() => {}}
+                      onDelete={() => {}}
+                      onRestore={() => {}}
+                      onHistory={() => {}}
+                      canReport
+                      onReport={() => onReportReply?.(rep)}
+                    />
+                  </span>
+                )}
+              </div>
+              <div className={styles.rText}>{rep.text}</div>
+            </div>
           </div>
-          <div>
-            <span className={styles.rName}>{rep.author.name}</span>{" "}
-            <MemberStaffBadge slug={rep.author.slug} />{" "}
-            <span className={styles.rTime}>{rep.time}</span>
-            <div className={styles.rText}>{rep.text}</div>
-          </div>
-        </div>
-      ))}
+        );
+      })}
       {showReply && (
         <div className={styles.replyBar}>
           <textarea
@@ -221,11 +310,18 @@ export function PulseTab({
   community,
   name,
   isMember,
+  canModerate = false,
+  frozen = false,
   paging,
 }: {
   community: LivingCommunity;
   name: string;
   isMember: boolean;
+  /** Owner/mod — gates the pin/unpin action on each post. */
+  canModerate?: boolean;
+  /** True while the community is auto-frozen — swaps the composer for an
+   *  explanation instead of leaving it open to a 403. */
+  frozen?: boolean;
   /** Live-mode pagination for the feed; inert in demo (`hasNextPage: false`). */
   paging: PulsePaging;
 }) {
@@ -239,12 +335,24 @@ export function PulseTab({
   const react = useReact(community.slug);
   const unreact = useUnreact(community.slug);
   const reply = useReply(community.slug);
+  const updatePost = useUpdatePost(community.slug);
+  const imageAttach = usePostImageAttach();
   const roleOf = useMemo(
     () => roleLookup(community.roster),
     [community.roster],
   );
   const [draft, setDraft] = useState("");
   const [mine, setMine] = useState<Post[]>([]);
+  // Demo-only pin overrides, keyed by post id — live mode relies on the
+  // refetch a successful `useUpdatePost` mutation triggers to move the post
+  // between the pinned/regular lists (see `postsToPulse`).
+  const [pinOverrides, setPinOverrides] = useState<Record<string, boolean>>({});
+  const [reportTarget, setReportTarget] = useState<ReportTarget | null>(null);
+
+  const onError = () => showToast(t("communities:common.error"), "error");
+
+  const isPinnedEffective = (post: Post) =>
+    pinOverrides[post.id] ?? !!post.pinned;
 
   // Persist handlers threaded into each post. Demo mode no-ops (the local
   // optimistic state owns the UI); live mode hits the API + invalidates.
@@ -252,19 +360,69 @@ export function PulseTab({
     if (willReact) react.mutate({ id, key });
     else unreact.mutate({ id, key });
   };
-  const onReplyPost = (id: string, text: string, onDone?: () => void) => {
+  const onReplyPost = (
+    id: string,
+    text: string,
+    onDone?: () => void,
+    onFailed?: () => void,
+  ) => {
     if (demoMode) return;
-    reply.mutate({ id, text }, { onSuccess: onDone });
+    reply.mutate(
+      { id, text },
+      {
+        onSuccess: onDone,
+        onError: () => {
+          onFailed?.();
+          onError();
+        },
+      },
+    );
+  };
+  const onTogglePin = (post: Post) => {
+    const next = !isPinnedEffective(post);
+    if (demoMode) {
+      setPinOverrides((prev) => ({ ...prev, [post.id]: next }));
+    } else {
+      updatePost.mutate({ id: post.id, dto: { pinned: next } }, { onError });
+    }
+    showToast(
+      t(
+        next
+          ? "communities:common.pinnedToast"
+          : "communities:common.unpinnedToast",
+      ),
+      "success",
+    );
+  };
+  const onReportPost = (post: Post) => {
+    setReportTarget({
+      authorName: post.author.name,
+      subjectId: post.id,
+      subjectType: "post",
+    });
+  };
+  const onReportReply = (reply: PostReply) => {
+    // A reply's backend id (absent on a demo/optimistic reply that hasn't
+    // round-tripped through the API) is the report's subject id.
+    if (!reply.id) return;
+    setReportTarget({
+      authorName: reply.author.name,
+      subjectId: reply.id,
+      subjectType: "reply",
+    });
   };
 
   const share = () => {
     const text = draft.trim();
     if (!text) return;
+    const stagedImage = imageAttach.image;
+    const optimisticId = `me-${mine.length}-${Date.now()}`;
     setMine((prev) => [
       {
-        id: `me-${prev.length}`,
+        id: optimisticId,
         author: viewer ?? { initials: "Me", name: "You", tint: "plum" },
         body: text,
+        image: stagedImage?.previewUrl,
         kind: "post",
         reactions: [{ key: "heart", count: 0 }],
         replies: [],
@@ -274,15 +432,39 @@ export function PulseTab({
       ...prev,
     ]);
     setDraft("");
-    if (!demoMode) {
-      createPost.mutate({ body: text }, { onSuccess: () => setMine([]) });
+    imageAttach.remove();
+    if (demoMode) {
+      showToast(t("communities:detail.pulse.sharedToast"), "success");
+      return;
     }
-    showToast(t("communities:detail.pulse.sharedToast"), "success");
+    createPost.mutate(
+      { body: text, image: stagedImage?.key },
+      {
+        onSuccess: () => {
+          setMine([]);
+          showToast(t("communities:detail.pulse.sharedToast"), "success");
+        },
+        onError: () => {
+          setMine((prev) => prev.filter((post) => post.id !== optimisticId));
+          onError();
+        },
+      },
+    );
   };
+
+  // Merge the pinned + regular lists once so a pin override can move a post
+  // between the two sections without waiting on a refetch (demo mode has no
+  // refetch to rely on — see `isPinnedEffective`).
+  const allLivingPosts = useMemo(
+    () => [...community.pinned, ...community.pulse],
+    [community.pinned, community.pulse],
+  );
+  const pinnedPosts = allLivingPosts.filter(isPinnedEffective);
+  const regularPosts = allLivingPosts.filter((post) => !isPinnedEffective(post));
 
   // Interleave system moments between posts so the feed reads as alive.
   const feed: Array<{ post?: Post; moment?: PulseMoment }> = [];
-  const posts = [...mine, ...community.pulse];
+  const posts = [...mine, ...regularPosts];
   posts.forEach((post, i) => {
     feed.push({ post });
     if (community.moments[i]) feed.push({ moment: community.moments[i] });
@@ -308,35 +490,80 @@ export function PulseTab({
   return (
     <div>
       {isMember ? (
-        <div className={styles.composer}>
-          <Avatar initials="Me" tint="plum" size={38} />
-          <textarea
-            className={styles.composerTa}
-            rows={1}
-            aria-label={t("communities:detail.pulse.composerPlaceholder", {
-              name,
-            })}
-            placeholder={t("communities:detail.pulse.composerPlaceholder", {
-              name,
-            })}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-          />
-          <Button
-            variant="primary"
-            onClick={share}
-            style={{ whiteSpace: "nowrap" }}
-          >
-            <FiSend aria-hidden /> {t("communities:detail.pulse.shareCta")}
-          </Button>
-        </div>
+        frozen ? (
+          <div style={{ marginBottom: 20 }}>
+            <CommunityFrozenComposerNotice />
+          </div>
+        ) : (
+          <div className={styles.composer}>
+            <Avatar initials="Me" tint="plum" size={38} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <textarea
+                className={styles.composerTa}
+                rows={1}
+                aria-label={t("communities:detail.pulse.composerPlaceholder", {
+                  name,
+                })}
+                placeholder={t("communities:detail.pulse.composerPlaceholder", {
+                  name,
+                })}
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                style={{ width: "100%" }}
+              />
+              {imageAttach.image && (
+                <div className={styles.stagedImage}>
+                  <img src={imageAttach.image.previewUrl} alt="" />
+                  <button
+                    type="button"
+                    className={styles.stagedImageRemove}
+                    aria-label={t("communities:common.removeImageAria")}
+                    onClick={imageAttach.remove}
+                  >
+                    <FiX aria-hidden />
+                  </button>
+                </div>
+              )}
+              {imageAttach.error && (
+                <p className={styles.imageAttachError} role="alert">
+                  {imageAttach.error}
+                </p>
+              )}
+            </div>
+            <input
+              ref={imageAttach.inputRef}
+              type="file"
+              accept="image/*"
+              className={styles.hiddenFileInput}
+              onChange={(e) => {
+                void imageAttach.handleFile(e.target.files?.[0]);
+              }}
+            />
+            <button
+              type="button"
+              className={styles.attachImageBtn}
+              aria-label={t("communities:common.attachImageAria")}
+              disabled={imageAttach.uploading}
+              onClick={() => imageAttach.inputRef.current?.click()}
+            >
+              <FiImage aria-hidden />
+            </button>
+            <Button
+              variant="primary"
+              onClick={share}
+              style={{ whiteSpace: "nowrap" }}
+            >
+              <FiSend aria-hidden /> {t("communities:detail.pulse.shareCta")}
+            </Button>
+          </div>
+        )
       ) : (
         <div className={styles.joinHint}>
           {t("communities:detail.pulse.joinHint", { name })}
         </div>
       )}
 
-      {community.pinned.map((post) => (
+      {pinnedPosts.map((post) => (
         <FadeIn key={post.id}>
           <PulsePost
             post={post}
@@ -344,8 +571,12 @@ export function PulseTab({
             isMember={isMember}
             viewer={viewer}
             pinned
+            canModerate={canModerate}
             onReactPost={onReactPost}
             onReplyPost={onReplyPost}
+            onTogglePin={onTogglePin}
+            onReportPost={onReportPost}
+            onReportReply={onReportReply}
           />
         </FadeIn>
       ))}
@@ -358,8 +589,12 @@ export function PulseTab({
               roleOf={roleOf}
               isMember={isMember}
               viewer={viewer}
+              canModerate={canModerate}
               onReactPost={onReactPost}
               onReplyPost={onReplyPost}
+              onTogglePin={onTogglePin}
+              onReportPost={onReportPost}
+              onReportReply={onReportReply}
             />
           </FadeIn>
         ) : (
@@ -388,6 +623,15 @@ export function PulseTab({
               : t("communities:detail.pulse.loadMoreCta")}
           </Button>
         </div>
+      )}
+
+      {reportTarget && (
+        <ReportReplyModal
+          authorName={reportTarget.authorName}
+          subjectId={reportTarget.subjectId}
+          subjectType={reportTarget.subjectType}
+          onClose={() => setReportTarget(null)}
+        />
       )}
     </div>
   );

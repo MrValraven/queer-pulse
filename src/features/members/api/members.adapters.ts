@@ -140,13 +140,15 @@ export function cardToMember(dto: MemberCardDTO): Member {
   };
 }
 
-/** Map the thin GET /members card DTO to the directory's rich MemberCard.
- *  Filter-only fields the API doesn't provide are defaulted to empty. These
- *  empties are SAFE only because live mode no longer re-filters client-side
- *  (see MemberDirectoryFilterPage): identity filtering happens server-side via
- *  the query, and the other facets are a documented no-op in live. Never
- *  re-introduce a `matchesFilters` pass over these fields in live — it would
- *  match nothing and empty the directory on any facet selection. */
+/** Map the thin GET /members card DTO to the directory's rich MemberCard. All
+ *  filter facets the API returns are populated for real now — every facet
+ *  filters server-side (see MemberDirectoryFilterPage), so these fields are
+ *  DISPLAY/count-badge data here, never re-run through `matchesFilters` in
+ *  live mode (the server's page is already the filtered result; see the
+ *  comment there). `discipline`/`profession` are singular on `MemberCard`
+ *  (a demo-mode simplification predating this DTO) while the backend holds
+ *  arrays — first value wins, matching how the demo's `SLUG_FACETS` already
+ *  picks one primary discipline/profession per member. */
 export function cardDtoToMemberCard(dto: MemberCardDTO): MemberCard {
   return {
     slug: dto.slug,
@@ -156,13 +158,15 @@ export function cardDtoToMemberCard(dto: MemberCardDTO): MemberCard {
     lastName: dto.lastName,
     avatarUrl: dto.avatarUrl ?? null,
     tags: (dto.tags ?? []).map((label) => ({ label })),
-    openTo: [],
-    hood: "",
-    discipline: "",
-    profession: "",
-    identities: [],
-    languages: [],
-    years: 0,
+    openTo: toOpenToEntries(dto.openTo).flatMap((entry) =>
+      entry.kind === "preset" ? [entry.id] : [],
+    ),
+    hood: dto.hood ?? "",
+    discipline: dto.discipline?.[0] ?? "",
+    profession: dto.profession?.[0] ?? "",
+    identities: (dto.identityFacets ?? []) as MemberCard["identities"],
+    languages: dto.languages ?? [],
+    years: dto.years ?? 0,
     joinedRank: 0,
     vouchCount: dto.vouchCount,
     mutualsCount: 0,
@@ -185,6 +189,9 @@ export function profileToMember(dto: ProfileDTO): Member {
     lookingForPublic: dto.lookingForPublic ?? false,
     privateNetwork: dto.privateNetwork ?? false,
     featuredConsent: dto.featuredConsent ?? false,
+    discipline: dto.discipline ?? [],
+    profession: dto.profession ?? [],
+    languages: dto.languages ?? [],
     socials: (dto.socials ?? []).map((s) => ({
       platform: s.platform,
       urlOrHandle: s.urlOrHandle,

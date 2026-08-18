@@ -64,6 +64,7 @@ export const routes = {
   adminCommissionInterests: "/admin/commission-interests",
   adminReadingGroupProposals: "/admin/reading-group-proposals",
   adminMagazineSubmissions: "/admin/magazine-submissions",
+  adminWriterApplications: "/admin/writer-applications",
   adminModeration: "/admin/moderation",
   adminConcerns: "/admin/concerns",
   adminSafeSpaces: "/admin/safe-spaces",
@@ -110,7 +111,6 @@ export const routes = {
   contact: "/about/contact",
   cookies: "/policies/cookies",
   imprint: "/policies/imprint",
-  createAccount: "/auth/create-account",
   culture: "/magazine/culture",
   dataExport: "/account/data-export",
   dating: "/dating",
@@ -230,6 +230,7 @@ export const routes = {
   settings: "/account/settings",
   sexualHealth: "/resources/sexual-health",
   signIn: "/auth/sign-in",
+  simulations: "/simulations",
   skills: "/work/skills",
   sober: "/resources/sober",
   solidarity: "/work/solidarity",
@@ -253,6 +254,7 @@ export const routes = {
   studioSheetStore: "/studio/sheet-store",
   studioTrack: "/studio/track",
   submitStory: "/magazine/submit-story",
+  magazineApplyToWrite: "/magazine/apply-to-write",
   // Subprofiles: the public persona directory + the owner's dashboard. Param
   // routes (/p/:handle, /members/:slug/:subslug, the editor) are declared in
   // routes.tsx and linked via the helpers below.
@@ -268,7 +270,6 @@ export const routes = {
   postVolunteer: "/about/volunteer/post",
   vouch: "/vouch",
   welcome: "/auth/welcome",
-  welcomeTour: "/auth/welcome-tour",
   wellbeing: "/resources/wellbeing",
   work: "/account/work",
   workProfile: "/account/work-profile",

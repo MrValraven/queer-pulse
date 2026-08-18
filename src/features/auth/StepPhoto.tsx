@@ -9,6 +9,8 @@ import { initialsFromParts } from "../../shared/lib/initials";
 import { useUploadImage } from "../members/api/useUploadImage";
 import { ImageProcessingError } from "../members/api/uploadProcessing";
 import { useUpdateProfile } from "../members/api/useUpdateProfile";
+import type { UpdateProfileDTO } from "../members/api/members.api";
+import { IdentityFields } from "./StepPhotoIdentityFields";
 import { SkipLink, type StepProps } from "./OnboardingStepChrome";
 import styles from "./OnboardingPage.module.css";
 
@@ -31,6 +33,17 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Pronouns and a short bio: the two identity fields signup never asks for
+  // (only what Google OAuth supplies), added to this step rather than an extra
+  // wizard step. Both are optional and, like the photo, saved only when the
+  // member actually typed something — an untouched field writes nothing, so a
+  // replay of onboarding can never clobber a value set elsewhere (e.g. in
+  // Settings) with a blank one. Pronouns pre-fill from the session (already on
+  // `useAuth().user`) so a returning member sees what's already saved.
+  const initialPronouns = user?.profile.pronouns ?? "";
+  const [pronouns, setPronouns] = useState(initialPronouns);
+  const [bio, setBio] = useState("");
 
   /** Shared tail of both upload paths (direct GIF path + post-reframe path). */
   async function uploadAndApply(file: File, crop?: CropRect) {
@@ -75,13 +88,22 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
   }
 
   async function handleContinue() {
-    if (!pendingKey) {
+    const trimmedPronouns = pronouns.trim();
+    const trimmedBio = bio.trim();
+    const updates: UpdateProfileDTO = {};
+    if (pendingKey) updates.avatarUrl = pendingKey;
+    if (trimmedPronouns && trimmedPronouns !== initialPronouns) {
+      updates.pronouns = trimmedPronouns;
+    }
+    if (trimmedBio) updates.bio = trimmedBio;
+
+    if (Object.keys(updates).length === 0) {
       onNext();
       return;
     }
     setError(null);
     try {
-      await updateProfile.mutateAsync({ avatarUrl: pendingKey });
+      await updateProfile.mutateAsync(updates);
       onNext();
     } catch {
       setError(t("auth:onboarding.stepPhoto.saveError"));
@@ -137,6 +159,12 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
           </p>
         )}
       </div>
+      <IdentityFields
+        pronouns={pronouns}
+        onPronounsChange={setPronouns}
+        bio={bio}
+        onBioChange={setBio}
+      />
       <div className={styles.nav}>
         <Button onClick={() => void handleContinue()} disabled={uploading || saving}>
           {t("auth:onboarding.stepPhoto.continue")}

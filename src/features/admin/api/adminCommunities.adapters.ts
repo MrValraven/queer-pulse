@@ -140,9 +140,11 @@ function moderatorDtoToModerator(
     name: moderatorDto.name,
     // Neither endpoint exposes a moderator's pronouns yet — no backend field.
     pronouns: "",
+    avatarUrl: moderatorDto.avatarUrl,
     tone: avatarToneForSlug(moderatorDto.slug),
     role: moderatorRoleLine(moderatorDto, translate, fmt),
     memberId: moderatorDto.userId,
+    slug: moderatorDto.slug,
     isOwner: moderatorDto.role === "owner",
   };
 }
@@ -282,6 +284,7 @@ export function detailDtoToCommunity(
     requiresSecondVouch: detailDto.requiresSecondVouch,
     autoFreezeOnReports: detailDto.autoFreezeOnReports,
     frozen: detailDto.frozen,
+    truncated: detailDto.truncated,
     // Still no backend field for either of these — see the card-path comment.
     join: "",
     code: "",

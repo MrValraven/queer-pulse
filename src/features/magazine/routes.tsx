@@ -22,6 +22,10 @@ const IssueProductionPage = lazyNamed(
   "IssueProductionPage",
 );
 const ArticleEditorPage = lazyNamed(() => import("./ArticleEditorPage"), "ArticleEditorPage");
+const ApplyToWritePage = lazyNamed(
+  () => import("./ApplyToWritePage"),
+  "ApplyToWritePage",
+);
 
 // The three first-person stories are now regular data-driven articles in the
 // article registry; their legacy paths resolve to the generic ArticlePage.
@@ -62,6 +66,7 @@ export function magazineRoutes() {
         }
       />
       <Route path={routes.submitStory} element={<SubmitStoryPage />} />
+      <Route path={routes.magazineApplyToWrite} element={<ApplyToWritePage />} />
       <Route path={routes.pitchTracker} element={<PitchTrackerPage />} />
       <Route path={routes.magazineEditor} element={<EditorDashboardPage />} />
       <Route path={routes.magazineWriter} element={<WriterWorkspacePage />} />

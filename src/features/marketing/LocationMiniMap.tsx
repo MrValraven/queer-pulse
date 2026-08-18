@@ -2,7 +2,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl, { type StyleSpecification } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import { MapLoading } from "./MapLoading";
-import { buildWarmStyle, MAP_STYLE_URL } from "./lisbonMapStyle";
+import { buildWarmStyle, MAP_STYLE_URL } from "../../shared/components/map/siteMapStyle";
 import s from "./localMap.module.css";
 
 interface LocationMiniMapProps {
@@ -22,7 +22,7 @@ const PIN_CLASS = s.pickerPin ?? "";
 /**
  * Read-only single-pin map for a place's exact location — the real basemap
  * counterpart to the decorative SVG that used to sit on the directory detail
- * card. Reuses the warm-recoloured Lisbon style (lisbonMapStyle.ts) and the
+ * card. Reuses the warm-recoloured Lisbon style (shared/components/map/siteMapStyle.ts) and the
  * picker pin, so it matches every other map in the app. Interactive (drag +
  * zoom buttons) but with scroll-zoom off, so it never traps the page scroll
  * while the detail sidebar is sticky. The pin is fixed — this shows a location,

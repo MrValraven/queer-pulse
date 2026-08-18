@@ -16,6 +16,9 @@ export interface JoinRequestVars {
   /** Optional free-text city. */
   city?: string;
   message: string;
+  /** The email of a member already here who can vouch for the applicant —
+   *  a structured field distinct from the free-text `message`. */
+  mutualMemberEmail?: string;
   /** The CTA the applicant came through, when the form could resolve one. */
   source?: JoinRequestSource;
 }
@@ -32,7 +35,14 @@ export function useCreateJoinRequest() {
   return useMutation<CreateJoinRequestResult, Error, JoinRequestVars>({
     // RequestInviteForm toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
-    mutationFn: async ({ name, email, city, message, source }) => {
+    mutationFn: async ({
+      name,
+      email,
+      city,
+      message,
+      mutualMemberEmail,
+      source,
+    }) => {
       if (demoMode) {
         return {
           id: "demo-join-request",
@@ -45,6 +55,7 @@ export function useCreateJoinRequest() {
         email,
         city: city?.trim() || undefined,
         message,
+        mutualMemberEmail: mutualMemberEmail?.trim() || undefined,
         ageAttested: true,
         termsVersion: TERMS_VERSION,
         source,

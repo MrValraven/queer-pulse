@@ -249,6 +249,13 @@ export const notifications: Catalog = {
   "type.badge_earned.text": "Ganhaste o crachá {badgeName}.",
   "type.badge_earned.meta": "Crachá ganho",
 
+  "type.writer_application_approved.text":
+    "A tua candidatura a escritor foi aprovada. Já podes submeter histórias.",
+  "type.writer_application_approved.meta": "Candidatura a escritor",
+  "type.writer_application_declined.text":
+    "A tua candidatura a escritor não foi aceite desta vez.",
+  "type.writer_application_declined.meta": "Candidatura a escritor",
+
   "type.unknown.text": "Tens uma nova notificação.",
   "type.unknown.meta": "Notificação",
 

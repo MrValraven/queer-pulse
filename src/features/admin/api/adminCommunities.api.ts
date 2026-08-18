@@ -57,6 +57,7 @@ export interface AdminCommunityModeratorDTO {
   slug: string;
   name: string;
   initials: string;
+  avatarUrl: string | null;
   role: "owner" | "mod";
   joinedAt: string;
 }
@@ -89,11 +90,27 @@ export interface AdminCommunityDetailDTO extends AdminCommunityCardDTO {
   /** Whether the community auto-freezes when open reports pile up. Persisted;
    *  enforcement is a follow-up. */
   autoFreezeOnReports: boolean;
-  /** True while the community is currently auto-frozen pending report review. */
+  /** True while the community is currently auto-frozen pending report review.
+   *  An admin can also freeze/unfreeze it directly (see the override actions
+   *  below), in addition to staff lifting it from the community's own mod
+   *  panel. */
   frozen: boolean;
   resolvedPercentage: number;
   moderators: AdminCommunityModeratorDTO[];
   scopedQueue: AdminCommunityQueueItemDTO[];
+  /** True when the backend's report scan hit its scan cap while building this
+   *  community's detail — some of its reports may not be reflected in
+   *  `scopedQueue`/the health numbers above. Mirrors
+   *  `AdminCommunityListDTO.truncated`. */
+  truncated: boolean;
+}
+
+/** The full `GET /admin/communities` payload: the cards, plus whether either
+ *  scan behind them (communities themselves, or the platform-wide report
+ *  scan feeding their health numbers) hit its cap. */
+export interface AdminCommunityListDTO {
+  items: AdminCommunityCardDTO[];
+  truncated: boolean;
 }
 
 /** The safety-policy fields the admin Settings tab can PATCH. Every field is
@@ -105,7 +122,7 @@ export interface UpdateAdminCommunitySettingsDto {
 
 /** Every community on the platform, for the admin grid. Admin-only — 403s otherwise. */
 export const getAdminCommunities = () =>
-  apiGet<AdminCommunityCardDTO[]>("/admin/communities");
+  apiGet<AdminCommunityListDTO>("/admin/communities");
 
 /** One community, with its moderators and scoped report queue. */
 export const getAdminCommunity = (slug: string) =>
@@ -133,3 +150,45 @@ export const addAdminCommunityModerator = (slug: string, memberId: string) =>
 /** Demote a moderator (`memberId` = their user id) back to a plain member. */
 export const removeAdminCommunityModerator = (slug: string, memberId: string) =>
   apiDelete<void>(`/admin/communities/${slug}/moderators/${memberId}`);
+
+// ── Moderation-of-last-resort overrides ─────────────────────────────────────
+// The five actions below all bypass a community's own owner/mod authorization
+// on purpose — see `AdminCommunitiesController`'s doc comment on the backend.
+// They exist for the case a community's own leadership can't be reached or
+// trusted, which is exactly what the health-score/report-scope data already
+// shown on `AdminCommunityDetail` surfaces without giving the admin anything
+// to act on.
+
+/** Admin override: freeze a community regardless of who owns/moderates it (or
+ *  whether it has an owner at all). Idempotent — freezing an already-frozen
+ *  community is a no-op. Returns the refreshed detail. */
+export const freezeAdminCommunity = (slug: string) =>
+  apiPost<AdminCommunityDetailDTO>(`/admin/communities/${slug}/freeze`);
+
+/** Admin override: lift a community's freeze regardless of who owns/moderates
+ *  it. Idempotent — unfreezing a community that isn't frozen is a no-op.
+ *  Returns the refreshed detail. */
+export const unfreezeAdminCommunity = (slug: string) =>
+  apiPost<AdminCommunityDetailDTO>(`/admin/communities/${slug}/unfreeze`);
+
+/** Admin override: archive a community regardless of its ownership state.
+ *  One-way — there is no unarchive. Idempotent — archiving an
+ *  already-archived community is a no-op. Returns the refreshed detail. */
+export const archiveAdminCommunity = (slug: string) =>
+  apiPost<AdminCommunityDetailDTO>(`/admin/communities/${slug}/archive`);
+
+/** Admin override: hand ownership to any roster member (by profile slug),
+ *  even when the community currently has no owner. 404s if `memberSlug` isn't
+ *  on this community's roster; 400s if the target is the house account.
+ *  Returns the refreshed detail. */
+export const reassignAdminCommunityOwner = (slug: string, memberSlug: string) =>
+  apiPost<AdminCommunityDetailDTO>(`/admin/communities/${slug}/reassign-owner`, {
+    memberSlug,
+  });
+
+/** Admin override: remove any roster member outright (by profile slug), not
+ *  just demote a moderator. 404s if `memberSlug` isn't on this community's
+ *  roster; 400s if the target is the current owner — reassign ownership
+ *  first. */
+export const removeAdminCommunityMember = (slug: string, memberSlug: string) =>
+  apiDelete<void>(`/admin/communities/${slug}/members/${memberSlug}`);

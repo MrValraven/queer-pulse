@@ -26,6 +26,7 @@ export type Namespace =
   | "studio"
   | "cinema"
   | "settings"
+  | "simulations"
   | "admin"
   | "system"
   | "safety"

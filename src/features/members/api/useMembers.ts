@@ -36,6 +36,13 @@ export function useMembers(
     query?: string;
     tags?: string[];
     identities?: string[];
+    openTo?: string[];
+    hoods?: string[];
+    disciplines?: string[];
+    professions?: string[];
+    languages?: string[];
+    yearsFrom?: number;
+    yearsTo?: number;
     /** Server-side sort order (a `MemberSort` wire token). Demo mode ignores it
      *  and sorts the mock list in the browser; see the page's `sortMembers`. */
     sort?: string;

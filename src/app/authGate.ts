@@ -81,6 +81,7 @@ const GATED_PATTERNS: string[] = [
   // Member-only actions
   "/vouch",
   "/magazine/submit-story",
+  "/magazine/apply-to-write",
   // Local discovery — directory & map (safe-spaces / visas / arriving stay public)
   "/local/directory",
   "/local/directory/*",
@@ -209,13 +210,12 @@ const CAPABILITY_PATTERNS: { patterns: string[]; capability: StaffRoleId }[] = [
  * Guest-only surfaces: the sign-in / sign-up entry pages that only make sense to
  * a logged-out visitor. A signed-in member has nothing to do here, so the gate
  * bounces them to their feed (or the `?next=` they were headed for). This is the
- * mirror image of GATED_PATTERNS. Post-signup pages (onboarding, welcome tour,
+ * mirror image of GATED_PATTERNS. Post-signup pages (onboarding,
  * member-sends-an-invite) are intentionally NOT here — being logged in is the
  * whole point of those.
  */
 const GUEST_ONLY_PATTERNS: string[] = [
   routes.signIn,
-  routes.createAccount,
   routes.requestInvite,
   "/studio/sign-in",
 ];
@@ -374,6 +374,30 @@ export function useAuthGateRedirect(): string | null {
       matchPath(routes.onboarding, pathname)
     ) {
       return routes.feed;
+    }
+    // The forward direction of the same one-time gate: a member still
+    // mid-onboarding (onboardedAt null) who navigates straight to the member
+    // surface (e.g. a bookmarked /feed, or the address bar) is nudged back into
+    // the wizard instead of being left to wander it unfinished. Scoped to
+    // `isGatedPath` — the same member-only surface GATED_PATTERNS already
+    // fences off from logged-out visitors — rather than every logged-in-reachable
+    // page, so it reads as one denylist: public marketing, magazine/cinema
+    // browsing, legal (terms/privacy), support/contact, and the auth flow
+    // (sign-in/request-invite) are never gated, so none of them are touched
+    // here either — reading Terms or reaching contact support never gets
+    // trapped. `routes.deleteAccount` is carved out explicitly even though
+    // it lives under the gated `/account/*` prefix: a member who wants to leave
+    // the platform shouldn't have to finish onboarding first, mirroring the
+    // deactivated-member carve-out for the same page above. This is a
+    // client-side nudge only — it does not change what the backend allows.
+    if (
+      !demoMode &&
+      !user?.onboardedAt &&
+      pathname !== routes.deleteAccount &&
+      !matchPath(routes.onboarding, pathname) &&
+      isGatedPath(pathname)
+    ) {
+      return routes.onboarding;
     }
     return null;
   }

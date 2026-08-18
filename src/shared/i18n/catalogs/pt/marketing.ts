@@ -784,6 +784,7 @@ export const marketing: Catalog = {
   "legal.plainSummaryTitle": "Em linguagem simples",
   "legal.toc.title": "Índice",
   "legal.contact.emailCta": "Envia-nos um email",
+  "legal.viewFullPage": "Ver a página completa da política",
 
   // ── Anunciar o teu negócio (pills do assistente) ──────────────────────
   "listBusiness.wizard.pill.path": "Percurso",
@@ -1946,6 +1947,7 @@ export const marketing: Catalog = {
   "changelog.tag.search": "Experimentar a pesquisa global",
   "changelog.tag.donate": "Ver para onde vai o dinheiro",
   "changelog.tag.volunteer": "Encontra o teu caminho",
+  "changelog.tag.postVolunteer": "Publicar oportunidade",
   "changelog.tag.notifications": "Abrir as tuas notificações",
   "changelog.tag.connections": "Abrir as tuas ligações",
   "changelog.tag.trustNetwork": "Abrir a rede de confiança",
@@ -2040,6 +2042,66 @@ export const marketing: Catalog = {
     "O menu de ações de conversa passa a aparecer corretamente",
   "changelog.entries.inbox-menu-dropdown-visibility.body":
     "Abrir o menu “⋯” de uma conversa na tua caixa de entrada passa a mostrar as opções Fixar, Favorito e Eliminar por cima, em vez de ficarem escondidas atrás da conversa seguinte. O menu funcionava sempre, só nem sempre estava visível.",
+
+  "changelog.entries.member-directory-filters-fix.title":
+    "Os filtros do diretório de membros passam a filtrar mesmo",
+  "changelog.entries.member-directory-filters-fix.body":
+    "A maioria dos filtros em Encontrar membros (Aberto a, Onde estão, O que fazem, Profissão, Tempo de casa, Idiomas) só mudava o que estava marcado no ecrã, não os resultados. Agora pesquisam mesmo no diretório, e podes definir a tua área, profissão e idiomas em Definições para outras pessoas te encontrarem por eles.",
+
+  "changelog.entries.directory-ownership-claims.title":
+    "Posse real no diretório local",
+  "changelog.entries.directory-ownership-claims.body":
+    "O selo “negócio queer-owned verificado” nas listagens do diretório local passa agora a refletir uma confirmação real de uma moderadora. Se já existe uma listagem de um negócio que é teu, criada por outra pessoa, podes pedir para a reclamar, com revisão de uma moderadora antes de qualquer alteração.",
+
+  "changelog.entries.session-expired-toast-fix.title":
+    "Corrigida uma mensagem falsa de “sessão expirada”",
+  "changelog.entries.session-expired-toast-fix.body":
+    "Algumas páginas diziam às pessoas que a sessão tinha expirado mesmo quando nunca tinham iniciado sessão. Essa mensagem só aparece agora se realmente tiveste uma sessão que expirou.",
+
+  "changelog.entries.join-request-form-fix.title":
+    "Simplificámos o formulário de pedido para entrar numa comunidade",
+  "changelog.entries.join-request-form-fix.body":
+    "Pedir para entrar numa comunidade costumava voltar a pedir o teu email, mesmo já tendo sessão iniciada, e esse campo nunca era enviado para lado nenhum. Esse campo desapareceu, e a pergunta “como gostarias de participar” passa agora a partilhar um passo com a nota que deixas para a moderação, em vez de perguntar as duas coisas em separado.",
+
+  "changelog.entries.community-pulse-and-insights.title":
+    "As comunidades já mostram os seus eventos, discussões e oportunidades de voluntariado reais",
+  "changelog.entries.community-pulse-and-insights.body":
+    "O separador Eventos de uma comunidade já mostra os próximos convívios reais em vez de estar sempre vazio, e a barra lateral passa a mostrar discussões recentes e oportunidades de voluntariado associadas a essa comunidade. Organizações e moderação também têm um novo painel de estatísticas sobre o crescimento de membros e a atividade de publicações.",
+
+  "changelog.entries.onboarding-identity-and-notifications.title":
+    "A configuração inicial já pergunta pronomes e preferências de notificação",
+  "changelog.entries.onboarding-identity-and-notifications.body":
+    "O assistente de configuração passa a ter um espaço para os teus pronomes e uma bio curta, e um momento para ativares notificações se quiseres — ambos opcionais. O último passo também aponta para os Primeiros passos, para o resto da tua configuração ser fácil de encontrar.",
+
+  "changelog.entries.getting-started-vouch-fix.title":
+    "Corrigido o passo “recomenda alguém” do Início Rápido",
+  "changelog.entries.getting-started-vouch-fix.body":
+    "Marcava-se como concluído assim que entravas através de um convite pessoal, porque seres recomendade e recomendar outra pessoa estavam a contar como a mesma coisa. Agora só fica concluído depois de teres mesmo recomendado alguém.",
+
+  "changelog.entries.admin-invite-quota-controls.title":
+    "Administradores podem definir limites de convites por membro",
+  "changelog.entries.admin-invite-quota-controls.body":
+    "A página de supervisão de convites passa a permitir subir ou descer quantos convites um membro pode enviar por mês, em vez de isso só ser possível com acesso direto à base de dados.",
+
+  "changelog.entries.invite-approval-email.title":
+    "Os convites aprovados enviam-se sozinhos",
+  "changelog.entries.invite-approval-email.body":
+    "Aprovar um pedido de convite envia logo ao candidato a ligação do convite por email. Quem revê pedidos continua a poder copiar a ligação à mão como cópia de segurança, mas enviá-la deixou de ser algo que têm de lembrar de fazer.",
+
+  "changelog.entries.join-request-mutual-member-field.title":
+    "Nomear alguém que te pode avalizar passa a ser um dado real",
+  "changelog.entries.join-request-mutual-member-field.body":
+    "O campo “alguém que te pode avalizar” do formulário de pedido de convite era antes inserido na tua mensagem como texto simples. Agora é enviado como campo próprio, para quem revê o pedido conseguir associá-lo diretamente, em vez de ter de ler a mensagem toda para o encontrar.",
+
+  "changelog.entries.post-opportunity-team-picker.title":
+    "Publicar uma oportunidade já vem preenchido com os teus dados",
+  "changelog.entries.post-opportunity-team-picker.body":
+    "O passo de Equipa e contacto passa a preencher automaticamente o teu identificador de contacto, e o slug de parceiro também, se fores responsável por uma comunidade. Os membros da equipa passam a ser escolhidos a partir das tuas ligações e comunidades.",
+
+  "changelog.entries.side-quests-getting-started.title":
+    "Missões secundárias assim que estiveres pronto",
+  "changelog.entries.side-quests-getting-started.body":
+    "Terminar a lista de primeiros passos costumava ser um beco sem saída. Agora abre-se em missões secundárias: os crachás que ainda não ganhaste, cada um com um botão direto para onde precisas de ir, mais qualquer regalia que já desbloqueaste mas ainda não reclamaste. Vieram também quatro novos crachás, para explorares o diretório Local, guardares artigos, entrares numa segunda comunidade e preencheres o teu Perfil de Trabalho.",
 
   "changelog.entries.recognition-xp.title": "Ganha XP, níveis e crachás",
   "changelog.entries.recognition-xp.body": "A tua atividade passa a dar experiência para níveis e crachás. Concluir a tua lista de primeiros passos, entrar em comunidades, ir a encontros e ligar-te a membros faz-te subir. Acompanha o teu progresso na página de Crachás.",
@@ -3879,7 +3941,16 @@ export const marketing: Catalog = {
     "Um turno regular e um prazo mínimo — a consistência importa.",
   "postOpportunity.core.basicsHeading": "O essencial",
   "postOpportunity.core.orgLabel": "Organização",
-  "postOpportunity.core.orgPlaceholder": "ex.: a sua organização",
+  "postOpportunity.core.orgHelper":
+    "Escolha uma comunidade que possui ou modera, ou uma organização parceira aprovada.",
+  "postOpportunity.core.orgEmptyState":
+    "Precisa de possuir ou moderar uma comunidade, ou ser uma organização parceira aprovada, antes de poder publicar uma oportunidade em nome dela.",
+  "postOpportunity.core.orgLinkLabel": "Associar a uma organização",
+  "postOpportunity.core.orgLinkHelper":
+    "Opcional: associe esta publicação a uma comunidade que possui ou modera, ou a uma organização parceira aprovada.",
+  "postOpportunity.core.orgLinkNone": "Nenhuma",
+  "postOpportunity.core.orgLinkGroupPartner": "Parceiros",
+  "postOpportunity.core.orgLinkGroupCommunity": "As minhas comunidades",
   "postOpportunity.core.roleLabel": "Título da função",
   "postOpportunity.core.rolePlaceholder":
     "ex.: Voluntário de Sensibilização Comunitária",
@@ -3936,8 +4007,12 @@ export const marketing: Catalog = {
     "ex.: 18 voluntários de sensibilização ativos este trimestre.",
   "postOpportunity.rich.teamLabel": "Membros da equipa",
   "postOpportunity.rich.teamHelper":
-    "Identificadores/slugs de pessoas já na equipa, separados por vírgulas.",
-  "postOpportunity.rich.teamPlaceholder": "catarina-v, jonas-f",
+    "Escolha entre as suas ligações ou as comunidades a que pertence.",
+  "postOpportunity.rich.teamPlaceholder": "Selecionar ligações ou comunidades",
+  "postOpportunity.rich.teamGroupConnections": "Ligações",
+  "postOpportunity.rich.teamGroupCommunities": "Comunidades",
+  "postOpportunity.rich.teamEmpty":
+    "Ligue-se a pessoas ou junte-se a uma comunidade para as adicionar aqui.",
   "postOpportunity.rich.applyRoleLabel": "Etiqueta da função ao candidatar-se",
   "postOpportunity.rich.applyRoleHelper":
     "Por predefinição, “Função · Organização”.",
@@ -3994,6 +4069,19 @@ export const marketing: Catalog = {
   "volunteerDetail.sidebar.otherWays": "Outras formas de ajudar agora:",
   "volunteerDetail.sidebar.fundInstead":
     "Financiar este trabalho em vez disso",
+  "volunteerDetail.signupModal.ariaLabel": "Candidatar a {{role}}",
+  "volunteerDetail.signupModal.eyebrow": "A tua candidatura",
+  "volunteerDetail.signupModal.title":
+    "Conta-nos porque serias uma boa escolha",
+  "volunteerDetail.signupModal.sub":
+    "Algumas frases já chegam: a equipa lê todas as candidaturas.",
+  "volunteerDetail.signupModal.noteLabel":
+    "Porque queres ser voluntário/a nesta função?",
+  "volunteerDetail.signupModal.notePlaceholder":
+    "Partilha o que te atrai nisto, ou experiência relevante…",
+  "volunteerDetail.signupModal.cancel": "Cancelar",
+  "volunteerDetail.signupModal.submit": "Enviar candidatura",
+  "volunteerDetail.signupModal.sending": "A enviar…",
 
   // ── Detalhe do Parceiro — chrome da página. O conteúdo sobre/trabalho
   //    conjunto/linha do tempo/como trabalhamos, as estatísticas, e os
@@ -4336,6 +4424,7 @@ export const marketing: Catalog = {
   "directory.badge.queerOwned": "Negócio queer",
   "directory.badge.friendly": "LGBTQ+ friendly",
   "directory.card.memberRun": "Gerido por uma pessoa da comunidade",
+  "directory.card.online": "Online",
   "directory.card.viewDetails": "Ver detalhes",
   "directory.card.verifiedBadge": "Espaço seguro verificado",
   "directory.submitStrip.title":
@@ -4370,11 +4459,12 @@ export const marketing: Catalog = {
   "directory.detail.badge.friendly": "LGBTQ+ friendly",
   "directory.detail.reviewsCount": "· {count} avaliações",
   "directory.detail.newBadge": "Novo",
+  "directory.detail.onlineBusiness": "Só online",
   "directory.detail.whatItIsTitle": "O que <em>é, na prática.</em>",
   "directory.detail.goodForTitle":
     "Para que é que a comunidade diz que é <em>bom</em>",
   "directory.detail.offersTitle": "O que este espaço <em>oferece</em>",
-  "directory.detail.goodForSub": "Com base em {count} avaliações.",
+  "directory.detail.goodForSub": "Como {name} descreve.",
   "directory.detail.hoursTitle": "Horário",
   "directory.detail.today": "Hoje",
   "directory.detail.hoursClosed": "Encerrado",
@@ -4498,6 +4588,26 @@ export const marketing: Catalog = {
   "directory.detail.dispute.successBody":
     "Uma moderadora vai analisar a tua denúncia sobre {name}. Se deixaste um email, só o usamos se precisarmos de dar seguimento.",
   "directory.detail.dispute.doneCta": "Concluído",
+  "directory.detail.claim.ariaLabel": "Reclamar {name}",
+  "directory.detail.claim.eyebrow": "Reclamar esta listagem",
+  "directory.detail.claim.title": "Geres o <em>{name}</em>?",
+  "directory.detail.claim.sub":
+    "Conta-nos um pouco sobre ti e uma moderadora analisa o teu pedido. Se tudo bater certo, passas a gerir a listagem: as avaliações, os detalhes, tudo.",
+  "directory.detail.claim.noteLabel": "Algo que nos ajude a confirmar que és tu",
+  "directory.detail.claim.notePlaceholder":
+    "ex.: Sou a pessoa responsável, aqui está como me podes contactar para confirmar.",
+  "directory.detail.claim.note":
+    "Reclamar não transfere a listagem por si só — uma moderadora analisa cada pedido primeiro.",
+  "directory.detail.claim.cancel": "Cancelar",
+  "directory.detail.claim.submit": "Enviar à moderação",
+  "directory.detail.claim.submitting": "A enviar…",
+  "directory.detail.claim.errorToast": "Não foi possível enviar o teu pedido. Tenta novamente.",
+  "directory.detail.claim.successAriaLabel": "Pedido recebido",
+  "directory.detail.claim.successTitle": "Recebido — estamos",
+  "directory.detail.claim.successEm": "a tratar disto.",
+  "directory.detail.claim.successBody":
+    "Uma moderadora vai analisar o teu pedido sobre {name} e avisa-te do que se segue.",
+  "directory.detail.claim.doneCta": "Concluído",
   "directory.detail.mapAria": "Mapa a mostrar onde fica {name}",
   "directory.detail.languagesLabel": "Idiomas",
   "directory.detail.accessLabel": "Acessibilidade",

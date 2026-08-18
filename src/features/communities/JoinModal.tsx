@@ -2,12 +2,8 @@ import { useState } from "react";
 import { ModalSheet } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AccessTier } from "./membership.types";
-import {
-  JoinStepAbout,
-  JoinStepDone,
-  JoinStepInvolvement,
-  JoinStepIntro,
-} from "./JoinModalSteps";
+import { INVOLVEMENT } from "./joinModal.data";
+import { JoinStepAbout, JoinStepDone, JoinStepIntro } from "./JoinModalSteps";
 import styles from "./JoinModal.module.css";
 
 export interface JoinModalCommunity {
@@ -16,6 +12,24 @@ export interface JoinModalCommunity {
   count: string;
   description: string;
   tags?: string[];
+}
+
+/**
+ * The backend only persists one free-text `note` on a join/request (see
+ * `JoinCommunityDto`) — there's no separate column for "level of
+ * involvement". So the chip-select the applicant picks in `JoinStepAbout`
+ * gets folded into that same note as a short leading tag, e.g.
+ * "[Help organise] New to Lisbon, would love to get involved." Truncated
+ * defensively to the backend's `@MaxLength(1000)`.
+ */
+function composeJoinNote(
+  aboutText: string,
+  involvementLabel: string,
+): string | undefined {
+  const trimmedAbout = aboutText.trim();
+  const tag = `[${involvementLabel}]`;
+  const combined = trimmedAbout ? `${tag} ${trimmedAbout}` : tag;
+  return combined.slice(0, 1000);
 }
 
 export function JoinModal({
@@ -28,25 +42,31 @@ export function JoinModal({
   community: JoinModalCommunity;
   tier?: AccessTier;
   onClose: () => void;
-  onJoined?: () => void;
-  onRequested?: () => void;
+  onJoined?: (note?: string) => void;
+  onRequested?: (note?: string) => void;
 }) {
   const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [involvement, setInvolvement] = useState("active");
+  const [aboutText, setAboutText] = useState("");
   const [inviteCode, setInviteCode] = useState("");
 
   const isRequest = tier === "request" || tier === "private";
   const isInvite = tier === "invite";
 
-  const total = 3;
+  const total = 2;
   const done = step > total;
   const fill = done ? 100 : (step / total) * 100;
 
   const submit = () => {
-    setStep(4);
-    if (isRequest) onRequested?.();
-    else onJoined?.();
+    const involvementLabel = t(
+      INVOLVEMENT.find((option) => option.value === involvement)?.labelKey ??
+        "",
+    );
+    const note = composeJoinNote(aboutText, involvementLabel);
+    setStep(total + 1);
+    if (isRequest) onRequested?.(note);
+    else onJoined?.(note);
   };
 
   return (
@@ -79,13 +99,13 @@ export function JoinModal({
         />
       )}
 
-      {step === 2 && <JoinStepAbout onNext={() => setStep(3)} />}
-
-      {step === 3 && (
-        <JoinStepInvolvement
+      {step === 2 && (
+        <JoinStepAbout
           isRequest={isRequest}
           involvement={involvement}
           setInvolvement={setInvolvement}
+          aboutText={aboutText}
+          setAboutText={setAboutText}
           onSubmit={submit}
         />
       )}

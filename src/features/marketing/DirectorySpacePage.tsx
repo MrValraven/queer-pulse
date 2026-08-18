@@ -6,14 +6,11 @@ import { ErrorFallback } from "../../shared/components/feedback/ErrorFallback";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDirectoryPlace } from "./api/useDirectory";
 import { useDirectoryListings } from "./listBusiness/api/useDirectoryListings";
-import { routes, businessPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import { DirectorySpaceView } from "./DirectorySpaceView";
 import { DirectoryRelatedPlaces } from "./DirectoryRelatedPlaces";
 import { categoryLabel, normalizeCategory } from "./localPlaces";
 import { PageMeta } from "../../shared/seo/PageMeta";
-import { JsonLd } from "../../shared/seo/JsonLd";
-import { buildLocalBusinessSchema } from "../../shared/seo/jsonLd.data";
-import { toAbsoluteUrl } from "../../shared/seo/seo.data";
 import s from "./DirectorySpacePage.module.css";
 
 /** Truncate a listing's tagline/description to a sensible social-meta length. */
@@ -90,7 +87,6 @@ export function DirectorySpacePage() {
     );
   }
 
-  const canonicalPath = businessPath(place.slug);
   // Canonical slug for the filter link so the directory chip matches, plus the
   // resolved label (heals legacy display-string categories too).
   const categorySlug = normalizeCategory(place.cat);
@@ -98,15 +94,14 @@ export function DirectorySpacePage() {
 
   return (
     <PageShell>
+      {/* This route is permanently member-gated (see authGate.ts) and excluded
+          from the sitemap/prerender allowlist, so canonical/OG/structured-data
+          tags can never reach a crawler or an unauthenticated link-preview
+          bot — only `title`/`description` (browser tab, in-app value) are
+          worth setting here. */}
       <PageMeta
         title={`${place.name} | QueerPulse`}
         description={clampDescription(place.tagline || place.desc)}
-        canonical={canonicalPath}
-        image={place.photos?.wide ?? undefined}
-        type="website"
-      />
-      <JsonLd
-        schema={buildLocalBusinessSchema(place, toAbsoluteUrl(canonicalPath))}
       />
       <div className={s.coverHead}>
         <div className={s.coverInner}>

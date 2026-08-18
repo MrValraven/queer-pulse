@@ -12,6 +12,8 @@ import {
 } from "../auth/api/pendingInvite";
 import { OnboardingPage } from "../auth/OnboardingPage";
 import { Under18Notice } from "../auth/Under18Notice";
+import { TermsModal } from "../marketing/TermsModal";
+import { PrivacyModal } from "../marketing/PrivacyModal";
 import { InviteExpiredPage } from "./InviteExpiredPage";
 import { buildLoaderSteps } from "./inviteLanding.data";
 import {
@@ -38,6 +40,9 @@ export function InviteLandingPage() {
   // without it, so the Google button stays locked until the box is ticked.
   const [is18, setIs18] = useState(false);
   const [under18, setUnder18] = useState(false);
+  const [legalModal, setLegalModal] = useState<"terms" | "privacy" | null>(
+    null,
+  );
 
   // Once a valid invite resolves, stash what the join flow needs to survive the
   // hop into onboarding: the code (to redeem) and the welcome payload (inviter +
@@ -140,12 +145,22 @@ export function InviteLandingPage() {
     return <InviteOpeningView view={invite} step={step} />;
 
   return (
-    <InviteCardView
-      view={invite}
-      onGoogle={joinWithGoogle}
-      is18={is18}
-      onIs18Change={setIs18}
-      onUnder18={() => setUnder18(true)}
-    />
+    <>
+      <InviteCardView
+        view={invite}
+        onGoogle={joinWithGoogle}
+        is18={is18}
+        onIs18Change={setIs18}
+        onUnder18={() => setUnder18(true)}
+        onOpenTerms={() => setLegalModal("terms")}
+        onOpenPrivacy={() => setLegalModal("privacy")}
+      />
+      {legalModal === "terms" && (
+        <TermsModal onClose={() => setLegalModal(null)} />
+      )}
+      {legalModal === "privacy" && (
+        <PrivacyModal onClose={() => setLegalModal(null)} />
+      )}
+    </>
   );
 }

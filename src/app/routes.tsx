@@ -46,6 +46,7 @@ import { settingsRoutes } from "../features/settings/routes";
 import { governanceRoutes } from "../features/governance/routes";
 import { systemRoutes } from "../features/system/routes";
 import { adminRoutes } from "../features/admin/routes";
+import { simulationRoutes } from "../features/simulations/routes";
 
 const HomePage = lazyNamed(() => import("../features/homepage/HomePage"), "HomePage");
 const NotFoundPage = lazyNamed(() => import("../pages/NotFoundPage"), "NotFoundPage");
@@ -113,6 +114,7 @@ export function AppRoutes() {
           {settingsRoutes()}
           {systemRoutes()}
           {adminRoutes()}
+          {simulationRoutes()}
 
           {/* Legacy paths → new homes (keeps old links & design hrefs working) */}
           {LEGACY_REDIRECTS.map(([from, to]) => (

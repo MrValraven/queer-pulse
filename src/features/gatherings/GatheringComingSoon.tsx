@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { FiCalendar, FiCamera, FiCheckCircle, FiUserPlus } from "react-icons/fi";
+import { FiCalendar, FiCamera, FiCheckCircle } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
@@ -8,7 +8,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./GatheringManageComingSoon.module.css";
 
 /** Which prototype surface is resolving to this placeholder. */
-export type GatheringComingSoonVariant = "event" | "rsvp" | "cohost" | "recap";
+export type GatheringComingSoonVariant = "event" | "rsvp" | "recap";
 
 const VARIANTS: Record<
   GatheringComingSoonVariant,
@@ -24,11 +24,6 @@ const VARIANTS: Record<
     titleKey: "gatherings:rsvpComingSoon.title",
     descriptionKey: "gatherings:rsvpComingSoon.description",
   },
-  cohost: {
-    icon: <FiUserPlus aria-hidden />,
-    titleKey: "gatherings:cohostInviteComingSoon.title",
-    descriptionKey: "gatherings:cohostInviteComingSoon.description",
-  },
   recap: {
     icon: <FiCamera aria-hidden />,
     titleKey: "gatherings:recapComingSoon.title",
@@ -38,14 +33,13 @@ const VARIANTS: Record<
 
 /**
  * Shared live-mode placeholder for the gatherings **prototype** pages that are
- * each fixed to a single mock gathering — the standalone event detail
- * (`/event`), the RSVP confirmation (`/rsvp`), the co-host invite, and the
- * recap. In demo mode those pages render fully, but in LIVE mode they fired
- * real RSVP / un-RSVP / invite-response mutations — or orphaned a real photo
- * upload — at a hardcoded slug/id that ignored the route entirely. There is no
- * live gathering behind them, so in LIVE mode (`demoMode === false`) the route
- * resolves here instead and no mutation can target that hardcoded id. The full
- * mock page still renders in demo mode.
+ * each fixed to a single mock gathering: the standalone event detail
+ * (`/event`), the RSVP confirmation (`/rsvp`), and the recap. In demo mode
+ * those pages render fully, but in LIVE mode they fired real RSVP / un-RSVP /
+ * attach-photo mutations at a hardcoded slug/id that ignored the route
+ * entirely. There is no live gathering behind them, so in LIVE mode
+ * (`demoMode === false`) the route resolves here instead and no mutation can
+ * target that hardcoded id. The full mock page still renders in demo mode.
  */
 export function GatheringComingSoon({
   variant,

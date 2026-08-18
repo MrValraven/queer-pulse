@@ -6,6 +6,7 @@ export type BadgeRarity = "common" | "rare" | "legendary";
 export type BadgeTint = "jade" | "accent" | "plum";
 
 export interface Badge {
+  key: string;
   category: string;
   name: string;
   when: string;

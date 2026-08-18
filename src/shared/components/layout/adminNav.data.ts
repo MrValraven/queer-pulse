@@ -134,6 +134,11 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: FiEdit3,
   },
   {
+    labelKey: "shared:adminNav.items.writerApplications",
+    to: routes.adminWriterApplications,
+    icon: FiFeather,
+  },
+  {
     labelKey: "shared:adminNav.items.partnerships",
     to: routes.adminPartnerApplications,
     icon: FiInbox,

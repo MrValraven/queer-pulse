@@ -3,6 +3,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Review } from "./directoryPlaces";
 import { STAR_SLOTS } from "./directorySpace.data";
 import { countByStar } from "./reviewSort";
+import { Stars } from "./DirectoryStars";
 import s from "./DirectorySpacePage.module.css";
 
 interface Props {
@@ -20,14 +21,10 @@ export function DirectoryRatingDistribution({ reviews, rating }: Props) {
     <div className={s.ratingDist}>
       <div className={s.ratingDistSummary}>
         <b className={s.ratingDistScore}>{rating.score}</b>
-        <span className={s.starRow}>
-          {STAR_SLOTS.map((slot) => (
-            <FiStar
-              key={slot}
-              className={slot <= roundedScore ? s.starOn : undefined}
-            />
-          ))}
-        </span>
+        {/* Numeric score sits right beside this row, so it stays decorative
+            (no `label`) per Stars' own doc comment — screen readers aren't
+            told the rating twice. */}
+        <Stars score={roundedScore} />
         <span className={s.ratingDistCount}>
           {t("marketing:directory.detail.reviewsCount", { count: rating.count })}
         </span>
@@ -46,7 +43,7 @@ export function DirectoryRatingDistribution({ reviews, rating }: Props) {
               <li key={stars} className={s.ratingDistRow}>
                 <span className={s.ratingDistLabel} aria-hidden="true">
                   {stars}
-                  <FiStar className={s.starOn} />
+                  <FiStar className={s.starOn} aria-hidden="true" />
                 </span>
                 <div
                   className={s.ratingDistTrack}

@@ -12,13 +12,14 @@ import { useFormat } from "../../shared/i18n/format";
 import { AdminPageHeader, AdminTabs, type AdminTab } from "./ui";
 import { AdminMemberRows, AdminFlaggedRows } from "./AdminMemberRows";
 import { AdminVerifyQueue } from "./AdminVerifyQueue";
+import { AdminJoinRequestSamplePage } from "./AdminJoinRequestSamplePage";
 import { AdminMemberDrawer } from "./AdminMemberDrawer";
 import { useAdminMembers, useAdminFlagged } from "./api/useAdminMembers";
 import { useJoinRequests } from "./api/useJoinRequests";
 import { type AdminMember } from "./adminMembers.data";
 import styles from "./AdminMembersPage.module.css";
 
-type TabId = "all" | "pending" | "flagged";
+type TabId = "all" | "pending" | "flagged" | "sample";
 type StatusFilter = "all" | "verified" | "new";
 
 export function AdminMembersPage() {
@@ -68,6 +69,7 @@ export function AdminMembersPage() {
       label: t("admin:members.tabs.flagged"),
       count: flagged.length,
     },
+    { id: "sample", label: t("admin:members.tabs.sample") },
   ];
 
   const FILTERS: { id: StatusFilter; label: string }[] = [
@@ -175,6 +177,7 @@ export function AdminMembersPage() {
           ))}
         {tab === "pending" && <AdminVerifyQueue />}
         {tab === "flagged" && <AdminFlaggedRows members={flagged} />}
+        {tab === "sample" && <AdminJoinRequestSamplePage />}
       </FadeIn>
 
       {selected && (

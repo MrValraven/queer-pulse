@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
@@ -6,6 +7,7 @@ import type { SignupRow } from "./api/volunteering.adapters";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { VolunteerSignupsCard } from "./VolunteerSignupsCard";
+import { VolunteerSignupModal } from "./VolunteerSignupModal";
 import { routes } from "../../app/routeMap";
 import styles from "./VolunteerOpportunityPage.module.css";
 
@@ -34,7 +36,7 @@ export function VolunteerOpportunitySidebar({
   opp: VolunteerOpportunity;
   applied: boolean;
   submitting: boolean;
-  apply: () => void;
+  apply: (note: string) => void;
   withdraw: () => void;
   withdrawing: boolean;
   error: string | null;
@@ -48,6 +50,7 @@ export function VolunteerOpportunitySidebar({
   alternatives: VolunteerOpportunity[];
 }) {
   const { t } = useTranslation();
+  const [modalOpen, setModalOpen] = useState(false);
   const partnerTo = opp.partner?.slug
     ? `${routes.partners}/${opp.partner.slug}`
     : PARTNER;
@@ -113,7 +116,7 @@ export function VolunteerOpportunitySidebar({
             <Button
               variant="primary"
               className={styles.ctaBtn}
-              onClick={apply}
+              onClick={() => setModalOpen(true)}
               disabled={submitting || isFull}
               aria-busy={submitting}
             >
@@ -128,10 +131,14 @@ export function VolunteerOpportunitySidebar({
               {t("marketing:volunteerDetail.sidebar.askTeam")}
             </Button>
           </div>
-          {error && (
-            <p className={styles.applyError} role="alert">
-              {error}
-            </p>
+          {modalOpen && (
+            <VolunteerSignupModal
+              applyRole={opp.applyRole}
+              submitting={submitting}
+              error={error}
+              onClose={() => setModalOpen(false)}
+              onSubmit={(note) => apply(note)}
+            />
           )}
           <p className={styles.footNote}>
             <Translation
@@ -149,6 +156,7 @@ export function VolunteerOpportunitySidebar({
           onClose={onCloseOpportunity}
           closing={closing}
           closed={closed}
+          opportunitySlug={opp.slug}
         />
       )}
 

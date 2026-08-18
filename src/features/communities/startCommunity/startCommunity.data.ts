@@ -254,6 +254,13 @@ export const ACCESS_OPTIONS: AccessOption[] = [
 
 /* ---------- Features ---------- */
 
+// Only "discussion", "events" and "roster" correspond to a real tab/feature in
+// the product — "rooms" and "library" were configurable here but never wired
+// to anything, so they were dropped from the founder-facing toggle grid (and
+// from EditCommunityModal's equivalent list, which reads this same array).
+// The backend DTO/entity still accepts a wider enum (including "rooms" and
+// "library") for backward compatibility with anything already persisted —
+// that's fine to leave alone, it's just no longer offered as a choice here.
 export interface FeatureOption {
   id: string;
   labelKey: string;
@@ -273,19 +280,9 @@ export const FEATURE_OPTIONS: FeatureOption[] = [
     descriptionKey: "communities:start.feature.events.desc",
   },
   {
-    id: "rooms",
-    labelKey: "communities:start.feature.rooms.label",
-    descriptionKey: "communities:start.feature.rooms.desc",
-  },
-  {
     id: "roster",
     labelKey: "communities:start.feature.roster.label",
     descriptionKey: "communities:start.feature.roster.desc",
-  },
-  {
-    id: "library",
-    labelKey: "communities:start.feature.library.label",
-    descriptionKey: "communities:start.feature.library.desc",
   },
 ];
 

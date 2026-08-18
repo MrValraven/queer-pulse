@@ -79,7 +79,9 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/solidarity", routes.solidarity],
   // Auth
   ["/sign-in", routes.signIn],
-  ["/create-account", routes.createAccount],
+  // The old create-account prototype is gone — the real live-mode journey is
+  // invite → Google → onboarding, so send this straight to sign-in.
+  ["/create-account", routes.signIn],
   ["/invite", routes.invite],
   ["/request-invite", routes.requestInvite],
   ["/onboarding", routes.onboarding],
@@ -87,7 +89,9 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   // the canonical path (not the `/auth/welcome` alias, which only redirects here
   // again) so it lands in one hop and under the one-time gate.
   ["/welcome", routes.onboarding],
-  ["/welcome-tour", routes.welcomeTour],
+  // The standalone welcome-tour prototype is gone; the real onboarding wizard
+  // is its replacement.
+  ["/welcome-tour", routes.onboarding],
   // About
   ["/contact", routes.contact],
   ["/help", routes.help],

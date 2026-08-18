@@ -42,7 +42,7 @@ export const STEP_KEYS = [
 export const ISSUE = {
   number: 26,
   openDate: new Date(2026, 6, 1),
-  deadlineDate: new Date(2026, 5, 20),
+  deadlineDate: new Date(2026, 7, 15),
 };
 
 /**
@@ -104,19 +104,16 @@ export const AFTER_SUBMIT_KEYS = [
   "magazine:submitStory.sidebar.afterSubmit.licence",
 ];
 
-/** Example draft the editor opens with (mirrors the design prototype). */
+/** The editable fields of a story draft, starting empty — the member writes
+ * their own byline and body; no pre-filled example content. */
 export const INITIAL_DRAFT = {
-  section: "Personal essay",
-  byline: "Sofia Ferreira",
+  section: "",
+  byline: "",
   bylineNote: "",
   tags: "",
-  headline: "The city keeps changing around us",
+  headline: "",
   deck: "",
-  body: `The apartment I grew up thinking I could afford no longer exists in the neighbourhood I grew up in. This isn't a complaint. It's a map coordinate. Where you can live shapes who you can be around, and who you can be around shapes everything else.
-
-I have been tracking this for three years: not with data, but with the particular cartography of knowing who has left. The restaurant where Catarina worked. The street where six of my friends used to live within walking distance of each other. The squat that became a hotel.
-
-What I want to write about is the gap between leaving and being displaced. They feel different from the inside. Leaving has agency in it, even when it's coerced. Being displaced is something that happens to the body before the mind has processed it.`,
+  body: "",
 };
 
 /** The editable fields of a story draft. */

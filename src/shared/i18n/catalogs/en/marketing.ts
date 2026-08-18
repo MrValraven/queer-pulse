@@ -762,6 +762,7 @@ export const marketing: Catalog = {
   "legal.plainSummaryTitle": "In plain language",
   "legal.toc.title": "Contents",
   "legal.contact.emailCta": "Email us",
+  "legal.viewFullPage": "View the full policy page",
 
   // ── List Your Business (wizard step pills) ────────────────────────────
   "listBusiness.wizard.pill.path": "Path",
@@ -1894,6 +1895,7 @@ export const marketing: Catalog = {
   "changelog.tag.search": "Try global search",
   "changelog.tag.donate": "See where money goes",
   "changelog.tag.volunteer": "Find a way in",
+  "changelog.tag.postVolunteer": "Post an opportunity",
   "changelog.tag.comingOut": "Read the coming-out guide",
   "changelog.tag.notifications": "Open your notifications",
   "changelog.tag.connections": "Open your connections",
@@ -1988,6 +1990,66 @@ export const marketing: Catalog = {
     "The chat actions menu now shows up properly",
   "changelog.entries.inbox-menu-dropdown-visibility.body":
     "Opening the “⋯” menu on a conversation in your inbox now shows its Pin, Favourite and Delete options on top, instead of them hiding behind the chat below. The menu was always working, it just was not always visible.",
+
+  "changelog.entries.member-directory-filters-fix.title":
+    "Member directory filters now actually filter",
+  "changelog.entries.member-directory-filters-fix.body":
+    "Most of the filters in Find members (Open to, Where they're based, What they do, Profession, Member age, Languages) were only changing what was checked on screen, not what showed up. They now search the real directory, and you can set your own field, profession and languages in Settings so others can find you by them.",
+
+  "changelog.entries.directory-ownership-claims.title":
+    "Real ownership for the local directory",
+  "changelog.entries.directory-ownership-claims.body":
+    "The “verified queer-owned” badge on local directory listings now reflects a moderator's actual confirmation. If a business you run is already listed by someone else, you can request to claim it, with a moderator reviewing before anything changes.",
+
+  "changelog.entries.session-expired-toast-fix.title":
+    "Fixed a false “session expired” message",
+  "changelog.entries.session-expired-toast-fix.body":
+    "Some pages were telling people their session expired even when they'd never signed in. That message only appears now if you actually had a session that ran out.",
+
+  "changelog.entries.join-request-form-fix.title":
+    "Cleaned up the community join request form",
+  "changelog.entries.join-request-form-fix.body":
+    "Requesting to join a community used to ask for your email again, even though you're already signed in, and never actually sent it anywhere. That field is gone, and the “how involved would you like to be” question now shares a step with the note you leave for the mods, instead of asking twice.",
+
+  "changelog.entries.community-pulse-and-insights.title":
+    "Communities now show their real events, discussions, and volunteer opportunities",
+  "changelog.entries.community-pulse-and-insights.body":
+    "A community's Events tab now shows its real upcoming gatherings instead of always being empty, and the sidebar surfaces recent discussion threads and open volunteer opportunities filed to that community. Owners and mods also get a new insights panel on membership growth and post activity.",
+
+  "changelog.entries.onboarding-identity-and-notifications.title":
+    "Onboarding now asks for pronouns and notification preferences",
+  "changelog.entries.onboarding-identity-and-notifications.body":
+    "The setup wizard now has a spot for your pronouns and a short bio, and a moment to turn on notifications if you want them — both optional. The final step also points you to Getting Started, so the rest of your setup is easy to find.",
+
+  "changelog.entries.getting-started-vouch-fix.title":
+    "Fixed the “vouch for someone” checklist step",
+  "changelog.entries.getting-started-vouch-fix.body":
+    "It was marking itself done the moment you joined through a personal invite, since being vouched for and vouching for someone else were being counted as the same thing. It now only completes once you've actually vouched for someone.",
+
+  "changelog.entries.admin-invite-quota-controls.title":
+    "Admins can set invite quotas per member",
+  "changelog.entries.admin-invite-quota-controls.body":
+    "The invite oversight page now lets admins raise or lower how many invites a specific member can send each month, instead of that only being possible with direct database access.",
+
+  "changelog.entries.invite-approval-email.title":
+    "Invite approvals now send themselves",
+  "changelog.entries.invite-approval-email.body":
+    "Approving a join request emails the applicant their invite link right away. Reviewers can still copy the link by hand as a backup, but sending it is no longer something they have to remember to do.",
+
+  "changelog.entries.join-request-mutual-member-field.title":
+    "Naming a member who can vouch for you is now a real match",
+  "changelog.entries.join-request-mutual-member-field.body":
+    "The request-invite form's “member who can vouch for you” field used to get folded into your message as plain text. It's now sent as its own field, so a reviewer can match it directly instead of reading the whole message to find it.",
+
+  "changelog.entries.post-opportunity-team-picker.title":
+    "Posting an opportunity now fills in your own details",
+  "changelog.entries.post-opportunity-team-picker.body":
+    "The Team & contact step now fills in your own contact handle, and your partner slug too if you steward a community. Team members come from a picker of your connections and communities.",
+
+  "changelog.entries.side-quests-getting-started.title":
+    "Side quests once you're all set",
+  "changelog.entries.side-quests-getting-started.body":
+    "Finishing the getting-started checklist used to be a dead end. Now it opens onto side quests: the badges you haven't earned yet, each with a button straight to where you'd go to work on it, plus any perk you've unlocked but haven't claimed. Four new badges came with it, for exploring the Local directory, saving articles, joining a second community, and filling out your Work Profile.",
 
   "changelog.entries.recognition-xp.title": "Earn XP, levels, and badges",
   "changelog.entries.recognition-xp.body": "Your activity now earns experience toward levels and badges. Finishing your getting started checklist, joining communities, attending gatherings, and connecting with members all move you up. Track your progress on the Badges page.",
@@ -3822,7 +3884,16 @@ export const marketing: Catalog = {
     "A regular shift and a minimum term, consistency matters.",
   "postOpportunity.core.basicsHeading": "The basics",
   "postOpportunity.core.orgLabel": "Organisation",
-  "postOpportunity.core.orgPlaceholder": "e.g. your organisation",
+  "postOpportunity.core.orgHelper":
+    "Pick a community you own or moderate, or an approved partner org.",
+  "postOpportunity.core.orgEmptyState":
+    "You'll need to own or moderate a community, or be an approved partner, before you can post an opportunity on their behalf.",
+  "postOpportunity.core.orgLinkLabel": "Link to an organisation",
+  "postOpportunity.core.orgLinkHelper":
+    "Optional: attach this post to a community you own or moderate, or an approved partner.",
+  "postOpportunity.core.orgLinkNone": "None",
+  "postOpportunity.core.orgLinkGroupPartner": "Partners",
+  "postOpportunity.core.orgLinkGroupCommunity": "My communities",
   "postOpportunity.core.roleLabel": "Role title",
   "postOpportunity.core.rolePlaceholder": "e.g. Community Outreach Volunteer",
   "postOpportunity.core.causeLabel": "Cause",
@@ -3878,8 +3949,12 @@ export const marketing: Catalog = {
     "e.g. 18 outreach volunteers active this quarter.",
   "postOpportunity.rich.teamLabel": "Team members",
   "postOpportunity.rich.teamHelper":
-    "Comma-separated member handles / slugs already on the team.",
-  "postOpportunity.rich.teamPlaceholder": "catarina-v, jonas-f",
+    "Pick from your connections or the communities you belong to.",
+  "postOpportunity.rich.teamPlaceholder": "Select connections or communities",
+  "postOpportunity.rich.teamGroupConnections": "Connections",
+  "postOpportunity.rich.teamGroupCommunities": "Communities",
+  "postOpportunity.rich.teamEmpty":
+    "Connect with people or join a community to add them here.",
   "postOpportunity.rich.applyRoleLabel": "Apply-as role label",
   "postOpportunity.rich.applyRoleHelper": "Defaults to “Role · Organisation”.",
   "postOpportunity.rich.applyRolePlaceholder":
@@ -3933,6 +4008,18 @@ export const marketing: Catalog = {
   "volunteerDetail.sidebar.notRightFit": "Not the right fit?",
   "volunteerDetail.sidebar.otherWays": "Other ways to help right now:",
   "volunteerDetail.sidebar.fundInstead": "Fund this work instead",
+  "volunteerDetail.signupModal.ariaLabel": "Apply to volunteer for {{role}}",
+  "volunteerDetail.signupModal.eyebrow": "Your application",
+  "volunteerDetail.signupModal.title": "Tell us why you'd be a good fit",
+  "volunteerDetail.signupModal.sub":
+    "A few sentences is plenty. The team reads every application.",
+  "volunteerDetail.signupModal.noteLabel":
+    "Why do you want to volunteer for this role?",
+  "volunteerDetail.signupModal.notePlaceholder":
+    "Share what draws you to this, or any relevant experience…",
+  "volunteerDetail.signupModal.cancel": "Cancel",
+  "volunteerDetail.signupModal.submit": "Send application",
+  "volunteerDetail.signupModal.sending": "Sending…",
 
   // ── Partner Detail — page chrome. About/joint-work/timeline/how-we-work
   //    copy, stats, and contact details are each partner org's own content
@@ -4262,6 +4349,7 @@ export const marketing: Catalog = {
   "directory.badge.queerOwned": "Queer-owned",
   "directory.badge.friendly": "LGBTQ+ friendly",
   "directory.card.memberRun": "Member-run",
+  "directory.card.online": "Online",
   "directory.card.viewDetails": "View details",
   "directory.card.verifiedBadge": "Verified safe space",
   "directory.submitStrip.title": "Know a place worth <em>adding?</em>",
@@ -4295,10 +4383,11 @@ export const marketing: Catalog = {
   "directory.detail.badge.friendly": "LGBTQ+ friendly",
   "directory.detail.reviewsCount": "· {count} reviews",
   "directory.detail.newBadge": "New",
+  "directory.detail.onlineBusiness": "Online only",
   "directory.detail.whatItIsTitle": "What it <em>actually is.</em>",
   "directory.detail.goodForTitle": "What members say it's <em>good for</em>",
   "directory.detail.offersTitle": "What this place <em>offers</em>",
-  "directory.detail.goodForSub": "Aggregated from {count} reviews.",
+  "directory.detail.goodForSub": "As {name} describes it.",
   "directory.detail.hoursTitle": "Hours",
   "directory.detail.today": "Today",
   "directory.detail.hoursClosed": "Closed",
@@ -4419,6 +4508,26 @@ export const marketing: Catalog = {
   "directory.detail.dispute.successBody":
     "A moderator will review your report about {name}. If you left an email, we'll use it only if we need to follow up.",
   "directory.detail.dispute.doneCta": "Done",
+  "directory.detail.claim.ariaLabel": "Claim {name}",
+  "directory.detail.claim.eyebrow": "Claim this listing",
+  "directory.detail.claim.title": "You run <em>{name}</em>?",
+  "directory.detail.claim.sub":
+    "Tell us a bit about yourself and a moderator will review your request. If it checks out, you'll take over the listing: its reviews, its details, everything.",
+  "directory.detail.claim.noteLabel": "Anything that helps us verify you",
+  "directory.detail.claim.notePlaceholder":
+    "e.g. I'm the owner, here's how you can reach me to confirm.",
+  "directory.detail.claim.note":
+    "Claiming doesn't hand over the listing on its own. A moderator reviews every request first.",
+  "directory.detail.claim.cancel": "Cancel",
+  "directory.detail.claim.submit": "Send to moderators",
+  "directory.detail.claim.submitting": "Sending…",
+  "directory.detail.claim.errorToast": "Couldn't send your claim. Please try again.",
+  "directory.detail.claim.successAriaLabel": "Claim received",
+  "directory.detail.claim.successTitle": "Got it. We're",
+  "directory.detail.claim.successEm": "on it.",
+  "directory.detail.claim.successBody":
+    "A moderator will review your claim on {name} and let you know what happens next.",
+  "directory.detail.claim.doneCta": "Done",
   "directory.detail.mapAria": "Map showing where {name} is",
   "directory.detail.languagesLabel": "Languages",
   "directory.detail.accessLabel": "Access",

@@ -1,7 +1,8 @@
 import { FiPlus, FiX } from "react-icons/fi";
-import { FormField } from "../../shared/components/ui";
+import { FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { PostOpportunityForm } from "./usePostOpportunityForm";
+import { defaultApplyRole, type PostOpportunityForm } from "./usePostOpportunityForm";
+import { useTeamMemberOptions } from "./useTeamMemberOptions";
 import styles from "./PostVolunteerOpportunityPage.module.css";
 
 /** Repeating "what you'd actually do" task rows. */
@@ -137,6 +138,12 @@ export function PostOpportunityTeamFields({
 }) {
   const { t } = useTranslation();
   const { state, set } = form;
+  const teamOptions = useTeamMemberOptions();
+
+  // Live preview of the submit-time fallback ("Role · Org") until the poster
+  // types their own apply-as label — see `defaultApplyRole`.
+  const applyRoleValue =
+    state.applyRole || defaultApplyRole(state.role, state.org);
 
   return (
     <>
@@ -156,11 +163,13 @@ export function PostOpportunityTeamFields({
         label={t("marketing:postOpportunity.rich.teamLabel")}
         helper={t("marketing:postOpportunity.rich.teamHelper")}
       >
-        <input
-          type="text"
+        <Select
+          multiple
+          options={teamOptions}
           value={state.team}
-          onChange={(e) => set("team", e.target.value)}
+          onChange={(value) => set("team", value)}
           placeholder={t("marketing:postOpportunity.rich.teamPlaceholder")}
+          emptyText={t("marketing:postOpportunity.rich.teamEmpty")}
         />
       </FormField>
 
@@ -171,7 +180,7 @@ export function PostOpportunityTeamFields({
         >
           <input
             type="text"
-            value={state.applyRole}
+            value={applyRoleValue}
             onChange={(e) => set("applyRole", e.target.value)}
             placeholder={t(
               "marketing:postOpportunity.rich.applyRolePlaceholder",

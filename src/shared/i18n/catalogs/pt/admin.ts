@@ -325,6 +325,7 @@ export const admin: Catalog = {
   "members.tabs.all": "Todas as pessoas",
   "members.tabs.pending": "Verificação pendente",
   "members.tabs.flagged": "Sinalizadas",
+  "members.tabs.sample": "Amostra de qualidade",
   "members.filters.all": "Todos os estados",
   "members.filters.verified": "Verificadas",
   "members.filters.new": "Novas esta semana",
@@ -399,6 +400,68 @@ export const admin: Catalog = {
     "Não foi possível copiar a ligação. Seleciona-a e copia",
   "members.verify.noInviteCode":
     "Não veio nenhum código de convite. Atualiza a fila ou pede a um admin para o reemitir.",
+  "members.verify.flags.disposableEmail": "Email descartável",
+  "members.verify.flags.duplicateMessage":
+    "Mesma mensagem de outro pedido pendente",
+  "members.verify.flags.sourceBurst":
+    "Parte de um pico incomum desta origem",
+  "members.verify.priorDeclineCount_one": "Já recusado uma vez",
+  "members.verify.priorDeclineCount_other": "Já recusado {count} vezes",
+  "members.verify.referenceLabel": "Referência",
+  "members.verify.referenceResolved": "Corroborado por {name}",
+  "members.verify.referenceUnresolved": "Indicou {email}; sem correspondência entre membros",
+  "members.verify.waitingDays_one": "À espera há {count} dia",
+  "members.verify.waitingDays_other": "À espera há {count} dias",
+  "members.verify.declineReason.spam_pattern": "Parece spam",
+  "members.verify.declineReason.underage": "Menor de 18 anos",
+  "members.verify.declineReason.implausible": "Os detalhes não batem certo",
+  "members.verify.declineReason.safety_concern": "Preocupação de segurança",
+  "members.verify.declineReason.other": "Outro",
+  "members.verify.declineModal.title": "Recusar o pedido de {name}?",
+  "members.verify.declineModal.body":
+    "Escolhe o motivo mais próximo. Isto não é mostrado à pessoa candidata. Ela recebe uma nota curta e genérica.",
+  "members.verify.declineModal.reasonLabel": "Motivo",
+  "members.verify.declineModal.reasonPlaceholder": "Escolhe um motivo",
+  "members.verify.declineModal.confirmCta": "Recusar pedido",
+  "members.verify.waitlistCta": "Lista de espera",
+  "members.verify.waitlistedToast": "{name} passou para a lista de espera",
+  "members.verify.waitlistedSectionTitle": "Lista de espera",
+  "members.verify.identityReminder":
+    "Um nome, foto ou pronomes não são, por si só, motivo para recusar.",
+  "members.verify.selectAria": "Selecionar o pedido de {name}",
+  "members.verify.bulk.ariaLabel": "Ações em lote",
+  "members.verify.bulk.selectedCount_one": "{count} selecionado",
+  "members.verify.bulk.selectedCount_other": "{count} selecionados",
+  "members.verify.bulk.capNote": "Até {cap} de cada vez",
+  "members.verify.bulk.approveCta": "Aprovar",
+  "members.verify.bulk.waitlistCta": "Lista de espera",
+  "members.verify.bulk.declineCta": "Recusar",
+  "members.verify.bulk.clearCta": "Limpar",
+  "members.verify.bulk.partialFailure_one":
+    "{count} pedido não pôde ser atualizado",
+  "members.verify.bulk.partialFailure_other":
+    "{count} pedidos não puderam ser atualizados",
+  "members.verify.bulk.action.approve": "Aprovar pedidos",
+  "members.verify.bulk.action.waitlist":
+    "Colocar pedidos em lista de espera",
+  "members.verify.bulk.action.decline": "Recusar pedidos",
+  "members.verify.bulk.confirmDecline.title": "Recusar {count} pedidos?",
+  "members.verify.bulk.confirmDecline.body":
+    "Escolhe o motivo mais próximo. Aplica-se aos {count} pedidos selecionados.",
+  "members.verify.bulk.confirmDecline.confirmCta": "Recusar todos",
+  "members.verify.status.approved": "Aprovado",
+  "members.verify.status.declined": "Recusado",
+
+  // Separador de amostra de qualidade: uma verificação periódica e só de
+  // leitura de decisões passadas, para outro admin comparar notas. Não é um
+  // fluxo de aprovação — dizê-lo com clareza.
+  "members.sample.intro":
+    "Uma verificação periódica de decisões passadas, para dois admins compararem notas.",
+  "members.sample.explainer":
+    "Isto mostra decisões passadas para discussão. Não regista uma segunda aprovação.",
+  "members.sample.resampleCta": "Mostrar outra amostra",
+  "members.sample.decisionLabel": "Decisão",
+  "members.sample.empty": "Ainda não há pedidos revistos para amostrar.",
 
   "members.drawer.verifiedChip": "Pessoa verificada",
   "members.drawer.verifyCta": "Verificar",
@@ -781,6 +844,30 @@ export const admin: Catalog = {
   "adminMagazineSubmissions.row.sent": "Enviado {date}",
   "adminMagazineSubmissions.loadMore": "Carregar mais",
   "adminMagazineSubmissions.loadingMore": "A carregar…",
+
+  "adminWriterApplications.title": "Candidaturas a <em>escritor</em>",
+  "adminWriterApplications.header.eyebrow": "Revista",
+  "adminWriterApplications.header.title": "Candidaturas a <em>escritor</em>",
+  "adminWriterApplications.header.sub":
+    "Membros a candidatarem-se a escrever para a revista, com a sua proposta e amostra de escrita.",
+  "adminWriterApplications.filter.all": "Todas",
+  "adminWriterApplications.filter.pending": "Pendentes",
+  "adminWriterApplications.filter.approved": "Aprovadas",
+  "adminWriterApplications.filter.declined": "Recusadas",
+  "adminWriterApplications.status.pending": "Pendente",
+  "adminWriterApplications.status.approved": "Aprovada",
+  "adminWriterApplications.status.declined": "Recusada",
+  "adminWriterApplications.row.by": "De {name}",
+  "adminWriterApplications.row.sample": "Amostra",
+  "adminWriterApplications.row.sampleLink": "Amostra ligada",
+  "adminWriterApplications.row.approveCta": "Aprovar",
+  "adminWriterApplications.row.declineCta": "Recusar",
+  "adminWriterApplications.row.reviewNotePlaceholder": "Nota opcional para o candidato",
+  "adminWriterApplications.unknownMember": "Um membro",
+  "adminWriterApplications.error": "Não foi possível carregar as candidaturas.",
+  "adminWriterApplications.empty": "Ainda não há candidaturas.",
+  "adminWriterApplications.loadMore": "Carregar mais",
+  "adminWriterApplications.loadingMore": "A carregar…",
 
   "adminListings.title": "Espaços do <em>diretório</em>",
   "adminListings.header.eyebrow": "Moderação",

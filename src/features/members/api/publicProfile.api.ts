@@ -65,6 +65,11 @@ export interface PublicEligibilitySignalsDto {
   workshopsTaught: number;
   publishedSubprofiles: number;
   vouchCount: number;
+  /** Vouches this member has given to OTHERS (voucher, not vouchee) — distinct
+   *  from `vouchCount`, which counts vouches received. Powers the getting-
+   *  started "vouch for someone" milestone, which must not false-positive off
+   *  an inbound vouch the member never gave. */
+  vouchesGivenCount: number;
   endorsementCount: number;
   connectionCount: number;
   eventsAttended: number;

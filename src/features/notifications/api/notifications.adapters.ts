@@ -6,6 +6,7 @@ import {
   routes,
   thread,
 } from "../../../app/routeMap";
+import { coHostInvitePath } from "../../gatherings/data";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Formatters } from "../../../shared/i18n/format";
@@ -47,6 +48,7 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   "vouch_received",
   "introduction_made",
   "event_invite",
+  "event_cohost_invite",
   "mention",
   "forum_reply",
   // Coverage-sweep kinds that carry a member actor (and so a `textNamed`
@@ -187,6 +189,19 @@ function sourceHrefFromPayload(
     const communitySlug = payload.communitySlug;
     return typeof communitySlug === "string" && communitySlug
       ? communityPath(communitySlug)
+      : undefined;
+  }
+  // A real cohost invite (SDD 2026-08-18 "cohost invite flow") has its own
+  // `source` value, distinct from plain event/event_rsvp notifications. It
+  // deep-links to the invite page, using the invite id.
+  if (payload.source === "cohost_invite") {
+    const eventSlug = payload.eventSlug;
+    const inviteId = payload.inviteId;
+    return typeof eventSlug === "string" &&
+      eventSlug &&
+      typeof inviteId === "string" &&
+      inviteId
+      ? coHostInvitePath(eventSlug, inviteId)
       : undefined;
   }
   // Coverage-sweep sources — each deep-links to the entity the notification is

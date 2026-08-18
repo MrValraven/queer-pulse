@@ -628,4 +628,10 @@ export const auth: Catalog = {
   "gettingStarted.allDone.body":
     "Já fizeste o essencial. O resto do QueerPulse é teu para explorares — com calma.",
   "gettingStarted.allDone.cta": "Explorar o QueerPulse",
+  "gettingStarted.sideQuests.eyebrow": "A seguir",
+  "gettingStarted.sideQuests.title": "Missões <em>secundárias</em>",
+  "gettingStarted.sideQuests.lede":
+    "Agora que já te instalaste, ainda há mais para descobrir: mais umas coisas para experimentares, cada uma com um crachá ou regalia à espera no fim.",
+  "gettingStarted.sideQuests.cta": "Começar",
+  "gettingStarted.sideQuests.showMore": "Mostrar mais {count}",
 };

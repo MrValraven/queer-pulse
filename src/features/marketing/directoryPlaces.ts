@@ -78,6 +78,10 @@ export interface DirectoryPlace {
   cat: string;
   hood: string;
   owned: boolean;
+  /** Moderator-confirmed queer-owned badge, distinct from the self-reported
+   * `owned` claim above. Drives the "VERIFIED QUEER-OWNED" badge. Optional so
+   * the static demo fixtures below don't all need updating; absent ⇒ false. */
+  queerOwnedVerified?: boolean;
   member?: string;
   av: string;
   tint: Tint;

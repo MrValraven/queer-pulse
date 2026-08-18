@@ -54,7 +54,26 @@ export function useCommunities(
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
-        return { items: communities, total: communities.length, page: 1 };
+        // Mirror the live endpoint's ILIKE-over-name/tagline search client-side
+        // (the mock registry has no separate "purpose" field). Demo has no
+        // pagination, so a fresh search always yields its own single page —
+        // there's nothing to reset.
+        const needle = params.q?.trim().toLowerCase();
+        const matches = needle
+          ? communities.filter((community) =>
+              `${community.name} ${community.description}`
+                .toLowerCase()
+                .includes(needle),
+            )
+          : communities;
+        // Mirror the live endpoint's `sort=name` (A→Z); `newest`/omitted keeps
+        // the registry's own order, same as the backend's `created_at DESC`
+        // default reads today.
+        const sorted =
+          params.sort === "name"
+            ? [...matches].sort((a, b) => a.name.localeCompare(b.name))
+            : matches;
+        return { items: sorted, total: sorted.length, page: 1 };
       }
       const res = await getCommunities({
         ...params,

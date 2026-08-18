@@ -1,8 +1,9 @@
-import { FiCheck, FiX, FiFlag, FiUserPlus, FiShield } from "react-icons/fi";
+import { FiCheck, FiX, FiFlag, FiUserPlus, FiUserMinus, FiShield } from "react-icons/fi";
 import { Avatar, Button, EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { REASON_LABEL_KEYS } from "../safety/reportReasons";
 import type { LivingCommunity } from "./community.model";
 import { photoOf } from "./communityPeople";
 import { RoleBadge } from "./CommunityBadges";
@@ -99,10 +100,12 @@ export function ModJoinRequests({
 
 export function ModReportedPosts({
   reports,
-  onResolve,
+  onRemove,
+  onDismiss,
 }: {
   reports: Report[];
-  onResolve: (id: string, removedPost: boolean) => void;
+  onRemove: (report: Report) => void;
+  onDismiss: (report: Report) => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -122,35 +125,58 @@ export function ModReportedPosts({
           )}
         />
       ) : (
-        reports.map((rep) => (
-          <div className={styles.reportCard} key={rep.id}>
-            <div className={styles.reportReason}>
-              <FiFlag aria-hidden /> {rep.reason}
+        reports.map((rep) => {
+          // Demo mocks author a free-text `reason`; live rows only carry a
+          // stable `reasonCode` (the leaner `GET /communities/:slug/reports`
+          // shape), resolved to a label here.
+          const reasonLabel =
+            rep.reason ?? (rep.reasonCode ? t(REASON_LABEL_KEYS[rep.reasonCode]) : "");
+          // "Remove" deletes a post by id — this queue has no parent-post id
+          // for a reply report, so that action only wires up for posts.
+          const canRemove = rep.subjectType == null || rep.subjectType === "post";
+          return (
+            <div className={styles.reportCard} key={rep.id}>
+              <div className={styles.reportReason}>
+                <FiFlag aria-hidden /> {reasonLabel}
+              </div>
+              {rep.postExcerpt && (
+                <p className={styles.reportExcerpt}>“{rep.postExcerpt}”</p>
+              )}
+              <div className={styles.modMeta}>
+                {rep.author && rep.reporter
+                  ? t("communities:detail.modtools.reports.meta", {
+                      author: rep.author.name,
+                      reporter: rep.reporter.name,
+                      time: rep.time,
+                    })
+                  : t("communities:detail.modtools.reports.metaLive", {
+                      time: rep.time,
+                    })}
+              </div>
+              {!canRemove && (
+                <p className={styles.modMeta}>
+                  {t("communities:detail.modtools.reports.replyNote")}
+                </p>
+              )}
+              <div className={styles.modActions} style={{ marginTop: 12 }}>
+                {canRemove && (
+                  <Button variant="primary" onClick={() => onRemove(rep)}>
+                    {t("communities:detail.modtools.reports.removeCta")}
+                  </Button>
+                )}
+                <span
+                  role="button"
+                  tabIndex={0}
+                  className={styles.declineBtn}
+                  onClick={() => onDismiss(rep)}
+                  onKeyDown={keyDownActivate(() => onDismiss(rep))}
+                >
+                  {t("communities:detail.modtools.reports.dismissCta")}
+                </span>
+              </div>
             </div>
-            <p className={styles.reportExcerpt}>“{rep.postExcerpt}”</p>
-            <div className={styles.modMeta}>
-              {t("communities:detail.modtools.reports.meta", {
-                author: rep.author.name,
-                reporter: rep.reporter.name,
-                time: rep.time,
-              })}
-            </div>
-            <div className={styles.modActions} style={{ marginTop: 12 }}>
-              <Button variant="primary" onClick={() => onResolve(rep.id, true)}>
-                {t("communities:detail.modtools.reports.removeCta")}
-              </Button>
-              <span
-                role="button"
-                tabIndex={0}
-                className={styles.declineBtn}
-                onClick={() => onResolve(rep.id, false)}
-                onKeyDown={keyDownActivate(() => onResolve(rep.id, false))}
-              >
-                {t("communities:detail.modtools.reports.dismissCta")}
-              </span>
-            </div>
-          </div>
-        ))
+          );
+        })
       )}
     </>
   );
@@ -160,13 +186,17 @@ export function ModMemberManagement({
   members,
   memberKey,
   promoted,
+  demoted,
   onPromote,
+  onDemote,
   onRemove,
 }: {
   members: RosterMember[];
   memberKey: (slug?: string, name?: string) => string;
   promoted: string[];
+  demoted: string[];
   onPromote: (slug: string | undefined, name: string) => void;
+  onDemote: (slug: string | undefined, name: string) => void;
   onRemove: (slug: string | undefined, name: string) => void;
 }) {
   const { t } = useTranslation();
@@ -179,7 +209,11 @@ export function ModMemberManagement({
       </div>
       {members.map((m) => {
         const key = memberKey(m.slug, m.name);
-        const isMod = m.role !== "member" || promoted.includes(key);
+        const isOwner = m.role === "owner";
+        const isMod =
+          !isOwner &&
+          !demoted.includes(key) &&
+          (m.role === "mod" || promoted.includes(key));
         return (
           <div className={styles.modRow} key={key}>
             <Avatar
@@ -192,13 +226,13 @@ export function ModMemberManagement({
             <div className={styles.modMain}>
               <div className={styles.modName}>
                 {m.name}{" "}
-                <RoleBadge role={promoted.includes(key) ? "mod" : m.role} />
+                <RoleBadge role={isOwner ? "owner" : isMod ? "mod" : "member"} />
                 <MemberStaffBadge slug={m.slug} />
               </div>
               {m.title && <div className={styles.modMeta}>{m.title}</div>}
             </div>
             <div className={styles.modActions}>
-              {!isMod && m.role === "member" && (
+              {!isOwner && !isMod && (
                 <span
                   role="button"
                   tabIndex={0}
@@ -210,7 +244,19 @@ export function ModMemberManagement({
                   {t("communities:detail.modtools.members.makeModCta")}
                 </span>
               )}
-              {m.role !== "owner" && (
+              {!isOwner && isMod && (
+                <span
+                  role="button"
+                  tabIndex={0}
+                  className={styles.declineBtn}
+                  onClick={() => onDemote(m.slug, m.name)}
+                  onKeyDown={keyDownActivate(() => onDemote(m.slug, m.name))}
+                >
+                  <FiUserMinus aria-hidden />{" "}
+                  {t("communities:detail.modtools.members.demoteCta")}
+                </span>
+              )}
+              {!isOwner && (
                 <span
                   role="button"
                   tabIndex={0}
@@ -222,7 +268,7 @@ export function ModMemberManagement({
                   {t("communities:detail.modtools.members.removeCta")}
                 </span>
               )}
-              {m.role === "owner" && (
+              {isOwner && (
                 <span className={styles.ownerTag}>
                   <FiShield aria-hidden />{" "}
                   {t("communities:detail.modtools.members.ownerTag")}

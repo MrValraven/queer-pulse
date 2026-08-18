@@ -39,59 +39,66 @@ export function DirectorySpaceMain({ place, preview = false, ownerRef }: Props) 
   // visitor's browser timezone (Europe/Lisbon by default) — see `zonedNow`.
   const venueNow = zonedNow(place.timezone);
   const todayIdx = (venueNow.getDay() + 6) % 7;
-  // With no reviews yet, the "what members say" framing (and its
-  // "aggregated from N reviews" line) claims a consensus that doesn't exist —
-  // present the same checklist honestly as what the place declares it offers.
+  // With no reviews yet, the "what members say" framing claims a consensus
+  // that doesn't exist — present the same checklist honestly as what the
+  // place declares it offers. The subline underneath is always attributed to
+  // the owner (see goodForSub), never to review count: these tags are set
+  // once at listing creation, not mined from reviews.
   const hasReviews = place.rating.count > 0;
+
+  const hasWhatItIs = place.whatItIs.length > 0;
+  const hasGoodFor = place.goodFor.length > 0;
 
   return (
     <div>
-      <section className={s.sec}>
-        <h2>
-          <Translation
-            i18nKey="marketing:directory.detail.whatItIsTitle"
-            components={{ em: <em /> }}
-          />
-        </h2>
-        {place.whatItIs.map((paragraph, index) => (
-          <p key={index}>{paragraph}</p>
-        ))}
-      </section>
+      {hasWhatItIs && (
+        <section className={s.sec}>
+          <h2>
+            <Translation
+              i18nKey="marketing:directory.detail.whatItIsTitle"
+              components={{ em: <em /> }}
+            />
+          </h2>
+          {place.whatItIs.map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
+          ))}
+        </section>
+      )}
 
-      <section className={s.sec}>
-        <h2>
-          <Translation
-            i18nKey={
-              hasReviews
-                ? "marketing:directory.detail.goodForTitle"
-                : "marketing:directory.detail.offersTitle"
-            }
-            components={{ em: <em /> }}
-          />
-        </h2>
-        {hasReviews && (
+      {hasGoodFor && (
+        <section className={s.sec}>
+          <h2>
+            <Translation
+              i18nKey={
+                hasReviews
+                  ? "marketing:directory.detail.goodForTitle"
+                  : "marketing:directory.detail.offersTitle"
+              }
+              components={{ em: <em /> }}
+            />
+          </h2>
           <p className={s.subLine}>
             {t("marketing:directory.detail.goodForSub", {
-              count: place.rating.count,
+              name: place.owner.first,
             })}
           </p>
-        )}
-        <div className={s.features}>
-          {place.goodFor.map((feature) => (
-            <div
-              key={feature.label}
-              className={[s.feature, !feature.yes && s.featureMaybe]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              <div className={s.featureIc}>
-                {feature.yes ? <Check /> : <Dash />}
+          <div className={s.features}>
+            {place.goodFor.map((feature) => (
+              <div
+                key={feature.label}
+                className={[s.feature, !feature.yes && s.featureMaybe]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                <div className={s.featureIc}>
+                  {feature.yes ? <Check /> : <Dash />}
+                </div>
+                {feature.label}
               </div>
-              {feature.label}
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className={s.sec}>
         <h2>{t("marketing:directory.detail.hoursTitle")}</h2>

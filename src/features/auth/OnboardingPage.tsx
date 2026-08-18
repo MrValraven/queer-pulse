@@ -8,6 +8,7 @@ import { useAuth } from "../../app/providers/authContext";
 import { useScopedLocalStorage } from "../../app/providers/useScopedLocalStorage";
 import { useStorageScope } from "../../app/providers/useStorageScope";
 import { safeStorage } from "../../shared/storage/safeStorage";
+import { usePlatformStatus } from "../../shared/api/usePlatformStatus";
 import { postCompleteOnboarding } from "./api/auth.api";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FeatureHelp } from "../../shared/components/ui";
@@ -40,6 +41,7 @@ export function OnboardingPage() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { markOnboarded } = useAuth();
+  const { data: platformStatus } = usePlatformStatus();
 
   // Seven steps in total, indexed 0–6. Step 0 is the warm "let's begin" intro,
   // counted as Step 1 so the "Step X of N" label is honest and continuous.
@@ -70,7 +72,7 @@ export function OnboardingPage() {
     if (demoMode || stampedRef.current) return;
     if (step !== TOTAL_STEPS - 1) return;
     stampedRef.current = true;
-    void postCompleteOnboarding()
+    void postCompleteOnboarding(platformStatus?.guidelinesVersion)
       .then(({ onboardedAt }) => {
         // Reflect the stamp on the cached user immediately, so the one-time gate
         // won't replay the wizard later in this session (e.g. browser autofill of
@@ -90,7 +92,7 @@ export function OnboardingPage() {
           safeStorage.remove(`${ONBOARDING_STEP_KEY}.u.${persistScope}`);
         }
       });
-  }, [step, demoMode, markOnboarded, persistScope]);
+  }, [step, demoMode, markOnboarded, persistScope, platformStatus?.guidelinesVersion]);
 
   // Focus management: on each step transition the `key={step}` remount drops
   // focus to <body>, so keyboard and screen-reader users lose their place. Move

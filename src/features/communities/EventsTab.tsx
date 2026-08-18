@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
-import { Button, FeatureHelp } from "../../shared/components/ui";
+import { FiAlertTriangle, FiArrowRight } from "react-icons/fi";
+import { Button, EmptyState, FeatureHelp, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
@@ -46,8 +46,65 @@ function EventRow({ ev }: { ev: CommunityEvent }) {
   );
 }
 
-export function EventsTab({ events }: { events: CommunityEvent[] }) {
+/** A placeholder event row, shape-matched to the real thing, while the
+ *  live-mode fetch (`GET /communities/:slug/pulse`) is in flight. */
+function EventRowSkeleton() {
+  return (
+    <div className={styles.eventRow} aria-hidden="true">
+      <div className={detail.gDate}>
+        <SkeletonLine width={22} height={22} />
+        <SkeletonLine width={28} height={11} style={{ marginTop: 6 }} />
+      </div>
+      <div className={styles.eventMain}>
+        <SkeletonLine width="55%" height={14} />
+        <SkeletonLine width="35%" height={12} style={{ marginTop: 8 }} />
+      </div>
+    </div>
+  );
+}
+
+export function EventsTab({
+  events,
+  isLoading = false,
+  isError = false,
+  onRetry,
+}: {
+  events: CommunityEvent[];
+  /** True while the live-mode fetch is in flight (always `false` in demo). */
+  isLoading?: boolean;
+  /** True when the live-mode fetch failed (always `false` in demo). */
+  isError?: boolean;
+  onRetry?: () => void;
+}) {
   const { t } = useTranslation();
+
+  if (isLoading) {
+    return (
+      <div aria-busy="true">
+        <div className={detail.secLbl}>
+          {t("communities:detail.events.upcoming")}
+        </div>
+        <EventRowSkeleton />
+        <EventRowSkeleton />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <EmptyState
+        icon={<FiAlertTriangle />}
+        title={t("communities:detail.events.error.title")}
+        description={t("communities:detail.events.error.description")}
+        action={
+          onRetry
+            ? { label: t("communities:detail.events.error.retryCta"), onClick: onRetry }
+            : undefined
+        }
+      />
+    );
+  }
+
   // Show every upcoming gathering (soonest first — the list is date-ordered),
   // not just the next one; the sidebar already highlights the single soonest.
   const upcoming = events.filter((e) => !e.past);

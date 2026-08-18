@@ -23,6 +23,10 @@ export interface Reply {
   text: string;
   /** Backend reply id (present for live-wired threads; absent in static demo). */
   id?: string;
+  /** The reply author's registry slug, when known — lets the viewer's own
+   *  reply be told apart from someone else's (e.g. hiding "Report" on your
+   *  own reply) without a separate DTO flag. */
+  authorSlug?: string;
   /** ISO timestamp of the last edit, when the reply has been edited. */
   editedAt?: string | null;
   /** True when the reply is a soft-tombstone ("[deleted]"). */
@@ -80,6 +84,11 @@ export interface CommunityDetail {
     slug?: string;
   };
   topicThread: Thread;
+  /** True while the community is auto-frozen pending report review — mirrors
+   *  `LivingCommunity.frozen` for the lighter fallback hub (non-flagship
+   *  communities without enriched "living" data), which has no `living`
+   *  object to read the flag from. Blocks new forum posts/replies. */
+  frozen?: boolean;
 }
 
 export { COMMUNITY_DETAILS };

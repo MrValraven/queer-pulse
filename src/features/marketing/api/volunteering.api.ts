@@ -1,6 +1,7 @@
 import {
   apiGet,
   apiPost,
+  apiPatch,
   apiDelete,
 } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
@@ -61,11 +62,28 @@ export interface OpportunityDetailDTO extends OpportunityCardDTO {
   mySignup: boolean;
 }
 
+export type SignupStatus = "pending" | "accepted" | "declined";
+
 /** A single signup, as GET /volunteering/:slug/signups returns (poster-only). */
 export interface VolunteerSignupDTO {
   id: string;
   member: MemberRefDTO | null;
   note: string | null;
+  status: SignupStatus;
+  decidedAt: string | null;
+  createdAt: string;
+}
+
+/** A row of GET /volunteering/mine — an opportunity the viewer posted, with
+ *  pending/accepted applicant counts for the manage-applicants dashboard. */
+export interface MyOpportunitySummaryDTO {
+  slug: string;
+  role: string;
+  org: string;
+  status: "open" | "closed";
+  pendingCount: number;
+  acceptedCount: number;
+  spotsTotal: number;
   createdAt: string;
 }
 
@@ -74,6 +92,7 @@ export interface VolunteerSignupDTO {
 export interface CreateOpportunityDto {
   org: string;
   partnerSlug?: string;
+  communitySlug?: string;
   role: string;
   cause: Cause;
   commit: Commit;
@@ -136,3 +155,17 @@ export const withdrawSignup = (slug: string) =>
 /** Poster-only roster of everyone who signed up. */
 export const getSignups = (slug: string) =>
   apiGet<VolunteerSignupDTO[]>(`/volunteering/${slug}/signups`);
+
+/** Poster-only: accept or decline an applicant. */
+export const decideSignup = (
+  slug: string,
+  signupId: string,
+  status: "accepted" | "declined",
+) =>
+  apiPatch<VolunteerSignupDTO>(`/volunteering/${slug}/signups/${signupId}`, {
+    status,
+  });
+
+/** Opportunities the viewer has posted, with pending/accepted counts. */
+export const getMyOpportunities = () =>
+  apiGet<MyOpportunitySummaryDTO[]>(`/volunteering/mine`);

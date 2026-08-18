@@ -3,7 +3,11 @@ import maplibregl, { type StyleSpecification } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MapLoading } from "./MapLoading";
-import { buildWarmStyle, LISBON_BOUNDS, MAP_STYLE_URL } from "./lisbonMapStyle";
+import {
+  buildWarmStyle,
+  GREATER_LISBON_BOUNDS,
+  MAP_STYLE_URL,
+} from "../../shared/components/map/siteMapStyle";
 import s from "./localMap.module.css";
 
 interface LocationPickerMapProps {
@@ -19,7 +23,7 @@ const PICKER_WRAP_CLASS = s.pickerPinWrap ?? "";
 const PICKER_PIN_CLASS = s.pickerPin ?? "";
 
 /** Reusable draggable-marker picker for the Lisbon map. Reuses the warm-recoloured
- *  Lisbon style + bounds (lisbonMapStyle.ts) so the picker matches every other
+ *  Lisbon style + bounds (shared/components/map/siteMapStyle.ts) so the picker matches every other
  *  map in the app. Mounted only once coordinates already exist (geocoded
  *  upstream); dragging the pin reports the adjusted coordinates via `onChange`. */
 export function LocationPickerMap({ latitude, longitude, onChange }: LocationPickerMapProps) {
@@ -50,7 +54,7 @@ export function LocationPickerMap({ latitude, longitude, onChange }: LocationPic
       const map = new maplibregl.Map({
         container,
         style,
-        bounds: LISBON_BOUNDS,
+        bounds: GREATER_LISBON_BOUNDS,
         fitBoundsOptions: { padding: 24 },
         attributionControl: { compact: true },
       });

@@ -47,6 +47,7 @@ function demoListing(overrides: Partial<ListingDTO> & Pick<
     notify: [],
     consentOuting: false,
     consentGuide: false,
+    queerOwnedVerified: false,
     submittedBy: null,
     createdAt: overrides.createdAt ?? "2026-07-28T10:00:00.000Z",
     ...overrides,

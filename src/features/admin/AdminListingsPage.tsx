@@ -10,6 +10,7 @@ import { AdminListingRows } from "./AdminListingRows";
 import { BulkActionBar } from "./BulkActionBar";
 import { ListingPreviewDrawer } from "./ListingPreviewDrawer";
 import { EditSuggestionsSection } from "./EditSuggestionsSection";
+import { ListingClaimsSection } from "./ListingClaimsSection";
 import { AdminListingsHeader, type AdminListingsHeaderValue } from "./AdminListingsHeader";
 import { useAdminListings } from "./api/useAdminListings";
 import {
@@ -20,8 +21,8 @@ import {
 } from "./api/adminListings.api";
 import styles from "./AdminListingsPage.module.css";
 
-type ViewTab = "queue" | "editSuggestions";
-const VIEWS: ViewTab[] = ["queue", "editSuggestions"];
+type ViewTab = "queue" | "editSuggestions" | "claims";
+const VIEWS: ViewTab[] = ["queue", "editSuggestions", "claims"];
 
 /**
  * Moderator queue for member-submitted directory listings: filter by review
@@ -207,8 +208,10 @@ export function AdminListingsPage() {
             )}
           </FadeIn>
         </>
-      ) : (
+      ) : view === "editSuggestions" ? (
         <EditSuggestionsSection />
+      ) : (
+        <ListingClaimsSection />
       )}
 
       {openRowLive && (

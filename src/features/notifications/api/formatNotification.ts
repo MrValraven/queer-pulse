@@ -47,6 +47,12 @@ export type NotificationKind =
   // `notifications_type_enum` value added in
   // `AddEventUpdatedNotificationType1786001600000`).
   | "event_updated"
+  // Sent to the invitee when a host/co-host invites them to co-host a
+  // gathering, the real invite-to-accept flow (mirrors the backend
+  // `notifications_type_enum` value added in
+  // `AddEventCohostInviteNotificationType1790500000000`, SDD 2026-08-18
+  // "cohost invite flow").
+  | "event_cohost_invite"
   // Sent to a member the first time a save newly credits their handle as a
   // collaborator on someone else's persona item (mirrors the backend
   // `notifications_type_enum` value added in
@@ -105,7 +111,14 @@ export type NotificationKind =
   // `AddRecognitionNotificationTypes1789600000000`). System-driven, no
   // actor. Payload carries `{ badgeName }`, interpolated the same way as
   // `xp_level_up` above.
-  | "badge_earned";
+  | "badge_earned"
+  // Sent to a magazine writer applicant when an admin approves or declines
+  // their application (mirrors the backend `notifications_type_enum`
+  // additions in `AddWriterApplicationNotificationTypes1790700000000`).
+  // System-driven, no actor. Flat copy — no payload-driven key branching,
+  // like `xp_level_up`/`badge_earned`.
+  | "writer_application_approved"
+  | "writer_application_declined";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -127,6 +140,7 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   waitlist_promoted: "events",
   event_cancelled: "events",
   event_updated: "events",
+  event_cohost_invite: "events",
   event_rsvp: "events",
   community_reply: "community",
   forum_thread_reply: "community",
@@ -159,6 +173,10 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // own standing, same tab as verification_update.
   xp_level_up: "platform",
   badge_earned: "platform",
+  // An admin's decision on a writer application is the platform's word on
+  // your own submission — same tab as concern_update/moderation_outcome.
+  writer_application_approved: "platform",
+  writer_application_declined: "platform",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */

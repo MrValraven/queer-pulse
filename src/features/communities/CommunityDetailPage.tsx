@@ -79,6 +79,7 @@ export function CommunityDetailPage() {
     discussionPaging,
     rosterResult,
     related,
+    communityPulse,
     leaveMutation,
     joining,
     setJoining,
@@ -112,7 +113,7 @@ export function CommunityDetailPage() {
 
       <div className={styles.body}>
         <div className="wrap">
-          {living?.frozen && slug && (
+          {(living?.frozen || detail.frozen) && slug && (
             <CommunityFrozenBanner slug={slug} canManage={canEdit} />
           )}
           <div className={styles.layout}>
@@ -128,6 +129,7 @@ export function CommunityDetailPage() {
                 pulsePaging={posts}
                 discussionPaging={discussionPaging}
                 rosterPaging={rosterResult}
+                communityPulse={communityPulse}
               />
             ) : (
               <FallbackHubTabs
@@ -138,11 +140,16 @@ export function CommunityDetailPage() {
                 threads={discussionThreads}
                 slug={slug ?? ""}
                 isMember={joined}
+                canModerate={canEdit}
                 discussionPaging={discussionPaging}
               />
             )}
 
-            <CommunitySidebar detail={detail} related={related} />
+            <CommunitySidebar
+              detail={detail}
+              related={related}
+              communityPulse={communityPulse}
+            />
           </div>
         </div>
       </div>

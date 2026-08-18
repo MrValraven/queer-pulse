@@ -1,0 +1,126 @@
+.player {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  background: var(--cream);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--paper);
+  flex-wrap: wrap;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+
+@media (hover: hover) {
+  .back:hover {
+    color: var(--accent-ink);
+  }
+}
+
+.back svg {
+  width: 15px;
+  height: 15px;
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--text-strong);
+  flex: 1;
+  text-align: center;
+}
+
+.deviceToggle {
+  display: inline-flex;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.deviceBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition:
+    background 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+.deviceBtn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.deviceBtnActive {
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.openFull {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+
+@media (hover: hover) {
+  .openFull:hover {
+    color: var(--accent-ink);
+  }
+}
+
+.openFull svg {
+  width: 15px;
+  height: 15px;
+}
+
+.notFound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  height: 100dvh;
+  background: var(--cream);
+  padding: 32px;
+  text-align: center;
+}
+
+.notFound p {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink-60);
+  max-width: 420px;
+}

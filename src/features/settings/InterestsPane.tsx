@@ -7,6 +7,7 @@ import {
   DiscoverableIdentitiesSection,
   PrivateIdentitiesSection,
 } from "./IdentitySections";
+import { ProfessionalDetailsSection } from "./ProfessionalDetailsSection";
 import { Pane, Section, ToggleList, ToggleRow } from "./SettingsControls";
 import {
   AGE_LABELS,
@@ -42,6 +43,8 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
       <PrivateIdentitiesSection onChange={onChange} />
       {/* Directly below the chips it reads from — see the doc comment there. */}
       <DiscoverableIdentitiesSection />
+
+      <ProfessionalDetailsSection onChange={onChange} />
 
       <div className={styles.prefSection}>
         <div className={styles.psHead} id={`${uid}-lookingFor`}>
@@ -86,35 +89,21 @@ export function InterestsPane({ onChange }: { onChange: () => void }) {
             {t("settings:interests.life.note")}
           </span>
         </div>
-        <div className={styles.worldGrid}>
-          <div className={styles.field}>
-            <label htmlFor={`${uid}-city`}>
-              {t("settings:interests.life.cityLabel")}
-            </label>
-            {/* The member's real location (empty if unset) — never a hardcoded
-                "Lisbon, Portugal" that would show as everyone's city in live.
-                The field is coming-soon/disabled (no dedicated city pref yet),
-                so it reflects `draft.hood` read-only rather than persisting. */}
-            <input
-              id={`${uid}-city`}
-              type="text"
-              value={draft.hood}
-              disabled
-              readOnly
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor={`${uid}-languages`}>
-              {t("settings:interests.life.languagesLabel")}
-            </label>
-            <input
-              id={`${uid}-languages`}
-              type="text"
-              placeholder={t("settings:interests.life.languagesPlaceholder")}
-              disabled
-              onChange={onChange}
-            />
-          </div>
+        <div className={styles.field}>
+          <label htmlFor={`${uid}-city`}>
+            {t("settings:interests.life.cityLabel")}
+          </label>
+          {/* The member's real location (empty if unset) — never a hardcoded
+              "Lisbon, Portugal" that would show as everyone's city in live.
+              The field is coming-soon/disabled (no dedicated city pref yet),
+              so it reflects `draft.hood` read-only rather than persisting. */}
+          <input
+            id={`${uid}-city`}
+            type="text"
+            value={draft.hood}
+            disabled
+            readOnly
+          />
         </div>
         <div className={styles.field}>
           <label htmlFor={`${uid}-age`}>

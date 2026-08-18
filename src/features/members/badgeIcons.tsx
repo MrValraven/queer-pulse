@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { FiAward, FiFlag } from "react-icons/fi";
+import { FiAward, FiFlag, FiMapPin, FiBookOpen, FiHome, FiBriefcase } from "react-icons/fi";
 
 /**
  * Maps a backend badge `key` to its icon. Badges are hand-drawn per key, so
@@ -10,6 +10,10 @@ import { FiAward, FiFlag } from "react-icons/fi";
  */
 const BADGE_ICONS: Record<string, ReactNode> = {
   "first-steps": <FiFlag aria-hidden />,
+  "local-scout": <FiMapPin aria-hidden />,
+  "well-read": <FiBookOpen aria-hidden />,
+  "two-homes": <FiHome aria-hidden />,
+  "work-ready": <FiBriefcase aria-hidden />,
   // "first-gathering": <svg …/>,
   // "three-company": <svg …/>,
 };

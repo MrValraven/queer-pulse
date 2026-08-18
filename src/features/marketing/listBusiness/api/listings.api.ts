@@ -43,6 +43,10 @@ export interface ListingDTO extends Omit<CreateListingDto, "photos"> {
   /** ISO 8601 timestamp. */
   createdAt: string;
   photos: Record<PhotoKey, string | null>;
+  /** Moderator-verified confirmation of the "queer-owned" badge — distinct
+   *  from `linkToProfile` (the member's own self-reported claim). Toggled via
+   *  `PATCH /listings/:ref/queer-owned-verified` (moderator/admin only). */
+  queerOwnedVerified: boolean;
 }
 
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
