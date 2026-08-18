@@ -279,6 +279,61 @@
   height: 18px;
 }
 
+/* ── Side sheet ───────────────────────────────────────────────────────────── */
+/* Rises from the bottom edge like `.sheet` above, just wider and with its own
+   head/body/foot structure (grouped settings sections, not a single form). */
+.sideScrim {
+  composes: scrim;
+  align-items: flex-end;
+  padding: 0;
+  /* Lift above the on-screen keyboard, same as the bottom-sheet overlay. */
+  padding-block-end: var(--keyboard-inset, 0px);
+}
+.sideSheet {
+  /* Matches `.sheetWide` above — this app's one existing "large" surface
+     convention — rather than a wider one-off: past that, this sheet's
+     text/pills/form fields (all `width: 100%` inside) stretch too thin. */
+  width: min(760px, 100vw);
+  max-height: 92svh;
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+  box-shadow: 0 -20px 60px -20px rgba(var(--plum-rgb), 0.5);
+  animation: sheetUp 0.4s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
+}
+@media (prefers-reduced-motion: reduce) {
+  .sideSheet {
+    animation: none;
+  }
+}
+.sideSheetHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 26px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.11);
+}
+.sideSheetTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 23px;
+  /* --text-strong, not --plum: --plum is a fixed brand colour (also used as a
+     background elsewhere) so it doesn't theme-switch; --text-strong equals
+     plum in light mode and flips to light ink in dark mode so the heading
+     stays legible on the dark --cream surface (see colors.css). */
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+  flex: 1;
+}
+.sideSheetBody {
+  overflow-y: auto;
+  padding: 24px 26px max(40px, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
 @keyframes scrimIn {
   from {
     opacity: 0;

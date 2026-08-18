@@ -90,6 +90,14 @@ export interface GatheringDetail {
    *  "Community members" audience-scope tier simply stays unoffered there,
    *  same as any other event with no community. */
   communitySlug?: string;
+  /** Live mode only: the directory listing this gathering's venue is linked
+   *  to, or null/absent for a free-text venue. Settable via the manage
+   *  dashboard's venue picker. Absent in the demo registry (no demo
+   *  gathering is linked to a real listing). */
+  venueListingId?: string | null;
+  /** Live mode only: the linked listing's display name + public slug, when
+   *  `venueListingId` is set. Absent/null otherwise. */
+  venueListing?: { slug: string; name: string } | null;
 }
 
 export const gatheringDetails: Record<string, GatheringDetail> = {

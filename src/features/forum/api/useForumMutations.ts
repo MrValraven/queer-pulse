@@ -12,9 +12,12 @@ import {
   editPost,
   editThreadTitle,
   lockThread,
+  pinThread,
   replyToThread,
   restorePost,
+  setThreadOfficial,
   unlockThread,
+  unpinThread,
   votePost,
 } from "./forum.api";
 import { slugForThreadId } from "./forum.adapters";
@@ -336,6 +339,96 @@ export function useLockThread() {
 interface LockVars {
   slug: string;
   locked: boolean;
+}
+
+/**
+ * Moderator pin / unpin of a thread (sticky bucket above the list).
+ *
+ * Consumer interface:
+ * ```ts
+ * const { pin, unpin, isPending } = usePinThread();
+ * pin(slug);    // POST /forum/threads/:slug/pin
+ * unpin(slug);  // POST /forum/threads/:slug/unpin
+ * ```
+ * On success it invalidates the pinned bucket (so the sticky section
+ * refreshes) and the thread list (so the row's pinned badge/menu label
+ * refreshes). DEMO is a no-op — there is no separate pinned bucket to
+ * invalidate in demo mode (see `usePinnedThreads`).
+ */
+export function usePinThread() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation<void, Error, PinVars>({
+    mutationFn: async ({ slug, pinned }) => {
+      if (demoMode) return;
+      if (pinned) await pinThread(slug);
+      else await unpinThread(slug);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: ["forum-pinned-threads"] });
+      void queryClient.invalidateQueries(THREADS_KEY);
+    },
+  });
+
+  return {
+    pin: (slug: string, options?: MutateOptions<void, Error, PinVars>) =>
+      mutation.mutate({ slug, pinned: true }, options),
+    unpin: (slug: string, options?: MutateOptions<void, Error, PinVars>) =>
+      mutation.mutate({ slug, pinned: false }, options),
+    isPending: mutation.isPending,
+  };
+}
+
+/** Mutation variables for the pin/unpin toggle. */
+interface PinVars {
+  slug: string;
+  pinned: boolean;
+}
+
+/**
+ * Admin-only toggle: flips a published thread between its real author and
+ * "QueerPulse Official".
+ *
+ * Consumer interface:
+ * ```ts
+ * const { setOfficial, isPending } = useSetThreadOfficial();
+ * setOfficial(slug, true);   // PATCH /admin/forum/threads/:slug/official
+ * ```
+ * On success it invalidates the thread meta/posts (so the byline re-reads)
+ * and the thread list (so the row's author refreshes). DEMO is a no-op.
+ */
+export function useSetThreadOfficial() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation<void, Error, OfficialVars>({
+    mutationFn: async ({ slug, isOfficial }) => {
+      if (demoMode) return;
+      await setThreadOfficial(slug, isOfficial);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      invalidateThread(queryClient);
+      void queryClient.invalidateQueries(THREADS_KEY);
+    },
+  });
+
+  return {
+    setOfficial: (
+      slug: string,
+      isOfficial: boolean,
+      options?: MutateOptions<void, Error, OfficialVars>,
+    ) => mutation.mutate({ slug, isOfficial }, options),
+    isPending: mutation.isPending,
+  };
+}
+
+/** Mutation variables for the official-byline toggle. */
+interface OfficialVars {
+  slug: string;
+  isOfficial: boolean;
 }
 
 /** PATCH /forum/threads/:slug — author edits the thread title. Resolves the

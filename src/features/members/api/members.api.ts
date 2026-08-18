@@ -19,6 +19,9 @@ export interface MemberCardDTO {
   firstName: string;
   lastName: string;
   pronouns?: string;
+  /** Phonetic spelling of the member's name, read aloud via SpeechSynthesis
+   *  on the profile hero. Ungated, same as `pronouns`. */
+  pronunciation?: string;
   tagline?: string;
   avatarUrl?: string | null;
   tags?: string[];
@@ -40,6 +43,17 @@ export interface MemberCardDTO {
   identityFacets?: string[];
   /** Years on QueerPulse, floor-rounded from `joinedAt`. */
   years?: number;
+  /** Member-controlled visibility toggles (backend `ProfileCard.photoVisible`).
+   *  ALWAYS the true stored value for every viewer — they say whether `avatarUrl`
+   *  is gated, they are never themselves gated. Backend default `true`; optional
+   *  here only defensively (a backend ahead of this build must not crash). */
+  photoVisible?: boolean;
+  /** Member-controlled visibility toggle (backend `ProfileCard.hoodVisible`) —
+   *  same shape/defensiveness as `photoVisible`, gates `location`/`hood`. */
+  hoodVisible?: boolean;
+  /** Member-controlled visibility toggle (backend `ProfileCard.vouchersVisible`)
+   *  — same shape/defensiveness as `photoVisible`, gates the vouchers list. */
+  vouchersVisible?: boolean;
 }
 
 export interface MembersPage {
@@ -53,24 +67,47 @@ export interface SocialLinkDTO {
   platform: string;
   urlOrHandle: string;
 }
+/** A work item's link, wire-shaped exactly like the backend's `WorkLinkDto`
+ *  (see `replace-work.dto.ts`): `entity`/`slug` only apply to `kind: "ref"`,
+ *  `href` only to `kind: "external"`. Kept looser than the domain `WorkLink`
+ *  union (generic `string` fields, not narrowed to `WorkRefEntity`) so the
+ *  adapter can defensively drop an entry this build doesn't recognise instead
+ *  of crashing — see `toWorkLinks`. */
+export interface WorkLinkDTO {
+  kind: "ref" | "external";
+  entity?: string;
+  slug?: string;
+  href?: string;
+}
 export interface WorkItemDTO {
   category: string;
   title: string;
   year: string;
   imageUrl?: string;
-  /** Where the card points, wire-shaped: a platform ref (`refEntity` + `refSlug`)
-   *  or an off-platform `href`. Absent when the item is unlinked. */
-  refEntity?: string;
-  refSlug?: string;
-  href?: string;
+  /** Where the card points: 0–2 entries, each a platform ref or an
+   *  off-platform URL. Matches `WorkView.links` / `WorkItemDto.links`
+   *  server-side (`@ArrayMaxSize(2)`). Absent/empty when the item is
+   *  unlinked. */
+  links?: WorkLinkDTO[];
 }
 
-/** A barter-board post by the member ("On the board"). */
+/** A barter-board post by the member ("On the board"). The lifecycle fields
+ *  (`status`/`closedNote`/`closedAt`/`expiresAt`/`createdAt`) are read-only —
+ *  present on every item the GET profile response returns (see backend
+ *  `BoardView`), but never sent back on the PUT /profiles/me/board replace
+ *  (see `boardToDto`, which only forwards `kind`/`title`/`slug`) or accepted
+ *  by the backend's `ReplaceBoardDto`. `status` only changes via the
+ *  dedicated `PATCH /profiles/me/board/:slug/close`. */
 export interface BoardItemDTO {
   kind: "looking" | "offering";
   title: string;
   /** Slug of the linked board post — anchors to #<slug> on the barter board. */
   slug: string;
+  status?: "open" | "closed";
+  closedNote?: string | null;
+  closedAt?: string | null;
+  expiresAt?: string;
+  createdAt?: string;
 }
 
 /** A skill or service the member offers ("Skills & offerings"). */
@@ -121,6 +158,8 @@ export interface ActivityItemDTO {
 
 export interface ProfileDTO extends MemberCardDTO {
   bio?: string;
+  /** Portuguese translation of `bio`. Ungated, same as `bio`. */
+  bioPt?: string;
   openTo?: OpenToEntryDTO[];
   /** Private Interests preferences — not shown on the profile (Settings → Interests). */
   identities?: string[];
@@ -141,6 +180,9 @@ export interface ProfileDTO extends MemberCardDTO {
   joinedAt?: string;
   /** Free-text "what I'm in the middle of" status ("Now"). */
   now?: string;
+  /** What the member is explicitly not here for, shown alongside `now`.
+   *  Ungated, same as `now`. */
+  notHereFor?: string;
   /** Barter-board posts by this member ("On the board"). */
   board?: BoardItemDTO[];
   /** Skills/services offered on the barter board ("Skills & offerings"). */
@@ -158,6 +200,10 @@ export interface ProfileDTO extends MemberCardDTO {
   featuredCommunities?: FeaturedCommunityRefDTO[];
   /** True when the viewer only gets the limited card (network/private). */
   limited: boolean;
+  /** ISO 8601 timestamp until which the member has self-hidden their profile,
+   *  or `null` when not hidden. Owner-only — never sent to non-owner viewers
+   *  (see backend `FullProfileResponse`'s `isOwner` conditional spread). */
+  hiddenUntil?: string | null;
 }
 
 export interface VoucherDTO {
@@ -243,6 +289,8 @@ export interface UpdateProfileDTO {
   pronouns?: string;
   tagline?: string;
   bio?: string;
+  /** Portuguese translation of `bio`. */
+  bioPt?: string;
   location?: string;
   /** Storage key from an avatar upload, or `null`/`""` to clear it back to the
    *  Google OAuth fallback. */
@@ -250,6 +298,10 @@ export interface UpdateProfileDTO {
   visibility?: Visibility;
   /** Free-text "what I'm in the middle of" status ("Now"); "" clears it. */
   now?: string;
+  /** What the member is explicitly not here for, shown alongside `now`. */
+  notHereFor?: string;
+  /** Phonetic spelling of the member's name. */
+  pronunciation?: string;
   openTo?: OpenToEntryDTO[];
   /** Private Interests preferences — not shown on the profile (Settings → Interests). */
   identities?: string[];
@@ -271,6 +323,18 @@ export interface UpdateProfileDTO {
   /** Ordered slugs of the communities the member has chosen to feature on
    *  their profile. */
   featuredCommunities?: string[];
+  /** Member-controlled visibility toggle (backend `ProfileCard.photoVisible`) —
+   *  see the read-side doc on `MemberCardDTO.photoVisible`. First wired up by
+   *  the "Who sees what" sheet's instant-save field toggles. */
+  photoVisible?: boolean;
+  /** Member-controlled visibility toggle (backend `ProfileCard.hoodVisible`). */
+  hoodVisible?: boolean;
+  /** Member-controlled visibility toggle (backend `ProfileCard.vouchersVisible`). */
+  vouchersVisible?: boolean;
+  /** ISO 8601 timestamp until which the member has self-hidden their profile,
+   *  or `null` to unhide. The profile rail's "Hide me for 24h" / "Bring me
+   *  back" instant-save toggle. */
+  hiddenUntil?: string | null;
 }
 
 /** Persist edits to the logged-in member's profile. Returns the saved profile. */
@@ -297,6 +361,16 @@ export const replaceSkills = (items: SkillItemDTO[]) =>
 /** Replace the member's barter-board posts (≤100). PUT /profiles/me/board. */
 export const replaceBoard = (items: BoardItemDTO[]) =>
   apiPut<ProfileDTO>("/profiles/me/board", { items });
+
+/** Mark one of the member's own board posts closed/found. Returns just that
+ *  item (now closed), not the full profile — unlike `replaceBoard`'s
+ *  full-replace PUT, this is the dedicated lifecycle action.
+ *  PATCH /profiles/me/board/:slug/close. */
+export const closeBoardItem = (slug: string, note?: string) =>
+  apiPatch<BoardItemDTO>(
+    `/profiles/me/board/${encodeURIComponent(slug)}/close`,
+    { note },
+  );
 
 /** Replace the member's formative films/books/songs/moments (≤4). PUT /profiles/me/shapings. */
 export const replaceShapings = (items: ShapingItemDTO[]) =>

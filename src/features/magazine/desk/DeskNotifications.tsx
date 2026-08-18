@@ -38,7 +38,7 @@ function initialsFor(name: string): string {
 export function DeskNotifications({ open, onClose, onNavigate }: DeskNotificationsProps) {
   const { t } = useTranslation();
   const panelId = useId();
-  const { notifications: rows, isLoading } = useMagazineNotifications();
+  const { notifications: rows, isLoading, markAllRead } = useMagazineNotifications();
 
   useScrollLock(open);
 
@@ -120,7 +120,14 @@ export function DeskNotifications({ open, onClose, onNavigate }: DeskNotificatio
         </div>
 
         <div className={styles.foot}>
-          <Button variant="ghost" size="sm" onClick={onClose}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              markAllRead();
+              onClose();
+            }}
+          >
             {t("magazine:desk.notifications.markAllRead")}
           </Button>
         </div>

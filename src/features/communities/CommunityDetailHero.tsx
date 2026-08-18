@@ -50,7 +50,13 @@ export function CommunityDetailHero({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={styles.hero}>
+    <header
+      className={styles.hero}
+      // Plain data attribute (not a CSS-module class) so base.css's
+      // `main[data-page-main]:has(...)` can tint the reserved nav-band gap
+      // plum too, instead of leaving a cream strip above the hero.
+      data-plum
+    >
       <div className={`wrap ${styles.heroInner}`}>
         <Link to={routes.communities} className={styles.breadcrumb}>
           <FiArrowLeft aria-hidden /> {t("communities:detail.breadcrumb")}
@@ -126,6 +132,6 @@ export function CommunityDetailHero({
           />
         </div>
       </div>
-    </div>
+    </header>
   );
 }

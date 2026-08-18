@@ -3,7 +3,7 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { slugify } from "../subprofiles/subprofile-kinds";
 import type { BoardItem } from "./data/members";
-import { BOARD_KIND_OPTIONS } from "./boardEditor.data";
+import { BOARD_KIND_OPTIONS, newBoardItem } from "./boardEditor.data";
 import { useRowKeys } from "./useRowKeys";
 import { Section } from "./ProfileSections";
 import editStyles from "./ProfileEdit.module.css";
@@ -42,7 +42,7 @@ export function BoardEditor({
   }
   function add() {
     appendKey();
-    onChange([...board, { kind: "looking", title: "", slug: "" }]);
+    onChange([...board, newBoardItem()]);
   }
 
   return (

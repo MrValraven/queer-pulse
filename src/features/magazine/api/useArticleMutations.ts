@@ -29,8 +29,16 @@ export function useArticleMutations(pieceId: string) {
       }
       return updateArticleDraft(pieceId, body);
     },
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       void queryClient.invalidateQueries({ queryKey: ["magazine-article-draft", pieceId] });
+      // A title edit also syncs server-side onto `MagazinePiece.title` (and
+      // can regenerate the draft's slug) — invalidate the piece list/record
+      // caches too, or the command palette/piece board/piece record keep
+      // showing the stale commission-time title.
+      if (variables.title !== undefined) {
+        void queryClient.invalidateQueries({ queryKey: ["magazine-pieces"] });
+        void queryClient.invalidateQueries({ queryKey: ["magazine-piece", pieceId] });
+      }
     },
   });
 

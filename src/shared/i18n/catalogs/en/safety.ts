@@ -233,6 +233,11 @@ export const safety: Catalog = {
   "profileMenu.blockedToast": "You blocked {name}.",
   "profileMenu.blockedReportedToast":
     "You blocked {name} and sent a report to the moderation team.",
+  "profileMenu.withdrawVouchConfirmTitle": "Withdraw your vouch for {name}?",
+  "profileMenu.withdrawVouchConfirmBody":
+    "{name} will no longer be able to count your vouch toward their standing on QueerPulse. You can vouch for them again later.",
+  "profileMenu.withdrawVouchConfirmCta": "Withdraw vouch",
+  "profileMenu.withdrawVouchToast": "You withdrew your vouch for {name}.",
   "blockModal.title": "Block {name}?",
   "blockModal.body":
     "Blocking severs any connection between you. {name} won't be able to view your profile, message you, or find you in search, and neither of you can connect with the other. You can unblock later.",

@@ -6,7 +6,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { type Thread } from "./forum.data";
-import { useForumCounts, useThreads } from "./api/useForum";
+import { useForumCounts, usePinnedThreads, useThreads } from "./api/useForum";
 import { useEditThreadTitle, useVotePost } from "./api/useForumMutations";
 import { type ForumSort, type ForumThreadCounts } from "./api/forum.api";
 import { useCreateThreadFlow } from "./useCreateThreadFlow";
@@ -72,6 +72,12 @@ export function useForumPageState() {
   // of the loaded page, which only ever sees the fetched slice.
   const countsResult = useForumCounts(q || undefined, tag);
   const counts: ForumThreadCounts = countsResult.counts ?? { all: 0 };
+
+  // The sticky pinned bucket above the list. It only takes a category filter
+  // (see `usePinnedThreads`), so hide it during a tag/text search — a pinned
+  // thread the search doesn't match would otherwise look like a stray result.
+  const pinnedThreadsQuery = usePinnedThreads(cat);
+  const pinnedThreads = tag || q ? [] : pinnedThreadsQuery.pinned;
 
   const votePost = useVotePost();
   const moderation = useForumRowModeration();
@@ -147,7 +153,8 @@ export function useForumPageState() {
       : !!thread.canEdit ||
         !!thread.canDelete ||
         !!thread.canRestore ||
-        !!thread.canViewHistory;
+        !!thread.canViewHistory ||
+        !!thread.canPin;
 
   const editingThread =
     editingTitleThreadId != null
@@ -253,6 +260,7 @@ export function useForumPageState() {
     totalCount: counts.all ?? 0,
     headerCount,
     threads,
+    pinnedThreads,
     filtered,
     resetFilters,
     onVote,

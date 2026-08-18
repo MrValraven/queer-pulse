@@ -36,7 +36,7 @@ export function WorkEditor({
   }
   function add() {
     appendKey();
-    onChange([...work, { category: "", title: "", year: "" }]);
+    onChange([...work, { category: "", title: "", year: "", links: [] }]);
   }
 
   return (

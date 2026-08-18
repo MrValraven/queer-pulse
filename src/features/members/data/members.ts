@@ -26,9 +26,11 @@ export interface WorkItem {
   title: string;
   year: string;
   image?: string;
-  /** Where the card points, a platform entity or an external URL. Unlinked
-   *  items render as plain cards, exactly as before. */
-  link?: WorkLink;
+  /** Up to two places this work item points to: a platform entity or an
+   *  external URL. An empty array renders as a plain card, exactly as
+   *  before — matches the backend's `WorkView.links` / `WorkItemDto.links`
+   *  (0–2 entries, enforced by `@ArrayMaxSize(2)` server-side). */
+  links: WorkLink[];
 }
 /** A social / web link the member surfaces on their profile. */
 export interface SocialLink {
@@ -44,6 +46,20 @@ export interface BoardItem {
   kind: "looking" | "offering";
   title: string;
   slug: string;
+  /** Lifecycle status. Only ever changed via the dedicated "Mark as found"
+   *  close action (`useCloseBoardItem`) — the general board editor never
+   *  writes it, mirroring the backend's dedicated `PATCH …/board/:slug/close`
+   *  endpoint rather than the full-replace `PUT`. */
+  status: "open" | "closed";
+  /** Optional note the member left when marking the post found/closed. */
+  closedNote?: string;
+  /** ISO timestamp the post was closed; absent while open. */
+  closedAt?: string;
+  /** ISO timestamp the post expires (kind-dependent: looking = +30d,
+   *  offering = +90d from creation, computed server-side). */
+  expiresAt: string;
+  /** ISO timestamp the post was created. */
+  createdAt: string;
 }
 /** A skill or service the member offers on the barter board. */
 export interface SkillItem {
@@ -86,6 +102,9 @@ export interface Member {
   role: string;
   /** Optional pronouns (e.g. "she/her", "they/them"), shown beside the role. */
   pronouns?: string;
+  /** Phonetic spelling of the member's name, read aloud via the browser's
+   *  SpeechSynthesis API on the profile hero. Ungated, like `pronouns`. */
+  pronunciation?: string;
   hood: string;
   tags: string[];
   visibility: VisibilityMode;
@@ -101,7 +120,14 @@ export interface Member {
   verified: boolean;
   since: string;
   bio: string;
+  /** Portuguese translation of `bio`, shown via the EN/PT bio language toggle.
+   *  Absent when the member hasn't written one, in which case the toggle
+   *  doesn't render and the profile shows `bio` only. */
+  bioPt?: string;
   now: string;
+  /** What the member is explicitly not here for, shown alongside `now` as a
+   *  boundary note. Free text, member-authored. */
+  notHereFor?: string;
   /** What this member is open to, shared presets plus their own words.
    *  Presets are translatable and drive the directory filter; customs are the
    *  member's phrasing and are display-only. */
@@ -153,6 +179,27 @@ export interface Member {
   featuredCommunities?: FeaturedCommunityRef[];
   /** Recent public activity across the platform. */
   activity: ActivityItem[];
+  /** Whether other members can see this member's real avatar photo (vs the
+   *  gated/blank fallback). Owner-controlled; always the true stored setting
+   *  for every viewer per backend `ProfileCard.photoVisible`. Defaults to
+   *  visible (`true`) when absent — matches the backend column default. */
+  photoVisible?: boolean;
+  /** Whether other members can see this member's neighbourhood/location.
+   *  Owner-controlled; always the true stored setting for every viewer per
+   *  backend `ProfileCard.hoodVisible`. Defaults to visible (`true`) when
+   *  absent — matches the backend column default. */
+  hoodVisible?: boolean;
+  /** Whether other members can see this member's vouchers list. Owner-
+   *  controlled; always the true stored setting for every viewer per backend
+   *  `ProfileCard.vouchersVisible`. Defaults to visible (`true`) when absent
+   *  — matches the backend column default. */
+  vouchersVisible?: boolean;
+  /** ISO 8601 timestamp until which the member has self-hidden their profile
+   *  (24h self-hide), or `null` when not hidden. Owner-only: the backend does
+   *  not currently expose this on any response DTO (see `members.adapters.ts`
+   *  `profileToMember` — nothing maps into this field yet), so it stays
+   *  `undefined` for every live-mode read today. */
+  hiddenUntil?: string | null;
 }
 
 /**
@@ -200,11 +247,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2025",
         image:
           "https://images.unsplash.com/photo-1753944847480-92f369a5f00e?q=80&w=600&auto=format&fit=crop",
-        link: {
-          kind: "ref",
-          entity: "collection",
-          slug: "iberian-queer-cinema",
-        },
+        links: [
+          {
+            kind: "ref",
+            entity: "collection",
+            slug: "iberian-queer-cinema",
+          },
+        ],
       },
       {
         category: "Essay",
@@ -212,6 +261,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2025",
         image:
           "https://images.unsplash.com/photo-1618410321132-9f4cebb2f7f5?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
       {
         category: "Programming",
@@ -219,6 +269,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2024",
         image:
           "https://images.unsplash.com/photo-1711479898431-9031deb4ff0e?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
     ],
     board: [
@@ -226,11 +277,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "looking",
         title: "Rare prints of pre-1974 Portuguese queer cinema",
         slug: "archive-prints",
+        status: "open",
+        expiresAt: "2026-09-15T12:00:00.000Z",
+        createdAt: "2026-08-16T12:00:00.000Z",
       },
       {
         kind: "offering",
         title: "Programming mentorship for first-time curators",
         slug: "programming-mentorship",
+        status: "open",
+        expiresAt: "2026-11-07T12:00:00.000Z",
+        createdAt: "2026-08-09T12:00:00.000Z",
       },
     ],
     vouchers: ["ines", "rui"],
@@ -333,6 +390,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2025",
         image:
           "https://images.unsplash.com/photo-1680020556897-4495277f8efc?q=80&w=600&auto=format&fit=crop",
+        links: [],
       },
       {
         category: "Editorial",
@@ -340,6 +398,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2025",
         image:
           "https://images.unsplash.com/photo-1731174218715-9b4d23795265?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
       {
         category: "Type",
@@ -347,6 +406,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2024",
         image:
           "https://images.unsplash.com/photo-1736613212084-4b7e6d94bc34?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
     ],
     board: [
@@ -354,11 +414,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "looking",
         title: "A collaborator for a queer zine launching in September",
         slug: "zine-collab",
+        status: "open",
+        expiresAt: "2026-09-01T12:00:00.000Z",
+        createdAt: "2026-08-02T12:00:00.000Z",
       },
       {
         kind: "offering",
         title: "Portfolio reviews for junior queer designers",
         slug: "portfolio-reviews",
+        status: "open",
+        expiresAt: "2026-10-24T12:00:00.000Z",
+        createdAt: "2026-07-26T12:00:00.000Z",
       },
     ],
     vouchers: ["sofia", "rui", "beatriz"],
@@ -449,6 +515,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2025",
         image:
           "https://images.unsplash.com/photo-1737028512200-beec1a39e2f0?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
       {
         category: "Consulting",
@@ -456,6 +523,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2024",
         image:
           "https://images.unsplash.com/photo-1762652847912-4c2761d54aa1?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
     ],
     board: [
@@ -463,6 +531,9 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Monthly mentoring for junior engineers",
         slug: "mentoring-engineers",
+        status: "open",
+        expiresAt: "2026-10-17T12:00:00.000Z",
+        createdAt: "2026-07-19T12:00:00.000Z",
       },
     ],
     vouchers: ["ines", "diogo"],
@@ -548,6 +619,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2024",
         image:
           "https://images.unsplash.com/photo-1770462594767-c64faffea172?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
       {
         category: "Short doc",
@@ -555,6 +627,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2023",
         image:
           "https://images.unsplash.com/photo-1772110204334-b2e9c346515e?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
     ],
     board: [
@@ -562,6 +635,9 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "looking",
         title: "A composer for a short documentary, paid",
         slug: "composer-doc",
+        status: "open",
+        expiresAt: "2026-09-08T12:00:00.000Z",
+        createdAt: "2026-08-09T12:00:00.000Z",
       },
     ],
     vouchers: ["ines", "mariana"],
@@ -647,6 +723,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2024–25",
         image:
           "https://images.unsplash.com/photo-1772482360229-d93a8ef2de07?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
     ],
     board: [],
@@ -801,6 +878,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2024",
         image:
           "https://images.unsplash.com/photo-1773136355382-e27d8cc9ae22?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
       {
         category: "Editorial",
@@ -808,6 +886,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2025",
         image:
           "https://images.unsplash.com/photo-1774300622212-1d9a3be2d4f1?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
     ],
     board: [
@@ -815,6 +894,9 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Free portrait sessions for trans & nonbinary members",
         slug: "free-portraits",
+        status: "open",
+        expiresAt: "2026-10-03T12:00:00.000Z",
+        createdAt: "2026-07-05T12:00:00.000Z",
       },
     ],
     vouchers: ["ines"],
@@ -897,6 +979,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2024",
         image:
           "https://images.unsplash.com/photo-1775536867092-1aa0a9cd6449?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
       {
         category: "Strategy",
@@ -904,6 +987,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2023",
         image:
           "https://plus.unsplash.com/premium_photo-1667823753552-1159b2b9c3c7?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
     ],
     board: [
@@ -911,6 +995,9 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "looking",
         title: "A sublet in Arroios, June through August",
         slug: "sublet-arroios",
+        status: "open",
+        expiresAt: "2026-08-25T12:00:00.000Z",
+        createdAt: "2026-07-26T12:00:00.000Z",
       },
     ],
     vouchers: ["rui", "ines"],
@@ -993,6 +1080,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2025",
         image:
           "https://plus.unsplash.com/premium_photo-1670523428691-401adf274515?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
       {
         category: "Workshop",
@@ -1000,6 +1088,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2024–25",
         image:
           "https://plus.unsplash.com/premium_photo-1675791726816-1ac1e815f579?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
     ],
     board: [
@@ -1007,6 +1096,9 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Two desks to share in a bright Graça studio",
         slug: "desks-graca",
+        status: "open",
+        expiresAt: "2026-09-19T12:00:00.000Z",
+        createdAt: "2026-06-21T12:00:00.000Z",
       },
     ],
     vouchers: ["tomas", "ines"],
@@ -1089,10 +1181,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2025",
         image:
           "https://plus.unsplash.com/premium_photo-1682545693253-c9491d190b8f?q=80&w=800&auto=format&fit=crop",
-        link: {
-          kind: "external",
-          href: "https://nightform.bandcamp.com",
-        },
+        links: [
+          {
+            kind: "external",
+            href: "https://nightform.bandcamp.com",
+          },
+        ],
       },
       {
         category: "Live",
@@ -1100,6 +1194,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2024–25",
         image:
           "https://plus.unsplash.com/premium_photo-1731950841187-cfbec0ed025b?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
     ],
     board: [],
@@ -1193,11 +1288,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Product",
         title: "Acessível, public-form toolkit",
         year: "2025",
+        links: [],
       },
       {
         category: "Talk",
         title: "Designing for the people the design forgot",
         year: "2024",
+        links: [],
       },
     ],
     board: [
@@ -1205,11 +1302,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Free portfolio reviews for queer designers",
         slug: "portfolio-reviews-sr",
+        status: "open",
+        expiresAt: "2026-09-12T12:00:00.000Z",
+        createdAt: "2026-06-14T12:00:00.000Z",
       },
       {
         kind: "looking",
         title: "Researcher for a clinic-access study",
         slug: "research-partner",
+        status: "open",
+        expiresAt: "2026-09-01T12:00:00.000Z",
+        createdAt: "2026-08-02T12:00:00.000Z",
       },
     ],
     vouchers: ["ines", "jordan"],
@@ -1283,16 +1386,19 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Project",
         title: "Armazém 7, collective workspace conversion",
         year: "2025",
+        links: [],
       },
       {
         category: "Project",
         title: "Casa Comum co-housing study",
         year: "2024",
+        links: [],
       },
       {
         category: "Exhibition",
         title: "Who Stays, housing & belonging",
         year: "2023",
+        links: [],
       },
     ],
     board: [
@@ -1300,6 +1406,9 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Pro-bono feasibility sketches for collectives",
         slug: "feasibility-sketches",
+        status: "open",
+        expiresAt: "2026-08-29T12:00:00.000Z",
+        createdAt: "2026-05-31T12:00:00.000Z",
       },
     ],
     vouchers: ["beatriz", "sofia-rodrigues", "ines"],
@@ -1372,11 +1481,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       { kind: "preset", id: "casualMeetups" },
     ],
     work: [
-      { category: "Chapbook", title: "Border Tongues", year: "2025" },
+      { category: "Chapbook", title: "Border Tongues", year: "2025", links: [] },
       {
         category: "Translation",
         title: "Selected poems of Svetlana V. (sl→pt)",
         year: "2024",
+        links: [],
       },
     ],
     board: [
@@ -1384,11 +1494,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "looking",
         title: "Co-host for a bilingual reading night",
         slug: "bilingual-reading",
+        status: "open",
+        expiresAt: "2026-09-15T12:00:00.000Z",
+        createdAt: "2026-08-16T12:00:00.000Z",
       },
       {
         kind: "offering",
         title: "Translation help for queer migrant orgs",
         slug: "translation-help",
+        status: "open",
+        expiresAt: "2026-11-11T12:00:00.000Z",
+        createdAt: "2026-08-13T12:00:00.000Z",
       },
     ],
     vouchers: ["ines"],
@@ -1462,11 +1578,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Programme",
         title: "First Year, onboarding for new organisers",
         year: "2025",
+        links: [],
       },
       {
         category: "Workshop",
         title: "Holding conflict in queer groups",
         year: "2024",
+        links: [],
       },
     ],
     board: [
@@ -1474,11 +1592,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Free facilitation for grassroots groups",
         slug: "facilitation-jp",
+        status: "open",
+        expiresAt: "2026-11-04T12:00:00.000Z",
+        createdAt: "2026-08-06T12:00:00.000Z",
       },
       {
         kind: "offering",
         title: "1:1 mentoring for new organisers",
         slug: "mentoring-jp",
+        status: "open",
+        expiresAt: "2026-10-28T12:00:00.000Z",
+        createdAt: "2026-07-30T12:00:00.000Z",
       },
     ],
     vouchers: ["maria", "ines", "andre"],
@@ -1552,11 +1676,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Practice",
         title: "Consultório Cedofeita, affirming therapy",
         year: "2022",
+        links: [],
       },
       {
         category: "Course",
         title: "Foundations of trans-affirming care",
         year: "2025",
+        links: [],
       },
     ],
     board: [
@@ -1564,11 +1690,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Sliding-scale therapy slots",
         slug: "therapy-slots-mf",
+        status: "open",
+        expiresAt: "2026-10-21T12:00:00.000Z",
+        createdAt: "2026-07-23T12:00:00.000Z",
       },
       {
         kind: "offering",
         title: "Supervision for affirming-care trainees",
         slug: "supervision-mf",
+        status: "open",
+        expiresAt: "2026-10-14T12:00:00.000Z",
+        createdAt: "2026-07-16T12:00:00.000Z",
       },
     ],
     vouchers: ["monica", "jordan"],
@@ -1638,11 +1770,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       { kind: "preset", id: "collaborating" },
     ],
     work: [
-      { category: "Film", title: "Last Call (in production)", year: "2026" },
+      { category: "Film", title: "Last Call (in production)", year: "2026", links: [] },
       {
         category: "Short",
         title: "Smoke Room, Malmö queer techno",
         year: "2024",
+        links: [],
       },
     ],
     board: [
@@ -1650,11 +1783,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "looking",
         title: "Interviewees from Lisbon's club scene",
         slug: "doc-interviewees",
+        status: "open",
+        expiresAt: "2026-09-01T12:00:00.000Z",
+        createdAt: "2026-08-02T12:00:00.000Z",
       },
       {
         kind: "looking",
         title: "Porto fixer for a weekend shoot",
         slug: "porto-fixer",
+        status: "open",
+        expiresAt: "2026-08-25T12:00:00.000Z",
+        createdAt: "2026-07-26T12:00:00.000Z",
       },
     ],
     vouchers: ["sofia", "tomas-mendes"],
@@ -1727,11 +1866,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Practice",
         title: "Estrela Bodywork, affirming physio",
         year: "2023",
+        links: [],
       },
       {
         category: "Workshop",
         title: "Consent-led touch for practitioners",
         year: "2025",
+        links: [],
       },
     ],
     board: [
@@ -1739,6 +1880,9 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Post-op rehab consultations",
         slug: "rehab-mr",
+        status: "open",
+        expiresAt: "2026-09-23T12:00:00.000Z",
+        createdAt: "2026-06-25T12:00:00.000Z",
       },
     ],
     vouchers: ["maria"],
@@ -1820,11 +1964,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Organising",
         title: "Welcome Desk, weekly drop-in for new arrivals",
         year: "2023",
+        links: [],
       },
       {
         category: "Writing",
         title: "Know Your Rights pocket guide (4 languages)",
         year: "2024",
+        links: [],
       },
     ],
     board: [
@@ -1832,11 +1978,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "looking",
         title: "Volunteer interpreters, evenings",
         slug: "interpreters-eve",
+        status: "open",
+        expiresAt: "2026-09-08T12:00:00.000Z",
+        createdAt: "2026-08-09T12:00:00.000Z",
       },
       {
         kind: "offering",
         title: "Peer-support training for new volunteers",
         slug: "ps-training",
+        status: "open",
+        expiresAt: "2026-09-09T12:00:00.000Z",
+        createdAt: "2026-06-11T12:00:00.000Z",
       },
     ],
     vouchers: ["jonas", "carla"],
@@ -1922,11 +2074,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Organising",
         title: "Marvila Tenants' Union, co-founder",
         year: "2021",
+        links: [],
       },
       {
         category: "Campaign",
         title: "Stop the Renovação evictions, Graça",
         year: "2023",
+        links: [],
       },
     ],
     board: [
@@ -1934,6 +2088,9 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "looking",
         title: "Co-op members ready to commit",
         slug: "coop-members",
+        status: "open",
+        expiresAt: "2026-08-25T12:00:00.000Z",
+        createdAt: "2026-07-26T12:00:00.000Z",
       },
     ],
     vouchers: ["fatima", "rui"],
@@ -2019,11 +2176,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Health",
         title: "Street outreach, Cais do Sodré",
         year: "2020",
+        links: [],
       },
       {
         category: "Programme",
         title: "PrEP navigation peer line",
         year: "2024",
+        links: [],
       },
     ],
     board: [
@@ -2031,11 +2190,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Free rapid HIV testing, Fridays",
         slug: "rapid-test",
+        status: "open",
+        expiresAt: "2026-08-26T12:00:00.000Z",
+        createdAt: "2026-05-28T12:00:00.000Z",
       },
       {
         kind: "looking",
         title: "Late-night outreach volunteers",
         slug: "night-outreach",
+        status: "open",
+        expiresAt: "2026-09-08T12:00:00.000Z",
+        createdAt: "2026-08-09T12:00:00.000Z",
       },
     ],
     vouchers: ["fatima", "beatriz"],
@@ -2125,16 +2290,19 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Casework",
         title: "60+ pro-bono cases, discrimination & family law",
         year: "2021–25",
+        links: [],
       },
       {
         category: "Training",
         title: "Taking LGBTQ+ cases, a course for lawyers",
         year: "2025",
+        links: [],
       },
       {
         category: "Guide",
         title: "Know Your Rights at Work, plain-language edition",
         year: "2024",
+        links: [],
       },
     ],
     board: [
@@ -2142,11 +2310,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Free monthly LGBTQ+ rights clinic",
         slug: "rights-clinic",
+        status: "open",
+        expiresAt: "2026-11-08T12:00:00.000Z",
+        createdAt: "2026-08-10T12:00:00.000Z",
       },
       {
         kind: "looking",
         title: "Lawyers to train in queer family law",
         slug: "train-lawyers",
+        status: "open",
+        expiresAt: "2026-08-25T12:00:00.000Z",
+        createdAt: "2026-07-26T12:00:00.000Z",
       },
     ],
     vouchers: ["mariana", "catarina-vaz"],
@@ -2232,11 +2406,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Comics",
         title: "Santa Solidão, riso zine, 2-colour",
         year: "2024",
+        links: [],
       },
       {
         category: "Teaching",
         title: "Riso & Bind workshop series, Mouraria",
         year: "2025",
+        links: [],
       },
     ],
     board: [
@@ -2244,11 +2420,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Risograph workshop, beginners",
         slug: "riso-101",
+        status: "open",
+        expiresAt: "2026-10-25T12:00:00.000Z",
+        createdAt: "2026-07-27T12:00:00.000Z",
       },
       {
         kind: "looking",
         title: "Co-host for a queer zine fair",
         slug: "zine-fair",
+        status: "open",
+        expiresAt: "2026-09-08T12:00:00.000Z",
+        createdAt: "2026-08-09T12:00:00.000Z",
       },
     ],
     vouchers: ["sofia-castano", "luisa"],
@@ -2328,11 +2510,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Photography",
         title: "Última Pista, nightlife photo essay",
         year: "2025",
+        links: [],
       },
       {
         category: "Exhibition",
         title: "Tender Hours, group show, Marvila",
         year: "2024",
+        links: [],
       },
     ],
     board: [
@@ -2340,6 +2524,9 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Portrait sessions, trade or sliding scale",
         slug: "portraits-trade",
+        status: "open",
+        expiresAt: "2026-10-11T12:00:00.000Z",
+        createdAt: "2026-07-13T12:00:00.000Z",
       },
     ],
     vouchers: ["rita", "jonas"],
@@ -2425,11 +2612,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Tech",
         title: "Accessible trans-healthcare directory",
         year: "2025",
+        links: [],
       },
       {
         category: "Open source",
         title: "a11y component library for activist sites",
         year: "2024",
+        links: [],
       },
     ],
     board: [
@@ -2437,11 +2626,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Free websites for queer nonprofits",
         slug: "free-sites",
+        status: "open",
+        expiresAt: "2026-10-04T12:00:00.000Z",
+        createdAt: "2026-07-06T12:00:00.000Z",
       },
       {
         kind: "looking",
         title: "A designer to collaborate with",
         slug: "design-pair",
+        status: "open",
+        expiresAt: "2026-09-15T12:00:00.000Z",
+        createdAt: "2026-08-16T12:00:00.000Z",
       },
     ],
     vouchers: ["catarina-vaz", "luisa"],
@@ -2524,11 +2719,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Curation",
         title: "Antes de Nós, queer ephemera exhibition",
         year: "2026",
+        links: [],
       },
       {
         category: "Archive",
         title: "Arquivo Cor-de-Rosa, founding curator",
         year: "2021",
+        links: [],
       },
     ],
     board: [
@@ -2536,11 +2733,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "looking",
         title: "Donations of queer ephemera, any era",
         slug: "ephemera-donate",
+        status: "open",
+        expiresAt: "2026-09-08T12:00:00.000Z",
+        createdAt: "2026-08-09T12:00:00.000Z",
       },
       {
         kind: "looking",
         title: "Volunteers to digitise the archive",
         slug: "digitise",
+        status: "open",
+        expiresAt: "2026-09-01T12:00:00.000Z",
+        createdAt: "2026-08-02T12:00:00.000Z",
       },
     ],
     vouchers: ["rita", "nuno"],
@@ -2620,14 +2823,18 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Investigation",
         title: "The Eighteen-Month Wait",
         year: "2025",
+        links: [],
       },
-      { category: "Feature", title: "Who Funds the Backlash?", year: "2024" },
+      { category: "Feature", title: "Who Funds the Backlash?", year: "2024", links: [] },
     ],
     board: [
       {
         kind: "looking",
         title: "Sources inside health administration",
         slug: "health-sources",
+        status: "open",
+        expiresAt: "2026-08-25T12:00:00.000Z",
+        createdAt: "2026-07-26T12:00:00.000Z",
       },
     ],
     vouchers: ["rui-fernandes", "ines"],
@@ -2696,11 +2903,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       { kind: "custom", label: "Pairing new organisers with mentors" },
     ],
     work: [
-      { category: "Essay", title: "On Patience and Rage", year: "2025" },
+      { category: "Essay", title: "On Patience and Rage", year: "2025", links: [] },
       {
         category: "Pamphlet",
         title: "Your Documents, Your Rights",
         year: "2024",
+        links: [],
       },
     ],
     board: [
@@ -2708,11 +2916,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Walk-through: legal gender recognition",
         slug: "name-change-help",
+        status: "open",
+        expiresAt: "2026-08-30T12:00:00.000Z",
+        createdAt: "2026-06-01T12:00:00.000Z",
       },
       {
         kind: "looking",
         title: "Translators for our rights guide",
         slug: "translators-wanted",
+        status: "open",
+        expiresAt: "2026-09-08T12:00:00.000Z",
+        createdAt: "2026-08-09T12:00:00.000Z",
       },
     ],
     vouchers: ["mariana-costa", "carla"],
@@ -2785,19 +2999,26 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Toolkit",
         title: "If You Get an Eviction Notice",
         year: "2025",
+        links: [],
       },
-      { category: "Workshop", title: "Reading Your Lease", year: "2024" },
+      { category: "Workshop", title: "Reading Your Lease", year: "2024", links: [] },
     ],
     board: [
       {
         kind: "offering",
         title: "Free tenants' rights clinic",
         slug: "tenant-clinic",
+        status: "open",
+        expiresAt: "2026-11-12T12:00:00.000Z",
+        createdAt: "2026-08-14T12:00:00.000Z",
       },
       {
         kind: "looking",
         title: "Spare rooms for emergencies",
         slug: "emergency-rooms",
+        status: "open",
+        expiresAt: "2026-08-25T12:00:00.000Z",
+        createdAt: "2026-07-26T12:00:00.000Z",
       },
     ],
     vouchers: ["rui-fernandes", "carla"],
@@ -2875,11 +3096,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Guide",
         title: "Can I Get In? A Venue Access Map",
         year: "2025",
+        links: [],
       },
       {
         category: "Report",
         title: "Waiting Rooms Aren't Neutral",
         year: "2024",
+        links: [],
       },
     ],
     board: [
@@ -2887,6 +3110,9 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Accessibility audits for events",
         slug: "access-audit",
+        status: "open",
+        expiresAt: "2026-10-29T12:00:00.000Z",
+        createdAt: "2026-07-31T12:00:00.000Z",
       },
     ],
     vouchers: ["catarina-melo", "daniel-oliveira"],
@@ -2959,11 +3185,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Theatre",
         title: "Sound design for 'Salt Threshold'",
         year: "2026",
+        links: [],
       },
       {
         category: "Album",
         title: "Ferry Crossings, field recordings",
         year: "2025",
+        links: [],
       },
     ],
     board: [
@@ -2971,11 +3199,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Soundsystem tuning for parties",
         slug: "rig-tuning",
+        status: "open",
+        expiresAt: "2026-10-22T12:00:00.000Z",
+        createdAt: "2026-07-24T12:00:00.000Z",
       },
       {
         kind: "looking",
         title: "A quiet room to record vocals",
         slug: "vocal-room",
+        status: "open",
+        expiresAt: "2026-09-01T12:00:00.000Z",
+        createdAt: "2026-08-02T12:00:00.000Z",
       },
     ],
     vouchers: ["ines-fonseca", "tomas"],
@@ -3049,11 +3283,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       { kind: "custom", label: "Cross-disciplinary collaborators" },
     ],
     work: [
-      { category: "Performance", title: "Soft Animals", year: "2025" },
+      { category: "Performance", title: "Soft Animals", year: "2025", links: [] },
       {
         category: "Residency",
         title: "Floorwork: a queer practice",
         year: "2024",
+        links: [],
       },
     ],
     board: [
@@ -3061,6 +3296,9 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "looking",
         title: "Movers for an open rehearsal",
         slug: "open-rehearsal",
+        status: "open",
+        expiresAt: "2026-08-25T12:00:00.000Z",
+        createdAt: "2026-07-26T12:00:00.000Z",
       },
     ],
     vouchers: ["bilal-kaya", "beatriz"],
@@ -3129,11 +3367,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       { kind: "custom", label: "Venues wanting a welfare point" },
     ],
     work: [
-      { category: "Programme", title: "The Night Welfare Point", year: "2026" },
+      { category: "Programme", title: "The Night Welfare Point", year: "2026", links: [] },
       {
         category: "Guide",
         title: "Looking After Each Other Till Dawn",
         year: "2025",
+        links: [],
       },
     ],
     board: [
@@ -3141,11 +3380,17 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Peer first-aid training",
         slug: "first-aid-training",
+        status: "open",
+        expiresAt: "2026-10-01T12:00:00.000Z",
+        createdAt: "2026-07-03T12:00:00.000Z",
       },
       {
         kind: "looking",
         title: "Quiet recovery space at parties",
         slug: "chill-space",
+        status: "open",
+        expiresAt: "2026-09-08T12:00:00.000Z",
+        createdAt: "2026-08-09T12:00:00.000Z",
       },
     ],
     vouchers: ["sara-pinheiro", "bilal-kaya"],
@@ -3221,11 +3466,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         category: "Stewardship",
         title: "Keeper of the master resource guide",
         year: "2024–",
+        links: [],
       },
       {
         category: "Reading",
         title: "Queer Lisbon reading group",
         year: "2025",
+        links: [],
       },
     ],
     board: [
@@ -3233,6 +3480,9 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "A calm second pair of eyes on a forum dispute",
         slug: "mod-help",
+        status: "open",
+        expiresAt: "2026-09-17T12:00:00.000Z",
+        createdAt: "2026-06-19T12:00:00.000Z",
       },
     ],
     vouchers: ["mariana", "jordan"],
@@ -3321,6 +3571,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2022–2025",
         image:
           "https://plus.unsplash.com/premium_photo-1732115973557-47e5c91ba6e9?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
       {
         category: "Fullstack Developer",
@@ -3329,6 +3580,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2020–2022",
         image:
           "https://plus.unsplash.com/premium_photo-1737392496893-07869d657a6e?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
       {
         category: "Poetry",
@@ -3336,6 +3588,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2024",
         image:
           "https://plus.unsplash.com/premium_photo-1759762964086-184095920575?q=80&w=800&auto=format&fit=crop",
+        links: [],
       },
     ],
     board: [
@@ -3343,6 +3596,9 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         kind: "offering",
         title: "Web development & mentorship for community projects",
         slug: "web-dev-help",
+        status: "open",
+        expiresAt: "2026-09-10T12:00:00.000Z",
+        createdAt: "2026-06-12T12:00:00.000Z",
       },
     ],
     vouchers: ["ines", "rui"],

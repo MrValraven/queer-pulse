@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { businessPath } from "../../app/routeMap";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { EditVenueModal } from "./EditVenueModal";
 import { InlineEditModal } from "./InlineEditModal";
 import { LAST_EDITED_AT } from "./manageGathering.data";
 import { daysSince } from "./manageGatheringDates";
+import type { VenueSelection } from "./VenuePicker";
 import styles from "./ManageGatheringPage.module.css";
 
 export interface GatheringDetail {
@@ -35,7 +39,13 @@ interface OverviewTabProps {
   description: string;
   /** Live going/waitlist/spots-left; absent → the static demo trio. */
   counts?: OverviewCounts;
+  /** The venue's directory link (or null for a free-text venue) — read
+   *  alongside the "venue" row's plain-text `value` above to decide whether
+   *  it renders as a link, and to seed the venue edit modal. */
+  venueListingId: string | null;
+  venueListing: { slug: string; name: string } | null;
   onUpdateDetail: (id: string, value: string) => void;
+  onUpdateVenue: (value: VenueSelection) => void;
   onUpdateDescription: (value: string) => void;
 }
 
@@ -43,13 +53,17 @@ export function OverviewTab({
   details,
   description,
   counts,
+  venueListingId,
+  venueListing,
   onUpdateDetail,
+  onUpdateVenue,
   onUpdateDescription,
 }: OverviewTabProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const [editing, setEditing] = useState<
     | { kind: "detail"; id: string; labelKey: string; value: string }
+    | { kind: "venue"; selection: VenueSelection }
     | { kind: "description"; value: string }
     | null
   >(null);
@@ -76,17 +90,34 @@ export function OverviewTab({
         {details.map((detail) => (
           <div className={styles.detailRow} key={detail.id}>
             <div className={styles.drLabel}>{t(detail.labelKey)}</div>
-            <div className={styles.drVal}>{detail.value}</div>
+            <div className={styles.drVal}>
+              {detail.id === "venue" && venueListing ? (
+                <Link to={businessPath(venueListing.slug)} className={styles.venueLink}>
+                  {detail.value}
+                </Link>
+              ) : (
+                detail.value
+              )}
+            </div>
             <button
               type="button"
               className={styles.drEdit}
               onClick={() =>
-                setEditing({
-                  kind: "detail",
-                  id: detail.id,
-                  labelKey: detail.labelKey,
-                  value: detail.value,
-                })
+                detail.id === "venue"
+                  ? setEditing({
+                      kind: "venue",
+                      selection: {
+                        text: detail.value,
+                        listingId: venueListingId,
+                        venueListing,
+                      },
+                    })
+                  : setEditing({
+                      kind: "detail",
+                      id: detail.id,
+                      labelKey: detail.labelKey,
+                      value: detail.value,
+                    })
               }
             >
               <Pencil /> {t("gatherings:manage.overview.editCta")}
@@ -121,6 +152,13 @@ export function OverviewTab({
           initialValue={editing.value}
           onClose={() => setEditing(null)}
           onSave={(value) => onUpdateDetail(editing.id, value)}
+        />
+      )}
+      {editing?.kind === "venue" && (
+        <EditVenueModal
+          initial={editing.selection}
+          onClose={() => setEditing(null)}
+          onSave={onUpdateVenue}
         />
       )}
       {editing?.kind === "description" && (

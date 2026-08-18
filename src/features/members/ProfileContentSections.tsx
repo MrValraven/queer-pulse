@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { FiArrowRight, FiExternalLink } from "react-icons/fi";
 import { useMemberContact } from "../connect/useMemberContact";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { Avatar, ImageSlot, KindChip } from "../../shared/components/ui";
+import { Avatar, ImageSlot } from "../../shared/components/ui";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -10,8 +10,9 @@ import { memberProfiles, type MemberProfile } from "./data/memberProfiles";
 import type { RelatedMember, WorkItem } from "./data/members";
 import { SHAPING_META } from "./profileSections.data";
 import { Section } from "./ProfileSections";
+import { BoardRow } from "./BoardRow";
 import { openToLabel, reasonValue } from "./openTo.data";
-import { workLinkTarget } from "./workLink.data";
+import { workLinkTarget, type WorkLink } from "./workLink.data";
 import styles from "./ProfilePage.module.css";
 
 export function NowSection({
@@ -28,6 +29,7 @@ export function NowSection({
   if (!profile.now?.trim() && profile.openTo.length === 0) return null;
   return (
     <Section
+      id="now"
       title={t("members:content.now.title")}
       subtitle={t("members:content.now.subtitle", { first: profile.first })}
     >
@@ -71,6 +73,36 @@ export function NowSection({
   );
 }
 
+/** One work-item link rendered as a small affordance, distinctly labeled by
+ *  target kind (internal ref vs. off-platform URL) — up to two of these sit
+ *  side by side per card, so the whole card can no longer double as a single
+ *  giant link the way a lone link used to render. Invalid targets (see
+ *  `workLinkTarget`) render nothing rather than a dead affordance. */
+function WorkLinkChip({ link }: { link: WorkLink }) {
+  const { t } = useTranslation();
+  const target = workLinkTarget(link);
+  if (!target) return null;
+  if (target.kind === "internal") {
+    return (
+      <Link to={target.to} className={styles.workLinkChip}>
+        {t("members:content.work.viewLink")}
+        <FiArrowRight aria-hidden />
+      </Link>
+    );
+  }
+  return (
+    <a
+      href={target.href}
+      target="_blank"
+      rel="noreferrer noopener"
+      className={styles.workLinkChip}
+    >
+      {t("members:content.work.visitLink")}
+      <FiExternalLink aria-hidden />
+    </a>
+  );
+}
+
 function WorkCardBody({ item, index }: { item: WorkItem; index: number }) {
   const { t } = useTranslation();
   return (
@@ -84,13 +116,18 @@ function WorkCardBody({ item, index }: { item: WorkItem; index: number }) {
         style={{ marginBottom: 14 }}
       />
       <div className={styles.workCat}>{item.category}</div>
-      <h3>
-        {item.title}
-        {item.link?.kind === "external" && (
-          <FiExternalLink className={styles.workExternal} aria-hidden />
-        )}
-      </h3>
+      <h3>{item.title}</h3>
       <div className={styles.workYear}>{item.year}</div>
+      {item.links.length > 0 && (
+        <div className={styles.workLinks}>
+          {/* 0-2 fixed entries, never reordered/filtered/inserted at render
+           *  time and with no stable id of their own, so a positional key
+           *  is safe here. */}
+          {item.links.map((link, linkIndex) => (
+            <WorkLinkChip key={linkIndex} link={link} />
+          ))}
+        </div>
+      )}
     </>
   );
 }
@@ -100,70 +137,40 @@ export function SelectedWorkSection({ profile }: { profile: MemberProfile }) {
   if (profile.work.length === 0) return null;
   return (
     <Section
+      id="selected-work"
       title={t("members:content.work.title")}
       subtitle={t("members:content.work.subtitle")}
     >
       <div className={styles.workGrid}>
-        {profile.work.map((item, index) => {
-          const target = item.link ? workLinkTarget(item.link) : null;
-          const body = <WorkCardBody item={item} index={index} />;
-          if (target?.kind === "internal") {
-            return (
-              <Link
-                key={item.title}
-                to={target.to}
-                className={`${styles.workCard} ${styles.workCardLink}`}
-              >
-                {body}
-              </Link>
-            );
-          }
-          if (target?.kind === "external") {
-            return (
-              <a
-                key={item.title}
-                href={target.href}
-                target="_blank"
-                rel="noreferrer noopener"
-                className={`${styles.workCard} ${styles.workCardLink}`}
-              >
-                {body}
-              </a>
-            );
-          }
-          return (
-            <article key={item.title} className={styles.workCard}>
-              {body}
-            </article>
-          );
-        })}
+        {profile.work.map((item, index) => (
+          <article key={item.title} className={styles.workCard}>
+            <WorkCardBody item={item} index={index} />
+          </article>
+        ))}
       </div>
     </Section>
   );
 }
 
-export function BoardSection({ profile }: { profile: MemberProfile }) {
+export function BoardSection({
+  profile,
+  isSelf = false,
+}: {
+  profile: MemberProfile;
+  /** Self-only: shows the "Mark as found" close action on open posts. */
+  isSelf?: boolean;
+}) {
   const { t } = useTranslation();
   if (profile.board.length === 0) return null;
   return (
     <Section
+      id="board"
       title={t("members:content.board.title")}
       subtitle={t("members:content.board.subtitle", { first: profile.first })}
     >
       <div className={styles.miniBoard}>
         {profile.board.map((item) => (
-          <Link
-            key={item.slug}
-            to={`${routes.offer}#${item.slug}`}
-            className={styles.ask}
-          >
-            <KindChip kind={item.kind}>
-              {item.kind === "looking"
-                ? t("members:content.board.looking")
-                : t("members:content.board.offering")}
-            </KindChip>
-            <h3>{item.title}</h3>
-          </Link>
+          <BoardRow key={item.slug} item={item} isSelf={isSelf} />
         ))}
       </div>
     </Section>
@@ -175,6 +182,7 @@ export function SkillsSection({ profile }: { profile: MemberProfile }) {
   if (profile.skills.length === 0) return null;
   return (
     <Section
+      id="skills"
       title={t("members:content.skills.title")}
       subtitle={t("members:content.skills.subtitle", { first: profile.first })}
     >
@@ -198,6 +206,7 @@ export function GroupsSection({ profile }: { profile: MemberProfile }) {
   if (profile.groups.length === 0) return null;
   return (
     <Section
+      id="groups"
       title={t("members:content.groups.title")}
       subtitle={t("members:content.groups.subtitle", { first: profile.first })}
     >
@@ -218,6 +227,7 @@ export function ShapingsSection({ profile }: { profile: MemberProfile }) {
   if (Object.keys(profile.shapings).length === 0) return null;
   return (
     <Section
+      id="shapings"
       title={t("members:content.shapings.title")}
       subtitle={t("members:content.shapings.subtitle")}
     >
@@ -296,6 +306,7 @@ export function RelatedSection({ profile }: { profile: MemberProfile }) {
   if (relatedMembers.length === 0) return null;
   return (
     <Section
+      id="related"
       title={t("members:content.related.title")}
       subtitle={t("members:content.related.subtitle")}
     >

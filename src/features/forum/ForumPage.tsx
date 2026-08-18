@@ -46,6 +46,7 @@ export function ForumPage() {
               <ForumThreadList
                 loading={page.loading}
                 threads={page.threads}
+                pinnedThreads={page.pinnedThreads}
                 sort={page.sort}
                 setSort={page.setSort}
                 headerCount={page.headerCount}
@@ -61,6 +62,7 @@ export function ForumPage() {
                 onDelete={moderation.requestDelete}
                 onRestore={moderation.requestRestore}
                 onHistory={moderation.requestHistory}
+                onTogglePin={moderation.requestTogglePin}
               />
 
               <ForumLoadMore

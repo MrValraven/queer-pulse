@@ -1,0 +1,71 @@
+/* Compact trust-signals meta row: N vouches + an explainer trigger.
+   Mirrors PublicProfilePage.module.css's `.pronouns` meta-row
+   pattern (flex-wrap, ink-60 body copy) so it reads as the same "who this
+   person is" register rather than inventing a new visual language. Also
+   backs ProfileTrustModal's `<dl>` explainer, which imports this same module
+   so the two surfaces never drift into separate stylesheets for one concept. */
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  /* Contrast check (see task brief): ink-60 in rgba(26,26,31,.62) composited
+     over --cream #F7F3EE computes to ~4.69:1, and over --paper #FFFFFF to
+     ~4.86:1 — both clear WCAG AA's 4.5:1 floor for normal-size text (13.5px
+     is normal, not "large text" at 18px/24px+). This repo's --ink-60 is not
+     the design source's --ink-40 the brief's comment warns about, and this
+     repo has no separate --ink-50 tier because --ink-60 already passes here. */
+  color: var(--ink-60);
+  font-size: 13.5px;
+}
+.row svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.explain {
+  margin-inline-start: 2px;
+}
+
+/* ── ProfileTrustModal's definition list ── */
+.modalIntro {
+  color: var(--ink-60);
+  margin: 0 0 20px;
+}
+.deflist {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 0;
+}
+.def {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.defTerm {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-strong);
+  font-weight: 600;
+}
+.defTerm svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--ink-60);
+}
+.defBody {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: 14px;
+  line-height: 1.5;
+}

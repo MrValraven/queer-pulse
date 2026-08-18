@@ -29,6 +29,7 @@ import type {
   SkillItemDTO,
   SocialLinkDTO,
   WorkItemDTO,
+  WorkLinkDTO,
 } from "./members.api";
 import type { MemberCard } from "../memberDirectoryFilter.data";
 
@@ -72,23 +73,25 @@ const KNOWN_WORK_REF_ENTITIES = new Set<WorkRefEntity>([
   "place",
 ]);
 
-/** Reconstruct a work item's link union from the wire's flat ref/href fields,
- *  dropping a `refEntity` this build doesn't know (same not-crash principle as
- *  `toOpenToEntries`) rather than sending the viewer to a broken path. */
-function toWorkLink(dto: WorkItemDTO): WorkLink | undefined {
-  if (
-    dto.refEntity &&
-    dto.refSlug &&
-    KNOWN_WORK_REF_ENTITIES.has(dto.refEntity as WorkRefEntity)
-  ) {
-    return {
-      kind: "ref",
-      entity: dto.refEntity as WorkRefEntity,
-      slug: dto.refSlug,
-    };
-  }
-  if (dto.href) return { kind: "external", href: dto.href };
-  return undefined;
+/** Reconstruct a work item's link union list from the wire, dropping any entry
+ *  with a `entity` this build doesn't know (same not-crash principle as
+ *  `toOpenToEntries`) rather than sending the viewer to a broken path, and
+ *  capping at 2 to match the backend's own `@ArrayMaxSize(2)`. */
+function toWorkLinks(dtoLinks?: WorkLinkDTO[]): WorkLink[] {
+  return (dtoLinks ?? []).slice(0, 2).flatMap((link): WorkLink[] => {
+    if (
+      link.kind === "ref" &&
+      link.entity &&
+      link.slug &&
+      KNOWN_WORK_REF_ENTITIES.has(link.entity as WorkRefEntity)
+    ) {
+      return [{ kind: "ref", entity: link.entity as WorkRefEntity, slug: link.slug }];
+    }
+    if (link.kind === "external" && link.href) {
+      return [{ kind: "external", href: link.href }];
+    }
+    return [];
+  });
 }
 
 /** Format an ISO join date to the year the hero shows ("2024"); "" if absent. */
@@ -116,6 +119,7 @@ export function cardToMember(dto: MemberCardDTO): Member {
     last: dto.lastName,
     role: dto.tagline ?? "",
     pronouns: dto.pronouns,
+    pronunciation: dto.pronunciation,
     hood: dto.location ?? "",
     tags: dto.tags ?? [],
     visibility: dto.visibility,
@@ -137,6 +141,14 @@ export function cardToMember(dto: MemberCardDTO): Member {
     skills: [],
     groups: [],
     activity: [],
+    // Backend `ProfileCard` fields, always the true stored value for every
+    // viewer (never themselves gated) — see the DTO field comments. Default
+    // to visible (`true`) when the wire omits them, matching the backend
+    // column default, so an older/thinner card response doesn't read as
+    // "hidden" by omission.
+    photoVisible: dto.photoVisible ?? true,
+    hoodVisible: dto.hoodVisible ?? true,
+    vouchersVisible: dto.vouchersVisible ?? true,
   };
 }
 
@@ -180,15 +192,22 @@ export function profileToMember(dto: ProfileDTO): Member {
     role: dto.tagline ?? "",
     hood: dto.location ?? "",
     bio: dto.bio ?? "",
+    bioPt: dto.bioPt,
     verified: dto.verified ?? false,
     since: joinYear(dto.joinedAt),
     now: dto.now ?? "",
+    notHereFor: dto.notHereFor,
     openTo: toOpenToEntries(dto.openTo),
     identities: dto.identities ?? [],
     lookingFor: dto.lookingFor ?? [],
     lookingForPublic: dto.lookingForPublic ?? false,
     privateNetwork: dto.privateNetwork ?? false,
     featuredConsent: dto.featuredConsent ?? false,
+    // Owner-only self-hide timestamp (Task 17) — absent from the DTO for any
+    // non-owner viewer (backend never sends it), so this stays `undefined` on
+    // another member's profile and only carries a real value on the owner's
+    // own fetch, matching `ProfileRailControls`' `resolvedProfile.hiddenUntil` read.
+    hiddenUntil: dto.hiddenUntil,
     discipline: dto.discipline ?? [],
     profession: dto.profession ?? [],
     languages: dto.languages ?? [],
@@ -201,12 +220,19 @@ export function profileToMember(dto: ProfileDTO): Member {
       title: w.title,
       year: w.year,
       image: w.imageUrl,
-      link: toWorkLink(w),
+      links: toWorkLinks(w.links),
     })),
     board: (dto.board ?? []).map((b) => ({
       kind: b.kind,
       title: b.title,
       slug: b.slug,
+      // Defaults cover a hypothetical older/thinner response — the current
+      // backend `BoardView` always sends these (see `toBoardView`).
+      status: b.status ?? "open",
+      closedNote: b.closedNote ?? undefined,
+      closedAt: b.closedAt ?? undefined,
+      expiresAt: b.expiresAt ?? "",
+      createdAt: b.createdAt ?? "",
     })),
     skills: (dto.skills ?? []).map((s) => ({ name: s.name, meta: s.meta })),
     groups: (dto.groups ?? []).map((g) => ({ name: g.name, role: g.role })),
@@ -261,10 +287,12 @@ export function workToDto(work: Member["work"]): WorkItemDTO[] {
     title: w.title,
     year: w.year,
     ...(w.image ? { imageUrl: w.image } : {}),
-    ...(w.link?.kind === "ref"
-      ? { refEntity: w.link.entity, refSlug: w.link.slug }
-      : {}),
-    ...(w.link?.kind === "external" ? { href: w.link.href } : {}),
+    links: w.links.map(
+      (link): WorkLinkDTO =>
+        link.kind === "ref"
+          ? { kind: "ref", entity: link.entity, slug: link.slug }
+          : { kind: "external", href: link.href },
+    ),
   }));
 }
 

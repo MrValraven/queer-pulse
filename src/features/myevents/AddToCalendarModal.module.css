@@ -1,0 +1,104 @@
+/* The sheet supplies the dialog chrome (grabber, close, padding); this modal
+   provides its own heading inside the sheet body. Reserve room on the inline
+   end so a long title never runs under the close chip. Matches
+   SubprofilePeopleModal's head/title/sub idiom. */
+.head {
+  margin-bottom: 18px;
+  padding-inline-end: 34px;
+}
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(20px, 3vw, 25px);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--text-strong);
+}
+.sub {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  position: relative;
+}
+
+.rowBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  width: 100%;
+  /* ~52px: two token gaps (--gap-xs) around the 34px icon circle, not an
+     arbitrary min-height number. */
+  min-height: calc(2 * var(--gap-xs) + 34px);
+  padding: var(--gap-xs) 14px;
+  border: none;
+  border-radius: var(--radius-badge);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14.5px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .rowBtn:hover {
+    background: color-mix(in srgb, var(--ink) 6%, transparent);
+  }
+}
+.rowBtn:active {
+  background: color-mix(in srgb, var(--ink) 10%, transparent);
+}
+.rowBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rowBtn {
+    transition: none;
+  }
+}
+
+.iconWrap {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-avatar);
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  color: var(--ink);
+}
+
+.rowLabel {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* The generic .ics fallback: a small subordinate link under the row list,
+   not a fifth identical-looking row. Reuses the shared ghost Button (per
+   STYLE-RULES — never a bare ad-hoc <button>), whose pill shape and smaller
+   footprint already read as secondary next to the full-width rows above. */
+.icsRow {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--gap-sm);
+}

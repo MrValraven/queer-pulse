@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useFormat, type Formatters } from "../../../shared/i18n/format";
 import { formatRelative } from "../../../shared/lib/date";
 import {
   getMagazineNotifications,
+  markMagazineNotificationsRead,
   type MagazineNotificationDto,
 } from "./pieces.api";
 import { DESK_NOTIFICATIONS, type DeskNotification } from "../desk/deskNotifications.data";
@@ -26,6 +27,7 @@ export interface DeskNotificationView {
   when: string;
   route: string;
   tone: "normal" | "warn";
+  isUnread: boolean;
 }
 
 /** Demo rows use an enum `route` key, not a URL (Phase 1 had nothing to link
@@ -39,6 +41,8 @@ const DEMO_ROUTE_TO_PATH: Record<DeskNotification["route"], string> = {
   after: "",
 };
 
+// Demo mode has no read-cursor backend, so its rows always read as unread —
+// matches the panel's old always-shown badge count in demo.
 function mapDemoNotification(notification: DeskNotification, index: number): DeskNotificationView {
   return {
     id: `demo-notification-${index}`,
@@ -47,6 +51,7 @@ function mapDemoNotification(notification: DeskNotification, index: number): Des
     when: notification.when,
     route: DEMO_ROUTE_TO_PATH[notification.route],
     tone: notification.tone === "warn" ? "warn" : "normal",
+    isUnread: true,
   };
 }
 
@@ -61,6 +66,7 @@ function mapLiveNotification(
     when: formatRelative(dto.when, formatters) || dto.when,
     route: dto.route,
     tone: dto.tone,
+    isUnread: dto.isUnread,
   };
 }
 
@@ -75,10 +81,14 @@ type RawNotificationsFeed =
  * real `magazine_piece_event` log). The view mapping runs outside the query
  * function (using the current `useFormat()` formatters) so a language switch
  * re-renders "when" immediately instead of waiting on a cache invalidation.
+ * `unreadCount` drives the sidebar bell badge; `markAllRead` advances the
+ * viewer's server-side read cursor (a no-op in demo mode, which has none) and
+ * refetches so the badge actually clears.
  */
 export function useMagazineNotifications() {
   const { demoMode } = useDemoMode();
   const formatters = useFormat();
+  const queryClient = useQueryClient();
 
   const query = useQuery<RawNotificationsFeed>({
     queryKey: ["magazine-notifications", demoMode],
@@ -88,11 +98,25 @@ export function useMagazineNotifications() {
     },
   });
 
+  const markReadMutation = useMutation({
+    mutationFn: markMagazineNotificationsRead,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["magazine-notifications"] });
+    },
+  });
+
+  function markAllRead() {
+    if (demoMode) return;
+    markReadMutation.mutate();
+  }
+
   if (!query.data) {
     return {
       notifications: [] as DeskNotificationView[],
+      unreadCount: 0,
       isLoading: query.isLoading,
       isError: query.isError,
+      markAllRead,
     };
   }
 
@@ -100,6 +124,7 @@ export function useMagazineNotifications() {
     query.data.kind === "demo"
       ? query.data.rows.map(mapDemoNotification)
       : query.data.rows.map((dto) => mapLiveNotification(dto, formatters));
+  const unreadCount = notifications.filter((notification) => notification.isUnread).length;
 
-  return { notifications, isLoading: false, isError: query.isError };
+  return { notifications, unreadCount, isLoading: false, isError: query.isError, markAllRead };
 }

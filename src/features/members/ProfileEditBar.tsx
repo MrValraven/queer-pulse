@@ -3,7 +3,10 @@ import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useProfileEdit } from "../../app/providers/useProfile";
+import {
+  useProfile,
+  getChangedSectionLabelKeys,
+} from "../../app/providers/useProfile";
 import { useEscapeToCancel } from "./useEscapeToCancel";
 import styles from "./ProfileEdit.module.css";
 
@@ -15,6 +18,8 @@ import styles from "./ProfileEdit.module.css";
 export function ProfileEditBar() {
   const { t } = useTranslation();
   const {
+    profile,
+    draft,
     isEditing,
     justSaved,
     isSaving,
@@ -22,8 +27,11 @@ export function ProfileEditBar() {
     isDirty,
     save,
     requestCancel,
-  } = useProfileEdit();
+  } = useProfile();
   useEscapeToCancel(isEditing);
+  const changedSectionKeys = isDirty
+    ? getChangedSectionLabelKeys(draft, profile)
+    : [];
 
   // Keep the saved banner mounted for one beat after `justSaved` clears so it can
   // animate out instead of popping out of place.
@@ -50,7 +58,11 @@ export function ProfileEditBar() {
           ) : isDirty ? (
             <>
               <span className={styles.unsavedDot} aria-hidden />
-              {t("members:profileEdit.bar.unsaved")}
+              {changedSectionKeys.length > 0
+                ? t("members:profileEdit.bar.unsavedIn", {
+                    sections: changedSectionKeys.map((key) => t(key)).join(", "),
+                  })
+                : t("members:profileEdit.bar.unsaved")}
             </>
           ) : null}
         </span>

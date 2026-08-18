@@ -97,7 +97,7 @@ export function MobileProfileTabPanels({
             <SelectedWorkSection profile={profile} />
           </SectionWrap>
           <SectionWrap>
-            <BoardSection profile={profile} />
+            <BoardSection profile={profile} isSelf={selfView} />
           </SectionWrap>
         </>
       )}

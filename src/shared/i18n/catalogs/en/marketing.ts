@@ -1852,6 +1852,51 @@ export const marketing: Catalog = {
   "changelog.entries.governance-editable-finances.body":
     "Admins can now correct the figures on the governance Finances tab instead of them being fixed. Every number carries a small tag showing where it comes from: an unverified placeholder, a value an admin entered, or one that is calculated (like the surplus). Corrections are recorded, so it is always clear who changed what and when.",
 
+  "changelog.entries.profile-hero-rail-redesign.title":
+    "Profile hero and rail redesigned",
+  "changelog.entries.profile-hero-rail-redesign.body":
+    "Your profile page has a cleaner hero and a new side rail: trust signals (verified, staff, vouch count) now come with a plain-language explainer, and a section nav lets visitors jump straight to what they're looking for, no scrolling required.",
+  "changelog.entries.profile-who-sees-what-controls.title":
+    "Choose exactly who sees what on your profile",
+  "changelog.entries.profile-who-sees-what-controls.body":
+    "A new \"Who sees what\" panel gathers your visibility controls in one place: quick presets, instant switches for your photo, neighbourhood, vouchers and what you're looking for, per-identity discoverability, hiding your profile from specific people, and a record of the reports you've filed.",
+  "changelog.entries.profile-your-data-panel.title":
+    "A \"Your data\" panel for your account",
+  "changelog.entries.profile-your-data-panel.body":
+    "Download a copy of everything QueerPulse holds on you, step away or request erasure with a 30-day grace period, or file a data request, all from one panel on your profile. Any owned community or live listing standing in the way of erasure now shows up there with its own fix.",
+  "changelog.entries.profile-board-work-name-qr-updates.title":
+    "Board posts can be marked found, work entries get a second link, and more",
+  "changelog.entries.profile-board-work-name-qr-updates.body":
+    "Your board posts can now be marked as found when you close them. Selected-work entries support a second link alongside the first. You can add how your name is pronounced and a Portuguese version of your bio, and a scannable QR code for your profile is one tap away.",
+
+  "changelog.entries.gathering-venue-directory-link.title":
+    "Link a gathering's venue to its local directory listing",
+  "changelog.entries.gathering-venue-directory-link.body":
+    "When you set a venue while creating a gathering, or edit one from its manage page, you can now search the local directory and pick a real business instead of only typing a name. Pick one and the venue name becomes a link straight to its listing, so guests can see photos, hours, and reviews before they show up. Typing a name freehand still works too.",
+  "changelog.entries.add-to-calendar-picker-redesign.title":
+    "Add to calendar now offers Google, Apple, Outlook, and Yahoo",
+  "changelog.entries.add-to-calendar-picker-redesign.body":
+    "The add-to-calendar modal is now a proper picker: Google, Apple, Outlook, and Yahoo each get their own row with a brand icon and a one-click add (Apple downloads a file, since it has no web link), ordered by your platform, plus a fallback download link for any other app. We also fixed a bug where an event's listed timezone wasn't actually used when building the calendar entry, which could add the wrong time to your calendar.",
+  "changelog.entries.local-directory-card-redesign.title":
+    "Directory and venue cards now show a photo, rating, and open status",
+  "changelog.entries.local-directory-card-redesign.body":
+    "Local directory and venue cards were redesigned around a photo, star rating, price and tag pills, and a save button, plus an open-till status and the host on business cards. Venues now carry demo photos and ratings to match.",
+
+  "changelog.entries.forum-thread-pinning.title":
+    "Moderators can pin forum threads to the top",
+  "changelog.entries.forum-thread-pinning.body":
+    "Moderators and admins can now pin a thread from its ⋯ menu, holding it above the regular list (up to 3 at a time) no matter which sort tab you're on. Unpin the same way to send it back into the normal order.",
+
+  "changelog.entries.magazine-desk-notifications-cleanup.title":
+    "Fewer duplicate desk notifications, and a working Mark all as read",
+  "changelog.entries.magazine-desk-notifications-cleanup.body":
+    "The magazine desk's Since Friday panel used to log a new notification for nearly every autosave, so one edit to a still-untitled draft could show up five or six times. Repeated edits to the same piece by the same person now collapse into a single line until something else happens on it. Mark all as read also used to just close the panel without changing anything, leaving the bell badge stuck. It now clears for real.",
+
+  "changelog.entries.volunteer-opportunity-edit-parity.title":
+    "Editing an opportunity now uses the same form as posting one",
+  "changelog.entries.volunteer-opportunity-edit-parity.body":
+    "Posters editing a volunteer opportunity get the exact same screen used to create it, including the why/tasks/commitments fields the old edit screen didn't offer at all.",
+
   "changelog.entries.local-directory-sort-fix.title":
     "Fixed the Local Business directory's sort menu",
   "changelog.entries.local-directory-sort-fix.body":
@@ -3737,10 +3782,13 @@ export const marketing: Catalog = {
   "postOpportunity.edit.sub":
     "Update the details volunteers see on the listing.",
   "postOpportunity.edit.saveCta": "Save changes",
+  "postOpportunity.edit.saving": "Saving…",
   "postOpportunity.edit.cancelCta": "Cancel",
   "postOpportunity.edit.successToast": "Your changes are saved.",
   "postOpportunity.edit.errorToast":
     "Couldn't save your changes. Please try again.",
+  "postOpportunity.edit.notAllowed":
+    "You can only edit an opportunity you posted.",
   "postOpportunity.rich.summary": "Add more detail (optional)",
   "postOpportunity.rich.whyHeading": "Why it matters",
   "postOpportunity.rich.whyLabel": "Why this role matters",
@@ -4094,8 +4142,15 @@ export const marketing: Catalog = {
   "directory.badge.friendly": "LGBTQ+ friendly",
   "directory.card.memberRun": "Member-run",
   "directory.card.online": "Online",
-  "directory.card.viewDetails": "View details",
+  "directory.card.visit": "Visit",
   "directory.card.verifiedBadge": "Verified safe space",
+  "directory.card.photoComing": "Photo coming",
+  "directory.card.openTill": "Open till {time}",
+  "directory.card.closedNow": "Closed",
+  "directory.card.saveAriaLabel": "Save {name}",
+  "directory.card.unsaveAriaLabel": "Remove {name} from saved",
+  "directory.card.savedToast": "Saved {name}",
+  "directory.card.unsavedToast": "Removed {name} from saved",
   "directory.submitStrip.title": "Know a place worth <em>adding?</em>",
   "directory.submitStrip.body":
     "If you run or know a queer-owned or queer-friendly business in Lisbon that belongs in this directory, tell us. We review every suggestion before it goes live.",
@@ -4601,6 +4656,7 @@ export const marketing: Catalog = {
   "map.venueCard.beenCount_other": "<b>{count}</b> people been here",
   "map.venueCard.beenThere": "Been there",
   "map.venueCard.markBeen": "I've been here",
+  "map.venueCard.accessible": "Wheelchair accessible",
   // Bairro is a Lisbon proper noun — identical in both catalogs, only the
   // surrounding phrase is translated.
   "map.svg.filterByAria": "Filter the map by {bairro}",

@@ -1,0 +1,40 @@
+.intro {
+  margin: 0 0 var(--gap-sm);
+  color: var(--ink-60);
+}
+
+.qrbox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-xs);
+  padding: var(--gap-sm);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+  text-align: center;
+}
+
+.canvas {
+  width: 232px;
+  height: 232px;
+  max-width: 100%;
+  border-radius: var(--radius-tag);
+}
+
+.who {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.who b {
+  font-family: var(--serif);
+  color: var(--ink);
+}
+
+.who span {
+  font-size: 0.85rem;
+  color: var(--ink-40);
+  overflow-wrap: anywhere;
+}

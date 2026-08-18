@@ -12,6 +12,7 @@ import styles from "./ForumPage.module.css";
 export function ForumThreadList({
   loading,
   threads,
+  pinnedThreads,
   sort,
   setSort,
   headerCount,
@@ -27,9 +28,15 @@ export function ForumThreadList({
   onDelete,
   onRestore,
   onHistory,
+  onTogglePin,
 }: {
   loading: boolean;
   threads: Thread[];
+  /** The sticky bucket rendered above the regular list — small (capped) and
+   *  unpaginated, hidden while filtering by tag/search (see
+   *  `useForumPageState`). Defaults to empty for callers/tests that don't pass
+   *  it. */
+  pinnedThreads?: Thread[];
   sort: ForumSort;
   setSort: (sort: ForumSort) => void;
   headerCount: number;
@@ -45,6 +52,7 @@ export function ForumThreadList({
   onDelete: (thread: Thread) => void;
   onRestore: (thread: Thread) => void;
   onHistory: (thread: Thread) => void;
+  onTogglePin: (thread: Thread) => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -95,6 +103,26 @@ export function ForumThreadList({
         </div>
       )}
 
+      {!!pinnedThreads?.length && (
+        <div className={styles.pinnedSection}>
+          {pinnedThreads.map((thread, idx) => (
+            <ForumThreadRow
+              key={thread.slug ?? thread.id}
+              thread={thread}
+              index={idx}
+              onVote={onVote}
+              onTagClick={onTagClick}
+              canEditThread={canEditThread}
+              onEditTitle={onEditTitle}
+              onDelete={onDelete}
+              onRestore={onRestore}
+              onHistory={onHistory}
+              onTogglePin={onTogglePin}
+            />
+          ))}
+        </div>
+      )}
+
       <div>
         {loading && <ForumThreadListSkeleton count={5} />}
         {!loading && threads.length === 0 && filtered && (
@@ -132,6 +160,7 @@ export function ForumThreadList({
               onDelete={onDelete}
               onRestore={onRestore}
               onHistory={onHistory}
+              onTogglePin={onTogglePin}
             />
           ))}
       </div>

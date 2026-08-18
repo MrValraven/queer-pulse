@@ -1076,6 +1076,16 @@ export const gatherings: Catalog = {
   "manage.inlineEdit.title": "Editar {label}",
   "manage.inlineEdit.saveCta": "Guardar",
 
+  // ── Venue picker (VenuePicker) — used by the manage venue modal and the
+  //    create-gathering wizard's DatePlaceStep ──────────────────────────────
+  "venuePicker.searchPlaceholder": "Pesquisar no diretório local",
+  "venuePicker.noResults": "Sem correspondências. Tenta outra pesquisa.",
+  "venuePicker.enterManually": "Não encontras? Escreve tu mesmo",
+  "venuePicker.searchInstead": "Pesquisar no diretório",
+  "venuePicker.freeTextPlaceholder": "Nome do local",
+  "venuePicker.fromDirectory": "Do diretório local",
+  "venuePicker.change": "Alterar",
+
   // ── Cohosts (CohostManager / AddCohostModal / MemberPicker) ─────────────────────
   "cohost.panelTitle": "Pessoas coanfitriãs",
   "cohost.addCta": "Adicionar pessoa coanfitriã",

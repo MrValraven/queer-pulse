@@ -230,6 +230,17 @@ export const communities: Catalog = {
   "detail.roster.loadingMore": "A carregar…",
 
   // ── Separador de ferramentas de moderação (hub completo) ──────────────────
+  "detail.modtools.insights.label": "Estatísticas da comunidade",
+  "detail.modtools.insights.error.title": "Não foi possível carregar as estatísticas",
+  "detail.modtools.insights.error.description":
+    "Algo correu mal ao carregar os números. Tenta novamente.",
+  "detail.modtools.insights.error.retryCta": "Tentar novamente",
+  "detail.modtools.insights.memberCount": "Pessoas",
+  "detail.modtools.insights.newThisWeek": "Novas esta semana",
+  "detail.modtools.insights.newThisMonth": "Novas este mês",
+  "detail.modtools.insights.postCount": "Publicações",
+  "detail.modtools.insights.postsThisWeek": "Publicações esta semana",
+  "detail.modtools.insights.activeMembers": "Ativas esta semana",
   "detail.modtools.joinRequests.label": "Pessoas a pedir para entrar",
   "detail.modtools.joinRequests.empty.title": "Sem pedidos à espera",
   "detail.modtools.joinRequests.empty.description":
@@ -243,10 +254,14 @@ export const communities: Catalog = {
     "Nada foi assinalado. A comunidade cuida de si mesma.",
   "detail.modtools.reports.meta":
     "De {author} · denunciado por {reporter} · há {time}",
+  "detail.modtools.reports.metaLive": "Denunciado há {time}",
   "detail.modtools.reports.removeCta": "Remover publicação",
   "detail.modtools.reports.dismissCta": "Ignorar",
+  "detail.modtools.reports.replyNote":
+    "Esta denúncia é sobre uma resposta, não sobre a publicação em si — pode ser ignorada mas não removida diretamente.",
   "detail.modtools.members.label": "Pessoas",
   "detail.modtools.members.makeModCta": "Tornar mod",
+  "detail.modtools.members.demoteCta": "Remover como mod",
   "detail.modtools.members.removeCta": "Remover da comunidade",
   "detail.modtools.members.ownerTag": "Responsável",
   "detail.modtools.toast.approved": "{name} aprovade. Dá-lhe as boas-vindas.",
@@ -257,6 +272,45 @@ export const communities: Catalog = {
   "detail.modtools.toast.reportDismissed": "Denúncia ignorada.",
   "detail.modtools.toast.promoted": "{name} é agora mod.",
   "detail.modtools.toast.removed": "{name} foi removide.",
+
+  // ── Zona de risco (separador de ferramentas de moderação, hub completo) ───
+  "detail.dangerZone.heading": "Zona de risco",
+  "detail.dangerZone.errorToast": "Algo correu mal. Tenta novamente.",
+  "detail.dangerZone.freeze.label": "Congelar a comunidade",
+  "detail.dangerZone.freeze.text":
+    "Pausa novas publicações e pedidos de entrada enquanto as coisas assentam. As pessoas ainda podem ler.",
+  "detail.dangerZone.freeze.cta": "Congelar",
+  "detail.dangerZone.freeze.successToast": "{name} foi congelada.",
+  "detail.dangerZone.freeze.confirm.title": "Congelar {name}?",
+  "detail.dangerZone.freeze.confirm.body":
+    "As pessoas não vão poder publicar nem entrar enquanto a comunidade estiver congelada. Podes descongelar quando quiseres.",
+  "detail.dangerZone.freeze.confirm.cancel": "Cancelar",
+  "detail.dangerZone.freeze.confirm.confirmCta": "Congelar comunidade",
+  "detail.dangerZone.archive.label": "Arquivar a comunidade",
+  "detail.dangerZone.archive.text":
+    "Fecha a comunidade definitivamente. Fica visível em modo só de leitura; ninguém pode publicar, entrar ou geri-la.",
+  "detail.dangerZone.archive.cta": "Arquivar",
+  "detail.dangerZone.archive.successToast": "{name} foi arquivada.",
+  "detail.dangerZone.archive.confirm.title": "Arquivar {name}?",
+  "detail.dangerZone.archive.confirm.body":
+    "Isto fecha a comunidade definitivamente. Fica só de leitura e não pode ser reaberta. Não é possível desfazer esta ação.",
+  "detail.dangerZone.archive.confirm.cancel": "Cancelar",
+  "detail.dangerZone.archive.confirm.confirmCta": "Arquivar comunidade",
+  "detail.dangerZone.transfer.label": "Transferir a titularidade",
+  "detail.dangerZone.transfer.text":
+    "Passa a comunidade para outra pessoa membro. Manténs o teu papel atual.",
+  "detail.dangerZone.transfer.cta": "Transferir",
+  "detail.dangerZone.transfer.successToast":
+    "A titularidade foi transferida para {owner}.",
+  "detail.dangerZone.transfer.confirm.title":
+    "Transferir a titularidade de {name}?",
+  "detail.dangerZone.transfer.confirm.body":
+    "Escolhe quem passa a ser responsável. Vai ficar com controlo total de {name}.",
+  "detail.dangerZone.transfer.confirm.cancel": "Cancelar",
+  "detail.dangerZone.transfer.confirm.confirmCta": "Transferir titularidade",
+  "detail.dangerZone.transfer.confirm.empty":
+    "Ainda não há mais ninguém na lista de pessoas para passar isto.",
+  "detail.dangerZone.transfer.confirm.searchPlaceholder": "Procurar pessoas…",
 
   // ── Separador Pulso (hub completo) ────────────────────────────────────────
   "detail.pulse.joinHint":

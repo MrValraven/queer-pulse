@@ -82,7 +82,12 @@ export const members: Catalog = {
   "workItem.yearLabel": "Work year",
   "workItem.linkPlaceholder": "Link (optional, e.g. https://bandcamp.com/…)",
   "workItem.linkLabel": "Work link",
+  "workItem.secondLinkPlaceholder":
+    "Second link (optional, e.g. https://bandcamp.com/…)",
+  "workItem.secondLinkLabel": "Second work link",
   "workItem.linkedNote": "Links to a QueerPulse page. Not editable here.",
+  "workItem.addSecondLink": "Add a second link",
+  "workItem.removeSecondLink": "Remove second link",
   "workItem.remove": "Remove",
 
   // ── Profile page states (ProfilePage) ──────────────────────────────────────
@@ -126,6 +131,76 @@ export const members: Catalog = {
   "profile.hero.perksChip": "{count} perks",
   "profile.hero.perksTitle": "Member perks",
   "profile.hero.perksArrow": "Redeem your perks",
+  "profile.hero.hearPronunciation": "Hear how to say {name}'s name",
+  "profile.hero.notHereFor.label": "Not here for",
+  "profile.hero.writtenBy.en": "{name} wrote this in English",
+  "profile.hero.writtenBy.pt": "{name} wrote this in Portuguese",
+
+  // ── Mutual connections card (ProfileMutualsCard) ────────────────────────────
+  "profile.mutuals.title": "Mutual connections",
+  "profile.mutuals.one": "You both know <strong>{nameA}</strong>.",
+  "profile.mutuals.two":
+    "You both know <strong>{nameA}</strong> and <strong>{nameB}</strong>.",
+  "profile.mutuals.many":
+    "You both know <strong>{nameA}</strong>, <strong>{nameB}</strong> and {othersCount} more.",
+
+  // ── "Say hello" modal (ProfileHelloModal) ───────────────────────────────────
+  "profile.hello.title": "Say hello to {first}",
+  "profile.hello.intro": "Pick what drew you in, or just start typing.",
+  "profile.hello.reasonsLabel": "What drew you in",
+  "profile.hello.draftTemplate":
+    "Hi {first}, I saw you're open to \"{reason}\" and wanted to say hello. ",
+  "profile.hello.draftLabel": "Your message",
+  "profile.hello.draftPlaceholder": "Say what's on your mind.",
+  "profile.hello.cancel": "Cancel",
+  "profile.hello.send": "Send",
+  "profile.hello.sentToast": "Sent. {first} usually replies soon.",
+  "profile.hello.errorToast": "Couldn't open the message. Try again.",
+
+  // ── Profile rail (ProfileRail, Task 3) ──────────────────────────────────────
+  "profile.railLabel": "{name}'s profile summary",
+  "profile.nav.title": "Sections",
+  "profile.nav.label": "Jump to a section",
+  "profile.nav.openTo": "Open to",
+  "profile.nav.board": "On the board",
+  "profile.nav.work": "Selected work",
+  "profile.nav.subprofiles": "Also working as",
+  "profile.nav.communities": "Communities",
+  "profile.nav.places": "Places",
+  "profile.nav.skills": "Skills & offerings",
+  "profile.nav.groups": "Groups & circles",
+  "profile.nav.shapings": "What shaped me",
+  "profile.nav.related": "Also in the room",
+
+  // ── Trust signals row + explainer (ProfileTrustSignals, ProfileTrustModal — Task 4) ──
+  "profile.trust.verified": "Verified",
+  "profile.trust.staff": "Staff",
+  "profile.trust.vouchCount_one": "{count} vouch",
+  "profile.trust.vouchCount_other": "{count} vouches",
+  "profile.trust.explainCta": "What these mean",
+  "profile.trust.modalTitle": "Trust signals",
+  "profile.trust.modalIntro":
+    "A quick guide to what you'll see on someone's profile.",
+  "profile.trust.verifiedDescription":
+    "This member's identity has been confirmed by QueerPulse.",
+  "profile.trust.staffDescription":
+    "This member is part of the QueerPulse team.",
+  "profile.trust.vouchesTerm": "Vouches",
+  "profile.trust.vouchesDescription":
+    "Other members who have personally vouched for this person joining the community.",
+
+  // ── Owner rail controls (ProfileRailControls — Task 5) ──────────────────────
+  "profile.rail.whoSeesWhat": "Who sees what",
+  "profile.rail.bringMeBack": "Bring me back",
+  "profile.rail.hideMe24h": "Hide me for 24h",
+  "profile.rail.yourData": "Your data",
+  "profile.rail.yourDataSub": "Download or manage what we keep",
+
+  // ── Profile QR modal (ProfileQrModal) ───────────────────────────────────────
+  "profile.qr.title": "Your profile QR code",
+  "profile.qr.intro": "Scan this to open your public profile.",
+  "profile.qr.save": "Save to photos",
+  "profile.qr.doneCta": "Done",
 
   // ── Profile stat row + content tabs (ProfileStatsRow, ProfileTabBar) ───────
   "profile.stats.vouches": "Vouches",
@@ -156,10 +231,24 @@ export const members: Catalog = {
   "content.now.openLabel": "Open to",
   "content.work.title": "Selected work",
   "content.work.subtitle": "A few things, handpicked",
+  "content.work.viewLink": "View",
+  "content.work.visitLink": "Visit",
   "content.board.title": "On the board",
   "content.board.subtitle": "What {first} is asking for and offering right now",
   "content.board.looking": "Looking",
   "content.board.offering": "Offering",
+
+  // ── Barter board row (BoardRow) ────────────────────────────────────────
+  "profile.board.postedAgo": "Posted {time}",
+  "profile.board.expiresWarning_one": "Expires in {count} day",
+  "profile.board.expiresWarning_other": "Expires in {count} days",
+  "profile.board.foundIt": "Found — closed",
+  "profile.board.foundItWithNote": "Found — {note}",
+  "profile.board.markFoundCta": "Mark as found",
+  "profile.board.markFoundCancel": "Cancel",
+  "profile.board.markFoundConfirm": "Confirm",
+  "profile.board.foundNoteLabel": "Note about how it was found",
+  "profile.board.foundNotePlaceholder": "Add a note (optional)",
   "content.skills.title": "Skills & offerings",
   "content.skills.subtitle":
     "What {first} can help with, and swap on the barter board",
@@ -202,6 +291,8 @@ export const members: Catalog = {
   "profileEdit.field.tags": "Tags",
   "profileEdit.field.addSkillPlaceholder": "Search skills…",
   "profileEdit.field.links": "Links",
+  "profileEdit.field.photo": "Photo",
+  "profileEdit.field.lookingFor": "Looking for",
   "profileEdit.customPronounPlaceholder": "custom…",
   "profileEdit.customPronounsLabel": "Custom pronouns",
   "profileEdit.addTagPlaceholder": "Add a tag…",
@@ -215,6 +306,21 @@ export const members: Catalog = {
   "profileEdit.validation.nameRequired": "Please enter your first name.",
   "profileEdit.validation.invalidUrl":
     "That doesn't look like a valid link or handle.",
+
+  // ── Pronunciation, Portuguese bio, boundary note (ProfileEditDetailFields) ──
+  "profileEdit.pronunciation.label": "Name pronunciation",
+  "profileEdit.pronunciation.help":
+    "Spell it out phonetically so people get it right. Shown next to your name with a 'hear it' button.",
+  "profileEdit.pronunciation.placeholder": "e.g. kuh-tuh-REE-nuh",
+  "profileEdit.bioPt.label": "Bio in Portuguese",
+  "profileEdit.bioPt.help":
+    "An optional Portuguese version of your bio. Add one and visitors can switch between languages.",
+  "profileEdit.bioPt.placeholder":
+    "Write it in Portuguese if you'd like people to be able to switch.",
+  "profileEdit.notHereFor.label": "Not here for",
+  "profileEdit.notHereFor.help":
+    "A boundary you'd like people to know about before they reach out.",
+  "profileEdit.notHereFor.placeholder": "e.g. Networking for my day job",
 
   // ── Short bio field (ProfileShortBioField) ─────────────────────────────────
   "profileEdit.shortBio.label": "Short bio",
@@ -247,6 +353,7 @@ export const members: Catalog = {
 
   // ── Edit bar (ProfileEditBar) ───────────────────────────────────────────────
   "profileEdit.bar.unsaved": "You're editing your profile, unsaved changes",
+  "profileEdit.bar.unsavedIn": "Unsaved changes in {sections}",
   "profileEdit.bar.discard": "Discard",
   "profileEdit.bar.saving": "Saving…",
   "profileEdit.bar.tryAgain": "Try again",
@@ -311,6 +418,9 @@ export const members: Catalog = {
   "hero.hereFor.label": "Here for",
   "hero.hereFor.hintPublic": "shown on your profile",
   "hero.hereFor.hintPrivate": "only you can see this",
+
+  // ── Hero tags row (ProfileHeroMain) ─────────────────────────────────────────
+  "hero.tags.label": "Tags",
 
   // ── Public profile page (PublicProfilePage) ─────────────────────────────────
   // ── /public-profile/:slug — the logged-out, indexable public profile ──────
@@ -730,6 +840,15 @@ export const members: Catalog = {
   "vouch.relationship.metThroughQueerPulse": "Met through QueerPulse",
   "vouch.relationship.neighbours": "We're neighbours",
 
+  // ── Read-only relationship "texture" chips (HeroVouchRow) — short
+  // third-person noun phrases, not the first-person form copy above; these
+  // describe a voucher's relationship to the profile being viewed. ─────────
+  "vouch.relationshipChip.collaborated": "Collaborated",
+  "vouch.relationshipChip.friends": "Friends",
+  "vouch.relationshipChip.group": "Same collective",
+  "vouch.relationshipChip.met_through": "Met through QueerPulse",
+  "vouch.relationshipChip.neighbours": "Neighbours",
+
   // ── Vouch-for-a-member modal (VouchMemberModal, VouchMemberModalParts) ─────
   "vouch.modal.ariaLabel": "Vouch for {first}",
   "vouch.modal.close": "Close",
@@ -1047,4 +1166,170 @@ export const members: Catalog = {
   "network.searchPlaceholder": "Search by name",
   "network.searchAria": "Search this list by name",
   "network.noMatches": "No one here matches “{query}”.",
+
+  // ── "Who sees what" sheet (WhoSeesWhatSheet + Presets/FieldToggles/Identities/HiddenFrom/Reports/NameChange) ──
+  "profile.whoSeesWhat.title": "Who sees what",
+
+  "profile.whoSeesWhat.presets.heading": "Quick presets",
+  "profile.whoSeesWhat.presets.sub":
+    "One tap sets your photo, neighbourhood, vouchers and what you're looking for together.",
+  "profile.whoSeesWhat.presets.findable.label": "Findable",
+  "profile.whoSeesWhat.presets.findable.desc":
+    "Photo, neighbourhood, vouchers and what you're looking for are all visible.",
+  "profile.whoSeesWhat.presets.careful.label": "Careful",
+  "profile.whoSeesWhat.presets.careful.desc":
+    "Photo and neighbourhood stay private. Vouchers and what you're looking for are visible.",
+  "profile.whoSeesWhat.presets.closed.label": "Closed",
+  "profile.whoSeesWhat.presets.closed.desc":
+    "Photo, neighbourhood, vouchers and what you're looking for all stay private.",
+
+  "profile.whoSeesWhat.fields.heading": "Visibility switches",
+  "profile.whoSeesWhat.fields.sub": "Each of these takes effect right away.",
+  "profile.whoSeesWhat.fields.photo.label": "Photo",
+  "profile.whoSeesWhat.fields.photo.desc":
+    "Show your photo on your profile and directory card.",
+  "profile.whoSeesWhat.fields.hood.label": "Neighbourhood",
+  "profile.whoSeesWhat.fields.hood.desc":
+    "Show which Lisbon neighbourhood you're in.",
+  "profile.whoSeesWhat.fields.vouchers.label": "Vouchers",
+  "profile.whoSeesWhat.fields.vouchers.desc": "Show who has vouched for you.",
+  "profile.whoSeesWhat.fields.intent.label": "What you're looking for",
+  "profile.whoSeesWhat.fields.intent.desc":
+    "Show what you're open to on your profile.",
+
+  "profile.whoSeesWhat.identities.heading": "Identities",
+  "profile.whoSeesWhat.identities.sub":
+    "Choose which of your identities show up in search and the directory.",
+  "profile.whoSeesWhat.identities.empty":
+    "You haven't added any identities yet.",
+  "profile.whoSeesWhat.identities.emptyLink": "Add identities",
+
+  "profile.whoSeesWhat.hiddenFrom.heading": "Hidden from",
+  "profile.whoSeesWhat.hiddenFrom.sub":
+    "Your profile stays invisible to anyone on this list, even if you're connected.",
+  "profile.whoSeesWhat.hiddenFrom.demoNote":
+    "This is a demo account, so hiding your profile from someone isn't simulated here.",
+  "profile.whoSeesWhat.hiddenFrom.empty":
+    "You haven't hidden your profile from anyone.",
+  "profile.whoSeesWhat.hiddenFrom.addButton": "Hide from someone",
+  "profile.whoSeesWhat.hiddenFrom.remove": "Remove",
+  "profile.whoSeesWhat.hiddenFrom.removeAria": "Remove {name}",
+  "profile.whoSeesWhat.hiddenFrom.pickerTitle": "Hide your profile from",
+  "profile.whoSeesWhat.hiddenFrom.pickerSearchPlaceholder": "Search by name",
+  "profile.whoSeesWhat.hiddenFrom.toast.hidden":
+    "Hidden. They won't see your profile.",
+  "profile.whoSeesWhat.hiddenFrom.toast.unhidden":
+    "Unhidden. They can see your profile again.",
+  "profile.whoSeesWhat.hiddenFrom.toast.error":
+    "Something went wrong. Please try again.",
+
+  "profile.whoSeesWhat.reports.heading": "Reports you've filed",
+  "profile.whoSeesWhat.reports.sub":
+    "A record of what you've reported and where it stands.",
+  "profile.whoSeesWhat.reports.filedTemplate": "Filed {time}",
+  "profile.whoSeesWhat.reports.empty": "You haven't filed any reports.",
+  "profile.whoSeesWhat.reports.error": "We couldn't load your reports.",
+  "profile.whoSeesWhat.reports.status.open": "Open",
+  "profile.whoSeesWhat.reports.status.resolved": "Resolved",
+  "profile.whoSeesWhat.reports.status.escalated": "Escalated",
+
+  "profile.whoSeesWhat.nameChange.heading": "Your username",
+  "profile.whoSeesWhat.nameChange.sub":
+    "Your username is @{handle}. Change it any time.",
+  "profile.whoSeesWhat.nameChange.button": "Change your username",
+
+  "profile.whoSeesWhat.toast.saved": "Saved.",
+  "profile.whoSeesWhat.toast.error": "Couldn't save that. Please try again.",
+
+  // ── "Your data" sheet (AccountDataSheet + Export/StepAway/Dsar) ──────────────
+  "profile.accountData.title": "Your data",
+
+  "profile.accountData.export.title": "Download your data",
+  "profile.accountData.export.intro":
+    "Request a copy of everything QueerPulse holds on you. We'll build it in the background, and it can take a few minutes.",
+  "profile.accountData.export.cta": "Request export",
+  "profile.accountData.export.requesting": "Requesting…",
+  "profile.accountData.export.status.queued": "Queued",
+  "profile.accountData.export.status.processing": "Building",
+  "profile.accountData.export.status.ready": "Ready",
+  "profile.accountData.export.status.failed": "Failed",
+  "profile.accountData.export.status.expired": "Expired",
+  "profile.accountData.export.statusNote":
+    "We're putting your archive together. This page updates on its own, so there's no need to refresh.",
+  "profile.accountData.export.downloadCta": "Download archive",
+  "profile.accountData.export.expiresNote": "This link expires {date}.",
+  "profile.accountData.export.retryCta": "Try again",
+  "profile.accountData.export.toast.startError":
+    "We couldn't start your export. Please try again.",
+
+  "profile.accountData.stepAway.title": "Step away",
+  "profile.accountData.stepAway.hide.title": "Hide me",
+  "profile.accountData.stepAway.hide.body":
+    "Your profile becomes invisible and you stop receiving notifications. It's fully reversible: sign back in any time to reactivate. While hidden, other members see you listed as a deactivated member.",
+  "profile.accountData.stepAway.hide.cta": "Hide me",
+  "profile.accountData.stepAway.hide.confirm.title": "Hide your profile?",
+  "profile.accountData.stepAway.hide.confirm.body":
+    "You'll be signed out and your profile hidden right away. Sign back in whenever you're ready. Nothing is deleted.",
+  "profile.accountData.stepAway.hide.confirm.cta": "Yes, hide me",
+  "profile.accountData.stepAway.erase.title": "Erase me",
+  "profile.accountData.stepAway.erase.body":
+    "Permanently delete your account. There's a 30-day grace period to change your mind before erasure is irreversible.",
+  "profile.accountData.stepAway.erase.blockedByDependencies":
+    "A few things still depend on you before we can erase your account:",
+  "profile.accountData.stepAway.erase.cta": "Erase me",
+  "profile.accountData.stepAway.erase.disabledHint":
+    "Transfer or close everything listed above, then Erase me becomes available.",
+  "profile.accountData.stepAway.erase.confirm.title":
+    "Request account erasure?",
+  "profile.accountData.stepAway.erase.confirm.body":
+    "This starts a 30-day grace period. Your profile at {profile} disappears right away, you'll be signed out now, and everything is permanently erased at the end of the 30 days unless you cancel first.",
+  "profile.accountData.stepAway.erase.confirm.cta": "Request erasure",
+  "profile.accountData.stepAway.erase.confirm.reasonLabel":
+    "Tell us why, if you'd like (optional)",
+  "profile.accountData.stepAway.erase.confirm.reasonPlaceholder":
+    "Optional, and it helps us do better",
+  "profile.accountData.stepAway.dependency.transferCta": "Transfer",
+  "profile.accountData.stepAway.dependency.closeCta": "Close listing",
+  "profile.accountData.stepAway.dependency.closeConfirm.title":
+    "Close “{name}”?",
+  "profile.accountData.stepAway.dependency.closeConfirm.body":
+    "This withdraws the listing from the directory. It won't be visible to anyone afterward.",
+  "profile.accountData.stepAway.dependency.closedToast": "Listing closed.",
+  "profile.accountData.stepAway.pending.banner":
+    "<strong>Your account is scheduled for deletion.</strong> Everything is hidden now and will be permanently erased on <strong>{date}</strong>. Changed your mind? You can still cancel.",
+  "profile.accountData.stepAway.pending.cancelling": "Cancelling…",
+  "profile.accountData.stepAway.pending.cancelCta": "Cancel deletion",
+  "profile.accountData.stepAway.pending.cancelledToast":
+    "Deletion cancelled. Welcome back.",
+  "profile.accountData.stepAway.pending.cancelErrorToast":
+    "We couldn't cancel that. Please try again.",
+  "profile.accountData.stepAway.toast.actionError":
+    "Something went wrong. Please try again.",
+
+  "profile.accountData.dsar.article.access": "Access (Art. 15)",
+  "profile.accountData.dsar.article.rectification": "Rectification (Art. 16)",
+  "profile.accountData.dsar.article.erasure": "Erasure (Art. 17)",
+  "profile.accountData.dsar.article.objection": "Objection (Art. 21)",
+  "profile.accountData.dsar.status.received": "Received",
+  "profile.accountData.dsar.status.inReview": "In review",
+  "profile.accountData.dsar.status.resolved": "Resolved",
+  "profile.accountData.dsar.status.rejected": "Rejected",
+  "profile.accountData.dsar.title": "Request something else",
+  "profile.accountData.dsar.intro":
+    "Access, correct, or object to how we use your data: anything beyond what Download and Erase already cover.",
+  "profile.accountData.dsar.articleGroupLabel": "Which right?",
+  "profile.accountData.dsar.detailsLabel": "What do you need?",
+  "profile.accountData.dsar.detailsPlaceholder":
+    "Describe what you'd like us to do",
+  "profile.accountData.dsar.submitting": "Sending…",
+  "profile.accountData.dsar.submitCta": "Send request",
+  "profile.accountData.dsar.pastTitle": "Past requests",
+  "profile.accountData.dsar.pastLoading": "Loading your requests…",
+  "profile.accountData.dsar.pastError":
+    "We couldn't load your past requests.",
+  "profile.accountData.dsar.pastEmpty": "You haven't filed a request yet.",
+  "profile.accountData.dsar.toast.submitted":
+    "Request sent, reference {ref}.",
+  "profile.accountData.dsar.toast.submitError":
+    "We couldn't send that request. Please try again.",
 };

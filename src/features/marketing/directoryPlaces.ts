@@ -68,6 +68,11 @@ export interface Review {
 export interface DirectoryPlace {
   /* ---- card ---- */
   slug: string;
+  /** The listing's real DB uuid — the id a cross-entity FK (e.g. a gathering's
+   * venue link, `Event.listingId`) targets. Present for live business
+   * listings (from `GET /directory`); absent for the static demo fixture
+   * below, which has no real row to point at. */
+  id?: string;
   /** Human-readable business reference (e.g. `QPL-2026-0007`) — the id every
    * listing MUTATION path is keyed by (`/listings/:ref/...`, incl. the dispute
    * endpoint). Distinct from `slug` (the cosmetic public URL id). Absent for

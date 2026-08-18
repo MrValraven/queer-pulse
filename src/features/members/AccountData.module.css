@@ -1,0 +1,138 @@
+/* Shared styles for the "Your data" sheet — AccountDataSheet and its three
+   sections (Export / StepAway / Dsar). One module across all four
+   components rather than four near-duplicates: each section is small and
+   they share the same handful of structural needs (heading rhythm, list
+   reset + row layout, a status-pill row). `SideSheet`'s own `.sideSheetBody`
+   already supplies the 32px gap *between* top-level sections, so nothing
+   here re-adds outer section spacing — only what's INSIDE a section. */
+
+/* ── Top-level logical section (Download / Step away / Request something
+   else) ── each gets its own surface so the sheet reads as distinct grouped
+   actions instead of one continuous scroll; `.sideSheetBody`'s 32px gap
+   between sections stays bigger than this card's own padding, so "space
+   between groups" still reads louder than "space within" one. */
+.section {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+}
+
+.heading {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 17px;
+  color: var(--text-strong);
+  margin-bottom: var(--gap-xs);
+}
+
+.subheading {
+  composes: heading;
+  font-size: 15px;
+}
+
+.body {
+  color: var(--ink-60);
+  margin-bottom: var(--gap-sm);
+}
+
+.hint {
+  color: var(--ink-60);
+  font-size: 13px;
+  margin-top: var(--gap-xs);
+}
+
+/* ── Status row (export job status, pill + note) ─────────────────────────── */
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+/* ── Deactivate/erase blocks ──────────────────────────────────────────────── */
+.block {
+  padding-top: var(--gap-grid);
+  border-top: 1px solid var(--line);
+}
+
+.block:first-of-type {
+  padding-top: 0;
+  border-top: none;
+}
+
+/* ── Pending-deletion banner ──────────────────────────────────────────────── */
+.pendingBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-sm);
+  padding: var(--gap-sm);
+  border-radius: var(--radius-tag);
+  background: var(--wash);
+}
+
+.pendingBannerIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--accent);
+}
+
+/* ── Dependency list (owned communities / live listings blocking erasure) ── */
+.dependencyIntro {
+  margin-bottom: var(--gap-xs);
+}
+
+.dependencyList {
+  list-style: none;
+  margin: 0 0 var(--gap-sm);
+  padding: 0;
+}
+
+.dependencyRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  padding: var(--gap-xs) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dependencyRow:last-child {
+  border-bottom: none;
+}
+
+/* ── DSAR article picker ──────────────────────────────────────────────────── */
+.articleGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  margin-bottom: var(--gap-sm);
+}
+
+/* ── DSAR past-requests list ──────────────────────────────────────────────── */
+.pastList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pastRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  padding: var(--gap-xs) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.pastRow:last-child {
+  border-bottom: none;
+}
+
+.pastRowRef {
+  font-weight: 600;
+}
+
+.pastRowMeta {
+  color: var(--ink-60);
+  font-size: 13px;
+}

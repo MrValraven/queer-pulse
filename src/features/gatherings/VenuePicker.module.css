@@ -1,0 +1,188 @@
+/* VenuePicker: search-the-directory combobox + free-text fallback + a
+   linked-listing chip. Mirrors the shared Select's trigger/panel tokens. */
+
+.container {
+  position: relative;
+}
+
+.searchRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 15px;
+  color: var(--ink-40);
+  pointer-events: none;
+}
+
+.searchInput,
+.freeInput {
+  width: 100%;
+  min-height: 48px;
+  font-family: var(--sans);
+  /* >=16px so iOS Safari never zooms on focus. */
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: 12px;
+  padding: 11px 15px 11px 40px;
+  transition:
+    border-color 0.16s var(--ease),
+    box-shadow 0.16s var(--ease),
+    background 0.16s var(--ease);
+}
+.freeInput {
+  padding-left: 15px;
+}
+.searchInput:focus,
+.freeInput:focus {
+  outline: none;
+  border-color: var(--line-strong);
+  background: var(--paper);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+}
+.searchInput::placeholder,
+.freeInput::placeholder {
+  color: var(--ink-40);
+}
+
+.toggleLink {
+  display: inline-block;
+  margin-top: 8px;
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--plum);
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .toggleLink:hover {
+    text-decoration: underline;
+  }
+}
+
+/* ── Results panel ── */
+.panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 40;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 14px;
+  box-shadow: var(--shadow-panel);
+  padding: 8px;
+  max-height: 280px;
+  overflow-y: auto;
+  transform-origin: top;
+  animation: qpVenuePanelIn var(--dur-fast) var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}
+@keyframes qpVenuePanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.option {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 11px;
+  border: none;
+  border-radius: 9px;
+  background: none;
+  font-family: var(--sans);
+  text-align: left;
+  cursor: pointer;
+}
+.option[data-active="true"] {
+  background: var(--wash);
+}
+.optionName {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.optionMeta {
+  flex-shrink: 0;
+  font-size: 13px;
+  color: var(--ink-40);
+}
+
+.empty {
+  padding: 14px 11px;
+  font-size: 14px;
+  color: var(--ink-60);
+}
+
+/* ── Linked chip ── */
+.linked {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: 12px;
+  padding: 9px 12px;
+}
+.linkedIcon {
+  flex-shrink: 0;
+  color: var(--plum);
+}
+.linkedBody {
+  flex: 1;
+  min-width: 0;
+}
+.linkedName {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.linkedMeta {
+  font-size: 12px;
+  color: var(--ink-40);
+}
+.changeBtn {
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  padding: 6px 4px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--plum);
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .changeBtn:hover {
+    text-decoration: underline;
+  }
+}

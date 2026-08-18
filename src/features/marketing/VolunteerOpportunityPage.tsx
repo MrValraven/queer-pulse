@@ -1,32 +1,22 @@
 import { useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { ApiError } from "../../shared/api/client";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import { routes } from "../../app/routeMap";
 import { useOpportunity } from "./api/useOpportunity";
 import { useOpportunities } from "./api/useOpportunities";
-import { useOrganizationOptions } from "./api/useOrganizationOptions";
 import { useSignups } from "./api/useSignups";
-import {
-  applyEditDraft,
-  draftToUpdateDto,
-  opportunityToEditDraft,
-} from "./api/volunteering.adapters";
 import {
   useCloseOpportunity,
   useSignup,
-  useUpdateOpportunity,
   useWithdrawSignup,
 } from "./api/useOpportunityMutations";
-import { EditOpportunityModal } from "./EditOpportunityModal";
 import { VolunteerOpportunityMain } from "./VolunteerOpportunitySections";
 import { VolunteerOpportunitySidebar } from "./VolunteerOpportunitySidebar";
 import type { VolunteerOpportunity } from "./volunteerOpportunities";
-import type { OpportunityEditDraft } from "./volunteerOpportunities.types";
 import styles from "./VolunteerOpportunityPage.module.css";
 
 /** Map a failed signup to member-facing copy, distinguishing the two 409 cases. */
@@ -45,48 +35,35 @@ function signupErrorMessage(e: unknown, t: TFunction): string {
 
 export function VolunteerOpportunityPage() {
   const { t } = useTranslation();
-  const { showToast } = useToast();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { slug } = useParams();
   const { data, isLoading } = useOpportunity(slug);
   const { items: allOpportunities } = useOpportunities();
-  const organizationOptions = useOrganizationOptions();
 
   // `null` means "defer to the server's mySignup"; set explicitly after a
   // successful signup / withdraw so the optimistic UI updates immediately.
   const [signedUp, setSignedUp] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [editOpen, setEditOpen] = useState(false);
-  // The poster's last saved edit, applied over the query's data so the page
-  // reflects a save immediately (load-bearing in demo mode — see
-  // `applyEditDraft`). Guarded by slug so a stale edit from a previously
-  // viewed opportunity can never bleed into this one.
-  const [override, setOverride] = useState<VolunteerOpportunity | null>(null);
 
   const signup = useSignup(slug ?? "");
   const withdraw = useWithdrawSignup(slug ?? "");
   const close = useCloseOpportunity(slug ?? "");
-  const update = useUpdateOpportunity(slug ?? "");
   const signups = useSignups(slug, data?.isPoster ?? false);
 
   const baseOpp = data?.opportunity;
+  // A freshly-saved edit arrives via router state (EditOpportunityFlow) so
+  // the page reflects it instantly — load-bearing in demo mode, which has
+  // no server to refetch from at all. Guarded by slug so a stale edit from
+  // a previously viewed opportunity can never bleed into this one.
+  const editedOpportunity = (
+    location.state as { editedOpportunity?: VolunteerOpportunity } | null
+  )?.editedOpportunity;
   const opp =
-    override && baseOpp && override.slug === baseOpp.slug
-      ? override
+    editedOpportunity && baseOpp && editedOpportunity.slug === baseOpp.slug
+      ? editedOpportunity
       : baseOpp;
   const applied = signedUp ?? data?.mySignup ?? false;
-
-  const saveEdit = (draft: OpportunityEditDraft) => {
-    if (!opp) return;
-    setOverride(applyEditDraft(opp, draft, organizationOptions));
-    update.mutate(draftToUpdateDto(draft), {
-      onSuccess: () =>
-        showToast(t("marketing:postOpportunity.edit.successToast"), "success"),
-      onError: () => {
-        setOverride(null);
-        showToast(t("marketing:postOpportunity.edit.errorToast"), "error");
-      },
-    });
-  };
 
   const apply = (note: string) => {
     setError(null);
@@ -163,19 +140,13 @@ export function VolunteerOpportunityPage() {
             onCloseOpportunity={() => close.mutate()}
             closing={close.isPending}
             closed={data?.status === "closed" || close.isSuccess}
-            onEdit={() => setEditOpen(true)}
+            onEdit={() =>
+              void navigate(routes.editVolunteer.replace(":slug", opp.slug))
+            }
             alternatives={alternatives}
           />
         </div>
       </div>
-
-      {editOpen && (
-        <EditOpportunityModal
-          initial={opportunityToEditDraft(opp)}
-          onClose={() => setEditOpen(false)}
-          onSave={saveEdit}
-        />
-      )}
     </PageShell>
   );
 }

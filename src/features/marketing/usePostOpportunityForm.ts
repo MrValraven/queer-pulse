@@ -7,6 +7,7 @@ import type {
   Cause,
   Commit,
   CreateOpportunityDto,
+  UpdateOpportunityDto,
 } from "./api/volunteering.api";
 
 export interface TaskRow {
@@ -96,10 +97,17 @@ const REQUIRED: RequiredField[] = [
  * State + payload builder for the "Post an opportunity" form. Holds every field
  * (core + optional rich lists), exposes a generic setter plus repeatable-row
  * helpers, validates the required fields, and maps the whole thing onto the
- * backend's `CreateOpportunityDto` (empty optional lists are dropped).
+ * backend's `CreateOpportunityDto` (empty optional lists are dropped) or, for
+ * the edit flow, `UpdateOpportunityDto` (every field always sent, so a
+ * cleared field explicitly clears it server-side).
+ *
+ * Pass `initial` (the edit flow's `opportunityToFormState(opp)`) to seed the
+ * form from an existing opportunity instead of a blank one — this also skips
+ * the poster-account auto-prefill below, since the seed already carries the
+ * real values.
  */
-export function usePostOpportunityForm() {
-  const [state, setState] = useState<PostOpportunityState>(EMPTY);
+export function usePostOpportunityForm(initial?: PostOpportunityState) {
+  const [state, setState] = useState<PostOpportunityState>(initial ?? EMPTY);
   const { user } = useAuth();
   const stewardedCommunities = useMyCommunityOptions({ roles: ["owner", "mod"] });
   const membershipsResolving = useMyCommunitiesResolving();
@@ -109,8 +117,10 @@ export function usePostOpportunityForm() {
   // pattern over a setState-in-effect — same latch shape as
   // EndorseSubprofileModal's note prefill). The organisation prefill waits on
   // `!membershipsResolving` so it doesn't latch onto the synchronous empty
-  // placeholder before the real membership list has loaded.
-  const [handlePrefilled, setHandlePrefilled] = useState(false);
+  // placeholder before the real membership list has loaded. Both latches
+  // start pre-tripped when editing, since `initial` already carries the
+  // opportunity's real values.
+  const [handlePrefilled, setHandlePrefilled] = useState(Boolean(initial));
   if (!handlePrefilled && user) {
     setHandlePrefilled(true);
     if (!state.handle) {
@@ -118,7 +128,9 @@ export function usePostOpportunityForm() {
     }
   }
 
-  const [communitySlugPrefilled, setCommunitySlugPrefilled] = useState(false);
+  const [communitySlugPrefilled, setCommunitySlugPrefilled] = useState(
+    Boolean(initial),
+  );
   if (!communitySlugPrefilled && !membershipsResolving) {
     setCommunitySlugPrefilled(true);
     const [stewarded] = stewardedCommunities;
@@ -227,6 +239,41 @@ export function usePostOpportunityForm() {
     };
   };
 
+  /** The edit flow's PATCH payload. Unlike `toDto`, every updatable field is
+   *  always sent (never conditionally omitted) — the form always represents
+   *  the FULL desired state, so an emptied field explicitly clears it rather
+   *  than leaving it untouched server-side. `handle`/`team` are creation-only
+   *  (see `UpdateOpportunityDto`) and aren't part of this payload. */
+  const toUpdateDto = (): UpdateOpportunityDto => {
+    const org = state.org.trim();
+    const role = state.role.trim();
+    const tasks = state.tasks
+      .filter((t) => t.title.trim())
+      .map((t) => ({ title: t.title.trim(), desc: t.description.trim() }));
+    const commitments = state.commitments
+      .filter((c) => c.label.trim())
+      .map((c) => ({ label: c.label.trim(), detail: c.detail.trim() }));
+    return {
+      org,
+      role,
+      cause: state.cause,
+      commit: state.commit,
+      time: state.time.trim(),
+      location: state.location.trim(),
+      desc: state.description.trim(),
+      spotsTotal: spotsNumber,
+      applyRole: state.applyRole.trim() || defaultApplyRole(role, org),
+      skills: splitCommas(state.skills),
+      why: splitLines(state.why),
+      goodFor: splitLines(state.goodFor),
+      teamIntro: state.teamIntro.trim(),
+      tasks,
+      commitments,
+      partnerSlug: state.partnerSlug.trim(),
+      communitySlug: state.communitySlug.trim(),
+    };
+  };
+
   return {
     state,
     set,
@@ -240,6 +287,7 @@ export function usePostOpportunityForm() {
     errorFor,
     markTouched: requiredValidation.markSubmitted,
     toDto,
+    toUpdateDto,
   };
 }
 

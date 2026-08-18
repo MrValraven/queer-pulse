@@ -7,6 +7,7 @@
 import { leadingInitials } from "../../../shared/lib/initials";
 import type { CommunityType } from "../../homepage/data/types";
 import type { AccessTier } from "../membership.types";
+import type { TFunction } from "../../../shared/i18n/types";
 
 export const TOTAL_STEPS = 9;
 
@@ -294,6 +295,17 @@ export const RULE_PRESET_KEYS: string[] = [
   "communities:start.rulePreset.consent",
   "communities:start.rulePreset.welcome",
 ];
+
+/** `draft.rules` holds raw preset i18n keys while the wizard is in progress
+ *  (so `StepTone`'s toggle/highlight logic can match on a stable, language-
+ *  independent id) — but the persisted community record stores plain text.
+ *  Call this once, right before the draft leaves the wizard (create/update
+ *  payload), to swap any still-preset keys for their translated copy. */
+export function resolvePresetRules(rules: string[], t: TFunction): string[] {
+  return rules.map((rule) =>
+    RULE_PRESET_KEYS.includes(rule) ? t(rule) : rule,
+  );
+}
 
 /** The enforcement ladder, shown as static context on the Tone chapter. */
 export interface LadderStep {

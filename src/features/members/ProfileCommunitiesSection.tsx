@@ -66,7 +66,11 @@ export function ProfileCommunitiesSection({
 
   return (
     <div className="wrap">
-      <Section title={t("members:profile.communities.title")} subtitle={subtitle}>
+      <Section
+        id="communities"
+        title={t("members:profile.communities.title")}
+        subtitle={subtitle}
+      >
         <div className={styles.grid}>
           {featuredCommunities.map((featuredCommunity) => (
             <ProfileCommunityCard

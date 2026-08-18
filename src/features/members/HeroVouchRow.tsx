@@ -12,9 +12,27 @@ import {
   type MemberProfile,
 } from "./data/memberProfiles";
 import { useVouchers, type VoucherFace } from "./api/useVouchers";
+import { useProfileMutuals } from "./api/useProfileMutuals";
 import { initialsOf, tintForSlug } from "./api/members.adapters";
+import { RELATIONSHIPS, type VouchRelationship } from "./vouchMember.data";
 import type { AuthUser } from "../auth/api/auth.api";
 import styles from "./ProfilePage.module.css";
+
+/**
+ * Labels for the read-only "texture" chips on this row — distinct from
+ * `RELATIONSHIP_LABEL_KEY` in `vouchMember.data.ts`, which is first-person
+ * form copy for the vouch-SUBMISSION modal ("We've collaborated"). Rendered
+ * verbatim on someone else's profile, first-person has no clear antecedent;
+ * these are short third-person noun phrases instead, matching the
+ * `.hereForChip` convention ("Community events", "Mentoring juniors").
+ */
+const RELATIONSHIP_CHIP_LABEL_KEY: Record<VouchRelationship, string> = {
+  collaborated: "members:vouch.relationshipChip.collaborated",
+  friends: "members:vouch.relationshipChip.friends",
+  group: "members:vouch.relationshipChip.group",
+  met_through: "members:vouch.relationshipChip.met_through",
+  neighbours: "members:vouch.relationshipChip.neighbours",
+};
 
 /**
  * The viewer's own "+ you" voucher face. Demo uses the mock persona; live builds
@@ -34,6 +52,8 @@ function resolveSelfFace(
       initials: you.initials,
       tint: you.tint,
       avatarUrl: you.photo,
+      // The viewer's own optimistic face carries no recorded relationship.
+      relationships: [],
     };
   }
   if (!user) return null;
@@ -44,6 +64,7 @@ function resolveSelfFace(
     initials: initialsOf(firstName, lastName),
     tint: tintForSlug(slug),
     avatarUrl: avatarUrl ?? undefined,
+    relationships: [],
   };
 }
 
@@ -68,6 +89,16 @@ export function HeroVouchRow({
   const { hasVouched } = useVouch();
   const vouched = hasVouched(profile.slug);
 
+  // Mutual connections between the viewer and this member — a visitor-only
+  // social-proof signal, folded into this row's terse "N mutual" texture
+  // chip (mirrors `ProfileMutualsCard`'s own framing up in the hero, which
+  // names the mutuals instead of just counting them), so it never renders on
+  // the viewer's own profile. `useProfileMutuals` shares its query key with
+  // `ProfileMutualsCard` when both are mounted, so React Query dedupes the
+  // network request rather than firing it twice.
+  const { data: mutuals } = useProfileMutuals(isSelf ? undefined : profile.slug);
+  const mutualsCount = mutuals?.count ?? 0;
+
   // Real voucher faces: demo derives them from the mock registry, live fetches
   // GET /members/:slug/vouchers. In demo the fetch already resolves against the
   // mock registry; the `profile.vouchers` fallback only covers the while-loading
@@ -87,6 +118,9 @@ export function HeroVouchRow({
                 initials: v.initials,
                 tint: v.tint,
                 avatarUrl: v.photo,
+                // No relationship data in this while-loading fallback — the
+                // real fetch (above) resolves it via `useVouchers`.
+                relationships: [],
               },
             ];
           })
@@ -120,6 +154,13 @@ export function HeroVouchRow({
     : baseFaces.length > 0
       ? t("members:hero.vouch.namesPlusYou", { names: baseNames })
       : t("members:hero.vouch.youOnly");
+
+  // "Texture" chips: the distinct ways these vouchers know the member, one
+  // chip per distinct value (never per voucher, which could explode into a
+  // long, redundant row), capped at 3 and shown in canonical enum order.
+  const textureRelationships = RELATIONSHIPS.filter((relationship) =>
+    faces.some((face) => face.relationships.includes(relationship)),
+  ).slice(0, 3);
 
   return (
     <div className={styles.vouchRow}>
@@ -191,6 +232,20 @@ export function HeroVouchRow({
             />
             <br />
             {t("members:hero.vouch.onlyNumberMatters")}
+            {(textureRelationships.length > 0 || mutualsCount > 0) && (
+              <div className={styles.hereFor}>
+                {textureRelationships.map((relationship) => (
+                  <span key={relationship} className={styles.hereForChip}>
+                    {t(RELATIONSHIP_CHIP_LABEL_KEY[relationship])}
+                  </span>
+                ))}
+                {mutualsCount > 0 && (
+                  <span className={styles.hereForChip}>
+                    {t("members:card.mutualsCount", { count: mutualsCount })}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </>
       ) : (

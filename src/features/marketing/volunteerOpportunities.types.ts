@@ -1,34 +1,17 @@
 import { type ReactNode } from "react";
-import type { Cause, Commit } from "./api/volunteering.api";
 
 export type VolunteerCause = "Rights" | "Health" | "Youth" | "Housing" | "Arts";
 export type VolunteerCommit = "low" | "medium";
-
-/** The poster's "edit this opportunity" modal draft — see
- *  `EditOpportunityModal`/`EditOpportunityFields`. Lowercase API `cause`/
- *  `commit` (not the Title-case view-model versions) since it round-trips
- *  straight into `UpdateOpportunityDto` via `draftToUpdateDto`. */
-export interface OpportunityEditDraft {
-  org: string;
-  role: string;
-  cause: Cause;
-  commit: Commit;
-  time: string;
-  location: string;
-  skills: string;
-  description: string;
-  spotsTotal: string;
-  /** "" for none — mutually exclusive with `communitySlug`, see
-   *  `OrganizationPickerField`. */
-  partnerSlug: string;
-  communitySlug: string;
-}
 
 export interface TeamMember {
   initials: string;
   background: string;
   color: string;
   name: string;
+  /** Undefined for mock/demo team members (the prototype pool has no real
+   *  member records) — live data always carries it, sourced from the
+   *  detail DTO's `MemberRefDTO`. */
+  slug?: string;
 }
 
 export interface VolunteerOpportunity {

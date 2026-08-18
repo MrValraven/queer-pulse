@@ -105,10 +105,11 @@ function ActionRow({ action }: { action: NextAction }) {
 }
 
 /**
- * The locked-state body: a focal progress moment (a meter once the essentials
- * are met, an anchored "essentials" card with a live count before then), the
- * two hard gates, the three capped family bars, the point-earning next actions,
- * and — only when standing is blocked — a generic note that never names why.
+ * The locked-state body: the overall progress meter, the two hard gates, the
+ * three capped family bars, the point-earning next actions, and — only when
+ * standing is blocked — a generic note that never names why. All shown from
+ * the first view, not staged behind the gates, so progress is never a black
+ * box.
  */
 export function EligibilityTracker({
   eligibility,
@@ -129,17 +130,15 @@ export function EligibilityTracker({
 
   return (
     <div className={styles.tracker}>
-      {gatesMet && (
-        <div className={styles.hero}>
-          <span className={styles.heroGlow} aria-hidden />
-          <p className={styles.heroPct}>
-            {t("members:publicProfile.eligibility.progress.pct", { pct })}
-          </p>
-          <span className={styles.heroTrack} aria-hidden>
-            <span className={styles.heroFill} style={{ width: `${pct}%` }} />
-          </span>
-        </div>
-      )}
+      <div className={styles.hero}>
+        <span className={styles.heroGlow} aria-hidden />
+        <p className={styles.heroPct}>
+          {t("members:publicProfile.eligibility.progress.pct", { pct })}
+        </p>
+        <span className={styles.heroTrack} aria-hidden>
+          <span className={styles.heroFill} style={{ width: `${pct}%` }} />
+        </span>
+      </div>
 
       <section className={`${styles.group} ${styles.essentialsGroup}`}>
         <header className={styles.groupHead}>
@@ -158,18 +157,16 @@ export function EligibilityTracker({
         </ul>
       </section>
 
-      {gatesMet && (
-        <section className={styles.group}>
-          <header className={styles.groupHead}>
-            <span>{t("members:publicProfile.eligibility.families.heading")}</span>
-          </header>
-          <ul className={styles.families}>
-            {eligibility.score.families.map((family) => (
-              <FamilyBar key={family.key} family={family} />
-            ))}
-          </ul>
-        </section>
-      )}
+      <section className={styles.group}>
+        <header className={styles.groupHead}>
+          <span>{t("members:publicProfile.eligibility.families.heading")}</span>
+        </header>
+        <ul className={styles.families}>
+          {eligibility.score.families.map((family) => (
+            <FamilyBar key={family.key} family={family} />
+          ))}
+        </ul>
+      </section>
 
       {scoringActions.length > 0 && (
         <section className={styles.group}>

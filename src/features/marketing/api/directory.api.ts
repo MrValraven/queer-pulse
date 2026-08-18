@@ -16,6 +16,10 @@ export type PhotoSetView = Record<PhotoKey, string | null>;
  * non-null only when the listing is linked to its owner's member profile.
  */
 export interface DirectoryCardDTO {
+  /** The listing's real DB uuid — distinct from `slug` (the cosmetic public
+   * URL id). Lets a cross-entity FK (e.g. a gathering's venue link) target a
+   * real listing picked from this card grid. */
+  id: string;
   slug: string;
   name: string;
   cat: string;

@@ -15,6 +15,7 @@ import {
 import { EditDetailsModal } from "./EditDetailsModal";
 import type { EventVisibility } from "./api/events.api";
 import { MessageAttendeesModal } from "./MessageAttendeesModal";
+import type { VenueSelection } from "./VenuePicker";
 import {
   GATHERING_TITLE,
   GATHERING_DESCRIPTION,
@@ -45,6 +46,10 @@ interface GatheringState {
   location: string;
   description: string;
   details: GatheringDetailRow[];
+  /** The venue's directory link, or null for a free-text venue. See
+   *  `VenuePicker`/`EditVenueModal`. */
+  venueListingId: string | null;
+  venueListing: { slug: string; name: string } | null;
   /** Who can find and RSVP to this gathering. See `AudienceScopeField`. */
   visibility: EventVisibility;
   /** The community this gathering is filed to, or `""` for none — settable
@@ -75,6 +80,10 @@ function demoInitialState(): GatheringState {
     location: venueDetail,
     description: GATHERING_DESCRIPTION,
     details: GATHERING_DETAILS,
+    // The static prototype has no gathering linked to a real directory
+    // listing.
+    venueListingId: null,
+    venueListing: null,
     // The static prototype has no audience-scope of its own; "members"
     // (Public) matches the wizard's default and prior behaviour.
     visibility: "members",
@@ -108,6 +117,8 @@ function liveInitialState(
         value: gathering.hood,
       },
     ],
+    venueListingId: gathering.venueListingId ?? null,
+    venueListing: gathering.venueListing ?? null,
     visibility: gathering.visibility ?? "members",
     communitySlug: gathering.communitySlug ?? "",
   };
@@ -244,10 +255,20 @@ function ManageGatheringMain({
         detail.id === id ? { ...detail, value } : detail,
       ),
       ...(id === "date" ? { date: value } : {}),
-      ...(id === "venue" ? { location: value } : {}),
     }));
-    // Map the edited detail onto the closest UpdateEventDto field.
-    if (id === "venue") updateEvent.mutate({ venue: value });
+  };
+
+  const updateVenue = (selection: VenueSelection) => {
+    setGatheringState((current) => ({
+      ...current,
+      location: selection.text,
+      venueListingId: selection.listingId,
+      venueListing: selection.venueListing,
+      details: current.details.map((detail) =>
+        detail.id === "venue" ? { ...detail, value: selection.text } : detail,
+      ),
+    }));
+    updateEvent.mutate({ venue: selection.text, listingId: selection.listingId });
   };
 
   return (
@@ -306,7 +327,10 @@ function ManageGatheringMain({
               details={gatheringState.details}
               description={gatheringState.description}
               overviewCounts={overviewCounts}
+              venueListingId={gatheringState.venueListingId}
+              venueListing={gatheringState.venueListing}
               onUpdateDetail={updateDetail}
+              onUpdateVenue={updateVenue}
               onUpdateDescription={(value) => {
                 setGatheringState((current) => ({
                   ...current,
@@ -336,6 +360,13 @@ function ManageGatheringMain({
           }}
           onClose={() => setEditOpen(false)}
           onSave={(draft) => {
+            // This modal only offers a plain-text location field — it can't
+            // specify (or preserve) a directory link, so any change to the
+            // location text implicitly detaches an existing one rather than
+            // leaving it silently pointing at stale text. An untouched
+            // location (only the title/date/etc. changed) leaves the link
+            // exactly as it was.
+            const locationChanged = draft.location !== gatheringState.location;
             setGatheringState((current) => ({
               ...current,
               title: draft.title,
@@ -344,6 +375,9 @@ function ManageGatheringMain({
               description: draft.description,
               visibility: draft.visibility,
               communitySlug: draft.communitySlug,
+              ...(locationChanged
+                ? { venueListingId: null, venueListing: null }
+                : {}),
               details: current.details.map((detail) =>
                 detail.id === "date"
                   ? { ...detail, value: draft.date }
@@ -356,6 +390,7 @@ function ManageGatheringMain({
               title: draft.title,
               description: draft.description,
               venue: draft.location,
+              ...(locationChanged ? { listingId: null } : {}),
               visibility: draft.visibility,
               // Only include `communitySlug` when it actually changed from
               // the PERSISTED value (`gatheringState.communitySlug`, this

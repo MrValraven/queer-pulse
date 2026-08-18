@@ -6,6 +6,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { THREADS, type Thread } from "../forum.data";
 import {
+  getPinnedThreads,
   getThread,
   getThreadCounts,
   getThreadPosts,
@@ -93,6 +94,32 @@ export function useThreads(category: string, options?: GetThreadsOptions) {
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
   };
+}
+
+/**
+ * The small "sticky" pinned bucket rendered above the thread list (GET
+ * /forum/threads/pinned?category=). Live only — demo has no separate pinned
+ * endpoint; its pinned threads already sort to the top of the mock list via
+ * `useForumPageState`'s client-side sort, so this simply returns an empty
+ * bucket in demo mode rather than doubling them up.
+ */
+export function usePinnedThreads(category: string) {
+  const { demoMode } = useDemoMode();
+  const { t, language } = useTranslation();
+  const fmt = useFormat();
+
+  const query = useQuery<ForumThreadResponse[]>({
+    queryKey: ["forum-pinned-threads", demoMode, category, language],
+    enabled: !demoMode,
+    queryFn: () => getPinnedThreads(category),
+  });
+
+  const pinned = useMemo<Thread[]>(
+    () => (query.data ?? []).map((dto) => threadToCard(dto, t, fmt)),
+    [query.data, t, fmt],
+  );
+
+  return { pinned, isLoading: !demoMode && query.isLoading };
 }
 
 /**

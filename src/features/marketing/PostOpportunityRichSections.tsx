@@ -171,11 +171,15 @@ export function PostOpportunityCommitments({
   );
 }
 
-/** Team intro, who applies to, partner slug, and contact handle. */
+/** Team intro, who applies to, partner slug, and contact handle. The team
+ *  picker and contact handle are creation-only (`UpdateOpportunityDto` can't
+ *  update them) so `editing` hides both in the edit flow. */
 export function PostOpportunityTeamFields({
   form,
+  editing = false,
 }: {
   form: PostOpportunityForm;
+  editing?: boolean;
 }) {
   const { t } = useTranslation();
   const { state, set } = form;
@@ -204,22 +208,24 @@ export function PostOpportunityTeamFields({
         />
       </FormField>
 
-      <FormField
-        label={t("marketing:postOpportunity.rich.teamLabel")}
-        helper={t("marketing:postOpportunity.rich.teamHelper", {
-          maxCount: MAX_TEAM_COUNT,
-          maxLength: MAX_TEAM_SLUG_LENGTH,
-        })}
-      >
-        <Select
-          multiple
-          options={teamOptions}
-          value={state.team}
-          onChange={(value) => set("team", value)}
-          placeholder={t("marketing:postOpportunity.rich.teamPlaceholder")}
-          emptyText={t("marketing:postOpportunity.rich.teamEmpty")}
-        />
-      </FormField>
+      {!editing && (
+        <FormField
+          label={t("marketing:postOpportunity.rich.teamLabel")}
+          helper={t("marketing:postOpportunity.rich.teamHelper", {
+            maxCount: MAX_TEAM_COUNT,
+            maxLength: MAX_TEAM_SLUG_LENGTH,
+          })}
+        >
+          <Select
+            multiple
+            options={teamOptions}
+            value={state.team}
+            onChange={(value) => set("team", value)}
+            placeholder={t("marketing:postOpportunity.rich.teamPlaceholder")}
+            emptyText={t("marketing:postOpportunity.rich.teamEmpty")}
+          />
+        </FormField>
+      )}
 
       <div className={styles.row}>
         <FormField
@@ -255,19 +261,21 @@ export function PostOpportunityTeamFields({
         </FormField>
       </div>
 
-      <FormField
-        label={t("marketing:postOpportunity.rich.handleLabel")}
-        helper={t("marketing:postOpportunity.rich.handleHelper")}
-        labelAside={`${state.handle.length}/${MAX_HANDLE_LENGTH}`}
-      >
-        <input
-          type="text"
-          value={state.handle}
-          onChange={(e) => set("handle", e.target.value)}
-          maxLength={MAX_HANDLE_LENGTH}
-          placeholder={t("marketing:postOpportunity.rich.handlePlaceholder")}
-        />
-      </FormField>
+      {!editing && (
+        <FormField
+          label={t("marketing:postOpportunity.rich.handleLabel")}
+          helper={t("marketing:postOpportunity.rich.handleHelper")}
+          labelAside={`${state.handle.length}/${MAX_HANDLE_LENGTH}`}
+        >
+          <input
+            type="text"
+            value={state.handle}
+            onChange={(e) => set("handle", e.target.value)}
+            maxLength={MAX_HANDLE_LENGTH}
+            placeholder={t("marketing:postOpportunity.rich.handlePlaceholder")}
+          />
+        </FormField>
+      )}
     </>
   );
 }

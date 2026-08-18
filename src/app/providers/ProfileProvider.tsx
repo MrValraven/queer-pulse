@@ -232,6 +232,20 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       identities: draft.identities,
       lookingFor: draft.lookingFor,
       lookingForPublic: draft.lookingForPublic,
+      // Instant-save visibility switches (Task 11) — committed here too, not
+      // just left in `draft`, so a consumer reading the committed `profile`
+      // (e.g. the profile hero's own avatar/hood rendering) reflects a toggle
+      // immediately rather than waiting on the next full profile refetch.
+      photoVisible: draft.photoVisible,
+      hoodVisible: draft.hoodVisible,
+      vouchersVisible: draft.vouchersVisible,
+      // The rail's 24h-hide instant-save toggle (Task 17) — same reasoning as
+      // the visibility switches above: committed from `draft` directly rather
+      // than from `savedProfile`, since the backend response (`ProfileDTO`)
+      // doesn't carry `hiddenUntil` back either. `ProfileRailControls` reads
+      // this off the COMMITTED profile (via `resolvedProfile.hiddenUntil` in
+      // `ProfilePage.tsx`), so without this the rail label would never flip.
+      hiddenUntil: draft.hiddenUntil,
       privateNetwork: draft.privateNetwork,
       featuredConsent: draft.featuredConsent,
       // Self display (Task 3) always reads live from `draft.featuredCommunities`,

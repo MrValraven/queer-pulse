@@ -115,6 +115,8 @@ export function detailToGathering(dto: EventDetailDTO): GatheringDetail {
     // `null` (no community) and `undefined` (field absent) both collapse to
     // undefined here, matching GatheringDetail's "unset" representation.
     communitySlug: dto.communitySlug ?? undefined,
+    venueListingId: dto.listingId ?? null,
+    venueListing: dto.venueListing ?? null,
   };
 }
 
@@ -232,6 +234,11 @@ export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
         ? Intl.DateTimeFormat().resolvedOptions().timeZone
         : "Europe/Lisbon",
     venue: isOnline ? undefined : form.venue.trim() || form.hood || undefined,
+    // Only carried when the organiser actually picked a directory listing
+    // (never for an online gathering, which has no physical venue at all).
+    ...(!isOnline && form.venueListingId
+      ? { listingId: form.venueListingId }
+      : {}),
     isOnline,
     capacity: Number.isFinite(capacity) ? capacity : undefined,
     // The host's audience-scope pick from the wizard (default "members" —

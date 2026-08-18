@@ -90,6 +90,10 @@ export interface CreateThreadDto {
   /** Attach the thread to one of the author's communities. Omitted (or
    *  undefined) keeps it a global thread, as before. */
   communitySlug?: string;
+  /** Publish under the "QueerPulse Official" byline instead of the caller.
+   *  Only an admin's value is actually honored — the backend silently
+   *  coerces it to `false` for anyone else. */
+  isOfficial?: boolean;
 }
 
 /** POST /forum/threads — ComposeThreadModal. */
@@ -140,6 +144,35 @@ export const lockThread = (slug: string) =>
  *  the updated thread. */
 export const unlockThread = (slug: string) =>
   apiPost<ForumThreadResponse>(`/forum/threads/${slug}/unlock`);
+
+/** POST /forum/threads/:slug/pin — moderator pins the thread to the sticky
+ *  bucket above the list. Returns the updated thread. */
+export const pinThread = (slug: string) =>
+  apiPost<ForumThreadResponse>(`/forum/threads/${slug}/pin`);
+
+/** POST /forum/threads/:slug/unpin — moderator unpins the thread. Returns the
+ *  updated thread. */
+export const unpinThread = (slug: string) =>
+  apiPost<ForumThreadResponse>(`/forum/threads/${slug}/unpin`);
+
+/** PATCH /admin/forum/threads/:slug/official — admin-only, toggles a
+ *  published thread between its real author and "QueerPulse Official".
+ *  Returns the updated thread. */
+export const setThreadOfficial = (slug: string, isOfficial: boolean) =>
+  apiPatch<ForumThreadResponse>(`/admin/forum/threads/${slug}/official`, {
+    isOfficial,
+  });
+
+/** GET /forum/threads/pinned?category= — the small, unpaginated sticky bucket
+ *  rendered above the thread list. Most-recently-pinned first. */
+export function getPinnedThreads(category?: string) {
+  const params = new URLSearchParams();
+  if (category && category !== "all") params.set("category", category);
+  const qs = params.toString();
+  return apiGet<ForumThreadResponse[]>(
+    `/forum/threads/pinned${qs ? `?${qs}` : ""}`,
+  );
+}
 
 // The backend serializes each revision's editor as `editor` (see
 // queerpulse-backend's ForumPostHistoryEntry), but the FE contract names the

@@ -21,19 +21,18 @@ export function useCountUp(
   const prefersReduced = usePrefersReducedMotion();
   const [value, setValue] = useState(from);
   const valueRef = useRef(from);
-  // The target we last animated to. Lets us re-run when the target changes
-  // after the first settle (e.g. a total that arrives/updates asynchronously),
-  // instead of freezing on the initial value.
-  const animatedToRef = useRef<number | null>(null);
 
   useEffect(() => {
     // Reduced motion needs no animation — the value is derived in the return below.
     if (!active || prefersReduced) return;
-    // Already settled on this exact target — nothing to animate.
-    if (animatedToRef.current === target) return;
-    // First run animates from `from`; a later target change animates from
-    // wherever the count currently sits so it ticks to the new value.
-    const startValue = animatedToRef.current === null ? from : valueRef.current;
+    // Already showing this target — nothing to animate. Checking the value
+    // actually on screen (rather than a separate "last completed" flag) means
+    // an animation interrupted mid-flight by a fast target change (e.g. a
+    // filter toggled on and back off before the count settles) resumes from
+    // wherever it was — a flag would wrongly see the reverted target as
+    // already reached and leave the count frozen mid-transition.
+    if (valueRef.current === target) return;
+    const startValue = valueRef.current;
 
     let frame = 0;
     const start = performance.now();
@@ -46,12 +45,6 @@ export function useCountUp(
       setValue(next);
       if (progress < 1) {
         frame = requestAnimationFrame(tick);
-      } else {
-        // Mark "settled on this target" only once the animation actually
-        // completes — not up front. Otherwise StrictMode's mount→cleanup→mount
-        // cycle cancels the first frame, and the re-run sees `animatedToRef`
-        // already equal to `target` and bails, freezing the count at `from`.
-        animatedToRef.current = target;
       }
     };
     frame = requestAnimationFrame(tick);

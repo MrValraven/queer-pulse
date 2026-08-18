@@ -297,6 +297,12 @@
   outline-offset: 2px;
 }
 
+.pinnedSection {
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+}
+
 .threadRow {
   position: relative;
 }

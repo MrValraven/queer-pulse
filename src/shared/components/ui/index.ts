@@ -1,4 +1,5 @@
 export { Button, type ButtonVariant, type ButtonSize } from "./Button";
+export { Card } from "./Card";
 export { Tag, TagRow, KindChip, type ChipKind } from "./Tag";
 export { Avatar, AvatarStack, type AvatarTint } from "./Avatar";
 export { Eyebrow } from "./Eyebrow";
@@ -15,7 +16,7 @@ export { FeatureHelp } from "./FeatureHelp";
 
 // Composition-level primitives (extracted from per-feature duplicates)
 export { FormField } from "./FormField";
-export { Modal, ModalSheet } from "./Modal";
+export { Modal, ModalSheet, SideSheet } from "./Modal";
 export { SuccessPanel } from "./SuccessPanel";
 export { Spinner, Sending } from "./Spinner";
 export { FilterChips, ChipSelect, type ChipOption } from "./ChipSelect";

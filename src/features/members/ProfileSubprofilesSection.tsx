@@ -88,7 +88,11 @@ export function ProfileSubprofilesSection({
 
   return (
     <div className="wrap">
-      <Section title={t("subprofiles:alsoAs.title")} subtitle={subtitle}>
+      <Section
+        id="also-working-as"
+        title={t("subprofiles:alsoAs.title")}
+        subtitle={subtitle}
+      >
         {hasPersonas ? (
           <SubprofileShowcase
             // Resets all per-owner state (activeSlug, previousIndexRef,

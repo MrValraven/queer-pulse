@@ -52,6 +52,40 @@
   box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.28);
 }
 
+/* Admin-only "post as QueerPulse Official" toggle — set apart with a soft
+   accent surface since it changes who the post is attributed to. */
+.officialField {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.2);
+  cursor: pointer;
+}
+.officialField input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--accent);
+}
+.officialFieldText {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.officialFieldHint {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink-60);
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
 .dialogActions {
   display: flex;
   justify-content: flex-end;

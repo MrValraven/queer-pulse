@@ -1,0 +1,50 @@
+.railctl {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.railctl button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  font-family: var(--sans);
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink-60);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    color 0.18s var(--ease);
+}
+
+@media (hover: hover) {
+  .railctl button:hover {
+    color: var(--ink);
+  }
+}
+
+.railctl button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.railctl svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quiet {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-40);
+  font-weight: 400;
+  margin-top: 2px;
+}

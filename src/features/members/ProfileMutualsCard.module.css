@@ -1,0 +1,64 @@
+/* Visitor-only "You both know X and Y" card. Floats beside the hero text in
+   `.pheroRow` (ProfilePage.module.css), filling space the decorative hero
+   blob would otherwise leave empty. Tokens only, theme-aware (every colour
+   resolves through a token that flips in dark mode). */
+
+.card {
+  flex: 1 1 240px;
+  min-width: 220px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  padding: 20px 22px;
+}
+:global([data-theme="dark"]) .card {
+  border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+.title {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.faces {
+  display: flex;
+}
+
+.face {
+  position: relative;
+  display: block;
+  line-height: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--paper);
+  transition: transform 0.18s var(--ease);
+}
+.face:not(:first-child) {
+  margin-left: -10px;
+}
+.face:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  z-index: 1;
+}
+@media (hover: hover) {
+  .face:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.text {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+.text strong {
+  color: var(--ink);
+  font-weight: 600;
+}

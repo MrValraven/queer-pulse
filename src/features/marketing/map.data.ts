@@ -35,6 +35,12 @@ export interface Venue {
   hours: string;
   note: string;
   beenHere: number;
+  /** Card hero photo. Demo-only field, hand-picked per venue. */
+  photo: string;
+  /** Demo-only aggregate rating, matching DirectoryPlace.rating's shape. */
+  rating: { score: string; count: number };
+  /** Price tier (€/€€/€€€), or "Free" for no-cost community/health services. */
+  price: string;
 }
 
 export const VENUES: Venue[] = [
@@ -52,6 +58,9 @@ export const VENUES: Venue[] = [
     hours: "11pm – 6am",
     note: "The longest-running queer bar in Lisbon. Come for the drag shows on weekends. They are unmissable.",
     beenHere: 247,
+    photo: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.8", count: 95 },
+    price: "€€",
   },
   {
     id: "v2",
@@ -67,6 +76,9 @@ export const VENUES: Venue[] = [
     hours: "Thu–Sat 11pm – 6am",
     note: "The closest thing Lisbon has to a legendary queer institution. Three rooms, one very good time.",
     beenHere: 189,
+    photo: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.6", count: 73 },
+    price: "€€",
   },
   {
     id: "v3",
@@ -82,6 +94,9 @@ export const VENUES: Venue[] = [
     hours: "9pm – 2am",
     note: "Low-key and brilliant. The best place to start a Príncipe Real evening before it gets loud.",
     beenHere: 134,
+    photo: "https://images.unsplash.com/photo-1572116469696-31de0f17cc34?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.8", count: 52 },
+    price: "€€",
   },
   {
     id: "v4",
@@ -97,6 +112,9 @@ export const VENUES: Venue[] = [
     hours: "Tue–Sat 10pm – 2am",
     note: "Historic jazz club, wholly queer-welcoming and entirely its own thing.",
     beenHere: 71,
+    photo: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.9", count: 27 },
+    price: "€",
   },
   {
     id: "v5",
@@ -112,6 +130,9 @@ export const VENUES: Venue[] = [
     hours: "Mon–Fri 11am – 8pm · weekends 10am – 9pm",
     note: "The most beautiful bookshop in Lisbon. Not exclusively queer but completely welcoming.",
     beenHere: 156,
+    photo: "https://images.unsplash.com/photo-1521123845560-14093637aa7d?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.6", count: 60 },
+    price: "€€",
   },
   {
     id: "v6",
@@ -127,6 +148,9 @@ export const VENUES: Venue[] = [
     hours: "Mon–Fri 9am – 5pm",
     note: "Free HIV and STI testing, trans health support, harm reduction. No judgment, no referral needed.",
     beenHere: 78,
+    photo: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.6", count: 30 },
+    price: "Free",
   },
   {
     id: "v7",
@@ -142,6 +166,9 @@ export const VENUES: Venue[] = [
     hours: "Mon–Sat 7pm – midnight",
     note: "Fado and petiscos. Not queer-specific but genuinely feels like home.",
     beenHere: 203,
+    photo: "https://images.unsplash.com/photo-1445116572660-236099ec97a0?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.7", count: 78 },
+    price: "€",
   },
   {
     id: "v8",
@@ -157,6 +184,9 @@ export const VENUES: Venue[] = [
     hours: "Tue–Sat 11am – 7pm",
     note: "Queer community centre with events, legal support, and a library. Always something on.",
     beenHere: 88,
+    photo: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.7", count: 34 },
+    price: "Free",
   },
   {
     id: "v9",
@@ -172,6 +202,9 @@ export const VENUES: Venue[] = [
     hours: "Mon–Fri 10am – 6pm",
     note: "The main LGBTQ+ organisation in Portugal. Legal support, mental health, community programmes.",
     beenHere: 112,
+    photo: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.6", count: 43 },
+    price: "Free",
   },
   {
     id: "v10",
@@ -187,6 +220,9 @@ export const VENUES: Venue[] = [
     hours: "Fri–Sat midnight – 6am",
     note: "One of the most genuinely queer clubs in Lisbon. Eclectic music, no attitude.",
     beenHere: 143,
+    photo: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.9", count: 55 },
+    price: "€€",
   },
   {
     id: "v11",
@@ -202,6 +238,9 @@ export const VENUES: Venue[] = [
     hours: "Mon–Sat 10pm – 4am",
     note: "Relaxed bar with a good terrace. Solid middle ground between loud and quiet.",
     beenHere: 119,
+    photo: "https://images.unsplash.com/photo-1543007630-9710e4a00a20?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.6", count: 46 },
+    price: "€€",
   },
   {
     id: "v12",
@@ -217,6 +256,9 @@ export const VENUES: Venue[] = [
     hours: "Fri–Sat 11pm – 6am",
     note: "Cruisy, dark, electronic. Knows exactly what it is.",
     beenHere: 98,
+    photo: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.8", count: 38 },
+    price: "€€",
   },
   {
     id: "v13",
@@ -232,6 +274,9 @@ export const VENUES: Venue[] = [
     hours: "Mon–Fri 1pm – 8pm",
     note: "Community-led HIV/STI testing and PrEP support. Walk-ins welcome.",
     beenHere: 67,
+    photo: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.8", count: 26 },
+    price: "Free",
   },
   {
     id: "v14",
@@ -247,6 +292,9 @@ export const VENUES: Venue[] = [
     hours: "Daily 2pm – midnight",
     note: "Clean, friendly, no pressure. Trans men welcome. Towel and locker included.",
     beenHere: 54,
+    photo: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.7", count: 21 },
+    price: "€€",
   },
   {
     id: "v15",
@@ -262,6 +310,9 @@ export const VENUES: Venue[] = [
     hours: "Mon–Sat 12pm – midnight",
     note: "Not queer-specific but one of the most welcoming spots in Príncipe Real. Great natural wine list.",
     beenHere: 165,
+    photo: "https://images.unsplash.com/photo-1445116572660-236099ec97a0?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.7", count: 63 },
+    price: "€",
   },
   {
     id: "v16",
@@ -277,6 +328,9 @@ export const VENUES: Venue[] = [
     hours: "Tue–Sat 10am – 7pm",
     note: "Queer-owned barbershop with real expertise in trans haircuts. No awkward questions, no gendered pricing.",
     beenHere: 184,
+    photo: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.9", count: 71 },
+    price: "€€",
   },
   {
     id: "v17",
@@ -292,6 +346,9 @@ export const VENUES: Venue[] = [
     hours: "Mon–Sat 9am – 6pm",
     note: "Neighbourhood salon that became a queer anchor without fuss. Bilingual, trans-welcoming, affordable.",
     beenHere: 97,
+    photo: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.8", count: 37 },
+    price: "€€",
   },
   {
     id: "v18",
@@ -307,6 +364,9 @@ export const VENUES: Venue[] = [
     hours: "Tue–Sat 11am – 8pm",
     note: "Gender-neutral pricing across the board. They will not charge you more because of your hair length.",
     beenHere: 122,
+    photo: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.7", count: 47 },
+    price: "€€",
   },
   {
     id: "v19",
@@ -322,6 +382,9 @@ export const VENUES: Venue[] = [
     hours: "Wed–Sun 10am – 6pm",
     note: "Small queer-run salon. Specialises in curly and natural hair. Known in the trans femme community for getting it right.",
     beenHere: 76,
+    photo: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.6", count: 29 },
+    price: "€€",
   },
   {
     id: "v20",
@@ -337,6 +400,9 @@ export const VENUES: Venue[] = [
     hours: "Mon–Fri 7am – 10pm · Sat–Sun 9am – 6pm",
     note: "The most trans-inclusive gym in the city. Gender-neutral changing rooms on every floor, pronoun lanyards at reception.",
     beenHere: 143,
+    photo: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.9", count: 55 },
+    price: "€€",
   },
   {
     id: "v21",
@@ -352,6 +418,9 @@ export const VENUES: Venue[] = [
     hours: "Mon–Fri 8am – 9pm · Sat 9am – 5pm",
     note: "Feminist and queer-centred fitness space. Small classes, no mirrors, no weight scales. Body-neutral by design.",
     beenHere: 88,
+    photo: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.7", count: 34 },
+    price: "€€",
   },
   {
     id: "v22",
@@ -367,6 +436,9 @@ export const VENUES: Venue[] = [
     hours: "Mon–Sat 7am – 10pm",
     note: "Community gym with a genuinely welcoming culture. Queer swim sessions on Thursdays 7–9pm.",
     beenHere: 61,
+    photo: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.8", count: 23 },
+    price: "€€",
   },
   {
     id: "v23",
@@ -382,6 +454,9 @@ export const VENUES: Venue[] = [
     hours: "Daily 8am – 10pm",
     note: "Yoga, capoeira, and weights in a converted warehouse. Queer-run, sliding-scale memberships available.",
     beenHere: 54,
+    photo: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1200&auto=format&fit=crop",
+    rating: { score: "4.7", count: 21 },
+    price: "€€",
   },
 ];
 

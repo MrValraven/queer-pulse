@@ -263,6 +263,7 @@ export const routes = {
   visas: "/local/visas",
   volunteer: "/about/volunteer",
   postVolunteer: "/about/volunteer/post",
+  editVolunteer: "/about/volunteer/opportunity/:slug/edit",
   manageVolunteerApplicants: "/about/volunteer/manage",
   vouch: "/vouch",
   welcome: "/auth/welcome",

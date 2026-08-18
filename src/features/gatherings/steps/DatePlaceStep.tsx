@@ -4,6 +4,7 @@ import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { HOODS } from "../createGathering.data";
 import type { GatheringForm } from "../useGatheringForm";
+import { VenuePicker } from "../VenuePicker";
 import styles from "../CreateGatheringPage.module.css";
 
 export function DatePlaceStep({ form }: { form: GatheringForm }) {
@@ -84,16 +85,26 @@ export function DatePlaceStep({ form }: { form: GatheringForm }) {
           />
         </div>
       </div>
-      <label className={styles.label} htmlFor={`${fieldId}-venue`}>
+      <label
+        id={`${fieldId}-venue-label`}
+        className={styles.label}
+        htmlFor={`${fieldId}-venue`}
+      >
         {t("gatherings:create.step2.venueLabel")}
       </label>
-      <input
+      <VenuePicker
         id={`${fieldId}-venue`}
-        className={styles.input}
-        type="text"
-        placeholder={t("gatherings:create.step2.venuePlaceholder")}
-        value={form.venue}
-        onChange={(e) => form.setVenue(e.target.value)}
+        labelledBy={`${fieldId}-venue-label`}
+        value={{
+          text: form.venue,
+          listingId: form.venueListingId,
+          venueListing: form.venueListing,
+        }}
+        onChange={(selection) => {
+          form.setVenue(selection.text);
+          form.setVenueListingId(selection.listingId);
+          form.setVenueListing(selection.venueListing);
+        }}
       />
       <label className={styles.label} htmlFor={`${fieldId}-address`}>
         {t("gatherings:create.step2.addressLabel")}

@@ -245,6 +245,12 @@ export const safety: Catalog = {
   "profileMenu.blockedToast": "Bloqueaste {name}.",
   "profileMenu.blockedReportedToast":
     "Bloqueaste {name} e enviaste uma denúncia à equipa de moderação.",
+  "profileMenu.withdrawVouchConfirmTitle":
+    "Retirar o teu voto de confiança a {name}?",
+  "profileMenu.withdrawVouchConfirmBody":
+    "{name} deixa de poder contar com o teu voto de confiança para a sua reputação na QueerPulse. Podes voltar a dar-lhe um voto de confiança mais tarde.",
+  "profileMenu.withdrawVouchConfirmCta": "Retirar voto de confiança",
+  "profileMenu.withdrawVouchToast": "Retiraste o teu voto de confiança a {name}.",
   "blockModal.title": "Bloquear {name}?",
   "blockModal.body":
     "Bloquear corta qualquer ligação entre vocês. {name} deixa de poder ver o teu perfil, enviar-te mensagem ou encontrar-te na pesquisa, e nenhum de vocês consegue estabelecer ligação com o outro. Podes desbloquear mais tarde.",

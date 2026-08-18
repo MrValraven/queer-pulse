@@ -1,9 +1,10 @@
 import { useRef, useState } from "react";
-import { FiCamera, FiTrash2 } from "react-icons/fi";
+import { FiCamera, FiPlus, FiTrash2 } from "react-icons/fi";
 import { ImageSlot, PhotoReframeModal } from "../../shared/components/ui";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { WorkItem } from "./data/members";
+import type { WorkLink } from "./workLink.data";
 import { ImageProcessingError } from "./api/uploadProcessing";
 import { useUploadImage } from "./api/useUploadImage";
 import styles from "./ProfilePage.module.css";
@@ -11,13 +12,105 @@ import editStyles from "./ProfileEdit.module.css";
 
 const TINTS = ["coral", "jade", "plum"] as const;
 
+/** One link input: an editable external-URL field, or — when the link is a
+ *  `ref` this editor has no picker for — a read-only note. Shared by both the
+ *  primary and (optional) second link slot in `WorkItemEditor`. */
+function WorkLinkField({
+  link,
+  ariaLabel,
+  placeholder,
+  onChange,
+}: {
+  link: WorkLink | undefined;
+  ariaLabel: string;
+  placeholder: string;
+  onChange: (link: WorkLink | undefined) => void;
+}) {
+  const { t } = useTranslation();
+  if (link?.kind === "ref") {
+    // A `ref` link points at an internal QueerPulse page (e.g. a curated
+    // collection). There's no ref/entity picker in this editor (out of
+    // scope), so rendering the external-URL input here would show a blank
+    // box whose first keystroke silently downgrades and destroys the ref.
+    // Show a read-only note instead — every other field stays editable.
+    return (
+      <p className={editStyles.workLinkNote}>
+        {t("members:workItem.linkedNote")}
+      </p>
+    );
+  }
+  return (
+    <input
+      className={`${editStyles.inlineInput} ${editStyles.workLinkInput}`}
+      value={link?.kind === "external" ? link.href : ""}
+      placeholder={placeholder}
+      aria-label={ariaLabel}
+      onChange={(e) => {
+        const href = e.target.value.trim();
+        onChange(href ? { kind: "external", href } : undefined);
+      }}
+    />
+  );
+}
+
+/** The second (optional) link slot: collapsed behind an "Add a second link"
+ *  affordance until the member opts in (or the item already has one, e.g.
+ *  loaded from the server) — then it's a `WorkLinkField` plus a remove
+ *  button that both clears the link and re-collapses the slot. Owns its own
+ *  open/closed state; `links` is the item's full (0-2) list so it can read
+ *  whether a first link exists yet and what the second one currently is. */
+function WorkSecondLinkSlot({
+  links,
+  onChange,
+}: {
+  links: WorkLink[];
+  onChange: (link: WorkLink | undefined) => void;
+}) {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(links.length > 1);
+  if (open) {
+    return (
+      <div className={editStyles.workSecondLinkRow}>
+        <WorkLinkField
+          link={links[1]}
+          ariaLabel={t("members:workItem.secondLinkLabel")}
+          placeholder={t("members:workItem.secondLinkPlaceholder")}
+          onChange={onChange}
+        />
+        <button
+          type="button"
+          className={editStyles.workLinkRemoveBtn}
+          aria-label={t("members:workItem.removeSecondLink")}
+          onClick={() => {
+            onChange(undefined);
+            setOpen(false);
+          }}
+        >
+          <FiTrash2 size={13} aria-hidden />
+        </button>
+      </div>
+    );
+  }
+  // Only offer a second link once a first one exists.
+  if (links.length !== 1) return null;
+  return (
+    <button
+      type="button"
+      className={editStyles.workAddLinkBtn}
+      onClick={() => setOpen(true)}
+    >
+      <FiPlus size={13} aria-hidden /> {t("members:workItem.addSecondLink")}
+    </button>
+  );
+}
+
 /**
  * One editable "Selected work" card: an image picker (uploads via
  * `useUploadImage("work-image")`, which resolves to `{ key, previewUrl }` —
  * `previewUrl` renders instantly as this component's own local preview state,
  * `key` is what `onChange` persists onto `item.image`) plus title / category /
- * year fields, and a remove action. Mirrors `AvatarEditor`'s upload + error
- * handling.
+ * year fields, up to two links, and a remove action. Mirrors `AvatarEditor`'s
+ * upload + error handling.
  */
 export function WorkItemEditor({
   item,
@@ -37,6 +130,18 @@ export function WorkItemEditor({
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pendingFile, setPendingFile] = useState<File | null>(null);
+
+  /** Replace (or, when `link` is undefined, drop) the link at `linkIndex`,
+   *  keeping `item.links` compact (0-2 entries, no holes). */
+  function setLinkAt(linkIndex: number, link: WorkLink | undefined) {
+    const nextLinks = [...item.links];
+    if (link) {
+      nextLinks[linkIndex] = link;
+    } else {
+      nextLinks.splice(linkIndex, 1);
+    }
+    onChange({ links: nextLinks });
+  }
 
   /** Shared tail of both upload paths (direct GIF path + post-reframe path). */
   async function uploadAndApply(file: File, crop?: CropRect) {
@@ -166,27 +271,16 @@ export function WorkItemEditor({
         aria-label={t("members:workItem.titleLabel")}
         onChange={(e) => onChange({ title: e.target.value })}
       />
-      {item.link?.kind === "ref" ? (
-        // A `ref` link points at an internal QueerPulse page (e.g. a curated
-        // collection). There's no ref/entity picker in this editor (out of
-        // scope), so rendering the external-URL input here would show a blank
-        // box whose first keystroke silently downgrades and destroys the ref.
-        // Show a read-only note instead — every other field stays editable.
-        <p className={editStyles.workLinkNote}>
-          {t("members:workItem.linkedNote")}
-        </p>
-      ) : (
-        <input
-          className={`${editStyles.inlineInput} ${editStyles.workLinkInput}`}
-          value={item.link?.kind === "external" ? item.link.href : ""}
-          placeholder={t("members:workItem.linkPlaceholder")}
-          aria-label={t("members:workItem.linkLabel")}
-          onChange={(e) => {
-            const href = e.target.value.trim();
-            onChange({ link: href ? { kind: "external", href } : undefined });
-          }}
-        />
-      )}
+      <WorkLinkField
+        link={item.links[0]}
+        ariaLabel={t("members:workItem.linkLabel")}
+        placeholder={t("members:workItem.linkPlaceholder")}
+        onChange={(link) => setLinkAt(0, link)}
+      />
+      <WorkSecondLinkSlot
+        links={item.links}
+        onChange={(link) => setLinkAt(1, link)}
+      />
       <div className={editStyles.workMetaRow}>
         <input
           className={`${editStyles.inlineInput} ${editStyles.workYearInput}`}

@@ -1,30 +1,37 @@
 import { Link } from "react-router-dom";
-import { FiLock, FiUnlock } from "react-icons/fi";
+import { FiLock, FiShield, FiUnlock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useAuth } from "../../app/providers/authContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
-import { useLockThread } from "./api/useForumMutations";
+import { useLockThread, useSetThreadOfficial } from "./api/useForumMutations";
 import type { Thread } from "./forum.data";
 import styles from "./ThreadPage.module.css";
 
 /** The breadcrumb bar above a thread: a "back to forum" link plus the thread's
  * category name. `categoryName` is already translated by the caller. When the
  * viewer is a moderator (`thread.canLock`), a lock/unlock control sits at the end
- * of the bar. Demo threads never carry `canLock`, so the control is live-only. */
+ * of the bar; when the viewer is an admin, a "QueerPulse Official" toggle joins
+ * it. Demo threads never carry `canLock`/the real session role, so both
+ * controls are live-only. */
 export function ThreadTopbar({
   categoryName,
   thread,
 }: {
   categoryName?: string;
-  thread?: Pick<Thread, "slug" | "isLocked" | "canLock">;
+  thread?: Pick<Thread, "slug" | "isLocked" | "canLock" | "author">;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { role } = useAuth();
   const { lock, unlock, isPending } = useLockThread();
+  const { setOfficial, isPending: officialPending } = useSetThreadOfficial();
 
   const canLock = !!thread?.canLock && !!thread.slug;
   const isLocked = !!thread?.isLocked;
+  const canSetOfficial = role === "admin" && !!thread?.slug;
+  const isOfficial = !!thread?.author.official;
 
   function toggleLock() {
     if (!thread?.slug) return;
@@ -34,6 +41,23 @@ export function ThreadTopbar({
       onSuccess: () =>
         showToast(
           t(locking ? "forum:toast.threadLocked" : "forum:toast.threadUnlocked"),
+          "success",
+        ),
+      onError: () => showToast(t("forum:toast.error"), "error"),
+    });
+  }
+
+  function toggleOfficial() {
+    if (!thread?.slug) return;
+    const marking = !isOfficial;
+    setOfficial(thread.slug, marking, {
+      onSuccess: () =>
+        showToast(
+          t(
+            marking
+              ? "forum:toast.threadMarkedOfficial"
+              : "forum:toast.threadUnmarkedOfficial",
+          ),
           "success",
         ),
       onError: () => showToast(t("forum:toast.error"), "error"),
@@ -59,19 +83,39 @@ export function ThreadTopbar({
           </Link>
           <span className={styles.sep} />
           <span className={styles.topCat}>{categoryName}</span>
-          {canLock && (
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={toggleLock}
-              disabled={isPending}
-              style={{ marginLeft: "auto" }}
-            >
-              {isLocked ? <FiUnlock aria-hidden /> : <FiLock aria-hidden />}
-              {t(
-                isLocked ? "forum:topbar.unlockThread" : "forum:topbar.lockThread",
+          {(canLock || canSetOfficial) && (
+            <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
+              {canSetOfficial && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={toggleOfficial}
+                  disabled={officialPending}
+                >
+                  <FiShield aria-hidden />
+                  {t(
+                    isOfficial
+                      ? "forum:topbar.unmarkOfficial"
+                      : "forum:topbar.markOfficial",
+                  )}
+                </Button>
               )}
-            </Button>
+              {canLock && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={toggleLock}
+                  disabled={isPending}
+                >
+                  {isLocked ? <FiUnlock aria-hidden /> : <FiLock aria-hidden />}
+                  {t(
+                    isLocked
+                      ? "forum:topbar.unlockThread"
+                      : "forum:topbar.lockThread",
+                  )}
+                </Button>
+              )}
+            </div>
           )}
         </div>
       </div>

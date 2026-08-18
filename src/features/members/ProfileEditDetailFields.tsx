@@ -1,7 +1,7 @@
 import { type RefObject } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfile } from "../../app/providers/useProfile";
-import { InlineTextarea, TagEditor } from "./profileEditControls";
+import { InlineText, InlineTextarea, TagEditor } from "./profileEditControls";
 import { ProfileNowField } from "./ProfileNowField";
 import { SocialLinksEditor } from "./SocialLinksEditor";
 import styles from "./ProfileEdit.module.css";
@@ -23,6 +23,22 @@ export function ProfileEditDetailFields({
     <>
       <div className={styles.field}>
         <label className={styles.fieldLabel}>
+          {t("members:profileEdit.pronunciation.label")}
+        </label>
+        <p className={styles.fieldHelp}>
+          {t("members:profileEdit.pronunciation.help")}
+        </p>
+        <InlineText
+          value={draft.pronunciation ?? ""}
+          ariaLabel={t("members:profileEdit.pronunciation.label")}
+          placeholder={t("members:profileEdit.pronunciation.placeholder")}
+          className={styles.hoodInput}
+          onChange={(value) => updateDraft({ pronunciation: value })}
+        />
+      </div>
+
+      <div className={styles.field}>
+        <label className={styles.fieldLabel}>
           {t("members:profileEdit.field.bio")}
         </label>
         <p className={styles.fieldHelp}>{t("members:profileEdit.field.bioHelp")}</p>
@@ -34,7 +50,38 @@ export function ProfileEditDetailFields({
         />
       </div>
 
+      <div className={styles.field}>
+        <label className={styles.fieldLabel}>
+          {t("members:profileEdit.bioPt.label")}
+        </label>
+        <p className={styles.fieldHelp}>{t("members:profileEdit.bioPt.help")}</p>
+        <InlineTextarea
+          value={draft.bioPt ?? ""}
+          ariaLabel={t("members:profileEdit.bioPt.label")}
+          placeholder={t("members:profileEdit.bioPt.placeholder")}
+          className={styles.bioInput}
+          onChange={(value) => updateDraft({ bioPt: value })}
+        />
+      </div>
+
       <ProfileNowField />
+
+      <div className={styles.field}>
+        <label className={styles.fieldLabel}>
+          {t("members:profileEdit.notHereFor.label")}
+        </label>
+        <p className={styles.fieldHelp}>
+          {t("members:profileEdit.notHereFor.help")}
+        </p>
+        <InlineTextarea
+          value={draft.notHereFor ?? ""}
+          ariaLabel={t("members:profileEdit.notHereFor.label")}
+          placeholder={t("members:profileEdit.notHereFor.placeholder")}
+          rows={2}
+          className={styles.nowInput}
+          onChange={(value) => updateDraft({ notHereFor: value })}
+        />
+      </div>
 
       <div className={styles.field}>
         <label className={styles.fieldLabel}>

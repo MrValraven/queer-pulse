@@ -182,6 +182,7 @@ export interface MagazineNotificationDto {
   what: string;
   when: string;
   route: string;
+  isUnread: boolean;
   tone: "normal" | "warn";
 }
 
@@ -480,6 +481,11 @@ export const getMagazineEditors = () =>
 
 export const getMagazineNotifications = () =>
   apiGet<MagazineNotificationDto[]>("/magazine/admin/notifications");
+
+/** POST /magazine/admin/notifications/read-all — advance the caller's read
+ *  cursor to now, so every currently-listed notification reads as read. */
+export const markMagazineNotificationsRead = () =>
+  apiPost<void>("/magazine/admin/notifications/read-all");
 
 export const getCurrentIssue = () =>
   apiGet<CurrentIssueDto | null>("/magazine/admin/issues/current");

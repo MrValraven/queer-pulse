@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button, ModalSheet, Select } from "../../shared/components/ui";
+import { useAuth } from "../../app/providers/authContext";
 import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -16,6 +17,9 @@ export interface NewThreadInput {
   /** The community this thread is posted to, or undefined for a global,
    *  everyone-sees-it thread. */
   communitySlug?: string;
+  /** Publish under the "QueerPulse Official" byline instead of the caller.
+   *  Only ever set from the admin-only checkbox below. */
+  isOfficial?: boolean;
 }
 
 interface ComposeThreadModalProps {
@@ -35,11 +39,14 @@ export function ComposeThreadModal({
   initialTitle = "",
 }: ComposeThreadModalProps) {
   const { t } = useTranslation();
+  const { role } = useAuth();
+  const isAdmin = role === "admin";
   const [title, setTitle] = useState(initialTitle);
   const [body, setBody] = useState("");
   const [cat, setCat] = useState(POST_CATS[0]!.id);
   const [tags, setTags] = useState<string[]>([]);
   const [communitySlug, setCommunitySlug] = useState("");
+  const [isOfficial, setIsOfficial] = useState(false);
   const [published, setPublished] = useState(false);
   const myCommunityOptions = useMyCommunityOptions();
 
@@ -81,6 +88,7 @@ export function ComposeThreadModal({
             cat,
             tags,
             ...(communitySlug ? { communitySlug } : {}),
+            ...(isAdmin && isOfficial ? { isOfficial: true } : {}),
           });
           setPublished(true);
         }}
@@ -137,6 +145,23 @@ export function ComposeThreadModal({
         )}
 
         <ComposeTagsField tags={tags} onChange={setTags} />
+
+        {isAdmin && (
+          <label className={styles.officialField} htmlFor="compose-official">
+            <input
+              id="compose-official"
+              type="checkbox"
+              checked={isOfficial}
+              onChange={(e) => setIsOfficial(e.target.checked)}
+            />
+            <span className={styles.officialFieldText}>
+              {t("forum:compose.officialFieldLabel")}
+              <span className={styles.officialFieldHint}>
+                {t("forum:compose.officialFieldHint")}
+              </span>
+            </span>
+          </label>
+        )}
 
         <label className={styles.field}>
           <span className={styles.fieldLabel}>

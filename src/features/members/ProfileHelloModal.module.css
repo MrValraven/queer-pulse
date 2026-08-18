@@ -1,0 +1,74 @@
+.intro {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  margin: 0 0 18px;
+}
+
+.reasons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.reasonBtn {
+  font:
+    500 13px/1.3 var(--sans);
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.5);
+  border-radius: 8px;
+  padding: 7px 13px;
+  cursor: pointer;
+  transition:
+    background 0.15s var(--ease),
+    border-color 0.15s var(--ease);
+}
+
+@media (hover: hover) {
+  .reasonBtn:hover {
+    border-color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.18);
+  }
+}
+
+.reasonBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.reasonBtn[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+}
+
+.draft {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+}
+
+.note {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  line-height: 1.5;
+  margin: -4px 0 20px;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+@media (--mobile) {
+  .reasonBtn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}

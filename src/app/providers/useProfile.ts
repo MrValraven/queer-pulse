@@ -23,10 +23,18 @@ export interface ProfileDraft {
   last: string;
   role: string;
   pronouns: string;
+  /** Phonetic spelling of the member's name, read aloud via SpeechSynthesis
+   *  on the profile hero. Ungated, same as `pronouns`. */
+  pronunciation?: string;
   hood: string;
   bio: string;
+  /** Portuguese translation of `bio`, shown via the EN/PT bio language toggle. */
+  bioPt?: string;
   /** Free-text "what I'm in the middle of" status, shown in the profile's Now card. */
   now: string;
+  /** What the member is explicitly not here for, shown alongside `now` as a
+   *  boundary note. Free text, member-authored. */
+  notHereFor?: string;
   /** What the member is open to — the chips under the Now status. */
   openTo: OpenToEntry[];
   tags: string[];
@@ -62,6 +70,23 @@ export interface ProfileDraft {
   /** Specific job(s) within `discipline` — Settings → Interests. */
   profession: string[];
   languages: string[];
+  /** Whether other members can see this member's real avatar photo. Owner-
+   *  controlled; see `Member.photoVisible`. */
+  photoVisible?: boolean;
+  /** Whether other members can see this member's neighbourhood/location.
+   *  Owner-controlled; see `Member.hoodVisible`. */
+  hoodVisible?: boolean;
+  /** Whether other members can see this member's vouchers list. Owner-
+   *  controlled; see `Member.vouchersVisible`. */
+  vouchersVisible?: boolean;
+  /** ISO 8601 timestamp until which the member has self-hidden their profile,
+   *  or `null` when not hidden. See `Member.hiddenUntil`. Sent on save via
+   *  `draftToUpdateDto` and committed straight from `draft` in `save()`'s
+   *  success handler (see `ProfileProvider.tsx`), so the in-session round
+   *  trip works — but no backend read response (`ProfileDTO`/`MemberCardDTO`)
+   *  carries it back yet, so a fresh page load / profile refetch still can't
+   *  reflect it until that read-side wiring lands. */
+  hiddenUntil?: string | null;
 }
 
 export function toDraft(m: Member): ProfileDraft {
@@ -72,9 +97,12 @@ export function toDraft(m: Member): ProfileDraft {
     last: m.last,
     role: m.role,
     pronouns: m.pronouns ?? "",
+    pronunciation: m.pronunciation,
     hood: m.hood,
     bio: m.bio,
+    bioPt: m.bioPt,
     now: m.now,
+    notHereFor: m.notHereFor,
     openTo: m.openTo.map((entry) => ({ ...entry })),
     tags: [...m.tags],
     visibility: m.visibility,
@@ -99,6 +127,10 @@ export function toDraft(m: Member): ProfileDraft {
     discipline: [...(m.discipline ?? [])],
     profession: [...(m.profession ?? [])],
     languages: [...(m.languages ?? [])],
+    photoVisible: m.photoVisible,
+    hoodVisible: m.hoodVisible,
+    vouchersVisible: m.vouchersVisible,
+    hiddenUntil: m.hiddenUntil,
   };
 }
 
@@ -108,6 +140,89 @@ export function toDraft(m: Member): ProfileDraft {
  *  is deterministic, so equal content compares equal). */
 export function isDraftDirty(draft: ProfileDraft, committed: Member): boolean {
   return JSON.stringify(draft) !== JSON.stringify(toDraft(committed));
+}
+
+/** Which section of `ProfilePage`'s edit form a given `ProfileDraft` field
+ *  belongs to — drives `getChangedSectionLabelKeys`' itemized "what changed"
+ *  summary in `ProfileEditBar`. Only fields with an editor reachable from
+ *  that page's own edit session are listed: fields edited elsewhere (Settings
+ *  → Interests' `identities`/`discipline`/`profession`/`languages`, the "Who
+ *  sees what" sheet's `photoVisible`/`hoodVisible`/`vouchersVisible`/
+ *  `privateNetwork`, the rail's instant-save `hiddenUntil`, and the featured-
+ *  communities picker's `featuredConsent`/`featuredCommunities`) can't change
+ *  while this session is open, so giving them a section here would never
+ *  surface one. */
+const FIELD_CHANGE_SECTION: Partial<Record<keyof ProfileDraft, string>> = {
+  photo: "photo",
+  avatarCrop: "photo",
+  visibility: "visibility",
+  first: "name",
+  last: "name",
+  role: "shortBio",
+  pronouns: "pronouns",
+  hood: "neighbourhood",
+  pronunciation: "pronunciation",
+  bio: "bio",
+  bioPt: "bioPt",
+  now: "now",
+  openTo: "openTo",
+  notHereFor: "notHereFor",
+  tags: "tags",
+  socials: "links",
+  lookingFor: "lookingFor",
+  lookingForPublic: "lookingFor",
+  work: "work",
+  skills: "skills",
+  board: "board",
+  groups: "groups",
+  shapings: "shapings",
+};
+
+/** i18n key for each section id above, in the order the corresponding field
+ *  appears on the profile-edit form (top to bottom) — `getChangedSectionLabelKeys`
+ *  preserves this order so the save-bar summary reads top-down. */
+const SECTION_ORDER: { id: string; labelKey: string }[] = [
+  { id: "photo", labelKey: "members:profileEdit.field.photo" },
+  { id: "visibility", labelKey: "members:profileEdit.field.statusVisibility" },
+  { id: "name", labelKey: "members:profileEdit.field.name" },
+  { id: "shortBio", labelKey: "members:profileEdit.shortBio.label" },
+  { id: "pronouns", labelKey: "members:profileEdit.field.pronouns" },
+  { id: "neighbourhood", labelKey: "members:profileEdit.field.neighbourhood" },
+  { id: "pronunciation", labelKey: "members:profileEdit.pronunciation.label" },
+  { id: "bio", labelKey: "members:profileEdit.field.bio" },
+  { id: "bioPt", labelKey: "members:profileEdit.bioPt.label" },
+  { id: "now", labelKey: "members:profileEdit.now.label" },
+  { id: "openTo", labelKey: "members:profileEdit.openTo.label" },
+  { id: "notHereFor", labelKey: "members:profileEdit.notHereFor.label" },
+  { id: "tags", labelKey: "members:profileEdit.field.tags" },
+  { id: "links", labelKey: "members:profileEdit.field.links" },
+  { id: "lookingFor", labelKey: "members:profileEdit.field.lookingFor" },
+  { id: "work", labelKey: "members:content.work.title" },
+  { id: "skills", labelKey: "members:content.skills.title" },
+  { id: "board", labelKey: "members:content.board.title" },
+  { id: "groups", labelKey: "members:content.groups.title" },
+  { id: "shapings", labelKey: "members:content.shapings.title" },
+];
+
+/** i18n keys for the sections that changed between `draft` and the committed
+ *  profile, in form order, deduped (editing both `first` and `last` yields a
+ *  single "Name" entry). Empty when nothing tracked by `FIELD_CHANGE_SECTION`
+ *  changed — `ProfileEditBar` falls back to its generic unsaved-changes copy
+ *  in that case. */
+export function getChangedSectionLabelKeys(
+  draft: ProfileDraft,
+  committed: Member,
+): string[] {
+  const committedDraft = toDraft(committed);
+  const changed = new Set<string>();
+  (Object.entries(FIELD_CHANGE_SECTION) as [keyof ProfileDraft, string][]).forEach(
+    ([key, section]) => {
+      if (JSON.stringify(draft[key]) !== JSON.stringify(committedDraft[key])) {
+        changed.add(section);
+      }
+    },
+  );
+  return SECTION_ORDER.filter((s) => changed.has(s.id)).map((s) => s.labelKey);
 }
 
 /** Map the editable draft to the backend's PATCH /profiles/me payload.
@@ -133,6 +248,9 @@ export function draftToUpdateDto(
     pronouns: d.pronouns.trim(),
     tagline: d.role.trim(),
     bio: d.bio.trim(),
+    pronunciation: d.pronunciation,
+    bioPt: d.bioPt,
+    notHereFor: d.notHereFor,
     location: d.hood.trim(),
     ...(photoChanged ? { avatarUrl: d.photo || null } : {}),
     visibility: d.visibility,
@@ -150,6 +268,14 @@ export function draftToUpdateDto(
     discipline: d.discipline,
     profession: d.profession,
     languages: d.languages,
+    // Instant-save visibility switches (Task 11's "Who sees what" sheet) —
+    // sent unconditionally like `lookingForPublic` above, not diffed against
+    // `committedPhoto`-style change detection, since they're plain optional
+    // booleans with no derived-URL trap to avoid.
+    photoVisible: d.photoVisible,
+    hoodVisible: d.hoodVisible,
+    vouchersVisible: d.vouchersVisible,
+    hiddenUntil: d.hiddenUntil,
   };
 }
 

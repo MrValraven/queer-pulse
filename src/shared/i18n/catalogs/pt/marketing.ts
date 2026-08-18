@@ -1901,6 +1901,51 @@ export const marketing: Catalog = {
   "changelog.entries.governance-editable-finances.body":
     "Os administradores passam a poder corrigir os valores no separador de Finanças da governação, em vez de estarem fixos. Cada número tem uma pequena etiqueta que mostra a sua origem: um valor de exemplo por verificar, um valor introduzido por um administrador, ou um valor calculado (como o excedente). As correções ficam registadas, por isso é sempre claro quem alterou o quê e quando.",
 
+  "changelog.entries.profile-hero-rail-redesign.title":
+    "Hero e barra lateral do perfil redesenhados",
+  "changelog.entries.profile-hero-rail-redesign.body":
+    "A tua página de perfil tem agora um hero mais limpo e uma nova barra lateral: os sinais de confiança (verificado, equipa, votos de confiança) vêm agora com uma explicação em linguagem simples, e uma navegação por secções permite a quem visita saltar direto para o que procura, sem precisar de percorrer a página toda.",
+  "changelog.entries.profile-who-sees-what-controls.title":
+    "Escolhe exatamente quem vê o quê no teu perfil",
+  "changelog.entries.profile-who-sees-what-controls.body":
+    "Um novo painel \"Quem vê o quê\" reúne os teus controlos de visibilidade num só lugar: predefinições rápidas, interruptores instantâneos para a tua foto, bairro, votos de confiança e o que procuras, visibilidade por identidade, esconder o teu perfil de pessoas específicas, e um registo das denúncias que fizeste.",
+  "changelog.entries.profile-your-data-panel.title":
+    "Um painel \"Os teus dados\" para a tua conta",
+  "changelog.entries.profile-your-data-panel.body":
+    "Descarrega uma cópia de tudo o que a QueerPulse guarda sobre ti, afasta-te temporariamente ou pede a eliminação da conta com um período de 30 dias para mudares de ideias, ou envia um pedido de dados, tudo a partir de um único painel no teu perfil. Qualquer comunidade que possuas ou anúncio ativo que esteja a impedir a eliminação passa a aparecer ali mesmo, com a sua própria solução.",
+  "changelog.entries.profile-board-work-name-qr-updates.title":
+    "Publicações no quadro podem ser marcadas como encontradas, trabalhos ganham um segundo link, e mais",
+  "changelog.entries.profile-board-work-name-qr-updates.body":
+    "As tuas publicações no quadro podem agora ser marcadas como encontradas ao serem fechadas. As entradas em Trabalho em destaque passam a suportar um segundo link além do primeiro. Podes adicionar a pronúncia do teu nome e uma versão em português da tua biografia, e o código QR do teu perfil está agora a um toque de distância.",
+
+  "changelog.entries.gathering-venue-directory-link.title":
+    "Liga o espaço de um encontro à sua ficha no diretório local",
+  "changelog.entries.gathering-venue-directory-link.body":
+    "Ao definir o espaço ao criar um encontro, ou ao editá-lo a partir da página de gestão, já podes pesquisar o diretório local e escolher um negócio real em vez de escrever só o nome. Ao escolher um, o nome do espaço passa a ser uma ligação direta à sua ficha, para os convidados verem fotos, horário e avaliações antes de aparecerem. Continuas a poder escrever o nome livremente.",
+  "changelog.entries.add-to-calendar-picker-redesign.title":
+    "Adicionar ao calendário passa a oferecer Google, Apple, Outlook e Yahoo",
+  "changelog.entries.add-to-calendar-picker-redesign.body":
+    "O modal de adicionar ao calendário é agora um seletor a sério: Google, Apple, Outlook e Yahoo têm cada um a sua linha com ícone de marca e adição num clique (a Apple descarrega um ficheiro, por não ter ligação direta), ordenados consoante a tua plataforma, mais uma ligação de recurso para descarregar noutra aplicação. Corrigimos também uma falha em que o fuso horário indicado num evento não era usado ao criar a entrada de calendário, o que podia adicionar a hora errada ao teu calendário.",
+  "changelog.entries.local-directory-card-redesign.title":
+    "Os cartões do diretório e dos espaços mostram agora foto, avaliação e horário",
+  "changelog.entries.local-directory-card-redesign.body":
+    "Os cartões do diretório local e dos espaços foram redesenhados com uma foto, avaliação por estrelas, preço e etiquetas, e um botão de guardar, além de um estado de horário e do anfitrião nos cartões de negócios. Os espaços passam agora a ter fotos e avaliações de demonstração a condizer.",
+
+  "changelog.entries.forum-thread-pinning.title":
+    "Os moderadores podem fixar tópicos do fórum no topo",
+  "changelog.entries.forum-thread-pinning.body":
+    "Moderadores e administradores podem agora fixar um tópico a partir do menu ⋯, mantendo-o acima da lista normal (até 3 de cada vez), seja qual for o separador de ordenação. Desafixa da mesma forma para o devolver à ordem normal.",
+
+  "changelog.entries.magazine-desk-notifications-cleanup.title":
+    "Menos notificações duplicadas na secretária, e Marcar tudo como lido a funcionar",
+  "changelog.entries.magazine-desk-notifications-cleanup.body":
+    "O painel Desde sexta da secretária da revista registava uma notificação nova a quase cada gravação automática, por isso uma só edição num rascunho ainda sem título podia aparecer cinco ou seis vezes. Edições repetidas à mesma peça pela mesma pessoa passam agora a juntar-se numa única linha até acontecer outra coisa nessa peça. Marcar tudo como lido também se limitava a fechar o painel sem mudar nada, deixando o número no sino preso. Agora limpa mesmo.",
+
+  "changelog.entries.volunteer-opportunity-edit-parity.title":
+    "Editar uma oportunidade usa agora o mesmo formulário de a publicar",
+  "changelog.entries.volunteer-opportunity-edit-parity.body":
+    "Quem edita uma oportunidade de voluntariado vê agora exatamente o mesmo ecrã usado para a publicar, incluindo os campos de motivo/tarefas/compromissos que o antigo ecrã de edição não oferecia.",
+
   "changelog.entries.local-directory-sort-fix.title":
     "Corrigido o menu de ordenação do Diretório de negócios locais",
   "changelog.entries.local-directory-sort-fix.body":
@@ -3792,10 +3837,13 @@ export const marketing: Catalog = {
   "postOpportunity.edit.sub":
     "Atualiza os detalhes que as pessoas voluntárias veem no anúncio.",
   "postOpportunity.edit.saveCta": "Guardar alterações",
+  "postOpportunity.edit.saving": "A guardar…",
   "postOpportunity.edit.cancelCta": "Cancelar",
   "postOpportunity.edit.successToast": "As tuas alterações estão guardadas.",
   "postOpportunity.edit.errorToast":
     "Não foi possível guardar as alterações. Tenta novamente.",
+  "postOpportunity.edit.notAllowed":
+    "Só podes editar uma oportunidade que tenhas publicado.",
   "postOpportunity.rich.summary": "Acrescentar mais detalhe (opcional)",
   "postOpportunity.rich.whyHeading": "Porque é que importa",
   "postOpportunity.rich.whyLabel": "Porque é que esta função importa",
@@ -4163,8 +4211,15 @@ export const marketing: Catalog = {
   "directory.badge.friendly": "LGBTQ+ friendly",
   "directory.card.memberRun": "Gerido por uma pessoa da comunidade",
   "directory.card.online": "Online",
-  "directory.card.viewDetails": "Ver detalhes",
+  "directory.card.visit": "Visitar",
   "directory.card.verifiedBadge": "Espaço seguro verificado",
+  "directory.card.photoComing": "Foto brevemente",
+  "directory.card.openTill": "Aberto até às {time}",
+  "directory.card.closedNow": "Fechado",
+  "directory.card.saveAriaLabel": "Guardar {name}",
+  "directory.card.unsaveAriaLabel": "Remover {name} das guardadas",
+  "directory.card.savedToast": "Guardaste {name}",
+  "directory.card.unsavedToast": "Removeste {name} dos guardados",
   "directory.submitStrip.title":
     "Conheces um lugar que devia estar <em>aqui?</em>",
   "directory.submitStrip.body":
@@ -4685,6 +4740,7 @@ export const marketing: Catalog = {
   "map.venueCard.beenCount_other": "<b>{count}</b> pessoas já estiveram aqui",
   "map.venueCard.beenThere": "Já estiveste aqui",
   "map.venueCard.markBeen": "Já estive aqui",
+  "map.venueCard.accessible": "Acesso para cadeira de rodas",
   "map.svg.filterByAria": "Filtrar o mapa por {bairro}",
   "map.mapError": "Não foi possível carregar o mapa. A lista de espaços abaixo continua a funcionar.",
   "map.mapLoading": "A dar <em>vida</em> ao mapa…",

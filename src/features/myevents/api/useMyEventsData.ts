@@ -11,9 +11,9 @@ import { getNotifications } from "../../notifications/api/notifications.api";
 import type { MyEvent, Notif } from "../myEvents.types";
 import {
   EVENT_PANEL_NOTIF_KINDS,
-  eventCardToMyEvent,
   eventInviteToMyEvent,
   eventNotificationToNotif,
+  mergeEventPages,
 } from "./myEvents.adapters";
 
 export interface MyEventsDataResult {
@@ -105,11 +105,10 @@ export function useMyEventsData(options?: {
         getEventInvites(),
         getNotifications(),
       ]);
-      const fromFilters = pages.flatMap((page, filterIndex) =>
-        page.items.map((dto) =>
-          eventCardToMyEvent(dto, LIVE_FILTERS[filterIndex]!),
-        ),
-      );
+      // A member who's both hosting an event and RSVP'd to it gets the same
+      // slug back under two filters (e.g. "going" and "hosting") — merge
+      // collapses that into one card instead of rendering it twice.
+      const fromFilters = mergeEventPages(pages, LIVE_FILTERS);
       const fromInvites = invites.map(eventInviteToMyEvent);
       // Keep only the event-change kinds the "What's changed" panel is about;
       // every other notification stays in the main notifications centre.

@@ -182,7 +182,7 @@ export function PlacesSection({
 
   if (places.length === 0) {
     return (
-      <section className={`${styles.section} wrap`}>
+      <section id="places" className={`${styles.section} wrap`}>
         <EmptyState
           title={t("members:places.empty.title")}
           description={t("members:places.empty.description")}
@@ -196,7 +196,7 @@ export function PlacesSection({
   }
 
   return (
-    <section className={`${styles.section} wrap`}>
+    <section id="places" className={`${styles.section} wrap`}>
       <div className={styles.head}>
         <h2 className={styles.title}>
           {isSelf ? (

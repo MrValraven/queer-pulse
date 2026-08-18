@@ -14,11 +14,15 @@ import {
 } from "./postVolunteerOpportunity.data";
 import styles from "./PostVolunteerOpportunityPage.module.css";
 
-/** Optional depth: the story, the tasks, the honest commitment, contact. */
+/** Optional depth: the story, the tasks, the honest commitment, contact.
+ *  `editing` hides the two creation-only fields (team picker, contact
+ *  handle) — see `PostOpportunityTeamFields`. */
 export function PostOpportunityRichFields({
   form,
+  editing = false,
 }: {
   form: PostOpportunityForm;
+  editing?: boolean;
 }) {
   const { t } = useTranslation();
   const { state, set } = form;
@@ -65,7 +69,7 @@ export function PostOpportunityRichFields({
 
         <PostOpportunityTasks form={form} />
         <PostOpportunityCommitments form={form} />
-        <PostOpportunityTeamFields form={form} />
+        <PostOpportunityTeamFields form={form} editing={editing} />
       </div>
     </details>
   );

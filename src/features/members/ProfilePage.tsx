@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
@@ -15,11 +15,14 @@ import { mediaMax } from "../../shared/theme/breakpoints";
 import { currentUserSlug } from "./data/memberProfiles";
 import { useMemberProfile } from "./api/useMemberProfile";
 import { ProfileHero, ProfileContent } from "./ProfileSections";
+import { ProfileRail } from "./ProfileRail";
 import { ProfileCommunitiesSection } from "./ProfileCommunitiesSection";
 import { ProfileSubprofilesSection } from "./ProfileSubprofilesSection";
 import { PlacesSection } from "./PlacesSection";
 import { EditableProfileHero } from "./EditableProfileHero";
 import { ProfileEditBar } from "./ProfileEditBar";
+import { WhoSeesWhatSheet } from "./WhoSeesWhatSheet";
+import { AccountDataSheet } from "./AccountDataSheet";
 import { useProfileEditGuard } from "./useProfileEditGuard";
 import { MobileProfileView } from "./MobileProfileView";
 import { MobileEditableProfileHero } from "./MobileEditableProfileHero";
@@ -42,6 +45,7 @@ export function ProfilePage() {
     cancelEditing,
     draft,
     updateDraft,
+    save,
     isDirty,
     isProfileLoading,
     isProfileError,
@@ -54,11 +58,34 @@ export function ProfilePage() {
   // When entering edit mode from the "Add/Edit links" affordance, jump the editor
   // straight to the Links section instead of landing at the top of the form.
   const [focusLinks, setFocusLinks] = useState(false);
+  // Desktop-only rail sheets — "who sees what" visibility settings and the
+  // account-data (export/step-away/DSAR) surface. See the guard on their
+  // render below; unreachable on mobile since nothing there can open them.
+  const [whoSeesWhatOpen, setWhoSeesWhatOpen] = useState(false);
+  const [accountDataOpen, setAccountDataOpen] = useState(false);
 
   function enterEdit(focus = false) {
     setFocusLinks(focus);
     startEditing();
   }
+
+  // The 24h-hide rail toggle persists immediately (its own copy says "takes
+  // effect right away" — it must not sit staged behind the normal Save
+  // button). `save()` is a `useCallback` closed over the CURRENT `draft`
+  // (see `ProfileProvider.tsx`), so calling it in the same tick as
+  // `updateDraft()` would ship the PRE-toggle draft — React hasn't
+  // re-rendered between the two calls yet, so the `save` reference here is
+  // still stale. This is the exact trap `useInstantVisibilitySave` (in
+  // `WhoSeesWhatFieldToggles.tsx`) works around for the sheet's own instant
+  // toggles: queue the intent, then let an effect keyed on the fresh `save`
+  // identity — which only changes once the provider has committed the
+  // patch — fire the actual persist on the next render.
+  const pendingHiddenToggle = useRef(false);
+  useEffect(() => {
+    if (!pendingHiddenToggle.current) return;
+    pendingHiddenToggle.current = false;
+    void save();
+  }, [save]);
 
   // In live mode, an unauthenticated visitor has no slug — never fall back to
   // the demo persona (`currentUserSlug` === "tiago"), or a logged-out visitor
@@ -105,6 +132,23 @@ export function ProfilePage() {
   // desktop inline editor.
   const useMobileLayout = isMobile;
   const ownerSlug = isSelf ? (selfSlug ?? "") : (slug ?? "");
+
+  // Desktop-only rail control (see `ProfileRailControls`/`ProfileRail`'s
+  // `realSelf` gate) — only ever reachable when `isSelf && !previewing &&
+  // !isEditing`, i.e. exactly when `ProfileHero` (not `EditableProfileHero`)
+  // is on screen. `useProfileEditGuard`'s dirty-navigation warning only
+  // activates when `isEditing && isDirty`, and the provider defines
+  // `isDirty` itself as `isEditing && isDraftDirty(...)` — so with `isEditing`
+  // always false here, this direct draft/save cycle can never trip it.
+  function toggleHidden() {
+    const nextValue =
+      resolvedProfile.hiddenUntil &&
+      new Date(resolvedProfile.hiddenUntil) > new Date()
+        ? null
+        : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    pendingHiddenToggle.current = true;
+    updateDraft({ hiddenUntil: nextValue });
+  }
 
   // Shared below-hero sections — rendered after the hero on both the desktop
   // layout and the phone-width edit layout, so mobile editing keeps access to
@@ -175,30 +219,54 @@ export function ProfilePage() {
             }}
           />
         )
-      ) : (
+      ) : selfView && isEditing ? (
         <>
-          {selfView && isEditing ? (
-            <EditableProfileHero focusLinks={focusLinks} />
-          ) : (
-            <ProfileHero
-              profile={resolvedProfile}
-              self={isSelf}
-              asVisitor={isSelf && previewing}
-              onEdit={() => enterEdit(false)}
-              onEditLinks={() => enterEdit(true)}
-              onPreview={() => {
-                setPreviewing(true);
-                window.scrollTo({ top: 0 });
-              }}
-            />
-          )}
-
-          {/* "Also as…" — the owner's linked + published personas, surfaced right
-              after the hero as the second thing on the profile. Public viewers see
-              only linked personas (the hook enforces this); self view adds a manage
-              link and a create prompt when empty. Preview counts as a public view. */}
+          <EditableProfileHero focusLinks={focusLinks} />
           {belowHero}
         </>
+      ) : (
+        // The sticky rail (portrait, trust signals, owner controls,
+        // section-jump nav) runs alongside the WHOLE page — hero text plus
+        // every below-hero section — not just the hero row, so it stays in
+        // view via `position: sticky` as the visitor scrolls through
+        // "Open to", "On the board", etc. Edit mode (above) skips this grid
+        // entirely: `EditableProfileHero` is a self-contained form, not a
+        // browsable profile, so it doesn't need the section-jump rail.
+        <div className="wrap">
+          <div className={styles.pageGrid}>
+            <div className={styles.railCol}>
+              <ProfileRail
+                profile={resolvedProfile}
+                self={isSelf}
+                asVisitor={isSelf && previewing}
+                onOpenWhoSeesWhat={() => setWhoSeesWhatOpen(true)}
+                onOpenAccountData={() => setAccountDataOpen(true)}
+                onToggleHidden={toggleHidden}
+                hiddenUntil={resolvedProfile.hiddenUntil ?? null}
+              />
+            </div>
+            <div className={styles.pageCol}>
+              <ProfileHero
+                profile={resolvedProfile}
+                self={isSelf}
+                asVisitor={isSelf && previewing}
+                onEdit={() => enterEdit(false)}
+                onEditLinks={() => enterEdit(true)}
+                onPreview={() => {
+                  setPreviewing(true);
+                  window.scrollTo({ top: 0 });
+                }}
+              />
+
+              {/* "Also as…" — the owner's linked + published personas, surfaced
+                  right after the hero as the second thing on the profile.
+                  Public viewers see only linked personas (the hook enforces
+                  this); self view adds a manage link and a create prompt when
+                  empty. Preview counts as a public view. */}
+              {belowHero}
+            </div>
+          </div>
+        </div>
       )}
 
       {selfView && <ProfileEditBar />}
@@ -215,6 +283,20 @@ export function ProfilePage() {
             {t("members:profile.exitPreview")}
           </Button>
         </div>
+      )}
+
+      {/* Rail sheets — `SideSheet` already portals to `document.body`, so
+          placement here doesn't matter for layout. Only ever opened from the
+          desktop `ProfileHero`'s rail controls (mobile has no trigger for
+          them), but guarded here too for defense-in-depth. */}
+      {!useMobileLayout && whoSeesWhatOpen && (
+        <WhoSeesWhatSheet onClose={() => setWhoSeesWhatOpen(false)} />
+      )}
+      {!useMobileLayout && accountDataOpen && (
+        <AccountDataSheet
+          onClose={() => setAccountDataOpen(false)}
+          ownerSlug={ownerSlug}
+        />
       )}
     </PageShell>
   );

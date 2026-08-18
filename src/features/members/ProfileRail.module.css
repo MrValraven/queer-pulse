@@ -1,0 +1,144 @@
+/* The profile hero's left column: portrait, meta line, trust signals,
+   network chips, owner rail controls, section-jump nav. Sits in the same
+   340px column `ProfilePage.module.css`'s `.pheroGrid` already reserves for
+   the hero portrait today — this module doesn't own the grid itself (that's
+   `ProfileHero`/Task 6's job), just the column's own content rhythm.
+
+   `ProfilePage.module.css` (the still-live `ProfileHero`) already has its own
+   `.portraitWrap` class. CSS Modules scope class names per file, so there is
+   no real collision, but this file's `.portraitWrap` is a separate, parallel
+   definition rather than a shared one — once Task 6 retires the old hero
+   markup, only this module's copy remains in use. */
+
+.rail {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  /* Stretched by `.pageGrid`'s (default) `align-items: stretch` to match the
+     much taller content column beside it — see `.snav`'s `position: sticky`
+     below, which needs this tall containing block to keep following the
+     page instead of running out of room after the short portrait/trust/
+     owner-controls block above it. */
+  height: 100%;
+}
+
+.portraitWrap {
+  position: relative;
+  width: 100%;
+}
+
+/* Tap-to-enlarge trigger wrapping the portrait — visually inert, just a zoom
+   cursor and a focus ring. Mirrors ProfilePage.module.css's `.portraitButton`. */
+.portraitButton {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 20px;
+  background: none;
+  cursor: zoom-in;
+}
+.portraitButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.vbadgeLg {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--jade);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+  box-shadow: 0 8px 22px -10px rgba(var(--jade-rgb), 0.9);
+}
+.vbadgeLg svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: var(--ink-60);
+}
+.loc {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.pin {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+.muted {
+  color: var(--ink-60);
+}
+
+/* ── Desktop section-jump nav ──
+   Sticky on its own (not the whole rail): it scrolls with the portrait/trust/
+   owner-controls block above it until its top edge clears the floating pill
+   Navbar (~96px), then holds in place while the page content beside it keeps
+   scrolling. */
+.snav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  position: sticky;
+  top: 96px;
+}
+
+.snavTitle {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  padding: 7px 2px 5px;
+}
+
+.snavLink {
+  padding: 9px 2px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-60);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: color 0.18s var(--ease);
+}
+@media (hover: hover) {
+  .snavLink:hover {
+    color: var(--ink);
+  }
+}
+.snavLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.on {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+/* No mobile jump list today — mirrors the brief's "new on desktop" scope. */
+@media (--mobile) {
+  .snav {
+    display: none;
+  }
+}

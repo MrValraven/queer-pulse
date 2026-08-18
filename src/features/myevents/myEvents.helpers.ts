@@ -1,6 +1,7 @@
 import type { MyEvent, Pill } from "./myEvents.types";
 import type { TFunction } from "../../shared/i18n/types";
 import { TODAY, NOW } from "./myEvents.data";
+import { zonedWallTimeToUtc } from "../../shared/lib/zonedTime";
 
 /** Categories that count as a committed RSVP (used for conflicts + soon bar). */
 export const COMMITTED: Record<string, boolean> = {
@@ -41,6 +42,9 @@ export function timeStr(ev: MyEvent): string {
 export function atTime(ev: MyEvent, which: "start" | "end"): Date {
   const dt = parseDate(ev.date);
   const [h = 0, m = 0] = (ev[which] || ev.start).split(":").map(Number);
+  if (ev.timezone) {
+    return zonedWallTimeToUtc(dt.getFullYear(), dt.getMonth(), dt.getDate(), h, m, ev.timezone);
+  }
   dt.setHours(h, m, 0, 0);
   return dt;
 }

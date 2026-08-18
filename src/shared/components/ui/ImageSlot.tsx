@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { resolveAvatarSrc } from "../../lib/avatarUrl";
 import { useTranslation } from "../../i18n/useTranslation";
 import { cropToImgStyle, type CropRect } from "./cropGeometry";
@@ -63,6 +63,14 @@ export function ImageSlot({
   crop,
 }: ImageSlotProps) {
   const { t } = useTranslation();
+  // Tracks the most recent `src` that failed to load (a 404/broken hotlink),
+  // so a real image swaps to the same empty-state placeholder as a missing
+  // `src` instead of leaking the browser's native broken-image glyph + alt
+  // text. Keyed by the failing src itself (not a plain boolean) so it
+  // self-corrects the moment the caller passes a different `src` — no effect
+  // needed to reset it.
+  const [failedSrc, setFailedSrc] = useState<string | undefined>(undefined);
+  const showImage = !!src && src !== failedSrc;
   // Present only when a crop rect is passed: positions the <img> as an
   // absolutely-placed sub-rect inside the (already overflow-hidden,
   // position-relative) `.slot` box, overriding the default cover fit so the
@@ -89,7 +97,7 @@ export function ImageSlot({
 
   return (
     <div className={cls} style={{ width, height, borderRadius, ...style }}>
-      {src ? (
+      {showImage ? (
         <img
           src={resolvedSrc}
           alt={alt}
@@ -98,6 +106,7 @@ export function ImageSlot({
           decoding="async"
           referrerPolicy="no-referrer"
           style={cropImgStyle}
+          onError={() => setFailedSrc(src)}
         />
       ) : initials ? (
         <span className={styles.initials} style={{ fontSize: 22 }}>

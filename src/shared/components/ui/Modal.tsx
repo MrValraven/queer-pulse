@@ -22,7 +22,7 @@ const FOCUSABLE =
  * Returns a ref to attach to the dialog container. Mount the modal only while
  * open (self-contained modals own their state), so this runs per open.
  */
-function useDismiss(onClose: () => void) {
+export function useDismiss(onClose: () => void) {
   const dialogRef = useRef<HTMLDivElement>(null);
   // Stable per-instance id so this dialog can register itself on the shared
   // modal stack (see `./modalStack`) and only act on Escape while topmost.
@@ -282,6 +282,60 @@ export function ModalSheet({
           </>
         )}
         {children}
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+interface SideSheetProps {
+  title: ReactNode;
+  onClose: () => void;
+  footer?: ReactNode;
+  className?: string;
+  children: ReactNode;
+}
+
+/**
+ * Wide bottom sheet for a settings surface with several grouped sub-sections
+ * (too long/structured for a centered <Modal>). Reuses <Modal>'s
+ * focus-trap/scroll-lock/Escape/body-portal mechanics via useDismiss.
+ */
+export function SideSheet({ title, onClose, footer, className, children }: SideSheetProps) {
+  const { t } = useTranslation();
+  const dialogRef = useDismiss(onClose);
+  const titleId = useId();
+  return createPortal(
+    <div
+      className={styles.sideScrim}
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        ref={dialogRef}
+        tabIndex={-1}
+        className={[styles.sideSheet, className].filter(Boolean).join(" ")}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+      >
+        <div className={styles.sideSheetHead}>
+          <h2 id={titleId} className={styles.sideSheetTitle}>
+            {title}
+          </h2>
+          <button
+            type="button"
+            className={styles.modalX}
+            onClick={onClose}
+            aria-label={t("shared:modal.close")}
+          >
+            <FiX />
+          </button>
+        </div>
+        <div className={styles.sideSheetBody}>{children}</div>
+        {footer && <div className={styles.modalFoot}>{footer}</div>}
       </div>
     </div>,
     document.body,

@@ -85,6 +85,7 @@ export function threadToCard(
       color: s.color,
       slug,
       photo: dto.author.avatarUrl ?? undefined,
+      official: dto.author.official,
     },
     posted: relative(dto.lastActivityAt, t, fmt),
     views: 0,
@@ -104,6 +105,7 @@ export function threadToCard(
     canRestore: dto.canRestore,
     canViewHistory: dto.canViewHistory,
     canLock: dto.canLock,
+    canPin: dto.canPin,
     // OP-vote wiring: the list-row upvote acts on the OP post (`opPostId`) and
     // reflects the viewer's own vote (`myVote`); `isLocked` gates the composer.
     opPostId: dto.opPostId,
@@ -165,7 +167,9 @@ export function threadDetail(
     // count + the viewer's own vote and stays consistent with `useVotePost`.
     upvotes: op?.voteCount ?? card.upvotes,
     myVote: op?.myVote ?? card.myVote,
-    replies: rest.map((post) => postToReply(post, t, fmt)),
+    replies: rest.map((post) =>
+      postToReply(post, t, fmt, post.author.handle === op?.author.handle),
+    ),
     opPostId: op?.id ?? card.opPostId,
     editedAt: op?.editedAt ?? null,
     deleted: op?.deleted ?? false,

@@ -1,9 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { getVouchers } from "./members.api";
+import { getVouchers, type VoucherDTO } from "./members.api";
 import { initialsOf, tintForSlug } from "./members.adapters";
 import { demoNetworkTimestamp } from "./networkTimestamps";
+import { RELATIONSHIPS } from "../vouchMember.data";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
+
+/**
+ * `VoucherDTO` doesn't (yet) declare `relationships` in its shared type —
+ * added here locally rather than widening the shared DTO, since the backend
+ * response already carries it. Optional/nullable: pre-relationship vouches
+ * (e.g. the signup auto-vouch) carry none.
+ */
+type VoucherDTOWithRelationships = VoucherDTO & {
+  relationships?: string[] | null;
+};
 
 /** A single voucher face rendered on a profile's "Vouched for by…" row. */
 export interface VoucherFace {
@@ -25,6 +36,13 @@ export interface VoucherFace {
    * consumed this type never needed it.
    */
   createdAt?: string;
+  /**
+   * The ways this voucher knows the member ("collaborated", "friends", …),
+   * from `Vouch.relationships`. Empty when the vouch carries no recorded
+   * relationship (e.g. the signup auto-vouch) — never undefined, so callers
+   * can flatMap/filter it without an extra null check.
+   */
+  relationships: string[];
 }
 
 /**
@@ -61,12 +79,20 @@ export function useVouchers(slug: string | undefined) {
               tint: v.tint,
               avatarUrl: v.photo,
               createdAt: demoNetworkTimestamp(voucherIndex),
+              // The mock registry has no relationship data — synthesize a
+              // deterministic single tag from the index (same spirit as
+              // `demoNetworkTimestamp`) so the texture chips render in demo too.
+              relationships: [
+                RELATIONSHIPS[voucherIndex % RELATIONSHIPS.length] ??
+                  RELATIONSHIPS[0],
+              ],
             },
           ];
         });
       }
       const res = await getVouchers(slug);
       return res.vouchers.map((v) => {
+        const relationships = (v as VoucherDTOWithRelationships).relationships ?? [];
         // Anonymous vouchers come back shielded (empty slug/name). Render a
         // generic, un-linked face instead of a broken link to `/members/`.
         if (v.anonymous) {
@@ -77,6 +103,7 @@ export function useVouchers(slug: string | undefined) {
             tint: "plum" as AvatarTint,
             anonymous: true,
             createdAt: v.createdAt,
+            relationships,
           };
         }
         return {
@@ -86,6 +113,7 @@ export function useVouchers(slug: string | undefined) {
           tint: tintForSlug(v.slug),
           avatarUrl: v.avatarUrl ?? undefined,
           createdAt: v.createdAt,
+          relationships,
         };
       });
     },

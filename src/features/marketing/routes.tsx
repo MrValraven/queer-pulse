@@ -72,6 +72,10 @@ export function marketingRoutes() {
         element={<PostVolunteerOpportunityPage />}
       />
       <Route
+        path={routes.editVolunteer}
+        element={<PostVolunteerOpportunityPage />}
+      />
+      <Route
         path={routes.manageVolunteerApplicants}
         element={<VolunteerApplicantsDashboardPage />}
       />

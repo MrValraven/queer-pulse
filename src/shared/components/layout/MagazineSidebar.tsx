@@ -25,8 +25,7 @@ export function MagazineSidebar({
   // live mode, in which case the eyebrow and the "Issue" nav destination
   // both fall back rather than fabricating a number/theme.
   const { issue } = useCurrentIssue();
-  const { notifications } = useMagazineNotifications();
-  const notificationsCount = notifications.length;
+  const { unreadCount } = useMagazineNotifications();
 
   return (
     <aside className={styles.rail}>
@@ -70,12 +69,12 @@ export function MagazineSidebar({
       <button type="button" className={styles.bell} onClick={onOpenNotifications}>
         <FiZap aria-hidden />
         <span>{t("magazine:desk.notifications.sinceFriday")}</span>
-        {notificationsCount > 0 && (
+        {unreadCount > 0 && (
           <span
             className={styles.pip}
-            aria-label={t("magazine:deskShell.bellCountAria", { count: notificationsCount })}
+            aria-label={t("magazine:deskShell.bellCountAria", { count: unreadCount })}
           >
-            {notificationsCount}
+            {unreadCount}
           </span>
         )}
       </button>

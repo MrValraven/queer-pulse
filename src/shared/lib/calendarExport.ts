@@ -14,7 +14,7 @@ export interface CalendarEventInput {
   description?: string;
 }
 
-function icsTimestamp(date: Date): string {
+export function icsTimestamp(date: Date): string {
   return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 }
 
@@ -68,4 +68,40 @@ export function googleCalendarUrl(input: CalendarEventInput): string {
   if (input.description) params.set("details", input.description);
   if (input.location) params.set("location", input.location);
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
+/** A pre-filled Outlook Web "add event" deep link. */
+export function outlookCalendarUrl(input: CalendarEventInput): string {
+  const params = new URLSearchParams({
+    path: "/calendar/action/compose",
+    rru: "addevent",
+    subject: input.title,
+    startdt: input.start.toISOString(),
+    enddt: input.end.toISOString(),
+  });
+  if (input.location) params.set("location", input.location);
+  if (input.description) params.set("body", input.description);
+  return `https://outlook.live.com/calendar/0/deeplink/compose?${params.toString()}`;
+}
+
+/** A pre-filled Yahoo Calendar "add event" link. */
+export function yahooCalendarUrl(input: CalendarEventInput): string {
+  const durationMinutes = Math.max(
+    0,
+    Math.round((input.end.getTime() - input.start.getTime()) / 60000),
+  );
+  const hours = Math.floor(durationMinutes / 60);
+  const minutes = durationMinutes % 60;
+  const dur = `${String(hours).padStart(2, "0")}${String(minutes).padStart(2, "0")}`;
+  const params = new URLSearchParams({
+    v: "60",
+    view: "d",
+    type: "20",
+    title: input.title,
+    st: icsTimestamp(input.start),
+    dur,
+  });
+  if (input.location) params.set("in_loc", input.location);
+  if (input.description) params.set("desc", input.description);
+  return `https://calendar.yahoo.com/?${params.toString()}`;
 }

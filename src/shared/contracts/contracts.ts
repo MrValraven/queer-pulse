@@ -113,6 +113,10 @@ export interface AuthorSummary {
    *  Absent/`null` where the producing endpoint doesn't resolve it. */
   pronouns?: string | null;
   avatarUrl: string | null;
+  /** Optional — only a forum `ForumThreadResponse.author` ever carries this
+   *  (a thread an admin posted as "QueerPulse Official"). Absent/`undefined`
+   *  everywhere else. */
+  official?: boolean;
 }
 
 export interface CommunityPostResponse {
@@ -424,6 +428,9 @@ export interface ForumThreadResponse {
   canRestore: boolean;
   canViewHistory: boolean;
   canLock: boolean;
+  /** Whether the viewer may pin/unpin this thread — a plain moderator check,
+   *  same shape as `canLock`. */
+  canPin: boolean;
   /** Id of the thread's opening post (oldest post) — the list-row upvote +
    *  row-moderation target. Empty string on responses that didn't resolve it. */
   opPostId: string;

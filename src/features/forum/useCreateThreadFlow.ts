@@ -68,6 +68,7 @@ export function useCreateThreadFlow({
     cat: postCat,
     tags,
     communitySlug,
+    isOfficial,
   }: NewThreadInput) {
     // A client-only temp id keys the optimistic card so the create response can
     // reconcile it (stamp the server slug) once it resolves.
@@ -114,6 +115,7 @@ export function useCreateThreadFlow({
         category: postCat,
         tags,
         ...(communitySlug ? { communitySlug } : {}),
+        ...(isOfficial ? { isOfficial: true } : {}),
       },
       {
         onSuccess: (created) => {
@@ -127,6 +129,19 @@ export function useCreateThreadFlow({
                     myVote: created.myVote ?? thread.myVote,
                     upvotes: created.opVoteCount ?? thread.upvotes,
                     tags: created.tags ?? thread.tags,
+                    // Reconcile the optimistic author to "QueerPulse
+                    // Official" once the server confirms it — otherwise the
+                    // card would briefly show the admin's own name until the
+                    // next list refetch.
+                    ...(created.author.official
+                      ? {
+                          author: {
+                            ...thread.author,
+                            name: created.author.displayName,
+                            official: true,
+                          },
+                        }
+                      : {}),
                   }
                 : thread,
             ),

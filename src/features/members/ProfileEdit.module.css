@@ -702,6 +702,55 @@
   font-style: italic;
   margin-bottom: 8px;
 }
+.workSecondLinkRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.workSecondLinkRow .workLinkInput,
+.workSecondLinkRow .workLinkNote {
+  flex: 1;
+  margin-bottom: 8px;
+}
+.workLinkRemoveBtn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin-bottom: 8px;
+  color: var(--ink-40);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s var(--ease);
+}
+@media (hover: hover) {
+  .workLinkRemoveBtn:hover {
+    color: var(--accent-ink);
+  }
+}
+.workAddLinkBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 8px;
+  transition: color 0.15s var(--ease);
+}
+@media (hover: hover) {
+  .workAddLinkBtn:hover {
+    color: var(--accent);
+  }
+}
 .workMetaRow {
   display: flex;
   align-items: center;
@@ -1020,7 +1069,9 @@
 .tagRemove:focus-visible,
 .linkRemove:focus-visible,
 .avatarBtn:focus-visible,
-.workRemove:focus-visible {
+.workRemove:focus-visible,
+.workLinkRemoveBtn:focus-visible,
+.workAddLinkBtn:focus-visible {
   outline: none;
   box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.12);
 }

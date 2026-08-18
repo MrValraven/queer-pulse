@@ -85,6 +85,9 @@ export const forum: Catalog = {
   "compose.postPlaceholder": "Escreve a tua publicação…",
   "compose.cancel": "Cancelar",
   "compose.publishCta": "Publicar",
+  "compose.officialFieldLabel": "Publicar como QueerPulse Oficial",
+  "compose.officialFieldHint":
+    "Publica em nome da conta QueerPulse, em vez do teu nome.",
 
   // ── ComposeThreadModal · campo de etiquetas ─────────────────────────────
   "compose.tagsFieldLabel": "Etiquetas",
@@ -169,6 +172,10 @@ export const forum: Catalog = {
   // ── ThreadTopbar · controlo de fecho da moderação ───────────────────────
   "topbar.lockThread": "Fechar tópico",
   "topbar.unlockThread": "Reabrir tópico",
+
+  // ── ThreadTopbar · controlo de autoria oficial (admin) ──────────────────
+  "topbar.markOfficial": "Marcar como QueerPulse Oficial",
+  "topbar.unmarkOfficial": "Remover QueerPulse Oficial",
 
   // ── ThreadPage ──────────────────────────────────────────────────────────
   "threadPage.breadcrumbForum": "Fórum",
@@ -257,11 +264,16 @@ export const forum: Catalog = {
   "history.titleChange": "Título anterior: {title}",
   "history.close": "Fechar",
 
-  // ── Toasts (edit / delete / restore / lock) ──────────────────────────────
+  // ── Toasts (edit / delete / restore / lock / pin) ─────────────────────────
   "toast.editSaved": "A tua edição está publicada.",
   "toast.deleted": "Publicação eliminada.",
   "toast.restored": "Publicação restaurada.",
   "toast.threadLocked": "Tópico fechado a novas respostas.",
   "toast.threadUnlocked": "Tópico reaberto.",
+  "toast.threadPinned": "Tópico fixado no topo do fórum.",
+  "toast.threadUnpinned": "Tópico desafixado.",
+  "toast.threadMarkedOfficial": "Publicado como QueerPulse Oficial.",
+  "toast.threadUnmarkedOfficial": "Revertido para o autor original.",
+  "toast.pinCapReached": "Só podes fixar 3 tópicos ao mesmo tempo. Desafixa um primeiro.",
   "toast.error": "Algo correu mal. Tenta novamente daqui a pouco.",
 };

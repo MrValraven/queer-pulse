@@ -28,6 +28,15 @@ export function useGatheringForm() {
   const [endTime, setEndTime] = useState("22:00");
   const [hood, setHood] = useState("");
   const [venue, setVenue] = useState("");
+  // The venue's directory link, when the organiser picked a real listing
+  // instead of typing free text — settable via the venue picker, which sets
+  // all three of `venue`/`venueListingId`/`venueListing` together. Cleared
+  // (`null`) whenever the organiser types their own text instead.
+  const [venueListingId, setVenueListingId] = useState<string | null>(null);
+  const [venueListing, setVenueListing] = useState<{
+    slug: string;
+    name: string;
+  } | null>(null);
   // The community this gathering is posted to, or "" for a public gathering
   // visible to everyone (the wizard's default — matches prior behaviour).
   const [communitySlug, setCommunitySlugValue] = useState("");
@@ -131,6 +140,10 @@ export function useGatheringForm() {
     setAudienceScope,
     venue,
     setVenue,
+    venueListingId,
+    setVenueListingId,
+    venueListing,
+    setVenueListing,
     address,
     setAddress,
     directions,

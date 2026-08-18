@@ -55,7 +55,7 @@ export function VolunteerOpportunitySidebar({
 
   return (
     <aside className={styles.side}>
-      {applied ? (
+      {isPoster ? null : applied ? (
         <FadeIn className={styles.appliedCard}>
           <div className={styles.appliedIcon}>
             <svg

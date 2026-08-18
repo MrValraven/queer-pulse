@@ -21,6 +21,7 @@ export function ForumThreadRow({
   onDelete,
   onRestore,
   onHistory,
+  onTogglePin,
 }: {
   thread: Thread;
   index: number;
@@ -31,6 +32,7 @@ export function ForumThreadRow({
   onDelete: (thread: Thread) => void;
   onRestore: (thread: Thread) => void;
   onHistory: (thread: Thread) => void;
+  onTogglePin: (thread: Thread) => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -167,10 +169,13 @@ export function ForumThreadRow({
               canDelete={thread.canDelete}
               canRestore={thread.canRestore}
               canViewHistory={thread.canViewHistory}
+              canPin={thread.canPin}
+              pinned={!!thread.pinned}
               onEdit={() => onEditTitle(thread)}
               onDelete={() => onDelete(thread)}
               onRestore={() => onRestore(thread)}
               onHistory={() => onHistory(thread)}
+              onTogglePin={() => onTogglePin(thread)}
             />
           </div>
         )}

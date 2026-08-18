@@ -74,6 +74,7 @@ export const currentUser: Member = {
       year: "2022–2025",
       image:
         "https://plus.unsplash.com/premium_photo-1732115973557-47e5c91ba6e9?q=80&w=800&auto=format&fit=crop",
+      links: [],
     },
     {
       category: "Fullstack Developer",
@@ -82,6 +83,7 @@ export const currentUser: Member = {
       year: "2020–2022",
       image:
         "https://plus.unsplash.com/premium_photo-1737392496893-07869d657a6e?q=80&w=800&auto=format&fit=crop",
+      links: [],
     },
     {
       category: "Poetry",
@@ -89,6 +91,7 @@ export const currentUser: Member = {
       year: "2024",
       image:
         "https://plus.unsplash.com/premium_photo-1759762964086-184095920575?q=80&w=800&auto=format&fit=crop",
+      links: [],
     },
   ],
   board: [
@@ -96,6 +99,9 @@ export const currentUser: Member = {
       kind: "offering",
       title: "Web development & mentorship for community projects",
       slug: "web-dev-help",
+      status: "open",
+      expiresAt: "2026-08-23T12:00:00.000Z",
+      createdAt: "2026-05-25T12:00:00.000Z",
     },
   ],
   vouchers: ["ines", "rui"],

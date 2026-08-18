@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { postToReply, threadDetail } from "./forum.adapters";
+import { postToReply, threadDetail, threadToCard } from "./forum.adapters";
 import type {
   ForumPostResponse,
   ForumThreadResponse,
@@ -52,6 +52,7 @@ describe("forum adapters carry the post id + flags", () => {
       canRestore: false,
       canViewHistory: false,
       canLock: false,
+      canPin: false,
       opPostId: "op-1",
       opVoteCount: 0,
       myVote: 0,
@@ -65,5 +66,37 @@ describe("forum adapters carry the post id + flags", () => {
     );
     expect(detail.opPostId).toBe("op-1");
     expect(detail.replies[0]?.postId).toBe("reply-1");
+  });
+
+  it("threadToCard carries the official flag onto the author", () => {
+    const thread: ForumThreadResponse = {
+      id: "thread-1",
+      slug: "guide",
+      title: "Master resource guide",
+      author: {
+        handle: "queerpulse",
+        displayName: "QueerPulse",
+        avatarUrl: null,
+        official: true,
+      },
+      category: "guides",
+      isPinned: false,
+      isLocked: false,
+      replyCount: 0,
+      lastActivityAt: "2026-07-23T10:00:00Z",
+      createdAt: "2026-07-23T10:00:00Z",
+      canEdit: false,
+      canDelete: false,
+      canRestore: false,
+      canViewHistory: false,
+      canLock: false,
+      canPin: false,
+      opPostId: "op-1",
+      opVoteCount: 0,
+      myVote: 0,
+      tags: [],
+    };
+    const card = threadToCard(thread, t, fmt);
+    expect(card.author.official).toBe(true);
   });
 });

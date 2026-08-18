@@ -18,6 +18,7 @@ import type { DirectoryCardDTO, DirectoryDetailDTO } from "./directory.api";
 export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
   return {
     // card fields
+    id: dto.id,
     slug: dto.slug,
     name: dto.name,
     cat: dto.cat,

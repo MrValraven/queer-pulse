@@ -368,6 +368,13 @@
 }
 
 .vc {
+  /* Fills its FadeIn/.wrap grid cell (grid rows stretch by default) so a
+     venue card matches the height of taller cards in the same row, instead
+     of sitting at its own shorter intrinsic content height. */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
@@ -387,61 +394,18 @@
   border-color: var(--line-strong);
   box-shadow: 0 14px 30px -20px rgba(var(--plum-rgb), 0.3);
 }
-.vcHead {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.vcIcon {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  flex: none;
-}
-.vcInfo {
-  flex: 1;
-  min-width: 0;
-}
 .vcName {
-  font-size: 15px;
-  font-weight: 600;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 17px;
   color: var(--text-strong);
-}
-.vcBairro {
-  font-size: 12px;
-  color: var(--ink-40);
-}
-.vcRight {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex: none;
-}
-.vcTypeTag {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 6px;
-}
-.vcAccess {
-  font-size: 13px;
-}
-.vcVibes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 10px;
+  letter-spacing: -0.01em;
 }
 .vt {
-  font-size: 10.5px;
-  padding: 3px 8px;
-  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
 }
 /* Accordion reveal: the 0fr→1fr grid-rows technique animates to the details'
    natural height. Details stay mounted so it plays open AND closed. */

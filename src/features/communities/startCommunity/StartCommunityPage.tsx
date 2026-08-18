@@ -13,7 +13,11 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
 import { useCreateCommunity } from "../api/useCommunityMutations";
 import { draftToCreateDto } from "../api/communities.adapters";
-import { TOTAL_STEPS, type CreatedCommunity } from "./startCommunity.data";
+import {
+  TOTAL_STEPS,
+  resolvePresetRules,
+  type CreatedCommunity,
+} from "./startCommunity.data";
 import { createCommunityRecord } from "./createdCommunities.store";
 import { useCommunityForm } from "./useCommunityForm";
 import {
@@ -122,10 +126,18 @@ export function StartCommunityPage() {
     // final step → found the community
     setPhase("opening");
     scrollUp();
+    // `draft.rules` still holds raw preset i18n keys for any covenant rule the
+    // founder left untouched (StepTone matches on them to drive its toggle
+    // state) — resolve those to real copy now, since what leaves the wizard
+    // becomes the community's permanent, plain-text shared values.
+    const submitDraft = {
+      ...draft,
+      rules: resolvePresetRules(draft.rules, t),
+    };
     // Live: POST /communities, then land in the new community's hub. Demo keeps
     // the in-page create-it-live success (no network, no navigation).
     if (!demoMode) {
-      create.mutate(draftToCreateDto(draft), {
+      create.mutate(draftToCreateDto(submitDraft), {
         onSuccess: (dto) => {
           if (dto) void navigate(`/community/${dto.slug}`);
         },
@@ -137,7 +149,7 @@ export function StartCommunityPage() {
       return;
     }
     openTimer.current = setTimeout(() => {
-      const record = createCommunityRecord(draft, user?.profile.slug ?? "");
+      const record = createCommunityRecord(submitDraft, user?.profile.slug ?? "");
       createOwned(record.slug);
       setCreated(record);
       setPhase("done");

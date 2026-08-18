@@ -6,6 +6,7 @@ import type { GatheringDetail, OverviewCounts } from "./ManageOverviewTab";
 import { AttendeesTab } from "./ManageAttendeesTab";
 import { MessagesTab } from "./ManageMessagesTab";
 import { SettingsTab } from "./ManageSettingsTab";
+import type { VenueSelection } from "./VenuePicker";
 import styles from "./ManageGatheringPage.module.css";
 
 export { ManageGatheringSidebar } from "./ManageGatheringSidebar";
@@ -22,7 +23,10 @@ interface ManageGatheringTabsProps {
   /** Live going/waitlist/spots-left for the overview chips; demo omits it and
    *  the tab falls back to its static trio. */
   overviewCounts?: OverviewCounts;
+  venueListingId: string | null;
+  venueListing: { slug: string; name: string } | null;
   onUpdateDetail: (id: string, value: string) => void;
+  onUpdateVenue: (value: VenueSelection) => void;
   onUpdateDescription: (value: string) => void;
 }
 
@@ -42,7 +46,10 @@ export function ManageGatheringTabs({
   details,
   description,
   overviewCounts,
+  venueListingId,
+  venueListing,
   onUpdateDetail,
+  onUpdateVenue,
   onUpdateDescription,
 }: ManageGatheringTabsProps) {
   const { t } = useTranslation();
@@ -64,7 +71,10 @@ export function ManageGatheringTabs({
           details={details}
           description={description}
           counts={overviewCounts}
+          venueListingId={venueListingId}
+          venueListing={venueListing}
           onUpdateDetail={onUpdateDetail}
+          onUpdateVenue={onUpdateVenue}
           onUpdateDescription={onUpdateDescription}
         />
       )}

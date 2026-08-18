@@ -79,6 +79,9 @@ export const forum: Catalog = {
   "compose.postPlaceholder": "Write your post…",
   "compose.cancel": "Cancel",
   "compose.publishCta": "Publish post",
+  "compose.officialFieldLabel": "Post as QueerPulse Official",
+  "compose.officialFieldHint":
+    "Publishes under the QueerPulse account instead of your name.",
 
   // ── ComposeThreadModal · tags field ─────────────────────────────────────
   "compose.tagsFieldLabel": "Tags",
@@ -162,6 +165,10 @@ export const forum: Catalog = {
   // ── ThreadTopbar · moderator lock control ───────────────────────────────
   "topbar.lockThread": "Close thread",
   "topbar.unlockThread": "Reopen thread",
+
+  // ── ThreadTopbar · admin official-byline control ────────────────────────
+  "topbar.markOfficial": "Mark as QueerPulse Official",
+  "topbar.unmarkOfficial": "Remove QueerPulse Official",
 
   // ── ThreadPage ──────────────────────────────────────────────────────────
   "threadPage.breadcrumbForum": "Forum",
@@ -250,11 +257,16 @@ export const forum: Catalog = {
   "history.titleChange": "Title was: {title}",
   "history.close": "Close",
 
-  // ── Toasts (edit / delete / restore / lock) ──────────────────────────────
+  // ── Toasts (edit / delete / restore / lock / pin) ─────────────────────────
   "toast.editSaved": "Your edit is live.",
   "toast.deleted": "Post deleted.",
   "toast.restored": "Post restored.",
   "toast.threadLocked": "Thread closed to new replies.",
   "toast.threadUnlocked": "Thread reopened.",
+  "toast.threadPinned": "Thread pinned to the top of the forum.",
+  "toast.threadUnpinned": "Thread unpinned.",
+  "toast.threadMarkedOfficial": "Posted as QueerPulse Official.",
+  "toast.threadUnmarkedOfficial": "Reverted to the original author.",
+  "toast.pinCapReached": "Only 3 threads can be pinned at once. Unpin one first.",
   "toast.error": "Something went wrong. Try again in a moment.",
 };

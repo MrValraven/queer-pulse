@@ -129,6 +129,10 @@ export interface Thread {
   /** Whether the viewer may lock/unlock this thread (moderator permission).
    *  Live-provided; absent on demo threads, so the lock control is live-only. */
   canLock?: boolean;
+  /** Whether the viewer may pin/unpin this thread (moderator permission).
+   *  Live-provided; absent on demo threads, so the row menu's Pin item is
+   *  live-only (demo threads already carry a fixed `pinned` badge instead). */
+  canPin?: boolean;
 }
 
 // ── Author / reply identity, driven by the member registry ──────────────────

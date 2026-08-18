@@ -225,6 +225,17 @@ export const communities: Catalog = {
   "detail.roster.loadingMore": "Loading…",
 
   // ── Mod tools tab (living hub) ─────────────────────────────────────────────
+  "detail.modtools.insights.label": "Community insights",
+  "detail.modtools.insights.error.title": "Couldn't load insights",
+  "detail.modtools.insights.error.description":
+    "Something went wrong loading the numbers. Try again.",
+  "detail.modtools.insights.error.retryCta": "Try again",
+  "detail.modtools.insights.memberCount": "Members",
+  "detail.modtools.insights.newThisWeek": "New this week",
+  "detail.modtools.insights.newThisMonth": "New this month",
+  "detail.modtools.insights.postCount": "Posts",
+  "detail.modtools.insights.postsThisWeek": "Posts this week",
+  "detail.modtools.insights.activeMembers": "Active this week",
   "detail.modtools.joinRequests.label": "People asking to join",
   "detail.modtools.joinRequests.empty.title": "No requests waiting",
   "detail.modtools.joinRequests.empty.description":
@@ -238,10 +249,14 @@ export const communities: Catalog = {
     "Nothing has been flagged. The community looks after each other.",
   "detail.modtools.reports.meta":
     "From {author} · flagged by {reporter} · {time} ago",
+  "detail.modtools.reports.metaLive": "Flagged {time} ago",
   "detail.modtools.reports.removeCta": "Remove post",
   "detail.modtools.reports.dismissCta": "Dismiss",
+  "detail.modtools.reports.replyNote":
+    "This report is on a reply, not the post itself — it can be dismissed but not removed directly.",
   "detail.modtools.members.label": "Members",
   "detail.modtools.members.makeModCta": "Make mod",
+  "detail.modtools.members.demoteCta": "Remove mod",
   "detail.modtools.members.removeCta": "Remove from community",
   "detail.modtools.members.ownerTag": "Owner",
   "detail.modtools.toast.approved": "{name} approved. Welcome them in.",
@@ -252,6 +267,45 @@ export const communities: Catalog = {
   "detail.modtools.toast.reportDismissed": "Report dismissed.",
   "detail.modtools.toast.promoted": "{name} is now a mod.",
   "detail.modtools.toast.removed": "{name} has been removed.",
+
+  // ── Danger zone (Mod tools tab, living hub) ────────────────────────────────
+  "detail.dangerZone.heading": "Danger zone",
+  "detail.dangerZone.errorToast": "Something went wrong. Try again.",
+  "detail.dangerZone.freeze.label": "Freeze the community",
+  "detail.dangerZone.freeze.text":
+    "Pause new posts and joins while things settle. Members can still read.",
+  "detail.dangerZone.freeze.cta": "Freeze",
+  "detail.dangerZone.freeze.successToast": "{name} has been frozen.",
+  "detail.dangerZone.freeze.confirm.title": "Freeze {name}?",
+  "detail.dangerZone.freeze.confirm.body":
+    "Members won't be able to post or join while the community is frozen. You can unfreeze it any time.",
+  "detail.dangerZone.freeze.confirm.cancel": "Cancel",
+  "detail.dangerZone.freeze.confirm.confirmCta": "Freeze community",
+  "detail.dangerZone.archive.label": "Archive the community",
+  "detail.dangerZone.archive.text":
+    "Close the community for good. It stays visible as read-only; nobody can post, join, or manage it.",
+  "detail.dangerZone.archive.cta": "Archive",
+  "detail.dangerZone.archive.successToast": "{name} has been archived.",
+  "detail.dangerZone.archive.confirm.title": "Archive {name}?",
+  "detail.dangerZone.archive.confirm.body":
+    "This closes the community for good. It becomes read-only and can't be reopened. This can't be undone.",
+  "detail.dangerZone.archive.confirm.cancel": "Cancel",
+  "detail.dangerZone.archive.confirm.confirmCta": "Archive community",
+  "detail.dangerZone.transfer.label": "Transfer ownership",
+  "detail.dangerZone.transfer.text":
+    "Hand the community over to another member. You'll keep your current role.",
+  "detail.dangerZone.transfer.cta": "Transfer",
+  "detail.dangerZone.transfer.successToast":
+    "Ownership was transferred to {owner}.",
+  "detail.dangerZone.transfer.confirm.title":
+    "Transfer ownership of {name}?",
+  "detail.dangerZone.transfer.confirm.body":
+    "Pick who takes over as owner. They'll get full control of {name}.",
+  "detail.dangerZone.transfer.confirm.cancel": "Cancel",
+  "detail.dangerZone.transfer.confirm.confirmCta": "Transfer ownership",
+  "detail.dangerZone.transfer.confirm.empty":
+    "There's nobody else on the roster to hand this to yet.",
+  "detail.dangerZone.transfer.confirm.searchPlaceholder": "Search members…",
 
   // ── Pulse tab (living hub) ─────────────────────────────────────────────────
   "detail.pulse.joinHint": "You're welcome to read. Join {name} to take part.",

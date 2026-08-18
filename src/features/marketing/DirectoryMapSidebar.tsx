@@ -6,29 +6,28 @@ import { type LocalPlace } from "./localPlaces";
 import { LocalPlaceCard } from "./LocalPlaceCard";
 import { type DirectoryMapViewState } from "./useDirectoryMapView";
 import s from "./localMap.module.css";
+import p from "./DirectoryPage.module.css";
 
+// Mirrors the real .vc: hero photo, name + rating, type/bairro, vibe pills.
 function VenueCardSkeleton() {
   return (
     <div className={s.vc} aria-hidden>
-      <div className={s.vcHead}>
-        <SkeletonLine
-          width={38}
-          height={38}
-          style={{ borderRadius: 10, flex: "none" }}
-        />
-        <div className={s.vcInfo}>
-          <SkeletonLine width="60%" height={15} />
-          <SkeletonLine width="40%" height={12} style={{ marginTop: 5 }} />
-        </div>
-        <SkeletonLine
-          width={54}
-          height={20}
-          style={{ borderRadius: 6, flex: "none" }}
-        />
+      <SkeletonLine width="100%" height={140} style={{ borderRadius: 14 }} />
+      <div className={p.nameRow}>
+        <SkeletonLine width="55%" height={17} />
+        <SkeletonLine width={48} height={12} />
       </div>
-      <div className={s.vcVibes}>
-        <SkeletonLine width={48} height={18} style={{ borderRadius: 6 }} />
-        <SkeletonLine width={62} height={18} style={{ borderRadius: 6 }} />
+      <div className={p.metaRow}>
+        <SkeletonLine width={70} height={16} style={{ borderRadius: 6 }} />
+        <SkeletonLine width={60} height={12.5} />
+      </div>
+      <div>
+        <SkeletonLine width="100%" height={13.5} />
+        <SkeletonLine width="85%" height={13.5} style={{ marginTop: 6 }} />
+      </div>
+      <div className={p.pillsRow}>
+        <SkeletonLine width={48} height={18} style={{ borderRadius: 999 }} />
+        <SkeletonLine width={62} height={18} style={{ borderRadius: 999 }} />
       </div>
     </div>
   );

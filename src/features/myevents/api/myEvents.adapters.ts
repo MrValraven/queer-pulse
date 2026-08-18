@@ -39,6 +39,46 @@ function splitIso(iso: string | undefined): { date: string; time: string } {
   return { date, time };
 }
 
+/**
+ * When a member is both hosting an event and RSVP'd to it, the same event
+ * slug comes back under more than one `LIVE_FILTERS` bucket (e.g. "going"
+ * AND "hosting"), which would otherwise render as two duplicate cards. This
+ * ranks the buckets so the more privileged relationship wins the merge —
+ * hosting a still-open RSVP the member also holds.
+ */
+const CATEGORY_MERGE_PRIORITY: EventFilter[] = [
+  "hosting",
+  "going",
+  "waitlisted",
+  "past",
+  "saved",
+];
+
+/** Merge one `GET /events?filter=…` page per `LIVE_FILTERS` entry into a single
+ *  `MyEvent[]`, collapsing any event slug that appears under more than one
+ *  filter down to its highest-priority category (see `CATEGORY_MERGE_PRIORITY`). */
+export function mergeEventPages(
+  pages: { items: EventCardDTO[] }[],
+  filters: EventFilter[],
+): MyEvent[] {
+  const byId = new Map<string, MyEvent>();
+  pages.forEach((page, filterIndex) => {
+    const filter = filters[filterIndex]!;
+    for (const dto of page.items) {
+      const event = eventCardToMyEvent(dto, filter);
+      const existing = byId.get(event.id);
+      if (
+        !existing ||
+        CATEGORY_MERGE_PRIORITY.indexOf(filter) <
+          CATEGORY_MERGE_PRIORITY.indexOf(existing.category as EventFilter)
+      ) {
+        byId.set(event.id, event);
+      }
+    }
+  });
+  return [...byId.values()];
+}
+
 /** GET /events card (already bucketed server-side by `filter`) → `MyEvent`. */
 export function eventCardToMyEvent(
   dto: EventCardDTO,

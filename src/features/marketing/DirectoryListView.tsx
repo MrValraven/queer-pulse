@@ -9,21 +9,26 @@ import { LocalPlaceCard } from "./LocalPlaceCard";
 import s from "./DirectoryPage.module.css";
 
 function DirectoryCardSkeleton() {
-  // Mirrors the real .card: top row (44px avatar + badge), name, cat, hood, desc, foot.
+  // Mirrors the real .card: hero photo, name + rating, category/hood, desc, tag pills, foot.
   return (
     <div className={s.card} aria-hidden>
-      <div className={s.top}>
-        <SkeletonLine width={44} height={44} style={{ borderRadius: 12 }} />
-        <SkeletonLine width={84} height={18} style={{ borderRadius: 6 }} />
+      <SkeletonLine width="100%" height={168} style={{ borderRadius: 14 }} />
+      <div className={s.nameRow}>
+        <SkeletonLine width="55%" height={19} />
+        <SkeletonLine width={48} height={12} />
+      </div>
+      <div className={s.metaRow}>
+        <SkeletonLine width={70} height={16} style={{ borderRadius: 6 }} />
+        <SkeletonLine width={60} height={12.5} />
       </div>
       <div>
-        <SkeletonLine width="65%" height={19} />
-        <SkeletonLine width="40%" height={12} style={{ marginTop: 6 }} />
-        <SkeletonLine width="50%" height={12.5} style={{ marginTop: 6 }} />
-      </div>
-      <div style={{ flex: 1 }}>
         <SkeletonLine width="100%" height={13.5} />
         <SkeletonLine width="85%" height={13.5} style={{ marginTop: 6 }} />
+      </div>
+      <div className={s.pillsRow}>
+        <SkeletonLine width={70} height={20} style={{ borderRadius: 999 }} />
+        <SkeletonLine width={40} height={20} style={{ borderRadius: 999 }} />
+        <SkeletonLine width={90} height={20} style={{ borderRadius: 999 }} />
       </div>
       <div className={s.foot} style={{ borderTopColor: "transparent" }}>
         <SkeletonLine width={90} height={13} />

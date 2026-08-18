@@ -110,6 +110,14 @@ export interface EventDetailDTO extends EventCardDTO {
   communityId?: string | null;
   /** Slug counterpart of `communityId`. */
   communitySlug?: string | null;
+  /** The directory listing this gathering's venue is linked to, or `null`/
+   *  absent for a free-text venue. Settable via the venue picker (PATCH
+   *  `/events/:slug` with `listingId`, see `UpdateEventDto` below). */
+  listingId?: string | null;
+  /** The linked listing's display name + public slug, when `listingId` is
+   *  set and the listing is still live. `null` otherwise. The frontend builds
+   *  the `/local/directory/:slug` link itself via `businessPath()`. */
+  venueListing?: { slug: string; name: string } | null;
 }
 
 export interface AttendeeDTO {
@@ -156,14 +164,21 @@ export interface CreateEventDto {
   /** Attach the gathering to one of the organiser's communities. Omitted (or
    *  undefined) keeps it a public/global gathering, as before. */
   communitySlug?: string;
+  /** Link the venue to a real directory listing (its uuid). Omitted keeps a
+   *  plain free-text `venue`, as before. */
+  listingId?: string;
 }
 
-/** PATCH /events/:slug — every field optional. `communitySlug` additionally
- *  accepts `null` (on top of `CreateEventDto`'s string-or-omitted), so the
- *  edit modal can explicitly CLEAR a gathering's community — create-time has
- *  no such concept; omitting the field there just means "no community". */
-export type UpdateEventDto = Partial<Omit<CreateEventDto, "communitySlug">> & {
+/** PATCH /events/:slug — every field optional. `communitySlug`/`listingId`
+ *  additionally accept `null` (on top of `CreateEventDto`'s
+ *  string-or-omitted), so the edit modal can explicitly CLEAR a gathering's
+ *  community / unlink its venue from a listing — create-time has no such
+ *  concept; omitting the field there just means "none". */
+export type UpdateEventDto = Partial<
+  Omit<CreateEventDto, "communitySlug" | "listingId">
+> & {
   communitySlug?: string | null;
+  listingId?: string | null;
 };
 
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
