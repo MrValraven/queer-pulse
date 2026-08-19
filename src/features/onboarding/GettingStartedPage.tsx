@@ -66,10 +66,17 @@ function StepRow({ step }: { step: GettingStartedStepState }) {
         </span>
       </span>
       {step.done ? (
-        <span className={styles.doneTag}>
-          <FiCheck aria-hidden />
-          {t("auth:gettingStarted.doneLabel")}
-        </span>
+        <>
+          <span className={styles.stepXpDone}>
+            {t("auth:gettingStarted.stepXpEarned", {
+              xp: String(GETTING_STARTED_STEP_XP),
+            })}
+          </span>
+          <span className={styles.doneTag}>
+            <FiCheck aria-hidden />
+            {t("auth:gettingStarted.doneLabel")}
+          </span>
+        </>
       ) : (
         <>
           <span className={styles.stepXp}>
@@ -106,19 +113,18 @@ export function GettingStartedPage() {
   return (
     <AppShell>
       <main className={styles.page}>
-        <header className={styles.head}>
-          <Eyebrow>{t("auth:gettingStarted.eyebrow")}</Eyebrow>
-          <h1 className={styles.title}>
-            <Translation
-              i18nKey="auth:gettingStarted.title"
-              components={{ em: <em /> }}
-            />
-          </h1>
-          <p className={styles.lede}>{t("auth:gettingStarted.lede")}</p>
-        </header>
-
         {allDone ? (
-          <>
+          <div className={styles.doneCol}>
+            <header className={styles.head}>
+              <Eyebrow>{t("auth:gettingStarted.eyebrow")}</Eyebrow>
+              <h1 className={styles.title}>
+                <Translation
+                  i18nKey="auth:gettingStarted.title"
+                  components={{ em: <em /> }}
+                />
+              </h1>
+              <p className={styles.lede}>{t("auth:gettingStarted.lede")}</p>
+            </header>
             <SuccessPanel
               title={t("auth:gettingStarted.allDone.title")}
               em={t("auth:gettingStarted.allDone.em")}
@@ -133,23 +139,40 @@ export function GettingStartedPage() {
             >
               {t("auth:gettingStarted.allDone.body")}
             </SuccessPanel>
-            <SideQuests />
-          </>
-        ) : (
-          <>
-            <LevelXpStrip />
-            <XpSourcesTeaser />
-            <ProgressMeter
-              done={completedCount}
-              total={totalCount}
-              loading={loading}
+            <LevelXpStrip
+              hint={t("auth:gettingStarted.levelStrip.hintDone")}
             />
-            <ol className={styles.list}>
-              {steps.map((step) => (
-                <StepRow key={step.key} step={step} />
-              ))}
-            </ol>
-          </>
+            <SideQuests />
+          </div>
+        ) : (
+          <div className={styles.layout}>
+            <div className={styles.mainCol}>
+              <header className={styles.head}>
+                <Eyebrow>{t("auth:gettingStarted.eyebrow")}</Eyebrow>
+                <h1 className={styles.title}>
+                  <Translation
+                    i18nKey="auth:gettingStarted.title"
+                    components={{ em: <em /> }}
+                  />
+                </h1>
+                <p className={styles.lede}>{t("auth:gettingStarted.lede")}</p>
+              </header>
+              <ProgressMeter
+                done={completedCount}
+                total={totalCount}
+                loading={loading}
+              />
+              <ol className={styles.list}>
+                {steps.map((step) => (
+                  <StepRow key={step.key} step={step} />
+                ))}
+              </ol>
+            </div>
+            <aside className={styles.sideCol}>
+              <LevelXpStrip force />
+              <XpSourcesTeaser />
+            </aside>
+          </div>
         )}
       </main>
     </AppShell>

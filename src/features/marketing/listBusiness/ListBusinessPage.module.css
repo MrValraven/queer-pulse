@@ -267,6 +267,15 @@
   flex-direction: column;
   gap: 22px;
 }
+/* Escalate the field whose Select panel is open above its siblings. Every
+   .stepBody child animates transform on entrance (below), which transiently
+   makes each one its own stacking context — Select's own z-index escalation
+   on `.container.open` only wins inside that context, so a later sibling
+   still paints over an earlier field's open panel. See the
+   fadein-row-stacking-context-clips-dropdown pattern. */
+.stepBody > *:has([role="listbox"]) {
+  z-index: 5;
+}
 .stepBody .lbField {
   /* Out-specifies FormField's own `.field { margin-bottom: 16px }` (0,2,0 vs
      0,1,0) so the flex gap alone drives field-to-field rhythm — locally, with

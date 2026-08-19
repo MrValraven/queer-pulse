@@ -313,7 +313,7 @@
   }
 }
 .sec {
-  margin-bottom: 32px;
+  margin-bottom: var(--gap-lg);
 }
 .secH2 {
   font-family: var(--serif);
@@ -321,7 +321,7 @@
   font-size: 23px;
   color: var(--text-strong);
   letter-spacing: -0.01em;
-  margin-bottom: 13px;
+  margin-bottom: var(--gap-sm);
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -349,8 +349,8 @@
 .pieceHead {
   display: grid;
   grid-template-columns: 1fr 200px 92px 84px;
-  gap: 16px;
-  padding: 15px 22px;
+  gap: var(--gap-sm);
+  padding: var(--gap-sm) var(--gap-grid);
   align-items: start;
 }
 .pieceHead {
@@ -360,7 +360,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-40);
-  padding: 11px 22px;
+  padding: var(--gap-xs) var(--gap-grid);
 }
 .pieceRow {
   border-top: 1px solid rgba(45, 27, 61, 0.06);
@@ -669,7 +669,7 @@
   background: rgba(var(--jade-rgb), 0.12);
 }
 .newDeckBtn {
-  margin-top: 14px;
+  margin-top: var(--gap-sm);
 }
 
 /* ── Pitch inbox ── */

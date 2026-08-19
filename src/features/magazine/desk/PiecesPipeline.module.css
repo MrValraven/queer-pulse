@@ -15,9 +15,9 @@
 .prow {
   display: grid;
   grid-template-columns: minmax(0, 2.5fr) 118px 130px 96px 96px;
-  gap: 14px;
+  gap: var(--gap-sm);
   align-items: center;
-  padding: 12px 20px;
+  padding: var(--gap-sm) var(--gap-grid);
 }
 
 .phead {

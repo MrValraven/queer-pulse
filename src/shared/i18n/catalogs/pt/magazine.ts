@@ -687,6 +687,9 @@ export const magazine: Catalog = {
   "desk.issuePlan.lateSuffix": " · atrasada",
 
   // ── PitchInbox ───────────────────────────────────────────────────────────
+  "desk.pitchInbox.heading": "Caixa de propostas",
+  "desk.pitchInbox.countLabel_one": "{count} proposta",
+  "desk.pitchInbox.countLabel_other": "{count} propostas",
   "desk.pitchInbox.emptyTitle": "Caixa vazia",
 
   // ── PitchRow ─────────────────────────────────────────────────────────────

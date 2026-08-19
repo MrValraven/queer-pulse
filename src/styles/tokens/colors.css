@@ -65,6 +65,14 @@
   --violet: #7a52b8;
   --violet-rgb: 122, 82, 184;
 
+  /* ── Rose (Care category accent — badges & recognition) ──
+     Muted rose-mauve, kept out of --accent-rgb's warmer/brighter range so it
+     reads as a distinct tint next to coral. --rose-ink is the AA-safe text
+     variant (4.6:1 cream / 5.1:1 paper); plain --rose is a fill/tint colour. */
+  --rose: #b0628f;
+  --rose-rgb: 176, 98, 143;
+  --rose-ink: #8a4a6e;
+
   /* ── Local directory category colours (map pins + filter-chip legend) ──
      One fixed, theme-stable fill per unified category, each dark enough to
      carry a white icon (≥4.5:1 on white). Fixed values are intentional — like
@@ -141,6 +149,7 @@
      See contrast-audit.md §9. */
   --danger: #e34646; /* was #B91C1C → 2.80:1. Now 4.51 paper / 4.87 cream. */
   --violet: #906fc4; /* was #7A52B8 → 3.21:1. Now 4.53 / 4.89. */
+  --rose-ink: #d79cbb; /* on dark surfaces a lighter rose reads as "ink" */
   /* The FormField error colour. On dark, plain --accent is already 6.22:1 on
      paper / 6.72:1 on cream — no new colour needed. */
   --accent-ink: var(--accent);

@@ -123,6 +123,7 @@ export function DeskHeader({
             {t("magazine:desk.header.viewingAs")}
             <Select
               size="sm"
+              className={styles.viewingAsSelect}
               value={me}
               onChange={(value) => onMe(value ?? "")}
               label={t("magazine:desk.header.viewingAsEditorAria")}

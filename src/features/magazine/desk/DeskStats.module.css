@@ -3,8 +3,8 @@
 .stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-bottom: 24px;
+  gap: var(--gap-sm);
+  margin-bottom: var(--gap-lg);
 }
 
 .stat {

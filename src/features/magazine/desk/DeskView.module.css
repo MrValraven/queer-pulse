@@ -7,9 +7,9 @@
 .grid {
   display: grid;
   grid-template-columns: 1fr 328px;
-  gap: 32px;
+  gap: var(--gap-lg);
   align-items: flex-start;
-  margin-top: 22px;
+  margin-top: var(--gap-grid);
 }
 
 @media (--wide) {

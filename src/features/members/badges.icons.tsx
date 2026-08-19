@@ -10,6 +10,8 @@ export const earnedBadges: Badge[] = [
     when: "Pride Brunch · Jun 2025",
     rarity: "common",
     tint: "jade",
+    xpReward: 60,
+    verifiedBy: "host",
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <rect
@@ -44,6 +46,8 @@ export const earnedBadges: Badge[] = [
     when: "3 gatherings attended",
     rarity: "common",
     tint: "jade",
+    xpReward: 70,
+    verifiedBy: "auto",
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <circle cx="10" cy="14" r="4.5" stroke={s("jade")} strokeWidth="1.8" />
@@ -59,6 +63,8 @@ export const earnedBadges: Badge[] = [
     when: "5 gatherings in one year",
     rarity: "rare",
     tint: "accent",
+    xpReward: 110,
+    verifiedBy: "auto",
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <path
@@ -84,6 +90,8 @@ export const earnedBadges: Badge[] = [
     when: "10 connections made",
     rarity: "common",
     tint: "jade",
+    xpReward: 50,
+    verifiedBy: "auto",
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <circle cx="9" cy="14" r="3.5" stroke={s("jade")} strokeWidth="1.8" />
@@ -110,6 +118,8 @@ export const earnedBadges: Badge[] = [
     when: "Vouched for a new member",
     rarity: "rare",
     tint: "accent",
+    xpReward: 100,
+    verifiedBy: "review",
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <path
@@ -136,6 +146,8 @@ export const earnedBadges: Badge[] = [
     when: "Started a community thread",
     rarity: "common",
     tint: "jade",
+    xpReward: 45,
+    verifiedBy: "auto",
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <path
@@ -167,6 +179,8 @@ export const earnedBadges: Badge[] = [
     when: "Joined in the first 500",
     rarity: "legendary",
     tint: "plum",
+    xpReward: 200,
+    verifiedBy: "auto",
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <path
@@ -189,10 +203,12 @@ export const earnedBadges: Badge[] = [
   {
     key: "sustainer",
     category: "Platform",
-    name: "Sustainer",
-    when: "Supporting member · 6 months",
+    name: "Rooted",
+    when: "Member for 6 months",
     rarity: "rare",
     tint: "accent",
+    xpReward: 130,
+    verifiedBy: "auto",
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <path
@@ -218,6 +234,8 @@ export const earnedBadges: Badge[] = [
     when: "Hosted a QueerPulse gathering",
     rarity: "legendary",
     tint: "plum",
+    xpReward: 220,
+    verifiedBy: "host",
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <path
@@ -246,11 +264,14 @@ export const earnedBadges: Badge[] = [
 export const lockedBadges: Badge[] = [
   {
     key: "decade",
-    category: "Attendance",
-    name: "Decade",
-    when: "Attend 10 gatherings",
+    category: "Platform",
+    name: "Anniversary",
+    when: "Be a member for 1 year",
     rarity: "rare",
     tint: "jade",
+    xpReward: 150,
+    verifiedBy: "auto",
+    progress: { units: 220, target: 365 },
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <circle cx="14" cy="14" r="8" stroke={s("jade")} strokeWidth="1.8" />
@@ -271,6 +292,9 @@ export const lockedBadges: Badge[] = [
     when: "Have your vouch accepted 3 times",
     rarity: "rare",
     tint: "accent",
+    xpReward: 120,
+    verifiedBy: "review",
+    progress: { units: 1, target: 3 },
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <path
@@ -289,6 +313,9 @@ export const lockedBadges: Badge[] = [
     when: "Connect with 50 members",
     rarity: "rare",
     tint: "plum",
+    xpReward: 110,
+    verifiedBy: "auto",
+    progress: { units: 22, target: 50 },
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <circle cx="14" cy="10" r="5" stroke={s("plum")} strokeWidth="1.8" />
@@ -309,6 +336,9 @@ export const lockedBadges: Badge[] = [
     when: "Host 3 approved gatherings",
     rarity: "legendary",
     tint: "jade",
+    xpReward: 240,
+    verifiedBy: "host",
+    progress: { units: 1, target: 3 },
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <path
@@ -367,6 +397,9 @@ export const lockedBadges: Badge[] = [
     when: "Active for 2 full years",
     rarity: "rare",
     tint: "accent",
+    xpReward: 140,
+    verifiedBy: "auto",
+    progress: { units: 520, target: 730 },
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <path
@@ -385,6 +418,9 @@ export const lockedBadges: Badge[] = [
     when: "Submit a member story",
     rarity: "common",
     tint: "jade",
+    xpReward: 80,
+    verifiedBy: "review",
+    progress: { units: 0, target: 1 },
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <path
@@ -436,6 +472,9 @@ export const lockedBadges: Badge[] = [
     when: "Connect members across cities",
     rarity: "rare",
     tint: "accent",
+    xpReward: 130,
+    verifiedBy: "auto",
+    progress: { units: 1, target: 3 },
     icon: (
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
         <path
@@ -451,6 +490,86 @@ export const lockedBadges: Badge[] = [
           stroke={s("accent")}
           strokeWidth="1.5"
           strokeDasharray="3 3"
+        />
+      </svg>
+    ),
+  },
+];
+
+/** Time-limited badges — only earnable during their open window, and never
+ *  earnable again once it closes. Rendered in the page's seasonal band. */
+export const seasonalBadges: Badge[] = [
+  {
+    key: "pride-2026",
+    category: "Attendance",
+    name: "Pride 2026",
+    when: "March with the QueerPulse block",
+    rarity: "rare",
+    tint: "accent",
+    xpReward: 120,
+    verifiedBy: "host",
+    seasonal: { when: "Open until 30 June 2026" },
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
+        <path
+          d="M5 21a9 9 0 0 1 18 0"
+          stroke={s("accent")}
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+        <path
+          d="M10.5 21a3.5 3.5 0 0 1 7 0"
+          stroke={s("accent")}
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    key: "new-year-first-table",
+    category: "Attendance",
+    name: "New Year, First Table",
+    when: "Attend the first gathering of the year",
+    rarity: "common",
+    tint: "jade",
+    xpReward: 90,
+    verifiedBy: "host",
+    seasonal: { when: "January only" },
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
+        <path
+          d="M14 5v16M6 9.5l16 8M22 9.5l-16 8"
+          stroke={s("jade")}
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    key: "winter-warmth",
+    category: "Community",
+    name: "Winter Warmth",
+    when: "Bring someone new to a December gathering",
+    rarity: "rare",
+    tint: "plum",
+    xpReward: 110,
+    verifiedBy: "host",
+    seasonal: { when: "Opens 1 December" },
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
+        <path
+          d="M8 6h12v6.5A6 6 0 0 1 8 12.5V6Z"
+          stroke={s("plum")}
+          strokeWidth="1.8"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M19 8h1.5a2 2 0 0 1 0 4H19M6 22h16"
+          stroke={s("plum")}
+          strokeWidth="1.8"
+          strokeLinecap="round"
         />
       </svg>
     ),

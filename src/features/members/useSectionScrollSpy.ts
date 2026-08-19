@@ -11,6 +11,18 @@ import { useEffect, useState } from "react";
  * up as soon as they mount, via a `MutationObserver` — not just skipped once
  * at effect-setup time, since `sectionIds` for an always-shown section never
  * changes to re-trigger that setup.
+ *
+ * The `MutationObserver` keeps watching for the effect's whole lifetime
+ * rather than disconnecting once every id has been found: right after an SPA
+ * navigation, the routed page can remount a couple of times in quick
+ * succession (React's dev-mode double-invoke, the `AnimatePresence`-based
+ * route transition swapping the outgoing/incoming page) — if that happens
+ * AFTER the one-shot bootstrap already found every section, the
+ * `IntersectionObserver` is left watching the earlier, now-detached DOM
+ * nodes forever and the highlight freezes until a full reload gives it a
+ * single stable mount to attach to. Comparing element IDENTITY (not just "do
+ * we already know this id") lets it re-observe a section whose node got
+ * swapped out from under it.
  */
 export function useSectionScrollSpy(
   sectionIds: readonly string[],
@@ -55,27 +67,27 @@ export function useSectionScrollSpy(
       { rootMargin: "-15% 0px -70% 0px", threshold: 0 },
     );
 
-    const observedIds = new Set<string>();
+    const observedElements = new Map<string, Element>();
 
-    function observeMountedSections() {
+    function syncObservedSections() {
       for (const id of ids) {
-        if (observedIds.has(id)) continue;
         const sectionElement = document.getElementById(id);
-        if (!sectionElement) continue;
-        observedIds.add(id);
+        if (!sectionElement || observedElements.get(id) === sectionElement) {
+          continue;
+        }
+        const previousElement = observedElements.get(id);
+        if (previousElement) intersectionObserver.unobserve(previousElement);
+        observedElements.set(id, sectionElement);
         intersectionObserver.observe(sectionElement);
       }
-      if (observedIds.size === ids.length) mutationObserver.disconnect();
     }
 
-    const mutationObserver = new MutationObserver(observeMountedSections);
-    observeMountedSections();
-    if (observedIds.size < ids.length) {
-      mutationObserver.observe(document.body, {
-        childList: true,
-        subtree: true,
-      });
-    }
+    const mutationObserver = new MutationObserver(syncObservedSections);
+    syncObservedSections();
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
 
     return () => {
       intersectionObserver.disconnect();

@@ -5,9 +5,8 @@ import { useTooltip, useTooltipInPortal } from "@visx/tooltip";
  * Bundles visx's tooltip state and portal container into one hook. Put
  * `containerRef` on the positioned `.plot` wrapper around the `<svg>`, translate
  * pointer events with `localPoint` (from `@visx/event`), and render
- * `<TooltipInPortal top={tooltipTop} left={tooltipLeft} className={styles.tip}
- * unstyled>` for a token-styled bubble that follows the cursor and flips near
- * edges (detectBounds).
+ * `<ChartTooltip tip={tip}>` for a token-styled bubble that follows the cursor
+ * and flips near edges (detectBounds).
  */
 export function useChartTooltip<Datum>() {
   const {

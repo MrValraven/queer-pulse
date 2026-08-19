@@ -5,6 +5,18 @@ import { currentUser, fullName } from "./data/members";
 export type BadgeRarity = "common" | "rare" | "legendary";
 export type BadgeTint = "jade" | "accent" | "plum";
 
+/** How far a locked badge is toward its target — omitted when the backend
+ *  hasn't wired real progress tracking for that badge yet (the UI degrades
+ *  to a binary locked state rather than guessing a number). */
+export interface BadgeProgress {
+  units: number;
+  target: number;
+}
+
+/** How a badge is checked, shown in the drawer's "how it's checked" copy.
+ *  Omitted rather than defaulted when the backend hasn't classified it. */
+export type BadgeVerification = "auto" | "host" | "review" | "peer";
+
 export interface Badge {
   key: string;
   category: string;
@@ -13,6 +25,33 @@ export interface Badge {
   rarity: BadgeRarity;
   tint: BadgeTint;
   icon: ReactNode;
+  /** Longer "what it takes" copy for the drawer. Falls back to `when`. */
+  criteria?: string;
+  /** XP this badge is worth when earned. */
+  xpReward?: number;
+  progress?: BadgeProgress;
+  verifiedBy?: BadgeVerification;
+  /** Present only for time-limited badges; drives the seasonal band. */
+  seasonal?: { when: string };
+}
+
+/** One dated entry in a member's XP history — see `XpLedgerEntryDTO`. `createdAt`
+ *  is a raw ISO timestamp; the UI formats it locally via `useFormat()` so it
+ *  renders in the member's language instead of a backend-baked English string. */
+export interface XpLedgerEntry {
+  createdAt: string;
+  description: string;
+  xp: number;
+  /** Present only on a correction/adjustment row. */
+  reason?: string;
+}
+
+/** One badge in whichever list opened the drawer (momentum, the case grid,
+ *  or the seasonal band) — the drawer's prev/next paging stays scoped to
+ *  that list rather than jumping across sections. */
+export interface BadgeDrawerEntry {
+  badge: Badge;
+  earned: boolean;
 }
 
 export interface LevelInfo {
@@ -68,7 +107,7 @@ export const levelLadder: LadderPill[] = [
   { number: 7, name: "Pillar", state: "locked" },
 ];
 
-export { earnedBadges, lockedBadges } from "./badges.icons";
+export { earnedBadges, lockedBadges, seasonalBadges } from "./badges.icons";
 
 export const perksLadder: PerkLadderRow[] = [
   {

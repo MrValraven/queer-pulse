@@ -669,6 +669,9 @@ export const magazine: Catalog = {
   "desk.issuePlan.lateSuffix": " · late",
 
   // ── PitchInbox ───────────────────────────────────────────────────────────
+  "desk.pitchInbox.heading": "Pitch inbox",
+  "desk.pitchInbox.countLabel_one": "{count} pitch",
+  "desk.pitchInbox.countLabel_other": "{count} pitches",
   "desk.pitchInbox.emptyTitle": "Inbox empty",
 
   // ── PitchRow ─────────────────────────────────────────────────────────────

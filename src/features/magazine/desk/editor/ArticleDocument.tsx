@@ -67,6 +67,18 @@ export function ArticleDocument({
 }: ArticleDocumentProps) {
   const { t } = useTranslation();
 
+  function handleHeadlinePaste(event: ClipboardEvent<HTMLDivElement>) {
+    // Title/standfirst sit outside `.blockList` below, so they don't get
+    // `handlePaste`'s protection — without this, the browser's default
+    // paste drops the clipboard's HTML straight into these contentEditables
+    // (wrapper tags, inline styles, classes and all), which then becomes
+    // the saved title/standfirst verbatim. Collapse to plain text instead,
+    // same as blocks discard rich clipboard markup below.
+    event.preventDefault();
+    const text = event.clipboardData.getData("text/plain").replace(/\s+/g, " ").trim();
+    if (text) document.execCommand("insertText", false, text);
+  }
+
   function handlePaste(event: ClipboardEvent<HTMLDivElement>) {
     const text = event.clipboardData.getData("text/plain");
     if (!text.trim()) return;
@@ -95,12 +107,14 @@ export function ArticleDocument({
         <RichText
           html={title}
           onChange={onTitleChange}
+          onPaste={handleHeadlinePaste}
           className={styles.title}
           placeholder={t("magazine:write.document.headlinePlaceholder")}
         />
         <RichText
           html={standfirst}
           onChange={onStandfirstChange}
+          onPaste={handleHeadlinePaste}
           className={styles.standfirst}
           placeholder={t("magazine:write.document.standfirstPlaceholder")}
         />

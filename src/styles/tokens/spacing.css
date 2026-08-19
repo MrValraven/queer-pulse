@@ -23,6 +23,7 @@
   --section-y-lg: 120px; /* larger sections */
 
   /* ── Grid gaps ── */
+  --gap-lg: 32px;
   --gap-grid: 22px;
   --gap-sm: 14px;
   --gap-xs: 9px;

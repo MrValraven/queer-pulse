@@ -30,9 +30,9 @@ export interface InviteView {
 }
 
 const DEMO_NOTE =
-  "\"I've been part of this community for two years now. It's the one platform I'm genuinely glad exists. I think you'd belong here.\"";
+  "\"I've been here two years now. It's the one place online where I don't have to explain myself. I think you'd like it here.\"";
 const DEMO_VOUCH =
-  "They’re exactly the kind of person this community was built for: thoughtful, creative, and genuinely invested in making queer spaces better.";
+  "You're thoughtful, creative, and exactly the kind of person I wanted in this space.";
 
 function formatExpiry(iso: string | null): string {
   if (!iso) return "";

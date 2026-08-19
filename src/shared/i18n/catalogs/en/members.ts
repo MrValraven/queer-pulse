@@ -31,7 +31,7 @@ export const members: Catalog = {
   "upload.error.decodeFailed":
     "We couldn't read that image. Try a different file.",
   "upload.error.tooSmall":
-    "This image is too small. It needs to be at least {minWidth} × {minHeight}px.",
+    "This image is too small ({minWidth} × {minHeight}px minimum). Screenshots and photos saved from messaging apps are often shrunk. Try uploading the original photo from your camera roll instead.",
   "upload.error.stripFailed":
     "We couldn't safely process that image, so we didn't upload it. Try a different file.",
   "upload.error.retry": "We couldn't upload that image. Please try again.",
@@ -177,7 +177,6 @@ export const members: Catalog = {
   "profile.trust.staff": "Staff",
   "profile.trust.vouchCount_one": "{count} vouch",
   "profile.trust.vouchCount_other": "{count} vouches",
-  "profile.trust.explainCta": "What these mean",
   "profile.trust.modalTitle": "Trust signals",
   "profile.trust.modalIntro":
     "A quick guide to what you'll see on someone's profile.",
@@ -1139,20 +1138,196 @@ export const members: Catalog = {
   "badges.xpBreakdown.sub": "Every source of XP, earned or still open.",
   "badges.xpBreakdown.progress": "{units} of {cap}",
   "badges.xpBreakdown.amount": "+{xp} XP",
+  "badges.xpBreakdown.perUnitAmount": "+{xp} XP each",
   "badges.xpBreakdown.sources.profile": "Profile complete",
+  "badges.xpBreakdown.sources.profileDesc": "A photo and a bio on your profile.",
   "badges.xpBreakdown.sources.communities": "Communities joined",
+  "badges.xpBreakdown.sources.communitiesDesc": "Joining a community.",
   "badges.xpBreakdown.sources.personas": "Personas published",
+  "badges.xpBreakdown.sources.personasDesc": "Publishing a persona.",
   "badges.xpBreakdown.sources.vouches": "Vouches given",
+  "badges.xpBreakdown.sources.vouchesDesc": "Vouching for someone else.",
   "badges.xpBreakdown.sources.connections": "Connections made",
+  "badges.xpBreakdown.sources.connectionsDesc": "Connecting with another member.",
   "badges.xpBreakdown.sources.events": "Gatherings attended",
+  "badges.xpBreakdown.sources.eventsDesc": "Attending a gathering.",
   "badges.xpBreakdown.sources.posts": "Community posts",
+  "badges.xpBreakdown.sources.postsDesc": "Posting in a community.",
   "badges.xpBreakdown.sources.endorsements": "Endorsements received",
+  "badges.xpBreakdown.sources.endorsementsDesc": "Being endorsed by another member.",
   "badges.xpBreakdown.sources.workshops": "Workshops taught",
+  "badges.xpBreakdown.sources.workshopsDesc": "Hosting a workshop.",
   "badges.xpBreakdown.sources.tenure": "Days on QueerPulse",
+  "badges.xpBreakdown.sources.tenureDesc": "Being part of QueerPulse, one day at a time.",
   "badges.xpBreakdown.sources.verified": "Verified",
+  "badges.xpBreakdown.sources.verifiedDesc": "Verifying your account.",
   "badges.xpBreakdown.sources.gettingStarted": "Getting-started steps",
+  "badges.xpBreakdown.sources.gettingStartedDesc": "Finishing a Getting Started step.",
   "badges.xpBreakdown.sources.badges": "Badge bonuses",
+  "badges.xpBreakdown.sources.badgesDesc": "The badges you've earned along the way.",
   "badges.xpBreakdown.sources.other": "Other",
+  "badges.xpBreakdown.sources.otherDesc": "Other activity on QueerPulse.",
+
+  // ── Badges v2: hero + level dial ─────────────────────────────────────────
+  "badges.hero.levelWord": "Level",
+  "badges.hero.statEarnedLabel": "In the case",
+  "badges.hero.statRareLabel": "Rarest held",
+  "badges.hero.statNearLabel": "Closest badge",
+  "badges.hero.statNearAllEarned": "All of them",
+  "badges.hero.statRareNone": "None yet",
+  "badges.hero.printCase": "Print your case",
+  "badges.hero.xpProgress": "{xp} / {xpMax} XP",
+  "badges.hero.xpToNextName": "{xp} XP to <b>{nextName}</b>",
+  "badges.hero.maxLevel": "You've reached the top of the ladder.",
+  "badges.hero.youAreHere": "You are here",
+  "badges.hero.seeAllLevels": "See all seven levels",
+  "badges.hero.toGo": "{count} to go",
+
+  // ── Badges v2: momentum ("closest to earning") ───────────────────────────
+  "badges.momentum.eyebrow": "Momentum",
+  "badges.momentum.heading": "Closest to <em>earning</em>",
+  "badges.momentum.previewEarn": "Preview the earn moment",
+  "badges.momentum.progress": "{units} of {target}",
+  "badges.momentum.cannotBeChased": "Comes from another member",
+  "badges.momentum.xpReward": "+{xp} XP",
+  "badges.momentum.allEarnedDesc":
+    "Everything in your unmuted categories is earned.",
+  "badges.momentum.unmuteCategory": "Unmute a category",
+  "badges.momentum.fastestXp": "Fastest XP",
+
+  // ── Badges v2: the case (grid + controls) ────────────────────────────────
+  "badges.case.eyebrow": "The case",
+  "badges.case.heading": "Your <em>badges</em>",
+  "badges.case.sub": "{earned} earned · {remaining} still out there",
+  "badges.case.showLocked": "Show locked",
+  "badges.case.notForMe": "Not for me",
+  "badges.case.muteTitle": "Mute a category",
+  "badges.case.muteDesc":
+    "Muted categories are never suggested to you. No nudges, no counting against you.",
+  "badges.case.sortLabel": "Sort badges",
+  "badges.case.sortClosest": "Closest first",
+  "badges.case.sortRarest": "Rarest first",
+  "badges.case.sortXp": "Most XP",
+  "badges.case.sortCategory": "By category",
+  "badges.case.filterAll": "Everything",
+  "badges.case.mutedNoteSingle":
+    "{category} is muted. Nothing from it will be suggested to you.",
+  "badges.case.mutedNotePlural":
+    "{categories} are muted. Nothing from them will be suggested to you.",
+  "badges.case.unmute": "Unmute",
+  "badges.case.rarestFlag": "Rarest in your case",
+  "badges.case.rarityCommon": "Common",
+  "badges.case.rarityRare": "Rare",
+  "badges.case.rarityLegendary": "Legendary",
+  "badges.case.emptyTitle": "Nothing in the case <em>yet</em>.",
+  "badges.case.emptyDesc":
+    "That's exactly right for week one. A few of these are within reach without leaving the sofa. The rest arrive by being here.",
+
+  // ── Badges v2: badge detail drawer ───────────────────────────────────────
+  "badges.drawer.whatItTakes": "What it takes",
+  "badges.drawer.rarity": "Rarity",
+  "badges.drawer.worth": "Worth",
+  "badges.drawer.checkedBy": "Checked by",
+  "badges.drawer.checkedBySystem": "System",
+  "badges.drawer.checkedByHost": "Host",
+  "badges.drawer.checkedByPerson": "A person",
+  "badges.drawer.checkedByMember": "A member",
+  "badges.drawer.howCheckedHeading": "How it's checked",
+  "badges.drawer.verifyAutoTitle": "Counted automatically",
+  "badges.drawer.verifyAutoBody":
+    "Counted automatically from your own activity. Nothing is logged that isn't already yours.",
+  "badges.drawer.verifyHostTitle": "Confirmed at the door",
+  "badges.drawer.verifyHostBody":
+    "Confirmed by the host checking you in at the door.",
+  "badges.drawer.verifyReviewTitle": "Read by a person",
+  "badges.drawer.verifyReviewBody":
+    "Someone on the community team reads it before it counts. That delay is the point.",
+  "badges.drawer.verifyPeerTitle": "Given in someone else's words",
+  "badges.drawer.verifyPeerBody":
+    "Given by another member, in their own words. It can't be requested, bought, or farmed.",
+  "badges.drawer.noteHeading": "Your note on this one",
+  "badges.drawer.notePlaceholder":
+    "One line for yourself. What was this actually about?",
+  "badges.drawer.noteHelp": "Only you can see this.",
+  "badges.drawer.visibleOnProfile": "Visible on your profile",
+  "badges.drawer.privateToYou": "Private to you",
+  "badges.drawer.visibilityNote":
+    "Saved on this device only. We're still building the part that hides it from how other people see your profile.",
+  "badges.drawer.earnedThisWeek": "this week",
+  "badges.drawer.progressCount": "{units} of {target} done",
+  "badges.drawer.previous": "Previous badge",
+  "badges.drawer.next": "Next badge",
+  "badges.drawer.count": "{index} of {total}",
+  "badges.drawer.seasonalTag": "Seasonal",
+  "badges.drawer.close": "Close",
+
+  // ── Badges v2: seasonal band ──────────────────────────────────────────────
+  "badges.seasonal.eyebrow": "Seasonal",
+  "badges.seasonal.heading": "Only <em>this year</em>",
+  "badges.seasonal.sub":
+    "Badges that won't be earnable again once their window closes. They expire, but the memory stays.",
+
+  // ── Badges v2: ladder ─────────────────────────────────────────────────────
+  "badges.ladderV2.eyebrow": "The ladder",
+  "badges.ladderV2.heading": "What each level <em>opens</em>",
+  "badges.ladderV2.sub":
+    "Levels are permissions you unlock. Each rung buys you one thing you can do, and that's the headline; everything else is detail.",
+  "badges.ladderV2.passed": "Passed",
+  "badges.ladderV2.youAreHere": "You are here",
+  "badges.ladderV2.ahead": "Ahead",
+  "badges.ladderV2.toNext": "{xp} to {name}",
+  "badges.ladderV2.beyondTitle": "After {name}",
+  "badges.ladderV2.beyondBody": "The ladder stops. The room doesn't.",
+
+  // ── Badges v2: XP ledger / receipts ──────────────────────────────────────
+  "badges.ledger.eyebrow": "Receipts",
+  "badges.ledger.heading": "Where the <em>points</em> came from",
+  "badges.ledger.subWithCount":
+    "{count} events. Your level is derived from this list, never stored.",
+  "badges.ledger.subEmpty": "Your level is derived from this list, never stored.",
+  "badges.ledger.sparkXp": "{xp} XP",
+  "badges.ledger.sparkAriaLabel": "XP over time, ending at {xp} XP",
+  "badges.ledger.colDate": "Date",
+  "badges.ledger.colWhat": "What happened",
+  "badges.ledger.colXp": "XP",
+  "badges.ledger.colTotal": "Total",
+  "badges.ledger.why": "Why",
+  "badges.ledger.showAll": "Show all {count} events",
+  "badges.ledger.showLess": "Show less",
+  "badges.ledger.emptyTitle": "No history yet.",
+  "badges.ledger.emptyBody":
+    "Every point lands here with a date and a reason, so you can see it, and we can take it back if something was miscounted.",
+  "badges.ledger.integrityHeading": "Why this can be trusted",
+  "badges.ledger.integrity1Title": "Hosts confirm attendance.",
+  "badges.ledger.integrity1Body":
+    "You can't mark yourself present at a table you never sat at.",
+  "badges.ledger.integrity2Title": "A person reviews contributions.",
+  "badges.ledger.integrity2Body":
+    "Guides, listings, and vouches pass a human before they count.",
+  "badges.ledger.integrity3Title": "Private by default.",
+  "badges.ledger.integrity3Body":
+    "Nothing appears on your profile until you switch it on, badge by badge.",
+  "badges.ledger.integrity4Title": "No leaderboard.",
+  "badges.ledger.integrity4Body":
+    "Members are never ranked against each other. Rarity describes the badge itself.",
+  "badges.ledger.integrity5Title": "Corrections stay visible.",
+  "badges.ledger.integrity5Body":
+    "When points are taken back, the row and the reason stay in the list.",
+  "badges.ledger.footnoteCount":
+    "{badges} badges · {levels} levels · one ledger you can audit.",
+  "badges.ledger.footnoteContact": "Something look wrong? Ask the community team.",
+
+  // ── Badges v2: earn moment + case card ───────────────────────────────────
+  "badges.earn.kickerBadge": "Badge earned",
+  "badges.earn.kickerGiven": "Given to you",
+  "badges.earn.body": "That's +{xp} XP, and it's yours whether or not you ever show it.",
+  "badges.earn.putInCase": "Put it in the case",
+  "badges.earn.footnote": "Level {level} · {name} · private until you say otherwise",
+  "badges.caseCard.title": "Your case",
+  "badges.caseCard.subtitle": "QueerPulse · Lisbon",
+  "badges.caseCard.emptyDesc": "An empty case. Come back in a month.",
+  "badges.caseCard.footStats": "{count} badges · {xp} XP",
+  "badges.caseCard.close": "Close",
 
   // ── Perks page chrome (PerksPage, PerksSections) ────────────────────────────
   "perks.page.backToBadges": "Badges & level",

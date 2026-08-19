@@ -29,7 +29,7 @@ export const members: Catalog = {
   "upload.error.decodeFailed":
     "Não conseguimos ler essa imagem. Tenta um ficheiro diferente.",
   "upload.error.tooSmall":
-    "Essa imagem é demasiado pequena. Precisa de ter pelo menos {minWidth} × {minHeight}px.",
+    "Essa imagem é demasiado pequena (mínimo de {minWidth} × {minHeight}px). Capturas de ecrã e fotos guardadas de apps de mensagens costumam vir reduzidas. Tenta carregar a foto original da tua galeria.",
   "upload.error.stripFailed":
     "Não conseguimos processar essa imagem em segurança, por isso não a carregámos. Tenta um ficheiro diferente.",
   "upload.error.retry":
@@ -180,7 +180,6 @@ export const members: Catalog = {
   "profile.trust.staff": "Equipa",
   "profile.trust.vouchCount_one": "{count} voto de confiança",
   "profile.trust.vouchCount_other": "{count} votos de confiança",
-  "profile.trust.explainCta": "O que significa isto",
   "profile.trust.modalTitle": "Sinais de confiança",
   "profile.trust.modalIntro":
     "Um guia rápido sobre o que vais ver no perfil de alguém.",
@@ -1152,20 +1151,199 @@ export const members: Catalog = {
   "badges.xpBreakdown.sub": "Todas as fontes de XP, ganhas ou ainda por ganhar.",
   "badges.xpBreakdown.progress": "{units} de {cap}",
   "badges.xpBreakdown.amount": "+{xp} XP",
+  "badges.xpBreakdown.perUnitAmount": "+{xp} XP cada",
   "badges.xpBreakdown.sources.profile": "Perfil completo",
+  "badges.xpBreakdown.sources.profileDesc": "Uma foto e uma bio no teu perfil.",
   "badges.xpBreakdown.sources.communities": "Comunidades a que te juntaste",
+  "badges.xpBreakdown.sources.communitiesDesc": "Entrares numa comunidade.",
   "badges.xpBreakdown.sources.personas": "Personas publicadas",
+  "badges.xpBreakdown.sources.personasDesc": "Publicares uma persona.",
   "badges.xpBreakdown.sources.vouches": "Avais que deste",
+  "badges.xpBreakdown.sources.vouchesDesc": "Dares aval a outra pessoa.",
   "badges.xpBreakdown.sources.connections": "Ligações feitas",
+  "badges.xpBreakdown.sources.connectionsDesc": "Ligares-te a outro membro.",
   "badges.xpBreakdown.sources.events": "Convívios em que participaste",
+  "badges.xpBreakdown.sources.eventsDesc": "Participares num convívio.",
   "badges.xpBreakdown.sources.posts": "Publicações na comunidade",
+  "badges.xpBreakdown.sources.postsDesc": "Publicares numa comunidade.",
   "badges.xpBreakdown.sources.endorsements": "Endossos recebidos",
+  "badges.xpBreakdown.sources.endorsementsDesc": "Seres endossade por outro membro.",
   "badges.xpBreakdown.sources.workshops": "Workshops que deste",
+  "badges.xpBreakdown.sources.workshopsDesc": "Dares um workshop.",
   "badges.xpBreakdown.sources.tenure": "Dias na QueerPulse",
+  "badges.xpBreakdown.sources.tenureDesc": "Fazeres parte da QueerPulse, dia a dia.",
   "badges.xpBreakdown.sources.verified": "Verificado",
+  "badges.xpBreakdown.sources.verifiedDesc": "Verificares a tua conta.",
   "badges.xpBreakdown.sources.gettingStarted": "Passos dos primeiros dias",
+  "badges.xpBreakdown.sources.gettingStartedDesc": "Concluíres um passo dos primeiros dias.",
   "badges.xpBreakdown.sources.badges": "Bónus de emblemas",
+  "badges.xpBreakdown.sources.badgesDesc": "Os emblemas que já ganhaste.",
   "badges.xpBreakdown.sources.other": "Outro",
+  "badges.xpBreakdown.sources.otherDesc": "Outra atividade na QueerPulse.",
+
+  // ── Emblemas v2: hero + mostrador de nível ───────────────────────────────
+  "badges.hero.levelWord": "Nível",
+  "badges.hero.statEarnedLabel": "No espólio",
+  "badges.hero.statRareLabel": "Mais raro",
+  "badges.hero.statNearLabel": "Emblema mais próximo",
+  "badges.hero.statNearAllEarned": "Todos eles",
+  "badges.hero.statRareNone": "Ainda nenhum",
+  "badges.hero.printCase": "Imprimir o teu espólio",
+  "badges.hero.xpProgress": "{xp} / {xpMax} XP",
+  "badges.hero.xpToNextName": "{xp} XP para <b>{nextName}</b>",
+  "badges.hero.maxLevel": "Chegaste ao topo da escada.",
+  "badges.hero.youAreHere": "Estás aqui",
+  "badges.hero.seeAllLevels": "Ver os sete níveis",
+  "badges.hero.toGo": "faltam {count}",
+
+  // ── Emblemas v2: momento ("mais perto de ganhar") ────────────────────────
+  "badges.momentum.eyebrow": "Impulso",
+  "badges.momentum.heading": "Mais perto de <em>ganhar</em>",
+  "badges.momentum.previewEarn": "Pré-visualizar o momento de ganhar",
+  "badges.momentum.progress": "{units} de {target}",
+  "badges.momentum.cannotBeChased": "Vem de outro membro",
+  "badges.momentum.xpReward": "+{xp} XP",
+  "badges.momentum.allEarnedDesc":
+    "Tudo nas tuas categorias não silenciadas já foi ganho.",
+  "badges.momentum.unmuteCategory": "Reativar uma categoria",
+  "badges.momentum.fastestXp": "XP mais rápido",
+
+  // ── Emblemas v2: o espólio (grelha + controlos) ──────────────────────────
+  "badges.case.eyebrow": "O espólio",
+  "badges.case.heading": "Os teus <em>emblemas</em>",
+  "badges.case.sub": "{earned} ganhos · {remaining} ainda por aí",
+  "badges.case.showLocked": "Mostrar bloqueados",
+  "badges.case.notForMe": "Não é para mim",
+  "badges.case.muteTitle": "Silenciar uma categoria",
+  "badges.case.muteDesc":
+    "As categorias silenciadas nunca te são sugeridas. Sem lembretes, sem contarem contra ti.",
+  "badges.case.sortLabel": "Ordenar emblemas",
+  "badges.case.sortClosest": "Mais próximos primeiro",
+  "badges.case.sortRarest": "Mais raros primeiro",
+  "badges.case.sortXp": "Mais XP",
+  "badges.case.sortCategory": "Por categoria",
+  "badges.case.filterAll": "Tudo",
+  "badges.case.mutedNoteSingle":
+    "{category} está silenciada. Nada dela te será sugerido.",
+  "badges.case.mutedNotePlural":
+    "{categories} estão silenciadas. Nada delas te será sugerido.",
+  "badges.case.unmute": "Reativar",
+  "badges.case.rarestFlag": "O mais raro do teu espólio",
+  "badges.case.rarityCommon": "Comum",
+  "badges.case.rarityRare": "Raro",
+  "badges.case.rarityLegendary": "Lendário",
+  "badges.case.emptyTitle": "Ainda nada no espólio.",
+  "badges.case.emptyDesc":
+    "É exatamente assim que deve ser na primeira semana. Alguns destes estão ao alcance sem saíres de casa. Os restantes chegam com o tempo.",
+
+  // ── Emblemas v2: painel de detalhe ────────────────────────────────────────
+  "badges.drawer.whatItTakes": "O que é preciso",
+  "badges.drawer.rarity": "Raridade",
+  "badges.drawer.worth": "Vale",
+  "badges.drawer.checkedBy": "Verificado por",
+  "badges.drawer.checkedBySystem": "Sistema",
+  "badges.drawer.checkedByHost": "Anfitrião",
+  "badges.drawer.checkedByPerson": "Uma pessoa",
+  "badges.drawer.checkedByMember": "Um membro",
+  "badges.drawer.howCheckedHeading": "Como é verificado",
+  "badges.drawer.verifyAutoTitle": "Contado automaticamente",
+  "badges.drawer.verifyAutoBody":
+    "Contado automaticamente a partir da tua própria atividade. Nada é registado que já não seja teu.",
+  "badges.drawer.verifyHostTitle": "Confirmado à porta",
+  "badges.drawer.verifyHostBody":
+    "Confirmado pelo anfitrião que te regista à entrada.",
+  "badges.drawer.verifyReviewTitle": "Lido por uma pessoa",
+  "badges.drawer.verifyReviewBody":
+    "Alguém da equipa da comunidade lê antes de contar. Essa demora é propositada.",
+  "badges.drawer.verifyPeerTitle": "Dado nas palavras de outra pessoa",
+  "badges.drawer.verifyPeerBody":
+    "Dado por outro membro, nas próprias palavras. Não pode ser pedido, comprado nem forçado.",
+  "badges.drawer.noteHeading": "A tua nota sobre este",
+  "badges.drawer.notePlaceholder":
+    "Uma linha para ti. O que foi isto, realmente?",
+  "badges.drawer.noteHelp": "Só tu vês isto.",
+  "badges.drawer.visibleOnProfile": "Visível no teu perfil",
+  "badges.drawer.privateToYou": "Privado, só para ti",
+  "badges.drawer.visibilityNote":
+    "Guardado só neste dispositivo. Ainda estamos a construir a parte que o esconde de como outras pessoas veem o teu perfil.",
+  "badges.drawer.earnedThisWeek": "esta semana",
+  "badges.drawer.progressCount": "{units} de {target} feitos",
+  "badges.drawer.previous": "Emblema anterior",
+  "badges.drawer.next": "Próximo emblema",
+  "badges.drawer.count": "{index} de {total}",
+  "badges.drawer.seasonalTag": "Sazonal",
+  "badges.drawer.close": "Fechar",
+
+  // ── Emblemas v2: faixa sazonal ────────────────────────────────────────────
+  "badges.seasonal.eyebrow": "Sazonal",
+  "badges.seasonal.heading": "Só <em>este ano</em>",
+  "badges.seasonal.sub":
+    "Emblemas que não voltam a poder ser ganhos depois de fechada a janela. Expiram, mas a memória fica.",
+
+  // ── Emblemas v2: escada ────────────────────────────────────────────────────
+  "badges.ladderV2.eyebrow": "A escada",
+  "badges.ladderV2.heading": "O que cada nível <em>desbloqueia</em>",
+  "badges.ladderV2.sub":
+    "Os níveis são permissões que desbloqueias. Cada degrau compra-te uma coisa que passas a poder fazer, e esse é o essencial; o resto são detalhes.",
+  "badges.ladderV2.passed": "Ultrapassado",
+  "badges.ladderV2.youAreHere": "Estás aqui",
+  "badges.ladderV2.ahead": "Por vir",
+  "badges.ladderV2.toNext": "{xp} para {name}",
+  "badges.ladderV2.beyondTitle": "Depois de {name}",
+  "badges.ladderV2.beyondBody": "A escada acaba. A comunidade, não.",
+
+  // ── Emblemas v2: extrato de XP ────────────────────────────────────────────
+  "badges.ledger.eyebrow": "Extrato",
+  "badges.ledger.heading": "De onde vieram os <em>pontos</em>",
+  "badges.ledger.subWithCount":
+    "{count} eventos. O teu nível deriva desta lista, nunca é guardado à parte.",
+  "badges.ledger.subEmpty":
+    "O teu nível deriva desta lista, nunca é guardado à parte.",
+  "badges.ledger.sparkXp": "{xp} XP",
+  "badges.ledger.sparkAriaLabel": "XP ao longo do tempo, a terminar em {xp} XP",
+  "badges.ledger.colDate": "Data",
+  "badges.ledger.colWhat": "O que aconteceu",
+  "badges.ledger.colXp": "XP",
+  "badges.ledger.colTotal": "Total",
+  "badges.ledger.why": "Porquê",
+  "badges.ledger.showAll": "Mostrar todos os {count} eventos",
+  "badges.ledger.showLess": "Mostrar menos",
+  "badges.ledger.emptyTitle": "Ainda sem histórico.",
+  "badges.ledger.emptyBody":
+    "Cada ponto fica aqui com uma data e um motivo, para o veres, e para podermos anulá-lo se algo foi contado por engano.",
+  "badges.ledger.integrityHeading": "Porque podes confiar nisto",
+  "badges.ledger.integrity1Title": "Os anfitriões confirmam presenças.",
+  "badges.ledger.integrity1Body":
+    "Não podes marcar-te presente numa mesa onde nunca te sentaste.",
+  "badges.ledger.integrity2Title": "Uma pessoa revê os contributos.",
+  "badges.ledger.integrity2Body":
+    "Guias, anúncios e avais passam por um humano antes de contarem.",
+  "badges.ledger.integrity3Title": "Privado por defeito.",
+  "badges.ledger.integrity3Body":
+    "Nada aparece no teu perfil até tu o ativares, emblema a emblema.",
+  "badges.ledger.integrity4Title": "Sem tabela de classificação.",
+  "badges.ledger.integrity4Body":
+    "Os membros nunca são comparados entre si. A raridade descreve o próprio emblema.",
+  "badges.ledger.integrity5Title": "As correções ficam visíveis.",
+  "badges.ledger.integrity5Body":
+    "Quando pontos são retirados, a linha e o motivo permanecem na lista.",
+  "badges.ledger.footnoteCount":
+    "{badges} emblemas · {levels} níveis · um extrato que podes auditar.",
+  "badges.ledger.footnoteContact":
+    "Algo parece errado? Fala com a equipa da comunidade.",
+
+  // ── Emblemas v2: momento de ganhar + cartão do espólio ────────────────────
+  "badges.earn.kickerBadge": "Emblema ganho",
+  "badges.earn.kickerGiven": "Recebeste isto",
+  "badges.earn.body":
+    "São +{xp} XP, e são teus quer decidas mostrá-los ou não.",
+  "badges.earn.putInCase": "Guardar no espólio",
+  "badges.earn.footnote": "Nível {level} · {name} · privado até dizeres o contrário",
+  "badges.caseCard.title": "O teu espólio",
+  "badges.caseCard.subtitle": "QueerPulse · Lisboa",
+  "badges.caseCard.emptyDesc": "Um espólio vazio. Volta daqui a um mês.",
+  "badges.caseCard.footStats": "{count} emblemas · {xp} XP",
+  "badges.caseCard.close": "Fechar",
 
   // ── Chrome da página de vantagens (PerksPage, PerksSections) ───────────────
   "perks.page.backToBadges": "Emblemas e nível",

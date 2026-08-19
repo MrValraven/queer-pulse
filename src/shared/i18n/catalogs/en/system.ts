@@ -219,7 +219,7 @@ export const system: Catalog = {
   "inviteLanding.loader.preparing": "Preparing your welcome…",
   "inviteLanding.what.private.strong": "Private by design.",
   "inviteLanding.what.private.rest":
-    "Invite-only. 247 members. Not trying to grow for growth's sake.",
+    "Invite-only, 247 members, and growth paced to how fast people vouch.",
   "inviteLanding.what.noAds.strong": "No ads. No algorithm.",
   "inviteLanding.what.noAds.rest":
     "A platform that works for you, funded by the community.",
@@ -239,7 +239,7 @@ export const system: Catalog = {
   "inviteLanding.card.inviterNoteNoSince": "invited you",
   "inviteLanding.card.heading": "You belong <em>here.</em>",
   "inviteLanding.card.headerNote":
-    "This invitation was created for you personally. It's yours, and yours alone.",
+    "This invitation was made just for you. Nobody else can open it.",
   "inviteLanding.card.noteFrom": "A note from {name}",
   "inviteLanding.card.tokenLabel": "Your invite code",
   "inviteLanding.card.validFor_one": "Valid for {count} day",

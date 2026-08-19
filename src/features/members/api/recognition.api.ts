@@ -22,6 +22,11 @@ export interface LevelLadderRowDTO {
 
 export type BadgeRarity = "common" | "rare" | "legendary";
 export type BadgeTint = "jade" | "accent" | "plum";
+export type BadgeVerificationDTO = "auto" | "host" | "review" | "peer";
+export interface BadgeProgressDTO {
+  units: number;
+  target: number;
+}
 export interface BadgeDTO {
   /** Stable slug the frontend maps to an icon (see badgeIcons). */
   key: string;
@@ -31,6 +36,26 @@ export interface BadgeDTO {
   context: string;
   rarity: BadgeRarity;
   tint: BadgeTint;
+  /** Longer "what it takes" copy for the badge drawer. Falls back to `context`. */
+  criteria?: string;
+  xpReward?: number;
+  /** Omitted when progress tracking isn't wired for this badge yet — the
+   *  frontend shows a binary locked state rather than guessing a number. */
+  progress?: BadgeProgressDTO;
+  verifiedBy?: BadgeVerificationDTO;
+  /** Present only for time-limited badges. */
+  seasonal?: { when: string };
+}
+
+/** One dated row in the member's XP history. `[]` until the backend adds
+ *  real event logging — the frontend renders its own empty state for that. */
+export interface XpLedgerEntryDTO {
+  /** ISO timestamp — the UI formats it locally so it respects the member's language. */
+  createdAt: string;
+  description: string;
+  xp: number;
+  /** Present only on a correction/adjustment row. */
+  reason?: string;
 }
 export interface BadgesDTO {
   earnedCount: number;
@@ -38,6 +63,8 @@ export interface BadgesDTO {
   discoverCount: number;
   earned: BadgeDTO[];
   locked: BadgeDTO[];
+  /** Time-limited badges, shown in their own band rather than the main grid. */
+  seasonal: BadgeDTO[];
 }
 
 export type PerkState = "available" | "locked" | "claimed";
@@ -94,11 +121,17 @@ export interface RecognitionDTO {
   badges: BadgesDTO;
   perks: PerksDTO;
   xpBreakdown: XpBreakdownItemDTO[];
+  xpLedger: XpLedgerEntryDTO[];
 }
 
 /** Own recognition (GET /me/recognition) or another member's public subset
- *  (GET /profiles/:slug/recognition — perks omitted for non-owners). */
-export const getRecognition = (slug?: string) =>
+ *  (GET /profiles/:slug/recognition — perks omitted for non-owners). `force`
+ *  (own view only) bypasses the backend's recompute throttle. */
+export const getRecognition = (slug?: string, force?: boolean) =>
   apiGet<RecognitionDTO>(
-    slug ? `/profiles/${slug}/recognition` : "/me/recognition",
+    slug
+      ? `/profiles/${slug}/recognition`
+      : force
+        ? "/me/recognition?force=true"
+        : "/me/recognition",
   );

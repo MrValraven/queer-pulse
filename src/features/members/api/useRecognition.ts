@@ -27,23 +27,37 @@ export interface RecognitionState extends Recognition {
 
 /**
  * A member's Recognition (level, badges, perks). Demo returns the mock model;
- * live calls GET /me/recognition (own) or /profiles/:slug/recognition (other).
- * The returned model is always a full `Recognition` so field access never
- * throws — but in LIVE mode the stand-in while loading/on error is a ZEROED
- * model (`emptyRecognition`), never the demo fixtures, so no fictional
- * level/badges/perks ever leak into production. Callers gate on
- * `isLoading`/`isError`/`hasRealData` to present the right state. React Query
- * dedupes the fetch, so the many components that call this share one request.
+ * live calls GET /me/recognition (own — pass no `slug`) or
+ * `/profiles/:slug/recognition` (someone else — pass their `slug`). Only
+ * `/me/recognition` triggers the backend's recompute-on-read and returns the
+ * owner-only breakdown/perks/ledger, so `slug` must stay `undefined` for a
+ * self-view rather than being defaulted to the caller's own slug — the two
+ * routes are not interchangeable. The returned model is always a full
+ * `Recognition` so field access never throws — but in LIVE mode the stand-in
+ * while loading/on error is a ZEROED model (`emptyRecognition`), never the
+ * demo fixtures, so no fictional level/badges/perks ever leak into
+ * production. Callers gate on `isLoading`/`isError`/`hasRealData` to present
+ * the right state. React Query dedupes the fetch, so the many components that
+ * call this share one request.
+ *
+ * `force` (own view only) bypasses the backend's 5-minute recompute throttle
+ * — use it sparingly, on surfaces where a member is expected to complete
+ * several XP-earning actions within minutes (e.g. the Getting Started
+ * checklist), so the XP shown doesn't lag behind actions already taken.
  */
-export function useRecognition(slug?: string): RecognitionState {
+export function useRecognition(
+  slug?: string,
+  options?: { force?: boolean },
+): RecognitionState {
   const { demoMode } = useDemoMode();
   const { user } = useAuth();
   const target = slug ?? user?.profile.slug;
+  const force = Boolean(options?.force);
   const { data, isPending, isError } = useQuery<Recognition>({
-    queryKey: ["recognition", demoMode, target ?? "me"],
+    queryKey: ["recognition", demoMode, target ?? "me", force],
     queryFn: async () => {
       if (demoMode) return demoRecognition;
-      return recognitionToModel(await getRecognition(target));
+      return recognitionToModel(await getRecognition(slug, force));
     },
   });
   // Demo mode always renders the mock model. Live mode renders real data once it

@@ -2,6 +2,30 @@
    Ported from the mag.css `.pitch`/`.ck` prototype rules onto repo tokens;
    there is no `--line-2` token, so the checkbox border is a local rgba. */
 
+.section {
+  margin-top: var(--gap-lg);
+}
+
+.head {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 23px;
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+  margin-bottom: var(--gap-sm);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.count {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  color: var(--ink-40);
+  font-weight: 600;
+}
+
 .wrap {
   display: flex;
   flex-direction: column;

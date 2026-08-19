@@ -1,6 +1,7 @@
 import {
   useLayoutEffect,
   useRef,
+  type ClipboardEvent,
   type FormEvent,
   type KeyboardEvent,
 } from "react";
@@ -17,6 +18,13 @@ export interface RichTextProps {
    * the slash menu (Task 6's `SlashMenu`). Not called if omitted. */
   onSlash?: (element: HTMLElement) => void;
   onFocus?: () => void;
+  /** Paste handler for callers not already covered by a paste listener on
+   * some ancestor element (`ArticleDocument`'s block list has its own,
+   * scoped to the blocks it wraps). Without one, the browser's default
+   * paste inserts the clipboard's HTML verbatim — wrapper tags, inline
+   * styles, classes and all — straight into this contentEditable's DOM,
+   * and from there into the `html` this component reports via `onChange`. */
+  onPaste?: (event: ClipboardEvent<HTMLDivElement>) => void;
   spellCheck?: boolean;
 }
 
@@ -47,6 +55,7 @@ export function RichText({
   placeholder,
   onSlash,
   onFocus,
+  onPaste,
   spellCheck = true,
 }: RichTextProps) {
   const elementRef = useRef<HTMLDivElement | null>(null);
@@ -104,6 +113,7 @@ export function RichText({
       onInput={handleInput}
       onKeyDown={handleKeyDown}
       onFocus={onFocus}
+      onPaste={onPaste}
     />
   );
 }

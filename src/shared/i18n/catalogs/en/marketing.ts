@@ -1676,6 +1676,7 @@ export const marketing: Catalog = {
   "changelog.tag.roadmap": "Open the roadmap",
   "changelog.tag.magazine": "Open the magazine",
   "changelog.tag.magazineWriter": "Open your workspace",
+  "changelog.tag.badges": "See badges & levels",
   "changelog.tag.safety": "See our safety approach",
   "changelog.tag.editProfile": "Edit your profile",
   "changelog.tag.employerReviews": "Read employer reviews",
@@ -1857,6 +1858,15 @@ export const marketing: Catalog = {
     "Editable finance figures, with a note on where each number comes from",
   "changelog.entries.governance-editable-finances.body":
     "Admins can now correct the figures on the governance Finances tab instead of them being fixed. Every number carries a small tag showing where it comes from: an unverified placeholder, a value an admin entered, or one that is calculated (like the surplus). Corrections are recorded, so it is always clear who changed what and when.",
+
+  "changelog.entries.getting-started-xp-not-awarded-fix.title":
+    "Fixed: Getting Started XP not showing up",
+  "changelog.entries.getting-started-xp-not-awarded-fix.body":
+    "Completing Getting Started steps could leave your XP total stuck at 0 for a while, and finished steps didn't show how much XP they'd earned. Both are fixed: your level now updates promptly as you complete steps, and each finished step shows its XP.",
+
+  "changelog.entries.badges-levels-v2-redesign.title": "Badges & levels redesigned",
+  "changelog.entries.badges-levels-v2-redesign.body":
+    "The Badges & Levels page has a new look: a level dial, closest-to-earning suggestions, a filterable badge case with a detail view for each one, a seasonal badges band, and a receipts view showing where your XP came from.",
 
   "changelog.entries.listing-preview-matches-card.title":
     "The listing preview now matches your real directory card",

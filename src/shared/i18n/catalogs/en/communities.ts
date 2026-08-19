@@ -37,6 +37,9 @@ export const communities: Catalog = {
   "discover.hero.cta": "Go to your hub",
   "discover.search.placeholder": "Search communities by name or focus",
   "discover.search.ariaLabel": "Search communities",
+  "discover.sort.label": "Sort by",
+  "discover.sort.newest": "Newest",
+  "discover.sort.name": "Name",
   "discover.empty.none.title": "No communities yet",
   "discover.empty.none.description":
     "The directory is still finding its feet. Be one of the first to gather your people. Start a community and others will follow.",

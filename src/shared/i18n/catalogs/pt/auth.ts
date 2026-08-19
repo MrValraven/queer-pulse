@@ -329,9 +329,9 @@ export const auth: Catalog = {
   "onboarding.stepWelcome.invitedYou": "Convidou-te",
   "onboarding.stepWelcome.memberSinceRole": "Aqui desde {since} · {role}",
   "onboarding.stepWelcome.vouchFallback":
-    "{firstName} é exatamente o tipo de pessoa para quem esta comunidade foi criada — atente, criative, e genuinamente empenhade em tornar os espaços queer melhores.",
+    "{firstName} é atente, criative, e exatamente quem esperávamos encontrar aqui.",
   "onboarding.stepWelcome.body":
-    "O QueerPulse é uma rede profissional cuidada, enraizada em Lisboa. Foste convidade porque alguém aqui reconhece o teu valor.",
+    "O QueerPulse é uma rede profissional cuidada, enraizada em Lisboa. Foste convidade porque alguém aqui já te conhece.",
   "onboarding.stepWelcome.cta": "Vamos a isto",
   "onboarding.stepWelcome.back": "Voltar",
 
@@ -402,12 +402,16 @@ export const auth: Catalog = {
   "onboarding.intent.gatherings": "Convívios e eventos",
   "onboarding.intent.professional": "Ligações profissionais",
   "onboarding.intent.dating": "Namoro",
+  "onboarding.intent.friendship": "Amizade",
   "onboarding.intent.resources": "Recursos e apoio",
   "onboarding.intent.contributing": "Contribuir",
   "onboarding.intent.housing": "Habitação",
   "onboarding.intent.flatmates": "Encontrar colegas de casa",
   "onboarding.intent.activism": "Ativismo",
   "onboarding.intent.creative": "Colaboração criativa",
+  "onboarding.intent.media": "Media e cultura",
+  "onboarding.intent.discussions": "Discussões",
+  "onboarding.intent.mentorship": "Mentoria",
 
   "onboarding.stepCommunities.heading": "Encontra as tuas <em>comunidades</em>",
   "onboarding.stepCommunities.body":
@@ -459,10 +463,13 @@ export const auth: Catalog = {
   "gettingStarted.levelStrip.eyebrow": "O teu nível",
   "gettingStarted.levelStrip.progress": "{xp} de {xpMax} XP",
   "gettingStarted.levelStrip.hint": "Cada passo que concluis dá XP para o teu próximo nível.",
+  "gettingStarted.levelStrip.hintDone": "Continua a explorar a QueerPulse para ganhares mais.",
   "gettingStarted.xpSources.eyebrow": "O que já rendeu XP",
   "gettingStarted.xpSources.amount": "+{xp} XP",
   "gettingStarted.xpSources.seeAll": "Ver detalhe completo",
+  "gettingStarted.xpSources.seeBadgesPage": "Ir para a página de Emblemas",
   "gettingStarted.stepXp": "+{xp} XP",
+  "gettingStarted.stepXpEarned": "+{xp} XP ganhos",
   "gettingStarted.success.badge": "Ganhaste o crachá First Steps.",
   "gettingStarted.meterAria": "{done} de {total} primeiros passos feitos",
   "gettingStarted.checking": "A verificar o teu progresso…",

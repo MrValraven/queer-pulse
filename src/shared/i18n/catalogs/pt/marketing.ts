@@ -1721,6 +1721,7 @@ export const marketing: Catalog = {
   "changelog.tag.roadmap": "Abrir o roteiro",
   "changelog.tag.magazine": "Abrir a revista",
   "changelog.tag.magazineWriter": "Abrir o teu espaço",
+  "changelog.tag.badges": "Ver emblemas e níveis",
   "changelog.tag.safety": "Ver a nossa abordagem à segurança",
   "changelog.tag.editProfile": "Editar o teu perfil",
   "changelog.tag.employerReviews": "Ler avaliações de empregadores",
@@ -1906,6 +1907,15 @@ export const marketing: Catalog = {
     "Valores financeiros editáveis, com indicação da origem de cada número",
   "changelog.entries.governance-editable-finances.body":
     "Os administradores passam a poder corrigir os valores no separador de Finanças da governação, em vez de estarem fixos. Cada número tem uma pequena etiqueta que mostra a sua origem: um valor de exemplo por verificar, um valor introduzido por um administrador, ou um valor calculado (como o excedente). As correções ficam registadas, por isso é sempre claro quem alterou o quê e quando.",
+
+  "changelog.entries.getting-started-xp-not-awarded-fix.title":
+    "Corrigido: XP do Início Rápido não aparecia",
+  "changelog.entries.getting-started-xp-not-awarded-fix.body":
+    "Ao concluíres passos do Início Rápido, o teu XP total podia ficar preso em 0 durante algum tempo, e os passos concluídos não mostravam quanto XP tinham rendido. Ambos foram corrigidos: o teu nível atualiza-se agora rapidamente à medida que concluis passos, e cada passo concluído mostra o seu XP.",
+
+  "changelog.entries.badges-levels-v2-redesign.title": "Emblemas e níveis redesenhados",
+  "changelog.entries.badges-levels-v2-redesign.body":
+    "A página de Emblemas e Níveis tem um novo visual: um mostrador de nível, sugestões dos emblemas mais próximos de ganhares, um espólio filtrável com detalhe por emblema, uma faixa de emblemas sazonais, e um extrato a mostrar de onde veio o teu XP.",
 
   "changelog.entries.listing-preview-matches-card.title":
     "A pré-visualização do anúncio agora corresponde ao cartão real do diretório",

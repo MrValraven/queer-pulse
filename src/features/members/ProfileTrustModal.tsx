@@ -5,7 +5,7 @@ import styles from "./ProfileTrustSignals.module.css";
 
 /**
  * Explainer for {@link ProfileTrustSignals}' three rows, opened from its
- * "What these mean →" trigger. Deliberately shares the terms' i18n keys
+ * info-icon trigger. Deliberately shares the terms' i18n keys
  * (`members:profile.trust.verified`/`.staff`) with the row labels rather than
  * writing new copy for them here — one catalog entry per term, so a future
  * wording change can't drift between the compact row and this explainer.

@@ -1,21 +1,29 @@
+import { useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Button } from "../../shared/components/ui";
-import { routes } from "../../app/routeMap";
 import { useRecognition } from "../members/api/useRecognition";
-import { xpSourceMetaFor } from "../members/xpBreakdown.data";
+import { XpSourceRow } from "./XpSourceRow";
+import { XpBreakdownModal } from "./XpBreakdownModal";
 import styles from "./GettingStartedPage.module.css";
 
 const TOP_SOURCES_SHOWN = 3;
 
 /**
  * A quiet "what earned it" preview below `LevelXpStrip` — the top XP sources
- * so far, with a link to the full breakdown on the Badges page. Gated on
- * `hasRealData` exactly like `LevelXpStrip`, and hides itself if nothing has
- * earned XP yet rather than showing an empty list.
+ * so far, with a "See full breakdown" button that opens `XpBreakdownModal`
+ * (every source, not just the top 3), which itself links on to the Badges
+ * page. Gated on `hasRealData` exactly like `LevelXpStrip`, and hides itself
+ * if nothing has earned XP yet rather than showing an empty list.
+ *
+ * Only ever rendered while the Getting Started checklist still has steps
+ * left (see `GettingStartedPage`), so it always forces a fresh recompute —
+ * that's exactly the window where a member can rack up several XP-earning
+ * actions within minutes and a throttled read would look stale.
  */
 export function XpSourcesTeaser() {
   const { t } = useTranslation();
-  const recognition = useRecognition();
+  const [showBreakdown, setShowBreakdown] = useState(false);
+  const recognition = useRecognition(undefined, { force: true });
   if (!recognition.hasRealData || recognition.isLoading) return null;
 
   const topSources = [...recognition.xpBreakdown]
@@ -33,29 +41,24 @@ export function XpSourcesTeaser() {
         {t("auth:gettingStarted.xpSources.eyebrow")}
       </span>
       <ul className={styles.xpSourcesList}>
-        {topSources.map((source) => {
-          const { labelKey, icon: Icon } = xpSourceMetaFor(source.key);
-          return (
-            <li key={source.key} className={styles.xpSourceRow}>
-              <Icon aria-hidden />
-              <span className={styles.xpSourceLabel}>{t(labelKey)}</span>
-              <span className={styles.xpSourceAmount}>
-                {t("auth:gettingStarted.xpSources.amount", {
-                  xp: String(source.xp),
-                })}
-              </span>
-            </li>
-          );
-        })}
+        {topSources.map((source) => (
+          <XpSourceRow key={source.key} source={source} />
+        ))}
       </ul>
       <Button
-        to={routes.badges}
         variant="ghost"
         size="sm"
         className={styles.xpSourcesLink}
+        onClick={() => setShowBreakdown(true)}
       >
         {t("auth:gettingStarted.xpSources.seeAll")}
       </Button>
+      {showBreakdown && (
+        <XpBreakdownModal
+          breakdown={recognition.xpBreakdown}
+          onClose={() => setShowBreakdown(false)}
+        />
+      )}
     </section>
   );
 }

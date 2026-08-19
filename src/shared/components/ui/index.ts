@@ -16,7 +16,7 @@ export { FeatureHelp } from "./FeatureHelp";
 
 // Composition-level primitives (extracted from per-feature duplicates)
 export { FormField } from "./FormField";
-export { Modal, ModalSheet, SideSheet } from "./Modal";
+export { Modal, ModalSheet, SideSheet, useDismiss } from "./Modal";
 export { SuccessPanel } from "./SuccessPanel";
 export { Spinner, Sending } from "./Spinner";
 export { FilterChips, ChipSelect, type ChipOption } from "./ChipSelect";

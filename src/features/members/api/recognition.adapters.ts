@@ -1,4 +1,9 @@
-import type { Badge, LadderPill, PerkLadderRow } from "../badges.data";
+import type {
+  Badge,
+  LadderPill,
+  PerkLadderRow,
+  XpLedgerEntry,
+} from "../badges.data";
 import type { PerkGroup } from "../perks.data";
 import { badgeIconFor } from "../badgeIcons";
 import type { BadgeDTO, RecognitionDTO } from "./recognition.api";
@@ -31,6 +36,7 @@ export interface Recognition {
   badges: {
     earned: Badge[];
     locked: Badge[];
+    seasonal: Badge[];
     earnedCount: number;
     discoverCount: number;
   };
@@ -40,6 +46,7 @@ export interface Recognition {
     availableCount: number;
   };
   xpBreakdown: XpBreakdownItem[];
+  xpLedger: XpLedgerEntry[];
 }
 
 /** A zeroed Recognition used in live mode while the fetch is in flight or has
@@ -58,9 +65,16 @@ export const emptyRecognition: Recognition = {
     nextName: "",
   },
   levelLadder: [],
-  badges: { earned: [], locked: [], earnedCount: 0, discoverCount: 0 },
+  badges: {
+    earned: [],
+    locked: [],
+    seasonal: [],
+    earnedCount: 0,
+    discoverCount: 0,
+  },
   perks: { groups: [], ladder: [], availableCount: 0 },
   xpBreakdown: [],
+  xpLedger: [],
 };
 
 function badgeFromDto(b: BadgeDTO): Badge {
@@ -72,6 +86,11 @@ function badgeFromDto(b: BadgeDTO): Badge {
     rarity: b.rarity,
     tint: b.tint,
     icon: badgeIconFor(b.key),
+    criteria: b.criteria,
+    xpReward: b.xpReward,
+    progress: b.progress,
+    verifiedBy: b.verifiedBy,
+    seasonal: b.seasonal,
   };
 }
 
@@ -97,6 +116,7 @@ export function recognitionToModel(dto: RecognitionDTO): Recognition {
       discoverCount: dto.badges.discoverCount,
       earned: dto.badges.earned.map(badgeFromDto),
       locked: dto.badges.locked.map(badgeFromDto),
+      seasonal: dto.badges.seasonal.map(badgeFromDto),
     },
     perks: {
       availableCount: dto.perks.availableCount,
@@ -124,6 +144,12 @@ export function recognitionToModel(dto: RecognitionDTO): Recognition {
       cap: item.cap,
       perUnit: item.perUnit,
       xp: item.xp,
+    })),
+    xpLedger: dto.xpLedger.map((entry) => ({
+      createdAt: entry.createdAt,
+      description: entry.description,
+      xp: entry.xp,
+      reason: entry.reason,
     })),
   };
 }

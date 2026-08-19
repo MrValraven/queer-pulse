@@ -17,6 +17,9 @@ import {
 
 export interface XpSourceMeta {
   labelKey: string;
+  /** One plain sentence explaining what this source is, for a detailed
+   *  breakdown view (e.g. `XpBreakdownModal`) rather than a compact list. */
+  descKey: string;
   icon: IconType;
 }
 
@@ -29,43 +32,78 @@ export interface XpSourceMeta {
  * this map hasn't caught up with yet.
  */
 export const XP_SOURCE_META: Record<string, XpSourceMeta> = {
-  profile: { labelKey: "members:badges.xpBreakdown.sources.profile", icon: FiUser },
+  profile: {
+    labelKey: "members:badges.xpBreakdown.sources.profile",
+    descKey: "members:badges.xpBreakdown.sources.profileDesc",
+    icon: FiUser,
+  },
   communities: {
     labelKey: "members:badges.xpBreakdown.sources.communities",
+    descKey: "members:badges.xpBreakdown.sources.communitiesDesc",
     icon: FiUsers,
   },
   personas: {
     labelKey: "members:badges.xpBreakdown.sources.personas",
+    descKey: "members:badges.xpBreakdown.sources.personasDesc",
     icon: FiLayers,
   },
-  vouches: { labelKey: "members:badges.xpBreakdown.sources.vouches", icon: FiHeart },
+  vouches: {
+    labelKey: "members:badges.xpBreakdown.sources.vouches",
+    descKey: "members:badges.xpBreakdown.sources.vouchesDesc",
+    icon: FiHeart,
+  },
   connections: {
     labelKey: "members:badges.xpBreakdown.sources.connections",
+    descKey: "members:badges.xpBreakdown.sources.connectionsDesc",
     icon: FiUserPlus,
   },
-  events: { labelKey: "members:badges.xpBreakdown.sources.events", icon: FiCalendar },
-  posts: { labelKey: "members:badges.xpBreakdown.sources.posts", icon: FiEdit3 },
+  events: {
+    labelKey: "members:badges.xpBreakdown.sources.events",
+    descKey: "members:badges.xpBreakdown.sources.eventsDesc",
+    icon: FiCalendar,
+  },
+  posts: {
+    labelKey: "members:badges.xpBreakdown.sources.posts",
+    descKey: "members:badges.xpBreakdown.sources.postsDesc",
+    icon: FiEdit3,
+  },
   endorsements: {
     labelKey: "members:badges.xpBreakdown.sources.endorsements",
+    descKey: "members:badges.xpBreakdown.sources.endorsementsDesc",
     icon: FiThumbsUp,
   },
   workshops: {
     labelKey: "members:badges.xpBreakdown.sources.workshops",
+    descKey: "members:badges.xpBreakdown.sources.workshopsDesc",
     icon: FiBookOpen,
   },
-  tenure: { labelKey: "members:badges.xpBreakdown.sources.tenure", icon: FiClock },
-  verified: { labelKey: "members:badges.xpBreakdown.sources.verified", icon: FiShield },
+  tenure: {
+    labelKey: "members:badges.xpBreakdown.sources.tenure",
+    descKey: "members:badges.xpBreakdown.sources.tenureDesc",
+    icon: FiClock,
+  },
+  verified: {
+    labelKey: "members:badges.xpBreakdown.sources.verified",
+    descKey: "members:badges.xpBreakdown.sources.verifiedDesc",
+    icon: FiShield,
+  },
   gettingStarted: {
     labelKey: "members:badges.xpBreakdown.sources.gettingStarted",
+    descKey: "members:badges.xpBreakdown.sources.gettingStartedDesc",
     icon: FiCheckSquare,
   },
-  badges: { labelKey: "members:badges.xpBreakdown.sources.badges", icon: FiAward },
+  badges: {
+    labelKey: "members:badges.xpBreakdown.sources.badges",
+    descKey: "members:badges.xpBreakdown.sources.badgesDesc",
+    icon: FiAward,
+  },
 };
 
 export function xpSourceMetaFor(key: string): XpSourceMeta {
   return (
     XP_SOURCE_META[key] ?? {
       labelKey: "members:badges.xpBreakdown.sources.other",
+      descKey: "members:badges.xpBreakdown.sources.otherDesc",
       icon: FiAward,
     }
   );

@@ -41,6 +41,9 @@ export const communities: Catalog = {
   "discover.hero.cta": "Ir para o teu hub",
   "discover.search.placeholder": "Pesquisar comunidades por nome ou foco",
   "discover.search.ariaLabel": "Pesquisar comunidades",
+  "discover.sort.label": "Ordenar por",
+  "discover.sort.newest": "Mais recentes",
+  "discover.sort.name": "Nome",
   "discover.empty.none.title": "Ainda sem comunidades",
   "discover.empty.none.description":
     "O diretório ainda está a dar os primeiros passos. Sê das primeiras pessoas a juntar a tua gente. Começa uma comunidade e o resto segue-se.",

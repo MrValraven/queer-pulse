@@ -226,7 +226,7 @@ export const system: Catalog = {
   "inviteLanding.loader.preparing": "A preparar as boas-vindas…",
   "inviteLanding.what.private.strong": "Privado por natureza.",
   "inviteLanding.what.private.rest":
-    "Só por convite. 247 pessoas. Sem pressa de crescer por crescer.",
+    "Só por convite, 247 pessoas, e um crescimento ao ritmo de quem avaliza.",
   "inviteLanding.what.noAds.strong": "Sem anúncios. Sem algoritmo.",
   "inviteLanding.what.noAds.rest":
     "Uma plataforma que trabalha para ti, financiada pela comunidade.",
@@ -246,7 +246,7 @@ export const system: Catalog = {
   "inviteLanding.card.inviterNoteNoSince": "convidou-te",
   "inviteLanding.card.heading": "Tu pertences <em>aqui.</em>",
   "inviteLanding.card.headerNote":
-    "Este convite foi criado só para ti, pessoalmente. É teu, só teu.",
+    "Este convite foi feito só para ti. Mais ninguém o pode abrir.",
   "inviteLanding.card.noteFrom": "Uma nota de {name}",
   "inviteLanding.card.tokenLabel": "O teu código de convite",
   "inviteLanding.card.validFor_one": "Válido durante {count} dia",

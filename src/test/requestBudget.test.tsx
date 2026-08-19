@@ -442,7 +442,7 @@ describe("request budget (live mode)", () => {
         http.get(`${API_V1}/profiles/${SLUG}/subprofiles`, () =>
           HttpResponse.json([]),
         ),
-        http.get(`${API_V1}/profiles/${SLUG}/recognition`, () =>
+        http.get(`${API_V1}/me/recognition`, () =>
           HttpResponse.json({
             level: {
               level: 1,
@@ -488,11 +488,9 @@ describe("request budget (live mode)", () => {
       //     GET /profiles/{slug}/subprofiles  (+ the app-wide /subprofiles/mine
       //     served by the shared subprofiles barrel handler)
       //   - ProfileHero's HeroRecognition chips (isSelf only) →
-      //     useRecognition() → GET /profiles/{slug}/recognition — this hook
-      //     defaults its `target` to the signed-in user's own slug, so even the
-      //     OWNER's own view hits the `/profiles/:slug/...` form, never
-      //     `/me/recognition` (see useRecognition.ts's
-      //     `target = slug ?? user?.profile.slug`).
+      //     useRecognition() → GET /me/recognition (no slug passed, so the
+      //     owner's own view correctly hits the owner-only route, which also
+      //     triggers the backend's recompute-on-read).
       //   - HeroVouchRow → useVouchers(profile.slug) →
       //     GET /members/{slug}/vouchers (a THIRD, distinct vouch-related
       //     endpoint from /me/vouches/given and vouch mutations — do not
@@ -510,10 +508,10 @@ describe("request budget (live mode)", () => {
           "/v1/listings/mine",
           "/v1/me/communities",
           "/v1/me/public-profile",
+          "/v1/me/recognition",
           "/v1/me/vouches/given",
           `/v1/members/${SLUG}/vouchers`,
           "/v1/platform/staff",
-          `/v1/profiles/${SLUG}/recognition`,
           `/v1/profiles/${SLUG}/subprofiles`,
           "/v1/subprofiles/mine",
         ].sort(),

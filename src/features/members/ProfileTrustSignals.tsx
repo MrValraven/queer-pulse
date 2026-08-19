@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { FiHeart } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { FiHeart, FiInfo } from "react-icons/fi";
+import { Tooltip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Member } from "./data/members";
 import { ProfileTrustModal } from "./ProfileTrustModal";
 import styles from "./ProfileTrustSignals.module.css";
 
 /**
- * Compact trust-signals row for a member's profile: N vouches, plus a "what
- * these mean" trigger that opens {@link ProfileTrustModal}. Verified/Staff
+ * Compact trust-signals row for a member's profile: N vouches, plus an info
+ * icon (tooltip: "Trust signals") that opens {@link ProfileTrustModal}.
+ * Verified/Staff
  * status is deliberately NOT repeated here — the hero's photo badge
  * (`ProfileRail`'s `.vbadgeLg`) and the name-row `MemberStaffBadge` already
  * state both facts once each; restating them a third time in smaller text
@@ -32,14 +33,16 @@ export function ProfileTrustSignals({ profile }: { profile: Member }) {
         <FiHeart aria-hidden />
         {t("members:profile.trust.vouchCount", { count: vouchCount })}
       </span>
-      <Button
-        variant="ghost"
-        size="sm"
-        className={styles.explain}
-        onClick={() => setExplainerOpen(true)}
-      >
-        {t("members:profile.trust.explainCta")}
-      </Button>
+      <Tooltip label={t("members:profile.trust.modalTitle")}>
+        <button
+          type="button"
+          className={styles.explain}
+          aria-label={t("members:profile.trust.modalTitle")}
+          onClick={() => setExplainerOpen(true)}
+        >
+          <FiInfo aria-hidden />
+        </button>
+      </Tooltip>
       {explainerOpen && (
         <ProfileTrustModal onClose={() => setExplainerOpen(false)} />
       )}

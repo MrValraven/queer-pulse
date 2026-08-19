@@ -93,6 +93,23 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "getting-started-xp-not-awarded-fix",
+        category: "fix",
+        date: "19 Aug 2026",
+        ...entryKeys("getting-started-xp-not-awarded-fix"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gettingStarted",
+          to: routes.gettingStarted,
+        },
+      },
+      {
+        id: "badges-levels-v2-redesign",
+        category: "feature",
+        date: "19 Aug 2026",
+        ...entryKeys("badges-levels-v2-redesign"),
+        tag: { labelKey: "marketing:changelog.tag.badges", to: routes.badges },
+      },
+      {
         id: "listing-preview-matches-card",
         category: "fix",
         date: "18 Aug 2026",

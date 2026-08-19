@@ -15,7 +15,7 @@ import { mediaMax } from "../../shared/theme/breakpoints";
 import { currentUserSlug } from "./data/memberProfiles";
 import { useMemberProfile } from "./api/useMemberProfile";
 import { ProfileHero, ProfileContent } from "./ProfileSections";
-import { ProfileRail } from "./ProfileRail";
+import { ProfileRail, ProfileSectionNavRail } from "./ProfileRail";
 import { ProfileCommunitiesSection } from "./ProfileCommunitiesSection";
 import { ProfileSubprofilesSection } from "./ProfileSubprofilesSection";
 import { PlacesSection } from "./PlacesSection";
@@ -32,8 +32,98 @@ import {
   ProfileBlockedState,
   ProfileNotFoundState,
 } from "./ProfileStateScreens";
+import type { ReactNode } from "react";
+import type { MemberProfile } from "./data/memberProfiles";
 import styles from "./ProfilePage.module.css";
 import editStyles from "./ProfileEdit.module.css";
+
+/**
+ * Desktop read-mode layout: the sticky rail runs in two pieces here, not
+ * one. The portrait/trust-signals/owner-controls block stays paired with
+ * the hero (first `.pageGrid`), while "Also working as" — the owner's
+ * linked + published personas, surfaced right after the hero as the second
+ * thing on the profile — breaks out to full width between the two grids.
+ * Public viewers see only linked personas (the hook enforces this); self
+ * view adds a manage link and a create prompt when empty. Preview counts as
+ * a public view. The section-jump nav resumes in the second grid's rail,
+ * sticky alongside "On the board", "Communities" and "Places" — the
+ * sections it actually links to. Edit mode skips both grids entirely:
+ * `EditableProfileHero` is a self-contained form, not a browsable profile,
+ * so it doesn't need the section-jump rail.
+ */
+function DesktopProfileGrid({
+  profile,
+  isSelf,
+  previewing,
+  selfView,
+  ownerSlug,
+  restBelowHero,
+  onEdit,
+  onEditLinks,
+  onPreview,
+  onOpenWhoSeesWhat,
+  onOpenAccountData,
+  onToggleHidden,
+}: {
+  profile: MemberProfile;
+  isSelf: boolean;
+  previewing: boolean;
+  selfView: boolean;
+  ownerSlug: string;
+  restBelowHero: ReactNode;
+  onEdit: () => void;
+  onEditLinks: () => void;
+  onPreview: () => void;
+  onOpenWhoSeesWhat: () => void;
+  onOpenAccountData: () => void;
+  onToggleHidden: () => void;
+}) {
+  const asVisitor = isSelf && previewing;
+  return (
+    <>
+      <div className="wrap">
+        <div className={styles.pageGrid}>
+          <div className={styles.railCol}>
+            <ProfileRail profile={profile} self={isSelf} asVisitor={asVisitor} />
+          </div>
+          <div className={styles.pageCol}>
+            <ProfileHero
+              profile={profile}
+              self={isSelf}
+              asVisitor={asVisitor}
+              onEdit={onEdit}
+              onEditLinks={onEditLinks}
+              onPreview={onPreview}
+              onOpenWhoSeesWhat={onOpenWhoSeesWhat}
+              onOpenAccountData={onOpenAccountData}
+              onToggleHidden={onToggleHidden}
+              hiddenUntil={profile.hiddenUntil ?? null}
+            />
+          </div>
+        </div>
+      </div>
+
+      <ProfileSubprofilesSection
+        ownerSlug={ownerSlug}
+        isSelf={selfView}
+        previewing={asVisitor}
+      />
+
+      <div className="wrap">
+        <div className={styles.pageGrid}>
+          <div className={styles.railCol}>
+            <ProfileSectionNavRail
+              profile={profile}
+              self={isSelf}
+              asVisitor={asVisitor}
+            />
+          </div>
+          <div className={styles.pageCol}>{restBelowHero}</div>
+        </div>
+      </div>
+    </>
+  );
+}
 
 export function ProfilePage() {
   const { t } = useTranslation();
@@ -150,16 +240,11 @@ export function ProfilePage() {
     updateDraft({ hiddenUntil: nextValue });
   }
 
-  // Shared below-hero sections — rendered after the hero on both the desktop
-  // layout and the phone-width edit layout, so mobile editing keeps access to
-  // the same work/board/skills/groups editors as desktop.
-  const belowHero = (
+  // The work/board/skills/groups + communities + places sections, excluding
+  // "Also working as" — desktop read-mode renders that section separately,
+  // full-width, between the two rail grids (see below).
+  const restBelowHero = (
     <>
-      <ProfileSubprofilesSection
-        ownerSlug={ownerSlug}
-        isSelf={selfView}
-        previewing={isSelf && previewing}
-      />
       <ProfileContent
         profile={resolvedProfile}
         isSelf={selfView}
@@ -187,6 +272,21 @@ export function ProfilePage() {
         isSelf={selfView}
         firstName={resolvedProfile.first}
       />
+    </>
+  );
+
+  // Shared below-hero sections — rendered after the hero on both the phone-
+  // width edit layout and the desktop edit layout. Neither has the rail
+  // grid, so "Also working as" stays inline with the rest here (desktop
+  // read-mode below breaks it out separately).
+  const belowHero = (
+    <>
+      <ProfileSubprofilesSection
+        ownerSlug={ownerSlug}
+        isSelf={selfView}
+        previewing={isSelf && previewing}
+      />
+      {restBelowHero}
     </>
   );
 
@@ -226,48 +326,23 @@ export function ProfilePage() {
           {belowHero}
         </>
       ) : (
-        // The sticky rail (portrait, trust signals, owner controls,
-        // section-jump nav) runs alongside the WHOLE page — hero text plus
-        // every below-hero section — not just the hero row, so it stays in
-        // view via `position: sticky` as the visitor scrolls through
-        // "Open to", "On the board", etc. Edit mode (above) skips this grid
-        // entirely: `EditableProfileHero` is a self-contained form, not a
-        // browsable profile, so it doesn't need the section-jump rail.
-        <div className="wrap">
-          <div className={styles.pageGrid}>
-            <div className={styles.railCol}>
-              <ProfileRail
-                profile={resolvedProfile}
-                self={isSelf}
-                asVisitor={isSelf && previewing}
-              />
-            </div>
-            <div className={styles.pageCol}>
-              <ProfileHero
-                profile={resolvedProfile}
-                self={isSelf}
-                asVisitor={isSelf && previewing}
-                onEdit={() => enterEdit(false)}
-                onEditLinks={() => enterEdit(true)}
-                onPreview={() => {
-                  setPreviewing(true);
-                  window.scrollTo({ top: 0 });
-                }}
-                onOpenWhoSeesWhat={() => setWhoSeesWhatOpen(true)}
-                onOpenAccountData={() => setAccountDataOpen(true)}
-                onToggleHidden={toggleHidden}
-                hiddenUntil={resolvedProfile.hiddenUntil ?? null}
-              />
-
-              {/* "Also as…" — the owner's linked + published personas, surfaced
-                  right after the hero as the second thing on the profile.
-                  Public viewers see only linked personas (the hook enforces
-                  this); self view adds a manage link and a create prompt when
-                  empty. Preview counts as a public view. */}
-              {belowHero}
-            </div>
-          </div>
-        </div>
+        <DesktopProfileGrid
+          profile={resolvedProfile}
+          isSelf={isSelf}
+          previewing={previewing}
+          selfView={selfView}
+          ownerSlug={ownerSlug}
+          restBelowHero={restBelowHero}
+          onEdit={() => enterEdit(false)}
+          onEditLinks={() => enterEdit(true)}
+          onPreview={() => {
+            setPreviewing(true);
+            window.scrollTo({ top: 0 });
+          }}
+          onOpenWhoSeesWhat={() => setWhoSeesWhatOpen(true)}
+          onOpenAccountData={() => setAccountDataOpen(true)}
+          onToggleHidden={toggleHidden}
+        />
       )}
 
       {selfView && <ProfileEditBar />}

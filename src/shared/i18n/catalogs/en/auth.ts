@@ -332,9 +332,9 @@ export const auth: Catalog = {
   "onboarding.stepWelcome.invitedYou": "Invited you",
   "onboarding.stepWelcome.memberSinceRole": "Member since {since} · {role}",
   "onboarding.stepWelcome.vouchFallback":
-    "{firstName} is exactly the kind of person this community was built for — thoughtful, creative, and genuinely invested in making queer spaces better.",
+    "{firstName} is thoughtful, creative, and exactly who we hoped would end up here.",
   "onboarding.stepWelcome.body":
-    "QueerPulse is a cared-for professional network rooted in Lisbon. You were invited because someone here knows your worth.",
+    "QueerPulse is a cared-for professional network rooted in Lisbon. You were invited because someone here already knows you.",
   "onboarding.stepWelcome.cta": "Let's get started",
   "onboarding.stepWelcome.back": "Back",
 
@@ -401,12 +401,16 @@ export const auth: Catalog = {
   "onboarding.intent.gatherings": "Gatherings & events",
   "onboarding.intent.professional": "Professional connections",
   "onboarding.intent.dating": "Dating",
+  "onboarding.intent.friendship": "Friendship",
   "onboarding.intent.resources": "Resources & support",
   "onboarding.intent.contributing": "Contributing",
   "onboarding.intent.housing": "Housing",
   "onboarding.intent.flatmates": "Finding flatmates",
   "onboarding.intent.activism": "Activism",
   "onboarding.intent.creative": "Creative collaboration",
+  "onboarding.intent.media": "Media & culture",
+  "onboarding.intent.discussions": "Discussions",
+  "onboarding.intent.mentorship": "Mentorship",
 
   "onboarding.stepCommunities.heading": "Find your <em>communities</em>",
   "onboarding.stepCommunities.body":
@@ -455,10 +459,13 @@ export const auth: Catalog = {
   "gettingStarted.levelStrip.eyebrow": "Your level",
   "gettingStarted.levelStrip.progress": "{xp} of {xpMax} XP",
   "gettingStarted.levelStrip.hint": "Each step you finish earns XP toward your next level.",
+  "gettingStarted.levelStrip.hintDone": "Keep exploring QueerPulse to earn more.",
   "gettingStarted.xpSources.eyebrow": "What's earned it so far",
   "gettingStarted.xpSources.amount": "+{xp} XP",
   "gettingStarted.xpSources.seeAll": "See full breakdown",
+  "gettingStarted.xpSources.seeBadgesPage": "Go to Badges page",
   "gettingStarted.stepXp": "+{xp} XP",
+  "gettingStarted.stepXpEarned": "+{xp} XP earned",
   "gettingStarted.success.badge": "You earned the First Steps badge.",
   "gettingStarted.meterAria": "{done} of {total} first steps done",
   "gettingStarted.checking": "Checking your progress…",

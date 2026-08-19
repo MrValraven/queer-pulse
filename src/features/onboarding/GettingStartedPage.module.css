@@ -1,8 +1,42 @@
 .page {
-  max-width: 680px;
+  max-width: 1040px;
   margin-inline: auto;
   padding-inline: var(--wrap-px);
   padding-block: var(--section-y);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 56px;
+  align-items: start;
+}
+
+.mainCol {
+  min-width: 0;
+}
+
+.doneCol {
+  max-width: 680px;
+  margin-inline: auto;
+}
+
+.sideCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+.sideCol .levelCard,
+.sideCol .xpSources {
+  margin-block-end: 0;
+}
+
+@media (--mobile) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
 }
 
 .head {
@@ -31,71 +65,109 @@
   margin: 0;
 }
 
-/* ── Level / XP strip ── */
-.levelStrip {
+/* ── Level / XP card ──
+   Mirrors the badges page hero: plum-gradient panel with a conic-gradient
+   dial. This is the only other place level + XP progress is drawn, so it
+   deliberately reuses that visual language at a smaller scale. */
+.levelCard {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 16px;
+  align-items: center;
+  gap: 12px;
+  padding: 28px 24px 24px;
   margin-block-end: 20px;
-  background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  text-align: center;
+  color: var(--cream);
+  background: linear-gradient(155deg, #33204a 0%, var(--plum) 44%, var(--plum-deep) 100%);
   border-radius: var(--radius-card);
-}
-.levelStripHead {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-}
-.levelStripEyebrow {
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-60);
-}
-.levelStripName {
-  font-family: var(--serif);
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--ink);
-}
-.levelStripTrack {
-  height: 8px;
-  border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--plum) 12%, transparent);
   overflow: hidden;
 }
-.levelStripFill {
+.levelCardGlow {
+  position: absolute;
+  inset: -25% -35% auto auto;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 42% 46%, rgba(var(--accent-rgb), 0.3), transparent 62%);
+  pointer-events: none;
+}
+.levelCardEyebrow {
+  position: relative;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(247, 243, 238, 0.5);
+}
+.levelDial {
+  position: relative;
+  width: 108px;
+  height: 108px;
+  display: grid;
+  place-items: center;
+}
+.levelDialRing {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from -90deg, var(--accent) calc(var(--p, 0) * 1%), rgba(247, 243, 238, 0.16) 0);
+  -webkit-mask: radial-gradient(circle, transparent 0 40px, #000 40px 50px, transparent 50px);
+  mask: radial-gradient(circle, transparent 0 40px, #000 40px 50px, transparent 50px);
+  transition: background 1.1s var(--ease);
+}
+.levelDialIn {
+  position: relative;
+  text-align: center;
+}
+.levelDialNum {
   display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--accent);
-  transition: width var(--dur-300, 300ms) var(--ease);
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 36px;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
-.levelStripMeta {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--ink-60);
-}
-.levelStripHint {
+.levelDialName {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--serif);
+  font-style: italic;
   font-size: 13px;
-  line-height: 1.5;
-  color: var(--ink-60);
+  color: var(--accent);
+}
+.levelCardXp {
+  position: relative;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: rgba(247, 243, 238, 0.92);
+  font-variant-numeric: tabular-nums;
+}
+.levelCardHint {
+  position: relative;
   margin: 0;
+  max-width: 32ch;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(247, 243, 238, 0.5);
+}
+@media (prefers-reduced-motion: reduce) {
+  .levelDialRing {
+    transition: none;
+  }
 }
 
-/* ── XP sources teaser ── */
+/* ── XP sources teaser ──
+   Rows share the checklist's card language (.step/.stepDone/.mark below):
+   same padding, radius, icon-chip size and title/desc type scale, tinted
+   with --accent instead of --jade since these are "what earned XP" rather
+   than "done" rows, but built to read as the same family of card. */
 .xpSources {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 16px;
   margin-block-end: 20px;
-  background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  border-radius: var(--radius-card);
 }
 .xpSourcesEyebrow {
   font-size: 11.5px;
@@ -110,28 +182,77 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 .xpSourceRow {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 13.5px;
-  color: var(--ink);
+  gap: 14px;
+  padding: 16px;
+  background: color-mix(in srgb, var(--accent) 6%, var(--paper));
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  border-radius: var(--radius-card);
 }
-.xpSourceRow svg {
+.xpSourceIcon {
   flex: none;
-  color: var(--ink-60);
-  font-size: 15px;
+  display: grid;
+  place-items: center;
+  inline-size: 38px;
+  block-size: 38px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent);
+  font-size: 17px;
+}
+.xpSourceBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.xpSourceTop {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
 }
 .xpSourceLabel {
   flex: 1;
   min-width: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
 }
 .xpSourceAmount {
   flex: none;
+  font-size: 14px;
   font-weight: 700;
   color: var(--accent);
+}
+.xpSourceDesc {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  margin: 0;
+}
+.xpSourceMetrics {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-40);
+}
+.xpSourceTrack {
+  display: block;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--plum) 10%, transparent);
+  overflow: hidden;
+  margin-block-start: 2px;
+}
+.xpSourceFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
 }
 .xpSourcesLink {
   align-self: flex-start;
@@ -241,6 +362,13 @@
   color: var(--accent);
 }
 
+.stepXpDone {
+  flex: none;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--jade);
+}
+
 /* Row action sits below the copy on narrow screens so the CTA keeps a full
    44px target without crowding the title. */
 @media (max-width: 480px) {
@@ -256,6 +384,7 @@
      sits flush after it. */
   .doneTag,
   .stepXp,
+  .stepXpDone,
   .step a {
     margin-inline-start: 52px;
   }

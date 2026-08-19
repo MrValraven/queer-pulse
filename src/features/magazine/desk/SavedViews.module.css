@@ -2,9 +2,9 @@
 
 .views {
   display: flex;
-  gap: 8px;
+  gap: var(--gap-xs);
   flex-wrap: wrap;
-  margin-bottom: 16px;
+  margin-bottom: var(--gap-lg);
 }
 
 .chip {

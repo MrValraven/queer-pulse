@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button } from "../../shared/components/ui";
+import { FiInfo } from "react-icons/fi";
+import { Tooltip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfileNetwork } from "./api/useProfileNetwork";
 import type {
@@ -52,7 +53,7 @@ function NetworkStatBlock({
  * The profile rail's "trust & network" zone, owner-only: the three network
  * groups (Connected / You vouched for / Vouched for you) as always-labeled
  * stat blocks, each opening its full people list in `NetworkListModal`, plus
- * the "What these mean" trigger for `ProfileTrustModal`. This replaces the
+ * an info-icon trigger for `ProfileTrustModal`. This replaces the
  * old icon-only chip row *and* the separate `ProfileTrustSignals` vouch-count
  * line for a real self — that line duplicated the "Vouched for you" count
  * here once the two counts were reconciled (see `useProfileNetwork`'s
@@ -80,6 +81,21 @@ export function ProfileNetworkStats({ ownerSlug }: { ownerSlug: string }) {
 
   return (
     <div className={styles.zone}>
+      <div className={styles.zoneHead}>
+        <span className={styles.zoneTitle}>
+          {t("members:profile.trust.modalTitle")}
+        </span>
+        <Tooltip label={t("members:profile.trust.modalTitle")}>
+          <button
+            type="button"
+            className={styles.explain}
+            aria-label={t("members:profile.trust.modalTitle")}
+            onClick={() => setExplainerOpen(true)}
+          >
+            <FiInfo aria-hidden />
+          </button>
+        </Tooltip>
+      </div>
       <div className={styles.stats}>
         {groups.map((group) => (
           <NetworkStatBlock
@@ -89,13 +105,6 @@ export function ProfileNetworkStats({ ownerSlug }: { ownerSlug: string }) {
           />
         ))}
       </div>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setExplainerOpen(true)}
-      >
-        {t("members:profile.trust.explainCta")}
-      </Button>
       {openGroup && (
         <NetworkListModal
           group={openGroup}

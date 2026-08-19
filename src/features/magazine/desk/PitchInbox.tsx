@@ -34,30 +34,38 @@ export function PitchInbox({
 }: PitchInboxProps) {
   const { t } = useTranslation();
 
-  if (pitches.length === 0) {
-    return (
-      <div className={styles.wrap}>
-        <div className={styles.empty}>
-          <h3>{t("magazine:desk.pitchInbox.emptyTitle")}</h3>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className={styles.wrap}>
-      {pitches.map((pitch) => (
-        <PitchRow
-          key={pitch.id}
-          pitch={pitch}
-          selected={selected.includes(pitch.id)}
-          leaving={leaving.includes(pitch.id)}
-          onToggleSelect={onToggleSelect}
-          onCommission={onCommission}
-          onMaybe={onMaybe}
-          onPass={onPass}
-        />
-      ))}
-    </div>
+    <section className={styles.section}>
+      <h2 className={styles.head}>
+        <span>{t("magazine:desk.pitchInbox.heading")}</span>
+        {pitches.length > 0 && (
+          <span className={styles.count}>
+            {t("magazine:desk.pitchInbox.countLabel", { count: pitches.length })}
+          </span>
+        )}
+      </h2>
+      {pitches.length === 0 ? (
+        <div className={styles.wrap}>
+          <div className={styles.empty}>
+            <h3>{t("magazine:desk.pitchInbox.emptyTitle")}</h3>
+          </div>
+        </div>
+      ) : (
+        <div className={styles.wrap}>
+          {pitches.map((pitch) => (
+            <PitchRow
+              key={pitch.id}
+              pitch={pitch}
+              selected={selected.includes(pitch.id)}
+              leaving={leaving.includes(pitch.id)}
+              onToggleSelect={onToggleSelect}
+              onCommission={onCommission}
+              onMaybe={onMaybe}
+              onPass={onPass}
+            />
+          ))}
+        </div>
+      )}
+    </section>
   );
 }

@@ -109,8 +109,6 @@ export function ProfileRail({
         <ProfileTrustSignals profile={profile} />
       )}
 
-      <ProfileSectionNav profile={profile} isSelf={realSelf} />
-
       {photoOpen && profile.photo && (
         <ProfilePhotoViewer
           src={profile.photo}
@@ -120,6 +118,27 @@ export function ProfileRail({
         />
       )}
     </aside>
+  );
+}
+
+/**
+ * The section-jump nav alone, in its own rail column — used beside the
+ * below-hero content sections (`ProfilePage.tsx`'s second `.pageGrid`). Split
+ * out from {@link ProfileRail} so the "Also working as" section between the
+ * two grids can run full-width: the portrait/meta/trust block stays paired
+ * with the hero above it, while the sticky nav resumes here, alongside the
+ * sections it actually links to.
+ */
+export function ProfileSectionNavRail({
+  profile,
+  self = false,
+  asVisitor = false,
+}: ProfileRailProps) {
+  const realSelf = self && !asVisitor;
+  return (
+    <div className={styles.rail}>
+      <ProfileSectionNav profile={profile} isSelf={realSelf} />
+    </div>
   );
 }
 
