@@ -1,9 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
+  convertDeckToArticle,
   createDeck,
   deleteDeck,
   updateDeck,
+  type ConvertDeckToArticleDto,
   type CreateDeckDto,
   type UpdateDeckDto,
 } from "./magazine.api";
@@ -65,6 +67,28 @@ export function useDeleteDeck() {
     mutationFn: async (id) => {
       if (demoMode) return;
       await deleteDeck(id);
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["magazine-admin-decks"] });
+      void queryClient.invalidateQueries({ queryKey: ["magazine-deck"] });
+    },
+  });
+}
+
+/** POST /magazine/admin/decks/:id/convert-to-article — CNT-6 "Convert": a
+ *  one-way, one-time transform of the deck into an article draft. Demo mode
+ *  has no deck→piece link to resolve (the deck editor's own local draft
+ *  state is all there is), so it fabricates a stable fake piece id — the
+ *  article editor's demo fixture is a single fixed record regardless of id
+ *  (see `useArticleDraft`'s doc comment), so this still lands somewhere real. */
+export function useConvertDeckToArticle() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<ConvertDeckToArticleDto, Error, string>({
+    meta: { silentError: true },
+    mutationFn: async (id) => {
+      if (demoMode) return { pieceId: "demo", articleId: "demo", droppedSlideKinds: [] };
+      return convertDeckToArticle(id);
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["magazine-admin-decks"] });

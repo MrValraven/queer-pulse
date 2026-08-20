@@ -9,6 +9,7 @@ import {
   monthDate,
   relationshipLabel,
   type VouchEdge,
+  type VouchPerson,
 } from "./trustGraph/trustGraphModel";
 import styles from "./AdminVouchGraph.module.css";
 
@@ -28,9 +29,13 @@ interface Props {
    *  button so it can't be double-clicked. */
   verifying: boolean;
   /** Real navigation to the moderation queue for this subject, pre-filtered
-   *  to their reports (ADM-8 deep-link; also replaces the former "Cite in
-   *  audit log" button, which fired a success toast and did nothing else). */
+   *  to their reports (ADM-8 deep-link). */
   onOpenModeration: (id: string) => void;
+  /** Opens the real "Cite evidence" confirm dialog against the SELECTED
+   *  person (ADM-9 — the former "Cite in audit log" button was removed
+   *  outright when it fired a success toast and did nothing else; there was
+   *  nothing to attach evidence to until now). */
+  onCite: (id: string) => void;
   /** Deselect the node — dismisses the mobile bottom sheet. */
   onCloseSheet: () => void;
 }
@@ -148,6 +153,7 @@ export function VouchGraphInspector({
   onVerify,
   verifying,
   onOpenModeration,
+  onCite,
   onCloseSheet,
 }: Props) {
   const { t } = useTranslation();
@@ -214,7 +220,10 @@ export function VouchGraphInspector({
         <FiLock aria-hidden /> {t("admin:vouchGraph.inspector.sealed")}
       </div>
 
-      {p.standing === "flagged" && (
+      {/* ADM-23: real cycle detection (`inRing`) — not `standing === "flagged"`,
+          which also covers suspended/frozen/high-report-count members who
+          aren't necessarily part of a self-vouching ring. */}
+      {p.inRing && (
         <Banner
           kind="danger"
           title={t("admin:vouchGraph.inspector.ringBanner.title")}
@@ -310,28 +319,67 @@ export function VouchGraphInspector({
         </div>
       )}
 
-      <div className={styles.insActions}>
-        {!p.private && (
-          <Button
-            variant="jade"
-            size="md"
-            disabled={p.verified || verifying}
-            onClick={() => onVerify(sel)}
-          >
-            {p.verified
-              ? t("admin:vouchGraph.inspector.verifiedCta")
-              : t("admin:vouchGraph.inspector.useAsVerificationCta")}
-          </Button>
-        )}
-        <Button variant="ghost" size="md" onClick={() => onExpand(sel)}>
-          {expanded
-            ? t("admin:vouchGraph.inspector.collapseCta")
-            : t("admin:vouchGraph.inspector.expandCta")}
-        </Button>
-        <Button variant="ghost" size="md" onClick={() => onOpenModeration(sel)}>
-          {t("common:cta.openModerationQueue")}
-        </Button>
-      </div>
+      <InspectorActions
+        p={p}
+        sel={sel}
+        onVerify={onVerify}
+        verifying={verifying}
+        onCite={onCite}
+        expanded={expanded}
+        onExpand={onExpand}
+        onOpenModeration={onOpenModeration}
+      />
     </aside>
+  );
+}
+
+/** The inspector's action row, extracted so `VouchGraphInspector` itself
+ *  stays under the repo's 200-line component limit. */
+function InspectorActions({
+  p,
+  sel,
+  onVerify,
+  verifying,
+  onCite,
+  expanded,
+  onExpand,
+  onOpenModeration,
+}: {
+  p: VouchPerson;
+  sel: string;
+  onVerify: (id: string) => void;
+  verifying: boolean;
+  onCite: (id: string) => void;
+  expanded: boolean;
+  onExpand: (id: string) => void;
+  onOpenModeration: (id: string) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.insActions}>
+      {!p.private && (
+        <Button
+          variant="jade"
+          size="md"
+          disabled={p.verified || verifying}
+          onClick={() => onVerify(sel)}
+        >
+          {p.verified
+            ? t("admin:vouchGraph.inspector.verifiedCta")
+            : t("admin:vouchGraph.inspector.useAsVerificationCta")}
+        </Button>
+      )}
+      <Button variant="ghost" size="md" onClick={() => onCite(sel)}>
+        {t("admin:vouchGraph.inspector.citeCta")}
+      </Button>
+      <Button variant="ghost" size="md" onClick={() => onExpand(sel)}>
+        {expanded
+          ? t("admin:vouchGraph.inspector.collapseCta")
+          : t("admin:vouchGraph.inspector.expandCta")}
+      </Button>
+      <Button variant="ghost" size="md" onClick={() => onOpenModeration(sel)}>
+        {t("common:cta.openModerationQueue")}
+      </Button>
+    </div>
   );
 }

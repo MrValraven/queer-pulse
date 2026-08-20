@@ -6,6 +6,7 @@ import { SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { VouchGraphCanvas } from "./VouchGraphCanvas";
+import { VouchGraphCiteDialog } from "./VouchGraphCiteDialog";
 import { VouchGraphInspector } from "./VouchGraphInspector";
 import { TrustNetworkMemberFinder } from "./TrustNetworkMemberFinder";
 import { useVouchGraph, type VouchMode } from "./useVouchGraph";
@@ -13,7 +14,7 @@ import { useVouchGraphInspectorActions } from "./useVouchGraphInspectorActions";
 import { useTrustNetwork } from "./api/useTrustNetwork";
 import { TrustGraphProvider } from "./trustGraph/TrustGraphContext";
 import { useTrustGraph } from "./trustGraph/useTrustGraph";
-import { monthDate } from "./trustGraph/trustGraphModel";
+import { monthDate, type TrustGraph } from "./trustGraph/trustGraphModel";
 import styles from "./AdminVouchGraph.module.css";
 
 /** `admin:vouchGraph.modes.*` catalog keys, resolved with `t()`. */
@@ -192,6 +193,58 @@ function GraphModalShell({
   );
 }
 
+/**
+ * The inspector plus its "Cite" confirm dialog (ADM-9) — owns
+ * `useVouchGraphInspectorActions` itself so `GraphModalInner` stays under the
+ * repo's 200-line component limit. Extracted rather than inlined because the
+ * dialog needs the same action-state (`citingId`/`citeFromGraph`) the
+ * inspector's "Cite" button opens it from.
+ */
+function InspectorPanel({
+  graph,
+  g,
+}: {
+  graph: TrustGraph;
+  g: ReturnType<typeof useVouchGraph>;
+}) {
+  const {
+    verifyFromGraph,
+    verifyingId,
+    openInModeration,
+    citingId,
+    openCite,
+    closeCite,
+    citeFromGraph,
+    citing,
+  } = useVouchGraphInspectorActions(graph);
+
+  return (
+    <>
+      <VouchGraphInspector
+        sel={g.sel}
+        activeEdgeId={g.timeCut < g.eventCount ? g.activeEdgeId : null}
+        expanded={g.sel ? g.expanded.has(g.sel) : false}
+        onGo={g.select}
+        onExpand={g.toggleExpand}
+        onVerify={verifyFromGraph}
+        verifying={verifyingId !== null && verifyingId === g.sel}
+        onOpenModeration={openInModeration}
+        onCite={openCite}
+        onCloseSheet={() => g.select(null)}
+      />
+      {citingId && (
+        <VouchGraphCiteDialog
+          focusId={g.focus}
+          personId={citingId}
+          onClose={closeCite}
+          onCite={citeFromGraph}
+          citing={citing}
+        />
+      )}
+    </>
+  );
+}
+
 function GraphModalInner({
   focusSlug,
   onClose,
@@ -210,8 +263,6 @@ function GraphModalInner({
   const graph = useTrustGraph();
   const g = useVouchGraph(graph, focusSlug);
   const focusPerson = graph.peopleById[g.focus]!;
-  const { verifyFromGraph, verifyingId, openInModeration } =
-    useVouchGraphInspectorActions(graph);
 
   return createPortal(
     <div
@@ -312,17 +363,7 @@ function GraphModalInner({
             <PathBar pathA={g.pathA} pathB={g.pathB} onClear={g.clearPath} />
           </VouchGraphCanvas>
 
-          <VouchGraphInspector
-            sel={g.sel}
-            activeEdgeId={g.timeCut < g.eventCount ? g.activeEdgeId : null}
-            expanded={g.sel ? g.expanded.has(g.sel) : false}
-            onGo={g.select}
-            onExpand={g.toggleExpand}
-            onVerify={verifyFromGraph}
-            verifying={verifyingId !== null && verifyingId === g.sel}
-            onOpenModeration={openInModeration}
-            onCloseSheet={() => g.select(null)}
-          />
+          <InspectorPanel graph={graph} g={g} />
         </div>
 
         <footer className={styles.bottom}>

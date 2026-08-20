@@ -115,6 +115,33 @@ export interface ReportDetail {
 export type PriorReports =
   { kind: "count"; count: number } | { kind: "newAccount"; vouches: number };
 
+/**
+ * ADM-22: reporter credibility — the mirror of `PriorReports` on the filer's
+ * side rather than the reported party's. Deliberately a raw `filed`/
+ * `dismissed` count pair (never a derived score/tier) so a moderator can
+ * weigh it themselves. `{ kind: "new" }` is a genuinely first-time reporter
+ * (0 prior resolved reports) — rendered as "New reporter" rather than a 0/0
+ * that reads as a red flag. `ModReport.reporterCredibility` itself stays
+ * `undefined` for an anonymous or already-erased reporter — there is no
+ * identity to attach any track record, "new" or otherwise, to. */
+export type ReporterCredibility =
+  | { kind: "new" }
+  | { kind: "history"; filed: number; dismissed: number };
+
+/** Resolves a reporter-credibility line at render, so the plural/wording
+ *  follows the language — mirrors `priorReportsText`. */
+export function reporterCredibilityText(
+  credibility: ReporterCredibility,
+  t: TFunction,
+): string {
+  return credibility.kind === "new"
+    ? t("admin:moderation.reporterCredibility.new")
+    : t("admin:moderation.reporterCredibility.history", {
+        filed: credibility.filed,
+        dismissed: credibility.dismissed,
+      });
+}
+
 export interface ModReport {
   id: string;
   /** What kind of thing the report is about (member, post, listing, …) — gates
@@ -143,6 +170,9 @@ export interface ModReport {
   reportedName: string;
   community?: string;
   priorReports?: PriorReports;
+  /** ADM-22: reporter credibility — undefined for an anonymous/erased
+   *  reporter (no identity to show a track record for). */
+  reporterCredibility?: ReporterCredibility;
   age: string;
   risk: { tone: AdminTone; key: string };
   /** Server-computed SLA deadline (severity-tiered), ISO timestamp (COM-8). */
@@ -312,6 +342,7 @@ export const EMERGENCY_REPORTS: ModReport[] = [
     reporterName: "Mara L.",
     reportedName: "@anon_4471",
     priorReports: { kind: "newAccount", vouches: 0 },
+    reporterCredibility: { kind: "new" },
     age: "1h",
     risk: { tone: "danger", key: "admin:moderation.risk.atRisk" },
     slaDueAt: new Date(Date.now() + 40 * 60_000).toISOString(),
@@ -332,6 +363,7 @@ export const OTHER_REPORTS: ModReport[] = [
     reporterName: "Tomás R.",
     reportedName: "@nightowl",
     priorReports: { kind: "count", count: 4 },
+    reporterCredibility: { kind: "history", filed: 2, dismissed: 0 },
     age: "3h",
     risk: { tone: "coral", key: "admin:moderation.risk.high" },
     slaDueAt: new Date(Date.now() - 90 * 60_000).toISOString(),
@@ -382,6 +414,7 @@ export const OTHER_REPORTS: ModReport[] = [
     reporterName: "Bruna T.",
     reportedName: "rosa-amarga-cafe",
     community: "Porto Queers",
+    reporterCredibility: { kind: "history", filed: 1, dismissed: 1 },
     age: "11h",
     risk: { tone: "amber", key: "admin:moderation.risk.medium" },
     detail: {
@@ -425,6 +458,7 @@ export const OTHER_REPORTS: ModReport[] = [
     reporterName: "Sofia D.",
     reportedName: "Trans & Friends",
     community: "Trans & Friends",
+    reporterCredibility: { kind: "history", filed: 3, dismissed: 2 },
     age: "14h",
     risk: { tone: "jade", key: "admin:moderation.risk.low" },
   },

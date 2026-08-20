@@ -11,7 +11,7 @@ export interface WriterWorkTabProps {
   onSelectAssignment: (assignment: WriterAssignmentDto) => void;
   onFileDraft: (assignment: WriterAssignmentDto) => void;
   onMessageEditor: (assignment: WriterAssignmentDto) => void;
-  onToast: (message: string) => void;
+  onReadBrief: (assignment: WriterAssignmentDto) => void;
 }
 
 /** The "Your work" tab body of `WriterWorkspacePage` — the writer's own
@@ -23,7 +23,7 @@ export function WriterWorkTab({
   onSelectAssignment,
   onFileDraft,
   onMessageEditor,
-  onToast,
+  onReadBrief,
 }: WriterWorkTabProps) {
   const { t } = useTranslation();
 
@@ -47,7 +47,7 @@ export function WriterWorkTab({
           onSelect={onSelectAssignment}
           onFileDraft={onFileDraft}
           onMessageEditor={onMessageEditor}
-          onToast={onToast}
+          onReadBrief={onReadBrief}
         />
       ))}
     </div>

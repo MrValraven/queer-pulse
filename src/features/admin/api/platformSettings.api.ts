@@ -16,6 +16,13 @@ export interface PlatformSettingsDTO {
   lockdownMessage: string | null;
   /** Shared by BOTH the registration and join-request closed states. */
   registrationClosedMessage: string | null;
+  /** Sitewide announcement banner (ADM-25) — independent of the switches above. */
+  announcementEnabled: boolean;
+  announcementMessage: string | null;
+  /** ISO 8601, or `null` for no auto-hide. */
+  announcementExpiresAt: string | null;
+  /** Bumped to a fresh UUID whenever `announcementMessage` changes. */
+  announcementVersion: string;
   updatedAt: string;
   updatedBy: string | null;
 }
@@ -40,6 +47,10 @@ export interface UpdatePlatformSettingsInput {
   lockdownAllowsModerators?: boolean;
   lockdownMessage?: string | null;
   registrationClosedMessage?: string | null;
+  announcementEnabled?: boolean;
+  announcementMessage?: string | null;
+  /** ISO 8601; pass `null` to clear. */
+  announcementExpiresAt?: string | null;
   note?: string;
 }
 

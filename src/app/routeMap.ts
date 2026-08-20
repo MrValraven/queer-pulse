@@ -64,6 +64,7 @@ export const routes = {
   adminChangemakerNominations: "/admin/changemaker-nominations",
   adminCommissionInterests: "/admin/commission-interests",
   adminReadingGroupProposals: "/admin/reading-group-proposals",
+  adminGuideFeedback: "/admin/guide-feedback",
   adminMagazineSubmissions: "/admin/magazine-submissions",
   adminWriterApplications: "/admin/writer-applications",
   adminModeration: "/admin/moderation",
@@ -78,8 +79,11 @@ export const routes = {
   adminHousingGroups: "/admin/housing-groups",
   adminVerifications: "/admin/verifications",
   adminOrgTiers: "/admin/org-tiers",
+  adminResourceListings: "/admin/resource-listings",
+  adminResourceSuggestions: "/admin/resource-suggestions",
   adminPartnerApplications: "/admin/partner-applications",
   adminSettings: "/admin/settings",
+  adminReports: "/admin/reports",
   about: "/about",
   account: "/account",
   accountProfile: "/account/profile",
@@ -96,6 +100,9 @@ export const routes = {
   /** CNT-9 — the authors directory (`AuthorsDirectoryPage`), distinct from
    *  `author` above (a single writer's page, `/magazine/author/:slug`). */
   magazineAuthors: "/magazine/authors",
+  /** CNT-20 — the section/topic browse page (`MagazineSectionsPage`); a
+   *  section's filtered article list lives at `${magazineSections}/:section`. */
+  magazineSections: "/magazine/sections",
   barter: "/work/barter",
   businessDirectory: "/business-directory",
   calendar: "/calendar",

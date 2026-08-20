@@ -114,6 +114,8 @@ export const DEMO_ISSUE_PRODUCTION: IssueProductionDto = {
   ],
   runOrder: DEMO_RUN_ORDER,
   digest: DEMO_DIGEST,
+  digestSendOnPublish: true,
+  digestSentAt: null,
   // Matches the design's ship modal note ("two pieces are still behind the
   // publish gate") — the whole-issue gate check reads false while the other
   // per-issue checks reflect what's already been done.

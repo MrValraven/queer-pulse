@@ -1675,6 +1675,7 @@ export const marketing: Catalog = {
   "changelog.tag.events": "Open the Events Hub",
   "changelog.tag.roadmap": "Open the roadmap",
   "changelog.tag.magazine": "Open the magazine",
+  "changelog.tag.magazineSections": "Browse by section",
   "changelog.tag.magazineWriter": "Open your workspace",
   "changelog.tag.badges": "See badges & levels",
   "changelog.tag.safety": "See our safety approach",
@@ -1870,6 +1871,56 @@ export const marketing: Catalog = {
     "See and remove every device getting your push notifications",
   "changelog.entries.push-devices-list.body":
     "Settings now has a Devices list under Notifications: every device registered for QueerPulse push, when it was registered, and when it was last notified. Lost a phone, or don't recognise one? Remove it right from there.",
+
+  "changelog.entries.admin-sitewide-announcement.title":
+    "Admins can post a sitewide announcement banner",
+  "changelog.entries.admin-sitewide-announcement.body":
+    "The only platform-wide messaging tool was the lockdown banner, admin-facing only. Admins can now write a real announcement banner that shows to every visitor, signed in or not, with an optional auto-expiry so a scheduled-maintenance notice doesn't have to be remembered and manually turned off. Each member can dismiss it individually; editing the message brings it back for anyone who already dismissed the old one.",
+
+  "changelog.entries.admin-reports-page.title":
+    "New consolidated admin Reports page",
+  "changelog.entries.admin-reports-page.body":
+    "Growth, moderation-report volume, community health, and governance finance figures used to live scattered across different admin pages, with no way to adjust the time window or export the numbers. A new Reports page pulls them into one place, with a real adjustable date range (4/8/12/26 weeks) and CSV export for growth and report volume.",
+
+  "changelog.entries.magazine-sections-browse.title":
+    "Browse the magazine by section",
+  "changelog.entries.magazine-sections-browse.body":
+    "Every article and issue already carried a real editorial section (Features, Interview, Essays, and the rest). Now there's a Sections page that groups everything by it, instead of leaving you to stumble onto a topic through search.",
+
+  "changelog.entries.magazine-digest-real-send.title":
+    "Issue digests can send a real test and go out with the issue",
+  "changelog.entries.magazine-digest-real-send.body":
+    "The magazine desk's digest tools used to just show a confirmation toast. \"Send test\" now really emails the current draft to the editor who clicked it, and \"Schedule with issue\" now really queues the digest to go out to newsletter subscribers the moment the issue ships.",
+
+  "changelog.entries.magazine-deck-convert-to-article.title":
+    "Decks can convert into articles",
+  "changelog.entries.magazine-deck-convert-to-article.body":
+    "The desk's deck editor can now turn a finished deck into a real article, carrying over its text, images, and stat slides. Interactive slides have no article equivalent, so those are called out honestly rather than silently dropped.",
+
+  "changelog.entries.magazine-writer-read-brief.title":
+    "Writers can read their actual assignment brief",
+  "changelog.entries.magazine-writer-read-brief.body":
+    "\"Read the brief\" used to be a placeholder toast. It now opens the real brief for the piece, including the angle, what to include, what to avoid, the rate, and who commissioned it.",
+
+  "changelog.entries.admin-trust-network-cite-evidence.title":
+    "Admins can cite evidence from the trust network graph",
+  "changelog.entries.admin-trust-network-cite-evidence.body":
+    "The graph inspector's \"Cite\" button used to fire a success toast and do nothing else. It now writes a real note to the member's audit trail describing the vouch relationship being cited, visible the next time an admin reviews that member.",
+
+  "changelog.entries.admin-trust-network-ring-detection.title":
+    "Trust network ring detection is now a real graph analysis",
+  "changelog.entries.admin-trust-network-ring-detection.body":
+    "Flagging a \"vouch ring\" used to just mean an account was suspended, frozen, or carrying two or more open reports, a much broader signal than an actual closed loop. The graph now detects real clusters of new accounts vouching only for each other, with no outside vouch to back them up.",
+
+  "changelog.entries.admin-reporter-credibility.title":
+    "Moderation queue now shows reporter history alongside reported-party history",
+  "changelog.entries.admin-reporter-credibility.body":
+    "The report queue always showed how many prior reports the reported member has. It now shows the same signal for the reporter: how many reports they've filed and how many were dismissed, so a moderator can weigh both sides.",
+
+  "changelog.entries.admin-housing-moderator-role.title":
+    "New Housing-only moderator staff role",
+  "changelog.entries.admin-housing-moderator-role.body":
+    "Staff roles used to only cover the magazine desk. A member can now be granted a Housing moderator role that lets them moderate Housing listings and groups without handing them the full platform Moderator tier.",
 
   "changelog.entries.gatherings-manage-attendees-remove-promote.title":
     "Hosts can now remove a guest or promote from the waitlist",
@@ -5343,4 +5394,15 @@ export const marketing: Catalog = {
   "submitPartner.tips.whatNext.body":
     "Your application arrives as pending. A member of the team reviews it, and we'll be in touch, whether it's a yes, a not-yet, or a question.",
 
+  "changelog.entries.resource-listings-and-suggestions.title":
+    "Real resource listings for Legal Aid & Sexual Health Testing",
+  "changelog.entries.resource-listings-and-suggestions.body":
+    "Legal Aid and Sexual Health Testing now show a real, admin-vetted directory when one exists — and a \"Suggest a resource\" form feeding an admin review queue when it doesn't. No fabricated listings, ever.",
+  "changelog.tag.legal": "See Legal Aid →",
+
+  "changelog.tag.guideRating": "See the Legal guides",
+  "changelog.entries.resources-guide-rating.title":
+    "Rate whether a resource guide helped",
+  "changelog.entries.resources-guide-rating.body":
+    "Legal, Sexual Health, and Mental Health guides now end with a quick \"Was this helpful?\" — thumbs up or down, no visible counts, just a thanks once you've answered. Editors can see which guides are and aren't landing from the new Guide Feedback admin page.",
 };

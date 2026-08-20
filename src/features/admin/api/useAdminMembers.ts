@@ -26,6 +26,7 @@ import {
   flaggedDtoToMember,
 } from "./adminMembers.adapters";
 import {
+  citeMember,
   getAdminFlagged,
   getAdminMember,
   getAdminMembers,
@@ -37,6 +38,7 @@ import {
   verifyMember,
   type AdminMemberRoleDTO,
   type AdminStaffRolesDTO,
+  type CitedMemberDTO,
   type MemberRole,
   type RestrictedMemberDTO,
   type RestrictMemberInput,
@@ -297,6 +299,38 @@ export function useRestrictMember() {
       suspendedUntil: input.duration ? new Date().toISOString() : null,
     }),
     live: ({ memberId, input }) => restrictMember(memberId, input),
+    onLiveSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
+    },
+  });
+}
+
+/**
+ * Cite evidence against a member (ADM-9) — the trust network graph
+ * inspector's real "Cite" action, replacing the old button that fired a
+ * success toast and did nothing. Demo mode resolves synthetically. Live mode
+ * calls `POST /admin/members/:id/cite`; on success both the roster and the
+ * open drawer re-read off the shared `["admin-members"]` key prefix, so the
+ * new entry shows up in the member's moderation timeline right away.
+ */
+export function useCiteMember() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useDemoAwareMutation<
+    CitedMemberDTO,
+    unknown,
+    { memberId: string; slug: string; note: string }
+  >({
+    demoMode,
+    demoLatencyMs: 0,
+    mutationKey: ["admin-members", "cite"],
+    demoResult: ({ memberId, slug, note }) => ({
+      id: memberId,
+      slug,
+      note,
+      citedAt: new Date().toISOString(),
+    }),
+    live: ({ memberId, note }) => citeMember(memberId, note),
     onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
     },

@@ -153,17 +153,21 @@ export function VouchGraphCanvas({
                 p.name.toLowerCase().includes(q) ||
                 p.initials.toLowerCase().includes(q);
               const safety = mode === "safety";
-              const flagged = p.standing === "flagged";
-              // Flagged (ring) nodes keep their red "ring" halo — don't also
-              // paint them with the amber "isolated" halo, which (declared
-              // later in the CSS) would override and hide the ring signal.
-              const isolated = safety && !flagged && graph.isIsolated(id);
+              // ADM-23: real cycle detection (`inRing`) — not
+              // `standing === "flagged"`, which also covers
+              // suspended/frozen/high-report-count members who aren't
+              // necessarily part of a self-vouching ring.
+              const inRing = !!p.inRing;
+              // Ring nodes keep their red "ring" halo — don't also paint them
+              // with the amber "isolated" halo, which (declared later in the
+              // CSS) would override and hide the ring signal.
+              const isolated = safety && !inRing && graph.isIsolated(id);
               const className = cx(
                 styles.node,
                 sel === id && styles.selected,
-                safety && flagged && styles.ring,
+                safety && inRing && styles.ring,
                 isolated && styles.isolated,
-                safety && !flagged && !isolated && !!p.reports && styles.reported,
+                safety && !inRing && !isolated && !!p.reports && styles.reported,
                 pathNodes.has(id) && styles.pathnode,
                 q && !matches && styles.searchDim,
                 q && matches && styles.searchHit,

@@ -32,6 +32,12 @@ export interface VouchPerson {
   tone: AvatarTone;
   joined: string; // 'YYYY-MM'
   standing: Standing;
+  /** ADM-23: real cycle detection — true when this person is part of a
+   *  closed self-vouching loop among new/unverified accounts. A
+   *  graph-structure signal distinct from `standing`, which keeps its own
+   *  meaning (suspended/frozen/high-report-count). Optional so demo fixtures
+   *  that predate this field still type-check as `false`/absent. */
+  inRing?: boolean;
   sceneId: string | null;
   role: string | null;
   reports?: number;

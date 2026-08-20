@@ -50,6 +50,11 @@ const ASSIGNMENTS: WriterAssignmentDto[] = [
     byline: "Sara Pinheiro",
     // Matches this same piece's `brief.killFee` on `pieceRecord.data.ts` (id "p1").
     terms: { killFee: "€140", rights: HOUSE_RIGHTS_TERM, edits: HOUSE_EDITS_TERM },
+    wants: ["Start at the waiting list, not the diagnosis", "At least one friend's voice, not just the clinical view"],
+    avoid: "Nothing that reads as a how-to grief guide.",
+    rate: "€0.15/word",
+    commissionedBy: "Marta Silveira",
+    commissionedOn: "12 Jul",
   },
   {
     id: "a2",
@@ -65,6 +70,11 @@ const ASSIGNMENTS: WriterAssignmentDto[] = [
     note: "Transcript attached. Brief says start at the waiting list, not the diagnosis.",
     byline: "Sara Pinheiro",
     terms: { killFee: "€105", rights: HOUSE_RIGHTS_TERM, edits: HOUSE_EDITS_TERM },
+    wants: ["Her own words on the waiting list, not a summary of the transcript"],
+    avoid: "Any detail that could identify her clinic.",
+    rate: "€0.15/word",
+    commissionedBy: "Marta Silveira",
+    commissionedOn: "3 Jul",
   },
 ];
 

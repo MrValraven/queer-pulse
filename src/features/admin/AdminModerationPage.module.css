@@ -371,6 +371,26 @@ button.reportMain:focus-visible {
   width: 11px;
   height: 11px;
 }
+/* ADM-22: reporter credibility chip — mirrors .priorFlag/.assignedFlag's
+   pill shape, in a neutral violet tone (this is informational context for a
+   moderator to weigh, not itself a warning like .priorFlag or an
+   endorsement like .assignedFlag). */
+.reporterFlag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(var(--violet-rgb), 0.16);
+  color: var(--violet);
+  font-weight: 600;
+  font-size: 11.5px;
+}
+.reporterFlag svg {
+  width: 11px;
+  height: 11px;
+}
 
 .reportSide {
   flex: none;

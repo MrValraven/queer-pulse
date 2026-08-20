@@ -46,4 +46,9 @@ export const MASTHEAD_NAV: MastheadNavItem[] = [
     labelKey: "magazine:masthead.nav.write",
     href: routes.submitStory,
   },
+  {
+    key: "sections",
+    labelKey: "magazine:masthead.nav.sections",
+    href: routes.magazineSections,
+  },
 ];

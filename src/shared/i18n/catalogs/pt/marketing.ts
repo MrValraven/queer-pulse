@@ -1720,6 +1720,7 @@ export const marketing: Catalog = {
   "changelog.tag.events": "Abrir o Events Hub",
   "changelog.tag.roadmap": "Abrir o roteiro",
   "changelog.tag.magazine": "Abrir a revista",
+  "changelog.tag.magazineSections": "Navegar por seção",
   "changelog.tag.magazineWriter": "Abrir o teu espaço",
   "changelog.tag.badges": "Ver emblemas e níveis",
   "changelog.tag.safety": "Ver a nossa abordagem à segurança",
@@ -1919,6 +1920,56 @@ export const marketing: Catalog = {
     "Vê e remove todos os dispositivos que recebem as tuas notificações push",
   "changelog.entries.push-devices-list.body":
     "As Definições passam a ter uma lista de Dispositivos em Notificações: todos os dispositivos registados para push da QueerPulse, quando foram registados, e quando foram notificados pela última vez. Perdeste um telemóvel, ou não reconheces algum? Remove-o diretamente ali.",
+
+  "changelog.entries.admin-sitewide-announcement.title":
+    "Os admins podem publicar um aviso em toda a plataforma",
+  "changelog.entries.admin-sitewide-announcement.body":
+    "A única ferramenta de mensagem para toda a plataforma era o aviso de bloqueio, só visível para admins. Os admins já podem escrever um aviso real que aparece para qualquer visitante, autenticado ou não, com uma expiração automática opcional para que um aviso de manutenção agendada não dependa de alguém se lembrar de o desligar. Cada membro pode dispensá-lo individualmente; editar a mensagem volta a mostrá-lo a quem já tinha dispensado a anterior.",
+
+  "changelog.entries.admin-reports-page.title":
+    "Nova página consolidada de Relatórios no admin",
+  "changelog.entries.admin-reports-page.body":
+    "Crescimento, volume de denúncias de moderação, saúde das comunidades e as cifras de finanças da governação viviam espalhados por páginas diferentes do admin, sem forma de ajustar a janela temporal ou exportar os números. Uma nova página de Relatórios reúne tudo num só sítio, com um intervalo de datas real e ajustável (4/8/12/26 semanas) e exportação em CSV para o crescimento e o volume de denúncias.",
+
+  "changelog.entries.magazine-sections-browse.title":
+    "Navega a revista por secção",
+  "changelog.entries.magazine-sections-browse.body":
+    "Cada artigo e edição já tinha uma secção editorial real (Reportagens, Entrevista, Ensaios, entre outras). Agora há uma página de Secções que agrupa tudo por ela, em vez de teres de tropeçar num tema através da pesquisa.",
+
+  "changelog.entries.magazine-digest-real-send.title":
+    "Os resumos de edição já enviam um teste real e saem com a edição",
+  "changelog.entries.magazine-digest-real-send.body":
+    "As ferramentas de resumo da redação da revista mostravam apenas um aviso de confirmação. \"Enviar teste\" agora envia mesmo o rascunho atual por email a quem clicou, e \"Agendar com a edição\" agora põe mesmo o resumo na fila para sair aos subscritores da newsletter no momento em que a edição é publicada.",
+
+  "changelog.entries.magazine-deck-convert-to-article.title":
+    "Os decks podem converter-se em artigos",
+  "changelog.entries.magazine-deck-convert-to-article.body":
+    "O editor de decks da redação já consegue transformar um deck terminado num artigo real, transportando o texto, as imagens e os slides de estatísticas. Os slides interativos não têm equivalente em artigo, por isso ficam assinalados com honestidade em vez de serem descartados em silêncio.",
+
+  "changelog.entries.magazine-writer-read-brief.title":
+    "Os redatores podem ler o briefing real da peça",
+  "changelog.entries.magazine-writer-read-brief.body":
+    "\"Ler o briefing\" era antes um aviso de placeholder. Agora abre o briefing real da peça, incluindo o ângulo, o que incluir, o que evitar, o cachê e quem a encomendou.",
+
+  "changelog.entries.admin-trust-network-cite-evidence.title":
+    "Os admins podem citar provas a partir do grafo da rede de confiança",
+  "changelog.entries.admin-trust-network-cite-evidence.body":
+    "O botão \"Citar\" do inspetor de grafo disparava um aviso de sucesso e não fazia mais nada. Agora escreve uma nota real no histórico de auditoria do membro a descrever a relação de aval citada, visível da próxima vez que um admin rever esse membro.",
+
+  "changelog.entries.admin-trust-network-ring-detection.title":
+    "A deteção de anéis na rede de confiança é agora uma análise real de grafo",
+  "changelog.entries.admin-trust-network-ring-detection.body":
+    "Assinalar um \"anel de avais\" significava apenas que uma conta estava suspensa, congelada ou tinha duas ou mais denúncias abertas, um sinal bem mais amplo do que um laço fechado real. O grafo agora deteta clusters reais de contas novas que só se avalizam entre si, sem nenhum aval externo a apoiá-las.",
+
+  "changelog.entries.admin-reporter-credibility.title":
+    "A fila de moderação mostra agora o histórico de quem denuncia, além de quem foi denunciado",
+  "changelog.entries.admin-reporter-credibility.body":
+    "A fila de denúncias sempre mostrou quantas denúncias anteriores tem a pessoa denunciada. Agora mostra o mesmo sinal para quem denuncia: quantas denúncias já apresentou e quantas foram arquivadas, para o moderador pesar os dois lados.",
+
+  "changelog.entries.admin-housing-moderator-role.title":
+    "Novo papel de staff: moderador só de Habitação",
+  "changelog.entries.admin-housing-moderator-role.body":
+    "Os papéis de staff só cobriam a redação da revista. Agora é possível conceder a um membro um papel de moderador de Habitação, que lhe permite moderar anúncios e grupos de Habitação sem lhe dar o nível completo de Moderador da plataforma.",
 
   "changelog.entries.gatherings-manage-attendees-remove-promote.title":
     "Quem organiza já pode remover uma pessoa convidada ou promovê-la da lista de espera",
@@ -5427,4 +5478,15 @@ export const marketing: Catalog = {
   "submitPartner.tips.whatNext.body":
     "A tua candidatura chega como pendente. Uma pessoa da equipa revê-a, e entraremos em contacto — seja um sim, um ainda não, ou uma pergunta.",
 
+  "changelog.entries.resource-listings-and-suggestions.title":
+    "Recursos reais para Apoio Jurídico e Testagem de Saúde Sexual",
+  "changelog.entries.resource-listings-and-suggestions.body":
+    "Apoio Jurídico e Testagem de Saúde Sexual mostram agora um diretório real, verificado por administradores, quando existe — e um formulário \"Sugerir um recurso\" que alimenta uma fila de revisão administrativa quando não existe. Nunca com recursos fabricados.",
+  "changelog.tag.legal": "Ver Apoio Jurídico →",
+
+  "changelog.tag.guideRating": "Ver os guias de Legal",
+  "changelog.entries.resources-guide-rating.title":
+    "Avalia se um guia de recursos ajudou",
+  "changelog.entries.resources-guide-rating.body":
+    "Os guias de Legal, Saúde Sexual e Saúde Mental terminam agora com um rápido \"Isto foi útil?\" — polegar para cima ou para baixo, sem contagens visíveis, só um agradecimento depois de responderes. A equipa editorial já vê quais guias estão e não estão a resultar na nova página de administração Feedback dos guias.",
 };

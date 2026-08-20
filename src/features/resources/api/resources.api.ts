@@ -1,4 +1,4 @@
-import { apiGet } from "../../../shared/api/client";
+import { apiGet, apiPost } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
 
 // ── Backend DTOs ────────────────────────────────────────────────────────────
@@ -38,6 +38,17 @@ export interface GlossaryTermResponseDTO {
   category: string | null;
 }
 
+/** `POST|GET /resources/guides/:contentKey/rating` (CNT-18) response shape —
+ *  `ResourceGuideRatingsController`'s `GuideRatingResult`. */
+export type GuideRatingValue = "helpful" | "not_helpful";
+
+export interface GuideRatingResponseDTO {
+  contentKey: string;
+  helpfulCount: number;
+  notHelpfulCount: number;
+  myVote: GuideRatingValue | null;
+}
+
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
 
 export async function getResources(
@@ -58,4 +69,73 @@ export function getGlossaryTerms(params: { category?: string } = {}) {
   if (params.category) q.set("category", params.category);
   const qs = q.toString();
   return apiGet<GlossaryTermResponseDTO[]>(`/glossary${qs ? `?${qs}` : ""}`);
+}
+
+export function fetchGuideRating(contentKey: string) {
+  return apiGet<GuideRatingResponseDTO>(
+    `/resources/guides/${encodeURIComponent(contentKey)}/rating`,
+  );
+}
+
+export function rateGuide(contentKey: string, value: GuideRatingValue) {
+  return apiPost<GuideRatingResponseDTO>(
+    `/resources/guides/${encodeURIComponent(contentKey)}/rating`,
+    { value },
+  );
+}
+
+// ── Resource listings + suggestions (CNT-14) ────────────────────────────────
+// Shapes the NestJS `resources` domain's CNT-14 additions return: a real,
+// admin-curated Legal Aid / Sexual Health Testing directory
+// (GET /resources/listings) plus the public "suggest a resource" submission
+// pathway (POST /resources/suggestions) that feeds the admin review queue.
+
+/** A single listing row, as returned by GET /resources/listings. */
+export interface ResourceListingResponseDTO {
+  id: string;
+  category: string;
+  title: string;
+  description: string;
+  phone: string | null;
+  email: string | null;
+  website: string | null;
+  region: string | null;
+}
+
+/** Active listings only, optionally filtered by category
+ *  ("legal_aid" | "sexual_health_testing"). */
+export function getResourceListings(
+  category: string,
+): Promise<ResourceListingResponseDTO[]> {
+  const q = new URLSearchParams({ category });
+  return apiGet<ResourceListingResponseDTO[]>(
+    `/resources/listings?${q.toString()}`,
+  );
+}
+
+export interface SubmitResourceSuggestionBody {
+  category: string;
+  name: string;
+  description: string;
+  phone?: string;
+  email?: string;
+  website?: string;
+}
+
+/** Echo of the suggestion the backend recorded — always lands `Pending`. */
+export interface ResourceSuggestionResponseDTO {
+  id: string;
+  category: string;
+  name: string;
+  description: string;
+  phone: string | null;
+  email: string | null;
+  website: string | null;
+  createdAt: string;
+}
+
+export function submitResourceSuggestion(
+  body: SubmitResourceSuggestionBody,
+): Promise<ResourceSuggestionResponseDTO> {
+  return apiPost<ResourceSuggestionResponseDTO>("/resources/suggestions", body);
 }

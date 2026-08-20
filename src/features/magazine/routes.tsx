@@ -10,6 +10,14 @@ const AuthorsDirectoryPage = lazyNamed(
   () => import("./AuthorsDirectoryPage"),
   "AuthorsDirectoryPage",
 );
+const MagazineSectionsPage = lazyNamed(
+  () => import("./MagazineSectionsPage"),
+  "MagazineSectionsPage",
+);
+const MagazineSectionArticlesPage = lazyNamed(
+  () => import("./MagazineSectionArticlesPage"),
+  "MagazineSectionArticlesPage",
+);
 const IssuePage = lazyNamed(() => import("./IssuePage"), "IssuePage");
 const IssuesPage = lazyNamed(() => import("./IssuesPage"), "IssuesPage");
 const SubmitStoryPage = lazyNamed(() => import("./SubmitStoryPage"), "SubmitStoryPage");
@@ -50,6 +58,14 @@ export function magazineRoutes() {
       <Route path={routes.author} element={<AuthorPage />} />
       <Route path={`${routes.author}/:slug`} element={<AuthorPage />} />
       <Route path={routes.magazineAuthors} element={<AuthorsDirectoryPage />} />
+      {/* CNT-20 — section/topic taxonomy browse; the drill-down's `:section`
+          segment is `encodeURIComponent`-ed by `MagazineSectionGrid`'s link
+          (a name like "Last word" carries a space). */}
+      <Route path={routes.magazineSections} element={<MagazineSectionsPage />} />
+      <Route
+        path={`${routes.magazineSections}/:section`}
+        element={<MagazineSectionArticlesPage />}
+      />
       <Route path={routes.issue} element={<IssuePage />} />
       {/* CNT-8 fix: a real per-issue route — every archive/masthead link used
           to point at this same bare path (always issue 09), so no past issue

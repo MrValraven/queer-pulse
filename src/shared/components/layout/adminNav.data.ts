@@ -23,6 +23,10 @@ import {
   FiUserCheck,
   FiFlag,
   FiKey,
+  FiBarChart2,
+  FiThumbsUp,
+  FiPhoneCall,
+  FiMessageSquare,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
@@ -135,6 +139,11 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: FiBookOpen,
   },
   {
+    labelKey: "shared:adminNav.items.guideFeedback",
+    to: routes.adminGuideFeedback,
+    icon: FiThumbsUp,
+  },
+  {
     labelKey: "shared:adminNav.items.magazineSubmissions",
     to: routes.adminMagazineSubmissions,
     icon: FiEdit3,
@@ -164,6 +173,16 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: FiLayers,
   },
   {
+    labelKey: "shared:adminNav.items.resourceListings",
+    to: routes.adminResourceListings,
+    icon: FiPhoneCall,
+  },
+  {
+    labelKey: "shared:adminNav.items.resourceSuggestions",
+    to: routes.adminResourceSuggestions,
+    icon: FiMessageSquare,
+  },
+  {
     labelKey: "shared:adminNav.items.governance",
     to: routes.adminGovernance,
     icon: FiAward,
@@ -172,6 +191,11 @@ export const ADMIN_NAV: AdminNavItem[] = [
     labelKey: "shared:adminNav.items.roadmap",
     to: routes.adminRoadmap,
     icon: FiMap,
+  },
+  {
+    labelKey: "shared:adminNav.items.reports",
+    to: routes.adminReports,
+    icon: FiBarChart2,
   },
   {
     labelKey: "shared:adminNav.items.systemAccounts",

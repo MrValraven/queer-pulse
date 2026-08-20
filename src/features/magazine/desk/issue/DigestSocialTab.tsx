@@ -3,6 +3,7 @@ import { FiCheck } from "react-icons/fi";
 import { Button, ImageSlot } from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { formatDate } from "../../../../shared/lib/date";
 import type { IssueDigestItemDto } from "../../api/issueProduction.api";
 import type { PieceListItemDto } from "../../api/pieces.api";
 import styles from "./issueTabs.module.css";
@@ -10,22 +11,54 @@ import styles from "./issueTabs.module.css";
 export interface DigestSocialTabProps {
   digest: IssueDigestItemDto[];
   pieces: PieceListItemDto[];
+  /** CNT-6 "Schedule with issue" toggle + send watermark. */
+  digestSendOnPublish: boolean;
+  digestSentAt: string | null;
   onSaveDigest: (nextDigest: IssueDigestItemDto[]) => void;
+  onToggleSendOnPublish: (next: boolean) => void;
+  /** POST /magazine/admin/issues/:number/digest/test-send — resolves or
+   *  rejects; this tab owns the success/failure toast (see `handleSendTest`). */
+  onSendTest: () => Promise<void>;
+  sendTestPending: boolean;
 }
 
 /**
  * Issue production — Digest & social tab. The members' digest card lists
  * every curated piece in email order (a checkbox to include/exclude it, its
  * blurb, and an inline editor); the social-out card turns the same curated
- * set into one card per piece for posting elsewhere. Every edit is an
- * immutable rewrite of the `digest` array handed back through `onSaveDigest`
- * — this tab holds no server state of its own.
+ * set into one card per piece for posting elsewhere. Every curation edit is
+ * an immutable rewrite of the `digest` array handed back through
+ * `onSaveDigest`. "Send me a test" (CNT-6) fires a real one-off email to the
+ * caller's own inbox; "Schedule with the issue" toggles
+ * `digestSendOnPublish`, which the real ship action (`shipIssue`) reads to
+ * decide whether to mail every confirmed subscriber the moment the issue
+ * actually publishes — this module has no cron, so shipping IS the scheduled
+ * moment. Once `digestSentAt` is set the toggle locks, since the send has
+ * already happened. This tab holds no other server state of its own.
  */
-export function DigestSocialTab({ digest, pieces, onSaveDigest }: DigestSocialTabProps) {
+export function DigestSocialTab({
+  digest,
+  pieces,
+  digestSendOnPublish,
+  digestSentAt,
+  onSaveDigest,
+  onToggleSendOnPublish,
+  onSendTest,
+  sendTestPending,
+}: DigestSocialTabProps) {
   const { showToast } = useToast();
   const { t } = useTranslation();
   const [editingPieceId, setEditingPieceId] = useState<string | null>(null);
   const [draftBlurb, setDraftBlurb] = useState("");
+
+  async function handleSendTest() {
+    try {
+      await onSendTest();
+      showToast(t("magazine:issue.digest.sendTestToast"), "success");
+    } catch {
+      showToast(t("magazine:issue.digest.sendTestError"), "error");
+    }
+  }
 
   function findPieceTitle(pieceId: string): string {
     return pieces.find((piece) => piece.id === pieceId)?.title ?? pieceId;
@@ -112,18 +145,39 @@ export function DigestSocialTab({ digest, pieces, onSaveDigest }: DigestSocialTa
           <Button
             size="sm"
             variant="ghost"
-            onClick={() => showToast(t("magazine:issue.digest.sendTestToast"))}
+            onClick={() => void handleSendTest()}
+            disabled={sendTestPending}
+            aria-busy={sendTestPending}
           >
             {t("magazine:issue.digest.sendTest")}
           </Button>
           <Button
             size="sm"
-            variant="ghost"
-            onClick={() => showToast(t("magazine:issue.digest.scheduleToast"))}
+            variant={digestSendOnPublish ? "plum" : "ghost"}
+            onClick={() => {
+              const next = !digestSendOnPublish;
+              onToggleSendOnPublish(next);
+              showToast(
+                t(
+                  next
+                    ? "magazine:issue.digest.scheduleToast"
+                    : "magazine:issue.digest.scheduleOffToast",
+                ),
+                "success",
+              );
+            }}
+            disabled={digestSentAt !== null}
           >
-            {t("magazine:issue.digest.scheduleWithIssue")}
+            {digestSendOnPublish
+              ? t("magazine:issue.digest.scheduledWithIssue")
+              : t("magazine:issue.digest.scheduleWithIssue")}
           </Button>
         </div>
+        {digestSentAt && (
+          <p className={styles.hint}>
+            {t("magazine:issue.digest.alreadySent", { date: formatDate(digestSentAt) })}
+          </p>
+        )}
       </div>
 
       <div className={styles.card}>

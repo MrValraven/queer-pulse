@@ -333,6 +333,14 @@ const MODERATION_ACTION_TITLE_KEY: Partial<Record<string, string>> = {
   suspension_lifted: "admin:members.timeline.action.suspensionLifted",
   verified: "admin:members.timeline.action.verified",
   no_reports: "admin:members.timeline.action.noReports",
+  // Report-less rows written directly against a member (ADM-9's Cite
+  // action, and `AdminMembersService.updateRole`/`grantStaffRole`/
+  // `revokeStaffRole`) only started reaching this per-member timeline once
+  // it began reading rows by `targetUserId` too, not just by `reportId`.
+  evidence_cited: "admin:members.timeline.action.evidenceCited",
+  role_changed: "admin:members.timeline.action.roleChanged",
+  staff_role_granted: "admin:members.timeline.action.staffRoleGranted",
+  staff_role_revoked: "admin:members.timeline.action.staffRoleRevoked",
 };
 
 function moderationEntryTitle(

@@ -546,6 +546,9 @@ export const admin: Catalog = {
   "staffRoles.magazineWriter.label": "Redator da revista",
   "staffRoles.magazineWriter.desc":
     "Escreve rascunhos e submete peças para revisão editorial.",
+  "staffRoles.housingModerator.label": "Moderador de Habitação",
+  "staffRoles.housingModerator.desc":
+    "Pode moderar anúncios e grupos de Habitação.",
   "staffRoles.adminSuperset":
     "A administração já tem todas as capacidades de equipa.",
   "staffRoles.systemLocked": "Contas do sistema não podem ter papéis de equipa.",
@@ -642,6 +645,10 @@ export const admin: Catalog = {
   "members.timeline.action.suspensionLifted": "Suspensão levantada",
   "members.timeline.action.verified": "Identidade verificada",
   "members.timeline.action.noReports": "Sem denúncias contra esta pessoa",
+  "members.timeline.action.evidenceCited": "Prova citada",
+  "members.timeline.action.roleChanged": "Papel alterado",
+  "members.timeline.action.staffRoleGranted": "Papel de equipa concedido",
+  "members.timeline.action.staffRoleRevoked": "Papel de equipa revogado",
   "members.timeline.action.other": "Ação de moderação tomada",
   "members.timeline.noReportsMeta": "Um histórico limpo, até agora",
   "members.timeline.verifiedMeta": "{date} · votos de confiança confirmados",
@@ -824,6 +831,16 @@ export const admin: Catalog = {
   "adminReadingGroupProposals.toast.error": "Não foi possível concluir. Tenta novamente.",
   "adminReadingGroupProposals.loadMore": "Carregar mais",
   "adminReadingGroupProposals.loadingMore": "A carregar…",
+
+  "adminGuideFeedback.title": "Feedback dos <em>guias</em>",
+  "adminGuideFeedback.header.eyebrow": "Recursos",
+  "adminGuideFeedback.header.title": "O que está realmente a <em>ajudar</em>",
+  "adminGuideFeedback.header.sub":
+    "Todos os guias de recursos que os membros avaliaram como úteis ou não, dos piores para os melhores.",
+  "adminGuideFeedback.empty": "Ainda não há avaliações de guias.",
+  "adminGuideFeedback.error":
+    "Não foi possível carregar o feedback dos guias. Tenta novamente.",
+  "adminGuideFeedback.row.counts": "{helpful} úteis · {notHelpful} não úteis",
 
   "adminConcerns.title": "Preocupações <em>levantadas</em>",
   "adminConcerns.header.eyebrow": "Confiança e segurança",
@@ -1303,6 +1320,8 @@ export const admin: Catalog = {
   "moderation.priorReports.count_one": "{count} denúncia anterior",
   "moderation.priorReports.count_other": "{count} denúncias anteriores",
   "moderation.priorReports.newAccount": "Conta nova · {vouches} votos de confiança",
+  "moderation.reporterCredibility.new": "Nova pessoa denunciante",
+  "moderation.reporterCredibility.history": "{filed} denúncias apresentadas · {dismissed} arquivadas",
   "moderation.assignedToFlag": "Atribuído a {name}",
   "moderation.slaOverdue": "Atrasado",
   "moderation.risk.atRisk": "Em risco",
@@ -1824,6 +1843,7 @@ export const admin: Catalog = {
   "governance.audit.actionType.role_changed": "Papel alterado",
   "governance.audit.actionType.staff_role_granted": "Papel de equipa concedido",
   "governance.audit.actionType.staff_role_revoked": "Papel de equipa revogado",
+  "governance.audit.actionType.evidence_cited": "Prova citada",
   "governance.audit.range.today": "Hoje",
   "governance.audit.range.week": "Esta semana",
   "governance.audit.range.quarter": "Este trimestre",
@@ -2061,8 +2081,25 @@ export const admin: Catalog = {
     "Os {count} votos de confiança que ela deu continuam válidos. Pesa o custo humano antes de agires.",
   "vouchGraph.inspector.useAsVerificationCta": "Usar como base de verificação",
   "vouchGraph.inspector.verifiedCta": "Verificado",
+  "vouchGraph.inspector.citeCta": "Citar",
   "vouchGraph.inspector.expandCta": "Expandir rede",
   "vouchGraph.inspector.collapseCta": "Colapsar rede",
+
+  "vouchGraph.citeDialog.title": "Citar prova: {name}",
+  "vouchGraph.citeDialog.description":
+    "Anexa uma nota ao registo de auditoria desta pessoa. Pessoas moderadoras e administradoras que consultem o seu histórico vão vê-la.",
+  "vouchGraph.citeDialog.noteLabel": "Nota de prova",
+  "vouchGraph.citeDialog.confirmCta": "Citar",
+  "vouchGraph.citeDialog.defaultNoteWithEdge":
+    "Voto de confiança entre {focusName} e {personName}, {relation}, confirmado em {when}.",
+  "vouchGraph.citeDialog.defaultNoteNoEdge":
+    "Rede de confiança de {personName} revista no inspetor do grafo, confirmado em {when}.",
+  "vouchGraph.citeDialog.relationMutual": "mútuo",
+  "vouchGraph.citeDialog.relationVouched": "voto de confiança unilateral",
+  "vouchGraph.citeDialog.successToast":
+    "{name} foi citada(o) no registo de auditoria.",
+  "vouchGraph.citeDialog.failedToast":
+    "Não foi possível guardar. Verifica a ligação e tenta de novo.",
 
   "vouchGraph.tooltip.vouchesIn_one": "{count} voto de confiança recebido",
   "vouchGraph.tooltip.vouchesIn_other": "{count} votos de confiança recebidos",
@@ -2200,6 +2237,22 @@ export const admin: Catalog = {
   "settings.key.lockdownAllowsModerators": "Moderação durante o bloqueio",
   "settings.key.lockdownMessage": "Mensagem de manutenção",
   "settings.key.registrationClosedMessage": "Mensagem de registos fechados",
+  "settings.key.announcementEnabled": "Faixa de aviso",
+  "settings.key.announcementMessage": "Mensagem da faixa de aviso",
+  "settings.key.announcementExpiresAt": "Validade da faixa de aviso",
+
+  // ── Faixa de aviso em todo o site (ADM-25) ────────────────────────────────
+  "settings.announcement.title": "Faixa de aviso",
+  "settings.announcement.sub":
+    "Mostrada a todas as pessoas visitantes no topo do site, com ou sem sessão iniciada.",
+  "settings.announcement.message.label": "Mensagem da faixa",
+  "settings.announcement.message.placeholder":
+    "ex.: Manutenção agendada esta noite, das 22h à meia-noite (UTC).",
+  "settings.announcement.message.hint":
+    "Editar isto volta a mostrar a faixa a quem já a tinha dispensado.",
+  "settings.announcement.expiresAt.label": "Ocultar automaticamente após (opcional)",
+  "settings.announcement.expiresAt.hint":
+    "Depois desta hora, a faixa deixa de aparecer mesmo que o interruptor acima continue ligado.",
 
   // ── Contas de sistema (bots) ──────────────────────────────────────────────
   "bots.eyebrow": "Plataforma",
@@ -3283,4 +3336,100 @@ export const admin: Catalog = {
   "housing.risk.reason.incomplete_listing": "Descrição escassa",
   "housing.risk.reason.no_photos": "Sem fotografias",
   "housing.risk.reason.missing_accessibility_info": "Sem informação de acessos",
+
+  // ── Relatórios consolidados da plataforma (ADM-17/ADM-19) — /admin/reports ──
+  "reports.title": "<em>Relatórios</em> da plataforma",
+  "reports.header.eyebrow": "Relatórios",
+  "reports.header.title": "<em>Relatórios</em> da plataforma",
+  "reports.header.sub":
+    "Crescimento, denúncias por tipo, finanças da governação e saúde das comunidades, num só lugar.",
+  "reports.trends.title": "Crescimento e denúncias por tipo",
+  "reports.trends.sub": "Ajusta o período para veres uma janela mais longa ou mais curta.",
+  "reports.trends.rangeWeeks": "{count}sem",
+  "reports.trends.exportGrowth": "Exportar CSV de crescimento",
+  "reports.trends.exportReportsByType": "Exportar CSV de denúncias",
+  "reports.trends.exportToast": "Exportação iniciada",
+  "reports.trends.exportError": "Não foi possível exportar. Tenta de novo",
+  "reports.finance.title": "Finanças da governação",
+  "reports.finance.sub": "Receita, despesa e excedente trimestrais.",
+  "reports.finance.latestQuarter": "Último trimestre: {quarter}",
+  "reports.finance.income": "Receita: {amount}",
+  "reports.finance.expense": "Despesa: {amount}",
+  "reports.finance.surplus": "Excedente: {amount}",
+  "reports.communityHealth.title": "Saúde das comunidades",
+  "reports.communityHealth.sub": "Uma fotografia da pontuação de saúde de cada comunidade.",
+  "reports.communityHealth.asOfNow": "A partir das {time}. Uma fotografia, não uma tendência.",
+  "reports.communityHealth.notMeasured": "Ainda não medido",
+  "reports.communityHealth.averageScore": "Pontuação média: {score}",
+  "reports.communityHealth.needingSupport": "{count} a precisar de apoio",
+  "reports.communityHealth.needsSupportChip": "Precisa de apoio",
+  "reports.communityHealth.columns.name": "Comunidade",
+  "reports.communityHealth.columns.score": "Pontuação",
+  "reports.communityHealth.columns.activity": "Atividade",
+  "reports.communityHealth.columns.members": "Membros",
+  "reports.communityHealth.columns.openReports": "Denúncias abertas",
+
+  "dashboard.viewFullReport": "Ver relatório completo",
+
+  // ── CNT-14: CRUD de diretório de recursos (admin) ───────────────────────
+  "adminResourceListings.title": "Diretório de <em>recursos</em>",
+  "adminResourceListings.header.eyebrow": "Diretório",
+  "adminResourceListings.header.sub":
+    "As organizações reais e verificadas de Apoio Jurídico e Testagem de Saúde Sexual que os membros podem contactar. Publicar aqui é sempre um passo deliberado — aprovar uma sugestão nunca cria um recurso automaticamente.",
+  "adminResourceListings.newCta": "Novo recurso",
+  "adminResourceListings.empty":
+    "Ainda não há recursos — crie o primeiro, ou consulte a fila de sugestões para ideias.",
+  "adminResourceListings.loadError": "Não foi possível carregar os recursos.",
+  "adminResourceListings.category.legal_aid": "Apoio Jurídico",
+  "adminResourceListings.category.sexual_health_testing": "Testagem de Saúde Sexual",
+  "adminResourceListings.status.active": "Ativo",
+  "adminResourceListings.status.archived": "Arquivado",
+  "adminResourceListings.row.noRegion": "Sem região definida",
+  "adminResourceListings.field.category": "Categoria",
+  "adminResourceListings.field.title": "Título",
+  "adminResourceListings.field.description": "Descrição",
+  "adminResourceListings.field.region": "Região / morada",
+  "adminResourceListings.field.phone": "Telefone",
+  "adminResourceListings.field.email": "E-mail",
+  "adminResourceListings.field.website": "Site",
+  "adminResourceListings.field.status": "Estado",
+  "adminResourceListings.form.editEyebrow": "Editar recurso",
+  "adminResourceListings.form.editTitle": "Editar recurso",
+  "adminResourceListings.form.createTitle": "Novo recurso",
+  "adminResourceListings.form.createCta": "Criar recurso",
+  "adminResourceListings.toast.created": "\"{title}\" foi publicado.",
+  "adminResourceListings.toast.updated": "\"{title}\" foi atualizado.",
+  "adminResourceListings.toast.removed": "\"{title}\" foi removido.",
+  "adminResourceListings.delete.title": "Remover \"{title}\"?",
+  "adminResourceListings.delete.body":
+    "Este recurso deixará de ser mostrado aos membros. Esta ação não pode ser desfeita aqui.",
+  "adminResourceListings.delete.confirmCta": "Remover recurso",
+
+  // ── CNT-14: fila de revisão de sugestões (admin) ────────────────────────
+  "adminResourceSuggestions.title": "Sugestões de <em>recursos</em>",
+  "adminResourceSuggestions.header.eyebrow": "Fila de revisão",
+  "adminResourceSuggestions.header.title": "Sugestões de <em>recursos</em>",
+  "adminResourceSuggestions.header.sub":
+    "Todos os recursos de Apoio Jurídico / Testagem de Saúde Sexual sugeridos por membros. Aprovar aqui apenas regista a decisão — publique o recurso real e verificado manualmente em Diretório de recursos.",
+  "adminResourceSuggestions.filter.all": "Todas as categorias",
+  "adminResourceSuggestions.category.legal_aid": "Apoio Jurídico",
+  "adminResourceSuggestions.category.sexual_health_testing": "Testagem de Saúde Sexual",
+  "adminResourceSuggestions.status.pending": "Pendente",
+  "adminResourceSuggestions.status.approved": "Aprovada",
+  "adminResourceSuggestions.status.declined": "Recusada",
+  "adminResourceSuggestions.status.archived": "Arquivada",
+  "adminResourceSuggestions.action.approve": "Aprovar",
+  "adminResourceSuggestions.action.decline": "Recusar",
+  "adminResourceSuggestions.action.archive": "Arquivar",
+  "adminResourceSuggestions.row.by": "Sugerido por {name}",
+  "adminResourceSuggestions.row.sent": "Enviado a {date}",
+  "adminResourceSuggestions.unknownMember": "Um membro",
+  "adminResourceSuggestions.empty": "Ainda não há sugestões.",
+  "adminResourceSuggestions.error": "Não foi possível carregar as sugestões.",
+  "adminResourceSuggestions.loadMore": "Carregar mais",
+  "adminResourceSuggestions.loadingMore": "A carregar…",
+  "adminResourceSuggestions.toast.approved": "Sugestão aprovada.",
+  "adminResourceSuggestions.toast.declined": "Sugestão recusada.",
+  "adminResourceSuggestions.toast.archived": "Sugestão arquivada.",
+  "adminResourceSuggestions.toast.error": "Não foi possível atualizar a sugestão.",
 };

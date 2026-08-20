@@ -69,4 +69,7 @@ export const SETTING_LABEL_KEYS: Record<string, string> = {
   lockdownAllowsModerators: "admin:settings.key.lockdownAllowsModerators",
   lockdownMessage: "admin:settings.key.lockdownMessage",
   registrationClosedMessage: "admin:settings.key.registrationClosedMessage",
+  announcementEnabled: "admin:settings.key.announcementEnabled",
+  announcementMessage: "admin:settings.key.announcementMessage",
+  announcementExpiresAt: "admin:settings.key.announcementExpiresAt",
 };

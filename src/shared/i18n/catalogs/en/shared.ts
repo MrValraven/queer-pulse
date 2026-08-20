@@ -159,15 +159,19 @@ export const shared: Catalog = {
   "adminNav.items.changemakerNominations": "Nominations",
   "adminNav.items.commissionInterests": "Commissions",
   "adminNav.items.readingGroupProposals": "Reading groups",
+  "adminNav.items.guideFeedback": "Guide feedback",
   "adminNav.items.magazineSubmissions": "Submissions",
   "adminNav.items.writerApplications": "Writer applications",
   "adminNav.items.partnerships": "Partnerships",
   "adminNav.items.verifications": "Verifications",
   "adminNav.items.orgTiers": "Partnership tiers",
+  "adminNav.items.resourceListings": "Resource listings",
+  "adminNav.items.resourceSuggestions": "Resource suggestions",
   "adminNav.items.housingGroups": "Housing groups",
   // Reused by footer.data.ts BASE_LINKS and navMenus.ts About > Mission column.
   "adminNav.items.governance": "Governance",
   "adminNav.items.roadmap": "Roadmap",
+  "adminNav.items.reports": "Reports",
   "adminNav.items.systemAccounts": "System accounts",
 
   // BackToSettingsLink
@@ -483,4 +487,9 @@ export const shared: Catalog = {
   "reframe.ratio.original": "Original",
   "reframe.ratio.square": "Square",
   "reframe.ratio.native": "Cover shape",
+
+  // announcement.*: sitewide admin-authored banner (AnnouncementBanner.tsx),
+  // mounted in both AppShell and PageShell — shown to every visitor, signed
+  // in or not (ADM-25).
+  "announcement.dismiss": "Dismiss this announcement",
 };

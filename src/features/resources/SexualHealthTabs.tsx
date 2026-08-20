@@ -18,6 +18,11 @@ import {
   type ClinicType,
 } from "./sexualHealth.data";
 import { TestingNominate } from "./SexualHealthTestingNominate";
+import { useResourceListings } from "./api/useResourceListings";
+import { contactHrefForListing } from "./api/resources.adapters";
+import { CardGrid, ResourceCard, ResourceCardSkeleton } from "./ResourceCard";
+import { SuggestResourceModal } from "./SuggestResourceModal";
+import { GuideRatingWidget } from "./GuideRatingWidget";
 import styles from "./SexualHealthPage.module.css";
 
 export function TestingTab() {
@@ -25,6 +30,10 @@ export function TestingTab() {
   const { demoMode } = useDemoMode();
   const [clinicFilter, setClinicFilter] = useState<ClinicType | "all">("all");
   const [openClinic, setOpenClinic] = useState<string | null>(null);
+  const { listings, isLoading: listingsLoading } = useResourceListings(
+    "sexual_health_testing",
+  );
+  const [suggestOpen, setSuggestOpen] = useState(false);
   const clinics = CLINICS.filter(
     (c) => clinicFilter === "all" || c.type === clinicFilter,
   );
@@ -61,11 +70,52 @@ export function TestingTab() {
       </div>
 
       {!demoMode ? (
-        <EmptyState
-          icon={<FiMapPin />}
-          title={t("resources:sexualHealth.testing.live.title")}
-          description={t("resources:sexualHealth.testing.live.body")}
-        />
+        listingsLoading ? (
+          <CardGrid busy>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <ResourceCardSkeleton key={index} />
+            ))}
+          </CardGrid>
+        ) : listings.length > 0 ? (
+          <>
+            <CardGrid>
+              {listings.map((listing, index) => (
+                <ResourceCard
+                  key={listing.id}
+                  name={listing.title}
+                  spec={listing.description}
+                  tags={listing.region ? [listing.region] : []}
+                  loc={listing.region ?? ""}
+                  nameSize={19}
+                  ctaLabel={t("resources:directory.contactCta")}
+                  onCta={() => {
+                    const href = contactHrefForListing(listing);
+                    if (href) {
+                      window.open(href, listing.website ? "_blank" : "_self");
+                    }
+                  }}
+                  animation="fade"
+                  delay={Math.min(index, 8) * 60}
+                />
+              ))}
+            </CardGrid>
+            <div style={{ marginTop: 20, textAlign: "center" }}>
+              <Button variant="ghost" onClick={() => setSuggestOpen(true)}>
+                {t("resources:suggest.cta")}
+              </Button>
+            </div>
+          </>
+        ) : (
+          <EmptyState
+            icon={<FiMapPin />}
+            title={t("resources:sexualHealth.testing.live.title")}
+            description={t("resources:sexualHealth.testing.live.body")}
+            action={{
+              label: t("resources:suggest.cta"),
+              onClick: () => setSuggestOpen(true),
+            }}
+          />
+        )
       ) : (
         <>
       <FilterChips
@@ -181,6 +231,12 @@ export function TestingTab() {
 
       <TestingNominate />
         </>
+      )}
+      {suggestOpen && (
+        <SuggestResourceModal
+          category="sexual_health_testing"
+          onClose={() => setSuggestOpen(false)}
+        />
       )}
     </>
   );
@@ -352,6 +408,7 @@ export function GuidesTab() {
                 {g.link.label} <FiArrowRight aria-hidden />
               </Link>
             )}
+            <GuideRatingWidget contentKey={g.contentKey} />
           </div>
         ))}
       </div>

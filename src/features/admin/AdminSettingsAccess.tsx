@@ -8,6 +8,8 @@ import type {
   PlatformSettingsDTO,
   UpdatePlatformSettingsInput,
 } from "./api/platformSettings.api";
+import { isoToDatetimeLocalValue } from "./adminDateTimeLocal";
+import { useSeededDraft } from "./useSeededDraft";
 import { AdminSettingsAccessCards } from "./AdminSettingsAccessCards";
 import styles from "./AdminSettingsPage.module.css";
 
@@ -39,56 +41,28 @@ export function AdminSettingsAccess({
   const [confirming, setConfirming] = useState<"enable" | "disable" | null>(
     null,
   );
-  const [lockdownMsg, setLockdownMsg] = useState("");
-  const [closedMsg, setClosedMsg] = useState("");
+  // Each draft starts out mirroring its server value, stays fully editable,
+  // and only re-seeds itself on a GENUINE server-side change — not on an
+  // identity-only refetch (every mutation invalidates the settings query) and
+  // not over an in-progress edit. See `useSeededDraft`'s doc comment for why
+  // that needs more than a plain `useState(serverValue)`.
+  const [lockdownMsg, setLockdownMsg, lastSeededLockdownMsg] = useSeededDraft(
+    settings?.lockdownMessage ?? "",
+  );
+  const [closedMsg, setClosedMsg, lastSeededClosedMsg] = useSeededDraft(
+    settings?.registrationClosedMessage ?? "",
+  );
+  const [announcementMsg, setAnnouncementMsg, lastSeededAnnouncementMsg] =
+    useSeededDraft(settings?.announcementMessage ?? "");
+  // `datetime-local` string, never ISO — see `adminDateTimeLocal.ts`.
+  const [
+    announcementExpiresAt,
+    setAnnouncementExpiresAt,
+    lastSeededAnnouncementExpiresAt,
+  ] = useSeededDraft(isoToDatetimeLocalValue(settings?.announcementExpiresAt ?? null));
   // A single optional note, attached to whichever change is saved next, then
   // cleared — it explains that one change, not a running log for the tab.
   const [note, setNote] = useState("");
-
-  // Every successful (and, since onSettled invalidates unconditionally, every
-  // failed) mutation invalidates the settings query, and invalidateQueries
-  // refetches active observers regardless of staleTime — so a live-mode
-  // refetch hands back a freshly parsed `settings` object with a new identity
-  // even when every field is byte-for-byte the same. Depending on the object
-  // itself made the re-seed effect below fire on identity alone, wiping
-  // whatever the admin was mid-typing. Depend on the primitive string values
-  // instead: an identity-only refetch no longer changes the dependency, so
-  // React skips the effect entirely.
-  const serverLockdownMsg = settings?.lockdownMessage ?? "";
-  const serverClosedMsg = settings?.registrationClosedMessage ?? "";
-
-  // That alone isn't enough for the case where the server value *genuinely*
-  // changes while the admin is mid-edit (e.g. click a preset — which blurs
-  // the other field and commits it — then the resulting refetch resolves).
-  // Each ref remembers the value we last seeded into its draft; the effect
-  // only overwrites the draft if it still equals that last-seeded value,
-  // i.e. the admin hasn't touched it since. `null` means "not seeded yet",
-  // so the very first run always seeds regardless of the draft's initial
-  // "" state. Do not collapse this back to depending on `settings` or to an
-  // unconditional overwrite — both of those are exactly the two bugs this
-  // guards against (see AdminSettingsAccess.test.tsx for the regressions).
-  const lastSeededLockdownMsg = useRef<string | null>(null);
-  const lastSeededClosedMsg = useRef<string | null>(null);
-
-  useEffect(() => {
-    setLockdownMsg((current) =>
-      lastSeededLockdownMsg.current === null ||
-      current === lastSeededLockdownMsg.current
-        ? serverLockdownMsg
-        : current,
-    );
-    lastSeededLockdownMsg.current = serverLockdownMsg;
-  }, [serverLockdownMsg]);
-
-  useEffect(() => {
-    setClosedMsg((current) =>
-      lastSeededClosedMsg.current === null ||
-      current === lastSeededClosedMsg.current
-        ? serverClosedMsg
-        : current,
-    );
-    lastSeededClosedMsg.current = serverClosedMsg;
-  }, [serverClosedMsg]);
 
   // Read via a ref rather than closing over the `settings` prop directly:
   // `save` closes over whatever `settings` was at the render where it was
@@ -134,6 +108,18 @@ export function AdminSettingsAccess({
           setClosedMsg(reverted);
           lastSeededClosedMsg.current = reverted;
         }
+        if ("announcementMessage" in input) {
+          const reverted = latest.announcementMessage ?? "";
+          setAnnouncementMsg(reverted);
+          lastSeededAnnouncementMsg.current = reverted;
+        }
+        if ("announcementExpiresAt" in input) {
+          const reverted = isoToDatetimeLocalValue(
+            latest.announcementExpiresAt,
+          );
+          setAnnouncementExpiresAt(reverted);
+          lastSeededAnnouncementExpiresAt.current = reverted;
+        }
       },
     });
   }
@@ -150,6 +136,10 @@ export function AdminSettingsAccess({
       setClosedMessage={setClosedMsg}
       lockdownMessage={lockdownMsg}
       setLockdownMessage={setLockdownMsg}
+      announcementMessage={announcementMsg}
+      setAnnouncementMessage={setAnnouncementMsg}
+      announcementExpiresAt={announcementExpiresAt}
+      setAnnouncementExpiresAt={setAnnouncementExpiresAt}
       note={note}
       setNote={setNote}
       confirming={confirming}

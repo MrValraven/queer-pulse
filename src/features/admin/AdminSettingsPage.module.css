@@ -129,6 +129,12 @@
   outline-offset: 1px;
 }
 
+/* Announcement expiry — same input chrome as .textarea, sized for a
+   datetime-local value instead of stretching full width. */
+.dateInput {
+  max-width: 260px;
+}
+
 /* ── Loading / error states ───────────────────────────────── */
 .loading {
   height: 220px;

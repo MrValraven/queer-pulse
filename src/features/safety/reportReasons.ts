@@ -25,7 +25,8 @@ export type ReportSubjectType =
   | "business"
   | "company"
   | "job"
-  | "subprofile";
+  | "subprofile"
+  | "magazine_comment";
 
 export type ReasonCode =
   | "outing"
@@ -242,6 +243,19 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "impersonation",
     "discrimination",
     "spam",
+    "other",
+  ],
+  // A public reader comment on a magazine article (CNT-10). Mirrors the
+  // backend's `ReportSubjectType.MagazineComment` reason set exactly — same
+  // shape as `reply`.
+  magazine_comment: [
+    "outing",
+    "doxxing",
+    "harassment",
+    "hate_speech",
+    "discrimination",
+    "spam",
+    "off_topic",
     "other",
   ],
 };

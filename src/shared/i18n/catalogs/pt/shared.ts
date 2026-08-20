@@ -148,14 +148,18 @@ export const shared: Catalog = {
   "adminNav.items.changemakerNominations": "Nomeações",
   "adminNav.items.commissionInterests": "Encomendas",
   "adminNav.items.readingGroupProposals": "Grupos de leitura",
+  "adminNav.items.guideFeedback": "Feedback dos guias",
   "adminNav.items.magazineSubmissions": "Propostas",
   "adminNav.items.writerApplications": "Candidaturas a escritor",
   "adminNav.items.partnerships": "Parcerias",
   "adminNav.items.verifications": "Verificações",
   "adminNav.items.orgTiers": "Níveis de parceria",
+  "adminNav.items.resourceListings": "Diretório de recursos",
+  "adminNav.items.resourceSuggestions": "Sugestões de recursos",
   "adminNav.items.housingGroups": "Grupos de habitação",
   "adminNav.items.governance": "Governação",
   "adminNav.items.roadmap": "Roteiro",
+  "adminNav.items.reports": "Relatórios",
   "adminNav.items.systemAccounts": "Contas de sistema",
 
   // BackToSettingsLink
@@ -458,4 +462,9 @@ export const shared: Catalog = {
   "reframe.ratio.original": "Original",
   "reframe.ratio.square": "Quadrado",
   "reframe.ratio.native": "Forma da capa",
+
+  // announcement.*: faixa de aviso em todo o site, escrita por quem administra
+  // (AnnouncementBanner.tsx), montada tanto no AppShell como no PageShell —
+  // mostrada a todas as pessoas visitantes, com ou sem sessão iniciada (ADM-25).
+  "announcement.dismiss": "Dispensar este aviso",
 };

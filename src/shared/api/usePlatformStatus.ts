@@ -17,6 +17,13 @@ const DEMO_STATUS: PlatformStatusDTO = {
   // Demo has no backend to read the real current version from; kept in step
   // with the backend's own demo/live default by convention, not by import.
   guidelinesVersion: "1.0",
+  // Demo mode never shows the sitewide announcement banner by default — the
+  // Admin Settings page's demo fixture (`DEMO_PLATFORM_SETTINGS`) is the
+  // source of truth for previewing it while demoing.
+  announcementEnabled: false,
+  announcementMessage: null,
+  announcementVersion: null,
+  announcementDismissed: false,
 };
 
 /**

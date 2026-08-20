@@ -28,6 +28,7 @@ import { ArticleReaderBody } from "./ArticleReaderBody";
 import { ArticleToolbar, type TextSize } from "./ArticleToolbar";
 import { AuthorLink } from "./AuthorLink";
 import { useArticle } from "./api/useArticle";
+import { ArticleComments } from "./comments/ArticleComments";
 
 import styles from "./ArticlePage.module.css";
 
@@ -242,6 +243,8 @@ export function ArticlePage() {
           </div>
         </div>
       )}
+
+      <ArticleComments articleSlug={article.id} />
 
       {article.outro && (
         <Outro

@@ -64,6 +64,16 @@ export interface AuthorDTO {
   avatarUrl: string | null;
 }
 
+/** A row as returned by GET /magazine/sections (CNT-20) — the seeded
+ *  section/topic taxonomy (mirrors `magazine-response.ts` `SectionResponse`). */
+export interface SectionDTO {
+  id: string;
+  name: string;
+  target: number;
+  note: string;
+  orderIndex: number;
+}
+
 export type SubmissionStatus =
   "draft" | "submitted" | "in_review" | "accepted" | "rejected" | "published";
 
@@ -144,12 +154,20 @@ export const getIssue = (number: string) =>
   apiGet<IssueDTO>(`/magazine/issues/${number}`);
 
 export function getArticles(
-  params: { issue?: string; tag?: string; author?: string; page?: number } = {},
+  params: {
+    issue?: string;
+    tag?: string;
+    author?: string;
+    /** `magazine_section.name` — CNT-20 section/topic browse drill-down. */
+    section?: string;
+    page?: number;
+  } = {},
 ) {
   const q = new URLSearchParams();
   if (params.issue) q.set("issue", params.issue);
   if (params.tag) q.set("tag", params.tag);
   if (params.author) q.set("author", params.author);
+  if (params.section) q.set("section", params.section);
   if (params.page) q.set("page", String(params.page));
   const qs = q.toString();
   return apiGet<ArticlesPage>(`/magazine/articles${qs ? `?${qs}` : ""}`);
@@ -164,6 +182,10 @@ export const getAuthor = (slug: string) =>
 /** GET /magazine/authors — every author who has ever published, list order
  *  is by name (see `MagazineService.listAuthors`). */
 export const getAuthors = () => apiGet<AuthorDTO[]>("/magazine/authors");
+
+/** GET /magazine/sections (CNT-20) — the seeded section/topic taxonomy,
+ *  ordered for display (see `MagazineService.listSections`). */
+export const getSections = () => apiGet<SectionDTO[]>("/magazine/sections");
 
 export const createStorySubmission = (dto: CreateStorySubmissionDto) =>
   apiPost<StorySubmissionDTO>("/magazine/submissions", dto);
@@ -202,3 +224,16 @@ export const updateDeck = (id: string, dto: UpdateDeckDto) =>
 
 export const deleteDeck = (id: string) =>
   apiDelete<void>(`/magazine/admin/decks/${id}`);
+
+/** CNT-6 "Convert" — one-way, one-time deck→article transform. Returns the
+ *  piece and newly created article ids (for navigating to the article
+ *  editor), plus which slides (if any) had no article-block equivalent and
+ *  were dropped, so the caller can surface an honest partial-success toast. */
+export interface ConvertDeckToArticleDto {
+  pieceId: string;
+  articleId: string;
+  droppedSlideKinds: string[];
+}
+
+export const convertDeckToArticle = (id: string) =>
+  apiPost<ConvertDeckToArticleDto>(`/magazine/admin/decks/${id}/convert-to-article`);

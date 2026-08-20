@@ -1,5 +1,4 @@
 import { Modal, Button } from "../../../../shared/components/ui";
-import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import styles from "../DeskModals.module.css";
 
@@ -14,6 +13,12 @@ export interface DeckModalsProps {
    *  wiring); this only fires the confirmation. */
   onConfirmDelete: () => void;
   deletePending: boolean;
+  /** Confirmed convert (CNT-6) — the caller owns the actual
+   *  `convertDeckToArticle` mutation, its success/error toast, and the
+   *  post-convert navigate to the article editor; this only fires the
+   *  confirmation. */
+  onConfirmConvert: () => void;
+  convertPending: boolean;
 }
 
 /**
@@ -21,9 +26,15 @@ export interface DeckModalsProps {
  * `modal.kind`, mirroring the desk's own `DeskModals` dispatch pattern and
  * reusing its shared modal chrome styles.
  */
-export function DeckModals({ modal, onClose, onConfirmDelete, deletePending }: DeckModalsProps) {
+export function DeckModals({
+  modal,
+  onClose,
+  onConfirmDelete,
+  deletePending,
+  onConfirmConvert,
+  convertPending,
+}: DeckModalsProps) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
 
   if (!modal) return null;
 
@@ -53,23 +64,24 @@ export function DeckModals({ modal, onClose, onConfirmDelete, deletePending }: D
     );
   }
 
-  // "convert" — article↔deck conversion is a future cross-phase feature
-  // (see the Phase 4 plan); this is a toast stub, not a real conversion.
+  // "convert" (CNT-6) — one-way, one-time deck→article transform. The
+  // caller (`DeckEditorPage`/`useDeckEditorActions`) owns the mutation and
+  // navigates away on success, which unmounts this modal along with it; on
+  // failure it stays open with an error toast so the editor can retry.
   return (
     <Modal
       title={t("magazine:deck.editor.convertModal.title")}
       onClose={onClose}
       footer={
         <div className={styles.actions}>
-          <Button variant="ghost" onClick={onClose}>
+          <Button variant="ghost" onClick={onClose} disabled={convertPending}>
             {t("magazine:desk.modals.cancel")}
           </Button>
           <Button
             variant="primary"
-            onClick={() => {
-              showToast(t("magazine:deck.editor.convertModal.toast"));
-              onClose();
-            }}
+            onClick={onConfirmConvert}
+            disabled={convertPending}
+            aria-busy={convertPending}
           >
             {t("magazine:deck.editor.convertModal.cta")}
           </Button>

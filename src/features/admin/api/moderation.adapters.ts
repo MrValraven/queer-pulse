@@ -3,6 +3,7 @@ import type {
   Appeal,
   ModReport,
   PriorReports,
+  ReporterCredibility,
   ReportChip,
   ResolvedItem,
 } from "../adminModeration.data";
@@ -91,6 +92,22 @@ function priorLine(count: number): PriorReports | undefined {
   return { kind: "count", count };
 }
 
+/** ADM-22: the reporter-side mirror of `priorLine` — `undefined` for an
+ *  anonymous/erased reporter (no identity to attach a track record to),
+ *  `{ kind: "new" }` for a first-time reporter (0 prior resolved reports),
+ *  and the raw filed/dismissed pair otherwise. */
+function reporterCredibilityFrom(
+  reporter: ModReportDTO["reporter"],
+): ReporterCredibility | undefined {
+  if (reporter.anonymous) return undefined;
+  if (reporter.priorReports <= 0) return { kind: "new" };
+  return {
+    kind: "history",
+    filed: reporter.priorReports,
+    dismissed: reporter.priorDismissed,
+  };
+}
+
 export function modReportDtoToView(dto: ModReportDTO): ModReport {
   const severity = dto.severity;
   const category = CATEGORY[dto.reasonCode] ?? "Report";
@@ -121,6 +138,8 @@ export function modReportDtoToView(dto: ModReportDTO): ModReport {
   };
   const prior = priorLine(dto.reported.priorReports);
   if (prior) view.priorReports = prior;
+  const reporterCredibility = reporterCredibilityFrom(dto.reporter);
+  if (reporterCredibility) view.reporterCredibility = reporterCredibility;
 
   if (dto.detail) {
     view.detail = {

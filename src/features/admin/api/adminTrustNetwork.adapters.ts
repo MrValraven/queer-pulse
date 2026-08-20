@@ -23,6 +23,7 @@ export function trustNetworkDtoToData(dto: TrustNetworkDTO): TrustGraphData {
     tone: node.tone,
     joined: toMonth(node.joinedAt),
     standing: node.standing,
+    inRing: node.inRing,
     sceneId: node.sceneId,
     role: node.role,
     reports: node.openReportCount,

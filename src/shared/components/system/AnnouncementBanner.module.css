@@ -1,0 +1,53 @@
+/* Sitewide admin-authored announcement banner (ADM-25). A solid plum bar,
+   matching the informational-chrome tone of `OfflineBanner` — this sits in
+   normal document flow at the top of the shell content (not a fixed overlay),
+   so it pushes the page down rather than covering it. */
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 12px 44px 12px 20px;
+  border-radius: var(--radius-card, 22px);
+  background: var(--plum);
+  position: relative;
+}
+
+.message {
+  margin: 0;
+  color: rgba(var(--cream-rgb), 1);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.dismiss {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(var(--cream-rgb), 0.75);
+  cursor: pointer;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.dismiss:hover,
+.dismiss:focus-visible {
+  background: rgba(var(--cream-rgb), 0.12);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+@media (max-width: 640px) {
+  .banner {
+    padding: 12px 40px 12px 16px;
+  }
+}

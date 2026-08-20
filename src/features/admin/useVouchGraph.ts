@@ -87,7 +87,12 @@ export function useVouchGraph(graph: TrustGraph, initialFocus: string) {
     );
     if (mode === "safety") {
       graph.people.forEach((p) => {
-        if (p.standing === "flagged" || graph.isIsolated(p.id)) set.add(p.id);
+        // Auto-reveal every node the Safety overlay would otherwise dim:
+        // flagged for enforcement reasons, part of a real self-vouching ring
+        // (ADM-23's `inRing`), or trust-isolated.
+        if (p.standing === "flagged" || p.inRing || graph.isIsolated(p.id)) {
+          set.add(p.id);
+        }
       });
       [...set].forEach((id) =>
         graph.neighbors(id, true).forEach((n) => set.add(n)),

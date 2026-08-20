@@ -7,13 +7,13 @@ const DTO: TrustNetworkDTO = {
     {
       id: "ines", userId: "u-ines", slug: "ines", name: "Inês Martins", pronouns: "she/her",
       initials: "IM", tone: "jade", avatarUrl: null, joinedAt: "2023-03-01T00:00:00.000Z",
-      standing: "trusted", sceneId: "c1", role: "owner", openReportCount: 0,
+      standing: "trusted", inRing: false, sceneId: "c1", role: "owner", openReportCount: 0,
       verified: true, private: false,
     },
     {
       id: "kai", userId: "u-kai", slug: "kai", name: "Kai Sousa", pronouns: "xe/xem",
       initials: "KS", tone: "plum", avatarUrl: null, joinedAt: "2025-11-01T00:00:00.000Z",
-      standing: "trusted", sceneId: "c1", role: "member", openReportCount: 0,
+      standing: "trusted", inRing: false, sceneId: "c1", role: "member", openReportCount: 0,
       verified: true, private: false,
     },
   ],
@@ -53,19 +53,19 @@ describe("trustNetworkDtoToData", () => {
         {
           id: "a", userId: "u-a", slug: "a", name: "Ana Reis", pronouns: "she/her",
           initials: "AR", tone: "jade", avatarUrl: null, joinedAt: "2023-03-01T00:00:00.000Z",
-          standing: "trusted", sceneId: "c1", role: "owner", openReportCount: 0,
+          standing: "trusted", inRing: false, sceneId: "c1", role: "owner", openReportCount: 0,
           verified: true, private: false,
         },
         {
           id: "b", userId: "u-b", slug: "b", name: "Bruno Alves", pronouns: "he/him",
           initials: "BA", tone: "plum", avatarUrl: null, joinedAt: "2025-11-01T00:00:00.000Z",
-          standing: "trusted", sceneId: "c1", role: "member", openReportCount: 0,
+          standing: "trusted", inRing: false, sceneId: "c1", role: "member", openReportCount: 0,
           verified: true, private: false,
         },
         {
           id: "c", userId: "u-c", slug: "c", name: "Carla Nunes", pronouns: "she/her",
           initials: "CN", tone: "coral", avatarUrl: null, joinedAt: "2026-01-01T00:00:00.000Z",
-          standing: "trusted", sceneId: "c1", role: "member", openReportCount: 0,
+          standing: "trusted", inRing: false, sceneId: "c1", role: "member", openReportCount: 0,
           verified: true, private: false,
         },
       ],

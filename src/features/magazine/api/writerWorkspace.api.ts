@@ -30,6 +30,13 @@ export interface WriterAssignmentDto {
   note: string;
   byline: string;
   terms: WriterAssignmentTerms;
+  /** Full brief detail for "Read the brief" (CNT-6) — writer-safe fields off
+   *  `PieceBrief` beyond `note`/`words`/`target`/`terms.killFee` above. */
+  wants: string[];
+  avoid: string;
+  rate: string;
+  commissionedBy: string;
+  commissionedOn: string;
 }
 
 /** GET /magazine/writer/pitches row — mirrors `WriterPitchResponse`. */

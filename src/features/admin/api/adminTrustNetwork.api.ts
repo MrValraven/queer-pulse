@@ -17,6 +17,8 @@ export interface TrustNodeDTO {
   avatarUrl: string | null;
   joinedAt: string;
   standing: Standing;
+  /** ADM-23: real cycle detection, distinct from `standing`. */
+  inRing: boolean;
   sceneId: string | null;
   role: string | null;
   openReportCount: number;

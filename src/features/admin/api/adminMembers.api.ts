@@ -195,6 +195,21 @@ export interface RestrictMemberInput {
 export const restrictMember = (memberId: string, input: RestrictMemberInput) =>
   apiPost<RestrictedMemberDTO>(`/admin/members/${memberId}/restrict`, input);
 
+/** The shape returned after citing evidence against a member (ADM-9). Mirrors
+ *  the backend `CitedMemberDTO`. */
+export interface CitedMemberDTO {
+  id: string;
+  slug: string;
+  note: string;
+  citedAt: string;
+}
+
+/** Cite evidence against a member — a free-text note attached to their audit
+ *  trail, called from the trust network graph inspector's "Cite" action.
+ *  Moderator/admin-only; the backend 404s an unknown member. */
+export const citeMember = (memberId: string, note: string) =>
+  apiPost<CitedMemberDTO>(`/admin/members/${memberId}/cite`, { note });
+
 /** The shape returned after a staff-role grant/revoke, so the roster/drawer
  *  can patch in place. Mirrors the backend's grant/revoke response. */
 export interface AdminStaffRolesDTO {

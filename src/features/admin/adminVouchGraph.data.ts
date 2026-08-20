@@ -522,6 +522,11 @@ const DEMO_PEOPLE: ModelPerson[] = PEOPLE.map((person) => ({
   tone: person.tone === "danger" ? "coral" : (person.tone as ModelPerson["tone"]),
   joined: person.joined,
   standing: person.standing,
+  // ADM-23: the fixture's "ring" scene IS the seed's 5-account self-vouching
+  // loop (a1…a5, below) — real cycle detection would find exactly this shape
+  // server-side, so demo mode reuses the same fixture flag rather than
+  // re-running the algorithm over static data.
+  inRing: person.scene === "ring",
   sceneId: person.scene,
   role: person.role,
   reports: person.reports,

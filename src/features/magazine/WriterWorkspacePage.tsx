@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { AppShell } from "../../shared/components/layout";
 import { Avatar, EmptyState, SkeletonLine, type AvatarTint } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { cx } from "../../shared/lib/cx";
 import { useWriterWorkspace } from "./api/useWriterWorkspace";
@@ -15,6 +14,7 @@ import { BylineSafetyCard } from "./desk/writer/BylineSafetyCard";
 import { EditorMessageCard } from "./desk/writer/EditorMessageCard";
 import { FileDraftModal } from "./desk/writer/FileDraftModal";
 import { MessageEditorModal } from "./desk/writer/MessageEditorModal";
+import { BriefDetailModal } from "./desk/writer/BriefDetailModal";
 import styles from "./WriterWorkspacePage.module.css";
 
 type WriterTab = "work" | "pitches" | "payments";
@@ -55,12 +55,12 @@ export function WriterWorkspacePage() {
   const { t } = useTranslation();
   const { me, assignments, pitches, payments, isLoading, isError } = useWriterWorkspace();
   const { submitPitch, updateByline, fileDraft } = useWriterMutations();
-  const { showToast } = useToast();
   const [tab, setTab] = useState<WriterTab>("work");
   const [filingAssignment, setFilingAssignment] = useState<WriterAssignmentDto | null>(null);
   const [messagingAssignment, setMessagingAssignment] = useState<WriterAssignmentDto | null>(
     null,
   );
+  const [briefAssignment, setBriefAssignment] = useState<WriterAssignmentDto | null>(null);
   // The rail's active assignment — the "Your work" list marks one (defaulting
   // to the first), and the rail cards + byline picker read it, instead of
   // always acting on `assignments[0]`. Falls back to the first assignment if
@@ -107,7 +107,7 @@ export function WriterWorkspacePage() {
             onSelectAssignment={(selected) => setActiveAssignmentId(selected.id)}
             onFileDraft={setFilingAssignment}
             onMessageEditor={setMessagingAssignment}
-            onToast={showToast}
+            onReadBrief={setBriefAssignment}
           />
         );
       case "pitches":
@@ -182,6 +182,13 @@ export function WriterWorkspacePage() {
         <MessageEditorModal
           assignment={messagingAssignment}
           onClose={() => setMessagingAssignment(null)}
+        />
+      )}
+
+      {briefAssignment && (
+        <BriefDetailModal
+          assignment={briefAssignment}
+          onClose={() => setBriefAssignment(null)}
         />
       )}
     </AppShell>

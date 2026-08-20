@@ -282,24 +282,28 @@ export const HIV_INFO: InfoCard[] = [
   },
 ];
 
-export const GUIDES: InfoCard[] = [
+export const GUIDES: (InfoCard & { contentKey: string })[] = [
   {
     icon: FaSyringe,
+    contentKey: "sexualHealth.guides.vaccination",
     title: "HPV & hepatitis B vaccination",
     body: "Both are free through the SNS for certain groups, and strongly recommended. HPV vaccination is now available up to age 45 through some clinics. Ask your GP or CheckpointLx.",
   },
   {
     icon: FaVirus,
+    contentKey: "sexualHealth.guides.mpox",
     title: "Mpox: what to know",
     body: "Mpox can affect anyone, but some queer networks have higher exposure. Vaccination is available via SNS for close contacts and higher-risk individuals. CheckpointLx maintains an up-to-date guide.",
   },
   {
     icon: LuMicroscope,
+    contentKey: "sexualHealth.guides.bacterialStis",
     title: "Bacterial STIs: syphilis, gonorrhoea, chlamydia",
     body: "All are curable with antibiotics and all are on the rise across Europe. Many have no symptoms. Testing every 3 months if sexually active is the most reliable way to catch them early.",
   },
   {
     icon: FiMessageCircle,
+    contentKey: "sexualHealth.guides.talkingToPartners",
     title: "Talking to partners about testing",
     body: "A practical guide to having the conversation: different scripts for different situations. Written by community members, not clinical guidelines.",
     // No standalone guide page exists yet, so we render no CTA rather than a
@@ -308,12 +312,14 @@ export const GUIDES: InfoCard[] = [
   },
   {
     icon: LuLeaf,
+    contentKey: "sexualHealth.guides.substanceUse",
     title: "Sexual health & substance use",
     body: "Practical harm reduction for people who use substances in sexual contexts: chemsex, MDMA, alcohol. No judgment, practical information about risk reduction.",
     link: { label: "Read the guide", href: routes.harmReduction },
   },
   {
     icon: LuDna,
+    contentKey: "sexualHealth.guides.transNonbinary",
     title: "Sexual health for trans & non-binary people",
     body: "Bodies vary, practices vary, and most sexual health guidance is written for cisgender people. A community-written guide to navigating the system and finding clinicians who understand.",
     link: { label: "Trans Hub", href: routes.transHub },

@@ -78,7 +78,8 @@ export type AuditType =
   | "suspension_lifted"
   | "role_changed"
   | "staff_role_granted"
-  | "staff_role_revoked";
+  | "staff_role_revoked"
+  | "evidence_cited";
 
 /**
  * Time-bucket used by the audit-log range filter — a stable canonical id,
@@ -105,6 +106,7 @@ export const ACTION_TONE: Record<AuditType, AdminTone> = {
   role_changed: "violet",
   staff_role_granted: "violet",
   staff_role_revoked: "amber",
+  evidence_cited: "violet",
 };
 
 export interface AuditEntry {
@@ -144,6 +146,7 @@ export const AUDIT_ACTION_IDS: AuditType[] = [
   "role_changed",
   "staff_role_granted",
   "staff_role_revoked",
+  "evidence_cited",
 ];
 
 export const AUDIT_RANGE_IDS: AuditRange[] = ["today", "week", "quarter"];

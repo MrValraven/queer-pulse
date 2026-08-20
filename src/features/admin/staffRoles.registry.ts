@@ -3,7 +3,10 @@
  * MemberRole mirrors the backend UserRole). Drives the admin "Roles & access"
  * toggle list. Add a role here + on the backend and it appears automatically.
  */
-export type StaffRoleId = "magazine_editor" | "magazine_writer";
+export type StaffRoleId =
+  | "magazine_editor"
+  | "magazine_writer"
+  | "housing_moderator";
 
 export interface StaffRoleMeta {
   id: StaffRoleId;
@@ -21,6 +24,11 @@ export const STAFF_ROLES: StaffRoleMeta[] = [
     id: "magazine_writer",
     labelKey: "admin:staffRoles.magazineWriter.label",
     descriptionKey: "admin:staffRoles.magazineWriter.desc",
+  },
+  {
+    id: "housing_moderator",
+    labelKey: "admin:staffRoles.housingModerator.label",
+    descriptionKey: "admin:staffRoles.housingModerator.desc",
   },
 ];
 

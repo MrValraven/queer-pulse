@@ -5,6 +5,7 @@ import {
   FiCheck,
   FiClock,
   FiUsers,
+  FiUserCheck,
   FiUserPlus,
 } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
@@ -16,6 +17,7 @@ import {
   chipKey,
   chipLabel,
   priorReportsText,
+  reporterCredibilityText,
   type ModReport,
   type Appeal,
   type ResolvedItem,
@@ -146,6 +148,12 @@ export function ReportCard({
                 <FiFlag aria-hidden /> {priorReportsText(report.priorReports, t)}
               </span>
             ))}
+          {report.reporterCredibility && (
+            <span className={styles.reporterFlag}>
+              <FiUserCheck aria-hidden />{" "}
+              {reporterCredibilityText(report.reporterCredibility, t)}
+            </span>
+          )}
           {report.assignedModeratorName && (
             <span className={styles.assignedFlag}>
               <FiUserPlus aria-hidden />{" "}

@@ -2395,4 +2395,38 @@ export const resources: Catalog = {
     "As contribuições ainda não estão abertas — o arquivo ainda está a ser construído.",
   "sharedEquipment.requestLiveToast":
     "A biblioteca de empréstimos ainda não está ativa — volta em breve.",
+
+  // ── GuideRatingWidget (CNT-18) ───────────────────────────────────────────
+  "rating.prompt": "Isto foi útil?",
+  "rating.helpfulCta": "Sim",
+  "rating.notHelpfulCta": "Não",
+  "rating.thanks": "Obrigado pelo feedback.",
+  "rating.changeCta": "Alterar a tua resposta",
+
+  // ── CNT-14: diretório real de recursos + via de sugestão ────────────────
+  "directory.contactCta": "Contactar",
+
+  "suggest.cta": "Sugerir um recurso",
+  "suggest.modalTitle": "Sugerir um recurso",
+  "suggest.intro":
+    "Conhece uma clínica de apoio jurídico ou um serviço de testagem que devia estar aqui? Diga-nos — a nossa equipa verifica todas as sugestões antes de as publicar.",
+  "suggest.form.nameLabel": "Nome da organização",
+  "suggest.form.namePlaceholder": "ex.: Clínica Jurídica Queer do Porto",
+  "suggest.form.descriptionLabel": "O que oferecem?",
+  "suggest.form.descriptionPlaceholder":
+    "ex.: Consultas gratuitas para discriminação no trabalho, atendimento às quartas-feiras.",
+  "suggest.form.phoneLabel": "Telefone (opcional)",
+  "suggest.form.phonePlaceholder": "+351 ...",
+  "suggest.form.emailLabel": "E-mail (opcional)",
+  "suggest.form.emailPlaceholder": "contacto@exemplo.org",
+  "suggest.form.websiteLabel": "Site (opcional)",
+  "suggest.form.websitePlaceholder": "exemplo.org",
+  "suggest.cancelCta": "Cancelar",
+  "suggest.submitCta": "Enviar sugestão",
+  "suggest.sendingLabel": "A enviar…",
+  "suggest.errorToast":
+    "Não foi possível enviar a sua sugestão — tente novamente dentro de instantes.",
+  "suggest.success.title": "Obrigado — <em>tratamos do resto.</em>",
+  "suggest.success.sub":
+    "A nossa equipa verifica todas as sugestões antes de as publicar, para nunca enviar ninguém para um número errado ou uma clínica encerrada.",
 };

@@ -34,7 +34,23 @@ export interface ModReportDTO {
   subjectType: ReportSubjectType;
   subjectId: string;
   reporter:
-    { anonymous: true } | { anonymous: false; id: string; name: string };
+    | { anonymous: true }
+    | {
+        anonymous: false;
+        id: string;
+        name: string;
+        /**
+         * ADM-22: reporter credibility, mirroring `reported.priorReports`'s
+         * pattern on the filer's side. Counted over the reporter's PAST
+         * RESOLVED reports only (an open report has no verdict yet), so
+         * these two never drift out of sync with each other — `priorReports`
+         * is always every resolved report this reporter has filed;
+         * `priorDismissed` is the subset that resolved to `dismiss` (the
+         * unfounded outcome). Raw counts, deliberately not a derived score.
+         */
+        priorReports: number;
+        priorDismissed: number;
+      };
   reported: { id: string; handle: string; priorReports: number };
   community: string | null;
   createdAt: string;

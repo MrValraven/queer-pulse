@@ -16,6 +16,7 @@ const AdminChangemakersPage = lazyNamed(() => import("./AdminChangemakersPage"),
 const AdminChangemakerNominationsPage = lazyNamed(() => import("./AdminChangemakerNominationsPage"), "AdminChangemakerNominationsPage");
 const AdminCommissionInterestsPage = lazyNamed(() => import("./AdminCommissionInterestsPage"), "AdminCommissionInterestsPage");
 const AdminReadingGroupProposalsPage = lazyNamed(() => import("./AdminReadingGroupProposalsPage"), "AdminReadingGroupProposalsPage");
+const AdminGuideFeedbackPage = lazyNamed(() => import("./AdminGuideFeedbackPage"), "AdminGuideFeedbackPage");
 const AdminMagazineSubmissionsPage = lazyNamed(() => import("./AdminMagazineSubmissionsPage"), "AdminMagazineSubmissionsPage");
 const AdminWriterApplicationsPage = lazyNamed(() => import("./AdminWriterApplicationsPage"), "AdminWriterApplicationsPage");
 const AdminCommunitiesPage = lazyNamed(() => import("./AdminCommunitiesPage"), "AdminCommunitiesPage");
@@ -30,7 +31,10 @@ const AdminHousingCoopsPage = lazyNamed(() => import("./AdminHousingCoopsPage"),
 const AdminHousingGroupsPage = lazyNamed(() => import("./AdminHousingGroupsPage"), "AdminHousingGroupsPage");
 const AdminVerificationsPage = lazyNamed(() => import("./AdminVerificationsPage"), "AdminVerificationsPage");
 const AdminOrgTiersPage = lazyNamed(() => import("./AdminOrgTiersPage"), "AdminOrgTiersPage");
+const AdminResourceListingsPage = lazyNamed(() => import("./AdminResourceListingsPage"), "AdminResourceListingsPage");
+const AdminResourceSuggestionsPage = lazyNamed(() => import("./AdminResourceSuggestionsPage"), "AdminResourceSuggestionsPage");
 const AdminSettingsPage = lazyNamed(() => import("./AdminSettingsPage"), "AdminSettingsPage");
+const AdminReportsPage = lazyNamed(() => import("./AdminReportsPage"), "AdminReportsPage");
 
 /** The admin & moderation panels (role-gated in authGate.ts). */
 export function adminRoutes() {
@@ -63,6 +67,10 @@ export function adminRoutes() {
         element={<AdminReadingGroupProposalsPage />}
       />
       <Route
+        path={routes.adminGuideFeedback}
+        element={<AdminGuideFeedbackPage />}
+      />
+      <Route
         path={routes.adminMagazineSubmissions}
         element={<AdminMagazineSubmissionsPage />}
       />
@@ -93,9 +101,18 @@ export function adminRoutes() {
         element={<AdminVerificationsPage />}
       />
       <Route path={routes.adminOrgTiers} element={<AdminOrgTiersPage />} />
+      <Route
+        path={routes.adminResourceListings}
+        element={<AdminResourceListingsPage />}
+      />
+      <Route
+        path={routes.adminResourceSuggestions}
+        element={<AdminResourceSuggestionsPage />}
+      />
       <Route path={routes.adminGovernance} element={<AdminGovernancePage />} />
       <Route path={routes.adminRoadmap} element={<AdminRoadmapPage />} />
       <Route path={routes.adminSettings} element={<AdminSettingsPage />} />
+      <Route path={routes.adminReports} element={<AdminReportsPage />} />
       <Route
         path={`${routes.adminCommunities}/:slug/mod`}
         element={<AdminCommunityModPage />}

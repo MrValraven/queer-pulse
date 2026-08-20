@@ -1,11 +1,17 @@
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { draftToCreateDto, type DeckDraft } from "./deckDraft";
-import { useCreateDeck, useDeleteDeck, useUpdateDeck } from "./api/useDeckMutations";
+import {
+  useConvertDeckToArticle,
+  useCreateDeck,
+  useDeleteDeck,
+  useUpdateDeck,
+} from "./api/useDeckMutations";
 
 export interface UseDeckEditorActionsArgs {
   /** Server id once the deck has been saved at least once; `null` for a
-   *  brand-new, never-saved draft (publish/delete are disabled until then). */
+   *  brand-new, never-saved draft (publish/delete/convert are disabled until
+   *  then). */
   id: string | null;
   draft: DeckDraft;
   published: boolean;
@@ -16,6 +22,9 @@ export interface UseDeckEditorActionsArgs {
   onSaved: () => void;
   onPublishedChange: (published: boolean) => void;
   onDeleted: () => void;
+  /** The deck was converted to an article (CNT-6) — hands the new piece id
+   *  up so the page can navigate to the article editor. */
+  onConverted: (pieceId: string) => void;
 }
 
 /**
@@ -39,12 +48,14 @@ export function useDeckEditorActions({
   onSaved,
   onPublishedChange,
   onDeleted,
+  onConverted,
 }: UseDeckEditorActionsArgs) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const createDeck = useCreateDeck();
   const updateDeck = useUpdateDeck();
   const deleteDeck = useDeleteDeck();
+  const convertDeck = useConvertDeckToArticle();
   const isSaving = createDeck.isPending || updateDeck.isPending;
 
   async function handleSave() {
@@ -89,12 +100,34 @@ export function useDeckEditorActions({
     }
   }
 
+  async function handleConvert() {
+    if (!id) return;
+    try {
+      const result = await convertDeck.mutateAsync(id);
+      if (result.droppedSlideKinds.length > 0) {
+        showToast(
+          t("magazine:deck.editor.convertModal.partialToast", {
+            dropped: result.droppedSlideKinds.join(", "),
+          }),
+          "info",
+        );
+      } else {
+        showToast(t("magazine:deck.editor.convertModal.successToast"), "success");
+      }
+      onConverted(result.pieceId);
+    } catch {
+      showToast(t("magazine:deck.editor.convertModal.errorToast"), "error");
+    }
+  }
+
   return {
     handleSave: () => void handleSave(),
     handleTogglePublish: () => void handleTogglePublish(),
     handleDelete: () => void handleDelete(),
+    handleConvert: () => void handleConvert(),
     isSaving,
     isPublishPending: updateDeck.isPending,
     isDeletePending: deleteDeck.isPending,
+    isConvertPending: convertDeck.isPending,
   };
 }

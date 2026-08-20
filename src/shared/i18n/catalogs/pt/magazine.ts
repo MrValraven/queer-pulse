@@ -34,6 +34,7 @@ export const magazine: Catalog = {
   "masthead.nav.stories": "Histórias",
   "masthead.nav.authors": "Autoria",
   "masthead.nav.write": "Escreve para nós",
+  "masthead.nav.sections": "Secções",
 
   // ── MagazinePage ─────────────────────────────────────────────────────────
   "landing.meta.title": "A Revista: QueerPulse",
@@ -234,8 +235,13 @@ export const magazine: Catalog = {
   "deck.editor.deleteModal.body":
     "Isto remove o deck e todos os seus slides. Quem já tiver o link vai ver um erro 404.",
   "deck.editor.convertModal.title": "Transformar isto em texto corrido?",
+  "deck.editor.convertModal.successToast": "Convertido num rascunho de artigo.",
+  "deck.editor.convertModal.partialToast":
+    "Convertido, mas {dropped} não passaram e foram descartados.",
+  "deck.editor.convertModal.errorToast":
+    "Não foi possível converter este deck. Tenta novamente.",
   "deck.editor.convertModal.body":
-    "Converter um deck de slides num artigo completo ainda não está disponível. Quando estiver, isto vai passar o conteúdo do deck para o editor de artigos como rascunho inicial.",
+    "Os slides de texto e imagem passam diretamente para blocos de artigo, e cada estatística vira um bloco de estatísticas. Os slides interativos (antes/depois, revelar) não têm equivalente em artigo e serão descartados. Isto não pode ser desfeito.",
   "deck.editor.convertModal.cta": "Converter em artigo",
   "deck.editor.convertModal.toast":
     "A conversão de deck para artigo ainda não está disponível.",
@@ -346,6 +352,29 @@ export const magazine: Catalog = {
   "authorsDirectory.emptyTitle": "Ainda não há autoria para mostrar.",
   "authorsDirectory.emptyBody":
     "O diretório ainda está a ser preparado. As assinaturas chegam em breve.",
+
+  // ── MagazineSectionsPage (CNT-20) ────────────────────────────────────────
+  "sections.eyebrow": "Revista · secções",
+  "sections.title": "Explora por secção.",
+  "sections.sub":
+    "Cada parte da revista, da capa às features até à última palavra. Escolhe uma secção para veres o que já saiu.",
+  "sections.errorTitle": "Não conseguimos carregar as secções.",
+  "sections.errorBody":
+    "Algo nos interrompeu a caminho daqui. Tenta novamente.",
+  "sections.emptyTitle": "Ainda não há secções para mostrar.",
+  "sections.emptyBody": "A taxonomia de secções ainda está a ser preparada.",
+  "sections.articleCount_one": "{count} peça",
+  "sections.articleCount_other": "{count} peças",
+
+  // ── MagazineSectionArticlesPage (CNT-20) ─────────────────────────────────
+  "sectionArticles.eyebrow": "Revista · secção",
+  "sectionArticles.backCta": "Todas as secções",
+  "sectionArticles.errorTitle": "Não conseguimos carregar esta secção.",
+  "sectionArticles.errorBody":
+    "Algo nos interrompeu a caminho daqui. Tenta novamente.",
+  "sectionArticles.emptyTitle": "Ainda nada publicado aqui.",
+  "sectionArticles.emptyBody":
+    "Esta secção ainda espera pela primeira peça. Volta em breve.",
 
   // ══════════════════ Painel de edição (uso interno) ═══════════════════════
   // Os REGISTOS de peças/propostas (títulos, notas, feed de atividade, nomes
@@ -1520,6 +1549,12 @@ export const magazine: Catalog = {
   "issue.digest.cancel": "Cancelar",
   "issue.digest.edit": "Editar",
   "issue.digest.sendTest": "Enviar-me um teste",
+  "issue.digest.sendTestError":
+    "Não foi possível enviar o digest de teste. Tenta novamente.",
+  "issue.digest.scheduledWithIssue": "Agendado com a edição",
+  "issue.digest.scheduleOffToast":
+    "O digest deixa de sair automaticamente com esta edição.",
+  "issue.digest.alreadySent": "Enviado às pessoas subscritoras a {date}",
   "issue.digest.sendTestToast":
     "Um digest de teste está a caminho da tua caixa de entrada.",
   "issue.digest.scheduleWithIssue": "Agendar com a edição",
@@ -1579,6 +1614,20 @@ export const magazine: Catalog = {
   "writer.work.messageEditor": "Mensagem à pessoa editora",
   "writer.work.activeBadge": "Ativa",
   "writer.work.setActive": "Usar para assinatura e termos",
+
+  // ── BriefDetailModal ─────────────────────────────────────────────────────
+  "writer.brief.title": "Briefing — {title}",
+  "writer.brief.angleLabel": "Ângulo",
+  "writer.brief.wantsLabel": "O que queremos",
+  "writer.brief.emptyWants": "Sem pedidos específicos registados.",
+  "writer.brief.avoidLabel": "O que evitar",
+  "writer.brief.wordCountLabel": "Extensão pretendida",
+  "writer.brief.rateLabel": "Valor",
+  "writer.brief.killFeeLabel": "Valor de cancelamento",
+  "writer.brief.commissionedByLabel": "Encomendado por",
+  "writer.brief.commissionedOnLabel": "Encomendado a",
+  "writer.brief.noBrief": "Ainda não foi escrito um briefing para esta peça.",
+  "writer.brief.close": "Fechar",
 
   // ── WriterPitchesTab ─────────────────────────────────────────────────────
   "writer.pitches.emptyTitle": "Ainda não tens propostas",
@@ -1683,4 +1732,34 @@ export const magazine: Catalog = {
     "A tua candidatura foi aprovada. Vai à página de submissão para enviares a tua primeira proposta.",
   "applyToWrite.approved.cta": "Começar a escrever",
   "applyToWrite.backCta": "Voltar à revista",
+
+  // ── ArticleComments (comments/) — comentários de leitores (CNT-10) ──────
+  "comments.heading_one": "{count} comentário",
+  "comments.heading_other": "{count} comentários",
+  "comments.empty": "Ainda não há comentários: sê a primeira pessoa a dizer algo.",
+  "comments.reply": "Responder",
+  "comments.edit": "Editar",
+  "comments.delete": "Eliminar",
+  "comments.editedMark": "(editado)",
+  "comments.tombstone": "Este comentário foi eliminado.",
+  "comments.composer.placeholder": "Adicionar um comentário…",
+  "comments.composer.replyPlaceholder": "Escrever uma resposta…",
+  "comments.composer.editPlaceholder": "Editar o teu comentário…",
+  "comments.composer.post": "Publicar comentário",
+  "comments.composer.postReply": "Publicar resposta",
+  "comments.composer.saveEdit": "Guardar",
+  "comments.composer.cancel": "Cancelar",
+  "comments.report.cta": "Denunciar",
+  "comments.report.title": "Denunciar este comentário",
+  "comments.report.sub": "Diz-nos o que está errado com o comentário de {name}.",
+  "comments.report.reasonGroupAria": "Motivo da denúncia",
+  "comments.report.cancel": "Cancelar",
+  "comments.report.sendCta": "Enviar denúncia",
+  "comments.report.sending": "A enviar…",
+  "comments.report.confirmTitle": "Denúncia <em>enviada</em>",
+  "comments.report.confirmBody": "Obrigado. Um moderador vai rever o comentário de {name}.",
+  "comments.report.done": "Concluído",
+  "comments.report.errorTitle": "Algo correu mal",
+  "comments.report.errorBody": "Não foi possível enviar a tua denúncia. Tenta novamente.",
+  "comments.report.retryCta": "Tentar novamente",
 };

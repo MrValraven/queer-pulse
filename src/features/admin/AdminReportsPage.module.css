@@ -1,0 +1,133 @@
+/* ── Page layout ─────────────────────────────────────────────────────────── */
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-top: 22px;
+}
+
+/* ── Card heads (mirrors AdminGovernancePage.module.css's .cardHead pattern) */
+.card {
+  padding: 24px 26px;
+}
+.cardHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.cardTitle {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  margin: 0;
+}
+[data-theme="dark"] .cardTitle {
+  color: var(--ink);
+}
+.cardSub {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  margin: 6px 0 0;
+}
+
+/* ── Growth + reports-by-type ────────────────────────────────────────────── */
+.chartRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+.chartCol {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+@media (max-width: 900px) {
+  .chartRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Finance summary strip ───────────────────────────────────────────────── */
+.financeSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  font-size: 13.5px;
+  color: var(--ink-70);
+  margin-bottom: 16px;
+}
+
+/* ── Community health snapshot ───────────────────────────────────────────── */
+.healthSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+.healthStat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+[data-theme="dark"] .healthStat {
+  color: var(--ink);
+}
+
+.healthTable {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.healthRowHead,
+.healthRow {
+  display: grid;
+  grid-template-columns: 1.6fr 0.7fr 1fr 0.9fr 1.1fr;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 14px;
+}
+.healthRowHead {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
+}
+.healthRow {
+  font-size: 13.5px;
+  color: var(--ink);
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
+}
+.healthRow:first-of-type {
+  border-top: none;
+}
+.healthOpenReports {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+@media (max-width: 720px) {
+  .healthRowHead,
+  .healthRow {
+    grid-template-columns: 1.4fr 0.7fr 1fr;
+  }
+  .healthRowHead span:nth-child(4),
+  .healthRowHead span:nth-child(5),
+  .healthRow span:nth-child(4),
+  .healthRow span:nth-child(5) {
+    display: none;
+  }
+}

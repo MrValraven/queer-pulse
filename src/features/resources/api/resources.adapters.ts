@@ -4,6 +4,7 @@ import { CATEGORIES, GUIDES, type Guide } from "../library.data";
 import type { LetterBlock, Term, TypeKind } from "../glossary.data";
 import type {
   GlossaryTermResponseDTO,
+  ResourceListingResponseDTO,
   ResourceResponseDTO,
 } from "./resources.api";
 
@@ -96,4 +97,24 @@ export function groupTermsIntoBlocks(terms: Term[]): LetterBlock[] {
       letter,
       terms: letterTerms.sort((a, b) => a.name.localeCompare(b.name)),
     }));
+}
+
+// ── Resource listings (CNT-14) ──────────────────────────────────────────────
+
+/** Where a "Contact" CTA on a real `ResourceListing` card should go: prefer a
+ *  website (opens in a new tab), then a phone number (`tel:`), then an email
+ *  (`mailto:`). Returns null when the listing genuinely has none — shouldn't
+ *  happen given the backend's "at least one contact field" invariant, but the
+ *  card still needs a safe no-op fallback. */
+export function contactHrefForListing(
+  listing: Pick<ResourceListingResponseDTO, "phone" | "email" | "website">,
+): string | null {
+  if (listing.website) {
+    return /^https?:\/\//i.test(listing.website)
+      ? listing.website
+      : `https://${listing.website}`;
+  }
+  if (listing.phone) return `tel:${listing.phone}`;
+  if (listing.email) return `mailto:${listing.email}`;
+  return null;
 }

@@ -92,24 +92,37 @@ export function DeckEditorPage() {
     setPendingNavigateTo(null);
   }, [pendingNavigateTo, navigate]);
 
-  const { handleSave, handleTogglePublish, handleDelete, isSaving, isPublishPending, isDeletePending } =
-    useDeckEditorActions({
-      id: effectiveId,
-      draft,
-      published,
-      onCreated: (newId) => {
-        setLastSaved(draft);
-        setCreatedId(newId);
-        seededForRef.current = newId;
-        setPendingNavigateTo(`${routes.deckEditor}?id=${newId}`);
-      },
-      onSaved: () => setLastSaved(draft),
-      onPublishedChange: setPublished,
-      onDeleted: () => {
-        setLastSaved(draft);
-        setPendingNavigateTo(routes.magazineEditor);
-      },
-    });
+  const {
+    handleSave,
+    handleTogglePublish,
+    handleDelete,
+    handleConvert,
+    isSaving,
+    isPublishPending,
+    isDeletePending,
+    isConvertPending,
+  } = useDeckEditorActions({
+    id: effectiveId,
+    draft,
+    published,
+    onCreated: (newId) => {
+      setLastSaved(draft);
+      setCreatedId(newId);
+      seededForRef.current = newId;
+      setPendingNavigateTo(`${routes.deckEditor}?id=${newId}`);
+    },
+    onSaved: () => setLastSaved(draft),
+    onPublishedChange: setPublished,
+    onDeleted: () => {
+      setLastSaved(draft);
+      setPendingNavigateTo(routes.magazineEditor);
+    },
+    onConverted: (pieceId) => {
+      setLastSaved(draft);
+      setModal(null);
+      setPendingNavigateTo(routes.magazineWrite.replace(":id", pieceId));
+    },
+  });
 
   const deck = draftToDeck(draft);
   const clampedIndex = deck.slides.length === 0 ? 0 : Math.min(previewIndex, deck.slides.length - 1);
@@ -181,6 +194,8 @@ export function DeckEditorPage() {
         onClose={() => setModal(null)}
         onConfirmDelete={handleDelete}
         deletePending={isDeletePending}
+        onConfirmConvert={handleConvert}
+        convertPending={isConvertPending}
       />
     </MagazineDeskShell>
   );

@@ -15,8 +15,8 @@ export interface AssignmentCardProps {
   onFileDraft: (assignment: WriterAssignmentDto) => void;
   /** Opens the real per-piece message thread with the assigned editor (Phase 7 Wave F). */
   onMessageEditor: (assignment: WriterAssignmentDto) => void;
-  /** Stub feedback for "Read the brief", which has no backing endpoint yet. */
-  onToast: (message: string) => void;
+  /** Opens the full brief detail modal (CNT-6 "Read the brief"). */
+  onReadBrief: (assignment: WriterAssignmentDto) => void;
 }
 
 interface KVProps {
@@ -38,10 +38,9 @@ function KV({ label, value, warn }: KVProps) {
  * One commissioned piece from the writer's own point of view — the same
  * `magazine_piece` an editor sees on the desk, but through the writer-scoped
  * `WriterAssignmentDto` projection (brief-adjacent fields only, never other
- * contributors' data or internal editor notes). "File a draft" and "Message
- * editor" (Phase 7 Wave F, the real per-piece thread) are both wired to real
- * backends — only "Read the brief" has no backing endpoint yet, so it stays
- * an honest toast stub.
+ * contributors' data or internal editor notes). "File a draft", "Message
+ * editor" (Phase 7 Wave F, the real per-piece thread), and "Read the brief"
+ * (CNT-6, opens `BriefDetailModal`) are all wired to real backends.
  */
 export function AssignmentCard({
   assignment,
@@ -49,7 +48,7 @@ export function AssignmentCard({
   onSelect,
   onFileDraft,
   onMessageEditor,
-  onToast,
+  onReadBrief,
 }: AssignmentCardProps) {
   const { t } = useTranslation();
   const hasWordCount = assignment.words !== null && assignment.target !== null;
@@ -111,11 +110,7 @@ export function AssignmentCard({
         <Button size="sm" variant="primary" onClick={() => onFileDraft(assignment)}>
           {t("magazine:writer.work.fileDraft")}
         </Button>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => onToast(t("magazine:writer.work.readBriefToast"))}
-        >
+        <Button size="sm" variant="ghost" onClick={() => onReadBrief(assignment)}>
           {t("magazine:writer.work.readBrief")}
         </Button>
         <Button size="sm" variant="ghost" onClick={() => onMessageEditor(assignment)}>

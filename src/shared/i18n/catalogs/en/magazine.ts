@@ -31,6 +31,7 @@ export const magazine: Catalog = {
   "masthead.nav.stories": "Stories",
   "masthead.nav.authors": "Writers",
   "masthead.nav.write": "Write for us",
+  "masthead.nav.sections": "Sections",
 
   // ── MagazinePage ─────────────────────────────────────────────────────────
   "landing.meta.title": "The Magazine: QueerPulse",
@@ -234,9 +235,13 @@ export const magazine: Catalog = {
     "This removes the deck and every slide in it. Readers who already have the link will see a 404.",
   "deck.editor.convertModal.title": "Turn this into prose?",
   "deck.editor.convertModal.body":
-    "Converting a slide deck into a full article isn't built yet. When it ships, this will hand the deck's content to the article editor as a starting draft.",
+    "Text and image slides carry straight over into article blocks, and each stat becomes a stats block. Interactive slides (before/after, reveal) have no article equivalent and will be dropped. This can't be undone.",
   "deck.editor.convertModal.cta": "Convert to article",
   "deck.editor.convertModal.toast": "Deck-to-article conversion isn't wired up yet.",
+  "deck.editor.convertModal.successToast": "Converted to an article draft.",
+  "deck.editor.convertModal.partialToast":
+    "Converted, but {dropped} couldn't carry over and were dropped.",
+  "deck.editor.convertModal.errorToast": "We couldn't convert this deck. Please try again.",
 
   // ── Issue chrome — shared by IssueCover, IssueContents, IssuesPage ────────
   "issue.backToAllIssues": "All issues",
@@ -341,6 +346,29 @@ export const magazine: Catalog = {
   "authorsDirectory.emptyTitle": "No writers to show yet.",
   "authorsDirectory.emptyBody":
     "The directory is still being set up. Bylines will land here soon.",
+
+  // ── MagazineSectionsPage (CNT-20) ────────────────────────────────────────
+  "sections.eyebrow": "Magazine · sections",
+  "sections.title": "Browse by section.",
+  "sections.sub":
+    "Every part of the magazine, from cover features to the last word. Pick a section to see what's run there.",
+  "sections.errorTitle": "We couldn't load the sections.",
+  "sections.errorBody":
+    "Something interrupted us on the way here. Give it another try.",
+  "sections.emptyTitle": "No sections to show yet.",
+  "sections.emptyBody": "The section taxonomy is still being set up.",
+  "sections.articleCount_one": "{count} piece",
+  "sections.articleCount_other": "{count} pieces",
+
+  // ── MagazineSectionArticlesPage (CNT-20) ─────────────────────────────────
+  "sectionArticles.eyebrow": "Magazine · section",
+  "sectionArticles.backCta": "All sections",
+  "sectionArticles.errorTitle": "We couldn't load this section.",
+  "sectionArticles.errorBody":
+    "Something interrupted us on the way here. Give it another try.",
+  "sectionArticles.emptyTitle": "Nothing published here yet.",
+  "sectionArticles.emptyBody":
+    "This section is still waiting on its first piece. Check back soon.",
 
   // ══════════════════ Editor dashboard (staff-only) ════════════════════════
   // Piece/pitch RECORDS (titles, notes, activity feed, section names) are
@@ -1505,8 +1533,12 @@ export const magazine: Catalog = {
   "issue.digest.edit": "Edit",
   "issue.digest.sendTest": "Send me a test",
   "issue.digest.sendTestToast": "A test digest is on its way to your inbox.",
+  "issue.digest.sendTestError": "We couldn't send the test digest. Please try again.",
   "issue.digest.scheduleWithIssue": "Schedule with the issue",
+  "issue.digest.scheduledWithIssue": "Scheduled with the issue",
   "issue.digest.scheduleToast": "The digest will go out with the issue.",
+  "issue.digest.scheduleOffToast": "The digest will no longer go out automatically with this issue.",
+  "issue.digest.alreadySent": "Sent to subscribers on {date}",
   "issue.digest.socialHeading": "Social out",
   "issue.digest.socialAltHint":
     "Alt text is copied from the image, so it's always filled in.",
@@ -1560,6 +1592,20 @@ export const magazine: Catalog = {
   "writer.work.messageEditor": "Message editor",
   "writer.work.activeBadge": "Active",
   "writer.work.setActive": "Use for byline & terms",
+
+  // ── BriefDetailModal ─────────────────────────────────────────────────────
+  "writer.brief.title": "Brief — {title}",
+  "writer.brief.angleLabel": "Angle",
+  "writer.brief.wantsLabel": "What we want",
+  "writer.brief.emptyWants": "No specific asks noted.",
+  "writer.brief.avoidLabel": "What to avoid",
+  "writer.brief.wordCountLabel": "Target length",
+  "writer.brief.rateLabel": "Rate",
+  "writer.brief.killFeeLabel": "Kill fee",
+  "writer.brief.commissionedByLabel": "Commissioned by",
+  "writer.brief.commissionedOnLabel": "Commissioned on",
+  "writer.brief.noBrief": "No brief has been written for this piece yet.",
+  "writer.brief.close": "Close",
 
   // ── WriterPitchesTab ─────────────────────────────────────────────────────
   "writer.pitches.emptyTitle": "No pitches yet",
@@ -1662,4 +1708,34 @@ export const magazine: Catalog = {
     "Your application was approved. Head over to the submission page to send your first pitch.",
   "applyToWrite.approved.cta": "Start writing",
   "applyToWrite.backCta": "Back to the magazine",
+
+  // ── ArticleComments (comments/) — CNT-10 reader comments ────────────────
+  "comments.heading_one": "{count} comment",
+  "comments.heading_other": "{count} comments",
+  "comments.empty": "No comments yet: be the first to say something.",
+  "comments.reply": "Reply",
+  "comments.edit": "Edit",
+  "comments.delete": "Delete",
+  "comments.editedMark": "(edited)",
+  "comments.tombstone": "This comment was deleted.",
+  "comments.composer.placeholder": "Add a comment…",
+  "comments.composer.replyPlaceholder": "Write a reply…",
+  "comments.composer.editPlaceholder": "Edit your comment…",
+  "comments.composer.post": "Post comment",
+  "comments.composer.postReply": "Post reply",
+  "comments.composer.saveEdit": "Save",
+  "comments.composer.cancel": "Cancel",
+  "comments.report.cta": "Report",
+  "comments.report.title": "Report this comment",
+  "comments.report.sub": "Tell us what's wrong with {name}'s comment.",
+  "comments.report.reasonGroupAria": "Reason for reporting",
+  "comments.report.cancel": "Cancel",
+  "comments.report.sendCta": "Send report",
+  "comments.report.sending": "Sending…",
+  "comments.report.confirmTitle": "Report <em>sent</em>",
+  "comments.report.confirmBody": "Thanks. A moderator will review {name}'s comment.",
+  "comments.report.done": "Done",
+  "comments.report.errorTitle": "Something went wrong",
+  "comments.report.errorBody": "We couldn't send your report. Please try again.",
+  "comments.report.retryCta": "Try again",
 };

@@ -541,6 +541,9 @@ export const admin: Catalog = {
   "staffRoles.magazineWriter.label": "Magazine Writer",
   "staffRoles.magazineWriter.desc":
     "Drafts and submits pieces for editorial review.",
+  "staffRoles.housingModerator.label": "Housing Moderator",
+  "staffRoles.housingModerator.desc":
+    "Can moderate Housing listings and groups.",
   "staffRoles.adminSuperset": "Admins already have every staff capability.",
   "staffRoles.systemLocked": "System accounts can't hold staff roles.",
 
@@ -635,6 +638,10 @@ export const admin: Catalog = {
   "members.timeline.action.suspensionLifted": "Suspension lifted",
   "members.timeline.action.verified": "Verified identity",
   "members.timeline.action.noReports": "No reports against this member",
+  "members.timeline.action.evidenceCited": "Evidence cited",
+  "members.timeline.action.roleChanged": "Role changed",
+  "members.timeline.action.staffRoleGranted": "Staff role granted",
+  "members.timeline.action.staffRoleRevoked": "Staff role revoked",
   "members.timeline.action.other": "Moderation action taken",
   "members.timeline.noReportsMeta": "A clean record so far",
   "members.timeline.verifiedMeta": "{date} · vouches confirmed",
@@ -816,6 +823,17 @@ export const admin: Catalog = {
   "adminReadingGroupProposals.toast.error": "That didn't go through. Please try again.",
   "adminReadingGroupProposals.loadMore": "Load more",
   "adminReadingGroupProposals.loadingMore": "Loading…",
+
+  "adminGuideFeedback.title": "Guide <em>feedback</em>",
+  "adminGuideFeedback.header.eyebrow": "Resources",
+  "adminGuideFeedback.header.title": "What's actually <em>helping</em>",
+  "adminGuideFeedback.header.sub":
+    "Every resource guide members have rated helpful or not, worst first.",
+  "adminGuideFeedback.empty": "No guide ratings yet.",
+  "adminGuideFeedback.error":
+    "Couldn't load guide feedback. Please try again.",
+  "adminGuideFeedback.row.counts":
+    "{helpful} helpful · {notHelpful} not helpful",
 
   "adminConcerns.title": "Concerns <em>raised</em>",
   "adminConcerns.header.eyebrow": "Trust & safety",
@@ -1286,6 +1304,8 @@ export const admin: Catalog = {
   "moderation.priorReports.count_one": "{count} prior report",
   "moderation.priorReports.count_other": "{count} prior reports",
   "moderation.priorReports.newAccount": "New account · {vouches} vouches",
+  "moderation.reporterCredibility.new": "New reporter",
+  "moderation.reporterCredibility.history": "{filed} filed · {dismissed} dismissed",
   "moderation.assignedToFlag": "Assigned to {name}",
   "moderation.slaOverdue": "Overdue",
   "moderation.risk.atRisk": "At risk",
@@ -1805,6 +1825,7 @@ export const admin: Catalog = {
   "governance.audit.actionType.role_changed": "Role changed",
   "governance.audit.actionType.staff_role_granted": "Staff role granted",
   "governance.audit.actionType.staff_role_revoked": "Staff role revoked",
+  "governance.audit.actionType.evidence_cited": "Evidence cited",
   "governance.audit.range.today": "Today",
   "governance.audit.range.week": "This week",
   "governance.audit.range.quarter": "This quarter",
@@ -2041,8 +2062,24 @@ export const admin: Catalog = {
     "Their own {count} vouches stay valid. Weigh the human cost before acting.",
   "vouchGraph.inspector.useAsVerificationCta": "Use as verification basis",
   "vouchGraph.inspector.verifiedCta": "Verified",
+  "vouchGraph.inspector.citeCta": "Cite",
   "vouchGraph.inspector.expandCta": "Expand network",
   "vouchGraph.inspector.collapseCta": "Collapse network",
+
+  "vouchGraph.citeDialog.title": "Cite evidence: {name}",
+  "vouchGraph.citeDialog.description":
+    "Attach a note to this member's audit trail. Moderators and admins reviewing their record will see it.",
+  "vouchGraph.citeDialog.noteLabel": "Evidence note",
+  "vouchGraph.citeDialog.confirmCta": "Cite",
+  "vouchGraph.citeDialog.defaultNoteWithEdge":
+    "Vouch edge between {focusName} and {personName}, {relation}, confirmed {when}.",
+  "vouchGraph.citeDialog.defaultNoteNoEdge":
+    "Reviewed {personName}'s trust network in the graph inspector, confirmed {when}.",
+  "vouchGraph.citeDialog.relationMutual": "mutual",
+  "vouchGraph.citeDialog.relationVouched": "one-way vouch",
+  "vouchGraph.citeDialog.successToast": "Cited {name} in the audit trail.",
+  "vouchGraph.citeDialog.failedToast":
+    "That didn't save. Check your connection and try again.",
 
   "vouchGraph.tooltip.vouchesIn_one": "{count} vouch in",
   "vouchGraph.tooltip.vouchesIn_other": "{count} vouches in",
@@ -2177,6 +2214,22 @@ export const admin: Catalog = {
   "settings.key.lockdownAllowsModerators": "Moderators during lockdown",
   "settings.key.lockdownMessage": "Maintenance message",
   "settings.key.registrationClosedMessage": "Signups-closed message",
+  "settings.key.announcementEnabled": "Announcement banner",
+  "settings.key.announcementMessage": "Announcement message",
+  "settings.key.announcementExpiresAt": "Announcement expiry",
+
+  // ── Sitewide announcement banner (ADM-25) ─────────────────────────────────
+  "settings.announcement.title": "Announcement banner",
+  "settings.announcement.sub":
+    "Shown to every visitor at the top of the site, signed in or not.",
+  "settings.announcement.message.label": "Banner message",
+  "settings.announcement.message.placeholder":
+    "e.g. Scheduled maintenance tonight from 10pm to midnight UTC.",
+  "settings.announcement.message.hint":
+    "Editing this shows the banner again to everyone who already dismissed it.",
+  "settings.announcement.expiresAt.label": "Auto-hide after (optional)",
+  "settings.announcement.expiresAt.hint":
+    "Once this time passes, the banner stops showing even if the switch above is still on.",
 
   // ── System accounts (bots) ────────────────────────────────────────────────
   "bots.eyebrow": "Platform",
@@ -3245,4 +3298,99 @@ export const admin: Catalog = {
   "housing.risk.reason.incomplete_listing": "Sparse description",
   "housing.risk.reason.no_photos": "No photos",
   "housing.risk.reason.missing_accessibility_info": "No accessibility info",
+
+  // ── Consolidated platform reports (ADM-17/ADM-19) — /admin/reports ──
+  "reports.title": "Platform <em>reports</em>",
+  "reports.header.eyebrow": "Reporting",
+  "reports.header.title": "Platform <em>reports</em>",
+  "reports.header.sub":
+    "Growth, reports by type, governance finance, and community health, in one place.",
+  "reports.trends.title": "Growth & reports by type",
+  "reports.trends.sub": "Adjust the range to see a longer or shorter window.",
+  "reports.trends.rangeWeeks": "{count}w",
+  "reports.trends.exportGrowth": "Export growth CSV",
+  "reports.trends.exportReportsByType": "Export reports CSV",
+  "reports.trends.exportToast": "Export started",
+  "reports.trends.exportError": "Couldn't export. Try again",
+  "reports.finance.title": "Governance finance",
+  "reports.finance.sub": "Quarterly income, spending, and surplus.",
+  "reports.finance.latestQuarter": "Latest quarter: {quarter}",
+  "reports.finance.income": "Income: {amount}",
+  "reports.finance.expense": "Spending: {amount}",
+  "reports.finance.surplus": "Surplus: {amount}",
+  "reports.communityHealth.title": "Community health",
+  "reports.communityHealth.sub": "A snapshot of every community's health score.",
+  "reports.communityHealth.asOfNow": "As of {time}. A snapshot, not a trend.",
+  "reports.communityHealth.notMeasured": "Not measured yet",
+  "reports.communityHealth.averageScore": "Average score: {score}",
+  "reports.communityHealth.needingSupport": "{count} needing support",
+  "reports.communityHealth.needsSupportChip": "Needs support",
+  "reports.communityHealth.columns.name": "Community",
+  "reports.communityHealth.columns.score": "Score",
+  "reports.communityHealth.columns.activity": "Activity",
+  "reports.communityHealth.columns.members": "Members",
+  "reports.communityHealth.columns.openReports": "Open reports",
+
+  "dashboard.viewFullReport": "View full report",
+
+  // ── CNT-14: admin resource-listings CRUD ────────────────────────────────
+  "adminResourceListings.title": "Resource <em>listings</em>",
+  "adminResourceListings.header.eyebrow": "Directory",
+  "adminResourceListings.header.sub":
+    "The real, vetted Legal Aid and Sexual Health Testing organisations members can contact. Publishing here is always a deliberate step — approving a suggestion never creates a listing automatically.",
+  "adminResourceListings.newCta": "New listing",
+  "adminResourceListings.empty": "No listings yet — create the first one, or check the suggestions queue for ideas.",
+  "adminResourceListings.loadError": "Couldn't load resource listings.",
+  "adminResourceListings.category.legal_aid": "Legal Aid",
+  "adminResourceListings.category.sexual_health_testing": "Sexual Health Testing",
+  "adminResourceListings.status.active": "Active",
+  "adminResourceListings.status.archived": "Archived",
+  "adminResourceListings.row.noRegion": "No region set",
+  "adminResourceListings.field.category": "Category",
+  "adminResourceListings.field.title": "Title",
+  "adminResourceListings.field.description": "Description",
+  "adminResourceListings.field.region": "Region / address",
+  "adminResourceListings.field.phone": "Phone",
+  "adminResourceListings.field.email": "Email",
+  "adminResourceListings.field.website": "Website",
+  "adminResourceListings.field.status": "Status",
+  "adminResourceListings.form.editEyebrow": "Edit listing",
+  "adminResourceListings.form.editTitle": "Edit listing",
+  "adminResourceListings.form.createTitle": "New listing",
+  "adminResourceListings.form.createCta": "Create listing",
+  "adminResourceListings.toast.created": "\"{title}\" was published.",
+  "adminResourceListings.toast.updated": "\"{title}\" was updated.",
+  "adminResourceListings.toast.removed": "\"{title}\" was removed.",
+  "adminResourceListings.delete.title": "Remove \"{title}\"?",
+  "adminResourceListings.delete.body":
+    "This listing will no longer be shown to members. This can't be undone from here.",
+  "adminResourceListings.delete.confirmCta": "Remove listing",
+
+  // ── CNT-14: admin resource-suggestions review queue ─────────────────────
+  "adminResourceSuggestions.title": "Resource <em>suggestions</em>",
+  "adminResourceSuggestions.header.eyebrow": "Review queue",
+  "adminResourceSuggestions.header.title": "Resource <em>suggestions</em>",
+  "adminResourceSuggestions.header.sub":
+    "Every Legal Aid / Sexual Health Testing resource a member has suggested. Approving here only records the decision — publish the real, verified listing by hand on Resource listings.",
+  "adminResourceSuggestions.filter.all": "All categories",
+  "adminResourceSuggestions.category.legal_aid": "Legal Aid",
+  "adminResourceSuggestions.category.sexual_health_testing": "Sexual Health Testing",
+  "adminResourceSuggestions.status.pending": "Pending",
+  "adminResourceSuggestions.status.approved": "Approved",
+  "adminResourceSuggestions.status.declined": "Declined",
+  "adminResourceSuggestions.status.archived": "Archived",
+  "adminResourceSuggestions.action.approve": "Approve",
+  "adminResourceSuggestions.action.decline": "Decline",
+  "adminResourceSuggestions.action.archive": "Archive",
+  "adminResourceSuggestions.row.by": "Suggested by {name}",
+  "adminResourceSuggestions.row.sent": "Sent {date}",
+  "adminResourceSuggestions.unknownMember": "A member",
+  "adminResourceSuggestions.empty": "No suggestions yet.",
+  "adminResourceSuggestions.error": "Couldn't load resource suggestions.",
+  "adminResourceSuggestions.loadMore": "Load more",
+  "adminResourceSuggestions.loadingMore": "Loading…",
+  "adminResourceSuggestions.toast.approved": "Suggestion approved.",
+  "adminResourceSuggestions.toast.declined": "Suggestion declined.",
+  "adminResourceSuggestions.toast.archived": "Suggestion archived.",
+  "adminResourceSuggestions.toast.error": "Couldn't update that suggestion.",
 };

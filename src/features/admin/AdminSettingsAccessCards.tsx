@@ -10,6 +10,8 @@ import {
   LOCKDOWN_PRESETS,
   type MessagePreset,
 } from "./adminSettings.data";
+import { datetimeLocalValueToIso } from "./adminDateTimeLocal";
+import { AdminAnnouncementCard } from "./AdminAnnouncementCard";
 import { AdminSettingsConfirm } from "./AdminSettingsConfirm";
 import styles from "./AdminSettingsPage.module.css";
 
@@ -81,6 +83,10 @@ export function AdminSettingsAccessCards({
   setClosedMessage,
   lockdownMessage,
   setLockdownMessage,
+  announcementMessage,
+  setAnnouncementMessage,
+  announcementExpiresAt,
+  setAnnouncementExpiresAt,
   note,
   setNote,
   confirming,
@@ -92,6 +98,11 @@ export function AdminSettingsAccessCards({
   setClosedMessage: Dispatch<SetStateAction<string>>;
   lockdownMessage: string;
   setLockdownMessage: Dispatch<SetStateAction<string>>;
+  announcementMessage: string;
+  setAnnouncementMessage: Dispatch<SetStateAction<string>>;
+  /** `datetime-local` value, never ISO — see `adminDateTimeLocal.ts`. */
+  announcementExpiresAt: string;
+  setAnnouncementExpiresAt: Dispatch<SetStateAction<string>>;
   note: string;
   setNote: Dispatch<SetStateAction<string>>;
   confirming: "enable" | "disable" | null;
@@ -189,6 +200,25 @@ export function AdminSettingsAccessCards({
           }}
         />
       </section>
+
+      <AdminAnnouncementCard
+        settings={settings}
+        save={save}
+        message={announcementMessage}
+        setMessage={setAnnouncementMessage}
+        onCommitMessage={() => {
+          if (announcementMessage === (settings.announcementMessage ?? ""))
+            return;
+          save({ announcementMessage: announcementMessage || null });
+        }}
+        expiresAt={announcementExpiresAt}
+        setExpiresAt={setAnnouncementExpiresAt}
+        onCommitExpiresAt={() => {
+          const nextIso = datetimeLocalValueToIso(announcementExpiresAt);
+          if (nextIso === (settings.announcementExpiresAt ?? null)) return;
+          save({ announcementExpiresAt: nextIso });
+        }}
+      />
 
       {confirming && (
         <AdminSettingsConfirm

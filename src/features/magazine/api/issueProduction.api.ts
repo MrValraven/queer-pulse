@@ -35,6 +35,9 @@ export interface IssueProductionDto {
   coverlines: string[];
   runOrder: IssueRunOrderEntryDto[];
   digest: IssueDigestItemDto[];
+  /** CNT-6 "Schedule with issue" toggle + send watermark. */
+  digestSendOnPublish: boolean;
+  digestSentAt: string | null;
   shipChecklist: PublishGateItemDto[];
   pages: { editorial: number; total: number; max: number };
 }
@@ -50,6 +53,8 @@ export interface UpdateRunOrderDto {
 /** Body of `PATCH /magazine/admin/issues/:number/digest`. */
 export interface UpdateDigestDto {
   items: { pieceId: string; blurb: string; on: boolean }[];
+  /** CNT-6 "Schedule with issue" toggle — omitted leaves it untouched. */
+  sendOnPublish?: boolean;
 }
 
 /** Body of `PATCH /magazine/admin/issues/:number/cover`. */
@@ -74,3 +79,8 @@ export const updateCover = (number: string, body: UpdateCoverDto) =>
 
 export const shipIssue = (number: string) =>
   apiPost<IssueProductionDto>(`/magazine/admin/issues/${number}/ship`);
+
+/** POST /magazine/admin/issues/:number/digest/test-send — CNT-6 "Send test":
+ *  sends the current members' digest to the caller's own inbox. */
+export const sendDigestTest = (number: string) =>
+  apiPost<void>(`/magazine/admin/issues/${number}/digest/test-send`);

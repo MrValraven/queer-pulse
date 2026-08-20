@@ -1,26 +1,36 @@
 /** i18n Pattern A — platform-authored guidance chrome, resolved via `t()`. */
-export const EXPERIENCES: { titleKey: string; textKey: string }[] = [
+export const EXPERIENCES: {
+  contentKey: string;
+  titleKey: string;
+  textKey: string;
+}[] = [
   {
+    contentKey: "mentalHealth.experience.newCommunity",
     titleKey: "resources:mentalHealth.experience.newCommunity.title",
     textKey: "resources:mentalHealth.experience.newCommunity.text",
   },
   {
+    contentKey: "mentalHealth.experience.visibility",
     titleKey: "resources:mentalHealth.experience.visibility.title",
     textKey: "resources:mentalHealth.experience.visibility.text",
   },
   {
+    contentKey: "mentalHealth.experience.admin",
     titleKey: "resources:mentalHealth.experience.admin.title",
     textKey: "resources:mentalHealth.experience.admin.text",
   },
   {
+    contentKey: "mentalHealth.experience.transNonbinary",
     titleKey: "resources:mentalHealth.experience.transNonbinary.title",
     textKey: "resources:mentalHealth.experience.transNonbinary.text",
   },
   {
+    contentKey: "mentalHealth.experience.distance",
     titleKey: "resources:mentalHealth.experience.distance.title",
     textKey: "resources:mentalHealth.experience.distance.text",
   },
   {
+    contentKey: "mentalHealth.experience.financial",
     titleKey: "resources:mentalHealth.experience.financial.title",
     textKey: "resources:mentalHealth.experience.financial.text",
   },

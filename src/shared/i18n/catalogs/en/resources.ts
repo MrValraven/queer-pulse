@@ -2378,4 +2378,37 @@ export const resources: Catalog = {
     "Contributions aren't open yet — the archive is still being built.",
   "sharedEquipment.requestLiveToast":
     "The lending library isn't live yet — check back soon.",
+
+  // ── GuideRatingWidget (CNT-18) ───────────────────────────────────────────
+  "rating.prompt": "Was this helpful?",
+  "rating.helpfulCta": "Yes",
+  "rating.notHelpfulCta": "No",
+  "rating.thanks": "Thanks for the feedback.",
+  "rating.changeCta": "Change your answer",
+
+  // ── CNT-14: real resource-listings directory + suggestion pathway ──────
+  "directory.contactCta": "Contact",
+
+  "suggest.cta": "Suggest a resource",
+  "suggest.modalTitle": "Suggest a resource",
+  "suggest.intro":
+    "Know a legal aid clinic or testing service that should be here? Tell us about it — our team verifies every suggestion before it's published.",
+  "suggest.form.nameLabel": "Organisation name",
+  "suggest.form.namePlaceholder": "e.g. Porto Queer Legal Clinic",
+  "suggest.form.descriptionLabel": "What do they offer?",
+  "suggest.form.descriptionPlaceholder":
+    "e.g. Free consultations for workplace discrimination, walk-in Wednesdays.",
+  "suggest.form.phoneLabel": "Phone (optional)",
+  "suggest.form.phonePlaceholder": "+351 ...",
+  "suggest.form.emailLabel": "Email (optional)",
+  "suggest.form.emailPlaceholder": "contact@example.org",
+  "suggest.form.websiteLabel": "Website (optional)",
+  "suggest.form.websitePlaceholder": "example.org",
+  "suggest.cancelCta": "Cancel",
+  "suggest.submitCta": "Send suggestion",
+  "suggest.sendingLabel": "Sending…",
+  "suggest.errorToast": "Couldn't send your suggestion — try again in a moment.",
+  "suggest.success.title": "Thanks — <em>we'll take it from here.</em>",
+  "suggest.success.sub":
+    "Our team verifies every suggestion before it's published, so we don't send anyone to a wrong number or a defunct clinic.",
 };

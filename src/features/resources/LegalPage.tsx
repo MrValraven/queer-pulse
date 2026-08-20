@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { FiArrowRight, FiBriefcase } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
@@ -24,10 +24,18 @@ import { ResourceHero } from "./ResourceHero";
 import { CrisisStrip } from "./CrisisStrip";
 import { SuggestEditTrigger } from "./SuggestEditTrigger";
 import { CardGrid, ResourceCard, ResourceCardSkeleton } from "./ResourceCard";
+import { useResourceListings } from "./api/useResourceListings";
+import { contactHrefForListing } from "./api/resources.adapters";
+import { SuggestResourceModal } from "./SuggestResourceModal";
+import { GuideRatingWidget } from "./GuideRatingWidget";
 import styles from "./resources.module.css";
 
 interface Right {
   badge: "protected" | "know" | "practical";
+  /** CNT-18 rating key — the i18n dot-path prefix minus `.title` (e.g.
+   *  `legal.workplace.dismissal`), so `GuideRatingWidget` addresses the same
+   *  guide the titleKey/bodyKey render. */
+  contentKey: string;
   titleKey: string;
   bodyKey: string;
   linkKey: string;
@@ -43,6 +51,7 @@ interface Right {
 const WORKPLACE: Right[] = [
   {
     badge: "protected",
+    contentKey: "legal.workplace.dismissal",
     titleKey: "resources:legal.workplace.dismissal.title",
     bodyKey: "resources:legal.workplace.dismissal.body",
     linkKey: "resources:legal.link.readGuide",
@@ -50,6 +59,7 @@ const WORKPLACE: Right[] = [
   },
   {
     badge: "protected",
+    contentKey: "legal.workplace.harassment",
     titleKey: "resources:legal.workplace.harassment.title",
     bodyKey: "resources:legal.workplace.harassment.body",
     linkKey: "resources:legal.link.readGuide",
@@ -57,6 +67,7 @@ const WORKPLACE: Right[] = [
   },
   {
     badge: "know",
+    contentKey: "legal.workplace.pronouns",
     titleKey: "resources:legal.workplace.pronouns.title",
     bodyKey: "resources:legal.workplace.pronouns.body",
     linkKey: "resources:legal.link.readGuide",
@@ -64,6 +75,7 @@ const WORKPLACE: Right[] = [
   },
   {
     badge: "practical",
+    contentKey: "legal.workplace.complaint",
     titleKey: "resources:legal.workplace.complaint.title",
     bodyKey: "resources:legal.workplace.complaint.body",
     linkKey: "resources:legal.link.getTemplate",
@@ -74,6 +86,7 @@ const WORKPLACE: Right[] = [
 const HOUSING: Right[] = [
   {
     badge: "protected",
+    contentKey: "legal.housing.rental",
     titleKey: "resources:legal.housing.rental.title",
     bodyKey: "resources:legal.housing.rental.body",
     linkKey: "resources:legal.link.readGuide",
@@ -81,6 +94,7 @@ const HOUSING: Right[] = [
   },
   {
     badge: "practical",
+    contentKey: "legal.housing.samesex",
     titleKey: "resources:legal.housing.samesex.title",
     bodyKey: "resources:legal.housing.samesex.body",
     linkKey: "resources:legal.link.readGuide",
@@ -88,6 +102,7 @@ const HOUSING: Right[] = [
   },
   {
     badge: "practical",
+    contentKey: "legal.housing.eviction",
     titleKey: "resources:legal.housing.eviction.title",
     bodyKey: "resources:legal.housing.eviction.body",
     linkKey: "resources:legal.link.findSupport",
@@ -98,6 +113,7 @@ const HOUSING: Right[] = [
 const HEALTHCARE: Right[] = [
   {
     badge: "protected",
+    contentKey: "legal.healthcare.sns",
     titleKey: "resources:legal.healthcare.sns.title",
     bodyKey: "resources:legal.healthcare.sns.body",
     linkKey: "resources:legal.link.transHubGuide",
@@ -105,6 +121,7 @@ const HEALTHCARE: Right[] = [
   },
   {
     badge: "protected",
+    contentKey: "legal.healthcare.refusal",
     titleKey: "resources:legal.healthcare.refusal.title",
     bodyKey: "resources:legal.healthcare.refusal.body",
     linkKey: "resources:legal.link.reportRefusal",
@@ -112,6 +129,7 @@ const HEALTHCARE: Right[] = [
   },
   {
     badge: "practical",
+    contentKey: "legal.healthcare.prep",
     titleKey: "resources:legal.healthcare.prep.title",
     bodyKey: "resources:legal.healthcare.prep.body",
     linkKey: "resources:legal.link.prepGuide",
@@ -197,6 +215,7 @@ function RightsSection({
                 {t(right.linkKey)}{" "}
                 <FiArrowRight aria-hidden />
               </Link>
+              <GuideRatingWidget contentKey={right.contentKey} />
             </Reveal>
           ))}
         </div>
@@ -210,6 +229,10 @@ export function LegalPage() {
   const { demoMode } = useDemoMode();
   const { openConnect } = useConnect();
   const loading = useSimulatedLoad();
+  const { listings, isLoading: listingsLoading } = useResourceListings(
+    "legal_aid",
+  );
+  const [suggestOpen, setSuggestOpen] = useState(false);
   const pageTitle = t("resources:legal.meta.title");
   const pageDescription = t("resources:legal.meta.description");
   return (
@@ -303,15 +326,55 @@ export function LegalPage() {
             {t("resources:legal.lawyers.lead")}
           </Reveal>
           {!demoMode ? (
-            <EmptyState
-              icon={<FiBriefcase />}
-              title={t("resources:legal.lawyers.live.title")}
-              description={t("resources:legal.lawyers.live.body")}
-              action={{
-                label: t("resources:legal.lawyers.live.cta"),
-                to: routes.report,
-              }}
-            />
+            listingsLoading ? (
+              <CardGrid busy>
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <ResourceCardSkeleton key={index} />
+                ))}
+              </CardGrid>
+            ) : listings.length > 0 ? (
+              <>
+                <CardGrid>
+                  {listings.map((listing, index) => (
+                    <ResourceCard
+                      key={listing.id}
+                      name={listing.title}
+                      spec={listing.description}
+                      tags={listing.region ? [listing.region] : []}
+                      loc={listing.region ?? ""}
+                      nameSize={19}
+                      ctaLabel={t("resources:directory.contactCta")}
+                      onCta={() => {
+                        const href = contactHrefForListing(listing);
+                        if (href) {
+                          window.open(
+                            href,
+                            listing.website ? "_blank" : "_self",
+                          );
+                        }
+                      }}
+                      animation="fade"
+                      delay={Math.min(index, 8) * 60}
+                    />
+                  ))}
+                </CardGrid>
+                <div style={{ marginTop: 20, textAlign: "center" }}>
+                  <Button variant="ghost" onClick={() => setSuggestOpen(true)}>
+                    {t("resources:suggest.cta")}
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <EmptyState
+                icon={<FiBriefcase />}
+                title={t("resources:legal.lawyers.live.title")}
+                description={t("resources:legal.lawyers.live.body")}
+                action={{
+                  label: t("resources:suggest.cta"),
+                  onClick: () => setSuggestOpen(true),
+                }}
+              />
+            )
           ) : (
           <CardGrid busy={loading}>
             {loading
@@ -333,6 +396,12 @@ export function LegalPage() {
                   />
                 ))}
           </CardGrid>
+          )}
+          {suggestOpen && (
+            <SuggestResourceModal
+              category="legal_aid"
+              onClose={() => setSuggestOpen(false)}
+            />
           )}
         </div>
       </section>

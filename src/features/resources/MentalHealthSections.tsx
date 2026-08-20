@@ -13,6 +13,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { EXPERIENCES, SNS } from "./mentalHealth.data";
 import { useTherapistPersonas } from "./api/useTherapistPersonas";
 import type { TherapistCardVM } from "./therapistPersonaCard";
+import { GuideRatingWidget } from "./GuideRatingWidget";
 import styles from "./MentalHealthPage.module.css";
 
 export function TherapistSection() {
@@ -181,6 +182,7 @@ export function ExperiencesSection() {
                 <div className={styles.expTitle}>{t(experience.titleKey)}</div>
                 <div className={styles.expText}>{t(experience.textKey)}</div>
               </div>
+              <GuideRatingWidget contentKey={experience.contentKey} />
             </Reveal>
           ))}
         </div>

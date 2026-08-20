@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useRegisterShellFrame } from "../../../app/providers/ShellFrameProvider";
+import { AnnouncementBanner } from "../system/AnnouncementBanner";
 import { MAIN_CONTENT_ID, SkipToContentLink } from "./SkipToContentLink";
 
 /**
@@ -23,6 +24,7 @@ export function AppShell({
   return (
     <>
       <SkipToContentLink />
+      <AnnouncementBanner />
       <main
         id={MAIN_CONTENT_ID}
         tabIndex={-1}

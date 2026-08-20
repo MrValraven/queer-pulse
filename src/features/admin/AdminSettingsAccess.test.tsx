@@ -20,6 +20,10 @@ const baseSettings: PlatformSettingsDTO = {
   lockdownAllowsModerators: false,
   lockdownMessage: null,
   registrationClosedMessage: null,
+  announcementEnabled: false,
+  announcementMessage: null,
+  announcementExpiresAt: null,
+  announcementVersion: "00000000-0000-0000-0000-000000000000",
   updatedAt: "2026-07-18T09:14:00.000Z",
   updatedBy: null,
 };

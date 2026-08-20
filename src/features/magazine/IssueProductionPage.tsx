@@ -31,9 +31,8 @@ export function IssueProductionPage() {
   const { number } = useParams();
   const navigate = useNavigate();
   const { issue, isLoading, isError } = useIssueProduction(number!);
-  const { saveRunOrder, saveDigest, saveCover, saveContentsBlurb, ship } = useIssueMutations(
-    number!,
-  );
+  const { saveRunOrder, saveDigest, saveCover, saveContentsBlurb, ship, sendDigestTest } =
+    useIssueMutations(number!);
   const { showToast } = useToast();
   const { t } = useTranslation();
   const [tab, setTab] = useState<IssueTabId>("runningOrder");
@@ -114,7 +113,14 @@ export function IssueProductionPage() {
           <DigestSocialTab
             digest={production.digest}
             pieces={contentsPieces}
+            digestSendOnPublish={production.digestSendOnPublish}
+            digestSentAt={production.digestSentAt}
             onSaveDigest={(items) => saveDigest.mutate({ items })}
+            onToggleSendOnPublish={(sendOnPublish) =>
+              saveDigest.mutate({ items: production.digest, sendOnPublish })
+            }
+            onSendTest={() => sendDigestTest.mutateAsync()}
+            sendTestPending={sendDigestTest.isPending}
           />
         );
       case "archive":
