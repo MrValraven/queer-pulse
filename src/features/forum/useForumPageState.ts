@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -17,6 +17,15 @@ import { currentUser } from "../members/data/members";
 
 const PROMPT_DISMISSED_KEY = "qp_forum_prompt_dismissed";
 
+const FORUM_SORTS: readonly ForumSort[] = ["new", "top", "active", "unanswered"];
+
+/** Narrows a raw `?sort=` URL param to a known `ForumSort`, so a malformed or
+ *  stale link (or hand-edited URL) falls back to the default rather than
+ *  passing garbage through to `useThreads`/the server. */
+function isForumSort(value: string | null): value is ForumSort {
+  return !!value && (FORUM_SORTS as readonly string[]).includes(value);
+}
+
 /**
  * Owns every ForumPage concern that isn't markup — thread source (with server
  * sort/tag/search), real OP voting, truthful counts, the first-post prompt, the
@@ -33,9 +42,6 @@ export function useForumPageState() {
   const { user } = useAuth();
   const simLoading = useSimulatedLoad();
   const { showToast } = useToast();
-
-  const [cat, setCat] = useState("all");
-  const [sort, setSort] = useState<ForumSort>("top");
 
   const [searchParams, setSearchParams] = useSearchParams();
   const tag = searchParams.get("tag") ?? undefined;
@@ -59,6 +65,24 @@ export function useForumPageState() {
   );
   const setTag = useCallback(
     (next: string | null) => setParam("tag", next),
+    [setParam],
+  );
+
+  // Category + sort are URL-backed too (same `setParam` mechanism as tag/q
+  // above), so refreshing or sharing a link preserves them instead of silently
+  // resetting to "All"/"Top". "all"/"top" are each param's default, so they're
+  // omitted from the URL entirely (never `?category=all`) — `setCat`/`setTag`
+  // still `null` the param out below their default, exactly like `setTag`.
+  const catParam = searchParams.get("category");
+  const cat = catParam ?? "all";
+  const setCat = useCallback(
+    (next: string) => setParam("category", next === "all" ? null : next),
+    [setParam],
+  );
+  const sortParam = searchParams.get("sort");
+  const sort: ForumSort = isForumSort(sortParam) ? sortParam : "top";
+  const setSort = useCallback(
+    (next: ForumSort) => setParam("sort", next === "top" ? null : next),
     [setParam],
   );
 
@@ -93,9 +117,20 @@ export function useForumPageState() {
       localStorage.getItem(PROMPT_DISMISSED_KEY) === "1",
   );
 
-  // Show the first-post invitation only to members who haven't posted this
-  // session and haven't waved it away before (dismissal persists across reloads).
-  const showFirstPostPrompt = !promptDismissed && extraThreads.length === 0;
+  // Show the first-post invitation only to members who genuinely haven't
+  // posted and haven't waved it away before (dismissal persists across
+  // reloads). LIVE reads `hasPosted` from the counts response — a real EXISTS
+  // check against the member's own threads/posts (see `ForumController.
+  // threadCounts`/`ForumPostsService.hasEverPosted`), not just this browsing
+  // session, so a repeat poster on a fresh session never sees a false "you
+  // haven't posted yet." `extraThreads.length` still covers the moment
+  // immediately after publishing, before that count has refetched. DEMO has no
+  // persistent posting history for the mock persona, so it's session-only,
+  // exactly as before.
+  const hasEverPosted = demoMode
+    ? extraThreads.length > 0
+    : countsResult.hasPosted || extraThreads.length > 0;
+  const showFirstPostPrompt = !promptDismissed && !hasEverPosted;
 
   function dismissPrompt() {
     setPromptDismissed(true);
@@ -108,19 +143,45 @@ export function useForumPageState() {
 
   // Surface the new post regardless of current filter/sort, and treat it like
   // any other first post — the invitation has done its job once they publish.
-  const { composing, composeSeed, openCompose, closeCompose, publishThread } =
-    useCreateThreadFlow({
-      demoMode,
-      user,
-      setExtraThreads,
-      onAfterPublish: () => {
-        setCat("all");
-        setSort("new");
-        setTag(null);
-        setQ("");
-        dismissPrompt();
+  const {
+    composing,
+    composeSeed,
+    composeTags,
+    openCompose,
+    closeCompose,
+    publishThread,
+  } = useCreateThreadFlow({
+    demoMode,
+    user,
+    setExtraThreads,
+    onAfterPublish: () => {
+      setCat("all");
+      setSort("new");
+      setTag(null);
+      setQ("");
+      dismissPrompt();
+    },
+  });
+
+  // DISC-5 — a topic page's "Write a post" CTA (`writeHrefForTag`) deep-links
+  // here as `?tag=<topic>&compose=1`. `tag` already scopes the thread list
+  // (read above); `compose=1` additionally auto-opens the composer seeded
+  // with that same tag, on mount only — a later in-page tag change (the
+  // sidebar filter chips) must NOT reopen the modal. The `compose` param is
+  // then stripped so a reload/share of the URL doesn't reopen it again.
+  useEffect(() => {
+    if (searchParams.get("compose") !== "1") return;
+    openCompose("", tag ? [tag] : []);
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete("compose");
+        return next;
       },
-    });
+      { replace: true },
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const allThreads = useMemo(() => {
     // Dedupe the local optimistic copy against the refetched server list by
@@ -245,6 +306,7 @@ export function useForumPageState() {
     loading,
     composing,
     composeSeed,
+    composeTags,
     openCompose,
     closeCompose,
     showFirstPostPrompt,

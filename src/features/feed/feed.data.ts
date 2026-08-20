@@ -11,6 +11,7 @@ import { routes } from "../../app/routeMap";
 export const FEED_TABS = [
   "All",
   "Communities",
+  "Connections",
   "Gatherings",
   "People",
   "Posts",
@@ -21,6 +22,7 @@ export type FeedTab = (typeof FEED_TABS)[number];
 export const FEED_TAB_LABEL_KEY: Record<FeedTab, string> = {
   All: "feed:tab.all",
   Communities: "feed:tab.communities",
+  Connections: "feed:tab.connections",
   Gatherings: "feed:tab.gatherings",
   People: "feed:tab.people",
   Posts: "feed:tab.posts",
@@ -28,7 +30,7 @@ export const FEED_TAB_LABEL_KEY: Record<FeedTab, string> = {
 
 /** Which react-icons glyph a tab's empty/error panel shows (resolved in the page). */
 export type FeedTabIcon =
-  "inbox" | "communities" | "gatherings" | "people" | "posts";
+  "inbox" | "communities" | "connections" | "gatherings" | "people" | "posts";
 
 interface FeedTabMessage {
   titleKey: string;
@@ -78,6 +80,21 @@ export const FEED_TAB_COPY: Record<FeedTab, FeedTabCopy> = {
     error: {
       titleKey: "feed:tab.communities.error.title",
       descriptionKey: "feed:tab.communities.error.description",
+    },
+  },
+  Connections: {
+    icon: "connections",
+    empty: {
+      titleKey: "feed:tab.connections.empty.title",
+      descriptionKey: "feed:tab.connections.empty.description",
+      action: {
+        labelKey: "feed:tab.connections.empty.action",
+        to: routes.members,
+      },
+    },
+    error: {
+      titleKey: "feed:tab.connections.error.title",
+      descriptionKey: "feed:tab.connections.error.description",
     },
   },
   Gatherings: {

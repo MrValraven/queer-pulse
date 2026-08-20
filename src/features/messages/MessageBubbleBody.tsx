@@ -69,19 +69,23 @@ export function MessageBubbleBody({
     </button>
   );
 
-  // A GIF renders as an inline image (no text-bubble chrome, like the emoji-only
-  // case). Rendered BEFORE the emoji/text branches so a gif never falls through
-  // to text. Reply-quote/forwarded labels still apply. The meta sits below (not
-  // floating), since a GIF has no coloured bubble to tuck it into.
-  if (message.kind === "gif" && message.attachment) {
+  // A GIF or an uploaded image renders as an inline image (no text-bubble
+  // chrome, like the emoji-only case) — visually identical either way, only
+  // `kind` differs for copy/analytics. Rendered BEFORE the emoji/text branches
+  // so neither ever falls through to text. Reply-quote/forwarded labels still
+  // apply. The meta sits below (not floating), since neither has a coloured
+  // bubble to tuck it into.
+  if ((message.kind === "gif" || message.kind === "image") && message.attachment) {
     const { url, width, height } = message.attachment;
     // Reserve the bubble's final box BEFORE the image decodes. The provider's
-    // per-item dimensions are sometimes missing/zero (see demoGifs mapping
-    // uncertainty), in which case a plain 1:1 fallback keeps the jump small
-    // and predictable — without it the bubble has no intrinsic height at all
-    // until decode, which also nudges the resize-follow scroll (item 4) right
-    // after the entrance has already played.
+    // (or upload's) per-item dimensions are sometimes missing/zero, in which
+    // case a plain 1:1 fallback keeps the jump small and predictable —
+    // without it the bubble has no intrinsic height at all until decode,
+    // which also nudges the resize-follow scroll (item 4) right after the
+    // entrance has already played.
     const aspectRatio = width > 0 && height > 0 ? width / height : 1;
+    const imageAlt =
+      message.kind === "image" ? t("messages:attachments.imageAlt") : message.text;
     return (
       <>
         {forwardedNode}
@@ -93,7 +97,7 @@ export function MessageBubbleBody({
           height={height || undefined}
           style={{ aspectRatio: String(aspectRatio) }}
           loading="lazy"
-          alt={message.text}
+          alt={imageAlt}
         />
         {isLast && (
           <MessageMeta

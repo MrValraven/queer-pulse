@@ -88,6 +88,10 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
     minWidth: 1200,
     minHeight: 600,
   },
+  // A message-composer image attachment (MSG-8) — no minimum, a member should
+  // be able to share a small screenshot or a square photo just as easily as a
+  // landscape one. Mirrors the backend's 8 MB cap (`upload-kinds.ts`).
+  "message-image": { maxBytes: 8 * MB, maxLabel: "8 MB" },
 };
 
 /** Type + size guards. Throws a human-readable `Error` the UI shows in role="alert". */
@@ -135,6 +139,10 @@ const MAX_DIMENSION_PX: Record<UploadKind, number> = {
   "story-cover": 2560,
   "listing-photo": 2560,
   "community-cover": 2560,
+  // A chat bubble never renders wider than the message column — a photo
+  // slot, not a full-bleed hero, so it gets the same 1600px cap as an avatar/
+  // work image rather than the wide-hero kinds above.
+  "message-image": 1600,
 };
 
 /** Re-encode quality used once an image is actually being downscaled — a
@@ -405,6 +413,9 @@ export const CROP_CONFIG: Record<UploadKind, AspectConfig> = {
   "listing-photo": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
   "work-image": { aspect: "free", aspectLabel: "free", allowFreeform: true },
   "gathering-photo": { aspect: "free", aspectLabel: "free", allowFreeform: true },
+  // Unused in practice — the message composer never opens the reframe editor
+  // (a chat photo sends as-is), but every `UploadKind` needs an entry here.
+  "message-image": { aspect: "free", aspectLabel: "free", allowFreeform: true },
 };
 
 /** Minimum output pixel dimensions for the crop, derived from `UPLOAD_LIMITS`. */

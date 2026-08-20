@@ -85,18 +85,29 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
       l: t("gatherings:create.step5.row.audience"),
       v: <strong>{t(audienceScopeLabelKey(form.audienceScope))}</strong>,
     },
-    {
-      l: t("gatherings:create.step5.row.pricing"),
-      v: form.free
-        ? t("gatherings:create.step5.pricingFree")
-        : t("gatherings:create.step5.pricingSliding", {
-            std: form.stdPrice ? fmt.currency(Number(form.stdPrice)) : "—",
-            sup: form.supPrice ? fmt.currency(Number(form.supPrice)) : "—",
-          }),
-    },
     { l: t("gatherings:create.step5.row.accessibility"), v: accessVal },
+    {
+      l: t("gatherings:create.step5.row.repeats"),
+      v: form.repeats ? (
+        <strong>
+          {t(`gatherings:create.repeats.cadence.${form.cadence}`)}
+          {form.endType === "count"
+            ? ` · ${t("gatherings:create.step5.repeatsUntilCount", { occurrences: form.endCount || "—" })}`
+            : ` · ${t("gatherings:create.step5.repeatsUntilDate", {
+                date: form.endUntil
+                  ? fmt.date(new Date(form.endUntil), {
+                      day: "numeric",
+                      month: "short",
+                    })
+                  : "—",
+              })}`}
+        </strong>
+      ) : (
+        t("gatherings:create.step5.repeatsOff")
+      ),
+    },
   ];
-  const remaining = 3 - form.checkedCount;
+  const remaining = CONFIRM_CHECK_KEYS.length - form.checkedCount;
   return (
     <div>
       <div className={styles.stepTitle}>

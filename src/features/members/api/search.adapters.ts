@@ -4,6 +4,7 @@ import {
   personaPath,
   routes,
   thread,
+  topicPath,
 } from "../../../app/routeMap";
 import { gatheringPath } from "../../gatherings/data";
 import type { SearchItem } from "../search.data";
@@ -35,6 +36,9 @@ const hrefFor = (result: SearchResultDTO): string => {
     case "subprofile":
       // A subprofile hit's slug IS its public handle (/p/:handle).
       return personaPath(result.slug);
+    case "topic":
+      // A topic hit's slug IS its tag (see `topicToResult` in the backend).
+      return topicPath(result.slug);
   }
 };
 

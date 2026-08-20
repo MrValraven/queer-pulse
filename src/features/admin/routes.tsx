@@ -6,6 +6,7 @@ const AdminDashboardPage = lazyNamed(() => import("./AdminDashboardPage"), "Admi
 const AdminModerationPage = lazyNamed(() => import("./AdminModerationPage"), "AdminModerationPage");
 const AdminConcernsPage = lazyNamed(() => import("./AdminConcernsPage"), "AdminConcernsPage");
 const AdminMembersPage = lazyNamed(() => import("./AdminMembersPage"), "AdminMembersPage");
+const AdminStaffPage = lazyNamed(() => import("./AdminStaffPage"), "AdminStaffPage");
 const AdminBotsPage = lazyNamed(() => import("./AdminBotsPage"), "AdminBotsPage");
 const AdminSafeSpacesPage = lazyNamed(() => import("./AdminSafeSpacesPage"), "AdminSafeSpacesPage");
 const AdminListingsPage = lazyNamed(() => import("./AdminListingsPage"), "AdminListingsPage");
@@ -39,6 +40,7 @@ export function adminRoutes() {
       <Route path={routes.adminModeration} element={<AdminModerationPage />} />
       <Route path={routes.adminConcerns} element={<AdminConcernsPage />} />
       <Route path={routes.adminMembers} element={<AdminMembersPage />} />
+      <Route path={routes.adminStaff} element={<AdminStaffPage />} />
       <Route path={routes.adminBots} element={<AdminBotsPage />} />
       <Route path={routes.adminSafeSpaces} element={<AdminSafeSpacesPage />} />
       <Route path={routes.adminListings} element={<AdminListingsPage />} />

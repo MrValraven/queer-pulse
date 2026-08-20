@@ -19,6 +19,23 @@ interface SendingDeps {
   sendMessage: ReturnType<typeof useSendMessage>;
 }
 
+/** The two media send kinds — a picked provider GIF or a member-uploaded
+ *  image — both carry a `GifAttachment` (see that type's own doc) and both
+ *  render identically in the bubble; only this tag (and the DTO/DB kind it
+ *  becomes) tells them apart. */
+export type MediaKind = "gif" | "image";
+
+/** `ChatMessage.kind` → the `MediaKind` its attachment was sent as, or
+ *  undefined for a plain text/system message. Used by `retrySend`/the outbox
+ *  replay loop to resend a media message as the SAME kind it was, rather than
+ *  re-deriving it from "an attachment is present" (which can't distinguish
+ *  gif from image). */
+function mediaKindOf(message: ChatMessage): MediaKind | undefined {
+  return message.kind === "gif" || message.kind === "image"
+    ? message.kind
+    : undefined;
+}
+
 export interface MessageSending {
   /** Sends `body` as a new message in the open thread. The composer OWNS the
    *  draft text and passes its current value here on submit — the controller
@@ -27,7 +44,10 @@ export interface MessageSending {
   retrySend: (message: ChatMessage) => void;
   /** Append an optimistic bubble to a conversation's session sends. */
   appendOptimistic: (convId: string, message: ChatMessage) => void;
-  /** Drive a message down the send ladder (demo-simulated, or the live mutation). */
+  /** Drive a message down the send ladder (demo-simulated, or the live
+   *  mutation). `mediaKind` is required whenever `attachment` is set — it's
+   *  what tells the server (and a resend/outbox-replay) a `gif` message from
+   *  an `image` one; both carry the same `GifAttachment` shape. */
   deliver: (
     convId: string,
     body: string,
@@ -35,9 +55,17 @@ export interface MessageSending {
     replyToId?: string,
     forwarded?: boolean,
     attachment?: GifAttachment,
+    mediaKind?: MediaKind,
   ) => void;
   /** Send a GIF as its own message, through the same pipeline as `send()`. */
   sendGif: (attachment: GifAttachment) => void;
+  /** Send an uploaded image as its own message. `attachment` is the SEND
+   *  payload (its `url`/`previewUrl` are the private storage key the upload
+   *  minted); `localAttachment`, when given, is what the OPTIMISTIC bubble
+   *  renders instead — the upload's local blob preview, immediately
+   *  paintable, since the storage key alone isn't a fetchable URL until the
+   *  server round-trip resolves it. */
+  sendImage: (attachment: GifAttachment, localAttachment?: GifAttachment) => void;
 }
 
 /**
@@ -104,6 +132,7 @@ export function useMessageSending({
       replyToId?: string,
       forwarded?: boolean,
       attachment?: GifAttachment,
+      mediaKind?: MediaKind,
     ) => {
       if (demoMode) {
         // Simulate the honest ladder locally — no network. sent → delivered → seen
@@ -126,7 +155,7 @@ export function useMessageSending({
           clientMessageId: localId,
           forwarded,
           attachment,
-          kind: attachment ? "gif" : undefined,
+          kind: attachment ? mediaKind : undefined,
         },
         {
           // Drop only THIS optimistic message (matched by localId) — a concurrent
@@ -209,7 +238,49 @@ export function useMessageSending({
       });
       const replyToId = replyDraft?.id;
       setReplyDraft(null);
-      deliver(convId, "GIF", localId, replyToId, false, attachment);
+      deliver(convId, "GIF", localId, replyToId, false, attachment, "gif");
+    },
+    [
+      activeBlocked,
+      active,
+      currentReplyPreview,
+      appendOptimistic,
+      t,
+      replyDraft,
+      setReplyDraft,
+      deliver,
+    ],
+  );
+
+  /** Send an uploaded image as its own message — the same optimistic →
+   *  idempotent → outbox path as `sendGif`, with one twist: the OPTIMISTIC
+   *  bubble renders `localAttachment` (the upload's local blob preview,
+   *  paintable instantly) while `deliver` sends `attachment` (the private
+   *  storage key) to the server. Falls back to `attachment` itself for both
+   *  if no separate local preview was given. */
+  const sendImage = useCallback(
+    (attachment: GifAttachment, localAttachment?: GifAttachment) => {
+      if (activeBlocked || !active) return;
+      const convId = active.id;
+      const localId = nextLocalId();
+      const replyTo = currentReplyPreview();
+      const fallbackText = t("messages:attachments.fallbackText");
+      appendOptimistic(convId, {
+        from: "me",
+        text: fallbackText,
+        kind: "image",
+        // Render the local blob preview (paintable now); resend the real
+        // storage key (`sendAttachment`) if this ever needs a retry/replay.
+        attachment: localAttachment ?? attachment,
+        sendAttachment: attachment,
+        time: t("messages:time.justNow"),
+        status: "sending",
+        localId,
+        replyTo,
+      });
+      const replyToId = replyDraft?.id;
+      setReplyDraft(null);
+      deliver(convId, fallbackText, localId, replyToId, false, attachment, "image");
     },
     [
       activeBlocked,
@@ -233,7 +304,11 @@ export function useMessageSending({
         message.localId,
         message.replyTo?.id,
         message.forwarded,
-        message.attachment,
+        // Resend the real payload (`sendAttachment`, an image's storage key)
+        // when present — `attachment` alone may be the local blob preview,
+        // which the server can't validate/store.
+        message.sendAttachment ?? message.attachment,
+        mediaKindOf(message),
       );
     },
     [active, setStatus, deliver],
@@ -278,7 +353,9 @@ export function useMessageSending({
             message.localId,
             message.replyTo?.id,
             message.forwarded,
-            message.attachment,
+            // Same real-payload preference as `retrySend` above.
+            message.sendAttachment ?? message.attachment,
+            mediaKindOf(message),
           );
         }
       }
@@ -315,5 +392,5 @@ export function useMessageSending({
     wasConnectedRef.current = connected;
   }, [connected, demoMode, replayOutbox]);
 
-  return { send, retrySend, appendOptimistic, deliver, sendGif };
+  return { send, retrySend, appendOptimistic, deliver, sendGif, sendImage };
 }

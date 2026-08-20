@@ -5,7 +5,19 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { WAITLIST } from "./gatheringDashboard.data";
 import styles from "./GatheringDashboardPage.module.css";
 
-/** Collapsible waitlist section inside the guest-list card, with promote-to-list. */
+/**
+ * Collapsible waitlist section inside the guest-list card, with
+ * promote-to-list.
+ *
+ * This only renders inside `GatheringDashboardPage`, the day-of check-in
+ * dashboard, which has no live counterpart at all yet (no `:slug`/`useEvent`
+ * wiring, static `INITIAL_GUESTS` throughout) — mirrors `ManageGatheringPage`'s
+ * "message attendees" precedent: a real promote-to-going endpoint now exists
+ * (`RsvpService.promoteAttendee`, wired live in `ManageAttendeesTab`'s own
+ * waitlist section), but this specific button stays demo-only rather than
+ * fake a live effect from a page that has no real guest list to promote
+ * within. Building a live day-of dashboard is a separate, larger pass.
+ */
 export function GuestWaitlist() {
   const { t } = useTranslation();
   const { showToast } = useToast();

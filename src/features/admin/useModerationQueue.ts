@@ -1,19 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useAuth } from "../../app/providers/authContext";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ModReport, Appeal } from "./adminModeration.data";
 import { useModReports } from "./api/useModReports";
 import { useModAction, useModBulkAction } from "./api/useModAction";
+import { useReportAssignment } from "./api/useReportAssignment";
 import { useReviewAppeal } from "./api/useReviewAppeal";
 import type { ModActionCode } from "./api/moderation.api";
 import type { ReasonCode } from "../safety/reportReasons";
 
 export type TabId = "open" | "appeals" | "resolved";
 export type FilterId = "all" | "emergencies" | "mine";
-
-/** Reports notionally assigned to the signed-in moderator (for "Assigned to me"). */
-const MINE = new Set(["r-emerg-1", "r-harass", "r-offtopic"]);
 
 /** Drawer action id (MOD_ACTIONS) → server action code (spec 04 action set). */
 const ACTION_CODE: Record<string, ModActionCode> = {
@@ -39,11 +38,19 @@ export interface ResolveOpts {
   reasonCode?: ReasonCode;
   /** The member-facing note — the reason the member reads. */
   note?: string;
+  /** e.g. "7d" — required by the backend for `restrict` (always time-boxed). */
+  duration?: string;
 }
 
 /** Canonical bulk-verb id — never displayed directly. Resolve its label via
  *  `t(`admin:moderation.queue.bulkVerb.${verb}`)`. */
-export type BulkVerb = "dismissed" | "removedAsSpam" | "reassigned";
+export type BulkVerb =
+  | "dismissed"
+  | "removedAsSpam"
+  | "reassigned"
+  | "warned"
+  | "suspended"
+  | "banned";
 
 // Slightly longer than the action-toast's 5200ms undo window (ToastProvider),
 // so the moderator has the full toast lifetime to click Undo before it sends.
@@ -109,12 +116,17 @@ function useDeferredCommits() {
  */
 export function useModerationQueue() {
   const { t } = useTranslation();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const deepLink = searchParams.get("tab");
-  const { data, isLoading, isError, refetch } = useModReports();
+  // Deep-link from a flagged Trust Network node (ADM-8) or a report's
+  // "prior reports" chip (COM-6): narrows the queue to one subject.
+  const subjectId = searchParams.get("subjectId") ?? undefined;
+  const { user } = useAuth();
+  const { data, isLoading, isError, refetch } = useModReports(subjectId);
   const modAction = useModAction();
   const modBulk = useModBulkAction();
   const reviewAppeal = useReviewAppeal();
+  const reportAssignment = useReportAssignment();
 
   const [tab, setTab] = useState<TabId>(
     deepLink === "appeals"
@@ -181,7 +193,8 @@ export function useModerationQueue() {
 
   const matchesFilter = (r: ModReport) => {
     if (filter === "emergencies") return r.severity === "emergency";
-    if (filter === "mine") return MINE.has(r.id);
+    if (filter === "mine")
+      return user != null && r.assignedModeratorId === user.id;
     return true;
   };
 
@@ -242,6 +255,7 @@ export function useModerationQueue() {
           action: ACTION_CODE[opts.action ?? "dismiss"] ?? "dismiss",
           reasonCode: opts.reasonCode ?? "other",
           note: opts.note ?? "",
+          duration: opts.duration,
         },
         {
           // Committed: the server now agrees the row is gone (a resolved report
@@ -284,7 +298,11 @@ export function useModerationQueue() {
       return next;
     });
 
-  const bulkAct = (verb: BulkVerb, action: ModActionCode = "dismiss") => {
+  const bulkAct = (
+    verb: BulkVerb,
+    action: ModActionCode = "dismiss",
+    duration?: string,
+  ) => {
     const ids = [...picked];
     if (ids.length === 0) return;
     const snapshot = open;
@@ -295,10 +313,33 @@ export function useModerationQueue() {
     // waits out the undo window and is cancelled outright if Undo is clicked.
     const handle = scheduleCommit(() =>
       modBulk.mutate(
-        { ids, action, reasonCode: "other" },
+        { ids, action, reasonCode: "other", duration },
         {
-          onSuccess: () =>
-            ids.forEach((id) => pendingOpenRemoval.current.delete(id)),
+          // Continue-on-error (P0-16): the backend never throws for a partial
+          // batch, so a failure here means EVERY report failed rather than
+          // being thrown outright — `data.failed` is how a partial batch
+          // surfaces. Either way, only `data.updated` actually resolved
+          // server-side, so the failed ids must come back into view rather
+          // than staying optimistically removed.
+          onSuccess: (data) => {
+            ids.forEach((id) => pendingOpenRemoval.current.delete(id));
+            if (data.failed.length > 0) {
+              const reasons = [
+                ...new Set(data.failed.map((failure) => failure.reason)),
+              ]
+                .slice(0, 2)
+                .join("; ");
+              showToast(
+                t("admin:moderation.queue.bulkPartialToast", {
+                  succeededCount: data.updated.length,
+                  failedCount: data.failed.length,
+                  reasons,
+                }),
+                "error",
+              );
+              void refetch();
+            }
+          },
           onError: () => {
             ids.forEach((id) => pendingOpenRemoval.current.delete(id));
             showToast(t("admin:moderation.queue.serviceErrorToast"), "error");
@@ -319,6 +360,49 @@ export function useModerationQueue() {
         setOpen(snapshot);
       },
       t("admin:moderation.queue.bulkRestoredToast"),
+    );
+  };
+
+  /** Patches a report's assignee fields in every place it's held locally, so
+   *  the drawer and the "Assigned to me" filter reflect the claim/release
+   *  immediately without waiting on a refetch. */
+  const patchAssignment = (
+    id: string,
+    assignedModeratorId: string | null,
+    assignedModeratorName: string | undefined,
+  ) => {
+    const apply = (r: ModReport): ModReport =>
+      r.id === id ? { ...r, assignedModeratorId, assignedModeratorName } : r;
+    setOpen((current) => current.map(apply));
+    setSelected((current) => (current ? apply(current) : current));
+  };
+
+  /** Self-assign (COM-5) — claims a report for the signed-in moderator. */
+  const assignToMe = (report: ModReport) => {
+    reportAssignment.mutate(
+      { id: report.id, assign: true },
+      {
+        onSuccess: (result) =>
+          patchAssignment(
+            report.id,
+            result.assignedModeratorId,
+            result.assignedModeratorName,
+          ),
+        onError: () =>
+          showToast(t("admin:moderation.queue.serviceErrorToast"), "error"),
+      },
+    );
+  };
+
+  /** Releases a report the signed-in moderator had claimed. */
+  const unassignReport = (report: ModReport) => {
+    reportAssignment.mutate(
+      { id: report.id, assign: false },
+      {
+        onSuccess: () => patchAssignment(report.id, null, undefined),
+        onError: () =>
+          showToast(t("admin:moderation.queue.serviceErrorToast"), "error"),
+      },
     );
   };
 
@@ -370,11 +454,33 @@ export function useModerationQueue() {
     );
   };
 
+  const clearSubjectFilter = () =>
+    setSearchParams((previous) => {
+      const next = new URLSearchParams(previous);
+      next.delete("subjectId");
+      return next;
+    });
+
+  /** The "prior reports" chip's click-through (COM-6): narrows the queue to
+   *  every other report about this exact subject, via the `?subjectId=`
+   *  deep-link `useModReports` already understands. Closes the drawer first
+   *  (if open) so the filtered list is what the moderator lands on. */
+  const viewSubjectHistory = (report: ModReport) => {
+    setSelected(null);
+    setSearchParams((previous) => {
+      const next = new URLSearchParams(previous);
+      next.set("subjectId", report.subjectId);
+      return next;
+    });
+  };
+
   return {
     tab,
     setTab,
     filter,
     setFilter,
+    subjectId,
+    clearSubjectFilter,
     open,
     appeals,
     resolved: data?.resolved ?? [], // read-only: resolved rows carry no actions
@@ -395,11 +501,15 @@ export function useModerationQueue() {
     isError,
     refetch: () => void refetch(),
     showToast,
+    currentUserId: user?.id,
     replayOpen,
     resolveReport,
     openReport,
     togglePick,
     bulkAct,
+    assignToMe,
+    unassignReport,
+    viewSubjectHistory,
     recordAppeal,
     resetAppeals: () => dataAppeals && setAppeals(dataAppeals),
     clearPicked: () => setPicked(new Set()),

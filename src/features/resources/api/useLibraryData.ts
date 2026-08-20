@@ -25,14 +25,18 @@ interface LibraryPageVM {
 }
 
 /**
- * Data source for the Guide Library (`LibraryPage`), paginated in live mode.
+ * Data source for the Guide Library — the canonical, nav-linked
+ * `marketing/ResourceLibraryPage` (CNT-11 consolidated the resources
+ * feature's old static-mock `LibraryPage` onto this same real, backend-driven
+ * source; the old `/resources/library` route now redirects here), paginated
+ * in live mode.
  *
  * Demo mode returns the page's own `GUIDES` mock as a single page with
  * `hasNextPage` hard-false — so demo never paginates and renders exactly as
  * before. The mock is code-split out of the live bundle via a demo-gated
  * dynamic `import()` inside the query function, so `GUIDES` only loads when
- * demo mode actually asks for it; `LibraryPage` already renders a loading
- * state (`useSimulatedLoad() || dataLoading`), so the extra tick is invisible.
+ * demo mode actually asks for it; the page already renders a loading state
+ * (`useSimulatedLoad() || dataLoading`), so the extra tick is invisible.
  *
  * Live mode calls GET /resources?page= and appends each page, stopping at the
  * server `total`, so a library larger than one page is fully reachable via

@@ -1,7 +1,12 @@
 import { memberName } from "../members/data/members";
 import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction, TranslateOptions } from "../../shared/i18n/types";
-import type { EventVisibility } from "./api/events.api";
+import type {
+  EventHostDTO,
+  EventSeriesDTO,
+  EventVisibility,
+  RsvpDetailsDTO,
+} from "./api/events.api";
 
 /**
  * The "spots" line on an event card — "8 seats left", "32 going", "Open to all".
@@ -98,6 +103,35 @@ export interface GatheringDetail {
   /** Live mode only: the linked listing's display name + public slug, when
    *  `venueListingId` is set. Absent/null otherwise. */
   venueListing?: { slug: string; name: string } | null;
+  /** Live mode only: the gathering's accepted co-hosts, so the manage
+   *  dashboard's Settings tab can show who's co-hosting without a second
+   *  request. Absent in the demo registry, where `CohostManager` keeps its
+   *  own seeded mock roster. */
+  cohosts?: EventHostDTO[];
+  /** Live mode only: the viewer's own RSVP details ("Anything we should
+   *  know?"), or `null` with no active RSVP. Seeds `RsvpDetailsModal` on
+   *  open. Absent in the demo registry, where the modal keeps its own local
+   *  starting state. */
+  myRsvpDetails?: RsvpDetailsDTO | null;
+  /** Live mode only: the manage dashboard's "Options" toggles' real current
+   *  values (`SettingsTab`). Absent in the demo registry, where the tab
+   *  keeps its own local-only starting state (`GATHERING_SETTINGS.on`). */
+  showAttendeeCount?: boolean;
+  allowWaitlist?: boolean;
+  /** Live mode only (MSG-10): the recurring series this gathering belongs
+   *  to, or `null`/absent for a standalone gathering. Drives the manage
+   *  dashboard's this-vs-future edit/cancel prompt. Absent in the demo
+   *  registry — no demo gathering is part of a series. */
+  series?: EventSeriesDTO | null;
+  /** Live mode only (MSG-12): a small pre-RSVP "who else is going" preview,
+   *  already privacy- and block-filtered server-side — see
+   *  `EventsService.buildGoingAttendeesPreview` (backend). Absent in the demo
+   *  registry; `GoingAttendeesPreview` derives its own small preview from the
+   *  member registry there instead, keyed off `spots.values.count`. */
+  goingAttendeesPreview?: EventHostDTO[];
+  /** The filtered total behind `goingAttendeesPreview` (NOT the raw
+   *  `spots`/`goingCount` number) — drives the "+N more" line. */
+  goingAttendeesPreviewTotal?: number;
 }
 
 export const gatheringDetails: Record<string, GatheringDetail> = {

@@ -5,6 +5,7 @@ import {
   fileDraft as sendFileDraft,
   submitPitch as sendSubmitPitch,
   updateMyByline as sendUpdateMyByline,
+  type FileDraftBody,
   type SubmitWriterPitchDto,
   type UpdateWriterBylineDto,
   type WriterAssignmentDto,
@@ -61,14 +62,21 @@ export function useWriterMutations() {
     onSuccess: invalidateWorkspace,
   });
 
-  /** POST /magazine/writer/pieces/:id/file — file a draft for review. */
-  const fileDraft = useMutation<WriterAssignmentDto | null, Error, string>({
-    mutationFn: async (pieceId) => {
+  /** POST /magazine/writer/pieces/:id/file — file a draft for review.
+   *  `body.blocks`, when present, is a whole pasted draft already converted
+   *  to paragraph blocks (`FileDraftModal`'s data-loss fix) — appended
+   *  server-side to the article draft before the piece advances stage. */
+  const fileDraft = useMutation<
+    WriterAssignmentDto | null,
+    Error,
+    { pieceId: string; body?: FileDraftBody }
+  >({
+    mutationFn: async ({ pieceId, body }) => {
       if (demoMode) {
         showToast("Draft filed", "success");
         return null;
       }
-      return sendFileDraft(pieceId);
+      return sendFileDraft(pieceId, body);
     },
     onSuccess: invalidateWorkspace,
   });

@@ -42,12 +42,6 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         to: routes.vouch,
       },
       {
-        id: "pending-review",
-        title: "Pending review",
-        description: "See the holding screen shown while a new application is being reviewed by the community.",
-        to: routes.pendingReview,
-      },
-      {
         id: "invite-expired",
         title: "Invite expired",
         description: "Preview the dead-end someone hits when they open an invitation link that has already expired.",

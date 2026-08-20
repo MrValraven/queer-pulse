@@ -22,6 +22,10 @@ export const TONE: Record<AvatarTone, ToneInk> = {
 
 export interface VouchPerson {
   id: string;
+  /** The member's real account id — distinct from `id` (the profile slug
+   *  used as this graph's node key). Needed for an account-level admin
+   *  action against this node (e.g. verify). */
+  userId: string;
   name: string;
   pronoun: string;
   initials: string;

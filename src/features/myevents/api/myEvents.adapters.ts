@@ -2,12 +2,19 @@ import type {
   EventCardDTO,
   EventFilter,
   EventInviteDTO,
+  EventSeriesDTO,
+  RecurrenceCadence,
 } from "../../gatherings/api/events.api";
 import { formatNotification } from "../../notifications/api/formatNotification";
 import type { NotificationDTO } from "../../notifications/api/notifications.api";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
-import type { EventCategory, MyEvent, Notif } from "../myEvents.types";
+import type {
+  EventCategory,
+  EventSeries,
+  MyEvent,
+  Notif,
+} from "../myEvents.types";
 
 // Map each backend DTO onto the EXISTING mock view-model type (`MyEvent`) the
 // dashboard already renders and mutates locally. Fields the prototype invents
@@ -56,16 +63,19 @@ const CATEGORY_MERGE_PRIORITY: EventFilter[] = [
 
 /** Merge one `GET /events?filter=…` page per `LIVE_FILTERS` entry into a single
  *  `MyEvent[]`, collapsing any event slug that appears under more than one
- *  filter down to its highest-priority category (see `CATEGORY_MERGE_PRIORITY`). */
+ *  filter down to its highest-priority category (see `CATEGORY_MERGE_PRIORITY`).
+ *  `t` renders each card's recurring-series line (MSG-16) — see
+ *  `toMyEventSeries` below. */
 export function mergeEventPages(
   pages: { items: EventCardDTO[] }[],
   filters: EventFilter[],
+  t: TFunction,
 ): MyEvent[] {
   const byId = new Map<string, MyEvent>();
   pages.forEach((page, filterIndex) => {
     const filter = filters[filterIndex]!;
     for (const dto of page.items) {
-      const event = eventCardToMyEvent(dto, filter);
+      const event = eventCardToMyEvent(dto, filter, t);
       const existing = byId.get(event.id);
       if (
         !existing ||
@@ -79,10 +89,42 @@ export function mergeEventPages(
   return [...byId.values()];
 }
 
+// MSG-16 — cadence → the `SeriesLine`/`SeriesScopeModal` label (myevents),
+// live counterpart of the demo mock's hand-authored `EventSeries.label`.
+const CADENCE_LABEL_KEYS: Record<RecurrenceCadence, string> = {
+  weekly: "myevents:series.cadenceWeekly",
+  biweekly: "myevents:series.cadenceBiweekly",
+  monthly: "myevents:series.cadenceMonthly",
+};
+
+/**
+ * A live event's `EventSummary.series` (backend) → the dashboard's existing
+ * `MyEvent.series` view-model (MSG-16) — the same shape the demo mock always
+ * used (`myEvents.mock.ts`), now populated for real instead of only in demo.
+ * `dates` (a formatted upcoming-dates list) stays demo-only: the card DTO
+ * carries only this event's own position/cadence, not its siblings'
+ * schedules, so `SeriesLine`'s click-toast falls back to the position
+ * summary (`more`) in live mode — see `EventCardExtras.tsx`.
+ */
+function toMyEventSeries(
+  series: EventSeriesDTO | null | undefined,
+  t: TFunction,
+): EventSeries | undefined {
+  if (!series) return undefined;
+  return {
+    label: t(CADENCE_LABEL_KEYS[series.cadence]),
+    more: t("myevents:series.position", {
+      position: series.index + 1,
+      total: series.occurrenceCount,
+    }),
+  };
+}
+
 /** GET /events card (already bucketed server-side by `filter`) → `MyEvent`. */
 export function eventCardToMyEvent(
   dto: EventCardDTO,
   filter: EventFilter,
+  t: TFunction,
 ): MyEvent {
   const { date, time } = splitIso(dto.startAt);
   const end = dto.endAt ? splitIso(dto.endAt).time : undefined;
@@ -96,6 +138,10 @@ export function eventCardToMyEvent(
     end,
     venue: dto.isOnline ? "Online" : (dto.venue ?? dto.neighbourhood ?? ""),
     community: dto.org,
+    hostSlug: dto.host?.slug,
+    hostName: dto.host
+      ? `${dto.host.firstName} ${dto.host.lastName}`.trim()
+      : undefined,
     going: dto.goingCount ?? 0,
     waitlist: dto.waitlistCount,
     online: dto.isOnline,
@@ -108,6 +154,7 @@ export function eventCardToMyEvent(
         ? dto.goingCount >= dto.capacity
         : undefined,
     maybe: dto.myRsvp === "maybe",
+    series: toMyEventSeries(dto.series, t),
   };
 }
 

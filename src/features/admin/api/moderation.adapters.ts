@@ -103,6 +103,8 @@ export function modReportDtoToView(dto: ModReportDTO): ModReport {
   ];
   const view: ModReport = {
     id: dto.id,
+    subjectType: dto.subjectType,
+    subjectId: dto.subjectId,
     severity,
     category,
     chips,
@@ -113,6 +115,9 @@ export function modReportDtoToView(dto: ModReportDTO): ModReport {
     community: dto.community ?? undefined,
     age: ageOf(dto.createdAt),
     risk: RISK[dto.severity],
+    slaDueAt: dto.slaDueAt,
+    assignedModeratorId: dto.assignedModeratorId ?? null,
+    assignedModeratorName: dto.assignedModeratorName,
   };
   const prior = priorLine(dto.reported.priorReports);
   if (prior) view.priorReports = prior;
@@ -158,6 +163,7 @@ export function appealDtoToView(dto: AppealDTO): Appeal {
   const severity = dto.severity;
   return {
     id: dto.id,
+    reportId: dto.reportId || undefined,
     severity,
     chips: [
       {

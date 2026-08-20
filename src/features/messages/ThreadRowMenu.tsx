@@ -6,7 +6,7 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from "react";
-import { FiHeart, FiMoreHorizontal, FiTrash2 } from "react-icons/fi";
+import { FiBell, FiBellOff, FiHeart, FiMoreHorizontal, FiTrash2 } from "react-icons/fi";
 import { TbPin, TbPinnedFilled } from "react-icons/tb";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Conversation } from "./data";
@@ -28,14 +28,16 @@ export function ThreadRowMenu({
   thread,
   onTogglePin,
   onToggleFavorite,
+  onToggleMute,
   onDelete,
 }: {
-  /** Carries this row's own pinned/favorite state — the cap check itself lives
-   *  in `useTogglePin` (the caller computes and passes the pinned count into
-   *  its `mutate()` call, not through this component). */
+  /** Carries this row's own pinned/favorite/muted state — the pin cap check
+   *  itself lives in `useTogglePin` (the caller computes and passes the
+   *  pinned count into its `mutate()` call, not through this component). */
   thread: Conversation;
   onTogglePin: () => void;
   onToggleFavorite: () => void;
+  onToggleMute: () => void;
   /** Opens the delete-confirmation flow for this conversation. */
   onDelete: () => void;
 }) {
@@ -47,6 +49,7 @@ export function ThreadRowMenu({
 
   const isPinned = !!thread.pinnedAt;
   const isFavorite = !!thread.favorite;
+  const isMuted = !!thread.muted;
 
   const items: MenuItemDef[] = useMemo(
     () => [
@@ -67,6 +70,14 @@ export function ThreadRowMenu({
         onSelect: onToggleFavorite,
       },
       {
+        key: "mute",
+        label: isMuted
+          ? t("messages:thread.unmuteChat")
+          : t("messages:thread.muteChat"),
+        icon: isMuted ? <FiBellOff aria-hidden /> : <FiBell aria-hidden />,
+        onSelect: onToggleMute,
+      },
+      {
         key: "delete",
         label: t("messages:thread.deleteChat"),
         icon: <FiTrash2 aria-hidden />,
@@ -74,7 +85,16 @@ export function ThreadRowMenu({
         danger: true,
       },
     ],
-    [isPinned, isFavorite, onTogglePin, onToggleFavorite, onDelete, t],
+    [
+      isPinned,
+      isFavorite,
+      isMuted,
+      onTogglePin,
+      onToggleFavorite,
+      onToggleMute,
+      onDelete,
+      t,
+    ],
   );
 
   useEffect(() => {

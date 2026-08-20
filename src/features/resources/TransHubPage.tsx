@@ -146,7 +146,7 @@ export function TransHubPage() {
                 </span>
                 <div className={styles.resTitle}>{t(res.titleKey)}</div>
                 <div className={styles.resDesc}>{t(res.descriptionKey)}</div>
-                <Link to={routes.library} className={styles.rightLink}>
+                <Link to={routes.resources} className={styles.rightLink}>
                   {t("resources:transHub.resources.openCta")}{" "}
                   <FiArrowRight aria-hidden />
                 </Link>

@@ -7,6 +7,7 @@ import {
   freezeAdminCommunity,
   reassignAdminCommunityOwner,
   removeAdminCommunityMember,
+  unarchiveAdminCommunity,
   unfreezeAdminCommunity,
 } from "./adminCommunities.api";
 import {
@@ -16,22 +17,25 @@ import {
 import { useDemoAwareMutation } from "./demoAwareMutation";
 
 /**
- * The five moderation-of-last-resort actions on `AdminCommunityDetail`'s
- * Settings tab — freeze/unfreeze, archive, reassign owner, remove member.
+ * The moderation-of-last-resort actions on `AdminCommunityDetail`'s Settings
+ * tab — freeze/unfreeze, archive/unarchive, reassign owner, remove member.
  * Each bypasses the community's own owner/mod authorization on purpose (see
  * `AdminCommunitiesController`'s doc on the backend); they exist for the case
  * a community's own leadership can't be reached or trusted.
  *
- * All five follow `useUpdateAdminCommunity`'s dual-mode shape
+ * All of them follow `useUpdateAdminCommunity`'s dual-mode shape
  * (`useDemoAwareMutation`): live PATCHes/POSTs/DELETEs the real endpoint and
  * invalidates the cached detail so the pane re-renders from authoritative
  * state; demo never touches the network. Freeze/unfreeze also optimistically
  * patch the cached `frozen` flag (both modes) so the toggle never lags the
- * tap, mirroring `useUpdateAdminCommunity`'s toggle rows exactly. Archive,
- * reassign-owner and remove-member have no equivalent single boolean to flip
- * client-side, so — like this codebase's existing `ArchiveConfirmModal`/
- * `TransferOwnershipModal` (`ModPanelDangerModals.tsx`) — their demo path is
- * a confirmed no-op: a toast, but the fixture visibly stays put.
+ * tap, mirroring `useUpdateAdminCommunity`'s toggle rows exactly.
+ * Archive/unarchive, reassign-owner and remove-member have no equivalent
+ * single boolean to flip client-side ahead of the round trip (archive/
+ * unarchive's `archived` flag only exists on the detail DTO, not the card
+ * used to seed the cache), so — like this codebase's existing
+ * `ArchiveConfirmModal`/`TransferOwnershipModal` (`ModPanelDangerModals.tsx`)
+ * — their demo path is a confirmed no-op: a toast, but the fixture visibly
+ * stays put.
  */
 
 interface AdminCommunitySlugVars {
@@ -115,10 +119,12 @@ export function useUnfreezeAdminCommunity() {
   );
 }
 
-/** `POST /admin/communities/:slug/archive` — one-way, admin override of the
- *  owner-only member-facing archive. No client-visible field flips (the DTO
- *  carries no `archived`/`archivedAt`), so this is a confirm-and-invalidate
- *  action rather than an optimistic toggle. */
+/** `POST /admin/communities/:slug/archive` — admin override of the
+ *  owner-only member-facing archive, reversible via
+ *  {@link useUnarchiveAdminCommunity} (COM-18). This is a
+ *  confirm-and-invalidate action rather than an optimistic toggle: the
+ *  card-level DTO carries no `archived` flag, only the detail one does, so
+ *  there's nothing cheap to patch client-side ahead of the round trip. */
 export function useArchiveAdminCommunity() {
   const { demoMode } = useDemoMode();
   const { language } = useTranslation();
@@ -131,6 +137,32 @@ export function useArchiveAdminCommunity() {
     demoResult: () => undefined,
     live: async ({ slug }) => {
       await archiveAdminCommunity(slug);
+    },
+    onLiveSuccess: (_data, { slug }) => {
+      void queryClient.invalidateQueries({
+        queryKey: adminCommunityDetailQueryKey(slug, demoMode, language),
+      });
+    },
+  });
+}
+
+/** `POST /admin/communities/:slug/unarchive` — the reverse of
+ *  {@link useArchiveAdminCommunity} (COM-18: archiving a community used to be
+ *  a one-way door, even for admins). Same confirm-and-invalidate shape as
+ *  archive — no optimistic patch, since the card-level DTO carries no
+ *  `archived` flag to flip ahead of the round trip. */
+export function useUnarchiveAdminCommunity() {
+  const { demoMode } = useDemoMode();
+  const { language } = useTranslation();
+  const queryClient = useQueryClient();
+
+  return useDemoAwareMutation<void, Error, AdminCommunitySlugVars>({
+    demoMode,
+    logLabel: "admin.community.unarchive",
+    logContext: ({ slug }) => ({ slug }),
+    demoResult: () => undefined,
+    live: async ({ slug }) => {
+      await unarchiveAdminCommunity(slug);
     },
     onLiveSuccess: (_data, { slug }) => {
       void queryClient.invalidateQueries({

@@ -18,6 +18,8 @@ export interface ResourceResponseDTO {
   /** Card-footer chip, e.g. "Guide · 12 min · PT / EN". Null on unauthored rows. */
   meta: string | null;
   externalUrl: string | null;
+  /** ISO timestamp of the last editorial verification, or null if never verified. */
+  lastVerifiedAt: string | null;
 }
 
 export interface Paginated<T> {

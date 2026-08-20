@@ -84,7 +84,11 @@ export const perkGroups: PerkGroup[] = [
       {
         category: "Community",
         title: "Vouch access",
-        description: "The ability to vouch for new members on the waitlist. You've used this perk. It's now permanently part of your account.",
+        // Matches the backend catalog: vouching has no level gate — every
+        // active member already has this from day one (COM-15). Kept in the
+        // "claimed" demo state purely to showcase that UI variant; the copy
+        // itself no longer claims a Level 3 unlock that never existed.
+        description: "The ability to vouch for other members — a trust signal that helps them stand out. Available to every active member from day one, no level required.",
         state: "claimed",
         footer: { type: "claimed", date: "Claimed 14 Feb 2026" },
       },

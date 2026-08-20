@@ -14,7 +14,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useUpdateProfile } from "../members/api/useUpdateProfile";
 import { getProfile } from "../members/api/members.api";
 import { INTENTS } from "./onboardingPage.data";
-import { type StepProps } from "./OnboardingStepChrome";
+import { SkipLink, type StepProps } from "./OnboardingStepChrome";
 import styles from "./OnboardingPage.module.css";
 
 export function StepIntents(props: StepProps) {
@@ -109,6 +109,10 @@ function StepIntentsForm({
         >
           {t("auth:onboarding.stepIntents.continue")}
         </Button>
+        <SkipLink
+          onSkip={onNext}
+          label={t("auth:onboarding.stepIntents.skip")}
+        />
         <button type="button" className={styles.back} onClick={onBack}>
           <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepIntents.back")}
         </button>

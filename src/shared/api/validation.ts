@@ -250,6 +250,7 @@ const SEARCH_RESULT_TYPES = [
   "resource",
   "workshop",
   "subprofile",
+  "topic",
 ] as const;
 
 /**

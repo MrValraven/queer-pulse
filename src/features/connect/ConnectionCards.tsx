@@ -10,6 +10,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useStaffMap } from "../../shared/staff/useStaffRole";
 import { useConnectionActions } from "./api/useConnectionActions";
 import { reasonLabel } from "./connectModal.data";
+import { ConnectionReportModal } from "./ConnectionReportModal";
 import {
   profilePath,
   vouchBadgeLabelKey,
@@ -42,6 +43,7 @@ function ConnectionMoreMenu({
   const { showToast } = useToast();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  const [reporting, setReporting] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const first = name.split(" ")[0]!;
 
@@ -107,11 +109,7 @@ function ConnectionMoreMenu({
       label: t("connect:moreMenu.report"),
       icon: <FiFlag />,
       danger: true,
-      run: () =>
-        showToast(
-          t("connect:moreMenu.toastReportSent", { name: first }),
-          "info",
-        ),
+      run: () => setReporting(true),
     },
   ];
 
@@ -147,6 +145,13 @@ function ConnectionMoreMenu({
             </button>
           ))}
         </div>
+      )}
+      {reporting && (
+        <ConnectionReportModal
+          subjectId={slug}
+          name={name}
+          onClose={() => setReporting(false)}
+        />
       )}
     </div>
   );

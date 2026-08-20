@@ -193,6 +193,18 @@ const ADMIN_PATTERNS: string[] = ["/admin", "/admin/*"];
 const MOD_PATTERNS: string[] = ["/mod/*"];
 
 /**
+ * Admin-prefixed surfaces whose backend controller authorizes Moderators as
+ * well as Admins (e.g. `@Roles(Moderator, Admin)` on `moderation.controller.ts`
+ * for the report queue). Checked before the blanket `/admin/*` admin-only match
+ * in `requiredRole` so these specific routes downgrade to the same "mod" tier
+ * as `/mod/*`, while the rest of the admin console stays admin-only.
+ */
+const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
+  routes.adminModeration,
+  `${routes.adminModeration}/*`,
+];
+
+/**
  * Capability-gated surfaces: closed to the ordinary member tier regardless of
  * `role`, and opened by holding the matching additive staff-role grant (or by
  * being an admin, a superset — see the `role !== "admin"` short-circuit in
@@ -232,6 +244,7 @@ function safeNext(next: string | null): string {
 
 /** The role a path demands, or null when logged-in access is sufficient. */
 export function requiredRole(pathname: string): "admin" | "mod" | null {
+  if (matchesAny(pathname, MOD_ACCESSIBLE_ADMIN_PATTERNS)) return "mod";
   if (matchesAny(pathname, ADMIN_PATTERNS)) return "admin";
   if (matchesAny(pathname, MOD_PATTERNS)) return "mod";
   return null;

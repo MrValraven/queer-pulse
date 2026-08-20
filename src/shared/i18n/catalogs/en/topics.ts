@@ -74,4 +74,24 @@ export const topics: Catalog = {
   "notFound.description":
     "We couldn't find a topic for that tag. It may have been renamed or removed. Head back to the forum to find where the conversation moved.",
   "notFound.backCta": "Back to the forum",
+
+  // DISC-4 — the topics directory (`/topics`, `TopicsDirectoryPage`), listing
+  // every topic with a follow toggle. Page chrome only; each topic's own
+  // `label`/`description` are content (live: `GET /topics`) and stay
+  // untranslated, same scope rule as the rest of this catalog.
+  "directory.eyebrow": "Topics",
+  "directory.title": "Every conversation, by tag.",
+  "directory.sub":
+    "Follow a topic and you'll hear about it the moment someone posts.",
+  "directory.search.placeholder": "Search topics",
+  "directory.search.ariaLabel": "Search topics",
+  "directory.postsCount_one": "{count} post",
+  "directory.postsCount_other": "{count} posts",
+  "directory.empty.search.title": "No topics match",
+  "directory.empty.search.description":
+    "Try a different search term, or clear it to see every topic.",
+  "directory.empty.search.cta": "Clear search",
+  "directory.empty.none.title": "No topics yet",
+  "directory.empty.none.description":
+    "There's nothing in the directory yet. Check back soon.",
 };

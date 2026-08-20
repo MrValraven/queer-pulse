@@ -131,13 +131,33 @@ export function AdminGovernanceHealthEditor({
               >
                 {t("admin:governance.overview.health.field.value")}
               </label>
-              <input
-                id={`health-value-${index}`}
-                type="text"
-                maxLength={20}
-                value={row.n}
-                onChange={(event) => patch(index, { n: event.target.value })}
-              />
+              {row.key === "activeMembers" ? (
+                // Computed live from real account data (COM-4) — the backend
+                // overwrites this figure with a live count on every read AND
+                // on save, so letting an admin type a number here would be a
+                // dead end at best and misleading at worst. Shown read-only
+                // instead of hidden, so the row still communicates the
+                // current count inline with the rest of the health stats.
+                <>
+                  <output
+                    id={`health-value-${index}`}
+                    className={styles.editLineLabel}
+                  >
+                    {row.n}
+                  </output>
+                  <p className={styles.ovFieldHint}>
+                    {t("admin:governance.overview.health.field.valueComputedHint")}
+                  </p>
+                </>
+              ) : (
+                <input
+                  id={`health-value-${index}`}
+                  type="text"
+                  maxLength={20}
+                  value={row.n}
+                  onChange={(event) => patch(index, { n: event.target.value })}
+                />
+              )}
             </div>
             <div className={styles.ovField}>
               <label

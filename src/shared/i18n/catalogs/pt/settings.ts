@@ -24,6 +24,7 @@ export const settings: Catalog = {
   "nav.item.profileTheme": "Tema do perfil",
   "nav.item.accessibility": "Acessibilidade",
   "nav.item.interests": "Interesses",
+  "nav.item.blockedUsers": "Membros bloqueados",
   "nav.item.uploads": "As minhas imagens",
   "nav.item.deleteAccount": "Eliminar conta",
 
@@ -66,11 +67,7 @@ export const settings: Catalog = {
   "controls.deleteModal.cancel": "Cancelar",
   "controls.deleteModal.continue": "Continuar para eliminar",
 
-  // ── SettingsModals.tsx — chrome partilhado dos modais ────────────────────
-  "modals.common.close": "Fechar",
-  "modals.common.done": "Concluído",
-
-  // ── SettingsModals.tsx — SuggestEditModal (guia de terminologia) ─────────
+  // ── SuggestEditModal (guia de terminologia) ─────────
   "modals.suggestEdit.ariaLabel": "Sugerir uma alteração a {term}",
   "modals.suggestEdit.success.title": "Agradecemos, <em>anotado.</em>",
   "modals.suggestEdit.success.body":
@@ -88,15 +85,6 @@ export const settings: Catalog = {
   "modals.suggestEdit.sending": "A enviar…",
   "modals.suggestEdit.send": "Enviar sugestão",
   "modals.suggestEdit.cancel": "Cancelar",
-
-  // ── SettingsModals.tsx — DataExportModal (transferência simulada) ───────
-  "modals.dataExport.eyebrow": "Dados e privacidade",
-  "modals.dataExport.preparingBody":
-    "A reunir os teus dados e a preparar um ficheiro JSON. Isto costuma demorar um momento…",
-  "modals.dataExport.readyTitle": "A tua exportação está <em>pronta.</em>",
-  "modals.dataExport.readyBody":
-    "Preparámos os teus dados em <strong>{filename}</strong>. Não enviamos nada por email. Descarregas aqui mesmo, nesta página.",
-  "modals.dataExport.downloadCta": "Descarregar {filename}",
 
   // ── SettingsPersonalisation.tsx — ProfileThemePane ───────────────────────
   "personalisation.theme.title": "Tema do <em>perfil.</em>",
@@ -246,6 +234,10 @@ export const settings: Catalog = {
     "Teste enviado. Confirma no teu dispositivo",
   "notifications.phonePush.test.error":
     "Não foi possível enviar o teste. Tenta daqui a pouco",
+  "notifications.phonePush.manage.title": "Gere os teus dispositivos",
+  "notifications.phonePush.manage.desc":
+    "Vê todos os dispositivos que recebem as tuas notificações push e remove os que não reconheças.",
+  "notifications.phonePush.manage.cta": "Gerir dispositivos",
   "notifications.communities.newPost.title":
     "Nova publicação nas minhas comunidades",
   "notifications.communities.newPost.desc":
@@ -325,10 +317,6 @@ export const settings: Catalog = {
   "data.deletePermanently.cta": "Eliminar conta",
   "data.fineprint":
     "Ao abrigo do artigo 17.º do RGPD, tens o direito ao apagamento. Os pedidos de eliminação são processados no prazo de 30 dias. Alguns dados podem ser mantidos quando exista uma obrigação legal para tal.",
-  "data.export.full.title": "A preparar a tua exportação completa",
-  "data.export.messages.title": "A preparar as tuas mensagens",
-  "data.export.messages.note":
-    "Exportação simples do teu histórico completo de mensagens.",
 
   // ── SettingsPanes.tsx — VisibilityPane (quem pode encontrar/contactar-te)
   // Os ids "open"/"network"/"private" são o valor guardado — nunca traduzir
@@ -379,6 +367,10 @@ export const settings: Catalog = {
   "account.loginAlerts.title": "Alertas de início de sessão",
   "account.loginAlerts.desc":
     "Avisa-me por email quando a minha conta é acedida a partir de um novo dispositivo",
+  "account.sessions.title": "Sessões ativas",
+  "account.sessions.desc":
+    "Vê todos os dispositivos com sessão iniciada na tua conta e termina sessão em qualquer um que não reconheças.",
+  "account.sessions.cta": "Gerir sessões",
   "account.disclosure.title": "Comunicar uma vulnerabilidade de segurança",
   "account.disclosure.desc":
     "Encontraste uma falha ou uma fragilidade no QueerPulse? A nossa política de divulgação explica como comunicá-la e o que acontece a seguir.",
@@ -592,6 +584,53 @@ export const settings: Catalog = {
   "sessions.footNote":
     "<strong>Algo parece errado?</strong> Termina a sessão em qualquer dispositivo que não reconheças e <a>conta-nos o que aconteceu</a>. Vamos ajudar-te a proteger a tua conta.",
 
+  // ── PushDevicesPage.tsx — chrome (os registos de dispositivos são mock/
+  // dados vindos de GET /push/subscriptions — mesma convenção do
+  // SessionsPage acima) ─────────────────────────────────────────────────────
+  "pushDevices.ago.justNow": "agora mesmo",
+  "pushDevices.ago.unknown": "desconhecido",
+  "pushDevices.backToNotifications": "Notificações",
+  "pushDevices.eyebrow": "Notificações · Dispositivos push",
+  "pushDevices.h1": "Dispositivos que recebem as tuas <em>notificações push</em>.",
+  "pushDevices.lead":
+    "Todos os dispositivos registados para receber notificações push da QueerPulse. Remove os que não reconheças, incluindo um telemóvel perdido ou roubado.",
+  "pushDevices.sectionRegistered": "Dispositivos registados",
+  "pushDevices.card.registered": "Registado <strong>{when}</strong>",
+  "pushDevices.card.lastUsed": "Última notificação <strong>{when}</strong>",
+  "pushDevices.card.remove": "Remover",
+  "pushDevices.empty.error.title": "Não conseguimos carregar os teus dispositivos",
+  "pushDevices.empty.error.desc":
+    "Em vez de te mostrarmos uma lista em que não podemos confiar, não mostrámos nada. Tenta novamente dentro de momentos.",
+  "pushDevices.empty.none.title": "Ainda sem dispositivos",
+  "pushDevices.empty.none.desc":
+    "Ativa as notificações push num dispositivo e ele aparece aqui.",
+  "pushDevices.toast.removed":
+    "Dispositivo removido. Deixa de receber notificações push da QueerPulse.",
+  "pushDevices.toast.removedError":
+    "Não conseguimos remover esse dispositivo. Tenta novamente.",
+  "pushDevices.footNote":
+    "<strong>Perdeste um dispositivo?</strong> Removê-lo aqui pára as notificações push de imediato, mesmo que não consigas terminar sessão nele.",
+
+  // ── BlockedUsersPane.tsx — chrome (registos mock de membros bloqueados
+  // ficam em inglês, seguindo a convenção das sessões mock acima) ──────────
+  "blockedUsers.title": "Membros que <em>bloqueaste</em>.",
+  "blockedUsers.sub":
+    "Membros bloqueados não conseguem ver o teu perfil, enviar-te mensagens nem encontrar-te na pesquisa. Desbloquear não repõe nada disso automaticamente, só volta a abrir a porta.",
+  "blockedUsers.section.blocked": "Bloqueados",
+  "blockedUsers.row.blockedOn": "Bloqueado {date}",
+  "blockedUsers.row.deletedMember": "Membro eliminado",
+  "blockedUsers.row.unblockCta": "Desbloquear",
+  "blockedUsers.empty.error.title":
+    "Não conseguimos carregar os teus membros bloqueados",
+  "blockedUsers.empty.error.desc":
+    "Em vez de te mostrarmos uma lista em que não podemos confiar, não mostrámos nada. Tenta novamente dentro de momentos.",
+  "blockedUsers.empty.none.title": "Ainda não bloqueaste ninguém",
+  "blockedUsers.empty.none.desc":
+    "Quando bloqueares um membro, ele aparece aqui para poderes rever ou desfazer isso a qualquer momento.",
+  "blockedUsers.toast.unblocked": "{name} está desbloqueado.",
+  "blockedUsers.toast.unblockedError":
+    "Não conseguimos desbloquear esse membro. Tenta novamente.",
+
   // ── DataExportPage.tsx — hero + toast + outro ────────────────────────────
   "dataExport.hero.eyebrow": "Os teus dados · RGPD, art.º 20",
   "dataExport.hero.titleLine1": "Os teus dados.",
@@ -644,6 +683,21 @@ export const settings: Catalog = {
   "dataExport.type.activityLog.label": "Registo de atividade",
   "dataExport.type.activityLog.sub":
     "Histórico de início de sessão, sessões em dispositivos",
+  "dataExport.type.subprofiles.label": "Personas",
+  "dataExport.type.subprofiles.sub":
+    "Todas as personas que criaste, incluindo as não associadas",
+  "dataExport.type.listings.label": "Anúncios no diretório local",
+  "dataExport.type.listings.sub": "Anúncios de negócios ou espaços que submeteste",
+  "dataExport.type.housing.label": "Habitação",
+  "dataExport.type.housing.sub":
+    "Anúncios de habitação, perfil de colega de casa, pedidos de visita",
+  "dataExport.type.saved.label": "Itens guardados",
+  "dataExport.type.saved.sub": "Marcadores e coleções guardadas",
+  "dataExport.type.notifications.label": "Notificações",
+  "dataExport.type.notifications.sub":
+    "O teu histórico e preferências de notificações",
+  "dataExport.type.consent.label": "Registos de consentimento",
+  "dataExport.type.consent.sub": "A que deste consentimento, e quando",
 
   // ── DataExportSections.tsx — DataExportStatus ────────────────────────────
   "dataExport.status.ready.title": "O teu arquivo está pronto",

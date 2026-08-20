@@ -112,7 +112,7 @@ export function ArchiveSection({
             : issuesList.map((issue, index) => (
                 <FadeIn
                   as={Link}
-                  to={ISSUE}
+                  to={`${ISSUE}/${issue.number}`}
                   className={styles.tile}
                   key={issue.number}
                   delay={Math.min(index, 8) * 60}
@@ -146,7 +146,7 @@ export function ArchiveSection({
             : issuesList.map((issue, index) => (
                 <FadeIn
                   as={Link}
-                  to={ISSUE}
+                  to={`${ISSUE}/${issue.number}`}
                   className={styles.listRow}
                   key={issue.number}
                   delay={Math.min(index, 8) * 60}

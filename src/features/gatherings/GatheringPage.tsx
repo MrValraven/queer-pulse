@@ -16,6 +16,7 @@ import { GatheringSidebar } from "./GatheringSidebar";
 import { GatheringBookmarkButton } from "./GatheringBookmarkButton";
 import { GatheringMoreRail } from "./GatheringMoreRail";
 import { GatheringLineupSection } from "./GatheringLineupSection";
+import { GoingAttendeesPreview } from "./GoingAttendeesPreview";
 import {
   gatheringDetails,
   gatheringKind,
@@ -217,6 +218,8 @@ export function GatheringPage() {
                   {t("gatherings:gathering.seeAllCta")}
                 </Button>
               </div>
+
+              <GoingAttendeesPreview gathering={gathering} />
 
               {/* "Meet the table" is demo-only: the backend exposes no seat /
                   attendee data yet, so live mode omits it rather than leak the

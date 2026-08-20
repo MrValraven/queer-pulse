@@ -4,25 +4,43 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import type { EventHostDTO } from "./api/events.api";
 import { CohostInviteComposerModal } from "./CohostInviteComposerModal";
-import { INITIAL_COHOSTS, type CohostCandidate } from "./manageCohosts.data";
+import {
+  INITIAL_COHOSTS,
+  hostDtoToCandidate,
+  type CohostCandidate,
+} from "./manageCohosts.data";
 import { useRemoveCohost } from "./api/useEventMutations";
 import styles from "./ManageCohosts.module.css";
 
 /**
  * Lists the event's cohosts and lets the host add/remove them. Owns the cohost
- * list as local state: the add/remove mutations are a no-op in demo and a real
- * call + invalidate in live. Demo seeds the mock cohosts; live starts empty.
- * The event detail DTO carries no cohost roster, so seeding from the mock would
- * leak demo personas into a real gathering.
+ * list as local state (seeded once, then mutated optimistically): the
+ * add/remove mutations are a no-op in demo and a real call + invalidate in
+ * live. Demo seeds the mock cohosts; live seeds the real roster the parent
+ * already fetched off `GET /events/:slug` (`EventDetail.cohosts` — no second
+ * request needed).
  */
-export function CohostManager({ slug }: { slug: string }) {
+export function CohostManager({
+  slug,
+  cohosts: liveCohosts,
+}: {
+  slug: string;
+  /** The event's real accepted co-hosts (`GatheringDetail.cohosts`), or
+   *  `undefined` in demo mode / before the detail has loaded. */
+  cohosts?: EventHostDTO[];
+}) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
   const removeCohost = useRemoveCohost(slug);
-  const [cohosts, setCohosts] = useState<CohostCandidate[]>(
-    demoMode ? INITIAL_COHOSTS : [],
+  const [cohosts, setCohosts] = useState<CohostCandidate[]>(() =>
+    demoMode
+      ? INITIAL_COHOSTS
+      : (liveCohosts ?? []).map((dto, index) =>
+          hostDtoToCandidate(dto, index, t("gatherings:cohost.roleCohost")),
+        ),
   );
   const [addOpen, setAddOpen] = useState(false);
   const [confirming, setConfirming] = useState<string | null>(null);

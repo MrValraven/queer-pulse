@@ -17,12 +17,12 @@ export function SearchPage() {
   const simulatedLoad = useSimulatedLoad();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") ?? "";
+  const [tab, setTab] = useState<ResultType | "all">("all");
   const { data: searchData, recents, signInRequired, loading } =
-    useSearchData(query);
+    useSearchData(query, tab);
   const showLoading = loading || simulatedLoad;
   const setQuery = (value: string) =>
     setSearchParams(value ? { q: value } : {}, { replace: true });
-  const [tab, setTab] = useState<ResultType | "all">("all");
 
   return (
     <PageShell>
@@ -94,6 +94,7 @@ export function SearchPage() {
             query={query}
             tab={tab}
             setQuery={setQuery}
+            onSelectTab={setTab}
             signInRequired={signInRequired}
             loading={showLoading}
             searchData={searchData}

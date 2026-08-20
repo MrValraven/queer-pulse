@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiLock, FiShield, FiUnlock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
@@ -6,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { useLockThread, useSetThreadOfficial } from "./api/useForumMutations";
+import { LockThreadModal } from "./LockThreadModal";
 import type { Thread } from "./forum.data";
 import styles from "./ThreadPage.module.css";
 
@@ -27,22 +29,34 @@ export function ThreadTopbar({
   const { role } = useAuth();
   const { lock, unlock, isPending } = useLockThread();
   const { setOfficial, isPending: officialPending } = useSetThreadOfficial();
+  const [lockPromptOpen, setLockPromptOpen] = useState(false);
 
   const canLock = !!thread?.canLock && !!thread.slug;
   const isLocked = !!thread?.isLocked;
   const canSetOfficial = role === "admin" && !!thread?.slug;
   const isOfficial = !!thread?.author.official;
 
+  // Locking opens a small prompt for an optional reason note (shown on the
+  // locked banner); unlocking needs no reason and fires straight away.
   function toggleLock() {
     if (!thread?.slug) return;
-    const locking = !isLocked;
-    const action = locking ? lock : unlock;
-    action(thread.slug, {
-      onSuccess: () =>
-        showToast(
-          t(locking ? "forum:toast.threadLocked" : "forum:toast.threadUnlocked"),
-          "success",
-        ),
+    if (!isLocked) {
+      setLockPromptOpen(true);
+      return;
+    }
+    unlock(thread.slug, {
+      onSuccess: () => showToast(t("forum:toast.threadUnlocked"), "success"),
+      onError: () => showToast(t("forum:toast.error"), "error"),
+    });
+  }
+
+  function confirmLock(reason: string) {
+    if (!thread?.slug) return;
+    lock(thread.slug, reason, {
+      onSuccess: () => {
+        setLockPromptOpen(false);
+        showToast(t("forum:toast.threadLocked"), "success");
+      },
       onError: () => showToast(t("forum:toast.error"), "error"),
     });
   }
@@ -119,6 +133,14 @@ export function ThreadTopbar({
           )}
         </div>
       </div>
+
+      {lockPromptOpen && (
+        <LockThreadModal
+          busy={isPending}
+          onConfirm={confirmLock}
+          onClose={() => setLockPromptOpen(false)}
+        />
+      )}
     </section>
   );
 }

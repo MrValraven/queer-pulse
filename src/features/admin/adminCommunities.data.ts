@@ -218,6 +218,10 @@ export interface Community {
    *  addition to staff lifting it from the community's own mod panel.
    *  Optional: only the detail endpoint carries it. */
   frozen?: boolean;
+  /** True once an admin has archived the community. An admin can archive/
+   *  unarchive it directly from the Settings tab (COM-18: archiving is no
+   *  longer a one-way door). Optional: only the detail endpoint carries it. */
+  archived?: boolean;
   /** True when the backend's report scan hit its scan cap while building this
    *  community's detail — some of its reports may not be reflected in the
    *  queue/health numbers above. Optional: only the detail endpoint carries it. */

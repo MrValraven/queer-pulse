@@ -1,12 +1,16 @@
 import { memo, useRef } from "react";
-import { FiHeart } from "react-icons/fi";
+import { FiBellOff, FiHeart } from "react-icons/fi";
 import { TbPinnedFilled } from "react-icons/tb";
 import { Avatar } from "../../shared/components/ui";
 import { useIsOnline } from "../../shared/api/realtime";
 import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
-import { useToggleFavorite, useTogglePin } from "./api/useConversationPrefs";
+import {
+  useToggleFavorite,
+  useToggleMute,
+  useTogglePin,
+} from "./api/useConversationPrefs";
 import { ThreadRowMenu } from "./ThreadRowMenu";
 import { ThreadRowSwipeAffordances } from "./ThreadRowSwipeAffordances";
 import { isThreadUnread } from "./threadFilters";
@@ -62,8 +66,10 @@ function MessagesThreadRowImpl({
     (!thread.otherParticipantId && !!thread.online);
   const isPinned = !!thread.pinnedAt;
   const isFavorite = !!thread.favorite;
+  const isMuted = !!thread.muted;
   const togglePin = useTogglePin();
   const toggleFavorite = useToggleFavorite();
+  const toggleMute = useToggleMute();
 
   // Shared by BOTH the ⋯ menu items and the mobile swipe gesture below — one
   // toggle callback per action, never two paths computing the same mutation.
@@ -75,6 +81,8 @@ function MessagesThreadRowImpl({
     });
   const handleToggleFavorite = () =>
     toggleFavorite.mutate({ conversationId: thread.id, favorite: isFavorite });
+  const handleToggleMute = () =>
+    toggleMute.mutate({ conversationId: thread.id, muted: isMuted });
 
   const rowRef = useRef<HTMLButtonElement>(null);
   const leadingIconRef = useRef<HTMLSpanElement>(null);
@@ -136,6 +144,14 @@ function MessagesThreadRowImpl({
                 <MemberStaffBadge slug={thread.slug} />
               </span>
               <span className={styles.trIndicators}>
+                {isMuted && (
+                  <span
+                    className={styles.trMutedIcon}
+                    title={t("messages:thread.mutedIndicator")}
+                  >
+                    <FiBellOff aria-hidden />
+                  </span>
+                )}
                 {isFavorite && (
                   <span
                     className={styles.trFavoriteIcon}
@@ -179,6 +195,7 @@ function MessagesThreadRowImpl({
         thread={thread}
         onTogglePin={handleTogglePin}
         onToggleFavorite={handleToggleFavorite}
+        onToggleMute={handleToggleMute}
         onDelete={() => onRequestDelete(thread)}
       />
     </div>

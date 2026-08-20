@@ -19,6 +19,7 @@ import { PhotoUploadModal, type RecapPhoto } from "./PhotoUploadModal";
 import { GatheringRecapMain } from "./GatheringRecapSections";
 import { GatheringRecapSidebar } from "./GatheringRecapSidebar";
 import { GatheringPhotosLive } from "./GatheringPhotosLive";
+import { MoreFromHost } from "./MoreFromHost";
 import { useEvent } from "./api/useEvent";
 import type { GatheringDetail } from "./data";
 import {
@@ -113,6 +114,12 @@ function LiveGatheringRecap({ gathering }: { gathering: GatheringDetail }) {
       <div className={styles.body}>
         <div className="wrap">
           <GatheringPhotosLive slug={gathering.slug} canUpload={canUpload} />
+          <MoreFromHost
+            hostSlug={gathering.hostSlug}
+            hostName={gathering.host}
+            excludeSlug={gathering.slug}
+            seriesId={gathering.series?.id ?? null}
+          />
         </div>
       </div>
     </AppShell>

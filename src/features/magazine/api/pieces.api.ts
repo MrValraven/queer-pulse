@@ -316,6 +316,12 @@ export interface ArticleDraftDto {
   standfirst: string;
   kicker: string;
   section: string;
+  /** The contributor's credit-line qualifier (e.g. "Contributing editor") —
+   *  mirrors `MagazineDeck.role`, round-trips through `save()`. */
+  role: string;
+  metaDescription: string;
+  socialImage: string;
+  canonicalUrl: string;
   tags: string[];
   contentNotes: string[];
   blocks: ArticleBlock[];
@@ -323,11 +329,25 @@ export interface ArticleDraftDto {
   publishedAt: string | null;
 }
 
-/** Body of `PATCH /magazine/admin/pieces/:id/article` — mirrors `UpdateArticleDto`. */
+/**
+ * Body of `PATCH /magazine/admin/pieces/:id/article` — mirrors
+ * `UpdateArticleDto`. Publishing is NOT this DTO's job — see
+ * `PublishArticleDto`/`publishArticle` below.
+ */
 export type UpdateArticleDraftDto = Partial<
   Pick<
     ArticleDraftDto,
-    "title" | "standfirst" | "kicker" | "section" | "tags" | "contentNotes" | "blocks"
+    | "title"
+    | "standfirst"
+    | "kicker"
+    | "section"
+    | "role"
+    | "metaDescription"
+    | "socialImage"
+    | "canonicalUrl"
+    | "tags"
+    | "contentNotes"
+    | "blocks"
   >
 >;
 
@@ -518,6 +538,24 @@ export const getArticleDraft = (pieceId: string) =>
 
 export const updateArticleDraft = (pieceId: string, body: UpdateArticleDraftDto) =>
   apiPatch<ArticleDraftDto>(`/magazine/admin/pieces/${pieceId}/article`, body);
+
+/**
+ * Body of `PATCH /magazine/admin/pieces/:id/article/publish` — mirrors
+ * backend `PublishArticleDto`. `publishedAt` reads three ways: omitted ->
+ * publish now, an ISO instant -> publish/schedule at that instant, `null` ->
+ * unpublish back to draft.
+ */
+export interface PublishArticleDto {
+  publishedAt?: string | null;
+}
+
+/** CNT-1 fix: the article editor's real publish/unpublish endpoint — the
+ *  deck's `updateDeck({ published })` toggle has no article equivalent on
+ *  `updateArticleDraft`, so publishing (including a web-only article with no
+ *  `issueId`, which `shipIssue` never reaches) goes through this dedicated
+ *  route instead. */
+export const publishArticle = (pieceId: string, body: PublishArticleDto) =>
+  apiPatch<ArticleDraftDto>(`/magazine/admin/pieces/${pieceId}/article/publish`, body);
 
 // ── Article comments (Phase 7 Wave D — threaded, resolvable NotesRail) ─────
 // Mirrors backend `ArticleCommentResponse` (`magazine-article-comment-response.ts`).

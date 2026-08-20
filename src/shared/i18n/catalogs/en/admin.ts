@@ -212,28 +212,33 @@ export const admin: Catalog = {
     "Every open item has a human decision attached. Go rest. The network's safe in your hands.",
   "dashboard.header.moderationCta": "Open moderation",
 
-  "dashboard.metrics.activeMembers.label": "Active members",
+  // Renamed from "Active members": the backing metric is account standing
+  // (not suspended), not engagement — there is no login/activity tracking
+  // behind this tile.
+  "dashboard.metrics.activeMembers.label": "Members in good standing",
   "dashboard.metrics.openReports.label": "Open reports",
   "dashboard.metrics.medianResponse.label": "Median response",
-  "dashboard.metrics.sustainerMrr.label": "Sustainer MRR",
+  "dashboard.metrics.communityHealth.label": "Community health",
   "dashboard.metrics.trendPercent": "{value}%",
   "dashboard.metrics.trendOldest": "oldest {hours}",
   "dashboard.metrics.trendWellUnder": "well under",
   // Median response is live but over the 6h SLA target — a warning, not the
   // "well under" badge.
   "dashboard.metrics.trendOverSla": "over target",
-  // No comparison data yet for this metric (e.g. no prior period to compare
-  // against) — a neutral placeholder instead of a fabricated delta.
+  // No comparison data yet for this metric (e.g. no communities yet, or no
+  // prior period to compare against) — a neutral placeholder instead of a
+  // fabricated delta.
   "dashboard.metrics.trendNoData": "not enough data yet",
-  // The metric has a real, live value but nothing to compare it against
-  // (e.g. sustainer MRR has no historical growth-rate feed yet).
-  "dashboard.metrics.trendTracked": "tracked live",
-  "dashboard.metrics.footGrowth": "+{count} this month",
+  // Average community health score is at or above the "healthy" band.
+  "dashboard.metrics.trendHealthy": "healthy",
+  // Average community health score has dropped into the "needs a hand" band.
+  "dashboard.metrics.trendNeedsHand": "needs a hand",
+  "dashboard.metrics.footGrowth": "+{count} this month · based on account status",
   "dashboard.metrics.footEmergencies_one": "{count} is an emergency",
   "dashboard.metrics.footEmergencies_other": "{count} are emergencies",
   "dashboard.metrics.footSlaTarget": "{hours} SLA target",
-  "dashboard.metrics.footSustainers_one": "{count} sustainer",
-  "dashboard.metrics.footSustainers_other": "{count} sustainers",
+  "dashboard.metrics.footNeedsHand_one": "{count} community needs a hand",
+  "dashboard.metrics.footNeedsHand_other": "{count} communities need a hand",
 
   "dashboard.triage.title": "Needs <em>a human</em>",
   "dashboard.triage.sortedToast": "Sorted by urgency",
@@ -511,6 +516,18 @@ export const admin: Catalog = {
   "members.role.demoteConfirm.body":
     "{name} will lose access to every admin tool right away. You can restore it later. This is recorded in the audit log under your name.",
   "members.role.demoteConfirm.confirmCta": "Remove admin",
+  "members.role.grantConfirm.title": "Make {name} an admin?",
+  "members.role.grantConfirm.body":
+    "{name} will get full admin access to the platform right away: staff and role management, moderation actions on every report, and every other admin tool. This is the highest level of access QueerPulse has. It's recorded in the audit log under your name.",
+  "members.role.grantConfirm.confirmCta": "Grant admin access",
+
+  // ── Staff roster (/admin/staff) — read-only list of every moderator/admin ─
+  "staff.title": "Staff & <em>roles</em>",
+  "staff.header.eyebrow": "Who runs QueerPulse",
+  "staff.header.sub":
+    "Every moderator and admin on the platform. To change someone's role, open their profile in Members.",
+  "staff.empty": "Nobody holds a staff role right now.",
+  "staff.loadError": "Couldn't load the staff roster.",
 
   // ── Members: staff roles (additive functional grants, e.g. magazine desk) ─
   "staffRoles.title": "Roles & access",
@@ -758,6 +775,14 @@ export const admin: Catalog = {
   "adminChangemakerNominations.unknownMember": "A former member",
   "adminChangemakerNominations.row.by": "Nominated by {name}",
   "adminChangemakerNominations.row.sent": "Sent {date}",
+  "adminChangemakerNominations.row.reviewedBy": "Reviewed by {name}",
+  "adminChangemakerNominations.status.pending": "Pending",
+  "adminChangemakerNominations.status.approved": "Approved",
+  "adminChangemakerNominations.status.dismissed": "Dismissed",
+  "adminChangemakerNominations.row.approveCta": "Approve",
+  "adminChangemakerNominations.row.dismissCta": "Dismiss",
+  "adminChangemakerNominations.row.reviewNotePlaceholder":
+    "Optional note to the nominator",
   "adminChangemakerNominations.loadMore": "Load more",
   "adminChangemakerNominations.loadingMore": "Loading…",
 
@@ -1092,6 +1117,8 @@ export const admin: Catalog = {
   "moderation.filters.emergencies": "Emergencies",
   "moderation.filters.mine": "Assigned to me",
   "moderation.filterAriaLabel": "Filter reports",
+  "moderation.subjectFilter.label": "Filtered to @{subjectId}",
+  "moderation.subjectFilter.clearAriaLabel": "Clear filter",
 
   "moderation.selectReportAriaLabel": "Select report: {title}",
   "moderation.reportedByLabel": "Reported by",
@@ -1102,7 +1129,17 @@ export const admin: Catalog = {
   "moderation.bulk.dismissCta": "Dismiss",
   "moderation.bulk.spamCta": "Remove as spam",
   "moderation.bulk.reassignCta": "Reassign…",
+  "moderation.bulk.warnCta": "Warn",
+  "moderation.bulk.suspendCta": "Suspend…",
+  "moderation.bulk.banCta": "Ban",
   "moderation.bulk.cancelCta": "Cancel",
+  "moderation.bulk.suspendModal.title_one": "Suspend {count} member",
+  "moderation.bulk.suspendModal.title_other": "Suspend {count} members",
+  "moderation.bulk.suspendModal.body_one":
+    "Choose how long the account behind this report stays suspended.",
+  "moderation.bulk.suspendModal.body_other":
+    "Choose how long the accounts behind these {count} reports stay suspended.",
+  "moderation.bulk.suspendModal.confirmCta": "Confirm suspension",
 
   "moderation.emergency.ariaLabel": "Safety emergencies",
   "moderation.emergency.count_one": "{count} safety emergency",
@@ -1164,6 +1201,18 @@ export const admin: Catalog = {
   "moderation.reportDrawer.noteAriaLabel": "Note to the member",
   "moderation.reportDrawer.transparency":
     "{name} will be told exactly what was actioned and why, with a link to appeal. Nothing happens silently.",
+  "moderation.reportDrawer.accountActionsHidden":
+    "Restrict and ban aren't shown here because this report is about content, not a member account. Use hide, remove, warn or dismiss instead.",
+  "moderation.reportDrawer.restrictDurationLabel": "Restriction length",
+  "moderation.reportDrawer.restrictDuration.24h": "24 hours",
+  "moderation.reportDrawer.restrictDuration.7d": "7 days",
+  "moderation.reportDrawer.restrictDuration.30d": "30 days",
+  "moderation.reportDrawer.unassigned": "Unassigned",
+  "moderation.reportDrawer.assignedToYou": "Assigned to you",
+  "moderation.reportDrawer.assignedTo": "Assigned to {name}",
+  "moderation.reportDrawer.anotherModerator": "another moderator",
+  "moderation.reportDrawer.assignToMeCta": "Assign to me",
+  "moderation.reportDrawer.unassignCta": "Unassign",
   "moderation.reportDrawer.pickActionToast":
     "Pick an action before confirming.",
   "moderation.reportDrawer.escalatedToast":
@@ -1181,6 +1230,9 @@ export const admin: Catalog = {
   "moderation.appealDrawer.decidedByLine": "Decided by {name} · {when}",
   "moderation.appealDrawer.viewOriginalCta":
     "View the original report & thread",
+  "moderation.appealDrawer.originalContentTitle": "What was originally reported",
+  "moderation.appealDrawer.originalContentUnavailable":
+    "The original report's content isn't available — it may have been erased or this appeal has no linked report.",
   "moderation.appealDrawer.argumentTitle": "Their argument",
   "moderation.appealDrawer.supportersTitle": "Who's backing them",
   "moderation.appealDrawer.noSupport":
@@ -1202,6 +1254,9 @@ export const admin: Catalog = {
   "moderation.severity.medium": "Medium",
   "moderation.severity.low": "Low",
 
+  "moderation.actions.dismiss.label": "Dismiss",
+  "moderation.actions.dismiss.desc": "No action needed, close the report",
+  "moderation.actions.dismiss.done": "dismissed",
   "moderation.actions.hide.label": "Hide content",
   "moderation.actions.hide.desc": "Remove from view, keep for records",
   "moderation.actions.hide.done": "hidden",
@@ -1231,6 +1286,8 @@ export const admin: Catalog = {
   "moderation.priorReports.count_one": "{count} prior report",
   "moderation.priorReports.count_other": "{count} prior reports",
   "moderation.priorReports.newAccount": "New account · {vouches} vouches",
+  "moderation.assignedToFlag": "Assigned to {name}",
+  "moderation.slaOverdue": "Overdue",
   "moderation.risk.atRisk": "At risk",
   "moderation.risk.high": "High",
   "moderation.risk.medium": "Medium",
@@ -1269,11 +1326,16 @@ export const admin: Catalog = {
   "moderation.queue.restoredToast": "Restored the report.",
   "moderation.queue.serviceErrorToast":
     "Couldn't reach the safety service. Restored.",
+  "moderation.queue.bulkPartialToast":
+    "{succeededCount} succeeded, {failedCount} failed: {reasons}",
   "moderation.queue.bulkToast_one": "{count} report {verb}",
   "moderation.queue.bulkToast_other": "{count} reports {verb}",
   "moderation.queue.bulkVerb.dismissed": "dismissed",
   "moderation.queue.bulkVerb.removedAsSpam": "removed as spam",
   "moderation.queue.bulkVerb.reassigned": "reassigned",
+  "moderation.queue.bulkVerb.warned": "warned",
+  "moderation.queue.bulkVerb.suspended": "suspended",
+  "moderation.queue.bulkVerb.banned": "banned",
   "moderation.queue.bulkRestoredToast": "Restored the reports.",
   "moderation.queue.appealToast": "{verb} · {name} notified",
   "moderation.queue.appealVerb.upheld": "Upheld",
@@ -1399,6 +1461,43 @@ export const admin: Catalog = {
   "communities.settings.status": "Status",
   "communities.settings.frozenChip": "Frozen · under review",
 
+  // ── Admin overrides (freeze/unfreeze, archive/unarchive, reassign owner) ──
+  "communities.settings.overrides.title": "Moderation overrides",
+  "communities.settings.overrides.sub":
+    "Bypass this community's own owner/mod controls, for when its leadership can't be reached or trusted.",
+  "communities.settings.overrides.freezeCta": "Freeze",
+  "communities.settings.overrides.unfreezeCta": "Unfreeze",
+  "communities.settings.overrides.freezeToast": "{name} is now frozen",
+  "communities.settings.overrides.freezeFailedToast":
+    "Couldn't freeze that community. Try again.",
+  "communities.settings.overrides.unfreezeToast": "{name} is no longer frozen",
+  "communities.settings.overrides.unfreezeFailedToast":
+    "Couldn't unfreeze that community. Try again.",
+  "communities.settings.overrides.reassignCta": "Reassign owner",
+  "communities.settings.overrides.archiveCta": "Archive",
+  "communities.settings.overrides.unarchiveCta": "Unarchive",
+  "communities.settings.overrides.unarchiveToast": "{name} is no longer archived",
+  "communities.settings.overrides.unarchiveFailedToast":
+    "Couldn't unarchive that community. Try again.",
+  "communities.settings.overrides.archiveToast": "{name} has been archived",
+  "communities.settings.overrides.archiveFailedToast":
+    "Couldn't archive {name}. Try again.",
+  "communities.settings.overrides.archiveConfirmTitle": "Archive {name}?",
+  "communities.settings.overrides.archiveConfirmBody":
+    "The community is taken down for members immediately. An admin can reverse this from the same panel.",
+  "communities.settings.overrides.archiveConfirmCta": "Archive community",
+  "communities.settings.overrides.reassignToast": "{name} is now the owner",
+  "communities.settings.overrides.reassignFailedToast":
+    "Couldn't reassign ownership. Try again.",
+  "communities.settings.overrides.reassignTitle": "Reassign ownership of {name}",
+  "communities.settings.overrides.reassignBody":
+    "The member you pick becomes owner immediately. If the community already has an owner, they're demoted to moderator.",
+  "communities.settings.overrides.reassignEmptyTitle": "No one to reassign to",
+  "communities.settings.overrides.reassignEmptyDesc":
+    "This community has no other roster members yet.",
+  "communities.settings.overrides.reassignConfirmCta": "Reassign ownership",
+  "communities.settings.overrides.reassignPickLabel": "Pick the new owner",
+
   "communities.health.modalTitle": "Why <em>{score}</em>?",
   "communities.health.howCalculatedCta": "How it's calculated",
   "communities.health.offerSupportCta": "Offer support",
@@ -1489,7 +1588,61 @@ export const admin: Catalog = {
     "Publishing transparency reports isn't available yet.",
   "governance.tabs.finances": "Finances",
   "governance.tabs.policy": "Policy & versions",
+  "governance.tabs.proposals": "Proposals",
   "governance.tabs.audit": "Audit log",
+
+  // NOTE: the rest of `governance.overview.*` (the Policy tab's
+  // health/moderation/council/principles/decisions editors) is a pre-existing
+  // gap in this catalog — those keys were already missing before this
+  // change, in both EN and PT. Out of scope for COM-1/COM-4; only the one key
+  // this change's `AdminGovernanceHealthEditor` edit needs is added below, so
+  // it renders correctly whenever that broader gap gets backfilled.
+  "governance.overview.health.field.valueComputedHint":
+    "Computed live from active member accounts — not editable here.",
+
+  // ── Proposals tab (COM-1) ──────────────────────────────────────────────────
+  // Admin-only create form + list for the real member-vote proposals backing
+  // the "two-thirds community vote" / "the community will vote on it"
+  // promises on the public Governance page. List rendering reuses the public
+  // `governance:sections.proposals.*` vocabulary conceptually, but as a
+  // separate admin-namespaced copy since the admin list has no vote buttons.
+  "governance.proposals.header.eyebrow": "Proposals",
+  "governance.proposals.header.title": "Open it to a <em>vote</em>",
+  "governance.proposals.header.sub":
+    "Council-seat removals and funding-policy changes are decided by member vote, not admin fiat. Open a proposal here; members vote on the public Governance page.",
+  "governance.proposals.createCta": "New proposal",
+  "governance.proposals.empty": "No proposal has been opened yet.",
+  "governance.proposals.list.status.passed": "Passed",
+  "governance.proposals.list.status.failed": "Did not pass",
+  "governance.proposals.list.type.council_removal": "Council seat removal",
+  "governance.proposals.list.type.funding_change": "Funding change",
+  "governance.proposals.list.tally":
+    "{forCount} for · {againstCount} against · {forPercent}% in favour",
+  "governance.proposals.list.closes": "Voting closes {date}",
+  "governance.proposals.list.closedOn": "Voting closed {date}",
+  "governance.proposals.form.eyebrow": "New proposal",
+  "governance.proposals.form.title": "Open a <em>proposal</em>",
+  "governance.proposals.form.sub":
+    "This goes live on the public Governance page immediately and members can start voting once it opens.",
+  "governance.proposals.form.field.type": "Type",
+  "governance.proposals.form.field.type.council_removal":
+    "Council seat removal",
+  "governance.proposals.form.field.type.funding_change": "Funding change",
+  "governance.proposals.form.field.title": "Title",
+  "governance.proposals.form.field.description": "Description",
+  "governance.proposals.form.field.targetMemberId":
+    "Member id (seat under review)",
+  "governance.proposals.form.field.targetMemberIdHint":
+    "The account id of the council member this proposal concerns. Required for a council-seat proposal.",
+  "governance.proposals.form.field.opensAt": "Voting opens",
+  "governance.proposals.form.field.closesAt": "Voting closes",
+  "governance.proposals.form.save": "Open proposal",
+  "governance.proposals.form.cancel": "Cancel",
+  "governance.proposals.form.saved": "Proposal opened.",
+  "governance.proposals.form.error":
+    "Could not open the proposal. Please try again.",
+  "governance.proposals.form.validation":
+    "Fill in every field before opening the proposal.",
 
   "governance.finances.stat.sustainerMrr": "Sustainer MRR",
   "governance.finances.stat.totalIncome": "Total monthly income",
@@ -1520,7 +1673,7 @@ export const admin: Catalog = {
   "governance.finances.edit.eyebrow": "Finances",
   "governance.finances.edit.title": "Correct the <em>figures</em>",
   "governance.finances.edit.sub":
-    "Fix any number that is wrong. Every change is recorded, and the figure is marked as admin-entered.",
+    "These figures are reported by QueerPulse each quarter and reviewed by the finance team — not computed automatically. Fix any number that's wrong; every change is recorded and marked as admin-entered.",
   "governance.finances.edit.section.headline": "Headline figures",
   "governance.finances.edit.section.income": "Income lines",
   "governance.finances.edit.section.spend": "Spending lines",
@@ -1575,7 +1728,11 @@ export const admin: Catalog = {
   "governance.chart.range.6q": "6Q",
   "governance.chart.range.all": "All",
 
-  "governance.mrrPanel.live": "Sustainer MRR · live",
+  // Not "live" (COM-4): this figure is admin-reported each period and
+  // reviewed by the finance team, not computed automatically — the copy and
+  // the panel's dot (no longer pulsing, see AdminGovernancePage.module.css)
+  // were changed together so neither implies real-time computation.
+  "governance.mrrPanel.live": "Sustainer MRR · reported",
   "governance.mrrPanel.lead":
     "Every euro comes from members alone. <em>We will never sell member data</em>. That's written into our constitution, so it holds us to it.",
   "governance.mrrPanel.breakdown.care": "Care",
@@ -1645,6 +1802,9 @@ export const admin: Catalog = {
   "governance.audit.actionType.appeal_upheld": "Appeal upheld",
   "governance.audit.actionType.appeal_overturned": "Appeal overturned",
   "governance.audit.actionType.suspension_lifted": "Suspension lifted",
+  "governance.audit.actionType.role_changed": "Role changed",
+  "governance.audit.actionType.staff_role_granted": "Staff role granted",
+  "governance.audit.actionType.staff_role_revoked": "Staff role revoked",
   "governance.audit.range.today": "Today",
   "governance.audit.range.week": "This week",
   "governance.audit.range.quarter": "This quarter",
@@ -1826,14 +1986,18 @@ export const admin: Catalog = {
   "vouchGraph.modal.replayCta": "Replay",
   "vouchGraph.modal.replayStart": "Before anyone connected",
   "vouchGraph.modal.timeCutAriaLabel": "Connection timeline",
-  "vouchGraph.modal.verifyToast": "Trust basis attached. Opening verification",
-  "vouchGraph.modal.citeToast": "Trust path cited in the audit log",
+  "vouchGraph.modal.verifyToast": "{name} is verified.",
+  "vouchGraph.modal.verifyFailedToast":
+    "That didn't save. Check your connection and try again.",
   "vouchGraph.modal.privateToast": "This member keeps their network private",
   "vouchGraph.modal.loadingTitle": "Loading trust network…",
   "vouchGraph.modal.emptyTitle": "No trust network yet",
   "vouchGraph.modal.emptyBody": "This member doesn't have any vouches on record.",
   "vouchGraph.modal.truncatedNotice":
-    "Showing the 500 most recent members. Some connections may be hidden.",
+    "Showing the 500 most recent members. Search above to find someone older.",
+  "vouchGraph.memberFinder.placeholder": "Search all members…",
+  "vouchGraph.memberFinder.ariaLabel": "Search all members",
+  "vouchGraph.memberFinder.empty": "No members found.",
 
   "vouchGraph.inspector.emptyTitle": "Pick anyone",
   "vouchGraph.inspector.emptyBody":
@@ -1849,6 +2013,7 @@ export const admin: Catalog = {
   "vouchGraph.inspector.reportsBanner.title_other": "{count} reports on record",
   "vouchGraph.inspector.reportsBanner.body":
     "Open the member's moderation history before acting.",
+  "vouchGraph.inspector.reportsBanner.viewCta": "View in moderation queue",
   "vouchGraph.inspector.privateBanner.title": "Network kept private",
   "vouchGraph.inspector.privateBanner.body":
     "This member has chosen to hide their vouch graph. Respect it. Don't work around it.",
@@ -1875,9 +2040,9 @@ export const admin: Catalog = {
   "vouchGraph.inspector.ownVouchesStay_other":
     "Their own {count} vouches stay valid. Weigh the human cost before acting.",
   "vouchGraph.inspector.useAsVerificationCta": "Use as verification basis",
+  "vouchGraph.inspector.verifiedCta": "Verified",
   "vouchGraph.inspector.expandCta": "Expand network",
   "vouchGraph.inspector.collapseCta": "Collapse network",
-  "vouchGraph.inspector.citeCta": "Cite in audit log",
 
   "vouchGraph.tooltip.vouchesIn_one": "{count} vouch in",
   "vouchGraph.tooltip.vouchesIn_other": "{count} vouches in",
@@ -1992,6 +2157,7 @@ export const admin: Catalog = {
 
   "settings.note.label": "Note (optional)",
   "settings.note.placeholder": "Why are you making this change?",
+  "settings.note.hint": "Applies to the next change you make below.",
   "settings.saved": "Settings saved.",
   "settings.saveError": "Couldn’t save that. Nothing was changed.",
 

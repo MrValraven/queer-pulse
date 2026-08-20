@@ -7,6 +7,7 @@ import {
 import { toPage } from "../../../shared/api/pagination";
 import type {
   ConversationResponse,
+  MessageRequestResponse,
   MessageResponse,
   MessageSearchResponse,
   Paginated,
@@ -67,14 +68,16 @@ export const sendMessage = (
   clientMessageId?: string,
   forwarded?: boolean,
   attachment?: GifAttachment,
-  kind?: "user" | "gif",
+  kind?: "user" | "gif" | "image",
 ) =>
   apiPost<MessageResponse>(`/conversations/${conversationId}/messages`, {
     body,
     ...(replyToId ? { replyToId } : {}),
     ...(clientMessageId ? { clientMessageId } : {}),
     ...(forwarded ? { forwarded: true } : {}),
-    ...(kind === "gif" && attachment ? { kind: "gif", attachment } : {}),
+    ...((kind === "gif" || kind === "image") && attachment
+      ? { kind, attachment }
+      : {}),
   });
 
 /** GET /conversations/:id/pins — the conversation's SHARED pinned messages,
@@ -127,21 +130,34 @@ export const editMessage = (
     { body },
   );
 
-/** PATCH /conversations/:id — pin/unpin or favorite/unfavorite a chat
- *  (WhatsApp-style, CONVERSATION-scoped — distinct from the message-level pin
- *  in `pinMessage`/`unpinMessage`). Shares the same endpoint `updateGroup`
- *  (title/avatar) and the mute preference use. The server caps a caller at 3
- *  pinned chats and answers 409 past it (mirrored client-side before this
- *  ever fires — see `useTogglePin`). */
+/** PATCH /conversations/:id — pin/unpin, favorite/unfavorite, or mute/unmute a
+ *  chat (WhatsApp-style, CONVERSATION-scoped — distinct from the message-level
+ *  pin in `pinMessage`/`unpinMessage`). Shares the same endpoint as
+ *  `updateGroup` (title/avatar). The server caps a caller at 3 pinned chats
+ *  and answers 409 past it (mirrored client-side before this ever fires — see
+ *  `useTogglePin`). */
 export const updateConversationPrefs = (
   conversationId: string,
-  changes: { pinned?: boolean; favorite?: boolean },
+  changes: { pinned?: boolean; favorite?: boolean; muted?: boolean },
 ) =>
   apiPatch<ConversationResponse>(`/conversations/${conversationId}`, changes);
 
 /** POST /conversations — open (or reuse) a DM with a member by handle. */
 export const startConversation = (recipientHandle: string) =>
   apiPost<ConversationResponse>("/conversations", { recipientHandle });
+
+/**
+ * POST /messages/request — a first-contact message to a member by handle,
+ * addressed to someone the caller may or may not already be connected with.
+ * When they're already connected the server delivers `body` as an ordinary
+ * message and returns `conversationId`; otherwise it seeds a connection
+ * request instead and returns `connectionRequestId` (the conversation
+ * materializes once the recipient accepts — see the "Requests" inbox tab).
+ * Used by `NewMessageModal`'s fall-through when the picked member isn't an
+ * accepted connection yet.
+ */
+export const sendMessageRequest = (toSlug: string, body: string) =>
+  apiPost<MessageRequestResponse>("/messages/request", { toSlug, body });
 
 /** POST /conversations/group — create a group thread. Members are addressed by
  *  handle (slug); the caller becomes owner. Each member must be a connection and
@@ -199,13 +215,18 @@ export const updateGroup = (
  *  `AbortSignal` (react-query forwards its `queryFn` signal here) so a fast
  *  retype cancels the previous keystroke's still-in-flight request instead of
  *  letting it run to completion against the backend. */
+/** `conversationId`, when supplied, scopes the search to that single thread
+ *  ("search in this chat", opened from an already-open conversation) instead
+ *  of the caller's whole inbox. */
 export async function searchMessages(
   query: string,
   limit?: number,
   signal?: AbortSignal,
+  conversationId?: string,
 ): Promise<MessageSearchResponse> {
   const params = new URLSearchParams({ q: query });
   if (limit) params.set("limit", String(limit));
+  if (conversationId) params.set("conversationId", conversationId);
   return apiGet<MessageSearchResponse>(
     `/messages/search?${params.toString()}`,
     undefined,

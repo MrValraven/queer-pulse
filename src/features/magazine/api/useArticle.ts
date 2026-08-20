@@ -49,13 +49,16 @@ export function useArticle(id: string) {
       const dto = await getArticle(id).catch(() => null);
       if (!dto) return { article: null, related: [] };
 
-      const authorDetail = await getAuthor(dto.author.handle).catch(() => null);
-      const article = articleResponseToArticle(dto, fmt, authorDetail?.bio);
-
+      // CNT-17 fix: the author lookup and the related-articles lookup only
+      // depend on `dto` (just resolved above), not on each other — they used
+      // to run as a serial waterfall (author, then related) for no reason.
       const tag = dto.tags[0];
-      const relatedPage = tag
-        ? await getArticles({ tag }).catch(() => null)
-        : null;
+      const [authorDetail, relatedPage] = await Promise.all([
+        getAuthor(dto.author.handle).catch(() => null),
+        tag ? getArticles({ tag }).catch(() => null) : Promise.resolve(null),
+      ]);
+
+      const article = articleResponseToArticle(dto, fmt, authorDetail?.bio);
       const related = (relatedPage?.items ?? [])
         .filter((item) => item.slug !== dto.slug)
         .slice(0, 3)

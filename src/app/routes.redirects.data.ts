@@ -135,7 +135,6 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/account-locked", routes.accountLocked],
   ["/account-suspended", routes.accountSuspended],
   ["/invite-expired", routes.inviteExpired],
-  ["/pending-review", routes.pendingReview],
   ["/verification-needed", routes.verificationNeeded],
   ["/status", routes.status],
   // Communities (2026-08-10): /communities/home merged into /communities.

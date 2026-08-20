@@ -8,6 +8,7 @@ import { DirectoryRatingDistribution } from "./DirectoryRatingDistribution";
 import { DirectoryReviewControls } from "./DirectoryReviewControls";
 import { DirectoryReviewForm } from "./DirectoryReviewForm";
 import { DirectoryReviewReply } from "./DirectoryReviewReply";
+import { DirectoryReviewReportControl } from "./DirectoryReviewReportControl";
 import type { ReviewSort, ReviewStarFilter } from "./reviewSort";
 import { countByStar, sortAndFilterReviews } from "./reviewSort";
 import { Stars } from "./DirectoryStars";
@@ -165,6 +166,15 @@ export function DirectoryReviewsSection({
                   values={{ count: review.helpful }}
                 />
               </div>
+              {/* Visible to any viewer, not just the owner (unlike the reply
+                  composer below) — hidden only in the moderation preview,
+                  same as the write-a-review form above. */}
+              {!preview && (
+                <DirectoryReviewReportControl
+                  reviewId={review.id}
+                  reviewerName={review.name}
+                />
+              )}
               <DirectoryReviewReply
                 review={review}
                 ownerRef={ownerRef}

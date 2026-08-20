@@ -1,0 +1,61 @@
+/* Mirrors DirectorySuggestEditModal.module.css's label/input treatment so
+ * this small "fix one thing" form reads consistently with the app's other
+ * lightweight edit modals. */
+.field {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-strong);
+  margin-block: 12px 6px;
+}
+
+.helper {
+  font-size: 0.75rem;
+  color: var(--ink-40);
+  margin-block-start: -2px;
+  margin-block-end: 6px;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  padding: 10px 14px;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text-strong);
+  background: var(--cream);
+}
+
+.textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.input:focus-visible,
+.textarea:focus-visible {
+  outline: none;
+  border-color: var(--line-strong);
+  background: var(--paper);
+}
+
+.counter {
+  font-size: 0.75rem;
+  color: var(--ink-40);
+  margin-block-start: 6px;
+  text-align: right;
+}
+
+.moreLink {
+  display: block;
+  margin-block-start: 18px;
+  padding-block-start: 14px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+  font-size: 0.8125rem;
+  color: var(--ink-60);
+}
+
+.moreLink a {
+  color: var(--accent);
+  font-weight: 600;
+}

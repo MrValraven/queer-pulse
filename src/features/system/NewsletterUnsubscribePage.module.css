@@ -1,0 +1,19 @@
+/* Loading-state icon inside StatusCard's icon tile: a stroke ring that spins,
+   styled through the shared `.icon svg { stroke; fill: none }` rule so it
+   inherits the tile's tone colour like every other state icon does. */
+.spinIcon {
+  animation: spin 0.9s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinIcon {
+    animation-duration: 1.8s;
+  }
+}

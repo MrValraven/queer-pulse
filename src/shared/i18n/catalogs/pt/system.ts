@@ -155,40 +155,6 @@ export const system: Catalog = {
     "Detetado: <b>Portugal · Lisboa</b> · esta é uma demonstração da vista de região restrita.",
   "geoRestricted.goHome": "Ir para o início",
 
-  // ── InterestsEditorModal.tsx + interestsEditor.data.ts ───────────────────
-  "interestsEditor.closeAria": "Fechar",
-  "interestsEditor.success.title": "Interesses <em>atualizados.</em>",
-  "interestsEditor.success.sub_one":
-    "Registámos o teu {count} interesse. Uma pessoa que dá votos de confiança com interesses em comum vai tratar do teu pedido. Mantê-los atualizados pode acelerar o processo.",
-  "interestsEditor.success.sub_other":
-    "Registámos os teus {count} interesses. Uma pessoa que dá votos de confiança com interesses em comum vai tratar do teu pedido. Mantê-los atualizados pode acelerar o processo.",
-  "interestsEditor.success.doneCta": "Concluído",
-  "interestsEditor.eyebrow": "Pedido de convite · interesses",
-  "interestsEditor.title": "Atualiza os teus <em>interesses.</em>",
-  "interestsEditor.desc":
-    "Associamos o teu pedido a uma pessoa que dá votos de confiança com interesses em comum. Escolhe os que se aplicam. Quanto mais sinceros, melhor a correspondência.",
-  "interestsEditor.count_one": "{count} selecionado",
-  "interestsEditor.count_other": "{count} selecionados",
-  "interestsEditor.pickAtLeastTwo": "escolhe pelo menos 2",
-  "interestsEditor.saveCta": "Guardar interesses",
-  "interestsEditor.cancelCta": "Cancelar",
-  "interestsEditor.options.filmCinema": "Cinema",
-  "interestsEditor.options.readingGroups": "Grupos de leitura",
-  "interestsEditor.options.mutualAid": "Entreajuda",
-  "interestsEditor.options.activism": "Ativismo",
-  "interestsEditor.options.nightlife": "Vida noturna",
-  "interestsEditor.options.transHealthcare": "Saúde trans",
-  "interestsEditor.options.migrationVisas": "Migração e vistos",
-  "interestsEditor.options.housing": "Habitação",
-  "interestsEditor.options.mentorship": "Mentoria",
-  "interestsEditor.options.musicStudio": "Música e estúdio",
-  "interestsEditor.options.soberSpaces": "Espaços sóbrios",
-  "interestsEditor.options.parentingFamily": "Parentalidade e família",
-  "interestsEditor.options.sports": "Desporto",
-  "interestsEditor.options.artMaking": "Arte e criação",
-  "interestsEditor.options.techWork": "Tecnologia e trabalho",
-  "interestsEditor.options.wellbeing": "Bem-estar",
-
   // ── InviteExpiredPage.tsx (estado do convite: expirado / usado / cancelado / inválido) ─
   "inviteState.expired.eyebrow": "Convite expirado",
   "inviteState.expired.heading": "Esta ligação <em>expirou.</em>",
@@ -295,37 +261,6 @@ export const system: Catalog = {
   "offline.status": "À escuta de sinal",
   "offline.retryCta": "Tentar outra vez",
   "offline.retryingCta": "Ainda offline",
-
-  // ── PendingReviewPage.tsx ─────────────────────────────────────────────────
-  "pendingReview.kicker": "Pedido de convite · em fila de espera",
-  "pendingReview.heading": "Estás em <em>{position}.º</em> lugar na fila.",
-  "pendingReview.lead":
-    "Abrimos a comunidade em grupos. O teu pedido para <b>{email}</b> está na fila e uma pessoa que dá votos de confiança vai revê-lo dentro de <b>~ 3 semanas</b>.",
-  "pendingReview.position.title": "A tua posição",
-  "pendingReview.position.body":
-    "Em {total} na fila · admitimos <b>cerca de {perMonth} por mês</b> · previsão para ti: <b>{eta}</b>",
-  "pendingReview.position.etaValue": "final de junho / início de julho de 2026",
-  "pendingReview.timeline.step1.title": "Pedido recebido · {date}",
-  "pendingReview.timeline.step1.desc":
-    "Inscreveste-te · registámos o teu interesse",
-  "pendingReview.timeline.step2.title":
-    "À espera de uma pessoa que dá votos de confiança",
-  "pendingReview.timeline.step2.desc":
-    "Uma pessoa da comunidade está a comparar os teus interesses · isto demora 2 a 3 semanas",
-  "pendingReview.timeline.step3.title": "Chamada breve de confirmação · 15 min",
-  "pendingReview.timeline.step3.desc":
-    "Descontraída e simpática · só para sabermos quem és",
-  "pendingReview.timeline.step4.title":
-    "Convite enviado · ativa-se no prazo de 14 dias",
-  "pendingReview.timeline.step4.desc":
-    "Vais receber uma ligação de utilização única para ativar a tua conta",
-  "pendingReview.actions.magazineCta": "Ler a revista",
-  "pendingReview.actions.vouchCta":
-    "Pedir um voto de confiança a alguém da comunidade",
-  "pendingReview.actions.updateInterestsCta": "Atualizar os meus interesses",
-  "pendingReview.foot.knowMember":
-    "Já conheces alguém que te possa dar um voto de confiança? <a>Envia-lhe uma ligação de voto de confiança num clique</a>. Isso adianta-te na fila.",
-  "pendingReview.foot.withdraw": "Queres desistir? <a>Escreve à equipa</a>.",
 
   // ── PwaPromptPage.tsx ─────────────────────────────────────────────────────
   "pwaPrompt.kicker": "Adicionar ao ecrã principal · sem loja de aplicações",
@@ -505,4 +440,24 @@ export const system: Catalog = {
   "maintenance.stillSignedIn":
     "A tua sessão continua iniciada. Está tudo à tua espera quando voltarmos.",
   "maintenance.retry": "Tentar outra vez",
+
+  // ── NewsletterUnsubscribePage.tsx (CNT-19: cancelar subscrição da newsletter) ─
+  "newsletterUnsubscribe.loading.eyebrow": "Newsletter",
+  "newsletterUnsubscribe.loading.heading": "A confirmar o teu pedido…",
+  "newsletterUnsubscribe.success.eyebrow": "Subscrição cancelada",
+  "newsletterUnsubscribe.success.heading": "Saíste da <em>lista.</em>",
+  "newsletterUnsubscribe.success.lead":
+    "Deixámos de enviar o resumo semanal para este endereço. Podes voltar a subscrever a partir da página inicial sempre que quiseres.",
+  "newsletterUnsubscribe.alreadyUnsubscribed.eyebrow": "Já sem subscrição",
+  "newsletterUnsubscribe.alreadyUnsubscribed.heading":
+    "Já estava <em>tratado.</em>",
+  "newsletterUnsubscribe.alreadyUnsubscribed.lead":
+    "Este endereço já tinha cancelado a subscrição. Não está a receber o resumo semanal.",
+  "newsletterUnsubscribe.invalid.eyebrow": "Ligação não reconhecida",
+  "newsletterUnsubscribe.invalid.heading":
+    "Não conseguimos <em>reconhecer esta ligação.</em>",
+  "newsletterUnsubscribe.invalid.lead":
+    "Esta ligação para cancelar a subscrição não corresponde a nada do nosso lado. Pode estar desatualizada ou mal copiada. Se ainda estás a receber o resumo semanal, avisa a equipa e nós tratamos disso.",
+  "newsletterUnsubscribe.goHomeCta": "Voltar à página inicial",
+  "newsletterUnsubscribe.contactCta": "Falar com a equipa",
 };

@@ -227,22 +227,23 @@ export const admin: Catalog = {
     "Cada item aberto tem uma decisão humana associada. Vai descansar. A rede está segura nas tuas mãos.",
   "dashboard.header.moderationCta": "Abrir moderação",
 
-  "dashboard.metrics.activeMembers.label": "Pessoas ativas",
+  "dashboard.metrics.activeMembers.label": "Membros em situação regular",
   "dashboard.metrics.openReports.label": "Denúncias em aberto",
   "dashboard.metrics.medianResponse.label": "Resposta mediana",
-  "dashboard.metrics.sustainerMrr.label": "MRR de apoiantes",
+  "dashboard.metrics.communityHealth.label": "Saúde das comunidades",
   "dashboard.metrics.trendPercent": "{value}%",
   "dashboard.metrics.trendOldest": "mais antiga: {hours}",
   "dashboard.metrics.trendWellUnder": "bem abaixo",
   "dashboard.metrics.trendOverSla": "acima do alvo",
   "dashboard.metrics.trendNoData": "ainda sem dados suficientes",
-  "dashboard.metrics.trendTracked": "acompanhado em tempo real",
-  "dashboard.metrics.footGrowth": "+{count} este mês",
+  "dashboard.metrics.trendHealthy": "saudável",
+  "dashboard.metrics.trendNeedsHand": "precisa de ajuda",
+  "dashboard.metrics.footGrowth": "+{count} este mês · com base no estado da conta",
   "dashboard.metrics.footEmergencies_one": "{count} é uma emergência",
   "dashboard.metrics.footEmergencies_other": "{count} são emergências",
   "dashboard.metrics.footSlaTarget": "meta de SLA: {hours}",
-  "dashboard.metrics.footSustainers_one": "{count} apoiante",
-  "dashboard.metrics.footSustainers_other": "{count} apoiantes",
+  "dashboard.metrics.footNeedsHand_one": "{count} comunidade precisa de ajuda",
+  "dashboard.metrics.footNeedsHand_other": "{count} comunidades precisam de ajuda",
 
   "dashboard.triage.title": "Precisa de <em>uma pessoa</em>",
   "dashboard.triage.sortedToast": "Ordenado por urgência",
@@ -520,6 +521,18 @@ export const admin: Catalog = {
   "members.role.demoteConfirm.body":
     "{name} vai perder acesso a todas as ferramentas de admin de imediato. Podes restaurar mais tarde. Isto fica registado no histórico de auditoria em teu nome.",
   "members.role.demoteConfirm.confirmCta": "Remover admin",
+  "members.role.grantConfirm.title": "Tornar {name} admin?",
+  "members.role.grantConfirm.body":
+    "{name} vai ter acesso total de admin à plataforma de imediato: gestão de equipa e de papéis, ações de moderação sobre qualquer denúncia e todas as outras ferramentas de admin. Este é o nível de acesso mais alto que a QueerPulse tem. Fica registado no histórico de auditoria em teu nome.",
+  "members.role.grantConfirm.confirmCta": "Conceder acesso de admin",
+
+  // ── Equipa (/admin/staff) — lista só de leitura de todos os moderadores/admins
+  "staff.title": "Equipa e <em>papéis</em>",
+  "staff.header.eyebrow": "Quem gere a QueerPulse",
+  "staff.header.sub":
+    "Todos os moderadores e admins da plataforma. Para alterar o papel de alguém, abre o perfil dessa pessoa em Membros.",
+  "staff.empty": "Ninguém tem um papel de equipa neste momento.",
+  "staff.loadError": "Não foi possível carregar a lista de equipa.",
 
   // ── Membros: papéis de equipa (concessões funcionais adicionais, ex. desk da revista)
   "staffRoles.title": "Papéis e acesso",
@@ -770,6 +783,14 @@ export const admin: Catalog = {
   "adminChangemakerNominations.unknownMember": "Um antigo membro",
   "adminChangemakerNominations.row.by": "Nomeado por {name}",
   "adminChangemakerNominations.row.sent": "Enviado {date}",
+  "adminChangemakerNominations.row.reviewedBy": "Revisto por {name}",
+  "adminChangemakerNominations.status.pending": "Pendente",
+  "adminChangemakerNominations.status.approved": "Aprovada",
+  "adminChangemakerNominations.status.dismissed": "Recusada",
+  "adminChangemakerNominations.row.approveCta": "Aprovar",
+  "adminChangemakerNominations.row.dismissCta": "Recusar",
+  "adminChangemakerNominations.row.reviewNotePlaceholder":
+    "Nota opcional para quem nomeou",
   "adminChangemakerNominations.loadMore": "Carregar mais",
   "adminChangemakerNominations.loadingMore": "A carregar…",
 
@@ -1108,6 +1129,8 @@ export const admin: Catalog = {
   "moderation.filters.emergencies": "Emergências",
   "moderation.filters.mine": "Atribuídas a mim",
   "moderation.filterAriaLabel": "Filtrar denúncias",
+  "moderation.subjectFilter.label": "Filtrado para @{subjectId}",
+  "moderation.subjectFilter.clearAriaLabel": "Limpar filtro",
 
   "moderation.selectReportAriaLabel": "Selecionar denúncia: {title}",
   "moderation.reportedByLabel": "Denunciado por",
@@ -1118,7 +1141,17 @@ export const admin: Catalog = {
   "moderation.bulk.dismissCta": "Rejeitar",
   "moderation.bulk.spamCta": "Remover como spam",
   "moderation.bulk.reassignCta": "Reatribuir…",
+  "moderation.bulk.warnCta": "Advertir",
+  "moderation.bulk.suspendCta": "Suspender…",
+  "moderation.bulk.banCta": "Banir",
   "moderation.bulk.cancelCta": "Cancelar",
+  "moderation.bulk.suspendModal.title_one": "Suspender {count} membro",
+  "moderation.bulk.suspendModal.title_other": "Suspender {count} membros",
+  "moderation.bulk.suspendModal.body_one":
+    "Escolha por quanto tempo a conta por trás desta denúncia fica suspensa.",
+  "moderation.bulk.suspendModal.body_other":
+    "Escolha por quanto tempo as contas por trás destas {count} denúncias ficam suspensas.",
+  "moderation.bulk.suspendModal.confirmCta": "Confirmar suspensão",
 
   "moderation.emergency.ariaLabel": "Emergências de segurança",
   "moderation.emergency.count_one": "{count} emergência de segurança",
@@ -1183,6 +1216,18 @@ export const admin: Catalog = {
   "moderation.reportDrawer.noteAriaLabel": "Nota para a pessoa",
   "moderation.reportDrawer.transparency":
     "Vamos dizer a {name} exatamente o que foi feito e porquê, com uma ligação para recorrer. Nada acontece em silêncio.",
+  "moderation.reportDrawer.accountActionsHidden":
+    "Restringir e banir não aparecem aqui porque esta denúncia é sobre conteúdo, não sobre uma conta. Usa ocultar, remover, avisar ou dispensar.",
+  "moderation.reportDrawer.restrictDurationLabel": "Duração da restrição",
+  "moderation.reportDrawer.restrictDuration.24h": "24 horas",
+  "moderation.reportDrawer.restrictDuration.7d": "7 dias",
+  "moderation.reportDrawer.restrictDuration.30d": "30 dias",
+  "moderation.reportDrawer.unassigned": "Não atribuído",
+  "moderation.reportDrawer.assignedToYou": "Atribuído a ti",
+  "moderation.reportDrawer.assignedTo": "Atribuído a {name}",
+  "moderation.reportDrawer.anotherModerator": "outra pessoa moderadora",
+  "moderation.reportDrawer.assignToMeCta": "Atribuir a mim",
+  "moderation.reportDrawer.unassignCta": "Remover atribuição",
   "moderation.reportDrawer.pickActionToast":
     "Escolhe uma ação antes de confirmar.",
   "moderation.reportDrawer.escalatedToast":
@@ -1200,6 +1245,10 @@ export const admin: Catalog = {
   "moderation.appealDrawer.decidedByLine": "Decidido por {name} · {when}",
   "moderation.appealDrawer.viewOriginalCta":
     "Ver a denúncia original e a conversa",
+  "moderation.appealDrawer.originalContentTitle":
+    "O que foi originalmente denunciado",
+  "moderation.appealDrawer.originalContentUnavailable":
+    "O conteúdo da denúncia original não está disponível — pode ter sido apagado, ou este recurso não tem uma denúncia associada.",
   "moderation.appealDrawer.argumentTitle": "O argumento apresentado",
   "moderation.appealDrawer.supportersTitle": "Quem está a apoiar",
   "moderation.appealDrawer.noSupport":
@@ -1221,6 +1270,9 @@ export const admin: Catalog = {
   "moderation.severity.medium": "Média",
   "moderation.severity.low": "Baixa",
 
+  "moderation.actions.dismiss.label": "Dispensar",
+  "moderation.actions.dismiss.desc": "Nenhuma ação necessária, encerra a denúncia",
+  "moderation.actions.dismiss.done": "dispensa",
   "moderation.actions.hide.label": "Ocultar conteúdo",
   "moderation.actions.hide.desc": "Remove da vista, mantém para registo",
   "moderation.actions.hide.done": "ocultação",
@@ -1251,6 +1303,8 @@ export const admin: Catalog = {
   "moderation.priorReports.count_one": "{count} denúncia anterior",
   "moderation.priorReports.count_other": "{count} denúncias anteriores",
   "moderation.priorReports.newAccount": "Conta nova · {vouches} votos de confiança",
+  "moderation.assignedToFlag": "Atribuído a {name}",
+  "moderation.slaOverdue": "Atrasado",
   "moderation.risk.atRisk": "Em risco",
   "moderation.risk.high": "Alto",
   "moderation.risk.medium": "Médio",
@@ -1289,11 +1343,16 @@ export const admin: Catalog = {
   "moderation.queue.restoredToast": "Denúncia restaurada.",
   "moderation.queue.serviceErrorToast":
     "Não foi possível contactar o serviço de segurança. Restaurado.",
+  "moderation.queue.bulkPartialToast":
+    "{succeededCount} com sucesso, {failedCount} falharam: {reasons}",
   "moderation.queue.bulkToast_one": "{verb} de {count} denúncia",
   "moderation.queue.bulkToast_other": "{verb} de {count} denúncias",
   "moderation.queue.bulkVerb.dismissed": "Rejeição",
   "moderation.queue.bulkVerb.removedAsSpam": "Remoção como spam",
   "moderation.queue.bulkVerb.reassigned": "Reatribuição",
+  "moderation.queue.bulkVerb.warned": "Advertência",
+  "moderation.queue.bulkVerb.suspended": "Suspensão",
+  "moderation.queue.bulkVerb.banned": "Banimento",
   "moderation.queue.bulkRestoredToast": "Denúncias restauradas.",
   "moderation.queue.appealToast": "{verb} · aviso enviado a {name}",
   "moderation.queue.appealVerb.upheld": "Mantido",
@@ -1421,6 +1480,43 @@ export const admin: Catalog = {
   "communities.settings.status": "Estado",
   "communities.settings.frozenChip": "Congelada · em revisão",
 
+  // ── Sobreposições de administração (congelar/descongelar, arquivar/desarquivar, reatribuir dono) ──
+  "communities.settings.overrides.title": "Sobreposições de moderação",
+  "communities.settings.overrides.sub":
+    "Contorna os controlos próprios de dono/moderador desta comunidade, para quando a sua liderança não pode ser contactada ou não é de confiança.",
+  "communities.settings.overrides.freezeCta": "Congelar",
+  "communities.settings.overrides.unfreezeCta": "Descongelar",
+  "communities.settings.overrides.freezeToast": "{name} está agora congelada",
+  "communities.settings.overrides.freezeFailedToast":
+    "Não foi possível congelar essa comunidade. Tenta novamente.",
+  "communities.settings.overrides.unfreezeToast": "{name} já não está congelada",
+  "communities.settings.overrides.unfreezeFailedToast":
+    "Não foi possível descongelar essa comunidade. Tenta novamente.",
+  "communities.settings.overrides.reassignCta": "Reatribuir dono",
+  "communities.settings.overrides.archiveCta": "Arquivar",
+  "communities.settings.overrides.unarchiveCta": "Desarquivar",
+  "communities.settings.overrides.unarchiveToast": "{name} já não está arquivada",
+  "communities.settings.overrides.unarchiveFailedToast":
+    "Não foi possível desarquivar essa comunidade. Tenta novamente.",
+  "communities.settings.overrides.archiveToast": "{name} foi arquivada",
+  "communities.settings.overrides.archiveFailedToast":
+    "Não foi possível arquivar {name}. Tenta novamente.",
+  "communities.settings.overrides.archiveConfirmTitle": "Arquivar {name}?",
+  "communities.settings.overrides.archiveConfirmBody":
+    "A comunidade é retirada de imediato para os membros. Um admin pode reverter isto no mesmo painel.",
+  "communities.settings.overrides.archiveConfirmCta": "Arquivar comunidade",
+  "communities.settings.overrides.reassignToast": "{name} é agora a dona",
+  "communities.settings.overrides.reassignFailedToast":
+    "Não foi possível reatribuir a propriedade. Tenta novamente.",
+  "communities.settings.overrides.reassignTitle": "Reatribuir a propriedade de {name}",
+  "communities.settings.overrides.reassignBody":
+    "O membro escolhido torna-se dono de imediato. Se a comunidade já tiver uma pessoa dona, esta passa a moderadora.",
+  "communities.settings.overrides.reassignEmptyTitle": "Ninguém a quem reatribuir",
+  "communities.settings.overrides.reassignEmptyDesc":
+    "Esta comunidade ainda não tem outros membros no quadro.",
+  "communities.settings.overrides.reassignConfirmCta": "Reatribuir propriedade",
+  "communities.settings.overrides.reassignPickLabel": "Escolhe a nova pessoa dona",
+
   "communities.health.modalTitle": "Porquê <em>{score}</em>?",
   "communities.health.howCalculatedCta": "Como é calculada",
   "communities.health.offerSupportCta": "Oferecer apoio",
@@ -1512,7 +1608,58 @@ export const admin: Catalog = {
     "A publicação de relatórios de transparência ainda não está disponível.",
   "governance.tabs.finances": "Finanças",
   "governance.tabs.policy": "Política e versões",
+  "governance.tabs.proposals": "Propostas",
   "governance.tabs.audit": "Registo de auditoria",
+
+  // NOTA: o resto de `governance.overview.*` (os editores de
+  // saúde/moderação/conselho/princípios/decisões do separador Política) é uma
+  // lacuna pré-existente neste catálogo — já faltava antes desta mudança, em
+  // EN e PT. Fora do âmbito de COM-1/COM-4; só é adicionada a chave de que
+  // este `AdminGovernanceHealthEditor` precisa, para que traduza
+  // corretamente quando essa lacuna for preenchida.
+  "governance.overview.health.field.valueComputedHint":
+    "Calculado em tempo real a partir das contas ativas — não editável aqui.",
+
+  // ── Separador Propostas (COM-1) ─────────────────────────────────────────────
+  "governance.proposals.header.eyebrow": "Propostas",
+  "governance.proposals.header.title": "Pôr a <em>votos</em>",
+  "governance.proposals.header.sub":
+    "Encerrar um lugar no conselho e mudanças de política de financiamento são decididas por voto das pessoas da comunidade, não por decisão administrativa. Abre a proposta aqui; a votação acontece na página pública de Governação.",
+  "governance.proposals.createCta": "Nova proposta",
+  "governance.proposals.empty": "Ainda não foi aberta nenhuma proposta.",
+  "governance.proposals.list.status.passed": "Aprovada",
+  "governance.proposals.list.status.failed": "Não aprovada",
+  "governance.proposals.list.type.council_removal":
+    "Encerramento de lugar no conselho",
+  "governance.proposals.list.type.funding_change": "Mudança de financiamento",
+  "governance.proposals.list.tally":
+    "{forCount} a favor · {againstCount} contra · {forPercent}% a favor",
+  "governance.proposals.list.closes": "Votação encerra {date}",
+  "governance.proposals.list.closedOn": "Votação encerrada a {date}",
+  "governance.proposals.form.eyebrow": "Nova proposta",
+  "governance.proposals.form.title": "Abrir uma <em>proposta</em>",
+  "governance.proposals.form.sub":
+    "Isto fica visível de imediato na página pública de Governação, e as pessoas podem votar assim que a votação abrir.",
+  "governance.proposals.form.field.type": "Tipo",
+  "governance.proposals.form.field.type.council_removal":
+    "Encerramento de lugar no conselho",
+  "governance.proposals.form.field.type.funding_change":
+    "Mudança de financiamento",
+  "governance.proposals.form.field.title": "Título",
+  "governance.proposals.form.field.description": "Descrição",
+  "governance.proposals.form.field.targetMemberId":
+    "Id da pessoa (lugar em avaliação)",
+  "governance.proposals.form.field.targetMemberIdHint":
+    "O id da conta da pessoa do conselho a que esta proposta diz respeito. Obrigatório para uma proposta de lugar no conselho.",
+  "governance.proposals.form.field.opensAt": "Votação abre",
+  "governance.proposals.form.field.closesAt": "Votação encerra",
+  "governance.proposals.form.save": "Abrir proposta",
+  "governance.proposals.form.cancel": "Cancelar",
+  "governance.proposals.form.saved": "Proposta aberta.",
+  "governance.proposals.form.error":
+    "Não foi possível abrir a proposta. Tenta novamente.",
+  "governance.proposals.form.validation":
+    "Preenche todos os campos antes de abrir a proposta.",
 
   "governance.finances.stat.sustainerMrr": "MRR de apoiantes",
   "governance.finances.stat.totalIncome": "Receita mensal total",
@@ -1547,7 +1694,7 @@ export const admin: Catalog = {
   "governance.finances.edit.eyebrow": "Finanças",
   "governance.finances.edit.title": "Corrigir os <em>valores</em>",
   "governance.finances.edit.sub":
-    "Corrija qualquer número errado. Cada alteração é registada, e o valor passa a estar marcado como introduzido por um administrador.",
+    "Estes valores são reportados pela QueerPulse a cada trimestre e revistos pela equipa financeira — não são calculados automaticamente. Corrige qualquer número errado; cada alteração é registada e marcada como introduzida por um administrador.",
   "governance.finances.edit.section.headline": "Valores principais",
   "governance.finances.edit.section.income": "Linhas de receita",
   "governance.finances.edit.section.spend": "Linhas de despesa",
@@ -1602,7 +1749,11 @@ export const admin: Catalog = {
   "governance.chart.range.6q": "6T",
   "governance.chart.range.all": "Tudo",
 
-  "governance.mrrPanel.live": "MRR de apoiantes · em direto",
+  // Já não "em direto" (COM-4): este valor é reportado pela administração a
+  // cada período e revisto pela equipa financeira, não calculado
+  // automaticamente — o texto e o ponto do painel (deixou de pulsar, ver
+  // AdminGovernancePage.module.css) foram alterados em conjunto.
+  "governance.mrrPanel.live": "MRR de apoiantes · reportado",
   "governance.mrrPanel.lead":
     "Cada euro vem apenas das pessoas. <em>Nunca vamos vender dados de ninguém</em>. Está escrito na nossa constituição, por isso obriga-nos a cumpri-lo.",
   "governance.mrrPanel.breakdown.care": "Cuidado",
@@ -1670,6 +1821,9 @@ export const admin: Catalog = {
   "governance.audit.actionType.appeal_upheld": "Recurso deferido",
   "governance.audit.actionType.appeal_overturned": "Recurso revertido",
   "governance.audit.actionType.suspension_lifted": "Suspensão levantada",
+  "governance.audit.actionType.role_changed": "Papel alterado",
+  "governance.audit.actionType.staff_role_granted": "Papel de equipa concedido",
+  "governance.audit.actionType.staff_role_revoked": "Papel de equipa revogado",
   "governance.audit.range.today": "Hoje",
   "governance.audit.range.week": "Esta semana",
   "governance.audit.range.quarter": "Este trimestre",
@@ -1850,16 +2004,18 @@ export const admin: Catalog = {
   "vouchGraph.modal.replayCta": "Rever",
   "vouchGraph.modal.replayStart": "Antes de qualquer ligação",
   "vouchGraph.modal.timeCutAriaLabel": "Linha do tempo das ligações",
-  "vouchGraph.modal.verifyToast":
-    "Base de confiança associada. A abrir verificação",
-  "vouchGraph.modal.citeToast":
-    "Caminho de confiança citado no registo de auditoria",
+  "vouchGraph.modal.verifyToast": "Verificámos {name}.",
+  "vouchGraph.modal.verifyFailedToast":
+    "Não foi possível guardar. Verifica a ligação e tenta de novo.",
   "vouchGraph.modal.privateToast": "Esta pessoa mantém a rede privada",
   "vouchGraph.modal.loadingTitle": "A carregar rede de confiança…",
   "vouchGraph.modal.emptyTitle": "Ainda sem rede de confiança",
   "vouchGraph.modal.emptyBody": "Esta pessoa ainda não tem votos de confiança registados.",
   "vouchGraph.modal.truncatedNotice":
-    "A mostrar os 500 membros mais recentes. Algumas ligações podem estar ocultas.",
+    "A mostrar os 500 membros mais recentes. Procura acima para encontrar alguém mais antigo.",
+  "vouchGraph.memberFinder.placeholder": "Procurar todos os membros…",
+  "vouchGraph.memberFinder.ariaLabel": "Procurar todos os membros",
+  "vouchGraph.memberFinder.empty": "Nenhum membro encontrado.",
 
   "vouchGraph.inspector.emptyTitle": "Escolhe alguém",
   "vouchGraph.inspector.emptyBody":
@@ -1877,6 +2033,7 @@ export const admin: Catalog = {
     "{count} denúncias registadas",
   "vouchGraph.inspector.reportsBanner.body":
     "Consulta o histórico de moderação desta pessoa antes de agires.",
+  "vouchGraph.inspector.reportsBanner.viewCta": "Ver na fila de moderação",
   "vouchGraph.inspector.privateBanner.title": "Rede mantida privada",
   "vouchGraph.inspector.privateBanner.body":
     "Esta pessoa escolheu esconder a sua rede de votos de confiança. Respeita isso. Não tentes contornar.",
@@ -1903,9 +2060,9 @@ export const admin: Catalog = {
   "vouchGraph.inspector.ownVouchesStay_other":
     "Os {count} votos de confiança que ela deu continuam válidos. Pesa o custo humano antes de agires.",
   "vouchGraph.inspector.useAsVerificationCta": "Usar como base de verificação",
+  "vouchGraph.inspector.verifiedCta": "Verificado",
   "vouchGraph.inspector.expandCta": "Expandir rede",
   "vouchGraph.inspector.collapseCta": "Colapsar rede",
-  "vouchGraph.inspector.citeCta": "Citar no registo de auditoria",
 
   "vouchGraph.tooltip.vouchesIn_one": "{count} voto de confiança recebido",
   "vouchGraph.tooltip.vouchesIn_other": "{count} votos de confiança recebidos",
@@ -2023,6 +2180,7 @@ export const admin: Catalog = {
 
   "settings.note.label": "Nota (opcional)",
   "settings.note.placeholder": "Porque estás a fazer esta alteração?",
+  "settings.note.hint": "Aplica-se à próxima alteração que fizeres abaixo.",
   "settings.saved": "Definições guardadas.",
   "settings.saveError": "Não foi possível guardar. Nada foi alterado.",
 

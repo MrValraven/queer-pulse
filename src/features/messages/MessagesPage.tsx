@@ -51,6 +51,7 @@ export function MessagesPage() {
     deletePending,
     send,
     sendGif,
+    sendImage,
     retrySend,
     forwardMessage,
   } = useMessagesController();
@@ -105,6 +106,7 @@ export function MessagesPage() {
               messageGroups={messageGroups}
               onSend={send}
               onSendGif={sendGif}
+              onSendImage={sendImage}
               blocked={activeBlocked}
               onBack={isMobile ? () => setView("list") : undefined}
               onRetry={retrySend}
@@ -153,7 +155,14 @@ export function MessagesPage() {
           groups={forwardableGroups}
           onClose={() => setForwardSource(null)}
           onPick={(recipient: Conversation) => {
-            forwardMessage(recipient, forwardSource.text, forwardSource.attachment);
+            forwardMessage(
+              recipient,
+              forwardSource.text,
+              forwardSource.attachment,
+              forwardSource.kind === "gif" || forwardSource.kind === "image"
+                ? forwardSource.kind
+                : undefined,
+            );
             setForwardSource(null);
           }}
         />

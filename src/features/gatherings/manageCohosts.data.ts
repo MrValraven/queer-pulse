@@ -1,4 +1,6 @@
 import { MEMBERS, type Member } from "../members/data/members";
+import { initialsFromParts } from "../../shared/lib/initials";
+import type { EventHostDTO } from "./api/events.api";
 
 /** A person the host can invite or add as a cohost. */
 export interface CohostCandidate {
@@ -21,6 +23,30 @@ function toCandidate(member: Member): CohostCandidate {
     initials: member.initials,
     tint: member.tint,
     photo: member.photo,
+  };
+}
+
+/** Cycles through the same three avatar tints the attendee rows use
+ *  (`AV_TINTS` in `api/events.adapters.ts`) — cohosts carry no tint of their
+ *  own on the wire, so a stable per-row tint just needs to vary visually. */
+const COHOST_TINTS: Member["tint"][] = ["coral", "jade", "plum"];
+
+/** `GET /events/:slug`'s real `cohosts` (`EventOrganizerView[]`, no per-person
+ *  role/bio text) -> the light shape `CohostManager` renders. `roleLabel` is
+ *  pre-translated by the caller (`t("gatherings:cohost.roleCohost")`) since
+ *  this is a plain data mapper, not a component. */
+export function hostDtoToCandidate(
+  dto: EventHostDTO,
+  index: number,
+  roleLabel: string,
+): CohostCandidate {
+  return {
+    slug: dto.slug,
+    name: `${dto.firstName} ${dto.lastName}`.trim(),
+    role: roleLabel,
+    initials: initialsFromParts(dto.firstName, dto.lastName),
+    tint: COHOST_TINTS[index % COHOST_TINTS.length]!,
+    photo: dto.avatarUrl ?? undefined,
   };
 }
 

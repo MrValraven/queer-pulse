@@ -39,4 +39,9 @@ export const eventKeys = {
   cohostInviteRoot: ["cohost-invite"] as const,
   cohostInvite: (id: string | undefined, demoMode: boolean) =>
     ["cohost-invite", id, demoMode] as const,
+
+  /** Prefix matching every "my RSVP details" query (any slug, any mode). */
+  rsvpDetailsRoot: ["rsvp-details"] as const,
+  rsvpDetails: (slug: string | undefined, demoMode: boolean) =>
+    ["rsvp-details", slug, demoMode] as const,
 };

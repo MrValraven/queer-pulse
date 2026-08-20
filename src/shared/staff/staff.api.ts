@@ -1,9 +1,13 @@
 import { apiGet } from "../api/client";
 import type { StaffRole } from "../components/ui/StaffBadge";
 
-/** One staff member on the wire. */
+/** One staff member on the wire. `firstName`/`lastName` are unused by the
+ *  slug-keyed map this file builds, but are part of the response shape — the
+ *  admin staff-roster page fetches the same endpoint directly for them. */
 export interface PlatformStaffRowDTO {
   slug: string;
+  firstName: string;
+  lastName: string;
   platformRole: StaffRole;
 }
 

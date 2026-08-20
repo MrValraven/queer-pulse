@@ -1,5 +1,6 @@
 import { FormField } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { ArticleSeoFields } from "./ArticleSeoFields";
 import styles from "../pieceTabs.module.css";
 
 export interface ArticleMetaRailProps {
@@ -11,12 +12,17 @@ export interface ArticleMetaRailProps {
    * `PieceRecordDto`), not on `ArticleDraftDto`. Shown here for context, but
    * editing it belongs on the piece record's Brief tab. */
   byline: string;
-  /** The contributor's credit-line qualifier (e.g. "Contributing editor").
-   * `ArticleDraftDto` has no field for this yet, so it's editor-local only
-   * for this phase — it does not round-trip through `save()` and resets on
-   * reload, same as the plan's own "Suggesting" toggle stub. */
+  /** The contributor's credit-line qualifier (e.g. "Contributing editor") —
+   * a real `MagazineArticle.role` column, round-trips through `save()` like
+   * every other field on this rail (mirrors `MagazineDeck.role`). */
   role: string;
   onRoleChange: (value: string) => void;
+  metaDescription: string;
+  onMetaDescriptionChange: (value: string) => void;
+  socialImage: string;
+  onSocialImageChange: (value: string) => void;
+  canonicalUrl: string;
+  onCanonicalUrlChange: (value: string) => void;
   /** Read-only — `slug` is server-derived (`ArticleDraftDto`), not part of
    * `UpdateArticleDraftDto`. */
   slug: string;
@@ -38,10 +44,11 @@ function joinCsv(values: string[]): string {
 
 /**
  * The piece's editorial metadata: section, byline (read-only), role, tags,
- * slug (read-only), and the current read-time. Ported from the design
- * prototype's meta rail (`mag-write.jsx`). Every editable field patches
- * straight into `ArticleEditorPage`'s state, which the page's autosave
- * debounce picks up like any block edit.
+ * slug (read-only), the current read-time, and SEO/social fields
+ * (`ArticleSeoFields`). Ported from the design prototype's meta rail
+ * (`mag-write.jsx`). Every editable field patches straight into
+ * `ArticleEditorPage`'s state, which the page's autosave debounce picks up
+ * like any block edit.
  */
 export function ArticleMetaRail({
   section,
@@ -51,6 +58,12 @@ export function ArticleMetaRail({
   byline,
   role,
   onRoleChange,
+  metaDescription,
+  onMetaDescriptionChange,
+  socialImage,
+  onSocialImageChange,
+  canonicalUrl,
+  onCanonicalUrlChange,
   slug,
   readMinutes,
   wordCount,
@@ -103,6 +116,15 @@ export function ArticleMetaRail({
       >
         <input type="text" value={slug} readOnly />
       </FormField>
+
+      <ArticleSeoFields
+        metaDescription={metaDescription}
+        onMetaDescriptionChange={onMetaDescriptionChange}
+        socialImage={socialImage}
+        onSocialImageChange={onSocialImageChange}
+        canonicalUrl={canonicalUrl}
+        onCanonicalUrlChange={onCanonicalUrlChange}
+      />
 
       <div className={styles.kvs}>
         <div className={styles.kv}>

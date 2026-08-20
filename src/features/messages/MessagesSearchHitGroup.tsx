@@ -23,8 +23,11 @@ function highlight(text: string, query: string): ReactNode {
 }
 
 /** One matched-message row: sender + time, then the highlighted snippet. Selects
- *  the message (opens the thread and jumps to the bubble) on click. */
-function MessageHitRow({
+ *  the message (opens the thread and jumps to the bubble) on click. Exported
+ *  for `ThreadSearchModal`, which reuses this exact row for its flat,
+ *  single-conversation hit list (no group header needed — it's already inside
+ *  that conversation). */
+export function MessageHitRow({
   hit,
   query,
   onSelect,

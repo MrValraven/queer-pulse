@@ -197,15 +197,24 @@ export function EventTools({
     const r = e.currentTarget.getBoundingClientRect();
     c.openMore(ev.id, r.left, r.bottom + 6);
   };
-  const Bell = (
-    <ToolBtn on={ev.reminder} onClick={() => c.toggleReminder(ev.id)}>
+  // Purely informational — NOT a per-event toggle. The real reminder cron
+  // (`EventRemindersService`) reminds every going/maybe attendee
+  // unconditionally, by each member's own GLOBAL lead-time preference
+  // (`EventReminderLeadRow`/`GET /me/event-reminder-preferences`); there is
+  // no per-event opt-out to flip. A clickable on/off bell here would imply
+  // control this app doesn't have, so it renders as a static `<span>` (never
+  // a `<button>`) with a title explaining what actually governs it. Shown
+  // only for the "going" category — that's the one place `MyEvent.category`
+  // reliably means an active going/maybe RSVP, the exact condition the cron
+  // reminds on.
+  const ReminderIndicator = (
+    <span
+      className={sx("tool-btn on")}
+      title={t("myevents:tools.reminderInfoTooltip")}
+    >
       {Icons.bell}
-      <span>
-        {ev.reminder
-          ? t("myevents:tools.reminderOn")
-          : t("myevents:tools.remindMe")}
-      </span>
-    </ToolBtn>
+      <span>{t("myevents:tools.reminderOn")}</span>
+    </span>
   );
   const Cal = (
     <ToolBtn onClick={() => setCalOpen(true)}>
@@ -240,7 +249,7 @@ export function EventTools({
     return (
       <>
         <div className={sx("card-tools")}>
-          {Bell}
+          {ReminderIndicator}
           {DayofBtn}
           {ev.maybe && (
             <ToolBtn onClick={() => c.setGoing(ev.id)}>
@@ -267,7 +276,6 @@ export function EventTools({
     return (
       <>
         <div className={sx("card-tools")}>
-          {Bell}
           {Cal}
           {!ev.cohost && (
             <Link className={sx("tool-btn")} to={managePath(ev)}>
@@ -284,7 +292,6 @@ export function EventTools({
   if (ev.category === "waitlisted") {
     return (
       <div className={sx("card-tools")}>
-        {Bell}
         <ToolBtn danger onClick={() => c.leaveWaitlist(ev.id)}>
           {Icons.leave}
           {t("myevents:tools.leaveWaitlist")}
@@ -324,7 +331,6 @@ export function EventTools({
   if (ev.category === "saved") {
     return (
       <div className={sx("card-tools")}>
-        {Bell}
         {MoreBtn}
       </div>
     );

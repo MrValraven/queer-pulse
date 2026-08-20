@@ -107,6 +107,7 @@ export function ThreadPage() {
               count={thread.comments}
               loading={loading}
               isLocked={!!thread.isLocked}
+              lockReason={thread.lockReason}
               nodes={replyTree}
               replyKey={replyKey}
               likedReplies={likedReplies}

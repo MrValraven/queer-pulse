@@ -39,6 +39,23 @@
 [data-theme="dark"] .tile {
   border-color: rgba(var(--line-rgb), 0.14);
 }
+
+/* Only applied when `to` is set — the tile renders as a link with its own
+   drill-down destination, so it needs the usual clickable affordances. */
+.tileLink {
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.16s var(--ease);
+}
+@media (hover: hover) {
+  .tileLink:hover {
+    border-color: rgba(var(--line-rgb), 0.28);
+  }
+}
+.tileLink:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 2px;
+}
 .value {
   font-family: var(--serif);
   font-weight: 400;

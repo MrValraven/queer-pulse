@@ -83,6 +83,12 @@
 .searchInput::-webkit-search-cancel-button {
   display: none;
 }
+.searchHint {
+  margin: 6px 0 0;
+  padding-left: 2px;
+  font-size: 0.78rem;
+  color: var(--ink-40);
+}
 .searchClear {
   position: absolute;
   right: 8px;

@@ -1,4 +1,5 @@
 import type { TFunction } from "../../shared/i18n/types";
+import type { ReportSubjectType } from "../safety/reportReasons";
 import type { AdminTone } from "./ui";
 
 export type Severity = "emergency" | "high" | "medium" | "low";
@@ -116,6 +117,16 @@ export type PriorReports =
 
 export interface ModReport {
   id: string;
+  /** What kind of thing the report is about (member, post, listing, …) — gates
+   *  which drawer actions apply (see `modActionsFor`): account-level actions
+   *  like restrict/ban only make sense, and only succeed server-side, for a
+   *  `"member"` report. */
+  subjectType: ReportSubjectType;
+  /** The exact server-side `subjectId` string this report carries — the same
+   *  literal value "prior reports" are counted against. Powers the "view this
+   *  member's report history" click-through (COM-6). In demo mode this is a
+   *  stand-in id, not a real backend key. */
+  subjectId: string;
   severity: Severity;
   /** Stronger square category label (AdminCat). Not currently rendered in the
    *  demo UI (ReportCard shows the severity label instead) but kept to mirror
@@ -134,6 +145,12 @@ export interface ModReport {
   priorReports?: PriorReports;
   age: string;
   risk: { tone: AdminTone; key: string };
+  /** Server-computed SLA deadline (severity-tiered), ISO timestamp (COM-8). */
+  slaDueAt?: string;
+  /** Null/undefined = unassigned. Populated once a moderator self-assigns
+   *  the report (COM-5). */
+  assignedModeratorId?: string | null;
+  assignedModeratorName?: string;
   detail?: ReportDetail;
 }
 
@@ -153,6 +170,12 @@ export interface AppealOriginal {
 
 export interface Appeal {
   id: string;
+  /** The original report this appeal contests, when resolvable (COM-11) —
+   *  lets the review drawer fetch and show the ORIGINAL reported content, not
+   *  just the moderator's self-reported reason. Absent for a "cold" appeal
+   *  with no linked report, and in the demo seed (no backing report data to
+   *  fetch). */
+  reportId?: string;
   severity: Severity;
   chips: ReportChip[];
   title: string;
@@ -192,6 +215,8 @@ export interface ResolvedItem {
 export const EMERGENCY_REPORTS: ModReport[] = [
   {
     id: "r-emerg-1",
+    subjectType: "member",
+    subjectId: "reblanco",
     severity: "emergency",
     category: "Emergency",
     chips: [
@@ -207,6 +232,7 @@ export const EMERGENCY_REPORTS: ModReport[] = [
     priorReports: { kind: "count", count: 1 },
     age: "26m",
     risk: { tone: "danger", key: "admin:moderation.risk.atRisk" },
+    slaDueAt: new Date(Date.now() - 5 * 60_000).toISOString(),
     detail: {
       contentAuthor: "RB · @reblanco · in Lisbon Queers · public thread",
       excerpt:
@@ -273,6 +299,8 @@ export const EMERGENCY_REPORTS: ModReport[] = [
   },
   {
     id: "r-emerg-2",
+    subjectType: "member",
+    subjectId: "anon_4471",
     severity: "emergency",
     category: "Emergency",
     chips: [
@@ -286,12 +314,15 @@ export const EMERGENCY_REPORTS: ModReport[] = [
     priorReports: { kind: "newAccount", vouches: 0 },
     age: "1h",
     risk: { tone: "danger", key: "admin:moderation.risk.atRisk" },
+    slaDueAt: new Date(Date.now() + 40 * 60_000).toISOString(),
   },
 ];
 
 export const OTHER_REPORTS: ModReport[] = [
   {
     id: "r-harass",
+    subjectType: "member",
+    subjectId: "nightowl",
     severity: "high",
     category: "Harassment",
     chips: [{ tone: "coral", labelKey: "admin:moderation.chip.harassment" }],
@@ -303,9 +334,12 @@ export const OTHER_REPORTS: ModReport[] = [
     priorReports: { kind: "count", count: 4 },
     age: "3h",
     risk: { tone: "coral", key: "admin:moderation.risk.high" },
+    slaDueAt: new Date(Date.now() - 90 * 60_000).toISOString(),
   },
   {
     id: "r-vouch",
+    subjectType: "member",
+    subjectId: "vouch-ring-5",
     severity: "medium",
     category: "Vouch-abuse",
     chips: [{ tone: "violet", labelKey: "admin:moderation.chip.vouchAbuse" }],
@@ -320,6 +354,8 @@ export const OTHER_REPORTS: ModReport[] = [
   },
   {
     id: "r-spam",
+    subjectType: "member",
+    subjectId: "coin_daily",
     severity: "medium",
     category: "Spam",
     chips: [{ tone: "amber", labelKey: "admin:moderation.chip.spam" }],
@@ -333,6 +369,8 @@ export const OTHER_REPORTS: ModReport[] = [
   },
   {
     id: "r-listing-dispute",
+    subjectType: "listing",
+    subjectId: "rosa-amarga-cafe",
     severity: "medium",
     category: "Listing dispute",
     chips: [
@@ -376,6 +414,8 @@ export const OTHER_REPORTS: ModReport[] = [
   },
   {
     id: "r-offtopic",
+    subjectType: "post",
+    subjectId: "post-trans-friends-logistics",
     severity: "low",
     category: "Off-topic",
     chips: [{ tone: "jade", labelKey: "admin:moderation.chip.offTopic" }],
@@ -531,9 +571,21 @@ export interface ModAction {
   kind: ActionKind;
   /** Past-tense phrase catalog key, used in the confirmation toast. */
   doneKey: string;
+  /** True for actions that land on a member's account (`restrict`/`ban`). The
+   *  backend 400s these unless the report's `subjectType` is `"member"` (see
+   *  `account-enforcement.service.ts`), so `modActionsFor` only offers them for
+   *  member reports. */
+  memberOnly?: boolean;
 }
 
 export const MOD_ACTIONS: ModAction[] = [
+  {
+    id: "dismiss",
+    labelKey: "admin:moderation.actions.dismiss.label",
+    descriptionKey: "admin:moderation.actions.dismiss.desc",
+    kind: "neutral",
+    doneKey: "admin:moderation.actions.dismiss.done",
+  },
   {
     id: "hide",
     labelKey: "admin:moderation.actions.hide.label",
@@ -561,6 +613,7 @@ export const MOD_ACTIONS: ModAction[] = [
     descriptionKey: "admin:moderation.actions.restrict.desc",
     kind: "neutral",
     doneKey: "admin:moderation.actions.restrict.done",
+    memberOnly: true,
   },
   {
     id: "remove",
@@ -575,8 +628,22 @@ export const MOD_ACTIONS: ModAction[] = [
     descriptionKey: "admin:moderation.actions.ban.desc",
     kind: "destruct",
     doneKey: "admin:moderation.actions.ban.done",
+    memberOnly: true,
   },
 ];
+
+/**
+ * The action tiles that actually apply to a report's subject (P0-14). Ban and
+ * restrict land on a member's account — the backend rejects them with a 400
+ * for any report whose `subjectType` isn't `"member"` (a post, reply, listing,
+ * venue, …), so offering them there just sets the moderator up to fail. Every
+ * other action (dismiss, hide, shield, warn, remove) has no such subject-type
+ * restriction on the server and stays available everywhere.
+ */
+export function modActionsFor(subjectType: ReportSubjectType): ModAction[] {
+  if (subjectType === "member") return MOD_ACTIONS;
+  return MOD_ACTIONS.filter((action) => !action.memberOnly);
+}
 
 export interface ModReason {
   id: string;

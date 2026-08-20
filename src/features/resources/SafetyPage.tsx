@@ -17,6 +17,7 @@ import { routes } from "../../app/routeMap";
 import styles from "./SafetyPage.module.css";
 import { SAFETY_SUBPAGES } from "./safety.data";
 import { ResourceHero } from "./ResourceHero";
+import { CrisisStrip } from "./CrisisStrip";
 
 export function SafetyPage() {
   const { t } = useTranslation();
@@ -54,6 +55,8 @@ export function SafetyPage() {
         }
         lead={t("resources:safety.hero.intro")}
       />
+
+      <CrisisStrip />
 
       <div className={styles.content}>
         <Reveal as="section" className={styles.section}>

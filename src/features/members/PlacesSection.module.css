@@ -141,15 +141,24 @@
   }
 }
 .viewLink,
-.editLink {
+.editLink,
+.quickEditBtn {
   font-size: 13px;
   font-weight: 700;
   color: var(--text-strong);
   text-decoration: none;
 }
+.quickEditBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
 @media (hover: hover) {
   .viewLink:hover,
-  .editLink:hover {
+  .editLink:hover,
+  .quickEditBtn:hover {
     color: var(--accent-ink);
   }
 }

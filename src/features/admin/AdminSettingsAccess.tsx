@@ -41,6 +41,9 @@ export function AdminSettingsAccess({
   );
   const [lockdownMsg, setLockdownMsg] = useState("");
   const [closedMsg, setClosedMsg] = useState("");
+  // A single optional note, attached to whichever change is saved next, then
+  // cleared — it explains that one change, not a running log for the tab.
+  const [note, setNote] = useState("");
 
   // Every successful (and, since onSettled invalidates unconditionally, every
   // failed) mutation invalidates the settings query, and invalidateQueries
@@ -102,7 +105,13 @@ export function AdminSettingsAccess({
   });
 
   function save(input: UpdatePlatformSettingsInput) {
-    update.mutate(input, {
+    const trimmedNote = note.trim();
+    update.mutate(trimmedNote ? { ...input, note: trimmedNote } : input, {
+      onSuccess: () => {
+        // The note explained this specific change — clear it so it isn't
+        // accidentally reattached to the next, unrelated one.
+        if (trimmedNote) setNote("");
+      },
       onError: () => {
         showToast(t("admin:settings.saveError"), "error");
         // onSettled invalidates unconditionally, but a failed save leaves the
@@ -141,6 +150,8 @@ export function AdminSettingsAccess({
       setClosedMessage={setClosedMsg}
       lockdownMessage={lockdownMsg}
       setLockdownMessage={setLockdownMsg}
+      note={note}
+      setNote={setNote}
       confirming={confirming}
       setConfirming={setConfirming}
     />

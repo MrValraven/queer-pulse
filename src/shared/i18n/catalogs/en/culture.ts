@@ -2,10 +2,18 @@ import type { Catalog } from "../../types";
 
 /**
  * `culture` — the Lisbon queer-scene page (club picks, commission board, art
- * showcase, community radio). No feature-wide backend integration exists
- * except the Commission Board's "Express interest" mutation
- * (`api/useCreateCommissionInterest.ts`); everything else ships identically
- * in demo/live mode. Per the extraction brief's scope rule, all
+ * showcase, community radio). The club picks / commissions / showcase /
+ * radio *listings* themselves are curated editorial content with no
+ * server-backed listing (they ship identically in demo/live mode), but every
+ * member-submission modal is real: the Commission Board's "Express interest"
+ * hits its own mutation (`api/useCreateCommissionInterest.ts`), and the other
+ * four forms (suggest a pick, post a project, submit work, submit a
+ * playlist) record through the generic intake pipeline
+ * (`shared/api/intakes.ts`, kinds `culture_suggest_pick` /
+ * `culture_post_project` / `culture_submit_work` /
+ * `culture_submit_playlist`) — see `CultureFormModals.tsx`. None of those
+ * four kinds has a dedicated admin triage page yet, so their success copy
+ * makes no reply-time promise. Per the extraction brief's scope rule, all
  * fictional-user content stays English: book/film/album titles, member
  * quotes/questions/bios, commission project pitches, gallery artist credits,
  * and radio track/curator content are all left untranslated — only the
@@ -85,14 +93,14 @@ export const culture: Catalog = {
     "Community radio isn't on air yet. When a curator takes the first slot, you'll hear it here.",
   "radio.curatorLabel": "This week's curator",
   "radio.curatedBy": "curated by {name}",
-  "radio.pastPlaylists": "Past playlists",
   "radio.becomeCurator": "Become a curator",
   "radio.nowPlaying": "Now playing",
   "radio.upNext": "Up next",
   "radio.previousTrack": "Previous track",
   "radio.nextTrack": "Next track",
   "radio.play": "Play",
-  "radio.pause": "Pause",
+  "radio.playbackNote":
+    "Playback isn't live yet. This shows what's currently on air.",
 
   // ── Shared modal chrome ────────────────────────────────────────────────
   "modal.dialogAriaLabel": "Dialog",
@@ -116,10 +124,10 @@ export const culture: Catalog = {
   "suggestPick.success.title": "Pick",
   "suggestPick.success.em": "nominated.",
   "suggestPick.success.body":
-    "Thank you for nominating something for the club. The community decides what we read, watch and listen to next.",
+    "We've received your nomination. The community decides what we read, watch and listen to next.",
   "suggestPick.success.step1": "It joins the ballot for the last-Sunday vote.",
   "suggestPick.success.step2":
-    "We'll email you the results by <strong>{date}</strong>.",
+    "We don't send a results email yet, so check back here after the vote.",
 
   // ── Post a project modal ───────────────────────────────────────────────
   "postProject.title": "Post a <em>project</em>",
@@ -134,10 +142,10 @@ export const culture: Catalog = {
   "postProject.success.title": "Project",
   "postProject.success.em": "posted.",
   "postProject.success.body":
-    "Your call for collaborators is in the queue. We keep the board small and intentional, so every post is read by a human first.",
-  "postProject.success.step1": "A moderator reviews new posts within 48 hours.",
+    "We've received your project. The board is still small, so posts aren't matched automatically yet.",
+  "postProject.success.step1": "It's saved and visible to our team.",
   "postProject.success.step2":
-    "Once live, you'll get interest by email. First replies usually arrive within a week.",
+    "We'll reach out by email if a collaborator wants to move forward.",
 
   // ── Submit your work modal ─────────────────────────────────────────────
   "submitWork.title": "Submit your <em>work</em>",
@@ -154,11 +162,9 @@ export const culture: Catalog = {
   "submitWork.success.title": "Work",
   "submitWork.success.em": "submitted.",
   "submitWork.success.body":
-    "Thank you for trusting us with your work. The showcase rotates eight pieces at a time, chosen by the community.",
-  "submitWork.success.step1":
-    "Submissions are reviewed once a month by rotating member curators.",
-  "submitWork.success.step2":
-    "You'll hear back by <strong>{date}</strong>, selected or not.",
+    "We've received your work. The showcase rotates eight pieces at a time, chosen by the community.",
+  "submitWork.success.step1": "It's saved for the showcase queue.",
+  "submitWork.success.step2": "We'll reach out by email if it's selected.",
 
   // ── Submit a playlist modal ─────────────────────────────────────────────
   "submitPlaylist.eyebrow": "Community Radio",
@@ -176,11 +182,10 @@ export const culture: Catalog = {
   "submitPlaylist.success.title": "Playlist",
   "submitPlaylist.success.em": "received.",
   "submitPlaylist.success.body":
-    "Thank you for offering to take a turn on community radio. We rotate guest DJs so the sound stays human.",
-  "submitPlaylist.success.step1":
-    "A curator listens to every submission: no algorithm, no skips.",
+    "We've received your playlist. We rotate guest DJs so the sound stays human.",
+  "submitPlaylist.success.step1": "It's saved here for a curator to consider.",
   "submitPlaylist.success.step2":
-    "If it's a fit, we'll book you a slot and email you by <strong>{date}</strong>.",
+    "We'll reach out by email if we can book you a slot.",
 
   // ── Commission interest modal ───────────────────────────────────────────
   "commissionInterest.errorToast":

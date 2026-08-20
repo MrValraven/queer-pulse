@@ -137,6 +137,14 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> replied to your thread.",
   "type.forum_thread_reply.meta": "Reply",
 
+  // Sent to a member who follows a topic when a new post lands on it (a
+  // tagged forum thread). {topicLabel} comes from the payload.
+  "type.topic_new_post.text":
+    "Someone posted in a topic you follow: {topicLabel}.",
+  "type.topic_new_post.textNamed":
+    "<profile>{name}</profile> posted in a topic you follow: {topicLabel}.",
+  "type.topic_new_post.meta": "Topic update",
+
   "type.join_request_received.text": "Someone asked to join your community.",
   "type.join_request_received.textNamed":
     "<profile>{name}</profile> asked to join your community.",
@@ -271,6 +279,13 @@ export const notifications: Catalog = {
     "There's an update on your volunteer application.",
   "type.volunteer_application_decided.meta": "Volunteer application",
 
+  "type.changemaker_nomination_approved.text":
+    "Your nomination of {nomineeName} was approved. We're starting their story.",
+  "type.changemaker_nomination_approved.meta": "Changemaker nomination",
+  "type.changemaker_nomination_dismissed.text":
+    "Your nomination of {nomineeName} wasn't taken forward this time.",
+  "type.changemaker_nomination_dismissed.meta": "Changemaker nomination",
+
   "type.unknown.text": "You have a new notification.",
   "type.unknown.meta": "Notification",
 
@@ -285,6 +300,8 @@ export const notifications: Catalog = {
   "page.error.description":
     "Something went wrong reaching the server. This isn't an empty inbox. Try again in a moment.",
   "page.error.retry": "Try again",
+  "page.loadMoreCta": "Load more notifications",
+  "page.loadingMore": "Loading…",
 
   // Filter tabs (data.tsx's notificationTabs + the link-style Mentions tab)
   "tabs.all": "All",

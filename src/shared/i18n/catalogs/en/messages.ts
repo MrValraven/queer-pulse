@@ -38,6 +38,9 @@ export const messages: Catalog = {
   "thread.favoriteChat": "Favorite chat",
   "thread.unfavoriteChat": "Unfavorite chat",
   "thread.favoriteIndicator": "Favorite chat",
+  "thread.muteChat": "Mute notifications",
+  "thread.unmuteChat": "Unmute notifications",
+  "thread.mutedIndicator": "Notifications muted",
   "thread.deleteChat": "Delete chat",
   // Inbox filter tabs
   "thread.tabAll": "All",
@@ -67,6 +70,12 @@ export const messages: Catalog = {
   "gif.comingSoonTitle": "GIFs are coming soon",
   "gif.comingSoonHint": "We're wiring up GIF search. Check back soon to add a little motion to your messages.",
 
+  // Image attachments (Composer's ImageComposerButton, MessageBubbleBody)
+  "attachments.open": "Send a photo",
+  "attachments.imageAlt": "Photo message",
+  "attachments.fallbackText": "Photo",
+  "attachments.uploading": "Sending photo…",
+
   // Connection status strip (ConnectionStatusBanner) at the top of the open
   // thread — surfaces when the member is offline or the socket is reconnecting.
   "connection.offline": "You're offline. Messages will send when you reconnect.",
@@ -95,6 +104,13 @@ export const messages: Catalog = {
   "search.emptyTitle": "Nothing matches yet",
   "search.emptyDescription":
     "Nothing in your inbox matches “{query}”. Try another word, or someone's name.",
+
+  // "Search in this chat" (ThreadSearchModal), opened from the conversation
+  // header — scoped to the open thread instead of the whole inbox.
+  "search.inChatOpen": "Search in this chat",
+  "search.inChatTitle": "Search in {name}",
+  "search.inChatPlaceholder": "Search this conversation…",
+  "search.inChatAria": "Search messages in this conversation",
 
   // Conversation panel (ConversationPanel)
   "conversation.activeNow": "Active now",
@@ -205,12 +221,38 @@ export const messages: Catalog = {
   // New-message recipient picker (NewMessageModal)
   "newMessage.title": "New message",
   "newMessage.close": "Close",
-  "newMessage.sub": "Pick a connection to start a conversation.",
-  "newMessage.searchPlaceholder": "Search connections…",
-  "newMessage.searchAria": "Search connections",
+  "newMessage.sub": "Pick a connection, or search for someone new to message.",
+  "newMessage.searchPlaceholder": "Search connections or people…",
+  "newMessage.searchAria": "Search connections and members",
   "newMessage.loading": "Loading your connections…",
   "newMessage.none": "You haven't connected with anyone yet.",
   "newMessage.empty": "No connections match “{query}”.",
+  "newMessage.back": "Back",
+  // Fall-through: members found who AREN'T an accepted connection yet — picking
+  // one opens the message-request composer instead of an existing thread.
+  "newMessage.sectionStrangers": "Message someone new",
+  "newMessage.strangerSub": "Not connected yet",
+
+  // Message-request composer (MessageRequestComposer), the compose step
+  // NewMessageModal swaps in for a picked member who isn't a connection yet —
+  // POST /messages/request, which delivers directly if they turn out to
+  // already be connected, or seeds a connection request otherwise.
+  "request.notConnectedYet": "You're not connected yet",
+  "request.composeIntro":
+    "Introduce yourself. If they accept, you'll be connected and this becomes your first conversation.",
+  "request.composePlaceholder": "Say hello to {name}…",
+  "request.composeAria": "Your message",
+  "request.sendCta": "Send request",
+  "request.sendingLabel": "Sending…",
+  "request.sentToast": "Message request sent to {name}.",
+  "request.sentDirectToast": "Message sent to {name}.",
+  "request.errorToast": "Couldn't send your message. Try again.",
+
+  // "Requests" inbox tab (incoming message requests with accept/decline)
+  "requests.tabLabel": "Requests",
+  "requests.emptyTitle": "No message requests",
+  "requests.emptyDescription":
+    "When someone who isn't connected with you sends a first message, it appears here to accept or decline.",
 
   // Group chat (#17) — create-group picker (NewGroupModal), group header +
   // info (ConversationHeader / GroupInfoModal), and the composer's left-notice.

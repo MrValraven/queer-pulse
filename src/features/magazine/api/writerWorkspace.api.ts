@@ -1,5 +1,5 @@
 import { apiGet, apiPatch, apiPost } from "../../../shared/api/client";
-import type { CreatePieceMessageDto, PieceMessageDto, PieceStage } from "./pieces.api";
+import type { ArticleBlock, CreatePieceMessageDto, PieceMessageDto, PieceStage } from "./pieces.api";
 
 // ── Backend DTOs ───────────────────────────────────────────────────────────
 // Mirrors `queerpulse-backend/src/magazine/magazine-writer-response.ts`
@@ -61,6 +61,18 @@ export interface UpdateWriterBylineDto {
   byline: string;
 }
 
+/**
+ * Body of `POST /magazine/writer/pieces/:id/file` — mirrors `FileDraftDto`.
+ * `blocks` is optional (filing with nothing pasted keeps the old no-body
+ * behaviour); when present these are already-converted paragraph blocks
+ * (`FileDraftModal` splits the pasted text on blank lines, same rule
+ * `ArticleDocument`'s in-editor paste uses) that get appended to whatever
+ * the article draft already holds.
+ */
+export interface FileDraftBody {
+  blocks?: ArticleBlock[];
+}
+
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
 
 export const getMyAssignments = () =>
@@ -78,8 +90,8 @@ export const getMyPayments = () =>
 export const updateMyByline = (pieceId: string, body: UpdateWriterBylineDto) =>
   apiPatch<WriterAssignmentDto>(`/magazine/writer/pieces/${pieceId}/byline`, body);
 
-export const fileDraft = (pieceId: string) =>
-  apiPost<WriterAssignmentDto>(`/magazine/writer/pieces/${pieceId}/file`);
+export const fileDraft = (pieceId: string, body?: FileDraftBody) =>
+  apiPost<WriterAssignmentDto>(`/magazine/writer/pieces/${pieceId}/file`, body);
 
 // ── Piece messages (Phase 7 Wave F) ─────────────────────────────────────────
 // Same `PieceMessageDto` shape as the editor surface (defined once on

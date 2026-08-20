@@ -39,7 +39,10 @@ export function AdminMemberRoleControl({
   const { showToast } = useToast();
   const { user } = useAuth();
   const updateRole = useUpdateMemberRole();
-  const [confirmTarget, setConfirmTarget] = useState<MemberRole | null>(null);
+  const [confirm, setConfirm] = useState<{
+    role: MemberRole;
+    kind: "grant" | "demote";
+  } | null>(null);
 
   const currentRole = detail.role;
   const isSelf = user?.id === member.id;
@@ -50,7 +53,7 @@ export function AdminMemberRoleControl({
       : null;
 
   const apply = (targetRole: MemberRole) => {
-    setConfirmTarget(null);
+    setConfirm(null);
     updateRole.mutate(
       {
         memberId: member.id,
@@ -73,11 +76,20 @@ export function AdminMemberRoleControl({
 
   const onPick = (targetRole: MemberRole) => {
     if (targetRole === currentRole) return;
-    // Removing admin is the one move that strips real power — confirm it.
+    // Granting admin is the single most dangerous move here — full platform
+    // access, including staff/role management and moderation actions — so it
+    // gets at least as much confirmation friction as removing admin does.
+    const isAdminGrant =
+      targetRole === "admin" && ROLE_RANK[currentRole] < ROLE_RANK.admin;
+    if (isAdminGrant) {
+      setConfirm({ role: targetRole, kind: "grant" });
+      return;
+    }
+    // Removing admin also strips real power — confirm it.
     const isAdminDemotion =
       currentRole === "admin" && ROLE_RANK[targetRole] < ROLE_RANK.admin;
     if (isAdminDemotion) {
-      setConfirmTarget(targetRole);
+      setConfirm({ role: targetRole, kind: "demote" });
       return;
     }
     apply(targetRole);
@@ -120,25 +132,27 @@ export function AdminMemberRoleControl({
         </>
       )}
 
-      {confirmTarget && (
+      {confirm && (
         <AdminModal
-          title={t("admin:members.role.demoteConfirm.title", {
+          title={t(`admin:members.role.${confirm.kind}Confirm.title`, {
             name: member.name,
           })}
-          onClose={() => setConfirmTarget(null)}
+          onClose={() => setConfirm(null)}
           footer={
             <>
-              <Button variant="ghost" onClick={() => setConfirmTarget(null)}>
+              <Button variant="ghost" onClick={() => setConfirm(null)}>
                 {t("admin:common.cancel")}
               </Button>
-              <Button variant="danger" onClick={() => apply(confirmTarget)}>
-                {t("admin:members.role.demoteConfirm.confirmCta")}
+              <Button variant="danger" onClick={() => apply(confirm.role)}>
+                {t(`admin:members.role.${confirm.kind}Confirm.confirmCta`)}
               </Button>
             </>
           }
         >
           <p className={styles.roleConfirmBody}>
-            {t("admin:members.role.demoteConfirm.body", { name: member.name })}
+            {t(`admin:members.role.${confirm.kind}Confirm.body`, {
+              name: member.name,
+            })}
           </p>
         </AdminModal>
       )}

@@ -93,6 +93,7 @@ export const forum: Catalog = {
   "search.placeholder": "Search the forum…",
   "search.ariaLabel": "Search the forum",
   "search.clearAria": "Clear search",
+  "search.hint": "Searches thread titles, not the text inside posts and replies.",
 
   // ── ForumThreadList ─────────────────────────────────────────────────────
   "threadList.top": "Top",
@@ -160,11 +161,23 @@ export const forum: Catalog = {
   "locked.title": "This thread is closed to new replies",
   "locked.body":
     "A moderator has closed this thread, so replies are paused. You can still read everything here.",
+  "locked.reasonBody":
+    "A moderator has closed this thread: {reason}. You can still read everything here.",
   "locked.replyBlockedToast": "This thread is closed to new replies.",
 
   // ── ThreadTopbar · moderator lock control ───────────────────────────────
   "topbar.lockThread": "Close thread",
   "topbar.unlockThread": "Reopen thread",
+
+  // ── LockThreadModal (optional reason note when closing a thread) ────────
+  "lockReason.title": "Close this thread",
+  "lockReason.sub":
+    "Members will still be able to read everything here — this only pauses new replies. Let them know why, if it's useful.",
+  "lockReason.label": "Reason (optional)",
+  "lockReason.placeholder": "e.g. resolved, off-topic, moved to a community",
+  "lockReason.cancel": "Cancel",
+  "lockReason.confirm": "Close thread",
+  "lockReason.locking": "Closing…",
 
   // ── ThreadTopbar · admin official-byline control ────────────────────────
   "topbar.markOfficial": "Mark as QueerPulse Official",

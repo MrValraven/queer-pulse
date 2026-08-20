@@ -20,10 +20,10 @@ export const connect: Catalog = {
   "page.eyebrow": "A tua rede",
   "page.title": "Pessoas que <em>conheceste mesmo.</em>",
   "page.lead":
-    "A QueerPulse não faz seguidores. Ligas-te a pessoas quando já as conheceste: num convívio, através de alguém, ou porque te deram um voto de confiança. Qualidade em vez de quantidade.",
+    "O teu perfil principal não faz seguidores. Ligas-te a pessoas quando já as conheceste: num convívio, através de alguém, ou porque te deram um voto de confiança. Qualidade em vez de quantidade.",
   "page.inviteCta": "Convidar alguém",
   "page.note":
-    "<b>Sem contagem de seguidores, de propósito.</b> Se procuras “seguir as publicações de alguém” sem te ligares primeiro, usa antes o feed de Comunidades. As ligações são bidirecionais: desbloqueiam mensagens e atualizações marcadas.",
+    "<b>Sem contagem de seguidores aqui, de propósito.</b> Queres seguir as publicações de uma persona sem te ligares primeiro? É para isso que servem as personas. As ligações são bidirecionais: desbloqueiam mensagens e atualizações marcadas.",
   "page.loadMoreLoading": "A carregar…",
   "page.loadMore": "Carregar mais",
 
@@ -42,11 +42,11 @@ export const connect: Catalog = {
   "moreMenu.block": "Bloquear {name}",
   "moreMenu.unblock": "Desbloquear {name}",
   "moreMenu.report": "Denunciar",
+  "moreMenu.reportTitle": "Denunciar {name}?",
   "moreMenu.toastMuted": "Silenciaste {name}",
   "moreMenu.toastUnmuted": "Deixaste de silenciar {name}",
   "moreMenu.toastBlocked": "Bloqueaste {name}",
   "moreMenu.toastUnblocked": "Desbloqueaste {name}",
-  "moreMenu.toastReportSent": "Denúncia enviada sobre {name}",
 
   // Texto dos cartões (ConnectionCards)
   "card.profileAria": "Perfil de {name}",

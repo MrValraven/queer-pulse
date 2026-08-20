@@ -1,6 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useDirectoryListingsActions } from "../../../app/providers/useDirectoryListingsActions";
+import { toItemsPage } from "../../../shared/api/pagination";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
@@ -13,27 +14,28 @@ import {
   detailDtoToPlace,
   submittedToPlace,
 } from "./directory.adapters";
-import { getDirectory, getDirectorySpace } from "./directory.api";
+import { getDirectory, getDirectoryPage, getDirectorySpace } from "./directory.api";
 import { ApiError } from "../../../shared/api/client";
 
 export const DIRECTORY_KEY = "directory";
 
 /**
- * Source for the public business directory grid (`/local/directory`).
+ * Whole-catalog source for callers that need every live business client-side
+ * rather than a browsable page: the gatherings venue picker, @mention
+ * suggestions, and the directory detail page's "related places" strip. The
+ * `/local/directory` grid itself uses `useDirectoryPlacesPage` below (real
+ * server-side filtering + pagination) — this hook stays a small, unfiltered,
+ * unpaginated read for surfaces that just want "every business" to search/
+ * match against locally.
  *
  * Demo mode returns the prototype's own `DIRECTORY_PLACES` registry and never
  * hits the network. Live mode fetches the public `GET /directory` (every live
- * listing) and adapts each card — so with "Populate platform" OFF the page
- * shows real businesses, and the fabricated fixture only appears in demo.
+ * listing, capped at the backend's `DEFAULT_LIST_LIMIT`) and adapts each card
+ * — so with "Populate platform" OFF these surfaces work against real
+ * businesses, and the fabricated fixture only appears in demo.
  *
- * Always fetches the unfiltered grand total — the directory page's "Verified
- * safe spaces" chip is applied client-side (alongside category/query/vibe) so
- * its "X of Y" count stays meaningful. `getDirectory`'s `safe` param remains a
- * valid, separately-usable API capability (the backend also boosts verified
- * listings first by default) for any caller that wants server-side filtering.
- *
- * Returns a plain array (page keeps its own `useSimulatedLoad` skeleton), so
- * this stays a drop-in for the previous synchronous read point.
+ * Returns a plain array (callers keep their own loading UI), so this stays a
+ * drop-in for the previous synchronous read point.
  */
 export function useDirectoryPlaces(): DirectoryPlace[] {
   const { demoMode } = useDemoMode();
@@ -47,6 +49,101 @@ export function useDirectoryPlaces(): DirectoryPlace[] {
     },
   });
   return query.data ?? [];
+}
+
+export interface DirectoryPlacesPageFilters {
+  /** Free-text search — sent server-side as `q` in live mode. */
+  query?: string;
+  /** `"verified"` restricts to safe-space-verified listings — sent
+   * server-side as `safe`. `null`/absent = no restriction. */
+  safe?: "verified" | null;
+}
+
+export interface DirectoryPlacesPageResult {
+  /** Every place loaded so far, flattened across loaded pages. */
+  places: DirectoryPlace[];
+  /** Server-reported grand total matching the current query/safe filter
+   * (live); the full fixture length in demo. */
+  total: number;
+  /** True while the first page is in flight. */
+  isLoading: boolean;
+  /** True when another page is available (always false in demo). */
+  hasNextPage: boolean;
+  /** Fetch and append the next page. */
+  fetchNextPage: () => void;
+  /** True while a subsequent page loads. */
+  isFetchingNextPage: boolean;
+}
+
+interface DirectoryPageVM {
+  items: DirectoryPlace[];
+  total: number;
+  page: number;
+}
+
+/**
+ * Paginated, server-filtered source for the `/local/directory` grid
+ * (gap-audit HSG-5): sends the active `query`/`safe` filters to the backend
+ * as `q`/`safe` query params — instead of `useDirectoryPlaces`' old pattern of
+ * fetching every live listing unfiltered and filtering client-side — and
+ * pages through the real backend `total` via `getDirectoryPage` rather than
+ * silently stopping at `DEFAULT_LIST_LIMIT`. `cat` (category) deliberately
+ * stays a client-side filter over the loaded pages (see
+ * `useDirectoryFilters`'s `categoryCounts`), and `vibe` is demo-only (see
+ * `LocalFilterFields`'s `useDemoMode` gate) — neither is a real server-side
+ * concept here.
+ *
+ * Demo mode returns the full `DIRECTORY_PLACES` fixture as a single terminal
+ * page (`hasNextPage: false`), so demo renders exactly as before with no
+ * "Load more" ever offered. Mirrors `useCompanies`'s identical
+ * `useInfiniteQuery` shape.
+ */
+export function useDirectoryPlacesPage(
+  filters: DirectoryPlacesPageFilters = {},
+): DirectoryPlacesPageResult {
+  const { demoMode } = useDemoMode();
+  const trimmedQuery = (filters.query ?? "").trim();
+  const safe = filters.safe ?? undefined;
+
+  const query = useInfiniteQuery<DirectoryPageVM>({
+    queryKey: [DIRECTORY_KEY, "page", demoMode, trimmedQuery, safe],
+    initialPageParam: 1,
+    queryFn: async ({ pageParam }) => {
+      if (demoMode) {
+        return {
+          items: DIRECTORY_PLACES,
+          total: DIRECTORY_PLACES.length,
+          page: 1,
+        };
+      }
+      const res = toItemsPage(
+        await getDirectoryPage({
+          q: trimmedQuery || undefined,
+          safe,
+          page: pageParam as number,
+        }),
+      );
+      return {
+        items: res.items.map(cardDtoToPlace),
+        total: res.total,
+        page: res.page,
+      };
+    },
+    getNextPageParam: (last, all) => {
+      const loaded = all.reduce((count, page) => count + page.items.length, 0);
+      return loaded < last.total ? last.page + 1 : undefined;
+    },
+  });
+
+  const pages = query.data?.pages ?? [];
+  return {
+    places: pages.flatMap((page) => page.items),
+    total: pages[0]?.total ?? 0,
+    isLoading: query.isLoading,
+    hasNextPage: query.hasNextPage,
+    fetchNextPage: () => void query.fetchNextPage(),
+    isFetchingNextPage: query.isFetchingNextPage,
+  };
 }
 
 /**

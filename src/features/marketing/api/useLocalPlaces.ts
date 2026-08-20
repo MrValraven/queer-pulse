@@ -7,24 +7,49 @@ import {
   venueToLocal,
   type LocalPlace,
 } from "../localPlaces";
-import { useDirectoryPlaces } from "./useDirectory";
+import {
+  useDirectoryPlacesPage,
+  type DirectoryPlacesPageFilters,
+} from "./useDirectory";
+
+export interface LocalPlacesResult {
+  places: LocalPlace[];
+  /** Server-reported grand total matching the current query/safe filter. */
+  total: number;
+  isLoading: boolean;
+  hasNextPage: boolean;
+  fetchNextPage: () => void;
+  isFetchingNextPage: boolean;
+}
 
 /**
- * Unified source for the Local page's list + map. Businesses come from
- * useDirectoryPlaces (demo mock / live API). Venues are demo-only and merged in
- * by name (business canonical), so live mode shows businesses alone — no mock
- * venues leak into production.
+ * Unified, paginated source for the Local page's list + map (gap-audit
+ * HSG-5). Businesses come from `useDirectoryPlacesPage` (demo mock / live,
+ * server-filtered + paginated API) — `query`/`safe` are forwarded so the
+ * network fetch matches what's actually being searched for instead of every
+ * live listing unfiltered. Venues are demo-only and merged in by name
+ * (business canonical), so live mode shows businesses alone — no mock venues
+ * leak into production.
  *
- * Always returns the full (unfiltered) set — the "Verified safe spaces" chip
- * (like category/query/vibe) is applied client-side in `useDirectoryFilters`'s
- * `filtered`, so the results header's "X of Y" total stays the grand total
- * instead of collapsing to "X of X" once the chip is on.
+ * `category`/`vibe` stay client-side filters over whatever's been loaded so
+ * far (see `useDirectoryFilters`) — `category` so its chip counts stay
+ * correct against the loaded set, `vibe` because it's a demo-only concept
+ * (see `LocalFilterFields`'s `useDemoMode` gate).
  */
-export function useLocalPlaces(): LocalPlace[] {
+export function useLocalPlaces(
+  filters: DirectoryPlacesPageFilters = {},
+): LocalPlacesResult {
   const { demoMode } = useDemoMode();
-  const businesses = useDirectoryPlaces();
+  const {
+    places: businesses,
+    total,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useDirectoryPlacesPage(filters);
 
-  return useMemo(() => {
+  const places = useMemo(() => {
     const businessLocals = businesses.map((business) =>
       businessToLocal(business, demoMode),
     );
@@ -32,6 +57,8 @@ export function useLocalPlaces(): LocalPlace[] {
     const venueLocals = VENUES.map(venueToLocal);
     return mergeLocalPlaces(businessLocals, venueLocals);
   }, [businesses, demoMode]);
+
+  return { places, total, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage };
 }
 
 /**

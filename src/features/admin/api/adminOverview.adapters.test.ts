@@ -80,8 +80,7 @@ const baseDto: AdminOverviewDTO = {
     activeMembers: { value: 8500, growthPercent: 3.87, netNewThisMonth: 340 },
     openReports: { value: 19, oldestOpenHours: 5, emergencies: 1 },
     medianResponseHours: null,
-    sustainerMrr: null,
-    sustainerCount: null,
+    communityHealth: { averageScore: null, needingSupportCount: 0 },
     verifiedMembers: 4200,
   },
   triage: {
@@ -230,29 +229,47 @@ const baseDto: AdminOverviewDTO = {
 /* ── overviewToMetrics ────────────────────────────────────────────────────── */
 
 describe("overviewToMetrics", () => {
-  it("MRR tile is flagged notMeasured when sustainerMrr is null, foot falls back to 0 sustainers", () => {
-    const [, , , mrrTile] = overviewToMetrics(baseDto, fmt);
-    expect(mrrTile?.notMeasured).toBe(true);
-    expect(mrrTile?.value).toBe(0);
-    expect(mrrTile?.footValues).toEqual({ count: 0 });
-    expect(mrrTile?.trend).toEqual({
+  it("community-health tile is flagged notMeasured when averageScore is null, foot falls back to 0 needing support", () => {
+    const [, , , communityHealthTile] = overviewToMetrics(baseDto, fmt);
+    expect(communityHealthTile?.notMeasured).toBe(true);
+    expect(communityHealthTile?.value).toBe(0);
+    expect(communityHealthTile?.footValues).toEqual({ count: 0 });
+    expect(communityHealthTile?.trend).toEqual({
       dir: "warn",
       key: "admin:dashboard.metrics.trendNoData",
     });
   });
 
-  it("MRR tile is not flagged and gets a neutral 'tracked' trend once it has a real value", () => {
+  it("community-health tile gets a 'healthy' trend at/above the support threshold, carries the live needingSupportCount", () => {
     const measuredDto: AdminOverviewDTO = {
       ...baseDto,
-      stats: { ...baseDto.stats, sustainerMrr: 25_150, sustainerCount: 2010 },
+      stats: {
+        ...baseDto.stats,
+        communityHealth: { averageScore: 82, needingSupportCount: 2 },
+      },
     };
-    const [, , , mrrTile] = overviewToMetrics(measuredDto, fmt);
-    expect(mrrTile?.notMeasured).toBe(false);
-    expect(mrrTile?.value).toBe(25_150);
-    expect(mrrTile?.footValues).toEqual({ count: 2010 });
-    expect(mrrTile?.trend).toEqual({
+    const [, , , communityHealthTile] = overviewToMetrics(measuredDto, fmt);
+    expect(communityHealthTile?.notMeasured).toBe(false);
+    expect(communityHealthTile?.value).toBe(82);
+    expect(communityHealthTile?.footValues).toEqual({ count: 2 });
+    expect(communityHealthTile?.trend).toEqual({
       dir: "up",
-      key: "admin:dashboard.metrics.trendTracked",
+      key: "admin:dashboard.metrics.trendHealthy",
+    });
+  });
+
+  it("community-health tile switches to a 'needs a hand' warning below the support threshold", () => {
+    const belowThresholdDto: AdminOverviewDTO = {
+      ...baseDto,
+      stats: {
+        ...baseDto.stats,
+        communityHealth: { averageScore: 60, needingSupportCount: 5 },
+      },
+    };
+    const [, , , communityHealthTile] = overviewToMetrics(belowThresholdDto, fmt);
+    expect(communityHealthTile?.trend).toEqual({
+      dir: "warn",
+      key: "admin:dashboard.metrics.trendNeedsHand",
     });
   });
 
@@ -339,15 +356,17 @@ describe("overviewToMetrics", () => {
     expect(openReportsTile?.footValues).toEqual({ count: 1 });
   });
 
-  it("carries labelKey/icon/comma/decimal/prefix/suffix through from the fixture tiles unchanged", () => {
+  it("carries labelKey/icon/comma/decimal/suffix/to through from the fixture tiles unchanged", () => {
     const tiles = overviewToMetrics(baseDto, fmt);
     expect(tiles[0]?.labelKey).toBe(
       "admin:dashboard.metrics.activeMembers.label",
     );
     expect(tiles[0]?.comma).toBe(true);
+    expect(tiles[0]?.to).toBe("/admin/members");
+    expect(tiles[1]?.to).toBe("/admin/moderation");
     expect(tiles[2]?.decimal).toBe(true);
     expect(tiles[2]?.suffix).toBe("h");
-    expect(tiles[3]?.prefix).toBe("€");
+    expect(tiles[3]?.to).toBe("/admin/communities");
   });
 });
 

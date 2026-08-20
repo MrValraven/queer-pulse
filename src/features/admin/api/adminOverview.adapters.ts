@@ -34,14 +34,14 @@ import type { AdminOverviewDTO } from "./adminOverview.api";
  * themselves), and fully-composed sentences for the live feed (which the
  * component renders verbatim, so this file must call `t()` itself).
  *
- * "Not measured yet": `stats.sustainerMrr`/`sustainerCount`,
- * `stats.medianResponseHours`, `responseTime`, and
+ * "Not measured yet": `stats.medianResponseHours`,
+ * `stats.communityHealth.averageScore`, `responseTime`, and
  * `memberGrowth.points[].churned` all arrive `null` when nothing has been
  * recorded. Each is represented so E4 can render a not-measured state
  * instead of a fabricated zero:
- *  - the MRR and median-response stat tiles get `StatCard.notMeasured: true`
- *    (value falls back to 0, a safe placeholder E4 never displays because
- *    of the flag);
+ *  - the median-response and community-health stat tiles get
+ *    `StatCard.notMeasured: true` (value falls back to 0, a safe placeholder
+ *    E4 never displays because of the flag);
  *  - `overviewToResponseDist` returns `null` outright;
  *  - `GrowthPoint.churned` is passed through as `null` rather than coerced to
  *    0 — `adminDashboard.data.ts`'s `GrowthPoint.churned` was widened from
@@ -53,7 +53,7 @@ const [
   ACTIVE_MEMBERS_FIXTURE,
   OPEN_REPORTS_FIXTURE,
   MEDIAN_RESPONSE_FIXTURE,
-  SUSTAINER_MRR_FIXTURE,
+  COMMUNITY_HEALTH_FIXTURE,
 ] = METRICS as [StatCard, StatCard, StatCard, StatCard];
 
 const [
@@ -118,18 +118,32 @@ function medianResponseTrend(
   return { dir: "warn", key: "admin:dashboard.metrics.trendOverSla" };
 }
 
+/** Mirrors `SUPPORT_HEALTH_THRESHOLD` (`admin-communities-response.ts`) — the
+ *  score below which a community is flagged as needing support. Duplicated
+ *  as a display-only threshold the same way `MEDIAN_RESPONSE_SLA_HOURS`
+ *  above mirrors the backend's SLA target, since the frontend has no import
+ *  path into backend source. */
+const COMMUNITY_HEALTH_SUPPORT_THRESHOLD = 78;
+
+function communityHealthTrend(averageScore: number | null): StatCard["trend"] {
+  if (averageScore === null) {
+    return { dir: "warn", key: "admin:dashboard.metrics.trendNoData" };
+  }
+  if (averageScore >= COMMUNITY_HEALTH_SUPPORT_THRESHOLD) {
+    return { dir: "up", key: "admin:dashboard.metrics.trendHealthy" };
+  }
+  return { dir: "warn", key: "admin:dashboard.metrics.trendNeedsHand" };
+}
+
 /** GET /admin/overview → the 4 hero stat tiles. Reuses each fixture tile's
- *  `labelKey`/icon/format-flags (comma/decimal/prefix/suffix) as its base and
- *  only overrides the live value/trend/foot fields. No live source exists
- *  for a sustainer-MRR growth rate, so — rather than keep the fixture's
- *  fabricated "4.1%" — that tile falls back to a neutral "tracked live"
- *  trend once it has a real value (see task-E2-report.md concerns). */
+ *  `labelKey`/icon/format-flags (comma/decimal/prefix/suffix/`to`) as its
+ *  base and only overrides the live value/trend/foot fields. */
 export function overviewToMetrics(
   dto: AdminOverviewDTO,
   fmt: Formatters,
 ): StatCard[] {
   const medianResponseHours = dto.stats.medianResponseHours;
-  const sustainerMrr = dto.stats.sustainerMrr;
+  const communityHealthAverageScore = dto.stats.communityHealth.averageScore;
 
   return [
     {
@@ -151,14 +165,11 @@ export function overviewToMetrics(
       trend: medianResponseTrend(medianResponseHours),
     },
     {
-      ...SUSTAINER_MRR_FIXTURE,
-      value: sustainerMrr ?? 0,
-      notMeasured: sustainerMrr === null,
-      trend:
-        sustainerMrr === null
-          ? { dir: "warn", key: "admin:dashboard.metrics.trendNoData" }
-          : { dir: "up", key: "admin:dashboard.metrics.trendTracked" },
-      footValues: { count: dto.stats.sustainerCount ?? 0 },
+      ...COMMUNITY_HEALTH_FIXTURE,
+      value: communityHealthAverageScore ?? 0,
+      notMeasured: communityHealthAverageScore === null,
+      trend: communityHealthTrend(communityHealthAverageScore),
+      footValues: { count: dto.stats.communityHealth.needingSupportCount },
     },
   ];
 }

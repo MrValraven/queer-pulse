@@ -299,21 +299,21 @@ export function useVotePost() {
  * Consumer interface:
  * ```ts
  * const { lock, unlock, isPending } = useLockThread();
- * lock(slug);    // POST /forum/threads/:slug/lock
- * unlock(slug);  // POST /forum/threads/:slug/unlock
+ * lock(slug, reason);  // POST /forum/threads/:slug/lock — reason is optional
+ * unlock(slug);        // POST /forum/threads/:slug/unlock
  * ```
  * On success it invalidates the thread meta + posts (so the banner/composer
- * re-read `isLocked`) and the thread list (so the row lock state refreshes).
- * DEMO is a no-op — the page toggles its own local lock state.
+ * re-read `isLocked`/`lockReason`) and the thread list (so the row lock state
+ * refreshes). DEMO is a no-op — the page toggles its own local lock state.
  */
 export function useLockThread() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
 
   const mutation = useMutation<void, Error, LockVars>({
-    mutationFn: async ({ slug, locked }) => {
+    mutationFn: async ({ slug, locked, reason }) => {
       if (demoMode) return;
-      if (locked) await lockThread(slug);
+      if (locked) await lockThread(slug, reason);
       else await unlockThread(slug);
     },
     onSuccess: () => {
@@ -327,18 +327,23 @@ export function useLockThread() {
   // confirming toast) without the hook owning UI concerns. Demo still resolves
   // the no-op mutationFn, so onSuccess fires in both modes.
   return {
-    lock: (slug: string, options?: MutateOptions<void, Error, LockVars>) =>
-      mutation.mutate({ slug, locked: true }, options),
+    lock: (
+      slug: string,
+      reason?: string,
+      options?: MutateOptions<void, Error, LockVars>,
+    ) => mutation.mutate({ slug, locked: true, reason }, options),
     unlock: (slug: string, options?: MutateOptions<void, Error, LockVars>) =>
       mutation.mutate({ slug, locked: false }, options),
     isPending: mutation.isPending,
   };
 }
 
-/** Mutation variables for the lock/unlock toggle. */
+/** Mutation variables for the lock/unlock toggle. `reason` is only ever sent
+ *  on a locking transition. */
 interface LockVars {
   slug: string;
   locked: boolean;
+  reason?: string;
 }
 
 /**

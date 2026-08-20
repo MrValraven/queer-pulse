@@ -53,4 +53,20 @@ export const topics: Catalog = {
   "notFound.description":
     "Não encontrámos um tópico para essa etiqueta. Pode ter sido renomeado ou removido. Volta ao fórum para veres onde a conversa continua.",
   "notFound.backCta": "Voltar ao fórum",
+
+  "directory.eyebrow": "Tópicos",
+  "directory.title": "Cada conversa, pela etiqueta.",
+  "directory.sub":
+    "Segue um tópico e ficas a saber assim que alguém publicar nele.",
+  "directory.search.placeholder": "Procurar tópicos",
+  "directory.search.ariaLabel": "Procurar tópicos",
+  "directory.postsCount_one": "{count} publicação",
+  "directory.postsCount_other": "{count} publicações",
+  "directory.empty.search.title": "Nenhum tópico corresponde",
+  "directory.empty.search.description":
+    "Tenta outro termo de pesquisa, ou limpa-o para ver todos os tópicos.",
+  "directory.empty.search.cta": "Limpar pesquisa",
+  "directory.empty.none.title": "Ainda não há tópicos",
+  "directory.empty.none.description":
+    "Ainda não há nada no diretório. Volta a verificar em breve.",
 };

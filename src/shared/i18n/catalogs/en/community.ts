@@ -136,7 +136,11 @@ export const community: Catalog = {
   "changemakers.stat.activeCampaigns": "Active campaigns running right now",
   "changemakers.featured.label": "Featured change maker",
   "changemakers.featured.readStoryCta": "Read her story",
-  "changemakers.featured.connectCta": "Connect",
+  // Routes to the general Contact page, not a DM to this specific person
+  // (COM-25: Changemaker profiles have no linked member account) — the
+  // label says so plainly rather than implying a direct message will reach
+  // them.
+  "changemakers.featured.connectCta": "Reach the team about them",
   "changemakers.empty.title": "No change makers profiled yet",
   "changemakers.empty.description":
     "This is where we celebrate the people quietly making things better. Know someone doing that work? Nominate them below and we'll start the story.",
@@ -148,6 +152,7 @@ export const community: Catalog = {
   "changemakers.nominate.lead":
     "We add change makers through community nominations. If you know someone doing meaningful work for queer people in Lisbon, a name and a sentence is enough to start.",
   "changemakers.nominate.namePlaceholder": "Their name…",
+  "changemakers.nominate.reasonPlaceholder": "In a sentence, why?",
   "changemakers.nominate.submitCta": "Nominate them",
   "changemakers.nominate.submitPending": "Sending…",
   "changemakers.nominate.successToast": "Thank you. We'll look into {name}.",

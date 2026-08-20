@@ -3,50 +3,10 @@ import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { AdminPageHeader } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import { useAdminChangemakerNominations } from "./api/useAdminChangemakerNominations";
-import type { AdminChangemakerNominationDTO } from "./api/adminChangemakerNominations.api";
+import { AdminChangemakerNominationsRow } from "./AdminChangemakerNominationsRow";
 import styles from "./AdminSubmissionList.module.css";
-
-function shortDate(fmt: Formatters, iso: string): string {
-  return fmt.date(new Date(iso), {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
-
-function NominationRow({
-  nomination,
-}: {
-  nomination: AdminChangemakerNominationDTO;
-}) {
-  const { t } = useTranslation();
-  const fmt = useFormat();
-  const nominatorName =
-    nomination.nominator?.name ??
-    t("admin:adminChangemakerNominations.unknownMember");
-  return (
-    <div className={styles.row}>
-      <div className={styles.rowMain}>
-        <div className={styles.rowTop}>
-          <span className={styles.rowName}>{nomination.nomineeName}</span>
-        </div>
-        <div className={styles.rowMeta}>
-          {t("admin:adminChangemakerNominations.row.by", {
-            name: nominatorName,
-          })}
-        </div>
-        <div className={styles.rowDates}>
-          {t("admin:adminChangemakerNominations.row.sent", {
-            date: shortDate(fmt, nomination.createdAt),
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function RowsSkeleton() {
   return (
@@ -120,7 +80,7 @@ export function AdminChangemakerNominationsPage() {
             <div className={styles.rows}>
               {nominations.map((nomination, index) => (
                 <FadeIn key={nomination.id} delay={Math.min(index, 8) * 50}>
-                  <NominationRow nomination={nomination} />
+                  <AdminChangemakerNominationsRow nomination={nomination} />
                 </FadeIn>
               ))}
             </div>

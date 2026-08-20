@@ -16,6 +16,8 @@ function tabParam(tab: FeedTab): string | undefined {
   switch (tab) {
     case "Communities":
       return "communities";
+    case "Connections":
+      return "connections";
     case "Gatherings":
       return "gatherings";
     case "People":

@@ -189,13 +189,14 @@ export interface MessageResponse {
     senderName: string;
     deleted: boolean;
   } | null;
-  /** `user` (an ordinary bubble), `system` (a rendered event pill), or `gif`
-   *  (an inline-image bubble). Every DM message is `user`, so the existing
-   *  bubble path is unchanged. */
-  kind: "user" | "system" | "gif";
-  /** Provider-hosted GIF for a `kind:"gif"` message, else null. The client
-   *  renders it as an inline image; `body` carries a "GIF" text fallback so
-   *  previews/notifications keep working. */
+  /** `user` (an ordinary bubble), `system` (a rendered event pill), `gif` (a
+   *  picked provider GIF), or `image` (a member-uploaded photo) — the last two
+   *  both render as an inline-image bubble. Every DM message is `user`, so the
+   *  existing bubble path is unchanged. */
+  kind: "user" | "system" | "gif" | "image";
+  /** The media attachment for a `kind:"gif"` or `kind:"image"` message, else
+   *  null. The client renders it as an inline image; `body` carries a
+   *  "GIF"/"Photo" text fallback so previews/notifications keep working. */
   attachment: {
     url: string;
     previewUrl: string;
@@ -251,6 +252,11 @@ export interface ConversationResponse {
   pinnedAt?: string | null;
   /** Whether the caller has favorited this chat. Absent/false = not a favorite. */
   favorite?: boolean;
+  /** Whether the caller has muted this chat (any thread). Absent/false = not
+   *  muted. Suppresses push notifications for new messages in this thread
+   *  (`push` module only pushes to unmuted recipients) and drives the row's
+   *  mute indicator; unread counting/badges are unaffected. */
+  muted?: boolean;
   /** The OTHER participant's read watermark (ISO), for "Seen" receipts. Null for
    *  official/group threads or a counterpart who has never read. */
   otherLastReadAt: string | null;
@@ -330,6 +336,21 @@ export interface StarredMessageHit extends MessageSearchHit {
 export interface StarredMessagesResponse {
   items: StarredMessageHit[];
   conversations: MessageSearchConversationGroup[];
+}
+
+/**
+ * POST /messages/request response — a first-contact message to a member by
+ * handle. When the two are already accepted connections the body was
+ * delivered as an ordinary message and `conversationId` is set; otherwise the
+ * body seeds a connection request instead (materializing the conversation
+ * only once the recipient accepts) and `connectionRequestId` is set. Exactly
+ * one of the two is non-null. `message` (the backend's internal `MessageView`
+ * shape) is deliberately omitted here — the client already knows what it
+ * sent and only needs to know which of the two outcomes happened.
+ */
+export interface MessageRequestResponse {
+  conversationId: string | null;
+  connectionRequestId: string | null;
 }
 
 export interface GatheringResponse {
@@ -415,6 +436,9 @@ export interface ForumThreadResponse {
   category: string;
   isPinned: boolean;
   isLocked: boolean;
+  /** Optional moderator note explaining why the thread was locked. Null when
+   *  the current lock (or the thread's unlocked state) carries no note. */
+  lockReason: string | null;
   replyCount: number;
   lastActivityAt: string;
   createdAt: string;
@@ -545,6 +569,8 @@ export interface ResourceResponse {
   description: string;
   body: string;
   externalUrl: string | null;
+  /** ISO timestamp of the last editorial verification, or null if never verified. */
+  lastVerifiedAt: string | null;
 }
 
 export interface GlossaryTermResponse {

@@ -25,11 +25,14 @@ export const resources: Catalog = {
   "crisis.line.emergency.hours": "Always · free",
   "crisis.line.sosVozAmiga.name": "SOS Voz Amiga",
   "crisis.line.sosVozAmiga.hours": "Daily 16h–24h",
-  "crisis.line.ilga.name": "ILGA Portugal — LGBTQ+ line",
-  "crisis.line.ilga.hours": "Weekdays 10h–18h",
+  "crisis.line.ilga.name": "ILGA Portugal · LGBTQ+ support line",
+  "crisis.line.ilga.hours": "Thu–Fri 20h–23h",
 
-  // ── Shared: SuggestEditModal ────────────────────────────────────────────
+  // ── Shared: SuggestEditModal + SuggestEditTrigger (CNT-12: extended beyond
+  // the Glossary to Legal, Trans Healthcare, Harm Reduction, Mental Health
+  // and the Library grid — same generic `POST /intakes/suggest_edit`). ─────
   "suggestEdit.modalTitle": "Suggest an edit",
+  "suggestEdit.pageTriggerCta": "Suggest an edit",
   "suggestEdit.success.title": "Suggestion <em>received.</em>",
   "suggestEdit.success.sub":
     "The editors look at suggestions weekly and discuss bigger changes at the monthly assembly. This is a living document precisely because of edits like yours.",
@@ -38,9 +41,19 @@ export const resources: Catalog = {
     "Glossary suggestions aren't wired to the editors on the live site yet, so this wouldn't reach anyone. We'd rather be honest than fake a receipt. Check back soon.",
   "suggestEdit.body.intro":
     "Community-edited. If a definition feels incomplete or wrong, tell us which term and what you'd change.",
+  // Shown when the modal is scoped to a fixed subject (a whole page).
+  "suggestEdit.body.introSubject":
+    "Something on this page out of date or wrong? Tell us what to fix.",
+  // Shown when the modal offers a picker over a list (e.g. the guide library).
+  "suggestEdit.body.introPicker":
+    "Tell us which guide needs an update, and what you'd change.",
   "suggestEdit.form.termLabel": "Which term",
+  "suggestEdit.form.subjectLabel": "What's this about?",
+  "suggestEdit.form.subjectFixedLabel": "Suggesting an edit for",
   "suggestEdit.form.selectPlaceholder": "Select a term…",
+  "suggestEdit.form.selectPlaceholderGeneric": "Choose what this is about…",
   "suggestEdit.form.newTermOption": "A term that's missing",
+  "suggestEdit.form.otherOption": "Something else",
   "suggestEdit.form.changeLabel": "Suggested change",
   "suggestEdit.form.changePlaceholder":
     "What's off, and how you'd put it instead. Sources welcome but not required.",
@@ -504,16 +517,6 @@ export const resources: Catalog = {
   "mentalHealth.hero.title": "You don't have to be <em>okay.</em>",
   "mentalHealth.hero.sub":
     "Queer-affirming therapists, honest information about accessing mental health support in Lisbon, crisis resources, and a community that understands what you're carrying — because we're carrying it too.",
-
-  "mentalHealth.crisis.label": "If you need support now",
-  "mentalHealth.crisis.heading": "Crisis & immediate support lines",
-  "mentalHealth.crisis.sub":
-    "These lines are available now. You don't have to be in immediate danger to call — if you're struggling, reaching out is enough.",
-  // Real-world helpline names untouched; only descriptive notes translated.
-  "mentalHealth.crisisLine.sosVozAmiga.note": "24h · Portuguese & English",
-  "mentalHealth.crisisLine.sns24.note": "Health line · 24h",
-  "mentalHealth.crisisLine.ilga.note": "LGBTQ+ support line",
-  "mentalHealth.crisisLine.samaritans.note": "Email · English · 24h response",
 
   "mentalHealth.outro.title": "Asking for help is <em>not small.</em>",
   "mentalHealth.outro.sub":
@@ -1048,24 +1051,14 @@ export const resources: Catalog = {
   "sober.host.submitCta.host": "Submit gathering",
   "sober.host.submitCta.attend": "Request to attend",
 
-  // ── LibraryPage ──────────────────────────────────────────────────────────
-  "library.meta.title":
-    "Guide library: legal, health, housing and trans-life guides",
-  "library.meta.description":
-    "Community-written guides on legal rights, health, housing, and trans life in Portugal — searchable by topic, from workplace discrimination to starting HRT.",
+  // ── Guide library grid — shared by marketing/ResourceLibraryPage (the
+  // canonical, nav-linked "/resources", CNT-11's consolidated real,
+  // backend-driven surface) and its card/search/filter chrome. ──────────────
   // GUIDES entries (title/desc/catLabel/meta) are demo content mirroring the
   // live GET /resources feed — stay English, see resources.adapters.ts.
   // POPULAR search shortcuts double as the literal query string matched
   // against that English guide content, so they stay English in both
   // languages too (translating them would silently break the search).
-  "library.hero.eyebrow": "Guide Library",
-  "library.hero.title": "Every guide, <em>in one place.</em>",
-  "library.hero.lead":
-    "Housing, health, legal, finance, and trans-specific guides — written and vetted by the community, kept current, and free to share with anyone who needs them.",
-  "library.hero.anchor.browseAll": "Browse all",
-  "library.hero.anchor.legal": "Legal",
-  "library.hero.anchor.health": "Health",
-  "library.hero.anchor.housing": "Housing",
   "library.search.placeholder": "Search guides — pronouns, PrEP, tenancy…",
   "library.filterAria": "Filter guides by topic",
   "library.category.all": "All guides",
@@ -1079,11 +1072,9 @@ export const resources: Catalog = {
   "library.loadingMore": "Loading more guides…",
   "library.loadMoreCta": "Load more guides",
   "library.popularLabel": "Most read:",
-  "library.outro.title": "Can't find <em>what you need?</em>",
-  "library.outro.sub":
-    "Ask in the forum — someone has usually been through it. Or suggest a guide we should write next.",
-  "library.outro.askCommunityCta": "Ask the community",
-  "library.outro.suggestGuideCta": "Suggest a guide",
+  // CNT-13 freshness signal, shown on every guide card.
+  "library.card.verifiedOn": "Verified {date}",
+  "library.card.notYetVerified": "Not yet verified",
 
   // ── SexualHealthPage (+ SexualHealthTabs.tsx + sexualHealth.data.ts) ────
   // Flagged for native review — sexual-health/HIV/PrEP information. CLINICS

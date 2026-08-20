@@ -1,7 +1,9 @@
+import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MY_HOUSING_LISTINGS_PATH } from "./housing.data";
 import { useSubmitHousingListing } from "./api/useSubmitHousingListing";
 import {
   verificationRequiredFrom,
@@ -64,6 +66,15 @@ export function ListSpaceModal({ onClose }: { onClose: () => void }) {
           em={t("economy:listSpace.success.em")}
           onClose={onClose}
           closeLabel={t("economy:housingModal.done")}
+          footer={
+            <Link
+              to={MY_HOUSING_LISTINGS_PATH}
+              className={styles.successLink}
+              onClick={onClose}
+            >
+              {t("economy:myHousingListings.entryLink")}
+            </Link>
+          }
         >
           <Translation
             i18nKey="economy:listSpace.success.body"

@@ -5,7 +5,7 @@ import type { ArticleBlockKind } from "./blockKinds";
 /** A fresh id for a newly-inserted block. Prefers `crypto.randomUUID` (every
  * evergreen browser this app targets has it); the timestamp+random fallback
  * only matters for an older/embedded WebView without it. */
-function freshBlockId(): string {
+export function freshBlockId(): string {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
     return crypto.randomUUID();
   }
@@ -17,6 +17,29 @@ function freshBlockId(): string {
  * to stop it from being interpreted as any. */
 function escapeHtml(text: string): string {
   return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/** One paragraph block per (already split, already trimmed, non-empty) text
+ * — the paste-as-blocks shape, shared by `pasteParagraphsAfter` below (split
+ * out of a document paste) and `FileDraftModal` (split out of a whole pasted
+ * draft), so the two paths never produce structurally different blocks. */
+export function createParagraphBlocks(texts: string[]): ArticleBlock[] {
+  return texts.map((text) => ({
+    id: freshBlockId(),
+    kind: "paragraph",
+    html: escapeHtml(text),
+  }));
+}
+
+/** Splits raw pasted text into paragraph strings on blank lines, trimmed and
+ * with empty groups dropped — the exact rule `ArticleDocument`'s in-document
+ * paste handler uses, reused so a whole draft pasted into `FileDraftModal`
+ * segments identically. */
+export function splitIntoParagraphTexts(text: string): string[] {
+  return text
+    .split(/\r?\n\s*\r?\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
 }
 
 /** A brand-new, empty block of `kind`, seeded with the same defaults the
@@ -127,11 +150,7 @@ export function useArticleBlockOps(
 
   const pasteParagraphsAfter = useCallback(
     (index: number, texts: string[]) => {
-      const paragraphBlocks: ArticleBlock[] = texts.map((text) => ({
-        id: freshBlockId(),
-        kind: "paragraph",
-        html: escapeHtml(text),
-      }));
+      const paragraphBlocks = createParagraphBlocks(texts);
       setBlocks((previous) => {
         const next = previous.slice();
         next.splice(index + 1, 0, ...paragraphBlocks);

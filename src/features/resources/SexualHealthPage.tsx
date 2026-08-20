@@ -13,6 +13,7 @@ import {
 import { TABS, type TabId } from "./sexualHealth.data";
 import { GuidesTab, HivTab, PrepTab, TestingTab } from "./SexualHealthTabs";
 import { ResourceHero } from "./ResourceHero";
+import { CrisisStrip } from "./CrisisStrip";
 import styles from "./SexualHealthPage.module.css";
 
 export function SexualHealthPage() {
@@ -65,6 +66,8 @@ export function SexualHealthPage() {
           />
         }
       />
+
+      <CrisisStrip />
 
       <div className={styles.body}>
         <div className="wrap">

@@ -1,4 +1,4 @@
-import { apiPost } from "../../../shared/api/client";
+import { apiGet, apiPost } from "../../../shared/api/client";
 
 /**
  * The member-facing half of appeals: submitting one. The moderator-facing
@@ -35,3 +35,29 @@ export interface SubmittedAppealDTO {
 /** File an appeal against a moderation decision taken on the current member. */
 export const submitAppeal = (body: SubmitAppealInput) =>
   apiPost<SubmittedAppealDTO>("/appeals", body);
+
+/**
+ * The calling member's own appeal record — deliberately NARROWER than the
+ * moderator-facing `AppealDTO` (`features/admin/api/moderation.api.ts`): no
+ * appellant handle, no original moderator's name, just enough for the member
+ * to see their own case's status, the moderator's decision text (once
+ * resolved), and the facts they themselves supplied. Mirrors the backend's
+ * `MemberAppealDTO` (`moderation-response.ts`).
+ */
+export interface MemberAppealDTO {
+  id: string;
+  status: AppealStatus;
+  decision: string | null;
+  argument: string;
+  severity: "emergency" | "high" | "medium" | "low";
+  community: string | null;
+  createdAt: string;
+}
+
+/**
+ * The member-facing complement to `submitAppeal`: checking on an appeal
+ * already filed. Reachable by a suspended member (same `AppealSubmitGuard`
+ * exception as `POST /appeals`) so the person who most needs to track a
+ * decision actually can. Returns the member's own appeals, most recent first.
+ */
+export const getMyAppeals = () => apiGet<MemberAppealDTO[]>("/appeals/me");

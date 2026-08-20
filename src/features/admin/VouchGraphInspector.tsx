@@ -18,9 +18,19 @@ interface Props {
   activeEdgeId?: string | null;
   expanded: boolean;
   onGo: (id: string) => void;
-  onVerify: (id: string) => void;
   onExpand: (id: string) => void;
-  onCite: (id: string) => void;
+  /** Real account-level verify action (ADM-9 fix — the former "Use as
+   *  verification basis" button fired a success toast and did nothing else).
+   *  Wired to the same `POST /admin/members/:id/verify` endpoint
+   *  `AdminMemberDrawer`'s Verify button already calls. */
+  onVerify: (id: string) => void;
+  /** True while a verify mutation for `sel` is in flight — disables the
+   *  button so it can't be double-clicked. */
+  verifying: boolean;
+  /** Real navigation to the moderation queue for this subject, pre-filtered
+   *  to their reports (ADM-8 deep-link; also replaces the former "Cite in
+   *  audit log" button, which fired a success toast and did nothing else). */
+  onOpenModeration: (id: string) => void;
   /** Deselect the node — dismisses the mobile bottom sheet. */
   onCloseSheet: () => void;
 }
@@ -134,9 +144,10 @@ export function VouchGraphInspector({
   activeEdgeId,
   expanded,
   onGo,
-  onVerify,
   onExpand,
-  onCite,
+  onVerify,
+  verifying,
+  onOpenModeration,
   onCloseSheet,
 }: Props) {
   const { t } = useTranslation();
@@ -301,8 +312,15 @@ export function VouchGraphInspector({
 
       <div className={styles.insActions}>
         {!p.private && (
-          <Button variant="jade" size="md" onClick={() => onVerify(sel)}>
-            {t("admin:vouchGraph.inspector.useAsVerificationCta")}
+          <Button
+            variant="jade"
+            size="md"
+            disabled={p.verified || verifying}
+            onClick={() => onVerify(sel)}
+          >
+            {p.verified
+              ? t("admin:vouchGraph.inspector.verifiedCta")
+              : t("admin:vouchGraph.inspector.useAsVerificationCta")}
           </Button>
         )}
         <Button variant="ghost" size="md" onClick={() => onExpand(sel)}>
@@ -310,8 +328,8 @@ export function VouchGraphInspector({
             ? t("admin:vouchGraph.inspector.collapseCta")
             : t("admin:vouchGraph.inspector.expandCta")}
         </Button>
-        <Button variant="ghost" size="md" onClick={() => onCite(sel)}>
-          {t("admin:vouchGraph.inspector.citeCta")}
+        <Button variant="ghost" size="md" onClick={() => onOpenModeration(sel)}>
+          {t("common:cta.openModerationQueue")}
         </Button>
       </div>
     </aside>

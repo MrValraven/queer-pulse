@@ -1065,6 +1065,24 @@ export const subprofiles: Catalog = {
     "Invite sent. They'll need to accept before they can manage this persona.",
   "invite.toastError": "We couldn't send that invite. Try again.",
 
+  // Invite-a-co-owner modal — disclosure/confirm step (IDN-2): shown before
+  // the invite actually sends, so accepting a co-owner invite is never a
+  // surprise about how much access it grants or, for an Unlinked persona,
+  // what it reveals.
+  "invite.confirmTitle": "Before you send this invite",
+  "invite.confirmBack": "Back",
+  "invite.confirmSend": "Send invite",
+  "invite.disclosureAccessTitle": "Full management access",
+  "invite.disclosureAccessBody":
+    "Once {name} accepts, they'll be able to edit, publish and manage every part of this persona, the same as you can. This is the only access level co-owners get.",
+  "invite.disclosureIdentityTitle": "This reveals your identity",
+  "invite.disclosureIdentityBody":
+    "This persona is Unlinked, so people who follow it can't tell it's yours. Accepting this invite is different: {name} will be able to see your real account the moment they accept.",
+  "invite.acknowledgeLinked":
+    "I understand {name} will get full management access to this persona.",
+  "invite.acknowledgeUnlinked":
+    "I understand {name} will get full management access to this persona, and will be able to see my real identity.",
+
   // Incoming co-owner invites banner (PersonaInvitesBanner, on MySubprofilesPage)
   "invites.regionLabel": "Invitations to co-own a persona",
   "invites.message": "{inviter} invited you to co-own <em>{persona}</em>",
@@ -1076,6 +1094,26 @@ export const subprofiles: Catalog = {
   "invites.toastAcceptError": "We couldn't accept that invite. Try again.",
   "invites.toastDeclined": "Invite declined",
   "invites.toastDeclineError": "We couldn't decline that invite. Try again.",
+
+  // Accept-invite disclosure/confirm step (IDN-2): shown before an incoming
+  // co-owner invite is actually accepted, the invitee-side twin of
+  // InviteCoOwnerModal's send-side confirm step above. Accepting is never a
+  // surprise about the access it grants or, for an Unlinked persona, what it
+  // reveals about the person accepting.
+  "invites.confirmTitle": "Before you accept",
+  "invites.confirmSub": "About co-owning {name}",
+  "invites.confirmCancel": "Not yet",
+  "invites.confirmAccept": "Accept invite",
+  "invites.disclosureAccessTitle": "Full management access",
+  "invites.disclosureAccessBody":
+    "Accepting gives you the same full access as {name}'s other co-owners: you'll be able to edit, publish and manage every part of it. This is the only access level co-owners get, there's no view-only tier.",
+  "invites.disclosureIdentityTitle": "This reveals your identity",
+  "invites.disclosureIdentityBody":
+    "{name} is Unlinked, so people who follow it can't tell who runs it. Accepting this invite is different: your real account becomes visible to its other co-owners the moment you accept, and theirs becomes visible to you.",
+  "invites.acknowledgeLinked":
+    "I understand accepting gives me full management access to {name}.",
+  "invites.acknowledgeUnlinked":
+    "I understand accepting gives me full management access to {name}, and reveals my real identity to its other co-owners.",
 
   // Report modal (SubprofileReportModal) + persona-specific reasons
   // (subprofileReportModal.data.ts) — every reason still maps to a stable,

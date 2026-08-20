@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { FiX } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Button } from "../../shared/components/ui";
@@ -55,7 +56,7 @@ export function DeckPresentButton({
                 onClick={() => setPresenting(false)}
                 aria-label={t("magazine:deck.close")}
               >
-                ×
+                <FiX aria-hidden />
               </button>
             </div>
             <div className={styles.presentStage}>{children}</div>

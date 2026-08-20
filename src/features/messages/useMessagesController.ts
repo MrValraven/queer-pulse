@@ -261,7 +261,8 @@ export function useMessagesController() {
     t,
     sendMessage,
   });
-  const { send, sendGif, retrySend, appendOptimistic, deliver } = sending;
+  const { send, sendGif, sendImage, retrySend, appendOptimistic, deliver } =
+    sending;
 
   // Thread + group creation, forwarding, and the deep-link effects.
   const creation = useMessageCreation({
@@ -326,6 +327,7 @@ export function useMessagesController() {
     myUserId,
     send,
     sendGif,
+    sendImage,
     retrySend,
   };
 }

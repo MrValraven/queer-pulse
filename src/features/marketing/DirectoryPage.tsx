@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, FeatureHelp, Outro, Reveal } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -8,7 +8,10 @@ import { PageMeta } from "../../shared/seo/PageMeta";
 import { routes } from "../../app/routeMap";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { useLocalPlaces } from "./api/useLocalPlaces";
-import { useDirectoryFilters } from "./useDirectoryFilters";
+import {
+  useDirectoryFilterParams,
+  useDirectoryFilterResults,
+} from "./useDirectoryFilters";
 import { LocalFilterBar } from "./LocalFilterBar";
 import { DirectoryResultsHeader } from "./DirectoryResultsHeader";
 import { DirectoryListView } from "./DirectoryListView";
@@ -26,19 +29,14 @@ const DirectoryMapView = lazy(() =>
 
 export function DirectoryPage() {
   const { t } = useTranslation();
-  const places = useLocalPlaces();
-  const loading = useSimulatedLoad();
+  const filterParams = useDirectoryFilterParams();
   const {
     view,
     category,
-    query,
     sort,
     vibes,
     safe,
-    filtered,
-    categoryCounts,
-    mappableCount,
-    activeFilters,
+    query,
     selectView,
     setCategory,
     setQuery,
@@ -46,8 +44,30 @@ export function DirectoryPage() {
     toggleVibe,
     setSafe,
     clearFilters,
-  } = useDirectoryFilters(places);
+  } = filterParams;
+  const {
+    places,
+    total: serverTotal,
+    isLoading: placesLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useLocalPlaces({ query, safe });
+  const { filtered, categoryCounts, mappableCount, activeFilters } =
+    useDirectoryFilterResults(places, filterParams);
+  const loading = useSimulatedLoad() || placesLoading;
   const hasActiveFilters = activeFilters.length > 0;
+
+  // Map view has no scroll-driven "load more" of its own (unlike the list's
+  // incremental reveal in `DirectoryListView`), and wants every matching pin
+  // on screen — so keep pulling pages while the map tab is active. This
+  // terminates naturally once the server reports no more pages (a curated,
+  // bounded city registry), never an unbounded fetch loop.
+  useEffect(() => {
+    if (view !== "map") return;
+    if (!hasNextPage || isFetchingNextPage) return;
+    fetchNextPage();
+  }, [view, hasNextPage, isFetchingNextPage, fetchNextPage, places.length]);
 
   return (
     <PageShell>
@@ -89,7 +109,7 @@ export function DirectoryPage() {
 
       <DirectoryResultsHeader
         shown={filtered.length}
-        total={places.length}
+        total={serverTotal}
         mappableCount={mappableCount}
         loading={loading}
         view={view}
@@ -103,10 +123,13 @@ export function DirectoryPage() {
       {view === "list" ? (
         <DirectoryListView
           places={filtered}
-          total={places.length}
+          total={serverTotal}
           loading={loading}
           hasActiveFilters={hasActiveFilters}
           onClearFilters={clearFilters}
+          hasMoreFromServer={hasNextPage}
+          isLoadingMoreFromServer={isFetchingNextPage}
+          onLoadMoreFromServer={fetchNextPage}
         />
       ) : (
         <Suspense fallback={<MapLoading ready={false} />}>

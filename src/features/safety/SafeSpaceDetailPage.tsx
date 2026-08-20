@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes, businessPath } from "../../app/routeMap";
 import { useSafeSpace } from "./api/useSafeSpaces";
 import { type RemovedSpace } from "./safeSpaces";
+import { QuickExit } from "./QuickExit";
 import styles from "./SafeSpaceDetailPage.module.css";
 
 const SAFETY = routes.safety;
@@ -187,6 +188,7 @@ export function SafeSpaceDetailPage() {
     return (
       <PageShell>
         <RemovedView s={space.data} />
+        <QuickExit />
       </PageShell>
     );
   }

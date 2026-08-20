@@ -110,6 +110,7 @@ export function threadToCard(
     // reflects the viewer's own vote (`myVote`); `isLocked` gates the composer.
     opPostId: dto.opPostId,
     isLocked: dto.isLocked,
+    lockReason: dto.lockReason,
     myVote: dto.myVote,
   };
 }
@@ -149,6 +150,23 @@ export function postToReply(
   };
 }
 
+/**
+ * Flags the reply/replies with the highest NON-ZERO `reactions` (net vote
+ * count) as `helpful`, ties included. Backs live "Most helpful" (see
+ * `threadDetail`'s call site for the full rationale) — computed once over the
+ * currently-loaded page of replies, so it recomputes as more pages load.
+ */
+function markMostHelpful(replies: Reply[]): Reply[] {
+  const maxReactions = replies.reduce(
+    (max, reply) => Math.max(max, reply.reactions),
+    0,
+  );
+  if (maxReactions === 0) return replies;
+  return replies.map((reply) =>
+    reply.reactions === maxReactions ? { ...reply, helpful: true } : reply,
+  );
+}
+
 /** Combine thread meta + its posts page into the full `Thread` detail. */
 export function threadDetail(
   dto: ForumThreadResponse,
@@ -158,6 +176,9 @@ export function threadDetail(
 ): Thread {
   const card = threadToCard(dto, t, fmt);
   const [op, ...rest] = posts;
+  const mappedReplies = rest.map((post) =>
+    postToReply(post, t, fmt, post.author.handle === op?.author.handle),
+  );
   return {
     ...card,
     excerpt: op ? (paragraphs(op.body)[0] ?? "") : "",
@@ -167,9 +188,15 @@ export function threadDetail(
     // count + the viewer's own vote and stays consistent with `useVotePost`.
     upvotes: op?.voteCount ?? card.upvotes,
     myVote: op?.myVote ?? card.myVote,
-    replies: rest.map((post) =>
-      postToReply(post, t, fmt, post.author.handle === op?.author.handle),
-    ),
+    // "Most helpful" (see REPLY_SORTS/buildReplyTree) has no dedicated backend
+    // concept — it's wired here to the real vote signal already on every post
+    // (`forum_post_vote`, exposed as `reactions`/`voteCount`): the reply/replies
+    // with the page's highest NON-ZERO vote count are flagged `helpful`, which
+    // both drives buildReplyTree's sort (its `helpful` tiebreak now has a real
+    // live signal, not just demo-curated data) and lights the "Most helpful"
+    // badge (ThreadReplyItem). A thread with no votes yet flags nothing — zero
+    // votes isn't a helpfulness signal.
+    replies: markMostHelpful(mappedReplies),
     opPostId: op?.id ?? card.opPostId,
     editedAt: op?.editedAt ?? null,
     deleted: op?.deleted ?? false,

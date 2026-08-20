@@ -1,7 +1,15 @@
 import { useState } from "react";
 import type { IconType } from "react-icons";
-import type { EventVisibility } from "./api/events.api";
-import { LANGS } from "./createGathering.data";
+import type {
+  EventVisibility,
+  RecurrenceCadence,
+  RecurrenceEndType,
+} from "./api/events.api";
+import {
+  LANGS,
+  MAX_RECURRENCE_OCCURRENCES,
+  MIN_RECURRENCE_OCCURRENCES,
+} from "./createGathering.data";
 
 /** All wizard form state + helpers, shared by the page and its step components. */
 export function useGatheringForm() {
@@ -26,6 +34,15 @@ export function useGatheringForm() {
     setTimeValue(value);
   };
   const [endTime, setEndTime] = useState("22:00");
+  // ── Repeats (MSG-10) — a deliberately minimal cadence + end-condition
+  // pair, never an RFC5545/RRULE picker. `repeats` off (the default) means
+  // a normal one-off gathering; `formToCreateEventDto` (events.adapters.ts)
+  // only sends `recurrence` at all when it's on.
+  const [repeats, setRepeats] = useState(false);
+  const [cadence, setCadence] = useState<RecurrenceCadence>("weekly");
+  const [endType, setEndType] = useState<RecurrenceEndType>("count");
+  const [endCount, setEndCount] = useState("8");
+  const [endUntil, setEndUntil] = useState("");
   const [hood, setHood] = useState("");
   const [venue, setVenue] = useState("");
   // The venue's directory link, when the organiser picked a real listing
@@ -62,18 +79,11 @@ export function useGatheringForm() {
   const [lang, setLang] = useState(LANGS[0]!.value);
   const [access, setAccess] = useState<Set<string>>(new Set());
   const [accessNotes, setAccessNotes] = useState("");
-  const [free, setFree] = useState(false);
-  const [solPrice, setSolPrice] = useState("0");
-  const [stdPrice, setStdPrice] = useState("10");
-  const [supPrice, setSupPrice] = useState("18");
-  // Per-tier available spots (were uncontrolled defaultValue-only inputs whose
-  // values never reached form state — anything the organiser typed was dropped).
-  const [solSpots, setSolSpots] = useState("3");
-  const [stdSpots, setStdSpots] = useState("8");
-  const [supSpots, setSupSpots] = useState("5");
-  const [included, setIncluded] = useState("");
-  const [bring, setBring] = useState("");
-  const [checks, setChecks] = useState<boolean[]>([false, false, false]);
+  // Two publish-gating confirmations (Code of Care + accessibility accuracy)
+  // — matches `CONFIRM_CHECK_KEYS.length` (createGathering.data.ts). The
+  // third, pricing-honesty confirmation was dropped along with the pricing
+  // step: see `TOTAL_STEPS`'s doc there.
+  const [checks, setChecks] = useState<boolean[]>([false, false]);
 
   const selectType = (name: string, icon: IconType) => {
     setType(name);
@@ -100,9 +110,28 @@ export function useGatheringForm() {
   const dateValid =
     !!startAt && !Number.isNaN(startAt.getTime()) && startAt.getTime() > now;
 
+  // Off (the common case) is always valid. On, the chosen end condition must
+  // itself be well-formed: a count in `[MIN_RECURRENCE_OCCURRENCES,
+  // MAX_RECURRENCE_OCCURRENCES]`, or an end date strictly after the
+  // gathering's own start — mirrors the backend's own `resolveOccurrences`
+  // checks (events.service.ts) so the wizard never submits a rule the server
+  // would reject.
+  const endCountNumber = Number.parseInt(endCount, 10);
+  const endUntilDate = endUntil ? new Date(endUntil) : null;
+  const recurrenceValid =
+    !repeats ||
+    (endType === "count"
+      ? Number.isFinite(endCountNumber) &&
+        endCountNumber >= MIN_RECURRENCE_OCCURRENCES &&
+        endCountNumber <= MAX_RECURRENCE_OCCURRENCES
+      : !!endUntilDate &&
+        !!startAt &&
+        !Number.isNaN(endUntilDate.getTime()) &&
+        endUntilDate.getTime() > startAt.getTime());
+
   // Has the organiser entered anything worth warning them about losing? Only
   // fields they actually filled count — the pre-seeded defaults (time, capacity,
-  // language, prices, spots) don't, so an untouched wizard never prompts on exit.
+  // language) don't, so an untouched wizard never prompts on exit.
   const dirty =
     Boolean(type) ||
     title.trim().length > 0 ||
@@ -113,11 +142,10 @@ export function useGatheringForm() {
     address.trim().length > 0 ||
     directions.trim().length > 0 ||
     accessNotes.trim().length > 0 ||
-    included.trim().length > 0 ||
-    bring.trim().length > 0 ||
     access.size > 0 ||
     checks.some(Boolean) ||
-    audienceScope !== "members";
+    audienceScope !== "members" ||
+    repeats;
 
   return {
     type,
@@ -132,6 +160,17 @@ export function useGatheringForm() {
     setTime,
     endTime,
     setEndTime,
+    repeats,
+    setRepeats,
+    cadence,
+    setCadence,
+    endType,
+    setEndType,
+    endCount,
+    setEndCount,
+    endUntil,
+    setEndUntil,
+    recurrenceValid,
     hood,
     setHood,
     communitySlug,
@@ -155,24 +194,6 @@ export function useGatheringForm() {
     access,
     accessNotes,
     setAccessNotes,
-    free,
-    setFree,
-    solPrice,
-    setSolPrice,
-    stdPrice,
-    setStdPrice,
-    supPrice,
-    setSupPrice,
-    solSpots,
-    setSolSpots,
-    stdSpots,
-    setStdSpots,
-    supSpots,
-    setSupSpots,
-    included,
-    setIncluded,
-    bring,
-    setBring,
     checks,
     allChecked,
     checkedCount,

@@ -43,16 +43,37 @@ function isHttpsUrl(value: string): boolean {
   }
 }
 
-export function useListSpaceForm(): ListSpaceForm {
-  const [title, setTitle] = useState("");
-  const [area, setArea] = useState("");
-  const [rent, setRent] = useState("");
-  const [type, setType] = useState("");
-  const [bedrooms, setBedrooms] = useState("");
-  const [accessibility, setAccessibility] = useState("");
-  const [virtualTour, setVirtualTour] = useState("");
-  const [billsIncluded, setBillsIncluded] = useState(false);
-  const [isAgent, setIsAgent] = useState(false);
+/** Seeds the form with an existing listing's values — the edit flow's only
+ * difference from create (`MyHousingListingsPage`'s edit modal passes this;
+ * omitting it, as every create-flow caller does, is the original blank form). */
+export interface ListSpaceFormInitial {
+  title?: string;
+  area?: string;
+  rent?: string;
+  type?: string;
+  bedrooms?: string;
+  accessibility?: string;
+  virtualTour?: string;
+  billsIncluded?: boolean;
+  isAgent?: boolean;
+}
+
+export function useListSpaceForm(
+  initial: ListSpaceFormInitial = {},
+): ListSpaceForm {
+  const [title, setTitle] = useState(initial.title ?? "");
+  const [area, setArea] = useState(initial.area ?? "");
+  const [rent, setRent] = useState(initial.rent ?? "");
+  const [type, setType] = useState(initial.type ?? "");
+  const [bedrooms, setBedrooms] = useState(initial.bedrooms ?? "");
+  const [accessibility, setAccessibility] = useState(
+    initial.accessibility ?? "",
+  );
+  const [virtualTour, setVirtualTour] = useState(initial.virtualTour ?? "");
+  const [billsIncluded, setBillsIncluded] = useState(
+    initial.billsIncluded ?? false,
+  );
+  const [isAgent, setIsAgent] = useState(initial.isAgent ?? false);
 
   const virtualTourInvalid =
     virtualTour.trim().length > 0 && !isHttpsUrl(virtualTour);

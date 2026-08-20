@@ -660,6 +660,10 @@ export interface MyInviteDTO {
   personaAvatarUrl: string | null;
   invitedByName: string;
   createdAt: string;
+  /** Drives the accept-confirmation disclosure (IDN-2): an Unlinked persona
+   *  is pseudonymous, so accepting is the moment the invitee's real identity
+   *  first becomes visible to its other co-owners. */
+  linkVisibility: LinkVisibility;
 }
 
 // ── Endpoint fns (contract C4) ───────────────────────────────────────────────

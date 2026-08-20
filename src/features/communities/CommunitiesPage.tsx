@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { FiUsers } from "react-icons/fi";
 import {
   Button,
@@ -65,6 +65,7 @@ export function CommunitiesDiscover() {
   // page 1 either way: it's part of the react-query key `useCommunities`
   // builds from `params`, so a changed sort is a fresh key, not an append.
   const [sort, setSort] = useState<DiscoverSort>("newest");
+  const [filter, setFilter] = useState<"all" | CommunityType>("all");
   const {
     items: communities,
     hasNextPage,
@@ -74,11 +75,11 @@ export function CommunitiesDiscover() {
   } = useCommunities({
     q: q || undefined,
     sort: sort === "newest" ? undefined : sort,
+    type: filter === "all" ? undefined : filter,
   });
   const loading = useSimulatedLoad() || isLoading;
   const { isMember, join, requestToJoin } = useCommunityMembership();
   const { demoMode } = useDemoMode();
-  const [filter, setFilter] = useState<"all" | CommunityType>("all");
   const [joining, setJoining] = useState<Community | null>(null);
   const joinMutation = useJoinCommunity(joining?.slug ?? "");
 
@@ -88,13 +89,12 @@ export function CommunitiesDiscover() {
       (joining.privateBadge ? "private" : "public"))
     : "public";
 
-  const visible = useMemo(
-    () =>
-      filter === "all"
-        ? communities
-        : communities.filter((c) => c.type === filter),
-    [filter, communities],
-  );
+  // The server now does the real `type` filtering (`useCommunities`'s `type`
+  // param), so `communities` already IS the filtered set — no more
+  // client-side re-filter over just the loaded page, which used to false-
+  // negative "no communities match" once a filtered category had more than
+  // one page (COM-3).
+  const visible = communities;
 
   return (
     <>
@@ -143,8 +143,15 @@ export function CommunitiesDiscover() {
             ))}
           </Reveal>
 
+          {/* `type`/`q` are now server-side query params (COM-3), so `visible`
+              (=`communities`) already IS the filtered, searched result — an
+              empty list here means the server found nothing, not that a
+              client-side re-filter over one loaded page came up short. Order
+              matters: search takes priority (it's the more specific action
+              the member just took), then the category filter, then the
+              platform-wide "nothing exists yet" fallback. */}
           {!loading && visible.length === 0 ? (
-            q && communities.length === 0 ? (
+            q ? (
               <EmptyState
                 icon={<FiUsers />}
                 title={t("communities:discover.empty.search.title")}
@@ -156,17 +163,7 @@ export function CommunitiesDiscover() {
                   onClick: () => setSearchInput(""),
                 }}
               />
-            ) : communities.length === 0 ? (
-              <EmptyState
-                icon={<FiUsers />}
-                title={t("communities:discover.empty.none.title")}
-                description={t("communities:discover.empty.none.description")}
-                action={{
-                  label: t("communities:discover.empty.none.cta"),
-                  to: routes.startCommunity,
-                }}
-              />
-            ) : (
+            ) : filter !== "all" ? (
               <EmptyState
                 icon={<FiUsers />}
                 title={t("communities:discover.empty.filtered.title")}
@@ -176,6 +173,16 @@ export function CommunitiesDiscover() {
                 action={{
                   label: t("communities:discover.empty.filtered.cta"),
                   onClick: () => setFilter("all"),
+                }}
+              />
+            ) : (
+              <EmptyState
+                icon={<FiUsers />}
+                title={t("communities:discover.empty.none.title")}
+                description={t("communities:discover.empty.none.description")}
+                action={{
+                  label: t("communities:discover.empty.none.cta"),
+                  to: routes.startCommunity,
                 }}
               />
             )

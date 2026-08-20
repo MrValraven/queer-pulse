@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Badge, Button, FormField, type BadgeTone } from "../../shared/components/ui";
+import { Button, FormField } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { logError } from "../../shared/observability/logger";
 import { useListDsar, useSubmitDsar } from "../settings/api/useDsar";
-import type { DsarArticle, DsarStatus } from "../settings/api/account.api";
+import type { DsarArticle } from "../settings/api/account.api";
 import styles from "./AccountData.module.css";
 
 /** Confirmed against the backend `SubmitDsarDto` (`@IsIn([15, 16, 17, 21])`,
@@ -20,22 +20,14 @@ const ARTICLE_LABEL_KEY: Record<DsarArticle, string> = {
   21: "members:profile.accountData.dsar.article.objection",
 };
 
-/** Shares the `Badge` status-pill primitive rather than declaring a new one —
- *  the same component the export job status and the deletion-pending banner
- *  reach for elsewhere in this sheet. */
-const STATUS_TONE: Record<DsarStatus, BadgeTone> = {
-  received: "ghost",
-  in_review: "amber",
-  resolved: "jade",
-  rejected: "danger",
-};
-
-const STATUS_LABEL_KEY: Record<DsarStatus, string> = {
-  received: "members:profile.accountData.dsar.status.received",
-  in_review: "members:profile.accountData.dsar.status.inReview",
-  resolved: "members:profile.accountData.dsar.status.resolved",
-  rejected: "members:profile.accountData.dsar.status.rejected",
-};
+/**
+ * No multi-state status badge here on purpose (previously `received` /
+ * `in_review` / `resolved` / `rejected` via `Badge`). Nothing in the backend
+ * ever moves a `dsar_request` past `received`, since there's no admin triage
+ * workflow, so a status pill would keep implying live progress-tracking that
+ * doesn't exist. Each row instead shows the real, fixed fact the backend
+ * already computes: the statutory reply-by date (`request.dueBy`).
+ */
 
 /**
  * Full default scope. The compact sheet doesn't expose the full page's
@@ -80,6 +72,11 @@ export function AccountDataDsar() {
       showToast(
         t("members:profile.accountData.dsar.toast.submitted", {
           ref: created.reference,
+          date: fmt.date(new Date(created.dueBy), {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          }),
         }),
         "success",
       );
@@ -153,6 +150,11 @@ export function AccountDataDsar() {
         <h4 className={styles.subheading}>
           {t("members:profile.accountData.dsar.pastTitle")}
         </h4>
+        {!loading && !failed && requests.length > 0 && (
+          <p className={styles.hint}>
+            {t("members:profile.accountData.dsar.pastHint")}
+          </p>
+        )}
         {loading && (
           <p className={styles.hint}>
             {t("members:profile.accountData.dsar.pastLoading")}
@@ -181,9 +183,15 @@ export function AccountDataDsar() {
                     year: "numeric",
                   })}
                 </span>
-                <Badge tone={STATUS_TONE[request.status]} dot>
-                  {t(STATUS_LABEL_KEY[request.status])}
-                </Badge>
+                <span className={styles.pastRowMeta}>
+                  {t("members:profile.accountData.dsar.pastRowDueBy", {
+                    date: fmt.date(new Date(request.dueBy), {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    }),
+                  })}
+                </span>
               </li>
             ))}
           </ul>

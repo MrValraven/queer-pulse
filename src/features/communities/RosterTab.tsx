@@ -137,7 +137,7 @@ export function RosterTab({
               {[m.pronouns, m.hood].filter(Boolean).join(" · ")}
             </div>
             {(() => {
-              const others = alsoIn(m.slug, slug);
+              const others = alsoIn(m.slug, slug, demoMode);
               return others.length > 0 ? (
                 <div className={styles.alsoIn}>
                   {t("communities:detail.roster.alsoIn", {

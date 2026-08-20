@@ -33,11 +33,15 @@ export const resources: Catalog = {
   "crisis.line.emergency.hours": "Sempre · gratuito",
   "crisis.line.sosVozAmiga.name": "SOS Voz Amiga",
   "crisis.line.sosVozAmiga.hours": "Diariamente 16h–24h",
-  "crisis.line.ilga.name": "ILGA Portugal — Linha LGBTQ+",
-  "crisis.line.ilga.hours": "Dias úteis 10h–18h",
+  "crisis.line.ilga.name": "ILGA Portugal · Linha de apoio LGBTQ+",
+  "crisis.line.ilga.hours": "Qui–Sex 20h–23h",
 
-  // ── Partilhado: SuggestEditModal ─────────────────────────────────────────
+  // ── Partilhado: SuggestEditModal + SuggestEditTrigger (CNT-12: alargado
+  // para além do Glossário, para Direito, Saúde Trans, Redução de Danos,
+  // Saúde Mental e a grade da Biblioteca — o mesmo `POST /intakes/suggest_edit`
+  // genérico). ───────────────────────────────────────────────────────────
   "suggestEdit.modalTitle": "Sugerir uma alteração",
+  "suggestEdit.pageTriggerCta": "Sugerir uma alteração",
   "suggestEdit.success.title": "Sugestão <em>recebida.</em>",
   "suggestEdit.success.sub":
     "A equipa editorial vê as sugestões semanalmente e discute alterações maiores na assembleia mensal. Este é um documento vivo precisamente por causa de sugestões como a tua.",
@@ -47,9 +51,17 @@ export const resources: Catalog = {
     "As sugestões ao glossário ainda não estão ligadas à equipa editorial no site em produção, por isso não chegariam a ninguém. Preferimos ser honestes a fingir um recibo. Volta cá em breve.",
   "suggestEdit.body.intro":
     "Editado pela comunidade. Se uma definição parecer incompleta ou incorreta, diz-nos qual o termo e o que mudarias.",
+  "suggestEdit.body.introSubject":
+    "Algo nesta página desatualizado ou errado? Diz-nos o que corrigir.",
+  "suggestEdit.body.introPicker":
+    "Diz-nos qual o guia que precisa de uma atualização, e o que mudarias.",
   "suggestEdit.form.termLabel": "Qual termo",
+  "suggestEdit.form.subjectLabel": "Sobre o que é isto?",
+  "suggestEdit.form.subjectFixedLabel": "A sugerir uma alteração para",
   "suggestEdit.form.selectPlaceholder": "Seleciona um termo…",
+  "suggestEdit.form.selectPlaceholderGeneric": "Escolhe do que se trata…",
   "suggestEdit.form.newTermOption": "Um termo que falta",
+  "suggestEdit.form.otherOption": "Outra coisa",
   "suggestEdit.form.changeLabel": "Alteração sugerida",
   "suggestEdit.form.changePlaceholder":
     "O que está errado, e como o dirias em vez disso. Fontes são bem-vindas mas não obrigatórias.",
@@ -520,15 +532,6 @@ export const resources: Catalog = {
   "mentalHealth.hero.title": "Não precisas de estar <em>bem.</em>",
   "mentalHealth.hero.sub":
     "Terapeutas afirmativos queer, informação honesta sobre como aceder a apoio de saúde mental em Lisboa, recursos de crise, e uma comunidade que compreende o que estás a carregar — porque nós também carregamos.",
-
-  "mentalHealth.crisis.label": "Se precisas de apoio agora",
-  "mentalHealth.crisis.heading": "Linhas de crise e apoio imediato",
-  "mentalHealth.crisis.sub":
-    "Estas linhas estão disponíveis agora. Não precisas de estar em perigo imediato para ligar — se estás a passar por um momento difícil, pedir ajuda já é suficiente.",
-  "mentalHealth.crisisLine.sosVozAmiga.note": "24h · Português e inglês",
-  "mentalHealth.crisisLine.sns24.note": "Linha de saúde · 24h",
-  "mentalHealth.crisisLine.ilga.note": "Linha de apoio LGBTQ+",
-  "mentalHealth.crisisLine.samaritans.note": "Email · Inglês · resposta em 24h",
 
   "mentalHealth.outro.title": "Pedir ajuda <em>não é pequeno.</em>",
   "mentalHealth.outro.sub":
@@ -1052,19 +1055,9 @@ export const resources: Catalog = {
   "sober.host.submitCta.host": "Submeter convívio",
   "sober.host.submitCta.attend": "Pedir para participar",
 
-  // ── LibraryPage ──────────────────────────────────────────────────────────
-  "library.meta.title":
-    "Biblioteca de guias: direito, saúde, habitação e vida trans",
-  "library.meta.description":
-    "Guias escritos pela comunidade sobre direitos, saúde, habitação e vida trans em Portugal — pesquisáveis por tema, da discriminação no trabalho à hormonoterapia.",
-  "library.hero.eyebrow": "Biblioteca de Guias",
-  "library.hero.title": "Todos os guias, <em>num só lugar.</em>",
-  "library.hero.lead":
-    "Guias de habitação, saúde, direito, finanças e guias específicos para pessoas trans — escritos e validados pela comunidade, mantidos atualizados e livres para partilhar com quem precisar.",
-  "library.hero.anchor.browseAll": "Ver tudo",
-  "library.hero.anchor.legal": "Direito",
-  "library.hero.anchor.health": "Saúde",
-  "library.hero.anchor.housing": "Habitação",
+  // ── Grade da biblioteca de guias — partilhada por marketing/ResourceLibraryPage
+  // (a página real "/resources", ligada à navegação, consolidada pela CNT-11)
+  // e o seu cromado de pesquisa/filtro/cartão. ────────────────────────────
   "library.search.placeholder":
     "Pesquisar guias — pronomes, PrEP, arrendamento…",
   "library.filterAria": "Filtrar guias por tema",
@@ -1080,11 +1073,9 @@ export const resources: Catalog = {
   "library.loadingMore": "A carregar mais guias…",
   "library.loadMoreCta": "Carregar mais guias",
   "library.popularLabel": "Mais lidos:",
-  "library.outro.title": "Não encontras <em>o que precisas?</em>",
-  "library.outro.sub":
-    "Pergunta no fórum — normalmente já passou por isto. Ou sugere um guia que devíamos escrever.",
-  "library.outro.askCommunityCta": "Perguntar à comunidade",
-  "library.outro.suggestGuideCta": "Sugerir um guia",
+  // Sinal de atualidade da CNT-13, mostrado em cada cartão de guia.
+  "library.card.verifiedOn": "Verificado a {date}",
+  "library.card.notYetVerified": "Ainda não verificado",
 
   // ── SexualHealthPage (+ SexualHealthTabs.tsx + sexualHealth.data.ts) ────
   // Assinalado para revisão nativa — informação sobre saúde sexual/VIH/PrEP.

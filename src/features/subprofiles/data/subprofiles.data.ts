@@ -3053,6 +3053,7 @@ export function mockMyPersonaInvites(): MyInviteDTO[] {
       personaAvatarUrl: NIGHTFORM.avatarUrl,
       invitedByName: NIGHTFORM.ownerName,
       createdAt: "2026-08-01T00:00:00.000Z",
+      linkVisibility: NIGHTFORM.linkVisibility,
     },
   ];
 }

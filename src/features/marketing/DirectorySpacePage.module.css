@@ -928,6 +928,20 @@
   font-weight: 600;
 }
 
+/* "Report this review" — a small, low-emphasis affordance under every review
+   (unlike the owner-only .replyToggle beside it), so it never competes
+   visually with the reply CTA. */
+.reportToggle {
+  margin-top: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--ink-40);
+}
+.reportToggle svg {
+  width: 12px;
+  height: 12px;
+}
+
 /* ── Owner reply block + inline composer ──────────────────────────────────── */
 .ownerReply {
   margin-top: 12px;

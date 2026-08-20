@@ -5,6 +5,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { InviteMembersModal } from "./InviteMembersModal";
 import { useAttendees } from "./api/useAttendees";
+import { useRemoveAttendee, usePromoteAttendee } from "./api/useEventMutations";
 import { AttendeeSection } from "./ManageGatheringAttendees";
 import styles from "./ManageGatheringPage.module.css";
 
@@ -16,6 +17,8 @@ export function AttendeesTab({ slug }: { slug: string }) {
   const [loadingMoreGoing, setLoadingMoreGoing] = useState(false);
   const [loadingMoreWaitlist, setLoadingMoreWaitlist] = useState(false);
   const { data, loadMoreGoing, loadMoreWaitlist } = useAttendees(slug);
+  const removeAttendee = useRemoveAttendee(slug);
+  const promoteAttendee = usePromoteAttendee(slug);
   const going = data?.going ?? [];
   const waitlist = data?.waitlist ?? [];
   const goingCount = data?.goingCount ?? going.length;
@@ -94,9 +97,18 @@ export function AttendeesTab({ slug }: { slug: string }) {
               name: attendee.name,
             })}
             className={`${styles.attActionBtn} ${styles.remove}`}
-            onClick={() =>
-              showToast(t("gatherings:manage.attendees.removedToast"), "info")
-            }
+            disabled={removeAttendee.isPending}
+            onClick={() => {
+              removeAttendee.mutate(attendee.slug, {
+                onSuccess: () =>
+                  showToast(
+                    t("gatherings:manage.attendees.removedToast"),
+                    "info",
+                  ),
+                onError: () =>
+                  showToast(t("gatherings:manage.attendees.actionErrorToast"), "error"),
+              });
+            }}
           >
             {t("gatherings:manage.attendees.removeCta")}
           </Button>
@@ -118,14 +130,20 @@ export function AttendeesTab({ slug }: { slug: string }) {
               name: attendee.name,
             })}
             className={`${styles.attActionBtn} ${styles.promote}`}
-            onClick={() =>
-              showToast(
-                t("gatherings:manage.attendees.promotedToast", {
-                  name: attendee.name.split(" ")[0]!,
-                }),
-                "success",
-              )
-            }
+            disabled={promoteAttendee.isPending}
+            onClick={() => {
+              promoteAttendee.mutate(attendee.slug, {
+                onSuccess: () =>
+                  showToast(
+                    t("gatherings:manage.attendees.promotedToast", {
+                      name: attendee.name.split(" ")[0]!,
+                    }),
+                    "success",
+                  ),
+                onError: () =>
+                  showToast(t("gatherings:manage.attendees.actionErrorToast"), "error"),
+              });
+            }}
           >
             {t("gatherings:manage.attendees.promoteCta")}
           </Button>

@@ -87,6 +87,12 @@ export function cardToCalendarEvent(dto: EventCardDTO): CalendarEvent {
 
 /** GET /events/:slug → the GatheringPage `GatheringDetail` view-model. */
 export function detailToGathering(dto: EventDetailDTO): GatheringDetail {
+  // The host turned off "Show attendee count" (`SettingsTab`) — a
+  // non-organizer viewer sees the generic "open to all" copy instead of a
+  // real headcount. Organizers always see the real number (their own
+  // dashboard, not the public-facing card). `undefined` (an older/absent
+  // field) defaults to "show", matching the backend column's own default.
+  const hideCount = dto.isOrganizer !== true && dto.showAttendeeCount === false;
   return {
     slug: dto.slug,
     type: dto.type ?? "Gathering",
@@ -98,7 +104,7 @@ export function detailToGathering(dto: EventDetailDTO): GatheringDetail {
     hostFirst: dto.host?.firstName,
     hostLast: dto.host?.lastName,
     hostAvatarUrl: dto.host?.avatarUrl ?? null,
-    spots: spotsLabel(dto),
+    spots: hideCount ? { key: "gatherings:spots.openToAll" } : spotsLabel(dto),
     ctaKey: "gatherings:cta.rsvp",
     body: dto.description ?? "",
     viewerIsOrganizer: dto.isOrganizer ?? false,
@@ -117,6 +123,13 @@ export function detailToGathering(dto: EventDetailDTO): GatheringDetail {
     communitySlug: dto.communitySlug ?? undefined,
     venueListingId: dto.listingId ?? null,
     venueListing: dto.venueListing ?? null,
+    cohosts: dto.cohosts,
+    myRsvpDetails: dto.myRsvpDetails ?? null,
+    showAttendeeCount: dto.showAttendeeCount,
+    allowWaitlist: dto.allowWaitlist,
+    series: dto.series ?? null,
+    goingAttendeesPreview: dto.goingAttendeesPreview ?? [],
+    goingAttendeesPreviewTotal: dto.goingAttendeesPreviewTotal ?? 0,
   };
 }
 
@@ -248,5 +261,19 @@ export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
     // Only sent when the organiser picked one of their communities — omitted
     // keeps the gathering public, exactly as before this field existed.
     ...(form.communitySlug ? { communitySlug: form.communitySlug } : {}),
+    // MSG-10 — only sent when the host actually switched "repeats" on; a
+    // normal one-off gathering (the common case) omits it entirely, exactly
+    // as before this field existed.
+    ...(form.repeats
+      ? {
+          recurrence: {
+            cadence: form.cadence,
+            endType: form.endType,
+            ...(form.endType === "count"
+              ? { endCount: Number.parseInt(form.endCount, 10) }
+              : { endUntil: combineDateTime(form.endUntil, "23:59") }),
+          },
+        }
+      : {}),
   };
 }

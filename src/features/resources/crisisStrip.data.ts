@@ -31,8 +31,8 @@ export const CRISIS_LINES: CrisisLine[] = [
   },
   {
     nameKey: "resources:crisis.line.ilga.name",
-    display: "218 873 918",
-    tel: "218873918",
+    display: "218 873 922",
+    tel: "218873922",
     hoursKey: "resources:crisis.line.ilga.hours",
   },
 ];

@@ -1,68 +1,6 @@
-/* Hero migrated to the shared <ResourceHero tone="light" />. */
-
-.crisisBar {
-  background: rgba(var(--jade-rgb), 0.08);
-  border: 1px solid rgba(var(--jade-rgb), 0.2);
-  padding: 24px 0;
-}
-.crisisInner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-.crisisLabel {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--jade);
-  margin-bottom: 6px;
-}
-.crisisHeading {
-  font-family: var(--serif);
-  font-size: 20px;
-  color: var(--text-strong);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-}
-.crisisSub {
-  font-size: 14px;
-  color: var(--ink-60);
-  margin-top: 4px;
-  max-width: 44ch;
-  line-height: 1.55;
-}
-.crisisLines {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.crisisLine {
-  background: var(--paper);
-  border: 1px solid rgba(var(--jade-rgb), 0.2);
-  border-radius: 12px;
-  padding: 12px 16px;
-}
-.clName {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-strong);
-}
-.clNum {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--jade);
-  font-family: var(--sans);
-  letter-spacing: 0.01em;
-  margin-top: 2px;
-}
-.clNote {
-  font-size: 11.5px;
-  color: var(--ink-40);
-  margin-top: 2px;
-}
+/* Hero migrated to the shared <ResourceHero tone="light" />. Crisis bar
+   migrated to the shared <CrisisStrip /> (see CrisisStrip.tsx / crisisStrip.data.ts) —
+   this page no longer hand-rolls its own crisis markup. */
 
 .sec {
   padding: 80px 0;
@@ -355,10 +293,6 @@
 }
 
 @media (--md) {
-  .crisisInner {
-    flex-direction: column;
-    align-items: flex-start;
-  }
   .peerStrip {
     flex-direction: column;
   }

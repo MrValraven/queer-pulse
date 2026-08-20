@@ -23,6 +23,7 @@ export const governance: Catalog = {
   "nav.council": "Advisory council",
   "nav.principles": "Principles",
   "nav.finances": "Finances",
+  "nav.proposals": "Proposals & votes",
   "nav.decisions": "Decision log",
   "nav.raise": "Raise a concern",
 
@@ -91,7 +92,7 @@ export const governance: Catalog = {
   "sections.council.eyebrow": "Advisory council",
   "sections.council.title": "Who <em>oversees</em> this.",
   "sections.council.intro":
-    "The advisory council reviews moderation appeals, proposes platform changes, and serves as an accountability layer. Members serve one-year terms and can be removed by a two-thirds community vote.",
+    "The advisory council reviews moderation appeals, proposes platform changes, and serves as an accountability layer. Members serve one-year terms and can be removed by a two-thirds community vote — see Proposals & votes below.",
 
   "council.psychologistChair": "Psychologist · Chair",
   "council.lawyerLegalAdvisor": "Lawyer · Legal advisor",
@@ -146,7 +147,28 @@ export const governance: Catalog = {
   "sections.finances.partnerScope.mentalHealthFund": "the Mental Health Fund",
   "sections.finances.partnerScope.communityEvents": "community events",
   "sections.finances.noCorporateFunding":
-    "We do not accept funding from corporations, brands, or government bodies whose interests could conflict with community autonomy. If that ever changes, we'll say so here first, and the community will vote on it.",
+    "We do not accept funding from corporations, brands, or government bodies whose interests could conflict with community autonomy. If that ever changes, we'll say so here first, and put it to a community vote — see Proposals & votes below.",
+
+  // ── Proposals & votes ────────────────────────────────────────────────────
+  "sections.proposals.eyebrow": "Proposals & votes",
+  "sections.proposals.title": "Put it to a <em>vote.</em>",
+  "sections.proposals.intro":
+    "Two things on this page are decided by member vote, not admin fiat: removing an advisory-council seat needs a two-thirds vote, and accepting funding outside our usual sources needs a majority. Every open proposal is listed here, and every past one stays visible with its result.",
+  "sections.proposals.type.council_removal": "Council seat",
+  "sections.proposals.type.funding_change": "Funding change",
+  "sections.proposals.status.passed": "Passed",
+  "sections.proposals.status.failed": "Did not pass",
+  "sections.proposals.targetSeat": "Seat under review: {name}",
+  "sections.proposals.tallyCaption":
+    "{forCount} for · {againstCount} against · {forPercent}% in favour (two-thirds line marked)",
+  "sections.proposals.closes": "Voting closes {date}",
+  "sections.proposals.closedOn": "Voting closed {date}",
+  "sections.proposals.voteFor": "Vote for",
+  "sections.proposals.voteAgainst": "Vote against",
+  "sections.proposals.votedFor": "You voted for this proposal.",
+  "sections.proposals.votedAgainst": "You voted against this proposal.",
+  "sections.proposals.resolvedHeading": "Past proposals",
+  "sections.proposals.empty": "No proposal has been opened yet.",
 
   // ── Decision log ────────────────────────────────────────────────────────
   "sections.decisions.eyebrow": "Recent decisions",

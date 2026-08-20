@@ -13,6 +13,7 @@ import {
   getThreads,
   type ForumPostResponse,
   type ForumThreadCounts,
+  type ForumThreadCountsResponse,
   type ForumThreadResponse,
   type GetThreadsOptions,
 } from "./forum.api";
@@ -145,23 +146,29 @@ const DEMO_COUNTS: ForumThreadCounts = THREADS.reduce<ForumThreadCounts>(
  * category), ignoring `q`/`tag` so the demo sidebar stays stable and matches the
  * single-terminal-page list.
  *
- * Returns `{ counts, isPending }`. `counts` is a `ForumThreadCounts`
+ * Returns `{ counts, hasPosted, isPending }`. `counts` is a `ForumThreadCounts`
  * (`{ all: number; [category]: number }`) — read `counts.all` and
  * `counts[categoryId]`; a category with no threads is simply absent, so treat a
  * missing key as 0. `counts` is `undefined` only while the LIVE query is still
  * loading; in demo it is always present.
+ *
+ * `hasPosted` is the LIVE "has this member ever posted (thread or reply)"
+ * signal the first-post prompt gates on (see `useForumPageState`) — always
+ * `false` in demo, where the mock carries no persistent posting history for
+ * the persona; demo instead treats a post made THIS session as "posted."
  */
 export function useForumCounts(q?: string, tag?: string) {
   const { demoMode } = useDemoMode();
 
-  const query = useQuery<ForumThreadCounts>({
+  const query = useQuery<ForumThreadCountsResponse>({
     queryKey: ["forum-thread-counts", demoMode, q, tag],
     enabled: !demoMode,
     queryFn: () => getThreadCounts(q, tag),
   });
 
   return {
-    counts: demoMode ? DEMO_COUNTS : query.data,
+    counts: demoMode ? DEMO_COUNTS : query.data?.counts,
+    hasPosted: !demoMode && !!query.data?.hasPosted,
     // Demo resolves synchronously; only the live fetch has a pending phase.
     isPending: !demoMode && query.isPending,
   };

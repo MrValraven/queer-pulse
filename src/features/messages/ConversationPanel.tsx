@@ -9,6 +9,7 @@ import { ConversationOverlays } from "./ConversationOverlays";
 import { ConversationPinnedBanner } from "./ConversationPinnedBanner";
 import type { GroupMemberPick } from "./NewGroupModal";
 import { MessageArea } from "./MessageArea";
+import { ThreadSearchModal } from "./ThreadSearchModal";
 import { useMessageActionMenu } from "./useMessageActionMenu";
 import { useMessageLogState } from "./useMessageLogState";
 import { useMessageReceipts } from "./useMessageReceipts";
@@ -25,6 +26,10 @@ interface ConversationPanelProps {
   onSend: (body: string) => void;
   /** Sends a picked GIF as its own message (from the composer's GIF picker). */
   onSendGif?: (attachment: GifAttachment) => void;
+  /** Sends an uploaded image as its own message (from the composer's photo
+   *  attach button). `localAttachment` is the upload's local blob preview,
+   *  for the optimistic bubble to render instantly. */
+  onSendImage?: (attachment: GifAttachment, localAttachment?: GifAttachment) => void;
   /** True when the counterpart is blocked — the composer is severed. */
   blocked?: boolean;
   /** Mobile only — returns to the conversation list. Absent on desktop. */
@@ -84,6 +89,7 @@ export function ConversationPanel({
   messageGroups,
   onSend,
   onSendGif,
+  onSendImage,
   blocked = false,
   onBack,
   onRetry,
@@ -111,6 +117,8 @@ export function ConversationPanel({
   const [groupInfoOpen, setGroupInfoOpen] = useState(false);
   /** Whether the "Seen by" sheet is open (groups only). */
   const [seenBySheetOpen, setSeenBySheetOpen] = useState(false);
+  /** Whether the "search in this chat" modal is open. */
+  const [threadSearchOpen, setThreadSearchOpen] = useState(false);
 
   // Pin (shared) + star (private) wiring lives in its own hook to keep this
   // component under the size cap.
@@ -196,8 +204,16 @@ export function ConversationPanel({
         isCounterpartOnline={isCounterpartOnline}
         onBack={onBack}
         onOpenStarred={onOpenStarred}
+        onOpenSearch={() => setThreadSearchOpen(true)}
         onOpenGroupInfo={() => setGroupInfoOpen(true)}
       />
+      {threadSearchOpen && (
+        <ThreadSearchModal
+          conversation={active}
+          onClose={() => setThreadSearchOpen(false)}
+          onJumpToMessage={jumpToMessageVirtualized}
+        />
+      )}
 
       <ConnectionStatusBanner />
 
@@ -236,6 +252,7 @@ export function ConversationPanel({
         active={active}
         onSend={onSend}
         onSendGif={onSendGif}
+        onSendImage={onSendImage}
         blocked={blocked}
         replyDraft={replyDraft}
         onCancelReply={onCancelReply}

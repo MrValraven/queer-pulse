@@ -29,6 +29,7 @@ export const magazine: Catalog = {
   "masthead.nav.current": "Current issue",
   "masthead.nav.issues": "Issues",
   "masthead.nav.stories": "Stories",
+  "masthead.nav.authors": "Writers",
   "masthead.nav.write": "Write for us",
 
   // ── MagazinePage ─────────────────────────────────────────────────────────
@@ -55,6 +56,10 @@ export const magazine: Catalog = {
   "cover.readFullFeatureCta": "Read the full feature",
 
   // ── MagazineSections ─────────────────────────────────────────────────────
+  // "sections.live.*" is MagazineLiveSections' heading (real published
+  // articles, live mode only) — distinct from "sections.features.title"
+  // below, which is demo-mode's curated (fabricated) "this month's picks".
+  "sections.live.title": "Latest <em>from the magazine</em>",
   "sections.features.title": "This month's <em>features</em>",
   "sections.features.allCta": "All this month's features",
   "sections.essayOfMonthKicker": "Essay of the month",
@@ -323,6 +328,19 @@ export const magazine: Catalog = {
   "author.work.allArticlesCta_other": "All {count} articles",
   "author.work.seeAllPicksCta": "See all picks",
   "author.work.findElsewhereHeading": "Find {name} <em>elsewhere</em>",
+  "author.work.noArticlesYet": "{name} hasn't published anything yet. Check back soon.",
+
+  // ── AuthorsDirectoryPage ─────────────────────────────────────────────────
+  "authorsDirectory.eyebrow": "Magazine · writers",
+  "authorsDirectory.title": "Everyone writing for the magazine.",
+  "authorsDirectory.sub":
+    "Reporters, essayists, and interviewers, all in one place. Pick a name to read their work.",
+  "authorsDirectory.errorTitle": "We couldn't load the writers.",
+  "authorsDirectory.errorBody":
+    "Something interrupted us on the way here. Give it another try.",
+  "authorsDirectory.emptyTitle": "No writers to show yet.",
+  "authorsDirectory.emptyBody":
+    "The directory is still being set up. Bylines will land here soon.",
 
   // ══════════════════ Editor dashboard (staff-only) ════════════════════════
   // Piece/pitch RECORDS (titles, notes, activity feed, section names) are
@@ -1222,7 +1240,16 @@ export const magazine: Catalog = {
   "write.header.sendOn": "Send on",
   "write.header.sendOnTo": "Send to {stage}",
   "write.header.publish": "Publish",
-  "write.header.publishToast": "Publishing isn't wired up yet.",
+  "write.header.unpublish": "Unpublish",
+  "write.header.statusPublished": "Published",
+  "write.header.statusScheduled": "Scheduled",
+  "write.header.statusDraft": "Draft",
+  "write.header.publishedToast": "Article published",
+  "write.header.scheduledToast": "Article scheduled",
+  "write.header.unpublishedToast": "Article unpublished",
+  "write.header.publishError": "Couldn't publish, try again",
+  "write.header.publishNotReadyError":
+    "Add a standfirst and alt text on every image before publishing.",
   "write.header.savedSaving": "Saving…",
   "write.header.savedError": "Couldn't save, will retry",
   "write.header.savedOk": "All changes saved",
@@ -1316,11 +1343,14 @@ export const magazine: Catalog = {
   "write.publish.now": "Now",
   "write.publish.schedule": "Schedule",
   "write.publish.withIssue": "With issue",
-  "write.publish.scheduleNote":
-    "Scheduling a date and time is coming soon. Ships as a draft for now.",
+  "write.publish.scheduleLabel": "Publish at",
+  "write.publish.scheduleNote": "Publishes automatically at the date and time you pick.",
+  "write.publish.scheduleInvalid": "Pick a date and time in the future.",
   "write.publish.issueNote": "Ships automatically when its issue goes out.",
   "write.publish.checklistHeading": "Before it ships · {done}/{total}",
   "write.publish.cta": "Publish",
+  "write.publish.scheduleCta": "Schedule",
+  "write.publish.unpublishCta": "Unpublish",
   "write.publish.checklist.standfirst": "Standfirst written",
   "write.publish.checklist.alts": "Alt text on every image",
   "write.publish.checklist.altsPending": "Alt text on every image (none yet)",
@@ -1339,6 +1369,14 @@ export const magazine: Catalog = {
   "write.meta.tagsHelper": "Comma-separated.",
   "write.meta.slugLabel": "Slug",
   "write.meta.slugHelper": "Server-generated.",
+  "write.meta.metaDescriptionLabel": "Meta description",
+  "write.meta.metaDescriptionHelper":
+    "Shown in search results and link previews. Optional.",
+  "write.meta.socialImageLabel": "Social image",
+  "write.meta.socialImageHelper": "Image URL used when this article is shared. Optional.",
+  "write.meta.canonicalUrlLabel": "Canonical URL",
+  "write.meta.canonicalUrlHelper":
+    "Only set this if the article is republished from elsewhere. Optional.",
   "write.meta.wordCountLabel": "Word count",
   "write.meta.readTimeLabel": "Read time",
 

@@ -25,8 +25,20 @@ export interface SisterCommunity {
   shared: number;
 }
 
-/** Other communities that share members with `slug`, most-connected first. */
-export function sisterCommunities(slug: string): SisterCommunity[] {
+/**
+ * Other communities that share members with `slug`, most-connected first.
+ *
+ * `LIVING` is a DEMO-ONLY fixture registry (`livingCommunities.data.ts`), not
+ * real roster data — pass `demoMode` from the caller's `useDemoMode()`, same
+ * convention as `photoOf`. Live mode always returns `[]`: a real community's
+ * slug colliding with a demo slug must never render fabricated sister-
+ * community relationships to real members.
+ */
+export function sisterCommunities(
+  slug: string,
+  demoMode = false,
+): SisterCommunity[] {
+  if (!demoMode) return [];
   return Object.keys(LIVING)
     .filter((other) => other !== slug)
     .map((other) => ({
@@ -37,12 +49,18 @@ export function sisterCommunities(slug: string): SisterCommunity[] {
     .sort((a, b) => b.shared - a.shared);
 }
 
-/** Names of other living communities a given member also belongs to. */
+/**
+ * Names of other living communities a given member also belongs to.
+ *
+ * Same DEMO-ONLY caveat as {@link sisterCommunities} — pass `demoMode` from
+ * the caller's `useDemoMode()`; live mode always returns `[]`.
+ */
 export function alsoIn(
   memberSlug: string | undefined,
   excludeSlug: string,
+  demoMode = false,
 ): string[] {
-  if (!memberSlug) return [];
+  if (!demoMode || !memberSlug) return [];
   return Object.keys(LIVING)
     .filter((slug) => slug !== excludeSlug && memberSlugs(slug).has(memberSlug))
     .map((slug) => communities.find((c) => c.slug === slug)?.name ?? slug);

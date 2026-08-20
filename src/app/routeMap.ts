@@ -58,6 +58,7 @@ export const routes = {
   adminLanding: "/admin/landing",
   adminPressKit: "/admin/press-kit",
   adminMembers: "/admin/members",
+  adminStaff: "/admin/staff",
   adminBots: "/admin/bots",
   adminChangemakers: "/admin/changemakers",
   adminChangemakerNominations: "/admin/changemaker-nominations",
@@ -92,6 +93,9 @@ export const routes = {
   article: "/magazine/article",
   deck: "/magazine/deck",
   author: "/magazine/author",
+  /** CNT-9 — the authors directory (`AuthorsDirectoryPage`), distinct from
+   *  `author` above (a single writer's page, `/magazine/author/:slug`). */
+  magazineAuthors: "/magazine/authors",
   barter: "/work/barter",
   businessDirectory: "/business-directory",
   calendar: "/calendar",
@@ -199,6 +203,7 @@ export const routes = {
   messages: "/messages",
   myEvents: "/account/events",
   microGrants: "/work/grants/micro",
+  newsletterUnsubscribe: "/newsletter/unsubscribe",
   notifications: "/notifications",
   offer: "/work/offer",
   parents: "/parents",
@@ -213,6 +218,7 @@ export const routes = {
   privacy: "/policies/privacy",
   pronounsGuide: "/resources/pronouns-guide",
   publicProfile: "/public-profile",
+  pushDevices: "/account/push-devices",
   queer101: "/resources/101",
   readingGroups: "/reading-groups",
   report: "/safety/report",
@@ -257,6 +263,9 @@ export const routes = {
   subprofiles: "/subprofiles",
   subprofilesDashboard: "/account/subprofiles",
   topic: "/topic",
+  /** DISC-4 — the topics directory (`TopicsDirectoryPage`), distinct from
+   *  `topic` above (the singular per-tag feed, `/topic/:tag`). */
+  topics: "/topics",
   terms: "/policies/terms",
   transHealthcare: "/resources/trans-healthcare",
   transHub: "/resources/trans-hub",
@@ -273,7 +282,6 @@ export const routes = {
 
   // Additional typed entry points (auth, lifecycle, studio & system states),
   // used by the settings → Simulations panel to launch real member journeys.
-  pendingReview: "/system/pending-review",
   requestInvite: "/auth/request-invite",
   inviteExpired: "/system/invite-expired",
   verificationNeeded: "/system/verification-needed",

@@ -1,6 +1,10 @@
 import type { Conversation } from "./data";
 
-export type InboxTab = "all" | "unread" | "favorites" | "groups";
+/** "requests" (MSG-1) isn't a conversation filter at all — it swaps the whole
+ *  list body for `MessagesRequestsPanel` (incoming first-contact message
+ *  requests), so `filterThreadsByTab` below just returns no conversation rows
+ *  for it; the real data comes from `useConnectionsList("incoming")`. */
+export type InboxTab = "all" | "unread" | "favorites" | "groups" | "requests";
 
 /** Same unread rule `MessagesThreadRow` uses for its dot/badge — unread flag
  *  on, not locally marked read this session, and not the thread currently
@@ -31,6 +35,8 @@ export function filterThreadsByTab(
       return threads.filter((thread) => thread.favorite === true);
     case "groups":
       return threads.filter((thread) => thread.isGroup === true);
+    case "requests":
+      return [];
     default:
       return threads;
   }

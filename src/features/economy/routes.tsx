@@ -2,6 +2,7 @@ import { Navigate, Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { ParamRedirect } from "../../app/routes.redirects";
 import { lazyNamed } from "../../app/routeHelpers";
+import { MY_HOUSING_LISTINGS_PATH } from "./housing.data";
 
 const JobsPage = lazyNamed(() => import("./JobsPage"), "JobsPage");
 const JobDetailPage = lazyNamed(() => import("./JobDetailPage"), "JobDetailPage");
@@ -15,6 +16,7 @@ const HousingTenantRightsPage = lazyNamed(() => import("./HousingTenantRightsPag
 const HousingGroupsPage = lazyNamed(() => import("./HousingGroupsPage"), "HousingGroupsPage");
 const HousingGroupDetailPage = lazyNamed(() => import("./HousingGroupDetailPage"), "HousingGroupDetailPage");
 const HousingListingPage = lazyNamed(() => import("./HousingListingPage"), "HousingListingPage");
+const MyHousingListingsPage = lazyNamed(() => import("./MyHousingListingsPage"), "MyHousingListingsPage");
 const HousingViewingsPage = lazyNamed(() => import("./HousingViewingsPage"), "HousingViewingsPage");
 const LandlordPage = lazyNamed(() => import("./LandlordPage"), "LandlordPage");
 const SkillsPage = lazyNamed(() => import("./SkillsPage"), "SkillsPage");
@@ -54,8 +56,12 @@ export function economyRoutes() {
       <Route path={`${routes.jobs}/:slug/apply`} element={<JobApplyPage />} />
       <Route path={`${routes.company}/:slug`} element={<CompanyPage />} />
       <Route path={routes.housing} element={<HousingPage />} />
-      {/* Static segment registered before the `:slug` catch so it always wins. */}
+      {/* Static segments registered before the `:slug` catch so they always win. */}
       <Route path={routes.housingViewings} element={<HousingViewingsPage />} />
+      <Route
+        path={MY_HOUSING_LISTINGS_PATH}
+        element={<MyHousingListingsPage />}
+      />
       <Route
         path={`${routes.housing}/:slug`}
         element={<HousingListingPage />}

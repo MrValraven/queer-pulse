@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { FiAlertTriangle } from "react-icons/fi";
 import { EmptyState, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -5,6 +6,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import {
   ReportCard,
   BulkBar,
+  BulkSuspendModal,
   EmergencyBand,
   SectionLabel,
   CaughtUpPanel,
@@ -37,6 +39,7 @@ function QueueErrorPane({ onRetry }: { onRetry: () => void }) {
 export function OpenPane({ q }: { q: Queue }) {
   const { t } = useTranslation();
   const { open, visible, emergencies, others, picked, leaving, oldest } = q;
+  const [suspending, setSuspending] = useState(false);
 
   const renderReport = (r: (typeof open)[number], i: number) => (
     <FadeIn key={r.id} delay={Math.min(i, 6) * 55}>
@@ -46,6 +49,7 @@ export function OpenPane({ q }: { q: Queue }) {
         selected={picked.has(r.id)}
         onToggle={q.togglePick}
         onOpen={q.openReport}
+        onViewHistory={q.viewSubjectHistory}
       />
     </FadeIn>
   );
@@ -81,7 +85,21 @@ export function OpenPane({ q }: { q: Queue }) {
           onDismiss={() => q.bulkAct("dismissed", "dismiss")}
           onSpam={() => q.bulkAct("removedAsSpam", "remove_content")}
           onReassign={() => q.bulkAct("reassigned", "escalate")}
+          onWarn={() => q.bulkAct("warned", "warn")}
+          onSuspendClick={() => setSuspending(true)}
+          onBan={() => q.bulkAct("banned", "ban")}
           onCancel={q.clearPicked}
+        />
+      )}
+
+      {suspending && (
+        <BulkSuspendModal
+          count={picked.size}
+          onClose={() => setSuspending(false)}
+          onConfirm={(duration) => {
+            setSuspending(false);
+            q.bulkAct("suspended", "suspend", duration);
+          }}
         />
       )}
 

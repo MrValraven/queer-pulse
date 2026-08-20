@@ -183,6 +183,83 @@
   }
 }
 
+/* ── "Find a member" search box (ADM-10) ──────────────────── */
+.memberFinder {
+  position: relative;
+  flex: none;
+  padding: 10px 22px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--paper);
+}
+.memberFinderInput {
+  width: min(340px, 100%);
+}
+.memberFinderResults {
+  position: absolute;
+  top: 100%;
+  left: 22px;
+  right: 22px;
+  z-index: 5;
+  max-width: 340px;
+  max-height: 260px;
+  overflow-y: auto;
+  margin: 6px 0 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: 16px;
+  box-shadow: 0 20px 44px -24px rgba(var(--plum-rgb), 0.5);
+}
+.memberFinderResults li + li {
+  margin-top: 2px;
+}
+.memberFinderResults button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 11px;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  transition: background 0.14s var(--ease);
+}
+@media (hover: hover) {
+  .memberFinderResults button:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
+}
+.memberFinderResults button:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: -2px;
+}
+.memberFinderResultText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+[data-theme="dark"] .memberFinderResultText {
+  color: var(--ink);
+}
+.memberFinderResultHandle {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--ink-40);
+}
+.memberFinderEmpty {
+  padding: 10px;
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+
 /* ── Main: stage + inspector ────────────────────────────── */
 .main {
   flex: 1;

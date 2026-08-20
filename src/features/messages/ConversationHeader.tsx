@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FiStar } from "react-icons/fi";
+import { FiSearch, FiStar } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { hapticTap } from "../../shared/lib/haptics";
 import { Avatar, FeatureHelp } from "../../shared/components/ui";
@@ -17,6 +17,8 @@ export interface ConversationHeaderProps {
   onBack?: () => void;
   /** Opens the "Starred messages" view. */
   onOpenStarred: () => void;
+  /** Opens the "search in this chat" view, scoped to just this thread. */
+  onOpenSearch: () => void;
   /** GROUP only — opens the read-only group-info view (member list). */
   onOpenGroupInfo?: () => void;
 }
@@ -32,6 +34,7 @@ export function ConversationHeader({
   isCounterpartOnline,
   onBack,
   onOpenStarred,
+  onOpenSearch,
   onOpenGroupInfo,
 }: ConversationHeaderProps) {
   const { t } = useTranslation();
@@ -140,6 +143,15 @@ export function ConversationHeader({
             name={active.name.split(" ")[0] ?? active.name}
           />
         )}
+        <button
+          type="button"
+          className={styles.ctbIconBtn}
+          onClick={onOpenSearch}
+          aria-label={t("messages:search.inChatOpen")}
+          title={t("messages:search.inChatOpen")}
+        >
+          <FiSearch aria-hidden />
+        </button>
         <button
           type="button"
           className={styles.ctbIconBtn}

@@ -40,6 +40,11 @@ export interface ModReportDTO {
   createdAt: string;
   slaDueAt: string;
   status: ModStatus;
+  /** Null when unassigned. Compare against the signed-in moderator's id for
+   *  the "Assigned to me" filter and the drawer's claim/release action. */
+  assignedModeratorId?: string | null;
+  /** Only present when `assignedModeratorId` is set. */
+  assignedModeratorName?: string;
   /**
    * Only present on resolved-tab items (`GET /mod/reports?tab=resolved`). Carries
    * the resolution metadata a `ResolvedItem` row shows — the outcome badge, the
@@ -113,6 +118,10 @@ export interface ModReportsParams {
   filter?: "all" | "emergencies" | "mine";
   severity?: ModSeverity;
   subjectType?: ReportSubjectType;
+  /** Filters to reports about this exact subject — the same literal value
+   *  `reported.priorReports` is counted against. Powers the "view this
+   *  member's report history" click-through from the prior-reports chip. */
+  subjectId?: string;
   sort?: "priority" | "age";
   cursor?: string;
 }
@@ -132,6 +141,16 @@ export interface ModBulkInput {
   action: ModActionCode;
   reasonCode: ReasonCode;
   note?: string;
+  /** e.g. "7d" — required for a bulk `suspend`/`restrict`. */
+  duration?: string;
+}
+
+/** `POST /mod/reports/bulk` response. Continue-on-error (P0-16): one report
+ *  failing (e.g. `ban` against a non-member-subject report) no longer aborts
+ *  the whole batch — `updated` and `failed` partition the selection. */
+export interface ModBulkResult {
+  updated: string[];
+  failed: { id: string; reason: string }[];
 }
 
 export interface AuditEntryDTO {
@@ -175,6 +194,7 @@ function qs(params: ModReportsParams): string {
   if (params.filter) p.set("filter", params.filter);
   if (params.severity) p.set("severity", params.severity);
   if (params.subjectType) p.set("subjectType", params.subjectType);
+  if (params.subjectId) p.set("subjectId", params.subjectId);
   if (params.sort) p.set("sort", params.sort);
   if (params.cursor) p.set("cursor", params.cursor);
   const s = p.toString();
@@ -193,9 +213,18 @@ export const getModReport = (id: string) =>
 export const actOnReport = (id: string, body: ModActionInput) =>
   apiPatch<ModReportDTO>(`/mod/reports/${encodeURIComponent(id)}`, body);
 
-/** Apply one action to many reports. Backend expects PATCH (was POST). */
+/** Apply one action to many reports. Backend expects PATCH (was POST).
+ *  Continue-on-error: check `failed` — a partial batch is not a thrown error. */
 export const bulkActOnReports = (body: ModBulkInput) =>
-  apiPatch<{ updated: string[] }>("/mod/reports/bulk", body);
+  apiPatch<ModBulkResult>("/mod/reports/bulk", body);
+
+/** Self-assign (`assign: true`) or unassign (`assign: false`) a report —
+ *  backs the queue's "Assigned to me" filter and the drawer's claim action. */
+export const setReportAssignment = (id: string, assign: boolean) =>
+  apiPatch<ModReportDTO>(
+    `/mod/reports/${encodeURIComponent(id)}/assignment`,
+    { assign },
+  );
 
 /** Immutable audit log for a report. */
 export const getReportAudit = (reportId: string) =>
@@ -203,9 +232,11 @@ export const getReportAudit = (reportId: string) =>
     `/mod/reports/audit?reportId=${encodeURIComponent(reportId)}`,
   );
 
-/** Appeals queue — routed to a different moderator than the decider (server-enforced). */
+/** Appeals queue. */
 export const getAppeals = () => apiGet<AppealDTO[]>("/mod/appeals");
 
-/** Uphold / overturn an appeal. Overturn reverses the original action + re-notifies. */
+/** Uphold / overturn an appeal. Overturn reverses the original action + re-notifies.
+ *  Server rejects (403) a moderator reviewing the appeal of their own original
+ *  decision — a conflict-of-interest guard, not a routing/assignment scheme. */
 export const reviewAppeal = (id: string, body: AppealDecisionInput) =>
   apiPatch<AppealDTO>(`/mod/appeals/${encodeURIComponent(id)}`, body);

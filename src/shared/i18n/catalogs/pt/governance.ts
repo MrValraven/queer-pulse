@@ -26,6 +26,7 @@ export const governance: Catalog = {
   "nav.council": "Conselho consultivo",
   "nav.principles": "Princípios",
   "nav.finances": "Finanças",
+  "nav.proposals": "Propostas e votações",
   "nav.decisions": "Registo de decisões",
   "nav.raise": "Levantar uma preocupação",
 
@@ -94,7 +95,7 @@ export const governance: Catalog = {
   "sections.council.eyebrow": "Conselho consultivo",
   "sections.council.title": "Quem <em>supervisiona</em> isto.",
   "sections.council.intro":
-    "O conselho consultivo revê contestações de moderação, propõe mudanças na plataforma, e serve como camada de responsabilização. Os mandatos duram um ano e podem ser encerrados por voto de dois terços da comunidade.",
+    "O conselho consultivo revê contestações de moderação, propõe mudanças na plataforma, e serve como camada de responsabilização. Os mandatos duram um ano e um lugar pode ser encerrado por voto de dois terços da comunidade — vê Propostas e votações abaixo.",
 
   "council.psychologistChair": "Psicologia · Presidência",
   "council.lawyerLegalAdvisor": "Direito · Aconselhamento jurídico",
@@ -152,7 +153,28 @@ export const governance: Catalog = {
   "sections.finances.partnerScope.mentalHealthFund": "o Fundo de Saúde Mental",
   "sections.finances.partnerScope.communityEvents": "eventos comunitários",
   "sections.finances.noCorporateFunding":
-    "Não aceitamos financiamento de empresas, marcas, ou entidades governamentais cujos interesses possam entrar em conflito com a autonomia da comunidade. Se isso alguma vez mudar, diremo-lo aqui primeiro, e a comunidade vai votar sobre isso.",
+    "Não aceitamos financiamento de empresas, marcas, ou entidades governamentais cujos interesses possam entrar em conflito com a autonomia da comunidade. Se isso alguma vez mudar, diremo-lo aqui primeiro, e a comunidade vai votar sobre isso — vê Propostas e votações abaixo.",
+
+  // ── Propostas e votações ─────────────────────────────────────────────────
+  "sections.proposals.eyebrow": "Propostas e votações",
+  "sections.proposals.title": "Pomos isso a <em>votos.</em>",
+  "sections.proposals.intro":
+    "Há duas coisas nesta página decididas por voto da comunidade, não por decisão administrativa: encerrar um lugar no conselho consultivo exige dois terços dos votos, e aceitar financiamento fora das nossas fontes habituais exige maioria. Todas as propostas em aberto estão listadas aqui, e as anteriores continuam visíveis com o respetivo resultado.",
+  "sections.proposals.type.council_removal": "Lugar no conselho",
+  "sections.proposals.type.funding_change": "Mudança de financiamento",
+  "sections.proposals.status.passed": "Aprovada",
+  "sections.proposals.status.failed": "Não aprovada",
+  "sections.proposals.targetSeat": "Lugar em avaliação: {name}",
+  "sections.proposals.tallyCaption":
+    "{forCount} a favor · {againstCount} contra · {forPercent}% a favor (linha dos dois terços marcada)",
+  "sections.proposals.closes": "Votação encerra {date}",
+  "sections.proposals.closedOn": "Votação encerrada a {date}",
+  "sections.proposals.voteFor": "Votar a favor",
+  "sections.proposals.voteAgainst": "Votar contra",
+  "sections.proposals.votedFor": "Votaste a favor desta proposta.",
+  "sections.proposals.votedAgainst": "Votaste contra esta proposta.",
+  "sections.proposals.resolvedHeading": "Propostas anteriores",
+  "sections.proposals.empty": "Ainda não foi aberta nenhuma proposta.",
 
   // ── Registo de decisões ─────────────────────────────────────────────────
   "sections.decisions.eyebrow": "Decisões recentes",

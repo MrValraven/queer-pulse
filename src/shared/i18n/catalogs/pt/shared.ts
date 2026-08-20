@@ -139,6 +139,7 @@ export const shared: Catalog = {
   "adminNav.items.landing": "Página inicial",
   "adminNav.items.pressKit": "Kit de imprensa",
   "adminNav.items.moderation": "Moderação",
+  "adminNav.items.staff": "Equipa e papéis",
   "adminNav.items.concerns": "Preocupações",
   "adminNav.items.safeSpaces": "Espaços seguros",
   "adminNav.items.listings": "Espaços",
@@ -252,6 +253,7 @@ export const shared: Catalog = {
   "megaNav.community.featurePublic.cta": "Participar",
   "megaNav.community.col.people.head": "Pessoas",
   "megaNav.community.col.people.membersDirectory": "Diretório de pessoas",
+  "megaNav.community.col.people.topics": "Tópicos",
   // Kept as "Dating" (not "Convívios") to avoid colliding with nav:gatherings
   // ("Convívios"), already the platform's term for the events feature.
   "megaNav.community.col.people.dating": "Dating",
@@ -364,6 +366,7 @@ export const shared: Catalog = {
   "megaNav.about.col.legal.head": "Legal e imprensa",
   "megaNav.about.col.legal.privacyPolicy": "Política de privacidade",
   "megaNav.about.col.legal.termsOfUse": "Termos de utilização",
+  "megaNav.about.col.legal.dataRequest": "Pedir os teus dados",
   "megaNav.about.col.legal.pressKit": "Kit de imprensa",
   "megaNav.about.col.legal.contact": "Contacto",
 
@@ -373,6 +376,7 @@ export const shared: Catalog = {
   "footerData.col.support.head": "Apoio",
   "footerData.col.support.therapistDirectory": "Diretório de terapeutas",
   "footerData.col.support.legalAid": "Apoio jurídico",
+  "footerData.col.support.hateCrimeGuide": "Recursos sobre crimes de ódio",
   "footerData.col.support.reportSafety": "Denúncias e segurança",
   "footerData.col.members.guideLibrary": "Biblioteca de guias",
   "footerData.base.privacy": "Privacidade",

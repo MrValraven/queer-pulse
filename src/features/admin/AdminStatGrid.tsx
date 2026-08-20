@@ -58,6 +58,7 @@ function AdminStatCard({
     footKey,
     footValues,
     notMeasured,
+    to,
   } = stat;
   const target = decimal ? Math.round(value * 10) : value;
   // Hold at the start value until the skeleton clears, then count up on
@@ -76,6 +77,7 @@ function AdminStatCard({
 
   return (
     <StatTile
+      to={to}
       label={
         <span className={styles.statLabel}>
           <Icon className={styles.statIcon} aria-hidden />

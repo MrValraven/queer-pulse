@@ -604,6 +604,7 @@ export const members: Catalog = {
   "search.browseTopics": "Browse topics",
   "search.upcomingEvents": "Upcoming events",
   "search.jumpTo": "Jump to <b>{name}</b>",
+  "search.seeAllIn": "See all in {category}",
   "search.resultCount_one": `<b>{count}</b> result for "<b>{query}</b>"`,
   "search.resultCount_other": `<b>{count}</b> results for "<b>{query}</b>"`,
   "search.empty.title": "Nothing found",
@@ -1095,7 +1096,8 @@ export const members: Catalog = {
   "places.selfSubtitle":
     "Listings you've added to the directory. Each is read by the community team before it goes live.",
   "places.refLabel": "Ref · {ref}",
-  "places.editCta": "Edit",
+  "places.quickEditCta": "Quick edit",
+  "places.editCta": "Full editor",
   "places.deleteCta": "Delete",
   "places.deleteConfirm": "Delete <b>{name}</b> for good? This can't be undone.",
   "places.deleteCancel": "Keep it",
@@ -1107,6 +1109,23 @@ export const members: Catalog = {
   "places.empty.description":
     "Run a studio, shop, clinic or space in Lisbon? List it in the directory. Once it's live, it'll show up here too.",
   "places.empty.action": "List my business",
+
+  "places.quickEdit.title": "Quick edit",
+  "places.quickEdit.sub": "Update the basics for {name}.",
+  "places.quickEdit.blurbLabel": "One-line blurb",
+  "places.quickEdit.blurbHelper": "Shown under your listing's name.",
+  "places.quickEdit.hoursNoteLabel": "Hours note",
+  "places.quickEdit.hoursNoteHelper":
+    "A short line shown under your opening hours, for example \"Closed public holidays.\"",
+  "places.quickEdit.websiteLabel": "Website",
+  "places.quickEdit.phoneLabel": "Phone",
+  "places.quickEdit.cancel": "Cancel",
+  "places.quickEdit.save": "Save changes",
+  "places.quickEdit.saving": "Saving…",
+  "places.quickEdit.savedToast": "Listing updated.",
+  "places.quickEdit.errorToast": "Couldn't save your changes. Try again.",
+  "places.quickEdit.moreLink":
+    "Need to change categories, address, or photos? <a>Open the full editor.</a>",
 
   // ── Badges page chrome (BadgesPage, BadgesSections) ─────────────────────────
   // Badge names, categories, rarity and level names are recognition-domain
@@ -1523,10 +1542,6 @@ export const members: Catalog = {
   "profile.accountData.dsar.article.rectification": "Rectification (Art. 16)",
   "profile.accountData.dsar.article.erasure": "Erasure (Art. 17)",
   "profile.accountData.dsar.article.objection": "Objection (Art. 21)",
-  "profile.accountData.dsar.status.received": "Received",
-  "profile.accountData.dsar.status.inReview": "In review",
-  "profile.accountData.dsar.status.resolved": "Resolved",
-  "profile.accountData.dsar.status.rejected": "Rejected",
   "profile.accountData.dsar.title": "Request something else",
   "profile.accountData.dsar.intro":
     "Access, correct, or object to how we use your data: anything beyond what Download and Erase already cover.",
@@ -1537,12 +1552,15 @@ export const members: Catalog = {
   "profile.accountData.dsar.submitting": "Sending…",
   "profile.accountData.dsar.submitCta": "Send request",
   "profile.accountData.dsar.pastTitle": "Past requests",
+  "profile.accountData.dsar.pastHint":
+    "We answer every request by email. This list is for your records, it won't change status on its own.",
   "profile.accountData.dsar.pastLoading": "Loading your requests…",
   "profile.accountData.dsar.pastError":
     "We couldn't load your past requests.",
   "profile.accountData.dsar.pastEmpty": "You haven't filed a request yet.",
+  "profile.accountData.dsar.pastRowDueBy": "Reply by {date}",
   "profile.accountData.dsar.toast.submitted":
-    "Request sent, reference {ref}.",
+    "Request received, reference {ref}. We'll reply by email by {date}.",
   "profile.accountData.dsar.toast.submitError":
     "We couldn't send that request. Please try again.",
 };

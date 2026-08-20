@@ -33,11 +33,15 @@ export const createReadingGroupProposal = (
 
 export interface CreateChangemakerNominationDto {
   nomineeName: string;
+  /** The nominator's own words on why (COM-16) — the form's copy promises
+   *  "a name and a sentence is enough to start"; this is that sentence. */
+  reason: string;
 }
 
 export interface ChangemakerNominationResponseDTO {
   id: string;
   nomineeName: string;
+  reason: string | null;
   createdAt: string;
 }
 

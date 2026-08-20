@@ -1,3 +1,4 @@
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./DeckPage.module.css";
 
@@ -14,7 +15,7 @@ export function DeckControls({ current, total, onGo, onPrev, onNext }: DeckContr
   return (
     <div className={styles.controls}>
       <button type="button" className={styles.arrow} onClick={onPrev}
-        disabled={current === 0} aria-label={t("magazine:deck.prev")}>‹</button>
+        disabled={current === 0} aria-label={t("magazine:deck.prev")}><FiChevronLeft aria-hidden /></button>
       <div className={styles.dots} role="tablist">
         {Array.from({ length: total }, (_, index) => (
           <button key={index} type="button" role="tab"
@@ -28,7 +29,7 @@ export function DeckControls({ current, total, onGo, onPrev, onNext }: DeckContr
         {t("magazine:deck.slideCounter", { current: current + 1, total })}
       </span>
       <button type="button" className={styles.arrow} onClick={onNext}
-        disabled={current === total - 1} aria-label={t("magazine:deck.next")}>›</button>
+        disabled={current === total - 1} aria-label={t("magazine:deck.next")}><FiChevronRight aria-hidden /></button>
     </div>
   );
 }

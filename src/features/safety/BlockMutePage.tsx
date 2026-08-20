@@ -23,6 +23,7 @@ import {
   BlockMuteExplainer,
   BlockMuteMuted,
 } from "./BlockMuteScreens";
+import { QuickExit } from "./QuickExit";
 import s from "./flows.module.css";
 
 /** Capitalise a slug fragment into a readable name while the real member loads. */
@@ -154,6 +155,7 @@ export function BlockMutePage() {
           </>
         )}
       </div>
+      <QuickExit />
       <Footer />
     </>
   );

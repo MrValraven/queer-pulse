@@ -23,6 +23,7 @@ export function ThreadReplySection({
   count,
   loading,
   isLocked,
+  lockReason,
   nodes,
   replyKey,
   likedReplies,
@@ -47,6 +48,9 @@ export function ThreadReplySection({
   /** When true, replies are closed: no reply/nested-reply composers render and
    *  a banner stands in for the bottom composer. */
   isLocked: boolean;
+  /** Optional moderator note explaining why the thread was locked, shown on
+   *  the locked banner. Live-only; undefined/null in demo. */
+  lockReason?: string | null;
   /** Reply tree, already sorted (see buildReplyTree) — top-level nodes only;
    *  each node recurses into its own children. */
   nodes: ReplyNode[];
@@ -119,7 +123,7 @@ export function ThreadReplySection({
       />
 
       {isLocked ? (
-        <LockedBanner />
+        <LockedBanner reason={lockReason} />
       ) : (
         <ThreadComposer
           authorName={authorName}
@@ -135,15 +139,21 @@ export function ThreadReplySection({
 
 /** Stands in for the reply composer when a moderator has closed replies. Uses
  *  the plum-panel pattern (plum surface, cream text) with a lock icon — warm,
- *  not punitive: the conversation is still fully readable above. */
-function LockedBanner() {
+ *  not punitive: the conversation is still fully readable above. Shows the
+ *  moderator's reason note when one was given, instead of the same generic
+ *  copy on every locked thread. */
+function LockedBanner({ reason }: { reason?: string | null }) {
   const { t } = useTranslation();
   return (
     <div className={styles.lockedBanner} role="status">
       <FiLock className={styles.lockedIcon} aria-hidden="true" />
       <div>
         <p className={styles.lockedTitle}>{t("forum:locked.title")}</p>
-        <p className={styles.lockedBody}>{t("forum:locked.body")}</p>
+        <p className={styles.lockedBody}>
+          {reason
+            ? t("forum:locked.reasonBody", { reason })
+            : t("forum:locked.body")}
+        </p>
       </div>
     </div>
   );

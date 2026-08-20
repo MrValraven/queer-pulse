@@ -338,6 +338,13 @@
   color: var(--ink-60);
   line-height: 1.5;
 }
+.noticeSupport {
+  margin-top: 2px;
+}
+.noticeSupport a {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
 
 .field {
   display: flex;

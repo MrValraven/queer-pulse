@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { useSocial } from "../../app/providers/useSocial";
 import type { TFunction } from "../../shared/i18n/types";
 import { logError } from "../../shared/observability/logger";
 import { useCreateReport } from "../safety/api/useCreateReport";
@@ -40,6 +41,9 @@ export function useMyEventsSafety({
     host: string;
   }>({ open: false, eventId: null, host: "" });
   const createReport = useCreateReport();
+  // Dual-mode already (no-op in demo, real `POST/DELETE /blocks/:slug` in
+  // live) — the same primitive `ProfileSafetyMenu`'s "Block" wires to.
+  const { toggleBlock } = useSocial();
 
   const openReport = useCallback(
     (eventId: string) => {
@@ -89,7 +93,11 @@ export function useMyEventsSafety({
     (eventId: string) => {
       const ev = byId(eventId);
       closeMore();
-      setBlock({ open: true, eventId, host: ev?.community ?? "" });
+      // The host's own display name — NOT `ev.community` (the previous code
+      // showed the community/org label here, which isn't who's being
+      // blocked). Absent for an org-hosted event with no individual member
+      // host; `confirmBlock` below no-ops when there's no real target.
+      setBlock({ open: true, eventId, host: ev?.hostName ?? "" });
     },
     [byId, closeMore],
   );
@@ -98,9 +106,16 @@ export function useMyEventsSafety({
     [],
   );
   const confirmBlock = useCallback(() => {
+    const ev = block.eventId ? byId(block.eventId) : undefined;
     setBlock((b) => ({ ...b, open: false }));
+    if (!ev?.hostSlug) {
+      // No real member to block (org-hosted event) — nothing to wire to.
+      toast(t("myevents:blockModal.blockedToast"), "success");
+      return;
+    }
+    toggleBlock(ev.hostSlug);
     toast(t("myevents:blockModal.blockedToast"), "success");
-  }, [t, toast]);
+  }, [block.eventId, byId, t, toast, toggleBlock]);
 
   return {
     report,

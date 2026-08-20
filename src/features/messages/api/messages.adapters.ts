@@ -113,6 +113,7 @@ function groupConversationToView(dto: ConversationResponse): Conversation {
     unreadCount: dto.unreadCount,
     pinnedAt: dto.pinnedAt ?? undefined,
     favorite: dto.favorite ?? undefined,
+    muted: dto.muted ?? undefined,
     members,
     memberCount: dto.memberCount,
     hasLeft: dto.hasLeft ?? false,
@@ -148,6 +149,7 @@ export function conversationToView(dto: ConversationResponse): Conversation {
     unread: dto.unreadCount > 0,
     pinnedAt: dto.pinnedAt ?? undefined,
     favorite: dto.favorite ?? undefined,
+    muted: dto.muted ?? undefined,
     otherLastReadAt: dto.otherLastReadAt ?? undefined,
     otherDeliveredAt: dto.otherDeliveredAt ?? undefined,
     otherParticipantId: dto.otherParticipantId ?? undefined,
@@ -191,7 +193,9 @@ export function messageToChat(
         ? "system"
         : dto.kind === "gif"
           ? "gif"
-          : undefined,
+          : dto.kind === "image"
+            ? "image"
+            : undefined,
     attachment: dto.attachment ?? undefined,
     systemEvent: dto.systemEvent
       ? {

@@ -6,6 +6,7 @@ const SettingsPage = lazyNamed(() => import("./SettingsPage"), "SettingsPage");
 const EditProfilePage = lazyNamed(() => import("./EditProfilePage"), "EditProfilePage");
 const SecurityPage = lazyNamed(() => import("./SecurityPage"), "SecurityPage");
 const SessionsPage = lazyNamed(() => import("./SessionsPage"), "SessionsPage");
+const PushDevicesPage = lazyNamed(() => import("./PushDevicesPage"), "PushDevicesPage");
 const DataExportPage = lazyNamed(() => import("./DataExportPage"), "DataExportPage");
 const DeleteAccountPage = lazyNamed(() => import("./DeleteAccountPage"), "DeleteAccountPage");
 
@@ -21,6 +22,7 @@ export function settingsRoutes() {
       <Route path={routes.editProfile} element={<EditProfilePage />} />
       <Route path={routes.security} element={<SecurityPage />} />
       <Route path={routes.sessions} element={<SessionsPage />} />
+      <Route path={routes.pushDevices} element={<PushDevicesPage />} />
       <Route path={routes.dataExport} element={<DataExportPage />} />
       <Route path={routes.deleteAccount} element={<DeleteAccountPage />} />
     </>

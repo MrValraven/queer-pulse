@@ -139,21 +139,17 @@
   height: 7px;
   border-radius: 50%;
 }
-.cost {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 6px;
+.verified {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--ink-40);
 }
-.costFree {
-  background: rgba(var(--jade-rgb), 0.12);
-  color: var(--jade);
-}
-.costSliding {
-  background: rgba(var(--accent-rgb), 0.12);
-  color: var(--accent-ink);
+.verified svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
 }
 .name {
   font-family: var(--serif);
@@ -193,6 +189,31 @@
   text-align: center;
   padding: 50px 0;
   color: var(--ink-40);
+}
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.orgsSection {
+  padding: 12px 0 70px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+.orgsTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 28px;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  margin: 0 0 8px;
+}
+.orgsLead {
+  font-size: 14.5px;
+  color: var(--ink-60);
+  max-width: 56ch;
+  line-height: 1.6;
+  margin: 0 0 28px;
 }
 
 @media (--wide) {

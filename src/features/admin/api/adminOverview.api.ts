@@ -8,10 +8,10 @@ import { apiGet } from "../../../shared/api/client";
  * not this one, reconciles the wire shape with the dashboard view models.
  *
  * `reportsByType.values` is a fixed 4-tuple stacked as
- * [outing, harassment, spam, other]. Un-backed metrics (`sustainerMrr`,
- * `sustainerCount`, `memberGrowth[].churned`, and `responseTime`/
- * `medianResponseHours` when nothing has been resolved) arrive as `null` and
- * render as "not measured yet".
+ * [outing, harassment, spam, other]. Un-backed metrics (`memberGrowth[].churned`,
+ * `responseTime`/`medianResponseHours` when nothing has been resolved, and
+ * `communityHealth.averageScore` when there are no communities yet) arrive as
+ * `null` and render as "not measured yet".
  */
 export interface AdminOverviewDTO {
   stats: {
@@ -26,8 +26,12 @@ export interface AdminOverviewDTO {
       emergencies: number;
     };
     medianResponseHours: number | null;
-    sustainerMrr: number | null;
-    sustainerCount: number | null;
+    /** Platform-wide summary of the per-community health score already
+     *  computed for the communities admin section. */
+    communityHealth: {
+      averageScore: number | null;
+      needingSupportCount: number;
+    };
     verifiedMembers: number;
   };
   triage: {

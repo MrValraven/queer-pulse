@@ -62,17 +62,17 @@ beforeEach(() => {
 
 /** A minimal but fully-valid AdminOverviewDTO: nulls where the backend
  *  reports "not measured yet" (growthPercent, oldestOpenHours,
- *  medianResponseHours, sustainerMrr/Count, responseTime), 8 report weeks
- *  (matching the fixture's own week count), a couple of growth points, and 2
- *  feed rows — one `report_resolved` (to exercise the null-actor "anonymous"
- *  branch) and one `member_joined` with a real actor. */
+ *  medianResponseHours, communityHealth.averageScore, responseTime), 8
+ *  report weeks (matching the fixture's own week count), a couple of growth
+ *  points, and 2 feed rows — one `report_resolved` (to exercise the
+ *  null-actor "anonymous" branch) and one `member_joined` with a real
+ *  actor. */
 const MINIMAL_OVERVIEW_DTO: AdminOverviewDTO = {
   stats: {
     activeMembers: { value: 9120, growthPercent: null, netNewThisMonth: 40 },
     openReports: { value: 5, oldestOpenHours: null, emergencies: 1 },
     medianResponseHours: null,
-    sustainerMrr: null,
-    sustainerCount: null,
+    communityHealth: { averageScore: null, needingSupportCount: 0 },
     verifiedMembers: 3000,
   },
   triage: {
@@ -170,7 +170,7 @@ describe("useAdminOverview (live mode via MSW)", () => {
     // null-backed metrics.
     expect(overview!.metrics).toHaveLength(4);
     expect(overview!.metrics[2]!.notMeasured).toBe(true); // medianResponse
-    expect(overview!.metrics[3]!.notMeasured).toBe(true); // sustainerMrr
+    expect(overview!.metrics[3]!.notMeasured).toBe(true); // communityHealth
 
     // 2 · triage queue — 4 rows, live counts overriding the fixture rows.
     expect(overview!.triage).toHaveLength(4);

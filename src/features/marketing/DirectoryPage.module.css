@@ -459,3 +459,14 @@
 .sentinel {
   height: 1px;
 }
+
+/* Shown briefly under the grid while the next SERVER page loads (once every
+   already-loaded place has been revealed locally) — see DirectoryListView's
+   `isLoadingMoreFromServer`. */
+.loadingMore {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0 4px;
+  color: var(--ink-60);
+  font-size: 0.9rem;
+}

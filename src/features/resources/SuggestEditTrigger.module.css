@@ -1,0 +1,28 @@
+.wrap {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0 0;
+}
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.08);
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+.trigger svg {
+  width: 14px;
+  height: 14px;
+}
+@media (hover: hover) {
+  .trigger:hover {
+    background: rgba(var(--accent-rgb), 0.15);
+  }
+}

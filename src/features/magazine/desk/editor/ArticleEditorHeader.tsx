@@ -1,10 +1,13 @@
 import { FiArrowLeft } from "react-icons/fi";
-import { Button, SegmentedControl } from "../../../../shared/components/ui";
+import { Button, SegmentedControl, Tag } from "../../../../shared/components/ui";
 import { routes } from "../../../../app/routeMap";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { stripHtml } from "./articleWordCount";
 import type { EditorMode } from "./editorMode";
+import type { PublishStatus } from "./PublishRail";
 import styles from "../../ArticleEditorPage.module.css";
+
+export type ArticleLiveStatus = "draft" | "scheduled" | "published";
 
 export interface ArticleEditorHeaderProps {
   pieceId: string;
@@ -14,6 +17,13 @@ export interface ArticleEditorHeaderProps {
   savedLabel: string;
   mode: EditorMode;
   onModeChange: (mode: EditorMode) => void;
+  /** Derived from `article.publishedAt` against the clock — `"scheduled"`
+   *  (a future `publishedAt`) is never rendered as `"published"`; the whole
+   *  point of a real schedule is that the status tag doesn't lie about
+   *  whether the piece is actually live yet. */
+  liveStatus: ArticleLiveStatus;
+  publishStatus: PublishStatus;
+  publishPending: boolean;
   publishDisabled: boolean;
   onPublish: () => void;
   sendOnLabel: string;
@@ -23,13 +33,15 @@ export interface ArticleEditorHeaderProps {
 
 /**
  * The editor's sticky `.ebar` header: back to the piece record, the plain-
- * text title + "Article · {section} · {issue}" sub-line + saved indicator,
- * the Draft/Shape/Read mode seg, Send on (advances the piece to its next
- * pipeline stage via `moveStage` — disabled once it's already at "Ready",
- * the last stage), and Publish (still a stub — real publishing happens at
- * issue production, disabled by the same `articlePublishChecklist` the
- * `PublishRail` renders). Extracted from `ArticleEditorPage` purely to keep
- * that file under the 200-line cap.
+ * text title + "Article · {section} · {issue}" sub-line + a status `<Tag>` +
+ * saved indicator, the Draft/Shape/Read mode seg, Send on (advances the piece
+ * to its next pipeline stage via `moveStage` — disabled once it's already at
+ * "Ready", the last stage), and Publish/Schedule/Unpublish — a real action
+ * against `article.publishedAt` (mirrors the deck editor's
+ * `DeckEditorHeader`), gated on a fresh publish by the same
+ * `articlePublishChecklist` the `PublishRail` renders, never gated on
+ * unpublishing an already-live or already-scheduled article. Extracted from
+ * `ArticleEditorPage` purely to keep that file under the 200-line cap.
  */
 export function ArticleEditorHeader({
   pieceId,
@@ -39,6 +51,9 @@ export function ArticleEditorHeader({
   savedLabel,
   mode,
   onModeChange,
+  liveStatus,
+  publishStatus,
+  publishPending,
   publishDisabled,
   onPublish,
   sendOnLabel,
@@ -46,6 +61,12 @@ export function ArticleEditorHeader({
   onSendOn,
 }: ArticleEditorHeaderProps) {
   const { t } = useTranslation();
+  const publishLabel =
+    liveStatus !== "draft"
+      ? t("magazine:write.header.unpublish")
+      : publishStatus === "schedule"
+        ? t("magazine:write.publish.scheduleCta")
+        : t("magazine:write.header.publish");
   return (
     <div className={styles.ebar}>
       <Button
@@ -66,6 +87,13 @@ export function ArticleEditorHeader({
           })}
         </span>
       </div>
+      <Tag>
+        {liveStatus === "published"
+          ? t("magazine:write.header.statusPublished")
+          : liveStatus === "scheduled"
+            ? t("magazine:write.header.statusScheduled")
+            : t("magazine:write.header.statusDraft")}
+      </Tag>
       <SegmentedControl
         label={t("magazine:write.header.viewLabel")}
         options={[
@@ -80,8 +108,14 @@ export function ArticleEditorHeader({
         <Button variant="ghost" size="sm" disabled={sendOnDisabled} onClick={onSendOn}>
           {sendOnLabel}
         </Button>
-        <Button variant="plum" size="sm" disabled={publishDisabled} onClick={onPublish}>
-          {t("magazine:write.header.publish")}
+        <Button
+          variant="plum"
+          size="sm"
+          disabled={publishDisabled || publishPending}
+          aria-busy={publishPending}
+          onClick={onPublish}
+        >
+          {publishLabel}
         </Button>
       </div>
     </div>

@@ -284,6 +284,7 @@ export function detailDtoToCommunity(
     requiresSecondVouch: detailDto.requiresSecondVouch,
     autoFreezeOnReports: detailDto.autoFreezeOnReports,
     frozen: detailDto.frozen,
+    archived: detailDto.archived,
     truncated: detailDto.truncated,
     // Still no backend field for either of these — see the card-path comment.
     join: "",

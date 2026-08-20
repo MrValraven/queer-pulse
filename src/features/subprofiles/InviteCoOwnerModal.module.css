@@ -18,3 +18,40 @@
   justify-content: center;
   padding-block-start: var(--gap-sm);
 }
+
+/* Step 2 — disclosure/confirm screen shown before an invite actually sends
+   (IDN-2). `.notice.warn`/`.warnbody` are global classes from
+   persona-editor.css (already loaded by the editor shell that hosts this
+   modal), matching AddressChangeWarningModal's warning-notice pattern. */
+.confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.selectedPerson {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--wash);
+}
+
+.acknowledgeRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 2px 4px 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  cursor: pointer;
+}
+
+.acknowledgeRow input {
+  margin-top: 2px;
+  accent-color: var(--accent);
+  width: auto;
+  flex: none;
+}

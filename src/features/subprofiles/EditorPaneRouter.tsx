@@ -141,7 +141,7 @@ export function EditorPaneRouter({
       </div>
 
       <div hidden={pane !== "owners"}>
-        <SubprofileOwnersPanel subprofileId={subprofile.id} />
+        <SubprofileOwnersPanel subprofile={subprofile} />
       </div>
 
       <div hidden={pane !== "publish"}>

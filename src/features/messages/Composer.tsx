@@ -9,6 +9,7 @@ import { MentionText } from "../../shared/mentions/MentionText";
 import { ComposerSafetyNotice } from "./ComposerSafetyNotice";
 import { detectContactSafetySignals } from "./contactSafetyDetector";
 import { GifComposerButton } from "./GifComposerButton";
+import { ImageComposerButton } from "./ImageComposerButton";
 import { MentionHintButton } from "./MentionHintButton";
 import { clearDraft, loadDraft, saveDraft } from "./drafts";
 import type { GifAttachment } from "../../shared/api/gifs";
@@ -30,6 +31,9 @@ interface ComposerProps {
   /** Sends a picked GIF as its own message. When absent, the GIF button is
    *  hidden (e.g. surfaces that don't wire the picker). */
   onSendGif?: (attachment: GifAttachment) => void;
+  /** Sends an uploaded image as its own message. When absent, the photo
+   *  attach button is hidden (e.g. surfaces that don't wire uploads). */
+  onSendImage?: (attachment: GifAttachment, localAttachment?: GifAttachment) => void;
 }
 
 /**
@@ -51,6 +55,7 @@ export function Composer({
   replyDraft,
   onCancelReply,
   onSendGif,
+  onSendImage,
 }: ComposerProps) {
   const { t } = useTranslation();
   const firstName = active.name.split(" ")[0]!;
@@ -257,6 +262,7 @@ export function Composer({
       </div>
       <div className={styles.composerRow}>
         <div className={styles.composerControls} ref={popoverGroupRef}>
+          {onSendImage && <ImageComposerButton onSendImage={onSendImage} />}
           {onSendGif && (
             <GifComposerButton
               onSendGif={onSendGif}

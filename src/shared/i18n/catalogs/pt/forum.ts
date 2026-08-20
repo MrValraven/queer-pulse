@@ -100,6 +100,8 @@ export const forum: Catalog = {
   "search.placeholder": "Pesquisar no fórum…",
   "search.ariaLabel": "Pesquisar no fórum",
   "search.clearAria": "Limpar pesquisa",
+  "search.hint":
+    "Pesquisa nos títulos dos tópicos, não no texto das publicações e respostas.",
 
   // ── ForumThreadList ─────────────────────────────────────────────────────
   "threadList.top": "Melhores",
@@ -167,11 +169,23 @@ export const forum: Catalog = {
   "locked.title": "Este tópico está fechado a novas respostas",
   "locked.body":
     "Uma pessoa moderadora fechou este tópico, por isso as respostas estão em pausa. Podes continuar a ler tudo aqui.",
+  "locked.reasonBody":
+    "Uma pessoa moderadora fechou este tópico: {reason}. Podes continuar a ler tudo aqui.",
   "locked.replyBlockedToast": "Este tópico está fechado a novas respostas.",
 
   // ── ThreadTopbar · controlo de fecho da moderação ───────────────────────
   "topbar.lockThread": "Fechar tópico",
   "topbar.unlockThread": "Reabrir tópico",
+
+  // ── LockThreadModal (nota opcional ao fechar um tópico) ─────────────────
+  "lockReason.title": "Fechar este tópico",
+  "lockReason.sub":
+    "As pessoas continuam a poder ler tudo aqui — isto só pausa novas respostas. Diz-lhes porquê, se for útil.",
+  "lockReason.label": "Motivo (opcional)",
+  "lockReason.placeholder": "ex.: resolvido, fora do tema, movido para uma comunidade",
+  "lockReason.cancel": "Cancelar",
+  "lockReason.confirm": "Fechar tópico",
+  "lockReason.locking": "A fechar…",
 
   // ── ThreadTopbar · controlo de autoria oficial (admin) ──────────────────
   "topbar.markOfficial": "Marcar como QueerPulse Oficial",

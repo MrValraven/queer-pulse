@@ -1,8 +1,8 @@
 import type { AvatarTint } from "../../../shared/components/ui";
 import type { Formatters } from "../../../shared/i18n/format";
-import { routes } from "../../../app/routeMap";
 import {
   splitForTitle,
+  writeHrefForTag,
   type PostCategory,
   type PostKind,
   type Topic,
@@ -86,9 +86,9 @@ export function topicPostResponseToTopicPost(
 }
 
 /** `TopicDetailResponse` + its first post-feed page → the mock's `Topic`
- * view-model. `writeHref` has no backend equivalent to vary by topic (the
- * mock always points every topic at `routes.forum`), so that stays fixed
- * too. */
+ * view-model. `writeHref` deep-links into forum thread creation with this
+ * topic's own tag pre-filled (DISC-5) via `writeHrefForTag`, the same helper
+ * the demo-mode topics in `topics.data.tsx` use. */
 export function topicDetailToTopic(
   detail: TopicDetailResponse,
   posts: TopicPostResponse[],
@@ -114,7 +114,7 @@ export function topicDetailToTopic(
         labelKey: "topics:stats.thisWeek",
       },
     ],
-    writeHref: routes.forum,
+    writeHref: writeHrefForTag(detail.tag),
     posts: posts.map((dto) => topicPostResponseToTopicPost(dto, fmt)),
     relatedTopics: detail.relatedTopics,
     topVoices: [],

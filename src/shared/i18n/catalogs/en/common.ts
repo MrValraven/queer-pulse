@@ -36,4 +36,10 @@ export const common: Catalog = {
   "greeting.welcome": "Welcome back, {name}",
   "members.count_one": "{count} member",
   "members.count_other": "{count} members",
+
+  // Trust Network admin inspector's real deep-link into the moderation queue
+  // (replaces two fake-success buttons that fired a toast and did nothing).
+  // Lives here rather than admin.ts, which another change owns this wave.
+  "cta.openModerationQueue": "Open in moderation queue",
+  "toast.openedModerationQueue": "Opened {name}'s reports in the moderation queue.",
 };

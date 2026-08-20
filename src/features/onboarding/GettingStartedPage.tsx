@@ -155,7 +155,14 @@ export function GettingStartedPage() {
                     components={{ em: <em /> }}
                   />
                 </h1>
-                <p className={styles.lede}>{t("auth:gettingStarted.lede")}</p>
+                <p className={styles.lede}>
+                  {completedCount > 0
+                    ? t("auth:gettingStarted.ledeProgress", {
+                        done: completedCount,
+                        total: totalCount,
+                      })
+                    : t("auth:gettingStarted.lede")}
+                </p>
               </header>
               <ProgressMeter
                 done={completedCount}

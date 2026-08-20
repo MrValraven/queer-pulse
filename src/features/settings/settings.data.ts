@@ -11,6 +11,7 @@ import {
   FiMessageCircle,
   FiSettings,
   FiSliders,
+  FiUserX,
 } from "react-icons/fi";
 import { SECTION_LABEL_KEYS } from "./editProfileNav.data";
 
@@ -23,6 +24,7 @@ export type PaneId =
   | "profile-theme"
   | "accessibility"
   | "interests"
+  | "blockedUsers"
   | "account"
   | "uploads"
   | "delete";
@@ -72,6 +74,14 @@ export const NAV: { groupKey: string; items: NavItem[] }[] = [
         id: "interests",
         icon: FiHeart,
         labelKey: "settings:nav.item.interests",
+      },
+      // A safety primitive, not a content preference, but lives in this
+      // group alongside `visibility`/`data`: it's still a "who can reach me"
+      // control, and there's no dedicated Safety group in this nav.
+      {
+        id: "blockedUsers",
+        icon: FiUserX,
+        labelKey: "settings:nav.item.blockedUsers",
       },
     ],
   },

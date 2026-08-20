@@ -220,6 +220,10 @@ export const gatherings: Catalog = {
   "gathering.notFoundDescription":
     "Pode ter sido cancelado, ou o link pode estar desatualizado.",
 
+  // GoingAttendeesPreview (MSG-12)
+  "gathering.attendeesPreview.heading": "Quem vai",
+  "gathering.attendeesPreview.moreLabel": "+{count} mais",
+
   // JoinVouchCallout
   "vouchCallout.title": "Chegaste agora? <em>Pede um voto de confiança.</em>",
   "vouchCallout.body":
@@ -314,6 +318,10 @@ export const gatherings: Catalog = {
   "cancelled.stampTitle": "Este evento foi cancelado.",
   "cancelled.stampBody":
     "Estavas na lista. Aqui está tudo o que acontece a seguir.",
+  // Apenas em modo real: sem "cancelado há N horas" nem motivo inventados,
+  // o backend não regista um motivo de cancelamento, por isso fica genérico.
+  "cancelled.stampBodyLive":
+    "Aqui estão os detalhes, e onde encontrar o que se segue.",
   "cancelled.explainerTitle": "Porque foi cancelado",
   "cancelled.hostSentLabel": "organização · enviou o cancelamento",
   "cancelled.sendWellWishesCta": "Enviar votos de melhoras",
@@ -412,6 +420,10 @@ export const gatherings: Catalog = {
   "recap.attendedLabel": "Presenças",
   "recap.hostLabel": "Quem organiza",
   "recap.comingUpNextEyebrow": "A seguir",
+  "recap.moreFromHostEyebrow": "Mais de {name}",
+  "recap.moreFromHostCta": "Ver convívio",
+  "recap.seriesNextUpEyebrow": "Este convívio repete-se",
+  "recap.seriesNextUpCta": "Ver a próxima data",
   "recap.attendedThisGathering": "Estiveste neste convívio",
   "recap.yearInReviewCta": "Adicionar ao teu resumo do ano",
   "recap.soonBadge": "Brevemente",
@@ -473,6 +485,7 @@ export const gatherings: Catalog = {
   // createGathering.data.ts — step pills
   "create.pill.type": "Tipo",
   "create.pill.datePlace": "Data e local",
+  "create.pill.repeats": "Repetições",
   "create.pill.capacity": "Capacidade",
   "create.pill.pricing": "Preços",
   "create.pill.review": "Revisão",
@@ -482,6 +495,8 @@ export const gatherings: Catalog = {
     "Escolhe o formato que te é mais natural. Os melhores convívios são os que quem organiza gosta mesmo de fazer acontecer.",
   "create.tip.datePlace":
     "O bairro aparece no anúncio. A morada completa só é partilhada com quem confirmou presença.",
+  "create.tip.repeats":
+    "Um convívio semanal ou mensal fixo cria uma verdadeira comunidade fiel. Cada data continua a ser o seu próprio convívio: quem participa confirma presença, e podes editar ou cancelar uma data sem mexer nas restantes.",
   "create.tip.capacity":
     "Sê honesto/a sobre acessibilidade. As pessoas participantes planeiam-se com base nisso. Marca só o que consegues confirmar genuinamente.",
   "create.tip.pricing":
@@ -554,6 +569,8 @@ export const gatherings: Catalog = {
   "create.nav.back": "Voltar",
   "create.nav.publishHint": "Confirma as três caixas acima para publicar",
   "create.nav.dateHint": "Escolhe uma data e hora no futuro para continuar",
+  "create.nav.repeatsHint":
+    "Indica um número de datas válido, ou uma data de fim depois do início do teu convívio, para continuar",
   "create.nav.detailsHint":
     "Escolhe um formato e dá um nome ao teu convívio para continuar",
   "create.nav.leaveConfirm":
@@ -599,6 +616,24 @@ export const gatherings: Catalog = {
   "create.step2.directionsLabel": "Como chegar (opcional)",
   "create.step2.directionsPlaceholder":
     "ex.: Toca a campainha da esquerda, 5 min a pé do metro do Intendente",
+
+  // RepeatsStep.tsx — step 2b: repetições (MSG-10)
+  "create.step2b.title": "Isto <em>repete-se?</em>",
+  "create.step2b.sub":
+    "Um convívio fixo, semanal ou mensal, em vez de um evento único. Cada data é publicada como o seu próprio convívio, com confirmação de presença e edição independentes.",
+  "create.step2b.toggle": "Este convívio repete-se",
+  "create.step2b.cadenceLabel": "Com que frequência",
+  "create.step2b.endTypeLabel": "Termina",
+  "create.step2b.endType.count": "Depois de um número de datas",
+  "create.step2b.endType.date": "Numa data",
+  "create.step2b.endCountLabel": "Número de datas",
+  "create.step2b.endCountHint": "Entre 2 e {max} datas.",
+  "create.step2b.endUntilLabel": "Última data possível",
+  "create.step2b.invalidHint":
+    "Escolhe um número de datas ou uma data de fim depois do início do teu convívio.",
+  "create.repeats.cadence.weekly": "Semanal",
+  "create.repeats.cadence.biweekly": "A cada 2 semanas",
+  "create.repeats.cadence.monthly": "Mensal",
 
   // CreateGatheringSteps.tsx — step 3: capacity
   "create.step3.title": "Quem e <em>quantas pessoas?</em>",
@@ -684,6 +719,10 @@ export const gatherings: Catalog = {
   "create.step5.row.audience": "Quem pode ver",
   "create.step5.row.pricing": "Preços",
   "create.step5.row.accessibility": "Acessibilidade",
+  "create.step5.row.repeats": "Repetições",
+  "create.step5.repeatsOff": "Não, só desta vez",
+  "create.step5.repeatsUntilCount": "{occurrences} datas",
+  "create.step5.repeatsUntilDate": "até {date}",
   "create.step5.pricingFree": "Evento gratuito",
   "create.step5.pricingSliding": "Escala progressiva · Grátis / {std} / {sup}",
   "create.step5.confirmHeading": "Antes de publicares: confirma as três",
@@ -947,6 +986,8 @@ export const gatherings: Catalog = {
   "manage.attendees.promoteCta": "Promover",
   "manage.attendees.promotedToast":
     "{name} entrou na lista de pessoas convidadas",
+  "manage.attendees.actionErrorToast":
+    "Isso não foi possível. Tenta outra vez.",
 
   // ── Manage: messages tab ─────────────────────────────────────────────────────
   "manage.messages.composerLabel_one":
@@ -1028,6 +1069,19 @@ export const gatherings: Catalog = {
   "manage.editModal.successMeta_other":
     "Guardado agora mesmo · {count} pessoas avisadas",
 
+  // ── Manage: pedido de âmbito this-vs-future para séries (MSG-10) ───────────
+  "manage.seriesScope.eyebrow": "Convívio recorrente",
+  "manage.seriesScope.edit.title": "Aplicar esta <em>alteração</em> a…",
+  "manage.seriesScope.edit.sub":
+    "Este convívio repete-se. Escolhe se a tua alteração se aplica só a esta data ou a todas as datas seguintes.",
+  "manage.seriesScope.edit.thisCta": "Só a esta data",
+  "manage.seriesScope.edit.futureCta": "A esta e a todas as datas futuras",
+  "manage.seriesScope.cancel.title": "Cancelar <em>que datas?</em>",
+  "manage.seriesScope.cancel.sub":
+    "Este convívio repete-se. Escolhe se queres cancelar só esta data ou toda a série fixa.",
+  "manage.seriesScope.cancel.thisCta": "Só esta data",
+  "manage.seriesScope.cancel.futureCta": "Esta e todas as datas futuras",
+
   // ── Manage: message-attendees modal ───────────────────────────────────────────
   "manage.messageModal.eyebrow": "Enviar mensagem",
   "manage.messageModal.title": "Escreve às pessoas convidadas",
@@ -1093,6 +1147,7 @@ export const gatherings: Catalog = {
     "Uma pessoa coanfitriã pode editar este convívio, enviar mensagens às pessoas convidadas e gerir as inscrições. Continuas como a pessoa anfitriã principal. Cancelar o convívio e o fundo da pessoa anfitriã ficam contigo.",
   "cohost.emptyState":
     "Ainda não tens nenhuma pessoa coanfitriã. Adicionar uma significa teres companhia para a noite.",
+  "cohost.roleCohost": "Pessoa coanfitriã",
   "cohost.addedToast": "{name} é agora pessoa coanfitriã",
   "cohost.removedToast": "{name} deixou de ser pessoa coanfitriã",
   "cohost.confirmPrompt": "Remover?",

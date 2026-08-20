@@ -1100,6 +1100,24 @@ export const subprofiles: Catalog = {
     "Convite enviado. A pessoa vai precisar de aceitar antes de poder gerir esta persona.",
   "invite.toastError": "Não conseguimos enviar esse convite. Tenta outra vez.",
 
+  // Modal de convite a um responsável — etapa de confirmação/aviso (IDN-2):
+  // aparece antes de o convite ser mesmo enviado, para que aceitar um convite
+  // de responsável conjunto nunca seja uma surpresa quanto ao acesso que dá
+  // ou, no caso de uma persona autónoma, ao que revela.
+  "invite.confirmTitle": "Antes de enviares este convite",
+  "invite.confirmBack": "Voltar",
+  "invite.confirmSend": "Enviar convite",
+  "invite.disclosureAccessTitle": "Acesso total de gestão",
+  "invite.disclosureAccessBody":
+    "Assim que {name} aceitar, vai poder editar, publicar e gerir todas as partes desta persona, tal como tu. É o único nível de acesso que os responsáveis conjuntos têm.",
+  "invite.disclosureIdentityTitle": "Isto revela a tua identidade",
+  "invite.disclosureIdentityBody":
+    "Esta persona é autónoma, por isso quem a segue não consegue saber que é tua. Aceitar este convite muda isso: {name} vai poder ver a tua conta real assim que aceitar.",
+  "invite.acknowledgeLinked":
+    "Percebo que {name} vai ter acesso total de gestão a esta persona.",
+  "invite.acknowledgeUnlinked":
+    "Percebo que {name} vai ter acesso total de gestão a esta persona, e vai poder ver a minha identidade real.",
+
   // Painel de convites recebidos (PersonaInvitesBanner, em MySubprofilesPage)
   "invites.regionLabel": "Convites para seres responsável conjunta de uma persona",
   "invites.message": "{inviter} convidou-te para seres responsável conjunta de <em>{persona}</em>",
@@ -1111,6 +1129,25 @@ export const subprofiles: Catalog = {
   "invites.toastAcceptError": "Não conseguimos aceitar esse convite. Tenta outra vez.",
   "invites.toastDeclined": "Convite recusado",
   "invites.toastDeclineError": "Não conseguimos recusar esse convite. Tenta outra vez.",
+
+  // Etapa de confirmação/aviso antes de aceitar um convite recebido (IDN-2):
+  // o par, do lado de quem recebe, da etapa de confirmação do modal de
+  // convite acima. Aceitar nunca deve ser uma surpresa quanto ao acesso que
+  // dá ou, no caso de uma persona autónoma, ao que revela sobre quem aceita.
+  "invites.confirmTitle": "Antes de aceitares",
+  "invites.confirmSub": "Sobre seres responsável conjunta de {name}",
+  "invites.confirmCancel": "Ainda não",
+  "invites.confirmAccept": "Aceitar convite",
+  "invites.disclosureAccessTitle": "Acesso total de gestão",
+  "invites.disclosureAccessBody":
+    "Aceitar dá-te o mesmo acesso total que os outros responsáveis conjuntos de {name}: vais poder editar, publicar e gerir todas as partes da persona. É o único nível de acesso que os responsáveis conjuntos têm, não há um nível só de visualização.",
+  "invites.disclosureIdentityTitle": "Isto revela a tua identidade",
+  "invites.disclosureIdentityBody":
+    "{name} é autónoma, por isso quem a segue não consegue saber quem a gere. Aceitar este convite muda isso: a tua conta real fica visível para os outros responsáveis conjuntos assim que aceitares, e a deles fica visível para ti.",
+  "invites.acknowledgeLinked":
+    "Percebo que aceitar me dá acesso total de gestão a {name}.",
+  "invites.acknowledgeUnlinked":
+    "Percebo que aceitar me dá acesso total de gestão a {name}, e revela a minha identidade real aos outros responsáveis conjuntos.",
 
   // Modal de denúncia (SubprofileReportModal) + motivos específicos de
   // persona (subprofileReportModal.data.ts) — cada motivo continua a mapear

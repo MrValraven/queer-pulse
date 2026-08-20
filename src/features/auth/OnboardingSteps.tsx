@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiArrowLeft, FiArrowRight, FiBell, FiLock } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiBell, FiLock, FiShield } from "react-icons/fi";
 import { Button, Toggle } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
@@ -95,6 +95,22 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
             </div>
           </div>
         ))}
+      </div>
+      <div className={styles.notifyCard}>
+        <span className={styles.notifyIcon} aria-hidden>
+          <FiShield />
+        </span>
+        <div className={styles.notifyBody}>
+          <div className={styles.notifyTitle}>
+            {t("auth:onboarding.stepNorms.control.title")}
+          </div>
+          <div className={styles.notifyDesc}>
+            <Translation
+              i18nKey="auth:onboarding.stepNorms.control.desc"
+              components={{ a: <Link to={routes.blockMute} /> }}
+            />
+          </div>
+        </div>
       </div>
       <label
         className={`${styles.agreeRow} ${!agreed ? styles.locked : ""} ${shake ? styles.shake : ""}`}

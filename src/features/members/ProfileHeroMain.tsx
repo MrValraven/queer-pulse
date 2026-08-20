@@ -46,7 +46,8 @@ interface ProfileHeroMainProps {
 
 /**
  * The profile hero's main column: eyebrow/visibility, name (+ pronunciation),
- * role/pronouns/staff badge, curator link, the self-only recognition strip,
+ * role/pronouns/staff badge, curator link, the recognition strip (a fuller
+ * self view, or a visitor's narrower view of the profile being viewed),
  * bio (with the EN/PT toggle), "here for" chips, tags, the boundary note,
  * social links, the CTA row (say hello / vouch / safety menu) and the vouch
  * row. Decomposed from the former monolithic `ProfileHero` in
@@ -111,7 +112,11 @@ export function ProfileHeroMain({
           <FiArrowRight aria-hidden />
         </Link>
       )}
-      {isSelf && <HeroRecognition />}
+      {isSelf ? (
+        <HeroRecognition />
+      ) : (
+        <OtherMemberRecognition slug={profile.slug} />
+      )}
       <ProfileBioLanguageToggle profile={profile} />
       {profile.lookingFor &&
         profile.lookingFor.length > 0 &&
@@ -185,11 +190,12 @@ export function ProfileHeroMain({
 }
 
 /**
- * A quiet, self-only recognition strip that lives in the profile hero meta
- * zone: three small chips (level, badges, perks) that link through to their
- * pages. Deliberately subtle — no heading, no card — so it reads as
+ * A quiet recognition strip that lives in the profile hero meta zone: three
+ * small chips (level, badges, perks) that link through to your own badges/
+ * perks pages. Deliberately subtle — no heading, no card — so it reads as
  * secondary hero meta rather than a headline section. Rendered only on your
- * own profile.
+ * own profile (the "own view" branch — see `OtherMemberRecognition` below
+ * for what a visitor sees on someone else's).
  */
 function HeroRecognition() {
   const { t } = useTranslation();
@@ -227,6 +233,52 @@ function HeroRecognition() {
       >
         {t("members:profile.hero.perksChip", { count: perks.availableCount })}
       </Link>
+    </div>
+  );
+}
+
+/**
+ * The same quiet recognition strip as `HeroRecognition`, but for viewing
+ * ANOTHER member's profile (or your own profile in visitor-preview mode).
+ * Recognition (level + badges) is a visible trust signal between members —
+ * the backend has always supported reading it by slug
+ * (`GET /profiles/:slug/recognition`), but no frontend surface ever called
+ * `useRecognition(slug)` for someone else until now (COM-24).
+ *
+ * Deliberately narrower than the self view: no perks chip, and the chips
+ * aren't links. Perk state is owner-only — the backend already omits it for
+ * a non-owner slug lookup (`availableCount` comes back `0`), so showing a
+ * "0 perks" chip on a stranger's profile would misread as "this member has
+ * no perks" rather than "you can't see their perks" — better to just not
+ * show it. `/badges` and `/perks` are self-scoped pages (they always render
+ * the viewer's OWN recognition, not the profile being viewed), so linking to
+ * them from here would silently swap in the viewer's own data — the chips
+ * are plain, non-interactive text instead.
+ */
+function OtherMemberRecognition({ slug }: { slug: string }) {
+  const { t } = useTranslation();
+  const { level, badges, hasRealData } = useRecognition(slug);
+  if (!hasRealData) {
+    return (
+      <div className={styles.heroRecog} aria-hidden>
+        <SkeletonLine width={128} height={26} />
+        <SkeletonLine width={92} height={26} />
+      </div>
+    );
+  }
+  const totalBadges = badges.earnedCount + badges.discoverCount;
+  return (
+    <div className={styles.heroRecog}>
+      <span className={`${styles.heroRecogChip} ${styles.accent}`}>
+        {t("members:profile.hero.levelLabel", { number: level.level })} ·{" "}
+        {level.name}
+      </span>
+      <span className={styles.heroRecogChip}>
+        {t("members:profile.hero.badgesChip", {
+          earned: badges.earnedCount,
+          total: totalBadges,
+        })}
+      </span>
     </div>
   );
 }

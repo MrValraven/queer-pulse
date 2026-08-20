@@ -150,6 +150,7 @@ export const shared: Catalog = {
   "adminNav.items.landing": "Landing page",
   "adminNav.items.pressKit": "Press kit",
   "adminNav.items.moderation": "Moderation",
+  "adminNav.items.staff": "Staff & roles",
   "adminNav.items.concerns": "Concerns",
   "adminNav.items.safeSpaces": "Safe spaces",
   "adminNav.items.listings": "Listings",
@@ -264,6 +265,7 @@ export const shared: Catalog = {
   "megaNav.community.featurePublic.cta": "Get involved",
   "megaNav.community.col.people.head": "People",
   "megaNav.community.col.people.membersDirectory": "Members directory",
+  "megaNav.community.col.people.topics": "Topics",
   "megaNav.community.col.people.dating": "Dating",
   "megaNav.community.col.gather.head": "Gather",
   "megaNav.community.col.gather.allGatherings": "Gatherings",
@@ -384,6 +386,10 @@ export const shared: Catalog = {
   "megaNav.about.col.legal.head": "Legal & press",
   "megaNav.about.col.legal.privacyPolicy": "Privacy Policy",
   "megaNav.about.col.legal.termsOfUse": "Terms of Use",
+  // Same route + phrasing as marketing:privacy.related.dataRequestLabel —
+  // kept in "shared" (not "marketing") since MegaNav is part of the always-
+  // mounted shell and can't wait on a lazy namespace chunk.
+  "megaNav.about.col.legal.dataRequest": "Request your data",
   "megaNav.about.col.legal.pressKit": "Press Kit",
   // Reused by footer.data.ts BASE_LINKS.
   "megaNav.about.col.legal.contact": "Contact",
@@ -396,6 +402,7 @@ export const shared: Catalog = {
   "footerData.col.support.head": "Support",
   "footerData.col.support.therapistDirectory": "Therapist Directory",
   "footerData.col.support.legalAid": "Legal Aid",
+  "footerData.col.support.hateCrimeGuide": "Hate Crime Resources",
   "footerData.col.support.reportSafety": "Report & Safety",
   "footerData.col.members.guideLibrary": "Guide Library",
   "footerData.base.privacy": "Privacy",

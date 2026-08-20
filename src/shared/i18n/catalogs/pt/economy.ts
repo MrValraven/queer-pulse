@@ -648,6 +648,52 @@ export const economy: Catalog = {
   "listSpace.error":
     "Não foi possível submeter o teu anúncio, não foi entregue. Verifica a ligação e tenta novamente.",
 
+  // ── MyHousingListingsPage (HSG-1/HSG-3) ─────────────────────────────────
+  "myHousingListings.entryLink": "Os meus anúncios",
+  "myHousingListings.eyebrow": "Quadro de habitação",
+  "myHousingListings.title": "Os meus <em>anúncios.</em>",
+  "myHousingListings.sub":
+    "Tudo o que publicaste no quadro de habitação, gere aqui.",
+  "myHousingListings.empty.title": "Ainda não publicaste nenhum anúncio",
+  "myHousingListings.empty.description":
+    "Quando anunciares um quarto, sublocação ou partilha, aparece aqui para poderes geri-lo.",
+  "myHousingListings.empty.cta": "Anuncia o teu espaço",
+  "myHousingListings.error.title": "Não foi possível carregar os teus anúncios",
+  "myHousingListings.error.body":
+    "Algo correu mal do nosso lado. Verifica a ligação e tenta novamente.",
+  "myHousingListings.error.retry": "Tentar novamente",
+  "myHousingListings.status.review": "Em revisão",
+  "myHousingListings.status.question": "Precisa de resposta",
+  "myHousingListings.status.live": "No ar",
+  "myHousingListings.status.filled": "Ocupado",
+  "myHousingListings.status.expired": "Expirado",
+  "myHousingListings.postedOn": "Publicado {date}",
+  "myHousingListings.expiresOn": "Expira {date}",
+  "myHousingListings.expiredHint": "Expirado, prolonga para voltar a publicar",
+  "myHousingListings.filledHint": "Marcado como ocupado, escondido do quadro",
+  "myHousingListings.actions.edit": "Editar",
+  "myHousingListings.actions.view": "Ver anúncio",
+  "myHousingListings.actions.markFilled": "Marcar como ocupado",
+  "myHousingListings.actions.markAvailable": "Marcar como disponível",
+  "myHousingListings.actions.extend": "Prolongar",
+  "myHousingListings.actions.delete": "Eliminar",
+  "myHousingListings.delete.confirmTitle": "Eliminar este anúncio?",
+  "myHousingListings.delete.confirmBody":
+    "Isto remove-o do quadro definitivamente, quem tiver o link vê uma página de não encontrado. Não é possível desfazer.",
+  "myHousingListings.delete.confirmCta": "Eliminar anúncio",
+  "myHousingListings.toast.filled": "Marcado como ocupado",
+  "myHousingListings.toast.available": "Marcado como disponível outra vez",
+  "myHousingListings.toast.extended": "Anúncio prolongado",
+  "myHousingListings.toast.deleted": "Anúncio eliminado",
+  "myHousingListings.toast.updated": "Anúncio atualizado",
+  "myHousingListings.toast.error": "Isso não foi entregue, tenta novamente.",
+  "myHousingListings.edit.eyebrow": "Quadro de habitação",
+  "myHousingListings.edit.title": "Edita o teu <em>anúncio.</em>",
+  "myHousingListings.edit.sub":
+    "As tuas alterações ficam guardadas de imediato e atualizam o anúncio no quadro.",
+  "myHousingListings.edit.submitting": "A guardar…",
+  "myHousingListings.edit.submitCta": "Guardar alterações",
+
   // ── SuggestLandlordModal ────────────────────────────────────────────────
   "suggestLandlord.ariaLabel": "Sugerir uma pessoa proprietária",
   "suggestLandlord.eyebrow": "Quadro de habitação",

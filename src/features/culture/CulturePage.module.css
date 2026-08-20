@@ -501,20 +501,25 @@
   gap: 10px;
   flex-wrap: wrap;
 }
-.curatorLinks a {
+.curatorLinks a,
+.curatorLinks button {
+  font: inherit;
   font-size: 13px;
   font-weight: 600;
   color: rgba(var(--cream-rgb), 0.6);
+  background: transparent;
   border: 1px solid rgba(var(--cream-rgb), 0.18);
   border-radius: 999px;
   padding: 8px 16px;
   text-decoration: none;
+  cursor: pointer;
   transition:
     color 0.25s var(--ease),
     border-color 0.25s var(--ease);
 }
 @media (hover: hover) {
-  .curatorLinks a:hover {
+  .curatorLinks a:hover,
+  .curatorLinks button:hover {
     color: rgba(var(--cream-rgb), 1);
     border-color: rgba(var(--cream-rgb), 0.45);
   }
@@ -588,9 +593,14 @@
   transition: transform 0.2s var(--ease);
 }
 @media (hover: hover) {
-  .rPlay:hover {
+  .rPlay:hover:not(:disabled) {
     transform: scale(1.07);
   }
+}
+.rPlay:disabled,
+.rBtn:disabled {
+  cursor: default;
+  opacity: 0.45;
 }
 .rBtn {
   width: 34px;
@@ -607,7 +617,7 @@
   transition: background 0.2s var(--ease);
 }
 @media (hover: hover) {
-  .rBtn:hover {
+  .rBtn:hover:not(:disabled) {
     background: rgba(var(--cream-rgb), 0.18);
   }
 }
@@ -615,6 +625,11 @@
   font-size: 13px;
   color: rgba(var(--cream-rgb), 0.38);
   font-variant-numeric: tabular-nums;
+}
+.radioNote {
+  font-size: 12.5px;
+  color: rgba(var(--cream-rgb), 0.4);
+  margin-bottom: 22px;
 }
 .radioQueue {
   border-top: 1px solid rgba(var(--cream-rgb), 0.1);

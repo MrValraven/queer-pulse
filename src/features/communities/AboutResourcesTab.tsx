@@ -6,6 +6,7 @@ import type { CommunityResource, LivingCommunity } from "./community.model";
 import { sisterCommunities } from "./communityConnections";
 import { RULE_PRESET_KEYS } from "./startCommunity/startCommunity.data";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { leadingInitials } from "../../shared/lib/initials";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./CommunityHubTabs.module.css";
@@ -24,7 +25,8 @@ export function AboutResourcesTab({
   living: LivingCommunity;
 }) {
   const { t } = useTranslation();
-  const sisters = sisterCommunities(living.slug);
+  const { demoMode } = useDemoMode();
+  const sisters = sisterCommunities(living.slug, demoMode);
   return (
     <div>
       {info.about.map((p, i) => (

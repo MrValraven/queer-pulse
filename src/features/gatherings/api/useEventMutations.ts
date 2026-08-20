@@ -6,6 +6,8 @@ import {
   createCohostInvite,
   createEvent,
   inviteToEvent,
+  promoteAttendee,
+  removeAttendee,
   removeCohost,
   respondCohostInvite,
   respondInvite,
@@ -13,9 +15,13 @@ import {
   unbookmarkEvent,
   unrsvpEvent,
   updateEvent,
+  updateRsvpDetails,
   type CreateCohostInviteDto,
   type CreateEventDto,
+  type RsvpDetailsDTO,
+  type SeriesScope,
   type UpdateEventDto,
+  type UpdateRsvpDetailsDto,
 } from "./events.api";
 import { eventKeys } from "./eventKeys";
 import type { AttendeesResult } from "./useAttendees";
@@ -52,14 +58,18 @@ export function useCreateEvent() {
   });
 }
 
-/** PATCH /events/:slug — edit details / inline edits / manage page. */
+/** PATCH /events/:slug — edit details / inline edits / manage page.
+ *  `seriesScope` (MSG-10, optional) rides on the mutation variables rather
+ *  than as a separate hook argument, so every existing plain-`UpdateEventDto`
+ *  call site keeps working unchanged (defaults to `"this"`) — only the
+ *  manage dashboard's "this vs. this and future" prompt needs to set it. */
 export function useUpdateEvent(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, UpdateEventDto>({
-    mutationFn: async (dto) => {
+  return useMutation<void, Error, UpdateEventDto & { seriesScope?: SeriesScope }>({
+    mutationFn: async ({ seriesScope, ...dto }) => {
       if (demoMode) return;
-      await updateEvent(slug, dto);
+      await updateEvent(slug, dto, seriesScope);
     },
     // The detail query is keyed on the raw route param (`<slug>-<shortId>`),
     // which may differ from this mutation's `slug`, so invalidate the whole
@@ -71,14 +81,16 @@ export function useUpdateEvent(slug: string) {
   });
 }
 
-/** POST /events/:slug/cancel — manage → GatheringCancelledPage. */
+/** POST /events/:slug/cancel — manage → GatheringCancelledPage. `scope`
+ *  (MSG-10, optional — pass `undefined` for the plain "this occurrence
+ *  only" case) mirrors `cancelEvent`'s own optional `scope`. */
 export function useCancelEvent(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, void>({
-    mutationFn: async () => {
+  return useMutation<void, Error, SeriesScope | undefined>({
+    mutationFn: async (scope) => {
       if (demoMode) return;
-      await cancelEvent(slug);
+      await cancelEvent(slug, scope);
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
@@ -311,4 +323,63 @@ export function useRespondInvite() {
       },
     },
   );
+}
+
+/** DELETE /events/:slug/attendees/:memberSlug — manage-attendees "Remove". */
+export function useRemoveAttendee(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: async (memberSlug) => {
+      if (demoMode) return;
+      await removeAttendee(slug, memberSlug);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({
+        queryKey: eventKeys.attendees(slug, demoMode),
+      });
+      void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
+    },
+  });
+}
+
+/** POST /events/:slug/waitlist/:memberSlug/promote — manage-attendees /
+ *  guest-list "Promote". */
+export function usePromoteAttendee(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: async (memberSlug) => {
+      if (demoMode) return;
+      await promoteAttendee(slug, memberSlug);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({
+        queryKey: eventKeys.attendees(slug, demoMode),
+      });
+      void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
+    },
+  });
+}
+
+/** PATCH /events/:slug/rsvp/details — `RsvpDetailsModal`'s "Save". `slug` may
+ *  be `undefined` briefly while the modal's target event is still resolving;
+ *  the mutation simply no-ops in live mode until it's set. */
+export function useUpdateRsvpDetails(slug: string | undefined) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<RsvpDetailsDTO | void, Error, UpdateRsvpDetailsDto>({
+    mutationFn: async (dto) => {
+      if (demoMode || !slug) return;
+      return updateRsvpDetails(slug, dto);
+    },
+    onSuccess: () => {
+      if (demoMode || !slug) return;
+      void queryClient.invalidateQueries({
+        queryKey: eventKeys.rsvpDetails(slug, demoMode),
+      });
+    },
+  });
 }

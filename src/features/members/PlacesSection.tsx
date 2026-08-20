@@ -18,6 +18,7 @@ import {
   registryPlacesForMember,
   type MemberPlace,
 } from "./places.data";
+import { QuickEditListingModal } from "./QuickEditListingModal";
 import styles from "./PlacesSection.module.css";
 
 /** Status-chip catalog key per listing status — a small, platform-defined
@@ -46,6 +47,7 @@ function PlacesCard({
   // owner + live-mode + real-ref gate, so compute it once.
   const canManage = isSelf && Boolean(place.ref) && !demoMode;
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [quickEditing, setQuickEditing] = useState(false);
 
   return (
     <article className={styles.card}>
@@ -101,6 +103,15 @@ function PlacesCard({
           )}
           <div className={styles.footActions}>
             {canManage && place.ref && (
+              <button
+                type="button"
+                className={styles.quickEditBtn}
+                onClick={() => setQuickEditing(true)}
+              >
+                {t("members:places.quickEditCta")}
+              </button>
+            )}
+            {canManage && place.ref && (
               <Link
                 to={routes.listBusinessEdit.replace(":ref", place.ref)}
                 className={styles.editLink}
@@ -132,6 +143,13 @@ function PlacesCard({
             )}
           </div>
         </div>
+      )}
+      {quickEditing && canManage && place.ref && (
+        <QuickEditListingModal
+          editRef={place.ref}
+          placeName={place.name}
+          onClose={() => setQuickEditing(false)}
+        />
       )}
     </article>
   );

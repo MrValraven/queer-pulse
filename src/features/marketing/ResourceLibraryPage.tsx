@@ -5,38 +5,53 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { LIBRARY_SUBPAGES, RESOURCES } from "./resourceLibrary.data";
+import { CATEGORIES } from "../resources/library.data";
+import { useLibraryData } from "../resources/api/useLibraryData";
+import { SuggestEditTrigger } from "../resources/SuggestEditTrigger";
+import { LIBRARY_SUBPAGES, ORGANISATIONS } from "./resourceLibrary.data";
 import {
-  ResourceCard,
+  GuideCard,
+  OrganisationCard,
   ResourceCardSkeleton,
   ResourceFilterBar,
 } from "./ResourceLibrarySections";
 import s from "./ResourceLibraryPage.module.css";
 
+// CNT-11: the canonical, nav-linked "/resources" surface — consolidated onto
+// real backend-driven guide data (see useLibraryData) instead of the old
+// static mock, so there is exactly one resource library with one taxonomy.
+// The old resources-feature `LibraryPage` at "/resources/library" now
+// redirects here (see resources/routes.tsx).
 export function ResourceLibraryPage() {
   const { t } = useTranslation();
-  const loading = useSimulatedLoad();
   const [cat, setCat] = useState("all");
   const [query, setQuery] = useState("");
+  const {
+    guides,
+    loading: dataLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useLibraryData();
+  const loading = useSimulatedLoad() || dataLoading;
   const pageTitle = t("marketing:resourceLibrary.meta.title");
   const pageDescription = t("marketing:resourceLibrary.meta.description");
 
   const visible = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    return RESOURCES.filter((resource) => {
-      if (cat !== "all" && resource.cat !== cat) return false;
+    return guides.filter((guide) => {
+      if (cat !== "all" && guide.category !== cat) return false;
       if (
         normalizedQuery &&
-        !(
-          resource.name.toLowerCase().includes(normalizedQuery) ||
-          resource.description.toLowerCase().includes(normalizedQuery) ||
-          resource.tags.join(" ").toLowerCase().includes(normalizedQuery)
-        )
-      )
+        !`${guide.title} ${guide.description} ${guide.categoryLabel}`
+          .toLowerCase()
+          .includes(normalizedQuery)
+      ) {
         return false;
+      }
       return true;
     });
-  }, [cat, query]);
+  }, [cat, query, guides]);
 
   return (
     <PageShell>
@@ -58,11 +73,11 @@ export function ResourceLibraryPage() {
       >
         <div className={s.stats}>
           <div className={s.stat}>
-            <b>{RESOURCES.length}</b>
+            <b>{loading ? "…" : guides.length}</b>
             <span>{t("marketing:resourceLibrary.stats.resources")}</span>
           </div>
           <div className={s.stat}>
-            <b>7</b>
+            <b>{CATEGORIES.length - 1}</b>
             <span>{t("marketing:resourceLibrary.stats.categories")}</span>
           </div>
           <div className={s.stat}>
@@ -93,13 +108,52 @@ export function ResourceLibraryPage() {
               </div>
             )}
             {!loading &&
-              visible.map((resource, index) => (
-                <ResourceCard
-                  key={resource.name}
-                  resource={resource}
-                  index={index}
-                />
+              visible.map((guide, index) => (
+                <GuideCard key={guide.title} guide={guide} index={index} />
               ))}
+          </div>
+
+          {!loading && hasNextPage && (
+            <div className={s.loadMore}>
+              <Button
+                type="button"
+                variant="ghost"
+                disabled={isFetchingNextPage}
+                onClick={fetchNextPage}
+              >
+                {isFetchingNextPage
+                  ? t("resources:library.loadingMore")
+                  : t("resources:library.loadMoreCta")}
+              </Button>
+            </div>
+          )}
+
+          <SuggestEditTrigger
+            subjectOptions={guides.map((guide) => guide.title)}
+            context="library"
+          />
+        </div>
+      </section>
+
+      <section className={s.orgsSection}>
+        <div className="wrap">
+          <h2 className={s.orgsTitle}>
+            <Translation
+              i18nKey="marketing:resourceLibrary.orgs.title"
+              components={{ em: <em /> }}
+            />
+          </h2>
+          <p className={s.orgsLead}>
+            {t("marketing:resourceLibrary.orgs.lead")}
+          </p>
+          <div className={s.grid}>
+            {ORGANISATIONS.map((organisation, index) => (
+              <OrganisationCard
+                key={organisation.name}
+                organisation={organisation}
+                index={index}
+              />
+            ))}
           </div>
         </div>
       </section>

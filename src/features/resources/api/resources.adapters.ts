@@ -22,7 +22,7 @@ const TITLE_TO_ROUTE: Record<string, string> = Object.fromEntries(
 );
 
 /** Maps a live `ResourceResponseDTO` onto the page's local `Guide` shape —
- *  the same type `LibraryPage` already renders in demo mode. */
+ *  the same type `marketing/ResourceLibraryPage` already renders in demo mode. */
 export function resourceToGuide(dto: ResourceResponseDTO): Guide {
   return {
     title: dto.title,
@@ -30,7 +30,8 @@ export function resourceToGuide(dto: ResourceResponseDTO): Guide {
     category: dto.category,
     categoryLabel: CATEGORY_LABELS[dto.category] ?? dto.category,
     meta: dto.meta ?? "Guide",
-    to: TITLE_TO_ROUTE[dto.title] ?? routes.library,
+    to: TITLE_TO_ROUTE[dto.title] ?? routes.resources,
+    lastVerifiedAt: dto.lastVerifiedAt,
   };
 }
 

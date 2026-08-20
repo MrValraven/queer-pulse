@@ -45,15 +45,27 @@ export interface ChatMessage {
   from: "me" | "them";
   text: string;
   time?: string;
-  /** `"system"` renders a centred event pill (see `systemEvent`); `"gif"`
-   *  renders an inline GIF image (see `attachment`); absent/`"user"` is an
-   *  ordinary bubble. */
-  kind?: "user" | "system" | "gif";
+  /** `"system"` renders a centred event pill (see `systemEvent`); `"gif"` and
+   *  `"image"` both render an inline image (see `attachment`, distinguished
+   *  only for copy/analytics — the bubble markup is identical either way);
+   *  absent/`"user"` is an ordinary bubble. */
+  kind?: "user" | "system" | "gif" | "image";
   /** Resolved system event for a `kind: "system"` message. */
   systemEvent?: ChatSystemEvent;
-  /** Provider-hosted GIF for a `kind:"gif"` bubble (rendered as an inline image).
-   *  Absent for text/system messages. `text` holds a "GIF" fallback. */
+  /** The media attachment a `kind:"gif"` or `kind:"image"` bubble RENDERS
+   *  (rendered as an inline image either way). Absent for text/system
+   *  messages. `text` holds a "GIF"/"Photo" fallback. For an image message
+   *  this is the upload's local blob preview while the send is optimistic
+   *  (immediately paintable) — see `sendAttachment` for what's actually sent. */
   attachment?: import("../../shared/api/gifs").GifAttachment;
+  /** Client-only: the SEND payload for a `kind:"image"` optimistic message —
+   *  the private storage key the upload minted, distinct from `attachment`
+   *  (the local blob preview) because the key alone isn't a fetchable URL to
+   *  render with. `retrySend`/the offline-outbox replay resend this, never
+   *  `attachment`. Absent for a gif (its `attachment` already IS the real,
+   *  resendable value) and for every server-derived message (the server
+   *  response's `attachment` is already the real, resolved URL). */
+  sendAttachment?: import("../../shared/api/gifs").GifAttachment;
   /** GROUP threads only — the sender's identity for per-run attribution (name
    *  label + avatar above a received run). Absent in DMs, where the header
    *  already identifies the single counterpart. */
@@ -144,6 +156,11 @@ export interface Conversation {
   /** Whether the signed-in member has favorited this chat. Absent/false =
    *  not a favorite. Drives the row's heart indicator and the Favorites tab. */
   favorite?: boolean;
+  /** Whether the signed-in member has muted this chat. Absent/false = not
+   *  muted. Suppresses push notifications for new messages here; unread
+   *  counting/badges are unaffected (mirrors WhatsApp). Drives the row's
+   *  mute indicator. */
+  muted?: boolean;
   /** Counterpart's read watermark (ISO, live). Drives the "Seen" receipt. */
   otherLastReadAt?: string;
   /** Counterpart's delivered watermark (ISO, live). Drives the "double check". */

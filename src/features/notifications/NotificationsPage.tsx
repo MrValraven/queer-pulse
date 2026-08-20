@@ -2,7 +2,12 @@ import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiBell, FiAlertCircle } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import { Tabs, FeatureHelp, PullToRefresh } from "../../shared/components/ui";
+import {
+  Button,
+  Tabs,
+  FeatureHelp,
+  PullToRefresh,
+} from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { NotificationsListSkeleton } from "./NotificationsSkeleton";
@@ -22,7 +27,10 @@ export function NotificationsPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const {
-    data: notifications = [],
+    items: notifications,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
     isLoading,
     isError,
     refetch,
@@ -200,6 +208,20 @@ export function NotificationsPage() {
                 )}
                 {earlier.map((n, i) => renderItem(n, recent.length + i))}
               </div>
+              {hasNextPage && (
+                <div className={styles.loadMore}>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    disabled={isFetchingNextPage}
+                    onClick={fetchNextPage}
+                  >
+                    {isFetchingNextPage
+                      ? t("notifications:page.loadingMore")
+                      : t("notifications:page.loadMoreCta")}
+                  </Button>
+                </div>
+              )}
             </PullToRefresh>
           )}
         </div>

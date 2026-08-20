@@ -19,6 +19,7 @@ const STORAGE_KEY = "qp.messages.conversationPrefs.v1";
 export interface ConversationPrefOverride {
   pinnedAt?: string;
   favorite?: boolean;
+  muted?: boolean;
 }
 
 export type ConversationPrefsMap = Record<string, ConversationPrefOverride>;
@@ -28,7 +29,8 @@ function isOverride(value: unknown): value is ConversationPrefOverride {
   const candidate = value as Record<string, unknown>;
   return (
     (candidate.pinnedAt === undefined || typeof candidate.pinnedAt === "string") &&
-    (candidate.favorite === undefined || typeof candidate.favorite === "boolean")
+    (candidate.favorite === undefined || typeof candidate.favorite === "boolean") &&
+    (candidate.muted === undefined || typeof candidate.muted === "boolean")
   );
 }
 
@@ -55,7 +57,7 @@ function saveConversationPrefs(map: ConversationPrefsMap): void {
   try {
     const trimmed: ConversationPrefsMap = {};
     for (const [conversationId, override] of Object.entries(map)) {
-      if (override.pinnedAt || override.favorite) {
+      if (override.pinnedAt || override.favorite || override.muted) {
         trimmed[conversationId] = override;
       }
     }
@@ -101,6 +103,7 @@ export function applyConversationPrefs(
       ...conversation,
       pinnedAt: override.pinnedAt ?? conversation.pinnedAt,
       favorite: override.favorite ?? conversation.favorite,
+      muted: override.muted ?? conversation.muted,
     };
   });
 }

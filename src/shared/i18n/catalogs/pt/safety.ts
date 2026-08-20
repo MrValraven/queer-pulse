@@ -301,6 +301,16 @@ export const safety: Catalog = {
     "Se acreditares que isto é um erro, podes contactar diretamente a nossa equipa de Confiança.",
   "appeal.upheld.contactCta": "Enviar mensagem à equipa de Confiança",
 
+  // Apenas em modo live: o recurso real obtido de `GET /appeals/me`.
+  "appeal.live.error.title": "Não foi possível carregar o teu recurso",
+  "appeal.live.error.desc":
+    "Algo correu mal ao obter o estado do teu recurso. Tenta atualizar a página.",
+  "appeal.live.empty.title": "Não há recursos registados",
+  "appeal.live.empty.desc":
+    "Ainda não submeteste nenhum recurso contra uma decisão de moderação. Se foi tomada alguma decisão contra a tua conta, podes contestá-la aqui.",
+  "appeal.live.empty.cta": "Submeter um recurso",
+  "appeal.live.decisionNoteLabel": "Nota do moderador",
+
   // ── AppealSubmitPage.tsx ───────────────────────────────────────────────
   "appealSubmit.kicker": "Contestar uma decisão",
   "appealSubmit.heading": "Diz-nos o que <em>correu mal</em>",

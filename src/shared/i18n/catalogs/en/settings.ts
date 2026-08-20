@@ -28,6 +28,7 @@ export const settings: Catalog = {
   "nav.item.profileTheme": "Profile theme",
   "nav.item.accessibility": "Accessibility",
   "nav.item.interests": "Interests",
+  "nav.item.blockedUsers": "Blocked members",
   "nav.item.uploads": "My uploads",
   "nav.item.deleteAccount": "Delete account",
 
@@ -70,11 +71,7 @@ export const settings: Catalog = {
   "controls.deleteModal.cancel": "Cancel",
   "controls.deleteModal.continue": "Continue to delete",
 
-  // ── SettingsModals.tsx — shared modal chrome ──────────────────────────────
-  "modals.common.close": "Close",
-  "modals.common.done": "Done",
-
-  // ── SettingsModals.tsx — SuggestEditModal (terminology guide) ────────────
+  // ── SuggestEditModal (terminology guide) ────────────
   "modals.suggestEdit.ariaLabel": "Suggest an edit to {term}",
   "modals.suggestEdit.success.title": "Thank you, <em>noted.</em>",
   "modals.suggestEdit.success.body":
@@ -91,15 +88,6 @@ export const settings: Catalog = {
   "modals.suggestEdit.sending": "Sending…",
   "modals.suggestEdit.send": "Send suggestion",
   "modals.suggestEdit.cancel": "Cancel",
-
-  // ── SettingsModals.tsx — DataExportModal (simulated download) ────────────
-  "modals.dataExport.eyebrow": "Data & privacy",
-  "modals.dataExport.preparingBody":
-    "Gathering your data and packaging it as a JSON file. This usually takes a moment…",
-  "modals.dataExport.readyTitle": "Your export is <em>ready.</em>",
-  "modals.dataExport.readyBody":
-    "We've packaged your data as <strong>{filename}</strong>. Nothing is emailed. You download it right here, on this page.",
-  "modals.dataExport.downloadCta": "Download {filename}",
 
   // ── SettingsPersonalisation.tsx — ProfileThemePane ───────────────────────
   "personalisation.theme.title": "Profile <em>theme.</em>",
@@ -243,6 +231,10 @@ export const settings: Catalog = {
   "notifications.phonePush.test.sent": "Test sent. Check your device",
   "notifications.phonePush.test.error":
     "Couldn't send the test. Try again in a moment",
+  "notifications.phonePush.manage.title": "Manage your devices",
+  "notifications.phonePush.manage.desc":
+    "See every device receiving your push notifications, and remove any you don't recognise.",
+  "notifications.phonePush.manage.cta": "Manage devices",
   "notifications.communities.newPost.title": "New post in my communities",
   "notifications.communities.newPost.desc":
     "Activity in communities you've joined",
@@ -320,9 +312,6 @@ export const settings: Catalog = {
   "data.deletePermanently.cta": "Delete account",
   "data.fineprint":
     "Under GDPR Article 17, you have the right to erasure. Deletion requests are processed within 30 days. Some data may be retained where we have a legal obligation to do so.",
-  "data.export.full.title": "Preparing your full export",
-  "data.export.messages.title": "Preparing your messages",
-  "data.export.messages.note": "Plain export of your full message history.",
 
   // ── SettingsPanes.tsx — VisibilityPane (who can find/reach you) ─────────
   // "v" ids (open/network/private) are the stored value — never translate the
@@ -371,6 +360,10 @@ export const settings: Catalog = {
   "account.loginAlerts.title": "Login alerts",
   "account.loginAlerts.desc":
     "Email me when my account is accessed from a new device",
+  "account.sessions.title": "Active sessions",
+  "account.sessions.desc":
+    "See every device signed into your account right now, and sign out anywhere you don't recognize.",
+  "account.sessions.cta": "Manage sessions",
   "account.disclosure.title": "Report a security vulnerability",
   "account.disclosure.desc":
     "Found a bug or a weakness in QueerPulse? Our disclosure policy explains how to report it and what happens next.",
@@ -578,6 +571,51 @@ export const settings: Catalog = {
   "sessions.footNote":
     "<strong>Something looks wrong?</strong> Sign out anything you don't recognise, then <a>tell us what happened</a>. We'll help you lock things down.",
 
+  // ── PushDevicesPage.tsx — chrome (mock device records stay English, same
+  // demo-fallback convention as SessionsPage above) ────────────────────────
+  "pushDevices.ago.justNow": "just now",
+  "pushDevices.ago.unknown": "unknown",
+  "pushDevices.backToNotifications": "Notifications",
+  "pushDevices.eyebrow": "Notifications · Push devices",
+  "pushDevices.h1": "Devices getting your <em>push notifications</em>.",
+  "pushDevices.lead":
+    "Every device registered to receive a push from QueerPulse. Remove any you don't recognise, including a lost or stolen phone.",
+  "pushDevices.sectionRegistered": "Registered devices",
+  "pushDevices.card.registered": "Registered <strong>{when}</strong>",
+  "pushDevices.card.lastUsed": "Last notified <strong>{when}</strong>",
+  "pushDevices.card.remove": "Remove",
+  "pushDevices.empty.error.title": "We couldn't load your devices",
+  "pushDevices.empty.error.desc":
+    "Rather than show you a list we can't stand behind, we've shown you nothing. Try again in a moment.",
+  "pushDevices.empty.none.title": "No devices yet",
+  "pushDevices.empty.none.desc":
+    "Turn on push notifications from a device and it'll show up here.",
+  "pushDevices.toast.removed":
+    "Device removed. It won't get any more push notifications from QueerPulse.",
+  "pushDevices.toast.removedError":
+    "We couldn't remove that device. Try again.",
+  "pushDevices.footNote":
+    "<strong>Lost a device?</strong> Removing it here stops its push notifications immediately, even if you can't sign out of it yourself.",
+
+  // ── BlockedUsersPane.tsx — chrome (demo mock blocked members stay English,
+  // matching the mock-session-record convention above) ─────────────────────
+  "blockedUsers.title": "Members you've <em>blocked</em>.",
+  "blockedUsers.sub":
+    "Blocked members can't see your profile, message you, or find you in search. Unblocking restores none of that automatically — it just opens the door again.",
+  "blockedUsers.section.blocked": "Blocked",
+  "blockedUsers.row.blockedOn": "Blocked {date}",
+  "blockedUsers.row.deletedMember": "Deleted member",
+  "blockedUsers.row.unblockCta": "Unblock",
+  "blockedUsers.empty.error.title": "We couldn't load your blocked members",
+  "blockedUsers.empty.error.desc":
+    "Rather than show you a list we can't stand behind, we've shown you nothing. Try again in a moment.",
+  "blockedUsers.empty.none.title": "You haven't blocked anyone",
+  "blockedUsers.empty.none.desc":
+    "When you block a member, they'll show up here so you can review or undo it any time.",
+  "blockedUsers.toast.unblocked": "{name} is unblocked.",
+  "blockedUsers.toast.unblockedError":
+    "We couldn't unblock that member. Try again.",
+
   // ── DataExportPage.tsx — hero + toast + outro ────────────────────────────
   "dataExport.hero.eyebrow": "Your data · GDPR Art. 20",
   "dataExport.hero.titleLine1": "Your data.",
@@ -630,6 +668,18 @@ export const settings: Catalog = {
   "dataExport.type.connections.sub": "Members you follow or are connected to",
   "dataExport.type.activityLog.label": "Activity log",
   "dataExport.type.activityLog.sub": "Login history, device sessions",
+  "dataExport.type.subprofiles.label": "Personas",
+  "dataExport.type.subprofiles.sub": "Every persona you've created, including unlinked ones",
+  "dataExport.type.listings.label": "Local directory listings",
+  "dataExport.type.listings.sub": "Business or venue listings you've submitted",
+  "dataExport.type.housing.label": "Housing",
+  "dataExport.type.housing.sub": "Housing listings, flatmate profile, viewing requests",
+  "dataExport.type.saved.label": "Saved items",
+  "dataExport.type.saved.sub": "Bookmarks and saved collections",
+  "dataExport.type.notifications.label": "Notifications",
+  "dataExport.type.notifications.sub": "Your notification history and preferences",
+  "dataExport.type.consent.label": "Consent records",
+  "dataExport.type.consent.sub": "What you've agreed to, and when",
 
   // ── DataExportSections.tsx — DataExportStatus ────────────────────────────
   "dataExport.status.ready.title": "Your archive is ready",

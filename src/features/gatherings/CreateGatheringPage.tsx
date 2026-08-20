@@ -16,7 +16,7 @@ import { CreateGatheringSuccess } from "./CreateGatheringSuccess";
 import {
   CapacityStep,
   DatePlaceStep,
-  PricingStep,
+  RepeatsStep,
   ReviewStep,
   TypeStep,
 } from "./steps";
@@ -45,10 +45,17 @@ export function CreateGatheringPage() {
     (stepIndex: number) => {
       if (stepIndex === 0) return Boolean(form.type) && form.title.trim().length > 0;
       if (stepIndex === 1) return form.dateValid;
+      if (stepIndex === 2) return form.recurrenceValid;
       if (stepIndex === TOTAL_STEPS - 1) return form.allChecked;
       return true;
     },
-    [form.type, form.title, form.dateValid, form.allChecked],
+    [
+      form.type,
+      form.title,
+      form.dateValid,
+      form.recurrenceValid,
+      form.allChecked,
+    ],
   );
   const { currentStepIndex, canAdvanceFromStep, goToNextStep, goToPreviousStep } =
     useWizardForm({ stepCount: TOTAL_STEPS, isStepComplete });
@@ -69,9 +76,11 @@ export function CreateGatheringPage() {
       ? t("gatherings:create.nav.detailsHint")
       : currentStepIndex === 1 && !form.dateValid
         ? t("gatherings:create.nav.dateHint")
-        : isLastStep && !form.allChecked
-          ? t("gatherings:create.nav.publishHint")
-          : undefined;
+        : currentStepIndex === 2 && !form.recurrenceValid
+          ? t("gatherings:create.nav.repeatsHint")
+          : isLastStep && !form.allChecked
+            ? t("gatherings:create.nav.publishHint")
+            : undefined;
 
   const next = () => {
     if (!canAdvanceFromStep(currentStepIndex)) return;
@@ -140,8 +149,8 @@ export function CreateGatheringPage() {
                 <FadeIn key={currentStepIndex}>
                   {currentStepIndex === 0 && <TypeStep form={form} />}
                   {currentStepIndex === 1 && <DatePlaceStep form={form} />}
-                  {currentStepIndex === 2 && <CapacityStep form={form} />}
-                  {currentStepIndex === 3 && <PricingStep form={form} />}
+                  {currentStepIndex === 2 && <RepeatsStep form={form} />}
+                  {currentStepIndex === 3 && <CapacityStep form={form} />}
                   {currentStepIndex === 4 && <ReviewStep form={form} />}
                 </FadeIn>
               )}

@@ -11,6 +11,7 @@ import {
 } from "react-icons/fi";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { routes } from "../../app/routeMap";
 import { probeBackend, type BackendProbe } from "../../shared/api/client";
 import { usePlatformStatus } from "../../shared/api/usePlatformStatus";
 import { requestInvitePath } from "./api/joinRequestSource";
@@ -215,6 +216,18 @@ export function SignInPage() {
       ? noticeForAuthError(authError, t)
       : null;
 
+  // A "still stuck? contact us" link, shown under a genuine closed-door notice
+  // from the OAuth callback: this also covers the case where someone's linked
+  // Google account was deleted or revoked, which has no dedicated error code
+  // (identity here is keyed solely on `googleId`, so a lost Google account has
+  // no distinct "account not found" signal and just resurfaces as a generic
+  // failure). Left off two states that don't need a human: `probeError`
+  // (offline/server/unreachable, network hiccups that self-resolve on retry)
+  // and `access_denied` (the member cancelled the Google consent screen
+  // themselves, so "try again" is the honest next step).
+  const showSupportLink =
+    !probeError && authError !== null && authError !== "access_denied";
+
   return (
     <AuthLayout>
       <div className={styles.artTile}>
@@ -238,6 +251,14 @@ export function SignInPage() {
           <div className={styles.noticeText}>
             <strong>{notice.title}</strong>
             <span>{notice.body}</span>
+            {showSupportLink && (
+              <span className={styles.noticeSupport}>
+                <Translation
+                  i18nKey="auth:signIn.notice.support"
+                  components={{ a: <Link to={routes.contact} /> }}
+                />
+              </span>
+            )}
           </div>
         </div>
       )}

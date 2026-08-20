@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Tabs } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { EventHostDTO } from "./api/events.api";
 import { OverviewTab } from "./ManageOverviewTab";
 import type { GatheringDetail, OverviewCounts } from "./ManageOverviewTab";
 import { AttendeesTab } from "./ManageAttendeesTab";
@@ -28,6 +29,17 @@ interface ManageGatheringTabsProps {
   onUpdateDetail: (id: string, value: string) => void;
   onUpdateVenue: (value: VenueSelection) => void;
   onUpdateDescription: (value: string) => void;
+  /** The event's real accepted co-hosts — see `CohostManager`. */
+  cohosts?: EventHostDTO[];
+  /** The "Options" toggles' real current values + persist callback — see
+   *  `SettingsTab`. `undefined` in demo mode (the tab keeps its own local
+   *  starting state). */
+  allowWaitlist?: boolean;
+  showAttendeeCount?: boolean;
+  onUpdateSettings?: (patch: {
+    allowWaitlist?: boolean;
+    showAttendeeCount?: boolean;
+  }) => void;
 }
 
 const TAB_ORDER: Tab[] = ["overview", "attendees", "messages", "settings"];
@@ -51,6 +63,10 @@ export function ManageGatheringTabs({
   onUpdateDetail,
   onUpdateVenue,
   onUpdateDescription,
+  cohosts,
+  allowWaitlist,
+  showAttendeeCount,
+  onUpdateSettings,
 }: ManageGatheringTabsProps) {
   const { t } = useTranslation();
   const [tab, setTab] = useState<Tab>(initialTab);
@@ -80,7 +96,16 @@ export function ManageGatheringTabs({
       )}
       {tab === "attendees" && <AttendeesTab slug={slug} />}
       {tab === "messages" && <MessagesTab />}
-      {tab === "settings" && <SettingsTab slug={slug} onCancel={onCancel} />}
+      {tab === "settings" && (
+        <SettingsTab
+          slug={slug}
+          onCancel={onCancel}
+          cohosts={cohosts}
+          allowWaitlist={allowWaitlist}
+          showAttendeeCount={showAttendeeCount}
+          onUpdateSettings={onUpdateSettings}
+        />
+      )}
     </div>
   );
 }

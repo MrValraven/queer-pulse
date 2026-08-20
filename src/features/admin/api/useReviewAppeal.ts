@@ -10,10 +10,13 @@ export interface ReviewAppealVars {
 }
 
 /**
- * A moderator upholds or overturns an appeal (spec 04). The backend routes
- * appeals to a *different* moderator than the original decider and, on overturn,
- * reverses the original action and re-notifies the appellant (`appeal_outcome`).
- * Demo mode is a no-op — the appeals pane drops the row locally as before.
+ * A moderator upholds or overturns an appeal (spec 04). The backend rejects
+ * (403) a moderator reviewing the appeal of their own original decision — a
+ * conflict-of-interest guard (COM-10), not an active routing/assignment
+ * scheme; nothing auto-picks a different reviewer, it just blocks the same
+ * one. On overturn the backend reverses the original action and re-notifies
+ * the appellant (`appeal_outcome`). Demo mode is a no-op — the appeals pane
+ * drops the row locally as before.
  */
 export function useReviewAppeal() {
   const { demoMode } = useDemoMode();

@@ -204,6 +204,8 @@ export const myevents: Catalog = {
   // ── Card tools row (EventCardActions EventTools) ──────────────────────────
   "tools.reminderOn": "Reminder on",
   "tools.remindMe": "Remind me",
+  "tools.reminderInfoTooltip":
+    "You'll get a reminder before this starts, based on your reminder-lead setting in Preferences",
   "tools.addToCalendar": "Add to calendar",
   "tools.addedToCalendarToast": "Added to your calendar",
   "tools.addToCalendarModalTitle": "Add to calendar",
@@ -270,6 +272,13 @@ export const myevents: Catalog = {
   "edge.blockedBody":
     "Someone you've blocked is going to this. They won't see you, and you won't see them on the night.",
   "series.upcomingDatesToast": "Upcoming dates · {dates}",
+  // MSG-16 — live recurring-series line (SeriesLine), populated from the
+  // real backend series instead of only the demo mock.
+  "series.cadenceWeekly": "Repeats weekly",
+  "series.cadenceBiweekly": "Repeats every 2 weeks",
+  "series.cadenceMonthly": "Repeats monthly",
+  "series.position": "{position} of {total}",
+  "series.positionToast": "{label} · {position}",
   "dayof.runOfShow": "Run of show",
   "dayof.whatToBring": "What to bring",
   "dayof.gettingIn": "Getting in",
@@ -299,6 +308,9 @@ export const myevents: Catalog = {
   "calSubscribe.feedSub": "Auto-syncs with Google or Apple Calendar",
   "calSubscribe.feedToast":
     "Feed link copied. Add it in Google or Apple Calendar",
+  "calSubscribe.feedCopyFailToast":
+    "Couldn't copy automatically. Try again from a supported browser.",
+  "calSubscribe.feedErrorToast": "Couldn't create your feed link. Try again.",
   "calSubscribe.exportTitle": "Export this month",
   "calSubscribe.exportSub": "Download a one-time .ics file",
   "calSubscribe.exportToast": "{month} events downloaded as .ics",
@@ -416,6 +428,7 @@ export const myevents: Catalog = {
   "rsvpModal.cancelCta": "Cancel",
   "rsvpModal.saveCta": "Save",
   "rsvpModal.savedToast": "Saved. Only the host can see this",
+  "rsvpModal.saveErrorToast": "That didn't save. Try again.",
 
   // ── Ticket modal (EventTicketModal) ───────────────────────────────────────
   "ticketModal.eyebrow": "Your ticket",

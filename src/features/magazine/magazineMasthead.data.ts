@@ -37,6 +37,11 @@ export const MASTHEAD_NAV: MastheadNavItem[] = [
     demoOnly: true,
   },
   {
+    key: "authors",
+    labelKey: "magazine:masthead.nav.authors",
+    href: routes.magazineAuthors,
+  },
+  {
     key: "write",
     labelKey: "magazine:masthead.nav.write",
     href: routes.submitStory,

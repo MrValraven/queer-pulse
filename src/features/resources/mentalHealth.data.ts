@@ -1,31 +1,3 @@
-/**
- * i18n Pattern A. Real-world helpline names (SOS Voz Amiga, SNS 24, ILGA
- * Portugal, Samaritans) are proper nouns and stay untranslated; `noteKey`
- * (the descriptive hours/format text) is chrome and resolved via `t()`.
- */
-export const CRISIS: { name: string; number: string; noteKey: string }[] = [
-  {
-    name: "SOS Voz Amiga",
-    number: "213 544 545",
-    noteKey: "resources:mentalHealth.crisisLine.sosVozAmiga.note",
-  },
-  {
-    name: "SNS 24",
-    number: "808 24 24 24",
-    noteKey: "resources:mentalHealth.crisisLine.sns24.note",
-  },
-  {
-    name: "ILGA Portugal",
-    number: "213 887 239",
-    noteKey: "resources:mentalHealth.crisisLine.ilga.note",
-  },
-  {
-    name: "Samaritans (online)",
-    number: "jo@samaritans.org",
-    noteKey: "resources:mentalHealth.crisisLine.samaritans.note",
-  },
-];
-
 /** i18n Pattern A — platform-authored guidance chrome, resolved via `t()`. */
 export const EXPERIENCES: { titleKey: string; textKey: string }[] = [
   {

@@ -1,4 +1,5 @@
 import { apiGet, apiPost } from "../../../shared/api/client";
+import type { ItemsPage } from "../../../shared/api/pagination";
 import {
   validateDirectoryDetail,
   validateDirectoryList,
@@ -43,7 +44,12 @@ export interface DirectoryCardDTO {
   safeSpaceTier: number | null;
 }
 
-/** GET /directory — every live directory listing (public), optionally filtered. */
+/** GET /directory — every live directory listing (public), optionally
+ * filtered. Always the bare, `DEFAULT_LIST_LIMIT`-capped array shape — for
+ * whole-catalog callers that need the full working set client-side rather
+ * than a browsable page (the gatherings venue picker, @mention suggestions,
+ * the directory detail page's "related places" strip). The `/local/directory`
+ * grid itself calls `getDirectoryPage` instead, which paginates. */
 export function getDirectory(params?: {
   cat?: string;
   q?: string;
@@ -60,6 +66,35 @@ export function getDirectory(params?: {
     `/directory${query ? `?${query}` : ""}`,
     undefined,
     validateDirectoryList,
+  );
+}
+
+/**
+ * GET /directory?page=N — the paginated variant backing the `/local/directory`
+ * grid (gap-audit HSG-5): sends `q`/`safe` server-side, so the network payload
+ * matches what's actually being searched for instead of dragging down every
+ * live listing on every render, and pages through the real `total` instead of
+ * silently stopping at the backend's `DEFAULT_LIST_LIMIT` cap. `cat`
+ * deliberately stays client-side (see `useDirectoryFilters`'s `categoryCounts`)
+ * so each category chip's count stays correct against the loaded set no
+ * matter which category is currently selected.
+ *
+ * No response validator, mirroring `companies.api.ts#getCompanies`'s identical
+ * dual-shape precedent: the backend answers a bare array when `page` is
+ * omitted and the `{items,total,page,pageSize}` envelope once it's given, and
+ * `toItemsPage` (called by every caller) normalizes either into one shape.
+ */
+export function getDirectoryPage(params: {
+  q?: string;
+  safe?: "verified";
+  page: number;
+}): Promise<DirectoryCardDTO[] | ItemsPage<DirectoryCardDTO>> {
+  const search = new URLSearchParams();
+  if (params.q) search.set("q", params.q);
+  if (params.safe) search.set("safe", params.safe);
+  search.set("page", String(params.page));
+  return apiGet<DirectoryCardDTO[] | ItemsPage<DirectoryCardDTO>>(
+    `/directory?${search.toString()}`,
   );
 }
 

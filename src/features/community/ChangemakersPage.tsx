@@ -9,7 +9,7 @@ import {
   Reveal,
   SkeletonLine,
 } from "../../shared/components/ui";
-import { useConnect } from "../../app/providers/useConnect";
+import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { NominateChangemakerSection } from "./NominateChangemakerSection";
@@ -32,7 +32,6 @@ function MakerCardSkeleton() {
 
 export function ChangemakersPage() {
   const { profiles, featured, stats, isLoading } = useChangemakers();
-  const { openConnect } = useConnect();
   const { t } = useTranslation();
 
   const makers = featured
@@ -125,7 +124,16 @@ export function ChangemakersPage() {
                     {t("community:changemakers.featured.readStoryCta")}{" "}
                     <FiArrowRight aria-hidden />
                   </Button>
-                  <Button variant="ghost" onClick={() => openConnect()}>
+                  {/* COM-25: Changemaker profiles are curated editorial
+                      content with no linked member account (no `userId` on
+                      the entity) — there is no real person to reach with a
+                      direct message. Routes to the general Contact page
+                      (press/partnership topic available there) instead of
+                      the member-to-member Connect modal, which either shows
+                      a broken "member not found" state (live) or silently
+                      addresses a random demo persona (demo) when opened with
+                      no slug. */}
+                  <Button variant="ghost" to={routes.contact}>
                     {t("community:changemakers.featured.connectCta")}
                   </Button>
                 </div>

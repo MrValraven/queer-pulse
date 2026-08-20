@@ -1,4 +1,5 @@
 import { type CSSProperties, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import styles from "./StatTile.module.css";
 
 export interface StatTileProps {
@@ -6,6 +7,9 @@ export interface StatTileProps {
   value: ReactNode;
   /** Optional third line — a trend, context, or sub-label. */
   hint?: ReactNode;
+  /** Route to this stat's detail view, if one exists. Renders the tile as a
+   *  link with hover/focus affordances instead of a static card. */
+  to?: string;
 }
 
 /**
@@ -13,15 +17,29 @@ export interface StatTileProps {
  * hint line. Consolidates the admin/governance/safety stat tiles (and replaces
  * the safety tiles' hardcoded inline font styles with tokens). Wrap a set in
  * `StatGrid`.
+ *
+ * Passing `to` renders the tile as a `Link` instead of a plain `div` — only
+ * do this when the stat has a real destination page; a tile with no `to`
+ * stays a static, non-interactive card.
  */
-export function StatTile({ label, value, hint }: StatTileProps) {
-  return (
-    <div className={styles.tile}>
+export function StatTile({ label, value, hint, to }: StatTileProps) {
+  const content = (
+    <>
       <div className={styles.value}>{value}</div>
       <div className={styles.label}>{label}</div>
       {hint != null && hint !== "" && <div className={styles.hint}>{hint}</div>}
-    </div>
+    </>
   );
+
+  if (to) {
+    return (
+      <Link to={to} className={`${styles.tile} ${styles.tileLink}`}>
+        {content}
+      </Link>
+    );
+  }
+
+  return <div className={styles.tile}>{content}</div>;
 }
 
 export interface StatGridProps {

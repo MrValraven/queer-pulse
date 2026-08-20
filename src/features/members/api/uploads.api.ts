@@ -7,7 +7,14 @@ export type UploadContentType =
 
 /** Which surface an upload belongs to — drives per-kind size/dimension limits. */
 export type UploadKind =
-  "avatar" | "work-image" | "story-cover" | "gathering-photo" | "group-avatar" | "listing-photo" | "community-cover";
+  | "avatar"
+  | "work-image"
+  | "story-cover"
+  | "gathering-photo"
+  | "group-avatar"
+  | "listing-photo"
+  | "community-cover"
+  | "message-image";
 
 /**
  * ============================================================================

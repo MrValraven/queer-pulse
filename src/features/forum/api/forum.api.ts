@@ -54,13 +54,25 @@ export interface ForumThreadCounts {
   [category: string]: number;
 }
 
-/** GET /forum/threads/counts?q=&tag= — counts for the sidebar + list header. */
+/** Wire shape of `GET /forum/threads/counts` — the per-category counts plus
+ *  whether the caller has EVER posted (any thread or reply), kept as a
+ *  separate `boolean` field rather than folded into `counts` so it doesn't
+ *  have to share a type with the `Record<string, number>` category tally. */
+export interface ForumThreadCountsResponse {
+  counts: ForumThreadCounts;
+  hasPosted: boolean;
+}
+
+/** GET /forum/threads/counts?q=&tag= — counts for the sidebar + list header,
+ *  plus the truthful "has this member ever posted" signal the first-post
+ *  prompt gates on (see `useForumPageState`). Piggybacks on this existing
+ *  page-load request rather than costing a dedicated round-trip. */
 export async function getThreadCounts(q?: string, tag?: string) {
   const params = new URLSearchParams();
   if (q) params.set("q", q);
   if (tag) params.set("tag", tag);
   const qs = params.toString();
-  return apiGet<ForumThreadCounts>(
+  return apiGet<ForumThreadCountsResponse>(
     `/forum/threads/counts${qs ? `?${qs}` : ""}`,
   );
 }
@@ -135,10 +147,13 @@ export const restorePost = (id: string) =>
 export const editThreadTitle = (slug: string, title: string) =>
   apiPatch<ForumThreadResponse>(`/forum/threads/${slug}`, { title });
 
-/** POST /forum/threads/:slug/lock — moderator closes the thread to replies.
- *  Returns the updated thread. */
-export const lockThread = (slug: string) =>
-  apiPost<ForumThreadResponse>(`/forum/threads/${slug}/lock`);
+/** POST /forum/threads/:slug/lock — moderator closes the thread to replies,
+ *  with an optional note explaining why (shown on the locked banner). Returns
+ *  the updated thread. */
+export const lockThread = (slug: string, reason?: string) =>
+  apiPost<ForumThreadResponse>(`/forum/threads/${slug}/lock`, {
+    ...(reason?.trim() ? { reason: reason.trim() } : {}),
+  });
 
 /** POST /forum/threads/:slug/unlock — moderator reopens the thread. Returns
  *  the updated thread. */

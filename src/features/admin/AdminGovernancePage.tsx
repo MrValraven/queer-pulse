@@ -10,6 +10,7 @@ import { publishGovernanceOverview } from "../governance/api/governance.api";
 import { AdminPageHeader, AdminTabs, type AdminTab } from "./ui";
 import { AdminGovernanceFinances } from "./AdminGovernanceFinances";
 import { AdminGovernancePolicy } from "./AdminGovernancePolicy";
+import { AdminGovernanceProposals } from "./AdminGovernanceProposals";
 import { AdminGovernanceAudit } from "./AdminGovernanceAudit";
 
 export function AdminGovernancePage() {
@@ -44,6 +45,7 @@ export function AdminGovernancePage() {
   const TABS: AdminTab[] = [
     { id: "finances", label: t("admin:governance.tabs.finances") },
     { id: "policy", label: t("admin:governance.tabs.policy") },
+    { id: "proposals", label: t("admin:governance.tabs.proposals") },
     {
       id: "audit",
       label: t("admin:governance.tabs.audit"),
@@ -87,6 +89,7 @@ export function AdminGovernancePage() {
 
       {active === "finances" && <AdminGovernanceFinances />}
       {active === "policy" && <AdminGovernancePolicy />}
+      {active === "proposals" && <AdminGovernanceProposals />}
       {active === "audit" && <AdminGovernanceAudit />}
     </AdminShell>
   );

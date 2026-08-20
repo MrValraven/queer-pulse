@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "../../../shared/api/client";
+import { apiDelete, apiGet, apiPatch, apiPost } from "../../../shared/api/client";
 import { toItemsPage, type ItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO } from "../../../shared/api/refs";
 import type { VerificationLevel } from "./verification.api";
@@ -17,6 +17,13 @@ export interface HousingListingDTO {
    * failing gate) — powers an honest tooltip. */
   listingVerifiedReason: string;
   createdAt: string;
+  /** Owner "found a place / no longer looking" signal (HSG-1), or null while
+   * still looking. Set by the owner or by the daily expiry sweep. */
+  filledAt: string | null;
+  /** TTL (HSG-3) — auto-computed at create time, resettable via `extend`. */
+  expiresAt: string;
+  /** Server-computed `expiresAt < now` — no client clock-skew guesswork. */
+  expired: boolean;
   type: "sublet" | "room" | "short" | "studio";
   title: string;
   blurb: string;
@@ -130,3 +137,40 @@ export const sendHousingEnquiry = (ref: string, body: { body: string }) =>
     `/housing-listings/${ref}/enquiries`,
     body,
   );
+
+/** PATCH /housing-listings/:ref body — reuses the create form's shape (see
+ * `useListSpaceForm`/`ListSpaceFields`) for the edit flow; every field
+ * optional, only present fields are applied. */
+export type UpdateHousingListingBody = Partial<CreateHousingListingBody>;
+
+/** GET /housing-listings/mine (paginated) — the member's own listings,
+ * including filled ones (still shown to the owner, withheld from public
+ * browse). Owner-gated (HSG-1). */
+export async function getMyHousingListings(
+  page = 1,
+): Promise<ItemsPage<HousingListingDTO>> {
+  const res = await apiGet<HousingListingDTO[] | ItemsPage<HousingListingDTO>>(
+    `/housing-listings/mine?page=${page}`,
+  );
+  return toItemsPage(res);
+}
+
+export const getMyHousingListing = (ref: string) =>
+  apiGet<HousingListingDTO>(`/housing-listings/${ref}`);
+
+export const updateHousingListing = (
+  ref: string,
+  body: UpdateHousingListingBody,
+) => apiPatch<HousingListingDTO>(`/housing-listings/${ref}`, body);
+
+export const deleteHousingListing = (ref: string) =>
+  apiDelete<void>(`/housing-listings/${ref}`);
+
+export const markHousingListingFilled = (ref: string) =>
+  apiPatch<HousingListingDTO>(`/housing-listings/${ref}/mark-filled`);
+
+export const markHousingListingAvailable = (ref: string) =>
+  apiPatch<HousingListingDTO>(`/housing-listings/${ref}/mark-available`);
+
+export const extendHousingListing = (ref: string) =>
+  apiPatch<HousingListingDTO>(`/housing-listings/${ref}/extend`);

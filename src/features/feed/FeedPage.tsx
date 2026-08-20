@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   FiInbox,
   FiUsers,
+  FiUserCheck,
   FiCalendar,
   FiUserPlus,
   FiMessageCircle,
@@ -40,6 +41,7 @@ import styles from "./FeedPage.module.css";
 const TAB_ICONS: Record<FeedTabIcon, React.ReactElement> = {
   inbox: <FiInbox />,
   communities: <FiUsers />,
+  connections: <FiUserCheck />,
   gatherings: <FiCalendar />,
   people: <FiUserPlus />,
   posts: <FiMessageCircle />,

@@ -9,31 +9,62 @@ import { GLOSSARY } from "./queer101.data";
 import { ResourceModal, PlumSuccess } from "./ResourceModal";
 import styles from "./ResourceModal.module.css";
 
-export function SuggestEditModal({ onClose }: { onClose: () => void }) {
+interface SuggestEditModalProps {
+  onClose: () => void;
+  /**
+   * Fixed subject when the modal is scoped to one known thing (a whole page,
+   * a single guide) — skips the picker and shows the subject as read-only
+   * context instead of asking the reader to choose it.
+   */
+  subject?: string;
+  /**
+   * Picker options when the reader should say which item they mean. Defaults
+   * to the glossary term list — the modal's original behavior — so the
+   * Glossary's call site needs no changes.
+   */
+  subjectOptions?: string[];
+  /**
+   * Free-text tag included in the submitted payload so staff can triage by
+   * surface (e.g. "legal", "library"). Defaults to "glossary".
+   */
+  context?: string;
+}
+
+export function SuggestEditModal({
+  onClose,
+  subject,
+  subjectOptions,
+  context = "glossary",
+}: SuggestEditModalProps) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const fieldId = useId();
-  const [term, setTerm] = useState("");
+  const [term, setTerm] = useState(subject ?? "");
   const [change, setChange] = useState("");
   const [phase, setPhase] = useState<"form" | "loading" | "done">("form");
 
-  const valid = term.trim().length > 0 && change.trim().length > 8;
+  const options =
+    subjectOptions ?? GLOSSARY.map((glossaryTerm) => t(glossaryTerm.termKey));
+  const valid =
+    (subject ? true : term.trim().length > 0) && change.trim().length > 8;
 
   // LIVE: POST the suggestion to the generic intake endpoint; demo keeps the
   // simulated success. On failure we drop back to the form and toast.
   const submit = async () => {
     if (!valid || phase === "loading") return;
     setPhase("loading");
+    const payload = {
+      term: subject ?? term.trim(),
+      change: change.trim(),
+      context,
+    };
     if (demoMode) {
       setTimeout(() => setPhase("done"), 1100);
       return;
     }
     try {
-      await submitIntake("suggest_edit", {
-        term: term.trim(),
-        change: change.trim(),
-      });
+      await submitIntake("suggest_edit", payload);
       setPhase("done");
     } catch {
       setPhase("form");
@@ -61,28 +92,59 @@ export function SuggestEditModal({ onClose }: { onClose: () => void }) {
         <>
           <div className={styles.body}>
             <p className={styles.sub}>
-              {t("resources:suggestEdit.body.intro")}
+              {t(
+                subject
+                  ? "resources:suggestEdit.body.introSubject"
+                  : subjectOptions
+                    ? "resources:suggestEdit.body.introPicker"
+                    : "resources:suggestEdit.body.intro",
+              )}
             </p>
 
-            <label className={styles.label} htmlFor={`${fieldId}-term`}>
-              {t("resources:suggestEdit.form.termLabel")}
-            </label>
-            <Select
-              id={`${fieldId}-term`}
-              placeholder={t("resources:suggestEdit.form.selectPlaceholder")}
-              value={term || null}
-              onChange={(value) => setTerm(value ?? "")}
-              options={[
-                ...GLOSSARY.map((g) => ({
-                  value: t(g.termKey),
-                  label: t(g.termKey),
-                })),
-                {
-                  value: "__new",
-                  label: t("resources:suggestEdit.form.newTermOption"),
-                },
-              ]}
-            />
+            {subject ? (
+              <>
+                <span className={styles.label}>
+                  {t("resources:suggestEdit.form.subjectFixedLabel")}
+                </span>
+                <p className={styles.sub} style={{ fontWeight: 600 }}>
+                  {subject}
+                </p>
+              </>
+            ) : (
+              <>
+                <label className={styles.label} htmlFor={`${fieldId}-term`}>
+                  {t(
+                    subjectOptions
+                      ? "resources:suggestEdit.form.subjectLabel"
+                      : "resources:suggestEdit.form.termLabel",
+                  )}
+                </label>
+                <Select
+                  id={`${fieldId}-term`}
+                  placeholder={t(
+                    subjectOptions
+                      ? "resources:suggestEdit.form.selectPlaceholderGeneric"
+                      : "resources:suggestEdit.form.selectPlaceholder",
+                  )}
+                  value={term || null}
+                  onChange={(value) => setTerm(value ?? "")}
+                  options={[
+                    ...options.map((option) => ({
+                      value: option,
+                      label: option,
+                    })),
+                    {
+                      value: "__new",
+                      label: t(
+                        subjectOptions
+                          ? "resources:suggestEdit.form.otherOption"
+                          : "resources:suggestEdit.form.newTermOption",
+                      ),
+                    },
+                  ]}
+                />
+              </>
+            )}
 
             <label className={styles.label} htmlFor={`${fieldId}-change`}>
               {t("resources:suggestEdit.form.changeLabel")}

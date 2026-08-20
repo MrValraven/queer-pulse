@@ -18,6 +18,7 @@ export function MessagesThreadListHeader({
   showTabs,
   activeTab,
   onTabChange,
+  requestsCount,
 }: {
   query: string;
   onQueryChange: (value: string) => void;
@@ -27,6 +28,8 @@ export function MessagesThreadListHeader({
   showTabs: boolean;
   activeTab: InboxTab;
   onTabChange: (tab: InboxTab) => void;
+  /** Incoming message-request count for the Requests tab badge (MSG-1). */
+  requestsCount?: number;
 }) {
   const { t } = useTranslation();
   return (
@@ -97,7 +100,13 @@ export function MessagesThreadListHeader({
         placeholder={t("messages:thread.searchPlaceholder")}
         ariaLabel={t("messages:thread.searchAria")}
       />
-      {showTabs && <InboxTabs active={activeTab} onChange={onTabChange} />}
+      {showTabs && (
+        <InboxTabs
+          active={activeTab}
+          onChange={onTabChange}
+          requestsCount={requestsCount}
+        />
+      )}
     </div>
   );
 }

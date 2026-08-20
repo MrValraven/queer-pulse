@@ -631,6 +631,52 @@ export const economy: Catalog = {
   "listSpace.error":
     "Couldn't submit your listing. It didn't go through. Check your connection and try again.",
 
+  // ── MyHousingListingsPage (HSG-1/HSG-3) ─────────────────────────────────
+  "myHousingListings.entryLink": "My listings",
+  "myHousingListings.eyebrow": "Housing board",
+  "myHousingListings.title": "My <em>listings.</em>",
+  "myHousingListings.sub":
+    "Everything you've posted to the housing board, manage it here.",
+  "myHousingListings.empty.title": "You haven't listed anything yet",
+  "myHousingListings.empty.description":
+    "When you list a room, sublet, or share, it'll show up here so you can manage it.",
+  "myHousingListings.empty.cta": "List your space",
+  "myHousingListings.error.title": "Couldn't load your listings",
+  "myHousingListings.error.body":
+    "Something went wrong on our end. Check your connection and try again.",
+  "myHousingListings.error.retry": "Try again",
+  "myHousingListings.status.review": "In review",
+  "myHousingListings.status.question": "Needs a reply",
+  "myHousingListings.status.live": "Live",
+  "myHousingListings.status.filled": "Filled",
+  "myHousingListings.status.expired": "Expired",
+  "myHousingListings.postedOn": "Posted {date}",
+  "myHousingListings.expiresOn": "Expires {date}",
+  "myHousingListings.expiredHint": "Expired, extend it to relist",
+  "myHousingListings.filledHint": "Marked as filled, hidden from the board",
+  "myHousingListings.actions.edit": "Edit",
+  "myHousingListings.actions.view": "View listing",
+  "myHousingListings.actions.markFilled": "Mark as filled",
+  "myHousingListings.actions.markAvailable": "Mark as available",
+  "myHousingListings.actions.extend": "Extend",
+  "myHousingListings.actions.delete": "Delete",
+  "myHousingListings.delete.confirmTitle": "Delete this listing?",
+  "myHousingListings.delete.confirmBody":
+    "This removes it from the board for good, anyone with the link will get a not-found page. This can't be undone.",
+  "myHousingListings.delete.confirmCta": "Delete listing",
+  "myHousingListings.toast.filled": "Marked as filled",
+  "myHousingListings.toast.available": "Marked as available again",
+  "myHousingListings.toast.extended": "Listing extended",
+  "myHousingListings.toast.deleted": "Listing deleted",
+  "myHousingListings.toast.updated": "Listing updated",
+  "myHousingListings.toast.error": "That didn't go through, try again.",
+  "myHousingListings.edit.eyebrow": "Housing board",
+  "myHousingListings.edit.title": "Edit your <em>listing.</em>",
+  "myHousingListings.edit.sub":
+    "Your changes save right away and update the board listing.",
+  "myHousingListings.edit.submitting": "Saving…",
+  "myHousingListings.edit.submitCta": "Save changes",
+
   // ── SuggestLandlordModal ────────────────────────────────────────────────
   "suggestLandlord.ariaLabel": "Suggest a landlord",
   "suggestLandlord.eyebrow": "Housing board",

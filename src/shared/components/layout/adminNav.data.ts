@@ -22,6 +22,7 @@ import {
   FiImage,
   FiUserCheck,
   FiFlag,
+  FiKey,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
@@ -71,6 +72,11 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: FiUsers,
     badge: "members",
     tone: "warn",
+  },
+  {
+    labelKey: "shared:adminNav.items.staff",
+    to: routes.adminStaff,
+    icon: FiKey,
   },
   {
     labelKey: "shared:adminNav.items.landing",

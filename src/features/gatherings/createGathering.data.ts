@@ -19,23 +19,48 @@ import {
  * — only the resolved label shown to the host does.
  */
 
+// Pricing/ticketing (formerly step 4) was removed from the active wizard flow:
+// the backend has no price columns and no payment integration anywhere (see
+// `PricingStep`'s deletion + `events.adapters.ts`'s `formToCreateEventDto`
+// doc), so the step implied a capture-and-honor promise the platform never
+// kept. Matches this platform's pattern of removing a fake-functional step
+// rather than leaving a "coming soon" stub that still looks interactive.
+//
+// `RepeatsStep` (MSG-10) took the freed slot right after date/place — a
+// gathering's cadence is a scheduling decision, so it reads naturally next
+// to when/where it happens.
 export const TOTAL_STEPS = 5;
 
 export const PILL_LABEL_KEYS = [
   "gatherings:create.pill.type",
   "gatherings:create.pill.datePlace",
+  "gatherings:create.pill.repeats",
   "gatherings:create.pill.capacity",
-  "gatherings:create.pill.pricing",
   "gatherings:create.pill.review",
 ];
 
 export const TIP_KEYS = [
   "gatherings:create.tip.type",
   "gatherings:create.tip.datePlace",
+  "gatherings:create.tip.repeats",
   "gatherings:create.tip.capacity",
-  "gatherings:create.tip.pricing",
   "gatherings:create.tip.review",
 ];
+
+// ── Repeats (MSG-10) ─────────────────────────────────────────────────────
+// `value` matches the backend's `RecurrenceCadence`/`RecurrenceEndType`
+// literal unions exactly (see events.api.ts) — never translated, only the
+// label is.
+export const CADENCE_OPTIONS: { value: "weekly" | "biweekly" | "monthly"; labelKey: string }[] = [
+  { value: "weekly", labelKey: "gatherings:create.repeats.cadence.weekly" },
+  { value: "biweekly", labelKey: "gatherings:create.repeats.cadence.biweekly" },
+  { value: "monthly", labelKey: "gatherings:create.repeats.cadence.monthly" },
+];
+
+// Backend cap (`MAX_OCCURRENCES`, events.service.ts) — mirrored here so the
+// count input's own bounds match what the server will actually accept.
+export const MAX_RECURRENCE_OCCURRENCES = 52;
+export const MIN_RECURRENCE_OCCURRENCES = 2;
 
 export const TYPES: {
   icon: IconType;
@@ -166,8 +191,9 @@ export function accessLabelKey(value: string): string | undefined {
   return ACCESS_OPTIONS.find((option) => option.value === value)?.labelKey;
 }
 
+// "slidingScale" (ticket-pricing honesty) dropped along with the pricing
+// step above — there is no pricing to confirm honest anymore.
 export const CONFIRM_CHECK_KEYS = [
   "gatherings:create.confirm.codeOfCare",
-  "gatherings:create.confirm.slidingScale",
   "gatherings:create.confirm.accessibility",
 ];

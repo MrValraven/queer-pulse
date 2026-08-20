@@ -149,40 +149,6 @@ export const system: Catalog = {
     "Detected: <b>Portugal · Lisbon</b> · this is a demo of the region-restricted view.",
   "geoRestricted.goHome": "Go home",
 
-  // ── InterestsEditorModal.tsx + interestsEditor.data.ts ───────────────────
-  "interestsEditor.closeAria": "Close",
-  "interestsEditor.success.title": "Interests <em>updated.</em>",
-  "interestsEditor.success.sub_one":
-    "We've noted your {count} interest. A vouching member with overlapping interests will pick up your request. Keeping these current can speed up the match.",
-  "interestsEditor.success.sub_other":
-    "We've noted your {count} interests. A vouching member with overlapping interests will pick up your request. Keeping these current can speed up the match.",
-  "interestsEditor.success.doneCta": "Done",
-  "interestsEditor.eyebrow": "Invite request · interests",
-  "interestsEditor.title": "Update your <em>interests.</em>",
-  "interestsEditor.desc":
-    "We match your request to a vouching member with overlapping interests. Pick the ones that fit. The more honest, the better the match.",
-  "interestsEditor.count_one": "{count} selected",
-  "interestsEditor.count_other": "{count} selected",
-  "interestsEditor.pickAtLeastTwo": "pick at least 2",
-  "interestsEditor.saveCta": "Save interests",
-  "interestsEditor.cancelCta": "Cancel",
-  "interestsEditor.options.filmCinema": "Film & cinema",
-  "interestsEditor.options.readingGroups": "Reading groups",
-  "interestsEditor.options.mutualAid": "Mutual aid",
-  "interestsEditor.options.activism": "Activism",
-  "interestsEditor.options.nightlife": "Nightlife",
-  "interestsEditor.options.transHealthcare": "Trans healthcare",
-  "interestsEditor.options.migrationVisas": "Migration & visas",
-  "interestsEditor.options.housing": "Housing",
-  "interestsEditor.options.mentorship": "Mentorship",
-  "interestsEditor.options.musicStudio": "Music & studio",
-  "interestsEditor.options.soberSpaces": "Sober spaces",
-  "interestsEditor.options.parentingFamily": "Parenting & family",
-  "interestsEditor.options.sports": "Sports",
-  "interestsEditor.options.artMaking": "Art & making",
-  "interestsEditor.options.techWork": "Tech & work",
-  "interestsEditor.options.wellbeing": "Wellbeing",
-
   // ── InviteExpiredPage.tsx (invite state: expired / used / revoked / not found) ─
   "inviteState.expired.eyebrow": "Invite expired",
   "inviteState.expired.heading": "This link has <em>timed out.</em>",
@@ -287,35 +253,6 @@ export const system: Catalog = {
   "offline.status": "Listening for signal",
   "offline.retryCta": "Try again",
   "offline.retryingCta": "Still offline",
-
-  // ── PendingReviewPage.tsx ─────────────────────────────────────────────────
-  "pendingReview.kicker": "Invite request · in queue",
-  "pendingReview.heading": "You're <em>{position}th</em> in line.",
-  "pendingReview.lead":
-    "We open membership in cohorts. Your request to <b>{email}</b> is in the queue and a vouching member will review it within <b>~ 3 weeks</b>.",
-  "pendingReview.position.title": "Your position",
-  "pendingReview.position.body":
-    "Out of {total} in queue · we admit <b>about {perMonth} / month</b> · ETA for you: <b>{eta}</b>",
-  "pendingReview.position.etaValue": "late Jun / early Jul 2026",
-  "pendingReview.timeline.step1.title": "Request received · {date}",
-  "pendingReview.timeline.step1.desc":
-    "You signed up · we logged your interest",
-  "pendingReview.timeline.step2.title": "Awaiting vouching member",
-  "pendingReview.timeline.step2.desc":
-    "A current member is matching your interests · this takes 2–3 weeks",
-  "pendingReview.timeline.step3.title": "Brief check-in call · 15 min",
-  "pendingReview.timeline.step3.desc":
-    "Light, friendly · just so we know who you are",
-  "pendingReview.timeline.step4.title":
-    "Invitation sent · activates within 14 days",
-  "pendingReview.timeline.step4.desc":
-    "You'll get a single-use link to activate your account",
-  "pendingReview.actions.magazineCta": "Read the magazine",
-  "pendingReview.actions.vouchCta": "Ask a member to vouch",
-  "pendingReview.actions.updateInterestsCta": "Update my interests",
-  "pendingReview.foot.knowMember":
-    "Already know a member who can vouch? <a>Send them a one-click vouch link</a>. Bumps you ahead in the queue.",
-  "pendingReview.foot.withdraw": "Want to withdraw? <a>Write to the team</a>.",
 
   // ── PwaPromptPage.tsx ─────────────────────────────────────────────────────
   "pwaPrompt.kicker": "Add to home screen · no app store needed",
@@ -491,4 +428,24 @@ export const system: Catalog = {
   "maintenance.stillSignedIn":
     "You’re still signed in. Everything will be here when we’re back.",
   "maintenance.retry": "Try again",
+
+  // ── NewsletterUnsubscribePage.tsx (CNT-19: self-serve newsletter unsubscribe) ─
+  "newsletterUnsubscribe.loading.eyebrow": "Newsletter",
+  "newsletterUnsubscribe.loading.heading": "Confirming your request…",
+  "newsletterUnsubscribe.success.eyebrow": "Unsubscribed",
+  "newsletterUnsubscribe.success.heading": "You're off the <em>list.</em>",
+  "newsletterUnsubscribe.success.lead":
+    "We've stopped the weekly digest for this address. Subscribe again from the homepage whenever you want it back.",
+  "newsletterUnsubscribe.alreadyUnsubscribed.eyebrow": "Already unsubscribed",
+  "newsletterUnsubscribe.alreadyUnsubscribed.heading":
+    "Already <em>taken care of.</em>",
+  "newsletterUnsubscribe.alreadyUnsubscribed.lead":
+    "This address was unsubscribed already. No digest is going out to it.",
+  "newsletterUnsubscribe.invalid.eyebrow": "Link not recognised",
+  "newsletterUnsubscribe.invalid.heading":
+    "We couldn't <em>place this link.</em>",
+  "newsletterUnsubscribe.invalid.lead":
+    "This unsubscribe link doesn't match anything on our side. It may be old or mistyped. If digest emails are still reaching this address, let the team know and we'll sort it.",
+  "newsletterUnsubscribe.goHomeCta": "Back to homepage",
+  "newsletterUnsubscribe.contactCta": "Talk to the team",
 };

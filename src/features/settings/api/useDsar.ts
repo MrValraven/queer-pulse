@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { DEMO_PAST_DSAR } from "../../marketing/dsar.data";
 import {
@@ -34,11 +34,18 @@ export interface SubmitDsarInput {
  * prototype still confirms end to end — and never invents a persona or a
  * fixed reference on a real session. No `reauthToken` is passed by callers; it
  * is minted here so the page needn't know the route is gated (see `reauth`).
+ *
+ * On success, the new request is prepended directly into the `useListDsar`
+ * cache (see `dsarListQueryKey`) instead of invalidating and refetching.
+ * There's no backend workflow that ever moves a request past `received` (no
+ * admin route touches `dsar_request.status`), so a round trip back to the
+ * server would just re-fetch the exact row already in hand.
  */
 export function useSubmitDsar() {
   const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
   return useCallback(
-    (input: SubmitDsarInput): Promise<DsarRequest> => {
+    async (input: SubmitDsarInput): Promise<DsarRequest> => {
       const demoResult: DsarRequest = {
         reference: "QP-DSAR-DEMO",
         article: input.article,
@@ -46,12 +53,17 @@ export function useSubmitDsar() {
         submittedAt: daysFromNow(0),
         dueBy: daysFromNow(DSAR_DUE_DAYS),
       };
-      return simulateOr(demoMode, demoResult, async () => {
+      const created = await simulateOr(demoMode, demoResult, async () => {
         const { reauthToken } = await reauth();
         return submitDsar({ ...input, reauthToken });
       });
+      queryClient.setQueryData<DsarRequest[]>(dsarListQueryKey(), (current) => [
+        created,
+        ...(current ?? []),
+      ]);
+      return created;
     },
-    [demoMode],
+    [demoMode, queryClient],
   );
 }
 
@@ -78,6 +90,13 @@ export interface ListDsarResult {
  * list is small and unpaginated (one row per filed request), so a single fetch
  * covers it. Callers gate mounting on demo-or-authenticated, so the live query
  * only runs for a signed-in member and never 401s a logged-out visitor.
+ *
+ * `staleTime: Infinity`: deliberately never refetches on remount/refocus.
+ * There is no backend workflow that changes a `dsar_request` after it's
+ * created (no admin route ever transitions its status), so re-fetching a row
+ * already in cache can only ever return the same bytes. `useSubmitDsar`
+ * keeps the cache correct by prepending each newly created request directly;
+ * a cold app load still gets the real server list via the initial fetch.
  */
 export function useListDsar(): ListDsarResult {
   const { demoMode } = useDemoMode();
@@ -86,6 +105,7 @@ export function useListDsar(): ListDsarResult {
     queryKey: dsarListQueryKey(),
     enabled: !demoMode,
     queryFn: listDsar,
+    staleTime: Infinity,
   });
 
   if (demoMode) {

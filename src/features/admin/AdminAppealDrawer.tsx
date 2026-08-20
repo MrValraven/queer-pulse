@@ -1,18 +1,76 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { FiInfo, FiShield } from "react-icons/fi";
+import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
 import { AdminDrawer, AdminChip, AdminCat, AdminAvatar } from "./ui";
 import { portrait } from "./adminPeople.data";
 import { chipKey, chipLabel, type Appeal } from "./adminModeration.data";
+import { useOriginalReport } from "./api/useOriginalReport";
 import {
   AppealDecisionSection,
   type AppealDecision as Decision,
 } from "./AdminAppealSections";
 import styles from "./AdminModerationPage.module.css";
+
+/**
+ * The ORIGINAL reported content behind this appeal (COM-11) — not just the
+ * moderator's self-reported reason for their decision, but what was actually
+ * reported. Three states: loading, resolved (real excerpt + author), or
+ * unavailable (a cold appeal with no linked report, or a fetch that came back
+ * empty) — the last one says so plainly rather than silently omitting the
+ * section, since "nothing to show" and "we didn't try" read very differently
+ * to a moderator deciding an appeal.
+ */
+function OriginalReportedContent({
+  reportId,
+}: {
+  reportId: string | undefined;
+}) {
+  const { t } = useTranslation();
+  const { detail, loading } = useOriginalReport(reportId);
+
+  if (loading) {
+    return (
+      <section className={styles.dSec}>
+        <h3 className={styles.dSecLabel}>
+          {t("admin:moderation.appealDrawer.originalContentTitle")}
+        </h3>
+        <SkeletonLine height={14} width="40%" />
+        <SkeletonLine height={48} style={{ marginTop: 12, borderRadius: 10 }} />
+      </section>
+    );
+  }
+
+  if (!detail) {
+    return (
+      <section className={styles.dSec}>
+        <h3 className={styles.dSecLabel}>
+          {t("admin:moderation.appealDrawer.originalContentTitle")}
+        </h3>
+        <p className={styles.dTransparency}>
+          <FiInfo aria-hidden />{" "}
+          {t("admin:moderation.appealDrawer.originalContentUnavailable")}
+        </p>
+      </section>
+    );
+  }
+
+  return (
+    <section className={styles.dSec}>
+      <h3 className={styles.dSecLabel}>
+        {t("admin:moderation.appealDrawer.originalContentTitle")}
+      </h3>
+      <p className={styles.dContentAuthor}>{detail.contentAuthor}</p>
+      <blockquote className={styles.dExcerpt}>{detail.excerpt}</blockquote>
+      {detail.redactionNote && (
+        <p className={styles.dRedact}>
+          <FiShield aria-hidden /> {detail.redactionNote}
+        </p>
+      )}
+    </section>
+  );
+}
 
 export function AdminAppealDrawer({
   appeal,
@@ -108,12 +166,12 @@ export function AdminAppealDrawer({
             </span>
           </div>
           <p className={styles.appealOrigReason}>{appeal.original.reason}</p>
-          <Link className={styles.appealOrigLink} to={routes.adminModeration}>
-            {t("admin:moderation.appealDrawer.viewOriginalCta")}{" "}
-            <FiArrowRight aria-hidden />
-          </Link>
         </div>
       </section>
+
+      {/* Original REPORTED content (COM-11) — what was actually reported, not
+          just the moderator's own reason for their decision. */}
+      <OriginalReportedContent reportId={appeal.reportId} />
 
       {/* Member argument */}
       <section className={styles.dSec}>

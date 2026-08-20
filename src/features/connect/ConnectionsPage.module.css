@@ -290,6 +290,59 @@
 :global([data-theme="dark"]) .menu {
   border-color: rgba(var(--cream-rgb), 0.14);
 }
+
+/* ── Connection report modal (reason radios + detail) ── */
+.reportLabel {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-strong);
+  margin-block: 12px 6px;
+}
+.reportOpts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.reportOpt {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  font-size: 0.9375rem;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.reportOptChecked {
+  border-color: var(--plum);
+  background: rgba(var(--plum-rgb), 0.05);
+}
+.reportTextarea {
+  width: 100%;
+  min-height: 84px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  padding: 11px 14px;
+  font-family: var(--sans);
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--cream);
+  resize: vertical;
+  line-height: 1.5;
+}
+.reportTextarea:focus-visible {
+  outline: none;
+  border-color: var(--line-strong);
+  background: var(--paper);
+}
+.reportCounter {
+  font-size: 0.75rem;
+  color: var(--ink-40);
+  margin-block-start: 6px;
+}
+
 .pron {
   font-size: 12.5px;
   color: var(--ink-40);

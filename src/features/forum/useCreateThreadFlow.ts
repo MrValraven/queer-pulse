@@ -52,9 +52,15 @@ export function useCreateThreadFlow({
   });
   const [composing, setComposing] = useState(false);
   const [composeSeed, setComposeSeed] = useState("");
+  // DISC-5 — seeds `ComposeThreadModal`'s tags field, so a topic page's
+  // "Write a post" CTA (`writeHrefForTag`, `?tag=…&compose=1`) opens the
+  // composer with that topic's tag already attached. Empty for every other
+  // caller (the first-post prompt's starter chips only ever seed the title).
+  const [composeTags, setComposeTags] = useState<string[]>([]);
 
-  function openCompose(seed = "") {
+  function openCompose(seed = "", tags: string[] = []) {
     setComposeSeed(seed);
+    setComposeTags(tags);
     setComposing(true);
   }
 
@@ -154,6 +160,7 @@ export function useCreateThreadFlow({
   return {
     composing,
     composeSeed,
+    composeTags,
     openCompose,
     closeCompose,
     publishThread,

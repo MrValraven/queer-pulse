@@ -4,7 +4,8 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
-import { spotsText } from "./data";
+import { initialsFromName, initialsFromParts } from "../../shared/lib/initials";
+import { spotsText, type GatheringDetail } from "./data";
 import {
   ALTS,
   CANCELLED_HOURS_AGO,
@@ -36,7 +37,62 @@ const Tick = () => (
   </svg>
 );
 
-/** The cancelled event's header, host explainer, and "send well wishes" row. */
+/**
+ * The real cancelled event's header + host row — title, original schedule,
+ * venue, and who was hosting it, all read straight off the fetched
+ * `GatheringDetail`. Live mode's counterpart to `CancelledEventCard` below,
+ * minus the fabricated "why it was cancelled" write-up (the backend records
+ * no cancellation reason) and the "send well-wishes" link (there is no real
+ * per-cancellation host message to reply to).
+ */
+export function LiveCancelledEventCard({
+  gathering,
+}: {
+  gathering: GatheringDetail;
+}) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const hasHostParts = Boolean(gathering.hostFirst || gathering.hostLast);
+  const initials = hasHostParts
+    ? initialsFromParts(gathering.hostFirst ?? "", gathering.hostLast ?? "")
+    : initialsFromName(gathering.host, "QP");
+  return (
+    <div className={styles.eventCard}>
+      <div className={styles.eventH}>
+        <div className={styles.eventDate}>
+          <div className="d">{fmt.date(gathering.date, { day: "2-digit" })}</div>
+          <div className="m">{fmt.date(gathering.date, { month: "short" })}</div>
+        </div>
+        <div className={styles.eventInfo}>
+          <h2>{gathering.title}</h2>
+          <div className={styles.eventMeta}>
+            <span>
+              {fmt.date(gathering.date, { weekday: "short" })}{" "}
+              {fmt.time(gathering.date)}
+              {gathering.endAt ? ` – ${fmt.time(gathering.endAt)}` : ""}
+            </span>
+            {gathering.hood && (
+              <>
+                <span className={styles.dot} />
+                <span>{gathering.hood}</span>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className={styles.host}>
+        <div className={styles.hostAv}>{initials}</div>
+        <div className={styles.hostText}>
+          {t("gatherings:common.hostedBy")} <b>{gathering.host}</b>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** The DEMO prototype's cancelled event header, host explainer, and "send
+ *  well wishes" row — organizer-authored fictional content, never reached by
+ *  a real cancellation (see `LiveCancelledEventCard` above for that path). */
 export function CancelledEventCard() {
   const { t } = useTranslation();
   const fmt = useFormat();

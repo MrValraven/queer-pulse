@@ -2,13 +2,12 @@ import { useMemo, useState } from "react";
 import { FiShield } from "react-icons/fi";
 import { Button, FeatureHelp, Toggle } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
-import { useProfileData, useProfileEdit } from "../../app/providers/useProfile";
+import { useProfileEdit } from "../../app/providers/useProfile";
 import { useConsent } from "../../app/providers/useConsent";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Language } from "../../shared/i18n/types";
-import { buildExports } from "./settingsExports.helpers";
 import { TERMS } from "./settings.data";
 import {
   EMAIL_DELIVERY_OPTIONS,
@@ -28,7 +27,6 @@ import {
   ToggleList,
   ToggleRow,
 } from "./SettingsControls";
-import { DataExportModal } from "./SettingsModals";
 import styles from "./SettingsPage.module.css";
 
 export function NotificationsPane({ onChange }: { onChange: () => void }) {
@@ -113,6 +111,14 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
             onChange={onChange}
           />
         </ToggleList>
+        <div className={styles.dataCards}>
+          <DataCard
+            title={t("settings:notifications.phonePush.manage.title")}
+            description={t("settings:notifications.phonePush.manage.desc")}
+            button={t("settings:notifications.phonePush.manage.cta")}
+            to={routes.pushDevices}
+          />
+        </div>
       </Section>
       <Section label={t("settings:notifications.section.communitiesBoard")}>
         <ToggleList>
@@ -245,8 +251,6 @@ export function LanguagePane() {
   );
 }
 
-type ExportKind = "full" | "messages";
-
 /** Controlled consent row bound to real state (not the cosmetic ToggleRow). */
 function ConsentToggleRow({
   title,
@@ -299,21 +303,8 @@ export function DataPane({
   onDeleteClick: () => void;
 }) {
   const { t } = useTranslation();
-  const { user } = useAuth();
-  const { profile } = useProfileData();
   const { consent, setConsent, openPreferences } = useConsent();
-  const [exportKind, setExportKind] = useState<ExportKind | null>(null);
   const [deactivateOpen, setDeactivateOpen] = useState(false);
-  const exports = useMemo(
-    () =>
-      buildExports(
-        t,
-        user?.email ?? "—",
-        `${profile.first} ${profile.last}`.trim(),
-        profile,
-      ),
-    [t, user?.email, profile],
-  );
   const destructiveFlow = useMemo(() => buildDestructiveFlow(t), [t]);
   return (
     <Pane
@@ -342,13 +333,13 @@ export function DataPane({
             title={t("settings:data.download.title")}
             description={t("settings:data.download.desc")}
             button={t("settings:data.download.cta")}
-            onClick={() => setExportKind("full")}
+            to={routes.dataExport}
           />
           <DataCard
             title={t("settings:data.downloadMessages.title")}
             description={t("settings:data.downloadMessages.desc")}
             button={t("settings:data.downloadMessages.cta")}
-            onClick={() => setExportKind("messages")}
+            to={routes.dataExport}
           />
           <DataCard
             title={t("settings:data.correct.title")}
@@ -433,14 +424,6 @@ export function DataPane({
         </div>
         <div className={styles.fineprint}>{t("settings:data.fineprint")}</div>
       </Section>
-      {exportKind && (
-        <DataExportModal
-          title={exports[exportKind].title}
-          filename={exports[exportKind].filename}
-          payload={exports[exportKind].payload}
-          onClose={() => setExportKind(null)}
-        />
-      )}
       {deactivateOpen && (
         <DestructiveActionFlow
           content={destructiveFlow.deactivate}
@@ -584,6 +567,12 @@ export function AccountPane({ onChange }: { onChange: () => void }) {
           />
         </ToggleList>
         <div className={styles.dataCards}>
+          <DataCard
+            title={t("settings:account.sessions.title")}
+            description={t("settings:account.sessions.desc")}
+            button={t("settings:account.sessions.cta")}
+            to={routes.sessions}
+          />
           <DataCard
             title={t("settings:account.disclosure.title")}
             description={t("settings:account.disclosure.desc")}

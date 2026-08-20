@@ -113,6 +113,21 @@
   color: rgba(var(--cream-rgb), 1);
   border-color: var(--line-strong);
 }
+.listActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.myListingsLink {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+.myListingsLink:hover {
+  color: var(--ink);
+}
 .listBtn {
   font-family: var(--sans);
   font-size: 14px;

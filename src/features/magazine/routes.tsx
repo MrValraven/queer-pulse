@@ -6,6 +6,10 @@ const MagazinePage = lazyNamed(() => import("./MagazinePage"), "MagazinePage");
 const ArticlePage = lazyNamed(() => import("./ArticlePage"), "ArticlePage");
 const DeckPage = lazyNamed(() => import("./DeckPage"), "DeckPage");
 const AuthorPage = lazyNamed(() => import("./AuthorPage"), "AuthorPage");
+const AuthorsDirectoryPage = lazyNamed(
+  () => import("./AuthorsDirectoryPage"),
+  "AuthorsDirectoryPage",
+);
 const IssuePage = lazyNamed(() => import("./IssuePage"), "IssuePage");
 const IssuesPage = lazyNamed(() => import("./IssuesPage"), "IssuesPage");
 const SubmitStoryPage = lazyNamed(() => import("./SubmitStoryPage"), "SubmitStoryPage");
@@ -45,7 +49,13 @@ export function magazineRoutes() {
       <Route path={routes.deck} element={<DeckPage />} />
       <Route path={routes.author} element={<AuthorPage />} />
       <Route path={`${routes.author}/:slug`} element={<AuthorPage />} />
+      <Route path={routes.magazineAuthors} element={<AuthorsDirectoryPage />} />
       <Route path={routes.issue} element={<IssuePage />} />
+      {/* CNT-8 fix: a real per-issue route — every archive/masthead link used
+          to point at this same bare path (always issue 09), so no past issue
+          was actually reachable. Falls back to the current issue when no
+          `:number` is given (see `IssuePage`/`useIssue`). */}
+      <Route path={`${routes.issue}/:number`} element={<IssuePage />} />
       <Route path={routes.issues} element={<IssuesPage />} />
       <Route
         path={routes.story}

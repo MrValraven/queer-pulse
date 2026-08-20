@@ -230,6 +230,80 @@ export function deckResponseToDeck(dto: DeckDTO, fmt: Formatters): SlideDeck {
 // ── Authors ──────────────────────────────────────────────────────────────
 
 /**
+ * A fresh `Author` record built entirely from live data, for a slug with no
+ * curated mock profile (CNT-9 fix — `useAuthorPageData` used to 404 any live
+ * author outside the 8 curated demo slugs even though `GET
+ * /magazine/authors/:slug` is real for all of them). The backend only models
+ * `name`/`bio`/`avatarUrl` plus this author's published articles, so the
+ * richer editorial-page furniture the curated mocks invent (stats, reading
+ * list, "elsewhere" links) is left honestly empty rather than fabricated —
+ * `AuthorHeader`/`AuthorWork` already render blank for an empty array/string.
+ * `beats` is the one exception: derived from the author's own live articles'
+ * tags, which is real data.
+ */
+export function authorFromDto(
+  dto: AuthorDTO,
+  liveArticles: ArticleListItemDTO[],
+  fmt: Formatters,
+): Author {
+  const featured = liveArticles[0];
+  return {
+    slug: dto.slug,
+    firstName: dto.name.split(" ")[0] ?? dto.name,
+    name: dto.name,
+    eyebrow: "",
+    role: "",
+    pronouns: "",
+    bio: dto.bio ?? "",
+    stats: [],
+    beats: Array.from(
+      new Set(liveArticles.flatMap((article) => article.tags)),
+    ).slice(0, 6),
+    featured: featured
+      ? {
+          kicker: featured.issueNumber
+            ? `Feature · Issue ${featured.issueNumber}`
+            : "Feature",
+          title: featured.title,
+          dek: featured.dek,
+          publishedDate: featured.publishedAt
+            ? new Date(featured.publishedAt)
+            : new Date(),
+          minutes: featured.readMinutes,
+          readsThisWeek: "",
+          articleId: featured.slug,
+          image: "",
+        }
+      : {
+          kicker: "",
+          title: "",
+          dek: "",
+          publishedDate: new Date(),
+          minutes: 0,
+          readsThisWeek: "",
+          articleId: "",
+          image: "",
+        },
+    articles: liveArticles.map(
+      (article): AuthorArticle => ({
+        id: article.slug,
+        kicker: article.issueNumber ? `Issue ${article.issueNumber}` : "Web",
+        title: article.title,
+        dek: article.dek,
+        meta: article.issueNumber
+          ? `Issue ${article.issueNumber}`
+          : formatMonthYear(article.publishedAt, fmt),
+      }),
+    ),
+    readingTitle: "",
+    readingBlurb: "",
+    reading: [],
+    elsewhere: [],
+    portrait: dto.avatarUrl ?? "",
+  };
+}
+
+/**
  * Overlay live author data onto the curated mock profile. The backend only
  * models `name`/`bio`/`avatarUrl` plus this author's published articles — the
  * richer editorial-page furniture (stats, beats, reading list, "elsewhere"

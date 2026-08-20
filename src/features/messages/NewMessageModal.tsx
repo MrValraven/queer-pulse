@@ -1,10 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
-import { Avatar, MemberIdentity, Modal, SearchInput } from "../../shared/components/ui";
+import { Modal, SearchInput } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useAuth } from "../../app/providers/authContext";
 import { useSocial } from "../../app/providers/useSocial";
 import { useStaffMap } from "../../shared/staff/useStaffRole";
 import { useConnectionsList } from "../connect/api/useConnectionsList";
 import type { ConnectionView } from "../connect/connections.data";
+import { MessageRequestComposer } from "./MessageRequestComposer";
+import { NewMessagePickList } from "./NewMessagePickList";
+import {
+  useStrangerMemberSearch,
+  type StrangerMemberResult,
+} from "./api/useStrangerMemberSearch";
 import { type Conversation } from "./data";
 import styles from "./NewMessageModal.module.css";
 
@@ -46,41 +53,6 @@ function connectionToRecipient(view: ConnectionView): Conversation {
   };
 }
 
-interface GroupPickRowProps {
-  group: Conversation;
-  onPick: (recipient: Conversation) => void;
-}
-
-/** A single row in the forward picker's Groups section. */
-function GroupPickRow({ group, onPick }: GroupPickRowProps) {
-  const { t } = useTranslation();
-  return (
-    <li>
-      <button
-        type="button"
-        className={styles.row}
-        onClick={() => onPick(group)}
-      >
-        <Avatar
-          initials={group.initials}
-          tint={group.tint}
-          src={group.avatarUrl}
-          alt={group.name}
-          size={40}
-        />
-        <div className={styles.rowBody}>
-          <span className={styles.rowName}>{group.name}</span>
-          <span className={styles.rowMeta}>
-            {t("messages:group.memberCount", {
-              count: group.memberCount ?? group.members?.length ?? 0,
-            })}
-          </span>
-        </div>
-      </button>
-    </li>
-  );
-}
-
 /** Self-contained recipient picker — opens (or reuses) a thread for the chosen
  *  member. Built on the shared `Modal` (scroll-lock / focus-trap / Escape); the
  *  People rows reuse the shared `MemberIdentity` block. Keeps its own search box
@@ -96,8 +68,17 @@ export function NewMessageModal({
   const { t } = useTranslation();
   const isForward = mode === "forward";
   const { isBlocked } = useSocial();
+  const { user } = useAuth();
   const staffMap = useStaffMap();
   const [query, setQuery] = useState("");
+  // The member picked from the "Message someone new" fall-through, once
+  // they're confirmed not an accepted connection — swaps this modal's body to
+  // the request compose step (MSG-1). Cleared automatically by `mode`/`isForward`
+  // never being true here: forwarding always targets an existing thread/group,
+  // never a first-contact request.
+  const [requestTarget, setRequestTarget] = useState<StrangerMemberResult | null>(
+    null,
+  );
 
   // The recipient pool is the member's accepted connections — demo resolves the
   // mock relationships locally, live fetches GET /connections. (Mirrors the
@@ -141,6 +122,41 @@ export function NewMessageModal({
       : activeGroups;
   }, [query, groups]);
 
+  // MSG-1 fall-through: anyone the People search doesn't already cover
+  // (accepted connections) can still be reached — picking one opens the
+  // message-request composer instead of an existing thread. Forward mode never
+  // offers this (a forward always targets an existing thread or group).
+  const excludeSlugs = useMemo(() => {
+    const slugs = new Set(candidates.map((c) => c.slug).filter(Boolean) as string[]);
+    if (user?.profile.slug) slugs.add(user.profile.slug);
+    return slugs;
+  }, [candidates, user?.profile.slug]);
+  const strangerSearch = useStrangerMemberSearch(
+    isForward ? "" : query,
+    excludeSlugs,
+  );
+  // Blocked members are unreachable here too (mirrors the People/`candidates`
+  // filter above) — otherwise a blocked stranger still shows up as a pickable
+  // "message someone new" result and only 403s server-side once tapped.
+  const strangers = isForward
+    ? []
+    : strangerSearch.results.filter((result) => !isBlocked(result.slug));
+
+  if (requestTarget) {
+    return (
+      <Modal title={requestTarget.name} onClose={onClose}>
+        <MessageRequestComposer
+          target={requestTarget}
+          onBack={() => setRequestTarget(null)}
+          onSent={() => {
+            setRequestTarget(null);
+            onClose();
+          }}
+        />
+      </Modal>
+    );
+  }
+
   return (
     <Modal
       title={
@@ -160,58 +176,17 @@ export function NewMessageModal({
         placeholder={t("messages:newMessage.searchPlaceholder")}
         ariaLabel={t("messages:newMessage.searchAria")}
       />
-      <ul className={styles.list}>
-        {groupResults.length > 0 && people.length > 0 && (
-          <li className={styles.sectionLabel} aria-hidden="true">
-            {t("messages:forward.sectionPeople")}
-          </li>
-        )}
-        {people.map((person) => (
-          <li key={person.id}>
-            <button
-              type="button"
-              className={styles.row}
-              onClick={() => onPick(person)}
-            >
-              <MemberIdentity
-                person={{
-                  slug: person.slug,
-                  name: person.name,
-                  avatarUrl: person.avatarUrl,
-                  staffRole: person.slug ? staffMap[person.slug] : undefined,
-                }}
-                secondary={person.pronouns}
-              />
-            </button>
-          </li>
-        ))}
-        {groupResults.length > 0 && (
-          <li className={styles.sectionLabel} aria-hidden="true">
-            {t("messages:forward.sectionGroups")}
-          </li>
-        )}
-        {groupResults.map((group) => (
-          <GroupPickRow key={group.id} group={group} onPick={onPick} />
-        ))}
-        {loading && candidates.length === 0 && (
-          <li className={styles.empty}>{t("messages:newMessage.loading")}</li>
-        )}
-        {/* The connections-empty notices are People-section copy, so suppress
-            them when the Groups section is carrying the list (forward mode with
-            groups but no matching people) — otherwise "you haven't connected
-            with anyone yet" reads oddly under a populated Groups list. */}
-        {!loading && candidates.length === 0 && groupResults.length === 0 && (
-          <li className={styles.empty}>{t("messages:newMessage.none")}</li>
-        )}
-        {!loading &&
-          candidates.length > 0 &&
-          people.length === 0 &&
-          groupResults.length === 0 && (
-            <li className={styles.empty}>
-              {t("messages:newMessage.empty", { query })}
-            </li>
-          )}
-      </ul>
+      <NewMessagePickList
+        people={people}
+        groupResults={groupResults}
+        strangers={strangers}
+        staffMap={staffMap}
+        loading={loading}
+        candidatesCount={candidates.length}
+        query={query}
+        onPick={onPick}
+        onPickStranger={setRequestTarget}
+      />
     </Modal>
   );
 }

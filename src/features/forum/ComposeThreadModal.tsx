@@ -27,6 +27,9 @@ interface ComposeThreadModalProps {
   onPublish: (thread: NewThreadInput) => void;
   /** Seeds the title field — used by the first-post prompt's starter chips. */
   initialTitle?: string;
+  /** Seeds the tags field — used by a topic page's "Write a post" CTA
+   *  (DISC-5, `writeHrefForTag`) to pre-attach that topic's tag. */
+  initialTags?: string[];
 }
 
 // Selectable categories — exclude the synthetic "all" bucket.
@@ -37,6 +40,7 @@ export function ComposeThreadModal({
   onClose,
   onPublish,
   initialTitle = "",
+  initialTags = [],
 }: ComposeThreadModalProps) {
   const { t } = useTranslation();
   const { role } = useAuth();
@@ -44,7 +48,7 @@ export function ComposeThreadModal({
   const [title, setTitle] = useState(initialTitle);
   const [body, setBody] = useState("");
   const [cat, setCat] = useState(POST_CATS[0]!.id);
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>(initialTags);
   const [communitySlug, setCommunitySlug] = useState("");
   const [isOfficial, setIsOfficial] = useState(false);
   const [published, setPublished] = useState(false);

@@ -31,12 +31,15 @@ interface CommunitiesPageVM {
  * `communities` registry as a single synthetic page (full fidelity for the type
  * chips + living-card stats) — `getNextPageParam` then sees loaded === total and
  * yields `undefined`, so demo never shows a "Load more" and renders exactly as
- * it does today. Live mode calls GET /communities?filter=…&page= and appends
- * each page, adapting every card to the same view-model and stopping at the
- * server `total`.
+ * it does today. Live mode calls GET /communities?filter=…&type=…&page= and
+ * appends each page, adapting every card to the same view-model and stopping
+ * at the server `total`.
  *
- * The page's category chips still filter client-side over whatever is loaded,
- * so demo behaviour is byte-for-byte today's. Live mode hides private
+ * The page's category chips are a `type` query param on both paths (demo
+ * filters the static registry the same way live filters server-side), so a
+ * chip narrows the WHOLE result set — not just whatever page happened to be
+ * loaded already (COM-3: a category with more than one page used to false-
+ * negative "no communities match" past page 1). Live mode hides private
  * communities from non-members (the API omits them from the list).
  */
 export function useCommunities(
@@ -59,13 +62,19 @@ export function useCommunities(
         // pagination, so a fresh search always yields its own single page —
         // there's nothing to reset.
         const needle = params.q?.trim().toLowerCase();
-        const matches = needle
+        const searched = needle
           ? communities.filter((community) =>
               `${community.name} ${community.description}`
                 .toLowerCase()
                 .includes(needle),
             )
           : communities;
+        // Mirror the live endpoint's `type=` filter (COM-3) — applied
+        // server-side there, applied here over the same static registry so
+        // demo behaviour stays byte-for-byte identical to live.
+        const matches = params.type
+          ? searched.filter((community) => community.type === params.type)
+          : searched;
         // Mirror the live endpoint's `sort=name` (A→Z); `newest`/omitted keeps
         // the registry's own order, same as the backend's `created_at DESC`
         // default reads today.

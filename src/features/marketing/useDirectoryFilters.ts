@@ -19,14 +19,32 @@ function toSort(value: string | null): LocalSort {
     : "default";
 }
 
+export interface DirectoryFilterParams {
+  view: "list" | "map";
+  category: string;
+  query: string;
+  sort: LocalSort;
+  vibes: string[];
+  safe: "verified" | null;
+  selectView: (next: string) => void;
+  setCategory: (next: string) => void;
+  setQuery: (next: string) => void;
+  setSort: (next: string) => void;
+  toggleVibe: (vibe: string) => void;
+  setSafe: (next: boolean) => void;
+  clearFilters: () => void;
+}
+
 /**
- * The directory's view + filter + sort state, all held in the URL so a filtered
- * directory is shareable and survives refresh / Back. Returns the derived list
- * plus the setters the filter bar and results header drive. `view` pushes a
- * history entry; filter edits replace, to avoid spamming history per keystroke.
+ * The directory's view + filter + sort STATE, held in the URL so a filtered
+ * directory is shareable and survives refresh / Back. Split out of the old
+ * combined `useDirectoryFilters` (gap-audit HSG-5) so `query`/`safe` are
+ * readable BEFORE `useLocalPlaces` runs — they're now sent server-side as
+ * `q`/`safe`, which needs this URL state resolved first, not derived from an
+ * already-fetched `places` array. `view` pushes a history entry; every other
+ * edit replaces, to avoid spamming history per keystroke.
  */
-export function useDirectoryFilters(places: LocalPlace[]) {
-  const { t } = useTranslation();
+export function useDirectoryFilterParams(): DirectoryFilterParams {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const view = searchParams.get("view") === "map" ? "map" : "list";
@@ -106,6 +124,39 @@ export function useDirectoryFilters(places: LocalPlace[]) {
     [mutateParams],
   );
 
+  return {
+    view,
+    category,
+    query,
+    sort,
+    vibes,
+    safe,
+    selectView,
+    setCategory,
+    setQuery,
+    setSort,
+    toggleVibe,
+    setSafe,
+    clearFilters,
+  };
+}
+
+/**
+ * Derives the displayed list, chip counts, and active-filter pills from an
+ * already-fetched `places` array plus the URL state from
+ * `useDirectoryFilterParams`. `query`/`safe` are ALSO applied here (even
+ * though the network fetch already filtered by them server-side) purely as a
+ * cheap, harmless no-op safety net; `category`/`vibe` are the two filters that
+ * genuinely only ever apply here client-side (see that hook's doc comment).
+ */
+export function useDirectoryFilterResults(
+  places: LocalPlace[],
+  params: DirectoryFilterParams,
+) {
+  const { t } = useTranslation();
+  const { category, query, vibes, safe, sort, setCategory, toggleVibe, setSafe, setQuery } =
+    params;
+
   const filtered = useMemo(
     () =>
       sortLocalPlaces(
@@ -116,7 +167,10 @@ export function useDirectoryFilters(places: LocalPlace[]) {
   );
 
   // Chip counts reflect the query + vibe + safe filters but NOT the category,
-  // so each chip shows how many places it would surface right now.
+  // so each chip shows how many of the LOADED places it would surface right
+  // now — an honest count against what's been fetched so far, not
+  // necessarily the platform-wide grand total (see `useLocalPlaces`'s doc
+  // comment on why category stays client-side over the loaded pages).
   const categoryCounts = useMemo(() => {
     const base = filterLocalPlaces(places, {
       category: "all",
@@ -169,23 +223,5 @@ export function useDirectoryFilters(places: LocalPlace[]) {
     return list;
   }, [category, vibes, safe, query, t, setCategory, toggleVibe, setSafe, setQuery]);
 
-  return {
-    view,
-    category,
-    query,
-    sort,
-    vibes,
-    safe,
-    filtered,
-    categoryCounts,
-    mappableCount,
-    activeFilters,
-    selectView,
-    setCategory,
-    setQuery,
-    setSort,
-    toggleVibe,
-    setSafe,
-    clearFilters,
-  };
+  return { filtered, categoryCounts, mappableCount, activeFilters };
 }

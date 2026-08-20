@@ -1,0 +1,168 @@
+/* Body styling on top of the shared <ModalSheet> — the sheet owns the overlay,
+   scroll-lock, focus-trap, grabber and close chrome. Tokens only. Mirrors
+   forum/ReportReplyModal.module.css exactly — same interaction shape (pick a
+   reason, submit, confirm/retry), scoped to a directory review. */
+
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.sub {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin: 8px 0 18px;
+}
+
+.reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reason {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-std),
+    background var(--dur-fast) var(--ease-std);
+}
+
+@media (hover: hover) {
+  .reason:hover {
+    border-color: var(--line-strong);
+  }
+}
+
+.reasonOn {
+  border-color: var(--line-strong);
+  background: rgba(var(--plum-rgb), 0.05);
+}
+
+.radio {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(var(--line-rgb), 0.3);
+  transition: border-color var(--dur-fast) var(--ease-std);
+}
+
+.reasonOn .radio {
+  border-color: var(--line-strong);
+  background: radial-gradient(
+    circle at center,
+    var(--plum) 0 4px,
+    transparent 5px
+  );
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+/* Plum success panel — the <ModalSheet success> variant supplies the plum
+   surface (padding 0), so this wrapper brings the panel's own padding. */
+.confirm {
+  padding: 44px 32px;
+  text-align: center;
+}
+
+.confirmIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(var(--jade-rgb), 0.18);
+  color: var(--jade);
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.confirmTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.confirmTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.confirmBody {
+  font-size: 14px;
+  color: rgba(var(--cream-rgb), 0.78);
+  line-height: 1.6;
+  max-width: 38ch;
+  margin: 12px auto 0;
+}
+
+.confirmActions {
+  display: flex;
+  justify-content: center;
+  margin-top: 22px;
+}
+
+/* Failure panel — a report POST that errored. Deliberately NOT the plum
+   success variant: an honest, non-celebratory sheet on the default surface,
+   with a retry. Tokens only. */
+.errorPanel {
+  padding: 40px 32px;
+  text-align: center;
+}
+
+.errorIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--accent-ink);
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.errorTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.errorBody {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  max-width: 40ch;
+  margin: 12px auto 0;
+}
+
+.errorActions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 22px;
+}

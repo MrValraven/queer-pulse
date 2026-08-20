@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { FiArchive, FiLock, FiUnlock, FiUserCheck } from "react-icons/fi";
+import {
+  FiArchive,
+  FiLock,
+  FiRotateCcw,
+  FiUnlock,
+  FiUserCheck,
+} from "react-icons/fi";
 import {
   Button,
   ConfirmDialog,
@@ -14,6 +20,7 @@ import {
   useArchiveAdminCommunity,
   useFreezeAdminCommunity,
   useReassignAdminCommunityOwner,
+  useUnarchiveAdminCommunity,
   useUnfreezeAdminCommunity,
 } from "./api/useAdminCommunityActions";
 import { firstName, type Community } from "./adminCommunities.data";
@@ -36,11 +43,37 @@ export function AdminOverridesZone({ community }: { community: Community }) {
   const [reassignOpen, setReassignOpen] = useState(false);
   const freeze = useFreezeAdminCommunity();
   const unfreeze = useUnfreezeAdminCommunity();
+  const unarchive = useUnarchiveAdminCommunity();
   const freezePending = freeze.isPending || unfreeze.isPending;
+  const communityFirstName = firstName(community.name);
+
+  // Archiving is reversible (COM-18) — mirrors `toggleFreeze` below: a
+  // direct, un-confirmed action, since undoing a take-down is the safe
+  // direction. Archiving itself keeps its confirm dialog further down; it's
+  // the one still worth pausing on.
+  function unarchiveCommunity() {
+    if (unarchive.isPending) return;
+    unarchive.mutate(
+      { slug: community.slug },
+      {
+        onSuccess: () =>
+          showToast(
+            t("admin:communities.settings.overrides.unarchiveToast", {
+              name: communityFirstName,
+            }),
+            "success",
+          ),
+        onError: () =>
+          showToast(
+            t("admin:communities.settings.overrides.unarchiveFailedToast"),
+            "error",
+          ),
+      },
+    );
+  }
 
   function toggleFreeze() {
     if (freezePending) return;
-    const communityFirstName = firstName(community.name);
     if (community.frozen) {
       unfreeze.mutate(
         { slug: community.slug },
@@ -116,14 +149,26 @@ export function AdminOverridesZone({ community }: { community: Community }) {
           <FiUserCheck aria-hidden />{" "}
           {t("admin:communities.settings.overrides.reassignCta")}
         </Button>
-        <Button
-          variant="danger"
-          size="sm"
-          onClick={() => setArchiveOpen(true)}
-        >
-          <FiArchive aria-hidden />{" "}
-          {t("admin:communities.settings.overrides.archiveCta")}
-        </Button>
+        {community.archived ? (
+          <Button
+            variant="ghost"
+            size="sm"
+            disabled={unarchive.isPending}
+            onClick={unarchiveCommunity}
+          >
+            <FiRotateCcw aria-hidden />{" "}
+            {t("admin:communities.settings.overrides.unarchiveCta")}
+          </Button>
+        ) : (
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={() => setArchiveOpen(true)}
+          >
+            <FiArchive aria-hidden />{" "}
+            {t("admin:communities.settings.overrides.archiveCta")}
+          </Button>
+        )}
       </div>
 
       {archiveOpen && (

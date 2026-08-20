@@ -609,6 +609,7 @@ export const members: Catalog = {
   "search.browseTopics": "Explorar tópicos",
   "search.upcomingEvents": "Próximos eventos",
   "search.jumpTo": "Ir para <b>{name}</b>",
+  "search.seeAllIn": "Ver tudo em {category}",
   "search.resultCount_one": `<b>{count}</b> resultado para "<b>{query}</b>"`,
   "search.resultCount_other": `<b>{count}</b> resultados para "<b>{query}</b>"`,
   "search.empty.title": "Nada encontrado",
@@ -1110,7 +1111,8 @@ export const members: Catalog = {
   "places.selfSubtitle":
     "Anúncios que adicionaste ao diretório. Cada um é revisto pela equipa da comunidade antes de ficar ativo.",
   "places.refLabel": "Ref. · {ref}",
-  "places.editCta": "Editar",
+  "places.quickEditCta": "Edição rápida",
+  "places.editCta": "Editor completo",
   "places.deleteCta": "Eliminar",
   "places.deleteConfirm": "Eliminar <b>{name}</b> definitivamente? Não pode ser anulado.",
   "places.deleteCancel": "Manter",
@@ -1122,6 +1124,23 @@ export const members: Catalog = {
   "places.empty.description":
     "Gere um estúdio, loja, clínica ou espaço em Lisboa? Regista-o no diretório. Assim que ficar ativo, aparece aqui também.",
   "places.empty.action": "Registar o meu espaço",
+
+  "places.quickEdit.title": "Edição rápida",
+  "places.quickEdit.sub": "Atualiza os dados principais de {name}.",
+  "places.quickEdit.blurbLabel": "Frase de apresentação",
+  "places.quickEdit.blurbHelper": "Mostrada por baixo do nome do teu anúncio.",
+  "places.quickEdit.hoursNoteLabel": "Nota sobre o horário",
+  "places.quickEdit.hoursNoteHelper":
+    "Uma linha curta mostrada por baixo do teu horário, por exemplo \"Fechado em feriados.\"",
+  "places.quickEdit.websiteLabel": "Site",
+  "places.quickEdit.phoneLabel": "Telefone",
+  "places.quickEdit.cancel": "Cancelar",
+  "places.quickEdit.save": "Guardar alterações",
+  "places.quickEdit.saving": "A guardar…",
+  "places.quickEdit.savedToast": "Anúncio atualizado.",
+  "places.quickEdit.errorToast": "Não foi possível guardar as alterações. Tenta novamente.",
+  "places.quickEdit.moreLink":
+    "Precisas de alterar categorias, morada ou fotos? <a>Abrir o editor completo.</a>",
 
   // ── Chrome da página de emblemas (BadgesPage, BadgesSections) ──────────────
   "badges.backToProfile": "Voltar ao perfil",
@@ -1546,10 +1565,6 @@ export const members: Catalog = {
     "Retificação (Art. 16.º)",
   "profile.accountData.dsar.article.erasure": "Apagamento (Art. 17.º)",
   "profile.accountData.dsar.article.objection": "Oposição (Art. 21.º)",
-  "profile.accountData.dsar.status.received": "Recebido",
-  "profile.accountData.dsar.status.inReview": "Em análise",
-  "profile.accountData.dsar.status.resolved": "Resolvido",
-  "profile.accountData.dsar.status.rejected": "Rejeitado",
   "profile.accountData.dsar.title": "Pedir outra coisa",
   "profile.accountData.dsar.intro":
     "Acede, corrige ou opõe-te ao uso dos teus dados: tudo o que fica para além do que Descarregar e Apagar já cobrem.",
@@ -1560,12 +1575,15 @@ export const members: Catalog = {
   "profile.accountData.dsar.submitting": "A enviar…",
   "profile.accountData.dsar.submitCta": "Enviar pedido",
   "profile.accountData.dsar.pastTitle": "Pedidos anteriores",
+  "profile.accountData.dsar.pastHint":
+    "Respondemos a cada pedido por email. Esta lista é para o teu registo, o estado não muda sozinho aqui.",
   "profile.accountData.dsar.pastLoading": "A carregar os teus pedidos…",
   "profile.accountData.dsar.pastError":
     "Não conseguimos carregar os teus pedidos anteriores.",
   "profile.accountData.dsar.pastEmpty": "Ainda não fizeste nenhum pedido.",
+  "profile.accountData.dsar.pastRowDueBy": "Resposta até {date}",
   "profile.accountData.dsar.toast.submitted":
-    "Pedido enviado, referência {ref}.",
+    "Pedido recebido, referência {ref}. Responderemos por email até {date}.",
   "profile.accountData.dsar.toast.submitError":
     "Não conseguimos enviar esse pedido. Tenta novamente.",
 };

@@ -135,6 +135,14 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> respondeu ao teu tópico.",
   "type.forum_thread_reply.meta": "Resposta",
 
+  // Enviada a quem segue um tópico quando aparece uma nova publicação nele
+  // (uma conversa do fórum com essa etiqueta). {topicLabel} vem do payload.
+  "type.topic_new_post.text":
+    "Alguém publicou num tópico que segues: {topicLabel}.",
+  "type.topic_new_post.textNamed":
+    "<profile>{name}</profile> publicou num tópico que segues: {topicLabel}.",
+  "type.topic_new_post.meta": "Atualização de tópico",
+
   "type.join_request_received.text":
     "Alguém pediu para entrar na tua comunidade.",
   "type.join_request_received.textNamed":
@@ -269,6 +277,13 @@ export const notifications: Catalog = {
     "Há uma novidade sobre a tua candidatura de voluntariado.",
   "type.volunteer_application_decided.meta": "Candidatura de voluntariado",
 
+  "type.changemaker_nomination_approved.text":
+    "A tua nomeação de {nomineeName} foi aprovada. Vamos começar a contar a história.",
+  "type.changemaker_nomination_approved.meta": "Nomeação de changemaker",
+  "type.changemaker_nomination_dismissed.text":
+    "A tua nomeação de {nomineeName} não avançou desta vez.",
+  "type.changemaker_nomination_dismissed.meta": "Nomeação de changemaker",
+
   "type.unknown.text": "Tens uma nova notificação.",
   "type.unknown.meta": "Notificação",
 
@@ -283,6 +298,8 @@ export const notifications: Catalog = {
   "page.error.description":
     "Algo correu mal ao contactar o servidor. Isto não é uma caixa vazia. Tenta novamente daqui a pouco.",
   "page.error.retry": "Tentar novamente",
+  "page.loadMoreCta": "Carregar mais notificações",
+  "page.loadingMore": "A carregar…",
 
   // Separadores de filtro (notificationTabs em data.tsx + o separador Menções)
   "tabs.all": "Todas",

@@ -90,6 +90,19 @@ export interface Topic {
   totalPosts: number;
 }
 
+/**
+ * DISC-5 — "Write a post" deep-links into forum thread creation with this
+ * topic's tag pre-filled, reusing the SAME `?tag=`/`?compose=1` mechanism
+ * `ForumPage`/`useForumPageState` already use (`?tag=` already scopes the
+ * thread list; `?compose=1` auto-opens the compose modal seeded with that
+ * tag — see `useForumPageState.ts`). Exported so
+ * `api/topics.adapters.tsx`'s live `topicDetailToTopic` builds the identical
+ * href from a fetched topic's tag.
+ */
+export function writeHrefForTag(tag: string): string {
+  return `${routes.forum}?tag=${encodeURIComponent(tag)}&compose=1`;
+}
+
 /** Serif hashtag heading: dim "#", body, coral italic tail. */
 function tagTitle(head: string, tail: string): ReactNode {
   return (
@@ -119,7 +132,7 @@ const healthcare: Topic = {
     { value: "52", labelKey: "topics:stats.thisWeek" },
     { value: "18", labelKey: "topics:stats.verifiedResources" },
   ],
-  writeHref: routes.forum,
+  writeHref: writeHrefForTag("healthcare"),
   totalPosts: 347,
   posts: [
     {
@@ -314,7 +327,7 @@ const trans: Topic = {
     { value: "74", labelKey: "topics:stats.thisWeek" },
     { value: "31", labelKey: "topics:stats.verifiedResources" },
   ],
-  writeHref: routes.forum,
+  writeHref: writeHrefForTag("trans"),
   totalPosts: 512,
   posts: [
     {
@@ -460,7 +473,7 @@ const mentalhealth: Topic = {
     { value: "63", labelKey: "topics:stats.thisWeek" },
     { value: "24", labelKey: "topics:stats.verifiedResources" },
   ],
-  writeHref: routes.forum,
+  writeHref: writeHrefForTag("mentalhealth"),
   totalPosts: 428,
   posts: [
     {
@@ -603,7 +616,7 @@ const housing: Topic = {
     { value: "29", labelKey: "topics:stats.thisWeek" },
     { value: "7", labelKey: "topics:stats.coopsForming" },
   ],
-  writeHref: routes.forum,
+  writeHref: writeHrefForTag("housing"),
   totalPosts: 173,
   posts: [
     {
@@ -740,7 +753,7 @@ const nightlife: Topic = {
     { value: "48", labelKey: "topics:stats.thisWeek" },
     { value: "12", labelKey: "topics:stats.saferSpaceVenues" },
   ],
-  writeHref: routes.forum,
+  writeHref: writeHrefForTag("nightlife"),
   totalPosts: 289,
   posts: [
     {
@@ -918,7 +931,7 @@ export function getTopic(rawTag: string, t: TFunction): Topic {
       },
       { value: "0", labelKey: "topics:stats.thisWeek" },
     ],
-    writeHref: routes.forum,
+    writeHref: writeHrefForTag(tag),
     totalPosts: 0,
     posts: [
       {

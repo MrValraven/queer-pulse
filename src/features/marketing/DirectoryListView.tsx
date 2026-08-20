@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiMapPin, FiSearch } from "react-icons/fi";
-import { EmptyState, SkeletonLine } from "../../shared/components/ui";
+import { EmptyState, SkeletonLine, Sending } from "../../shared/components/ui";
 import { useIncrementalList } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -44,28 +44,49 @@ export function DirectoryListView({
   loading,
   hasActiveFilters,
   onClearFilters,
+  hasMoreFromServer = false,
+  isLoadingMoreFromServer = false,
+  onLoadMoreFromServer,
 }: {
   places: LocalPlace[];
   total: number;
   loading: boolean;
   hasActiveFilters: boolean;
   onClearFilters: () => void;
+  /** True when the backend has more pages beyond what's already loaded into
+   *  `places` (gap-audit HSG-5) — distinct from `hasMore` below, which is
+   *  purely about revealing more of what's ALREADY loaded. */
+  hasMoreFromServer?: boolean;
+  /** True while the next server page is in flight. */
+  isLoadingMoreFromServer?: boolean;
+  /** Fetch the next server page. */
+  onLoadMoreFromServer?: () => void;
 }) {
   const { t } = useTranslation();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [been, setBeen] = useState<Record<string, number>>({});
 
-  // `places` is the platform's whole (unpaginated) live directory, filtered
-  // client-side — mounting every card at once means the grid's live DOM node
-  // count grows 1:1 with total listings platform-wide. Window it the same way
-  // MemberDirectoryFilterPage windows its grid: a capped initial slice grown
-  // via an IntersectionObserver sentinel, resetting whenever the filtered set's
-  // identity changes (a new search/category/vibe result).
+  // `places` is whatever's been fetched from the server SO FAR (paginated —
+  // see `useLocalPlaces`), filtered client-side — mounting every loaded card
+  // at once would still mean the grid's live DOM node count grows 1:1 with
+  // however much has loaded. Window it the same way MemberDirectoryFilterPage
+  // windows its grid: a capped initial slice grown via an IntersectionObserver
+  // sentinel, resetting whenever the filtered set's identity changes (a new
+  // search/category/vibe result).
   const {
     visible: placesWindowed,
     sentinelRef,
     hasMore,
   } = useIncrementalList(places, { initial: 24, step: 24 });
+
+  // Once every already-loaded place has been revealed locally, pull the next
+  // server page (if any) so scrolling to the end of the list keeps growing it
+  // instead of dead-ending at whatever page happened to load first.
+  useEffect(() => {
+    if (hasMore) return;
+    if (!hasMoreFromServer || isLoadingMoreFromServer) return;
+    onLoadMoreFromServer?.();
+  }, [hasMore, hasMoreFromServer, isLoadingMoreFromServer, onLoadMoreFromServer]);
 
   function toggleExpand(placeId: string) {
     setExpandedId((current) => (current === placeId ? null : placeId));
@@ -129,6 +150,11 @@ export function DirectoryListView({
             </div>
             {hasMore && (
               <div ref={sentinelRef} className={s.sentinel} aria-hidden="true" />
+            )}
+            {!hasMore && isLoadingMoreFromServer && (
+              <div className={s.loadingMore} aria-live="polite">
+                <Sending label={t("marketing:directory.loadingMore")} />
+              </div>
             )}
           </>
         )}

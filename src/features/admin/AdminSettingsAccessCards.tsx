@@ -81,6 +81,8 @@ export function AdminSettingsAccessCards({
   setClosedMessage,
   lockdownMessage,
   setLockdownMessage,
+  note,
+  setNote,
   confirming,
   setConfirming,
 }: {
@@ -90,12 +92,32 @@ export function AdminSettingsAccessCards({
   setClosedMessage: Dispatch<SetStateAction<string>>;
   lockdownMessage: string;
   setLockdownMessage: Dispatch<SetStateAction<string>>;
+  note: string;
+  setNote: Dispatch<SetStateAction<string>>;
   confirming: "enable" | "disable" | null;
   setConfirming: Dispatch<SetStateAction<"enable" | "disable" | null>>;
 }) {
   const { t } = useTranslation();
+  const noteFieldId = useId();
   return (
     <div className={styles.access}>
+      <section className={styles.card}>
+        <div className={styles.field}>
+          <label className={styles.fieldLabel} htmlFor={noteFieldId}>
+            {t("admin:settings.note.label")}
+          </label>
+          <textarea
+            id={noteFieldId}
+            className={styles.textarea}
+            value={note}
+            placeholder={t("admin:settings.note.placeholder")}
+            onChange={(e) => setNote(e.target.value)}
+            rows={2}
+          />
+          <p className={styles.fieldHint}>{t("admin:settings.note.hint")}</p>
+        </div>
+      </section>
+
       <section className={styles.card}>
         <div className={styles.switchRow}>
           <div className={styles.switchText}>

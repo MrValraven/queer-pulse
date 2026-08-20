@@ -1,15 +1,16 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import {
   FiAlertTriangle,
   FiFlag,
   FiCheck,
   FiClock,
   FiUsers,
+  FiUserPlus,
 } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { AdminChip, AdminCat } from "./ui";
+import { AdminChip, AdminCat, AdminModal, AdminSeg, type AdminSegOption } from "./ui";
 import {
   SEVERITY,
   chipKey,
@@ -21,6 +22,12 @@ import {
 } from "./adminModeration.data";
 import styles from "./AdminModerationPage.module.css";
 
+/** Server-computed SLA deadline check (COM-8) — past-due only matters while the
+ *  report is still open, so callers only ask for this on open-queue rows. */
+function isOverdue(slaDueAt: string | undefined): boolean {
+  return slaDueAt != null && new Date(slaDueAt).getTime() < Date.now();
+}
+
 /* ── Severity-striped report card ───────────────────────────────────────── */
 
 export function ReportCard({
@@ -29,15 +36,20 @@ export function ReportCard({
   selected,
   onToggle,
   onOpen,
+  onViewHistory,
 }: {
   report: ModReport;
   leaving?: boolean;
   selected?: boolean;
   onToggle?: (id: string) => void;
   onOpen: (r: ModReport) => void;
+  /** Opens a filtered view of this report's subject's other reports (COM-6).
+   *  Omitted entirely when `report.priorReports` is unset — nothing to view. */
+  onViewHistory?: (r: ModReport) => void;
 }) {
   const { t } = useTranslation();
   const sev = SEVERITY[report.severity];
+  const overdue = isOverdue(report.slaDueAt);
   return (
     <article
       className={[
@@ -109,15 +121,48 @@ export function ReportCard({
             {t("admin:moderation.aboutLabel")}{" "}
             <strong>{report.reportedName}</strong>
           </span>
-          {report.priorReports && (
-            <span className={styles.priorFlag}>
-              <FiFlag aria-hidden /> {priorReportsText(report.priorReports, t)}
+          {report.priorReports &&
+            (onViewHistory ? (
+              <span
+                role="button"
+                tabIndex={0}
+                className={[styles.priorFlag, styles.priorFlagLink].join(" ")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onViewHistory(report);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onViewHistory(report);
+                  }
+                }}
+              >
+                <FiFlag aria-hidden /> {priorReportsText(report.priorReports, t)}
+              </span>
+            ) : (
+              <span className={styles.priorFlag}>
+                <FiFlag aria-hidden /> {priorReportsText(report.priorReports, t)}
+              </span>
+            ))}
+          {report.assignedModeratorName && (
+            <span className={styles.assignedFlag}>
+              <FiUserPlus aria-hidden />{" "}
+              {t("admin:moderation.assignedToFlag", {
+                name: report.assignedModeratorName,
+              })}
             </span>
           )}
         </span>
       </button>
 
       <div className={styles.reportSide}>
+        {overdue && (
+          <AdminChip tone="danger">
+            {t("admin:moderation.slaOverdue")}
+          </AdminChip>
+        )}
         <span className={styles.reportAge}>
           <FiClock aria-hidden /> {report.age}
         </span>
@@ -134,12 +179,22 @@ export function BulkBar({
   onDismiss,
   onSpam,
   onReassign,
+  onWarn,
+  onSuspendClick,
+  onBan,
   onCancel,
 }: {
   count: number;
   onDismiss: () => void;
   onSpam: () => void;
   onReassign: () => void;
+  /** Bulk-warn every selected report (COM-9) — a light-touch outcome, no
+   *  duration, applied straight away like dismiss/spam/reassign. */
+  onWarn: () => void;
+  /** Opens the duration picker (`BulkSuspendModal`) — a bulk suspend always
+   *  needs a duration, so it can't fire on a single click like the others. */
+  onSuspendClick: () => void;
+  onBan: () => void;
   onCancel: () => void;
 }) {
   const { t } = useTranslation();
@@ -162,11 +217,66 @@ export function BulkBar({
         <Button variant="ghost" onClick={onReassign}>
           {t("admin:moderation.bulk.reassignCta")}
         </Button>
+        <Button variant="ghost" onClick={onWarn}>
+          {t("admin:moderation.bulk.warnCta")}
+        </Button>
+        <Button variant="ghost" onClick={onSuspendClick}>
+          {t("admin:moderation.bulk.suspendCta")}
+        </Button>
+        <Button variant="ghost" onClick={onBan}>
+          {t("admin:moderation.bulk.banCta")}
+        </Button>
         <Button variant="ghost-dark" onClick={onCancel}>
           {t("admin:moderation.bulk.cancelCta")}
         </Button>
       </div>
     </div>
+  );
+}
+
+/* ── Bulk-suspend duration picker (COM-9) ───────────────────────────────── */
+
+const BULK_SUSPEND_DURATIONS = ["24h", "7d", "30d"] as const;
+
+/** Confirms a bulk suspend with a required duration — mirrors the drawer's
+ *  single-report restrict-duration picker (`AdminReportDrawer.tsx`), since a
+ *  bulk `suspend` is rejected by the backend without one, same as `restrict`. */
+export function BulkSuspendModal({
+  count,
+  onClose,
+  onConfirm,
+}: {
+  count: number;
+  onClose: () => void;
+  onConfirm: (duration: string) => void;
+}) {
+  const { t } = useTranslation();
+  const [duration, setDuration] = useState<string>("7d");
+  const options = BULK_SUSPEND_DURATIONS.map((id) => ({
+    value: id,
+    label: t(`admin:moderation.reportDrawer.restrictDuration.${id}`),
+  })) satisfies AdminSegOption[];
+
+  return (
+    <AdminModal
+      title={t("admin:moderation.bulk.suspendModal.title", { count })}
+      onClose={onClose}
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose}>
+            {t("admin:common.cancel")}
+          </Button>
+          <Button variant="primary" onClick={() => onConfirm(duration)}>
+            {t("admin:moderation.bulk.suspendModal.confirmCta")}
+          </Button>
+        </>
+      }
+    >
+      <p className={styles.dTransparency}>
+        {t("admin:moderation.bulk.suspendModal.body", { count })}
+      </p>
+      <AdminSeg options={options} value={duration} onChange={setDuration} />
+    </AdminModal>
   );
 }
 

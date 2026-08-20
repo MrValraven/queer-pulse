@@ -108,7 +108,7 @@ export function useMyEventsData(options?: {
       // A member who's both hosting an event and RSVP'd to it gets the same
       // slug back under two filters (e.g. "going" and "hosting") — merge
       // collapses that into one card instead of rendering it twice.
-      const fromFilters = mergeEventPages(pages, LIVE_FILTERS);
+      const fromFilters = mergeEventPages(pages, LIVE_FILTERS, t);
       const fromInvites = invites.map(eventInviteToMyEvent);
       // Keep only the event-change kinds the "What's changed" panel is about;
       // every other notification stays in the main notifications centre.

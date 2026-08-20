@@ -128,6 +128,13 @@ export const NAV_MENUS: MegaMenu[] = [
           },
           { labelKey: "nav:forum", href: routes.forum },
           {
+            // DISC-4 — the topics directory, sitting next to Forum (its main
+            // source of content once a tagged thread links into a topic —
+            // see `TopicPostLinkService` on the backend).
+            labelKey: "shared:megaNav.community.col.people.topics",
+            href: routes.topics,
+          },
+          {
             labelKey: "shared:megaNav.community.col.organise.changeMakers",
             href: routes.changemakers,
           },
@@ -317,6 +324,15 @@ export const NAV_MENUS: MegaMenu[] = [
       {
         headKey: "shared:megaNav.culture.col.makers.head",
         links: [
+          // Ordered first + featured: the Culture page is this whole menu's
+          // namesake (club picks, commission board, art showcase, community
+          // radio) but was sitting last and unfeatured in this column, below
+          // links that all belong to other features. CNT-15.
+          {
+            labelKey: "shared:megaNav.culture.col.makers.lisbonScene",
+            href: routes.culture,
+            featured: true,
+          },
           {
             labelKey: "shared:megaNav.culture.col.screenSound.cinema",
             href: routes.cinema,
@@ -334,10 +350,6 @@ export const NAV_MENUS: MegaMenu[] = [
           {
             labelKey: "shared:megaNav.culture.col.makers.readingGroups",
             href: routes.readingGroups,
-          },
-          {
-            labelKey: "shared:megaNav.culture.col.makers.lisbonScene",
-            href: routes.culture,
           },
         ],
       },
@@ -464,6 +476,24 @@ export const NAV_MENUS: MegaMenu[] = [
           {
             labelKey: "shared:megaNav.about.col.legal.termsOfUse",
             href: routes.terms,
+          },
+          {
+            // Data Subject Access Request — same route/label already used
+            // from PrivacyPage's "Request your data" related link.
+            labelKey: "shared:megaNav.about.col.legal.dataRequest",
+            href: routes.dsar,
+          },
+          {
+            labelKey: "shared:footerData.base.cookies",
+            href: routes.cookies,
+          },
+          {
+            labelKey: "shared:footerData.base.guidelines",
+            href: routes.guidelines,
+          },
+          {
+            labelKey: "shared:footerData.base.imprint",
+            href: routes.imprint,
           },
           {
             labelKey: "shared:megaNav.about.col.legal.pressKit",

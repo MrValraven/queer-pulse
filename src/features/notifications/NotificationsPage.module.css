@@ -74,6 +74,10 @@
   color: var(--ink-40);
   padding: 16px 18px 8px;
 }
+.loadMore {
+  text-align: center;
+  padding: 24px 0;
+}
 .item {
   display: flex;
   align-items: flex-start;

@@ -1,5 +1,10 @@
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Formatters } from "../../../shared/i18n/format";
+import {
+  deviceKindFromUserAgent,
+  deviceLabelFromUserAgent,
+} from "../../../shared/lib/deviceUserAgent";
+import { relativeAgo } from "../../../shared/lib/relativeAgo";
 import type { DeviceType, Session } from "../sessions.data";
 import type { SessionResponse } from "./account.api";
 
@@ -18,87 +23,44 @@ import type { SessionResponse } from "./account.api";
  *   `suspect` in live mode — a fake risk badge is worse than none.
  * - `device` is derived from the UA string alone, and degrades to a plain
  *   "Unknown device" when the UA is empty rather than guessing.
+ *
+ * The UA-parsing itself lives in `shared/lib/deviceUserAgent.ts` — the same
+ * two helpers back `PushDevicesPage.tsx`'s device labels, since a push
+ * subscription's `userAgent` column is the same kind of raw UA string.
  */
 
-/** Coarse UA sniff — enough to pick the phone vs. desktop glyph, nothing more. */
-const MOBILE_RE = /Mobi|Android|iPhone|iPad|iPod|Windows Phone/i;
-
-/** Ordered longest-match-first so "Edg" doesn't lose to "Chrome", etc. */
-const BROWSERS: ReadonlyArray<readonly [RegExp, string]> = [
-  [/Edg\//, "Edge"],
-  [/OPR\/|Opera/, "Opera"],
-  [/Firefox\//, "Firefox"],
-  [/Chrome\//, "Chrome"],
-  [/Safari\//, "Safari"],
-];
-
-const PLATFORMS: ReadonlyArray<readonly [RegExp, string]> = [
-  [/iPhone/, "iPhone"],
-  [/iPad/, "iPad"],
-  [/Android/, "Android"],
-  [/Mac OS X|Macintosh/, "macOS"],
-  [/Windows/, "Windows"],
-  [/CrOS/, "ChromeOS"],
-  [/Linux/, "Linux"],
-];
-
-function matchFirst(
-  ua: string,
-  table: ReadonlyArray<readonly [RegExp, string]>,
-): string | undefined {
-  for (const [re, label] of table) if (re.test(ua)) return label;
-  return undefined;
-}
-
 export function deviceTypeFromUserAgent(userAgent: string): DeviceType {
-  return MOBILE_RE.test(userAgent) ? "mobile" : "desktop";
+  return deviceKindFromUserAgent(userAgent);
 }
 
 /**
  * A human label for a session, from the only two things the backend gives us:
- * an optional `deviceLabel` (always null today) and the raw UA string. Falls
- * back through platform-only → browser-only → "Unknown device".
+ * an optional `deviceLabel` (always null today) and the raw UA string.
  */
 export function deviceLabelFor(dto: SessionResponse): string {
-  if (dto.deviceLabel) return dto.deviceLabel;
-  const ua = dto.userAgent ?? "";
-  const platform = matchFirst(ua, PLATFORMS);
-  const browser = matchFirst(ua, BROWSERS);
-  if (platform && browser) return `${platform} · ${browser}`;
-  return platform ?? browser ?? "Unknown device";
+  return deviceLabelFromUserAgent(dto.userAgent ?? "", dto.deviceLabel);
 }
 
-const MINUTE = 60_000;
-const HOUR = 60 * MINUTE;
-const DAY = 24 * HOUR;
+const SESSION_AGO_KEYS = {
+  justNow: "settings:sessions.ago.justNow",
+  unknown: "settings:sessions.ago.unknown",
+};
 
 /**
  * "4 hours ago" / "8 days ago" from an ISO timestamp, relative to `now`
  * (injectable so the unit test isn't clock-dependent). Deliberately coarse —
- * this is a "when did this device sign in" hint, not an audit log.
- *
- * i18n note: the numeric distance goes through `fmt.relativeTime` (locale's
- * own `Intl.RelativeTimeFormat`, e.g. pt-PT's "há 4 horas"), never a
- * hand-rolled `${n} ${n === 1 ? "hour" : "hours"} ago` — that hard-codes
- * English pluralization rules and previously left this page permanently
- * English regardless of the active language. The two non-numeric idioms
- * ("just now" / "unknown", not something `Intl.RelativeTimeFormat` expresses)
- * still resolve through the catalog via `t`.
+ * this is a "when did this device sign in" hint, not an audit log. Bucketing
+ * and locale formatting live in `shared/lib/relativeAgo.ts`, shared with
+ * `PushDevicesPage.tsx`'s device timestamps; only the i18n keys are local to
+ * sessions.
  */
 export function signedInAgo(
   iso: string,
   t: TFunction,
   fmt: Formatters,
-  now: number = Date.now(),
+  now?: number,
 ): string {
-  const then = new Date(iso).getTime();
-  if (Number.isNaN(then)) return t("settings:sessions.ago.unknown");
-  const delta = Math.max(0, now - then);
-  if (delta < MINUTE) return t("settings:sessions.ago.justNow");
-  if (delta < HOUR)
-    return fmt.relativeTime(-Math.floor(delta / MINUTE), "minute");
-  if (delta < DAY) return fmt.relativeTime(-Math.floor(delta / HOUR), "hour");
-  return fmt.relativeTime(-Math.floor(delta / DAY), "day");
+  return relativeAgo(iso, t, fmt, SESSION_AGO_KEYS, now);
 }
 
 export function sessionResponseToSession(

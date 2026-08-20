@@ -96,4 +96,11 @@ export const economyKeys = {
   // invalidated after the caller submits their own review.
   viewingReviewPair: (demoMode: boolean, viewingId: string | undefined) =>
     ["housing-viewing-review-pair", demoMode, viewingId] as const,
+
+  // The caller's own housing listings (HSG-1) — read by `useMyHousingListings`;
+  // patched in place by the mark-filled/mark-available/extend/edit mutations,
+  // refetched after delete.
+  myHousingListingsRoot: ["my-housing-listings"] as const,
+  myHousingListings: (demoMode: boolean) =>
+    ["my-housing-listings", demoMode] as const,
 };

@@ -3,6 +3,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ApiError } from "../../../shared/api/client";
 import {
   patchConversationFavorite,
+  patchConversationMuted,
   patchConversationPinned,
 } from "../../../shared/api/messageCache";
 import { useToast } from "../../../shared/components/feedback/useToast";
@@ -100,6 +101,34 @@ export function useToggleFavorite() {
     },
     onSuccess: (_result, { conversationId, favorite }) => {
       patchConversationFavorite(queryClient, conversationId, !favorite);
+      if (!demoMode) {
+        void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      }
+    },
+  });
+}
+
+export interface ToggleMuteInput {
+  conversationId: string;
+  /** Whether this chat is currently muted — decides mute vs. unmute. */
+  muted: boolean;
+}
+
+/** Mute/unmute a chat's push notifications (any thread — DM or group). */
+export function useToggleMute() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, ToggleMuteInput>({
+    mutationFn: async ({ conversationId, muted }) => {
+      if (demoMode) {
+        writeConversationPrefOverride(conversationId, { muted: !muted });
+        return;
+      }
+      await updateConversationPrefs(conversationId, { muted: !muted });
+    },
+    onSuccess: (_result, { conversationId, muted }) => {
+      patchConversationMuted(queryClient, conversationId, !muted);
       if (!demoMode) {
         void queryClient.invalidateQueries({ queryKey: ["conversations"] });
       }

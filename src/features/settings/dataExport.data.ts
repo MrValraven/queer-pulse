@@ -42,6 +42,42 @@ export const DATA_TYPES: DataType[] = [
     subKey: "settings:dataExport.type.activityLog.sub",
     defaultChecked: false,
   },
+  {
+    id: "subprofiles",
+    labelKey: "settings:dataExport.type.subprofiles.label",
+    subKey: "settings:dataExport.type.subprofiles.sub",
+    defaultChecked: false,
+  },
+  {
+    id: "listings",
+    labelKey: "settings:dataExport.type.listings.label",
+    subKey: "settings:dataExport.type.listings.sub",
+    defaultChecked: false,
+  },
+  {
+    id: "housing",
+    labelKey: "settings:dataExport.type.housing.label",
+    subKey: "settings:dataExport.type.housing.sub",
+    defaultChecked: false,
+  },
+  {
+    id: "saved",
+    labelKey: "settings:dataExport.type.saved.label",
+    subKey: "settings:dataExport.type.saved.sub",
+    defaultChecked: false,
+  },
+  {
+    id: "notifications",
+    labelKey: "settings:dataExport.type.notifications.label",
+    subKey: "settings:dataExport.type.notifications.sub",
+    defaultChecked: false,
+  },
+  {
+    id: "consent",
+    labelKey: "settings:dataExport.type.consent.label",
+    subKey: "settings:dataExport.type.consent.sub",
+    defaultChecked: false,
+  },
 ];
 
 export interface AccordionItem {

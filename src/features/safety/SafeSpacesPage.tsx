@@ -10,6 +10,7 @@ import {
 } from "../../shared/seo";
 import { routes } from "../../app/routeMap";
 import { useSafeSpaces } from "./api/useSafeSpaces";
+import { QuickExit } from "./QuickExit";
 import {
   BadgeExplainer,
   HowSection,
@@ -129,6 +130,8 @@ export function SafeSpacesPage() {
           {t("safety:spaces.outro.soberCta")}
         </Button>
       </Outro>
+
+      <QuickExit />
     </PageShell>
   );
 }

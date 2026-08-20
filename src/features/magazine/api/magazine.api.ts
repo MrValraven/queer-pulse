@@ -161,6 +161,10 @@ export const getArticle = (slug: string) =>
 export const getAuthor = (slug: string) =>
   apiGet<AuthorDTO>(`/magazine/authors/${slug}`);
 
+/** GET /magazine/authors — every author who has ever published, list order
+ *  is by name (see `MagazineService.listAuthors`). */
+export const getAuthors = () => apiGet<AuthorDTO[]>("/magazine/authors");
+
 export const createStorySubmission = (dto: CreateStorySubmissionDto) =>
   apiPost<StorySubmissionDTO>("/magazine/submissions", dto);
 

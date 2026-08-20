@@ -1,13 +1,21 @@
 import { useState } from "react";
-import { FiSkipBack, FiSkipForward, FiPlay, FiPause } from "react-icons/fi";
+import { FiSkipBack, FiSkipForward, FiPlay } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { SubmitPlaylistModal } from "./CultureFormModals";
 import { RADIO } from "./culture.data";
 import styles from "./CulturePage.module.css";
 
-/** Full-bleed plum radio player, shown only on the Radio tab. */
+/**
+ * Full-bleed plum radio player, shown only on the Radio tab. There is no
+ * real audio-streaming backend behind this yet, so the transport controls
+ * are honestly inert (disabled, with a plain note) rather than faking a
+ * play/pause toggle with nothing playing. "Become a curator" opens the real
+ * `SubmitPlaylistModal` flow; the old "past playlists" link had nothing
+ * behind it, so it's gone rather than left dead.
+ */
 export function CultureRadioPanel() {
   const { t } = useTranslation();
-  const [playing, setPlaying] = useState(false);
+  const [curating, setCurating] = useState(false);
 
   return (
     <div className={styles.radioFull}>
@@ -23,8 +31,9 @@ export function CultureRadioPanel() {
             </div>
             <p className={styles.curatorQuote}>{RADIO.quote}</p>
             <div className={styles.curatorLinks}>
-              <a href="#past">{t("culture:radio.pastPlaylists")}</a>
-              <a href="#curate">{t("culture:radio.becomeCurator")}</a>
+              <button type="button" onClick={() => setCurating(true)}>
+                {t("culture:radio.becomeCurator")}
+              </button>
             </div>
           </div>
 
@@ -45,6 +54,7 @@ export function CultureRadioPanel() {
               <button
                 type="button"
                 className={styles.rBtn}
+                disabled
                 aria-label={t("culture:radio.previousTrack")}
               >
                 <FiSkipBack size={18} aria-hidden />
@@ -52,20 +62,15 @@ export function CultureRadioPanel() {
               <button
                 type="button"
                 className={styles.rPlay}
-                onClick={() => setPlaying((p) => !p)}
-                aria-label={
-                  playing ? t("culture:radio.pause") : t("culture:radio.play")
-                }
+                disabled
+                aria-label={t("culture:radio.play")}
               >
-                {playing ? (
-                  <FiPause size={22} aria-hidden />
-                ) : (
-                  <FiPlay size={22} aria-hidden />
-                )}
+                <FiPlay size={22} aria-hidden />
               </button>
               <button
                 type="button"
                 className={styles.rBtn}
+                disabled
                 aria-label={t("culture:radio.nextTrack")}
               >
                 <FiSkipForward size={18} aria-hidden />
@@ -73,6 +78,7 @@ export function CultureRadioPanel() {
               <div style={{ flex: 1 }} />
               <span className={styles.radioTime}>{RADIO.now.time}</span>
             </div>
+            <p className={styles.radioNote}>{t("culture:radio.playbackNote")}</p>
             <div className={styles.radioQueue}>
               <div className={styles.rqLabel}>{t("culture:radio.upNext")}</div>
               {RADIO.queue.map((item) => (
@@ -89,6 +95,8 @@ export function CultureRadioPanel() {
           </div>
         </div>
       </div>
+
+      {curating && <SubmitPlaylistModal onClose={() => setCurating(false)} />}
     </div>
   );
 }

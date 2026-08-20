@@ -32,6 +32,13 @@ export interface MyEvent {
   end?: string;
   venue: string;
   community?: string;
+  /** The event's real host — a member slug, so "Block host"
+   *  (`useMyEventsSafety`) can call the real block primitive. `hostName` is
+   *  the display name for the confirm dialog. Absent when the event has no
+   *  individual member host (an org-hosted event) or (in demo mode) the
+   *  mock registry doesn't model one. */
+  hostSlug?: string;
+  hostName?: string;
   going: number;
   /** state flags */
   reminder?: boolean;

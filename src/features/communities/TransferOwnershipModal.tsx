@@ -13,9 +13,9 @@ import { useTransferOwnership } from "./api/useCommunityMutations";
  * picker used across the app's other member pickers) in single-select mode,
  * scoped to this community's own roster rather than the caller's connections —
  * ownership can only pass to someone already on this roster. Picking and
- * confirming are two separate steps (unlike `InviteCoOwnerModal`'s tap-to-act
- * pattern): transferring ownership is severe enough to want an explicit
- * confirm after the pick, mirroring `LeaveCommunityModal`'s pattern.
+ * confirming are two separate steps, mirroring `LeaveCommunityModal`'s and
+ * `InviteCoOwnerModal`'s pattern: an action this consequential shouldn't fire
+ * on the first tap.
  */
 export function TransferOwnershipModal({
   slug,

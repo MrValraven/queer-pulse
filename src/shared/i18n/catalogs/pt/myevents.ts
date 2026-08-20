@@ -203,6 +203,8 @@ export const myevents: Catalog = {
   // ── Card tools row (EventCardActions EventTools) ──────────────────────────
   "tools.reminderOn": "Lembrete ativo",
   "tools.remindMe": "Lembrar-me",
+  "tools.reminderInfoTooltip":
+    "Vais receber um lembrete antes disto começar, de acordo com a tua definição de antecedência em Preferências",
   "tools.addToCalendar": "Adicionar ao calendário",
   "tools.addedToCalendarToast": "Adicionado ao teu calendário",
   "tools.addToCalendarModalTitle": "Adicionar ao calendário",
@@ -269,6 +271,13 @@ export const myevents: Catalog = {
   "edge.blockedBody":
     "Alguém que bloqueaste vai a este evento. Essa pessoa não te vê, e tu também não a vês na noite do evento.",
   "series.upcomingDatesToast": "Próximas datas · {dates}",
+  // MSG-16 — linha de série recorrente ao vivo (SeriesLine), com dados reais
+  // do backend em vez de apenas o registo de demonstração.
+  "series.cadenceWeekly": "Repete-se semanalmente",
+  "series.cadenceBiweekly": "Repete-se a cada 2 semanas",
+  "series.cadenceMonthly": "Repete-se mensalmente",
+  "series.position": "{position} de {total}",
+  "series.positionToast": "{label} · {position}",
   "dayof.runOfShow": "Ordem do dia",
   "dayof.whatToBring": "O que trazer",
   "dayof.gettingIn": "Como entrar",
@@ -299,6 +308,10 @@ export const myevents: Catalog = {
     "Sincroniza automaticamente com o Google ou Apple Calendar",
   "calSubscribe.feedToast":
     "Link do feed copiado. Adiciona-o no Google ou Apple Calendar",
+  "calSubscribe.feedCopyFailToast":
+    "Não foi possível copiar automaticamente. Tenta noutro navegador.",
+  "calSubscribe.feedErrorToast":
+    "Não foi possível criar o link do teu feed. Tenta outra vez.",
   "calSubscribe.exportTitle": "Exportar este mês",
   "calSubscribe.exportSub": "Transfere um ficheiro .ics único",
   "calSubscribe.exportToast": "Eventos de {month} transferidos como .ics",
@@ -421,6 +434,7 @@ export const myevents: Catalog = {
   "rsvpModal.cancelCta": "Cancelar",
   "rsvpModal.saveCta": "Guardar",
   "rsvpModal.savedToast": "Guardado. Só quem organiza vê isto",
+  "rsvpModal.saveErrorToast": "Isso não foi guardado. Tenta outra vez.",
 
   // ── Ticket modal (EventTicketModal) ───────────────────────────────────────
   "ticketModal.eyebrow": "O teu bilhete",

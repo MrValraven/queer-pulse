@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { Button, FormField, Modal, Select } from "../../shared/components/ui";
+import { Button, DatePicker, FormField, Modal, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions";
@@ -11,7 +11,11 @@ import styles from "./GatheringModals.module.css";
 
 export interface GatheringDetailsDraft {
   title: string;
-  date: string;
+  /** The gathering's real start moment, as the local `"yyyy-mm-ddThh:mm"`
+   *  wire value `DatePicker`'s `datetime` mode reads/writes (see
+   *  `dateToDatetimeValue`) — never a formatted display string, so saving
+   *  actually reschedules the event rather than just relabelling it. */
+  startAt: string;
   location: string;
   description: string;
   /** Who can find and RSVP to this gathering. See `AudienceScopeField`. */
@@ -64,7 +68,7 @@ export function EditDetailsModal({
   const communityAvailable = draft.communitySlug !== "";
   const canSave =
     draft.title.trim().length > 0 &&
-    draft.date.trim().length > 0 &&
+    draft.startAt.trim().length > 0 &&
     draft.location.trim().length > 0;
 
   const save = () => {
@@ -126,10 +130,10 @@ export function EditDetailsModal({
           label={t("gatherings:manage.editModal.fieldDateTime")}
           required
         >
-          <input
-            type="text"
-            value={draft.date}
-            onChange={(event) => set("date", event.target.value)}
+          <DatePicker
+            mode="datetime"
+            value={draft.startAt || null}
+            onChange={(value) => set("startAt", value ?? "")}
           />
         </FormField>
         <FormField

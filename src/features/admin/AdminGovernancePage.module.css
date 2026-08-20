@@ -231,13 +231,15 @@
   text-transform: uppercase;
   color: var(--jade);
 }
+/* Static, not pulsing (COM-4): these figures are admin-reported each period,
+   not computed live, so the dot no longer animates like a real-time
+   indicator — see `governance.mrrPanel.live`'s copy in admin.ts. */
 .panelLiveDot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: var(--jade);
   box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.25);
-  animation: govPulse 2.2s var(--ease, ease) infinite;
 }
 .panelNum {
   font-family: var(--serif);
@@ -383,6 +385,38 @@
   line-height: 1.55;
   color: var(--ink-60);
   margin: 0;
+}
+
+/* ── Proposals tab (COM-1) ───────────────────────────────────────────────── */
+.proposalAdminList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 22px;
+}
+.proposalAdminCard {
+  padding: 20px 22px;
+}
+.proposalAdminHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.proposalStatusPassed,
+.proposalStatusFailed {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  flex: none;
+}
+.proposalStatusPassed {
+  color: var(--jade);
+}
+.proposalStatusFailed {
+  color: var(--ink-40);
 }
 
 /* ── Policy rail ─────────────────────────────────────────────────────────── */
@@ -1197,6 +1231,14 @@
   font-size: 12px;
   font-weight: 500;
   color: var(--ink);
+}
+/* Explains a read-only computed field (e.g. the live active-members count,
+   COM-4) sitting inline with otherwise-editable health-stat fields. */
+.ovFieldHint {
+  font-size: 11px;
+  color: var(--ink-40);
+  margin: 2px 0 0;
+  line-height: 1.4;
 }
 .ovRemoveBtn {
   display: inline-flex;

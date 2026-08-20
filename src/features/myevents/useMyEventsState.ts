@@ -216,7 +216,7 @@ export function useMyEventsState(): MyEventsValue {
 
   // modals + preferences + more-menu (focused sub-hook)
   const modals = useMyEventsModals({ toast, t });
-  const { closeMore, prefs } = modals;
+  const { closeMore } = modals;
 
   // rsvp lifecycle + confirm/scope modals (focused sub-hook)
   const rsvp = useMyEventsRsvp({
@@ -227,7 +227,6 @@ export function useMyEventsState(): MyEventsValue {
     toastAction,
     t,
     fmt,
-    reminderLead: prefs.reminderLead,
     closeMore,
   });
 

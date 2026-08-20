@@ -41,6 +41,8 @@ const en: Record<string, string> = {
   "push:housing.match.title": "A home matches your search",
   "push:housing.match.body": "{title} in {area} matches a search you saved.",
   "push:housing.match.bodyNoArea": "{title} matches a search you saved.",
+  "push:topic.newPost.title": "New post in a topic you follow",
+  "push:topic.newPost.body": "{name} posted in #{topic}.",
 };
 
 const pt: Record<string, string> = {
@@ -67,6 +69,8 @@ const pt: Record<string, string> = {
   "push:housing.match.title": "Uma casa corresponde à tua procura",
   "push:housing.match.body": "{title} em {area} corresponde a uma procura que guardaste.",
   "push:housing.match.bodyNoArea": "{title} corresponde a uma procura que guardaste.",
+  "push:topic.newPost.title": "Nova publicação num tópico que segues",
+  "push:topic.newPost.body": "{name} publicou em #{topic}.",
 };
 
 const CATALOG: Record<PushLang, Record<string, string>> = { en, pt };

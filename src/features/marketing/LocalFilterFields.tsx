@@ -1,6 +1,7 @@
 import { useId } from "react";
 import { FiChevronDown, FiShield, FiSliders } from "react-icons/fi";
 import { FilterChips } from "../../shared/components/ui";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useLocalStorage } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { LOCAL_CATEGORIES, LOCAL_CATEGORY_LABEL_KEYS } from "./localPlaces";
@@ -39,6 +40,7 @@ export function LocalFilterFields({
   onToggleSafeOnly,
 }: LocalFilterFieldsProps) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const vibeLabelId = useId();
   const refineBodyId = useId();
   // The secondary refinements (safe-spaces + vibe) collapse behind one toggle so
@@ -47,6 +49,14 @@ export function LocalFilterFields({
     "qp.local.refineOpen",
     false,
   );
+  // Vibe (Cozy/Loud/Chill) only ever has data on demo-only venues (`map.data`'s
+  // `VENUES.vibe`) — a real business has no vibe-tag field at all (its
+  // `photos.vibe` is an unrelated photo-caption slot, not a mood tag), so the
+  // chips would silently do nothing to a real listing. Gated to demo mode only
+  // (gap-audit HSG-8), matching this folder's existing `useDemoMode` gates
+  // (`DirectoryAsideExtras`, `DirectoryAsideOwner`) until/unless a real
+  // vibe-tag field exists on live businesses.
+  const showVibeFilter = demoMode;
   // Surfaced on the collapsed toggle so hidden-but-active filters still read.
   const activeRefineCount = vibes.length + (safeOnly ? 1 : 0);
   const count = (value: string) => (
@@ -169,29 +179,31 @@ export function LocalFilterFields({
               {t("marketing:local.filter.verifiedSafeSpaces")}
             </button>
           </div>
-          <div className={s.vibeRow} role="group" aria-labelledby={vibeLabelId}>
-            <span className={s.vibeLabel} id={vibeLabelId}>
-              {t("marketing:local.filter.vibeLabel")}
-            </span>
-            {VIBES.map((vibe) => (
-              <button
-                type="button"
-                key={vibe}
-                aria-pressed={vibes.includes(vibe)}
-                className={[s.chip, s.vibe, vibes.includes(vibe) && s.chipOn]
-                  .filter(Boolean)
-                  .join(" ")}
-                onClick={() => onToggleVibe(vibe)}
-              >
-                {t(VIBE_LABEL_KEYS[vibe]!)}
-              </button>
-            ))}
-            {vibes.length > 0 && (
-              <span className={s.vibeNote}>
-                {t("marketing:local.filter.vibeVenueNote")}
+          {showVibeFilter && (
+            <div className={s.vibeRow} role="group" aria-labelledby={vibeLabelId}>
+              <span className={s.vibeLabel} id={vibeLabelId}>
+                {t("marketing:local.filter.vibeLabel")}
               </span>
-            )}
-          </div>
+              {VIBES.map((vibe) => (
+                <button
+                  type="button"
+                  key={vibe}
+                  aria-pressed={vibes.includes(vibe)}
+                  className={[s.chip, s.vibe, vibes.includes(vibe) && s.chipOn]
+                    .filter(Boolean)
+                    .join(" ")}
+                  onClick={() => onToggleVibe(vibe)}
+                >
+                  {t(VIBE_LABEL_KEYS[vibe]!)}
+                </button>
+              ))}
+              {vibes.length > 0 && (
+                <span className={s.vibeNote}>
+                  {t("marketing:local.filter.vibeVenueNote")}
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>

@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom";
+import { Navigate, Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
 
@@ -16,7 +16,6 @@ const TransHubPage = lazyNamed(() => import("./TransHubPage"), "TransHubPage");
 const LegalPage = lazyNamed(() => import("./LegalPage"), "LegalPage");
 const SafetyPage = lazyNamed(() => import("./SafetyPage"), "SafetyPage");
 const PronounsGuidePage = lazyNamed(() => import("./PronounsGuidePage"), "PronounsGuidePage");
-const LibraryPage = lazyNamed(() => import("./LibraryPage"), "LibraryPage");
 const RunningGuidePage = lazyNamed(() => import("./RunningGuidePage"), "RunningGuidePage");
 const AccessibleLisbonPage = lazyNamed(() => import("./AccessibleLisbonPage"), "AccessibleLisbonPage");
 const PeerSupportPage = lazyNamed(() => import("./PeerSupportPage"), "PeerSupportPage");
@@ -57,7 +56,14 @@ export function resourceRoutes() {
       />
       <Route path={routes.transHub} element={<TransHubPage />} />
       <Route path={routes.legal} element={<LegalPage />} />
-      <Route path={routes.library} element={<LibraryPage />} />
+      {/* CNT-11: retired in favor of the one real, backend-driven library at
+          routes.resources ("/resources", features/marketing/ResourceLibraryPage) —
+          old links/bookmarks land there instead of a second, static-mock
+          "library" surface. */}
+      <Route
+        path={routes.library}
+        element={<Navigate to={routes.resources} replace />}
+      />
       <Route path={routes.runningGuide} element={<RunningGuidePage />} />
       <Route
         path={routes.accessibleLisbon}

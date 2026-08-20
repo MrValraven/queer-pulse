@@ -12,6 +12,8 @@ import {
   HarmReductionGrid,
   HarmReductionOutro,
 } from "./HarmReductionSections";
+import { CrisisStrip } from "./CrisisStrip";
+import { SuggestEditTrigger } from "./SuggestEditTrigger";
 
 export function HarmReductionPage() {
   const { t } = useTranslation();
@@ -36,7 +38,9 @@ export function HarmReductionPage() {
       />
       <HarmReductionEmergencyStrip />
       <HarmReductionHero />
+      <CrisisStrip />
       <HarmReductionGrid />
+      <SuggestEditTrigger subject={pageTitle} context="harm_reduction" />
       <HarmReductionOutro />
     </PageShell>
   );

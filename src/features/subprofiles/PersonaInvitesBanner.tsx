@@ -7,6 +7,7 @@ import { reasonFor } from "../../shared/api/errorMessage";
 import { initialsFromName } from "../../shared/lib/initials";
 import { useMyPersonaInvites } from "./api/useMyPersonaInvites";
 import type { MyInviteDTO } from "./api/subprofiles.api";
+import { AcceptPersonaInviteModal } from "./AcceptPersonaInviteModal";
 import styles from "./PersonaInvitesBanner.module.css";
 
 /**
@@ -18,6 +19,14 @@ import styles from "./PersonaInvitesBanner.module.css";
  * celebratory add-on, never an empty-state placeholder. Each row tracks its
  * own in-flight mutation by `invite.id` so accepting one invite never
  * disables the buttons on another.
+ *
+ * "Accept" no longer fires the mutation directly (IDN-2): it opens
+ * `AcceptPersonaInviteModal`, a disclosure/confirm step stating plainly that
+ * accepting grants full management access and, for an Unlinked persona,
+ * reveals the accepting member's real identity to its other co-owners. The
+ * mutation only runs once that modal's own acknowledgment checkbox is
+ * ticked and Confirm is tapped. Decline is unaffected — it isn't a grant of
+ * access, so it stays a single tap.
  */
 export function PersonaInvitesBanner() {
   const { t } = useTranslation();
@@ -30,6 +39,14 @@ export function PersonaInvitesBanner() {
     id: string;
     action: "accept" | "decline";
   } | null>(null);
+  // The invite currently showing the accept-confirmation disclosure
+  // (IDN-2) — accepting is no longer a single tap, it opens this modal
+  // first so the invitee sees exactly what access it grants (and, for an
+  // Unlinked persona, what it reveals) before the invite is actually
+  // accepted.
+  const [confirmingInvite, setConfirmingInvite] = useState<MyInviteDTO | null>(
+    null,
+  );
 
   const pending = invites ?? [];
   if (pending.length === 0) return null;
@@ -42,6 +59,7 @@ export function PersonaInvitesBanner() {
         t("subprofiles:invites.toastAccepted", { name: invite.personaName }),
         "success",
       );
+      setConfirmingInvite(null);
     } catch (error) {
       showToast(
         reasonFor(error) ?? t("subprofiles:invites.toastAcceptError"),
@@ -100,7 +118,7 @@ export function PersonaInvitesBanner() {
               <Button
                 variant="jade"
                 size="sm"
-                onClick={() => void handleAccept(invite)}
+                onClick={() => setConfirmingInvite(invite)}
                 disabled={isBusy}
               >
                 {isAccepting
@@ -121,6 +139,17 @@ export function PersonaInvitesBanner() {
           </div>
         );
       })}
+
+      {confirmingInvite && (
+        <AcceptPersonaInviteModal
+          invite={confirmingInvite}
+          busy={
+            busy?.id === confirmingInvite.id && busy.action === "accept"
+          }
+          onConfirm={() => void handleAccept(confirmingInvite)}
+          onClose={() => setConfirmingInvite(null)}
+        />
+      )}
     </div>
   );
 }

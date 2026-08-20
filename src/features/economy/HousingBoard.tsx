@@ -1,12 +1,13 @@
 import { lazy, Suspense, useMemo, useState } from "react";
 import { FiArrowRight, FiList, FiMap } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import { Button, Outro, Reveal, SubpageIndex } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { FILTERS, HOUSING_SUBPAGES } from "./housing.data";
+import { FILTERS, HOUSING_SUBPAGES, MY_HOUSING_LISTINGS_PATH } from "./housing.data";
 import {
   anyFilterActive,
   EMPTY_HOUSING_FILTERS,
@@ -89,14 +90,19 @@ export function HousingBoard() {
                 </button>
               ))}
             </Reveal>
-            <Reveal
-              as="button"
-              className={styles.listBtn}
-              delay={60}
-              onClick={() => setListing(true)}
-            >
-              {t("economy:housing.listSpaceCta")}
-            </Reveal>
+            <div className={styles.listActions}>
+              <Link to={MY_HOUSING_LISTINGS_PATH} className={styles.myListingsLink}>
+                {t("economy:myHousingListings.entryLink")}
+              </Link>
+              <Reveal
+                as="button"
+                className={styles.listBtn}
+                delay={60}
+                onClick={() => setListing(true)}
+              >
+                {t("economy:housing.listSpaceCta")}
+              </Reveal>
+            </div>
           </div>
 
           <HousingFilterBar filters={filters} onChange={setFilters} />

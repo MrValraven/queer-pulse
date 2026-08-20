@@ -1,4 +1,5 @@
 import type { HousingListing, Poster, Tint } from "../housingListings";
+import type { MyHousingListingRow } from "../myHousingListings.data";
 import type { HousingListingDTO } from "./housingListing.api";
 import { initialsFromParts } from "../../../shared/lib/initials";
 
@@ -97,5 +98,31 @@ export function listingDtoToHousingListing(dto: HousingListingDTO): HousingListi
       addressLine: dto.addressLine,
       precision: dto.locationPrecision,
     },
+  };
+}
+
+/** The owner's "My Listings" row — see `MyHousingListingRow`'s doc comment for
+ * why this is a distinct shape from `listingDtoToHousingListing`. */
+export function dtoToMyHousingListingRow(
+  dto: HousingListingDTO,
+): MyHousingListingRow {
+  return {
+    ref: dto.ref,
+    slug: dto.slug,
+    status: dto.status,
+    filledAt: dto.filledAt,
+    expiresAt: dto.expiresAt,
+    expired: dto.expired,
+    createdAt: dto.createdAt,
+    type: dto.type,
+    title: dto.title,
+    city: dto.city,
+    area: dto.area,
+    rentEuros: dto.rentEuros,
+    bedrooms: dto.bedrooms ?? undefined,
+    billsIncluded: dto.billsIncluded,
+    accessibilityInfo: dto.accessibilityInfo,
+    listerKind: dto.listerKind,
+    virtualTourUrl: dto.virtualTourUrl ?? undefined,
   };
 }

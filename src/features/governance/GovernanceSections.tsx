@@ -39,7 +39,7 @@ const CONCERN_OPTIONS: { value: ConcernCategory; labelKey: string }[] = [
  * section's figures/list when its live fetch fails, so an API error surfaces as
  * "we couldn't load this — try again" instead of a silently-empty grid.
  */
-function SectionError({ onRetry }: { onRetry: () => void }) {
+export function SectionError({ onRetry }: { onRetry: () => void }) {
   const { t } = useTranslation();
   return (
     <div className={styles.sectionError} role="alert">

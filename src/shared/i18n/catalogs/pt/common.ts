@@ -42,4 +42,10 @@ export const common: Catalog = {
   "greeting.welcome": "Bem-vinde de volta, {name}",
   "members.count_one": "{count} pessoa",
   "members.count_other": "{count} pessoas",
+
+  // Ligação real da inspeção da Rede de Confiança para a fila de moderação
+  // (substitui dois botões de falso sucesso que só mostravam uma notificação).
+  // Fica aqui, não em admin.ts, que outra alteração desta ronda já ocupa.
+  "cta.openModerationQueue": "Abrir na fila de moderação",
+  "toast.openedModerationQueue": "Abrimos as denúncias de {name} na fila de moderação.",
 };

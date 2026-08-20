@@ -2,7 +2,7 @@ import {
   FiUsers,
   FiShield,
   FiClock,
-  FiDollarSign,
+  FiHeart,
   FiAlertTriangle,
   FiMessageSquare,
   FiCheckCircle,
@@ -40,10 +40,13 @@ export interface StatCard {
   };
   footKey: string;
   footValues?: Record<string, string | number>;
-  /** True when the backing metric has no data yet (e.g. no sustainer
-   *  payments/resolved reports recorded) — E4 renders "not measured yet"
-   *  instead of counting up `value` (which stays 0 as a safe placeholder). */
+  /** True when the backing metric has no data yet (e.g. no communities or
+   *  resolved reports recorded) — E4 renders "not measured yet" instead of
+   *  counting up `value` (which stays 0 as a safe placeholder). */
   notMeasured?: boolean;
+  /** Route to this stat's detail view, if one exists. Renders the tile as a
+   *  link (see `AdminStatGrid`/`StatTile`) rather than a static card. */
+  to?: string;
 }
 
 export const METRICS: StatCard[] = [
@@ -59,6 +62,7 @@ export const METRICS: StatCard[] = [
     },
     footKey: "admin:dashboard.metrics.footGrowth",
     footValues: { count: 312 },
+    to: routes.adminMembers,
   },
   {
     labelKey: "admin:dashboard.metrics.openReports.label",
@@ -71,6 +75,7 @@ export const METRICS: StatCard[] = [
     },
     footKey: "admin:dashboard.metrics.footEmergencies",
     footValues: { count: 2 },
+    to: routes.adminModeration,
   },
   {
     labelKey: "admin:dashboard.metrics.medianResponse.label",
@@ -83,18 +88,13 @@ export const METRICS: StatCard[] = [
     footValues: { hours: "6h" },
   },
   {
-    labelKey: "admin:dashboard.metrics.sustainerMrr.label",
-    icon: FiDollarSign,
-    value: 23150,
-    comma: true,
-    prefix: "€",
-    trend: {
-      dir: "up",
-      key: "admin:dashboard.metrics.trendPercent",
-      values: { value: "4.1" },
-    },
-    footKey: "admin:dashboard.metrics.footSustainers",
-    footValues: { count: 1842 },
+    labelKey: "admin:dashboard.metrics.communityHealth.label",
+    icon: FiHeart,
+    value: 82,
+    trend: { dir: "up", key: "admin:dashboard.metrics.trendHealthy" },
+    footKey: "admin:dashboard.metrics.footNeedsHand",
+    footValues: { count: 2 },
+    to: routes.adminCommunities,
   },
 ];
 

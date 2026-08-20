@@ -20,6 +20,7 @@ export const feed: Catalog = {
   // ── Etiquetas dos separadores (o id canónico mantém-se em inglês) ───────
   "tab.all": "Tudo",
   "tab.communities": "Comunidades",
+  "tab.connections": "Ligações",
   "tab.gatherings": "Convívios",
   "tab.people": "Pessoas",
   "tab.posts": "Publicações",
@@ -40,6 +41,15 @@ export const feed: Catalog = {
   "tab.communities.error.title": "Não foi possível chegar às tuas comunidades",
   "tab.communities.error.description":
     "O pulso das tuas comunidades não chegou. Tenta novamente daqui a pouco.",
+
+  "tab.connections.empty.title": "Ainda nada das tuas ligações",
+  "tab.connections.empty.description":
+    "Assim que te ligares a pessoas aqui, o que publicarem ou organizarem aparece nesta aba.",
+  "tab.connections.empty.action": "Encontrar pessoas para te ligares",
+  "tab.connections.error.title":
+    "Não foi possível carregar o feed das tuas ligações",
+  "tab.connections.error.description":
+    "Não conseguimos chegar à atividade das tuas ligações. Tenta outra vez.",
 
   "tab.gatherings.empty.title": "Ainda nada marcado",
   "tab.gatherings.empty.description":

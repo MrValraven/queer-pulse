@@ -17,6 +17,7 @@ export function NominateChangemakerSection() {
   const { showToast } = useToast();
   const { t } = useTranslation();
   const [nominee, setNominee] = useState("");
+  const [reason, setReason] = useState("");
   const nominationMutation = useCreateChangemakerNomination();
 
   return (
@@ -39,9 +40,10 @@ export function NominateChangemakerSection() {
           onSubmit={(e) => {
             e.preventDefault();
             const nomineeName = nominee.trim();
-            if (!nomineeName) return;
+            const nominationReason = reason.trim();
+            if (!nomineeName || !nominationReason) return;
             nominationMutation.mutate(
-              { nomineeName },
+              { nomineeName, reason: nominationReason },
               {
                 onSuccess: () => {
                   showToast(
@@ -51,6 +53,7 @@ export function NominateChangemakerSection() {
                     "success",
                   );
                   setNominee("");
+                  setReason("");
                 },
                 onError: () =>
                   showToast(
@@ -65,13 +68,31 @@ export function NominateChangemakerSection() {
             className={styles.nomInput}
             type="text"
             autoComplete="off"
-            enterKeyHint="send"
             aria-label={t("community:changemakers.nominate.namePlaceholder")}
             placeholder={t("community:changemakers.nominate.namePlaceholder")}
             value={nominee}
             onChange={(e) => setNominee(e.target.value)}
           />
-          <Button type="submit" disabled={nominationMutation.isPending}>
+          <input
+            className={styles.nomInput}
+            type="text"
+            autoComplete="off"
+            enterKeyHint="send"
+            aria-label={t("community:changemakers.nominate.reasonPlaceholder")}
+            placeholder={t(
+              "community:changemakers.nominate.reasonPlaceholder",
+            )}
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+          />
+          <Button
+            type="submit"
+            disabled={
+              nominationMutation.isPending ||
+              !nominee.trim() ||
+              !reason.trim()
+            }
+          >
             {nominationMutation.isPending
               ? t("community:changemakers.nominate.submitPending")
               : t("community:changemakers.nominate.submitCta")}

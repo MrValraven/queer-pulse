@@ -9,14 +9,14 @@ import {
   buildMedicalWebPageSchema,
   buildBreadcrumbSchema,
 } from "../../shared/seo";
-import { CRISIS } from "./mentalHealth.data";
 import {
   TherapistSection,
   ExperiencesSection,
   SnsSection,
 } from "./MentalHealthSections";
 import { ResourceHero } from "./ResourceHero";
-import styles from "./MentalHealthPage.module.css";
+import { CrisisStrip } from "./CrisisStrip";
+import { SuggestEditTrigger } from "./SuggestEditTrigger";
 
 const FORUM = routes.forum;
 const MENTORSHIP = routes.mentorship;
@@ -56,36 +56,13 @@ export function MentalHealthPage() {
         lead={t("resources:mentalHealth.hero.sub")}
       />
 
-      <div className={styles.crisisBar}>
-        <div className="wrap">
-          <div className={styles.crisisInner}>
-            <div>
-              <div className={styles.crisisLabel}>
-                {t("resources:mentalHealth.crisis.label")}
-              </div>
-              <div className={styles.crisisHeading}>
-                {t("resources:mentalHealth.crisis.heading")}
-              </div>
-              <p className={styles.crisisSub}>
-                {t("resources:mentalHealth.crisis.sub")}
-              </p>
-            </div>
-            <div className={styles.crisisLines}>
-              {CRISIS.map((c) => (
-                <div className={styles.crisisLine} key={c.name}>
-                  <div className={styles.clName}>{c.name}</div>
-                  <div className={styles.clNum}>{c.number}</div>
-                  <div className={styles.clNote}>{t(c.noteKey)}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      <CrisisStrip />
 
       <TherapistSection />
       <ExperiencesSection />
       <SnsSection forum={FORUM} mentorship={MENTORSHIP} />
+
+      <SuggestEditTrigger subject={pageTitle} context="mental_health" />
 
       <Outro
         title={

@@ -19,10 +19,10 @@ export const connect: Catalog = {
   "page.eyebrow": "Your network",
   "page.title": "People you've <em>actually met.</em>",
   "page.lead":
-    "QueerPulse doesn't do followers. You connect with people once you've met them: at a gathering, through someone, or because they vouched for you. Quality over count.",
+    "Your main profile doesn't do followers. You connect with people once you've met them: at a gathering, through someone, or because they vouched for you. Quality over count.",
   "page.inviteCta": "Invite a friend",
   "page.note":
-    "<b>No follower counts on purpose.</b> If you're looking to “follow a member's posts” without connecting first, use the Communities feed instead. Connections are a two-way thing: they unlock messaging and tagged updates.",
+    "<b>No follower counts here, on purpose.</b> Looking to follow a persona's updates without connecting first? That's what personas are for. Connections are a two-way thing: they unlock messaging and tagged updates.",
   "page.loadMoreLoading": "Loading…",
   "page.loadMore": "Load more",
 
@@ -41,11 +41,11 @@ export const connect: Catalog = {
   "moreMenu.block": "Block {name}",
   "moreMenu.unblock": "Unblock {name}",
   "moreMenu.report": "Report",
+  "moreMenu.reportTitle": "Report {name}?",
   "moreMenu.toastMuted": "Muted {name}",
   "moreMenu.toastUnmuted": "Unmuted {name}",
   "moreMenu.toastBlocked": "Blocked {name}",
   "moreMenu.toastUnblocked": "Unblocked {name}",
-  "moreMenu.toastReportSent": "Report sent for {name}",
 
   // Card chrome (ConnectionCards)
   "card.profileAria": "{name}'s profile",

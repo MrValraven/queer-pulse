@@ -128,16 +128,26 @@ function shortTime(iso: string): string {
   return date.toLocaleDateString(locale, { day: "numeric", month: "short" });
 }
 
-/** Demo search: filter the colocated mock message set locally — no network. */
+/** Demo search: filter the colocated mock message set locally — no network.
+ *  `scopedToConversationId`, when set, only searches that one conversation's
+ *  mock messages (the "search in this chat" mode), mirroring the live-mode
+ *  `conversationId` query param. */
 function searchDemo(
   query: string,
   deletedIds: ReadonlySet<string>,
   youLabel: string,
+  scopedToConversationId?: string,
 ): MessageSearchGroupView[] {
   const needle = query.toLowerCase();
   const groups: MessageSearchGroupView[] = [];
   for (const conversation of mockConversations) {
     if (deletedIds.has(conversation.id)) continue;
+    if (
+      scopedToConversationId &&
+      conversation.id !== scopedToConversationId
+    ) {
+      continue;
+    }
     const hits: MessageSearchHitView[] = [];
     for (const day of conversation.messages) {
       for (const item of day.items) {
@@ -172,10 +182,16 @@ function searchDemo(
  * mode filters the colocated mock messages locally with no network. Pass an
  * ALREADY-DEBOUNCED query — this hook does not debounce. `youLabel` is the
  * translated "You" so demo-mode own-message hits read naturally.
+ *
+ * `scopedToConversationId`, when supplied, narrows the search to that single
+ * thread instead of the caller's whole inbox — the "search in this chat" mode
+ * opened from an already-open conversation (`ThreadSearchModal`). Omitted
+ * (the default) searches every conversation, as the inbox-root search box does.
  */
 export function useMessageSearch(
   debouncedQuery: string,
   youLabel: string,
+  scopedToConversationId?: string,
 ): MessageSearchState {
   const { demoMode } = useDemoMode();
   const { deletedIds } = useDeletedConversations();
@@ -186,22 +202,36 @@ export function useMessageSearch(
   const deletedToken = [...deletedIds].sort().join(",");
 
   const liveQuery = useQuery<MessageSearchResponse>({
-    queryKey: ["messageSearch", trimmed, demoMode],
+    queryKey: [
+      "messageSearch",
+      trimmed,
+      demoMode,
+      scopedToConversationId ?? null,
+    ],
     enabled: enabled && !demoMode,
     // Forward react-query's own cancellation signal into the fetch — a fast
     // retype (new `trimmed` → new queryKey) cancels the previous keystroke's
     // request at the network layer, not just in the query cache.
-    queryFn: ({ signal }) => searchMessages(trimmed, SEARCH_LIMIT, signal),
+    queryFn: ({ signal }) =>
+      searchMessages(
+        trimmed,
+        SEARCH_LIMIT,
+        signal,
+        scopedToConversationId,
+      ),
     // A search term is short-lived; keep results briefly so re-typing the same
     // query doesn't refetch, but don't hoard stale corpora.
     staleTime: 30_000,
   });
 
   const demoGroups = useMemo(
-    () => (demoMode && enabled ? searchDemo(trimmed, deletedIds, youLabel) : []),
+    () =>
+      demoMode && enabled
+        ? searchDemo(trimmed, deletedIds, youLabel, scopedToConversationId)
+        : [],
     // deletedToken stands in for the deletedIds set identity.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [demoMode, enabled, trimmed, deletedToken, youLabel],
+    [demoMode, enabled, trimmed, deletedToken, youLabel, scopedToConversationId],
   );
 
   const liveGroups = useMemo(

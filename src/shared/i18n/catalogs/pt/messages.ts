@@ -26,6 +26,9 @@ export const messages: Catalog = {
   "thread.favoriteChat": "Adicionar aos favoritos",
   "thread.unfavoriteChat": "Remover dos favoritos",
   "thread.favoriteIndicator": "Conversa favorita",
+  "thread.muteChat": "Silenciar notificações",
+  "thread.unmuteChat": "Reativar notificações",
+  "thread.mutedIndicator": "Notificações silenciadas",
   "thread.deleteChat": "Apagar conversa",
   // Separadores de filtro da caixa de entrada
   "thread.tabAll": "Todas",
@@ -54,6 +57,12 @@ export const messages: Catalog = {
   "gif.poweredBy": "Com tecnologia KLIPY",
   "gif.comingSoonTitle": "Os GIFs estão a chegar",
   "gif.comingSoonHint": "Estamos a preparar a pesquisa de GIFs. Volta em breve para dar movimento às tuas mensagens.",
+
+  // Anexos de imagem (ImageComposerButton do Composer, MessageBubbleBody)
+  "attachments.open": "Enviar uma foto",
+  "attachments.imageAlt": "Mensagem com foto",
+  "attachments.fallbackText": "Foto",
+  "attachments.uploading": "A enviar foto…",
 
   // Connection status strip (ConnectionStatusBanner) at the top of the open
   // thread — surfaces when the member is offline or the socket is reconnecting.
@@ -84,6 +93,14 @@ export const messages: Catalog = {
   "search.emptyTitle": "Ainda não há correspondências",
   "search.emptyDescription":
     "Nada na tua caixa de entrada corresponde a “{query}”. Tenta outra palavra, ou o nome de alguém.",
+
+  // "Pesquisar nesta conversa" (ThreadSearchModal), aberto a partir do
+  // cabeçalho da conversa — limitado à conversa aberta, não a toda a caixa de
+  // entrada.
+  "search.inChatOpen": "Pesquisar nesta conversa",
+  "search.inChatTitle": "Pesquisar em {name}",
+  "search.inChatPlaceholder": "Pesquisar nesta conversa…",
+  "search.inChatAria": "Pesquisar mensagens nesta conversa",
 
   // Painel da conversa (ConversationPanel)
   "conversation.activeNow": "Ativo/a agora",
@@ -195,12 +212,40 @@ export const messages: Catalog = {
   // Escolha de destinatário para nova mensagem (NewMessageModal)
   "newMessage.title": "Nova mensagem",
   "newMessage.close": "Fechar",
-  "newMessage.sub": "Escolhe uma ligação para iniciar uma conversa.",
-  "newMessage.searchPlaceholder": "Pesquisar ligações…",
-  "newMessage.searchAria": "Pesquisar ligações",
+  "newMessage.sub":
+    "Escolhe uma ligação, ou procura alguém novo para contactar.",
+  "newMessage.searchPlaceholder": "Pesquisar ligações ou pessoas…",
+  "newMessage.searchAria": "Pesquisar ligações e membros",
   "newMessage.loading": "A carregar as tuas ligações…",
   "newMessage.none": "Ainda não tens ligações.",
   "newMessage.empty": "Nenhuma ligação corresponde a “{query}”.",
+  "newMessage.back": "Voltar",
+  // Alternativa: membros encontrados que ainda NÃO são uma ligação aceite —
+  // escolher um abre o compositor de pedido de mensagem em vez de uma conversa.
+  "newMessage.sectionStrangers": "Contactar alguém novo",
+  "newMessage.strangerSub": "Ainda sem ligação",
+
+  // Compositor de pedido de mensagem (MessageRequestComposer), o passo que o
+  // NewMessageModal mostra para um membro escolhido que ainda não é uma
+  // ligação — POST /messages/request, que entrega diretamente se afinal já
+  // estiverem ligados, ou cria um pedido de ligação caso contrário.
+  "request.notConnectedYet": "Ainda não estão ligados",
+  "request.composeIntro":
+    "Apresenta-te. Se aceitar, ficam ligados e esta torna-se a vossa primeira conversa.",
+  "request.composePlaceholder": "Diz olá a {name}…",
+  "request.composeAria": "A tua mensagem",
+  "request.sendCta": "Enviar pedido",
+  "request.sendingLabel": "A enviar…",
+  "request.sentToast": "Pedido de mensagem enviado a {name}.",
+  "request.sentDirectToast": "Mensagem enviada a {name}.",
+  "request.errorToast": "Não foi possível enviar a tua mensagem. Tenta de novo.",
+
+  // Separador "Pedidos" da caixa de entrada (pedidos de mensagem recebidos,
+  // com aceitar/recusar)
+  "requests.tabLabel": "Pedidos",
+  "requests.emptyTitle": "Sem pedidos de mensagem",
+  "requests.emptyDescription":
+    "Quando alguém sem ligação contigo te envia uma primeira mensagem, ela aparece aqui para aceitares ou recusares.",
 
   // Conversas em grupo (#17) — escolha de criação (NewGroupModal), cabeçalho +
   // info do grupo (ConversationHeader / GroupInfoModal), aviso de saída.

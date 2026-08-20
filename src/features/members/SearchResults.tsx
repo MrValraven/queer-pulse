@@ -10,6 +10,8 @@ import {
   TYPE_BG,
   TYPE_ICON,
   TYPE_LABEL_KEY,
+  NO_LIVE_SEARCH_TYPES,
+  SEARCH_PER_TYPE_CAP,
   type ResultType,
   type SearchItem,
 } from "./search.data";
@@ -101,7 +103,19 @@ function SearchSignInPrompt() {
   );
 }
 
-function Group({ items, label }: { items: SearchItem[]; label: string }) {
+function Group({
+  items,
+  label,
+  onSeeAll,
+}: {
+  items: SearchItem[];
+  label: string;
+  /** Set when this type is at its per-type cap on the "all" view — renders a
+   *  link that switches to this type's own tab, where the backend is asked
+   *  for the full result set instead of the capped one (DISC-10). */
+  onSeeAll?: () => void;
+}) {
+  const { t } = useTranslation();
   if (!items.length) return null;
   return (
     <div className={styles.section}>
@@ -113,6 +127,12 @@ function Group({ items, label }: { items: SearchItem[]; label: string }) {
           </FadeIn>
         ))}
       </div>
+      {onSeeAll && (
+        <button type="button" className={styles.seeAll} onClick={onSeeAll}>
+          {t("members:search.seeAllIn", { category: label })}
+          <FiArrowRight aria-hidden />
+        </button>
+      )}
     </div>
   );
 }
@@ -197,11 +217,13 @@ function HitsView({
   q,
   tab,
   searchData,
+  onSelectTab,
 }: {
   query: string;
   q: string;
   tab: ResultType | "all";
   searchData: SearchItem[];
+  onSelectTab: (type: ResultType) => void;
 }) {
   const { t } = useTranslation();
   const hits = searchData.filter((d) => {
@@ -280,13 +302,24 @@ function HitsView({
       <>
         {banner}
         {countEl}
-        {types.map((typ) => (
-          <Group
-            key={typ}
-            items={hits.filter((h) => h.t === typ)}
-            label={t(TYPE_LABEL_KEY[typ])}
-          />
-        ))}
+        {types.map((typ) => {
+          const typeHits = hits.filter((h) => h.t === typ);
+          // A type that came back exactly at its per-type cap may have more
+          // results the merged "all" view is silently hiding — switching to
+          // that type's own tab re-queries the backend at a much higher
+          // limit for just that one type (see `useSearchData`'s `liveType`).
+          const atCap =
+            typeHits.length >= SEARCH_PER_TYPE_CAP &&
+            !NO_LIVE_SEARCH_TYPES.has(typ);
+          return (
+            <Group
+              key={typ}
+              items={typeHits}
+              label={t(TYPE_LABEL_KEY[typ])}
+              onSeeAll={atCap ? () => onSelectTab(typ) : undefined}
+            />
+          );
+        })}
       </>
     );
   }
@@ -304,6 +337,7 @@ export function SearchResults({
   query,
   tab,
   setQuery,
+  onSelectTab,
   signInRequired,
   loading,
   searchData,
@@ -312,6 +346,9 @@ export function SearchResults({
   query: string;
   tab: ResultType | "all";
   setQuery: (value: string) => void;
+  /** Switches the active tab — wired to the "see all in [category]" links in
+   *  the "all" view once a type is at its per-type cap (DISC-10). */
+  onSelectTab: (type: ResultType) => void;
   signInRequired: boolean;
   loading: boolean;
   searchData: SearchItem[];
@@ -337,5 +374,13 @@ export function SearchResults({
       />
     );
   }
-  return <HitsView query={query} q={q} tab={tab} searchData={searchData} />;
+  return (
+    <HitsView
+      query={query}
+      q={q}
+      tab={tab}
+      searchData={searchData}
+      onSelectTab={onSelectTab}
+    />
+  );
 }

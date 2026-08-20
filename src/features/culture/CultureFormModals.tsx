@@ -2,7 +2,9 @@ import { useState, type ReactNode } from "react";
 import { Button, ChipSelect, Select, Sending } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { submitIntake } from "../../shared/api/intakes";
 import { ModalShell, SuccessPanel } from "./CultureModalKit";
 import { useChipSet, useSubmitFlow } from "./cultureModalKit.hooks";
 import {
@@ -14,23 +16,55 @@ import {
   SHOWCASE_MEDIUM_LABEL_KEY,
   PLAYLIST_VIBES,
   PLAYLIST_VIBE_LABEL_KEY,
-  replyByDate,
 } from "./cultureModals.data";
 import styles from "./CultureModals.module.css";
+
+/**
+ * Runs a culture form's submit: the prototype's simulated beat in demo mode,
+ * a real `POST /intakes/:kind` in live mode. Mirrors how
+ * `useCreateCommissionInterest` splits demo/live, but these four forms share
+ * one generic intake kind pipeline instead of a dedicated endpoint each (see
+ * `src/shared/api/intakes.ts`).
+ */
+function useCultureIntakeSubmit(
+  flow: ReturnType<typeof useSubmitFlow>,
+  kind: Parameters<typeof submitIntake>[0],
+) {
+  const { demoMode } = useDemoMode();
+  const { showToast } = useToast();
+  const { t } = useTranslation();
+  return async (payload: Record<string, unknown>) => {
+    if (demoMode) {
+      flow.submit();
+      return;
+    }
+    try {
+      await flow.run(async () => {
+        await submitIntake(kind, payload);
+      });
+    } catch {
+      showToast(t("shared:intake.errorToast"), "error");
+    }
+  };
+}
 
 /** Shared submit button that swaps to a spinner while sending. */
 export function SubmitBtn({
   sending,
+  disabled = false,
   label,
   onClick,
 }: {
   sending: boolean;
+  /** Disables the button without switching to the spinner, e.g. a required
+   *  field is still empty. */
+  disabled?: boolean;
   label: string;
   onClick: () => void;
 }) {
   const { t } = useTranslation();
   return (
-    <Button variant="primary" disabled={sending} onClick={onClick}>
+    <Button variant="primary" disabled={sending || disabled} onClick={onClick}>
       {sending ? <Sending label={t("culture:common.sending")} /> : label}
     </Button>
   );
@@ -46,6 +80,7 @@ export function CultureFormModal({
   onClose,
   sending,
   done,
+  disabled = false,
   eyebrow,
   title,
   sub,
@@ -57,6 +92,8 @@ export function CultureFormModal({
   onClose: () => void;
   sending: boolean;
   done: boolean;
+  /** Keeps Submit disabled while a required field is still empty. */
+  disabled?: boolean;
   eyebrow: ReactNode;
   title: ReactNode;
   sub: ReactNode;
@@ -84,6 +121,7 @@ export function CultureFormModal({
             </Button>
             <SubmitBtn
               sending={sending}
+              disabled={disabled}
               label={submitLabel}
               onClick={onSubmit}
             />
@@ -97,14 +135,20 @@ export function CultureFormModal({
 /* ── Suggest a pick ──────────────────────────────────────────────────── */
 export function SuggestPickModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
-  const { sending, done, submit } = useSubmitFlow();
+  const flow = useSubmitFlow();
+  const { sending, done } = flow;
   const [kind, setKind] = useState<string>(PICK_KINDS[0]);
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [why, setWhy] = useState("");
+  const submitToServer = useCultureIntakeSubmit(flow, "culture_suggest_pick");
+  const canSubmit = title.trim().length > 0;
   return (
     <CultureFormModal
       onClose={onClose}
       sending={sending}
       done={done}
+      disabled={!canSubmit}
       eyebrow={t("culture:tabs.club")}
       title={
         <Translation
@@ -114,24 +158,22 @@ export function SuggestPickModal({ onClose }: { onClose: () => void }) {
       }
       sub={t("culture:suggestPick.sub")}
       submitLabel={t("culture:suggestPick.nominateCta")}
-      onSubmit={() => submit()}
+      onSubmit={() => {
+        if (!canSubmit) return;
+        void submitToServer({
+          format: kind,
+          title: title.trim(),
+          author: author.trim(),
+          why: why.trim(),
+        });
+      }}
       success={
         <SuccessPanel
           title={t("culture:suggestPick.success.title")}
           em={t("culture:suggestPick.success.em")}
           steps={[
             t("culture:suggestPick.success.step1"),
-            <Translation
-              key="step2"
-              i18nKey="culture:suggestPick.success.step2"
-              values={{
-                date: fmt.date(replyByDate(1), {
-                  day: "numeric",
-                  month: "long",
-                }),
-              }}
-              components={{ strong: <strong /> }}
-            />,
+            t("culture:suggestPick.success.step2"),
           ]}
           onClose={onClose}
         >
@@ -156,6 +198,8 @@ export function SuggestPickModal({ onClose }: { onClose: () => void }) {
         <input
           id="pk-title"
           type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
           placeholder={t("culture:suggestPick.titlePlaceholder")}
         />
       </div>
@@ -166,6 +210,8 @@ export function SuggestPickModal({ onClose }: { onClose: () => void }) {
         <input
           id="pk-author"
           type="text"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
           placeholder={t("culture:suggestPick.authorPlaceholder")}
         />
       </div>
@@ -173,6 +219,8 @@ export function SuggestPickModal({ onClose }: { onClose: () => void }) {
         <label htmlFor="pk-why">{t("culture:suggestPick.whyLabel")}</label>
         <textarea
           id="pk-why"
+          value={why}
+          onChange={(e) => setWhy(e.target.value)}
           placeholder={t("culture:suggestPick.whyPlaceholder")}
         />
       </div>
@@ -183,17 +231,23 @@ export function SuggestPickModal({ onClose }: { onClose: () => void }) {
 /* ── Post a project (commission board) ───────────────────────────────── */
 export function PostProjectModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
-  const { sending, done, submit } = useSubmitFlow();
+  const flow = useSubmitFlow();
+  const { sending, done } = flow;
   const { selected, toggle } = useChipSet();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const lookingForOptions = PROJECT_LOOKING_FOR.map((value) => ({
     value,
     label: t(PROJECT_LOOKING_FOR_LABEL_KEY[value] ?? value),
   }));
+  const submitToServer = useCultureIntakeSubmit(flow, "culture_post_project");
+  const canSubmit = title.trim().length > 0 && description.trim().length > 0;
   return (
     <CultureFormModal
       onClose={onClose}
       sending={sending}
       done={done}
+      disabled={!canSubmit}
       eyebrow={t("culture:tabs.commission")}
       title={
         <Translation
@@ -203,7 +257,14 @@ export function PostProjectModal({ onClose }: { onClose: () => void }) {
       }
       sub={t("culture:postProject.sub")}
       submitLabel={t("culture:postProject.postCta")}
-      onSubmit={() => submit()}
+      onSubmit={() => {
+        if (!canSubmit) return;
+        void submitToServer({
+          title: title.trim(),
+          description: description.trim(),
+          lookingFor: [...selected],
+        });
+      }}
       success={
         <SuccessPanel
           title={t("culture:postProject.success.title")}
@@ -223,6 +284,8 @@ export function PostProjectModal({ onClose }: { onClose: () => void }) {
         <input
           id="pp-title"
           type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
           placeholder={t("culture:postProject.titlePlaceholder")}
         />
       </div>
@@ -230,6 +293,8 @@ export function PostProjectModal({ onClose }: { onClose: () => void }) {
         <label htmlFor="pp-desc">{t("culture:postProject.descLabel")}</label>
         <textarea
           id="pp-desc"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           placeholder={t("culture:postProject.descPlaceholder")}
         />
       </div>
@@ -251,14 +316,20 @@ export function PostProjectModal({ onClose }: { onClose: () => void }) {
 /* ── Submit your work (art showcase) ─────────────────────────────────── */
 export function SubmitWorkModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
-  const { sending, done, submit } = useSubmitFlow();
+  const flow = useSubmitFlow();
+  const { sending, done } = flow;
   const [medium, setMedium] = useState<string | null>(null);
+  const [title, setTitle] = useState("");
+  const [link, setLink] = useState("");
+  const [about, setAbout] = useState("");
+  const submitToServer = useCultureIntakeSubmit(flow, "culture_submit_work");
+  const canSubmit = title.trim().length > 0 && !!medium;
   return (
     <CultureFormModal
       onClose={onClose}
       sending={sending}
       done={done}
+      disabled={!canSubmit}
       eyebrow={t("culture:tabs.showcase")}
       title={
         <Translation
@@ -268,24 +339,22 @@ export function SubmitWorkModal({ onClose }: { onClose: () => void }) {
       }
       sub={t("culture:submitWork.sub")}
       submitLabel={t("culture:submitWork.submitCta")}
-      onSubmit={() => submit()}
+      onSubmit={() => {
+        if (!canSubmit) return;
+        void submitToServer({
+          title: title.trim(),
+          medium,
+          link: link.trim(),
+          about: about.trim(),
+        });
+      }}
       success={
         <SuccessPanel
           title={t("culture:submitWork.success.title")}
           em={t("culture:submitWork.success.em")}
           steps={[
             t("culture:submitWork.success.step1"),
-            <Translation
-              key="step2"
-              i18nKey="culture:submitWork.success.step2"
-              values={{
-                date: fmt.date(replyByDate(4), {
-                  day: "numeric",
-                  month: "long",
-                }),
-              }}
-              components={{ strong: <strong /> }}
-            />,
+            t("culture:submitWork.success.step2"),
           ]}
           onClose={onClose}
         >
@@ -298,6 +367,8 @@ export function SubmitWorkModal({ onClose }: { onClose: () => void }) {
         <input
           id="sw-title"
           type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
           placeholder={t("culture:submitWork.titlePlaceholder")}
         />
       </div>
@@ -319,6 +390,8 @@ export function SubmitWorkModal({ onClose }: { onClose: () => void }) {
         <input
           id="sw-link"
           type="url"
+          value={link}
+          onChange={(e) => setLink(e.target.value)}
           placeholder={t("culture:submitWork.linkPlaceholder")}
         />
       </div>
@@ -326,6 +399,8 @@ export function SubmitWorkModal({ onClose }: { onClose: () => void }) {
         <label htmlFor="sw-about">{t("culture:submitWork.aboutLabel")}</label>
         <textarea
           id="sw-about"
+          value={about}
+          onChange={(e) => setAbout(e.target.value)}
           placeholder={t("culture:submitWork.aboutPlaceholder")}
         />
       </div>
@@ -336,18 +411,27 @@ export function SubmitWorkModal({ onClose }: { onClose: () => void }) {
 /* ── Submit a playlist (radio) ───────────────────────────────────────── */
 export function SubmitPlaylistModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
-  const { sending, done, submit } = useSubmitFlow();
+  const flow = useSubmitFlow();
+  const { sending, done } = flow;
   const { selected, toggle } = useChipSet();
+  const [name, setName] = useState("");
+  const [link, setLink] = useState("");
+  const [note, setNote] = useState("");
   const vibeOptions = PLAYLIST_VIBES.map((value) => ({
     value,
     label: t(PLAYLIST_VIBE_LABEL_KEY[value] ?? value),
   }));
+  const submitToServer = useCultureIntakeSubmit(
+    flow,
+    "culture_submit_playlist",
+  );
+  const canSubmit = name.trim().length > 0 && link.trim().length > 0;
   return (
     <CultureFormModal
       onClose={onClose}
       sending={sending}
       done={done}
+      disabled={!canSubmit}
       eyebrow={t("culture:submitPlaylist.eyebrow")}
       title={
         <Translation
@@ -357,24 +441,22 @@ export function SubmitPlaylistModal({ onClose }: { onClose: () => void }) {
       }
       sub={t("culture:submitPlaylist.sub")}
       submitLabel={t("culture:submitPlaylist.submitCta")}
-      onSubmit={() => submit()}
+      onSubmit={() => {
+        if (!canSubmit) return;
+        void submitToServer({
+          name: name.trim(),
+          link: link.trim(),
+          vibes: [...selected],
+          note: note.trim(),
+        });
+      }}
       success={
         <SuccessPanel
           title={t("culture:submitPlaylist.success.title")}
           em={t("culture:submitPlaylist.success.em")}
           steps={[
             t("culture:submitPlaylist.success.step1"),
-            <Translation
-              key="step2"
-              i18nKey="culture:submitPlaylist.success.step2"
-              values={{
-                date: fmt.date(replyByDate(3), {
-                  day: "numeric",
-                  month: "long",
-                }),
-              }}
-              components={{ strong: <strong /> }}
-            />,
+            t("culture:submitPlaylist.success.step2"),
           ]}
           onClose={onClose}
         >
@@ -387,6 +469,8 @@ export function SubmitPlaylistModal({ onClose }: { onClose: () => void }) {
         <input
           id="pl-name"
           type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           placeholder={t("culture:submitPlaylist.namePlaceholder")}
         />
       </div>
@@ -395,6 +479,8 @@ export function SubmitPlaylistModal({ onClose }: { onClose: () => void }) {
         <input
           id="pl-link"
           type="url"
+          value={link}
+          onChange={(e) => setLink(e.target.value)}
           placeholder={t("culture:submitPlaylist.linkPlaceholder")}
         />
       </div>
@@ -413,6 +499,8 @@ export function SubmitPlaylistModal({ onClose }: { onClose: () => void }) {
         <label htmlFor="pl-note">{t("culture:submitPlaylist.noteLabel")}</label>
         <textarea
           id="pl-note"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
           placeholder={t("culture:submitPlaylist.notePlaceholder")}
         />
       </div>

@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
 import { reasonFor } from "../../shared/api/errorMessage";
 import { initialsFromName } from "../../shared/lib/initials";
+import type { SubprofileView } from "./api/subprofiles.adapters";
 import { useSubprofileMembers } from "./api/useSubprofileMembers";
 import { useSubprofileInvites } from "./api/useSubprofileInvites";
 import { InviteCoOwnerModal } from "./InviteCoOwnerModal";
@@ -16,23 +17,30 @@ import styles from "./SubprofileOwnersPanel.module.css";
  * Owner-facing "Co-owners" pane body: everyone who can currently edit this
  * persona, outstanding invites (with revoke), an entry point to invite
  * someone new, and — once there's more than one member — a way for the
- * signed-in member to leave. `subprofileId` drives both the members and
+ * signed-in member to leave. `subprofile.id` drives both the members and
  * invites hooks, which branch demo/live internally (this component just
  * consumes them). No outer card/title of its own — the editor's pane router
  * (`EditorPaneRouter`, Task 4) already renders the "Co-owners" h2 + lede
  * above whichever pane is active, reusing this component's own
  * `owners.title`/`owners.note` copy, so a second heading here would just
  * repeat it.
+ *
+ * Takes the full `subprofile` (not just its id) so it can pass it down into
+ * `InviteCoOwnerModal` — that modal reads `linkVisibility` to disclose,
+ * before an invite goes out, that co-owner access is full/unrestricted and,
+ * for an Unlinked (pseudonymous) persona specifically, that accepting
+ * reveals the creator's real identity to the invitee (IDN-2).
  */
 export function SubprofileOwnersPanel({
-  subprofileId,
+  subprofile,
 }: {
-  subprofileId: string;
+  subprofile: SubprofileView;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const subprofileId = subprofile.id;
   const { data: members, leave } = useSubprofileMembers(subprofileId);
   const { data: invites, revoke } = useSubprofileInvites(subprofileId);
   const [inviting, setInviting] = useState(false);
@@ -153,7 +161,7 @@ export function SubprofileOwnersPanel({
 
       {inviting && (
         <InviteCoOwnerModal
-          subprofileId={subprofileId}
+          subprofile={subprofile}
           excludedSlugs={excludedSlugs}
           onClose={() => setInviting(false)}
         />

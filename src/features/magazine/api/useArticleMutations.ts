@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
+  publishArticle,
   updateArticleDraft,
   type ArticleDraftDto,
+  type PublishArticleDto,
   type UpdateArticleDraftDto,
 } from "./pieces.api";
 
@@ -17,6 +19,17 @@ import {
  * changes saved"/"Saving…"), so a toast per tick would be redundant and
  * spammy. Live calls `PATCH /magazine/admin/pieces/:id/article` then
  * invalidates this piece's `useArticleDraft` cache.
+ *
+ * `publish` is the explicit, user-triggered counterpart (CNT-1 fix) — mirrors
+ * the deck editor's `useUpdateDeck`/`handleTogglePublish` pair, but hits the
+ * dedicated `PATCH .../article/publish` route (`publishArticle`) rather than
+ * `updateArticleDraft`, since `UpdateArticleDto` has no publish field of its
+ * own. Unlike `save` it writes the response straight into the
+ * `useArticleDraft` cache (rather than only invalidating) so the header/
+ * rail's Publish/Unpublish relabel and disabled state flip the instant the
+ * request resolves, with no extra refetch round trip. Demo mode resolves to
+ * `null` (nowhere to persist to, same as `save`) — the caller decides what to
+ * show for that case.
  */
 export function useArticleMutations(pieceId: string) {
   const { demoMode } = useDemoMode();
@@ -42,5 +55,21 @@ export function useArticleMutations(pieceId: string) {
     },
   });
 
-  return { save };
+  const publish = useMutation<ArticleDraftDto | null, Error, PublishArticleDto>({
+    meta: { silentError: true },
+    mutationFn: async (body) => {
+      if (demoMode) {
+        return null;
+      }
+      return publishArticle(pieceId, body);
+    },
+    onSuccess: (data) => {
+      if (data) {
+        queryClient.setQueryData(["magazine-article-draft", pieceId, demoMode], data);
+      }
+      void queryClient.invalidateQueries({ queryKey: ["magazine-article-draft", pieceId] });
+    },
+  });
+
+  return { save, publish };
 }

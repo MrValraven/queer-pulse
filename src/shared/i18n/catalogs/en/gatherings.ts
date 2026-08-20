@@ -216,6 +216,10 @@ export const gatherings: Catalog = {
   "gathering.notFoundDescription":
     "It may have been cancelled, or the link might be out of date.",
 
+  // GoingAttendeesPreview (MSG-12)
+  "gathering.attendeesPreview.heading": "Who's going",
+  "gathering.attendeesPreview.moreLabel": "+{count} more",
+
   // JoinVouchCallout
   "vouchCallout.title": "New here? <em>Get vouched in.</em>",
   "vouchCallout.body":
@@ -310,6 +314,10 @@ export const gatherings: Catalog = {
   "cancelled.stampTitle": "This event has been cancelled.",
   "cancelled.stampBody":
     "You were on the list. Here's everything that happens next.",
+  // Live mode only: no fabricated "cancelled N hours ago" or reason line —
+  // the backend doesn't record a cancellation reason, so this stays generic.
+  "cancelled.stampBodyLive":
+    "Here are the details, and where to find what's on next.",
   "cancelled.explainerTitle": "Why it was cancelled",
   "cancelled.hostSentLabel": "host · sent the cancellation",
   "cancelled.sendWellWishesCta": "Send well-wishes",
@@ -405,6 +413,10 @@ export const gatherings: Catalog = {
   "recap.attendedLabel": "Attended",
   "recap.hostLabel": "Host",
   "recap.comingUpNextEyebrow": "Coming up next",
+  "recap.moreFromHostEyebrow": "More from {name}",
+  "recap.moreFromHostCta": "See gathering",
+  "recap.seriesNextUpEyebrow": "This gathering repeats",
+  "recap.seriesNextUpCta": "See the next date",
   "recap.attendedThisGathering": "You attended this gathering",
   "recap.yearInReviewCta": "Add to your year in review",
   "recap.soonBadge": "Soon",
@@ -465,6 +477,7 @@ export const gatherings: Catalog = {
   // createGathering.data.ts — step pills
   "create.pill.type": "Type",
   "create.pill.datePlace": "Date & place",
+  "create.pill.repeats": "Repeats",
   "create.pill.capacity": "Capacity",
   "create.pill.pricing": "Pricing",
   "create.pill.review": "Review",
@@ -474,6 +487,8 @@ export const gatherings: Catalog = {
     "Choose the format that comes most naturally to you. The best gatherings are the ones hosts actually enjoy running.",
   "create.tip.datePlace":
     "The neighbourhood is shown on the listing. The full address is only shared with confirmed attendees.",
+  "create.tip.repeats":
+    "A standing weekly or monthly meetup builds a real following. Each date is still its own gathering: attendees RSVP, and you can edit or cancel one date without touching the rest.",
   "create.tip.capacity":
     "Be honest about accessibility. Attendees plan around it. Only tick what you can genuinely confirm.",
   "create.tip.pricing":
@@ -543,6 +558,8 @@ export const gatherings: Catalog = {
   "create.nav.back": "Back",
   "create.nav.publishHint": "Confirm all three boxes above to publish",
   "create.nav.dateHint": "Pick a date and time in the future to continue",
+  "create.nav.repeatsHint":
+    "Enter a valid number of dates, or an end date after your gathering's start, to continue",
   "create.nav.detailsHint": "Pick a format and name your gathering to continue",
   "create.nav.leaveConfirm":
     "You have an unpublished gathering here. Leave without saving it?",
@@ -587,6 +604,24 @@ export const gatherings: Catalog = {
   "create.step2.directionsLabel": "Getting there (optional)",
   "create.step2.directionsPlaceholder":
     "e.g. Ring the bell on the left, 5 min walk from Intendente metro",
+
+  // RepeatsStep.tsx — step 2b: repeats (MSG-10)
+  "create.step2b.title": "Does this <em>repeat?</em>",
+  "create.step2b.sub":
+    "A standing weekly or monthly meetup, not a one-off. Each date publishes as its own gathering, RSVPable and editable on its own.",
+  "create.step2b.toggle": "This gathering repeats",
+  "create.step2b.cadenceLabel": "How often",
+  "create.step2b.endTypeLabel": "Ends",
+  "create.step2b.endType.count": "After a number of dates",
+  "create.step2b.endType.date": "On a date",
+  "create.step2b.endCountLabel": "Number of dates",
+  "create.step2b.endCountHint": "Between 2 and {max} dates.",
+  "create.step2b.endUntilLabel": "Last possible date",
+  "create.step2b.invalidHint":
+    "Pick a number of dates or an end date after your gathering's start.",
+  "create.repeats.cadence.weekly": "Weekly",
+  "create.repeats.cadence.biweekly": "Every 2 weeks",
+  "create.repeats.cadence.monthly": "Monthly",
 
   // CreateGatheringSteps.tsx — step 3: capacity
   "create.step3.title": "Who and <em>how many?</em>",
@@ -667,6 +702,10 @@ export const gatherings: Catalog = {
   "create.step5.row.audience": "Who can see this",
   "create.step5.row.pricing": "Pricing",
   "create.step5.row.accessibility": "Accessibility",
+  "create.step5.row.repeats": "Repeats",
+  "create.step5.repeatsOff": "No, just this once",
+  "create.step5.repeatsUntilCount": "{occurrences} dates",
+  "create.step5.repeatsUntilDate": "until {date}",
   "create.step5.pricingFree": "Free event",
   "create.step5.pricingSliding": "Sliding scale · Free / {std} / {sup}",
   "create.step5.confirmHeading": "Before you publish: confirm all three",
@@ -917,6 +956,7 @@ export const gatherings: Catalog = {
   "manage.attendees.promoteAria": "Promote {name} to guest list",
   "manage.attendees.promoteCta": "Promote",
   "manage.attendees.promotedToast": "{name} promoted to guest list",
+  "manage.attendees.actionErrorToast": "That didn't go through. Try again.",
 
   // ── Manage: messages tab ─────────────────────────────────────────────────────
   "manage.messages.composerLabel_one": "Message all attendees ({count} going)",
@@ -994,6 +1034,19 @@ export const gatherings: Catalog = {
   "manage.editModal.successMeta_other":
     "Saved just now · {count} attendees notified",
 
+  // ── Manage: this-vs-future series scope prompt (MSG-10) ────────────────────
+  "manage.seriesScope.eyebrow": "Recurring gathering",
+  "manage.seriesScope.edit.title": "Apply this <em>change</em> to…",
+  "manage.seriesScope.edit.sub":
+    "This gathering repeats. Choose whether your edit covers just this date or every date still to come.",
+  "manage.seriesScope.edit.thisCta": "Just this date",
+  "manage.seriesScope.edit.futureCta": "This and every future date",
+  "manage.seriesScope.cancel.title": "Cancel <em>which dates?</em>",
+  "manage.seriesScope.cancel.sub":
+    "This gathering repeats. Choose whether to cancel just this date or the whole standing series.",
+  "manage.seriesScope.cancel.thisCta": "Just this date",
+  "manage.seriesScope.cancel.futureCta": "This and every future date",
+
   // ── Manage: message-attendees modal ───────────────────────────────────────────
   "manage.messageModal.eyebrow": "Message attendees",
   "manage.messageModal.title": "Write to your guests",
@@ -1058,6 +1111,7 @@ export const gatherings: Catalog = {
     "Cohosts can edit this gathering, message guests and manage RSVPs. You stay the lead host. Cancelling and the host fund stay with you.",
   "cohost.emptyState":
     "No cohosts yet. Adding one means you're not carrying the night alone.",
+  "cohost.roleCohost": "Cohost",
   "cohost.addedToast": "{name} added as a cohost",
   "cohost.removedToast": "{name} removed as a cohost",
   "cohost.confirmPrompt": "Remove?",

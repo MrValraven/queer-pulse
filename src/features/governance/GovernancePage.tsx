@@ -15,6 +15,7 @@ import {
   PrinciplesSection,
   RaiseSection,
 } from "./GovernanceSections";
+import { ProposalsSection } from "./GovernanceProposals";
 import styles from "./GovernancePage.module.css";
 
 export function GovernancePage() {
@@ -101,6 +102,7 @@ export function GovernancePage() {
               <CouncilSection />
               <PrinciplesSection />
               <FinancesSection />
+              <ProposalsSection />
               <DecisionsSection />
               <RaiseSection />
             </div>

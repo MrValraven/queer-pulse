@@ -1727,6 +1727,7 @@ export const marketing: Catalog = {
   "changelog.tag.employerReviews": "Ler avaliações de empregadores",
   "changelog.tag.studio": "Visitar o Studio",
   "changelog.tag.search": "Experimentar a pesquisa global",
+  "changelog.tag.topics": "Ver os tópicos",
   "changelog.tag.volunteer": "Encontra o teu caminho",
   "changelog.tag.postVolunteer": "Publicar oportunidade",
   "changelog.tag.notifications": "Abrir as tuas notificações",
@@ -1740,6 +1741,7 @@ export const marketing: Catalog = {
   "changelog.tag.myEvents": "Abrir Meus Eventos",
   "changelog.tag.safeSpaces": "Encontrar um espaço seguro",
   "changelog.tag.pressKit": "Abrir o kit de imprensa",
+  "changelog.tag.pushDevices": "Gerir os teus dispositivos",
   "changelog.tag.magazineDesk": "Abrir a redação",
   "changelog.tag.comingOut": "Ler o guia de sair do armário",
   "changelog.tag.guidelines": "Ler as diretrizes da comunidade",
@@ -1749,6 +1751,11 @@ export const marketing: Catalog = {
   "changelog.tag.tenantRights": "Conhece os teus direitos",
   "changelog.tag.workProfile": "Abrir o teu perfil de trabalho",
   "changelog.tag.governance": "Ver como o QueerPulse é gerido",
+  "changelog.tag.appealOutcome": "Ver o estado do teu recurso",
+  "changelog.tag.hateCrime": "Ler recursos sobre crimes de ódio",
+  "changelog.tag.changemakers": "Ver os nossos Changemakers",
+  "changelog.tag.vouch": "Apadrinhar alguém",
+  "changelog.tag.culture": "Visitar a Cultura",
 
   "changelog.entries.member-directory-filter-crossfade.title":
     "Filtragem mais suave no diretório de pessoas",
@@ -1907,6 +1914,311 @@ export const marketing: Catalog = {
     "Valores financeiros editáveis, com indicação da origem de cada número",
   "changelog.entries.governance-editable-finances.body":
     "Os administradores passam a poder corrigir os valores no separador de Finanças da governação, em vez de estarem fixos. Cada número tem uma pequena etiqueta que mostra a sua origem: um valor de exemplo por verificar, um valor introduzido por um administrador, ou um valor calculado (como o excedente). As correções ficam registadas, por isso é sempre claro quem alterou o quê e quando.",
+
+  "changelog.entries.push-devices-list.title":
+    "Vê e remove todos os dispositivos que recebem as tuas notificações push",
+  "changelog.entries.push-devices-list.body":
+    "As Definições passam a ter uma lista de Dispositivos em Notificações: todos os dispositivos registados para push da QueerPulse, quando foram registados, e quando foram notificados pela última vez. Perdeste um telemóvel, ou não reconheces algum? Remove-o diretamente ali.",
+
+  "changelog.entries.gatherings-manage-attendees-remove-promote.title":
+    "Quem organiza já pode remover uma pessoa convidada ou promovê-la da lista de espera",
+  "changelog.entries.gatherings-manage-attendees-remove-promote.body":
+    "Os botões Remover e Promover no separador de Pessoas Convidadas passam a fazer mesmo alguma coisa: remover liberta o lugar para a lista de espera, e promover coloca uma pessoa específica da lista de espera na lista de convidados, fora de ordem se quiseres.",
+
+  "changelog.entries.myevents-calendar-feed-subscribe.title":
+    "Subscreve os teus convívios no Google ou Apple Calendar",
+  "changelog.entries.myevents-calendar-feed-subscribe.body":
+    "\"Subscrever o teu feed\" em Os Meus Convívios passa a copiar um link de feed real e privado. Adiciona-o ao Google ou Apple Calendar e mantém-se atualizado com tudo a que vais.",
+
+  "changelog.entries.gatherings-recap-more-from-host.title":
+    "Os resumos passam a apontar para mais convívios da mesma pessoa anfitriã",
+  "changelog.entries.gatherings-recap-more-from-host.body":
+    "A página de resumo de um convívio passa a mostrar outros convívios futuros da mesma pessoa anfitriã, para que uma boa noite não termine sem forma de marcar a próxima.",
+
+  "changelog.entries.myevents-rsvp-actions-real.title":
+    "As ações em Os Meus Convívios já atualizam mesmo a tua inscrição",
+  "changelog.entries.myevents-rsvp-actions-real.body":
+    "Marcar-te como talvez ou vou, aceitar ou recusar um convite, dizer que não podes ir, e sair de uma lista de espera passam todos a escrever na tua inscrição real, em vez de só mudarem o que o cartão te mostra.",
+
+  "changelog.entries.myevents-block-host-real.title":
+    "\"Bloquear a pessoa anfitriã\" em Os Meus Convívios já bloqueia mesmo",
+  "changelog.entries.myevents-block-host-real.body":
+    "A opção de bloquear no menu de um cartão de convívio passa a usar o mesmo bloqueio de qualquer outro sítio na QueerPulse, em vez de só mostrar uma notificação de confirmação.",
+
+  "changelog.entries.myevents-reminder-indicator-honest.title":
+    "O sino de lembrete nos cartões de convívio passa a ser um estado, não um interruptor",
+  "changelog.entries.myevents-reminder-indicator-honest.body":
+    "Os lembretes são enviados a todas as pessoas que vão ou talvez vão, de acordo com a tua definição de antecedência em Preferências, não por convívio individual. O sino num cartão passa a mostrar isso claramente, em vez de parecer um interruptor por convívio que nunca foi.",
+
+  "changelog.entries.gatherings-edit-date-time-fix.title":
+    "Editar a data e hora de um convívio já o reagenda mesmo",
+  "changelog.entries.gatherings-edit-date-time-fix.body":
+    "O campo de data no \"Editar detalhes\" do painel de gestão costumava guardar só um texto, não uma data real. Agora reagenda mesmo o convívio, e todas as pessoas com inscrição são notificadas da mudança.",
+
+  "changelog.entries.gatherings-cancelled-page-real-content.title":
+    "A página de um convívio cancelado já mostra o convívio real",
+  "changelog.entries.gatherings-cancelled-page-real-content.body":
+    "Abrir um aviso de cancelamento costumava mostrar sempre o mesmo convívio fictício de exemplo. Agora mostra o convívio que foi mesmo cancelado: o seu título, data, pessoa anfitriã e local reais.",
+
+  "changelog.entries.gatherings-cohost-roster-visible.title":
+    "Quem organiza já vê quem já está a coanfitrionar",
+  "changelog.entries.gatherings-cohost-roster-visible.body":
+    "O painel de pessoas coanfitriãs no painel de gestão costumava começar sempre vazio, mesmo em convívios que já tinham pessoas coanfitriãs. Agora mostra a lista real.",
+
+  "changelog.entries.gatherings-remove-pricing-step.title":
+    "Removido o passo de preços ao criar um convívio",
+  "changelog.entries.gatherings-remove-pricing-step.body":
+    "A QueerPulse não processa pagamentos, por isso o passo de preços de bilhetes no assistente nunca fazia nada com o que escrevias ali. Deixou de existir, em vez de continuar com um aspeto funcional sem o ser.",
+
+  "changelog.entries.messages-message-requests.title":
+    "Contacta alguém novo, diretamente da tua caixa de entrada",
+  "changelog.entries.messages-message-requests.body":
+    "Ainda não estás ligado(a) a alguém? Procura essa pessoa em Nova Mensagem e envia uma primeira mensagem. Torna-se um pedido que a pessoa pode aceitar ou recusar, e os pedidos à tua espera aparecem agora num novo separador Pedidos.",
+
+  "changelog.entries.messages-mute-conversation.title":
+    "Silencia as notificações de uma conversa",
+  "changelog.entries.messages-mute-conversation.body":
+    "O menu de opções de cada conversa passa a ter Silenciar, junto de Fixar e Favoritos. Uma conversa silenciada deixa de enviar notificações push, mas mantém-se exatamente no mesmo lugar da tua caixa de entrada.",
+
+  "changelog.entries.messages-search-in-chat.title":
+    "Pesquisa dentro de uma única conversa",
+  "changelog.entries.messages-search-in-chat.body":
+    "Abre uma conversa e toca no ícone de pesquisa para procurar só nessa conversa, em vez de em toda a caixa de entrada.",
+
+  "changelog.entries.governance-proposals-voting.title":
+    "As decisões de governação passam agora por uma votação real da comunidade",
+  "changelog.entries.governance-proposals-voting.body":
+    "Encerrar um lugar no conselho consultivo exige dois terços dos votos, e aceitar financiamento fora das nossas fontes habituais exige maioria. As propostas em aberto mostram uma contagem ao vivo na página de Governação, e as anteriores continuam visíveis com o respetivo resultado.",
+
+  "changelog.entries.governance-figures-honesty.title":
+    "A contagem de membros ativos da Governação é agora calculada ao vivo",
+  "changelog.entries.governance-figures-honesty.body":
+    "O número de membros ativos na página de Governação é agora calculado diretamente a partir de contas reais, em vez de ser escrito à mão. Os valores financeiros continuam a ser reportados pela equipa a cada trimestre, e a página passa a dizê-lo claramente, em vez de dar a entender que são calculados automaticamente.",
+
+  "changelog.entries.communities-sister-demo-only.title":
+    "As sugestões de \"comunidades irmãs\" ficam limitadas ao modo de demonstração",
+  "changelog.entries.communities-sister-demo-only.body":
+    "As sugestões de \"comunidades irmãs\" e \"também em\" estavam a aparecer com dados de exemplo mesmo em páginas de comunidades reais. Agora só aparecem quando estás a ver a demonstração.",
+
+  "changelog.entries.communities-category-filter.title":
+    "Os filtros de categoria das comunidades funcionam para lá da primeira página",
+  "changelog.entries.communities-category-filter.body":
+    "Filtrar comunidades por categoria pede agora uma correspondência real ao servidor, em vez de filtrar apenas o que já tinha carregado, corrigindo o \"nenhuma comunidade corresponde\" incorreto ao passar da primeira página.",
+
+  "changelog.entries.communities-archive-reversible.title":
+    "Comunidades arquivadas podem ser recuperadas",
+  "changelog.entries.communities-archive-reversible.body":
+    "Os administradores podem agora desarquivar uma comunidade, tal como já era possível reverter a congelação. Arquivar uma comunidade por engano deixa de ser permanente.",
+
+  "changelog.entries.changemakers-nomination-reason.title":
+    "As nomeações de Changemakers pedem agora a frase que prometem pedir",
+  "changelog.entries.changemakers-nomination-reason.body":
+    "O formulário de nomeação sempre disse que \"um nome e uma frase chegam,\" mas só pedia um nome. Agora tem um campo real para a tua frase, e quem revê as nomeações pode ler o que escreveste.",
+
+  "changelog.entries.changemakers-nomination-review.title":
+    "As nomeações de Changemakers recebem agora uma resposta real",
+  "changelog.entries.changemakers-nomination-review.body":
+    "Os administradores podem agora aprovar ou recusar uma nomeação, e vais ser notificado da decisão em vez de ficares sem resposta depois de a submeteres.",
+
+  "changelog.entries.changemakers-connect-honest.title":
+    "O botão \"Contactar\" num perfil de Changemaker é agora honesto sobre o que faz",
+  "changelog.entries.changemakers-connect-honest.body":
+    "Os perfis de Changemakers são conteúdo editorial, não contas de membros ligadas, por isso \"Contactar\" nunca podia mesmo enviar uma mensagem a essa pessoa. Agora encaminha-te para o nosso canal de contacto geral e diz isso mesmo.",
+
+  "changelog.entries.moderation-assign-to-me.title":
+    "Os moderadores podem reivindicar denúncias na fila",
+  "changelog.entries.moderation-assign-to-me.body":
+    "O filtro \"Atribuídas a mim\" na fila de moderação estava sempre vazio. Os moderadores podem agora reivindicar ou libertar uma denúncia a partir do painel da denúncia, e o filtro reflete reivindicações reais.",
+
+  "changelog.entries.moderation-report-history-link.title":
+    "Vê o histórico completo de denúncias de um membro a partir da fila",
+  "changelog.entries.moderation-report-history-link.body":
+    "A contagem de \"denúncias anteriores\" numa denúncia era apenas um número. Agora é uma ligação direta para todas as outras denúncias sobre essa mesma pessoa.",
+
+  "changelog.entries.moderation-resolution-detail.title":
+    "As denúncias resolvidas mostram o que realmente aconteceu",
+  "changelog.entries.moderation-resolution-detail.body":
+    "As denúncias resolvidas mostram agora quem as resolveu, o que foi decidido, e quando, em vez de um texto genérico. \"Encerrada há X\" reflete agora o momento real da resolução, não o momento em que a denúncia foi submetida.",
+
+  "changelog.entries.moderation-sla-overdue.title":
+    "As denúncias atrasadas são assinaladas na fila",
+  "changelog.entries.moderation-sla-overdue.body":
+    "As denúncias já tinham um prazo de resposta calculado por trás dos bastidores. Agora é visível, com um aviso de atraso assim que uma denúncia ultrapassa o prazo.",
+
+  "changelog.entries.moderation-bulk-actions-expanded.title":
+    "A moderação em lote passa a incluir aviso, suspensão e banimento",
+  "changelog.entries.moderation-bulk-actions-expanded.body":
+    "A barra de ações em lote só lidava com dispensar, marcar como spam e reatribuir. Agora também lida com aviso, suspensão (com seletor de duração) e banimento, para que uma vaga de denúncias coordenadas não tenha de ser tratada uma a uma.",
+
+  "changelog.entries.moderation-appeal-integrity.title":
+    "As revisões de recursos mostram as provas reais, e já não podem ser autorrevistas",
+  "changelog.entries.moderation-appeal-integrity.body":
+    "Rever um recurso mostra agora o conteúdo originalmente denunciado, não apenas o resumo do próprio moderador sobre porque agiu. Um moderador já não pode rever o recurso da sua própria decisão original.",
+
+  "changelog.entries.forum-write-rate-limit.title":
+    "As publicações no fórum têm agora o seu próprio limite de frequência",
+  "changelog.entries.forum-write-rate-limit.body":
+    "Criar tópicos, respostas e votos tem agora uma proteção contra abuso dedicada, à altura da que as comunidades já tinham, em vez de depender apenas do limite geral do site.",
+
+  "changelog.entries.forum-first-post-accuracy.title":
+    "O aviso de \"primeira publicação\" verifica agora o teu histórico real",
+  "changelog.entries.forum-first-post-accuracy.body":
+    "O convite do fórum para fazeres a tua primeira publicação só verificava a sessão de navegação atual, por isso saudava incorretamente quem já publicava como se fosse novo. Agora verifica se já alguma vez publicaste.",
+
+  "changelog.entries.forum-lock-reason.title":
+    "Os tópicos encerrados podem dizer porquê",
+  "changelog.entries.forum-lock-reason.body":
+    "Quando um moderador encerra um tópico, pode agora acrescentar um motivo breve, que aparece na faixa de encerrado em vez de todos os tópicos encerrados terem o mesmo texto genérico.",
+
+  "changelog.entries.forum-shareable-filters.title":
+    "A categoria e a ordenação do fórum sobrevivem a uma atualização da página",
+  "changelog.entries.forum-shareable-filters.body":
+    "Escolher uma categoria ou separador de ordenação no fórum atualiza agora o link da página, para que atualizar ou partilhar mantenha a tua vista em vez de voltar silenciosamente a \"Todas.\"",
+
+  "changelog.entries.forum-search-hint.title":
+    "A pesquisa do fórum diz agora o que pesquisa",
+  "changelog.entries.forum-search-hint.body":
+    "Uma pequena nota junto à caixa de pesquisa do fórum esclarece agora que procura nos títulos dos tópicos, não no texto de publicações e respostas.",
+
+  "changelog.entries.forum-most-helpful-real.title":
+    "A ordenação \"Mais útil\" reflete agora votos reais",
+  "changelog.entries.forum-most-helpful-real.body":
+    "Ordenar respostas por \"mais útil\" usa agora votos positivos reais, e a resposta mais votada recebe o distintivo de estrela, em vez de só funcionar na demonstração.",
+
+  "changelog.entries.recognition-locked-badges-honest.title":
+    "A vitrine de emblemas só mostra emblemas que consegues mesmo ganhar",
+  "changelog.entries.recognition-locked-badges-honest.body":
+    "Alguns emblemas apareciam como \"bloqueados\" com instruções para os ganhar que não levavam a lado nenhum. Deixam de aparecer até haver uma forma real de os ganhar.",
+
+  "changelog.entries.recognition-vouch-perk-copy.title":
+    "A descrição do benefício \"Acesso a apadrinhamento\" corresponde agora à realidade",
+  "changelog.entries.recognition-vouch-perk-copy.body":
+    "A vitrine de benefícios dizia que o acesso a apadrinhamento se desbloqueava no Nível 3. Apadrinhar nunca teve realmente esse requisito de nível, por isso a descrição diz agora o que é verdade: está disponível para qualquer membro ativo desde o início.",
+
+  "changelog.entries.recognition-visible-on-profiles.title":
+    "Vê o nível e os emblemas de outros membros",
+  "changelog.entries.recognition-visible-on-profiles.body":
+    "O nível e os emblemas só apareciam no teu próprio perfil. Agora aparecem também nos perfis de outros membros, para o reconhecimento funcionar como um sinal visível entre membros.",
+
+  "changelog.entries.vouch-daily-cap.title":
+    "Um limite diário de apadrinhamentos, para manter o sinal significativo",
+  "changelog.entries.vouch-daily-cap.body":
+    "Apadrinhar pessoas já tinha um curto intervalo entre apadrinhamentos. Agora existe também um limite diário generoso, para o sinal se manter significativo mesmo ao longo do tempo.",
+
+  "changelog.entries.magazine-article-publish-schedule.title":
+    "Publicar e agendar artigos, agora a sério",
+  "changelog.entries.magazine-article-publish-schedule.body":
+    "Os controlos de Publicar e Agendar do editor de artigos eram apenas decorativos. Agora publicam mesmo o teu artigo, de imediato ou numa data e hora futura à tua escolha, e artigos que não estão ligados a uma edição podem finalmente ir ao ar sem esperar pela produção da edição.",
+
+  "changelog.entries.magazine-writer-draft-paste-fix.title":
+    "Colar um rascunho em \"Entregar rascunho\" deixou de o perder",
+  "changelog.entries.magazine-writer-draft-paste-fix.body":
+    "Colar o texto do teu rascunho ao entregar uma peça costumava desaparecer assim que confirmavas. Agora passa diretamente para o editor de artigos como parágrafos reais, prontos para continuares a trabalhar.",
+
+  "changelog.entries.magazine-live-discovery.title":
+    "A revista já tem por onde navegar",
+  "changelog.entries.magazine-live-discovery.body":
+    "Antes, só era possível chegar a um artigo através de uma ligação direta. A capa da revista, o arquivo de edições e as páginas de autores estão agora ligados a dados reais, e as ligações de edição abrem a edição certa em vez de mostrarem sempre a atual. Há também um novo diretório de autores para conheceres quem escreve na revista.",
+
+  "changelog.entries.culture-submissions-real.title":
+    "As submissões do Clube, Mostra e Rádio são agora reais",
+  "changelog.entries.culture-submissions-real.body":
+    "Sugerir uma escolha, publicar um projeto de encomenda, submeter trabalho para a mostra ou enviar uma playlist costumava mostrar uma mensagem de sucesso e não ir a lado nenhum. Agora cada uma destas ações fica mesmo guardada.",
+
+  "changelog.entries.culture-radio-honest.title":
+    "Os controlos da Rádio dizem a verdade",
+  "changelog.entries.culture-radio-honest.body":
+    "Os controlos de reprodução e avançar da Rádio costumavam fingir que funcionavam. Agora são honestos sobre o que está realmente no ar, e \"Tornar-me curador\" abre o formulário real de submissão de playlist.",
+
+  "changelog.entries.newsletter-unsubscribe.title":
+    "Cancela a subscrição da newsletter tu mesmo/a",
+  "changelog.entries.newsletter-unsubscribe.body":
+    "Não havia forma de parar os emails da newsletter depois de confirmares a subscrição. Existe agora uma ligação e página reais de cancelamento, a seguir o mesmo fluxo de confirmação que tens ao subscrever.",
+
+  "changelog.entries.resources-crisis-hotline-coverage.title":
+    "Linhas de crise aparecem agora em todas as páginas próximas de crise",
+  "changelog.entries.resources-crisis-hotline-coverage.body":
+    "Direito, Saúde Trans, Redução de Danos, Saúde Sexual, Segurança e Saúde Mental mostram agora a mesma faixa de linhas de crise que já existia no Bem-estar, para a ajuda estar sempre a um toque de distância.",
+
+  "changelog.entries.resources-library-consolidated.title":
+    "A página de Recursos passa a mostrar dados reais de guias",
+  "changelog.entries.resources-library-consolidated.body":
+    "A página inicial de Recursos mostra agora os mesmos guias reais, servidos pelo backend, do resto da aplicação, com a atualidade de cada guia acompanhada.",
+
+  "changelog.entries.resources-guide-freshness.title":
+    "Os guias mostram agora quando foram verificados pela última vez",
+  "changelog.entries.resources-guide-freshness.body":
+    "Cada guia mostra a data em que a equipa editorial o verificou pela última vez, ou um honesto \"ainda não verificado\" quando ainda não foi revisto.",
+
+  "changelog.entries.resources-suggest-edit-expanded.title":
+    "Sugerir uma alteração, para além do Glossário",
+  "changelog.entries.resources-suggest-edit-expanded.body":
+    "O formulário de \"sugerir uma alteração\" só funcionava no Glossário. Agora também abre a partir de Direito, Saúde Trans, Redução de Danos, Saúde Mental e da biblioteca de guias.",
+
+  "changelog.entries.directory-review-reporting.title":
+    "Denunciar uma avaliação individual no diretório local",
+  "changelog.entries.directory-review-reporting.body":
+    "Cada avaliação na página de um negócio tem agora uma opção de Denunciar, para poderes assinalar uma avaliação abusiva ou falsa isoladamente, em vez de só poderes contestar o anúncio inteiro. Um moderador analisa cada denúncia da mesma forma que no resto da plataforma.",
+
+  "changelog.entries.directory-search-pagination.title":
+    "Pesquisa mais rápida e completa no diretório local",
+  "changelog.entries.directory-search-pagination.body":
+    "A pesquisa no diretório local agora filtra do lado do servidor, em vez de parar silenciosamente ao fim das primeiras duas centenas de lugares. Ao chegares ao fim da lista, mais resultados carregam automaticamente, por isso uma pesquisa ampla ou o diretório completo já não param antes da contagem real.",
+
+  "changelog.entries.directory-edit-suggestions-applied.title":
+    "Correções de anúncios aceites agora atualizam mesmo o anúncio",
+  "changelog.entries.directory-edit-suggestions-applied.body":
+    "Quando sugeres uma correção a um anúncio de negócio (horário, morada, telefone, site ou descrição errados) e um moderador a aceita, o anúncio em si é atualizado e o dono é notificado. Aceitar não tinha antes qualquer efeito visível.",
+
+  "changelog.entries.housing-my-listings.title":
+    "Gere o quarto ou casa que publicaste, na tua própria página Os Meus Anúncios",
+  "changelog.entries.housing-my-listings.body":
+    "Os anúncios de habitação têm agora um espaço próprio. Edita qualquer anúncio que publicaste, marca-o como preenchido assim que encontrares alguém, prolonga-o antes de expirar, ou remove-o por completo. Um anúncio também expira automaticamente ao fim de alguns meses se nunca voltares a atualizá-lo, para o diretório não se encher de anúncios desatualizados.",
+
+  "changelog.entries.appeal-outcome-tracking.title":
+    "O resultado do recurso mostra agora o teu estado real",
+  "changelog.entries.appeal-outcome-tracking.body":
+    "A página de resultado do recurso costumava mostrar um estado de demonstração, independentemente do que realmente aconteceu ao teu recurso. Agora mostra o teu recurso real: mantido, revertido, ou ainda a aguardar revisão, tirado diretamente da decisão do moderador.",
+
+  "changelog.entries.quickexit-more-pages.title":
+    "A saída rápida está disponível em mais páginas de segurança",
+  "changelog.entries.quickexit-more-pages.body":
+    "O botão de saída rápida, para saíres da página de imediato, aparece agora também em Bloquear e Silenciar, nas duas páginas de recurso, e nos anúncios de Espaços Seguros, não só nas páginas de crimes de ódio e denúncia.",
+
+  "changelog.entries.legal-links-reconciled.title":
+    "Todos os documentos legais estão agora listados no rodapé e no menu",
+  "changelog.entries.legal-links-reconciled.body":
+    "Os Termos de Serviço não constavam do rodapé, e algumas políticas, incluindo a página de pedido de dados, não constavam da secção legal do menu Sobre. Ambos listam agora o mesmo conjunto completo: privacidade, termos, cookies, ficha legal, diretrizes e pedidos de dados.",
+
+  "changelog.entries.hate-crime-resources-linked.title":
+    "Recursos sobre Crimes de Ódio está agora ligado a partir do rodapé",
+  "changelog.entries.hate-crime-resources-linked.body":
+    "Esta página só era antes acessível através de Recursos ou de uma ligação direta. Está agora também na coluna de Apoio do rodapé, junto de Apoio Jurídico e Denúncias e Segurança.",
+
+  "changelog.entries.listing-quick-edit.title":
+    "Edição rápida para o teu anúncio no diretório",
+  "changelog.entries.listing-quick-edit.body":
+    "Corrigir um erro na frase de apresentação ou atualizar o teu telefone costumava obrigar a percorrer todo o assistente de anúncio outra vez. A secção Os Meus Espaços da tua conta tem agora uma Edição Rápida para o essencial (frase de apresentação, nota sobre o horário, telefone, site), com o editor completo ainda a um clique de distância para alterações maiores.",
+
+  "changelog.entries.topics-follow-notifications-and-directory.title":
+    "Seguir um tópico já te avisa — e há um novo diretório de Tópicos",
+  "changelog.entries.topics-follow-notifications-and-directory.body":
+    "Seguir um tópico (o botão Seguir em qualquer página de #etiqueta) não tinha efeito nenhum. Agora, quando alguém publica uma conversa no fórum com a etiqueta desse tópico, todas as pessoas a segui-lo são avisadas. Há também uma nova página de Tópicos que lista todos os tópicos com um botão de seguir, ligada a partir do menu Comunidade junto ao Fórum — e o botão \"Escrever uma publicação\" de um tópico abre o compositor do fórum já com essa etiqueta associada.",
+
+  "changelog.entries.search-topics-real-results.title":
+    "Os tópicos já aparecem na pesquisa global",
+  "changelog.entries.search-topics-real-results.body":
+    "Pesquisar por um tópico com hashtag devolve agora resultados reais da pesquisa global, junto com pessoas, comunidades e tudo o resto. As categorias com mais resultados do que cabem no ecrã passam a ter uma ligação \"Ver tudo\".",
+
+  "changelog.entries.feed-connections-tab.title":
+    "Novo separador \"Ligações\" no teu feed",
+  "changelog.entries.feed-connections-tab.body":
+    "A barra de separadores do feed passa a ter Ligações: publicações, tópicos do fórum, e convívios de pessoas a quem estás ligade, tudo num só lugar. Ainda não te ligaste a ninguém? O separador leva-te ao diretório de pessoas para começares.",
+
+  "changelog.entries.connections-report-now-files.title":
+    "Corrigido: denunciar uma ligação agora envia mesmo a denúncia",
+  "changelog.entries.connections-report-now-files.body":
+    "\"Denunciar\" no menu de opções de uma ligação mostrava uma confirmação de \"Denúncia enviada\" sem enviar nada de facto. Agora abre o mesmo formulário de motivo e detalhe usado no resto da aplicação e envia mesmo uma denúncia à equipa de moderação.",
 
   "changelog.entries.getting-started-xp-not-awarded-fix.title":
     "Corrigido: XP do Início Rápido não aparecia",
@@ -4225,6 +4537,7 @@ export const marketing: Catalog = {
   "directory.cat.grooming": "Barbearia e Salão",
   "directory.cat.fitness": "Ginásio e Fitness",
   "directory.loading": "A carregar lugares…",
+  "directory.loadingMore": "A carregar mais lugares…",
   "directory.count": "A mostrar <b>{shown}</b> de {total} lugares",
   "directory.empty.title": "Nenhum lugar corresponde a esses filtros",
   "directory.empty.body":
@@ -4353,6 +4666,22 @@ export const marketing: Catalog = {
   "directory.detail.notFound.cta": "Explorar o diretório",
   "directory.detail.reportCta": "Denunciar este negócio",
   "directory.detail.reportAriaLabel": "Denunciar {name}",
+  "directory.detail.reportReview.cta": "Denunciar",
+  "directory.detail.reportReview.title": "Denunciar esta avaliação",
+  "directory.detail.reportReview.sub":
+    "Diz-nos o que está errado na avaliação de {name}. Um moderador analisa todas as denúncias, e não será dito quem a fez.",
+  "directory.detail.reportReview.reasonGroupAria": "Motivo da denúncia",
+  "directory.detail.reportReview.cancel": "Cancelar",
+  "directory.detail.reportReview.sendCta": "Enviar denúncia",
+  "directory.detail.reportReview.sending": "A enviar…",
+  "directory.detail.reportReview.confirmTitle": "Obrigado. <em>Estamos a tratar disso.</em>",
+  "directory.detail.reportReview.confirmBody":
+    "Um moderador vai analisar esta avaliação.",
+  "directory.detail.reportReview.done": "Concluído",
+  "directory.detail.reportReview.errorTitle": "Não foi possível enviar a denúncia",
+  "directory.detail.reportReview.errorBody":
+    "Algo correu mal do nosso lado. Por favor, tenta novamente.",
+  "directory.detail.reportReview.retryCta": "Tentar novamente",
   "directory.detail.suggestEdit.cta": "Sugerir uma correção",
   "directory.detail.suggestEdit.ariaLabel": "Sugerir uma correção para {name}",
   "directory.detail.suggestEdit.title": "Sugerir uma correção",
@@ -4948,15 +5277,19 @@ export const marketing: Catalog = {
   "constitution.footer.readCodeOfConduct": "Ler o Código de Conduta",
 
   // ── Biblioteca de Recursos — chrome de página/filtros/cartão. Os registos
-  //    de `RESOURCES` (nome/descrição/etiquetas — organizações externas e
-  //    ferramentas da QueerPulse com curadoria) são conteúdo de diretório,
-  //    mesmo precedente de `directoryPlaces.ts` / da página Plataformas
-  //    abaixo — ficam em inglês. `LIBRARY_SUBPAGES` (rótulo/descrição) é
-  //    chrome curto de apresentação, escrito pela plataforma — traduzido.
+  //    de `ORGANISATIONS` (nome/descrição/etiquetas — uma pequena lista com
+  //    curadoria de organizações externas reais, mantida à parte da grade
+  //    editorial de guias) é conteúdo de diretório, mesmo precedente de
+  //    `directoryPlaces.ts` / da página Plataformas abaixo — ficam em
+  //    inglês. `LIBRARY_SUBPAGES` (rótulo/descrição) é chrome curto de
+  //    apresentação, escrito pela plataforma — traduzido.
+  //    CNT-11: a grade de guias em si é dados reais, servidos pelo backend —
+  //    o seu chrome de pesquisa/filtro/cartão vive nas chaves partilhadas
+  //    `resources:library.*` (ver resources.ts) para não duplicar por catálogo.
   "resourceLibrary.meta.title":
     "Recursos queer em Lisboa: saúde, apoio jurídico, habitação e dinheiro",
   "resourceLibrary.meta.description":
-    "Coisas que realmente ajudam — uma biblioteca com curadoria de recursos gratuitos e de escala variável de saúde, apoio jurídico, habitação, dinheiro, identidade e segurança para a Lisboa queer.",
+    "Coisas que realmente ajudam: guias escritos pela comunidade e uma pequena lista de organizações de confiança, para saúde, apoio jurídico, habitação, finanças e vida trans na Lisboa queer.",
   "resourceLibrary.hero.eyebrow": "Biblioteca de Recursos",
   "resourceLibrary.hero.title": "Coisas que <em>realmente ajudam.</em>",
   "resourceLibrary.hero.sub":
@@ -4966,22 +5299,15 @@ export const marketing: Catalog = {
   "resourceLibrary.stats.communityLabel": "Comunidade",
   "resourceLibrary.stats.maintained": "mantida",
   "resourceLibrary.search.placeholder": "Pesquisar recursos…",
-  "resourceLibrary.category.all": "Todos",
-  "resourceLibrary.category.health": "Saúde",
-  "resourceLibrary.category.legal": "Jurídico",
-  "resourceLibrary.category.housing": "Habitação",
-  "resourceLibrary.category.money": "Dinheiro",
-  "resourceLibrary.category.identity": "Identidade",
-  "resourceLibrary.category.safety": "Segurança",
-  "resourceLibrary.category.community": "Comunidade",
   "resourceLibrary.results_one": "{count} resultado",
   "resourceLibrary.results_other": "{count} resultados",
   "resourceLibrary.empty":
     "Nenhum recurso corresponde — tenta um filtro mais amplo.",
-  "resourceLibrary.cost.free": "Gratuito",
-  "resourceLibrary.cost.sliding": "Escala variável",
-  "resourceLibrary.card.openGuide": "Abrir guia",
-  "resourceLibrary.card.visitSite": "Visitar site ↗",
+  "resourceLibrary.card.visitSite": "Visitar site",
+  "resourceLibrary.orgs.title":
+    "Organizações que fazem isto <em>todos os dias.</em>",
+  "resourceLibrary.orgs.lead":
+    "Uma pequena lista de organizações em Lisboa e por Portugal em quem confiamos, para apoio que a QueerPulse não presta diretamente.",
   "resourceLibrary.outro.title": "Sabes de algo que <em>falta?</em>",
   "resourceLibrary.outro.sub":
     "Todos os recursos aqui foram adicionados por uma pessoa da comunidade. Se algo te ajudou e não está listado, conta-nos.",

@@ -11,6 +11,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import { useSubmitAppeal } from "./api/useSubmitAppeal";
 import type { SubmittedAppealDTO } from "./api/appeals.api";
+import { QuickExit } from "./QuickExit";
 import styles from "./AppealSubmitPage.module.css";
 
 /** Matches the backend `CreateAppealDto` `@MinLength(20)` — the submit stays
@@ -164,6 +165,7 @@ export function AppealSubmitPage() {
       ) : (
         <AppealForm submitAppeal={submitAppeal} />
       )}
+      <QuickExit />
     </SystemStateShell>
   );
 }

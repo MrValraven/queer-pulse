@@ -16,6 +16,7 @@ const ANCHOR_R = 215;
 export function trustNetworkDtoToData(dto: TrustNetworkDTO): TrustGraphData {
   const people: VouchPerson[] = dto.nodes.map((node) => ({
     id: node.id,
+    userId: node.userId,
     name: node.name,
     pronoun: node.pronouns ?? "",
     initials: node.initials,

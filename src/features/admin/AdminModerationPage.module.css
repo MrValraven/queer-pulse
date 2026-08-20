@@ -1,3 +1,50 @@
+/* ── Subject deep-link filter (ADM-8 / COM-6) ───────────────────────────── */
+.subjectFilter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  margin: 0 0 16px;
+  padding: 7px 8px 7px 14px;
+  border-radius: 999px;
+  background: rgba(var(--plum-rgb), 0.06);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+[data-theme="dark"] .subjectFilter {
+  color: var(--ink);
+}
+.subjectFilter button {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition:
+    background 0.16s var(--ease),
+    color 0.16s var(--ease);
+}
+@media (hover: hover) {
+  .subjectFilter button:hover {
+    background: rgba(var(--plum-rgb), 0.1);
+    color: var(--text-strong);
+  }
+}
+.subjectFilter button:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 2px;
+}
+.subjectFilter button svg {
+  width: 13px;
+  height: 13px;
+}
+
 /* ── Toolbar (tabs + filter pills) ──────────────────────────────────────── */
 .toolbar {
   display: flex;
@@ -298,6 +345,32 @@ button.reportMain:focus-visible {
   width: 11px;
   height: 11px;
 }
+.priorFlagLink {
+  cursor: pointer;
+  border: none;
+  font: inherit;
+}
+.priorFlagLink:hover,
+.priorFlagLink:focus-visible {
+  background: rgba(var(--amber-rgb), 0.28);
+  outline: none;
+}
+.assignedFlag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(var(--jade-rgb), 0.16);
+  color: var(--jade-ink);
+  font-weight: 600;
+  font-size: 11.5px;
+}
+.assignedFlag svg {
+  width: 11px;
+  height: 11px;
+}
 
 .reportSide {
   flex: none;
@@ -490,6 +563,28 @@ button.reportMain:focus-visible {
 .dTitle em {
   color: var(--accent-ink);
   font-style: italic;
+}
+.dAssignment {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+.dAssignmentCta {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent-ink);
+  cursor: pointer;
+  text-decoration: underline;
+}
+.dAssignmentCta:hover,
+.dAssignmentCta:focus-visible {
+  color: var(--accent);
 }
 .dAge {
   margin: 8px 0 0;

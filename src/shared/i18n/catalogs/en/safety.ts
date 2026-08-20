@@ -287,6 +287,16 @@ export const safety: Catalog = {
     "If you believe this is in error, you can contact our Trust team directly.",
   "appeal.upheld.contactCta": "Message the Trust team",
 
+  // Live-mode-only: the real appeal fetched from `GET /appeals/me`.
+  "appeal.live.error.title": "We couldn't load your appeal",
+  "appeal.live.error.desc":
+    "Something went wrong fetching your appeal status. Try refreshing the page.",
+  "appeal.live.empty.title": "No appeals on file",
+  "appeal.live.empty.desc":
+    "You haven't filed an appeal against a moderation decision. If one's been made against your account, you can contest it here.",
+  "appeal.live.empty.cta": "File an appeal",
+  "appeal.live.decisionNoteLabel": "Moderator's note",
+
   // ── AppealSubmitPage.tsx ───────────────────────────────────────────────
   "appealSubmit.kicker": "Appeal a decision",
   "appealSubmit.heading": "Tell us what we <em>got wrong</em>",

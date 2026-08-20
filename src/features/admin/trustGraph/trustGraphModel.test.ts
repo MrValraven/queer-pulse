@@ -4,9 +4,9 @@ import type { TrustGraphData } from "./trustGraphModel";
 
 const data: TrustGraphData = {
   people: [
-    { id: "a", name: "A", pronoun: "", initials: "A", tone: "jade", joined: "2024-01", standing: "trusted", sceneId: null, role: null },
-    { id: "b", name: "B", pronoun: "", initials: "B", tone: "plum", joined: "2024-02", standing: "new", sceneId: null, role: null },
-    { id: "c", name: "C", pronoun: "", initials: "C", tone: "coral", joined: "2024-03", standing: "new", sceneId: null, role: null },
+    { id: "a", userId: "u-a", name: "A", pronoun: "", initials: "A", tone: "jade", joined: "2024-01", standing: "trusted", sceneId: null, role: null },
+    { id: "b", userId: "u-b", name: "B", pronoun: "", initials: "B", tone: "plum", joined: "2024-02", standing: "new", sceneId: null, role: null },
+    { id: "c", userId: "u-c", name: "C", pronoun: "", initials: "C", tone: "coral", joined: "2024-03", standing: "new", sceneId: null, role: null },
   ],
   peopleById: {},
   edges: [

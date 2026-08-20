@@ -116,6 +116,10 @@ export interface Thread {
   /** Whether replies are closed. Live-provided; demo threads are unlocked.
    *  Optional so demo seed data still typechecks. */
   isLocked?: boolean;
+  /** Optional moderator note explaining why the thread was locked, shown on
+   *  the locked banner. Live-only; absent/null in demo (curated demo threads
+   *  are never locked). */
+  lockReason?: string | null;
   /** Viewer's vote on the opening post (0 or 1) — live only. Optional so demo
    *  seed data still typechecks. */
   myVote?: number;

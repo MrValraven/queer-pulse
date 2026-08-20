@@ -139,6 +139,15 @@ export const PREVIOUS_MESSAGES = [
 
 // i18n note: `id` is a stable lookup key for toggle state (never rendered);
 // `titleKey`/`descriptionKey` are the chrome copy shown per row.
+//
+// Only these two have a real backend effect (`Event.allowWaitlist`/
+// `showAttendeeCount` — see the `AddEventOptionsFlags` migration's doc). The
+// mock originally had two more ("Allow questions", "Require approval") that
+// persisted nothing and gated no real feature — there is no Q&A or
+// RSVP-approval workflow anywhere in this app for either to control, so they
+// were removed rather than wired to a flag that would still do nothing.
+// `on` seeds the DEMO prototype's starting state only; live reads/writes the
+// real event field (see `SettingsTab`).
 export const GATHERING_SETTINGS = [
   {
     id: "allowWaitlist",
@@ -152,16 +161,4 @@ export const GATHERING_SETTINGS = [
     descriptionKey: "gatherings:manage.settings.showAttendeeCount.desc",
     on: true,
   },
-  {
-    id: "allowQuestions",
-    titleKey: "gatherings:manage.settings.allowQuestions.title",
-    descriptionKey: "gatherings:manage.settings.allowQuestions.desc",
-    on: false,
-  },
-  {
-    id: "requireApproval",
-    titleKey: "gatherings:manage.settings.requireApproval.title",
-    descriptionKey: "gatherings:manage.settings.requireApproval.desc",
-    on: false,
-  },
-];
+] as const;

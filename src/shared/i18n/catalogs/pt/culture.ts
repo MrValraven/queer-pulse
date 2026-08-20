@@ -2,7 +2,8 @@ import type { Catalog } from "../../types";
 
 /** pt-PT — see `en/culture.ts` for the scope-rule note (book/film/album
  * titles, member quotes/bios, commission pitches, gallery credits and radio
- * track/curator content are fictional-user content and stay English). */
+ * track/curator content are fictional-user content and stay English) and for
+ * which forms record through the generic intake pipeline. */
 export const culture: Catalog = {
   "tabs.club": "Clube de Livro · Cinema · Música",
   "tabs.commission": "Quadro de Encomendas",
@@ -70,14 +71,14 @@ export const culture: Catalog = {
     "A rádio da comunidade ainda não está no ar. Quando alguém da curadoria pegar no primeiro turno, vais ouvi-lo aqui.",
   "radio.curatorLabel": "Curadoria desta semana",
   "radio.curatedBy": "com curadoria de {name}",
-  "radio.pastPlaylists": "Playlists anteriores",
   "radio.becomeCurator": "Torna-te curador",
   "radio.nowPlaying": "A tocar agora",
   "radio.upNext": "A seguir",
   "radio.previousTrack": "Faixa anterior",
   "radio.nextTrack": "Faixa seguinte",
   "radio.play": "Reproduzir",
-  "radio.pause": "Pausar",
+  "radio.playbackNote":
+    "A reprodução ainda não está ativa. Isto mostra o que está no ar neste momento.",
 
   "modal.dialogAriaLabel": "Janela",
   "modal.close": "Fechar",
@@ -99,10 +100,10 @@ export const culture: Catalog = {
   "suggestPick.success.title": "Escolha",
   "suggestPick.success.em": "nomeada.",
   "suggestPick.success.body":
-    "Obrigada por nomeares algo para o clube. A comunidade decide o que lemos, vemos e ouvimos a seguir.",
+    "Recebemos a tua nomeação. A comunidade decide o que lemos, vemos e ouvimos a seguir.",
   "suggestPick.success.step1": "Entra na votação de último domingo.",
   "suggestPick.success.step2":
-    "Enviamos-te os resultados por email até <strong>{date}</strong>.",
+    "Ainda não enviamos um email com os resultados, por isso volta aqui depois da votação.",
 
   "postProject.title": "Publicar um <em>projeto</em>",
   "postProject.sub":
@@ -117,11 +118,10 @@ export const culture: Catalog = {
   "postProject.success.title": "Projeto",
   "postProject.success.em": "publicado.",
   "postProject.success.body":
-    "O teu apelo a colaboradores está na fila. Mantemos o quadro pequeno e intencional, para que cada publicação seja lida primeiro por uma pessoa.",
-  "postProject.success.step1":
-    "Uma pessoa moderadora revê novas publicações no prazo de 48 horas.",
+    "Recebemos o teu projeto. O quadro ainda é pequeno, por isso as publicações ainda não são associadas automaticamente a colaboradores.",
+  "postProject.success.step1": "Está guardado e visível para a nossa equipa.",
   "postProject.success.step2":
-    "Depois de publicado, vais receber manifestações de interesse por email. As primeiras respostas costumam chegar dentro de uma semana.",
+    "Entramos em contacto por email se alguém quiser avançar como colaborador.",
 
   "submitWork.title": "Submete o teu <em>trabalho</em>",
   "submitWork.sub":
@@ -139,11 +139,9 @@ export const culture: Catalog = {
   "submitWork.success.title": "Trabalho",
   "submitWork.success.em": "submetido.",
   "submitWork.success.body":
-    "Obrigada por confiares em nós com o teu trabalho. A mostra roda oito peças de cada vez, escolhidas pela comunidade.",
-  "submitWork.success.step1":
-    "As submissões são revistas uma vez por mês por pessoas curadoras da comunidade.",
-  "submitWork.success.step2":
-    "Terás uma resposta até <strong>{date}</strong>, selecionado ou não.",
+    "Recebemos o teu trabalho. A mostra roda oito peças de cada vez, escolhidas pela comunidade.",
+  "submitWork.success.step1": "Está guardado na fila da mostra.",
+  "submitWork.success.step2": "Entramos em contacto por email se for selecionado.",
 
   "submitPlaylist.eyebrow": "Rádio da Comunidade",
   "submitPlaylist.title": "Submeter uma <em>playlist</em>",
@@ -161,11 +159,11 @@ export const culture: Catalog = {
   "submitPlaylist.success.title": "Playlist",
   "submitPlaylist.success.em": "recebida.",
   "submitPlaylist.success.body":
-    "Obrigada por te ofereceres para um turno na rádio da comunidade. Rodamos as pessoas convidadas para o som se manter humano.",
+    "Recebemos a tua playlist. Rodamos as pessoas convidadas para o som se manter humano.",
   "submitPlaylist.success.step1":
-    "Uma pessoa da curadoria ouve todas as submissões: sem algoritmo, sem saltar faixas.",
+    "Está guardada aqui para uma pessoa da curadoria considerar.",
   "submitPlaylist.success.step2":
-    "Se encaixar, reservamos-te um lugar e enviamos-te um email até <strong>{date}</strong>.",
+    "Entramos em contacto por email se conseguirmos reservar-te um lugar.",
 
   "commissionInterest.errorToast":
     "Não foi possível enviar o teu interesse. Tenta novamente.",

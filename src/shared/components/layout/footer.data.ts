@@ -85,6 +85,10 @@ export const COLUMNS: FooterColumn[] = [
         labelKey: "shared:footerData.col.support.reportSafety",
         href: routes.report,
       },
+      {
+        labelKey: "shared:footerData.col.support.hateCrimeGuide",
+        href: routes.hateCrime,
+      },
     ],
   },
   {
@@ -107,6 +111,10 @@ export const COLUMNS: FooterColumn[] = [
 
 /** Quiet legal / utility row in the bottom bar of the full footer. */
 export const BASE_LINKS: FooterLink[] = [
+  {
+    labelKey: "shared:megaNav.about.col.legal.termsOfUse",
+    href: routes.terms,
+  },
   { labelKey: "shared:footerData.base.privacy", href: routes.privacy },
   { labelKey: "shared:footerData.base.cookies", href: routes.cookies },
   { labelKey: "shared:footerData.base.imprint", href: routes.imprint },

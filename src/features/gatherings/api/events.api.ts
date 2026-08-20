@@ -34,6 +34,42 @@ export type RsvpStatus = "going" | "maybe" | "waitlisted" | "invited";
 export type EventFilter =
   "upcoming" | "going" | "hosting" | "waitlisted" | "past" | "saved";
 
+// ── Recurring series (MSG-10) ───────────────────────────────────────────────
+// A deliberately minimal repeat rule — no RFC5545/RRULE engine. The backend
+// generates one independent, fully RSVPable/editable/cancelable `Event` row
+// per occurrence up front (capped at 52) rather than lazily via a generation
+// job — see `EventSeries` (backend) and `RecurrenceStep` (FE).
+
+export type RecurrenceCadence = "weekly" | "biweekly" | "monthly";
+export type RecurrenceEndType = "count" | "date";
+
+/** The repeat rule sent on create — mirrors the backend's `RecurrenceDto`. */
+export interface RecurrenceInput {
+  cadence: RecurrenceCadence;
+  endType: RecurrenceEndType;
+  /** Required when `endType === "count"`. */
+  endCount?: number;
+  /** Required when `endType === "date"`. ISO 8601. */
+  endUntil?: string;
+}
+
+/** One event's own position + cadence within its series — rides on every
+ *  card/detail the backend returns (`EventSummary.series`, backend). */
+export interface EventSeriesDTO {
+  id: string;
+  cadence: RecurrenceCadence;
+  /** This event's own 0-based position within the series. */
+  index: number;
+  /** The series' TOTAL generated occurrences (not "remaining"). */
+  occurrenceCount: number;
+}
+
+/** Edit/cancel/RSVP-cancel scope for a recurring occurrence — `"this"` (the
+ *  default, omitted from the query string) touches only this occurrence;
+ *  `"future"` also applies to every later occurrence in its series. See
+ *  `SeriesScopeQuery` (backend). */
+export type SeriesScope = "this" | "future";
+
 export interface EventHostDTO {
   slug: string;
   firstName: string;
@@ -72,6 +108,10 @@ export interface EventCardDTO {
   /** Whether the viewer has bookmarked ("saved") this event. Present on every
    *  summary/detail the backend returns (batch-computed server-side). */
   isBookmarked?: boolean;
+  /** The recurring series this event belongs to, or `null`/absent for a
+   *  standalone event. Rides on every summary/card (MSG-10), not just the
+   *  detail view. */
+  series?: EventSeriesDTO | null;
 }
 
 export interface EventsPage {
@@ -118,7 +158,47 @@ export interface EventDetailDTO extends EventCardDTO {
    *  set and the listing is still live. `null` otherwise. The frontend builds
    *  the `/local/directory/:slug` link itself via `businessPath()`. */
   venueListing?: { slug: string; name: string } | null;
+  /** The event's accepted co-hosts (never pending invites — those live under
+   *  `event-cohost-invites`). Rides free on `GET /events/:slug` (backend
+   *  `EventDetail.cohosts`), so the manage dashboard's cohost roster never
+   *  needs a second request. */
+  cohosts?: EventHostDTO[];
+  /** The viewer's own RSVP details ("Anything we should know?"), or `null`
+   *  when they have no active RSVP. Backend `EventDetail.myRsvpDetails`. */
+  myRsvpDetails?: RsvpDetailsDTO | null;
+  /** Manage-dashboard "Show attendee count" toggle. Detail-only — see
+   *  `detailToGathering`'s use of it to hide the numeric "spots" copy from a
+   *  non-organizer viewer. */
+  showAttendeeCount?: boolean;
+  /** Manage-dashboard "Allow waitlist" toggle. Detail-only — read by
+   *  `SettingsTab` to seed the toggle's starting state. */
+  allowWaitlist?: boolean;
+  /** MSG-12 — a small pre-RSVP "who else is going" preview (backend
+   *  `EventDetail.goingAttendeesPreview`), earliest RSVP first, capped at 8.
+   *  Empty when the host has `showAttendeeCount` off and the viewer isn't the
+   *  organizer, or nobody's going yet — never a client-side-only filter, the
+   *  backend already excludes blocked members in either direction. */
+  goingAttendeesPreview?: EventHostDTO[];
+  /** The filtered total behind `goingAttendeesPreview` — NOT `goingCount`
+   *  (that's the raw, unfiltered "N going" spots number). Drives the FE's
+   *  "+N more" line. Backend `EventDetail.goingAttendeesPreviewTotal`. */
+  goingAttendeesPreviewTotal?: number;
 }
+
+/** Who can see an attendee's own RSVP details — the same three ids
+ *  `RsvpDetailsModal` (myevents) already used as local-only state. */
+export type RsvpDetailsVisibility = "everyone" | "connections" | "justMe";
+
+/** The self-service fields `RsvpDetailsModal` reads/writes. */
+export interface RsvpDetailsDTO {
+  guestCount: number;
+  accessNeeds: string | null;
+  dietaryNeeds: string | null;
+  visibility: RsvpDetailsVisibility | null;
+}
+
+/** PATCH /events/:slug/rsvp/details — every field optional (partial edit). */
+export type UpdateRsvpDetailsDto = Partial<RsvpDetailsDTO>;
 
 export interface AttendeeDTO {
   slug: string;
@@ -167,6 +247,14 @@ export interface CreateEventDto {
   /** Link the venue to a real directory listing (its uuid). Omitted keeps a
    *  plain free-text `venue`, as before. */
   listingId?: string;
+  /** Manage-dashboard "Options" toggles (`SettingsTab`). Omitted keeps the
+   *  backend default (`true` — unlimited waitlist, counts shown). */
+  allowWaitlist?: boolean;
+  showAttendeeCount?: boolean;
+  /** Optional repeat rule (MSG-10) — see `RecurrenceInput`'s doc. CREATE-only:
+   *  `UpdateEventDto` never carries this (converting an existing standalone
+   *  gathering into a series after the fact is out of scope). */
+  recurrence?: RecurrenceInput;
 }
 
 /** PATCH /events/:slug — every field optional. `communitySlug`/`listingId`
@@ -175,7 +263,7 @@ export interface CreateEventDto {
  *  community / unlink its venue from a listing — create-time has no such
  *  concept; omitting the field there just means "none". */
 export type UpdateEventDto = Partial<
-  Omit<CreateEventDto, "communitySlug" | "listingId">
+  Omit<CreateEventDto, "communitySlug" | "listingId" | "recurrence">
 > & {
   communitySlug?: string | null;
   listingId?: string | null;
@@ -184,11 +272,22 @@ export type UpdateEventDto = Partial<
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
 
 export async function getEvents(
-  params: { filter?: EventFilter; page?: number } = {},
+  params: {
+    filter?: EventFilter;
+    page?: number;
+    /** Narrows `filter: "upcoming"` to one host's other gatherings —
+     *  `GatheringRecapPage`'s "more from this host" CTA. Ignored by every
+     *  other filter (see `ListEventsQuery`, backend). */
+    hostSlug?: string;
+    /** Pairs with `hostSlug` — drops one event out of its own results. */
+    excludeSlug?: string;
+  } = {},
 ): Promise<EventsPage> {
   const q = new URLSearchParams();
   if (params.filter) q.set("filter", params.filter);
   if (params.page) q.set("page", String(params.page));
+  if (params.hostSlug) q.set("hostSlug", params.hostSlug);
+  if (params.excludeSlug) q.set("excludeSlug", params.excludeSlug);
   const qs = q.toString();
   const res = await apiGet<EventCardDTO[] | EventsPage>(
     `/events${qs ? `?${qs}` : ""}`,
@@ -202,11 +301,26 @@ export const getEvent = (slug: string) =>
 export const createEvent = (dto: CreateEventDto) =>
   apiPost<EventDetailDTO>("/events", dto);
 
-export const updateEvent = (slug: string, dto: UpdateEventDto) =>
-  apiPatch<EventDetailDTO>(`/events/${slug}`, dto);
+/** `scope` (MSG-10) — `"future"` also applies to every later occurrence in
+ *  this event's series (never its own `startAt`/`endAt`); omitted (or
+ *  `"this"`) touches only this occurrence. See `SeriesScope`'s doc. */
+export const updateEvent = (
+  slug: string,
+  dto: UpdateEventDto,
+  scope?: SeriesScope,
+) =>
+  apiPatch<EventDetailDTO>(
+    `/events/${slug}${scope ? `?scope=${scope}` : ""}`,
+    dto,
+  );
 
-export const cancelEvent = (slug: string) =>
-  apiPost<{ ok: true }>(`/events/${slug}/cancel`);
+/** `scope` (MSG-10) — `"future"` also cancels every later, not-yet-cancelled
+ *  occurrence in this event's series; omitted (or `"this"`) cancels only
+ *  this occurrence. See `SeriesScope`'s doc. */
+export const cancelEvent = (slug: string, scope?: SeriesScope) =>
+  apiPost<{ ok: true }>(
+    `/events/${slug}/cancel${scope ? `?scope=${scope}` : ""}`,
+  );
 
 export const getAttendees = (
   slug: string,
@@ -221,8 +335,20 @@ export const getAttendees = (
 export const rsvpEvent = (slug: string, status: "going" | "maybe") =>
   apiPost<{ status: RsvpStatus }>(`/events/${slug}/rsvp`, { status });
 
-export const unrsvpEvent = (slug: string) =>
-  apiDelete<{ ok: true }>(`/events/${slug}/rsvp`);
+/** `scope` (MSG-10) — `"future"` also cancels the caller's own RSVP on every
+ *  later occurrence in this event's series; omitted (or `"this"`) cancels
+ *  only this occurrence's RSVP. See `SeriesScope`'s doc. */
+export const unrsvpEvent = (slug: string, scope?: SeriesScope) =>
+  apiDelete<{ ok: true }>(
+    `/events/${slug}/rsvp${scope ? `?scope=${scope}` : ""}`,
+  );
+
+/** PATCH /events/:slug/rsvp/details — the caller's own RSVP ("Anything we
+ *  should know?"). 404s when the caller has no active RSVP to the event. */
+export const updateRsvpDetails = (
+  slug: string,
+  dto: UpdateRsvpDetailsDto,
+) => apiPatch<RsvpDetailsDTO>(`/events/${slug}/rsvp/details`, dto);
 
 /** POST /events/:slug/bookmark — save the event (idempotent). */
 export const bookmarkEvent = (slug: string) =>
@@ -234,6 +360,16 @@ export const unbookmarkEvent = (slug: string) =>
 
 export const removeCohost = (slug: string, cohostSlug: string) =>
   apiDelete<{ ok: true }>(`/events/${slug}/cohosts/${cohostSlug}`);
+
+/** DELETE /events/:slug/attendees/:memberSlug — host/co-host removes a
+ *  going/maybe/waitlisted attendee. Idempotent. */
+export const removeAttendee = (slug: string, memberSlug: string) =>
+  apiDelete<{ ok: true }>(`/events/${slug}/attendees/${memberSlug}`);
+
+/** POST /events/:slug/waitlist/:memberSlug/promote — host/co-host manually
+ *  promotes one waitlisted member to going, out of FIFO order. */
+export const promoteAttendee = (slug: string, memberSlug: string) =>
+  apiPost<{ ok: true }>(`/events/${slug}/waitlist/${memberSlug}/promote`);
 
 /** Invite members to an event. `slugs` is capped at 100 by the backend. */
 export const inviteToEvent = (slug: string, slugs: string[]) =>

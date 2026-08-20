@@ -1,14 +1,15 @@
-import { Fragment, useEffect, type ReactNode } from "react";
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { FiLock, FiPlay, FiSearch, FiUser, FiX } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
 import { SkeletonLine } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { VouchGraphCanvas } from "./VouchGraphCanvas";
 import { VouchGraphInspector } from "./VouchGraphInspector";
+import { TrustNetworkMemberFinder } from "./TrustNetworkMemberFinder";
 import { useVouchGraph, type VouchMode } from "./useVouchGraph";
+import { useVouchGraphInspectorActions } from "./useVouchGraphInspectorActions";
 import { useTrustNetwork } from "./api/useTrustNetwork";
 import { TrustGraphProvider } from "./trustGraph/TrustGraphContext";
 import { useTrustGraph } from "./trustGraph/useTrustGraph";
@@ -194,16 +195,23 @@ function GraphModalShell({
 function GraphModalInner({
   focusSlug,
   onClose,
+  memberSearch,
+  onMemberSearchChange,
+  onJumpToMember,
 }: {
   focusSlug: string;
   onClose: () => void;
+  memberSearch: string;
+  onMemberSearchChange: (value: string) => void;
+  onJumpToMember: (slug: string) => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { showToast } = useToast();
   const graph = useTrustGraph();
   const g = useVouchGraph(graph, focusSlug);
   const focusPerson = graph.peopleById[g.focus]!;
+  const { verifyFromGraph, verifyingId, openInModeration } =
+    useVouchGraphInspectorActions(graph);
 
   return createPortal(
     <div
@@ -281,6 +289,12 @@ function GraphModalInner({
           </button>
         </header>
 
+        <TrustNetworkMemberFinder
+          value={memberSearch}
+          onChange={onMemberSearchChange}
+          onPick={onJumpToMember}
+        />
+
         <div className={styles.main}>
           <VouchGraphCanvas
             visIds={g.visIds}
@@ -303,13 +317,10 @@ function GraphModalInner({
             activeEdgeId={g.timeCut < g.eventCount ? g.activeEdgeId : null}
             expanded={g.sel ? g.expanded.has(g.sel) : false}
             onGo={g.select}
-            onVerify={() =>
-              showToast(t("admin:vouchGraph.modal.verifyToast"), "success")
-            }
             onExpand={g.toggleExpand}
-            onCite={() =>
-              showToast(t("admin:vouchGraph.modal.citeToast"), "success")
-            }
+            onVerify={verifyFromGraph}
+            verifying={verifyingId !== null && verifyingId === g.sel}
+            onOpenModeration={openInModeration}
             onCloseSheet={() => g.select(null)}
           />
         </div>
@@ -374,7 +385,14 @@ export function AdminVouchGraphModal({
 }) {
   const { t } = useTranslation();
   useScrollLock();
-  const { data, isLoading } = useTrustNetwork();
+  // The member the graph is currently centered on — starts as the member the
+  // drawer opened for, but the member-finder (ADM-10) can jump it to anyone.
+  const [activeFocus, setActiveFocus] = useState(focusSlug);
+  const [memberSearch, setMemberSearch] = useState("");
+  // `focus` pins `activeFocus` into the fetched node set even when their join
+  // date falls outside the graph's cap, so both the initial member and any
+  // member-finder pick always resolve (ADM-10).
+  const { data, isLoading } = useTrustNetwork(activeFocus);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -396,7 +414,7 @@ export function AdminVouchGraphModal({
     );
   }
 
-  if (!data.peopleById[focusSlug]) {
+  if (!data.peopleById[activeFocus]) {
     return (
       <GraphModalShell onClose={onClose}>
         <div className={styles.insEmpty}>
@@ -412,7 +430,20 @@ export function AdminVouchGraphModal({
 
   return (
     <TrustGraphProvider data={data}>
-      <GraphModalInner focusSlug={focusSlug} onClose={onClose} />
+      <GraphModalInner
+        // Remounts the whole inner view (crumbs/expanded/selection reset)
+        // when the member-finder jumps to a different member — appropriate
+        // for a jump across the platform, not a within-network recenter.
+        key={activeFocus}
+        focusSlug={activeFocus}
+        onClose={onClose}
+        memberSearch={memberSearch}
+        onMemberSearchChange={setMemberSearch}
+        onJumpToMember={(slug) => {
+          setActiveFocus(slug);
+          setMemberSearch("");
+        }}
+      />
     </TrustGraphProvider>
   );
 }

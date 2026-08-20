@@ -1,0 +1,77 @@
+/* Accept-invite disclosure/confirm step (IDN-2) — shown before an incoming
+   co-owner invite is actually accepted. Deliberately its own small module
+   rather than reusing InviteCoOwnerModal's `.confirm`/`.acknowledgeRow`:
+   this modal mounts from MySubprofilesPage, which loads
+   `persona-dashboard.css`, not the editor's `persona-editor.css` that those
+   classes lean on (see InviteCoOwnerModal.module.css's note on `.notice.warn`
+   being a persona-editor.css global). Mirrors SubprofileDeleteModal's
+   head/body/foot shape for visual consistency with this page's other modal. */
+
+.head {
+  margin-bottom: var(--gap-sm);
+}
+
+.title {
+  margin: 0 0 4px;
+}
+
+.sub {
+  margin: 0;
+  color: var(--ink-60);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.notice {
+  display: flex;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--wash);
+  border: 1px solid rgba(45, 27, 61, 0.09);
+}
+
+.noticeIcon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent);
+}
+
+.noticeBody b {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.noticeBody p {
+  margin: 0;
+  color: var(--ink-60);
+}
+
+.acknowledgeRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 2px 4px 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  cursor: pointer;
+}
+
+.acknowledgeRow input {
+  margin-top: 2px;
+  accent-color: var(--accent);
+  width: auto;
+  flex: none;
+}
+
+.foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gap-xs);
+  margin-top: var(--gap-sm);
+}

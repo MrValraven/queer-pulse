@@ -9,6 +9,7 @@ interface ConversationComposerDockProps {
   active: Conversation;
   onSend: (body: string) => void;
   onSendGif?: (attachment: GifAttachment) => void;
+  onSendImage?: (attachment: GifAttachment, localAttachment?: GifAttachment) => void;
   blocked: boolean;
   replyDraft?: ChatMessage | null;
   onCancelReply?: () => void;
@@ -30,6 +31,7 @@ export function ConversationComposerDock({
   active,
   onSend,
   onSendGif,
+  onSendImage,
   blocked,
   replyDraft,
   onCancelReply,
@@ -54,6 +56,7 @@ export function ConversationComposerDock({
         conversationId={active.id}
         onSend={onSend}
         onSendGif={onSendGif}
+        onSendImage={onSendImage}
         blocked={blocked}
         replyDraft={replyDraft}
         onCancelReply={onCancelReply}

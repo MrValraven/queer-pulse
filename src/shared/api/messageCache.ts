@@ -273,6 +273,25 @@ export function patchConversationFavorite(
   );
 }
 
+/** Patch a conversation-list row's mute state in place — used by
+ *  `useToggleMute`'s optimistic update in both demo and live mode. A no-op if
+ *  the row isn't cached. */
+export function patchConversationMuted(
+  queryClient: QueryClient,
+  conversationId: string,
+  muted: boolean,
+): void {
+  queryClient.setQueriesData<Conversation[]>(
+    { queryKey: ["conversations"] },
+    (previous) =>
+      previous?.map((conversation) =>
+        conversation.id === conversationId
+          ? { ...conversation, muted }
+          : conversation,
+      ),
+  );
+}
+
 /** Patch a conversation-list row's unread state to zero — used by
  *  `useMarkRead.onSuccess` instead of `invalidateQueries(["conversations"])`,
  *  so opening an unread thread (which fires on every thread-open-with-unread)

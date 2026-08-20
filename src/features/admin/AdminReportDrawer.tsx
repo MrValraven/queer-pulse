@@ -4,14 +4,21 @@ import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { AdminDrawer, AdminChip, AdminCat, AdminAvatar } from "./ui";
+import {
+  AdminDrawer,
+  AdminChip,
+  AdminCat,
+  AdminAvatar,
+  AdminSeg,
+  type AdminSegOption,
+} from "./ui";
 import { portrait } from "./adminPeople.data";
 import {
-  MOD_ACTIONS,
   MOD_REASONS,
   SEVERITY,
   chipKey,
   chipLabel,
+  modActionsFor,
   type ModReport,
   type ReportDetail,
 } from "./adminModeration.data";
@@ -20,6 +27,11 @@ import { useModReportDetail } from "./api/useModReportDetail";
 import type { ReasonCode } from "../safety/reportReasons";
 import type { ResolveOpts } from "./useModerationQueue";
 import styles from "./AdminModerationPage.module.css";
+
+/** `restrict`'s duration options — the backend always requires one (P0-15):
+ *  unlike `ban`, there is no permanent restriction. */
+const RESTRICT_DURATIONS = ["24h", "7d", "30d"] as const;
+const DEFAULT_RESTRICT_DURATION: (typeof RESTRICT_DURATIONS)[number] = "7d";
 
 /** Reported content + surrounding thread + people involved (read-only context). */
 function ReportContext({ detail }: { detail: ReportDetail }) {
@@ -260,32 +272,44 @@ export function AdminReportDrawer({
   report,
   onClose,
   onResolve,
+  currentUserId,
+  onAssignToMe,
+  onUnassign,
 }: {
   report: ModReport;
   onClose: () => void;
   /** Called when a report leaves the open queue (confirm or escalate). */
   onResolve: (id: string, opts?: ResolveOpts) => void;
+  /** The signed-in moderator's id, for "is this assigned to ME" (COM-5). */
+  currentUserId?: string;
+  onAssignToMe?: (r: ModReport) => void;
+  onUnassign?: (r: ModReport) => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [action, setAction] = useState<string | null>(null);
   const [reason, setReason] = useState<ReasonCode | null>(null);
   const [note, setNote] = useState("");
+  const [restrictDuration, setRestrictDuration] = useState<string>(
+    DEFAULT_RESTRICT_DURATION,
+  );
   const { detail, loading } = useModReportDetail(report);
 
   const sev = SEVERITY[report.severity];
+  const actions = modActionsFor(report.subjectType);
 
   const handleConfirm = () => {
     if (!action) {
       showToast(t("admin:moderation.reportDrawer.pickActionToast"), "error");
       return;
     }
-    const chosen = MOD_ACTIONS.find((a) => a.id === action);
+    const chosen = actions.find((a) => a.id === action);
     onResolve(report.id, {
       verb: "resolved",
       action,
       reasonCode: reason ?? "other",
       note,
+      duration: action === "restrict" ? restrictDuration : undefined,
     });
     showToast(
       t("admin:moderation.reportDrawer.confirmedToast", {
@@ -327,6 +351,38 @@ export function AdminReportDrawer({
           <h2 className={styles.dTitle}>
             {t("admin:moderation.reportDrawer.title")}
           </h2>
+          {(onAssignToMe || onUnassign) && (
+            <div className={styles.dAssignment}>
+              <span>
+                {report.assignedModeratorId
+                  ? report.assignedModeratorId === currentUserId
+                    ? t("admin:moderation.reportDrawer.assignedToYou")
+                    : t("admin:moderation.reportDrawer.assignedTo", {
+                        name:
+                          report.assignedModeratorName ??
+                          t("admin:moderation.reportDrawer.anotherModerator"),
+                      })
+                  : t("admin:moderation.reportDrawer.unassigned")}
+              </span>
+              {report.assignedModeratorId === currentUserId && onUnassign ? (
+                <button
+                  type="button"
+                  className={styles.dAssignmentCta}
+                  onClick={() => onUnassign(report)}
+                >
+                  {t("admin:moderation.reportDrawer.unassignCta")}
+                </button>
+              ) : !report.assignedModeratorId && onAssignToMe ? (
+                <button
+                  type="button"
+                  className={styles.dAssignmentCta}
+                  onClick={() => onAssignToMe(report)}
+                >
+                  {t("admin:moderation.reportDrawer.assignToMeCta")}
+                </button>
+              ) : null}
+            </div>
+          )}
         </>
       }
       foot={
@@ -357,7 +413,7 @@ export function AdminReportDrawer({
           {t("admin:moderation.reportDrawer.decisionTitle")}
         </h3>
         <div className={styles.dActions}>
-          {MOD_ACTIONS.map((a) => (
+          {actions.map((a) => (
             <button
               key={a.id}
               type="button"
@@ -376,6 +432,31 @@ export function AdminReportDrawer({
             </button>
           ))}
         </div>
+        {report.subjectType !== "member" && (
+          <p className={styles.dTransparency}>
+            <FiInfo aria-hidden />{" "}
+            {t("admin:moderation.reportDrawer.accountActionsHidden")}
+          </p>
+        )}
+        {action === "restrict" && (
+          <>
+            <h3 className={styles.dSecLabel}>
+              {t("admin:moderation.reportDrawer.restrictDurationLabel")}
+            </h3>
+            <AdminSeg
+              options={
+                RESTRICT_DURATIONS.map((id) => ({
+                  value: id,
+                  label: t(
+                    `admin:moderation.reportDrawer.restrictDuration.${id}`,
+                  ),
+                })) satisfies AdminSegOption[]
+              }
+              value={restrictDuration}
+              onChange={setRestrictDuration}
+            />
+          </>
+        )}
       </section>
 
       {/* Reason + note */}

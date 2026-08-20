@@ -8,7 +8,7 @@ import {
   Reveal,
   Tag,
 } from "../../shared/components/ui";
-import { MagazineComingSoon } from "./MagazineComingSoon";
+import { MagazineLiveSections } from "./MagazineLiveSections";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -200,7 +200,7 @@ function ArchiveSection() {
         {ARCHIVE.map((issue) => (
           <Link
             key={issue.title}
-            to={routes.issue}
+            to={`${routes.issue}/${issue.issueNumber}`}
             className={styles.archiveIssue}
           >
             <div className={styles.aiCover} style={{ background: issue.background }}>
@@ -241,17 +241,13 @@ function SubmitBanner() {
 export function MagazineSections() {
   const { demoMode } = useDemoMode();
 
-  // The whole magazine front is fabricated editorial content. Live mode has no
-  // published issue yet, so it shows an honest "coming soon" in place of the
-  // article rails — the demo mock below stays the demo-mode branch.
+  // CNT-3 fix: the demo-mode sections below are fabricated editorial
+  // content, so live mode renders real published articles/decks/issues
+  // instead (`MagazineLiveSections`) — an honest "nothing published yet"
+  // only when the live fetch is truly empty, not the entire front gated
+  // behind a permanent "coming soon" regardless of what's actually live.
   if (!demoMode) {
-    return (
-      <div className={styles.body}>
-        <div className="wrap">
-          <MagazineComingSoon />
-        </div>
-      </div>
-    );
+    return <MagazineLiveSections />;
   }
 
   return (

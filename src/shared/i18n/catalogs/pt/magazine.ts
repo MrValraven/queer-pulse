@@ -32,6 +32,7 @@ export const magazine: Catalog = {
   "masthead.nav.current": "Edição atual",
   "masthead.nav.issues": "Edições",
   "masthead.nav.stories": "Histórias",
+  "masthead.nav.authors": "Autoria",
   "masthead.nav.write": "Escreve para nós",
 
   // ── MagazinePage ─────────────────────────────────────────────────────────
@@ -58,6 +59,7 @@ export const magazine: Catalog = {
   "cover.readFullFeatureCta": "Ler a reportagem completa",
 
   // ── MagazineSections ─────────────────────────────────────────────────────
+  "sections.live.title": "As <em>últimas</em> da revista",
   "sections.features.title": "As <em>reportagens</em> deste mês",
   "sections.features.allCta": "Todas as reportagens deste mês",
   "sections.essayOfMonthKicker": "Ensaio do mês",
@@ -330,6 +332,20 @@ export const magazine: Catalog = {
   "author.work.allArticlesCta_other": "Todos os {count} artigos",
   "author.work.seeAllPicksCta": "Ver todas as escolhas",
   "author.work.findElsewhereHeading": "Encontra {name} <em>noutros sítios</em>",
+  "author.work.noArticlesYet":
+    "{name} ainda não publicou nada. Volta a passar por aqui em breve.",
+
+  // ── AuthorsDirectoryPage ─────────────────────────────────────────────────
+  "authorsDirectory.eyebrow": "Revista · autoria",
+  "authorsDirectory.title": "Toda a gente que escreve para a revista.",
+  "authorsDirectory.sub":
+    "Repórteres, ensaístas e entrevistadores, todos num só lugar. Escolhe um nome para leres o trabalho.",
+  "authorsDirectory.errorTitle": "Não conseguimos carregar a autoria.",
+  "authorsDirectory.errorBody":
+    "Algo nos interrompeu a caminho daqui. Tenta novamente.",
+  "authorsDirectory.emptyTitle": "Ainda não há autoria para mostrar.",
+  "authorsDirectory.emptyBody":
+    "O diretório ainda está a ser preparado. As assinaturas chegam em breve.",
 
   // ══════════════════ Painel de edição (uso interno) ═══════════════════════
   // Os REGISTOS de peças/propostas (títulos, notas, feed de atividade, nomes
@@ -1235,7 +1251,16 @@ export const magazine: Catalog = {
   "write.header.sendOn": "Enviar",
   "write.header.sendOnTo": "Enviar para {stage}",
   "write.header.publish": "Publicar",
-  "write.header.publishToast": "A publicação ainda não está disponível.",
+  "write.header.unpublish": "Despublicar",
+  "write.header.statusPublished": "Publicado",
+  "write.header.statusScheduled": "Agendado",
+  "write.header.statusDraft": "Rascunho",
+  "write.header.publishedToast": "Artigo publicado",
+  "write.header.scheduledToast": "Artigo agendado",
+  "write.header.unpublishedToast": "Artigo despublicado",
+  "write.header.publishError": "Não foi possível publicar, tenta novamente",
+  "write.header.publishNotReadyError":
+    "Adiciona um standfirst e texto alternativo em todas as imagens antes de publicar.",
   "write.header.savedSaving": "A guardar…",
   "write.header.savedError": "Não foi possível guardar, vamos tentar de novo",
   "write.header.savedOk": "Todas as alterações guardadas",
@@ -1329,11 +1354,14 @@ export const magazine: Catalog = {
   "write.publish.now": "Agora",
   "write.publish.schedule": "Agendar",
   "write.publish.withIssue": "Com a edição",
-  "write.publish.scheduleNote":
-    "O agendamento de data e hora chega em breve. Por agora, fica como rascunho.",
+  "write.publish.scheduleLabel": "Publicar às",
+  "write.publish.scheduleNote": "Publica-se automaticamente na data e hora escolhidas.",
+  "write.publish.scheduleInvalid": "Escolhe uma data e hora no futuro.",
   "write.publish.issueNote": "Publica-se automaticamente quando a edição sai.",
   "write.publish.checklistHeading": "Antes de publicar · {done}/{total}",
   "write.publish.cta": "Publicar",
+  "write.publish.scheduleCta": "Agendar",
+  "write.publish.unpublishCta": "Despublicar",
   "write.publish.checklist.standfirst": "Resumo escrito",
   "write.publish.checklist.alts": "Texto alternativo em todas as imagens",
   "write.publish.checklist.altsPending":
@@ -1354,6 +1382,15 @@ export const magazine: Catalog = {
   "write.meta.tagsHelper": "Separadas por vírgulas.",
   "write.meta.slugLabel": "Slug",
   "write.meta.slugHelper": "Gerado pelo servidor.",
+  "write.meta.metaDescriptionLabel": "Meta descrição",
+  "write.meta.metaDescriptionHelper":
+    "Aparece nos resultados de pesquisa e nas pré-visualizações de partilha. Opcional.",
+  "write.meta.socialImageLabel": "Imagem para partilha",
+  "write.meta.socialImageHelper":
+    "URL da imagem usada quando este artigo é partilhado. Opcional.",
+  "write.meta.canonicalUrlLabel": "URL canónico",
+  "write.meta.canonicalUrlHelper":
+    "Só é necessário se este artigo for republicado de outro sítio. Opcional.",
   "write.meta.wordCountLabel": "Contagem de palavras",
   "write.meta.readTimeLabel": "Tempo de leitura",
 

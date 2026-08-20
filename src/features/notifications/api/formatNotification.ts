@@ -28,6 +28,16 @@ export type NotificationKind =
   | "event_rsvp"
   | "community_reply"
   | "forum_thread_reply"
+  // Sent to a member who follows a topic (`topic_follows`) when a new post
+  // lands on it — a forum thread created with a tag matching that topic
+  // (mirrors the backend `notifications_type_enum` value added in
+  // `AddTopicNewPostNotificationType1792400100000`, emitted from
+  // `TopicFollowNotificationsListener`). Carries an actor (the poster) —
+  // `payload.actorId` — plus `topicSlug`/`topicLabel`/`source: 'forum'`/
+  // `threadSlug`/`threadTitle`; `source: 'forum'` reuses the SAME deep-link
+  // shape a forum `@mention` already writes, so `sourceHrefFromPayload`
+  // resolves it with no new branch.
+  | "topic_new_post"
   | "join_request_received"
   | "join_request_approved"
   | "join_request_declined"
@@ -130,7 +140,17 @@ export type NotificationKind =
   // System-driven, no actor — the platform telling you about your own
   // status, like `concern_update`. Payload carries `status`
   // (`accepted`/`declined`) selecting the copy, plus `opportunitySlug`.
-  | "volunteer_application_decided";
+  | "volunteer_application_decided"
+  // Sent to the nominator when an admin approves or dismisses their Change
+  // Makers nomination (mirrors the backend `notifications_type_enum`
+  // additions in `AddChangemakerNominationTriage1792500100000`, COM-17:
+  // nominations used to be a one-way black hole). System-driven, no actor.
+  // Flat copy — no payload-driven key branching, like
+  // `writer_application_approved`/`declined`. Payload carries
+  // `{ nomineeName, reviewNote }`; `nomineeName` interpolates into the copy
+  // via `interpolationTokens`.
+  | "changemaker_nomination_approved"
+  | "changemaker_nomination_dismissed";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -156,6 +176,9 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   event_rsvp: "events",
   community_reply: "community",
   forum_thread_reply: "community",
+  // A new post in a followed topic is community activity, same tab as
+  // forum_thread_reply/community_reply.
+  topic_new_post: "community",
   join_request_received: "community",
   join_request_approved: "community",
   join_request_declined: "community",
@@ -193,6 +216,10 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // same tab as writer_application_approved/declined.
   volunteer_application_received: "platform",
   volunteer_application_decided: "platform",
+  // An admin's decision on a Change Makers nomination is the platform's word
+  // on your own submission — same tab as writer_application_approved/declined.
+  changemaker_nomination_approved: "platform",
+  changemaker_nomination_dismissed: "platform",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */

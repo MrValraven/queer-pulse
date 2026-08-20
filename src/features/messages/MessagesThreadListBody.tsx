@@ -1,6 +1,7 @@
 import { FiMessageCircle } from "react-icons/fi";
 import { EmptyState, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MessagesRequestsPanel } from "./MessagesRequestsPanel";
 import { MessagesSearchResults } from "./MessagesSearchResults";
 import { MessageThreadListSkeleton } from "./MessagesSkeleton";
 import { MessagesThreadRow } from "./MessagesThreadRow";
@@ -57,6 +58,12 @@ export function MessagesThreadListBody({
   onRequestDelete: (thread: Conversation) => void;
 }) {
   const { t } = useTranslation();
+  // "Requests" isn't a conversation filter at all (see `threadFilters.ts`) —
+  // it swaps the whole body for the incoming message-request list, bypassing
+  // every conversation-list/empty-state branch below.
+  if (!loading && !searching && activeTab === "requests") {
+    return <MessagesRequestsPanel />;
+  }
   return (
     <>
       {loading && <MessageThreadListSkeleton count={6} />}

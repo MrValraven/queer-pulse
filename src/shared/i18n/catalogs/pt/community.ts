@@ -144,7 +144,7 @@ export const community: Catalog = {
   "changemakers.stat.activeCampaigns": "Campanhas ativas neste momento",
   "changemakers.featured.label": "Agente de mudança em destaque",
   "changemakers.featured.readStoryCta": "Lê a história dela",
-  "changemakers.featured.connectCta": "Ligar",
+  "changemakers.featured.connectCta": "Fala com a equipa sobre esta pessoa",
   "changemakers.empty.title": "Ainda não há agentes de mudança retratados",
   "changemakers.empty.description":
     "É aqui que celebramos quem está, em silêncio, a tornar as coisas melhores. Conheces alguém a fazer esse trabalho? Nomeia essa pessoa abaixo e começamos a história.",
@@ -157,6 +157,7 @@ export const community: Catalog = {
   "changemakers.nominate.lead":
     "Acrescentamos agentes de mudança através de nomeações da comunidade. Se conheces alguém a fazer um trabalho significativo pelas pessoas queer em Lisboa, um nome e uma frase já chegam para começar.",
   "changemakers.nominate.namePlaceholder": "O nome dessa pessoa…",
+  "changemakers.nominate.reasonPlaceholder": "Numa frase, porquê?",
   "changemakers.nominate.submitCta": "Nomear",
   "changemakers.nominate.submitPending": "A enviar…",
   "changemakers.nominate.successToast": "Obrigade. Vamos investigar {name}.",

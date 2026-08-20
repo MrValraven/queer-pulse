@@ -81,7 +81,6 @@ export interface MyEventsValue {
   bulkCancel: () => void;
 
   // rsvp / lifecycle actions
-  toggleReminder: (id: string) => void;
   setMaybe: (id: string) => void;
   setGoing: (id: string) => void;
   rsvpSaved: (id: string) => void;

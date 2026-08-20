@@ -9,6 +9,7 @@ import { FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { NAV, type PaneId } from "./settings.data";
+import { BlockedUsersPane } from "./BlockedUsersPane";
 import { DeleteAccountSection } from "./DeleteAccountSection";
 import { EditProfilePane } from "./EditProfilePane";
 import { MyUploadsPane } from "./MyUploadsPane";
@@ -185,6 +186,7 @@ export function SettingsPage() {
               />
             )}
             {pane === "interests" && <InterestsPane onChange={markChanged} />}
+            {pane === "blockedUsers" && <BlockedUsersPane />}
             {pane === "account" && <AccountPane onChange={markChanged} />}
             {pane === "uploads" && <MyUploadsPane />}
             {pane === "delete" && <DeleteAccountSection />}

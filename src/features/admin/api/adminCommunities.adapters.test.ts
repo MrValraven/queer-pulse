@@ -86,6 +86,7 @@ const baseDetailDto: AdminCommunityDetailDTO = {
   requiresSecondVouch: true,
   autoFreezeOnReports: false,
   frozen: false,
+  archived: false,
   resolvedPercentage: 100,
   moderators: [baseModeratorDto],
   scopedQueue: [baseQueueItemDto],

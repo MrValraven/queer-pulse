@@ -58,7 +58,7 @@ export function useSendMessage() {
       clientMessageId?: string;
       forwarded?: boolean;
       attachment?: GifAttachment;
-      kind?: "user" | "gif";
+      kind?: "user" | "gif" | "image";
     }
   >({
     mutationFn: async ({

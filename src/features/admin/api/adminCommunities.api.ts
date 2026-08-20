@@ -95,6 +95,10 @@ export interface AdminCommunityDetailDTO extends AdminCommunityCardDTO {
    *  below), in addition to staff lifting it from the community's own mod
    *  panel. */
   frozen: boolean;
+  /** True once an admin (or the owner, via the member-facing endpoint) has
+   *  archived the community. Reversible via the admin-only unarchive action
+   *  below (COM-18) — archiving is no longer a one-way door. */
+  archived: boolean;
   resolvedPercentage: number;
   moderators: AdminCommunityModeratorDTO[];
   scopedQueue: AdminCommunityQueueItemDTO[];
@@ -172,10 +176,17 @@ export const unfreezeAdminCommunity = (slug: string) =>
   apiPost<AdminCommunityDetailDTO>(`/admin/communities/${slug}/unfreeze`);
 
 /** Admin override: archive a community regardless of its ownership state.
- *  One-way — there is no unarchive. Idempotent — archiving an
- *  already-archived community is a no-op. Returns the refreshed detail. */
+ *  Idempotent — archiving an already-archived community is a no-op. Returns
+ *  the refreshed detail. Reversible via {@link unarchiveAdminCommunity}
+ *  (COM-18) — archiving is no longer a one-way door. */
 export const archiveAdminCommunity = (slug: string) =>
   apiPost<AdminCommunityDetailDTO>(`/admin/communities/${slug}/archive`);
+
+/** Admin override: reverse an archive regardless of the community's
+ *  ownership state. Idempotent — unarchiving a community that isn't archived
+ *  is a no-op. Returns the refreshed detail. */
+export const unarchiveAdminCommunity = (slug: string) =>
+  apiPost<AdminCommunityDetailDTO>(`/admin/communities/${slug}/unarchive`);
 
 /** Admin override: hand ownership to any roster member (by profile slug),
  *  even when the community currently has no owner. 404s if `memberSlug` isn't

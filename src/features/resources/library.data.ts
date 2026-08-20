@@ -7,6 +7,10 @@ export interface Guide {
   categoryLabel: string;
   meta: string;
   to: string;
+  /** ISO date string of the last editorial verification, or null when the
+   *  guide hasn't been reviewed yet — the card shows an honest "not yet
+   *  verified" state rather than a fabricated date. */
+  lastVerifiedAt: string | null;
 }
 
 /**
@@ -55,6 +59,7 @@ export const GUIDES: Guide[] = [
     description: "What Portugal's Labour Code protects, how to document incidents, and a template complaint letter for the ACT.",
     meta: "Guide · 12 min · PT / EN",
     to: routes.legal,
+    lastVerifiedAt: "2026-07-14",
   },
   {
     category: "legal",
@@ -63,6 +68,7 @@ export const GUIDES: Guide[] = [
     description: "A landlord refusing you on grounds of identity is acting illegally. How to gather evidence and where to report it.",
     meta: "Guide · 9 min · PT / EN",
     to: routes.legal,
+    lastVerifiedAt: "2026-05-02",
   },
   {
     category: "legal",
@@ -71,6 +77,7 @@ export const GUIDES: Guide[] = [
     description: "Step-by-step through Portugal's self-determination process: documents, timelines, and what changed in 2018.",
     meta: "Guide · 15 min · PT / EN",
     to: routes.transHub,
+    lastVerifiedAt: "2026-06-30",
   },
   {
     category: "housing",
@@ -79,6 +86,7 @@ export const GUIDES: Guide[] = [
     description: "Neighbourhoods, red flags in listings, and how the QueerPulse housing board vets landlords.",
     meta: "Guide · 11 min",
     to: routes.housing,
+    lastVerifiedAt: "2026-08-01",
   },
   {
     category: "housing",
@@ -87,6 +95,9 @@ export const GUIDES: Guide[] = [
     description: "A plain-language template for shared tenancies, chosen-family arrangements included.",
     meta: "Template · 6 min",
     to: routes.flatmates,
+    // Never reviewed by an editor yet — an honest "not yet verified" state,
+    // not a fabricated date.
+    lastVerifiedAt: null,
   },
   {
     category: "health",
@@ -95,6 +106,7 @@ export const GUIDES: Guide[] = [
     description: "Registering, finding affirming GPs, and what to do if a provider refuses or mistreats you.",
     meta: "Guide · 10 min",
     to: routes.wellbeing,
+    lastVerifiedAt: "2026-07-21",
   },
   {
     category: "health",
@@ -103,6 +115,7 @@ export const GUIDES: Guide[] = [
     description: "Eligibility, the clinics most welcoming in Lisbon, and how to get it at no cost through the SNS.",
     meta: "Guide · 8 min",
     to: routes.sexualHealth,
+    lastVerifiedAt: "2026-08-05",
   },
   {
     category: "health",
@@ -111,6 +124,7 @@ export const GUIDES: Guide[] = [
     description: "Practical safety for chemsex, substances, and recovery. Written by and for the community.",
     meta: "Guide · 9 min",
     to: routes.harmReduction,
+    lastVerifiedAt: "2026-04-18",
   },
   {
     category: "trans",
@@ -119,6 +133,7 @@ export const GUIDES: Guide[] = [
     description: "Referral pathways, waiting lists, and a guide to the consultations, plus what private costs to expect.",
     meta: "Guide · 14 min",
     to: routes.transHealthcare,
+    lastVerifiedAt: "2026-06-09",
   },
   {
     category: "trans",
@@ -127,6 +142,7 @@ export const GUIDES: Guide[] = [
     description: "Bank, employer, GP, landlord: the order to do things in, with letter templates for each.",
     meta: "Checklist · 7 min",
     to: routes.transHub,
+    lastVerifiedAt: "2026-06-09",
   },
   {
     category: "finance",
@@ -135,6 +151,7 @@ export const GUIDES: Guide[] = [
     description: "What QueerPulse funds, how to apply, and how the community sliding scale works.",
     meta: "Guide · 6 min",
     to: routes.microGrants,
+    lastVerifiedAt: "2026-03-11",
   },
   {
     category: "finance",
@@ -143,6 +160,7 @@ export const GUIDES: Guide[] = [
     description: "Invoicing basics in Portugal, recibos verdes, and the funds open to queer creatives.",
     meta: "Guide · 10 min",
     to: routes.grants,
+    lastVerifiedAt: "2026-03-11",
   },
 ];
 

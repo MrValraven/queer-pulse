@@ -21,6 +21,8 @@ import {
   buildBreadcrumbSchema,
 } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
+import { CrisisStrip } from "./CrisisStrip";
+import { SuggestEditTrigger } from "./SuggestEditTrigger";
 import { CardGrid, ResourceCard, ResourceCardSkeleton } from "./ResourceCard";
 import styles from "./resources.module.css";
 
@@ -44,28 +46,28 @@ const WORKPLACE: Right[] = [
     titleKey: "resources:legal.workplace.dismissal.title",
     bodyKey: "resources:legal.workplace.dismissal.body",
     linkKey: "resources:legal.link.readGuide",
-    to: routes.library,
+    to: routes.resources,
   },
   {
     badge: "protected",
     titleKey: "resources:legal.workplace.harassment.title",
     bodyKey: "resources:legal.workplace.harassment.body",
     linkKey: "resources:legal.link.readGuide",
-    to: routes.library,
+    to: routes.resources,
   },
   {
     badge: "know",
     titleKey: "resources:legal.workplace.pronouns.title",
     bodyKey: "resources:legal.workplace.pronouns.body",
     linkKey: "resources:legal.link.readGuide",
-    to: routes.library,
+    to: routes.resources,
   },
   {
     badge: "practical",
     titleKey: "resources:legal.workplace.complaint.title",
     bodyKey: "resources:legal.workplace.complaint.body",
     linkKey: "resources:legal.link.getTemplate",
-    to: routes.library,
+    to: routes.resources,
   },
 ];
 
@@ -75,14 +77,14 @@ const HOUSING: Right[] = [
     titleKey: "resources:legal.housing.rental.title",
     bodyKey: "resources:legal.housing.rental.body",
     linkKey: "resources:legal.link.readGuide",
-    to: routes.library,
+    to: routes.resources,
   },
   {
     badge: "practical",
     titleKey: "resources:legal.housing.samesex.title",
     bodyKey: "resources:legal.housing.samesex.body",
     linkKey: "resources:legal.link.readGuide",
-    to: routes.library,
+    to: routes.resources,
   },
   {
     badge: "practical",
@@ -248,6 +250,8 @@ export function LegalPage() {
         }}
       />
 
+      <CrisisStrip />
+
       <RightsSection
         id="workplace"
         title={
@@ -332,6 +336,8 @@ export function LegalPage() {
           )}
         </div>
       </section>
+
+      <SuggestEditTrigger subject={pageTitle} context="legal" />
 
       <Outro
         title={

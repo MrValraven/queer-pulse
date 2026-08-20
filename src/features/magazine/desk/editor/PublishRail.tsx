@@ -1,9 +1,10 @@
 import { FiCheck, FiInfo, FiX } from "react-icons/fi";
-import { Button, SegmentedControl } from "../../../../shared/components/ui";
+import { Button, DatePicker, FormField, SegmentedControl } from "../../../../shared/components/ui";
 import { cx } from "../../../../shared/lib/cx";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { ArticleBlock } from "../../api/pieces.api";
 import { buildPublishChecklist, isPublishReady } from "./articlePublishChecklist";
+import { isFutureInstant } from "./scheduleValidity";
 import styles from "../pieceTabs.module.css";
 
 export type PublishStatus = "now" | "schedule" | "issue";
@@ -13,6 +14,13 @@ export interface PublishRailProps {
   blocks: ArticleBlock[];
   publishStatus: PublishStatus;
   onPublishStatusChange: (status: PublishStatus) => void;
+  /** `"yyyy-mm-ddThh:mm"` local wall-clock value (`DatePicker` `datetime`
+   *  mode's shape), or `null` while nothing's picked yet. Only read when
+   *  `publishStatus === "schedule"`. */
+  scheduledAt: string | null;
+  onScheduledAtChange: (value: string | null) => void;
+  published: boolean;
+  publishPending: boolean;
   onPublish: () => void;
 }
 
@@ -21,18 +29,34 @@ export interface PublishRailProps {
  * ships" checklist (`buildPublishChecklist` — shared with the page header's
  * own Publish button so the two never disagree). Ported from the design
  * prototype's publish rail (`mag-write.jsx`). Publish stays disabled while
- * any REQUIRED item is open — the two informational items never block it.
+ * an unpublished draft still has an open required item, while "Schedule" is
+ * picked without a valid future instant, or while "With issue" is picked (a
+ * direct publish would contradict that choice — CNT-2: it ships automatically
+ * when `shipIssue` runs, never from this button). Unpublishing an
+ * already-live article is never gated by any of this (mirrors
+ * `DeckPublishRail`).
  */
 export function PublishRail({
   standfirst,
   blocks,
   publishStatus,
   onPublishStatusChange,
+  scheduledAt,
+  onScheduledAtChange,
+  published,
+  publishPending,
   onPublish,
 }: PublishRailProps) {
   const { t } = useTranslation();
   const checklist = buildPublishChecklist(standfirst, blocks, t);
   const doneCount = checklist.filter((item) => item.done).length;
+  const scheduleValid = isFutureInstant(scheduledAt);
+  const disabled =
+    publishPending ||
+    (!published &&
+      (publishStatus === "issue" ||
+        !isPublishReady(checklist) ||
+        (publishStatus === "schedule" && !scheduleValid)));
 
   return (
     <div className={styles.card}>
@@ -50,7 +74,13 @@ export function PublishRail({
       />
 
       {publishStatus === "schedule" && (
-        <p className={styles.tiny}>{t("magazine:write.publish.scheduleNote")}</p>
+        <FormField
+          label={t("magazine:write.publish.scheduleLabel")}
+          helper={t("magazine:write.publish.scheduleNote")}
+          error={scheduledAt && !scheduleValid ? t("magazine:write.publish.scheduleInvalid") : undefined}
+        >
+          <DatePicker mode="datetime" value={scheduledAt} onChange={onScheduledAtChange} clearable />
+        </FormField>
       )}
       {publishStatus === "issue" && (
         <p className={styles.tiny}>{t("magazine:write.publish.issueNote")}</p>
@@ -79,8 +109,12 @@ export function PublishRail({
         </ul>
       </div>
 
-      <Button variant="plum" disabled={!isPublishReady(checklist)} onClick={onPublish}>
-        {t("magazine:write.publish.cta")}
+      <Button variant="plum" disabled={disabled} aria-busy={publishPending} onClick={onPublish}>
+        {published
+          ? t("magazine:write.publish.unpublishCta")
+          : publishStatus === "schedule"
+            ? t("magazine:write.publish.scheduleCta")
+            : t("magazine:write.publish.cta")}
       </Button>
     </div>
   );

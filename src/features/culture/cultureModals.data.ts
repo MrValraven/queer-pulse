@@ -92,15 +92,3 @@ export const PLAYLIST_VIBE_LABEL_KEY: Record<
   Healing: "culture:options.vibe.healing",
   Nostalgic: "culture:options.vibe.nostalgic",
 };
-
-/**
- * A date a few weeks out, used in success copy ("we'll email you by …").
- * Computed once at module load so the prototype always shows a future date.
- * Returns a `Date` (not a hand-formatted string) — the caller formats it with
- * `useFormat().date()` so pt-PT gets its own date phrasing.
- */
-export function replyByDate(weeks = 2): Date {
-  const date = new Date();
-  date.setDate(date.getDate() + weeks * 7);
-  return date;
-}

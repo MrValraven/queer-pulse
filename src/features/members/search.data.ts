@@ -654,3 +654,16 @@ export const TABS: { id: ResultType | "all"; labelKey: string }[] = [
   { id: "topic", labelKey: "members:search.type.topic" },
   { id: "page", labelKey: "members:search.type.page" },
 ];
+
+/** Result types with no backend search table: `page` (static navigation
+ *  shortcuts) and `board` (no live equivalent yet). Every other `ResultType`,
+ *  including `topic`, is a real `GET /search` `?type=` value — see
+ *  `api/useSearchData.ts`'s `isLiveSearchType` and `api/search.api.ts`'s
+ *  `LiveResultType`. */
+export const NO_LIVE_SEARCH_TYPES = new Set<ResultType>(["page", "board"]);
+
+/** Mirrors the backend's `PER_TYPE_LIMIT` (`search.service.ts`) — the number
+ *  of hits a type returns before it's "at cap" on the unfiltered, all-types
+ *  view. Used to show a "see all in [category]" affordance instead of
+ *  silently truncating (DISC-10). */
+export const SEARCH_PER_TYPE_CAP = 6;

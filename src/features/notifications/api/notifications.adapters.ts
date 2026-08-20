@@ -58,6 +58,9 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   "event_rsvp",
   "community_reply",
   "forum_thread_reply",
+  // A topic-new-post row always carries the posting member as an actor
+  // (`payload.actorId`, written by `TopicFollowNotificationsListener`).
+  "topic_new_post",
   "join_request_received",
   "job_application",
   "invite_accepted",

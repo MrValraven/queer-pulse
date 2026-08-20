@@ -1,3 +1,4 @@
+import { FiX } from "react-icons/fi";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { FadeIn, FeatureHelp } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -57,6 +58,23 @@ export function AdminModerationPage() {
         />
       </FadeIn>
 
+      {q.subjectId && (
+        <div className={styles.subjectFilter}>
+          <span>
+            {t("admin:moderation.subjectFilter.label", {
+              subjectId: q.subjectId,
+            })}
+          </span>
+          <button
+            type="button"
+            onClick={q.clearSubjectFilter}
+            aria-label={t("admin:moderation.subjectFilter.clearAriaLabel")}
+          >
+            <FiX aria-hidden />
+          </button>
+        </div>
+      )}
+
       <div className={styles.toolbar}>
         <AdminTabs
           tabs={[
@@ -111,6 +129,9 @@ export function AdminModerationPage() {
           report={q.selected}
           onClose={() => q.setSelected(null)}
           onResolve={(id, opts) => q.resolveReport(id, opts)}
+          currentUserId={q.currentUserId}
+          onAssignToMe={q.assignToMe}
+          onUnassign={q.unassignReport}
         />
       )}
 

@@ -1,5 +1,11 @@
 import { routes } from "../../app/routeMap";
 
+// HSG-1: the owner's "My Listings" management page. A literal path (not a
+// `routeMap.ts` entry) — mirrors the existing `/work/landlord/:slug` /
+// `/work/housing/:slug` literals already in `economy/routes.tsx` — since
+// `routeMap.ts` is a shared file another concurrent workstream also touches.
+export const MY_HOUSING_LISTINGS_PATH = `${routes.housing}/mine`;
+
 export const FILTERS = [
   { value: "all", labelKey: "economy:housing.filter.all" },
   { value: "sublet", labelKey: "economy:housing.filter.sublet" },

@@ -1,27 +1,28 @@
 import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
+import {
+  FiArrowRight,
+  FiCheckCircle,
+  FiClock,
+  FiExternalLink,
+} from "react-icons/fi";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { linkToPath } from "../../app/routeMap";
-import { CATS, CAT_META, type Resource } from "./resourceLibrary.data";
+import { formatDate } from "../../shared/lib/date";
+import { CATEGORIES, type Guide } from "../resources/library.data";
+import { CATEGORY_DOT, type Organisation } from "./resourceLibrary.data";
 import s from "./ResourceLibraryPage.module.css";
 
 export function ResourceCardSkeleton() {
-  // Mirrors the real .card: top row (category tag + cost pill), name, two desc lines, tags, foot.
+  // Mirrors the real .card: category tag, name, two desc lines, tags, foot.
   return (
     <div className={s.card} aria-hidden>
       <div className={s.cardTop}>
         <SkeletonLine width={80} height={12} />
-        <SkeletonLine width={48} height={18} style={{ borderRadius: 6 }} />
       </div>
       <SkeletonLine width="70%" height={17} />
       <div style={{ flex: 1 }}>
         <SkeletonLine width="100%" height={13} />
         <SkeletonLine width="85%" height={13} style={{ marginTop: 6 }} />
-      </div>
-      <div className={s.tags}>
-        <SkeletonLine width={50} height={14} />
-        <SkeletonLine width={62} height={14} />
       </div>
       <div className={s.cardFoot} style={{ borderTopColor: "transparent" }}>
         <SkeletonLine width={90} height={13} />
@@ -30,7 +31,7 @@ export function ResourceCardSkeleton() {
   );
 }
 
-/** Search field + category chips + live result count. */
+/** Search field + real-category chips + live result count. */
 export function ResourceFilterBar({
   query,
   onQuery,
@@ -69,14 +70,14 @@ export function ResourceFilterBar({
               onChange={(e) => onQuery(e.target.value)}
             />
           </div>
-          {CATS.map((category) => (
+          {CATEGORIES.map((category) => (
             <button
               type="button"
-              key={category.c}
-              className={[s.chip, cat === category.c && s.chipOn]
+              key={category.id}
+              className={[s.chip, cat === category.id && s.chipOn]
                 .filter(Boolean)
                 .join(" ")}
-              onClick={() => onCat(category.c)}
+              onClick={() => onCat(category.id)}
             >
               {t(category.labelKey)}
             </button>
@@ -90,77 +91,81 @@ export function ResourceFilterBar({
   );
 }
 
-/** A single resource tile — internal ones link within the app, external ones
- *  open in a new tab. */
-export function ResourceCard({
-  resource,
+/** A single editorial guide, real backend data via `useLibraryData`. */
+export function GuideCard({ guide, index }: { guide: Guide; index: number }) {
+  const { t } = useTranslation();
+  return (
+    <FadeIn delay={Math.min(index, 8) * 60} style={{ height: "100%" }}>
+      <Link to={guide.to} className={s.card} style={{ height: "100%" }}>
+        <div className={s.cardTop}>
+          <span
+            className={s.catTag}
+            style={{ color: CATEGORY_DOT[guide.category] }}
+          >
+            <span
+              className={s.dot}
+              style={{ background: CATEGORY_DOT[guide.category] }}
+            />
+            {guide.categoryLabel}
+          </span>
+        </div>
+        <div className={s.name}>{guide.title}</div>
+        <div className={s.desc}>{guide.description}</div>
+        <div className={s.verified}>
+          {guide.lastVerifiedAt ? (
+            <>
+              <FiCheckCircle aria-hidden />
+              {t("resources:library.card.verifiedOn", {
+                date: formatDate(guide.lastVerifiedAt),
+              })}
+            </>
+          ) : (
+            <>
+              <FiClock aria-hidden />
+              {t("resources:library.card.notYetVerified")}
+            </>
+          )}
+        </div>
+        <div className={s.cardFoot}>
+          {t("resources:library.readGuideCta")} <FiArrowRight aria-hidden />
+        </div>
+      </Link>
+    </FadeIn>
+  );
+}
+
+/** A curated external organisation — always opens in a new tab. */
+export function OrganisationCard({
+  organisation,
   index,
 }: {
-  resource: Resource;
+  organisation: Organisation;
   index: number;
 }) {
   const { t } = useTranslation();
-  const meta = CAT_META[resource.cat]!;
-  const inner = (
-    <>
-      <div className={s.cardTop}>
-        <span className={s.catTag} style={{ color: meta.dot }}>
-          <span className={s.dot} style={{ background: meta.dot }} />
-          {t(meta.labelKey)}
-        </span>
-        <span
-          className={`${s.cost} ${resource.cost === "free" ? s.costFree : s.costSliding}`}
-        >
-          {resource.cost === "free"
-            ? t("marketing:resourceLibrary.cost.free")
-            : t("marketing:resourceLibrary.cost.sliding")}
-        </span>
-      </div>
-      <div className={s.name}>{resource.name}</div>
-      <div className={s.desc}>{resource.description}</div>
-      <div className={s.tags}>
-        {resource.tags.map((tag) => (
-          <span key={tag} className={s.tag}>
-            #{tag}
-          </span>
-        ))}
-      </div>
-      <div className={s.cardFoot}>
-        {resource.internal ? (
-          <>
-            {t("marketing:resourceLibrary.card.openGuide")}{" "}
-            <FiArrowRight aria-hidden />
-          </>
-        ) : (
-          <span className={s.ext}>
-            {t("marketing:resourceLibrary.card.visitSite")}
-          </span>
-        )}
-      </div>
-    </>
-  );
-
   return (
     <FadeIn delay={Math.min(index, 8) * 60} style={{ height: "100%" }}>
-      {resource.internal ? (
-        <Link
-          to={linkToPath(resource.link)}
-          className={s.card}
-          style={{ height: "100%" }}
-        >
-          {inner}
-        </Link>
-      ) : (
-        <a
-          href={resource.link}
-          className={s.card}
-          target="_blank"
-          rel="noreferrer"
-          style={{ height: "100%" }}
-        >
-          {inner}
-        </a>
-      )}
+      <a
+        href={organisation.url}
+        className={s.card}
+        target="_blank"
+        rel="noreferrer"
+        style={{ height: "100%" }}
+      >
+        <div className={s.name}>{organisation.name}</div>
+        <div className={s.desc}>{organisation.description}</div>
+        <div className={s.tags}>
+          {organisation.tags.map((tag) => (
+            <span key={tag} className={s.tag}>
+              #{tag}
+            </span>
+          ))}
+        </div>
+        <div className={`${s.cardFoot} ${s.ext}`}>
+          {t("marketing:resourceLibrary.card.visitSite")}{" "}
+          <FiExternalLink aria-hidden />
+        </div>
+      </a>
     </FadeIn>
   );
 }

@@ -14,6 +14,7 @@ export const feed: Catalog = {
   // ── Tab labels (canonical id stays English; this is the display label) ──
   "tab.all": "All",
   "tab.communities": "Communities",
+  "tab.connections": "Connections",
   "tab.gatherings": "Gatherings",
   "tab.people": "People",
   "tab.posts": "Posts",
@@ -34,6 +35,14 @@ export const feed: Catalog = {
   "tab.communities.error.title": "Couldn't reach your communities",
   "tab.communities.error.description":
     "The pulse from your communities didn't come through. Try again in a moment.",
+
+  "tab.connections.empty.title": "Nothing from your connections yet",
+  "tab.connections.empty.description":
+    "Once you connect with people here, what they post and host will show up in this tab.",
+  "tab.connections.empty.action": "Find people to connect with",
+  "tab.connections.error.title": "Couldn't load your connections' feed",
+  "tab.connections.error.description":
+    "We couldn't reach your connections' activity. Give it another try.",
 
   "tab.gatherings.empty.title": "Nothing on the calendar yet",
   "tab.gatherings.empty.description":

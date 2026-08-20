@@ -174,7 +174,7 @@ export function WriterWorkspacePage() {
         <FileDraftModal
           assignment={filingAssignment}
           onClose={() => setFilingAssignment(null)}
-          onFile={(pieceId) => fileDraft.mutate(pieceId)}
+          onFile={(pieceId, blocks) => fileDraft.mutate({ pieceId, body: blocks ? { blocks } : undefined })}
         />
       )}
 

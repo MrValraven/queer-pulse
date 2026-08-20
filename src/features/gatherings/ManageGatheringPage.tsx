@@ -13,13 +13,15 @@ import {
   ManageGatheringSidebar,
 } from "./ManageGatheringTabs";
 import { EditDetailsModal } from "./EditDetailsModal";
-import type { EventVisibility } from "./api/events.api";
+import type { EventVisibility, SeriesScope, UpdateEventDto } from "./api/events.api";
 import { MessageAttendeesModal } from "./MessageAttendeesModal";
+import { SeriesEditScopeModal } from "./SeriesEditScopeModal";
 import type { VenueSelection } from "./VenuePicker";
 import {
   GATHERING_TITLE,
   GATHERING_DESCRIPTION,
   GATHERING_DETAILS,
+  GATHERING_DATE,
   ATTENDEE_COUNT,
 } from "./manageGathering.data";
 import {
@@ -31,7 +33,7 @@ import {
 import { useEvent } from "./api/useEvent";
 import { useAttendees } from "./api/useAttendees";
 import { useUpdateEvent, useCancelEvent } from "./api/useEventMutations";
-import { daysUntil } from "./manageGatheringDates";
+import { daysUntil, dateToDatetimeValue } from "./manageGatheringDates";
 import styles from "./ManageGatheringPage.module.css";
 
 interface GatheringDetailRow {
@@ -42,7 +44,13 @@ interface GatheringDetailRow {
 
 interface GatheringState {
   title: string;
+  /** Formatted display string for the "date" details row — derived, never
+   *  edited directly. See `startAt` for the real editable moment. */
   date: string;
+  /** The gathering's real scheduled start — what actually gets sent to the
+   *  backend on save. Kept in step with `date`/`details` (the display copy)
+   *  whenever either changes. */
+  startAt: Date;
   location: string;
   description: string;
   details: GatheringDetailRow[];
@@ -77,6 +85,7 @@ function demoInitialState(): GatheringState {
   return {
     title: GATHERING_TITLE,
     date: dateDetail,
+    startAt: GATHERING_DATE,
     location: venueDetail,
     description: GATHERING_DESCRIPTION,
     details: GATHERING_DETAILS,
@@ -107,6 +116,7 @@ function liveInitialState(
   return {
     title: gathering.title,
     date: dateValue,
+    startAt: gathering.date,
     location: gathering.hood,
     description: gathering.body,
     details: [
@@ -210,6 +220,16 @@ function ManageGatheringMain({
   const { data: attendees } = useAttendees(slug);
   const [editOpen, setEditOpen] = useState(false);
   const [messageOpen, setMessageOpen] = useState(false);
+  // MSG-10 — a repeating gathering's edit/cancel offers a this-vs-future
+  // choice. `seriesScopeModal` is which prompt (if any) is open;
+  // `pendingEditPatch` holds an already-saved edit's patch until the host
+  // picks a scope for it (see the `EditDetailsModal` wiring below).
+  const [seriesScopeModal, setSeriesScopeModal] = useState<
+    "edit" | "cancel" | null
+  >(null);
+  const [pendingEditPatch, setPendingEditPatch] = useState<UpdateEventDto | null>(
+    null,
+  );
 
   const [gatheringState, setGatheringState] = useState<GatheringState>(() =>
     demoMode || !gathering ? demoInitialState() : liveInitialState(gathering, fmt),
@@ -234,7 +254,15 @@ function ManageGatheringMain({
             : 0,
         };
 
+  // MSG-10 — a gathering that's part of a series (real, live only —
+  // `gathering?.series` is always undefined in demo mode) asks this-vs-future
+  // instead of the plain confirm; a standalone gathering keeps the original
+  // single `window.confirm`.
   const cancelGathering = () => {
+    if (gathering?.series) {
+      setSeriesScopeModal("cancel");
+      return;
+    }
     if (
       window.confirm(
         t("gatherings:manage.cancelConfirm", {
@@ -243,8 +271,22 @@ function ManageGatheringMain({
         }),
       )
     ) {
-      cancelEvent.mutate();
+      cancelEvent.mutate(undefined);
       void navigate(gatheringCancelledPath(slug));
+    }
+  };
+
+  // The host's answer to the `SeriesEditScopeModal` prompt — fires the
+  // deferred cancel/edit mutation with the chosen `SeriesScope`.
+  const chooseSeriesScope = (scope: SeriesScope) => {
+    const mode = seriesScopeModal;
+    setSeriesScopeModal(null);
+    if (mode === "cancel") {
+      cancelEvent.mutate(scope);
+      void navigate(gatheringCancelledPath(slug));
+    } else if (mode === "edit" && pendingEditPatch) {
+      updateEvent.mutate({ ...pendingEditPatch, seriesScope: scope });
+      setPendingEditPatch(null);
     }
   };
 
@@ -329,6 +371,12 @@ function ManageGatheringMain({
               overviewCounts={overviewCounts}
               venueListingId={gatheringState.venueListingId}
               venueListing={gatheringState.venueListing}
+              cohosts={gathering?.cohosts}
+              allowWaitlist={gathering?.allowWaitlist}
+              showAttendeeCount={gathering?.showAttendeeCount}
+              onUpdateSettings={(patch) => {
+                if (!demoMode) updateEvent.mutate(patch);
+              }}
               onUpdateDetail={updateDetail}
               onUpdateVenue={updateVenue}
               onUpdateDescription={(value) => {
@@ -352,13 +400,19 @@ function ManageGatheringMain({
         <EditDetailsModal
           initial={{
             title: gatheringState.title,
-            date: gatheringState.date,
+            startAt: dateToDatetimeValue(gatheringState.startAt),
             location: gatheringState.location,
             description: gatheringState.description,
             visibility: gatheringState.visibility,
             communitySlug: gatheringState.communitySlug,
           }}
-          onClose={() => setEditOpen(false)}
+          onClose={() => {
+            setEditOpen(false);
+            // MSG-10 — a save on a repeating gathering (see `onSave` below)
+            // stashes its patch here instead of sending it immediately;
+            // closing the modal is the cue to ask this-vs-future.
+            if (pendingEditPatch) setSeriesScopeModal("edit");
+          }}
           onSave={(draft) => {
             // This modal only offers a plain-text location field — it can't
             // specify (or preserve) a directory link, so any change to the
@@ -367,10 +421,22 @@ function ManageGatheringMain({
             // location (only the title/date/etc. changed) leaves the link
             // exactly as it was.
             const locationChanged = draft.location !== gatheringState.location;
+            // `draft.startAt` is the modal's local `"yyyy-mm-ddThh:mm"` wire
+            // value (no timezone suffix), which `new Date(...)` parses as
+            // local time — the same convention the create-gathering wizard
+            // uses for its own date+time fields.
+            const newStartAt = new Date(draft.startAt);
+            const newDateDisplay = fmt.date(newStartAt, {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            });
             setGatheringState((current) => ({
               ...current,
               title: draft.title,
-              date: draft.date,
+              date: newDateDisplay,
+              startAt: newStartAt,
               location: draft.location,
               description: draft.description,
               visibility: draft.visibility,
@@ -380,15 +446,23 @@ function ManageGatheringMain({
                 : {}),
               details: current.details.map((detail) =>
                 detail.id === "date"
-                  ? { ...detail, value: draft.date }
+                  ? { ...detail, value: newDateDisplay }
                   : detail.id === "venue"
                     ? { ...detail, value: draft.location }
                     : detail,
               ),
             }));
-            updateEvent.mutate({
+            const patch: UpdateEventDto = {
               title: draft.title,
               description: draft.description,
+              // Reschedules the real event — the backend applies `startAt`
+              // on PATCH and fans out an "event updated" notice to every
+              // attendee/invitee when it actually changes (events.service.ts
+              // `update()`'s `materialChanges` check). Never propagated to
+              // future series siblings even under `scope: "future"` below —
+              // each occurrence keeps its own date (see the backend's
+              // `update()` doc).
+              startAt: newStartAt.toISOString(),
               venue: draft.location,
               ...(locationChanged ? { listingId: null } : {}),
               visibility: draft.visibility,
@@ -406,7 +480,27 @@ function ManageGatheringMain({
               ...(draft.communitySlug !== gatheringState.communitySlug
                 ? { communitySlug: draft.communitySlug || null }
                 : {}),
-            });
+            };
+            // MSG-10 — a repeating gathering defers the actual PATCH until
+            // the host answers `SeriesEditScopeModal` (triggered from
+            // `onClose` above); a standalone gathering sends it immediately,
+            // exactly as before this feature existed.
+            if (gathering?.series) {
+              setPendingEditPatch(patch);
+            } else {
+              updateEvent.mutate(patch);
+            }
+          }}
+        />
+      )}
+
+      {seriesScopeModal && (
+        <SeriesEditScopeModal
+          mode={seriesScopeModal}
+          onChoose={chooseSeriesScope}
+          onClose={() => {
+            setSeriesScopeModal(null);
+            setPendingEditPatch(null);
           }}
         />
       )}

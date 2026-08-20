@@ -38,6 +38,7 @@ interface CreationDeps {
     replyToId?: string,
     forwarded?: boolean,
     attachment?: GifAttachment,
+    mediaKind?: "gif" | "image",
   ) => void;
 }
 
@@ -52,6 +53,7 @@ export interface MessageCreation {
     recipient: Conversation,
     text: string,
     attachment?: GifAttachment,
+    mediaKind?: "gif" | "image",
   ) => void;
 }
 
@@ -215,14 +217,18 @@ export function useMessageCreation({
     recipient: Conversation,
     text: string,
     attachment?: GifAttachment,
+    mediaKind?: "gif" | "image",
   ) {
     const localId = nextLocalId();
     const optimistic: ChatMessage = {
       from: "me",
       text,
-      // Forwarding a GIF carries its attachment so it renders (and re-sends) as a
-      // GIF, not as bare "GIF" text.
-      kind: attachment ? "gif" : undefined,
+      // Forwarding a GIF/image carries its attachment so it renders (and
+      // re-sends) as one, not as bare fallback text. `mediaKind` is the
+      // ORIGINAL message's kind (passed in by the caller from the message
+      // being forwarded) — it can't be re-derived from "an attachment is
+      // present" alone, since that's true for both kinds.
+      kind: attachment ? mediaKind : undefined,
       attachment,
       time: t("messages:time.justNow"),
       status: "sending",
@@ -236,7 +242,7 @@ export function useMessageCreation({
     if (recipient.isGroup) {
       appendOptimistic(recipient.id, optimistic);
       openThread(recipient.id);
-      deliver(recipient.id, text, localId, undefined, true, attachment);
+      deliver(recipient.id, text, localId, undefined, true, attachment, mediaKind);
       return;
     }
     const existing = allThreads.find(
@@ -245,7 +251,7 @@ export function useMessageCreation({
     if (existing) {
       appendOptimistic(existing.id, optimistic);
       openThread(existing.id);
-      deliver(existing.id, text, localId, undefined, true, attachment);
+      deliver(existing.id, text, localId, undefined, true, attachment, mediaKind);
       return;
     }
     // New thread. Open the placeholder immediately; in demo (or an official/
@@ -284,7 +290,7 @@ export function useMessageCreation({
         );
         setReadIds((current) => new Set(current).add(conversation.id));
         appendOptimistic(conversation.id, optimistic);
-        deliver(conversation.id, text, localId, undefined, true, attachment);
+        deliver(conversation.id, text, localId, undefined, true, attachment, mediaKind);
       },
     });
   }

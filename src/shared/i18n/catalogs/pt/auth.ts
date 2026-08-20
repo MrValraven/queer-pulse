@@ -67,6 +67,11 @@ export const auth: Catalog = {
   "signIn.notice.unreachable.body":
     "O servidor não respondeu. Pode estar a arrancar — espera um momento e tenta novamente.",
 
+  // Mostrado por baixo de um aviso de porta fechada do OAuth acima (não nos
+  // avisos de sonda de rede). Cobre membros bloqueados de forma permanente da
+  // conta Google associada, sem outra via de recuperação aqui.
+  "signIn.notice.support": "Continua preso? <a>Fala connosco</a>",
+
   // O registo está desligado em toda a plataforma (ou a plataforma está
   // bloqueada). Não é culpa de quem visita, e não há nada a repetir — a cópia
   // diz isso com clareza e não convida a tentar de novo em ciclo.
@@ -390,11 +395,15 @@ export const auth: Catalog = {
     "Abre as diretrizes e lê até ao fim para continuar.",
   "onboarding.stepNorms.continue": "Concordo, continuar",
   "onboarding.stepNorms.back": "Voltar",
+  "onboarding.stepNorms.control.title": "Tens sempre o controlo",
+  "onboarding.stepNorms.control.desc":
+    "Podes bloquear, silenciar ou denunciar qualquer pessoa, a qualquer momento. <a>Vê como funciona bloquear e silenciar</a>.",
 
   "onboarding.stepIntents.heading": "O que te traz <em>aqui?</em>",
   "onboarding.stepIntents.hint":
     "Escolhe pelo menos uma — escolhe quantas fizerem sentido.",
   "onboarding.stepIntents.continue": "Continuar",
+  "onboarding.stepIntents.skip": "Saltar por agora, podes partilhar isto depois",
   "onboarding.stepIntents.back": "Voltar",
   "onboarding.stepIntents.saveError":
     "Não conseguimos guardar isso agora. Tenta novamente.",
@@ -459,6 +468,8 @@ export const auth: Catalog = {
   "gettingStarted.title": "Primeiros <em>passos</em>",
   "gettingStarted.lede":
     "Alguns primeiros passos para encontrares a tua gente e te instalares. Sem pressa — pela ordem que quiseres, quando quiseres.",
+  "gettingStarted.ledeProgress":
+    "Bom progresso até agora: já fizeste {done} de {total}. Faltam mais alguns passos para encontrares a tua gente e te instalares.",
   "gettingStarted.progress": "{done} de {total} feitos",
   "gettingStarted.levelStrip.eyebrow": "O teu nível",
   "gettingStarted.levelStrip.progress": "{xp} de {xpMax} XP",

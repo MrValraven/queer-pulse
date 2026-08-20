@@ -1682,6 +1682,7 @@ export const marketing: Catalog = {
   "changelog.tag.employerReviews": "Read employer reviews",
   "changelog.tag.studio": "Visit the Studio",
   "changelog.tag.search": "Try global search",
+  "changelog.tag.topics": "Browse topics",
   "changelog.tag.volunteer": "Find a way in",
   "changelog.tag.postVolunteer": "Post an opportunity",
   "changelog.tag.comingOut": "Read the coming-out guide",
@@ -1696,6 +1697,7 @@ export const marketing: Catalog = {
   "changelog.tag.myEvents": "Open My Events",
   "changelog.tag.safeSpaces": "Find a safe space",
   "changelog.tag.pressKit": "Open the press kit",
+  "changelog.tag.pushDevices": "Manage your devices",
   "changelog.tag.magazineDesk": "Open the desk",
   "changelog.tag.guidelines": "Read the community guidelines",
   "changelog.tag.requestInvite": "Ask to come in",
@@ -1704,6 +1706,11 @@ export const marketing: Catalog = {
   "changelog.tag.tenantRights": "Know your rights",
   "changelog.tag.workProfile": "Open your work profile",
   "changelog.tag.governance": "See how QueerPulse is run",
+  "changelog.tag.appealOutcome": "Check your appeal status",
+  "changelog.tag.hateCrime": "Read hate crime resources",
+  "changelog.tag.changemakers": "See our Changemakers",
+  "changelog.tag.vouch": "Vouch for someone",
+  "changelog.tag.culture": "Visit Culture",
 
   "changelog.entries.member-directory-filter-crossfade.title":
     "Smoother filtering in the member directory",
@@ -1858,6 +1865,311 @@ export const marketing: Catalog = {
     "Editable finance figures, with a note on where each number comes from",
   "changelog.entries.governance-editable-finances.body":
     "Admins can now correct the figures on the governance Finances tab instead of them being fixed. Every number carries a small tag showing where it comes from: an unverified placeholder, a value an admin entered, or one that is calculated (like the surplus). Corrections are recorded, so it is always clear who changed what and when.",
+
+  "changelog.entries.push-devices-list.title":
+    "See and remove every device getting your push notifications",
+  "changelog.entries.push-devices-list.body":
+    "Settings now has a Devices list under Notifications: every device registered for QueerPulse push, when it was registered, and when it was last notified. Lost a phone, or don't recognise one? Remove it right from there.",
+
+  "changelog.entries.gatherings-manage-attendees-remove-promote.title":
+    "Hosts can now remove a guest or promote from the waitlist",
+  "changelog.entries.gatherings-manage-attendees-remove-promote.body":
+    "The Attendees tab's Remove and Promote buttons now actually do something: removing a guest frees their spot for the waitlist, and promoting pulls a specific waitlisted guest onto the list, out of turn if you want.",
+
+  "changelog.entries.myevents-calendar-feed-subscribe.title":
+    "Subscribe to your events in Google or Apple Calendar",
+  "changelog.entries.myevents-calendar-feed-subscribe.body":
+    "\"Subscribe to your feed\" in My Events now copies a real, private feed link. Add it to Google or Apple Calendar and it keeps itself up to date with everything you're going to.",
+
+  "changelog.entries.gatherings-recap-more-from-host.title":
+    "Recaps now point you to more from the same host",
+  "changelog.entries.gatherings-recap-more-from-host.body":
+    "A gathering's recap page now shows a few other upcoming gatherings from the same host, so a good night doesn't end without a way to book the next one.",
+
+  "changelog.entries.myevents-rsvp-actions-real.title":
+    "My Events actions now actually update your RSVP",
+  "changelog.entries.myevents-rsvp-actions-real.body":
+    "Marking yourself maybe or going, accepting or declining an invite, saying you can't make it, and leaving a waitlist all now write to your real RSVP instead of just changing what the card shows you.",
+
+  "changelog.entries.myevents-block-host-real.title":
+    "\"Block the host\" from My Events now really blocks them",
+  "changelog.entries.myevents-block-host-real.body":
+    "The block option in an event card's overflow menu now uses the same block as everywhere else on QueerPulse, instead of just showing a confirmation toast.",
+
+  "changelog.entries.myevents-reminder-indicator-honest.title":
+    "The reminder bell on event cards is now a status, not a toggle",
+  "changelog.entries.myevents-reminder-indicator-honest.body":
+    "Reminders are sent to everyone going or maybe-going, based on your reminder-lead setting in Preferences, not per event. The bell on a card now shows that plainly instead of looking like a per-event switch it never was.",
+
+  "changelog.entries.gatherings-edit-date-time-fix.title":
+    "Editing a gathering's date and time now actually reschedules it",
+  "changelog.entries.gatherings-edit-date-time-fix.body":
+    "The manage dashboard's \"Edit details\" date field used to save a label, not a real date. It now reschedules the gathering for real, and everyone with an RSVP gets notified of the change.",
+
+  "changelog.entries.gatherings-cancelled-page-real-content.title":
+    "A cancelled gathering's page now shows the real gathering",
+  "changelog.entries.gatherings-cancelled-page-real-content.body":
+    "Opening a cancellation notice used to always show the same fictional example gathering. It now shows the actual gathering that was cancelled: its real title, date, host, and venue.",
+
+  "changelog.entries.gatherings-cohost-roster-visible.title":
+    "Hosts can now see who's already co-hosting",
+  "changelog.entries.gatherings-cohost-roster-visible.body":
+    "The manage dashboard's cohost panel used to always start empty, even for gatherings with cohosts already on board. It now shows the real roster.",
+
+  "changelog.entries.gatherings-remove-pricing-step.title":
+    "Removed the pricing step from creating a gathering",
+  "changelog.entries.gatherings-remove-pricing-step.body":
+    "QueerPulse doesn't handle payments, so the wizard's ticket-pricing step never did anything with what you typed into it. It's gone now rather than sitting there looking functional.",
+
+  "changelog.entries.messages-message-requests.title":
+    "Message someone new, right from your inbox",
+  "changelog.entries.messages-message-requests.body":
+    "Not connected with someone yet? Search for them from New Message and send a first message. It becomes a request they can accept or decline, and any requests waiting for you now show up under a new Requests tab.",
+
+  "changelog.entries.messages-mute-conversation.title":
+    "Mute a chat's notifications",
+  "changelog.entries.messages-mute-conversation.body":
+    "Every chat's options menu now has Mute, alongside Pin and Favorite. A muted chat stops sending you push notifications while staying exactly where it is in your inbox.",
+
+  "changelog.entries.messages-search-in-chat.title":
+    "Search inside a single conversation",
+  "changelog.entries.messages-search-in-chat.body":
+    "Open a chat and tap the search icon to look through just that conversation, instead of your whole inbox.",
+
+  "changelog.entries.governance-proposals-voting.title":
+    "Governance decisions now go to a real community vote",
+  "changelog.entries.governance-proposals-voting.body":
+    "Removing an advisory-council seat needs a two-thirds vote, and accepting funding outside our usual sources needs a majority. Open proposals show a live tally on the Governance page, and every past one stays visible with its result.",
+
+  "changelog.entries.governance-figures-honesty.title":
+    "Governance's active-member count is now live",
+  "changelog.entries.governance-figures-honesty.body":
+    "The active-member figure on the Governance page is now calculated straight from real accounts instead of typed in by hand. The finance figures stay reported by the team each quarter, and the page now says so plainly instead of implying they're computed automatically.",
+
+  "changelog.entries.communities-sister-demo-only.title":
+    "Sister-community suggestions stay in demo mode",
+  "changelog.entries.communities-sister-demo-only.body":
+    "\"Sister communities\" and \"also in\" suggestions were rendering from sample data on real community pages too. They now only show up when you're looking at the demo.",
+
+  "changelog.entries.communities-category-filter.title":
+    "Community category filters work past the first page",
+  "changelog.entries.communities-category-filter.body":
+    "Filtering communities by category now asks the server for a real match instead of only filtering whatever had already loaded, so it stops wrongly saying \"no communities match\" once you scroll past page one.",
+
+  "changelog.entries.communities-archive-reversible.title":
+    "Archived communities can be brought back",
+  "changelog.entries.communities-archive-reversible.body":
+    "Admins can now unarchive a community, the same way freezing a community already had an unfreeze. Archiving one by mistake no longer has to be permanent.",
+
+  "changelog.entries.changemakers-nomination-reason.title":
+    "Changemaker nominations now ask for the sentence they promise",
+  "changelog.entries.changemakers-nomination-reason.body":
+    "The nomination form always said \"a name and a sentence is enough,\" but only asked for a name. It now has a real field for your sentence, and reviewers can read what you wrote.",
+
+  "changelog.entries.changemakers-nomination-review.title":
+    "Changemaker nominations get a real answer",
+  "changelog.entries.changemakers-nomination-review.body":
+    "Admins can now approve or dismiss a nomination, and you'll be notified of the decision instead of hearing nothing back after submitting one.",
+
+  "changelog.entries.changemakers-connect-honest.title":
+    "A Changemaker profile's \"Connect\" button is honest about what it does",
+  "changelog.entries.changemakers-connect-honest.body":
+    "Changemaker profiles are editorial features, not linked member accounts, so \"Connect\" could never actually message that person. It now routes you to our general contact channel and says so.",
+
+  "changelog.entries.moderation-assign-to-me.title":
+    "Moderators can claim reports in the queue",
+  "changelog.entries.moderation-assign-to-me.body":
+    "The \"Assigned to me\" filter in the moderation queue used to always come back empty. Moderators can now claim or release a report from the report drawer, and the filter reflects real claims.",
+
+  "changelog.entries.moderation-report-history-link.title":
+    "See a member's full report history from the queue",
+  "changelog.entries.moderation-report-history-link.body":
+    "The \"prior reports\" count on a report used to be just a number. It's now a link straight to every other report about that same person.",
+
+  "changelog.entries.moderation-resolution-detail.title":
+    "Resolved reports show what actually happened",
+  "changelog.entries.moderation-resolution-detail.body":
+    "Resolved reports now show who resolved them, what they decided, and when, instead of a generic placeholder. \"Closed X ago\" reflects the real resolution time now, not when the report was filed.",
+
+  "changelog.entries.moderation-sla-overdue.title":
+    "Overdue reports are flagged in the queue",
+  "changelog.entries.moderation-sla-overdue.body":
+    "Reports already had a computed response deadline behind the scenes. It's now visible, with an overdue badge once a report passes it.",
+
+  "changelog.entries.moderation-bulk-actions-expanded.title":
+    "Bulk moderation now covers warn, suspend, and ban",
+  "changelog.entries.moderation-bulk-actions-expanded.body":
+    "The bulk action bar used to only handle dismiss, spam, and reassign. It now also handles warn, suspend (with a duration picker), and ban, so a wave of coordinated reports doesn't have to be handled one at a time.",
+
+  "changelog.entries.moderation-appeal-integrity.title":
+    "Appeal reviews show the real evidence, and can't be self-reviewed",
+  "changelog.entries.moderation-appeal-integrity.body":
+    "Reviewing an appeal now shows the original reported content, not just the moderator's own summary of why they acted. A moderator can no longer review the appeal of their own original decision.",
+
+  "changelog.entries.forum-write-rate-limit.title":
+    "Forum posting gets its own rate limit",
+  "changelog.entries.forum-write-rate-limit.body":
+    "Creating threads, replies, and votes now has its own dedicated abuse guard, matching the protection communities already had, instead of relying on the site-wide default.",
+
+  "changelog.entries.forum-first-post-accuracy.title":
+    "The \"first post\" prompt checks your real history",
+  "changelog.entries.forum-first-post-accuracy.body":
+    "The forum's invitation to make your first post used to only track the current browsing session, so it wrongly greeted repeat posters as brand new. It now checks whether you've actually ever posted.",
+
+  "changelog.entries.forum-lock-reason.title":
+    "Locked threads can say why",
+  "changelog.entries.forum-lock-reason.body":
+    "When a moderator locks a thread, they can now add a short reason, and it shows in the locked banner instead of every locked thread reading identically.",
+
+  "changelog.entries.forum-shareable-filters.title":
+    "Forum category and sort survive a refresh",
+  "changelog.entries.forum-shareable-filters.body":
+    "Picking a category or sort tab on the forum now updates the page's link, so refreshing or sharing it keeps your view instead of silently resetting to \"All.\"",
+
+  "changelog.entries.forum-search-hint.title":
+    "Forum search now says what it searches",
+  "changelog.entries.forum-search-hint.body":
+    "A small hint under the forum search box now clarifies it matches thread titles, not the text of posts and replies.",
+
+  "changelog.entries.forum-most-helpful-real.title":
+    "\"Most helpful\" sort reflects real votes",
+  "changelog.entries.forum-most-helpful-real.body":
+    "Sorting replies by \"most helpful\" now uses real upvotes, and the top-voted reply gets the star badge, instead of only working in the demo.",
+
+  "changelog.entries.recognition-locked-badges-honest.title":
+    "The badge case only shows badges you can actually earn",
+  "changelog.entries.recognition-locked-badges-honest.body":
+    "A few badges were listed as \"locked\" with earning instructions that led nowhere. They're no longer shown until there's a real way to earn them.",
+
+  "changelog.entries.recognition-vouch-perk-copy.title":
+    "\"Vouch access\" perk description matches reality",
+  "changelog.entries.recognition-vouch-perk-copy.body":
+    "The perk case said vouch access unlocked at Level 3. Vouching has never actually had a level requirement, so the description now says what's true: it's available to every active member from the start.",
+
+  "changelog.entries.recognition-visible-on-profiles.title":
+    "See other members' level and badges",
+  "changelog.entries.recognition-visible-on-profiles.body":
+    "Level and badges used to only ever show on your own profile. They now show on other members' profiles too, so recognition works as a visible signal between members.",
+
+  "changelog.entries.vouch-daily-cap.title":
+    "A daily cap on vouches, to keep the signal meaningful",
+  "changelog.entries.vouch-daily-cap.body":
+    "Vouching for people already had a short cooldown between vouches. There's now also a generous daily cap, so the signal stays meaningful even over time.",
+
+  "changelog.entries.magazine-article-publish-schedule.title":
+    "Publish and schedule articles for real",
+  "changelog.entries.magazine-article-publish-schedule.body":
+    "The article editor's Publish and Schedule controls used to be decorative. They now actually publish your article, right away or at a future date and time you choose, and articles that aren't tied to an issue can finally go live without waiting on issue production.",
+
+  "changelog.entries.magazine-writer-draft-paste-fix.title":
+    "Pasting a draft into \"File a draft\" no longer loses it",
+  "changelog.entries.magazine-writer-draft-paste-fix.body":
+    "Pasting your draft text when filing a piece used to vanish the moment you confirmed. It now flows straight into the article editor as real paragraphs, ready to keep shaping.",
+
+  "changelog.entries.magazine-live-discovery.title":
+    "The magazine now has somewhere to browse",
+  "changelog.entries.magazine-live-discovery.body":
+    "Readers could only reach an article through a direct link before. The magazine front, issue archive, and author pages are now backed by real data, and issue links open the actual issue instead of always the current one. There's also a new authors directory to browse everyone writing for the magazine.",
+
+  "changelog.entries.culture-submissions-real.title":
+    "Club, Showcase, and Radio submissions are now real",
+  "changelog.entries.culture-submissions-real.body":
+    "Suggesting a pick, posting a commission project, submitting showcase work, or sending in a playlist used to show a success message and go nowhere. Every one of these now saves for real.",
+
+  "changelog.entries.culture-radio-honest.title":
+    "Radio's controls tell the truth",
+  "changelog.entries.culture-radio-honest.body":
+    "The Radio panel's play and skip controls used to pretend to work. They're now honest about what's actually live, and \"Become a curator\" opens the real playlist-submission form.",
+
+  "changelog.entries.newsletter-unsubscribe.title":
+    "Unsubscribe from the newsletter yourself",
+  "changelog.entries.newsletter-unsubscribe.body":
+    "There was no way to stop newsletter emails once you'd confirmed. There's now a real unsubscribe link and page, matching the same confirmation flow you get when you sign up.",
+
+  "changelog.entries.resources-crisis-hotline-coverage.title":
+    "Crisis hotlines now show on every crisis-adjacent resource page",
+  "changelog.entries.resources-crisis-hotline-coverage.body":
+    "Legal, Trans Healthcare, Harm Reduction, Sexual Health, Safety and Mental Health all now surface the same crisis line strip Wellbeing already had, so help is one tap away wherever you land.",
+
+  "changelog.entries.resources-library-consolidated.title":
+    "Resources home is now backed by real guide data",
+  "changelog.entries.resources-library-consolidated.body":
+    "The Resources home page now shows the same backend-driven guides as the rest of the app, with freshness tracked per guide.",
+
+  "changelog.entries.resources-guide-freshness.title":
+    "Guides now show when they were last checked",
+  "changelog.entries.resources-guide-freshness.body":
+    "Every guide card shows the date an editor last verified it, or an honest \"not yet verified\" when it hasn't been reviewed yet.",
+
+  "changelog.entries.resources-suggest-edit-expanded.title":
+    "Suggest an edit, beyond the Glossary",
+  "changelog.entries.resources-suggest-edit-expanded.body":
+    "The \"suggest an edit\" form used to work only on the Glossary. It now opens from Legal, Trans Healthcare, Harm Reduction, Mental Health and the guide library too.",
+
+  "changelog.entries.directory-review-reporting.title":
+    "Report a single review in the local directory",
+  "changelog.entries.directory-review-reporting.body":
+    "Every review on a business's page now has a Report action, so you can flag an abusive or fake review on its own instead of only being able to dispute the whole listing. A moderator reviews every report the same way as elsewhere on the platform.",
+
+  "changelog.entries.directory-search-pagination.title":
+    "Faster, more complete search in the local directory",
+  "changelog.entries.directory-search-pagination.body":
+    "Searching the local directory now filters on our servers instead of quietly capping out after the first couple hundred places. Scroll to the end of the list and more load automatically, so a broad search or the full directory no longer stops short of the real count.",
+
+  "changelog.entries.directory-edit-suggestions-applied.title":
+    "Accepted listing corrections now actually update the listing",
+  "changelog.entries.directory-edit-suggestions-applied.body":
+    "When you suggest an edit to a business listing (wrong hours, address, phone, website, or description) and a moderator accepts it, the listing itself now updates and its owner is notified. Accepting used to do nothing you could see.",
+
+  "changelog.entries.housing-my-listings.title":
+    "Manage the room or place you posted, from your own My Listings page",
+  "changelog.entries.housing-my-listings.body":
+    "Housing listings now have a home of their own. Edit any listing you posted, mark it as filled once you've found someone, extend it before it expires, or take it down entirely. A listing also expires automatically after a couple of months if you never come back to update it, so the directory doesn't fill up with stale ones.",
+
+  "changelog.entries.appeal-outcome-tracking.title":
+    "Appeal outcomes now show your real status",
+  "changelog.entries.appeal-outcome-tracking.body":
+    "The appeal outcome page used to show a demo toggle regardless of what actually happened to your appeal. It now shows your real appeal: upheld, overturned, or still awaiting review, pulled straight from the moderator's decision.",
+
+  "changelog.entries.quickexit-more-pages.title":
+    "Quick exit is available on more safety pages",
+  "changelog.entries.quickexit-more-pages.body":
+    "The quick-exit button for leaving the page fast now also appears on Block & Mute, both appeal pages, and Safe Space listings, not just the hate-crime and reporting pages.",
+
+  "changelog.entries.legal-links-reconciled.title":
+    "Every legal document is now listed in both the footer and the menu",
+  "changelog.entries.legal-links-reconciled.body":
+    "Terms of Service was missing from the footer, and a few policies, including the data request page, were missing from the About menu's legal section. Both now list the same complete set: privacy, terms, cookies, imprint, guidelines, and data requests.",
+
+  "changelog.entries.hate-crime-resources-linked.title":
+    "Hate Crime Resources is now linked from the footer",
+  "changelog.entries.hate-crime-resources-linked.body":
+    "This page used to be reachable only through Resources or a direct link. It's now in the footer's Support column too, alongside Legal Aid and Report & Safety.",
+
+  "changelog.entries.listing-quick-edit.title":
+    "Quick edit for your directory listing",
+  "changelog.entries.listing-quick-edit.body":
+    "Fixing a typo in your blurb or updating your phone number used to mean re-entering the whole multi-step listing wizard. Your account's Places section now offers a Quick Edit for the basics (blurb, hours note, phone, website), with the full editor still one click away for anything bigger.",
+
+  "changelog.entries.topics-follow-notifications-and-directory.title":
+    "Following a topic now actually notifies you — and a new Topics directory",
+  "changelog.entries.topics-follow-notifications-and-directory.body":
+    "Following a topic (the Follow button on any #tag page) used to have no effect. Now, when a forum thread is posted with that topic's tag, everyone following it gets notified. There's also a new Topics page listing every topic with a follow toggle, linked from the Community menu next to Forum — and a topic's \"Write a post\" button opens the forum composer with that topic's tag already attached.",
+
+  "changelog.entries.search-topics-real-results.title":
+    "Topics now show up in global search",
+  "changelog.entries.search-topics-real-results.body":
+    "Searching for a hashtag topic now returns real matches from global search, alongside members, communities, and everything else. Categories with more results than fit on screen now offer a \"See all\" link.",
+
+  "changelog.entries.feed-connections-tab.title":
+    "A new \"Connections\" tab in your feed",
+  "changelog.entries.feed-connections-tab.body":
+    "The feed's tab bar now includes Connections: posts, forum threads, and gatherings from people you're connected with, gathered in one place. Haven't connected with anyone yet? The tab points you to the members directory to get started.",
+
+  "changelog.entries.connections-report-now-files.title":
+    "Fixed: Reporting a connection now files a real report",
+  "changelog.entries.connections-report-now-files.body":
+    "\"Report\" in a connection's more-menu used to show a \"Report sent\" confirmation without actually sending anything. It now opens the same reason-and-detail form used elsewhere in the app and files a real report with the moderation team.",
 
   "changelog.entries.getting-started-xp-not-awarded-fix.title":
     "Fixed: Getting Started XP not showing up",
@@ -4156,6 +4468,7 @@ export const marketing: Catalog = {
   "directory.cat.grooming": "Barbershop & Salon",
   "directory.cat.fitness": "Gym & Fitness",
   "directory.loading": "Loading places…",
+  "directory.loadingMore": "Loading more places…",
   "directory.count": "Showing <b>{shown}</b> of {total} places",
   "directory.empty.title": "No places match those filters",
   "directory.empty.body":
@@ -4279,6 +4592,22 @@ export const marketing: Catalog = {
   "directory.detail.notFound.cta": "Browse the directory",
   "directory.detail.reportCta": "Report this listing",
   "directory.detail.reportAriaLabel": "Report {name}",
+  "directory.detail.reportReview.cta": "Report",
+  "directory.detail.reportReview.title": "Report this review",
+  "directory.detail.reportReview.sub":
+    "Tell us what's wrong with {name}'s review. A moderator reviews every report, and they won't be told who filed it.",
+  "directory.detail.reportReview.reasonGroupAria": "Reason for reporting",
+  "directory.detail.reportReview.cancel": "Cancel",
+  "directory.detail.reportReview.sendCta": "Send report",
+  "directory.detail.reportReview.sending": "Sending…",
+  "directory.detail.reportReview.confirmTitle": "Thanks. We're <em>on it.</em>",
+  "directory.detail.reportReview.confirmBody":
+    "A moderator will look into this review.",
+  "directory.detail.reportReview.done": "Done",
+  "directory.detail.reportReview.errorTitle": "Couldn't send that report",
+  "directory.detail.reportReview.errorBody":
+    "Something went wrong on our end. Please try again.",
+  "directory.detail.reportReview.retryCta": "Try again",
   "directory.detail.suggestEdit.cta": "Suggest an edit",
   "directory.detail.suggestEdit.ariaLabel": "Suggest an edit for {name}",
   "directory.detail.suggestEdit.title": "Suggest an edit",
@@ -4868,14 +5197,18 @@ export const marketing: Catalog = {
   "constitution.footer.readCodeOfConduct": "Read the Code of Conduct",
 
   // ── Resource Library — page/filter/card chrome. `RESOURCES` entries
-  //    (name/desc/tags — curated external orgs and QueerPulse tools) are
+  //    (name/desc/tags — a short, hand-curated list of real external
+  //    organisations, kept distinct from the editorial guide grid below) is
   //    directory-style content, same precedent as `directoryPlaces.ts` /
   //    the Platforms page below — left English. `LIBRARY_SUBPAGES`
   //    label/blurb are short platform-authored teaser chrome — translated.
+  //    CNT-11: the guide grid itself is real, backend-driven data — its
+  //    search/filter/card chrome lives under the shared `resources:library.*`
+  //    keys (see resources.ts) so it isn't duplicated per-catalog.
   "resourceLibrary.meta.title":
     "Queer resources in Lisbon: health, legal, housing and money support",
   "resourceLibrary.meta.description":
-    "Things that actually help: a curated library of free and sliding-scale health, legal, housing, money, identity and safety resources for queer Lisbon.",
+    "Things that actually help: community-written guides plus a short list of trusted organisations, for health, legal, housing, finance and trans life in queer Lisbon.",
   "resourceLibrary.hero.eyebrow": "Resource Library",
   "resourceLibrary.hero.title": "Things that <em>actually help.</em>",
   "resourceLibrary.hero.sub":
@@ -4885,21 +5218,13 @@ export const marketing: Catalog = {
   "resourceLibrary.stats.communityLabel": "Community",
   "resourceLibrary.stats.maintained": "maintained",
   "resourceLibrary.search.placeholder": "Search resources…",
-  "resourceLibrary.category.all": "All",
-  "resourceLibrary.category.health": "Health",
-  "resourceLibrary.category.legal": "Legal",
-  "resourceLibrary.category.housing": "Housing",
-  "resourceLibrary.category.money": "Money",
-  "resourceLibrary.category.identity": "Identity",
-  "resourceLibrary.category.safety": "Safety",
-  "resourceLibrary.category.community": "Community",
   "resourceLibrary.results_one": "{count} result",
   "resourceLibrary.results_other": "{count} results",
   "resourceLibrary.empty": "No resources match. Try a broader filter.",
-  "resourceLibrary.cost.free": "Free",
-  "resourceLibrary.cost.sliding": "Sliding scale",
-  "resourceLibrary.card.openGuide": "Open guide",
-  "resourceLibrary.card.visitSite": "Visit site ↗",
+  "resourceLibrary.card.visitSite": "Visit site",
+  "resourceLibrary.orgs.title": "Organisations doing this <em>every day.</em>",
+  "resourceLibrary.orgs.lead":
+    "A short list of Lisbon and Portugal-wide organisations we trust, for support QueerPulse doesn't provide directly.",
   "resourceLibrary.outro.title": "Know something <em>missing?</em>",
   "resourceLibrary.outro.sub":
     "Every resource here was added by a community member. If something helped you and isn't listed, tell us.",

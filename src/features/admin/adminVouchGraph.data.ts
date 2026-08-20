@@ -503,6 +503,7 @@ import {
   type VouchEdge as ModelEdge,
   type VouchPerson as ModelPerson,
 } from "./trustGraph/trustGraphModel";
+import type { TrustNetworkMemberSearchResultDTO } from "./api/adminTrustNetwork.api";
 
 const DEMO_SCENES: TrustScene[] = Object.entries(SCENES).map(([key, scene]) => ({
   id: key,
@@ -512,6 +513,9 @@ const DEMO_SCENES: TrustScene[] = Object.entries(SCENES).map(([key, scene]) => (
 
 const DEMO_PEOPLE: ModelPerson[] = PEOPLE.map((person) => ({
   id: person.id,
+  // Demo has no separate account id — the fixture's slug-shaped `id` stands
+  // in for it. `useVerifyMember`'s demo path never validates the shape.
+  userId: person.id,
   name: person.name,
   pronoun: person.pronoun,
   initials: person.initials,
@@ -554,3 +558,29 @@ export const DEMO_TRUST_GRAPH_DATA: TrustGraphData = {
   tMax: Math.max(...DEMO_EDGES.map((e) => ymValue(e.date))),
   truncated: false,
 };
+
+/**
+ * Demo fallback for the "find a member" search box (ADM-10): the live
+ * endpoint queries every member so an admin can reach someone outside the
+ * graph's node cap, but the demo graph is small and already loads everyone,
+ * so a local filter over `DEMO_PEOPLE` gives the same picker experience
+ * offline.
+ */
+export function searchDemoTrustNetworkMembers(
+  term: string,
+): TrustNetworkMemberSearchResultDTO[] {
+  const q = term.trim().toLowerCase();
+  if (q.length < 2) return [];
+  return DEMO_PEOPLE.filter(
+    (person) =>
+      person.name.toLowerCase().includes(q) ||
+      person.id.toLowerCase().includes(q),
+  )
+    .slice(0, 20)
+    .map((person) => ({
+      slug: person.id,
+      name: person.name,
+      initials: person.initials,
+      avatarUrl: person.avatarUrl ?? null,
+    }));
+}

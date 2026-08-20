@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { paneScrollRegistry } from "../../app/paneScrollRegistry";
 import { PullToRefresh } from "../../shared/components/ui";
+import { useMessageRequestsCount } from "./api/useMessageRequestsCount";
 import { DeleteConversationDialog } from "./DeleteConversationDialog";
 import { MessagesThreadListBody } from "./MessagesThreadListBody";
 import { MessagesThreadListHeader } from "./MessagesThreadListHeader";
@@ -61,12 +62,19 @@ export function MessagesThreadList({
   const [confirmDelete, setConfirmDelete] = useState<Conversation | null>(
     null,
   );
-  // All/Unread/Favorites/Groups — local UI state, doesn't need to persist.
-  // Reset to "All" whenever a search starts so leaving the search view never
-  // strands the list on a stale filter the user can't see the control for.
+  // All/Unread/Favorites/Groups/Requests — local UI state, doesn't need to
+  // persist. Reset to "All" whenever a search starts so leaving the search
+  // view never strands the list on a stale filter the user can't see the
+  // control for.
   const [activeTab, setActiveTab] = useState<InboxTab>("all");
+  const requestsCount = useMessageRequestsCount();
   const searching = !loading && query.trim().length > 0;
-  const showTabs = !loading && !searching && threads.length > 0;
+  // Tabs stay visible whenever there's SOMETHING to filter — either an actual
+  // conversation, or a pending message request (a brand-new member with
+  // requests but no conversations yet must still be able to reach the
+  // Requests tab, not just members who already have a thread).
+  const showTabs =
+    !loading && !searching && (threads.length > 0 || requestsCount > 0);
   const visibleThreads = useMemo(
     () => filterThreadsByTab(threads, activeTab, activeId, readIds),
     [threads, activeTab, activeId, readIds],
@@ -102,6 +110,7 @@ export function MessagesThreadList({
         showTabs={showTabs}
         activeTab={activeTab}
         onTabChange={setActiveTab}
+        requestsCount={requestsCount}
       />
 
       <div className={styles.threadList} ref={threadListRef}>

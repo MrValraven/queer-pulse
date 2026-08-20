@@ -14,6 +14,8 @@ import {
   TransHealthcareSidebar,
   TransHealthcareOutro,
 } from "./TransHealthcareSections";
+import { CrisisStrip } from "./CrisisStrip";
+import { SuggestEditTrigger } from "./SuggestEditTrigger";
 import styles from "./TransHealthcarePage.module.css";
 
 export function TransHealthcarePage() {
@@ -41,6 +43,8 @@ export function TransHealthcarePage() {
       />
       <TransHealthcareHero />
 
+      <CrisisStrip />
+
       <div className={styles.pathBar}>
         <div className={styles.pbInner}>
           {PATHS.map((p) => (
@@ -67,6 +71,8 @@ export function TransHealthcarePage() {
           <TransHealthcareSidebar />
         </div>
       </div>
+
+      <SuggestEditTrigger subject={pageTitle} context="trans_healthcare" />
 
       <TransHealthcareOutro />
     </PageShell>

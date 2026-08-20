@@ -6,6 +6,7 @@ import {
   type ModActionCode,
   type ModActionInput,
   type ModBulkInput,
+  type ModBulkResult,
 } from "./moderation.api";
 import { useDemoAwareMutation } from "./demoAwareMutation";
 
@@ -49,21 +50,28 @@ export interface ModBulkVars {
   action: ModActionCode;
   reasonCode: ModBulkInput["reasonCode"];
   note?: string;
+  duration?: string;
 }
 
-/** Apply one action to many reports (bulk bar). Same demo/live discipline. */
+/**
+ * Apply one action to many reports (bulk bar). Same demo/live discipline.
+ * Continue-on-error (P0-16): the backend applies each report independently
+ * and never throws for a partial batch, so `data.failed` (never a caught
+ * error) is how the caller learns some of the selection didn't land — demo
+ * mode has no real per-report failure mode, so it always reports a clean
+ * sweep.
+ */
 export function useModBulkAction() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useDemoAwareMutation<void, Error, ModBulkVars>({
+  return useDemoAwareMutation<ModBulkResult, Error, ModBulkVars>({
     demoMode,
     demoLatencyMs: 0,
     // useModerationQueue toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
-    demoResult: () => undefined,
-    live: async ({ ids, action, reasonCode, note }) => {
-      await bulkActOnReports({ ids, action, reasonCode, note });
-    },
+    demoResult: ({ ids }) => ({ updated: ids, failed: [] }),
+    live: ({ ids, action, reasonCode, note, duration }) =>
+      bulkActOnReports({ ids, action, reasonCode, note, duration }),
     onLiveSettled: () => {
       void queryClient.invalidateQueries({ queryKey: ["mod-reports"] });
     },

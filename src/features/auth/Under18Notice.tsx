@@ -32,7 +32,7 @@ export function Under18Notice({ onBack, backLabel }: Under18NoticeProps) {
       <p className={styles.body}>{t("auth:under18.body2")}</p>
       <ul className={styles.links}>
         <li>
-          <Link to={routes.library}>{t("auth:under18.link.library")}</Link>
+          <Link to={routes.resources}>{t("auth:under18.link.library")}</Link>
         </li>
         <li>
           <Link to={routes.queer101}>{t("auth:under18.link.queer101")}</Link>

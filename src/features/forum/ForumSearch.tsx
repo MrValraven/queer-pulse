@@ -34,31 +34,39 @@ export function ForumSearch({
   }, [draft, value]);
 
   return (
-    <div className={styles.search}>
-      <FiSearch className={styles.searchIcon} aria-hidden />
-      <input
-        type="search"
-        className={styles.searchInput}
-        value={draft}
-        onChange={(event) => setDraft(event.target.value)}
-        placeholder={t("forum:search.placeholder")}
-        aria-label={t("forum:search.ariaLabel")}
-        autoComplete="off"
-        enterKeyHint="search"
-      />
-      {draft && (
-        <button
-          type="button"
-          className={styles.searchClear}
-          onClick={() => {
-            setDraft("");
-            onChange("");
-          }}
-          aria-label={t("forum:search.clearAria")}
-        >
-          <FiX aria-hidden />
-        </button>
-      )}
+    <div>
+      <div className={styles.search}>
+        <FiSearch className={styles.searchIcon} aria-hidden />
+        <input
+          type="search"
+          className={styles.searchInput}
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+          placeholder={t("forum:search.placeholder")}
+          aria-label={t("forum:search.ariaLabel")}
+          aria-describedby="forum-search-hint"
+          autoComplete="off"
+          enterKeyHint="search"
+        />
+        {draft && (
+          <button
+            type="button"
+            className={styles.searchClear}
+            onClick={() => {
+              setDraft("");
+              onChange("");
+            }}
+            aria-label={t("forum:search.clearAria")}
+          >
+            <FiX aria-hidden />
+          </button>
+        )}
+      </div>
+      {/* Post/reply bodies aren't indexed (deliberate — see forum-threads.service.ts),
+          so a hint keeps a body-only match from reading as a missing result. */}
+      <p id="forum-search-hint" className={styles.searchHint}>
+        {t("forum:search.hint")}
+      </p>
     </div>
   );
 }

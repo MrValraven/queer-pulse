@@ -19,6 +19,7 @@ export const NAV = [
   { id: "council", labelKey: "governance:nav.council" },
   { id: "principles", labelKey: "governance:nav.principles" },
   { id: "finances", labelKey: "governance:nav.finances" },
+  { id: "proposals", labelKey: "governance:nav.proposals" },
   { id: "decisions", labelKey: "governance:nav.decisions" },
   { id: "raise", labelKey: "governance:nav.raise" },
 ];

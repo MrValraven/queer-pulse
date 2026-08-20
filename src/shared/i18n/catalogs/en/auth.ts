@@ -69,6 +69,11 @@ export const auth: Catalog = {
   "signIn.notice.unreachable.body":
     "The server didn't respond. It might be waking up — give it a moment and try again.",
 
+  // Shown under a closed-door OAuth notice above (not the network-probe ones).
+  // Covers members permanently locked out of their linked Google account, who
+  // have no other recovery path here.
+  "signIn.notice.support": "Still stuck? <a>Contact us</a>",
+
   // Registration is switched off platform-wide (or the platform is locked).
   // Not the visitor's fault and not retryable — the copy says so plainly and
   // does not invite them to try again in a loop.
@@ -390,10 +395,14 @@ export const auth: Catalog = {
     "Open the guidelines and read to the end to continue.",
   "onboarding.stepNorms.continue": "I agree, continue",
   "onboarding.stepNorms.back": "Back",
+  "onboarding.stepNorms.control.title": "You're always in control",
+  "onboarding.stepNorms.control.desc":
+    "You can block, mute, or report any member, any time. <a>See how blocking and muting work</a>.",
 
   "onboarding.stepIntents.heading": "What brings you <em>here?</em>",
   "onboarding.stepIntents.hint": "Pick at least one — choose as many as fit.",
   "onboarding.stepIntents.continue": "Continue",
+  "onboarding.stepIntents.skip": "Skip for now, you can share this later",
   "onboarding.stepIntents.back": "Back",
   "onboarding.stepIntents.saveError":
     "We couldn't save that just now. Please try again.",
@@ -455,6 +464,8 @@ export const auth: Catalog = {
   "gettingStarted.title": "Getting <em>started</em>",
   "gettingStarted.lede":
     "A few first moves to find your people and settle in. No rush — do them in any order, whenever you like.",
+  "gettingStarted.ledeProgress":
+    "Nice progress so far: you've already done {done} of {total}. A few more moves to find your people and settle in.",
   "gettingStarted.progress": "{done} of {total} done",
   "gettingStarted.levelStrip.eyebrow": "Your level",
   "gettingStarted.levelStrip.progress": "{xp} of {xpMax} XP",

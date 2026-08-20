@@ -42,11 +42,9 @@ export interface NotificationDTO {
 /**
  * Paginated list envelope the backend wraps notification rows in — the repo's
  * canonical offset envelope (`{ items, total, page, pageSize }`), matching what
- * `NotificationsService.list()` returns. The feed here only consumes the first
- * page's `items`; `total`/`page`/`pageSize` are carried for when the list grows
- * a "load more".
+ * `NotificationsService.list()` returns.
  */
-interface NotificationsPage {
+export interface NotificationsPage {
   items: NotificationDTO[];
   total: number;
   page: number;
@@ -54,18 +52,38 @@ interface NotificationsPage {
 }
 
 /**
- * GET /notifications — optionally filtered to unread only. The backend answers
- * with a `{ items, total, page, pageSize }` envelope, so we unwrap to the row
- * array the hooks expect. Tolerates a bare array too, in case the endpoint is
- * ever un-paginated.
+ * GET /notifications — optionally filtered to unread only, optionally a given
+ * `page` (1-indexed, matching `ListNotificationsQuery`/`normalizePage` on the
+ * backend; omitted defaults to page 1). Returns the full envelope so a caller
+ * paging through the feed (see `useNotifications`) can tell whether more pages
+ * remain. Tolerates a bare array too, in case the endpoint is ever
+ * un-paginated.
+ */
+export const getNotificationsPage = async (
+  unread?: boolean,
+  page?: number,
+): Promise<NotificationsPage> => {
+  const params = new URLSearchParams();
+  if (unread) params.set("unread", "true");
+  if (page) params.set("page", String(page));
+  const qs = params.toString();
+  const res = await apiGet<NotificationsPage | NotificationDTO[]>(
+    `/notifications${qs ? `?${qs}` : ""}`,
+  );
+  return Array.isArray(res)
+    ? { items: res, total: res.length, page: 1, pageSize: res.length }
+    : res;
+};
+
+/**
+ * GET /notifications, first page only — the row array the pre-pagination
+ * callers (the "What's changed" panel on My Events) still expect.
  */
 export const getNotifications = async (
   unread?: boolean,
 ): Promise<NotificationDTO[]> => {
-  const res = await apiGet<NotificationsPage | NotificationDTO[]>(
-    `/notifications${unread ? "?unread=true" : ""}`,
-  );
-  return Array.isArray(res) ? res : (res?.items ?? []);
+  const res = await getNotificationsPage(unread);
+  return res.items;
 };
 
 /**

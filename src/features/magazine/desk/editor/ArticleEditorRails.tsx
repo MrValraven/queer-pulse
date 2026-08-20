@@ -14,6 +14,10 @@ export interface ArticleEditorRailsProps {
   blocks: ArticleBlock[];
   publishStatus: PublishStatus;
   onPublishStatusChange: (status: PublishStatus) => void;
+  scheduledAt: string | null;
+  onScheduledAtChange: (value: string | null) => void;
+  published: boolean;
+  publishPending: boolean;
   onPublish: () => void;
   section: string;
   onSectionChange: (value: string) => void;
@@ -22,6 +26,12 @@ export interface ArticleEditorRailsProps {
   byline: string;
   role: string;
   onRoleChange: (value: string) => void;
+  metaDescription: string;
+  onMetaDescriptionChange: (value: string) => void;
+  socialImage: string;
+  onSocialImageChange: (value: string) => void;
+  canonicalUrl: string;
+  onCanonicalUrlChange: (value: string) => void;
   slug: string;
   readMinutes: number;
   wordCount: number;
@@ -43,6 +53,10 @@ export function ArticleEditorRails(props: ArticleEditorRailsProps) {
         blocks={props.blocks}
         publishStatus={props.publishStatus}
         onPublishStatusChange={props.onPublishStatusChange}
+        scheduledAt={props.scheduledAt}
+        onScheduledAtChange={props.onScheduledAtChange}
+        published={props.published}
+        publishPending={props.publishPending}
         onPublish={props.onPublish}
       />
       <ArticleMetaRail
@@ -53,6 +67,12 @@ export function ArticleEditorRails(props: ArticleEditorRailsProps) {
         byline={props.byline}
         role={props.role}
         onRoleChange={props.onRoleChange}
+        metaDescription={props.metaDescription}
+        onMetaDescriptionChange={props.onMetaDescriptionChange}
+        socialImage={props.socialImage}
+        onSocialImageChange={props.onSocialImageChange}
+        canonicalUrl={props.canonicalUrl}
+        onCanonicalUrlChange={props.onCanonicalUrlChange}
         slug={props.slug}
         readMinutes={props.readMinutes}
         wordCount={props.wordCount}

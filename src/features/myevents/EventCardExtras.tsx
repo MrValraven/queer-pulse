@@ -196,7 +196,13 @@ export function EdgeNote({ ev }: { ev: MyEvent }) {
   return null;
 }
 
-/** Recurring-series line. */
+/**
+ * Recurring-series line (MSG-16). `ev.series.dates` (a formatted upcoming-
+ * dates list) is demo-only — the live card DTO carries only this event's own
+ * position/cadence, not its siblings' schedules — so the click-toast falls
+ * back to that position summary (`ev.series.more`, e.g. "3 of 8") when
+ * `dates` is absent.
+ */
 export function SeriesLine({ ev }: { ev: MyEvent }) {
   const { t } = useTranslation();
   const { toast } = useMyEvents();
@@ -207,9 +213,14 @@ export function SeriesLine({ ev }: { ev: MyEvent }) {
       className={sx("ev-series")}
       onClick={() =>
         toast(
-          t("myevents:series.upcomingDatesToast", {
-            dates: ev.series?.dates || "",
-          }),
+          ev.series?.dates
+            ? t("myevents:series.upcomingDatesToast", {
+                dates: ev.series.dates,
+              })
+            : t("myevents:series.positionToast", {
+                label: ev.series?.label ?? "",
+                position: ev.series?.more ?? "",
+              }),
         )
       }
     >

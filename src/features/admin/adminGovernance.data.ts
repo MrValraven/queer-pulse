@@ -75,7 +75,10 @@ export type AuditType =
   | "escalate"
   | "appeal_upheld"
   | "appeal_overturned"
-  | "suspension_lifted";
+  | "suspension_lifted"
+  | "role_changed"
+  | "staff_role_granted"
+  | "staff_role_revoked";
 
 /**
  * Time-bucket used by the audit-log range filter — a stable canonical id,
@@ -99,6 +102,9 @@ export const ACTION_TONE: Record<AuditType, AdminTone> = {
   appeal_upheld: "jade",
   appeal_overturned: "jade",
   suspension_lifted: "jade",
+  role_changed: "violet",
+  staff_role_granted: "violet",
+  staff_role_revoked: "amber",
 };
 
 export interface AuditEntry {
@@ -135,6 +141,9 @@ export const AUDIT_ACTION_IDS: AuditType[] = [
   "appeal_upheld",
   "appeal_overturned",
   "suspension_lifted",
+  "role_changed",
+  "staff_role_granted",
+  "staff_role_revoked",
 ];
 
 export const AUDIT_RANGE_IDS: AuditRange[] = ["today", "week", "quarter"];

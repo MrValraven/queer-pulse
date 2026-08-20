@@ -56,7 +56,7 @@ export function CurrentIssueSection() {
             </span>
           </div>
           <div className={styles.curActions}>
-            <Button to={ISSUE} variant="primary">
+            <Button to={`${ISSUE}/${CURRENT_ISSUE_NUMBER}`} variant="primary">
               {t("magazine:issue.readCta", { number: CURRENT_ISSUE_NUMBER })}{" "}
               <FiArrowRight aria-hidden />
             </Button>
