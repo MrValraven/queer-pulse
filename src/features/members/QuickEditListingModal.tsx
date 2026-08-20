@@ -169,6 +169,7 @@ export function QuickEditListingModal({
               i18nKey="members:places.quickEdit.moreLink"
               components={{
                 a: (
+                  // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- <a> is an element template; <Translation> clones it with the translated link children at render time.
                   <a
                     href={routes.listBusinessEdit.replace(":ref", editRef)}
                   />

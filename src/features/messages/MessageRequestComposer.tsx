@@ -81,7 +81,6 @@ export function MessageRequestComposer({
         className={styles.groupNameField}
         rows={4}
         maxLength={MAX_LENGTH}
-        autoFocus
         placeholder={t("messages:request.composePlaceholder", {
           name: target.name.split(" ")[0] ?? target.name,
         })}
