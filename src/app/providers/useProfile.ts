@@ -97,12 +97,16 @@ export function toDraft(m: Member): ProfileDraft {
     last: m.last,
     role: m.role,
     pronouns: m.pronouns ?? "",
-    pronunciation: m.pronunciation,
+    // The backend column is nullable and comes through as `null`, not
+    // `undefined`, for a member who never set it — coalesce the same way
+    // `pronouns` does above so a save never round-trips `null` into a PATCH
+    // payload typed `string`. See ProfilesService.updateMe.
+    pronunciation: m.pronunciation ?? "",
     hood: m.hood,
     bio: m.bio,
-    bioPt: m.bioPt,
+    bioPt: m.bioPt ?? "",
     now: m.now,
-    notHereFor: m.notHereFor,
+    notHereFor: m.notHereFor ?? "",
     openTo: m.openTo.map((entry) => ({ ...entry })),
     tags: [...m.tags],
     visibility: m.visibility,

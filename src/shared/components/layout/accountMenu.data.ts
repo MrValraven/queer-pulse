@@ -50,7 +50,7 @@ export type AccountItem = {
 /**
  * The canonical account links, grouped by type. Each inner array renders as its
  * own two-column sub-grid in the desktop menu, separated by a divider, so the
- * clusters read as categories (people & what's on · career · writing · support).
+ * clusters read as categories (people & what's on · career & content · support).
  * Saved and Settings are NOT here — they live as icon actions in the menu header
  * (see HEADER_ACTIONS). Labels are bare nouns.
  */
@@ -99,16 +99,17 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       icon: FiCalendar,
     },
   ],
-  // Career — Applications now lives inside the Work hub, not as its own link.
+  // Career & content. Applications now lives inside the Work hub, not as its
+  // own link. Drafts/Pitches sit here, not in the staff-only RoleLinks block
+  // below: both are general-member features. Drafts spans job/post/pitch/
+  // grant drafts, and Pitches tracks any member's submitted story pitches;
+  // neither is gated to the magazine_writer staff role.
   [
     {
       labelKey: "shared:accountMenu.items.work",
       to: routes.work,
       icon: FiBriefcase,
     },
-  ],
-  // Writing
-  [
     {
       labelKey: "shared:accountMenu.items.drafts",
       to: routes.drafts,
