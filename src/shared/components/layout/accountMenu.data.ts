@@ -13,12 +13,15 @@ import {
   FiSettings,
   FiHelpCircle,
   FiCompass,
+  FiDownload,
 } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 
+/** Sentinel id for the one non-navigating row (see `action` below). */
+export const INSTALL_APP_ACTION = "installApp";
+
 export type AccountItem = {
   labelKey: string;
-  to: string;
   icon: IconType;
   /**
    * Optional trailing badge (a persona count pill / pending-invite dot,
@@ -33,7 +36,16 @@ export type AccountItem = {
    * sandbox — the panel/sheet drop the row when `demoMode` is on.
    */
   liveOnly?: boolean;
-};
+} & (
+  | { to: string; action?: undefined }
+  /**
+   * A row that opens something in place instead of navigating (currently only
+   * "Install the app" — mobile-only, opens InstallAppModal). `to` is omitted
+   * rather than pointed at a fake route so it can never be mistaken for a real
+   * link destination.
+   */
+  | { to?: undefined; action: typeof INSTALL_APP_ACTION }
+);
 
 /**
  * The canonical account links, grouped by type. Each inner array renders as its
@@ -51,6 +63,16 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       to: routes.gettingStarted,
       icon: FiCompass,
       liveOnly: true,
+    },
+  ],
+  // Install the app — mobile-only (AccountMenuPanel excludes it; AccountSheet
+  // filters it further by useDisplayMode().isInstalled). Opens InstallAppModal
+  // instead of navigating.
+  [
+    {
+      labelKey: "shared:accountMenu.items.installApp",
+      icon: FiDownload,
+      action: INSTALL_APP_ACTION,
     },
   ],
   // People — you, your circles, and what's on
@@ -108,11 +130,14 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
   ],
 ];
 
+/** An {@link AccountItem} that navigates (excludes the install-app action row). */
+export type AccountLinkItem = Extract<AccountItem, { to: string }>;
+
 /**
  * Saved + Settings — promoted out of the grid into compact icon actions in the
  * menu header (rendered with tooltips).
  */
-export const HEADER_ACTIONS: AccountItem[] = [
+export const HEADER_ACTIONS: AccountLinkItem[] = [
   {
     labelKey: "shared:accountMenu.items.saved",
     to: routes.collections,
@@ -124,4 +149,3 @@ export const HEADER_ACTIONS: AccountItem[] = [
     icon: FiSettings,
   },
 ];
-

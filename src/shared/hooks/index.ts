@@ -22,6 +22,10 @@ export {
   type InstallPromptApi,
   type InstallPlatform,
 } from "./useInstallPrompt";
+export {
+  INSTALL_INSTRUCTIONS,
+  INSTALL_TAB_LABEL_KEY,
+} from "./installInstructions";
 export { useUnsavedChangesGuard } from "./useUnsavedChangesGuard";
 export {
   useWizardForm,

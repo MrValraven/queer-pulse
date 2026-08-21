@@ -155,6 +155,10 @@
   font-size: 13.5px;
   color: var(--ink-60);
   line-height: 1.6;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 .acLink {
   display: inline-block;

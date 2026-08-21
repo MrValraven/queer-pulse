@@ -9,13 +9,14 @@ import {
 } from "../../../app/providers/navModeContext";
 import { routes } from "../../../app/routeMap";
 import { isComingSoonLink } from "../../../app/authGate";
-import {
-  useTeamRole,
-  type TeamRole,
-} from "../../../features/admin/adminRole";
+import { useTeamRole, type TeamRole } from "../../../features/admin/adminRole";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../i18n/useTranslation";
-import { ACCOUNT_GROUPS, HEADER_ACTIONS } from "./accountMenu.data";
+import {
+  ACCOUNT_GROUPS,
+  HEADER_ACTIONS,
+  type AccountLinkItem,
+} from "./accountMenu.data";
 import { useAccountIdentity } from "./useAccountIdentity";
 import { RoleLinks, AccountMenuControls } from "./accountMenuShared";
 import { usePersonaBadge } from "./usePersonaBadge";
@@ -238,43 +239,48 @@ function AccountMenuPanel({
       </div>
 
       <div className={styles.scroll}>
-        {ACCOUNT_GROUPS.map((group) => group.filter(
-          (item) => (!item.liveOnly || !demoMode) && !isComingSoonLink(item.to),
-        ))
+        {ACCOUNT_GROUPS.map((group) =>
+          group.filter(
+            (item): item is AccountLinkItem =>
+              !item.action &&
+              (!item.liveOnly || !demoMode) &&
+              !isComingSoonLink(item.to),
+          ),
+        )
           .filter((group) => group.length > 0)
           .map((group, groupIndex) => (
-          <div key={group[0]?.to ?? groupIndex}>
-            {groupIndex > 0 && <div className={styles.divider} />}
-            <div className={styles.grid}>
-              {group.map((item) => {
-                const Icon = item.icon;
-                const badge =
-                  item.badge ??
-                  (item.to === routes.subprofilesDashboard
-                    ? personaBadge
-                    : item.to === routes.gettingStarted
-                      ? gettingStartedBadge
-                      : undefined);
-                return (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    className={styles.item}
-                    onClick={onClose}
-                  >
-                    <Icon aria-hidden className={styles.itemIcon} />
-                    <span className={styles.itemLabel}>
-                      {t(item.labelKey)}
-                    </span>
-                    {badge && (
-                      <span className={styles.badgeSlot}>{badge}</span>
-                    )}
-                  </Link>
-                );
-              })}
+            <div key={group[0]?.to ?? groupIndex}>
+              {groupIndex > 0 && <div className={styles.divider} />}
+              <div className={styles.grid}>
+                {group.map((item) => {
+                  const Icon = item.icon;
+                  const badge =
+                    item.badge ??
+                    (item.to === routes.subprofilesDashboard
+                      ? personaBadge
+                      : item.to === routes.gettingStarted
+                        ? gettingStartedBadge
+                        : undefined);
+                  return (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      className={styles.item}
+                      onClick={onClose}
+                    >
+                      <Icon aria-hidden className={styles.itemIcon} />
+                      <span className={styles.itemLabel}>
+                        {t(item.labelKey)}
+                      </span>
+                      {badge && (
+                        <span className={styles.badgeSlot}>{badge}</span>
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
         {role !== "member" && (
           <>
             <div className={styles.divider} />

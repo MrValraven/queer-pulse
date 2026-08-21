@@ -22,7 +22,8 @@ export const marketing: Catalog = {
     "QueerPulse started as a frustration we had to fix. Every platform we tried to build community on was designed to hold our attention and optimised for time-on-app, indifferent to whether we actually found each other.",
   "about.why.p2":
     "So a small group of us (professionals, organisers, artists) decided to build the alternative ourselves: a network sized for trust, where the point is connection.",
-  "about.why.p3": "It's slower to grow this way. That's the design, exactly as intended.",
+  "about.why.p3":
+    "It's slower to grow this way. That's the design, exactly as intended.",
   "about.difference.eyebrow": "The difference",
   "about.difference.title": "What we're <em>not building.</em>",
   "about.contrast.them.label": "Everywhere else",
@@ -433,7 +434,8 @@ export const marketing: Catalog = {
   "dsar.past.status.inReview": "In review",
   "dsar.past.status.rejected": "Rejected",
   "dsar.past.loading": "Loading your past requests…",
-  "dsar.past.error": "We couldn't load your past requests. Please try again shortly.",
+  "dsar.past.error":
+    "We couldn't load your past requests. Please try again shortly.",
   "dsar.past.empty": "You haven't filed any requests yet.",
   "dsar.past.objectAnalytics": "Objection · Analytics",
   "dsar.toast.submitted": "Request submitted: reference {ref}",
@@ -464,7 +466,8 @@ export const marketing: Catalog = {
     "Ask a clarifying question instead of assuming intent.",
   "guidelines.clause02.li3": "Give people room to phrase something clumsily.",
   "guidelines.clause02.li4": "Assume you might be missing context.",
-  "guidelines.clause02.li5": "Disagree with the point while respecting the person.",
+  "guidelines.clause02.li5":
+    "Disagree with the point while respecting the person.",
   "guidelines.clause02.p2":
     "Good faith isn't infinite. Repeated bad behaviour stops getting the benefit of the doubt.",
   "guidelines.clause03.titlePre": "Take up ",
@@ -547,8 +550,7 @@ export const marketing: Catalog = {
   "help.qa.lisbonOnly.a":
     "Gatherings are Lisbon-based, but membership itself isn't location-locked. Plenty of members join remotely for the network and the magazine.",
   "help.qa.free.q": "Is QueerPulse free?",
-  "help.qa.free.a":
-    "Yes, QueerPulse is free to join and use.",
+  "help.qa.free.a": "Yes, QueerPulse is free to join and use.",
   "help.qa.changeName.q": "How do I change my name or pronouns?",
   "help.qa.changeName.a":
     "Head to <settingsLink>Settings</settingsLink> → Profile. Changes apply everywhere immediately.",
@@ -636,8 +638,7 @@ export const marketing: Catalog = {
   "partners.interstitial.body":
     "Every organisation below has been reviewed for alignment with our values before appearing here.",
   "partners.section.title": "Our <em>partners</em>",
-  "partners.section.sub":
-    "Filter isn't available yet. Here's the full roster.",
+  "partners.section.sub": "Filter isn't available yet. Here's the full roster.",
   "partners.card.viewCta": "View profile",
   "partners.loadingMore": "Loading more partners…",
   "partners.loadMoreCta": "Load more partners",
@@ -745,7 +746,8 @@ export const marketing: Catalog = {
   "communitiesAbout.meta.description":
     "Real rooms, kept by real people, no ads and no algorithm. See how QueerPulse communities work, and how to find the one that feels like yours.",
   "communitiesAbout.hero.eyebrow": "Communities",
-  "communitiesAbout.hero.title": "How communities work, and why they <em>matter</em>",
+  "communitiesAbout.hero.title":
+    "How communities work, and why they <em>matter</em>",
   "communitiesAbout.hero.sub":
     "Real rooms, kept by real people. No feeds, no algorithm. Here's what that means, and how to find the one that feels like yours.",
   "communitiesAbout.hero.browseCta": "Browse communities",
@@ -1713,6 +1715,11 @@ export const marketing: Catalog = {
   "changelog.tag.vouch": "Vouch for someone",
   "changelog.tag.culture": "Visit Culture",
 
+  "changelog.entries.account-menu-install-app.title":
+    "Install the app from your account menu",
+  "changelog.entries.account-menu-install-app.body":
+    "On a phone, your account menu now has an \"Install the app\" row right under Getting started. It opens a quick modal with steps for your device. On Android, tap once and the browser's real install prompt shows up; on iPhone, it walks you through adding QueerPulse to your home screen from Safari. Already installed? The row just doesn't show up.",
+
   "changelog.entries.member-directory-filter-crossfade.title":
     "Smoother filtering in the member directory",
   "changelog.entries.member-directory-filter-crossfade.body":
@@ -1736,7 +1743,7 @@ export const marketing: Catalog = {
   "changelog.entries.persona-date-month-picker.title":
     "Pick a month and year for your work, no more typing it out",
   "changelog.entries.persona-date-month-picker.body":
-    "When you add or edit an item on a persona page, poems, exhibitions, releases and the rest, the date field is now a proper month-and-year picker instead of a free-text box. Choose the month, and it shows up neatly as \"July 2025\" in your language. Dates you'd already written by hand keep showing exactly as you left them.",
+    'When you add or edit an item on a persona page, poems, exhibitions, releases and the rest, the date field is now a proper month-and-year picker instead of a free-text box. Choose the month, and it shows up neatly as "July 2025" in your language. Dates you\'d already written by hand keep showing exactly as you left them.',
 
   "changelog.entries.unified-date-picker.title":
     "A new date picker across the app, friendlier and fully keyboard-accessible",
@@ -1854,13 +1861,18 @@ export const marketing: Catalog = {
   "changelog.entries.article-editor-header-and-send-on.title":
     "Article editor header fixed, and Send on now works",
   "changelog.entries.article-editor-header-and-send-on.body":
-    "The article editor's toolbar was sticking 76px below the top of the screen instead of right at it, so scrolled text showed through above and below it. It now sits flush against the top. \"Send on\" also used to just show a toast, and now actually moves the piece to its next editorial stage.",
-  "changelog.entries.gathering-rsvp-fix.title": "RSVP buttons now confirm your spot",
-  "changelog.entries.gathering-rsvp-fix.body": "Tapping \"I'm going\" on a gathering's page wasn't visibly doing anything. It now confirms right away, with a toast and a Cancel RSVP option in the same spot.",
-  "changelog.entries.add-to-calendar-modal.title": "Add gatherings to your calendar",
-  "changelog.entries.add-to-calendar-modal.body": "\"Add to calendar\" on a gathering you're going to or hosting now opens a picker for Google Calendar or a downloadable .ics file that works with Apple Calendar, Outlook, and most other calendar apps.",
+    'The article editor\'s toolbar was sticking 76px below the top of the screen instead of right at it, so scrolled text showed through above and below it. It now sits flush against the top. "Send on" also used to just show a toast, and now actually moves the piece to its next editorial stage.',
+  "changelog.entries.gathering-rsvp-fix.title":
+    "RSVP buttons now confirm your spot",
+  "changelog.entries.gathering-rsvp-fix.body":
+    "Tapping \"I'm going\" on a gathering's page wasn't visibly doing anything. It now confirms right away, with a toast and a Cancel RSVP option in the same spot.",
+  "changelog.entries.add-to-calendar-modal.title":
+    "Add gatherings to your calendar",
+  "changelog.entries.add-to-calendar-modal.body":
+    '"Add to calendar" on a gathering you\'re going to or hosting now opens a picker for Google Calendar or a downloadable .ics file that works with Apple Calendar, Outlook, and most other calendar apps.',
   "changelog.entries.recognition-xp.title": "Earn XP, levels, and badges",
-  "changelog.entries.recognition-xp.body": "Your activity now earns experience toward levels and badges. Finishing your getting started checklist, joining communities, attending gatherings, and connecting with members all move you up. Track your progress on the Badges page.",
+  "changelog.entries.recognition-xp.body":
+    "Your activity now earns experience toward levels and badges. Finishing your getting started checklist, joining communities, attending gatherings, and connecting with members all move you up. Track your progress on the Badges page.",
 
   "changelog.entries.governance-editable-finances.title":
     "Editable finance figures, with a note on where each number comes from",
@@ -1890,7 +1902,7 @@ export const marketing: Catalog = {
   "changelog.entries.magazine-digest-real-send.title":
     "Issue digests can send a real test and go out with the issue",
   "changelog.entries.magazine-digest-real-send.body":
-    "The magazine desk's digest tools used to just show a confirmation toast. \"Send test\" now really emails the current draft to the editor who clicked it, and \"Schedule with issue\" now really queues the digest to go out to newsletter subscribers the moment the issue ships.",
+    'The magazine desk\'s digest tools used to just show a confirmation toast. "Send test" now really emails the current draft to the editor who clicked it, and "Schedule with issue" now really queues the digest to go out to newsletter subscribers the moment the issue ships.',
 
   "changelog.entries.magazine-deck-convert-to-article.title":
     "Decks can convert into articles",
@@ -1900,7 +1912,7 @@ export const marketing: Catalog = {
   "changelog.entries.magazine-writer-read-brief.title":
     "Writers can read their actual assignment brief",
   "changelog.entries.magazine-writer-read-brief.body":
-    "\"Read the brief\" used to be a placeholder toast. It now opens the real brief for the piece, including the angle, what to include, what to avoid, the rate, and who commissioned it.",
+    '"Read the brief" used to be a placeholder toast. It now opens the real brief for the piece, including the angle, what to include, what to avoid, the rate, and who commissioned it.',
 
   "changelog.entries.admin-trust-network-cite-evidence.title":
     "Admins can cite evidence from the trust network graph",
@@ -1910,7 +1922,7 @@ export const marketing: Catalog = {
   "changelog.entries.admin-trust-network-ring-detection.title":
     "Trust network ring detection is now a real graph analysis",
   "changelog.entries.admin-trust-network-ring-detection.body":
-    "Flagging a \"vouch ring\" used to just mean an account was suspended, frozen, or carrying two or more open reports, a much broader signal than an actual closed loop. The graph now detects real clusters of new accounts vouching only for each other, with no outside vouch to back them up.",
+    'Flagging a "vouch ring" used to just mean an account was suspended, frozen, or carrying two or more open reports, a much broader signal than an actual closed loop. The graph now detects real clusters of new accounts vouching only for each other, with no outside vouch to back them up.',
 
   "changelog.entries.admin-reporter-credibility.title":
     "Moderation queue now shows reporter history alongside reported-party history",
@@ -1930,7 +1942,7 @@ export const marketing: Catalog = {
   "changelog.entries.myevents-calendar-feed-subscribe.title":
     "Subscribe to your events in Google or Apple Calendar",
   "changelog.entries.myevents-calendar-feed-subscribe.body":
-    "\"Subscribe to your feed\" in My Events now copies a real, private feed link. Add it to Google or Apple Calendar and it keeps itself up to date with everything you're going to.",
+    '"Subscribe to your feed" in My Events now copies a real, private feed link. Add it to Google or Apple Calendar and it keeps itself up to date with everything you\'re going to.',
 
   "changelog.entries.gatherings-recap-more-from-host.title":
     "Recaps now point you to more from the same host",
@@ -1943,7 +1955,7 @@ export const marketing: Catalog = {
     "Marking yourself maybe or going, accepting or declining an invite, saying you can't make it, and leaving a waitlist all now write to your real RSVP instead of just changing what the card shows you.",
 
   "changelog.entries.myevents-block-host-real.title":
-    "\"Block the host\" from My Events now really blocks them",
+    '"Block the host" from My Events now really blocks them',
   "changelog.entries.myevents-block-host-real.body":
     "The block option in an event card's overflow menu now uses the same block as everywhere else on QueerPulse, instead of just showing a confirmation toast.",
 
@@ -1955,7 +1967,7 @@ export const marketing: Catalog = {
   "changelog.entries.gatherings-edit-date-time-fix.title":
     "Editing a gathering's date and time now actually reschedules it",
   "changelog.entries.gatherings-edit-date-time-fix.body":
-    "The manage dashboard's \"Edit details\" date field used to save a label, not a real date. It now reschedules the gathering for real, and everyone with an RSVP gets notified of the change.",
+    'The manage dashboard\'s "Edit details" date field used to save a label, not a real date. It now reschedules the gathering for real, and everyone with an RSVP gets notified of the change.',
 
   "changelog.entries.gatherings-cancelled-page-real-content.title":
     "A cancelled gathering's page now shows the real gathering",
@@ -2000,12 +2012,12 @@ export const marketing: Catalog = {
   "changelog.entries.communities-sister-demo-only.title":
     "Sister-community suggestions stay in demo mode",
   "changelog.entries.communities-sister-demo-only.body":
-    "\"Sister communities\" and \"also in\" suggestions were rendering from sample data on real community pages too. They now only show up when you're looking at the demo.",
+    '"Sister communities" and "also in" suggestions were rendering from sample data on real community pages too. They now only show up when you\'re looking at the demo.',
 
   "changelog.entries.communities-category-filter.title":
     "Community category filters work past the first page",
   "changelog.entries.communities-category-filter.body":
-    "Filtering communities by category now asks the server for a real match instead of only filtering whatever had already loaded, so it stops wrongly saying \"no communities match\" once you scroll past page one.",
+    'Filtering communities by category now asks the server for a real match instead of only filtering whatever had already loaded, so it stops wrongly saying "no communities match" once you scroll past page one.',
 
   "changelog.entries.communities-archive-reversible.title":
     "Archived communities can be brought back",
@@ -2015,7 +2027,7 @@ export const marketing: Catalog = {
   "changelog.entries.changemakers-nomination-reason.title":
     "Changemaker nominations now ask for the sentence they promise",
   "changelog.entries.changemakers-nomination-reason.body":
-    "The nomination form always said \"a name and a sentence is enough,\" but only asked for a name. It now has a real field for your sentence, and reviewers can read what you wrote.",
+    'The nomination form always said "a name and a sentence is enough," but only asked for a name. It now has a real field for your sentence, and reviewers can read what you wrote.',
 
   "changelog.entries.changemakers-nomination-review.title":
     "Changemaker nominations get a real answer",
@@ -2023,24 +2035,24 @@ export const marketing: Catalog = {
     "Admins can now approve or dismiss a nomination, and you'll be notified of the decision instead of hearing nothing back after submitting one.",
 
   "changelog.entries.changemakers-connect-honest.title":
-    "A Changemaker profile's \"Connect\" button is honest about what it does",
+    'A Changemaker profile\'s "Connect" button is honest about what it does',
   "changelog.entries.changemakers-connect-honest.body":
-    "Changemaker profiles are editorial features, not linked member accounts, so \"Connect\" could never actually message that person. It now routes you to our general contact channel and says so.",
+    'Changemaker profiles are editorial features, not linked member accounts, so "Connect" could never actually message that person. It now routes you to our general contact channel and says so.',
 
   "changelog.entries.moderation-assign-to-me.title":
     "Moderators can claim reports in the queue",
   "changelog.entries.moderation-assign-to-me.body":
-    "The \"Assigned to me\" filter in the moderation queue used to always come back empty. Moderators can now claim or release a report from the report drawer, and the filter reflects real claims.",
+    'The "Assigned to me" filter in the moderation queue used to always come back empty. Moderators can now claim or release a report from the report drawer, and the filter reflects real claims.',
 
   "changelog.entries.moderation-report-history-link.title":
     "See a member's full report history from the queue",
   "changelog.entries.moderation-report-history-link.body":
-    "The \"prior reports\" count on a report used to be just a number. It's now a link straight to every other report about that same person.",
+    'The "prior reports" count on a report used to be just a number. It\'s now a link straight to every other report about that same person.',
 
   "changelog.entries.moderation-resolution-detail.title":
     "Resolved reports show what actually happened",
   "changelog.entries.moderation-resolution-detail.body":
-    "Resolved reports now show who resolved them, what they decided, and when, instead of a generic placeholder. \"Closed X ago\" reflects the real resolution time now, not when the report was filed.",
+    'Resolved reports now show who resolved them, what they decided, and when, instead of a generic placeholder. "Closed X ago" reflects the real resolution time now, not when the report was filed.',
 
   "changelog.entries.moderation-sla-overdue.title":
     "Overdue reports are flagged in the queue",
@@ -2063,19 +2075,18 @@ export const marketing: Catalog = {
     "Creating threads, replies, and votes now has its own dedicated abuse guard, matching the protection communities already had, instead of relying on the site-wide default.",
 
   "changelog.entries.forum-first-post-accuracy.title":
-    "The \"first post\" prompt checks your real history",
+    'The "first post" prompt checks your real history',
   "changelog.entries.forum-first-post-accuracy.body":
     "The forum's invitation to make your first post used to only track the current browsing session, so it wrongly greeted repeat posters as brand new. It now checks whether you've actually ever posted.",
 
-  "changelog.entries.forum-lock-reason.title":
-    "Locked threads can say why",
+  "changelog.entries.forum-lock-reason.title": "Locked threads can say why",
   "changelog.entries.forum-lock-reason.body":
     "When a moderator locks a thread, they can now add a short reason, and it shows in the locked banner instead of every locked thread reading identically.",
 
   "changelog.entries.forum-shareable-filters.title":
     "Forum category and sort survive a refresh",
   "changelog.entries.forum-shareable-filters.body":
-    "Picking a category or sort tab on the forum now updates the page's link, so refreshing or sharing it keeps your view instead of silently resetting to \"All.\"",
+    'Picking a category or sort tab on the forum now updates the page\'s link, so refreshing or sharing it keeps your view instead of silently resetting to "All."',
 
   "changelog.entries.forum-search-hint.title":
     "Forum search now says what it searches",
@@ -2083,9 +2094,9 @@ export const marketing: Catalog = {
     "A small hint under the forum search box now clarifies it matches thread titles, not the text of posts and replies.",
 
   "changelog.entries.forum-most-helpful-real.title":
-    "\"Most helpful\" sort reflects real votes",
+    '"Most helpful" sort reflects real votes',
   "changelog.entries.forum-most-helpful-real.body":
-    "Sorting replies by \"most helpful\" now uses real upvotes, and the top-voted reply gets the star badge, instead of only working in the demo.",
+    'Sorting replies by "most helpful" now uses real upvotes, and the top-voted reply gets the star badge, instead of only working in the demo.',
 
   "changelog.entries.recognition-locked-badges-honest.title":
     "The badge case only shows badges you can actually earn",
@@ -2093,7 +2104,7 @@ export const marketing: Catalog = {
     "A few badges were listed as \"locked\" with earning instructions that led nowhere. They're no longer shown until there's a real way to earn them.",
 
   "changelog.entries.recognition-vouch-perk-copy.title":
-    "\"Vouch access\" perk description matches reality",
+    '"Vouch access" perk description matches reality',
   "changelog.entries.recognition-vouch-perk-copy.body":
     "The perk case said vouch access unlocked at Level 3. Vouching has never actually had a level requirement, so the description now says what's true: it's available to every active member from the start.",
 
@@ -2113,7 +2124,7 @@ export const marketing: Catalog = {
     "The article editor's Publish and Schedule controls used to be decorative. They now actually publish your article, right away or at a future date and time you choose, and articles that aren't tied to an issue can finally go live without waiting on issue production.",
 
   "changelog.entries.magazine-writer-draft-paste-fix.title":
-    "Pasting a draft into \"File a draft\" no longer loses it",
+    'Pasting a draft into "File a draft" no longer loses it',
   "changelog.entries.magazine-writer-draft-paste-fix.body":
     "Pasting your draft text when filing a piece used to vanish the moment you confirmed. It now flows straight into the article editor as real paragraphs, ready to keep shaping.",
 
@@ -2150,12 +2161,12 @@ export const marketing: Catalog = {
   "changelog.entries.resources-guide-freshness.title":
     "Guides now show when they were last checked",
   "changelog.entries.resources-guide-freshness.body":
-    "Every guide card shows the date an editor last verified it, or an honest \"not yet verified\" when it hasn't been reviewed yet.",
+    'Every guide card shows the date an editor last verified it, or an honest "not yet verified" when it hasn\'t been reviewed yet.',
 
   "changelog.entries.resources-suggest-edit-expanded.title":
     "Suggest an edit, beyond the Glossary",
   "changelog.entries.resources-suggest-edit-expanded.body":
-    "The \"suggest an edit\" form used to work only on the Glossary. It now opens from Legal, Trans Healthcare, Harm Reduction, Mental Health and the guide library too.",
+    'The "suggest an edit" form used to work only on the Glossary. It now opens from Legal, Trans Healthcare, Harm Reduction, Mental Health and the guide library too.',
 
   "changelog.entries.directory-review-reporting.title":
     "Report a single review in the local directory",
@@ -2210,34 +2221,35 @@ export const marketing: Catalog = {
   "changelog.entries.search-topics-real-results.title":
     "Topics now show up in global search",
   "changelog.entries.search-topics-real-results.body":
-    "Searching for a hashtag topic now returns real matches from global search, alongside members, communities, and everything else. Categories with more results than fit on screen now offer a \"See all\" link.",
+    'Searching for a hashtag topic now returns real matches from global search, alongside members, communities, and everything else. Categories with more results than fit on screen now offer a "See all" link.',
 
   "changelog.entries.feed-connections-tab.title":
-    "A new \"Connections\" tab in your feed",
+    'A new "Connections" tab in your feed',
   "changelog.entries.feed-connections-tab.body":
     "The feed's tab bar now includes Connections: posts, forum threads, and gatherings from people you're connected with, gathered in one place. Haven't connected with anyone yet? The tab points you to the members directory to get started.",
 
   "changelog.entries.connections-report-now-files.title":
     "Fixed: Reporting a connection now files a real report",
   "changelog.entries.connections-report-now-files.body":
-    "\"Report\" in a connection's more-menu used to show a \"Report sent\" confirmation without actually sending anything. It now opens the same reason-and-detail form used elsewhere in the app and files a real report with the moderation team.",
+    '"Report" in a connection\'s more-menu used to show a "Report sent" confirmation without actually sending anything. It now opens the same reason-and-detail form used elsewhere in the app and files a real report with the moderation team.',
 
   "changelog.entries.getting-started-xp-not-awarded-fix.title":
     "Fixed: Getting Started XP not showing up",
   "changelog.entries.getting-started-xp-not-awarded-fix.body":
     "Completing Getting Started steps could leave your XP total stuck at 0 for a while, and finished steps didn't show how much XP they'd earned. Both are fixed: your level now updates promptly as you complete steps, and each finished step shows its XP.",
 
-  "changelog.entries.badges-levels-v2-redesign.title": "Badges & levels redesigned",
+  "changelog.entries.badges-levels-v2-redesign.title":
+    "Badges & levels redesigned",
   "changelog.entries.badges-levels-v2-redesign.body":
     "The Badges & Levels page has a new look: a level dial, closest-to-earning suggestions, a filterable badge case with a detail view for each one, a seasonal badges band, and a receipts view showing where your XP came from.",
 
   "changelog.entries.listing-preview-matches-card.title":
     "The listing preview now matches your real directory card",
   "changelog.entries.listing-preview-matches-card.body":
-    "The live preview when you add or edit a directory listing now renders the exact same card people see in the directory, cover photo included. If you haven't added one yet, the preview shows an \"Add cover photo\" button that jumps straight to the photos step.",
+    'The live preview when you add or edit a directory listing now renders the exact same card people see in the directory, cover photo included. If you haven\'t added one yet, the preview shows an "Add cover photo" button that jumps straight to the photos step.',
 
   "changelog.entries.profile-shapings-editor.title":
-    "Edit your \"What shaped me\" section",
+    'Edit your "What shaped me" section',
   "changelog.entries.profile-shapings-editor.body":
     "The film, book, song, and moment that shaped you can now be added and edited from your profile, alongside your other lists. It was previously view-only.",
 
@@ -2258,7 +2270,7 @@ export const marketing: Catalog = {
   "changelog.entries.profile-who-sees-what-controls.body":
     "A new \"Who sees what\" panel gathers your visibility controls in one place: quick presets, instant switches for your photo, neighbourhood, vouchers and what you're looking for, per-identity discoverability, hiding your profile from specific people, and a record of the reports you've filed.",
   "changelog.entries.profile-your-data-panel.title":
-    "A \"Your data\" panel for your account",
+    'A "Your data" panel for your account',
   "changelog.entries.profile-your-data-panel.body":
     "Download a copy of everything QueerPulse holds on you, step away or request erasure with a 30-day grace period, or file a data request, all from one panel on your profile. Any owned community or live listing standing in the way of erasure now shows up there with its own fix.",
   "changelog.entries.profile-board-work-name-qr-updates.title":
@@ -2358,7 +2370,7 @@ export const marketing: Catalog = {
   "changelog.entries.affirming-housing-baseline.title":
     "Every home and housemate here is LGBTQ+ affirming. Now it's the standard",
   "changelog.entries.affirming-housing-baseline.body":
-    "Being LGBTQ+ affirming is no longer a box a listing might tick. It's the baseline for every home, room, and person on the housing board. Before you post a place, publish a flatmate profile, or reach out about a home, you take a short affirming pledge once, and it applies everywhere. Every listing now carries an \"LGBTQ+ affirming\" badge as the standard for everyone, and if a home or person breaks that pledge you can report it. This is a community commitment. Nobody is ever sorted by identity.",
+    'Being LGBTQ+ affirming is no longer a box a listing might tick. It\'s the baseline for every home, room, and person on the housing board. Before you post a place, publish a flatmate profile, or reach out about a home, you take a short affirming pledge once, and it applies everywhere. Every listing now carries an "LGBTQ+ affirming" badge as the standard for everyone, and if a home or person breaks that pledge you can report it. This is a community commitment. Nobody is ever sorted by identity.',
   // ── Wave B2: verified listings, viewing scheduling, two-sided blind reviews ─
   "changelog.entries.housing-listing-discovery.title":
     "Find the right home, real photos, a filter that fits, and a heads-up when one comes up",
@@ -2559,8 +2571,7 @@ export const marketing: Catalog = {
   "changelog.entries.persona-excerpt-crash-fix.body":
     "Starting an excerpt or menu detail on a persona page, filling in one field before the rest, no longer causes the page to go blank. It now shows what you've added and fills in the rest as you go.",
 
-  "changelog.entries.poem-line-break-fix.title":
-    "Poem line breaks now stick",
+  "changelog.entries.poem-line-break-fix.title": "Poem line breaks now stick",
   "changelog.entries.poem-line-break-fix.body":
     "Pasting a poem into the editor no longer runs its lines together when you read it back. Each verse line keeps its own line, just as you typed or pasted it.",
 
@@ -2692,8 +2703,7 @@ export const marketing: Catalog = {
   "changelog.entries.persona-image-reuse-uploads.body":
     "Every image slot in your persona editor (the avatar or logo, the cover banner, and each item's picture) can now pull from photos you've uploaded before, alongside a fresh file from your device. Choosing an image opens a picker with your past uploads, so you can reuse the same shot across personas in a couple of taps, or delete ones you no longer need.",
 
-  "changelog.entries.persona-banner-quality.title":
-    "Crisper persona banners",
+  "changelog.entries.persona-banner-quality.title": "Crisper persona banners",
   "changelog.entries.persona-banner-quality.body":
     "Persona banner images now keep more of their detail, so a full-width cover stays sharp instead of looking soft on larger screens. We've also added a little breathing room between a bled banner and your name and photo. Re-upload an existing banner to pick up the higher quality.",
 
@@ -2712,8 +2722,7 @@ export const marketing: Catalog = {
   "changelog.entries.persona-gallery-lightbox.body":
     "Photos in a persona's gallery now open full-screen when you tap them, the whole shot, uncropped, with arrow keys and on-screen arrows to move between them.",
 
-  "changelog.entries.persona-gig-images.title":
-    "Add a photo to your gigs",
+  "changelog.entries.persona-gig-images.title": "Add a photo to your gigs",
   "changelog.entries.persona-gig-images.body":
     "Gig and show items in your persona editor now take an image, so your featured set list shines with a real photo instead of an empty slot.",
 
@@ -2727,10 +2736,9 @@ export const marketing: Catalog = {
   "changelog.entries.persona-page-motion.body":
     "Persona pages now come alive as you arrive and scroll, the header settles in, and each section eases into view as you reach it. Every persona look keeps its own rhythm: some snap, some drift, and the quiet ones stay calm. It all respects your device's reduced-motion setting, so if you prefer things still, they stay still.",
 
-  "changelog.entries.endorse-with-note.title":
-    "Endorse a persona with a note",
+  "changelog.entries.endorse-with-note.title": "Endorse a persona with a note",
   "changelog.entries.endorse-with-note.body":
-    "Endorsing someone's persona now opens a proper window where you can add a short note about what makes their work worth backing. Already endorsed? Tap \"Endorsed\" to edit your note or withdraw your endorsement anytime.",
+    'Endorsing someone\'s persona now opens a proper window where you can add a short note about what makes their work worth backing. Already endorsed? Tap "Endorsed" to edit your note or withdraw your endorsement anytime.',
 
   "changelog.entries.persona-banner-bleed.title":
     "Let your persona banner bleed into the page",
@@ -2767,10 +2775,9 @@ export const marketing: Catalog = {
   "changelog.entries.fix-persona-avatar-overlap.body":
     "On some persona looks (like the developer and therapist styles), the profile photo could spill out of its frame and overlap the name, tagline, or buttons beside it. The photo now sits neatly inside its frame at the right size for each look, so the top of every persona reads cleanly.",
 
-  "changelog.entries.network-modal-search.title":
-    "Search your network lists",
+  "changelog.entries.network-modal-search.title": "Search your network lists",
   "changelog.entries.network-modal-search.body":
-    "The \"Connected\" and \"Vouched for\" lists on your profile now have a search box, so you can filter a long list down to a name instantly.",
+    'The "Connected" and "Vouched for" lists on your profile now have a search box, so you can filter a long list down to a name instantly.',
 
   "changelog.entries.profile-your-network.title":
     "See your network on your own profile",
@@ -2834,7 +2841,7 @@ export const marketing: Catalog = {
   "changelog.entries.fix-vouch-success-self-face.title":
     "Your vouch confirmation now shows your real face",
   "changelog.entries.fix-vouch-success-self-face.body":
-    "When you vouched for someone, the confirmation panel could pair the member's photo with a demo profile instead of yours. It now always shows your real avatar and initials beside theirs, so the \"backed\" moment reflects the actual person doing the vouching.",
+    'When you vouched for someone, the confirmation panel could pair the member\'s photo with a demo profile instead of yours. It now always shows your real avatar and initials beside theirs, so the "backed" moment reflects the actual person doing the vouching.',
 
   "changelog.entries.persona-readiness-estimate.title":
     "The persona readiness estimate now reflects what's really left",
@@ -2846,7 +2853,8 @@ export const marketing: Catalog = {
   "changelog.entries.fix-persona-item-drawer-scroll.body":
     "The edit panel for a showcase item (like a gig or a project) no longer ran off the bottom of the screen on phones. You can now scroll through every field and reach Save.",
 
-  "changelog.entries.my-uploads.title": "See and manage everything you've uploaded",
+  "changelog.entries.my-uploads.title":
+    "See and manage everything you've uploaded",
   "changelog.entries.my-uploads.body":
     "A new My uploads screen in Settings shows every picture you've uploaded, so you can spot and delete accidental double-uploads. It flags any picture that's still in use before you remove it.",
 
@@ -2995,8 +3003,7 @@ export const marketing: Catalog = {
   "changelog.entries.magazine-commission-editor-fix.body":
     "Commissioning a piece from the editor desk could fail with an “editorId must be a UUID” error. It happened on a fresh magazine that had no pieces assigned to anyone yet. Commissions are now stamped with your own signed-in editor identity, so they go through straight away.",
 
-  "changelog.entries.magazine-issue-production.title":
-    "Issue production",
+  "changelog.entries.magazine-issue-production.title": "Issue production",
   "changelog.entries.magazine-issue-production.body":
     "Added issue production, arrange the running order, set the cover and coverlines, curate the members' digest and social cards, and ship the whole issue at once with a pre-ship checklist.",
 
@@ -3005,8 +3012,7 @@ export const marketing: Catalog = {
   "changelog.entries.events-page-utility-redesign.body":
     "Events is now a utility-first page: a compact header with the My events / Discover switch and one place to host, no oversized hero, a small “Next up” highlight when something's on, and search in Browse.",
 
-  "changelog.entries.magazine-writer-workspace.title":
-    "The writer workspace",
+  "changelog.entries.magazine-writer-workspace.title": "The writer workspace",
   "changelog.entries.magazine-writer-workspace.body":
     "Opened the contributor workspace, writers now see their own assignments, pitches and payments, choose their byline, and file drafts, all in one place.",
 
@@ -3028,7 +3034,7 @@ export const marketing: Catalog = {
   "changelog.entries.persona-directory-redesign.title":
     "The persona directory, redesigned",
   "changelog.entries.persona-directory-redesign.body":
-    "Browsing personas is now organised by six craft families (Stage, Studio, Page, Workshop, Practice and Table) so you can narrow in on the kind of work you're after before you even search. Cards now show tags and a follower count at a glance, and a lighter \"Also working as\" block on member profiles gives each linked persona the same clearer, richer look.",
+    'Browsing personas is now organised by six craft families (Stage, Studio, Page, Workshop, Practice and Table) so you can narrow in on the kind of work you\'re after before you even search. Cards now show tags and a follower count at a glance, and a lighter "Also working as" block on member profiles gives each linked persona the same clearer, richer look.',
 
   "changelog.entries.persona-editor-redesign.title":
     "A redesigned editor for your personas",
@@ -3118,8 +3124,7 @@ export const marketing: Catalog = {
   "changelog.entries.follow-topics-you-care-about.body":
     "Tap Follow on any topic to keep it close. Your follows are saved to your account, so the subjects that matter to you travel with you across devices.",
 
-  "changelog.entries.event-change-alerts.title":
-    "Know when an event changes",
+  "changelog.entries.event-change-alerts.title": "Know when an event changes",
   "changelog.entries.event-change-alerts.body":
     "If an event you've RSVP'd to or been invited to moves its time or place, you'll get a notification, so a last-minute change never catches you out.",
 
@@ -3128,8 +3133,7 @@ export const marketing: Catalog = {
   "changelog.entries.forms-that-really-submit.body":
     "Newsletter signup, the contact and partner enquiry forms, grant / panel / sober-host applications, and safe-space nominations now genuinely send instead of showing a preview. Your event defaults (visibility and email) also save for real.",
 
-  "changelog.entries.save-events-for-later.title":
-    "Save events for later",
+  "changelog.entries.save-events-for-later.title": "Save events for later",
   "changelog.entries.save-events-for-later.body":
     "Found a gathering you're not ready to RSVP to yet? Tap Save to bookmark it. Everything you save shows up under the Saved tab in My Events, so nothing you were curious about slips away.",
 
@@ -3151,15 +3155,14 @@ export const marketing: Catalog = {
   "changelog.entries.reports-reach-the-team.title":
     "Reports now reach the moderation team",
   "changelog.entries.reports-reach-the-team.body":
-    "When you report a forum post, it now reaches the moderators reliably, and if sending ever fails, you'll see a clear error and a way to try again, instead of a false \"done\". You can also report any individual reply, as well as the opening post.",
+    'When you report a forum post, it now reaches the moderators reliably, and if sending ever fails, you\'ll see a clear error and a way to try again, instead of a false "done". You can also report any individual reply, as well as the opening post.',
 
   "changelog.entries.chat-recovers-after-reconnect.title":
     "Chat catches up when you're back online",
   "changelog.entries.chat-recovers-after-reconnect.body":
     "If a message can't send because you lost connection, it now sends itself as soon as you're reconnected, no need to reload or resend by hand. A small banner tells you when you're offline or reconnecting so you always know where a message stands.",
 
-  "changelog.entries.honest-live-states.title":
-    "What you see is real",
+  "changelog.entries.honest-live-states.title": "What you see is real",
   "changelog.entries.honest-live-states.body":
     "We swept the app so that pages only ever show real people and content. Placeholder press clippings, sample voices, and example inventory no longer appear as if they were real, and controls that aren't wired up yet are clearly marked instead of pretending to save.",
 
@@ -3227,8 +3230,7 @@ export const marketing: Catalog = {
   "changelog.entries.shared-ui-consistency.body":
     "We rebuilt dozens of pop-ups, confirmations, pickers and forms on one shared set of building blocks. In practice that means every dialog now traps keyboard focus, closes on Escape in the right order when several are open, and returns you exactly where you were, so the whole app feels tidier and works better with a keyboard or screen reader. No feature moved; things just behave the same way everywhere now.",
 
-  "changelog.entries.balanced-feed-grid.title":
-    "A more balanced home feed",
+  "changelog.entries.balanced-feed-grid.title": "A more balanced home feed",
   "changelog.entries.balanced-feed-grid.body":
     "Your home feed now lays its cards out as a tidy grid instead of one tall stack. Light cards (new members, saved reads, gathering recaps) sit two or more to a row on a wide screen, so you see more people at a glance and the People tab reads like a proper directory. Richer cards like posts, community pulse and gatherings still take the full width where the extra room helps. On a phone it all folds back to a single column.",
 
@@ -3262,8 +3264,7 @@ export const marketing: Catalog = {
   "changelog.entries.feed-keeps-loading.body":
     "The community feed used to stop after the first page. It now loads more on its own as you reach the end, and there's a keyboard-friendly “Load more” for when you'd rather tap.",
 
-  "changelog.entries.faster-first-load.title":
-    "A faster first load",
+  "changelog.entries.faster-first-load.title": "A faster first load",
   "changelog.entries.faster-first-load.body":
     "We now load each part of the interface's wording only when a screen needs it, instead of shipping all of it up front. The app opens noticeably quicker, especially on a phone or a slower connection.",
 
@@ -3333,14 +3334,12 @@ export const marketing: Catalog = {
   "changelog.entries.smoother-onboarding-first-minutes.body":
     "Setting up your space just got kinder. If you step away partway through, we now remember where you were and pick up right there instead of starting you over. The “here for” tags you choose show on your profile from the start, and coming back to onboarding will never quietly overwrite them. Moving through the steps with a keyboard or screen reader now lands you in the right place each time, and you can step back a page whenever you want a second look.",
 
-  "changelog.entries.events-open-at-top.title":
-    "Events opens at the top",
+  "changelog.entries.events-open-at-top.title": "Events opens at the top",
   "changelog.entries.events-open-at-top.body":
     "Opening Events (or any tab) now always starts you at the top of the page. It used to drop you back at wherever you'd last scrolled to, which on the tall Events cover left you stranded mid-page. Pressing your browser's Back button still returns you to exactly where you were.",
   "changelog.entries.events-open-at-top.tag": "Browse events",
 
-  "changelog.entries.chat-header-tap-to-profile.title":
-    "A calmer chat header",
+  "changelog.entries.chat-header-tap-to-profile.title": "A calmer chat header",
   "changelog.entries.chat-header-tap-to-profile.body":
     "The top of a conversation now works the way you'd expect: tap the person's name or photo to open their profile, no separate button needed. The layout is tidier too, with the info and starred-messages controls gathered into one neat pair in the corner instead of floating out of place.",
   "changelog.entries.chat-header-tap-to-profile.tag": "Open messages",
@@ -3437,7 +3436,7 @@ export const marketing: Catalog = {
   "changelog.entries.performance-cost-hardening.title":
     "Faster search, lighter uploads and steadier busy pages",
   "changelog.entries.performance-cost-hardening.body":
-    "A behind-the-scenes pass to keep QueerPulse quick and affordable as it fills up. Global search now uses proper text indexes, so finding people, communities, events, listings and threads stays fast no matter how many members join instead of slowing down as the platform grows. Photos you upload are gently resized before they leave your device, so posting is quicker on mobile data and pages load lighter for everyone. Busy community threads, member rosters and event guest lists now load in tidy pages with a \"load more\" button rather than pulling in everything at once, and popular pages the whole community shares can now be served from the cache instead of rebuilt every time. Event reminders and push notifications go out in a single efficient batch, images at the top of a page load first for a snappier first paint, and switching pages mid-load no longer wastes a request. Long lists, the local directory and busy forum threads, now reveal more as you scroll instead of rendering everything at once, so they stay smooth on a phone. Nothing you see changes. It just holds up better under a crowd.",
+    'A behind-the-scenes pass to keep QueerPulse quick and affordable as it fills up. Global search now uses proper text indexes, so finding people, communities, events, listings and threads stays fast no matter how many members join instead of slowing down as the platform grows. Photos you upload are gently resized before they leave your device, so posting is quicker on mobile data and pages load lighter for everyone. Busy community threads, member rosters and event guest lists now load in tidy pages with a "load more" button rather than pulling in everything at once, and popular pages the whole community shares can now be served from the cache instead of rebuilt every time. Event reminders and push notifications go out in a single efficient batch, images at the top of a page load first for a snappier first paint, and switching pages mid-load no longer wastes a request. Long lists, the local directory and busy forum threads, now reveal more as you scroll instead of rendering everything at once, so they stay smooth on a phone. Nothing you see changes. It just holds up better under a crowd.',
   "changelog.entries.accessibility-i18n-pwa-hardening.title":
     "Accessibility, translation and offline polish",
   "changelog.entries.accessibility-i18n-pwa-hardening.body":
@@ -3473,8 +3472,7 @@ export const marketing: Catalog = {
     "Three new persona types: chef, mixologist and therapist",
   "changelog.entries.chef-mixologist-therapist-personas.body":
     "You can now build a subprofile as a chef (menus + residencies), a mixologist (cocktails + residencies) or a therapist (specialisms + credentials), each with its own sections, starter template and directory filter, alongside the crafts already there.",
-  "changelog.entries.connections-card-polish.title":
-    "Tidier connection cards",
+  "changelog.entries.connections-card-polish.title": "Tidier connection cards",
   "changelog.entries.connections-card-polish.body":
     "On your connections page, the “mutuals” line now renders properly instead of showing raw formatting, and the “Connected” date shows the day and time you connected, down to the minute.",
   "changelog.entries.lightbox-focus-a11y.title":
@@ -3485,8 +3483,7 @@ export const marketing: Catalog = {
     "A redesigned, more accurate place page",
   "changelog.entries.directory-detail-polish.body":
     "Directory listings were rebuilt around a clearer layout: the place introduces itself first (name, category, and its key details in one row) then a compact photo gallery (a main shot with the rest in a clickable column) instead of one oversized banner, with the main actions sitting right beside the name. New venues now read as “New” rather than a hollow zero-star rating. Alongside the redesign: “Open now” is worked out on the venue's own clock (not your device's timezone), the location line and search data no longer assume every place is in Lisbon, website links always open correctly and show a tidy domain, and star ratings read properly to screen readers. Signed-out visitors can now save a place, people who run a venue can claim its listing, and a mistyped or removed listing shows a real “not found” page instead of quietly bouncing you back to the directory.",
-  "changelog.entries.review-author-avatars.title":
-    "See who left a review",
+  "changelog.entries.review-author-avatars.title": "See who left a review",
   "changelog.entries.review-author-avatars.body":
     "Reviews on a space's directory page now show the reviewer's photo, and their name links straight to their profile, so a warm note from someone in the community is one tap away from finding out more about them. Reviews from non-members still read exactly as before, just without the link.",
   "changelog.entries.verification-in-context.title":
@@ -3565,11 +3562,11 @@ export const marketing: Catalog = {
   "changelog.entries.moderation-takedowns.title":
     "Moderator hide and remove now actually take content down",
   "changelog.entries.moderation-takedowns.body":
-    "When a moderator hides or removes reported content, it now really disappears from public view. Hidden content is withheld from members while staff can still see it; removed content shows a clear \"removed by a moderator\" tombstone where a deleted post already would. Applied across forum posts and replies, community posts and replies, communities, events, and business listings, recorded in the same step as the moderator's decision so it can never be logged without taking effect.",
+    'When a moderator hides or removes reported content, it now really disappears from public view. Hidden content is withheld from members while staff can still see it; removed content shows a clear "removed by a moderator" tombstone where a deleted post already would. Applied across forum posts and replies, community posts and replies, communities, events, and business listings, recorded in the same step as the moderator\'s decision so it can never be logged without taking effect.',
   "changelog.entries.gathering-create-fix.title":
     "Creating a gathering works again, and lands on your event",
   "changelog.entries.gathering-create-fix.body":
-    "Publishing a new gathering was quietly failing on the server, yet the wizard still showed the celebration screen as if it had worked, and its \"See your event\" button opened a stray sample page. Both are fixed: a gathering now actually publishes, the success screen only appears once it has, and \"See your event\" takes you straight to your real gathering. If a publish ever fails, you'll see a clear message and stay on the review step to try again. The wizard now also asks for a date and start time in the future before you can move on, so a gathering can't be created without one.",
+    'Publishing a new gathering was quietly failing on the server, yet the wizard still showed the celebration screen as if it had worked, and its "See your event" button opened a stray sample page. Both are fixed: a gathering now actually publishes, the success screen only appears once it has, and "See your event" takes you straight to your real gathering. If a publish ever fails, you\'ll see a clear message and stay on the review step to try again. The wizard now also asks for a date and start time in the future before you can move on, so a gathering can\'t be created without one.',
   "changelog.entries.directory-photos-crisp.body":
     "Cover photos on business listings, and the preview while you're adding one, were loading at a low resolution and looking blurry when shown large. They now load crisp at full size. We also nudged the listing header down so the breadcrumb and the owner's Edit button no longer tuck under the floating navigation.",
   "changelog.entries.admin-role-management.title":
@@ -3583,7 +3580,7 @@ export const marketing: Catalog = {
   "changelog.entries.honest-report-failures.title":
     "Safety reports tell you the truth when they don't send",
   "changelog.entries.honest-report-failures.body":
-    "When a report, flag, or safe-space concern can't reach us (a dropped connection, a server hiccup) you now see an honest error and your words stay in the form to try again, instead of a false \"received\". If we say a report landed, it landed. This also covers messaging a housing lister and listing a space.",
+    'When a report, flag, or safe-space concern can\'t reach us (a dropped connection, a server hiccup) you now see an honest error and your words stay in the form to try again, instead of a false "received". If we say a report landed, it landed. This also covers messaging a housing lister and listing a space.',
   "changelog.entries.directory-filters-and-accurate-recognition.title":
     "Member filters that actually filter, and honest badges & perks",
   "changelog.entries.directory-filters-and-accurate-recognition.body":
@@ -3592,8 +3589,7 @@ export const marketing: Catalog = {
     "Back keeps your place, and the app rides out updates",
   "changelog.entries.navigation-resilience.body":
     "Hitting back after opening something from a list now drops you exactly where you were scrolled to, instead of jumping to the top. If your session quietly expires we tell you so you can sign back in, and when a new version ships mid-visit the app quietly refreshes itself instead of showing an error.",
-  "changelog.entries.search-page-launcher.title":
-    "Jump anywhere from search",
+  "changelog.entries.search-page-launcher.title": "Jump anywhere from search",
   "changelog.entries.search-page-launcher.body":
     "Search (⌘K and the search page) now doubles as a launcher: start typing, or just open it, to jump straight to Members, Communities, Events, Messages, your profile, Settings, the Magazine and more, each with its own icon. A new Pages tab lists every destination in one place.",
   "changelog.entries.donate-honest-live.title":
@@ -3608,8 +3604,7 @@ export const marketing: Catalog = {
     "See who you're searching for",
   "changelog.entries.search-member-avatars.body":
     "Member results in search (⌘K and the search page) now show each person's profile photo instead of a generic icon, so you can recognise the face you're looking for at a glance.",
-  "changelog.entries.search-real-topics.title":
-    "Search now shows real results",
+  "changelog.entries.search-real-topics.title": "Search now shows real results",
   "changelog.entries.search-real-topics.body":
     "Search (⌘K and the search page) no longer falls back to sample topics with made-up post counts. It now pulls the real trending topics and live post counts, alongside real people, communities, events, forum threads, and businesses.",
   "changelog.entries.global-search.title": "Search across QueerPulse",
@@ -3627,8 +3622,7 @@ export const marketing: Catalog = {
     "Cinema now streams real films",
   "changelog.entries.cinema-live-streaming.body":
     "Cinema is live: browse the real programme and press play to stream the film, and it resumes right where you left off next time you come back.",
-  "changelog.entries.employer-reviews-live.title":
-    "Employer reviews, for real",
+  "changelog.entries.employer-reviews-live.title": "Employer reviews, for real",
   "changelog.entries.employer-reviews-live.body":
     "The employer reviews page now shows real queer-inclusive employers. Open any company for its full profile and reviews, and write your own anonymous review of a place you've worked.",
   "changelog.entries.block-mute-from-profile.title":
@@ -3643,8 +3637,7 @@ export const marketing: Catalog = {
     "Report anything that doesn't feel right",
   "changelog.entries.report-more-surfaces.body":
     "You can now report an event, a business, a company, a job posting, or a member's public persona, a discreet “Report” link opens the same confidential flow used everywhere else, and events are now actually filed to the safety team instead of just acknowledged.",
-  "changelog.entries.profile-photo-pronouns.title":
-    "Your face, your words",
+  "changelog.entries.profile-photo-pronouns.title": "Your face, your words",
   "changelog.entries.profile-photo-pronouns.body":
     "Edit Profile now lets you upload a custom photo, with an instant preview, instead of only using your Google picture, and you can write in your own pronouns alongside the presets. We also cleared out the “coming soon” placeholders that couldn't do anything yet.",
   "changelog.entries.mobile-form-keyboard.title":
@@ -3670,8 +3663,7 @@ export const marketing: Catalog = {
   "changelog.entries.business-page-live.body":
     "Every business page now shows the venue's real photos in a gallery you can open full-screen, plus its real opening hours with a live “Open now / Closed” status, so you know what a place looks like and whether it's open before you go.",
 
-  "changelog.entries.business-actions.title":
-    "Save, share, and get directions",
+  "changelog.entries.business-actions.title": "Save, share, and get directions",
   "changelog.entries.business-actions.body":
     "Every business page now has an action bar. Get directions, call, share, or save a place to your list in one tap. Saved spots show how many members have saved them too, a quiet trust signal.",
 
@@ -3689,27 +3681,29 @@ export const marketing: Catalog = {
   "changelog.entries.directory-filters-upgrade.body":
     "Finding a place is smoother now. Search looks inside descriptions and tags as well as names; each category shows a live count; you can sort A–Z or by neighbourhood; and your filters live in the link, so a filtered directory is shareable and survives a refresh. Picking a vibe no longer makes every business disappear, active filters show as removable chips with a Clear-all, empty results explain themselves, and the map is easier to use on a phone.",
   "changelog.entries.public-profile-badge.title":
-    "\"Go public\" now lives on your profile",
+    '"Go public" now lives on your profile',
   "changelog.entries.public-profile-badge.body":
     "Your public-profile control moved into a quiet badge next to your name. Tap it to see how public profiles unlock, or to switch yours on once you're eligible. It only ever shows on your own profile.",
 
-  "changelog.entries.here-for-hero.title": "\"Here for\" now leads your profile",
+  "changelog.entries.here-for-hero.title": '"Here for" now leads your profile',
   "changelog.entries.here-for-hero.body":
     "Your \"Here for\" intent, what you're looking for on QueerPulse, now sits right at the top of your profile, next to your name and bio, instead of further down the page. Easier to spot at a glance, and just as easy to keep private if that's how you like it.",
 
-  "changelog.entries.directory-view-switcher.title": "A clearer List / Map switch",
+  "changelog.entries.directory-view-switcher.title":
+    "A clearer List / Map switch",
   "changelog.entries.directory-view-switcher.body":
-    "Switching between the list and the map on the business directory is easier to spot now. The two buttons became a single labelled toggle with icons, sitting beside the results count, so it clearly reads as \"pick a view\" rather than another filter, and it stays compact and tappable on a phone.",
+    'Switching between the list and the map on the business directory is easier to spot now. The two buttons became a single labelled toggle with icons, sitting beside the results count, so it clearly reads as "pick a view" rather than another filter, and it stays compact and tappable on a phone.',
 
   "changelog.entries.profile-links-fix.title": "Profile links that behave",
   "changelog.entries.profile-links-fix.body":
-    "Adding social links to your profile is smoother now. A plain username like your Instagram handle is accepted as-is, no more \"that doesn't look like a valid link\" warning when it clearly is, and the rows no longer break apart when a hint appears; the field stays put and the hint sits neatly below it.",
+    'Adding social links to your profile is smoother now. A plain username like your Instagram handle is accepted as-is, no more "that doesn\'t look like a valid link" warning when it clearly is, and the rows no longer break apart when a hint appears; the field stays put and the hint sits neatly below it.',
 
-  "changelog.entries.subprofiles-showcase.title": "A richer \"Also working as\"",
+  "changelog.entries.subprofiles-showcase.title": 'A richer "Also working as"',
   "changelog.entries.subprofiles-showcase.body":
     "Your other professional sides now show off more of who you are, featured work, links, availability, and follower and endorsement counts, right on the card. On mobile it's a one-tap view built for a smaller screen, and if you own the personas you get visibility badges and a quick way to edit right from the showcase.",
 
-  "changelog.entries.real-directory-map.title": "A real map on every directory listing",
+  "changelog.entries.real-directory-map.title":
+    "A real map on every directory listing",
   "changelog.entries.real-directory-map.body":
     "Open a business or space in the directory and its location now shows on a real, interactive map, the same warm Lisbon map you already know from the map view and from listing a business, pinned to the exact spot the owner placed. The old decorative placeholder is gone.",
 
@@ -3746,8 +3740,7 @@ export const marketing: Catalog = {
   "changelog.entries.privacy-and-speed.body":
     "A round of privacy, speed and messaging polish. Personas and subprofiles you've set to private now stay fully private, and people you've blocked no longer turn up in the flatmate directory. Editing or deleting a message updates right away, with no reload flicker. And the app itself is lighter, so pages, and the images that greet you at the top, load a little quicker.",
 
-  "changelog.entries.leaner-prerendering.title":
-    "Leaner, faster site builds",
+  "changelog.entries.leaner-prerendering.title": "Leaner, faster site builds",
   "changelog.entries.leaner-prerendering.body":
     "Behind the scenes: we now pre-build only the essential public page for search engines instead of the whole site, and we no longer bake a separate copy of every profile. Builds use less data and stay quick, and search engines still find every public page through the sitemap. Nothing to do on your end.",
 
@@ -3796,7 +3789,8 @@ export const marketing: Catalog = {
   "changelog.entries.mention-names.title": "Mentions show real names",
   "changelog.entries.mention-names.body":
     "Mention a person, community or place in a chat, forum thread or community discussion and it now reads as their name, Tiago Costa, in place of the raw @tiago-costa handle. Tap it and you still land in the right place; hover to see the handle.",
-  "changelog.entries.forward-to-groups.title": "Forward messages to your groups",
+  "changelog.entries.forward-to-groups.title":
+    "Forward messages to your groups",
   "changelog.entries.forward-to-groups.body":
     "Forwarding now reaches your group chats as well as one-to-one messages. Long-press any message, pick Forward, and choose any group you're part of.",
   "changelog.entries.read-receipts.title": "Delivered and read receipts",
@@ -3811,7 +3805,8 @@ export const marketing: Catalog = {
   "changelog.entries.offline-outbox.title": "Sends that don't get lost",
   "changelog.entries.offline-outbox.body":
     "Tapped send with no signal? Your message waits in line and goes out the moment you're back online. Nothing vanishes on the way.",
-  "changelog.entries.typing-indicator.title": "Typing bubble and screen-reader polish",
+  "changelog.entries.typing-indicator.title":
+    "Typing bubble and screen-reader polish",
   "changelog.entries.typing-indicator.body":
     "A gentle bubble shows when the other person is writing, and a round of screen-reader work makes the whole chat easier to follow without looking.",
   "changelog.entries.moderation-actions.title":
@@ -3847,7 +3842,8 @@ export const marketing: Catalog = {
   "changelog.entries.mentions.title": "Mention people and communities",
   "changelog.entries.mentions.body":
     "Type @ to tag a member or c/ to link a community in forum and community replies, anyone you mention gets a notification.",
-  "changelog.entries.push-notifications.title": "Push notifications for messages",
+  "changelog.entries.push-notifications.title":
+    "Push notifications for messages",
   "changelog.entries.push-notifications.body":
     "Opt in to get a phone notification when a new direct message arrives while you're away, private, direct-messages-only, and off by default.",
   "changelog.entries.delete-conversation.title": "Delete a conversation",
@@ -4088,7 +4084,8 @@ export const marketing: Catalog = {
   "volunteerManage.sub":
     "Review and decide on people who signed up for opportunities you posted.",
   "volunteerManage.loading": "Loading your opportunities…",
-  "volunteerManage.empty": "You haven't posted any volunteer opportunities yet.",
+  "volunteerManage.empty":
+    "You haven't posted any volunteer opportunities yet.",
   "volunteerManage.loadingApplicants": "Loading applicants…",
   "volunteerManage.noApplicants": "No one has applied yet.",
   "volunteerManage.pendingCount": "{count} pending",
@@ -4734,7 +4731,8 @@ export const marketing: Catalog = {
   "directory.detail.claim.cancel": "Cancel",
   "directory.detail.claim.submit": "Send to moderators",
   "directory.detail.claim.submitting": "Sending…",
-  "directory.detail.claim.errorToast": "Couldn't send your claim. Please try again.",
+  "directory.detail.claim.errorToast":
+    "Couldn't send your claim. Please try again.",
   "directory.detail.claim.successAriaLabel": "Claim received",
   "directory.detail.claim.successTitle": "Got it. We're",
   "directory.detail.claim.successEm": "on it.",
@@ -5332,8 +5330,7 @@ export const marketing: Catalog = {
   "submitPartner.success.closeLabel": "Back to partners",
   "submitPartner.success.step1":
     "It's pending review with the partnerships team",
-  "submitPartner.success.step2":
-    "We read every application, however rough",
+  "submitPartner.success.step2": "We read every application, however rough",
   "submitPartner.success.step3":
     "We'll be in touch, a yes, a not-yet, or a question",
   "submitPartner.success.body":
@@ -5397,7 +5394,7 @@ export const marketing: Catalog = {
   "changelog.entries.resource-listings-and-suggestions.title":
     "Real resource listings for Legal Aid & Sexual Health Testing",
   "changelog.entries.resource-listings-and-suggestions.body":
-    "Legal Aid and Sexual Health Testing now show a real, admin-vetted directory when one exists — and a \"Suggest a resource\" form feeding an admin review queue when it doesn't. No fabricated listings, ever.",
+    'Legal Aid and Sexual Health Testing now show a real, admin-vetted directory when one exists — and a "Suggest a resource" form feeding an admin review queue when it doesn\'t. No fabricated listings, ever.',
   "changelog.tag.legal": "See Legal Aid →",
 
   "changelog.tag.guideRating": "See the Legal guides",
@@ -5409,5 +5406,5 @@ export const marketing: Catalog = {
   "changelog.entries.homepage-housing-personas-showcase.title":
     "A closer look at housing and personas on the homepage",
   "changelog.entries.homepage-housing-personas-showcase.body":
-    "The homepage's Housing and Personas sections now show what the features actually feel like: two real listing cards with a room and a landlord tab (reviews, verdicts, an honest \"no reviews yet\" when a landlord is new), and an interactive persona deck you can switch between to see how a public page changes per persona.",
+    'The homepage\'s Housing and Personas sections now show what the features actually feel like: two real listing cards with a room and a landlord tab (reviews, verdicts, an honest "no reviews yet" when a landlord is new), and an interactive persona deck you can switch between to see how a public page changes per persona.',
 };

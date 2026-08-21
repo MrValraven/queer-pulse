@@ -96,7 +96,11 @@ export const shared: Catalog = {
   "accountMenu.items.saved": "Saved",
   "accountMenu.items.settings": "Settings",
   "accountMenu.items.gettingStarted": "Getting started",
+  "accountMenu.items.installApp": "Install the app",
   "accountMenu.items.help": "Help",
+  "installAppModal.title": "Install the app",
+  "installAppModal.sub":
+    "Add QueerPulse to your home screen in a few taps. Same app, no app store.",
   "accountMenu.ariaLabel": "Account menu",
   "accountMenu.header.subtitle": "Profile & account",
   "accountSheet.title": "Your account",

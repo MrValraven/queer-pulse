@@ -1,4 +1,9 @@
-import { useCallback, useRef, type PointerEvent as ReactPointerEvent } from "react";
+import {
+  useCallback,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import { Link } from "react-router-dom";
 import { FiX, FiLogOut } from "react-icons/fi";
 import { m, useDragControls, type PanInfo } from "motion/react";
@@ -7,18 +12,27 @@ import { useScrollLock } from "../../hooks";
 import { useAuth } from "../../../app/providers/authContext";
 import { useNavDrawer } from "../../../app/providers/navDrawerContext";
 import { useMotionPrefs } from "../../../app/providers/MotionProvider";
-import { useNavMode, type NavMode } from "../../../app/providers/navModeContext";
+import {
+  useNavMode,
+  type NavMode,
+} from "../../../app/providers/navModeContext";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useDisplayMode } from "../../../app/providers/displayModeContext";
 import { useTeamRole, type TeamRole } from "../../../features/admin/adminRole";
 import { routes } from "../../../app/routeMap";
 import { isComingSoonLink } from "../../../app/authGate";
 import { useTranslation } from "../../i18n/useTranslation";
-import { ACCOUNT_GROUPS, HEADER_ACTIONS } from "./accountMenu.data";
+import {
+  ACCOUNT_GROUPS,
+  HEADER_ACTIONS,
+  INSTALL_APP_ACTION,
+} from "./accountMenu.data";
 import { useAccountIdentity } from "./useAccountIdentity";
 import { RoleLinks, AccountMenuControls } from "./accountMenuShared";
 import { usePersonaBadge } from "./usePersonaBadge";
 import { useGettingStartedBadge } from "../../../features/onboarding/useGettingStartedBadge";
 import { useNavDrawerFocus } from "./useNavDrawerFocus";
+import { InstallAppModal } from "../system/InstallAppModal";
 import menu from "./AccountMenu.module.css";
 import styles from "./AccountSheet.module.css";
 
@@ -183,117 +197,139 @@ function AccountSheetBody({
   const { t } = useTranslation();
   const personaBadge = usePersonaBadge();
   const gettingStartedBadge = useGettingStartedBadge();
+  const { isInstalled } = useDisplayMode();
+  const [installOpen, setInstallOpen] = useState(false);
   return (
-    <div className={menu.scroll}>
-      <div className={styles.header}>
-        <Avatar
-          initials={initials}
-          src={photo ?? undefined}
-          alt={name}
-          tint="coral"
-          size={44}
+    <>
+      <div className={menu.scroll}>
+        <div className={styles.header}>
+          <Avatar
+            initials={initials}
+            src={photo ?? undefined}
+            alt={name}
+            tint="coral"
+            size={44}
+          />
+          <div className={styles.headerText}>
+            <div className={styles.headerName}>{name}</div>
+            <Link
+              to={routes.accountProfile}
+              replace
+              className={styles.viewProfile}
+              onClick={onNavigate}
+            >
+              {t("shared:accountSheet.viewProfile")}
+            </Link>
+          </div>
+        </div>
+
+        {ACCOUNT_GROUPS.map((group) =>
+          group
+            .filter((item) => item.to !== routes.accountProfile)
+            .filter((item) => !item.liveOnly || !demoMode)
+            .filter(
+              (item) => item.action !== INSTALL_APP_ACTION || !isInstalled,
+            )
+            .filter((item) => !item.to || !isComingSoonLink(item.to)),
+        )
+          .filter((group) => group.length > 0)
+          .map((group, groupIndex) => (
+            <div key={group[0]?.to ?? group[0]?.action ?? groupIndex}>
+              {groupIndex > 0 && <div className={menu.divider} />}
+              {group.map((item) => {
+                const ItemIcon = item.icon;
+                const badge =
+                  item.badge ??
+                  (item.to === routes.subprofilesDashboard
+                    ? personaBadge
+                    : item.to === routes.gettingStarted
+                      ? gettingStartedBadge
+                      : undefined);
+                if (item.action === INSTALL_APP_ACTION) {
+                  return (
+                    <button
+                      key={item.action}
+                      type="button"
+                      className={`${menu.item} ${styles.row}`}
+                      onClick={() => {
+                        onNavigate();
+                        setInstallOpen(true);
+                      }}
+                    >
+                      <ItemIcon aria-hidden className={menu.itemIcon} />
+                      <span className={menu.itemLabel}>{t(item.labelKey)}</span>
+                    </button>
+                  );
+                }
+                return (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    replace
+                    className={`${menu.item} ${styles.row}`}
+                    onClick={onNavigate}
+                  >
+                    <ItemIcon aria-hidden className={menu.itemIcon} />
+                    <span className={menu.itemLabel}>{t(item.labelKey)}</span>
+                    {badge && <span className={menu.badgeSlot}>{badge}</span>}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
+
+        <div className={menu.divider} />
+        {HEADER_ACTIONS.map((item) => {
+          const ItemIcon = item.icon;
+          return (
+            <Link
+              key={item.to}
+              to={item.to}
+              replace
+              className={`${menu.item} ${styles.row}`}
+              onClick={onNavigate}
+            >
+              <ItemIcon aria-hidden className={menu.itemIcon} />
+              <span className={menu.itemLabel}>{t(item.labelKey)}</span>
+            </Link>
+          );
+        })}
+
+        {role !== "member" && (
+          <>
+            <div className={menu.divider} />
+            <RoleLinks role={role} onNavigate={onNavigate} />
+          </>
+        )}
+
+        <AccountMenuControls
+          demoMode={demoMode}
+          available={available}
+          toggle={toggle}
+          role={role}
+          setRole={setRole}
+          canSwitch={canSwitch}
+          navMode={navMode}
+          setNavMode={setNavMode}
+          showNavModeSwitch={false}
+          onNavigate={onNavigate}
         />
-        <div className={styles.headerText}>
-          <div className={styles.headerName}>{name}</div>
-          <Link
-            to={routes.accountProfile}
-            replace
-            className={styles.viewProfile}
-            onClick={onNavigate}
-          >
-            {t("shared:accountSheet.viewProfile")}
-          </Link>
-        </div>
+
+        <div className={menu.divider} />
+        <Link
+          to={routes.homepage}
+          replace
+          className={`${menu.item} ${menu.signOut} ${styles.row}`}
+          onClick={() => {
+            onSignOut();
+            onNavigate();
+          }}
+        >
+          <FiLogOut aria-hidden className={menu.itemIcon} />
+          <span className={menu.itemLabel}>{t("nav:signOut")}</span>
+        </Link>
       </div>
-
-      {ACCOUNT_GROUPS.map((group) =>
-        group
-          .filter((item) => item.to !== routes.accountProfile)
-          .filter((item) => !item.liveOnly || !demoMode)
-          .filter((item) => !isComingSoonLink(item.to)),
-      )
-        .filter((group) => group.length > 0)
-        .map((group, groupIndex) => (
-        <div key={group[0]?.to ?? groupIndex}>
-          {groupIndex > 0 && <div className={menu.divider} />}
-          {group.map((item) => {
-              const ItemIcon = item.icon;
-              const badge =
-                item.badge ??
-                (item.to === routes.subprofilesDashboard
-                  ? personaBadge
-                  : item.to === routes.gettingStarted
-                    ? gettingStartedBadge
-                    : undefined);
-              return (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  replace
-                  className={`${menu.item} ${styles.row}`}
-                  onClick={onNavigate}
-                >
-                  <ItemIcon aria-hidden className={menu.itemIcon} />
-                  <span className={menu.itemLabel}>{t(item.labelKey)}</span>
-                  {badge && (
-                    <span className={menu.badgeSlot}>{badge}</span>
-                  )}
-                </Link>
-              );
-            })}
-        </div>
-      ))}
-
-      <div className={menu.divider} />
-      {HEADER_ACTIONS.map((item) => {
-        const ItemIcon = item.icon;
-        return (
-          <Link
-            key={item.to}
-            to={item.to}
-            replace
-            className={`${menu.item} ${styles.row}`}
-            onClick={onNavigate}
-          >
-            <ItemIcon aria-hidden className={menu.itemIcon} />
-            <span className={menu.itemLabel}>{t(item.labelKey)}</span>
-          </Link>
-        );
-      })}
-
-      {role !== "member" && (
-        <>
-          <div className={menu.divider} />
-          <RoleLinks role={role} onNavigate={onNavigate} />
-        </>
-      )}
-
-      <AccountMenuControls
-        demoMode={demoMode}
-        available={available}
-        toggle={toggle}
-        role={role}
-        setRole={setRole}
-        canSwitch={canSwitch}
-        navMode={navMode}
-        setNavMode={setNavMode}
-        showNavModeSwitch={false}
-        onNavigate={onNavigate}
-      />
-
-      <div className={menu.divider} />
-      <Link
-        to={routes.homepage}
-        replace
-        className={`${menu.item} ${menu.signOut} ${styles.row}`}
-        onClick={() => {
-          onSignOut();
-          onNavigate();
-        }}
-      >
-        <FiLogOut aria-hidden className={menu.itemIcon} />
-        <span className={menu.itemLabel}>{t("nav:signOut")}</span>
-      </Link>
-    </div>
+      {installOpen && <InstallAppModal onClose={() => setInstallOpen(false)} />}
+    </>
   );
 }

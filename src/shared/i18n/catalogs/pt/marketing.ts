@@ -16,7 +16,8 @@ import type { Catalog } from "../../types";
  */
 export const marketing: Catalog = {
   // ── Sobre ──────────────────────────────────────────────────────────────
-  "about.meta.title": "Sobre a QueerPulse: uma rede pequena e gerida por pessoas",
+  "about.meta.title":
+    "Sobre a QueerPulse: uma rede pequena e gerida por pessoas",
   "about.meta.description":
     "A QueerPulse é uma plataforma comunitária queer pequena, por convite, em Lisboa — sem anúncios, sem algoritmo, sem crescimento pelo crescimento. Eis o que acreditamos, e quem a gere.",
   "about.hero.eyebrow": "Sobre",
@@ -44,9 +45,9 @@ export const marketing: Catalog = {
     "Não rastreamos o que clicas nem quanto tempo ficas",
   "about.contrast.us.feedIsYours":
     "O teu feed é exatamente as comunidades a que te juntaste",
-  "about.contrast.us.vouched": "Cada pessoa é avalizada por alguém que já está cá",
-  "about.contrast.us.growthPace":
-    "O crescimento acompanha o ritmo dos avais",
+  "about.contrast.us.vouched":
+    "Cada pessoa é avalizada por alguém que já está cá",
+  "about.contrast.us.growthPace": "O crescimento acompanha o ritmo dos avais",
   "about.contrast.us.valueStays":
     "As contribuições financiam um fundo de apoio mútuo gerido pela comunidade",
   "about.beliefs.eyebrow": "No que acreditamos",
@@ -442,7 +443,8 @@ export const marketing: Catalog = {
   "dsar.past.status.inReview": "Em análise",
   "dsar.past.status.rejected": "Recusado",
   "dsar.past.loading": "A carregar os teus pedidos anteriores…",
-  "dsar.past.error": "Não foi possível carregar os teus pedidos anteriores. Tenta novamente daqui a pouco.",
+  "dsar.past.error":
+    "Não foi possível carregar os teus pedidos anteriores. Tenta novamente daqui a pouco.",
   "dsar.past.empty": "Ainda não submeteste nenhum pedido.",
   "dsar.past.objectAnalytics": "Oposição · Análise",
   "dsar.toast.submitted": "Pedido submetido — referência {ref}",
@@ -561,8 +563,7 @@ export const marketing: Catalog = {
   "help.qa.lisbonOnly.a":
     "Os convívios são em Lisboa, mas a adesão em si não está limitada por localização — muitas pessoas participam à distância pela rede e pela revista.",
   "help.qa.free.q": "A QueerPulse é gratuita?",
-  "help.qa.free.a":
-    "Sim — a QueerPulse é gratuita para aderir e usar.",
+  "help.qa.free.a": "Sim — a QueerPulse é gratuita para aderir e usar.",
   "help.qa.changeName.q": "Como mudo o meu nome ou pronomes?",
   "help.qa.changeName.a":
     "Vai a <settingsLink>Definições</settingsLink> → Perfil. As alterações aplicam-se em todo o lado de imediato.",
@@ -1417,7 +1418,8 @@ export const marketing: Catalog = {
     "No modo demo, cola o link completo google.com/maps/… — os links curtos precisam do site em produção.",
   "listBusiness.step3.pinPlaced": "Pino colocado perto de {place}",
   "listBusiness.step3.usePlaceName": "Usar “{place}” como morada",
-  "listBusiness.step3.mapAria": "Mapa — arrasta o pino para definir o local exato.",
+  "listBusiness.step3.mapAria":
+    "Mapa — arrasta o pino para definir o local exato.",
   "listBusiness.step3.hoursHeading": "Horário de funcionamento *",
   "listBusiness.step3.hasOpenHours": "Tem horas de abertura",
   "listBusiness.step3.allClosed": "Tudo fechado",
@@ -1627,7 +1629,8 @@ export const marketing: Catalog = {
   "listBusiness.missing.hours": "o horário",
   "listBusiness.missing.hoursInvalid": "uma correção no horário",
   "listBusiness.missing.social": "links de contacto válidos",
-  "listBusiness.missing.socialFormat": "o formato dos links de contacto corrigido",
+  "listBusiness.missing.socialFormat":
+    "o formato dos links de contacto corrigido",
   "listBusiness.missing.rel": "a tua ligação",
   "listBusiness.missing.ownerName": "o teu nome",
   "listBusiness.missing.ownerRole": "o teu papel",
@@ -1758,6 +1761,11 @@ export const marketing: Catalog = {
   "changelog.tag.vouch": "Apadrinhar alguém",
   "changelog.tag.culture": "Visitar a Cultura",
 
+  "changelog.entries.account-menu-install-app.title":
+    "Instala a app a partir do menu da conta",
+  "changelog.entries.account-menu-install-app.body":
+    'No telemóvel, o menu da conta tem agora uma linha "Instalar a app" mesmo abaixo de Primeiros passos. Abre um modal rápido com os passos para o teu aparelho: no Android, um toque mostra o verdadeiro pedido de instalação do navegador; no iPhone, guia-te a adicionar a QueerPulse ao ecrã principal a partir do Safari. Já instalaste? A linha simplesmente não aparece.',
+
   "changelog.entries.member-directory-filter-crossfade.title":
     "Filtragem mais suave no diretório de pessoas",
   "changelog.entries.member-directory-filter-crossfade.body":
@@ -1781,7 +1789,7 @@ export const marketing: Catalog = {
   "changelog.entries.persona-date-month-picker.title":
     "Escolhe o mês e o ano dos teus trabalhos, sem os escrever à mão",
   "changelog.entries.persona-date-month-picker.body":
-    "Ao adicionar ou editar um item numa página de persona, poemas, exposições, lançamentos e o resto, o campo de data passa a ser um seletor de mês e ano em vez de uma caixa de texto livre. Escolhes o mês e ele aparece de forma cuidada como \"julho de 2025\" no teu idioma. As datas que já tinhas escrito à mão continuam a aparecer tal como as deixaste.",
+    'Ao adicionar ou editar um item numa página de persona, poemas, exposições, lançamentos e o resto, o campo de data passa a ser um seletor de mês e ano em vez de uma caixa de texto livre. Escolhes o mês e ele aparece de forma cuidada como "julho de 2025" no teu idioma. As datas que já tinhas escrito à mão continuam a aparecer tal como as deixaste.',
 
   "changelog.entries.unified-date-picker.title":
     "Um novo seletor de datas em toda a plataforma, mais acolhedor e totalmente acessível por teclado",
@@ -1820,7 +1828,7 @@ export const marketing: Catalog = {
   "changelog.entries.community-health-explainer.title":
     "Vê exatamente como o índice de saúde de uma comunidade é calculado",
   "changelog.entries.community-health-explainer.body":
-    "O explicador do índice de saúde passa a ter uma vista \"Como é calculada\". Mostra os quatro sinais e quanto cada um conta, percorre como os números da própria comunidade se somam até à pontuação publicada, explica porque as comunidades mais pequenas são avaliadas com mais brandura e mostra os escalões da pontuação para veres onde uma comunidade se situa. O sentimento aparece como ainda não contabilizado, porque até agora nada na plataforma o mede.",
+    'O explicador do índice de saúde passa a ter uma vista "Como é calculada". Mostra os quatro sinais e quanto cada um conta, percorre como os números da própria comunidade se somam até à pontuação publicada, explica porque as comunidades mais pequenas são avaliadas com mais brandura e mostra os escalões da pontuação para veres onde uma comunidade se situa. O sentimento aparece como ainda não contabilizado, porque até agora nada na plataforma o mede.',
 
   "changelog.entries.modals-cover-full-screen.title":
     "As janelas de diálogo passam a escurecer o ecrã inteiro",
@@ -1899,17 +1907,18 @@ export const marketing: Catalog = {
   "changelog.entries.article-editor-header-and-send-on.title":
     "Cabeçalho do editor de artigos corrigido, e o botão Enviar já funciona",
   "changelog.entries.article-editor-header-and-send-on.body":
-    "A barra do editor de artigos ficava fixa a 76px do topo do ecrã em vez de encostada a ele, o que deixava texto a passar por trás dela, por cima e por baixo. Agora fica encostada ao topo. O botão \"Enviar\" também só mostrava uma notificação, e agora avança mesmo a peça para a fase editorial seguinte.",
+    'A barra do editor de artigos ficava fixa a 76px do topo do ecrã em vez de encostada a ele, o que deixava texto a passar por trás dela, por cima e por baixo. Agora fica encostada ao topo. O botão "Enviar" também só mostrava uma notificação, e agora avança mesmo a peça para a fase editorial seguinte.',
   "changelog.entries.gathering-rsvp-fix.title":
     "Confirmar presença nos encontros já funciona",
   "changelog.entries.gathering-rsvp-fix.body":
-    "Tocar em \"Eu vou\" na página de um encontro não mostrava confirmação nenhuma. Agora confirma logo, com uma notificação rápida e a opção de Cancelar presença no mesmo sítio.",
+    'Tocar em "Eu vou" na página de um encontro não mostrava confirmação nenhuma. Agora confirma logo, com uma notificação rápida e a opção de Cancelar presença no mesmo sítio.',
   "changelog.entries.add-to-calendar-modal.title":
     "Adiciona encontros ao teu calendário",
   "changelog.entries.add-to-calendar-modal.body":
-    "\"Adicionar ao calendário\" num encontro a que vais ou que organizas abre agora um seletor para o Google Calendar ou um ficheiro .ics para transferir, compatível com o Apple Calendar, o Outlook e a maioria dos outros calendários.",
+    '"Adicionar ao calendário" num encontro a que vais ou que organizas abre agora um seletor para o Google Calendar ou um ficheiro .ics para transferir, compatível com o Apple Calendar, o Outlook e a maioria dos outros calendários.',
   "changelog.entries.recognition-xp.title": "Ganha XP, níveis e crachás",
-  "changelog.entries.recognition-xp.body": "A tua atividade passa a dar experiência para níveis e crachás. Concluir a tua lista de primeiros passos, entrar em comunidades, ir a encontros e ligar-te a membros faz-te subir. Acompanha o teu progresso na página de Crachás.",
+  "changelog.entries.recognition-xp.body":
+    "A tua atividade passa a dar experiência para níveis e crachás. Concluir a tua lista de primeiros passos, entrar em comunidades, ir a encontros e ligar-te a membros faz-te subir. Acompanha o teu progresso na página de Crachás.",
 
   "changelog.entries.governance-editable-finances.title":
     "Valores financeiros editáveis, com indicação da origem de cada número",
@@ -1939,7 +1948,7 @@ export const marketing: Catalog = {
   "changelog.entries.magazine-digest-real-send.title":
     "Os resumos de edição já enviam um teste real e saem com a edição",
   "changelog.entries.magazine-digest-real-send.body":
-    "As ferramentas de resumo da redação da revista mostravam apenas um aviso de confirmação. \"Enviar teste\" agora envia mesmo o rascunho atual por email a quem clicou, e \"Agendar com a edição\" agora põe mesmo o resumo na fila para sair aos subscritores da newsletter no momento em que a edição é publicada.",
+    'As ferramentas de resumo da redação da revista mostravam apenas um aviso de confirmação. "Enviar teste" agora envia mesmo o rascunho atual por email a quem clicou, e "Agendar com a edição" agora põe mesmo o resumo na fila para sair aos subscritores da newsletter no momento em que a edição é publicada.',
 
   "changelog.entries.magazine-deck-convert-to-article.title":
     "Os decks podem converter-se em artigos",
@@ -1949,17 +1958,17 @@ export const marketing: Catalog = {
   "changelog.entries.magazine-writer-read-brief.title":
     "Os redatores podem ler o briefing real da peça",
   "changelog.entries.magazine-writer-read-brief.body":
-    "\"Ler o briefing\" era antes um aviso de placeholder. Agora abre o briefing real da peça, incluindo o ângulo, o que incluir, o que evitar, o cachê e quem a encomendou.",
+    '"Ler o briefing" era antes um aviso de placeholder. Agora abre o briefing real da peça, incluindo o ângulo, o que incluir, o que evitar, o cachê e quem a encomendou.',
 
   "changelog.entries.admin-trust-network-cite-evidence.title":
     "Os admins podem citar provas a partir do grafo da rede de confiança",
   "changelog.entries.admin-trust-network-cite-evidence.body":
-    "O botão \"Citar\" do inspetor de grafo disparava um aviso de sucesso e não fazia mais nada. Agora escreve uma nota real no histórico de auditoria do membro a descrever a relação de aval citada, visível da próxima vez que um admin rever esse membro.",
+    'O botão "Citar" do inspetor de grafo disparava um aviso de sucesso e não fazia mais nada. Agora escreve uma nota real no histórico de auditoria do membro a descrever a relação de aval citada, visível da próxima vez que um admin rever esse membro.',
 
   "changelog.entries.admin-trust-network-ring-detection.title":
     "A deteção de anéis na rede de confiança é agora uma análise real de grafo",
   "changelog.entries.admin-trust-network-ring-detection.body":
-    "Assinalar um \"anel de avais\" significava apenas que uma conta estava suspensa, congelada ou tinha duas ou mais denúncias abertas, um sinal bem mais amplo do que um laço fechado real. O grafo agora deteta clusters reais de contas novas que só se avalizam entre si, sem nenhum aval externo a apoiá-las.",
+    'Assinalar um "anel de avais" significava apenas que uma conta estava suspensa, congelada ou tinha duas ou mais denúncias abertas, um sinal bem mais amplo do que um laço fechado real. O grafo agora deteta clusters reais de contas novas que só se avalizam entre si, sem nenhum aval externo a apoiá-las.',
 
   "changelog.entries.admin-reporter-credibility.title":
     "A fila de moderação mostra agora o histórico de quem denuncia, além de quem foi denunciado",
@@ -1979,7 +1988,7 @@ export const marketing: Catalog = {
   "changelog.entries.myevents-calendar-feed-subscribe.title":
     "Subscreve os teus convívios no Google ou Apple Calendar",
   "changelog.entries.myevents-calendar-feed-subscribe.body":
-    "\"Subscrever o teu feed\" em Os Meus Convívios passa a copiar um link de feed real e privado. Adiciona-o ao Google ou Apple Calendar e mantém-se atualizado com tudo a que vais.",
+    '"Subscrever o teu feed" em Os Meus Convívios passa a copiar um link de feed real e privado. Adiciona-o ao Google ou Apple Calendar e mantém-se atualizado com tudo a que vais.',
 
   "changelog.entries.gatherings-recap-more-from-host.title":
     "Os resumos passam a apontar para mais convívios da mesma pessoa anfitriã",
@@ -1992,7 +2001,7 @@ export const marketing: Catalog = {
     "Marcar-te como talvez ou vou, aceitar ou recusar um convite, dizer que não podes ir, e sair de uma lista de espera passam todos a escrever na tua inscrição real, em vez de só mudarem o que o cartão te mostra.",
 
   "changelog.entries.myevents-block-host-real.title":
-    "\"Bloquear a pessoa anfitriã\" em Os Meus Convívios já bloqueia mesmo",
+    '"Bloquear a pessoa anfitriã" em Os Meus Convívios já bloqueia mesmo',
   "changelog.entries.myevents-block-host-real.body":
     "A opção de bloquear no menu de um cartão de convívio passa a usar o mesmo bloqueio de qualquer outro sítio na QueerPulse, em vez de só mostrar uma notificação de confirmação.",
 
@@ -2004,7 +2013,7 @@ export const marketing: Catalog = {
   "changelog.entries.gatherings-edit-date-time-fix.title":
     "Editar a data e hora de um convívio já o reagenda mesmo",
   "changelog.entries.gatherings-edit-date-time-fix.body":
-    "O campo de data no \"Editar detalhes\" do painel de gestão costumava guardar só um texto, não uma data real. Agora reagenda mesmo o convívio, e todas as pessoas com inscrição são notificadas da mudança.",
+    'O campo de data no "Editar detalhes" do painel de gestão costumava guardar só um texto, não uma data real. Agora reagenda mesmo o convívio, e todas as pessoas com inscrição são notificadas da mudança.',
 
   "changelog.entries.gatherings-cancelled-page-real-content.title":
     "A página de um convívio cancelado já mostra o convívio real",
@@ -2047,14 +2056,14 @@ export const marketing: Catalog = {
     "O número de membros ativos na página de Governação é agora calculado diretamente a partir de contas reais, em vez de ser escrito à mão. Os valores financeiros continuam a ser reportados pela equipa a cada trimestre, e a página passa a dizê-lo claramente, em vez de dar a entender que são calculados automaticamente.",
 
   "changelog.entries.communities-sister-demo-only.title":
-    "As sugestões de \"comunidades irmãs\" ficam limitadas ao modo de demonstração",
+    'As sugestões de "comunidades irmãs" ficam limitadas ao modo de demonstração',
   "changelog.entries.communities-sister-demo-only.body":
-    "As sugestões de \"comunidades irmãs\" e \"também em\" estavam a aparecer com dados de exemplo mesmo em páginas de comunidades reais. Agora só aparecem quando estás a ver a demonstração.",
+    'As sugestões de "comunidades irmãs" e "também em" estavam a aparecer com dados de exemplo mesmo em páginas de comunidades reais. Agora só aparecem quando estás a ver a demonstração.',
 
   "changelog.entries.communities-category-filter.title":
     "Os filtros de categoria das comunidades funcionam para lá da primeira página",
   "changelog.entries.communities-category-filter.body":
-    "Filtrar comunidades por categoria pede agora uma correspondência real ao servidor, em vez de filtrar apenas o que já tinha carregado, corrigindo o \"nenhuma comunidade corresponde\" incorreto ao passar da primeira página.",
+    'Filtrar comunidades por categoria pede agora uma correspondência real ao servidor, em vez de filtrar apenas o que já tinha carregado, corrigindo o "nenhuma comunidade corresponde" incorreto ao passar da primeira página.',
 
   "changelog.entries.communities-archive-reversible.title":
     "Comunidades arquivadas podem ser recuperadas",
@@ -2064,7 +2073,7 @@ export const marketing: Catalog = {
   "changelog.entries.changemakers-nomination-reason.title":
     "As nomeações de Changemakers pedem agora a frase que prometem pedir",
   "changelog.entries.changemakers-nomination-reason.body":
-    "O formulário de nomeação sempre disse que \"um nome e uma frase chegam,\" mas só pedia um nome. Agora tem um campo real para a tua frase, e quem revê as nomeações pode ler o que escreveste.",
+    'O formulário de nomeação sempre disse que "um nome e uma frase chegam," mas só pedia um nome. Agora tem um campo real para a tua frase, e quem revê as nomeações pode ler o que escreveste.',
 
   "changelog.entries.changemakers-nomination-review.title":
     "As nomeações de Changemakers recebem agora uma resposta real",
@@ -2072,24 +2081,24 @@ export const marketing: Catalog = {
     "Os administradores podem agora aprovar ou recusar uma nomeação, e vais ser notificado da decisão em vez de ficares sem resposta depois de a submeteres.",
 
   "changelog.entries.changemakers-connect-honest.title":
-    "O botão \"Contactar\" num perfil de Changemaker é agora honesto sobre o que faz",
+    'O botão "Contactar" num perfil de Changemaker é agora honesto sobre o que faz',
   "changelog.entries.changemakers-connect-honest.body":
-    "Os perfis de Changemakers são conteúdo editorial, não contas de membros ligadas, por isso \"Contactar\" nunca podia mesmo enviar uma mensagem a essa pessoa. Agora encaminha-te para o nosso canal de contacto geral e diz isso mesmo.",
+    'Os perfis de Changemakers são conteúdo editorial, não contas de membros ligadas, por isso "Contactar" nunca podia mesmo enviar uma mensagem a essa pessoa. Agora encaminha-te para o nosso canal de contacto geral e diz isso mesmo.',
 
   "changelog.entries.moderation-assign-to-me.title":
     "Os moderadores podem reivindicar denúncias na fila",
   "changelog.entries.moderation-assign-to-me.body":
-    "O filtro \"Atribuídas a mim\" na fila de moderação estava sempre vazio. Os moderadores podem agora reivindicar ou libertar uma denúncia a partir do painel da denúncia, e o filtro reflete reivindicações reais.",
+    'O filtro "Atribuídas a mim" na fila de moderação estava sempre vazio. Os moderadores podem agora reivindicar ou libertar uma denúncia a partir do painel da denúncia, e o filtro reflete reivindicações reais.',
 
   "changelog.entries.moderation-report-history-link.title":
     "Vê o histórico completo de denúncias de um membro a partir da fila",
   "changelog.entries.moderation-report-history-link.body":
-    "A contagem de \"denúncias anteriores\" numa denúncia era apenas um número. Agora é uma ligação direta para todas as outras denúncias sobre essa mesma pessoa.",
+    'A contagem de "denúncias anteriores" numa denúncia era apenas um número. Agora é uma ligação direta para todas as outras denúncias sobre essa mesma pessoa.',
 
   "changelog.entries.moderation-resolution-detail.title":
     "As denúncias resolvidas mostram o que realmente aconteceu",
   "changelog.entries.moderation-resolution-detail.body":
-    "As denúncias resolvidas mostram agora quem as resolveu, o que foi decidido, e quando, em vez de um texto genérico. \"Encerrada há X\" reflete agora o momento real da resolução, não o momento em que a denúncia foi submetida.",
+    'As denúncias resolvidas mostram agora quem as resolveu, o que foi decidido, e quando, em vez de um texto genérico. "Encerrada há X" reflete agora o momento real da resolução, não o momento em que a denúncia foi submetida.',
 
   "changelog.entries.moderation-sla-overdue.title":
     "As denúncias atrasadas são assinaladas na fila",
@@ -2112,7 +2121,7 @@ export const marketing: Catalog = {
     "Criar tópicos, respostas e votos tem agora uma proteção contra abuso dedicada, à altura da que as comunidades já tinham, em vez de depender apenas do limite geral do site.",
 
   "changelog.entries.forum-first-post-accuracy.title":
-    "O aviso de \"primeira publicação\" verifica agora o teu histórico real",
+    'O aviso de "primeira publicação" verifica agora o teu histórico real',
   "changelog.entries.forum-first-post-accuracy.body":
     "O convite do fórum para fazeres a tua primeira publicação só verificava a sessão de navegação atual, por isso saudava incorretamente quem já publicava como se fosse novo. Agora verifica se já alguma vez publicaste.",
 
@@ -2124,7 +2133,7 @@ export const marketing: Catalog = {
   "changelog.entries.forum-shareable-filters.title":
     "A categoria e a ordenação do fórum sobrevivem a uma atualização da página",
   "changelog.entries.forum-shareable-filters.body":
-    "Escolher uma categoria ou separador de ordenação no fórum atualiza agora o link da página, para que atualizar ou partilhar mantenha a tua vista em vez de voltar silenciosamente a \"Todas.\"",
+    'Escolher uma categoria ou separador de ordenação no fórum atualiza agora o link da página, para que atualizar ou partilhar mantenha a tua vista em vez de voltar silenciosamente a "Todas."',
 
   "changelog.entries.forum-search-hint.title":
     "A pesquisa do fórum diz agora o que pesquisa",
@@ -2132,17 +2141,17 @@ export const marketing: Catalog = {
     "Uma pequena nota junto à caixa de pesquisa do fórum esclarece agora que procura nos títulos dos tópicos, não no texto de publicações e respostas.",
 
   "changelog.entries.forum-most-helpful-real.title":
-    "A ordenação \"Mais útil\" reflete agora votos reais",
+    'A ordenação "Mais útil" reflete agora votos reais',
   "changelog.entries.forum-most-helpful-real.body":
-    "Ordenar respostas por \"mais útil\" usa agora votos positivos reais, e a resposta mais votada recebe o distintivo de estrela, em vez de só funcionar na demonstração.",
+    'Ordenar respostas por "mais útil" usa agora votos positivos reais, e a resposta mais votada recebe o distintivo de estrela, em vez de só funcionar na demonstração.',
 
   "changelog.entries.recognition-locked-badges-honest.title":
     "A vitrine de emblemas só mostra emblemas que consegues mesmo ganhar",
   "changelog.entries.recognition-locked-badges-honest.body":
-    "Alguns emblemas apareciam como \"bloqueados\" com instruções para os ganhar que não levavam a lado nenhum. Deixam de aparecer até haver uma forma real de os ganhar.",
+    'Alguns emblemas apareciam como "bloqueados" com instruções para os ganhar que não levavam a lado nenhum. Deixam de aparecer até haver uma forma real de os ganhar.',
 
   "changelog.entries.recognition-vouch-perk-copy.title":
-    "A descrição do benefício \"Acesso a apadrinhamento\" corresponde agora à realidade",
+    'A descrição do benefício "Acesso a apadrinhamento" corresponde agora à realidade',
   "changelog.entries.recognition-vouch-perk-copy.body":
     "A vitrine de benefícios dizia que o acesso a apadrinhamento se desbloqueava no Nível 3. Apadrinhar nunca teve realmente esse requisito de nível, por isso a descrição diz agora o que é verdade: está disponível para qualquer membro ativo desde o início.",
 
@@ -2162,7 +2171,7 @@ export const marketing: Catalog = {
     "Os controlos de Publicar e Agendar do editor de artigos eram apenas decorativos. Agora publicam mesmo o teu artigo, de imediato ou numa data e hora futura à tua escolha, e artigos que não estão ligados a uma edição podem finalmente ir ao ar sem esperar pela produção da edição.",
 
   "changelog.entries.magazine-writer-draft-paste-fix.title":
-    "Colar um rascunho em \"Entregar rascunho\" deixou de o perder",
+    'Colar um rascunho em "Entregar rascunho" deixou de o perder',
   "changelog.entries.magazine-writer-draft-paste-fix.body":
     "Colar o texto do teu rascunho ao entregar uma peça costumava desaparecer assim que confirmavas. Agora passa diretamente para o editor de artigos como parágrafos reais, prontos para continuares a trabalhar.",
 
@@ -2179,7 +2188,7 @@ export const marketing: Catalog = {
   "changelog.entries.culture-radio-honest.title":
     "Os controlos da Rádio dizem a verdade",
   "changelog.entries.culture-radio-honest.body":
-    "Os controlos de reprodução e avançar da Rádio costumavam fingir que funcionavam. Agora são honestos sobre o que está realmente no ar, e \"Tornar-me curador\" abre o formulário real de submissão de playlist.",
+    'Os controlos de reprodução e avançar da Rádio costumavam fingir que funcionavam. Agora são honestos sobre o que está realmente no ar, e "Tornar-me curador" abre o formulário real de submissão de playlist.',
 
   "changelog.entries.newsletter-unsubscribe.title":
     "Cancela a subscrição da newsletter tu mesmo/a",
@@ -2199,12 +2208,12 @@ export const marketing: Catalog = {
   "changelog.entries.resources-guide-freshness.title":
     "Os guias mostram agora quando foram verificados pela última vez",
   "changelog.entries.resources-guide-freshness.body":
-    "Cada guia mostra a data em que a equipa editorial o verificou pela última vez, ou um honesto \"ainda não verificado\" quando ainda não foi revisto.",
+    'Cada guia mostra a data em que a equipa editorial o verificou pela última vez, ou um honesto "ainda não verificado" quando ainda não foi revisto.',
 
   "changelog.entries.resources-suggest-edit-expanded.title":
     "Sugerir uma alteração, para além do Glossário",
   "changelog.entries.resources-suggest-edit-expanded.body":
-    "O formulário de \"sugerir uma alteração\" só funcionava no Glossário. Agora também abre a partir de Direito, Saúde Trans, Redução de Danos, Saúde Mental e da biblioteca de guias.",
+    'O formulário de "sugerir uma alteração" só funcionava no Glossário. Agora também abre a partir de Direito, Saúde Trans, Redução de Danos, Saúde Mental e da biblioteca de guias.',
 
   "changelog.entries.directory-review-reporting.title":
     "Denunciar uma avaliação individual no diretório local",
@@ -2254,39 +2263,40 @@ export const marketing: Catalog = {
   "changelog.entries.topics-follow-notifications-and-directory.title":
     "Seguir um tópico já te avisa — e há um novo diretório de Tópicos",
   "changelog.entries.topics-follow-notifications-and-directory.body":
-    "Seguir um tópico (o botão Seguir em qualquer página de #etiqueta) não tinha efeito nenhum. Agora, quando alguém publica uma conversa no fórum com a etiqueta desse tópico, todas as pessoas a segui-lo são avisadas. Há também uma nova página de Tópicos que lista todos os tópicos com um botão de seguir, ligada a partir do menu Comunidade junto ao Fórum — e o botão \"Escrever uma publicação\" de um tópico abre o compositor do fórum já com essa etiqueta associada.",
+    'Seguir um tópico (o botão Seguir em qualquer página de #etiqueta) não tinha efeito nenhum. Agora, quando alguém publica uma conversa no fórum com a etiqueta desse tópico, todas as pessoas a segui-lo são avisadas. Há também uma nova página de Tópicos que lista todos os tópicos com um botão de seguir, ligada a partir do menu Comunidade junto ao Fórum — e o botão "Escrever uma publicação" de um tópico abre o compositor do fórum já com essa etiqueta associada.',
 
   "changelog.entries.search-topics-real-results.title":
     "Os tópicos já aparecem na pesquisa global",
   "changelog.entries.search-topics-real-results.body":
-    "Pesquisar por um tópico com hashtag devolve agora resultados reais da pesquisa global, junto com pessoas, comunidades e tudo o resto. As categorias com mais resultados do que cabem no ecrã passam a ter uma ligação \"Ver tudo\".",
+    'Pesquisar por um tópico com hashtag devolve agora resultados reais da pesquisa global, junto com pessoas, comunidades e tudo o resto. As categorias com mais resultados do que cabem no ecrã passam a ter uma ligação "Ver tudo".',
 
   "changelog.entries.feed-connections-tab.title":
-    "Novo separador \"Ligações\" no teu feed",
+    'Novo separador "Ligações" no teu feed',
   "changelog.entries.feed-connections-tab.body":
     "A barra de separadores do feed passa a ter Ligações: publicações, tópicos do fórum, e convívios de pessoas a quem estás ligade, tudo num só lugar. Ainda não te ligaste a ninguém? O separador leva-te ao diretório de pessoas para começares.",
 
   "changelog.entries.connections-report-now-files.title":
     "Corrigido: denunciar uma ligação agora envia mesmo a denúncia",
   "changelog.entries.connections-report-now-files.body":
-    "\"Denunciar\" no menu de opções de uma ligação mostrava uma confirmação de \"Denúncia enviada\" sem enviar nada de facto. Agora abre o mesmo formulário de motivo e detalhe usado no resto da aplicação e envia mesmo uma denúncia à equipa de moderação.",
+    '"Denunciar" no menu de opções de uma ligação mostrava uma confirmação de "Denúncia enviada" sem enviar nada de facto. Agora abre o mesmo formulário de motivo e detalhe usado no resto da aplicação e envia mesmo uma denúncia à equipa de moderação.',
 
   "changelog.entries.getting-started-xp-not-awarded-fix.title":
     "Corrigido: XP do Início Rápido não aparecia",
   "changelog.entries.getting-started-xp-not-awarded-fix.body":
     "Ao concluíres passos do Início Rápido, o teu XP total podia ficar preso em 0 durante algum tempo, e os passos concluídos não mostravam quanto XP tinham rendido. Ambos foram corrigidos: o teu nível atualiza-se agora rapidamente à medida que concluis passos, e cada passo concluído mostra o seu XP.",
 
-  "changelog.entries.badges-levels-v2-redesign.title": "Emblemas e níveis redesenhados",
+  "changelog.entries.badges-levels-v2-redesign.title":
+    "Emblemas e níveis redesenhados",
   "changelog.entries.badges-levels-v2-redesign.body":
     "A página de Emblemas e Níveis tem um novo visual: um mostrador de nível, sugestões dos emblemas mais próximos de ganhares, um espólio filtrável com detalhe por emblema, uma faixa de emblemas sazonais, e um extrato a mostrar de onde veio o teu XP.",
 
   "changelog.entries.listing-preview-matches-card.title":
     "A pré-visualização do anúncio agora corresponde ao cartão real do diretório",
   "changelog.entries.listing-preview-matches-card.body":
-    "A pré-visualização ao vivo, ao adicionares ou editares um anúncio no diretório, mostra agora exatamente o mesmo cartão que aparece no diretório, incluindo a foto de capa. Se ainda não tiveres adicionado uma, a pré-visualização mostra um botão \"Adicionar foto de capa\" que te leva diretamente ao passo das fotos.",
+    'A pré-visualização ao vivo, ao adicionares ou editares um anúncio no diretório, mostra agora exatamente o mesmo cartão que aparece no diretório, incluindo a foto de capa. Se ainda não tiveres adicionado uma, a pré-visualização mostra um botão "Adicionar foto de capa" que te leva diretamente ao passo das fotos.',
 
   "changelog.entries.profile-shapings-editor.title":
-    "Edita a secção \"O que me formou\"",
+    'Edita a secção "O que me formou"',
   "changelog.entries.profile-shapings-editor.body":
     "O filme, o livro, a música e o momento que te formaram já podem ser adicionados e editados no teu perfil, tal como as tuas outras listas. Antes só era possível ver.",
 
@@ -2305,9 +2315,9 @@ export const marketing: Catalog = {
   "changelog.entries.profile-who-sees-what-controls.title":
     "Escolhe exatamente quem vê o quê no teu perfil",
   "changelog.entries.profile-who-sees-what-controls.body":
-    "Um novo painel \"Quem vê o quê\" reúne os teus controlos de visibilidade num só lugar: predefinições rápidas, interruptores instantâneos para a tua foto, bairro, votos de confiança e o que procuras, visibilidade por identidade, esconder o teu perfil de pessoas específicas, e um registo das denúncias que fizeste.",
+    'Um novo painel "Quem vê o quê" reúne os teus controlos de visibilidade num só lugar: predefinições rápidas, interruptores instantâneos para a tua foto, bairro, votos de confiança e o que procuras, visibilidade por identidade, esconder o teu perfil de pessoas específicas, e um registo das denúncias que fizeste.',
   "changelog.entries.profile-your-data-panel.title":
-    "Um painel \"Os teus dados\" para a tua conta",
+    'Um painel "Os teus dados" para a tua conta',
   "changelog.entries.profile-your-data-panel.body":
     "Descarrega uma cópia de tudo o que a QueerPulse guarda sobre ti, afasta-te temporariamente ou pede a eliminação da conta com um período de 30 dias para mudares de ideias, ou envia um pedido de dados, tudo a partir de um único painel no teu perfil. Qualquer comunidade que possuas ou anúncio ativo que esteja a impedir a eliminação passa a aparecer ali mesmo, com a sua própria solução.",
   "changelog.entries.profile-board-work-name-qr-updates.title":
@@ -2407,7 +2417,7 @@ export const marketing: Catalog = {
   "changelog.entries.affirming-housing-baseline.title":
     "Todas as casas e todos os colegas de casa aqui são afirmativos LGBTQ+ — agora é o padrão",
   "changelog.entries.affirming-housing-baseline.body":
-    "Ser afirmativo LGBTQ+ deixou de ser uma opção que um anúncio pode ou não marcar — é a base de todas as casas, quartos e pessoas no quadro de habitação. Antes de publicares um espaço, criares um perfil de colega de casa ou contactares sobre uma casa, assumes uma vez um compromisso afirmativo, e ele aplica-se em todo o lado. Cada anúncio passa a ter um selo \"Afirmativo LGBTQ+\" como norma, não como variável, e se uma casa ou pessoa quebrar esse compromisso podes denunciar. Isto é um compromisso da comunidade, não um filtro sobre quem é bem-vindo — ninguém é separado pela sua identidade.",
+    'Ser afirmativo LGBTQ+ deixou de ser uma opção que um anúncio pode ou não marcar — é a base de todas as casas, quartos e pessoas no quadro de habitação. Antes de publicares um espaço, criares um perfil de colega de casa ou contactares sobre uma casa, assumes uma vez um compromisso afirmativo, e ele aplica-se em todo o lado. Cada anúncio passa a ter um selo "Afirmativo LGBTQ+" como norma, não como variável, e se uma casa ou pessoa quebrar esse compromisso podes denunciar. Isto é um compromisso da comunidade, não um filtro sobre quem é bem-vindo — ninguém é separado pela sua identidade.',
   // ── Wave B2: anúncios verificados, marcação de visitas, avaliações cegas ─
   "changelog.entries.housing-listing-discovery.title":
     "Encontra a casa certa — fotos a sério, filtros que encaixam e um aviso quando aparece",
@@ -2780,7 +2790,7 @@ export const marketing: Catalog = {
   "changelog.entries.endorse-with-note.title":
     "Endossa uma persona com uma nota",
   "changelog.entries.endorse-with-note.body":
-    "Endossar a persona de alguém passa a abrir uma janela onde podes acrescentar uma breve nota sobre o que torna o trabalho digno de apoio. Já endossaste? Toca em \"Endossado\" para editar a tua nota ou retirar o endosso quando quiseres.",
+    'Endossar a persona de alguém passa a abrir uma janela onde podes acrescentar uma breve nota sobre o que torna o trabalho digno de apoio. Já endossaste? Toca em "Endossado" para editar a tua nota ou retirar o endosso quando quiseres.',
 
   "changelog.entries.persona-banner-bleed.title":
     "Deixe o banner do seu perfil sangrar na página",
@@ -2820,12 +2830,12 @@ export const marketing: Catalog = {
   "changelog.entries.network-modal-search.title":
     "Procura nas listas da tua rede",
   "changelog.entries.network-modal-search.body":
-    "As listas \"Ligações\" e \"Avalizaram-te\" no teu perfil passam a ter uma caixa de procura, para filtrares uma lista longa até um nome num instante.",
+    'As listas "Ligações" e "Avalizaram-te" no teu perfil passam a ter uma caixa de procura, para filtrares uma lista longa até um nome num instante.',
 
   "changelog.entries.profile-your-network.title":
     "Vê a tua rede no teu próprio perfil",
   "changelog.entries.profile-your-network.body":
-    "O cabeçalho do teu perfil passa a mostrar uma linha privada de atalhos \"A tua rede\", só para ti: quantas pessoas tens ligadas, quem avalizaste e quem te avalizou. Toca num atalho para veres a lista completa, do mais recente para o mais antigo, com a altura em que cada coisa aconteceu. Só tu a vês, e fica escondida quando pré-visualizas o teu perfil como visitante.",
+    'O cabeçalho do teu perfil passa a mostrar uma linha privada de atalhos "A tua rede", só para ti: quantas pessoas tens ligadas, quem avalizaste e quem te avalizou. Toca num atalho para veres a lista completa, do mais recente para o mais antigo, com a altura em que cada coisa aconteceu. Só tu a vês, e fica escondida quando pré-visualizas o teu perfil como visitante.',
 
   "changelog.entries.fix-page-top-nav-overlap.title":
     "O conteúdo das páginas já não fica escondido por baixo do menu do topo",
@@ -2884,19 +2894,20 @@ export const marketing: Catalog = {
   "changelog.entries.fix-vouch-success-self-face.title":
     "A confirmação do teu voto mostra agora a tua cara, não um marcador de posição",
   "changelog.entries.fix-vouch-success-self-face.body":
-    "Ao votar por alguém, o painel de confirmação podia juntar a foto do membro a um perfil de demonstração em vez da tua. Passa a mostrar sempre o teu avatar e as tuas iniciais reais ao lado das dessa pessoa, para que o momento \"confirmado\" reflita quem está mesmo a votar.",
+    'Ao votar por alguém, o painel de confirmação podia juntar a foto do membro a um perfil de demonstração em vez da tua. Passa a mostrar sempre o teu avatar e as tuas iniciais reais ao lado das dessa pessoa, para que o momento "confirmado" reflita quem está mesmo a votar.',
 
   "changelog.entries.persona-readiness-estimate.title":
     "A estimativa de prontidão da persona reflete agora o que falta mesmo",
   "changelog.entries.persona-readiness-estimate.body":
-    "A \"Estimativa rápida\" na página Publicar de uma persona passa a contar tudo o que ainda vale a pena acrescentar — uma imagem de capa, a tua disponibilidade, um link social e conteúdo suficiente — em vez de saltar para 100 assim que já dava para publicar. O número só enche quando não falta mesmo nada por afinar.",
+    'A "Estimativa rápida" na página Publicar de uma persona passa a contar tudo o que ainda vale a pena acrescentar — uma imagem de capa, a tua disponibilidade, um link social e conteúdo suficiente — em vez de saltar para 100 assim que já dava para publicar. O número só enche quando não falta mesmo nada por afinar.',
 
   "changelog.entries.fix-persona-item-drawer-scroll.title":
     "Percorre todos os campos ao editar um item da montra",
   "changelog.entries.fix-persona-item-drawer-scroll.body":
     "O painel de edição de um item da montra (como um concerto ou um projeto) já não fica cortado no fundo do ecrã no telemóvel — agora consegues percorrer todos os campos e chegar ao Guardar.",
 
-  "changelog.entries.my-uploads.title": "Vê e faz a gestão de tudo o que enviaste",
+  "changelog.entries.my-uploads.title":
+    "Vê e faz a gestão de tudo o que enviaste",
   "changelog.entries.my-uploads.body":
     "Um novo ecrã As minhas imagens nas Definições mostra todas as imagens que enviaste, para encontrares e apagares envios duplicados sem querer. Avisa-te se uma imagem ainda está a ser usada antes de a removeres.",
 
@@ -3045,8 +3056,7 @@ export const marketing: Catalog = {
   "changelog.entries.magazine-commission-editor-fix.body":
     "Encomendar um artigo a partir da mesa editorial podia falhar com um erro “editorId must be a UUID” — acontecia numa revista nova, ainda sem artigos atribuídos a ninguém. As encomendas passam a ficar associadas à tua própria identidade de editor com sessão iniciada, por isso são criadas de imediato.",
 
-  "changelog.entries.magazine-issue-production.title":
-    "Produção da edição",
+  "changelog.entries.magazine-issue-production.title": "Produção da edição",
   "changelog.entries.magazine-issue-production.body":
     "Adicionámos a produção da edição — organiza o alinhamento, define a capa e as chamadas, escolhe o resumo para membros e os cartões sociais, e publica a edição inteira de uma vez com uma lista de verificação.",
 
@@ -3106,9 +3116,9 @@ export const marketing: Catalog = {
     "Cada persona passa a ter uma página pensada para a forma como esse ofício realmente se apresenta: artistas de palco ganham uma faixa de destaque com dados de contratação, artistas visuais ganham uma parede de estúdio com uma caixa de luz de ecrã inteiro para o trabalho, quem escreve ganha um layout ao estilo de página com citações em destaque, programadoras e criadores ganham uma folha de oficina, terapeutas ganham um layout de consultório calmo com a logística das sessões, e cozinheiros e mixologistas ganham um cartão de menu impresso. Denunciar uma persona e ver quem a apoia ou segue também passaram a ter os seus próprios ecrãs dedicados.",
 
   "changelog.entries.persona-page-unavailable-reasons.title":
-    "As páginas de persona já dizem porquê, não só \"não encontrada\"",
+    'As páginas de persona já dizem porquê, não só "não encontrada"',
   "changelog.entries.persona-page-unavailable-reasons.body":
-    "Se uma persona é privada, só para membros, ou foi retirada, a página passa a dizer-te qual das três, em vez de um simples \"não encontrada\". E se és dona ou co-dona de uma persona que ainda não publicaste, o respetivo endereço mostra-te agora uma pré-visualização do teu rascunho, com uma barra a indicar o que falta para publicar — em vez de nada.",
+    'Se uma persona é privada, só para membros, ou foi retirada, a página passa a dizer-te qual das três, em vez de um simples "não encontrada". E se és dona ou co-dona de uma persona que ainda não publicaste, o respetivo endereço mostra-te agora uma pré-visualização do teu rascunho, com uma barra a indicar o que falta para publicar — em vez de nada.',
 
   "changelog.entries.meet-the-table.title": "Vê quem está à mesa",
   "changelog.entries.meet-the-table.body":
@@ -3202,15 +3212,14 @@ export const marketing: Catalog = {
   "changelog.entries.reports-reach-the-team.title":
     "As denúncias chegam agora à equipa de moderação",
   "changelog.entries.reports-reach-the-team.body":
-    "Quando denuncias uma publicação do fórum, ela chega agora à moderação de forma fiável — e, se o envio falhar, vês um erro claro e uma forma de tentar de novo, em vez de um falso \"concluído\". Também podes denunciar uma resposta em particular, não só a publicação inicial.",
+    'Quando denuncias uma publicação do fórum, ela chega agora à moderação de forma fiável — e, se o envio falhar, vês um erro claro e uma forma de tentar de novo, em vez de um falso "concluído". Também podes denunciar uma resposta em particular, não só a publicação inicial.',
 
   "changelog.entries.chat-recovers-after-reconnect.title":
     "O chat recupera quando voltas a ter ligação",
   "changelog.entries.chat-recovers-after-reconnect.body":
     "Se uma mensagem não puder ser enviada por teres perdido a ligação, passa a enviar-se sozinha assim que voltas a estar online — sem precisares de recarregar ou reenviar à mão. Uma pequena faixa indica quando estás offline ou a reconectar, para saberes sempre o estado de uma mensagem.",
 
-  "changelog.entries.honest-live-states.title":
-    "O que vês é real",
+  "changelog.entries.honest-live-states.title": "O que vês é real",
   "changelog.entries.honest-live-states.body":
     "Revimos a aplicação para que as páginas mostrem apenas pessoas e conteúdos reais. Recortes de imprensa de exemplo, vozes de amostra e inventário de demonstração deixam de aparecer como se fossem reais, e os controlos que ainda não estão ligados passam a estar claramente assinalados em vez de fingirem que guardam.",
 
@@ -3223,7 +3232,8 @@ export const marketing: Catalog = {
     "A administração já pode atribuir funções da equipa da revista",
   "changelog.entries.assignable-staff-roles.body":
     "A partir do diretório de membros, a administração pode atribuir duas funções específicas, além do nível de conta de cada pessoa: Editor da revista e Redator da revista. O acesso ao desk editorial da revista passa a seguir a função de Editor da revista, em vez de qualquer pessoa moderadora — a administração mantém o acesso, como antes.",
-  "changelog.entries.assignable-staff-roles.tag": "Abrir o diretório de membros",
+  "changelog.entries.assignable-staff-roles.tag":
+    "Abrir o diretório de membros",
 
   "changelog.entries.feed-scroll-no-longer-sticks.title":
     "O teu feed volta a rolar sem prender",
@@ -3384,8 +3394,7 @@ export const marketing: Catalog = {
   "changelog.entries.smoother-onboarding-first-minutes.body":
     "Preparar o teu espaço ficou mais gentil. Se te afastares a meio, passamos a lembrar-nos de onde estavas e retomamos aí mesmo, em vez de recomeçar do início. As etiquetas de “aqui para” que escolhes aparecem no teu perfil desde o início, e voltar ao acolhimento nunca as vai apagar sem querer. Percorrer os passos com teclado ou leitor de ecrã coloca-te agora no sítio certo de cada vez, e podes recuar uma página sempre que quiseres uma segunda vista.",
 
-  "changelog.entries.events-open-at-top.title":
-    "Eventos abre no topo",
+  "changelog.entries.events-open-at-top.title": "Eventos abre no topo",
   "changelog.entries.events-open-at-top.body":
     "Abrir Eventos (ou qualquer separador) começa agora sempre no topo da página. Antes deixava-te no ponto onde tinhas feito scroll da última vez, o que, na capa alta de Eventos, te deixava preso a meio da página. Carregar no botão Voltar do navegador continua a levar-te exatamente para onde estavas.",
   "changelog.entries.events-open-at-top.tag": "Ver eventos",
@@ -3488,7 +3497,7 @@ export const marketing: Catalog = {
   "changelog.entries.performance-cost-hardening.title":
     "Pesquisa mais rápida, uploads mais leves e páginas movimentadas mais estáveis",
   "changelog.entries.performance-cost-hardening.body":
-    "Uma passagem nos bastidores para manter o QueerPulse rápido e sustentável à medida que enche. A pesquisa global passa a usar índices de texto adequados, por isso encontrar pessoas, comunidades, eventos, anúncios e tópicos continua rápido por muitos membros que entrem, em vez de abrandar à medida que a plataforma cresce. As fotos que carregas são redimensionadas com cuidado antes de saírem do teu dispositivo, por isso publicar é mais rápido nos dados móveis e as páginas carregam mais leves para toda a gente. Tópicos movimentados de comunidades, listas de membros e listas de convidados de eventos passam a carregar por páginas, com um botão \"carregar mais\", em vez de trazerem tudo de uma vez, e as páginas populares que toda a comunidade partilha podem agora ser servidas a partir da cache em vez de reconstruídas sempre. Os lembretes de eventos e as notificações push saem num único lote eficiente, as imagens no topo de uma página carregam primeiro para uma primeira renderização mais ágil, e mudar de página a meio de um carregamento já não desperdiça um pedido. As listas longas — o diretório local e os tópicos movimentados do fórum — passam a revelar mais à medida que fazes scroll, em vez de renderizarem tudo de uma vez, por isso mantêm-se fluidas no telemóvel. Nada do que vês muda — só aguenta melhor com muita gente.",
+    'Uma passagem nos bastidores para manter o QueerPulse rápido e sustentável à medida que enche. A pesquisa global passa a usar índices de texto adequados, por isso encontrar pessoas, comunidades, eventos, anúncios e tópicos continua rápido por muitos membros que entrem, em vez de abrandar à medida que a plataforma cresce. As fotos que carregas são redimensionadas com cuidado antes de saírem do teu dispositivo, por isso publicar é mais rápido nos dados móveis e as páginas carregam mais leves para toda a gente. Tópicos movimentados de comunidades, listas de membros e listas de convidados de eventos passam a carregar por páginas, com um botão "carregar mais", em vez de trazerem tudo de uma vez, e as páginas populares que toda a comunidade partilha podem agora ser servidas a partir da cache em vez de reconstruídas sempre. Os lembretes de eventos e as notificações push saem num único lote eficiente, as imagens no topo de uma página carregam primeiro para uma primeira renderização mais ágil, e mudar de página a meio de um carregamento já não desperdiça um pedido. As listas longas — o diretório local e os tópicos movimentados do fórum — passam a revelar mais à medida que fazes scroll, em vez de renderizarem tudo de uma vez, por isso mantêm-se fluidas no telemóvel. Nada do que vês muda — só aguenta melhor com muita gente.',
   "changelog.entries.accessibility-i18n-pwa-hardening.title":
     "Acessibilidade, tradução e melhorias offline",
   "changelog.entries.accessibility-i18n-pwa-hardening.body":
@@ -3620,7 +3629,7 @@ export const marketing: Catalog = {
   "changelog.entries.moderation-takedowns.title":
     "Ocultar e remover da moderação passam mesmo a retirar o conteúdo",
   "changelog.entries.moderation-takedowns.body":
-    "Quando um moderador oculta ou remove conteúdo denunciado, este desaparece agora realmente da vista pública. O conteúdo oculto fica retido para os membros, mas a equipa continua a vê-lo; o conteúdo removido mostra uma marca clara de \"removido por um moderador\", onde uma publicação eliminada já apareceria. Aplicado a publicações e respostas do fórum, publicações e respostas de comunidades, comunidades, eventos e fichas de negócios — registado no mesmo passo da decisão do moderador, para que nunca possa ficar registado sem produzir efeito.",
+    'Quando um moderador oculta ou remove conteúdo denunciado, este desaparece agora realmente da vista pública. O conteúdo oculto fica retido para os membros, mas a equipa continua a vê-lo; o conteúdo removido mostra uma marca clara de "removido por um moderador", onde uma publicação eliminada já apareceria. Aplicado a publicações e respostas do fórum, publicações e respostas de comunidades, comunidades, eventos e fichas de negócios — registado no mesmo passo da decisão do moderador, para que nunca possa ficar registado sem produzir efeito.',
   "changelog.entries.directory-photos-crisp.body":
     "As fotos de capa das fichas de negócios — e a pré-visualização enquanto adicionas uma — carregavam em baixa resolução e ficavam desfocadas quando mostradas em tamanho grande. Passam agora a carregar nítidas em tamanho real. Também descemos o cabeçalho da ficha para que o caminho de navegação e o botão Editar do proprietário deixem de ficar por baixo da navegação flutuante.",
   "changelog.entries.admin-role-management.title":
@@ -3655,8 +3664,7 @@ export const marketing: Catalog = {
     "O painel de anfitrião é uma pré-visualização honesta",
   "changelog.entries.gathering-manage-coming-soon.body":
     "O painel de anfitrião de encontros era um protótipo de demonstração, por isso em modo ao vivo mostra agora um claro “em breve” em vez de agir sobre dados de exemplo. Explorar e confirmar presença estão totalmente ativos; explora as ferramentas de anfitrião em modo de demonstração.",
-  "changelog.entries.search-member-avatars.title":
-    "Veja quem está a procurar",
+  "changelog.entries.search-member-avatars.title": "Veja quem está a procurar",
   "changelog.entries.search-member-avatars.body":
     "Os resultados de membros na pesquisa (⌘K e a página de pesquisa) mostram agora a foto de perfil de cada pessoa em vez de um ícone genérico — assim reconhece de relance o rosto que procura.",
   "changelog.entries.search-real-topics.title":
@@ -3717,7 +3725,8 @@ export const marketing: Catalog = {
   "changelog.entries.listing-photos.body":
     "O formulário de registo de negócio já aceita fotos — carrega um ficheiro ou cola o link de uma imagem e vê em tempo real como a tua ficha vai ficar antes de publicar.",
 
-  "changelog.entries.business-page-live.title": "As páginas de negócios ganham vida",
+  "changelog.entries.business-page-live.title":
+    "As páginas de negócios ganham vida",
   "changelog.entries.business-page-live.body":
     "Cada página de negócio mostra agora as fotografias reais do espaço numa galeria que podes abrir em ecrã inteiro, além do horário de funcionamento real com um estado “Aberto agora / Encerrado” em tempo real — para saberes o aspeto de um lugar e se está aberto antes de ir.",
 
@@ -3739,31 +3748,37 @@ export const marketing: Catalog = {
   "changelog.entries.directory-filters-upgrade.body":
     "Encontrar um lugar ficou mais suave. A pesquisa olha para descrições e etiquetas, não só para os nomes; cada categoria mostra uma contagem ao vivo; podes ordenar A–Z ou por bairro; e os filtros ficam no link, por isso um diretório filtrado é partilhável e sobrevive a um refresh. Escolher um ambiente já não faz desaparecer todos os negócios, os filtros ativos aparecem como chips removíveis com um Limpar tudo, os resultados vazios explicam-se, e o mapa é mais fácil de usar no telemóvel.",
   "changelog.entries.public-profile-badge.title":
-    "O \"Ficar público\" agora vive no teu perfil",
+    'O "Ficar público" agora vive no teu perfil',
   "changelog.entries.public-profile-badge.body":
     "O controlo de perfil público passou para um selo discreto ao lado do teu nome — toca nele para veres como os perfis públicos se desbloqueiam, ou para ativares o teu quando fores elegível. Só aparece no teu próprio perfil.",
 
-  "changelog.entries.here-for-hero.title": "\"Aqui para\" agora abre o teu perfil",
+  "changelog.entries.here-for-hero.title":
+    '"Aqui para" agora abre o teu perfil',
   "changelog.entries.here-for-hero.body":
-    "O teu \"Aqui para\" — o que procuras na QueerPulse — está agora logo no topo do perfil, ao lado do nome e da bio, em vez de mais abaixo na página. Mais fácil de ver à primeira vista, e continua tão fácil manter privado, se for essa a tua escolha.",
+    'O teu "Aqui para" — o que procuras na QueerPulse — está agora logo no topo do perfil, ao lado do nome e da bio, em vez de mais abaixo na página. Mais fácil de ver à primeira vista, e continua tão fácil manter privado, se for essa a tua escolha.',
 
-  "changelog.entries.directory-view-switcher.title": "Uma troca Lista / Mapa mais clara",
+  "changelog.entries.directory-view-switcher.title":
+    "Uma troca Lista / Mapa mais clara",
   "changelog.entries.directory-view-switcher.body":
-    "Alternar entre a lista e o mapa no diretório de negócios ficou mais fácil de encontrar. Os dois botões passaram a ser um único seletor com etiquetas e ícones, ao lado da contagem de resultados — para se ler claramente como \"escolher uma vista\" e não como mais um filtro, mantendo-se compacto e fácil de tocar no telemóvel.",
+    'Alternar entre a lista e o mapa no diretório de negócios ficou mais fácil de encontrar. Os dois botões passaram a ser um único seletor com etiquetas e ícones, ao lado da contagem de resultados — para se ler claramente como "escolher uma vista" e não como mais um filtro, mantendo-se compacto e fácil de tocar no telemóvel.',
 
-  "changelog.entries.profile-links-fix.title": "Links de perfil que se comportam",
+  "changelog.entries.profile-links-fix.title":
+    "Links de perfil que se comportam",
   "changelog.entries.profile-links-fix.body":
-    "Adicionar links sociais ao teu perfil ficou mais suave. Um nome de utilizador simples, como o teu handle do Instagram, é aceite tal como está — acabou o aviso \"isto não parece um link válido\" quando claramente é — e as linhas já não se desmontam quando aparece uma dica; o campo mantém-se no sítio e a dica fica bem alinhada por baixo.",
+    'Adicionar links sociais ao teu perfil ficou mais suave. Um nome de utilizador simples, como o teu handle do Instagram, é aceite tal como está — acabou o aviso "isto não parece um link válido" quando claramente é — e as linhas já não se desmontam quando aparece uma dica; o campo mantém-se no sítio e a dica fica bem alinhada por baixo.',
 
-  "changelog.entries.subprofiles-showcase.title": "Um \"Também a trabalhar como\" mais rico",
+  "changelog.entries.subprofiles-showcase.title":
+    'Um "Também a trabalhar como" mais rico',
   "changelog.entries.subprofiles-showcase.body":
     "Os outros lados do teu trabalho mostram agora mais de quem és — trabalho em destaque, links, disponibilidade e o número de seguidores e endossos, tudo no cartão. No telemóvel é uma vista de um só toque, pensada para um ecrã mais pequeno, e se és dono das personas tens badges de visibilidade e uma forma rápida de editar direto da vitrine.",
 
-  "changelog.entries.real-directory-map.title": "Um mapa a sério em cada página do diretório",
+  "changelog.entries.real-directory-map.title":
+    "Um mapa a sério em cada página do diretório",
   "changelog.entries.real-directory-map.body":
     "Abre um negócio ou espaço no diretório e a localização passa a aparecer num mapa real e interativo — o mesmo mapa quente de Lisboa que já conheces da vista de mapa e de quando registas um negócio — marcado no ponto exato onde o dono o colocou. O antigo mapa decorativo desapareceu.",
 
-  "changelog.entries.reply-threads.title": "Responde a qualquer comentário no fórum",
+  "changelog.entries.reply-threads.title":
+    "Responde a qualquer comentário no fórum",
   "changelog.entries.reply-threads.body":
     "As respostas passam agora a poder ter as suas próprias respostas. Responde diretamente a qualquer comentário e a tua entra logo ali por baixo, para as conversas longas se ramificarem em vez de se amontoarem numa lista só. As conversas mais profundas recolhem-se numa única linha — toca para expandir quando quiseres ver o resto.",
 
@@ -3846,13 +3861,15 @@ export const marketing: Catalog = {
   "changelog.entries.mention-names.title": "As menções mostram nomes reais",
   "changelog.entries.mention-names.body":
     "Menciona uma pessoa, comunidade ou lugar numa conversa, tópico do fórum ou discussão de comunidade e agora aparece o nome — Tiago Costa, não @tiago-costa. Toca e continuas a ir para o sítio certo; passa o cursor para ver o identificador.",
-  "changelog.entries.forward-to-groups.title": "Reencaminha mensagens para os teus grupos",
+  "changelog.entries.forward-to-groups.title":
+    "Reencaminha mensagens para os teus grupos",
   "changelog.entries.forward-to-groups.body":
     "O reencaminhamento agora chega às tuas conversas de grupo, não só às mensagens individuais. Mantém premida qualquer mensagem, escolhe Reencaminhar e seleciona qualquer grupo de que fazes parte.",
   "changelog.entries.read-receipts.title": "Recibos de entrega e de leitura",
   "changelog.entries.read-receipts.body":
     "Os visto contam agora a história toda: enviada, entregue no telemóvel, e lida — para saber onde a sua mensagem chegou.",
-  "changelog.entries.message-gestures.title": "Deslize para responder, toque para reagir",
+  "changelog.entries.message-gestures.title":
+    "Deslize para responder, toque para reagir",
   "changelog.entries.message-gestures.body":
     "Deslize uma mensagem para o lado para lhe responder, e toque duas vezes para reagir — os gestos rápidos que os seus polegares já conhecem.",
   "changelog.entries.message-drafts.title": "Os seus rascunhos esperam por si",
@@ -3861,7 +3878,8 @@ export const marketing: Catalog = {
   "changelog.entries.offline-outbox.title": "Envios que não se perdem",
   "changelog.entries.offline-outbox.body":
     "Tocou em enviar sem rede? A sua mensagem fica em fila e parte assim que voltar a ter ligação — nada desaparece pelo caminho.",
-  "changelog.entries.typing-indicator.title": "Bolha de escrita e cuidado com o leitor de ecrã",
+  "changelog.entries.typing-indicator.title":
+    "Bolha de escrita e cuidado com o leitor de ecrã",
   "changelog.entries.typing-indicator.body":
     "Uma bolha suave mostra quando a outra pessoa está a escrever, e uma ronda de trabalho no leitor de ecrã torna toda a conversa mais fácil de acompanhar sem olhar.",
   "changelog.entries.moderation-actions.title":
@@ -3888,7 +3906,8 @@ export const marketing: Catalog = {
   "changelog.entries.clear-errors.title": "Mensagens de erro mais claras",
   "changelog.entries.clear-errors.body":
     "Quando algo não pode ser guardado, passamos a dizer exatamente o que correu mal em vez de um genérico «algo correu mal».",
-  "changelog.entries.messaging-reactions.title": "Reações a mensagens mais fluidas",
+  "changelog.entries.messaging-reactions.title":
+    "Reações a mensagens mais fluidas",
   "changelog.entries.messaging-reactions.body":
     "As reações atualizam-se instantaneamente para todos na conversa, e as suas mensagens enviadas já não mudam de posição quando reage a elas.",
   "changelog.entries.event-photos.title": "Galerias de fotos de eventos",
@@ -3897,7 +3916,8 @@ export const marketing: Catalog = {
   "changelog.entries.mentions.title": "Mencione pessoas e comunidades",
   "changelog.entries.mentions.body":
     "Escreva @ para etiquetar um membro ou c/ para ligar uma comunidade nas respostas do fórum e das comunidades — quem for mencionado recebe uma notificação.",
-  "changelog.entries.push-notifications.title": "Notificações push para mensagens",
+  "changelog.entries.push-notifications.title":
+    "Notificações push para mensagens",
   "changelog.entries.push-notifications.body":
     "Ative para receber uma notificação no telemóvel quando chega uma nova mensagem direta enquanto está ausente — privado, apenas para mensagens diretas e desativado por predefinição.",
   "changelog.entries.delete-conversation.title": "Apagar uma conversa",
@@ -3912,7 +3932,8 @@ export const marketing: Catalog = {
   "changelog.entries.messaging-upgrades.title": "Melhorias nas mensagens",
   "changelog.entries.messaging-upgrades.body":
     "Ações de mensagem por toque longo, edição e resposta, e um fio de conversa mais limpo.",
-  "changelog.entries.housing.title": "Diretórios de habitação e colegas de casa",
+  "changelog.entries.housing.title":
+    "Diretórios de habitação e colegas de casa",
   "changelog.entries.housing.body":
     "Listagens exclusivas para membros de habitação, colegas de casa e senhorios amigáveis, cada uma com uma pontuação de compatibilidade.",
   "changelog.entries.routing-cleanup.title": "Limpeza de rotas e caminhos",
@@ -3927,13 +3948,15 @@ export const marketing: Catalog = {
   "changelog.entries.pwa-mobile.title": "Instalar como aplicação",
   "changelog.entries.pwa-mobile.body":
     "A QueerPulse passou a ser uma aplicação web progressiva com uma interface móvel de aspeto nativo, além de ícones melhorados e metadados para motores de busca.",
-  "changelog.entries.deploy-stability.title": "Estabilização de implementação e compilação",
+  "changelog.entries.deploy-stability.title":
+    "Estabilização de implementação e compilação",
   "changelog.entries.deploy-stability.body":
     "Uma série de correções de implementação, compilação e pré-renderização para que a aplicação seja publicada de forma fiável em produção.",
   "changelog.entries.performance-staff.title": "Desempenho e crachás de equipa",
   "changelog.entries.performance-staff.body":
     "Carregamento de páginas mais rápido, mais rotas de administração e um crachá de equipa QueerPulse nas contas oficiais.",
-  "changelog.entries.accessibility.title": "Acessibilidade e refinamento da interface",
+  "changelog.entries.accessibility.title":
+    "Acessibilidade e refinamento da interface",
   "changelog.entries.accessibility.body":
     "Correções de acessibilidade e uma ronda de melhorias de interface em toda a aplicação.",
   "changelog.entries.i18n-complete.title": "Tradução completa para português",
@@ -4005,8 +4028,10 @@ export const marketing: Catalog = {
     "O que tornaria a QueerPulse melhor para ti?",
   "roadmap.submitIdea.cta": "Submeter ideia",
   "roadmap.submitIdea.toast.empty": "Escreve primeiro algumas palavras",
-  "roadmap.submitIdea.toast.submitted": "Obrigade — enviámos à equipa para revisão",
-  "roadmap.submitIdea.toast.error": "Não foi possível submeter a tua ideia — tenta de novo",
+  "roadmap.submitIdea.toast.submitted":
+    "Obrigade — enviámos à equipa para revisão",
+  "roadmap.submitIdea.toast.error":
+    "Não foi possível submeter a tua ideia — tenta de novo",
   "roadmap.topIdeas.title": "Ideias mais pedidas",
   "roadmap.topIdeas.voted": "Votado",
   "roadmap.topIdeas.vote": "Votar",
@@ -4030,8 +4055,10 @@ export const marketing: Catalog = {
   "roadmap.notBuilding.votesAsked_one": "{count} pessoa tinha pedido",
   "roadmap.notBuilding.votesAsked_other": "{count} pessoas tinham pedido",
   "roadmap.notBuilding.reason.scope.label": "Fora do que estamos a construir",
-  "roadmap.notBuilding.reason.unsafe.label": "Não conseguimos construir isto com segurança",
-  "roadmap.notBuilding.reason.capacity.label": "Sem capacidade, com honestidade",
+  "roadmap.notBuilding.reason.unsafe.label":
+    "Não conseguimos construir isto com segurança",
+  "roadmap.notBuilding.reason.capacity.label":
+    "Sem capacidade, com honestidade",
   "roadmap.notBuilding.reason.exists.label": "Já existe noutro lugar",
   "roadmap.notBuilding.reason.harm.label": "O risco supera o valor",
   "roadmap.subpageIndex.title": "Já lançado",
@@ -4062,7 +4089,8 @@ export const marketing: Catalog = {
   "pressArchive.loadingMore": "A carregar peças mais antigas…",
   "pressArchive.loadMoreCta": "Carregar cobertura mais antiga",
   "pressArchive.endOfArchive": "É este o arquivo completo — de 2022 até hoje.",
-  "pressArchive.noResults": "Nenhuma cobertura corresponde a esses filtros ainda.",
+  "pressArchive.noResults":
+    "Nenhuma cobertura corresponde a esses filtros ainda.",
   "pressArchive.live.title": "O arquivo de imprensa está a ser reunido",
   "pressArchive.live.body":
     "Estamos a reunir a cobertura como deve ser antes de a publicarmos aqui. A preparar um artigo? Fala com a equipa através do kit de imprensa.",
@@ -4140,7 +4168,8 @@ export const marketing: Catalog = {
   "volunteerManage.sub":
     "Revê e decide sobre quem se inscreveu nas oportunidades que publicaste.",
   "volunteerManage.loading": "A carregar as tuas oportunidades…",
-  "volunteerManage.empty": "Ainda não publicaste nenhuma oportunidade de voluntariado.",
+  "volunteerManage.empty":
+    "Ainda não publicaste nenhuma oportunidade de voluntariado.",
   "volunteerManage.loadingApplicants": "A carregar candidaturas…",
   "volunteerManage.noApplicants": "Ainda ninguém se candidatou.",
   "volunteerManage.pendingCount": "{count} pendentes",
@@ -4337,8 +4366,7 @@ export const marketing: Catalog = {
   "volunteerDetail.sidebar.editCta": "Editar esta oportunidade",
   "volunteerDetail.sidebar.notRightFit": "Não é a vaga certa para ti?",
   "volunteerDetail.sidebar.otherWays": "Outras formas de ajudar agora:",
-  "volunteerDetail.sidebar.fundInstead":
-    "Financiar este trabalho em vez disso",
+  "volunteerDetail.sidebar.fundInstead": "Financiar este trabalho em vez disso",
   "volunteerDetail.signupModal.ariaLabel": "Candidatar a {role}",
   "volunteerDetail.signupModal.eyebrow": "A tua candidatura",
   "volunteerDetail.signupModal.title":
@@ -4675,16 +4703,19 @@ export const marketing: Catalog = {
     "Conta como foi a tua visita — o que resultou e para quem é.",
   "directory.detail.review.submit": "Publicar avaliação",
   "directory.detail.review.submitting": "A publicar…",
-  "directory.detail.review.successToast": "Obrigada — a tua avaliação está publicada.",
+  "directory.detail.review.successToast":
+    "Obrigada — a tua avaliação está publicada.",
   "directory.detail.review.errorToast":
     "Não foi possível publicar a tua avaliação. Tenta novamente.",
   "directory.detail.review.signInPrompt":
     "Inicia sessão para avaliar este espaço.",
   "directory.detail.review.signInCta": "Iniciar sessão",
-  "directory.detail.reply.ownerResponseTitle": "Resposta de quem gere este espaço",
+  "directory.detail.reply.ownerResponseTitle":
+    "Resposta de quem gere este espaço",
   "directory.detail.reply.replyCta": "Responder",
   "directory.detail.reply.editReplyCta": "Editar resposta",
-  "directory.detail.reply.placeholder": "Escreve uma resposta pública a esta avaliação…",
+  "directory.detail.reply.placeholder":
+    "Escreve uma resposta pública a esta avaliação…",
   "directory.detail.reply.save": "Guardar resposta",
   "directory.detail.reply.cancel": "Cancelar",
   "directory.detail.reply.savingLabel": "A guardar…",
@@ -4697,16 +4728,17 @@ export const marketing: Catalog = {
   "directory.detail.reviews.sortHighest": "Melhor avaliadas",
   "directory.detail.reviews.sortLowest": "Pior avaliadas",
   "directory.detail.reviews.sortedByHelpful": "Ordenado por mais úteis.",
-  "directory.detail.reviews.sortedByHighest":
-    "Ordenado por melhor avaliadas.",
+  "directory.detail.reviews.sortedByHighest": "Ordenado por melhor avaliadas.",
   "directory.detail.reviews.sortedByLowest": "Ordenado por pior avaliadas.",
-  "directory.detail.reviews.filterAria": "Filtrar avaliações por número de estrelas",
+  "directory.detail.reviews.filterAria":
+    "Filtrar avaliações por número de estrelas",
   "directory.detail.reviews.filterAll": "Todas as avaliações",
   "directory.detail.reviews.filterStars_one": "{count} estrela",
   "directory.detail.reviews.filterStars_other": "{count} estrelas",
   "directory.detail.reviews.noStarReviews":
     "Ainda não há avaliações de {count} estrelas.",
-  "directory.detail.reviews.ratingAria": "Classificado com {count} em 5 estrelas",
+  "directory.detail.reviews.ratingAria":
+    "Classificado com {count} em 5 estrelas",
   "directory.detail.visitWebsite": "Visitar o site",
   "directory.detail.getInTouch": "Entrar em contacto",
   "directory.detail.backToDirectory": "Voltar ao diretório",
@@ -4725,11 +4757,13 @@ export const marketing: Catalog = {
   "directory.detail.reportReview.cancel": "Cancelar",
   "directory.detail.reportReview.sendCta": "Enviar denúncia",
   "directory.detail.reportReview.sending": "A enviar…",
-  "directory.detail.reportReview.confirmTitle": "Obrigado. <em>Estamos a tratar disso.</em>",
+  "directory.detail.reportReview.confirmTitle":
+    "Obrigado. <em>Estamos a tratar disso.</em>",
   "directory.detail.reportReview.confirmBody":
     "Um moderador vai analisar esta avaliação.",
   "directory.detail.reportReview.done": "Concluído",
-  "directory.detail.reportReview.errorTitle": "Não foi possível enviar a denúncia",
+  "directory.detail.reportReview.errorTitle":
+    "Não foi possível enviar a denúncia",
   "directory.detail.reportReview.errorBody":
     "Algo correu mal do nosso lado. Por favor, tenta novamente.",
   "directory.detail.reportReview.retryCta": "Tentar novamente",
@@ -4755,9 +4789,12 @@ export const marketing: Catalog = {
     "Obrigada — vamos passar isto a quem gere este espaço.",
   "directory.detail.suggestEdit.errorToast":
     "Não foi possível enviar a tua sugestão. Tenta novamente.",
-  "directory.detail.contest.cta": "Sugerir uma correção ou reivindicar este negócio",
-  "directory.detail.contest.ariaLabel": "Sugerir uma correção ou reivindicar {name}",
-  "directory.detail.contest.title": "Sugerir uma correção ou reivindicar este negócio",
+  "directory.detail.contest.cta":
+    "Sugerir uma correção ou reivindicar este negócio",
+  "directory.detail.contest.ariaLabel":
+    "Sugerir uma correção ou reivindicar {name}",
+  "directory.detail.contest.title":
+    "Sugerir uma correção ou reivindicar este negócio",
   "directory.detail.contest.sub":
     "Como queres ajudar a manter a página de {name} correta?",
   "directory.detail.contest.suggest.title": "Sugerir uma correção",
@@ -4800,7 +4837,8 @@ export const marketing: Catalog = {
   "directory.detail.claim.title": "Geres o <em>{name}</em>?",
   "directory.detail.claim.sub":
     "Conta-nos um pouco sobre ti e uma moderadora analisa o teu pedido. Se tudo bater certo, passas a gerir a listagem: as avaliações, os detalhes, tudo.",
-  "directory.detail.claim.noteLabel": "Algo que nos ajude a confirmar que és tu",
+  "directory.detail.claim.noteLabel":
+    "Algo que nos ajude a confirmar que és tu",
   "directory.detail.claim.notePlaceholder":
     "ex.: Sou a pessoa responsável, aqui está como me podes contactar para confirmar.",
   "directory.detail.claim.note":
@@ -4808,7 +4846,8 @@ export const marketing: Catalog = {
   "directory.detail.claim.cancel": "Cancelar",
   "directory.detail.claim.submit": "Enviar à moderação",
   "directory.detail.claim.submitting": "A enviar…",
-  "directory.detail.claim.errorToast": "Não foi possível enviar o teu pedido. Tenta novamente.",
+  "directory.detail.claim.errorToast":
+    "Não foi possível enviar o teu pedido. Tenta novamente.",
   "directory.detail.claim.successAriaLabel": "Pedido recebido",
   "directory.detail.claim.successTitle": "Recebido — estamos",
   "directory.detail.claim.successEm": "a tratar disto.",
@@ -4845,8 +4884,10 @@ export const marketing: Catalog = {
   "directory.detail.action.save": "Guardar",
   "directory.detail.action.saved": "Guardado",
   "directory.detail.action.linkCopied": "Link copiado",
-  "directory.detail.action.shareError": "Não foi possível partilhar — tenta copiar o link",
-  "directory.detail.action.saveSignIn": "Inicia sessão para guardar este espaço",
+  "directory.detail.action.shareError":
+    "Não foi possível partilhar — tenta copiar o link",
+  "directory.detail.action.saveSignIn":
+    "Inicia sessão para guardar este espaço",
   "directory.relative.yesterday": "Ontem",
   "directory.relative.twoDaysAgo": "há 2 dias",
   "directory.relative.threeDaysAgo": "há 3 dias",
@@ -5156,7 +5197,8 @@ export const marketing: Catalog = {
   "map.venueCard.markBeen": "Já estive aqui",
   "map.venueCard.accessible": "Acesso para cadeira de rodas",
   "map.svg.filterByAria": "Filtrar o mapa por {bairro}",
-  "map.mapError": "Não foi possível carregar o mapa. A lista de espaços abaixo continua a funcionar.",
+  "map.mapError":
+    "Não foi possível carregar o mapa. A lista de espaços abaixo continua a funcionar.",
   "map.mapLoading": "A dar <em>vida</em> ao mapa…",
   "map.pinAria": "{name} — {type}",
   "map.clusterAria_one": "{count} espaço aqui — ampliar",
@@ -5201,8 +5243,7 @@ export const marketing: Catalog = {
   "constitution.meta.description":
     "A constituição da QueerPulse: doze artigos em linguagem simples sobre finalidade, adesão e governação, escritos pelos voluntários que gerem a plataforma.",
   "constitution.artNumLabel": "Artigo",
-  "constitution.hero.eyebrow":
-    "Constituição · v1.4 · adotada a 14 nov. 2025",
+  "constitution.hero.eyebrow": "Constituição · v1.4 · adotada a 14 nov. 2025",
   "constitution.hero.title": "As regras, <em>em português claro.</em>",
   "constitution.hero.dek1":
     "A carta de trabalho do <b>coletivo de voluntários</b> que gere a QueerPulse. Escrita pelas oito pessoas fundadoras e adotada na primeira assembleia. Não é um documento legal, e ainda não existe nenhuma empresa ou associação registada por trás da QueerPulse. <em>Revista várias vezes desde então.</em>",
@@ -5432,7 +5473,8 @@ export const marketing: Catalog = {
   "submitPartner.fields.orgType.label": "Tipo de organização",
   "submitPartner.fields.orgType.helper":
     "Só o tipo de organização que são — o rótulo “Parceiro ·” é adicionado por nós.",
-  "submitPartner.fields.orgType.placeholder": "ex.: Clínica de saúde comunitária",
+  "submitPartner.fields.orgType.placeholder":
+    "ex.: Clínica de saúde comunitária",
   "submitPartner.fields.city.label": "Cidade / base",
   "submitPartner.fields.city.placeholder": "ex.: Lisboa",
   "submitPartner.fields.region.label": "Região",
@@ -5481,17 +5523,17 @@ export const marketing: Catalog = {
   "changelog.entries.resource-listings-and-suggestions.title":
     "Recursos reais para Apoio Jurídico e Testagem de Saúde Sexual",
   "changelog.entries.resource-listings-and-suggestions.body":
-    "Apoio Jurídico e Testagem de Saúde Sexual mostram agora um diretório real, verificado por administradores, quando existe — e um formulário \"Sugerir um recurso\" que alimenta uma fila de revisão administrativa quando não existe. Nunca com recursos fabricados.",
+    'Apoio Jurídico e Testagem de Saúde Sexual mostram agora um diretório real, verificado por administradores, quando existe — e um formulário "Sugerir um recurso" que alimenta uma fila de revisão administrativa quando não existe. Nunca com recursos fabricados.',
   "changelog.tag.legal": "Ver Apoio Jurídico →",
 
   "changelog.tag.guideRating": "Ver os guias de Legal",
   "changelog.entries.resources-guide-rating.title":
     "Avalia se um guia de recursos ajudou",
   "changelog.entries.resources-guide-rating.body":
-    "Os guias de Legal, Saúde Sexual e Saúde Mental terminam agora com um rápido \"Isto foi útil?\" — polegar para cima ou para baixo, sem contagens visíveis, só um agradecimento depois de responderes. A equipa editorial já vê quais guias estão e não estão a resultar na nova página de administração Feedback dos guias.",
+    'Os guias de Legal, Saúde Sexual e Saúde Mental terminam agora com um rápido "Isto foi útil?" — polegar para cima ou para baixo, sem contagens visíveis, só um agradecimento depois de responderes. A equipa editorial já vê quais guias estão e não estão a resultar na nova página de administração Feedback dos guias.',
 
   "changelog.entries.homepage-housing-personas-showcase.title":
     "Alojamento e perfis alternativos, mais próximos do real na homepage",
   "changelog.entries.homepage-housing-personas-showcase.body":
-    "As secções de Alojamento e Perfis Alternativos da homepage mostram agora como as funcionalidades funcionam de verdade: dois anúncios reais com um separador para o quarto e outro para o senhorio (avaliações, veredictos, e um honesto \"ainda sem avaliações\" quando o senhorio é novo), e um baralho de perfis interativo onde podes ver como a página pública muda consoante o perfil escolhido.",
+    'As secções de Alojamento e Perfis Alternativos da homepage mostram agora como as funcionalidades funcionam de verdade: dois anúncios reais com um separador para o quarto e outro para o senhorio (avaliações, veredictos, e um honesto "ainda sem avaliações" quando o senhorio é novo), e um baralho de perfis interativo onde podes ver como a página pública muda consoante o perfil escolhido.',
 };

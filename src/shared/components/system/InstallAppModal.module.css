@@ -1,0 +1,48 @@
+.howto {
+  padding: 16px 18px;
+  background: var(--cream);
+  border-radius: 12px;
+}
+
+.howtoTitle {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 10px;
+  padding: 7px 0;
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+.stepN {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--accent);
+  line-height: 1;
+  padding-top: 1px;
+}
+
+.step b {
+  color: var(--text-strong);
+  font-weight: 700;
+}
+
+.step em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+
+.installBtn {
+  width: 100%;
+  justify-content: center;
+}

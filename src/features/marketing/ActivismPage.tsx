@@ -5,7 +5,7 @@ import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { linkToPath, routes } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import { ACTIVISM_NAV, CONVICTION_ITEMS } from "./activism.data";
 import {
   StartSection,
@@ -128,7 +128,7 @@ export function ActivismPage() {
         }
         sub={t("marketing:activism.outro.sub")}
       >
-        <Button size="lg" to={linkToPath("#board")}>
+        <Button size="lg" to={routes.volunteer}>
           {t("marketing:activism.outro.seeBoardCta")}
         </Button>
       </Outro>

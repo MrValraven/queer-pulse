@@ -2,10 +2,7 @@ import { routes } from "../../app/routeMap";
 
 /** Dev-history category — drives the badge colour and the filter chips. */
 export type ChangelogCategory =
-  | "feature"
-  | "improvement"
-  | "infrastructure"
-  | "fix";
+  "feature" | "improvement" | "infrastructure" | "fix";
 
 export interface ChangelogEntryTag {
   /** Catalog key for the "See X →" label. */
@@ -93,6 +90,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "account-menu-install-app",
+        category: "feature",
+        date: "21 Aug 2026",
+        ...entryKeys("account-menu-install-app"),
+      },
+      {
         id: "homepage-housing-personas-showcase",
         category: "improvement",
         date: "21 Aug 2026",
@@ -132,7 +135,10 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("magazine-sections-browse"),
-        tag: { labelKey: "marketing:changelog.tag.magazineSections", to: routes.magazineSections },
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineSections",
+          to: routes.magazineSections,
+        },
       },
       {
         id: "magazine-digest-real-send",
@@ -151,7 +157,10 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "fix",
         date: "20 Aug 2026",
         ...entryKeys("magazine-writer-read-brief"),
-        tag: { labelKey: "marketing:changelog.tag.magazineWriter", to: routes.magazineWriter },
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineWriter",
+          to: routes.magazineWriter,
+        },
       },
       {
         id: "admin-trust-network-cite-evidence",
@@ -182,147 +191,210 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("gatherings-manage-attendees-remove-promote"),
-        tag: { labelKey: "marketing:changelog.tag.gatherings", to: routes.gatherings },
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
       },
       {
         id: "myevents-calendar-feed-subscribe",
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("myevents-calendar-feed-subscribe"),
-        tag: { labelKey: "marketing:changelog.tag.myEvents", to: routes.myEvents },
+        tag: {
+          labelKey: "marketing:changelog.tag.myEvents",
+          to: routes.myEvents,
+        },
       },
       {
         id: "gatherings-recap-more-from-host",
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("gatherings-recap-more-from-host"),
-        tag: { labelKey: "marketing:changelog.tag.gatherings", to: routes.gatherings },
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
       },
       {
         id: "myevents-rsvp-actions-real",
         category: "fix",
         date: "20 Aug 2026",
         ...entryKeys("myevents-rsvp-actions-real"),
-        tag: { labelKey: "marketing:changelog.tag.myEvents", to: routes.myEvents },
+        tag: {
+          labelKey: "marketing:changelog.tag.myEvents",
+          to: routes.myEvents,
+        },
       },
       {
         id: "myevents-block-host-real",
         category: "fix",
         date: "20 Aug 2026",
         ...entryKeys("myevents-block-host-real"),
-        tag: { labelKey: "marketing:changelog.tag.myEvents", to: routes.myEvents },
+        tag: {
+          labelKey: "marketing:changelog.tag.myEvents",
+          to: routes.myEvents,
+        },
       },
       {
         id: "myevents-reminder-indicator-honest",
         category: "fix",
         date: "20 Aug 2026",
         ...entryKeys("myevents-reminder-indicator-honest"),
-        tag: { labelKey: "marketing:changelog.tag.myEvents", to: routes.myEvents },
+        tag: {
+          labelKey: "marketing:changelog.tag.myEvents",
+          to: routes.myEvents,
+        },
       },
       {
         id: "gatherings-edit-date-time-fix",
         category: "fix",
         date: "20 Aug 2026",
         ...entryKeys("gatherings-edit-date-time-fix"),
-        tag: { labelKey: "marketing:changelog.tag.gatherings", to: routes.gatherings },
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
       },
       {
         id: "gatherings-cancelled-page-real-content",
         category: "fix",
         date: "20 Aug 2026",
         ...entryKeys("gatherings-cancelled-page-real-content"),
-        tag: { labelKey: "marketing:changelog.tag.gatherings", to: routes.gatherings },
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
       },
       {
         id: "gatherings-cohost-roster-visible",
         category: "fix",
         date: "20 Aug 2026",
         ...entryKeys("gatherings-cohost-roster-visible"),
-        tag: { labelKey: "marketing:changelog.tag.gatherings", to: routes.gatherings },
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
       },
       {
         id: "gatherings-remove-pricing-step",
         category: "improvement",
         date: "20 Aug 2026",
         ...entryKeys("gatherings-remove-pricing-step"),
-        tag: { labelKey: "marketing:changelog.tag.gatherings", to: routes.gatherings },
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
       },
       {
         id: "messages-message-requests",
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("messages-message-requests"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "messages-mute-conversation",
         category: "improvement",
         date: "20 Aug 2026",
         ...entryKeys("messages-mute-conversation"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "messages-search-in-chat",
         category: "improvement",
         date: "20 Aug 2026",
         ...entryKeys("messages-search-in-chat"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "governance-proposals-voting",
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("governance-proposals-voting"),
-        tag: { labelKey: "marketing:changelog.tag.governance", to: routes.governance },
+        tag: {
+          labelKey: "marketing:changelog.tag.governance",
+          to: routes.governance,
+        },
       },
       {
         id: "governance-figures-honesty",
         category: "improvement",
         date: "20 Aug 2026",
         ...entryKeys("governance-figures-honesty"),
-        tag: { labelKey: "marketing:changelog.tag.governance", to: routes.governance },
+        tag: {
+          labelKey: "marketing:changelog.tag.governance",
+          to: routes.governance,
+        },
       },
       {
         id: "communities-sister-demo-only",
         category: "fix",
         date: "20 Aug 2026",
         ...entryKeys("communities-sister-demo-only"),
-        tag: { labelKey: "marketing:changelog.tag.communities", to: routes.communities },
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
       },
       {
         id: "communities-category-filter",
         category: "fix",
         date: "20 Aug 2026",
         ...entryKeys("communities-category-filter"),
-        tag: { labelKey: "marketing:changelog.tag.communities", to: routes.communities },
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
       },
       {
         id: "communities-archive-reversible",
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("communities-archive-reversible"),
-        tag: { labelKey: "marketing:changelog.tag.communities", to: routes.communities },
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
       },
       {
         id: "changemakers-nomination-reason",
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("changemakers-nomination-reason"),
-        tag: { labelKey: "marketing:changelog.tag.changemakers", to: routes.changemakers },
+        tag: {
+          labelKey: "marketing:changelog.tag.changemakers",
+          to: routes.changemakers,
+        },
       },
       {
         id: "changemakers-nomination-review",
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("changemakers-nomination-review"),
-        tag: { labelKey: "marketing:changelog.tag.changemakers", to: routes.changemakers },
+        tag: {
+          labelKey: "marketing:changelog.tag.changemakers",
+          to: routes.changemakers,
+        },
       },
       {
         id: "changemakers-connect-honest",
         category: "fix",
         date: "20 Aug 2026",
         ...entryKeys("changemakers-connect-honest"),
-        tag: { labelKey: "marketing:changelog.tag.changemakers", to: routes.changemakers },
+        tag: {
+          labelKey: "marketing:changelog.tag.changemakers",
+          to: routes.changemakers,
+        },
       },
       {
         id: "moderation-assign-to-me",
@@ -435,35 +507,50 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("magazine-article-publish-schedule"),
-        tag: { labelKey: "marketing:changelog.tag.magazine", to: routes.magazine },
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
       },
       {
         id: "magazine-writer-draft-paste-fix",
         category: "fix",
         date: "20 Aug 2026",
         ...entryKeys("magazine-writer-draft-paste-fix"),
-        tag: { labelKey: "marketing:changelog.tag.magazineWriter", to: routes.magazineWriter },
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineWriter",
+          to: routes.magazineWriter,
+        },
       },
       {
         id: "magazine-live-discovery",
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("magazine-live-discovery"),
-        tag: { labelKey: "marketing:changelog.tag.magazine", to: routes.magazine },
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
       },
       {
         id: "culture-submissions-real",
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("culture-submissions-real"),
-        tag: { labelKey: "marketing:changelog.tag.culture", to: routes.culture },
+        tag: {
+          labelKey: "marketing:changelog.tag.culture",
+          to: routes.culture,
+        },
       },
       {
         id: "culture-radio-honest",
         category: "fix",
         date: "20 Aug 2026",
         ...entryKeys("culture-radio-honest"),
-        tag: { labelKey: "marketing:changelog.tag.culture", to: routes.culture },
+        tag: {
+          labelKey: "marketing:changelog.tag.culture",
+          to: routes.culture,
+        },
       },
       {
         id: "newsletter-unsubscribe",
@@ -483,42 +570,60 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "improvement",
         date: "20 Aug 2026",
         ...entryKeys("resources-library-consolidated"),
-        tag: { labelKey: "marketing:changelog.tag.library", to: routes.resources },
+        tag: {
+          labelKey: "marketing:changelog.tag.library",
+          to: routes.resources,
+        },
       },
       {
         id: "resources-guide-freshness",
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("resources-guide-freshness"),
-        tag: { labelKey: "marketing:changelog.tag.library", to: routes.resources },
+        tag: {
+          labelKey: "marketing:changelog.tag.library",
+          to: routes.resources,
+        },
       },
       {
         id: "resources-suggest-edit-expanded",
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("resources-suggest-edit-expanded"),
-        tag: { labelKey: "marketing:changelog.tag.library", to: routes.resources },
+        tag: {
+          labelKey: "marketing:changelog.tag.library",
+          to: routes.resources,
+        },
       },
       {
         id: "directory-review-reporting",
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("directory-review-reporting"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "directory-search-pagination",
         category: "improvement",
         date: "20 Aug 2026",
         ...entryKeys("directory-search-pagination"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "directory-edit-suggestions-applied",
         category: "fix",
         date: "20 Aug 2026",
         ...entryKeys("directory-edit-suggestions-applied"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "topics-follow-notifications-and-directory",
@@ -566,7 +671,10 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "20 Aug 2026",
         ...entryKeys("housing-my-listings"),
-        tag: { labelKey: "marketing:changelog.tag.housing", to: routes.housing },
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
       },
       {
         id: "appeal-outcome-tracking",
@@ -607,7 +715,10 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "improvement",
         date: "20 Aug 2026",
         ...entryKeys("listing-quick-edit"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "getting-started-xp-not-awarded-fix",
@@ -631,14 +742,20 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "fix",
         date: "18 Aug 2026",
         ...entryKeys("listing-preview-matches-card"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "profile-shapings-editor",
         category: "fix",
         date: "18 Aug 2026",
         ...entryKeys("profile-shapings-editor"),
-        tag: { labelKey: "marketing:changelog.tag.members", to: routes.members },
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
       },
       {
         id: "xp-breakdown",
@@ -655,56 +772,80 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "improvement",
         date: "18 Aug 2026",
         ...entryKeys("profile-hero-rail-redesign"),
-        tag: { labelKey: "marketing:changelog.tag.members", to: routes.members },
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
       },
       {
         id: "profile-rail-stats-redesign",
         category: "improvement",
         date: "18 Aug 2026",
         ...entryKeys("profile-rail-stats-redesign"),
-        tag: { labelKey: "marketing:changelog.tag.members", to: routes.members },
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
       },
       {
         id: "profile-who-sees-what-controls",
         category: "feature",
         date: "18 Aug 2026",
         ...entryKeys("profile-who-sees-what-controls"),
-        tag: { labelKey: "marketing:changelog.tag.members", to: routes.members },
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
       },
       {
         id: "profile-your-data-panel",
         category: "feature",
         date: "18 Aug 2026",
         ...entryKeys("profile-your-data-panel"),
-        tag: { labelKey: "marketing:changelog.tag.members", to: routes.members },
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
       },
       {
         id: "profile-board-work-name-qr-updates",
         category: "improvement",
         date: "18 Aug 2026",
         ...entryKeys("profile-board-work-name-qr-updates"),
-        tag: { labelKey: "marketing:changelog.tag.members", to: routes.members },
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
       },
       {
         id: "gathering-venue-directory-link",
         category: "feature",
         date: "18 Aug 2026",
         ...entryKeys("gathering-venue-directory-link"),
-        tag: { labelKey: "marketing:changelog.tag.gatherings", to: routes.gatherings },
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
       },
       {
         id: "add-to-calendar-picker-redesign",
         category: "improvement",
         date: "18 Aug 2026",
         ...entryKeys("add-to-calendar-picker-redesign"),
-        tag: { labelKey: "marketing:changelog.tag.myEvents", to: routes.myEvents },
+        tag: {
+          labelKey: "marketing:changelog.tag.myEvents",
+          to: routes.myEvents,
+        },
       },
       {
         id: "local-directory-card-redesign",
         category: "improvement",
         date: "18 Aug 2026",
         ...entryKeys("local-directory-card-redesign"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "forum-thread-pinning",
@@ -1280,7 +1421,10 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "12 Aug 2026",
         ...entryKeys("pin-favorite-chats-inbox-tabs"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "identity-verification-honest-badges",
@@ -1949,7 +2093,10 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "improvement",
         date: "11 Aug 2026",
         ...entryKeys("members-filter-panel-polish"),
-        tag: { labelKey: "marketing:changelog.tag.members", to: routes.members },
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
       },
       {
         id: "fix-persona-stage-dark-legibility",
@@ -2613,7 +2760,8 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         date: "4 Aug 2026",
         ...entryKeys("feature-communities-cta-jump"),
         tag: {
-          labelKey: "marketing:changelog.entries.feature-communities-cta-jump.tag",
+          labelKey:
+            "marketing:changelog.entries.feature-communities-cta-jump.tag",
           to: `${routes.editProfile}#communities`,
         },
       },
@@ -2629,7 +2777,8 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         date: "4 Aug 2026",
         ...entryKeys("featured-homepage-consent-toggle"),
         tag: {
-          labelKey: "marketing:changelog.entries.featured-homepage-consent-toggle.tag",
+          labelKey:
+            "marketing:changelog.entries.featured-homepage-consent-toggle.tag",
           to: `${routes.settings}?pane=visibility`,
         },
       },
@@ -2719,7 +2868,8 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         date: "4 Aug 2026",
         ...entryKeys("chat-header-tap-to-profile"),
         tag: {
-          labelKey: "marketing:changelog.entries.chat-header-tap-to-profile.tag",
+          labelKey:
+            "marketing:changelog.entries.chat-header-tap-to-profile.tag",
           to: routes.messages,
         },
       },
@@ -2771,7 +2921,8 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         date: "4 Aug 2026",
         ...entryKeys("list-business-wizard-overhaul"),
         tag: {
-          labelKey: "marketing:changelog.entries.list-business-wizard-overhaul.tag",
+          labelKey:
+            "marketing:changelog.entries.list-business-wizard-overhaul.tag",
           to: routes.listBusiness,
         },
       },
@@ -3245,7 +3396,10 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "fix",
         date: "30 Jul 2026",
         ...entryKeys("directory-filters-and-accurate-recognition"),
-        tag: { labelKey: "marketing:changelog.tag.members", to: routes.members },
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
       },
       {
         id: "navigation-resilience",
@@ -3370,56 +3524,80 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "fix",
         date: "30 Jul 2026",
         ...entryKeys("magazine-real-content"),
-        tag: { labelKey: "marketing:changelog.tag.magazine", to: routes.issues },
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.issues,
+        },
       },
       {
         id: "community-roadmap",
         category: "feature",
         date: "30 Jul 2026",
         ...entryKeys("community-roadmap"),
-        tag: { labelKey: "marketing:changelog.tag.roadmap", to: routes.roadmap },
+        tag: {
+          labelKey: "marketing:changelog.tag.roadmap",
+          to: routes.roadmap,
+        },
       },
       {
         id: "listing-photos",
         category: "feature",
         date: "30 Jul 2026",
         ...entryKeys("listing-photos"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "business-page-live",
         category: "improvement",
         date: "30 Jul 2026",
         ...entryKeys("business-page-live"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "business-actions",
         category: "feature",
         date: "30 Jul 2026",
         ...entryKeys("business-actions"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "business-reviews-trust",
         category: "improvement",
         date: "30 Jul 2026",
         ...entryKeys("business-reviews-trust"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "business-discovery",
         category: "improvement",
         date: "30 Jul 2026",
         ...entryKeys("business-discovery"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "directory-filters-upgrade",
         category: "improvement",
         date: "30 Jul 2026",
         ...entryKeys("directory-filters-upgrade"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "public-profile-badge",
@@ -3436,35 +3614,50 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "improvement",
         date: "30 Jul 2026",
         ...entryKeys("here-for-hero"),
-        tag: { labelKey: "marketing:changelog.tag.profile", to: routes.accountProfile },
+        tag: {
+          labelKey: "marketing:changelog.tag.profile",
+          to: routes.accountProfile,
+        },
       },
       {
         id: "directory-view-switcher",
         category: "improvement",
         date: "30 Jul 2026",
         ...entryKeys("directory-view-switcher"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "profile-links-fix",
         category: "fix",
         date: "30 Jul 2026",
         ...entryKeys("profile-links-fix"),
-        tag: { labelKey: "marketing:changelog.tag.profile", to: routes.accountProfile },
+        tag: {
+          labelKey: "marketing:changelog.tag.profile",
+          to: routes.accountProfile,
+        },
       },
       {
         id: "subprofiles-showcase",
         category: "improvement",
         date: "30 Jul 2026",
         ...entryKeys("subprofiles-showcase"),
-        tag: { labelKey: "marketing:changelog.tag.profile", to: routes.accountProfile },
+        tag: {
+          labelKey: "marketing:changelog.tag.profile",
+          to: routes.accountProfile,
+        },
       },
       {
         id: "real-directory-map",
         category: "improvement",
         date: "30 Jul 2026",
         ...entryKeys("real-directory-map"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "reply-threads",
@@ -3478,42 +3671,60 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "30 Jul 2026",
         ...entryKeys("copy-subprofile"),
-        tag: { labelKey: "marketing:changelog.tag.subprofiles", to: routes.subprofilesDashboard },
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofilesDashboard,
+        },
       },
       {
         id: "smoother-chat",
         category: "improvement",
         date: "30 Jul 2026",
         ...entryKeys("smoother-chat"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "safe-space-view-page",
         category: "improvement",
         date: "30 Jul 2026",
         ...entryKeys("safe-space-view-page"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "swipe-members-highlight",
         category: "improvement",
         date: "30 Jul 2026",
         ...entryKeys("swipe-members-highlight"),
-        tag: { labelKey: "marketing:changelog.tag.members", to: routes.members },
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
       },
       {
         id: "mention-names",
         category: "improvement",
         date: "30 Jul 2026",
         ...entryKeys("mention-names"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "forward-to-groups",
         category: "feature",
         date: "30 Jul 2026",
         ...entryKeys("forward-to-groups"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "invite-state-page",
@@ -3526,7 +3737,10 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "improvement",
         date: "29 Jul 2026",
         ...entryKeys("chat-shortcuts"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "events-hub",
@@ -3582,77 +3796,110 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "fix",
         date: "29 Jul 2026",
         ...entryKeys("composer-reaction-polish"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "chat-mentions",
         category: "feature",
         date: "29 Jul 2026",
         ...entryKeys("chat-mentions"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "group-chats",
         category: "feature",
         date: "29 Jul 2026",
         ...entryKeys("group-chats"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "message-search",
         category: "feature",
         date: "29 Jul 2026",
         ...entryKeys("message-search"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "link-previews",
         category: "feature",
         date: "29 Jul 2026",
         ...entryKeys("link-previews"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "forward-pin-star",
         category: "feature",
         date: "29 Jul 2026",
         ...entryKeys("forward-pin-star"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "read-receipts",
         category: "improvement",
         date: "29 Jul 2026",
         ...entryKeys("read-receipts"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "message-gestures",
         category: "improvement",
         date: "29 Jul 2026",
         ...entryKeys("message-gestures"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "message-drafts",
         category: "improvement",
         date: "29 Jul 2026",
         ...entryKeys("message-drafts"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "offline-outbox",
         category: "improvement",
         date: "29 Jul 2026",
         ...entryKeys("offline-outbox"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "typing-indicator",
         category: "improvement",
         date: "29 Jul 2026",
         ...entryKeys("typing-indicator"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "moderation-actions",
@@ -3671,21 +3918,30 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "29 Jul 2026",
         ...entryKeys("business-map-pin"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "profile-editing",
         category: "feature",
         date: "29 Jul 2026",
         ...entryKeys("profile-editing"),
-        tag: { labelKey: "marketing:changelog.tag.profile", to: routes.accountProfile },
+        tag: {
+          labelKey: "marketing:changelog.tag.profile",
+          to: routes.accountProfile,
+        },
       },
       {
         id: "profile-communities-save",
         category: "fix",
         date: "29 Jul 2026",
         ...entryKeys("profile-communities-save"),
-        tag: { labelKey: "marketing:changelog.tag.profile", to: routes.accountProfile },
+        tag: {
+          labelKey: "marketing:changelog.tag.profile",
+          to: routes.accountProfile,
+        },
       },
       {
         id: "mention-types",
@@ -3705,14 +3961,20 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "fix",
         date: "29 Jul 2026",
         ...entryKeys("messaging-reactions"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "event-photos",
         category: "feature",
         date: "28 Jul 2026",
         ...entryKeys("event-photos"),
-        tag: { labelKey: "marketing:changelog.tag.gatherings", to: routes.gatherings },
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
       },
       {
         id: "mentions",
@@ -3726,42 +3988,60 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "28 Jul 2026",
         ...entryKeys("push-notifications"),
-        tag: { labelKey: "marketing:changelog.tag.settings", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.settings",
+          to: routes.messages,
+        },
       },
       {
         id: "delete-conversation",
         category: "feature",
         date: "28 Jul 2026",
         ...entryKeys("delete-conversation"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "profile-communities",
         category: "feature",
         date: "28 Jul 2026",
         ...entryKeys("profile-communities"),
-        tag: { labelKey: "marketing:changelog.tag.communities", to: routes.communities },
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
       },
       {
         id: "subprofiles-upgrade",
         category: "feature",
         date: "25 Jul 2026",
         ...entryKeys("subprofiles-upgrade"),
-        tag: { labelKey: "marketing:changelog.tag.subprofiles", to: routes.subprofiles },
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofiles,
+        },
       },
       {
         id: "messaging-upgrades",
         category: "feature",
         date: "25 Jul 2026",
         ...entryKeys("messaging-upgrades"),
-        tag: { labelKey: "marketing:changelog.tag.messages", to: routes.messages },
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
       },
       {
         id: "housing",
         category: "feature",
         date: "23 Jul 2026",
         ...entryKeys("housing"),
-        tag: { labelKey: "marketing:changelog.tag.housing", to: routes.housing },
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
       },
       {
         id: "routing-cleanup",
@@ -3774,7 +4054,10 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "22 Jul 2026",
         ...entryKeys("maps"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "genesis",
@@ -3817,7 +4100,10 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "16 Jul 2026",
         ...entryKeys("subprofiles"),
-        tag: { labelKey: "marketing:changelog.tag.subprofiles", to: routes.subprofiles },
+        tag: {
+          labelKey: "marketing:changelog.tag.subprofiles",
+          to: routes.subprofiles,
+        },
       },
       {
         id: "live-backend",
@@ -3849,7 +4135,10 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "1 Jul 2026",
         ...entryKeys("business-directory"),
-        tag: { labelKey: "marketing:changelog.tag.directory", to: routes.directory },
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
       },
       {
         id: "invite-flow",

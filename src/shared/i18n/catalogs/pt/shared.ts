@@ -87,7 +87,11 @@ export const shared: Catalog = {
   "accountMenu.items.saved": "Guardados",
   "accountMenu.items.settings": "Definições",
   "accountMenu.items.gettingStarted": "Primeiros passos",
+  "accountMenu.items.installApp": "Instalar a app",
   "accountMenu.items.help": "Ajuda",
+  "installAppModal.title": "Instalar a app",
+  "installAppModal.sub":
+    "Adiciona a QueerPulse ao teu ecrã principal em poucos toques. A mesma app, sem loja de aplicações.",
   "accountMenu.ariaLabel": "Menu da conta",
   "accountMenu.header.subtitle": "Perfil e conta",
   "accountSheet.title": "A sua conta",
@@ -284,7 +288,8 @@ export const shared: Catalog = {
     "Cada espaço é revisto antes de receber o selo de verificado. Vê como funciona, e quais foram removidos.",
   "megaNav.lisbon.featurePublic.cta": "Ver como funciona a verificação",
   "megaNav.lisbon.col.discover.head": "Descobrir",
-  "megaNav.lisbon.col.discover.businessDirectory": "Diretório de negócios locais",
+  "megaNav.lisbon.col.discover.businessDirectory":
+    "Diretório de negócios locais",
   "megaNav.lisbon.col.discover.partners": "Parceiros",
   "megaNav.lisbon.col.livingHere.head": "Viver aqui",
   "megaNav.lisbon.col.livingHere.housing": "Habitação",
