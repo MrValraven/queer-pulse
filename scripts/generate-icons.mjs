@@ -77,8 +77,9 @@ console.log(`Wrote 4 icons to ${OUTPUT_DIRECTORY}/`);
 /* iOS launch (splash) images                                                 */
 /* -------------------------------------------------------------------------- */
 
-/* Cream wordmark ink, matching og-default.svg's text fill on the same plum
-   field. Kept in sync with src/styles/tokens/colors.css by hand. */
+/* Cream wordmark ink, matching the OG image's text fill on the same plum
+   field (see generate-og-image.mjs). Kept in sync with
+   src/styles/tokens/colors.css by hand. */
 const CREAM = "#f7f3ee";
 
 await mkdir(SPLASH_DIRECTORY, { recursive: true });

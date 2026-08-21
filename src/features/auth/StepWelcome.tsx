@@ -106,7 +106,9 @@ export function StepWelcome({
           </div>
         </div>
       )}
-      <div className={styles.p}>{t("auth:onboarding.stepWelcome.body")}</div>
+      <div className={styles.p}>{t("auth:onboarding.stepWelcome.body1")}</div>
+      <div className={styles.p}>{t("auth:onboarding.stepWelcome.body2")}</div>
+      <div className={styles.p}>{t("auth:onboarding.stepWelcome.body3")}</div>
       <div className={styles.nav}>
         <Button onClick={onNext}>{t("auth:onboarding.stepWelcome.cta")}</Button>
         <button type="button" className={styles.back} onClick={onBack}>

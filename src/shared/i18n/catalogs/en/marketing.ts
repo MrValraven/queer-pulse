@@ -5405,4 +5405,9 @@ export const marketing: Catalog = {
     "Rate whether a resource guide helped",
   "changelog.entries.resources-guide-rating.body":
     "Legal, Sexual Health, and Mental Health guides now end with a quick \"Was this helpful?\" — thumbs up or down, no visible counts, just a thanks once you've answered. Editors can see which guides are and aren't landing from the new Guide Feedback admin page.",
+
+  "changelog.entries.homepage-housing-personas-showcase.title":
+    "A closer look at housing and personas on the homepage",
+  "changelog.entries.homepage-housing-personas-showcase.body":
+    "The homepage's Housing and Personas sections now show what the features actually feel like: two real listing cards with a room and a landlord tab (reviews, verdicts, an honest \"no reviews yet\" when a landlord is new), and an interactive persona deck you can switch between to see how a public page changes per persona.",
 };

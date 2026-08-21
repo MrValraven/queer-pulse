@@ -114,9 +114,3 @@ export interface ChangeMaker {
  * code should import these from `src/shared/types/domain` directly.
  */
 export type { Community, CommunityType } from "../../../shared/types/domain";
-
-export interface DigestPreviewItem {
-  tag: string;
-  title: string;
-  meta: string;
-}

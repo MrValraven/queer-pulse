@@ -133,7 +133,7 @@ export function LiveCommunities() {
               onClear={clear}
             />
             {selected ? (
-              <FeaturedCommunityCard key={activeKey} items={[selected]} />
+              <FeaturedCommunityCard key={activeKey} items={[selected]} fill />
             ) : (
               <EmptySpotlight onClear={clear} />
             )}

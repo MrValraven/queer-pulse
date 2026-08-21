@@ -138,6 +138,8 @@ export interface InviteQuotaDTO {
   remaining: number;
   /** ISO timestamp the allowance resets (1st of next month, UTC). */
   resetsAt: string;
+  /** Current community size, for the compose page's share preview. */
+  memberCount: number;
 }
 
 /** The current member's remaining personal invites + reset date. */

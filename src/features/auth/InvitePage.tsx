@@ -64,7 +64,7 @@ export function InvitePage() {
             </div>
           )}
 
-          <InviteLinkPanel />
+          <InviteLinkPanel memberCount={quota?.memberCount} />
 
           <SentInvitesList />
         </div>

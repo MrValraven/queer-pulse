@@ -9,16 +9,15 @@ import type { Catalog } from "../../types";
  */
 export const homepage: Catalog = {
   // ── Page meta ──────────────────────────────────────────────────────────────
-  "meta.title":
-    "QueerPulse: Lisbon's queer community, online and in real life",
+  "meta.title": "QueerPulse: A Queer Network, Rooted in Lisbon",
   "meta.description":
-    "An invite-only queer community for Lisbon, in person as much as online: gatherings, skill swaps, and mutual support, among people who show up for each other.",
+    "A place to discover what's happening across Lisbon's queer community and find the people, communities, events, and opportunities shaping queer life in the city.",
 
   // ── Hero ───────────────────────────────────────────────────────────────────
   "hero.eyebrow": "Live in Lisboa",
   "hero.title": "A queer network, <em>rooted in Lisbon.</em>",
   "hero.sub":
-    "Where queer Lisbon actually finds each other, in person as much as online. Everyone here was vouched in by someone already inside, so the whole room chose to be. A community that belongs to the people in it.",
+    "A place to discover what's happening across Lisbon's queer community and find the people, communities, events, and opportunities shaping queer life in the city.",
   "hero.requestInviteCta": "Request an invite",
   "hero.exploreMembersCta": "Explore members",
   "hero.note": "New members join every week, always vouched in.",
@@ -26,27 +25,31 @@ export const homepage: Catalog = {
   // ── Manifesto ("about") ──────────────────────────────────────────────────
   "manifesto.label": "Our manifesto",
   "manifesto.lead":
-    "A community platform, built <em>like it should have been from the start.</em>",
+    "A community platform built around <em>what queer people actually need.</em>",
   "manifesto.body1":
-    "QueerPulse exists because we were tired of platforms that treat queer people as a market segment instead of a community. Every feature here was built because someone needed it.",
+    "QueerPulse exists because we were tired of platforms that treat queer people as a market segment instead of a community. Every feature here starts with a real need, a frustration, or something we wished already existed.",
   "manifesto.body2":
-    "Membership is invite-only and vouched, because trust is the whole point. Everyone in the room chose to be here, for each other.",
+    "We believe community works differently when there is trust behind it. When you know who you are connecting with, when you have control over what you share, and when there are people looking out for the spaces you use.",
+  "manifesto.body3":
+    "That is why QueerPulse is invite-only, why members are vouched for, and why safety and privacy are built into the foundation of the platform.",
+  "manifesto.highlight":
+    "We are building a place where being queer is the starting point for real connection.",
   "manifesto.safetyCta": "How we keep this safe",
   "manifesto.assurance.vouched.title": "Invited or vouched",
   "manifesto.assurance.vouched.description":
-    "Every member arrives through a vouch or a reviewed invite request.",
+    "Every member arrives through a trusted connection or a reviewed invite request, helping us build a community where people have a reason to be here.",
   "manifesto.assurance.safeSpaces.title": "Safe spaces we've been to",
   "manifesto.assurance.safeSpaces.description":
-    "Venues our mod team visits in person, re-verified on a date you can see.",
+    "Our team visits venues in person and keeps their information up to date, so you can discover places the community has actually checked out.",
   "manifesto.assurance.encrypted.title": "End-to-end encrypted",
   "manifesto.assurance.encrypted.description":
-    "Direct messages are encrypted: private conversations stay private.",
+    "Your direct conversations are encrypted, keeping private messages between the people they were meant for.",
   "manifesto.assurance.privacy.title": "You control what's visible",
   "manifesto.assurance.privacy.description":
-    "Set your profile, photos, and activity to public, members-only, or just for you.",
+    "Choose what you share and who gets to see it. Your profile, photos, and activity can be public, members-only, or private.",
   "manifesto.assurance.moderation.title": "Moderated around the clock",
   "manifesto.assurance.moderation.description":
-    "Reports get a real response, usually within hours.",
+    "When something goes wrong, you should not have to shout into the void. Reports are reviewed by real people and responded to as quickly as possible.",
 
   // ── TrustStrip ─────────────────────────────────────────────────────────────
   "trustStrip.vouched": "Invite-only & vouched",
@@ -58,15 +61,17 @@ export const homepage: Catalog = {
 
   // ── PainPoints ("why we built this") ───────────────────────────────────────
   "painPoints.eyebrow": "Why we built this",
-  "painPoints.title": "We built this because <em>we needed it too.</em>",
+  "painPoints.title": "We built <em>the community we wanted to find.</em>",
   "painPoints.sub":
-    "Every feature here started as something we wished already existed.",
+    "Queer life in Lisbon is full of people doing incredible things, but finding your way into that community can still feel harder than it should. The right people, spaces, opportunities, resources, and support are often scattered across different places.",
+  "painPoints.sub2":
+    "QueerPulse brings them closer together, making it easier to discover what exists, find where you belong, and turn a connection into something real.",
 
   "painPoints.hero1.eyebrow": "The gap we felt first",
   "painPoints.hero1.question": '"Where do I even meet people who get it?"',
-  "painPoints.hero1.heading": "So we built <em>the network.</em>",
+  "painPoints.hero1.heading": "So we built <em>a network.</em>",
   "painPoints.hero1.body":
-    "Every member here is vouched for by someone already inside: no swiping, no cold DMs, no proving yourself to strangers.",
+    "Every member is vouched for by someone already inside, creating a community where you can meet people through trust and shared connections.",
   "painPoints.hero1.builtLabel": "We built the vouch network",
   "painPoints.hero1.cta": "Meet the community",
 
@@ -74,38 +79,38 @@ export const homepage: Catalog = {
 
   "painPoints.exchange1.question":
     '"I need a favour, but I don\'t know who to ask."',
-  "painPoints.exchange1.heading": "So we built <em>the board.</em>",
+  "painPoints.exchange1.heading": "So we built <em>a community board.</em>",
   "painPoints.exchange1.body":
-    "Post what you need or what you can offer, from a spare room to a same-day translation, and let the community answer.",
+    "Ask for what you need or offer what you can, and give people a way to help each other in everyday life.",
   "painPoints.exchange1.cta": "Browse the board",
 
   "painPoints.exchange2.question":
     '"I want to spend my money with people like me."',
   "painPoints.exchange2.heading":
-    "So we built <em>the local queer business directory.</em>",
+    "So we built <em>a queer business directory.</em>",
   "painPoints.exchange2.body":
-    "Queer-owned shops, studios, and services across Lisbon: easy to find, easy to support.",
+    "Discover queer-owned businesses and welcoming services across Lisbon, all in one place.",
   "painPoints.exchange2.cta": "Browse the directory",
 
   "painPoints.exchange3.question":
-    '"I want to host something, I just don\'t know how."',
+    '"I want to host something, but I don\'t know where to start."',
   "painPoints.exchange3.heading": "So we built <em>a way to host.</em>",
   "painPoints.exchange3.body":
-    "A step-by-step guide to running your first supper club, workshop, or screening, with community support behind you.",
+    "Everything you need to turn an idea into a real gathering, with practical guidance and a community behind you.",
   "painPoints.exchange3.cta": "Start hosting",
 
   "painPoints.exchange4.question":
-    '"I have a skill to teach, and one I want to learn."',
+    '"I have something I can teach, and something I want to learn."',
   "painPoints.exchange4.heading": "So we're building <em>skill swaps.</em>",
   "painPoints.exchange4.body":
-    "Trade what you know for what you need. No invoices, no algorithm: just people teaching each other. Coming soon.",
+    "Share what you know, learn from someone else, and make useful connections along the way.",
   "painPoints.exchange4.cta": "See it on the roadmap",
 
   "painPoints.hero2.eyebrow": "The gap we felt hardest",
   "painPoints.hero2.question": '"What if I\'m not okay?"',
   "painPoints.hero2.heading": "So we built <em>a safety net.</em>",
   "painPoints.hero2.body":
-    "Therapists who get it, peer support that doesn't judge, and crisis lines that pick up: all vetted by the community that needs them.",
+    "Find queer-friendly therapists, peer support, and trusted resources when you need somewhere to turn.",
   "painPoints.hero2.builtLabel": "We built the wellbeing hub",
   "painPoints.hero2.cta": "See wellbeing resources",
 
@@ -115,26 +120,26 @@ export const homepage: Catalog = {
     '"I want to do something, not just post about it."',
   "painPoints.exchange5.heading": "So we built <em>a way to act.</em>",
   "painPoints.exchange5.body":
-    "Local campaigns, mutual aid, and organising: real ways to make something happen, together.",
+    "Find local campaigns, mutual aid initiatives, volunteer opportunities, and ways to turn care into action.",
   "painPoints.exchange5.cta": "Get involved",
 
   "painPoints.exchange6.question": '"Do I actually know my rights here?"',
   "painPoints.exchange6.heading": "So we built <em>plain-language guides.</em>",
   "painPoints.exchange6.body":
-    "Clear legal information for LGBTQ+ life in Portugal: no law degree required.",
+    "Clear, accessible information about LGBTQ+ rights in Portugal, written for real life rather than legal textbooks.",
   "painPoints.exchange6.cta": "Read the guides",
 
   "painPoints.exchange7.question": '"Will I actually be safe at this job?"',
   "painPoints.exchange7.heading": "So we're building <em>employer reviews.</em>",
   "painPoints.exchange7.body":
-    "Honest ratings from queer employees, so you know before you accept the offer. Coming soon.",
+    "Honest experiences from queer employees, helping you make more informed decisions about where you work.",
   "painPoints.exchange7.cta": "See it on the roadmap",
 
   // ── Discovery (member highlight) ─────────────────────────────────────────
   "discovery.eyebrow": "{count}+ members and counting",
   "discovery.title": "The <em>faces</em> of queer Lisbon",
   "discovery.sub":
-    "Every face here is a genuine, vouched member of queer Lisbon: a real portrait of someone you could actually say hello to.",
+    "Explore a diverse network of LGBTQ+ professionals, creators, founders, and community builders collaborating to turn ideas into meaningful impact.",
   "discovery.exploreMembersCta": "Explore members",
   "discovery.footNote": "New faces join every week.",
   "discovery.verifiedBadge": "Verified",
@@ -164,7 +169,7 @@ export const homepage: Catalog = {
   // ── Live sections (admin-curated, real data — see Live* section components) ─
   "liveDiscovery.eyebrow": "Chosen by our team",
   "liveCommunities.sub":
-    "A few communities our team wanted you to see: real rooms, kept by real people.",
+    "QueerPulse brings together the communities shaping Lisbon's LGBTQ+ ecosystem, making it easier to discover, connect, and collaborate.",
   "liveCommunities.memberCount": "{count} members",
 
   // ── Gatherings (homepage teaser) ──────────────────────────────────────────
@@ -252,37 +257,212 @@ export const homepage: Catalog = {
   "communities.room.events": "gatherings & RSVPs",
   "communities.room.resources": "guides & library",
 
-  // ── Newsletter ─────────────────────────────────────────────────────────────
-  "newsletter.title": "Stay connected. <em>Once a week.</em>",
-  "newsletter.subtitle":
-    "The QueerPulse digest lands every Thursday: new members to meet, upcoming gatherings, open skill swaps, and one piece of writing worth your time. No noise.",
-  "newsletter.emailRequiredToast": "Please enter your email",
-  "newsletter.subscribedToast": "You're on the list, see you Thursday",
-  "newsletter.success.title": "You're on the list, <em>almost.</em>",
-  "newsletter.success.body":
-    "We'll start sending the <strong>Weekly digest</strong> to <strong>{email}</strong> every Thursday.",
-  "newsletter.success.checkInboxNote":
-    "You're all set: no confirmation email needed. You can change or stop this anytime from your settings.",
-  "newsletter.success.useDifferentEmailCta": "Use a different email",
-  "newsletter.emailPlaceholder": "your@email.com",
-  "newsletter.subscribeCta": "Subscribe",
-  "newsletter.note": "Members only · no spam · unsubscribe anytime",
-  "newsletter.comingSoon":
-    "The weekly digest isn't sending yet. We're still building it. Once it's live, you'll be able to subscribe right here.",
-  // Live double-opt-in: honest "confirm from your inbox" messaging, distinct from
-  // the demo flow above (which fakes an instant subscribe with no email).
-  "newsletter.live.success.title": "Almost there, <em>check your inbox.</em>",
-  "newsletter.live.success.body":
-    "We just sent a confirmation link to <strong>{email}</strong>. Open it and you'll start getting the Weekly digest every Thursday.",
-  "newsletter.live.success.checkInboxNote":
-    "Didn't get it? Give it a minute, then check your spam folder. Nothing is sent until you confirm.",
-  "newsletter.live.errorToast":
-    "Something went wrong on our end. Please try again in a moment.",
-  "newsletter.live.submittingCta": "Sending…",
+  // ── Housing ────────────────────────────────────────────────────────────────
+  "housing.title": "Find a place where you can feel at <em>home.</em>",
+  "housing.subtitle":
+    "Rooms, sublets, and flatmates from people in the community, with recommendations from those who have actually lived there.",
+  "housing.cta": "Browse housing",
+  "housing.eyebrow": "Rooms & flatmates",
+  "housing.secondaryCta": "Post that you're looking",
+  "housing.ctaNote": "Everyone here is part of the same trusted network.",
+  "housing.tabRoom": "The room",
+  "housing.tabLandlord": "The landlord",
+  "housing.postedByMember": "Posted by a member",
+  "housing.bringToFrontAria": 'Bring "{label}" to the front',
+  "housing.reviewsFootNote":
+    "Written by members who lived there. Landlords can't reply or remove.",
+  "housing.reviewsFootCta": "How reviews work",
+
+  // Showcase listing content below (two example listing cards) is an
+  // intentional exception to the file-level i18n scope rule above: this is
+  // static illustrative chrome, identical in demo and live mode and never
+  // sourced from the API (unlike changemakers.ts), so it's fully translated
+  // rather than left English-only.
+  "housing.listings.a.peekLabel": "Room in Arroios · €480",
+  "housing.listings.a.photoPlaceholder": "The room. Arroios flat.",
+  "housing.listings.a.chips.0": "€480 + bills",
+  "housing.listings.a.chips.1": "Arroios · from 1 Oct",
+  "housing.listings.a.title": "A bright room in a three-person flat",
+  "housing.listings.a.meta":
+    "Private room, shared kitchen, rooftop and two cats already living rent free.",
+  "housing.listings.a.price.lead": "€40 under",
+  "housing.listings.a.price.rest":
+    "the median room in Arroios (€520). We show you that before you ask.",
+  "housing.listings.a.household.name": "Vera, Tó and one more",
+  "housing.listings.a.household.sub": "Vouched by 3 members. Here since 2024.",
+  "housing.listings.a.signals.0.lead": "Trans-affirming household.",
+  "housing.listings.a.signals.0.rest": "Shared by the people who live there.",
+  "housing.listings.a.signals.1.lead": "Landlord reviewed by 3 past tenants.",
+  "housing.listings.a.signals.1.rest":
+    "See what previous tenants had to say before you get in touch.",
+  "housing.listings.a.signals.2.lead": "Deposit terms in writing.",
+  "housing.listings.a.signals.2.rest":
+    "Know what you're agreeing to before you move in.",
+  "housing.listings.a.landlord.sub":
+    "Three flats in Arroios. Known here since 2024.",
+  "housing.listings.a.landlord.verdict":
+    "All three past tenants would rent from him again",
+  "housing.listings.a.landlord.quotes.0.quote":
+    "Never once asked who my partner was. Fixed the boiler in two days.",
+  "housing.listings.a.landlord.quotes.0.who": "Rui, lived there 2022–2024",
+  "housing.listings.a.landlord.quotes.1.quote":
+    "Put my name on the lease the way I asked, first time, no conversation about it.",
+  "housing.listings.a.landlord.quotes.1.who": "Nadia, lived there 2021–2022",
+  "housing.listings.a.landlord.quotes.2.quote":
+    "Deposit back in full, both times. He sends a photo of the transfer.",
+  "housing.listings.a.landlord.quotes.2.who": "Joana, lived there 2019–2021",
+  "housing.listings.a.landlord.flag.lead": "One flag:",
+  "housing.listings.a.landlord.flag.rest":
+    "raised the rent mid-lease in 2023, then reversed it after a written objection.",
+
+  "housing.listings.b.peekLabel": "Sublet in Graça · €390 · Jan–Mar",
+  "housing.listings.b.photoPlaceholder": "The studio. Graça sublet.",
+  "housing.listings.b.chips.0": "€390 + bills",
+  "housing.listings.b.chips.1": "Graça · Jan–Mar",
+  "housing.listings.b.title": "A whole studio in Graça, January to March",
+  "housing.listings.b.meta":
+    "Sublet while I'm away. Roof access, good afternoon light, a dog you'd be feeding.",
+  "housing.listings.b.price.lead": "Near the median",
+  "housing.listings.b.price.rest":
+    "for a studio in Graça (€420). Furnished, bills split with the flat below.",
+  "housing.listings.b.household.sub": "Vouched by 5 members. Here since 2023.",
+  "housing.listings.b.signals.0.lead":
+    "Sublet with written consent from the landlord.",
+  "housing.listings.b.signals.0.rest": "The paperwork is on the listing.",
+  "housing.listings.b.signals.1.lead": "Step-free entrance.",
+  "housing.listings.b.signals.1.rest":
+    "Lift to the fourth floor, wide bathroom door.",
+  "housing.listings.b.signals.2.lead": "No deposit.",
+  "housing.listings.b.signals.2.rest":
+    "Beatriz is asking for the first month only.",
+  "housing.listings.b.landlord.sub": "One flat in Graça. New to the board.",
+  "housing.listings.b.landlord.emptyState.title": "No reviews yet.",
+  "housing.listings.b.landlord.emptyState.body":
+    "Nobody here has rented from her yet. If you take it, you'd be the first to write it up, and the next person gets to know what you know.",
+  "housing.listings.b.landlord.facts.0.text":
+    "A moderator verified her identity in person.",
+  "housing.listings.b.landlord.facts.1.text":
+    "Lease and consent letter shown to the housing team before the post went live.",
+  "housing.listings.b.landlord.facts.2.text":
+    "No landlord track record yet. Take a friend along to the viewing.",
+  "housing.listings.factsHeading": "What we do know",
+
+  // ── Subprofiles ────────────────────────────────────────────────────────────
+  "subprofiles.title": "Different sides of you. <em>All in one place.</em>",
+  "subprofiles.subtitle":
+    "Maybe you're a designer by day and a DJ at night. Maybe you make art, run a project, or have a whole side of yourself you'd rather keep separate. Create personas for whatever you want to share, and decide exactly how visible each one is.",
+  "subprofiles.subtitleIdentity":
+    "Each persona can have its own identity, with the information, interests, and content that make sense for that context. Show a more professional side in one persona and something completely different in another, without losing the connection between them.",
+  "subprofiles.subtitleControl":
+    "You decide what each person sees and how much you want to share. Some personas can be fully linked to your name, while others can exist more discreetly. Not every part of us needs to show up in the same place.",
+  "subprofiles.cta": "Explore personas",
+  "subprofiles.ctaNote": "Three personas are included with every account.",
+  "subprofiles.proofHeading":
+    "More than one side of you. One profile can't show all of it.",
+  "subprofiles.proofEverywhereNote":
+    "One profile tends to become the version of you that's easiest to explain. The rest gets left out.",
+  "subprofiles.everywhereElse": "Everywhere else",
+  "subprofiles.onQueerPulse": "On QueerPulse",
+  "subprofiles.proofVs": "vs",
+  "subprofiles.proofCrampRoles": "drag performer · ceramicist · music critic",
+  "subprofiles.mainNodeSub": "Main profile · product designer",
+  "subprofiles.postingAs": "Posting as",
+
+  // Persona showcase content below (four example personas) is an
+  // intentional exception to the file-level i18n scope rule above: same
+  // reasoning as the housing listings block. Proper names stay in
+  // personasShowcase.data.ts, unrouted, since names aren't localized.
+  "subprofiles.personas.main.role": "Product designer",
+  "subprofiles.personas.main.sub": "Fintech, six years · Arroios",
+  "subprofiles.personas.main.cta": "See the work",
+  "subprofiles.personas.main.bio":
+    "Product designer in fintech, with case studies and open consulting hours.",
+  "subprofiles.personas.main.meta.0": "Open to consulting",
+  "subprofiles.personas.main.meta.1": "4 case studies",
+  "subprofiles.personas.main.meta.2": "Speaks EN / PT",
+  "subprofiles.personas.main.tiles.0.label": "Case study",
+  "subprofiles.personas.main.tiles.1.label": "Case study",
+  "subprofiles.personas.main.tiles.2.label": "Conference talk",
+  "subprofiles.personas.main.foot":
+    "Your main profile. The one people already know you by.",
+  "subprofiles.personas.main.note":
+    "Speaking as yourself: the product design career, the one every network already knows about.",
+  "subprofiles.personas.main.switcherSub": "Main profile · product design",
+  "subprofiles.personas.main.laneLabel": "product design",
+
+  "subprofiles.personas.mara.role": "Drag performer",
+  "subprofiles.personas.mara.sub": "Anjos · performing since 2018",
+  "subprofiles.personas.mara.cta": "Book a show",
+  "subprofiles.personas.mara.bio":
+    "Performing at Anjos since 2018, with a public rate card and travels for festivals.",
+  "subprofiles.personas.mara.meta.0": "Two shows a month",
+  "subprofiles.personas.mara.meta.1": "Rate card public",
+  "subprofiles.personas.mara.meta.2": "Travels for festivals",
+  "subprofiles.personas.mara.tiles.0.label": "Show photo",
+  "subprofiles.personas.mara.tiles.1.label": "Show photo",
+  "subprofiles.personas.mara.tiles.2.label": "Tour poster",
+  "subprofiles.personas.mara.foot":
+    "Everything they need to know about Sofia's work as a performer, without the rest of her profile getting in the way.",
+  "subprofiles.personas.mara.note":
+    "Speaking as Mara: bookers get the shows, the photos and the fee. The product design CV stays off this page.",
+  "subprofiles.personas.mara.switcherSub": "Drag · bookers and venues",
+  "subprofiles.personas.mara.laneLabel": "drag",
+  "subprofiles.personas.mara.deck.skinLabel": "Poster skin",
+  "subprofiles.personas.mara.deck.tag":
+    "Drag, eight years of it. Two shows a month at Anjos, a rate card that doesn't apologise.",
+  "subprofiles.personas.mara.deck.visLabel": "Bookers & venues",
+  "subprofiles.personas.mara.deck.showsLine": "Gigs · photos · rate card",
+
+  "subprofiles.personas.atelier.role": "Ceramics studio, two people",
+  "subprofiles.personas.atelier.sub": "Graça · commissions and wholesale",
+  "subprofiles.personas.atelier.cta": "Commission a piece",
+  "subprofiles.personas.atelier.bio":
+    "Two-person ceramics studio in Graça, taking commissions and wholesale orders.",
+  "subprofiles.personas.atelier.meta.0": "Commissions open",
+  "subprofiles.personas.atelier.meta.1": "Wholesale list",
+  "subprofiles.personas.atelier.meta.2": "Saturday workshops",
+  "subprofiles.personas.atelier.tiles.0.label": "Finished piece",
+  "subprofiles.personas.atelier.tiles.1.label": "Finished piece",
+  "subprofiles.personas.atelier.tiles.2.label": "The studio",
+  "subprofiles.personas.atelier.foot":
+    "Credited to the atelier: a shared front page two people can run.",
+  "subprofiles.personas.atelier.note":
+    "Speaking as the studio: buyers and galleries see the work and the pricing, credited to the atelier instead of to you.",
+  "subprofiles.personas.atelier.switcherSub": "Ceramics · buyers and galleries",
+  "subprofiles.personas.atelier.laneLabel": "ceramics",
+  "subprofiles.personas.atelier.deck.skinLabel": "Studio skin",
+  "subprofiles.personas.atelier.deck.tag":
+    "A two-person ceramics studio in Graça. Commissions, wholesale, and Saturday workshops.",
+  "subprofiles.personas.atelier.deck.visLabel": "Buyers & galleries",
+  "subprofiles.personas.atelier.deck.showsLine": "Work · pricing · studio days",
+
+  "subprofiles.personas.byline.role": "Music criticism",
+  "subprofiles.personas.byline.sub":
+    "Bylines in three magazines since 2021",
+  "subprofiles.personas.byline.cta": "Read the clips",
+  "subprofiles.personas.byline.bio":
+    "Music critic with bylines in three magazines, covering clubbing and diaspora.",
+  "subprofiles.personas.byline.meta.0": "Beat: club & diaspora",
+  "subprofiles.personas.byline.meta.1": "Pitch note on file",
+  "subprofiles.personas.byline.meta.2": "Commissions from €180",
+  "subprofiles.personas.byline.tiles.0.label": "Feature",
+  "subprofiles.personas.byline.tiles.1.label": "Album review",
+  "subprofiles.personas.byline.tiles.2.label": "Interview",
+  "subprofiles.personas.byline.foot":
+    "A pen name with a portfolio. The clips speak for themselves, no day job attached.",
+  "subprofiles.personas.byline.note":
+    "Speaking as the byline: editors see the clips and the beat you cover, with your day job kept out of the way.",
+  "subprofiles.personas.byline.switcherSub": "Music writing · editors",
+  "subprofiles.personas.byline.laneLabel": "music writing",
+  "subprofiles.personas.byline.deck.skinLabel": "Byline skin",
+  "subprofiles.personas.byline.deck.tag":
+    "The name she writes music criticism under. Bylines in three magazines since 2021.",
+  "subprofiles.personas.byline.deck.visLabel": "Editors who commission",
+  "subprofiles.personas.byline.deck.showsLine": "Clips · beats · pitch note",
 
   // ── Outro (final CTA) ──────────────────────────────────────────────────────
   "outro.title": "Walk into a room where you <em>already belong.</em>",
   "outro.sub":
-    "Membership is by invitation and kept small on purpose. If someone you trust is already here, ask them to vouch for you.",
+    "QueerPulse is an invite-only community built on trust, curiosity, and the belief that meaningful connections can change lives and cities.",
   "outro.cta": "Request an invite",
 };

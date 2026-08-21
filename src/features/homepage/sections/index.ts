@@ -9,5 +9,6 @@ export { ChangeMakers } from "./ChangeMakers";
 export { LiveChangeMakers } from "./LiveChangeMakers";
 export { Communities } from "./Communities";
 export { LiveCommunities } from "./LiveCommunities";
-export { Newsletter } from "./Newsletter";
+export { HousingShowcase } from "./HousingShowcase";
+export { PersonasShowcase } from "./PersonasShowcase";
 export { Outro } from "./Outro";

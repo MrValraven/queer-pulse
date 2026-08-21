@@ -185,13 +185,13 @@ export const system: Catalog = {
   "inviteLanding.loader.preparing": "Preparing your welcome…",
   "inviteLanding.what.private.strong": "Private by design.",
   "inviteLanding.what.private.rest":
-    "Invite-only, 247 members, and growth paced to how fast people vouch.",
-  "inviteLanding.what.noAds.strong": "No ads. No algorithm.",
+    "A space where you know who you're sharing it with, and where your privacy is always yours to control.",
+  "inviteLanding.what.noAds.strong": "Community comes first.",
   "inviteLanding.what.noAds.rest":
-    "A platform that works for you, funded by the community.",
-  "inviteLanding.what.community.strong": "Real community.",
+    "No ads competing for your attention and no algorithm deciding what you should see. QueerPulse is shaped around the people who use it.",
+  "inviteLanding.what.community.strong": "Built for real life.",
   "inviteLanding.what.community.rest":
-    "Forum, events, a monthly magazine, and a mental health fund.",
+    "Discover people, places, events, and opportunities that help you find your way into queer life in Lisbon.",
   "inviteLanding.sealed.eyebrow": "You've been personally invited",
   "inviteLanding.sealed.title": "<em>{name}</em> invited you.",
   "inviteLanding.sealed.sub_one":
@@ -205,7 +205,7 @@ export const system: Catalog = {
   "inviteLanding.card.inviterNoteNoSince": "invited you",
   "inviteLanding.card.heading": "You belong <em>here.</em>",
   "inviteLanding.card.headerNote":
-    "This invitation was made just for you. Nobody else can open it.",
+    "Someone in the community thought you'd feel at home here. Your invitation is personal, and it's yours to accept.",
   "inviteLanding.card.noteFrom": "A note from {name}",
   "inviteLanding.card.tokenLabel": "Your invite code",
   "inviteLanding.card.validFor_one": "Valid for {count} day",

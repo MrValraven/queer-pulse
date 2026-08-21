@@ -226,7 +226,8 @@ export function InviteCardView({
               <div className={styles.whatItem} key={item.strongKey}>
                 <div className={styles.whatDot} aria-hidden />
                 <div className={styles.whatText}>
-                  <strong>{t(item.strongKey)}</strong> {t(item.restKey)}
+                  <strong>{t(item.strongKey)}</strong>{" "}
+                  {t(item.restKey, { count: view.memberCount })}
                 </div>
               </div>
             ))}

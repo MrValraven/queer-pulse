@@ -6,6 +6,10 @@ interface SharePreviewCardProps {
   senderName: string;
   description: string;
   url: string;
+  /** Live community size for the "Invite-only · N members" line. Undefined
+   *  while the quota fetch (which carries it) is still loading — the line is
+   *  omitted rather than showing a placeholder count. */
+  memberCount?: number;
 }
 
 /**
@@ -17,6 +21,7 @@ export function SharePreviewCard({
   senderName,
   description,
   url,
+  memberCount,
 }: SharePreviewCardProps) {
   const { t } = useTranslation();
   return (
@@ -36,9 +41,11 @@ export function SharePreviewCard({
         <div className={styles.previewHeroExplainer}>
           {t("auth:sharePreview.heroExplainer")}
         </div>
-        <div className={styles.previewHeroSub}>
-          {t("auth:sharePreview.heroSub")}
-        </div>
+        {memberCount !== undefined && (
+          <div className={styles.previewHeroSub}>
+            {t("auth:sharePreview.heroSub", { count: memberCount })}
+          </div>
+        )}
       </div>
       <div className={styles.previewMeta}>
         <div className={styles.previewDomain}>{url.split("/")[0]}</div>

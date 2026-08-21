@@ -94,7 +94,7 @@ export const auth: Catalog = {
   "invite.eyebrow": "Convida alguém a entrar",
   "invite.title": "Traz alguém <em>para aqui</em>",
   "invite.sub":
-    "O QueerPulse cresce por convite, nunca por publicidade. Avaliza alguém em quem confias.",
+    "Provavelmente conheces alguém que se sentiria em casa aqui. Convida essa pessoa a juntar-se ao QueerPulse e avaliza-a pelo caminho.",
   "invite.quota.available_one": "{count} convite disponível este mês",
   "invite.quota.available_other": "{count} convites disponíveis este mês",
   "invite.quota.none": "Sem convites disponíveis este mês",
@@ -147,7 +147,7 @@ export const auth: Catalog = {
     "Algo correu mal ao gerar o teu link — tenta outra vez.",
   "invite.link.formNote": "Este link funciona uma vez, para uma pessoa.",
   "invite.link.defaultVouch":
-    "Uma comunidade queer discreta e avalizada em Lisboa. Sem anúncios, sem algoritmo. Acho que ias pertencer aqui.",
+    "Alguém da comunidade acha que devias estar aqui. QueerPulse: uma rede queer avalizada em Lisboa, construída sobre confiança.",
   "invite.link.shareMessage":
     "{senderFirst} convidou-te para o QueerPulse, uma comunidade queer discreta e avalizada. O teu convite pessoal: {url}",
 
@@ -201,7 +201,8 @@ export const auth: Catalog = {
   "sharePreview.heroTitle.line1": "Entra numa sala",
   "sharePreview.heroTitle.line2": "<em>onde já pertences</em>",
   "sharePreview.heroExplainer": "Uma rede queer. Enraizada em Lisboa.",
-  "sharePreview.heroSub": "Só por convite · 247 pessoas",
+  "sharePreview.heroSub_one": "Só por convite · {count} pessoa",
+  "sharePreview.heroSub_other": "Só por convite · {count} pessoas",
   "sharePreview.title": "{senderName} convidou-te para o QueerPulse",
 
   // ── Autoatestação 18+ (partilhada por onboarding + pedir convite) ──
@@ -314,19 +315,19 @@ export const auth: Catalog = {
   // ── Onboarding (fluxo de 7 passos após o registo, em /onboarding) ──
   "onboarding.stepLabel": "Passo {current} de {total}",
   "onboarding.welcomeToQueerPulse": "Bem-vinde ao QueerPulse",
-  "onboarding.stepIntro.heading": "Vamos começar o teu <em>acolhimento</em>",
+  "onboarding.stepIntro.heading": "Vamos <em>instalar-te</em> por aqui",
   "onboarding.stepIntro.body":
-    "Uns passos rápidos para configurares o teu perfil e encontrares a tua gente. Demora cerca de dois minutos — e podes mudar tudo depois.",
+    "Uns passos rápidos para configurares o teu perfil e começares a encontrar a tua gente. Demora só uns minutos, e podes sempre mudar tudo depois.",
   "onboarding.stepIntro.cta": "Vamos começar",
   "onboarding.preview.makeItYours.title": "Torna-o teu",
   "onboarding.preview.makeItYours.desc":
-    "Adiciona uma foto para que as pessoas possam pôr um rosto ao teu nome.",
-  "onboarding.preview.setIntentions.title": "Define as tuas intenções",
+    "Adiciona uma foto e alguns detalhes para que as pessoas te conheçam melhor.",
+  "onboarding.preview.setIntentions.title": "O que te traz aqui?",
   "onboarding.preview.setIntentions.desc":
-    "Conta-nos o que te traz aqui, e vamos personalizar tudo.",
+    "Conta-nos um pouco sobre o que procuras e de que gostavas de fazer parte.",
   "onboarding.preview.findCommunities.title": "Encontra as tuas comunidades",
   "onboarding.preview.findCommunities.desc":
-    "Junta-te aos grupos que combinam com o que te importa.",
+    "Escolhe as comunidades que fazem sentido para ti e descobre onde pertences.",
 
   "onboarding.stepWelcome.eyebrowSuffix": "Já estás dentro",
   "onboarding.stepWelcome.heading": "Bem-vinde, <em>{firstName}</em>",
@@ -335,8 +336,12 @@ export const auth: Catalog = {
   "onboarding.stepWelcome.memberSinceRole": "Aqui desde {since} · {role}",
   "onboarding.stepWelcome.vouchFallback":
     "{firstName} é atente, criative, e exatamente quem esperávamos encontrar aqui.",
-  "onboarding.stepWelcome.body":
-    "O QueerPulse é uma rede profissional cuidada, enraizada em Lisboa. Foste convidade porque alguém aqui já te conhece.",
+  "onboarding.stepWelcome.body1":
+    "Estás aqui porque alguém achou que devias estar.",
+  "onboarding.stepWelcome.body2":
+    "A QueerPulse é uma comunidade para pessoas LGBTQ+ e para quem constrói, cria e contribui à volta delas em Lisboa.",
+  "onboarding.stepWelcome.body3":
+    "Alguém que te conhece convidou-te a entrar. Agora é a tua vez de fazeres deste espaço o teu.",
   "onboarding.stepWelcome.cta": "Vamos a isto",
   "onboarding.stepWelcome.back": "Voltar",
 

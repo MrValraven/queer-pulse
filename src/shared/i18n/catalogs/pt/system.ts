@@ -192,13 +192,13 @@ export const system: Catalog = {
   "inviteLanding.loader.preparing": "A preparar as boas-vindas…",
   "inviteLanding.what.private.strong": "Privado por natureza.",
   "inviteLanding.what.private.rest":
-    "Só por convite, 247 pessoas, e um crescimento ao ritmo de quem avaliza.",
-  "inviteLanding.what.noAds.strong": "Sem anúncios. Sem algoritmo.",
+    "Um espaço onde sabes sempre com quem estás a partilhar, e onde a tua privacidade é sempre tua para controlar.",
+  "inviteLanding.what.noAds.strong": "A comunidade em primeiro lugar.",
   "inviteLanding.what.noAds.rest":
-    "Uma plataforma que trabalha para ti, financiada pela comunidade.",
-  "inviteLanding.what.community.strong": "Comunidade a sério.",
+    "Sem anúncios a competir pela tua atenção nem algoritmos a decidir o que vês. A QueerPulse é moldada pelas pessoas que a usam.",
+  "inviteLanding.what.community.strong": "Feito para a vida real.",
   "inviteLanding.what.community.rest":
-    "Fórum, eventos, uma revista mensal e um fundo de saúde mental.",
+    "Descobre pessoas, lugares, eventos e oportunidades que te ajudam a encontrar o teu caminho na vida queer em Lisboa.",
   "inviteLanding.sealed.eyebrow": "Recebeste um convite pessoal",
   "inviteLanding.sealed.title": "<em>{name}</em> convidou-te.",
   "inviteLanding.sealed.sub_one":
@@ -212,7 +212,7 @@ export const system: Catalog = {
   "inviteLanding.card.inviterNoteNoSince": "convidou-te",
   "inviteLanding.card.heading": "Tu pertences <em>aqui.</em>",
   "inviteLanding.card.headerNote":
-    "Este convite foi feito só para ti. Mais ninguém o pode abrir.",
+    "Alguém da comunidade achou que te sentirias em casa aqui. O teu convite é pessoal, e é teu para aceitares.",
   "inviteLanding.card.noteFrom": "Uma nota de {name}",
   "inviteLanding.card.tokenLabel": "O teu código de convite",
   "inviteLanding.card.validFor_one": "Válido durante {count} dia",

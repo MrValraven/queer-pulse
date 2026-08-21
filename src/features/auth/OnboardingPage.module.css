@@ -429,6 +429,15 @@
   color: var(--ink-40);
   margin-top: 1px;
 }
+.notifyLink {
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.notifyLink:hover {
+  color: var(--accent-deep);
+}
 
 .normCards {
   display: flex;

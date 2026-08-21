@@ -95,7 +95,7 @@ export const auth: Catalog = {
   "invite.eyebrow": "Invite someone in",
   "invite.title": "Bring someone <em>in</em>",
   "invite.sub":
-    "QueerPulse grows by invitation, never advertising. Vouch for someone you trust.",
+    "Here's probably someone you know who would feel at home here. Invite them to join QueerPulse and vouch for them along the way.",
   "invite.quota.available_one": "{count} invite available this month",
   "invite.quota.available_other": "{count} invites available this month",
   "invite.quota.none": "No invites left this month",
@@ -147,7 +147,7 @@ export const auth: Catalog = {
     "Something went wrong generating your link — try again.",
   "invite.link.formNote": "This link works once, for one person.",
   "invite.link.defaultVouch":
-    "A quiet, vouched-for queer community in Lisbon. No ads, no algorithm. I think you'd belong here.",
+    "Someone in the community thinks you should be here. QueerPulse: a vouched-for queer network in Lisbon, built on trust.",
   "invite.link.shareMessage":
     "{senderFirst} invited you to QueerPulse, a quiet, vouched-for queer community. Your personal invite: {url}",
 
@@ -199,7 +199,8 @@ export const auth: Catalog = {
   "sharePreview.heroTitle.line1": "Walk into a room",
   "sharePreview.heroTitle.line2": "<em>where you already belong</em>",
   "sharePreview.heroExplainer": "A queer network. Rooted in Lisbon.",
-  "sharePreview.heroSub": "Invite-only · 247 members",
+  "sharePreview.heroSub_one": "Invite-only · {count} member",
+  "sharePreview.heroSub_other": "Invite-only · {count} members",
   "sharePreview.title": "{senderName} invited you to QueerPulse",
 
   // ── 18+ self-attestation (shared by onboarding + request-invite) ──
@@ -317,19 +318,19 @@ export const auth: Catalog = {
   // ── Onboarding (the 7-step post-signup flow at /onboarding) ──
   "onboarding.stepLabel": "Step {current} of {total}",
   "onboarding.welcomeToQueerPulse": "Welcome to QueerPulse",
-  "onboarding.stepIntro.heading": "Let's start your <em>onboarding</em>",
+  "onboarding.stepIntro.heading": "Let's get you <em>settled in</em>",
   "onboarding.stepIntro.body":
-    "A few quick steps to set up your profile and find your people. It takes about two minutes — and you can change anything later.",
+    "A few quick steps to set up your profile and start finding your people. It'll only take a couple of minutes, and you can always change things later.",
   "onboarding.stepIntro.cta": "Let's begin",
   "onboarding.preview.makeItYours.title": "Make it yours",
   "onboarding.preview.makeItYours.desc":
-    "Add a photo so members can put a face to your name.",
-  "onboarding.preview.setIntentions.title": "Set your intentions",
+    "Add a photo and a few details so people can get to know you.",
+  "onboarding.preview.setIntentions.title": "What brings you here?",
   "onboarding.preview.setIntentions.desc":
-    "Tell us what brings you here, and we'll tailor things.",
+    "Tell us a little about what you're looking for and what you'd like to be part of.",
   "onboarding.preview.findCommunities.title": "Find your communities",
   "onboarding.preview.findCommunities.desc":
-    "Join the groups that match what you care about.",
+    "Choose the communities that feel relevant to you and discover where you belong.",
 
   "onboarding.stepWelcome.eyebrowSuffix": "You're in",
   "onboarding.stepWelcome.heading": "Welcome, <em>{firstName}</em>",
@@ -338,8 +339,12 @@ export const auth: Catalog = {
   "onboarding.stepWelcome.memberSinceRole": "Member since {since} · {role}",
   "onboarding.stepWelcome.vouchFallback":
     "{firstName} is thoughtful, creative, and exactly who we hoped would end up here.",
-  "onboarding.stepWelcome.body":
-    "QueerPulse is a cared-for professional network rooted in Lisbon. You were invited because someone here already knows you.",
+  "onboarding.stepWelcome.body1":
+    "You're here because someone thought you should be.",
+  "onboarding.stepWelcome.body2":
+    "QueerPulse is a community for LGBTQ+ people and the people building, creating, and contributing around them in Lisbon.",
+  "onboarding.stepWelcome.body3":
+    "Someone who knows you invited you in. Now it's your turn to make the space your own.",
   "onboarding.stepWelcome.cta": "Let's get started",
   "onboarding.stepWelcome.back": "Back",
 

@@ -12,6 +12,13 @@
   margin-inline: auto;
 }
 
+/* Used when the card sits in the rail + spotlight two-column grid: it should
+   fill the remaining grid column instead of being capped and centered. */
+.listFill {
+  max-width: none;
+  margin-inline: 0;
+}
+
 /* The reused `.spot` is built to sit beside a rail in a two-column layout;
    standalone it simply fills the constrained list column. */
 .card {

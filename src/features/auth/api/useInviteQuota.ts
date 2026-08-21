@@ -15,6 +15,7 @@ export interface InviteQuotaView {
   used: number;
   remaining: number;
   resetsAt: Date;
+  memberCount: number;
 }
 
 /** Whole days from now until the allowance resets, floored at 0. Call at render
@@ -29,6 +30,7 @@ function dtoToView(dto: InviteQuotaDTO): InviteQuotaView {
     used: dto.used,
     remaining: dto.remaining,
     resetsAt: new Date(dto.resetsAt),
+    memberCount: dto.memberCount,
   };
 }
 

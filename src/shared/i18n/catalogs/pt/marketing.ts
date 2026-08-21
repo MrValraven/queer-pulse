@@ -5489,4 +5489,9 @@ export const marketing: Catalog = {
     "Avalia se um guia de recursos ajudou",
   "changelog.entries.resources-guide-rating.body":
     "Os guias de Legal, Saúde Sexual e Saúde Mental terminam agora com um rápido \"Isto foi útil?\" — polegar para cima ou para baixo, sem contagens visíveis, só um agradecimento depois de responderes. A equipa editorial já vê quais guias estão e não estão a resultar na nova página de administração Feedback dos guias.",
+
+  "changelog.entries.homepage-housing-personas-showcase.title":
+    "Alojamento e perfis alternativos, mais próximos do real na homepage",
+  "changelog.entries.homepage-housing-personas-showcase.body":
+    "As secções de Alojamento e Perfis Alternativos da homepage mostram agora como as funcionalidades funcionam de verdade: dois anúncios reais com um separador para o quarto e outro para o senhorio (avaliações, veredictos, e um honesto \"ainda sem avaliações\" quando o senhorio é novo), e um baralho de perfis interativo onde podes ver como a página pública muda consoante o perfil escolhido.",
 };

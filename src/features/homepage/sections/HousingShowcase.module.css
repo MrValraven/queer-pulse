@@ -1,0 +1,535 @@
+/* Homepage Housing showcase — headline column + a 2-card interactive
+   listing stage (demo mode only). Ported from the design bundle's
+   qp-housing-personas.css (housing half) onto this repo's tokens. */
+
+.housing {
+  padding: var(--section-y) 0;
+  position: relative;
+  overflow: hidden;
+  background: var(--cream);
+}
+.housing::before {
+  content: "";
+  position: absolute;
+  top: -22%;
+  right: -8%;
+  width: 620px;
+  height: 620px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 38%,
+    rgba(var(--accent-rgb), 0.12),
+    transparent 62%
+  );
+  pointer-events: none;
+}
+
+.twoCol {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: 70px;
+  align-items: center;
+}
+/* ── Headline column ── */
+.secEye {
+  font-family: var(--sans);
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--ls-label);
+  color: var(--accent-text);
+  margin-bottom: 22px;
+}
+.secH {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  color: var(--ink);
+}
+.secH em {
+  font-style: italic;
+  color: var(--accent);
+}
+.secBody {
+  font-family: var(--sans);
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: var(--ink-60);
+  margin-top: 24px;
+  max-width: 34ch;
+}
+.ctaRow {
+  margin-top: 34px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.ctaAlt {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.ctaAlt:hover {
+  color: var(--accent-text);
+}
+.ctaNote {
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-40);
+  margin-top: 14px;
+  max-width: 32ch;
+}
+
+/* ── Listing stage ── */
+.lstStage {
+  position: relative;
+  height: 672px;
+}
+.lst {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--paper);
+  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-radius: var(--radius-card);
+  box-shadow:
+    0 30px 60px -34px rgba(var(--plum-rgb), 0.34),
+    0 1px 2px rgba(var(--plum-rgb), 0.05);
+  overflow: hidden;
+  transition:
+    transform var(--dur-slow) var(--ease),
+    opacity var(--dur-slow) var(--ease),
+    box-shadow var(--dur-slow) var(--ease);
+}
+.lst[data-position="front"] {
+  z-index: 2;
+  transform: translateY(30px);
+}
+.lst[data-position="back"] {
+  z-index: 1;
+  transform: translate(32px, -14px) scale(0.97) rotate(1.1deg);
+  opacity: 0.62;
+  cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  .lst[data-position="back"]:hover {
+    transform: translate(26px, -8px) scale(0.98) rotate(0.8deg);
+    opacity: 0.86;
+  }
+}
+.lst[data-position="back"]:focus-visible {
+  opacity: 0.86;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.lstIn {
+  display: flex;
+  flex-direction: column;
+}
+.lst[data-position="back"] .lstIn {
+  pointer-events: none;
+}
+
+.lstPeek {
+  position: absolute;
+  inset: 0 0 auto 0;
+  padding: 12px 22px;
+  display: none;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--text-strong);
+  background: var(--paper);
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  z-index: 3;
+}
+.lst[data-position="back"] .lstPeek {
+  display: flex;
+}
+
+.lstTabs {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  background: rgba(var(--plum-rgb), 0.02);
+}
+.lt {
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--ink-40);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 15px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  transition: background-color var(--dur-base) var(--ease), color var(--dur-base) var(--ease);
+}
+span.lt {
+  cursor: default;
+}
+.lt.on {
+  background: var(--plum);
+  color: var(--cream);
+}
+.lstNote {
+  margin-left: auto;
+  font-family: var(--sans);
+  font-size: var(--text-label);
+  color: var(--ink-40);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--jade);
+  box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.18);
+}
+
+.panelIn {
+  animation: qpTabIn var(--dur-base) var(--ease-out);
+}
+
+/* ── Room tab ── */
+.roomPhoto {
+  position: relative;
+}
+.roomChips {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+.chip {
+  font-family: var(--sans);
+  font-size: var(--text-label);
+  font-weight: 600;
+  padding: 7px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.82);
+  color: var(--cream);
+  backdrop-filter: blur(8px);
+}
+.chipAccent {
+  background: var(--accent);
+  color: #fff;
+}
+.lpPad {
+  padding: 22px var(--card-pad) 20px;
+}
+.roomTitle {
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: var(--ls-heading);
+  color: var(--plum);
+}
+.roomMeta {
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  color: var(--ink-40);
+  margin-top: 8px;
+}
+.priceCtx {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 14px;
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+.bar {
+  width: 56px;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.1);
+  position: relative;
+  flex: none;
+  overflow: hidden;
+  display: block;
+}
+.barFill {
+  display: block;
+  height: 100%;
+  background: var(--jade);
+  border-radius: var(--radius-pill);
+}
+.hh {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+}
+.hhName {
+  font-family: var(--sans);
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--ink);
+}
+.hhSub {
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  color: var(--ink-40);
+  margin-top: 3px;
+}
+.sig {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin-top: 18px;
+}
+.sigRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  color: var(--ink-60);
+  line-height: 1.4;
+}
+.sigIcon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--jade-ink);
+}
+.factNeutralIcon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--ink-40);
+}
+.factsHeading {
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--ls-label);
+  color: var(--ink-40);
+}
+
+.lstFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+  padding: 14px var(--card-pad);
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  background: rgba(var(--plum-rgb), 0.02);
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  color: var(--ink-40);
+}
+.footActs {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: none;
+}
+.footLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  color: var(--text-strong);
+  flex: none;
+  white-space: nowrap;
+}
+.footLink:hover {
+  color: var(--accent-text);
+}
+.footReport {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ink-40);
+}
+
+/* ── Landlord tab ── */
+.llHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.verdict {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 20px;
+  padding: 13px 16px;
+  border-radius: 16px;
+  background: rgba(var(--jade-rgb), 0.09);
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--jade-ink);
+}
+.quote {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: 20px;
+}
+.quote p {
+  font-family: var(--serif);
+  font-size: 16.5px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.who {
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  color: var(--ink-40);
+  margin-top: 6px;
+}
+.flag {
+  display: flex;
+  gap: 11px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  color: var(--ink-60);
+  line-height: 1.45;
+}
+.flagIcon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--amber-ink);
+}
+.empty {
+  margin-top: 20px;
+  padding: 22px;
+  border-radius: 16px;
+  border: 1.5px dashed rgba(var(--plum-rgb), 0.18);
+  background: rgba(var(--plum-rgb), 0.02);
+}
+.emptyTitle {
+  font-family: var(--serif);
+  font-size: 19px;
+  color: var(--plum);
+}
+.emptyBody {
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+  margin-top: 9px;
+}
+
+/* ── Responsive: stack to single column, cards become a snap-scroll row ──
+   No existing breakpoint token sits at the design's 1080px; --compact
+   (880px) is the closest named token already used repo-wide for the same
+   "stack two-column layouts to one" purpose. */
+@media (--compact) {
+  .twoCol {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+  .lstStage {
+    height: auto;
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    padding: 4px 4px 22px;
+  }
+  .lst {
+    position: static;
+    flex: 0 0 86%;
+    min-width: 86%;
+    transform: none !important;
+    opacity: 1 !important;
+    scroll-snap-align: center;
+  }
+  .lst[data-position="back"] .lstPeek {
+    display: none;
+  }
+  /* Tab pills are a real touch target here (not an inline text link), so
+     guarantee the ~44px minimum even though the nowrap label text alone
+     only needs ~36px. */
+  .lt {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* The room photo's price/neighbourhood chips are absolutely positioned
+     over a card that shrinks to ~86% of viewport width on phones; without a
+     right edge + wrap they can run past the card's rounded corners and get
+     silently clipped by .lst's overflow:hidden. */
+  .roomChips {
+    right: 16px;
+    flex-wrap: wrap;
+  }
+}
+
+/* ── Phone refinements: one full-bleed card, tab-bar header ──
+   Nested tighter than --compact (860px vs 880px) so tablets keep the
+   two-card peek carousel; phones get a single full-width card only (the
+   back card is hidden outright, not just scrolled off), and the
+   room/landlord toggle is promoted to a real full-width tab-bar header
+   (the "posted by a member" note is redundant there and hidden). */
+@media (--mobile) {
+  /* Only one card ever renders now (the back card is display:none below),
+     so the horizontal-scroll/snap machinery from --compact is dead weight
+     — worse, overflow-x: auto implicitly computes overflow-y to auto too,
+     which was clipping the card's own box-shadow at the container's edge. */
+  .lstStage {
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+  .lst {
+    flex: 0 0 100%;
+    min-width: 100%;
+  }
+  .lst[data-position="back"] {
+    display: none;
+  }
+  .lstTabs {
+    padding: 0;
+    gap: 0;
+    background: none;
+    border-bottom: none;
+  }
+  .lt {
+    flex: 1 1 0;
+    justify-content: center;
+    border-radius: 0;
+    min-height: 48px;
+    padding: 14px 12px;
+  }
+  .lstNote {
+    display: none;
+  }
+}

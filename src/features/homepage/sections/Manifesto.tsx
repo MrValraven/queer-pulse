@@ -28,7 +28,13 @@ export function Manifesto() {
             <Reveal as="p" className={styles.body} delay={160}>
               {t("homepage:manifesto.body2")}
             </Reveal>
-            <Reveal className={styles.actions} delay={220}>
+            <Reveal as="p" className={styles.body} delay={200}>
+              {t("homepage:manifesto.body3")}
+            </Reveal>
+            <Reveal as="p" className={styles.highlight} delay={240}>
+              {t("homepage:manifesto.highlight")}
+            </Reveal>
+            <Reveal className={styles.actions} delay={280}>
               <Button variant="ghost-dark" to={routes.safety}>
                 {t("homepage:manifesto.safetyCta")}
               </Button>

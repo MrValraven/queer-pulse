@@ -1,0 +1,16 @@
+.item + .item {
+  margin-top: 20px;
+}
+
+.itemTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.itemDesc {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin-top: 8px;
+}

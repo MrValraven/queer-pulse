@@ -7,6 +7,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { GuidelinesLink } from "../marketing/GuidelinesLink";
 import { usePushSubscription } from "../push/usePushSubscription";
+import { BlockMuteInfoModal } from "../safety/BlockMuteInfoModal";
 import { clearInviteWelcome } from "./api/pendingInvite";
 import { AgeAttestation } from "./AgeAttestation";
 import { Under18Notice } from "./Under18Notice";
@@ -58,6 +59,7 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
   const [is18, setIs18] = useState(false);
   const [under18, setUnder18] = useState(false);
   const [shake, setShake] = useState(false);
+  const [showBlockMuteInfo, setShowBlockMuteInfo] = useState(false);
 
   // The 18+ attestation is recorded at SIGN-UP now (it rides the OAuth `state`
   // param; the backend refuses to create an account without it), so by the time
@@ -107,11 +109,30 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
           <div className={styles.notifyDesc}>
             <Translation
               i18nKey="auth:onboarding.stepNorms.control.desc"
-              components={{ a: <Link to={routes.blockMute} /> }}
+              components={{
+                a: (
+                  // eslint-disable-next-line jsx-a11y/control-has-associated-label -- role="button" span is named by the inner text `<Translation>` injects at render time (via cloneElement), which the rule can't see statically.
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    className={styles.notifyLink}
+                    onClick={() => setShowBlockMuteInfo(true)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setShowBlockMuteInfo(true);
+                      }
+                    }}
+                  />
+                ),
+              }}
             />
           </div>
         </div>
       </div>
+      {showBlockMuteInfo && (
+        <BlockMuteInfoModal onClose={() => setShowBlockMuteInfo(false)} />
+      )}
       <label
         className={`${styles.agreeRow} ${!agreed ? styles.locked : ""} ${shake ? styles.shake : ""}`}
         onAnimationEnd={() => setShake(false)}

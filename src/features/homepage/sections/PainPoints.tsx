@@ -35,6 +35,7 @@ export function PainPoints() {
           />
         </h2>
         <p className={styles.sub}>{t("homepage:painPoints.sub")}</p>
+        <p className={styles.sub}>{t("homepage:painPoints.sub2")}</p>
       </Reveal>
 
       <div className={styles.thread}>

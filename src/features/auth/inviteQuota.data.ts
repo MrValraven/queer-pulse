@@ -14,4 +14,7 @@ export const INVITE_QUOTA: InviteQuotaDTO = {
   used: 1,
   remaining: 4,
   resetsAt: "2026-08-01T00:00:00.000Z",
+  // Matches the fixed illustrative size used elsewhere in demo mode (see
+  // `demoInvite` in `api/useInvite.ts`).
+  memberCount: 247,
 };

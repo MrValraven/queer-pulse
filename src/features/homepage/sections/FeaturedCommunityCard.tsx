@@ -233,13 +233,15 @@ function CommunityCard({
  */
 export function FeaturedCommunityCard({
   items,
+  fill,
 }: {
   items: CommunitySpotlightView[];
+  fill?: boolean;
 }) {
   const { openModal, modalElement } = useHowCommunitiesWorkModal();
   if (items.length === 0) return null;
   return (
-    <div className={styles.list}>
+    <div className={[styles.list, fill && styles.listFill].filter(Boolean).join(" ")}>
       {items.map((view) => (
         <CommunityCard key={view.key} view={view} onHowItWorksClick={openModal} />
       ))}

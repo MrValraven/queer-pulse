@@ -8,13 +8,14 @@ import {
   Discovery,
   Gatherings,
   Hero,
+  HousingShowcase,
   LiveChangeMakers,
   LiveCommunities,
   LiveDiscovery,
   Manifesto,
-  Newsletter,
   Outro,
   PainPoints,
+  PersonasShowcase,
   Stories,
 } from "./sections";
 
@@ -35,8 +36,12 @@ import {
  * redesign, not a wire. They render ONLY in demo mode (the `{demoMode && …}`
  * guards below) — verified to simply not render in live, never broken. Live
  * mode always keeps the platform-authored sections (value proposition,
- * manifesto, the "gaps we felt" thread, newsletter) — all honest, identical in
- * both modes.
+ * manifesto, the "gaps we felt" thread, housing, personas) — identical in
+ * both modes. HousingShowcase and PersonasShowcase both link to real,
+ * already-live features (`/local/housing`, `/subprofiles`); their
+ * interactive showcase content (specific example listings/personas) is
+ * fabricated illustrative copy shown in BOTH modes by product decision —
+ * neither section is backed by real listing/persona data yet.
  *
  * DEFERRED (Phase 2): a live Gatherings/Stories discovery surface needs its own
  * admin-curation endpoint (mirroring `GET /landing/features`) before these can
@@ -58,10 +63,11 @@ export function HomePage() {
       {demoMode ? <Discovery /> : <LiveDiscovery />}
       {demoMode ? <Communities /> : <LiveCommunities />}
       {demoMode && <Gatherings />}
+      <HousingShowcase />
+      <PersonasShowcase />
       <PainPoints />
       {demoMode && <Stories />}
       {demoMode ? <ChangeMakers /> : <LiveChangeMakers />}
-      <Newsletter />
       <Outro />
     </PageShell>
   );

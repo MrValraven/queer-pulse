@@ -93,6 +93,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "homepage-housing-personas-showcase",
+        category: "improvement",
+        date: "21 Aug 2026",
+        ...entryKeys("homepage-housing-personas-showcase"),
+      },
+      {
         id: "resources-guide-rating",
         category: "feature",
         date: "20 Aug 2026",

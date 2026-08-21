@@ -13,7 +13,12 @@ import { InviteComposeFields } from "./InviteComposeFields";
 import { useInviteSender } from "./useInviteSender";
 import styles from "./InvitePage.module.css";
 
-export function InviteLinkPanel() {
+interface InviteLinkPanelProps {
+  /** Live community size, from the page's quota fetch — undefined while loading. */
+  memberCount?: number;
+}
+
+export function InviteLinkPanel({ memberCount }: InviteLinkPanelProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const sender = useInviteSender();
@@ -85,6 +90,7 @@ export function InviteLinkPanel() {
         senderName={sender.full}
         description={description}
         url={INVITE_URL}
+        memberCount={memberCount}
       />
 
       {quotaError && (
