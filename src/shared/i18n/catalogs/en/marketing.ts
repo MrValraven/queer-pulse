@@ -1715,6 +1715,11 @@ export const marketing: Catalog = {
   "changelog.tag.vouch": "Vouch for someone",
   "changelog.tag.culture": "Visit Culture",
 
+  "changelog.entries.communities-hub-hero-restore.title":
+    "Communities got its welcome back",
+  "changelog.entries.communities-hub-hero-restore.body":
+    "The top of Communities had drifted too far from the nav, with a big empty gap above a bare title. It's back to sitting right under the nav, with the full welcome restored: a proper title, a line about what the space is for, and the My communities/Discover switch grouped together above the actions.",
+
   "changelog.entries.community-tags-discovery.title":
     "Find communities through tags and connections",
   "changelog.entries.community-tags-discovery.body":

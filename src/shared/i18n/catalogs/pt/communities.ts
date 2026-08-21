@@ -18,7 +18,10 @@ import type { Catalog } from "../../types";
  */
 export const communities: Catalog = {
   // ── Merged page shell (CommunitiesHubPage + header + top tabs) ────────────
-  "hubShell.title": "Comunidades",
+  "hubShell.title": "Comunidades e",
+  "hubShell.titleEm": "coletivos",
+  "hubShell.subtitle":
+    "Conhece as comunidades que já estão a juntar pessoas por Lisboa fora. Encontra uma onde te apeteça entrar, ou começa a tua própria.",
   "topTabs.mine": "Minhas comunidades",
   "topTabs.discover": "Descobrir",
   "topTabs.ariaLabel": "Vistas de comunidades",

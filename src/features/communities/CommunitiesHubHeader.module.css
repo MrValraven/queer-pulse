@@ -1,35 +1,55 @@
-/* Reserves the top nav band (--nav-top + --nav-height = 80px, plus breathing
-   room) so the header clears the fixed floating nav — the job the old hero did.
-   Sidebar nav mode clips this band via main[data-page-main]'s negative margin,
-   same as heroes (see src/styles/nav-mode.css). Not sticky; the Discover
-   sub-tabs keep their own sticky behaviour further down the page. */
+/* main[data-page-main] (base.css) already reserves the floating nav's band as
+   padding-top; this is only the header's own breathing room below it. Not
+   sticky; the Discover sub-tabs keep their own sticky behaviour further down
+   the page. */
 .header {
-  padding-block: clamp(88px, 12vw, 116px) var(--gap-grid);
+  padding-block: var(--gap-grid) var(--gap-grid);
 }
 
 .row {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: var(--gap-sm) var(--gap-grid);
 }
 
 .identity {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
   gap: var(--gap-sm);
   min-width: 0;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
 }
 
 .title {
   margin: 0;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: var(--text-heading);
-  line-height: var(--lh-title);
+  font-size: var(--text-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
   color: var(--text-strong);
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.lead {
+  margin: 0;
+  font-size: var(--text-body-lg);
+  line-height: var(--lh-body-lg);
+  color: var(--ink-60);
+  max-width: 46ch;
 }
 
 .actions {

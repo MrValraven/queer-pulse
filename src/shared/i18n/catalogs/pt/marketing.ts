@@ -1761,6 +1761,11 @@ export const marketing: Catalog = {
   "changelog.tag.vouch": "Apadrinhar alguém",
   "changelog.tag.culture": "Visitar a Cultura",
 
+  "changelog.entries.communities-hub-hero-restore.title":
+    "As Comunidades voltaram a ter as boas-vindas",
+  "changelog.entries.communities-hub-hero-restore.body":
+    "O topo das Comunidades tinha-se afastado demais da navegação, com um grande espaço vazio acima de um título simples. Voltou a encostar-se à navegação, com as boas-vindas completas: um título como deve ser, uma linha sobre o que este espaço é, e o alternador Minhas comunidades/Descobrir agrupado por cima das ações.",
+
   "changelog.entries.community-tags-discovery.title":
     "Descobre comunidades por etiquetas e ligações",
   "changelog.entries.community-tags-discovery.body":

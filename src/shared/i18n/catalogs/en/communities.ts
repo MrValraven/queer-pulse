@@ -13,7 +13,10 @@ import type { Catalog } from "../../types";
  */
 export const communities: Catalog = {
   // ── Merged page shell (CommunitiesHubPage + header + top tabs) ────────────
-  "hubShell.title": "Communities",
+  "hubShell.title": "Communities &",
+  "hubShell.titleEm": "collectives",
+  "hubShell.subtitle":
+    "Meet the communities already bringing people together across Lisbon. Find one you'd like to be part of, or start something of your own.",
   "topTabs.mine": "My communities",
   "topTabs.discover": "Discover",
   "topTabs.ariaLabel": "Communities views",

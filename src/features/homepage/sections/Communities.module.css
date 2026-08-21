@@ -953,6 +953,13 @@
   }
 }
 @media (--sm) {
+  /* headText and headRight stack on narrow screens, so the row's gap and
+     margin-bottom (tuned for a side-by-side layout) double up as one
+     oversized block of dead space above the toolbar. */
+  .head {
+    gap: var(--gap-sm);
+    margin-bottom: var(--gap-grid);
+  }
   .spotMedia {
     height: 200px;
   }

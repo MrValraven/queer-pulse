@@ -7,11 +7,11 @@ import type { TopTab } from "./useCommunitiesTopTab";
 import styles from "./CommunitiesHubHeader.module.css";
 
 /**
- * Compact, utility-first header for the merged `/communities` page. Carries the
- * page's single <h1>, the My communities | Discover switch, and the persistent
- * "Start a community" action. Reserves the top nav band (the job the old
- * directory hero did — see `src/styles/nav-mode.css`) so the switch clears the
- * floating nav instead of hiding behind it. Not sticky.
+ * Header for the merged `/communities` page. Carries the page's single <h1>
+ * (with its lead line), the My communities | Discover switch, and the
+ * persistent "Start a community" action. The floating nav's band is already
+ * reserved once by `main[data-page-main]` (base.css); this only adds its own
+ * breathing room on top of that. Not sticky.
  */
 export function CommunitiesHubHeader({
   active,
@@ -28,10 +28,18 @@ export function CommunitiesHubHeader({
       <div className="wrap">
         <div className={styles.row}>
           <div className={styles.identity}>
-            <h1 className={styles.title}>
-              {t("communities:hubShell.title")}{" "}
+            {/* FeatureHelp sits beside the heading, not inside it, so the info
+                button doesn't pollute the h1's accessible name or inherit its
+                hero-scale font-size (see CommunityDetailHero for the same
+                pattern). */}
+            <div className={styles.titleRow}>
+              <h1 className={styles.title}>
+                {t("communities:hubShell.title")}{" "}
+                <em>{t("communities:hubShell.titleEm")}</em>
+              </h1>
               <FeatureHelp id="communities.hub" />
-            </h1>
+            </div>
+            <p className={styles.lead}>{t("communities:hubShell.subtitle")}</p>
             <CommunitiesTopTabs active={active} onChange={onChange} />
           </div>
           <div className={styles.actions}>
