@@ -190,6 +190,36 @@
   background: var(--paper);
 }
 
+/* "Suggest a tag" trigger — a quiet secondary affordance below the tag
+   picker, not a button competing with the form's primary actions. */
+.suggestTagTrigger {
+  display: inline-flex;
+  align-items: center;
+  margin: -8px 0 16px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .suggestTagTrigger:hover {
+    color: var(--plum);
+  }
+}
+
+.suggestTagTrigger:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 /* Error alert */
 .alert {
   margin: 0 0 16px;

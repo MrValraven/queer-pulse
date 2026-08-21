@@ -13,7 +13,7 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
-import { Button, ImageSlot } from "../../../shared/components/ui";
+import { Button, ImageSlot, Tag, TagRow } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useHowCommunitiesWorkModal } from "../../marketing/useHowCommunitiesWorkModal";
@@ -21,6 +21,10 @@ import type {
   AccessTier,
   CommunityType,
 } from "../../communities/api/communities.api";
+import {
+  CARD_TAG_DISPLAY_CAP,
+  COMMUNITY_TAG_LABEL_KEY,
+} from "../../communities/communityTags.data";
 import { FACE_TINT } from "./communityClasses";
 import type {
   CommunitySpotlightFace,
@@ -156,6 +160,18 @@ function CommunityCard({
         </h3>
 
         {view.blurb && <p className={spot.spotDesc}>{view.blurb}</p>}
+
+        {view.tags && view.tags.length > 0 && (
+          <TagRow>
+            {view.tags.slice(0, CARD_TAG_DISPLAY_CAP).map((tagId) => (
+              <Tag key={tagId}>
+                {COMMUNITY_TAG_LABEL_KEY[tagId]
+                  ? t(COMMUNITY_TAG_LABEL_KEY[tagId])
+                  : tagId}
+              </Tag>
+            ))}
+          </TagRow>
+        )}
 
         <div className={spot.spotCols}>
           <div className={spot.spotMain}>

@@ -52,6 +52,10 @@ export interface CommunityDraft {
   /** Chapter 8 — confirm */
   handle: string;
   consent: boolean;
+  /** Curated tag ids (⊆ `COMMUNITY_TAGS`, `communityTags.data.ts`), capped at
+   *  `MAX_COMMUNITY_TAGS`. Pickable on chapter 1 — Why (`StepWhy`, alongside
+   *  `type`) — and afterwards, the only editor, `EditCommunityModal`. */
+  tags: string[];
 }
 
 /** A community founded this session (demo only — see createdCommunities.store.ts). */
@@ -210,6 +214,22 @@ export function typeLabelFor(type: CommunityType | ""): string {
     CATEGORY_OPTIONS.find((c) => c.type === type)?.typeLabel ?? "Community"
   );
 }
+
+/**
+ * A light-touch default: 1-2 curated tag ids (⊆ `COMMUNITY_TAGS`) worth
+ * pre-checking when a founder picks a category on chapter 1 — Why. Purely a
+ * suggestion — `StepWhy` merges these into the draft without locking them, so
+ * the founder can freely remove or add before submitting. Edit-flow (post-
+ * creation) never applies this; only the creation wizard does.
+ */
+export const TYPE_TAG_SUGGESTIONS: Record<CommunityType, string[]> = {
+  social: ["nightlife-events"],
+  arts: ["creative-collective"],
+  activism: ["activism-mutual-aid", "politics-advocacy"],
+  support: ["peer-support", "mental-health"],
+  sports: ["sports-fitness"],
+  professional: ["career-networking"],
+};
 
 /* ---------- Access tiers ---------- */
 

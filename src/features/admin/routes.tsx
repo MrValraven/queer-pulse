@@ -20,6 +20,7 @@ const AdminGuideFeedbackPage = lazyNamed(() => import("./AdminGuideFeedbackPage"
 const AdminMagazineSubmissionsPage = lazyNamed(() => import("./AdminMagazineSubmissionsPage"), "AdminMagazineSubmissionsPage");
 const AdminWriterApplicationsPage = lazyNamed(() => import("./AdminWriterApplicationsPage"), "AdminWriterApplicationsPage");
 const AdminCommunitiesPage = lazyNamed(() => import("./AdminCommunitiesPage"), "AdminCommunitiesPage");
+const AdminCommunityTagRequestsPage = lazyNamed(() => import("./AdminCommunityTagRequestsPage"), "AdminCommunityTagRequestsPage");
 const AdminLandingPage = lazyNamed(() => import("./AdminLandingPage"), "AdminLandingPage");
 const AdminPressKitPage = lazyNamed(() => import("./AdminPressKitPage"), "AdminPressKitPage");
 const AdminCommunityModPage = lazyNamed(() => import("./AdminCommunityModPage"), "AdminCommunityModPage");
@@ -81,6 +82,10 @@ export function adminRoutes() {
       <Route
         path={routes.adminCommunities}
         element={<AdminCommunitiesPage />}
+      />
+      <Route
+        path={routes.adminCommunityTagRequests}
+        element={<AdminCommunityTagRequestsPage />}
       />
       <Route path={routes.adminLanding} element={<AdminLandingPage />} />
       <Route path={routes.adminPressKit} element={<AdminPressKitPage />} />

@@ -40,4 +40,13 @@ export interface Community {
    *  computed client-side since this isn't a server-sortable/filterable
    *  column. Absent in sources that don't carry it (the demo registry). */
   activeThisWeek?: number;
+  /** Resolved cover-image URL, when the source knows it (the live card DTO).
+   *  Absent in sources that don't carry it (the demo registry). */
+  coverImageUrl?: string | null;
+  /** Curated tag ids the owner/mod picked for this community (⊆ the shared
+   *  `COMMUNITY_TAGS` vocabulary in `src/features/communities/communityTags.data.ts`)
+   *  — shown as pills on every card variant and filterable on the discover
+   *  page. Absent when the source doesn't carry it (an older cached card, or
+   *  a community with none picked yet). */
+  tags?: string[];
 }

@@ -171,6 +171,7 @@ export const shared: Catalog = {
   "adminNav.items.orgTiers": "Partnership tiers",
   "adminNav.items.resourceListings": "Resource listings",
   "adminNav.items.resourceSuggestions": "Resource suggestions",
+  "adminNav.items.communityTagRequests": "Community tag requests",
   "adminNav.items.housingGroups": "Housing groups",
   // Reused by footer.data.ts BASE_LINKS and navMenus.ts About > Mission column.
   "adminNav.items.governance": "Governance",

@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { FiCheck, FiActivity, FiMessageCircle, FiArrowRight } from "react-icons/fi";
-import { Avatar } from "../../shared/components/ui";
+import { Avatar, Tag, TagRow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Community } from "../homepage/data/types";
 import { getLiving } from "./livingCommunities.data";
 import { photoOf } from "./communityPeople";
 import { AccessTierBadge } from "./CommunityBadges";
+import { CARD_TAG_DISPLAY_CAP, COMMUNITY_TAG_LABEL_KEY } from "./communityTags.data";
 import styles from "./CommunitiesPage.module.css";
 
 export function CommunityCard({
@@ -72,6 +73,18 @@ export function CommunityCard({
 
       <div className={styles.name}>{community.name}</div>
       <p className={styles.desc}>{community.description}</p>
+
+      {community.tags && community.tags.length > 0 && (
+        <TagRow>
+          {community.tags.slice(0, CARD_TAG_DISPLAY_CAP).map((tagId) => (
+            <Tag key={tagId}>
+              {COMMUNITY_TAG_LABEL_KEY[tagId]
+                ? t(COMMUNITY_TAG_LABEL_KEY[tagId])
+                : tagId}
+            </Tag>
+          ))}
+        </TagRow>
+      )}
 
       {living && (
         <div className={styles.statsRow}>

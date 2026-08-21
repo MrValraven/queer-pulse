@@ -8,6 +8,7 @@ import { useCommunities } from "./api/useCommunities";
 import { useFeaturedCommunity } from "./api/useFeaturedCommunity";
 import { useJoinCommunity } from "./api/useCommunityMutations";
 import { getLiving } from "./livingCommunities.data";
+import { useCommunitiesTagsFilter } from "./useCommunitiesTagsFilter";
 import { JoinModal } from "./JoinModal";
 import { CommunityCard } from "./CommunityCard";
 import { FeaturedCommunityCard } from "./FeaturedCommunityCard";
@@ -51,6 +52,9 @@ export function CommunitiesDiscover() {
   const [filter, setFilter] = useState<"all" | CommunityType>("all");
   const [openOnly, setOpenOnly] = useState(false);
   const [busyOnly, setBusyOnly] = useState(false);
+  // Synced with `?tags=` — see the hook's doc comment for why only this
+  // filter round-trips through the URL.
+  const [tagIds, setTagIds] = useCommunitiesTagsFilter();
 
   const {
     items: communities,
@@ -65,6 +69,7 @@ export function CommunitiesDiscover() {
     sort: sort === "name" ? "name" : undefined,
     type: filter === "all" ? undefined : filter,
     access: openOnly ? "public" : undefined,
+    tags: tagIds.length ? tagIds : undefined,
   });
   const loading = useSimulatedLoad() || isLoading;
   const { isMember, join, requestToJoin } = useCommunityMembership();
@@ -83,7 +88,12 @@ export function CommunitiesDiscover() {
   // either toggle) it drops out so it doesn't compete with what they asked for.
   const featured = useFeaturedCommunity();
   const showFeatured =
-    Boolean(featured) && !q && filter === "all" && !openOnly && !busyOnly;
+    Boolean(featured) &&
+    !q &&
+    filter === "all" &&
+    !openOnly &&
+    !busyOnly &&
+    tagIds.length === 0;
 
   // The backend can't sort/filter by `activeThisWeek` (it's computed
   // post-pagination, not an indexed column), so "Most active" and "Busy this
@@ -130,7 +140,7 @@ export function CommunitiesDiscover() {
   }, [countsHasNext, countsFetching, countsFetchNext]);
 
   const hasActiveRefinement =
-    Boolean(q) || filter !== "all" || openOnly || busyOnly;
+    Boolean(q) || filter !== "all" || openOnly || busyOnly || tagIds.length > 0;
 
   return (
     <>
@@ -147,6 +157,8 @@ export function CommunitiesDiscover() {
             setSort={setSort}
             filter={filter}
             setFilter={setFilter}
+            tagIds={tagIds}
+            setTagIds={setTagIds}
             allForCounts={allForCounts}
             countsHasNext={countsHasNext}
             resultCount={gridItems.length + (showFeatured ? 1 : 0)}
@@ -155,16 +167,18 @@ export function CommunitiesDiscover() {
           />
 
           {showFeatured && (
-            <FeaturedCommunityCard
-              community={featured!}
-              joined={
-                demoMode
-                  ? featured!.slug
-                    ? isMember(featured!.slug)
-                    : false
-                  : featured!.myRole != null
-              }
-            />
+            <div className={styles.featured}>
+              <FeaturedCommunityCard
+                community={featured!}
+                joined={
+                  demoMode
+                    ? featured!.slug
+                      ? isMember(featured!.slug)
+                      : false
+                    : featured!.myRole != null
+                }
+              />
+            </div>
           )}
 
           {!showSkeletons && visible.length === 0 ? (
@@ -173,10 +187,12 @@ export function CommunitiesDiscover() {
               filter={filter}
               openOnly={openOnly}
               busyOnly={busyOnly}
+              tagIds={tagIds}
               setSearchInput={setSearchInput}
               setFilter={setFilter}
               setOpenOnly={setOpenOnly}
               setBusyOnly={setBusyOnly}
+              setTagIds={setTagIds}
             />
           ) : (
             <div className={styles.grid}>

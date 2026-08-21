@@ -59,6 +59,7 @@ export function useMyCommunityCards(
         typeLabel: community.typeLabel,
         countLabel: community.count,
         role: membership.role,
+        tags: community.tags,
       });
     }
     communityCards.sort((left, right) => left.name.localeCompare(right.name));

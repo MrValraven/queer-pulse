@@ -20,8 +20,11 @@ export function CommunitiesDiscoverOutro() {
             components={{ em: <em /> }}
           />
         </h2>
-        <p className={styles.outroBody}>
+        <p className={styles.outroBodyLead}>
           {t("communities:discover.outro.body")}
+        </p>
+        <p className={styles.outroBody}>
+          {t("communities:discover.outro.body2")}
         </p>
         <Button variant="ghost-dark" to={routes.startCommunity}>
           {t("communities:discover.outro.cta")}

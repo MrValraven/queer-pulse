@@ -1,9 +1,10 @@
 import { FiActivity, FiArrowRight, FiCalendar, FiCheck } from "react-icons/fi";
-import { Button, ImageSlot } from "../../shared/components/ui";
+import { Button, ImageSlot, Tag, TagRow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Community, CommunityType } from "../../shared/types/domain";
 import { useCommunityPulse } from "./api/useCommunityPulse";
 import { AccessTierBadge } from "./CommunityBadges";
+import { CARD_TAG_DISPLAY_CAP, COMMUNITY_TAG_LABEL_KEY } from "./communityTags.data";
 import styles from "./FeaturedCommunityCard.module.css";
 
 /** Category pill colour per `CommunityType` — mirrors CommunitiesPage.module.css's
@@ -50,6 +51,7 @@ export function FeaturedCommunityCard({
     <section className={styles.card}>
       <div className={styles.mediaWrap}>
         <ImageSlot
+          src={community.coverImageUrl ?? undefined}
           placeholder={community.name}
           tint="plum"
           radius={0}
@@ -84,6 +86,18 @@ export function FeaturedCommunityCard({
 
         <h2 className={styles.name}>{community.name}</h2>
         <p className={styles.tagline}>{community.description}</p>
+
+        {community.tags && community.tags.length > 0 && (
+          <TagRow>
+            {community.tags.slice(0, CARD_TAG_DISPLAY_CAP).map((tagId) => (
+              <Tag key={tagId}>
+                {COMMUNITY_TAG_LABEL_KEY[tagId]
+                  ? t(COMMUNITY_TAG_LABEL_KEY[tagId])
+                  : tagId}
+              </Tag>
+            ))}
+          </TagRow>
+        )}
 
         {nextEvent && (
           <div className={styles.next}>

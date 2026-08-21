@@ -132,6 +132,50 @@
   color: rgba(var(--cream-rgb), 0.92);
 }
 
+/* The tags filter disclosure — its trigger reuses .chip/.chipActive so it
+   reads as part of the same category-chip family; only the icon gap and the
+   dropdown panel below are its own. */
+.tagsFilter {
+  display: inline-block;
+  position: relative;
+  margin: 0 0 18px;
+}
+.tagsFilter .chip {
+  gap: 7px;
+}
+.tagsFilter svg {
+  width: 14px;
+  height: 14px;
+}
+.tagsPanel {
+  position: absolute;
+  z-index: 3;
+  top: calc(100% + 8px);
+  left: 0;
+  width: min(420px, 90vw);
+  max-height: 340px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+.tagsSearch {
+  flex: none;
+}
+.tagsChips {
+  gap: 7px;
+}
+.tagsNoMatch {
+  font-size: 13px;
+  color: var(--ink-40);
+  margin: 0;
+}
+
 /* Below the chips, above the grid: a quiet count + active sort, with a
    reset only when some refinement is actually narrowing the view. */
 .resline {
@@ -158,6 +202,10 @@
   .reset:hover {
     text-decoration: underline;
   }
+}
+
+.featured {
+  margin-bottom: 20px;
 }
 
 .grid {
@@ -446,6 +494,12 @@
 }
 .outroBody {
   margin: 0 0 28px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: rgba(var(--cream-rgb), 0.72);
+}
+.outroBodyLead {
+  margin: 0 0 12px;
   font-size: 15.5px;
   line-height: 1.65;
   color: rgba(var(--cream-rgb), 0.72);

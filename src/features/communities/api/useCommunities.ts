@@ -77,12 +77,21 @@ export function useCommunities(
           : searched;
         // Mirror the live endpoint's `access=` filter (used by the Discover
         // page's "Open to all" toggle) over the same static registry.
-        const matches = params.access
+        const accessMatched = params.access
           ? typeMatched.filter(
               (community) =>
                 (community.accessTier ?? "public") === params.access,
             )
           : typeMatched;
+        // Mirror the live endpoint's `tags=` filter (used by the Discover
+        // page's tags filter) — a community matches if it carries ANY of the
+        // selected tag ids, same OR-within/AND-across-filters semantics as
+        // every other facet on this page.
+        const matches = params.tags?.length
+          ? accessMatched.filter((community) =>
+              params.tags!.some((tagId) => community.tags?.includes(tagId)),
+            )
+          : accessMatched;
         // Mirror the live endpoint's `sort=name` (A→Z); `newest`/omitted keeps
         // the registry's own order, same as the backend's `created_at DESC`
         // default reads today.

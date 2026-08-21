@@ -181,10 +181,14 @@ export function useUploadImage(kind: UploadKind) {
   const { demoMode } = useDemoMode();
   const outstandingPreviewUrls = useRef<Set<string>>(new Set());
 
-  // Belt-and-suspenders cleanup: revoke every object URL this hook instance
-  // ever created, however it was left (superseded-but-caller-forgot,
-  // abandoned mid-upload, or simply still on screen when the component goes
-  // away). This is what actually prevents a blob from being held forever.
+  // Revokes any object URL this hook instance created but never got to hand
+  // back — the upload threw after `processImage` produced a blob (e.g. the
+  // presign or PUT failed). A URL that *was* successfully returned is removed
+  // from this set at the point it's returned (see below): ownership has
+  // passed to the caller by then, so this sweep must not touch it — this
+  // hook's own owning component (typically a picker modal) often unmounts in
+  // the very same commit that hands the result off via a callback, which
+  // would otherwise revoke the URL before the caller's `<img>` ever loads it.
   useEffect(() => {
     const trackedUrls = outstandingPreviewUrls.current;
     return () => {
@@ -208,6 +212,13 @@ export function useUploadImage(kind: UploadKind) {
         // persist the crop — just echo it back for the caller to store
         // alongside the preview, same as the key/previewUrl above.
         options?.onProgress?.(100);
+        // Ownership of this URL passes to the caller as soon as it's
+        // returned — stop tracking it so the unmount sweep below doesn't
+        // revoke it out from under whatever just rendered it (e.g. the
+        // picker modal that owns this hook instance closing itself the
+        // moment it hands the result to `onPick`, in the same commit that
+        // mounts the caller's `<img src={previewUrl}>`).
+        outstandingPreviewUrls.current.delete(previewUrl);
         return { key: previewUrl, previewUrl, crop: options?.crop };
       }
 
@@ -239,6 +250,9 @@ export function useUploadImage(kind: UploadKind) {
         }
       }
 
+      // Ownership passes to the caller now — see the demo-mode branch above
+      // for why this must happen before returning.
+      outstandingPreviewUrls.current.delete(previewUrl);
       return { key, previewUrl, crop: options?.crop };
     },
     [demoMode, kind],

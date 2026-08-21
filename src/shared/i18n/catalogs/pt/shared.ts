@@ -160,6 +160,7 @@ export const shared: Catalog = {
   "adminNav.items.orgTiers": "Níveis de parceria",
   "adminNav.items.resourceListings": "Diretório de recursos",
   "adminNav.items.resourceSuggestions": "Sugestões de recursos",
+  "adminNav.items.communityTagRequests": "Pedidos de etiquetas de comunidades",
   "adminNav.items.housingGroups": "Grupos de habitação",
   "adminNav.items.governance": "Governação",
   "adminNav.items.roadmap": "Roteiro",

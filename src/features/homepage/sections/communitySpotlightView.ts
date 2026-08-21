@@ -62,6 +62,9 @@ export interface CommunitySpotlightView {
   facesMore: number;
   /** Deterministic card tint so a curated set isn't all one colour. */
   tint: CommunityCardTint;
+  /** Curated tag ids (⊆ `COMMUNITY_TAGS`, `communities/communityTags.data.ts`)
+   *  — rendered as pills. Absent when the source doesn't carry it. */
+  tags?: string[];
 }
 
 /**
@@ -108,5 +111,6 @@ export function landingCommunityToView(
     faces,
     facesMore: Math.max(0, dto.memberCount - faces.length),
     tint: tintForKey(dto.slug),
+    tags: dto.tags,
   };
 }

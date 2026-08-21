@@ -20,19 +20,23 @@ export function CommunitiesDiscoverEmptyState({
   filter,
   openOnly,
   busyOnly,
+  tagIds,
   setSearchInput,
   setFilter,
   setOpenOnly,
   setBusyOnly,
+  setTagIds,
 }: {
   q: string;
   filter: "all" | CommunityType;
   openOnly: boolean;
   busyOnly: boolean;
+  tagIds: string[];
   setSearchInput: Dispatch<SetStateAction<string>>;
   setFilter: Dispatch<SetStateAction<"all" | CommunityType>>;
   setOpenOnly: Dispatch<SetStateAction<boolean>>;
   setBusyOnly: Dispatch<SetStateAction<boolean>>;
+  setTagIds: Dispatch<SetStateAction<string[]>>;
 }) {
   const { t } = useTranslation();
 
@@ -50,7 +54,7 @@ export function CommunitiesDiscoverEmptyState({
     );
   }
 
-  if (filter !== "all" || openOnly || busyOnly) {
+  if (filter !== "all" || openOnly || busyOnly || tagIds.length > 0) {
     return (
       <EmptyState
         icon={<FiUsers />}
@@ -62,6 +66,7 @@ export function CommunitiesDiscoverEmptyState({
             setFilter("all");
             setOpenOnly(false);
             setBusyOnly(false);
+            setTagIds([]);
           },
         }}
       />

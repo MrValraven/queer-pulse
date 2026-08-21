@@ -126,6 +126,9 @@ export function cardDtoToCommunity(dto: CommunityCardDTO): Community {
     // "Busy this week" toggle / "Most active" sort can read it client-side
     // (see the `Community.activeThisWeek` doc comment for why).
     activeThisWeek: dto.activeThisWeek,
+    coverImageUrl: dto.coverImageUrl,
+    // Curated tag ids for the card pills — absent/empty when none picked yet.
+    tags: dto.tags,
   };
 }
 
@@ -383,6 +386,8 @@ export interface EditableCommunityFields {
   /** Resolved cover URL (or "" for none) — round-trips through the edit modal's
    *  `ImageUploadField`; the backend rewrites the `/files/*` URL back to a key. */
   coverImageUrl: string;
+  /** Curated tag ids (⊆ `COMMUNITY_TAGS`), capped at `MAX_COMMUNITY_TAGS`. */
+  tags: string[];
 }
 
 /** Live seed: the authoritative current values straight off the detail DTO. */
@@ -398,6 +403,7 @@ export function dtoToEditable(dto: CommunityDetailDTO): EditableCommunityFields 
     features: dto.features,
     rules: dto.rules,
     coverImageUrl: dto.coverImageUrl ?? "",
+    tags: dto.tags ?? [],
   };
 }
 
@@ -421,6 +427,7 @@ export function applyCommunityOverride(
     next.dashed = patch.accessTier === "private";
     next.joinLabel = joinLabelFor(patch.accessTier);
   }
+  if (patch.tags !== undefined) next.tags = patch.tags;
   return next;
 }
 
@@ -484,6 +491,7 @@ export function editableToDraft(
     invites: [],
     handle: "",
     consent: true,
+    tags: editable.tags,
   };
 }
 
@@ -567,5 +575,6 @@ export function draftToUpdateDto(draft: CommunityDraft): UpdateCommunityDto {
     // "" clears the cover; a resolved URL round-trips (the backend's ownership
     // interceptor rewrites our own `/files/*` URL back to the stored key).
     coverImageUrl: draft.coverImageUrl || null,
+    tags: draft.tags,
   };
 }

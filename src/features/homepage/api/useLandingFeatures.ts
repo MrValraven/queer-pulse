@@ -18,6 +18,7 @@ import type {
   CommunityType,
 } from "../../communities/api/communities.api";
 import { changemakers } from "../data/changemakers";
+import { communities } from "../data/communities";
 
 // Demo fixtures speak the prototype's vocabulary; the public DTO speaks the
 // backend's. These two maps translate a demo community into the same rich shape
@@ -60,6 +61,14 @@ function demoLandingFeatures(): LandingFeaturesResponseDTO {
       tags: member.tags,
     })),
     communities: spotlightCommunities.map((community) => {
+      // The demo showcase's own communities are a separate, richer fixture
+      // set from the real `communities` registry (`Communities.data.ts` vs.
+      // `homepage/data/communities.ts`) — most `anchor`s happen to match a
+      // real registry slug, so borrow that record's curated tags when they
+      // do; a showcase-only anchor (no match) simply carries none.
+      const registryCommunity = communities.find(
+        (registryEntry) => registryEntry.slug === community.anchor,
+      );
       const shared = {
         id: community.anchor,
         slug: community.anchor,
@@ -68,6 +77,7 @@ function demoLandingFeatures(): LandingFeaturesResponseDTO {
         blurb: community.desc,
         accessTier: DEMO_ACCESS_TO_TIER[community.access],
         foundedYear: community.founded,
+        tags: registryCommunity?.tags,
       };
       // A quiet (members-only) community carries none of the rich fields — map
       // it to the honest minimum, same as a real private community.

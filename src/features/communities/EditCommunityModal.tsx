@@ -11,6 +11,9 @@ import {
   CATEGORY_OPTIONS,
   FEATURE_OPTIONS,
 } from "./startCommunity/startCommunity.data";
+import { MAX_COMMUNITY_TAGS } from "./communityTags.data";
+import { CommunityTagPicker } from "./CommunityTagPicker";
+import { SuggestCommunityTagModal } from "./SuggestCommunityTagModal";
 import {
   editableToDraft,
   draftToUpdateDto,
@@ -49,6 +52,7 @@ export function EditCommunityModal({
     useCommunityForm(initialDraft);
   const updateCommunity = useUpdateCommunity();
   const [error, setError] = useState(false);
+  const [suggestingTag, setSuggestingTag] = useState(false);
 
   const missingRequired =
     !draft.name.trim() ||
@@ -89,39 +93,49 @@ export function EditCommunityModal({
   };
 
   return (
-    <Modal
-      title={t("communities:edit.title")}
-      eyebrow={t("communities:edit.eyebrow")}
-      onClose={onClose}
-      footer={
-        <>
-          <Button variant="ghost" type="button" onClick={onClose}>
-            {t("communities:edit.cancel")}
-          </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            form={FORM_ID}
-            disabled={missingRequired || updateCommunity.isPending}
-          >
-            {updateCommunity.isPending
-              ? t("communities:edit.saving")
-              : t("communities:edit.save")}
-          </Button>
-        </>
-      }
-    >
-      <form id={FORM_ID} onSubmit={onSubmit} className={styles.form}>
-        <EditCommunityFields
-          draft={draft}
-          set={set}
-          toggleFeature={toggleFeature}
-          addRule={addRule}
-          toggleRule={toggleRule}
-          error={error}
+    <>
+      <Modal
+        title={t("communities:edit.title")}
+        eyebrow={t("communities:edit.eyebrow")}
+        onClose={onClose}
+        footer={
+          <>
+            <Button variant="ghost" type="button" onClick={onClose}>
+              {t("communities:edit.cancel")}
+            </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              form={FORM_ID}
+              disabled={missingRequired || updateCommunity.isPending}
+            >
+              {updateCommunity.isPending
+                ? t("communities:edit.saving")
+                : t("communities:edit.save")}
+            </Button>
+          </>
+        }
+      >
+        <form id={FORM_ID} onSubmit={onSubmit} className={styles.form}>
+          <EditCommunityFields
+            draft={draft}
+            set={set}
+            toggleFeature={toggleFeature}
+            addRule={addRule}
+            toggleRule={toggleRule}
+            error={error}
+            onSuggestTag={() => setSuggestingTag(true)}
+          />
+        </form>
+      </Modal>
+
+      {suggestingTag && (
+        <SuggestCommunityTagModal
+          slug={slug}
+          onClose={() => setSuggestingTag(false)}
         />
-      </form>
-    </Modal>
+      )}
+    </>
   );
 }
 
@@ -132,6 +146,7 @@ interface EditCommunityFieldsProps {
   addRule: (text: string) => void;
   toggleRule: (rule: string) => void;
   error: boolean;
+  onSuggestTag: () => void;
 }
 
 /** The form body — split out so the modal shell stays well under 200 lines. */
@@ -142,6 +157,7 @@ function EditCommunityFields({
   addRule,
   toggleRule,
   error,
+  onSuggestTag,
 }: EditCommunityFieldsProps) {
   const { t } = useTranslation();
   return (
@@ -210,6 +226,23 @@ function EditCommunityFields({
           }))}
         />
       </FormField>
+
+      <CommunityTagPicker
+        label={t("communities:edit.field.tags")}
+        helper={t("communities:edit.field.tagsHint", {
+          count: MAX_COMMUNITY_TAGS,
+        })}
+        selectedIds={draft.tags}
+        onChange={(tags) => set({ tags })}
+      />
+
+      <button
+        type="button"
+        className={styles.suggestTagTrigger}
+        onClick={onSuggestTag}
+      >
+        {t("communities:edit.suggestTag.trigger")}
+      </button>
 
       <div className={styles.block}>
         <label className={styles.check}>

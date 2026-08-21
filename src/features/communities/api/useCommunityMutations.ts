@@ -19,6 +19,7 @@ import {
   restoreCommunityReply,
   reviewJoinRequest,
   setMemberRole,
+  suggestCommunityTag,
   transferCommunityOwnership,
   unreactToPost,
   updateCommunity,
@@ -28,6 +29,7 @@ import {
   type CreatePostDto,
   type JoinResultDTO,
   type ReactionKey,
+  type SuggestCommunityTagDto,
   type UpdateCommunityDto,
   type UpdatePostDto,
 } from "./communities.api";
@@ -478,6 +480,27 @@ export function useRestoreCommunityReply(slug: string) {
     onSuccess: () => {
       if (demoMode) return;
       void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+    },
+  });
+}
+
+/** POST /communities/:slug/tag-requests — owner/mod "Suggest a tag" from
+ *  `SuggestCommunityTagModal`. Fire-and-forget: there's no local queue of the
+ *  submitter's own past requests to keep in sync (they see the outcome via
+ *  the existing notification system once an admin resolves it, not here), so
+ *  demo mode just resolves after a simulated delay and there's nothing to
+ *  invalidate in live mode either. */
+export function useSuggestCommunityTag(slug: string) {
+  const { demoMode } = useDemoMode();
+  return useMutation<void, Error, SuggestCommunityTagDto>({
+    // SuggestCommunityTagModal toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
+    mutationFn: async (dto) => {
+      if (demoMode) {
+        await new Promise((resolve) => setTimeout(resolve, 400));
+        return;
+      }
+      await suggestCommunityTag(slug, dto);
     },
   });
 }

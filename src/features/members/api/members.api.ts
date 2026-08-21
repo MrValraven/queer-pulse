@@ -134,6 +134,9 @@ export interface FeaturedCommunityRefDTO {
   typeLabel: string;
   countLabel: string;
   role: "owner" | "mod" | "member";
+  /** Curated tag ids (⊆ `COMMUNITY_TAGS`, `communities/communityTags.data.ts`)
+   *  — the profile's community card renders these as pills. */
+  tags?: string[];
 }
 
 export type ShapingKind = "film" | "book" | "song" | "moment";

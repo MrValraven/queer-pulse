@@ -3400,4 +3400,26 @@ export const admin: Catalog = {
   "adminResourceSuggestions.toast.declined": "Suggestion declined.",
   "adminResourceSuggestions.toast.archived": "Suggestion archived.",
   "adminResourceSuggestions.toast.error": "Couldn't update that suggestion.",
+
+  // ── Community tag requests (AdminCommunityTagRequestsPage) ────────────────
+  "adminCommunityTagRequests.title": "Community tag <em>requests</em>",
+  "adminCommunityTagRequests.header.eyebrow": "Review queue",
+  "adminCommunityTagRequests.header.title": "Community tag <em>requests</em>",
+  "adminCommunityTagRequests.header.sub":
+    "Curated-tag suggestions from community owners and mods, for tags that don't exist yet.",
+  "adminCommunityTagRequests.filter.pending": "Pending",
+  "adminCommunityTagRequests.filter.resolved": "Resolved",
+  "adminCommunityTagRequests.filter.all": "All",
+  "adminCommunityTagRequests.status.pending": "Pending",
+  "adminCommunityTagRequests.status.resolved": "Resolved",
+  "adminCommunityTagRequests.row.by": "Requested by {name}",
+  "adminCommunityTagRequests.row.sent": "Sent {date}",
+  "adminCommunityTagRequests.unknownRequester": "A member",
+  "adminCommunityTagRequests.action.resolve": "Resolve",
+  "adminCommunityTagRequests.empty": "No tag requests yet.",
+  "adminCommunityTagRequests.error": "Couldn't load tag requests.",
+  "adminCommunityTagRequests.loadMore": "Load more",
+  "adminCommunityTagRequests.loadingMore": "Loading…",
+  "adminCommunityTagRequests.toast.resolved": "Tag request resolved.",
+  "adminCommunityTagRequests.toast.error": "Couldn't resolve that request.",
 };

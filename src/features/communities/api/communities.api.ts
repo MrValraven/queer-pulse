@@ -32,6 +32,14 @@ export interface CommunityCardDTO {
   activeThisWeek: number;
   postsThisWeek: number; // derived
   myRole: RosterRole | null; // viewer's roster role, or null
+  /** Resolved cover-image URL, or null when the community has no cover. The
+   *  Discover-grid/featured cards render this; the owner's edit modal seeds
+   *  its `ImageUploadField` from the same field on the detail DTO. */
+  coverImageUrl: string | null;
+  /** Curated tag ids (⊆ `COMMUNITY_TAGS`, `communityTags.data.ts`) the owner/
+   *  mod picked for this community. Every card variant renders these as
+   *  pills; absent/empty when none picked yet. */
+  tags?: string[];
 }
 export interface CommunityDetailDTO extends CommunityCardDTO {
   purpose: string;
@@ -39,9 +47,6 @@ export interface CommunityDetailDTO extends CommunityCardDTO {
   rosterVisible: boolean;
   features: string[]; // ⊆ "discussion"|"events"|"rooms"|"roster"|"library"
   rules: string[];
-  /** Resolved cover-image URL, or null when the community has no cover. The
-   *  owner's edit modal seeds its `ImageUploadField` from this. */
-  coverImageUrl: string | null;
   owner: MemberRefDTO | null;
   createdAt: string;
   /** True once an owner has archived the community. Only ever present for the
@@ -151,6 +156,9 @@ export interface CreateCommunityDto {
   handle: string; // desired slug
   stewards?: string[]; // member slugs → seeded as "mod"
   invites?: string[]; // ⚠ accepted but NOT persisted yet
+  /** Curated tag ids (⊆ `COMMUNITY_TAGS`, `communityTags.data.ts`), capped at
+   *  `MAX_COMMUNITY_TAGS`. Optional; omit to leave unchanged on PATCH. */
+  tags?: string[];
 }
 export type UpdateCommunityDto = Partial<CreateCommunityDto>; // `handle` ignored on PATCH
 export interface CreatePostDto {
@@ -179,6 +187,10 @@ export interface CommunitiesQuery {
    *  pagination doesn't reshuffle) — mirrors the backend's
    *  `ListCommunitiesQuery.sort`. Omit for the default. */
   sort?: "newest" | "name";
+  /** Curated tag ids to narrow to (⊆ `COMMUNITY_TAGS`) — ANDed with the other
+   *  filters, OR'd against each other (a community matches if it carries any
+   *  of the given tags). Mirrors the backend's `ListCommunitiesQuery.tags`. */
+  tags?: string[];
 }
 
 export async function getCommunities(params: CommunitiesQuery = {}) {
@@ -189,6 +201,7 @@ export async function getCommunities(params: CommunitiesQuery = {}) {
   if (params.page) query.set("page", String(params.page));
   if (params.q) query.set("q", params.q);
   if (params.sort) query.set("sort", params.sort);
+  if (params.tags?.length) query.set("tags", params.tags.join(","));
   const qs = query.toString();
   const res = await apiGet<CommunityCardDTO[] | Paginated<CommunityCardDTO>>(
     `/communities${qs ? `?${qs}` : ""}`,
@@ -481,3 +494,31 @@ export interface CommunityInsightsDTO {
  *  owner/mod only (403 for anyone else on the roster). */
 export const getCommunityInsights = (slug: string) =>
   apiGet<CommunityInsightsDTO>(`/communities/${slug}/insights`);
+
+// ── Similar communities / curated-tag requests ────────────────────────────
+
+/** GET /communities/:slug/related — up to 4 communities ranked by shared
+ *  curated-tag overlap with this one (any viewer). Response items are plain
+ *  `CommunityCardDTO`s — map through `cardDtoToCommunity` like every other
+ *  card list in this file. */
+export const getRelatedCommunities = (slug: string) =>
+  apiGet<CommunityCardDTO[]>(`/communities/${slug}/related`);
+
+export interface SuggestCommunityTagDto {
+  /** The tag the owner/mod wants — capped at 60 chars client-side
+   *  (`SuggestCommunityTagModal`), mirrors the backend's own cap. */
+  label: string;
+  note?: string;
+}
+
+/** POST /communities/:slug/tag-requests — owner/mod suggests a curated tag
+ *  that doesn't exist yet in `COMMUNITY_TAGS`. Fire-and-forget from the
+ *  submitter's side (mirrors `useSuggestEdit`'s directory equivalent): an
+ *  admin reviews and resolves it later on the
+ *  `AdminCommunityTagRequestsPage` review queue
+ *  (`admin/api/communityTagRequests.api.ts`), which owns the richer DTO — the
+ *  response here isn't rendered anywhere, so it stays untyped. */
+export const suggestCommunityTag = (
+  slug: string,
+  dto: SuggestCommunityTagDto,
+) => apiPost<void>(`/communities/${slug}/tag-requests`, dto);

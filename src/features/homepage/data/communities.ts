@@ -14,6 +14,7 @@ export const communities: Community[] = [
     joinLabel: "Join",
     accessTier: "public",
     activeThisWeek: 26,
+    tags: ["local-city-based", "beginner-friendly", "nightlife-events"],
   },
   {
     slug: "rainbow-arts",
@@ -27,6 +28,7 @@ export const communities: Community[] = [
     joinLabel: "Join",
     accessTier: "request",
     activeThisWeek: 19,
+    tags: ["creative-collective", "arts-crafts", "beginner-friendly"],
   },
   {
     slug: "trans-mutual-aid",
@@ -40,6 +42,7 @@ export const communities: Community[] = [
     joinLabel: "Join",
     accessTier: "request",
     activeThisWeek: 31,
+    tags: ["trans-nonbinary", "peer-support", "activism-mutual-aid"],
   },
   {
     slug: "queer-runners",
@@ -53,6 +56,7 @@ export const communities: Community[] = [
     joinLabel: "Join",
     accessTier: "public",
     activeThisWeek: 44,
+    tags: ["sports-fitness", "outdoors-hiking", "beginner-friendly"],
   },
   {
     slug: "queer-parents",
@@ -66,6 +70,7 @@ export const communities: Community[] = [
     joinLabel: "Join",
     accessTier: "public",
     activeThisWeek: 12,
+    tags: ["parents-family", "peer-support", "local-city-based"],
   },
   {
     slug: "coming-out",
@@ -81,6 +86,7 @@ export const communities: Community[] = [
     dashed: true,
     privateBadge: true,
     activeThisWeek: 0,
+    tags: ["coming-out-support", "peer-support", "mental-health"],
   },
   {
     slug: "trans-hub",
@@ -94,6 +100,7 @@ export const communities: Community[] = [
     joinLabel: "Join",
     accessTier: "public",
     activeThisWeek: 38,
+    tags: ["trans-nonbinary", "health-wellness", "peer-support"],
   },
   {
     slug: "queer-elders",
@@ -107,6 +114,7 @@ export const communities: Community[] = [
     joinLabel: "Join",
     accessTier: "public",
     activeThisWeek: 9,
+    tags: ["elders-50-plus", "peer-support", "discussion-group"],
   },
   {
     slug: "queer-youth",
@@ -120,6 +128,7 @@ export const communities: Community[] = [
     joinLabel: "Join",
     accessTier: "invite",
     activeThisWeek: 21,
+    tags: ["youth-18-24", "career-networking", "peer-support"],
   },
   {
     slug: "queer-poc",
@@ -133,6 +142,7 @@ export const communities: Community[] = [
     joinLabel: "Join",
     accessTier: "request",
     activeThisWeek: 17,
+    tags: ["bipoc-led", "activism-mutual-aid", "discussion-group"],
   },
   {
     slug: "disabled-queers",
@@ -146,5 +156,6 @@ export const communities: Community[] = [
     joinLabel: "Join",
     accessTier: "public",
     activeThisWeek: 11,
+    tags: ["disability-chronic-illness", "peer-support", "health-wellness"],
   },
 ];

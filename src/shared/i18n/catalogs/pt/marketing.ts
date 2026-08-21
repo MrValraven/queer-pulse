@@ -1761,6 +1761,16 @@ export const marketing: Catalog = {
   "changelog.tag.vouch": "Apadrinhar alguém",
   "changelog.tag.culture": "Visitar a Cultura",
 
+  "changelog.entries.community-tags-discovery.title":
+    "Descobre comunidades por etiquetas e ligações",
+  "changelog.entries.community-tags-discovery.body":
+    "A página de uma comunidade mostra agora comunidades semelhantes com base em etiquetas partilhadas, e o Descobrir destaca comunidades onde pessoas das tuas ligações já estão. Donos e moderadores também podem sugerir uma etiqueta que ainda não esteja na lista, um administrador revê o pedido a partir daí.",
+
+  "changelog.entries.community-tags.title":
+    "As comunidades já podem ter etiquetas",
+  "changelog.entries.community-tags.body":
+    "Donos e moderadores podem escolher até 8 etiquetas para a sua comunidade a partir de uma lista curada, coisas como Trans & Não-Binárie, Apoio entre Pares, Clube do Livro, Habitação & Colegas de Casa. Aparecem como pastilhas em cada cartão de comunidade, e o Descobrir tem agora um filtro de etiquetas para encontrares comunidades pelo que elas realmente são.",
+
   "changelog.entries.account-menu-install-app.title":
     "Instala a app a partir do menu da conta",
   "changelog.entries.account-menu-install-app.body":

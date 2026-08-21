@@ -91,6 +91,9 @@ function demoEditableFields(
     // The demo mock view-models carry no cover image; the edit form starts empty
     // and an override can set one (demo covers are held in the session store).
     coverImageUrl: "",
+    // The mock view-model's own curated tags (see `communities.ts`'s `tags`
+    // entries), overridden below once a session edit picks new ones.
+    tags: community.tags ?? [],
   };
   if (!override) return base;
   return {
@@ -104,6 +107,7 @@ function demoEditableFields(
     features: override.features ?? base.features,
     rules: override.rules ?? base.rules,
     coverImageUrl: override.coverImageUrl ?? base.coverImageUrl,
+    tags: override.tags ?? base.tags,
   };
 }
 

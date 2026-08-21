@@ -2,6 +2,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { Reveal, SearchInput, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Community, CommunityType } from "../homepage/data/types";
+import { CommunitiesTagsFilter } from "./CommunitiesTagsFilter";
 import { FILTERS, SORT_OPTIONS, type DiscoverSort } from "./communitiesDiscover.data";
 import styles from "./CommunitiesPage.module.css";
 
@@ -24,6 +25,8 @@ export function CommunitiesDiscoverControls({
   setSort,
   filter,
   setFilter,
+  tagIds,
+  setTagIds,
   allForCounts,
   countsHasNext,
   resultCount,
@@ -40,6 +43,8 @@ export function CommunitiesDiscoverControls({
   setSort: Dispatch<SetStateAction<DiscoverSort>>;
   filter: "all" | CommunityType;
   setFilter: Dispatch<SetStateAction<"all" | CommunityType>>;
+  tagIds: string[];
+  setTagIds: Dispatch<SetStateAction<string[]>>;
   allForCounts: Community[];
   countsHasNext: boolean;
   resultCount: number;
@@ -131,6 +136,8 @@ export function CommunitiesDiscoverControls({
         })}
       </Reveal>
 
+      <CommunitiesTagsFilter selectedTagIds={tagIds} onChange={setTagIds} />
+
       {showResline && (
         <div className={styles.resline}>
           <span>
@@ -146,6 +153,7 @@ export function CommunitiesDiscoverControls({
                 setFilter("all");
                 setOpenOnly(false);
                 setBusyOnly(false);
+                setTagIds([]);
                 setSort("newest");
               }}
             >

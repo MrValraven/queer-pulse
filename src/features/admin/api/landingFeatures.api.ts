@@ -78,6 +78,9 @@ export interface LandingCommunityFeatureDTO {
   /** Capped member avatars for the roster strip. Empty when the community hides
    *  its roster — the card then leans on `memberCount` alone. */
   faces: LandingCommunityFaceDTO[];
+  /** Curated tag ids (⊆ `COMMUNITY_TAGS`, `communities/communityTags.data.ts`)
+   *  — rendered as pills. Absent when the source doesn't carry it. */
+  tags?: string[];
 }
 
 export interface LandingChangemakerFeatureDTO {

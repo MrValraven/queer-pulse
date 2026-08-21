@@ -12,6 +12,7 @@ import { CommunityFrozenBanner } from "./CommunityFrozenBanner";
 import { LivingHubTabs } from "./LivingHubTabs";
 import { FallbackHubTabs } from "./FallbackHubTabs";
 import { CommunitySidebar } from "./CommunitySidebar";
+import { SimilarCommunitiesSection } from "./SimilarCommunitiesSection";
 import { useCommunityDetailState } from "./useCommunityDetailState";
 import styles from "./CommunityDetailPage.module.css";
 
@@ -151,6 +152,8 @@ export function CommunityDetailPage() {
               communityPulse={communityPulse}
             />
           </div>
+
+          {slug && <SimilarCommunitiesSection currentSlug={slug} />}
         </div>
       </div>
 

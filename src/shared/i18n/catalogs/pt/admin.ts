@@ -3439,4 +3439,26 @@ export const admin: Catalog = {
   "adminResourceSuggestions.toast.declined": "Sugestão recusada.",
   "adminResourceSuggestions.toast.archived": "Sugestão arquivada.",
   "adminResourceSuggestions.toast.error": "Não foi possível atualizar a sugestão.",
+
+  // ── Pedidos de etiquetas de comunidades (AdminCommunityTagRequestsPage) ───
+  "adminCommunityTagRequests.title": "Pedidos de <em>etiquetas</em>",
+  "adminCommunityTagRequests.header.eyebrow": "Fila de revisão",
+  "adminCommunityTagRequests.header.title": "Pedidos de <em>etiquetas</em>",
+  "adminCommunityTagRequests.header.sub":
+    "Sugestões de etiquetas de proprietários e moderadores de comunidades, para etiquetas que ainda não existem.",
+  "adminCommunityTagRequests.filter.pending": "Pendentes",
+  "adminCommunityTagRequests.filter.resolved": "Resolvidos",
+  "adminCommunityTagRequests.filter.all": "Todos",
+  "adminCommunityTagRequests.status.pending": "Pendente",
+  "adminCommunityTagRequests.status.resolved": "Resolvido",
+  "adminCommunityTagRequests.row.by": "Pedido por {name}",
+  "adminCommunityTagRequests.row.sent": "Enviado a {date}",
+  "adminCommunityTagRequests.unknownRequester": "Um membro",
+  "adminCommunityTagRequests.action.resolve": "Resolver",
+  "adminCommunityTagRequests.empty": "Ainda não há pedidos de etiquetas.",
+  "adminCommunityTagRequests.error": "Não foi possível carregar os pedidos de etiquetas.",
+  "adminCommunityTagRequests.loadMore": "Carregar mais",
+  "adminCommunityTagRequests.loadingMore": "A carregar…",
+  "adminCommunityTagRequests.toast.resolved": "Pedido de etiqueta resolvido.",
+  "adminCommunityTagRequests.toast.error": "Não foi possível resolver o pedido.",
 };

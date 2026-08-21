@@ -1715,6 +1715,15 @@ export const marketing: Catalog = {
   "changelog.tag.vouch": "Vouch for someone",
   "changelog.tag.culture": "Visit Culture",
 
+  "changelog.entries.community-tags-discovery.title":
+    "Find communities through tags and connections",
+  "changelog.entries.community-tags-discovery.body":
+    "A community's page now shows similar communities based on shared tags, and Discover surfaces communities people you're connected to have already joined. Owners and mods can also suggest a tag that isn't on the list yet, an admin reviews it from there.",
+
+  "changelog.entries.community-tags.title": "Communities can now add tags",
+  "changelog.entries.community-tags.body":
+    "Owners and mods can pick up to 8 tags for their community from a curated list, things like Trans & Nonbinary, Peer Support, Book Club, Housing & Roommates. They show as pills on every community card, and Discover now has a tags filter so you can find communities by what they're actually about.",
+
   "changelog.entries.account-menu-install-app.title":
     "Install the app from your account menu",
   "changelog.entries.account-menu-install-app.body":

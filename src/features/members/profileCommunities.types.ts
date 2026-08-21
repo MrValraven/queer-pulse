@@ -17,6 +17,10 @@ export interface FeaturedCommunityRef {
   countLabel: string;
   /** the OWNER's role in this community */
   role: CommunityRole;
+  /** Curated tag ids (⊆ `COMMUNITY_TAGS`, `communities/communityTags.data.ts`)
+   *  — rendered as pills on `ProfileCommunityCard`. Absent when the source
+   *  doesn't carry it. */
+  tags?: string[];
 }
 
 /** members-namespace i18n key for each role's badge label. */

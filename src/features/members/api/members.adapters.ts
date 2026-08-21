@@ -273,6 +273,7 @@ export function profileToMember(dto: ProfileDTO): Member {
       typeLabel: ref.typeLabel,
       countLabel: ref.countLabel,
       role: ref.role,
+      tags: ref.tags,
     })),
   };
 }

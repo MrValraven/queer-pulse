@@ -46,6 +46,7 @@ export function emptyDraft(owner: Steward): CommunityDraft {
     invites: [],
     handle: "",
     consent: false,
+    tags: [],
   };
 }
 

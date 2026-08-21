@@ -1,0 +1,5 @@
+.counter {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ink-40);
+}

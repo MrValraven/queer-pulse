@@ -1,15 +1,44 @@
+import { useRef } from "react";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { CATEGORY_OPTIONS, initialsOf } from "./startCommunity.data";
+import type { CommunityType } from "../../homepage/data/types";
+import { MAX_COMMUNITY_TAGS } from "../communityTags.data";
+import { CommunityTagPicker } from "../CommunityTagPicker";
+import {
+  CATEGORY_OPTIONS,
+  TYPE_TAG_SUGGESTIONS,
+  initialsOf,
+} from "./startCommunity.data";
 import { useAllCommunities } from "../useAllCommunities";
 import type { CommunityForm } from "./useCommunityForm";
 import styles from "./StartCommunityPage.module.css";
 
-/** Chapter 1 — Why: name, purpose, category, plus a similar-spaces nudge. */
+/** Chapter 1 — Why: name, purpose, category, tags, plus a similar-spaces nudge. */
 export function StepWhy({ form }: { form: CommunityForm }) {
   const { t } = useTranslation();
   const { draft, set } = form;
   const all = useAllCommunities();
+  // Tracks which tag ids were auto-applied for the *previously* selected
+  // category, so switching category again swaps out only the tags this
+  // suggestion added — anything the founder picked or removed themselves is
+  // left untouched. Resets (harmlessly) if the founder navigates away from
+  // this chapter and back, since the step remounts.
+  const previousSuggestionRef = useRef<string[]>([]);
+
+  const handleTypeSelect = (type: CommunityType) => {
+    const suggested = TYPE_TAG_SUGGESTIONS[type] ?? [];
+    const previousSuggested = previousSuggestionRef.current;
+    const keptTags = draft.tags.filter(
+      (id) => !previousSuggested.includes(id) || suggested.includes(id),
+    );
+    const nextTags = [...keptTags];
+    for (const id of suggested) {
+      if (nextTags.length >= MAX_COMMUNITY_TAGS) break;
+      if (!nextTags.includes(id)) nextTags.push(id);
+    }
+    previousSuggestionRef.current = suggested;
+    set({ type, tags: nextTags });
+  };
   const q = draft.name.trim().toLowerCase();
   const similar =
     q.length >= 3
@@ -90,13 +119,22 @@ export function StepWhy({ form }: { form: CommunityForm }) {
                 .filter(Boolean)
                 .join(" ")}
               aria-pressed={draft.type === c.type}
-              onClick={() => set({ type: c.type })}
+              onClick={() => handleTypeSelect(c.type)}
             >
               {t(c.labelKey)}
             </button>
           ))}
         </div>
       </div>
+
+      <CommunityTagPicker
+        label={t("communities:start.why.tagsLabel")}
+        helper={t("communities:start.why.tagsHint", {
+          count: MAX_COMMUNITY_TAGS,
+        })}
+        selectedIds={draft.tags}
+        onChange={(tags) => set({ tags })}
+      />
     </div>
   );
 }

@@ -1,0 +1,15 @@
+/* Soft, non-blocking "these often go together" nudge — composed into the
+   FormField helper slot, so it inherits its 12px/--ink-40 sizing/rhythm; only
+   the colour steps up to --ink-60 since this line carries a little more
+   signal than a plain hint. */
+.overlapHint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  color: var(--ink-60);
+}
+
+.overlapHint svg {
+  flex: 0 0 auto;
+}

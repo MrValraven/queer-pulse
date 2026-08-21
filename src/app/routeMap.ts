@@ -81,6 +81,7 @@ export const routes = {
   adminOrgTiers: "/admin/org-tiers",
   adminResourceListings: "/admin/resource-listings",
   adminResourceSuggestions: "/admin/resource-suggestions",
+  adminCommunityTagRequests: "/admin/community-tag-requests",
   adminPartnerApplications: "/admin/partner-applications",
   adminSettings: "/admin/settings",
   adminReports: "/admin/reports",

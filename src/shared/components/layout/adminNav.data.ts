@@ -27,6 +27,7 @@ import {
   FiThumbsUp,
   FiPhoneCall,
   FiMessageSquare,
+  FiTag,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
@@ -93,6 +94,11 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: FiRadio,
   },
   { labelKey: "nav:communities", to: routes.adminCommunities, icon: FiGlobe },
+  {
+    labelKey: "shared:adminNav.items.communityTagRequests",
+    to: routes.adminCommunityTagRequests,
+    icon: FiTag,
+  },
   {
     labelKey: "shared:adminNav.items.safeSpaces",
     to: routes.adminSafeSpaces,
