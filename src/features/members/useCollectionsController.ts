@@ -11,6 +11,7 @@ import {
   useMyCollections,
   useCollectionDetail,
   useCollectionMutations,
+  useFiledRefs,
 } from "./api/useCollections";
 import type { CollectionDTO } from "./api/collections.api";
 import {
@@ -73,12 +74,14 @@ export function useCollectionsController() {
   const liveDetailQuery = useCollectionDetail(
     !demoMode && modal?.type === "view" ? modal.id : null,
   );
+  const filedRefsQuery = useFiledRefs();
 
   // Demo state: seeded grid + local "add" simulation (no persistence).
   const [localCollections, setLocalCollections] = useState<Collection[]>(
     demoMode ? COLLECTIONS : [],
   );
   const [contents, setContents] = useState<Record<string, SavedItem[]>>({});
+  const [demoFiledRefs, setDemoFiledRefs] = useState<Set<string>>(new Set());
 
   const liveCollections = useMemo<Collection[]>(
     () => (liveCollectionsQuery.data ?? []).map((dto) => toDisplay(dto, t, fmt)),
@@ -88,20 +91,31 @@ export function useCollectionsController() {
   const collections = demoMode ? localCollections : liveCollections;
   const loading = demoMode ? simulatedLoad : liveCollectionsQuery.isLoading;
 
-  // Recent unfiled saves: demo fiction, or the member's real saved store live —
-  // each row's `id` carries the true `<kind>:<subjectId>` ref so it can be filed.
+  // Recent unfiled saves: demo fiction, or the member's real saved store live,
+  // minus anything already filed into a collection — each row's `id` carries
+  // the true `<kind>:<subjectId>` ref so it can be filed.
+  const filedRefs = useMemo(
+    () => new Set(filedRefsQuery.data ?? []),
+    [filedRefsQuery.data],
+  );
   const liveRecent = useMemo<RecentSave[]>(
     () =>
-      savedItems.map((item) => ({
-        id: item.id,
-        kind: item.kind.slice(0, 3).toUpperCase(),
-        kindVariant: "article",
-        title: item.title,
-        saved: item.meta ?? "",
-      })),
-    [savedItems],
+      savedItems
+        .filter((item) => !filedRefs.has(item.id))
+        .map((item) => ({
+          id: item.id,
+          kind: item.kind.slice(0, 3).toUpperCase(),
+          kindVariant: "article",
+          title: item.title,
+          saved: item.meta ?? "",
+        })),
+    [savedItems, filedRefs],
   );
-  const recentSaves = demoMode ? RECENT_SAVES : liveRecent;
+  const demoRecent = useMemo(
+    () => RECENT_SAVES.filter((r) => !demoFiledRefs.has(r.id)),
+    [demoFiledRefs],
+  );
+  const recentSaves = demoMode ? demoRecent : liveRecent;
 
   const contentsFor = (id: string): SavedItem[] =>
     contents[id] ?? savedItems.slice(0, 3);
@@ -164,6 +178,7 @@ export function useCollectionsController() {
       if (existing.some((entry) => entry.id === item.id)) return prev;
       return { ...prev, [collectionId]: [item, ...existing] };
     });
+    setDemoFiledRefs((prev) => new Set(prev).add(save.id));
     setLocalCollections((prev) =>
       prev.map((collection) =>
         collection.id === collectionId

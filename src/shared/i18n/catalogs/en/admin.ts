@@ -1470,6 +1470,13 @@ export const admin: Catalog = {
   "communities.settings.autoFreeze.onToast":
     "Auto-freeze on doxxing reports enabled",
   "communities.settings.autoFreeze.offToast": "Auto-freeze disabled",
+  "communities.settings.featured.title": "Featured on Discover",
+  "communities.settings.featured.sub":
+    "Shown as the hero card at the top of the Communities Discover page. Only one community can be featured at a time. Turning this on for a community replaces whichever one is currently featured.",
+  "communities.settings.featured.onToast":
+    "This community is now featured on Discover",
+  "communities.settings.featured.offToast":
+    "This community is no longer featured",
   "communities.settings.saveErrorToast": "That didn't save. Try again.",
   "communities.settings.codeOfCare": "Code of care",
   "communities.settings.viewCta": "View",

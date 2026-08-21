@@ -26,11 +26,16 @@ import styles from "./CollectionsModals.module.css";
 function Modal({
   onClose,
   label,
+  contentKey,
   children,
 }: {
   onClose: () => void;
   /** Accessible dialog name announced to screen readers. */
   label?: string;
+  /** Change this to replay the modal's entrance animation when its content
+   *  is swapped in place (e.g. a picker giving way to a success screen)
+   *  instead of just popping — the overlay backdrop stays mounted. */
+  contentKey?: string;
   children: ReactNode;
 }) {
   const { t } = useTranslation();
@@ -51,6 +56,7 @@ function Modal({
       }}
     >
       <div
+        key={contentKey}
         className={styles.modal}
         role="dialog"
         aria-modal="true"
@@ -262,6 +268,7 @@ export function AddToCollectionModal({
       <Modal
         onClose={onClose}
         label={t("members:collections.modal.add.success.dialogLabel")}
+        contentKey="success"
       >
         <div className={styles.success}>
           <div className={styles.successIcon}>
@@ -292,6 +299,7 @@ export function AddToCollectionModal({
     <Modal
       onClose={onClose}
       label={t("members:collections.modal.add.dialogLabel")}
+      contentKey="pick"
     >
       <div className={styles.eyebrow}>
         {t("members:collections.modal.add.eyebrow")}

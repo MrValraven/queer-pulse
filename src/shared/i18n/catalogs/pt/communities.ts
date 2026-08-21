@@ -58,16 +58,27 @@ export const communities: Catalog = {
   "discover.empty.filtered.cta": "Limpar filtros",
   "discover.loadingMore": "A carregar…",
   "discover.loadMoreCta": "Carregar mais comunidades",
-  "discover.outro.title": "Não encontraste o <em>espaço certo?</em>",
-  "discover.outro.sub":
-    "Sugere uma comunidade para o diretório, ou publica no quadro para encontrares pessoas com os mesmos interesses, e talvez comecem algo juntas.",
-  "discover.outro.cta": "Ver o quadro",
+  "discover.toggle.openOnly": "Abertas a todas as pessoas",
+  "discover.toggle.busyOnly": "Com atividade esta semana",
+  "discover.sort.active": "Mais ativas",
+  "discover.resline.count_one": "{count} comunidade",
+  "discover.resline.count_other": "{count} comunidades",
+  "discover.resline.reset": "Limpar filtros",
+  "discover.outro.title": "Não encontraste o <em>espaço</em> certo?",
+  "discover.outro.body":
+    "As salas que existem são as salas que as pessoas criaram. Se a tua ainda não está aqui, começa em pequeno. Três pessoas e um ritmo já são uma comunidade.",
+  "discover.outro.cta": "Começar uma comunidade",
+  "discover.featured.gatheringFlag": "Encontro esta semana",
+  "discover.featured.next": "A seguir:",
+  "discover.featured.youreIn": "Já fazes parte",
+  "discover.featured.openCta": "Abrir comunidade",
 
   // ── Cartão de comunidade / textos do botão de entrada ─────────────────────
   "card.join.public": "Junta-te",
   "card.join.invite": "Junta-te com convite",
   "card.join.request": "Pedir para entrar",
   "card.joined": "Já és membro",
+  "card.enterQuietly": "Entra em silêncio",
   "card.view": "Ver",
   "card.stats.active_one": "{count} pessoa ativa esta semana",
   "card.stats.active_other": "{count} pessoas ativas esta semana",
@@ -115,6 +126,7 @@ export const communities: Catalog = {
   "common.justNow": "agora mesmo",
   "common.error": "Algo correu mal. Tenta de novo daqui a um instante.",
   "common.loading": "A carregar…",
+  "common.attachImageAria": "Anexar uma imagem",
 
   // ── Página de detalhe da comunidade (hero + sidebar) ──────────────────────
   "detail.breadcrumb": "Comunidades e Coletivos",
@@ -148,6 +160,9 @@ export const communities: Catalog = {
   "detail.sidebar.nextGathering": "Próximo convívio",
   "detail.sidebar.rsvpCta": "Confirmar presença",
   "detail.sidebar.relatedCommunities": "Comunidades relacionadas",
+  "detail.sidebar.communityThreads": "Conversas recentes",
+  "detail.sidebar.communityOpportunities": "Oportunidades abertas",
+  "detail.sidebar.pulseError": "Não foi possível carregar isto agora.",
 
   // ── Separadores do hub (rótulos partilhados) ──────────────────────────────
   "detail.tabs.about": "Sobre",

@@ -54,10 +54,20 @@ export const communities: Catalog = {
   "discover.empty.filtered.cta": "Clear filters",
   "discover.loadingMore": "Loading…",
   "discover.loadMoreCta": "Load more communities",
-  "discover.outro.title": "Not finding the right <em>space?</em>",
-  "discover.outro.sub":
-    "Suggest a community to add to the directory, or post on the board to find people who share your interest, and maybe start something together.",
-  "discover.outro.cta": "See the board",
+  "discover.toggle.openOnly": "Open to all",
+  "discover.toggle.busyOnly": "Busy this week",
+  "discover.sort.active": "Most active",
+  "discover.resline.count_one": "{count} community",
+  "discover.resline.count_other": "{count} communities",
+  "discover.resline.reset": "Clear filters",
+  "discover.outro.title": "Not finding the right <em>space</em>?",
+  "discover.outro.body":
+    "The rooms that exist are the rooms people made. If yours isn't here yet, start it small. Three people and a rhythm is a community.",
+  "discover.outro.cta": "Start a community",
+  "discover.featured.gatheringFlag": "Gathering this week",
+  "discover.featured.next": "Next:",
+  "discover.featured.youreIn": "You're in",
+  "discover.featured.openCta": "Open community",
 
   // ── Community card / join CTA labels ───────────────────────────────────────
   // Shared by the discover grid and the community-detail hero.
@@ -66,6 +76,7 @@ export const communities: Catalog = {
   "card.join.request": "Request",
   "card.joined": "Joined",
   "card.view": "View",
+  "card.enterQuietly": "Enter quietly",
   "card.stats.active_one": "{count} active this week",
   "card.stats.active_other": "{count} active this week",
   "card.stats.posts_one": "{count} post",
@@ -110,6 +121,7 @@ export const communities: Catalog = {
   "common.justNow": "just now",
   "common.error": "Something went wrong. Try again in a moment.",
   "common.loading": "Loading…",
+  "common.attachImageAria": "Attach an image",
 
   // ── Community detail page (hero + sidebar) ────────────────────────────────
   "detail.breadcrumb": "Communities & Collectives",
@@ -143,6 +155,9 @@ export const communities: Catalog = {
   "detail.sidebar.nextGathering": "Next gathering",
   "detail.sidebar.rsvpCta": "RSVP",
   "detail.sidebar.relatedCommunities": "Related communities",
+  "detail.sidebar.communityThreads": "Recent discussions",
+  "detail.sidebar.communityOpportunities": "Open opportunities",
+  "detail.sidebar.pulseError": "Couldn't load this right now.",
 
   // ── Hub tabs (shared labels, FallbackHubTabs + LivingHubTabs) ─────────────
   "detail.tabs.about": "About",

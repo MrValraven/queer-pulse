@@ -44,6 +44,7 @@ function makeCommunity(slug: string): Community {
     description: "A test community.",
     requiresSecondVouch: false,
     autoFreezeOnReports: false,
+    isFeatured: false,
     members: "100",
     activity: "Steady",
     activePercent: 50,

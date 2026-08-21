@@ -85,6 +85,7 @@ const baseDetailDto: AdminCommunityDetailDTO = {
   visibility: "private",
   requiresSecondVouch: true,
   autoFreezeOnReports: false,
+  isFeatured: false,
   frozen: false,
   archived: false,
   resolvedPercentage: 100,

@@ -199,6 +199,11 @@ export async function getCommunities(params: CommunitiesQuery = {}) {
 export const getCommunity = (slug: string) =>
   apiGet<CommunityDetailDTO>(`/communities/${slug}`);
 
+/** GET /communities/featured — the admin-chosen platform-wide featured
+ *  community, or null when none is set. See `CommunitiesService.getFeatured`. */
+export const getFeaturedCommunity = () =>
+  apiGet<CommunityCardDTO | null>("/communities/featured");
+
 export const createCommunity = (dto: CreateCommunityDto) =>
   apiPost<CommunityDetailDTO>("/communities", dto);
 

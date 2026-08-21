@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiCheck, FiActivity, FiMessageCircle } from "react-icons/fi";
+import { FiCheck, FiActivity, FiMessageCircle, FiArrowRight } from "react-icons/fi";
 import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -28,6 +28,7 @@ export function CommunityCard({
     living?.accessTier ??
     community.accessTier ??
     (community.privateBadge ? "private" : "public");
+  const isPrivate = tier === "private";
   const roster = living?.roster.slice(0, 4) ?? [];
   const joinLabel =
     tier === "public"
@@ -39,16 +40,36 @@ export function CommunityCard({
   return (
     <Link
       to={`/community/${community.slug}`}
-      className={[styles.card, joined && styles.joinedCard]
+      className={[
+        styles.card,
+        joined && styles.joinedCard,
+        isPrivate && styles.privateCard,
+      ]
         .filter(Boolean)
         .join(" ")}
     >
-      <div className={styles.cardTop}>
-        <span className={[styles.type, styles[community.type]].join(" ")}>
-          {community.typeLabel}
-        </span>
-        <AccessTierBadge tier={tier} />
+      <div className={[styles.shoulder, styles[community.type]].join(" ")}>
+        <div className={styles.cardTop}>
+          <span className={styles.type}>{community.typeLabel}</span>
+          <AccessTierBadge tier={tier} />
+        </div>
+        {roster.length > 0 && (
+          <div className={styles.cardAvStack}>
+            {roster.map((m) => (
+              <span className={styles.cardAv} key={m.slug ?? m.name}>
+                <Avatar
+                  initials={m.initials}
+                  tint={m.tint}
+                  src={photoOf(m, demoMode)}
+                  size={26}
+                  alt={m.name}
+                />
+              </span>
+            ))}
+          </div>
+        )}
       </div>
+
       <div className={styles.name}>{community.name}</div>
       <p className={styles.desc}>{community.description}</p>
 
@@ -70,31 +91,16 @@ export function CommunityCard({
       )}
 
       <div className={styles.foot}>
-        {roster.length > 0 ? (
-          <div className={styles.cardAvStack}>
-            {roster.map((m) => (
-              <span className={styles.cardAv} key={m.slug ?? m.name}>
-                <Avatar
-                  initials={m.initials}
-                  tint={m.tint}
-                  src={photoOf(m, demoMode)}
-                  size={26}
-                  alt={m.name}
-                />
-              </span>
-            ))}
-            <span className={styles.meta}>{community.count}</span>
-          </div>
-        ) : (
-          <span className={styles.meta}>{community.count}</span>
-        )}
+        <span className={styles.meta}>{community.count}</span>
 
         {joined ? (
           <span className={[styles.joinBtn, styles.joined].join(" ")}>
             <FiCheck aria-hidden /> {t("communities:card.joined")}
           </span>
-        ) : tier === "private" ? (
-          <span className={styles.joinBtn}>{t("communities:card.view")}</span>
+        ) : isPrivate ? (
+          <span className={[styles.joinBtn, styles.enterQuietly].join(" ")}>
+            {t("communities:card.enterQuietly")} <FiArrowRight aria-hidden />
+          </span>
         ) : (
           <span
             className={styles.joinBtn}

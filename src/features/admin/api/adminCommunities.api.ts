@@ -90,6 +90,10 @@ export interface AdminCommunityDetailDTO extends AdminCommunityCardDTO {
   /** Whether the community auto-freezes when open reports pile up. Persisted;
    *  enforcement is a follow-up. */
   autoFreezeOnReports: boolean;
+  /** Whether this is the platform-wide featured community shown as the hero
+   *  card at the top of the Discover page. A singleton: the backend clears
+   *  every other community's flag transactionally when this one is set true. */
+  isFeatured: boolean;
   /** True while the community is currently auto-frozen pending report review.
    *  An admin can also freeze/unfreeze it directly (see the override actions
    *  below), in addition to staff lifting it from the community's own mod
@@ -122,6 +126,9 @@ export interface AdminCommunityListDTO {
 export interface UpdateAdminCommunitySettingsDto {
   requiresSecondVouch?: boolean;
   autoFreezeOnReports?: boolean;
+  /** Set true to feature this community on Discover (clears every other
+   *  community's flag server-side); set false to unfeature it. */
+  isFeatured?: boolean;
 }
 
 /** Every community on the platform, for the admin grid. Admin-only — 403s otherwise. */

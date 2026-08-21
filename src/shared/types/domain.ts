@@ -34,4 +34,10 @@ export interface Community {
    *  proof of non-membership: demo mode leaves this unset and reads the session
    *  membership store instead. */
   myRole?: "owner" | "mod" | "member" | null;
+  /** How many members were active in this community this week, when the
+   *  source knows it (the live card DTO's `activeThisWeek`). Drives the
+   *  discover grid's "Busy this week" toggle and "Most active" sort — both
+   *  computed client-side since this isn't a server-sortable/filterable
+   *  column. Absent in sources that don't carry it (the demo registry). */
+  activeThisWeek?: number;
 }

@@ -38,6 +38,15 @@ export type UpdateCollectionBody = Partial<CreateCollectionBody>;
 export const getCollections = () =>
   apiGet<CollectionDTO[]>("/me/collections");
 
+/**
+ * `GET /me/collections/filed-refs` — every saved-item ref filed in any of the
+ * member's collections, across the whole set. Lets the "recently saved · not
+ * yet in a collection" list tell unfiled saves apart from ones already filed
+ * without fetching each collection's items.
+ */
+export const getFiledRefs = () =>
+  apiGet<string[]>("/me/collections/filed-refs");
+
 /** `GET /me/collections/:id` — one collection with its hydrated items. */
 export const getCollection = (id: string) =>
   apiGet<CollectionDetailDTO>(`/me/collections/${encodeURIComponent(id)}`);

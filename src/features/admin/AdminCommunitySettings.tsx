@@ -21,7 +21,10 @@ export function SettingsPane({ community }: { community: Community }) {
   const hasJoinData = community.join !== "";
 
   const saveToggle = (
-    patch: { requiresSecondVouch: boolean } | { autoFreezeOnReports: boolean },
+    patch:
+      | { requiresSecondVouch: boolean }
+      | { autoFreezeOnReports: boolean }
+      | { isFeatured: boolean },
     value: boolean,
     onToastKey: string,
     offToastKey: string,
@@ -77,6 +80,20 @@ export function SettingsPane({ community }: { community: Community }) {
             value,
             "admin:communities.settings.autoFreeze.onToast",
             "admin:communities.settings.autoFreeze.offToast",
+          )
+        }
+      />
+      <ToggleRow
+        title={t("admin:communities.settings.featured.title")}
+        sub={t("admin:communities.settings.featured.sub")}
+        checked={community.isFeatured}
+        disabled={updateCommunity.isPending}
+        onChange={(value) =>
+          saveToggle(
+            { isFeatured: value },
+            value,
+            "admin:communities.settings.featured.onToast",
+            "admin:communities.settings.featured.offToast",
           )
         }
       />

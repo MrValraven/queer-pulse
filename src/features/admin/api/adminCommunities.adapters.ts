@@ -261,6 +261,8 @@ export function cardDtoToCommunity(
     // endpoint does. Default off; the grid never reads these.
     requiresSecondVouch: false,
     autoFreezeOnReports: false,
+    // The card endpoint carries no featured flag — only the detail endpoint does.
+    isFeatured: false,
     support: cardDto.needsSupport,
     // The card endpoint carries no moderator roster.
     moderators: [],
@@ -283,6 +285,7 @@ export function detailDtoToCommunity(
     visibility: detailDto.visibility,
     requiresSecondVouch: detailDto.requiresSecondVouch,
     autoFreezeOnReports: detailDto.autoFreezeOnReports,
+    isFeatured: detailDto.isFeatured,
     frozen: detailDto.frozen,
     archived: detailDto.archived,
     truncated: detailDto.truncated,

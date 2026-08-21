@@ -122,6 +122,10 @@ export function cardDtoToCommunity(dto: CommunityCardDTO): Community {
     // `myRole` off its DTO. Dropping it here is what made the grid always show
     // "Join" even for communities you're already in.
     myRole: dto.myRole,
+    // Carry the raw weekly-activity count through so the discover grid's
+    // "Busy this week" toggle / "Most active" sort can read it client-side
+    // (see the `Community.activeThisWeek` doc comment for why).
+    activeThisWeek: dto.activeThisWeek,
   };
 }
 

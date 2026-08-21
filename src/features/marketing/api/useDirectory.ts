@@ -1,4 +1,5 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useAuth } from "../../../app/providers/authContext";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useDirectoryListingsActions } from "../../../app/providers/useDirectoryListingsActions";
 import { toItemsPage } from "../../../shared/api/pagination";
@@ -171,6 +172,7 @@ export function useDirectoryPlace(slug: string | undefined): {
   const { demoMode } = useDemoMode();
   const { language } = useTranslation();
   const fmt = useFormat();
+  const { user } = useAuth();
   // Hook-safe: read the demo/session listings overlay at the hook's top
   // level (never inside queryFn). `local` is the whole demo store — same
   // source `useDirectoryListings`' `submitted` reads in demo mode — and, in
@@ -179,12 +181,17 @@ export function useDirectoryPlace(slug: string | undefined): {
   const { local: submittedListings } = useDirectoryListingsActions();
 
   // Fixture-first, then the member's own submitted listing for that slug.
-  // Kept synchronous to match `getPlace`'s existing demo pattern.
+  // Kept synchronous to match `getPlace`'s existing demo pattern. A demo
+  // submission is always the signed-in viewer's own listing, so their real
+  // profile photo (not a mock registry lookup) is the right "who runs it"
+  // avatar — mirrors the live detail's resolved `owner.avatarUrl`.
   const demoPlace = (): DirectoryPlace | undefined => {
     const fixture = getPlace(slug);
     if (fixture) return fixture;
     const submitted = submittedListings.find((listing) => listing.slug === slug);
-    return submitted ? submittedToPlace(submitted) : undefined;
+    return submitted
+      ? submittedToPlace(submitted, user?.profile.avatarUrl)
+      : undefined;
   };
 
   const query = useQuery<DirectoryPlace | undefined>({

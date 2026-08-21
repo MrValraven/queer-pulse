@@ -216,7 +216,15 @@ const PLACE_PHOTO_KEYS: PhotoKey[] = ["wide", "d1", "d2", "vibe"];
  *   `emptyHours()`) takes priority over the `hoursType` template on the
  *   detail page, so the template is never actually rendered.
  */
-export function submittedToPlace(listing: PendingListing): DirectoryPlace {
+export function submittedToPlace(
+  listing: PendingListing,
+  /** The submitter's own profile photo, for the "Who runs it" card — same
+   * gating as `identity.inQueerPulse` below (only a public, profile-linked
+   * submission shows a real photo). The caller passes `useAuth()`'s
+   * `user.profile.avatarUrl`; absent when logged out or the profile has no
+   * photo, and the card falls back to the tinted `initials` avatar. */
+  submitterAvatarUrl?: string | null,
+): DirectoryPlace {
   const tint = tintForSlug(listing.slug);
   const identity = submittedOwnerIdentity(listing);
   const photos = Object.fromEntries(
@@ -260,6 +268,7 @@ export function submittedToPlace(listing: PendingListing): DirectoryPlace {
       bio: identity.bio,
       inQueerPulse: identity.inQueerPulse,
       first: identity.first,
+      avatarUrl: identity.inQueerPulse ? submitterAvatarUrl : null,
     },
     social: listing.social,
     address: listing.address,

@@ -1,39 +1,22 @@
-import { useState } from "react";
-import { FiUsers } from "react-icons/fi";
-import {
-  Button,
-  EmptyState,
-  FadeIn,
-  Reveal,
-  SearchInput,
-  Select,
-  SkeletonLine,
-} from "../../shared/components/ui";
-import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useEffect, useState } from "react";
+import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useDebouncedValue, useSimulatedLoad } from "../../shared/hooks";
-import { routes } from "../../app/routeMap";
 import { useCommunityMembership } from "../../app/providers/useCommunityMembership";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Community, CommunityType } from "../homepage/data/types";
 import { useCommunities } from "./api/useCommunities";
+import { useFeaturedCommunity } from "./api/useFeaturedCommunity";
 import { useJoinCommunity } from "./api/useCommunityMutations";
 import { getLiving } from "./livingCommunities.data";
 import { JoinModal } from "./JoinModal";
 import { CommunityCard } from "./CommunityCard";
+import { FeaturedCommunityCard } from "./FeaturedCommunityCard";
+import { CommunitiesDiscoverControls } from "./CommunitiesDiscoverControls";
+import { CommunitiesDiscoverEmptyState } from "./CommunitiesDiscoverEmptyState";
+import { CommunitiesDiscoverOutro } from "./CommunitiesDiscoverOutro";
+import { BUSY_THRESHOLD, type DiscoverSort } from "./communitiesDiscover.data";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CommunitiesPage.module.css";
-
-type DiscoverSort = "newest" | "name";
-const SORT_OPTIONS: DiscoverSort[] = ["newest", "name"];
-
-const FILTERS: { value: "all" | CommunityType; labelKey: string }[] = [
-  { value: "all", labelKey: "communities:category.all" },
-  { value: "social", labelKey: "communities:category.social" },
-  { value: "arts", labelKey: "communities:category.arts" },
-  { value: "activism", labelKey: "communities:category.activism" },
-  { value: "support", labelKey: "communities:category.support" },
-  { value: "sports", labelKey: "communities:category.sports" },
-  { value: "professional", labelKey: "communities:category.professional" },
-];
 
 function CommunityCardSkeleton() {
   return (
@@ -66,6 +49,9 @@ export function CommunitiesDiscover() {
   // builds from `params`, so a changed sort is a fresh key, not an append.
   const [sort, setSort] = useState<DiscoverSort>("newest");
   const [filter, setFilter] = useState<"all" | CommunityType>("all");
+  const [openOnly, setOpenOnly] = useState(false);
+  const [busyOnly, setBusyOnly] = useState(false);
+
   const {
     items: communities,
     hasNextPage,
@@ -74,8 +60,11 @@ export function CommunitiesDiscover() {
     isLoading,
   } = useCommunities({
     q: q || undefined,
-    sort: sort === "newest" ? undefined : sort,
+    // "active" isn't a server-side sort (see the drain note below) — leave the
+    // server on its default order and re-sort client-side once fully drained.
+    sort: sort === "name" ? "name" : undefined,
     type: filter === "all" ? undefined : filter,
+    access: openOnly ? "public" : undefined,
   });
   const loading = useSimulatedLoad() || isLoading;
   const { isMember, join, requestToJoin } = useCommunityMembership();
@@ -89,110 +78,113 @@ export function CommunitiesDiscover() {
       (joining.privateBadge ? "private" : "public"))
     : "public";
 
-  // The server now does the real `type` filtering (`useCommunities`'s `type`
-  // param), so `communities` already IS the filtered set — no more
-  // client-side re-filter over just the loaded page, which used to false-
-  // negative "no communities match" once a filtered category had more than
-  // one page (COM-3).
-  const visible = communities;
+  // The featured card only makes sense against the platform's whole discover
+  // pool — once a member is actively narrowing the list (search, category,
+  // either toggle) it drops out so it doesn't compete with what they asked for.
+  const featured = useFeaturedCommunity();
+  const showFeatured =
+    Boolean(featured) && !q && filter === "all" && !openOnly && !busyOnly;
+
+  // The backend can't sort/filter by `activeThisWeek` (it's computed
+  // post-pagination, not an indexed column), so "Most active" and "Busy this
+  // week" fully drain every remaining page client-side before filtering/
+  // sorting in memory — correct results over a handful of extra requests,
+  // rather than a "most active" that's silently wrong past page 1.
+  const needsDrain = busyOnly || sort === "active";
+  useEffect(() => {
+    if (needsDrain && hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [needsDrain, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  const draining = needsDrain && hasNextPage;
+  const showSkeletons = loading || draining;
+
+  // The server now does the real `type`/`q`/`access` filtering (`useCommunities`'s
+  // params), so `communities` already IS the filtered set — no more client-side
+  // re-filter over just the loaded page, which used to false-negative "no
+  // communities match" once a filtered category had more than one page (COM-3).
+  let visible = communities;
+  if (busyOnly) {
+    visible = visible.filter(
+      (community) => (community.activeThisWeek ?? 0) >= BUSY_THRESHOLD,
+    );
+  }
+  if (sort === "active") {
+    visible = [...visible].sort(
+      (a, b) => (b.activeThisWeek ?? 0) - (a.activeThisWeek ?? 0),
+    );
+  }
+  const gridItems = showFeatured
+    ? visible.filter((community) => community.slug !== featured!.slug)
+    : visible;
+
+  // Category-chip counts are deliberately stable across search/sort/toggles —
+  // they read against the whole discover pool, not whatever's currently
+  // filtered, so switching a chip doesn't make the other chips' numbers jump.
+  const {
+    items: allForCounts,
+    hasNextPage: countsHasNext,
+    fetchNextPage: countsFetchNext,
+    isFetchingNextPage: countsFetching,
+  } = useCommunities({});
+  useEffect(() => {
+    if (countsHasNext && !countsFetching) countsFetchNext();
+  }, [countsHasNext, countsFetching, countsFetchNext]);
+
+  const hasActiveRefinement =
+    Boolean(q) || filter !== "all" || openOnly || busyOnly;
 
   return (
     <>
       <div className={styles.body}>
         <div className="wrap">
-          <div className={styles.controlsRow}>
-            <SearchInput
-              className={styles.search}
-              value={searchInput}
-              onChange={setSearchInput}
-              placeholder={t("communities:discover.search.placeholder")}
-              ariaLabel={t("communities:discover.search.ariaLabel")}
+          <CommunitiesDiscoverControls
+            searchInput={searchInput}
+            setSearchInput={setSearchInput}
+            openOnly={openOnly}
+            setOpenOnly={setOpenOnly}
+            busyOnly={busyOnly}
+            setBusyOnly={setBusyOnly}
+            sort={sort}
+            setSort={setSort}
+            filter={filter}
+            setFilter={setFilter}
+            allForCounts={allForCounts}
+            countsHasNext={countsHasNext}
+            resultCount={gridItems.length + (showFeatured ? 1 : 0)}
+            hasActiveRefinement={hasActiveRefinement}
+            showResline={!showSkeletons}
+          />
+
+          {showFeatured && (
+            <FeaturedCommunityCard
+              community={featured!}
+              joined={
+                demoMode
+                  ? featured!.slug
+                    ? isMember(featured!.slug)
+                    : false
+                  : featured!.myRole != null
+              }
             />
+          )}
 
-            <label className={styles.sort}>
-              <span className={styles.sortLabel}>
-                {t("communities:discover.sort.label")}
-              </span>
-              <Select
-                size="sm"
-                value={sort}
-                options={SORT_OPTIONS.map((option) => ({
-                  value: option,
-                  label: t(`communities:discover.sort.${option}`),
-                }))}
-                onChange={(next) => setSort((next as DiscoverSort) ?? sort)}
-              />
-            </label>
-          </div>
-
-          <Reveal className={styles.filters}>
-            {FILTERS.map((option) => (
-              <button
-                type="button"
-                key={option.value}
-                className={[
-                  styles.chip,
-                  filter === option.value && styles.chipActive,
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                onClick={() => setFilter(option.value)}
-              >
-                {t(option.labelKey)}
-              </button>
-            ))}
-          </Reveal>
-
-          {/* `type`/`q` are now server-side query params (COM-3), so `visible`
-              (=`communities`) already IS the filtered, searched result — an
-              empty list here means the server found nothing, not that a
-              client-side re-filter over one loaded page came up short. Order
-              matters: search takes priority (it's the more specific action
-              the member just took), then the category filter, then the
-              platform-wide "nothing exists yet" fallback. */}
-          {!loading && visible.length === 0 ? (
-            q ? (
-              <EmptyState
-                icon={<FiUsers />}
-                title={t("communities:discover.empty.search.title")}
-                description={t(
-                  "communities:discover.empty.search.description",
-                )}
-                action={{
-                  label: t("communities:discover.empty.search.cta"),
-                  onClick: () => setSearchInput(""),
-                }}
-              />
-            ) : filter !== "all" ? (
-              <EmptyState
-                icon={<FiUsers />}
-                title={t("communities:discover.empty.filtered.title")}
-                description={t(
-                  "communities:discover.empty.filtered.description",
-                )}
-                action={{
-                  label: t("communities:discover.empty.filtered.cta"),
-                  onClick: () => setFilter("all"),
-                }}
-              />
-            ) : (
-              <EmptyState
-                icon={<FiUsers />}
-                title={t("communities:discover.empty.none.title")}
-                description={t("communities:discover.empty.none.description")}
-                action={{
-                  label: t("communities:discover.empty.none.cta"),
-                  to: routes.startCommunity,
-                }}
-              />
-            )
+          {!showSkeletons && visible.length === 0 ? (
+            <CommunitiesDiscoverEmptyState
+              q={q}
+              filter={filter}
+              openOnly={openOnly}
+              busyOnly={busyOnly}
+              setSearchInput={setSearchInput}
+              setFilter={setFilter}
+              setOpenOnly={setOpenOnly}
+              setBusyOnly={setBusyOnly}
+            />
           ) : (
             <div className={styles.grid}>
-              {loading
+              {showSkeletons
                 ? Array.from({ length: 6 }).map((_, i) => (
                     <CommunityCardSkeleton key={i} />
                   ))
-                : visible.map((community, index) => (
+                : gridItems.map((community, index) => (
                     <FadeIn
                       key={community.name}
                       delay={Math.min(index, 8) * 60}
@@ -213,7 +205,7 @@ export function CommunitiesDiscover() {
             </div>
           )}
 
-          {!loading && hasNextPage && (
+          {!showSkeletons && !needsDrain && hasNextPage && (
             <div className={styles.loadMore}>
               <Button
                 type="button"
@@ -227,6 +219,8 @@ export function CommunitiesDiscover() {
               </Button>
             </div>
           )}
+
+          <CommunitiesDiscoverOutro />
         </div>
       </div>
 

@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { type DirectoryPlace } from "./directoryPlaces";
 import { routes } from "../../app/routeMap";
-import { TINT } from "./directoryAsideTint";
 import { DirectoryClaimModal } from "./DirectoryClaimModal";
 import s from "./DirectorySpacePage.module.css";
 
@@ -34,9 +33,13 @@ export function DirectoryAsideOwner({ place, preview, ownerRef }: Props) {
   return (
     <div className={s.sideCard}>
       <h4>{t("marketing:directory.detail.whoRunsIt")}</h4>
-      <div className={[s.ownerAv, TINT[place.owner.tint]].join(" ")}>
-        {place.owner.initials}
-      </div>
+      <Avatar
+        className={s.ownerAv}
+        size={52}
+        initials={place.owner.initials}
+        tint={place.owner.tint}
+        src={place.owner.avatarUrl ?? undefined}
+      />
       <div className={s.ownerName}>{place.owner.name}</div>
       <div className={s.ownerRole}>{place.owner.role}</div>
       <span

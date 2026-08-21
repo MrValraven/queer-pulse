@@ -34,6 +34,10 @@ export interface Owner {
    * falls back to the members index). Resolved server-side from the owner id —
    * never a display name. */
   slug?: string | null;
+  /** The owner's real profile photo, for the "Who runs it" card — same
+   * gating as `slug` (public + profile-linked only). Absent/null falls back
+   * to the tinted `initials` avatar. */
+  avatarUrl?: string | null;
 }
 
 /** The listing owner's single public reply to a review, shown beneath it.

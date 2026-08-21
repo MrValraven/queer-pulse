@@ -213,6 +213,10 @@ export interface Community {
   /** Whether the community auto-freezes when open reports pile up. Persisted;
    *  enforcement is a follow-up. */
   autoFreezeOnReports: boolean;
+  /** Whether this is the platform-wide featured community shown as the hero
+   *  card at the top of the Discover page. A singleton: only one community is
+   *  ever true. */
+  isFeatured: boolean;
   /** True while the community is currently auto-frozen pending report review.
    *  An admin can freeze/unfreeze it directly from the Settings tab, in
    *  addition to staff lifting it from the community's own mod panel.
@@ -258,6 +262,7 @@ export const COMMUNITIES: Community[] = [
     slug: "trans-friends",
     requiresSecondVouch: true,
     autoFreezeOnReports: false,
+    isFeatured: true,
     name: "Trans & Friends",
     initials: "TR",
     tone: "jade",
@@ -313,6 +318,7 @@ export const COMMUNITIES: Community[] = [
     slug: "queer-creatives",
     requiresSecondVouch: false,
     autoFreezeOnReports: false,
+    isFeatured: false,
     name: "Queer Creatives",
     initials: "QC",
     tone: "violet",
@@ -368,6 +374,7 @@ export const COMMUNITIES: Community[] = [
     slug: "lisbon-queers",
     requiresSecondVouch: false,
     autoFreezeOnReports: true,
+    isFeatured: false,
     name: "Lisbon Queers",
     initials: "LQ",
     tone: "coral",
@@ -423,6 +430,7 @@ export const COMMUNITIES: Community[] = [
     slug: "newly-arrived",
     requiresSecondVouch: false,
     autoFreezeOnReports: false,
+    isFeatured: false,
     name: "Newly Arrived",
     initials: "NA",
     tone: "jade",
@@ -456,6 +464,7 @@ export const COMMUNITIES: Community[] = [
     slug: "trans-healthcare",
     requiresSecondVouch: true,
     autoFreezeOnReports: true,
+    isFeatured: false,
     frozen: true,
     name: "Trans Healthcare",
     initials: "TH",
@@ -490,6 +499,7 @@ export const COMMUNITIES: Community[] = [
     slug: "nightlife-afters",
     requiresSecondVouch: false,
     autoFreezeOnReports: true,
+    isFeatured: false,
     name: "Nightlife & Afters",
     initials: "NF",
     tone: "violet",
@@ -545,6 +555,7 @@ export const COMMUNITIES: Community[] = [
     slug: "elders-memory",
     requiresSecondVouch: true,
     autoFreezeOnReports: false,
+    isFeatured: false,
     name: "Elders & Memory",
     initials: "EM",
     tone: "amber",
@@ -578,6 +589,7 @@ export const COMMUNITIES: Community[] = [
     slug: "mutual-aid-lisbon",
     requiresSecondVouch: false,
     autoFreezeOnReports: false,
+    isFeatured: false,
     name: "Mutual Aid Lisbon",
     initials: "MA",
     tone: "coral",

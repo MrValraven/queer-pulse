@@ -12,6 +12,8 @@ export const communities: Community[] = [
       "Monthly casual meetups across the city. No agenda, no networking pressure, just queer people being in the same room.",
     count: "340 members",
     joinLabel: "Join",
+    accessTier: "public",
+    activeThisWeek: 26,
   },
   {
     slug: "rainbow-arts",
@@ -23,6 +25,8 @@ export const communities: Community[] = [
       "An open studio collective for queer visual artists and makers. Monthly crits, shared resources, and group shows.",
     count: "128 members",
     joinLabel: "Join",
+    accessTier: "request",
+    activeThisWeek: 19,
   },
   {
     slug: "trans-mutual-aid",
@@ -34,6 +38,8 @@ export const communities: Community[] = [
       "Peer support, resource sharing, and practical help for trans people in Lisbon. Run by and for the community.",
     count: "89 members",
     joinLabel: "Join",
+    accessTier: "request",
+    activeThisWeek: 31,
   },
   {
     slug: "queer-runners",
@@ -45,6 +51,8 @@ export const communities: Community[] = [
       "Weekly runs along the Tejo and through the city's parks. All paces welcome: inclusive, social, no performance pressure.",
     count: "214 members",
     joinLabel: "Join",
+    accessTier: "public",
+    activeThisWeek: 44,
   },
   {
     slug: "queer-parents",
@@ -56,6 +64,8 @@ export const communities: Community[] = [
       "For LGBTQ+ parents, co-parents, and people navigating parenthood. Often overlooked in queer spaces. Here, you're at the centre.",
     count: "62 members",
     joinLabel: "Join",
+    accessTier: "public",
+    activeThisWeek: 12,
   },
   {
     slug: "coming-out",
@@ -70,6 +80,7 @@ export const communities: Community[] = [
     accessTier: "private",
     dashed: true,
     privateBadge: true,
+    activeThisWeek: 0,
   },
   {
     slug: "trans-hub",
@@ -81,6 +92,8 @@ export const communities: Community[] = [
       "Healthcare navigation, legal guides, peer support, and community: a dedicated space of its own.",
     count: "147 members",
     joinLabel: "Join",
+    accessTier: "public",
+    activeThisWeek: 38,
   },
   {
     slug: "queer-elders",
@@ -92,6 +105,8 @@ export const communities: Community[] = [
       "For LGBTQ+ members 50 and over. Enormous lived wisdom, long memories, and a community that sees and genuinely honours you.",
     count: "38 members",
     joinLabel: "Join",
+    accessTier: "public",
+    activeThisWeek: 9,
   },
   {
     slug: "queer-youth",
@@ -103,6 +118,8 @@ export const communities: Community[] = [
       "Career starting points, city navigation, and peer support for members 18–25, the community we all needed and mostly didn't have at that age.",
     count: "93 members",
     joinLabel: "Join",
+    accessTier: "invite",
+    activeThisWeek: 21,
   },
   {
     slug: "queer-poc",
@@ -114,6 +131,8 @@ export const communities: Community[] = [
       "An intersectional space for queer people of colour in Lisbon, where race and queerness are held as one conversation.",
     count: "76 members",
     joinLabel: "Join",
+    accessTier: "request",
+    activeThisWeek: 17,
   },
   {
     slug: "disabled-queers",
@@ -125,5 +144,7 @@ export const communities: Community[] = [
       "Disability, chronic illness, and queerness intersect in ways most platforms ignore. Both identities belong here, in full.",
     count: "44 members",
     joinLabel: "Join",
+    accessTier: "public",
+    activeThisWeek: 11,
   },
 ];

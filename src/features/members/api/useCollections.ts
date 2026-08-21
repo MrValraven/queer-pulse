@@ -11,6 +11,7 @@ import {
   deleteCollection,
   getCollection,
   getCollections,
+  getFiledRefs,
   removeCollectionItem,
   updateCollection,
   type CollectionDTO,
@@ -29,6 +30,8 @@ export const collectionsKeys = {
   list: (demoMode: boolean) => [...collectionsKeys.all(demoMode), "list"] as const,
   detail: (demoMode: boolean, id: string) =>
     [...collectionsKeys.all(demoMode), "detail", id] as const,
+  filedRefs: (demoMode: boolean) =>
+    [...collectionsKeys.all(demoMode), "filed-refs"] as const,
 };
 
 /**
@@ -44,6 +47,22 @@ export function useMyCollections() {
     queryKey: collectionsKeys.list(demoMode),
     enabled: !demoMode && loggedIn,
     queryFn: () => (demoMode ? Promise.resolve([]) : getCollections()),
+  });
+}
+
+/**
+ * Every saved-item ref filed in any of the member's collections
+ * (`GET /me/collections/filed-refs`) — lets the "recently saved" list exclude
+ * items already filed somewhere. Live-only, mirroring `useMyCollections`.
+ */
+export function useFiledRefs() {
+  const { demoMode } = useDemoMode();
+  const { loggedIn } = useAuth();
+
+  return useQuery<string[]>({
+    queryKey: collectionsKeys.filedRefs(demoMode),
+    enabled: !demoMode && loggedIn,
+    queryFn: () => (demoMode ? Promise.resolve([]) : getFiledRefs()),
   });
 }
 
@@ -95,11 +114,17 @@ export function useCollectionMutations() {
     onSuccess: invalidateList,
   });
 
+  const invalidateFiledRefs = () =>
+    queryClient.invalidateQueries({
+      queryKey: collectionsKeys.filedRefs(demoMode),
+    });
+
   const addItem = useMutation({
     mutationFn: ({ id, ref }: { id: string; ref: string }) =>
       addCollectionItem(id, ref),
     onSuccess: (_data, { id }) => {
       void invalidateList();
+      void invalidateFiledRefs();
       void queryClient.invalidateQueries({
         queryKey: collectionsKeys.detail(demoMode, id),
       });
@@ -111,6 +136,7 @@ export function useCollectionMutations() {
       removeCollectionItem(id, ref),
     onSuccess: (_data, { id }) => {
       void invalidateList();
+      void invalidateFiledRefs();
       void queryClient.invalidateQueries({
         queryKey: collectionsKeys.detail(demoMode, id),
       });

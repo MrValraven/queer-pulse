@@ -72,9 +72,17 @@ export function useCommunities(
         // Mirror the live endpoint's `type=` filter (COM-3) — applied
         // server-side there, applied here over the same static registry so
         // demo behaviour stays byte-for-byte identical to live.
-        const matches = params.type
+        const typeMatched = params.type
           ? searched.filter((community) => community.type === params.type)
           : searched;
+        // Mirror the live endpoint's `access=` filter (used by the Discover
+        // page's "Open to all" toggle) over the same static registry.
+        const matches = params.access
+          ? typeMatched.filter(
+              (community) =>
+                (community.accessTier ?? "public") === params.access,
+            )
+          : typeMatched;
         // Mirror the live endpoint's `sort=name` (A→Z); `newest`/omitted keeps
         // the registry's own order, same as the backend's `created_at DESC`
         // default reads today.

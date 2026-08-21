@@ -8,6 +8,7 @@ import {
 } from "./adminCommunities.api";
 import { adminCommunityDetailQueryKey } from "./useAdminCommunities";
 import { useDemoAwareMutation } from "./demoAwareMutation";
+import { setDemoFeaturedSlug } from "../../communities/featuredCommunity.demo";
 
 export interface UpdateAdminCommunityVars {
   slug: string;
@@ -68,6 +69,14 @@ export function useUpdateAdminCommunity() {
           (community) => community.slug === slug,
         );
         if (fixture) Object.assign(fixture, patch);
+        // Keep the Discover page's demo hero card in sync with the admin
+        // toggle. No need to loop-clear other COMMUNITIES fixture rows'
+        // `isFeatured` here — nothing in the admin grid shows a "which one is
+        // featured, globally" list, so there's no visible cross-row clobber;
+        // live mode's backend already enforces the real singleton.
+        if (patch.isFeatured !== undefined) {
+          setDemoFeaturedSlug(patch.isFeatured ? slug : null);
+        }
       }
       return { previous };
     },

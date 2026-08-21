@@ -1487,6 +1487,13 @@ export const admin: Catalog = {
     "Congelamento automático em denúncias de doxxing ativado",
   "communities.settings.autoFreeze.offToast":
     "Congelamento automático desativado",
+  "communities.settings.featured.title": "Em destaque no Descobrir",
+  "communities.settings.featured.sub":
+    "Aparece como o card principal no topo da página Descobrir Comunidades. Só uma comunidade pode estar em destaque de cada vez. Ativar isto para uma comunidade substitui a que estava em destaque até agora.",
+  "communities.settings.featured.onToast":
+    "Esta comunidade está agora em destaque no Descobrir",
+  "communities.settings.featured.offToast":
+    "Esta comunidade deixou de estar em destaque",
   "communities.settings.saveErrorToast":
     "Não foi possível guardar. Tenta novamente.",
   "communities.settings.codeOfCare": "Código de cuidado",

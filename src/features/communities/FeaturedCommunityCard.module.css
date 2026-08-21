@@ -1,0 +1,202 @@
+/* Featured collective hero card — Communities Discover page.
+   Two-column on desktop (media / body), stacks to one column under the
+   repo's shared --compact (880px) "stack to single column" gate. */
+.card {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+@media (--compact) {
+  .card {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* A grid item stretches to the row's height by default (align-items: stretch),
+   so the ImageSlot child's own height: 100% resolves against a real height
+   here without needing absolute positioning. min-height is the floor before
+   the taller of the two columns (usually the body) sets that row height. */
+.mediaWrap {
+  position: relative;
+  min-height: clamp(220px, 30vw, 320px);
+}
+
+.flag {
+  position: absolute;
+  inset-block-start: 14px;
+  inset-inline-start: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(var(--cream-rgb), 1);
+  background: rgba(var(--plum-rgb), 0.78);
+  backdrop-filter: blur(6px);
+  border-radius: var(--radius-pill);
+  padding: 6px 12px 6px 10px;
+}
+.liveDot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jade-soft);
+  flex: none;
+}
+.liveDot::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background: var(--jade-soft);
+  animation: qpPulse 1.8s var(--ease-out) infinite;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: var(--card-pad-lg);
+}
+@media (--compact) {
+  .body {
+    padding: var(--card-pad);
+  }
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: var(--radius-tag);
+}
+.social {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.12);
+}
+.arts {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+}
+.activism {
+  color: var(--text-strong);
+  background: rgba(var(--plum-rgb), 0.09);
+}
+.support {
+  color: var(--violet);
+  background: rgba(var(--violet-rgb), 0.1);
+}
+.sports {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.1);
+}
+.professional {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+}
+
+.joined {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--jade-ink);
+  background: rgba(var(--jade-rgb), 0.12);
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+  margin-inline-start: auto;
+}
+.joined svg {
+  width: 11px;
+  height: 11px;
+}
+
+.name {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-heading);
+  line-height: var(--lh-title);
+  color: var(--text-strong);
+  margin: 0;
+}
+
+.tagline {
+  font-family: var(--sans);
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+  margin: 0;
+  max-width: 60ch;
+}
+
+.next {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  color: var(--ink-60);
+}
+.next svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  margin-block-start: 2px;
+  color: var(--accent-ink);
+}
+.next b {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-block-start: auto;
+  padding-block-start: 14px;
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+}
+.count {
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.activeStat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.activeStat svg {
+  width: 13px;
+  height: 13px;
+  color: var(--jade);
+}
