@@ -417,7 +417,8 @@ export const members: Catalog = {
   "hero.vouch.youOnly": "you",
   "hero.vouch.anonymous": "Anonymous",
   "hero.vouch.by": "Vouched for by <b>{names}</b>.",
-  "hero.vouch.onlyNumberMatters": "That's the only number that matters here.",
+  "hero.vouch.onlyNumberMatters": "A familiar face vouched for them.",
+  "hero.vouch.onlyNumberMattersSelf": "A familiar face vouched for you.",
   "hero.vouch.emptySelf":
     "No vouches yet. They'll appear here as people who know you add their name. The only number that matters.",
   "hero.vouch.emptyOther":

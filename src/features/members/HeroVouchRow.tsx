@@ -231,7 +231,11 @@ export function HeroVouchRow({
               values={{ names: namesText }}
             />
             <br />
-            {t("members:hero.vouch.onlyNumberMatters")}
+            {t(
+              isSelf
+                ? "members:hero.vouch.onlyNumberMattersSelf"
+                : "members:hero.vouch.onlyNumberMatters",
+            )}
             {(textureRelationships.length > 0 || mutualsCount > 0) && (
               <div className={styles.hereFor}>
                 {textureRelationships.map((relationship) => (

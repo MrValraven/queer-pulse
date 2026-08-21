@@ -420,7 +420,8 @@ export const members: Catalog = {
   "hero.vouch.youOnly": "tu",
   "hero.vouch.anonymous": "Anónimo",
   "hero.vouch.by": "Quem te deu um voto de confiança: <b>{names}</b>.",
-  "hero.vouch.onlyNumberMatters": "É o único número que importa aqui.",
+  "hero.vouch.onlyNumberMatters": "Um rosto conhecido deu-lhes um voto de confiança.",
+  "hero.vouch.onlyNumberMattersSelf": "Um rosto conhecido deu-te um voto de confiança.",
   "hero.vouch.emptySelf":
     "Ainda sem votos de confiança. Vão aparecer aqui à medida que quem te conhece juntar o nome. É o único número que importa.",
   "hero.vouch.emptyOther":
