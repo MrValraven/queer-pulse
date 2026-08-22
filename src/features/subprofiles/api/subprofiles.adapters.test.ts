@@ -124,9 +124,12 @@ describe("buildSections", () => {
   it("keeps every allowed section (in kind order) with includeEmpty for the editor", () => {
     const items = [makeItem({ section: "discography", title: "Threshold EP" })];
     const sections = buildSections(items, "musician", { includeEmpty: true });
+    // `gallery` is universal: `sectionsForKind` appends it to every kind, so
+    // the editor offers it alongside the kind's own sections.
     expect(sections.map((section) => section.section)).toEqual([
       "discography",
       "gigs",
+      "gallery",
     ]);
     // The empty section still surfaces its metadata (label key + no items).
     const gigs = sections.find((section) => section.section === "gigs");
@@ -145,10 +148,12 @@ describe("subprofileToView", () => {
     expect(view.featured?.title).toBe("Threshold EP");
     expect(view.endorsementCount).toBe(3);
     expect(view.followerCount).toBe(41);
-    // Owner view is includeEmpty, so the empty `gigs` section is still present.
+    // Owner view is includeEmpty, so the empty `gigs` and universal `gallery`
+    // sections are still present.
     expect(view.sections.map((section) => section.section)).toEqual([
       "discography",
       "gigs",
+      "gallery",
     ]);
   });
 

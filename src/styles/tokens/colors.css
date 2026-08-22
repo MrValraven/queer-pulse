@@ -1,6 +1,18 @@
 /* QueerPulse — Color tokens
    All hues are warm-tinted. Plum is the brand anchor; accent is swappable via Tweaks. */
-:root {
+
+/* `[data-theme="light"]` shares this block so the light palette can be
+   RE-declared on a descendant, not only inherited from the root. Custom
+   properties inherit, so a subtree that opts back into light inside a dark
+   document (the membership-card designer's light/dark preview) would
+   otherwise keep every dark value it inherited — the dark overrides below
+   have a selector to match, and light had none. Specificity is unchanged:
+   selector lists are scored per selector, so `:root` still loses to the
+   `[data-theme="dark"]` block below on the root element itself.
+   Note this re-declares TOKENS only; a component's own
+   `[data-theme="dark"] .thing` rule still matches inside such a subtree. */
+:root,
+[data-theme="light"] {
   /* ── Brand ── */
   --plum: #2d1b3d;
   --plum-rgb: 45, 27, 61;
@@ -103,6 +115,11 @@
 
   /* ── Ink (text) ── */
   --ink: #1a1a1f;
+  /* The ink SURFACE. `--ink` above is TEXT, so it inverts in dark mode; this
+     is its non-inverting counterpart, for the rare case where ink paints a
+     fixed OBJECT rather than type — the membership card's Ink colourway is
+     the same near-black card in both themes. Same reasoning as --cream-rgb. */
+  --ink-surface: #1a1a1f;
   --ink-rgb:
     26, 26, 31; /* ink channels for rgba() faint text — flips in dark mode */
   --ink-60: rgba(26, 26, 31, 0.62); /* body copy */

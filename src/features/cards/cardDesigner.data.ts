@@ -54,6 +54,48 @@ export function selectValueToValidity(value: string | null): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+/**
+ * Skin/accent pairs where the accent bar would land on its own colour and
+ * disappear. The accent no longer carries any text contrast (see the comment
+ * in `MembershipCardFace.module.css`), so this is purely about the bar still
+ * being visible — the designer warns rather than blocking, since a community
+ * may genuinely want the quietest possible card.
+ */
+const INVISIBLE_ACCENT_PAIRS: ReadonlyArray<`${CardSkin}:${string}`> = [
+  "plum:plum",
+  "jade:jade",
+  "ink:ink",
+  "coral:accent",
+];
+
+export function isAccentInvisibleOnSkin(
+  skin: CardSkin,
+  accentToken: string,
+): boolean {
+  return INVISIBLE_ACCENT_PAIRS.includes(`${skin}:${accentToken}`);
+}
+
+/**
+ * The date a card issued today would stop working, or `null` for a programme
+ * whose cards never expire. "One year" tells an owner nothing about the
+ * consequence; a date does.
+ */
+export function expiryPreviewDate(
+  validityMonths: number | null,
+  issuedAt: Date,
+): Date | null {
+  if (validityMonths === null) return null;
+  const expiry = new Date(issuedAt.getTime());
+  expiry.setUTCMonth(expiry.getUTCMonth() + validityMonths);
+  return expiry;
+}
+
+/** The serial a first card would carry, given the programme's prefix. Real
+ *  serials are minted server-side; this only has to look like one. */
+export function previewSerial(serialPrefix: string | undefined): string {
+  return `${serialPrefix || "ABC"}-00042`;
+}
+
 /** A stand-in card: the designer's own live preview of the owner's in-progress
  *  choices, and (via `ModToolsCardSection`) a preview of the community's
  *  current live design. Kept here (data-shaping, not a component) rather than
@@ -64,28 +106,56 @@ export function previewCard(
   cardName: string,
   skin: CardSkin,
   accentToken: string,
+  extras: {
+    /** Who the preview card is made out to. The viewing owner/mod by default,
+     *  so the preview reads as a real card rather than a form artefact. */
+    holderName?: string;
+    crestUrl?: string | null;
+    backgroundPreset?: string | null;
+    backgroundUrl?: string | null;
+    validityMonths?: number | null;
+    serialPrefix?: string;
+    /** Whether the programme being designed puts photos on its cards. */
+    allowsMemberPhoto?: boolean;
+    /** The face to draw when it does. The designer passes the viewing
+     *  owner's own avatar, so the preview is a real card rather than a
+     *  grey box. */
+    holderAvatarUrl?: string | null;
+  } = {},
 ): MyCardDTO {
+  const issuedAt = new Date();
+  const expiresAt = expiryPreviewDate(
+    extras.validityMonths ?? null,
+    issuedAt,
+  );
   return {
     id: "preview",
-    serial: "ABC-00000",
+    serial: previewSerial(extras.serialPrefix),
     status: "active",
-    issuedAt: new Date().toISOString(),
-    expiresAt: null,
+    issuedAt: issuedAt.toISOString(),
+    expiresAt: expiresAt ? expiresAt.toISOString() : null,
     communityName,
     communitySlug: "preview",
     role: "member",
-    holderName: "Preview",
+    holderName: extras.holderName?.trim() || "Preview",
+    holderAvatarUrl: extras.allowsMemberPhoto
+      ? (extras.holderAvatarUrl ?? null)
+      : null,
+    isPhotoHidden: false,
     program: {
       isEnabled: true,
       skin,
       accentToken,
-      crestUrl: null,
+      crestUrl: extras.crestUrl ?? null,
+      backgroundPreset: extras.backgroundPreset ?? null,
+      backgroundUrl: extras.backgroundUrl ?? null,
       cardName,
-      validityMonths: null,
+      validityMonths: extras.validityMonths ?? null,
       allowsPrint: false,
       allowsWallet: false,
       allowsPublicBadge: true,
-      serialPrefix: "ABC",
+      allowsMemberPhoto: extras.allowsMemberPhoto ?? false,
+      serialPrefix: extras.serialPrefix ?? "ABC",
     },
   };
 }

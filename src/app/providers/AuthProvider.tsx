@@ -107,9 +107,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // nudges bootstrap calls) trips reconcileSession gets falsely told their
   // session "expired."
   const wasEverLoggedIn = useRef(false);
+  // Handed to the session hooks as callbacks rather than as the ref itself:
+  // a ref that crosses a hook boundary arrives there as a plain local
+  // variable, which `react-hooks/immutability` refuses to see mutated after
+  // render. Owned here, where it is provably a ref.
+  const hasEverLoggedIn = useCallback(() => wasEverLoggedIn.current, []);
+  const markEverLoggedIn = useCallback(() => {
+    wasEverLoggedIn.current = true;
+  }, []);
 
   const reconcileSession = useReconcileSession({
-    wasEverLoggedIn,
+    hasEverLoggedIn,
+    markEverLoggedIn,
     setUser,
     setLoggedIn,
     setAuthError,
@@ -129,7 +138,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useLiveSessionBootstrap({
     demoMode,
     reconcileSession,
-    wasEverLoggedIn,
+    markEverLoggedIn,
     setUser,
     setLoggedIn,
     setChecking,

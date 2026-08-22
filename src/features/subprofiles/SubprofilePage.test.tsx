@@ -88,7 +88,7 @@ describe("SubprofilePage owner-draft preview (demo mode)", () => {
     );
     await waitForPageLoad();
     expect(
-      await screen.findByText("Draft — nobody else can open this address yet."),
+      await screen.findByText("Draft. Nobody else can open this address yet."),
     ).toBeInTheDocument();
   });
 

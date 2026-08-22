@@ -59,8 +59,14 @@ export function RequestViewingModal({
   // before the first, can only waste the lister's reply.
   const slotOneTime = slotOne ? new Date(slotOne).getTime() : Number.NaN;
   const slotTwoTime = slotTwo ? new Date(slotTwo).getTime() : Number.NaN;
-  const isSlotOneFuture =
-    Number.isFinite(slotOneTime) && slotOneTime > Date.now();
+  // The clock is read in the pickers' own change handlers (see `onChange`
+  // below) and kept in state, rather than inline here: `Date.now()` is impure,
+  // so calling it during render would re-judge "is this in the future" against
+  // a different clock on any unrelated re-render. Reading it as the member
+  // picks is also the accurate moment to ask, where a mount-time snapshot
+  // would still accept a slot that passed while the modal sat open.
+  const [nowMs, setNowMs] = useState(() => 0);
+  const isSlotOneFuture = Number.isFinite(slotOneTime) && slotOneTime > nowMs;
   const isSlotTwoOrdered =
     slotTwo.trim().length === 0 ||
     (Number.isFinite(slotTwoTime) && slotTwoTime > slotOneTime);
@@ -173,7 +179,10 @@ export function RequestViewingModal({
                 id="viewing-slot-1"
                 labelledBy="viewing-slot-1-label"
                 value={slotOne || null}
-                onChange={(value) => setSlotOne(value ?? "")}
+                onChange={(value) => {
+                  setNowMs(Date.now());
+                  setSlotOne(value ?? "");
+                }}
               />
             </div>
             <div className={v.slotRow}>
@@ -185,7 +194,10 @@ export function RequestViewingModal({
                 id="viewing-slot-2"
                 labelledBy="viewing-slot-2-label"
                 value={slotTwo || null}
-                onChange={(value) => setSlotTwo(value ?? "")}
+                onChange={(value) => {
+                  setNowMs(Date.now());
+                  setSlotTwo(value ?? "");
+                }}
               />
             </div>
             {slotErrorKey && (

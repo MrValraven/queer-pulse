@@ -18,6 +18,9 @@ export const cards: Catalog = {
   "remove.confirm.confirmCta": "Remove card",
   "remove.toast": "Card removed.",
 
+  "photo.consent": "Show my photo on this card",
+  "photo.consentAria": "Show my photo on my {community} card",
+
   "discreet.title": "Card hidden",
   "discreet.body":
     "Your card names the community that issued it. It stays covered until you show it, and hides again when you leave this screen.",
@@ -30,6 +33,13 @@ export const cards: Catalog = {
   "face.qrAriaLabel": "Scannable proof of membership for {community}",
   "face.serial": "No.",
   "face.memberSince": "Since",
+  "face.validUntil": "Valid until",
+  "face.neverExpires": "No expiry",
+  "face.role": "Role",
+  "face.backAriaLabel": "Back of your {community} membership card",
+  "face.flipToBack": "Turn the card over to show the code",
+  "face.flipToFront": "Turn the card back to the front",
+  "face.scanToVerify": "Scan to verify at {host}",
 
   "qrNotice.minting": "Preparing your code",
   "qrNotice.offline": "Cannot reach QueerPulse. Your card cannot prove itself right now.",
@@ -66,13 +76,59 @@ export const cards: Catalog = {
   "designer.defaultCardName": "Member",
   "designer.cardNameLabel": "What the card calls a member",
   "designer.cardNamePlaceholder": "Member, Sócie, Companheire",
+  "designer.cardNameHelper":
+    "The word printed under your community's name on every card.",
+  "designer.backgroundLabel": "What the card is made of",
+  "designer.background.colour": "Colour",
+  "designer.background.flag": "Flag",
+  "designer.background.photo": "Photo",
+  "designer.flagHelper":
+    "The flag fills the whole card. Text on top of it stays readable automatically.",
+  "designer.photoHelper":
+    "A wide image, cropped to the card. Text on top of it stays readable automatically.",
+  "flag.rainbow": "Rainbow",
+  "flag.progress": "Progress Pride",
+  "flag.transgender": "Transgender",
+  "flag.bisexual": "Bisexual",
+  "flag.lesbian": "Lesbian",
+  "flag.pansexual": "Pansexual",
+  "flag.asexual": "Asexual",
+  "flag.aromantic": "Aromantic",
+  "flag.nonbinary": "Non-binary",
+  "flag.genderfluid": "Genderfluid",
+  "flag.genderqueer": "Genderqueer",
+  "flag.agender": "Agender",
+  "flag.intersex": "Intersex",
   "designer.skinLabel": "Card style",
   "designer.accentLabel": "Accent",
+  "designer.accentInvisible":
+    "This accent is the same colour as the card, so the accent bar disappears.",
+  "designer.memberPhotoLabel": "Member photos",
+  "designer.memberPhotoCheck": "Put each member's photo on their card",
+  "designer.memberPhotoHelper":
+    "The photo comes from the member's own profile and sits beside your community's name. Anyone can turn theirs off on their own card.",
+  "designer.crestLabel": "Crest",
+  "designer.crestHelper":
+    "A small square logo, shown in the top corner of the card. Optional.",
   "designer.validityLabel": "How long a card stays valid",
+  "designer.validityHelper": "A card issued today stops working on {date}.",
+  "designer.validityHelperNever":
+    "Cards keep working until you pause or revoke them.",
+  "designer.previewCaption": "How a member sees their card.",
+  "designer.previewThemeLabel": "Preview the card in light or dark mode",
+  "designer.previewLight": "Light",
+  "designer.previewDark": "Dark",
   "designer.save": "Save and issue cards",
+  "designer.saveDesign": "Save design",
   "designer.saved": "Card saved. {count} members now hold one.",
+  "designer.savedDesign": "Card design saved. Every card updates to match.",
   "designer.savedPaused":
     "Card saved. It stays paused, so members won't see the change until you resume it.",
+  "designer.discard.title": "Discard this design?",
+  "designer.discard.body":
+    "Your changes to the card have not been saved yet. Closing now loses them.",
+  "designer.discard.confirm": "Discard changes",
+  "designer.discard.cancel": "Keep editing",
 
   "skin.plum": "Plum",
   "skin.cream": "Cream",
@@ -121,6 +177,20 @@ export const cards: Catalog = {
   "modTools.resume": "Resume this card programme",
   "modTools.pausedNotice":
     "This card programme is paused. Members cannot show or scan a card until you resume it.",
+  "modTools.issue": "Issue cards",
+  "modTools.issueConfirm.title": "Issue cards across your roster?",
+  "modTools.issueConfirm.body":
+    "Every member without a card gets one, and cards that have expired are put back in date. Cards you paused or revoked stay as they are.",
+  "modTools.issueConfirm.confirm": "Issue cards",
+  "modTools.issued.new_one": "One new card issued.",
+  "modTools.issued.new_other": "{count} new cards issued.",
+  "modTools.issued.renewed_one": "One expired card renewed.",
+  "modTools.issued.renewed_other": "{count} expired cards renewed.",
+  "modTools.issued.none": "Everyone on your roster already holds a card.",
+  "modTools.issued.skipped_one":
+    "One paused or revoked card was left as it is.",
+  "modTools.issued.skipped_other":
+    "{count} paused or revoked cards were left as they are.",
   "modTools.pausedToast": "Card programme paused.",
   "modTools.resumedToast": "Card programme resumed.",
 };

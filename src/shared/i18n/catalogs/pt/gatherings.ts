@@ -282,6 +282,40 @@ export const gatherings: Catalog = {
 
   // CoHostInvitePage
   "cohostInvite.back": "Notificações",
+  // Opções de convite para coanfitrião. Os ids são validados no backend
+  // (`cohost-invite-options.ts`); o texto é do frontend e vive aqui.
+  "cohostInvite.role.greeter.label": "Acolhimento",
+  "cohostInvite.role.greeter.description":
+    "Receber as pessoas à porta e ajudar quem chega sozinho a encontrar o seu lugar.",
+  "cohostInvite.role.room_lead.label": "Responsável de sala",
+  "cohostInvite.role.room_lead.description":
+    "Ficar atento ao espaço: montagem, fluxo e arrumação no fim.",
+  "cohostInvite.role.comoderator.label": "Comoderação",
+  "cohostInvite.role.comoderator.description":
+    "Segurar os limites do espaço com quem organiza e intervir se algo precisar de ser tratado.",
+  "cohostInvite.role.page_editor.label": "Edição da página",
+  "cohostInvite.role.page_editor.description":
+    "Manter a página do convívio certa: detalhes, fotos e as respostas que as pessoas procuram.",
+  "cohostInvite.commitment.light.label": "Só no próprio dia",
+  "cohostInvite.commitment.light.description":
+    "Uma ajuda no dia, sem nada a fazer antes.",
+  "cohostInvite.commitment.half_event.label": "Metade do convívio",
+  "cohostInvite.commitment.half_event.description":
+    "Presente durante boa parte, com o resto assegurado por outra pessoa.",
+  "cohostInvite.commitment.full_event.label": "O convívio inteiro",
+  "cohostInvite.commitment.full_event.description":
+    "Da montagem à arrumação.",
+  "cohostInvite.commitment.ongoing.label": "Contínuo",
+  "cohostInvite.commitment.ongoing.description":
+    "Este e os seguintes, como coanfitrião regular.",
+  "cohostInvite.notFoundTitle": "Este convite já não está aqui",
+  "cohostInvite.notFoundDescription":
+    "Pode ter sido retirado, ou o convívio a que pertencia deixou de existir. Não foi nada que tenhas feito.",
+  "cohostInvite.alreadyRespondedTitle": "Já respondeste a este convite",
+  "cohostInvite.alreadyAcceptedDescription":
+    "Estás a coanfitriar com {host}. As ferramentas de anfitrião estão abertas para ti.",
+  "cohostInvite.alreadyDeclinedDescription":
+    "Recusaste este. {host} pode sempre convidar-te para o próximo.",
   "cohostInvite.eyebrow": "Convite para co-organizar",
   "cohostInvite.title": "{host} quer que <em>co-organizes</em> com ela.",
   "cohostInvite.readThroughHint":

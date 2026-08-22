@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import {
@@ -16,11 +22,12 @@ import type { GovernanceOverviewResult } from "./api/useGovernanceOverview";
  * Decisions) all render `SectionError` (a synchronous `role="alert"` + a retry
  * button wired to the hook's `retry`) when the live fetch fails, instead of a
  * silently-empty list — so we mock the shared hook at its boundary and drive the
- * `error` flag. RaiseSection has no data hook but a real dual-mode branch: demo
- * shows a success toast, live an honest "coming soon" info toast (no backend
- * concern-intake endpoint exists) — so we flip a mutable `useDemoMode` and
- * capture `showToast`. `role="alert"`, the button role, and plain data (a
- * council name, a step number) are all synchronous.
+ * `error` flag. RaiseSection has no data hook but a real dual-mode branch:
+ * demo confirms locally, live POSTs to the concern-intake endpoint (which
+ * exists now) and confirms on success. Both paths are gated behind the same
+ * validation, so we flip a mutable `useDemoMode`, stub the submit, and capture
+ * `showToast`. `role="alert"`, the button role, and plain data (a council name,
+ * a step number) are all synchronous.
  */
 
 const retry = vi.fn();
@@ -28,6 +35,12 @@ let overviewState: GovernanceOverviewResult;
 
 vi.mock("./api/useGovernanceOverview", () => ({
   useGovernanceOverview: () => overviewState,
+}));
+
+const submitConcern = vi.fn((_submission: unknown) => Promise.resolve());
+vi.mock("./api/governance.api", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("./api/governance.api")>()),
+  submitConcern: (submission: unknown) => submitConcern(submission),
 }));
 
 const showToast = vi.fn();
@@ -187,26 +200,85 @@ describe("DecisionsSection", () => {
 });
 
 describe("RaiseSection dual-mode submit", () => {
-  it("confirms with a success toast in demo mode", async () => {
+  /** Fill the two fields a triager needs before a submission is accepted. */
+  async function fillConcern() {
+    fireEvent.click(
+      await screen.findByRole("button", { name: "What kind of concern?" }),
+    );
+    fireEvent.click(
+      await screen.findByRole("option", {
+        name: "Report a member or behaviour",
+      }),
+    );
+    fireEvent.change(
+      screen.getByLabelText(
+        "Describe what happened, or what's wrong, in as much detail as you're comfortable with…",
+      ),
+      { target: { value: "Someone is following me across threads." } },
+    );
+  }
+
+  async function clickSubmit() {
+    fireEvent.click(await screen.findByRole("button", { name: /^Submit/ }));
+  }
+
+  it("refuses an empty submission rather than filing an empty task", async () => {
     render(
       <TestProviders>
         <RaiseSection />
       </TestProviders>,
     );
-    fireEvent.click(await screen.findByRole("button", { name: "Submit" }));
+    await clickSubmit();
     expect(showToast).toHaveBeenCalledTimes(1);
-    expect(showToast.mock.calls[0]![1]).toBe("success");
+    expect(showToast.mock.calls[0]![1]).toBe("error");
+    expect(submitConcern).not.toHaveBeenCalled();
   });
 
-  it("stays honest with an info 'coming soon' toast in live mode", async () => {
+  it("confirms with a success toast in demo mode, without calling the API", async () => {
+    render(
+      <TestProviders>
+        <RaiseSection />
+      </TestProviders>,
+    );
+    await fillConcern();
+    await clickSubmit();
+    expect(showToast).toHaveBeenCalledTimes(1);
+    expect(showToast.mock.calls[0]![1]).toBe("success");
+    expect(submitConcern).not.toHaveBeenCalled();
+  });
+
+  it("POSTs the concern and confirms in live mode", async () => {
     demoMode = false;
     render(
       <TestProviders>
         <RaiseSection />
       </TestProviders>,
     );
-    fireEvent.click(await screen.findByRole("button", { name: "Submit" }));
-    expect(showToast).toHaveBeenCalledTimes(1);
-    expect(showToast.mock.calls[0]![1]).toBe("info");
+    await fillConcern();
+    await clickSubmit();
+    await waitFor(() => expect(submitConcern).toHaveBeenCalledTimes(1));
+    expect(submitConcern).toHaveBeenCalledWith(
+      expect.objectContaining({
+        category: "member",
+        description: "Someone is following me across threads.",
+      }),
+    );
+    await waitFor(() =>
+      expect(showToast.mock.calls[0]![1]).toBe("success"),
+    );
+  });
+
+  it("surfaces a failed live submit as an error, not a false confirmation", async () => {
+    demoMode = false;
+    submitConcern.mockRejectedValueOnce(new Error("boom"));
+    render(
+      <TestProviders>
+        <RaiseSection />
+      </TestProviders>,
+    );
+    await fillConcern();
+    await clickSubmit();
+    await waitFor(() => expect(showToast).toHaveBeenCalledTimes(1));
+    expect(showToast.mock.calls[0]![1]).toBe("error");
   });
 });

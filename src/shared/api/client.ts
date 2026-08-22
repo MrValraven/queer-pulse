@@ -565,6 +565,35 @@ export const apiGet = <T>(
   validate?: ResponseValidator<T>,
   signal?: AbortSignal,
 ) => request<T>("GET", path, undefined, true, timeoutMs, validate, signal);
+/**
+ * A GET whose "nothing here" answer is a real, expected outcome: the member has
+ * no employer affiliation, the community runs no card programme, the writer
+ * never applied.
+ *
+ * Nest sends an EMPTY BODY for a controller that returns `null` (`isNil` short-
+ * circuits before serialization), and an empty 2xx body arrives here as
+ * `undefined`, not `null`. React Query then rejects the query outright:
+ * "Query data cannot be undefined". Normalizing to `null` at this boundary
+ * makes the declared `T | null` return type true, so every caller (queryFn
+ * included) can rely on it.
+ *
+ * Use this instead of `apiGet<T | null>` for any endpoint that can legitimately
+ * answer with nothing.
+ */
+export const apiGetNullable = async <T>(
+  path: string,
+  timeoutMs?: number,
+  signal?: AbortSignal,
+): Promise<T | null> =>
+  (await request<T | null>(
+    "GET",
+    path,
+    undefined,
+    true,
+    timeoutMs,
+    undefined,
+    signal,
+  )) ?? null;
 export const apiPost = <T>(
   path: string,
   body?: unknown,

@@ -52,8 +52,8 @@ export function reasonFor(error: unknown): string | null {
  * A user-facing error string: an action frame plus the specific reason when we
  * have one, otherwise the friendly fallback.
  *   describeError("Couldn't save that co-op", err)
- *     → "Couldn't save that co-op — that name is taken."   (reason present)
- *     → "Couldn't save that co-op — please try again."     (no reason)
+ *     → "Couldn't save that co-op: That name is taken."   (reason present)
+ *     → "Couldn't save that co-op. Please try again."      (no reason)
  * `action` is a capitalized phrase with no trailing punctuation.
  */
 export function describeError(

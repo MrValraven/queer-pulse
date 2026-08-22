@@ -246,7 +246,13 @@ describe("403 stale-CSRF retry", () => {
     expect(postHeaders[1]?.["X-CSRF-Token"]).toBe("tok-2");
   });
 
-  it("does NOT retry a non-CSRF 403", async () => {
+  // The retry is deliberately NOT keyed on the backend's error text: a
+  // reworded, localized or non-JSON body would leave a stale token cached for
+  // the rest of the tab's life and turn every subsequent write into what reads
+  // as a permissions failure. So a genuine permission denial is retried once
+  // too — harmless, because the CsrfGuard rejects BEFORE the controller runs,
+  // so nothing was performed — and then surfaces as the ApiError it is.
+  it("retries a non-CSRF 403 exactly once, then surfaces it", async () => {
     const { apiPost, ApiError } = await loadClient();
     let postCalls = 0;
     stubFetch(
@@ -259,7 +265,8 @@ describe("403 stale-CSRF retry", () => {
     );
 
     await expect(apiPost("/thing")).rejects.toBeInstanceOf(ApiError);
-    expect(postCalls).toBe(1); // no retry
+    // Once, never a loop: the retried request carries `retry: false`.
+    expect(postCalls).toBe(2);
   });
 });
 

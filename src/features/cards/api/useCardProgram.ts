@@ -48,7 +48,14 @@ export function useIssueAllCards(slug: string | undefined) {
   const { demoMode } = useDemoMode();
   return useMutation({
     mutationFn: () =>
-      demoMode ? Promise.resolve({ issued: 12 }) : issueAllCards(slug!),
+      demoMode
+        ? Promise.resolve({
+            issued: 12,
+            renewed: 0,
+            skipped: 1,
+            unchanged: 4,
+          })
+        : issueAllCards(slug!),
     onSuccess: () => {
       void client.invalidateQueries({ queryKey: ["card-holders", slug] });
     },

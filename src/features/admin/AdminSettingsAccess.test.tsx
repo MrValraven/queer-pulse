@@ -105,7 +105,7 @@ describe("AdminSettingsAccess", () => {
     fireEvent.click(screen.getByRole("button", { name: "Scheduled maintenance" }));
 
     expect(textarea).toHaveValue(
-      "QueerPulse is down for planned maintenance. We’ll be back shortly — thanks for your patience.",
+      "QueerPulse is down for planned maintenance. We’ll be back shortly. Thanks for your patience.",
     );
     // Filling is not committing: blur/save only happens via onCommit (blur) or
     // the lockdown confirm flow, neither of which this test triggers.
@@ -130,7 +130,7 @@ describe("AdminSettingsAccess", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: "Scheduled maintenance" }));
     const presetText =
-      "QueerPulse is down for planned maintenance. We’ll be back shortly — thanks for your patience.";
+      "QueerPulse is down for planned maintenance. We’ll be back shortly. Thanks for your patience.";
     expect(textarea).toHaveValue(presetText);
 
     fireEvent.click(screen.getByRole("switch", { name: "Platform lockdown" }));

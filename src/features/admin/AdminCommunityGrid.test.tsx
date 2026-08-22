@@ -146,7 +146,9 @@ describe("AdminCommunityGrid", () => {
     communities = [makeCommunity("a")];
     truncated = true;
     renderGrid();
-    expect(await screen.findByText(/scan limit/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/report scan hit its limit/i),
+    ).toBeInTheDocument();
   });
 
   it("says nothing about a scan limit when the list isn't truncated", async () => {
@@ -154,6 +156,8 @@ describe("AdminCommunityGrid", () => {
     truncated = false;
     renderGrid();
     await screen.findByText(/One space,/);
-    expect(screen.queryByText(/scan limit/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/report scan hit its limit/i),
+    ).not.toBeInTheDocument();
   });
 });

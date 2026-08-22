@@ -7,18 +7,27 @@
   margin: 0 auto;
 }
 
+/* 320px, not 280: a card is 1.59:1, so a 280px column renders it ~176px tall
+   and its back has to give up the community name and the scan line to fit
+   (see the container queries in MembershipCardFace.module.css). At 320 the
+   desktop grid drops from three cramped cards to two readable ones, and a
+   phone still gets exactly one. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: var(--gap-grid);
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
+/* `start`, so the row's height (set by whichever card carries a status notice
+   and a Remove button) is not handed to the shorter cards' last child — which
+   stretched the Hide button into a tall pill. */
 .cell {
   display: grid;
   gap: var(--gap-xs);
+  align-content: start;
 }
 
 .empty {
@@ -59,4 +68,19 @@
   color: var(--plum);
   opacity: 0.85;
   margin: 0;
+}
+
+/* The member's photo veto, sitting under its card. Quiet by design: it is a
+   setting, not a call to action. */
+.photoConsent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+}
+
+.photoConsentText {
+  font-size: 0.82rem;
+  color: var(--plum);
+  opacity: 0.85;
 }

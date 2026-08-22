@@ -1775,6 +1775,31 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visitar a Cultura",
   "changelog.tag.myCards": "Ver os teus cartões",
 
+  "changelog.entries.card-member-photos.title":
+    "Cartões de sócie com fotografia, e a última palavra fica com a pessoa",
+  "changelog.entries.card-member-photos.body":
+    "Uma comunidade pode agora pôr a fotografia de cada sócie no cartão, para quem está à porta poder ligar o cartão à pessoa sem ler código nenhum. A fotografia vem do perfil da própria pessoa e fica na frente, ao lado do nome da comunidade, onde um cartão físico a teria. Vem desligada até a comunidade a ligar, e qualquer pessoa pode desligar a sua a partir da página dos seus cartões, sem ter de sair da comunidade: uma cara num documento que nomeia uma comunidade queer não é coisa pouca para quem não está fora do armário.",
+
+  "changelog.entries.card-two-sides.title":
+    "O teu cartão de sócio passou a ter verso, e uma frente que vale a pena ver",
+  "changelog.entries.card-two-sides.body":
+    "Um cartão de sócio era um único lado liso com tudo amontoado. Agora funciona como um cartão a sério. A frente é o objeto: a bandeira, a fotografia ou a cor da tua comunidade, o brasão dela e o teu nome, sob uma película que apanha a luz à medida que passas por cima. Vira-o com o botão do canto e o verso traz a credencial: um código bem maior, o número do cartão, desde quando és sócie, até quando é válido e o teu papel na comunidade. O código só é preparado quando viras mesmo o cartão, por isso um cartão pousado de frente para cima não tem nada a provar e não gera nada.",
+
+  "changelog.entries.cohost-invite-copy.title":
+    "Os convites para coanfitrião voltam a ler-se, e a semana em português começa à segunda",
+  "changelog.entries.cohost-invite-copy.body":
+    "Convidar alguém para coanfitriar um convívio mostrava códigos internos no lugar dos papéis e dos compromissos de tempo, e a página do convite dizia o mesmo quando a ligação já não era válida ou já tinha sido respondida. Está tudo escrito como deve ser, em português e em inglês, incluindo a notificação que chega quando te pedem para coanfitriar. Os seletores de data em português também passam a começar a semana à segunda-feira, em vez de usarem um calendário que começa ao domingo.",
+
+  "changelog.entries.card-backgrounds.title":
+    "Põe uma bandeira, ou a tua própria fotografia, no cartão da comunidade",
+  "changelog.entries.card-backgrounds.body":
+    "Um cartão de sócio já não tem de ser uma cor lisa. Escolhe uma de treze bandeiras do orgulho, do arco-íris e da Progress Pride às bandeiras trans, bi, lésbica, pan, assexual, arromântica, não binária, de género fluido, genderqueer, agénero e intersexo, ou carrega uma fotografia tua. Escolhas o que escolheres, o cartão mantém-se legível: uma camada fixa fica entre o fundo e o texto, para ninguém ter de apertar os olhos à porta. O código continua a poder ser lido em todas elas.",
+
+  "changelog.entries.card-designer.title":
+    "Uma verdadeira ferramenta de desenho para o cartão de sócio da tua comunidade",
+  "changelog.entries.card-designer.body":
+    "Desenhar um cartão passa a acontecer numa tela em ecrã largo: uma pré-visualização grande do cartão tal como quem é membro o vê, estilos mostrados como cartões em miniatura em vez de pontos de cor, o teu emblema no cartão, uma verificação em modo claro e escuro, e a data exata em que um cartão emitido hoje deixaria de funcionar. Fechar com alterações por guardar passa a perguntar primeiro. Guardar um desenho já não emite cartões para toda a gente sem avisar: emitir é um botão próprio, diz o que vai fazer antes de o fazer, e os cartões que pausaste ou revogaste ficam como estão.",
+
   "changelog.entries.membership-cards.title":
     "As comunidades já podem dar-te um cartão de sócio",
   "changelog.entries.membership-cards.body":

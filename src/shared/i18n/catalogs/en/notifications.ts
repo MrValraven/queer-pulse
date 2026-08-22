@@ -98,6 +98,12 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> invited you to a gathering.",
   "type.event_invite.meta": "Gathering invitation",
 
+  "type.event_cohost_invite.text":
+    "You've been invited to co-host a gathering.",
+  "type.event_cohost_invite.textNamed":
+    "<profile>{name}</profile> invited you to co-host a gathering.",
+  "type.event_cohost_invite.meta": "Co-host invitation",
+
   "type.event_reminder.text": "A gathering you're going to is coming up.",
   "type.event_reminder.meta": "Gathering reminder",
 

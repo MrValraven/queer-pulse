@@ -48,7 +48,7 @@ describe("GatheringBookmarkButton", () => {
     // Pressed state flips immediately, before/independent of any server round-trip.
     await waitFor(() =>
       expect(
-        screen.getByRole("button", { name: "Saved — remove from your events" }),
+        screen.getByRole("button", { name: "Saved. Remove from your events" }),
       ).toHaveAttribute("aria-pressed", "true"),
     );
   });
@@ -58,7 +58,7 @@ describe("GatheringBookmarkButton", () => {
     renderButton(true);
 
     const button = await screen.findByRole("button", {
-      name: "Saved — remove from your events",
+      name: "Saved. Remove from your events",
     });
     fireEvent.click(button);
 

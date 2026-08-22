@@ -43,11 +43,14 @@ describe("DeviceFrame", () => {
     renderFrame(
       <DeviceFrame src="/invite?sandbox=1" title="Broken" device="desktop" />,
     );
+    // Wait for the lazy "simulations" namespace BEFORE firing the error:
+    // until it resolves `t()` returns the raw key, so the overlay is on
+    // screen but reads "simulations:player.loadError" and no text matcher
+    // for the real copy can match it.
+    await screen.findByText(/loading simulation/i);
     const frame = screen.getByTitle("Broken");
     fireEvent.error(frame);
-    expect(
-      await screen.findByText(/could not load/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/could not load/i)).toBeInTheDocument();
   });
 
   it("calls onEscape when Escape is pressed inside the frame", () => {

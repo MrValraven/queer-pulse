@@ -47,6 +47,14 @@ const PENDING_ELIGIBILITY: PublicEligibility = {
  * GET /me/public-eligibility, fetched asynchronously — `eligibilityStatus`
  * tells consumers whether that fetch is still loading, errored, or ready, and
  * `eligibility` stays a neutral locked placeholder until it resolves.
+ *
+ * ELIGIBILITY IS DEMAND-DRIVEN. This provider is mounted app-wide, so a fetch
+ * gated only on `live` fired GET /me/public-eligibility on every route for
+ * every signed-in member, while the only things that read the answer are the
+ * profile hero's badge and the public-profile modal. `usePublicProfileEligibility()`
+ * registers demand for as long as such a consumer is mounted, and the query
+ * stays disabled until one is — the same "the request fires where the control
+ * is shown" rule `usePublicProfile()` already applies to GET /me/public-profile.
  */
 export function PublicProfileProvider({ children }: { children: ReactNode }) {
   const { demoMode } = useDemoMode();
@@ -56,7 +64,16 @@ export function PublicProfileProvider({ children }: { children: ReactNode }) {
 
   const live = !demoMode && loggedIn;
 
-  const signalsQuery = usePublicEligibilitySignals(live);
+  // How many mounted consumers are actually reading eligibility. A counter
+  // rather than a boolean so two consumers (the hero badge and the modal it
+  // opens) don't switch the query off when the first of them unmounts.
+  const [eligibilityDemand, setEligibilityDemand] = useState(0);
+  const requestEligibility = useCallback(() => {
+    setEligibilityDemand((count) => count + 1);
+    return () => setEligibilityDemand((count) => count - 1);
+  }, []);
+
+  const signalsQuery = usePublicEligibilitySignals(live && eligibilityDemand > 0);
 
   const eligibility = useMemo<PublicEligibility>(() => {
     // A single reference "now" the pure evaluator scores against — resolved here
@@ -147,6 +164,7 @@ export function PublicProfileProvider({ children }: { children: ReactNode }) {
       eligibility,
       eligibilityStatus,
       retryEligibility,
+      requestEligibility,
       hydrate,
     }),
     [
@@ -157,6 +175,7 @@ export function PublicProfileProvider({ children }: { children: ReactNode }) {
       eligibility,
       eligibilityStatus,
       retryEligibility,
+      requestEligibility,
       hydrate,
     ],
   );

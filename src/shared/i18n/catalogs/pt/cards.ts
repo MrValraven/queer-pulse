@@ -18,6 +18,9 @@ export const cards: Catalog = {
   "remove.confirm.confirmCta": "Remover cartão",
   "remove.toast": "Cartão removido.",
 
+  "photo.consent": "Mostrar a minha fotografia neste cartão",
+  "photo.consentAria": "Mostrar a minha fotografia no meu cartão de {community}",
+
   "discreet.title": "Cartão escondido",
   "discreet.body":
     "O teu cartão mostra o nome da comunidade que o emitiu. Fica tapado até o mostrares e volta a esconder-se quando sais deste ecrã.",
@@ -30,6 +33,13 @@ export const cards: Catalog = {
   "face.qrAriaLabel": "Prova de filiação legível por leitor, de {community}",
   "face.serial": "N.º",
   "face.memberSince": "Desde",
+  "face.validUntil": "Válido até",
+  "face.neverExpires": "Sem validade",
+  "face.role": "Papel",
+  "face.backAriaLabel": "Verso do teu cartão de sócio de {community}",
+  "face.flipToBack": "Virar o cartão para mostrar o código",
+  "face.flipToFront": "Virar o cartão para a frente",
+  "face.scanToVerify": "Lê o código para verificar em {host}",
 
   "qrNotice.minting": "A preparar o teu código",
   "qrNotice.offline":
@@ -64,13 +74,61 @@ export const cards: Catalog = {
   "designer.defaultCardName": "Sócie",
   "designer.cardNameLabel": "Como o cartão trata quem é membro",
   "designer.cardNamePlaceholder": "Sócie, sócio, sócia, companheire",
+  "designer.cardNameHelper":
+    "A palavra impressa por baixo do nome da comunidade em cada cartão.",
+  "designer.backgroundLabel": "De que é feito o cartão",
+  "designer.background.colour": "Cor",
+  "designer.background.flag": "Bandeira",
+  "designer.background.photo": "Fotografia",
+  "designer.flagHelper":
+    "A bandeira preenche o cartão inteiro. O texto por cima continua legível automaticamente.",
+  "designer.photoHelper":
+    "Uma imagem larga, recortada para o cartão. O texto por cima continua legível automaticamente.",
+  "flag.rainbow": "Arco-íris",
+  "flag.progress": "Progress Pride",
+  "flag.transgender": "Transgénero",
+  "flag.bisexual": "Bissexual",
+  "flag.lesbian": "Lésbica",
+  "flag.pansexual": "Pansexual",
+  "flag.asexual": "Assexual",
+  "flag.aromantic": "Arromântica",
+  "flag.nonbinary": "Não binário",
+  "flag.genderfluid": "Género fluido",
+  "flag.genderqueer": "Genderqueer",
+  "flag.agender": "Agénero",
+  "flag.intersex": "Intersexo",
   "designer.skinLabel": "Estilo do cartão",
   "designer.accentLabel": "Cor de destaque",
+  "designer.accentInvisible":
+    "Este destaque tem a mesma cor do cartão, por isso a barra de destaque desaparece.",
+  "designer.memberPhotoLabel": "Fotografias de sócies",
+  "designer.memberPhotoCheck": "Pôr a fotografia de cada sócie no cartão",
+  "designer.memberPhotoHelper":
+    "A fotografia vem do perfil da própria pessoa e fica ao lado do nome da comunidade. Qualquer pessoa pode desligar a sua no seu cartão.",
+  "designer.crestLabel": "Emblema",
+  "designer.crestHelper":
+    "Um logótipo quadrado pequeno, mostrado no canto superior do cartão. Opcional.",
   "designer.validityLabel": "Durante quanto tempo o cartão é válido",
+  "designer.validityHelper":
+    "Um cartão emitido hoje deixa de funcionar a {date}.",
+  "designer.validityHelperNever":
+    "Os cartões continuam a funcionar até os pausares ou revogares.",
+  "designer.previewCaption": "Como quem é membro vê o seu cartão.",
+  "designer.previewThemeLabel": "Pré-visualizar o cartão em modo claro ou escuro",
+  "designer.previewLight": "Claro",
+  "designer.previewDark": "Escuro",
   "designer.save": "Guardar e emitir cartões",
+  "designer.saveDesign": "Guardar desenho",
   "designer.saved": "Cartão guardado. {count} membros já têm um.",
+  "designer.savedDesign":
+    "Desenho do cartão guardado. Todos os cartões passam a ficar assim.",
   "designer.savedPaused":
     "Cartão guardado. Continua pausado, por isso quem é membro só vê a mudança quando o retomares.",
+  "designer.discard.title": "Descartar este desenho?",
+  "designer.discard.body":
+    "As tuas alterações ao cartão ainda não foram guardadas. Se fechares agora, perdem-se.",
+  "designer.discard.confirm": "Descartar alterações",
+  "designer.discard.cancel": "Continuar a editar",
 
   "skin.plum": "Ameixa",
   "skin.cream": "Creme",
@@ -119,6 +177,20 @@ export const cards: Catalog = {
   "modTools.resume": "Retomar este cartão de sócio",
   "modTools.pausedNotice":
     "Este cartão de sócio está pausado. Quem é membro não pode mostrar nem ler um cartão até o retomares.",
+  "modTools.issue": "Emitir cartões",
+  "modTools.issueConfirm.title": "Emitir cartões para toda a comunidade?",
+  "modTools.issueConfirm.body":
+    "Cada membro sem cartão recebe um, e os cartões que expiraram voltam a ficar válidos. Os cartões que pausaste ou revogaste ficam como estão.",
+  "modTools.issueConfirm.confirm": "Emitir cartões",
+  "modTools.issued.new_one": "Foi emitido um cartão novo.",
+  "modTools.issued.new_other": "Foram emitidos {count} cartões novos.",
+  "modTools.issued.renewed_one": "Foi renovado um cartão expirado.",
+  "modTools.issued.renewed_other": "Foram renovados {count} cartões expirados.",
+  "modTools.issued.none": "Toda a gente na comunidade já tem cartão.",
+  "modTools.issued.skipped_one":
+    "Um cartão pausado ou revogado ficou como estava.",
+  "modTools.issued.skipped_other":
+    "{count} cartões pausados ou revogados ficaram como estavam.",
   "modTools.pausedToast": "Cartão de sócio pausado.",
   "modTools.resumedToast": "Cartão de sócio retomado.",
 };

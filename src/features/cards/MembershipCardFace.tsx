@@ -1,8 +1,20 @@
-import { FiLoader, FiWifiOff } from "react-icons/fi";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
+import { FiRefreshCw } from "react-icons/fi";
+import { IconButton } from "../../shared/components/ui";
+import { useMotionPrefs } from "../../app/providers/MotionProvider";
 import { useCardToken } from "./api/useCardToken";
 import type { CardSkin, MyCardDTO } from "./api/cards.api";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { CardQr } from "./CardQr";
+import { CardBackFace } from "./CardBackFace";
+import { CardFrontFace } from "./CardFrontFace";
+import { backgroundPresetValue } from "./cardBackgrounds.data";
 import styles from "./MembershipCardFace.module.css";
 
 // Depends on the CSS module import, so it stays in this file rather than a
@@ -15,93 +27,185 @@ const SKIN_CLASS: Record<CardSkin, string | undefined> = {
   ink: styles.skinInk,
 };
 
-function verifyUrl(token: string): string {
-  return `${window.location.origin}/cards/verify/${encodeURIComponent(token)}`;
-}
-
 /**
- * One membership card, front face.
+ * One membership card, with both of its sides.
  *
- * `isActive` gates the QR: the token only mints while the card is genuinely
- * on screen and unlocked. A card that is expired, suspended, or revoked shows
- * no QR at all, because there is nothing valid to prove.
+ * The front is the object: the community's flag or photo, its crest, and the
+ * holder's name, under a gloss laminate that catches the pointer. The back is
+ * the credential: the scannable code and the card's details. A corner control
+ * turns it over.
+ *
+ * Two gates sit on the code. `isActive` says the card is genuinely on screen
+ * and unlocked, and `isFlipped` says its holder has actually turned it over
+ * to be scanned — so a revealed card that nobody has flipped mints no token
+ * at all. A card that is expired, suspended, or revoked shows no code on
+ * either side, because there is nothing valid to prove.
  */
 export function MembershipCardFace({
   card,
   isActive,
+  isPreview = false,
 }: {
   card: MyCardDTO;
   isActive: boolean;
+  /**
+   * Designer/preview rendering: no real token is ever minted for a card that
+   * does not exist yet, so the code slot would otherwise be an empty hole on
+   * the back. Fills it with the real QR geometry (decorative, `aria-hidden`,
+   * pointing at a token that verifies as invalid) so the composition an owner
+   * is designing is the composition a member gets.
+   */
+  isPreview?: boolean;
 }) {
   const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
+  const flipperId = useId();
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  // A card that gets re-covered comes back showing its front. Without this, a
+  // holder who hid the card while it was turned over would re-reveal it with
+  // the code already facing the room.
+  //
+  // Adjusted DURING render rather than in an effect (the pattern React
+  // documents for "resetting state when a prop changes"): an effect would let
+  // the turned-over card paint once before flipping back, which is exactly the
+  // frame this is meant to prevent.
+  const [wasActive, setWasActive] = useState(isActive);
+  if (wasActive !== isActive) {
+    setWasActive(isActive);
+    if (!isActive) setIsFlipped(false);
+  }
+
   const canProve = card.status === "active";
   const { token, isMinting, error } = useCardToken(card.id, {
-    isActive: isActive && canProve,
+    isActive: isActive && canProve && !isPreview && isFlipped,
   });
 
-  return (
-    <article
-      className={`${styles.card} ${SKIN_CLASS[card.program.skin]}`}
-      // Threads the community's chosen accent token through as a CSS custom
-      // property so the card face can actually render it (see
-      // MembershipCardFace.module.css's `.cardName`/`.meta dt`, and the
-      // comment there on why it's blended rather than swapped in outright).
-      style={{ ["--card-accent" as string]: `var(--${card.program.accentToken})` }}
-      aria-label={t("cards:face.ariaLabel", {
-        community: card.communityName,
-      })}
-    >
-      <header className={styles.head}>
-        {card.program.crestUrl ? (
-          <img
-            className={styles.crest}
-            src={card.program.crestUrl}
-            alt=""
-            width={36}
-            height={36}
-          />
-        ) : null}
-        <span className={styles.accentBar} aria-hidden="true" />
-        <div>
-          <p className={styles.community}>{card.communityName}</p>
-          <p className={styles.cardName}>{card.program.cardName}</p>
-        </div>
-      </header>
+  const shellRef = useRef<HTMLDivElement | null>(null);
+  const frameRef = useRef<number | null>(null);
+  const pointRef = useRef<{ x: number; y: number } | null>(null);
 
-      <div className={styles.qrSlot}>
-        {!canProve ? (
-          <p className={styles.qrNotice}>{t(`cards:qrNotice.${card.status}`)}</p>
-        ) : error ? (
-          <p className={styles.qrNotice}>
-            <FiWifiOff aria-hidden="true" /> {t("cards:qrNotice.offline")}
-          </p>
-        ) : token ? (
-          <CardQr
-            url={verifyUrl(token)}
-            ariaLabel={t("cards:face.qrAriaLabel", {
-              community: card.communityName,
-            })}
+  // The sheen is written straight onto the node as custom properties inside a
+  // single coalesced frame, never through state: a pointer emits moves far
+  // faster than React can usefully re-render, and re-rendering a card to move
+  // a highlight would re-run the whole QR module grid with it.
+  const paintGloss = useCallback(() => {
+    if (frameRef.current !== null) return;
+    frameRef.current = requestAnimationFrame(() => {
+      frameRef.current = null;
+      const node = shellRef.current;
+      const point = pointRef.current;
+      if (!node || !point) return;
+      node.style.setProperty("--gloss-x", `${point.x}%`);
+      node.style.setProperty("--gloss-y", `${point.y}%`);
+    });
+  }, []);
+
+  useEffect(
+    () => () => {
+      if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
+    },
+    [],
+  );
+
+  const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (reducedMotion) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    if (!bounds.width || !bounds.height) return;
+    pointRef.current = {
+      x: ((event.clientX - bounds.left) / bounds.width) * 100,
+      y: ((event.clientY - bounds.top) / bounds.height) * 100,
+    };
+    event.currentTarget.style.setProperty("--gloss-lit", "1");
+    paintGloss();
+  };
+
+  const onPointerLeave = (event: ReactPointerEvent<HTMLDivElement>) => {
+    event.currentTarget.style.setProperty("--gloss-lit", "0");
+  };
+
+  // The card's ground: an uploaded photo, else a curated flag, else the flat
+  // skin colour. At most one of the two is ever set (the backend clears the
+  // other when either is written), so this order is a formality rather than a
+  // real precedence question. It dresses the FRONT only — see CardBackFace.
+  const ground = card.program.backgroundUrl
+    ? `url(${JSON.stringify(card.program.backgroundUrl)}) center / cover no-repeat`
+    : backgroundPresetValue(card.program.backgroundPreset);
+
+  const skinClass = SKIN_CLASS[card.program.skin];
+
+  return (
+    <div
+      ref={shellRef}
+      className={styles.shell}
+      style={{
+        // Threads the community's chosen accent token through as a CSS custom
+        // property so the card face can actually render it (see
+        // MembershipCardFace.module.css's `.accentBar`, and the comment there
+        // on why the accent never carries text contrast).
+        ["--card-accent" as string]: `var(--${card.program.accentToken})`,
+        ...(ground ? { ["--card-ground" as string]: ground } : {}),
+      }}
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
+      onPointerCancel={onPointerLeave}
+    >
+      <div
+        id={flipperId}
+        className={styles.flipper}
+        data-flipped={isFlipped ? "true" : "false"}
+        data-reduced={reducedMotion ? "true" : "false"}
+      >
+        {/* Both sides stay mounted so the turn has something to reveal, so
+            the hidden one is taken out of the accessibility tree AND out of
+            tab order — otherwise every card would announce its details twice
+            and park focus on a face nobody can see. */}
+        <article
+          className={[styles.face, styles.faceFront, skinClass, ground && styles.hasGround]
+            .filter(Boolean)
+            .join(" ")}
+          aria-label={t("cards:face.ariaLabel", { community: card.communityName })}
+          aria-hidden={isFlipped}
+          inert={isFlipped}
+        >
+          <CardFrontFace card={card} isPreview={isPreview} />
+        </article>
+
+        <article
+          className={[styles.face, styles.faceBack, skinClass]
+            .filter(Boolean)
+            .join(" ")}
+          aria-label={t("cards:face.backAriaLabel", {
+            community: card.communityName,
+          })}
+          aria-hidden={!isFlipped}
+          inert={!isFlipped}
+        >
+          <CardBackFace
+            card={card}
+            token={token}
+            isMinting={isMinting}
+            hasError={error}
+            isPreview={isPreview}
           />
-        ) : isMinting ? (
-          <p className={styles.qrNotice}>
-            <FiLoader aria-hidden="true" /> {t("cards:qrNotice.minting")}
-          </p>
-        ) : null}
+        </article>
       </div>
 
-      <footer className={styles.foot}>
-        <p className={styles.holder}>{card.holderName}</p>
-        <dl className={styles.meta}>
-          <div>
-            <dt>{t("cards:face.serial")}</dt>
-            <dd>{card.serial}</dd>
-          </div>
-          <div>
-            <dt>{t("cards:face.memberSince")}</dt>
-            <dd>{new Date(card.issuedAt).getFullYear()}</dd>
-          </div>
-        </dl>
-      </footer>
-    </article>
+      {/* Outside the flipper on purpose: inside, it would rotate with the
+          card and land mirrored on the back. Its own fixed plate reads on
+          every skin, since it cannot inherit either face's ink. */}
+      <IconButton
+        className={styles.flipButton}
+        tone="dark"
+        size="sm"
+        aria-controls={flipperId}
+        // The name carries the state, rather than `aria-pressed`: this is a
+        // toggle between two equal sides, not a control that is on or off.
+        aria-label={t(isFlipped ? "cards:face.flipToFront" : "cards:face.flipToBack")}
+        onClick={() => setIsFlipped((flipped) => !flipped)}
+      >
+        <FiRefreshCw aria-hidden="true" />
+      </IconButton>
+    </div>
   );
 }

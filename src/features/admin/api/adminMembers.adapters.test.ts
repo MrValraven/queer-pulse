@@ -124,11 +124,14 @@ describe("cardDtoToMember", () => {
     ).toBe(true);
   });
 
-  it("drops slug but keeps avatarUrl on vouchedBy (the trust-network graph reads it for real portraits)", () => {
+  it("carries slug and avatarUrl through on vouchedBy (the roster keys on the slug; the graph reads the portrait)", () => {
     expect(cardDtoToMember(baseCardDto, translate, fmt).vouchedBy[0]).toEqual({
       initials: "TM",
       tone: "violet",
       avatarUrl: null,
+      // Widened to `VouchAvatarRow`: the avatar stack keys on this stable slug
+      // rather than on an array index.
+      slug: "t",
     });
   });
 });
@@ -311,7 +314,7 @@ describe("detailDtoToMember", () => {
       fmt,
     );
     expect(plural.graphNote).toBe(
-      "21 members vouch for Inês. A mutual graph is a sign of trust — not a metric to optimise.",
+      "21 members vouch for Inês. A mutual graph is a sign of trust. Honour it, and let the numbers be.",
     );
     const singular = detailDtoToMember(
       { ...baseDetailDto, vouchCount: 1 },
@@ -319,7 +322,7 @@ describe("detailDtoToMember", () => {
       fmt,
     );
     expect(singular.graphNote).toBe(
-      "1 member vouches for Inês. A mutual graph is a sign of trust — not a metric to optimise.",
+      "1 member vouches for Inês. A mutual graph is a sign of trust. Honour it, and let the numbers be.",
     );
   });
 

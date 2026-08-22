@@ -50,23 +50,23 @@ describe("describeError", () => {
   it("frames the reason when there is one", () => {
     expect(describeError("Couldn't save that co-op", new ApiError(409, "That name is taken"))).toBe(
       // The reason's own casing is preserved verbatim (only a single trailing
-      // period is trimmed) — `describeError` never lower-cases the first letter.
-      "Couldn't save that co-op — That name is taken.",
+      // period is trimmed): `describeError` never lower-cases the first letter.
+      "Couldn't save that co-op: That name is taken.",
     );
   });
 
   it("trims a single trailing period on the reason", () => {
     expect(describeError("Couldn't save", new ApiError(422, "Bio is too long."))).toBe(
-      "Couldn't save — Bio is too long.",
+      "Couldn't save: Bio is too long.",
     );
   });
 
   it("falls back to please-try-again with no reason", () => {
     expect(describeError("Couldn't save that co-op", new TypeError("Failed to fetch"))).toBe(
-      "Couldn't save that co-op — please try again.",
+      "Couldn't save that co-op. Please try again.",
     );
     expect(describeError("Couldn't save that co-op", new ApiError(500, "boom"))).toBe(
-      "Couldn't save that co-op — please try again.",
+      "Couldn't save that co-op. Please try again.",
     );
   });
 });

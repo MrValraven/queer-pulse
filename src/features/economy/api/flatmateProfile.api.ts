@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut } from "../../../shared/api/client";
+import { apiGet, apiGetNullable, apiPost, apiPut } from "../../../shared/api/client";
 import { toItemsPage, type ItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO } from "../../../shared/api/refs";
 import type { VerificationLevel } from "./verification.api";
@@ -122,7 +122,7 @@ export async function getFlatmateProfiles(
 }
 
 export const getMyFlatmateProfile = () =>
-  apiGet<FlatmateProfileDTO | null>("/flatmate-profiles/mine");
+  apiGetNullable<FlatmateProfileDTO>("/flatmate-profiles/mine");
 
 export const upsertFlatmateProfile = (body: UpsertFlatmateProfileBody) =>
   apiPut<FlatmateProfileDTO>("/flatmate-profiles/mine", body);

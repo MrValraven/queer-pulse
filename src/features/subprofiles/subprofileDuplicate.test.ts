@@ -187,9 +187,10 @@ describe("applyDuplicatePlan", () => {
     await expect(
       applyDuplicatePlan("new-id", plan, mutations),
     ).resolves.toBeUndefined();
-    // …and the later steps still run.
+    // …and the later steps still run. One `replaceSection` call, matching the
+    // plan's single non-empty section above.
     expect(mutations.replaceSocials.mutateAsync).toHaveBeenCalledTimes(1);
-    expect(mutations.replaceSection.mutateAsync).toHaveBeenCalledTimes(2);
+    expect(mutations.replaceSection.mutateAsync).toHaveBeenCalledTimes(1);
     expect(mutations.replaceAffiliations.mutateAsync).toHaveBeenCalledTimes(1);
   });
 
@@ -202,6 +203,6 @@ describe("applyDuplicatePlan", () => {
     expect(mutations.update.mutateAsync).not.toHaveBeenCalled();
     expect(mutations.replaceAffiliations.mutateAsync).not.toHaveBeenCalled();
     expect(mutations.replaceSocials.mutateAsync).toHaveBeenCalledTimes(1);
-    expect(mutations.replaceSection.mutateAsync).toHaveBeenCalledTimes(2);
+    expect(mutations.replaceSection.mutateAsync).toHaveBeenCalledTimes(1);
   });
 });

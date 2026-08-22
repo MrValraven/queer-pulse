@@ -38,7 +38,7 @@ describe("StudioFlagReviewPage", () => {
       await screen.findByText(/resolved · dismissed/i),
     ).toBeInTheDocument();
     expect(
-      await screen.findByText("Flag dismissed — credits confirmed correct"),
+      await screen.findByText("Flag dismissed. Credits confirmed correct"),
     ).toBeInTheDocument();
   });
 });

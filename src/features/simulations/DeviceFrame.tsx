@@ -61,11 +61,24 @@ export function DeviceFrame({ src, title, device, onEscape }: DeviceFrameProps) 
     }
   };
 
-  const handleFrameError = () => {
-    setLoadState({ key: frameKey, status: "error" });
-    escapeCleanupRef.current?.();
-    escapeCleanupRef.current = null;
-  };
+  // React never delivers `onError` for an <iframe>: it registers only `load`
+  // as a non-delegated event for iframe/object/embed (see the `case "iframe"`
+  // arm of react-dom's event registration), so an `onError` prop here is dead
+  // code and the failure overlay below could never appear. The listener has to
+  // go on the node itself. Re-runs on `frameKey` because the iframe is keyed
+  // on it and remounts when the device or src changes.
+  const frameRef = useRef<HTMLIFrameElement | null>(null);
+  useEffect(() => {
+    const frameNode = frameRef.current;
+    if (!frameNode) return undefined;
+    const handleNativeError = () => {
+      setLoadState({ key: frameKey, status: "error" });
+      escapeCleanupRef.current?.();
+      escapeCleanupRef.current = null;
+    };
+    frameNode.addEventListener("error", handleNativeError);
+    return () => frameNode.removeEventListener("error", handleNativeError);
+  }, [frameKey]);
 
   useEffect(() => () => escapeCleanupRef.current?.(), []);
 
@@ -89,12 +102,12 @@ export function DeviceFrame({ src, title, device, onEscape }: DeviceFrameProps) 
         )}
         <iframe
           key={frameKey}
+          ref={frameRef}
           src={src}
           title={title}
           data-sandbox="1"
           className={styles.iframe}
           onLoad={handleFrameLoad}
-          onError={handleFrameError}
         />
       </div>
     </div>

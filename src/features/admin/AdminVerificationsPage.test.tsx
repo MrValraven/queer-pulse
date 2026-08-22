@@ -34,15 +34,20 @@ describe("AdminVerificationsPage — segment switching", () => {
       await screen.findByRole("button", { name: "Direct override" }),
     );
 
-    // Direct override now shows the level console; the request-only member
-    // is gone.
+    // Direct override now shows the level console. Asserted on the segment's
+    // own furniture rather than on a name: the two fixtures deliberately
+    // overlap on most members (every request member also holds a level), so
+    // only the request pipeline's status tabs distinguish the segments.
     expect(await screen.findByText("Inês Tavares")).toBeInTheDocument();
-    expect(screen.queryByText("Sofia Almeida")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("tab", { name: /Pending/ }),
+    ).not.toBeInTheDocument();
 
     await user.click(
       await screen.findByRole("button", { name: "Review queue" }),
     );
-    expect(await screen.findByText("Sofia Almeida")).toBeInTheDocument();
+    expect(await screen.findByRole("tab", { name: /Pending/ })).toBeInTheDocument();
+    expect(screen.getByText("Sofia Almeida")).toBeInTheDocument();
   });
 });
 

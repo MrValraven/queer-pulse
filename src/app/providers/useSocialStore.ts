@@ -162,11 +162,16 @@ export function useSocialStore(): SocialContextValue {
   }
 
   // A mirror of `state` that callbacks can read synchronously without being
-  // re-created on every change. Assigned during render so it is always the
-  // value the last committed render saw — including after the render-phase
-  // hydration `setState` above, which React applies before committing.
+  // re-created on every change. Written in a COMMIT effect, not during render:
+  // a render-phase ref write is unsafe under a double-invoked/abandoned render
+  // and `react-hooks/immutability` rejects it. The contract is unchanged —
+  // both readers are event callbacks, which only ever run after a commit, so
+  // the ref they see is still the value the last committed render saw
+  // (including after the render-phase hydration `setState` above).
   const stateRef = useRef(state);
-  stateRef.current = state;
+  useEffect(() => {
+    stateRef.current = state;
+  });
 
   /**
    * Optimistically flip an id in `blocked`/`muted`, then (live mode) fire the

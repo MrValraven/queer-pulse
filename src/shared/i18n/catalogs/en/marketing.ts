@@ -1726,6 +1726,31 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visit Culture",
   "changelog.tag.myCards": "See your cards",
 
+  "changelog.entries.card-member-photos.title":
+    "Photo membership cards, with the last word left to the member",
+  "changelog.entries.card-member-photos.body":
+    "A community can now put each member's photo on their card, so someone on a door can match the card to the person without scanning anything. The photo comes from the member's own profile and sits on the front, beside the community's name, where a physical card would carry it. It is off until a community turns it on, and any member can switch their own off from their cards page without leaving the community: a face on a credential naming a queer community is not a small thing to ask of someone who is not out.",
+
+  "changelog.entries.card-two-sides.title":
+    "Your membership card now has a back, and a front worth looking at",
+  "changelog.entries.card-two-sides.body":
+    "A membership card used to be one flat side with everything crowded onto it. It now works the way a real card does. The front is the object: your community's flag, photo or colour, its crest, and your name, under a laminate that catches the light as you move across it. Turn it over with the button in the corner and the back carries the credential: a much larger code, the card number, when you joined, when it stops being valid, and your role in the community. The code is only prepared once you actually turn the card over, so a card sitting face-up on a table has nothing to prove and mints nothing.",
+
+  "changelog.entries.cohost-invite-copy.title":
+    "Co-host invites read like words again, and Portuguese weeks start on Monday",
+  "changelog.entries.cohost-invite-copy.body":
+    "Inviting someone to co-host a gathering showed internal placeholders where the roles and time commitments should have been, and the invite page said the same thing when a link had expired or was already answered. All of it now reads as written, in English and Portuguese, including the notification that lands when someone asks you to co-host. Date pickers in Portuguese also start the week on Monday, as they should, instead of borrowing a Sunday-first calendar.",
+
+  "changelog.entries.card-backgrounds.title":
+    "Put a flag, or your own photo, on your community's card",
+  "changelog.entries.card-backgrounds.body":
+    "A membership card no longer has to be a flat colour. Choose one of thirteen pride flags, from the rainbow and Progress Pride to trans, bi, lesbian, pan, ace, aro, non-binary, genderfluid, genderqueer, agender and intersex, or upload a photo of your own. Whatever you choose, the card keeps itself readable: a fixed scrim sits between the background and the text, so nobody has to squint at a door. The code stays scannable on every one of them.",
+
+  "changelog.entries.card-designer.title":
+    "A real design tool for your community's membership card",
+  "changelog.entries.card-designer.body":
+    "Designing a card now happens on a full-width canvas: a large live preview of the card as a member holds it, card styles shown as miniature cards rather than colour dots, your own crest on the card, a light and dark check, and the exact date a card issued today would stop working. Closing with unsaved changes asks first. Saving a design no longer issues cards to everyone behind your back: issuing is its own button, it says what it will do before it does it, and cards you paused or revoked now stay that way.",
+
   "changelog.entries.membership-cards.title":
     "Communities can now give you a membership card",
   "changelog.entries.membership-cards.body":

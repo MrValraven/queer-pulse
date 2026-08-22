@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FiStar } from "react-icons/fi";
 import { Tooltip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { usePublicProfile } from "../../app/providers/usePublicProfile";
+import { usePublicProfileEligibility } from "../../app/providers/usePublicProfile";
 import { PublicProfileModal } from "./PublicProfileModal";
 import styles from "./PublicProfileBadge.module.css";
 
@@ -14,7 +14,7 @@ import styles from "./PublicProfileBadge.module.css";
  */
 export function PublicProfileBadge() {
   const { t } = useTranslation();
-  const { eligibility } = usePublicProfile();
+  const { eligibility } = usePublicProfileEligibility();
   const [open, setOpen] = useState(false);
   const label = t("members:publicProfile.badge.label");
 

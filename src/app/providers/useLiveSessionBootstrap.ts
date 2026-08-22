@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, type RefObject } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   ApiError,
   refreshSession,
@@ -13,7 +13,15 @@ import {
 import type { AuthErrorCode } from "./authContext";
 
 type ReconcileInput = {
-  wasEverLoggedIn: RefObject<boolean>;
+  /**
+   * Read/mark "this tab has confirmed a real session at least once", as a pair
+   * of callbacks rather than the `useRef` behind them. The ref is owned by
+   * `AuthProvider`; handing it across a hook boundary makes it a plain local
+   * variable here, which `react-hooks/immutability` (correctly, for anything
+   * it cannot prove is a ref) refuses to see mutated after render.
+   */
+  hasEverLoggedIn: () => boolean;
+  markEverLoggedIn: () => void;
   setUser: (user: AuthUser | null) => void;
   setLoggedIn: (loggedIn: boolean) => void;
   setAuthError: (error: AuthErrorCode | null) => void;
@@ -36,7 +44,8 @@ type ReconcileInput = {
  * triggers ONE reconcile rather than one per failed request.
  */
 export function useReconcileSession({
-  wasEverLoggedIn,
+  hasEverLoggedIn,
+  markEverLoggedIn,
   setUser,
   setLoggedIn,
   setAuthError,
@@ -53,7 +62,7 @@ export function useReconcileSession({
           setSessionState("active");
           setUser(freshUser);
           setLoggedIn(true);
-          wasEverLoggedIn.current = true;
+          markEverLoggedIn();
           setAuthError(null);
           return;
         } catch {
@@ -67,7 +76,7 @@ export function useReconcileSession({
       // Only a tab that previously confirmed a real session can "expire" —
       // otherwise this is just a never-signed-in visitor, the same treatment the
       // bootstrap below gives its own signed-out case.
-      if (wasEverLoggedIn.current) {
+      if (hasEverLoggedIn()) {
         setAuthError({ kind: "expired" });
       }
     })().finally(() => {
@@ -75,13 +84,14 @@ export function useReconcileSession({
     });
     reconciling.current = run;
     return run;
-  }, [wasEverLoggedIn, setUser, setLoggedIn, setAuthError]);
+  }, [hasEverLoggedIn, markEverLoggedIn, setUser, setLoggedIn, setAuthError]);
 }
 
 type LiveSessionInput = {
   demoMode: boolean;
   reconcileSession: () => Promise<void>;
-  wasEverLoggedIn: RefObject<boolean>;
+  /** Same pair as `ReconcileInput` above, for the same reason. */
+  markEverLoggedIn: () => void;
   setUser: (user: AuthUser | null) => void;
   setLoggedIn: (loggedIn: boolean) => void;
   setChecking: (checking: boolean) => void;
@@ -105,7 +115,7 @@ type LiveSessionInput = {
 export function useLiveSessionBootstrap({
   demoMode,
   reconcileSession,
-  wasEverLoggedIn,
+  markEverLoggedIn,
   setUser,
   setLoggedIn,
   setChecking,
@@ -132,7 +142,7 @@ export function useLiveSessionBootstrap({
         if (!active) return;
         setUser(u);
         setLoggedIn(true);
-        wasEverLoggedIn.current = true;
+        markEverLoggedIn();
         // A confirmed live session clears any stale error left by an earlier
         // recovered blip, so a "session expired" toast can never linger over it.
         setAuthError(null);
@@ -166,7 +176,7 @@ export function useLiveSessionBootstrap({
   }, [
     demoMode,
     reconcileSession,
-    wasEverLoggedIn,
+    markEverLoggedIn,
     setUser,
     setLoggedIn,
     setChecking,

@@ -64,6 +64,13 @@ if (!Element.prototype.scrollTo) {
   Element.prototype.scrollTo = () => {};
 }
 
+// Same gap, different method: a keyboard-navigable list that keeps the focused
+// row in view (`rowRef.current?.scrollIntoView({ block: "nearest" })` in
+// VerificationRequestRows) throws without this.
+if (!Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = () => {};
+}
+
 // jsdom ships `URL` but not the blob-URL helpers, so any component that turns a
 // File/Blob into a preview URL (e.g. the list-a-business photo-upload wizard on
 // /local/directory/list) throws "window.URL.createObjectURL is not a function"

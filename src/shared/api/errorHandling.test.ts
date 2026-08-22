@@ -45,7 +45,7 @@ describe("handleQueryError", () => {
   it("toasts an unexpected 5xx", () => {
     handleQueryError(new ApiError(503, "down"), query);
     expect(emit).toHaveBeenCalledWith(
-      "Something went wrong on our end — please try again.",
+      "Something went wrong on our end. Please try again.",
       "error",
       6000,
     );
@@ -78,7 +78,7 @@ describe("handleQueryError", () => {
   it("still toasts a plain 503 that is not a platform lockdown", () => {
     handleQueryError(new ApiError(503, "down", { code: "SOMETHING_ELSE" }), query);
     expect(emit).toHaveBeenCalledWith(
-      "Something went wrong on our end — please try again.",
+      "Something went wrong on our end. Please try again.",
       "error",
       6000,
     );
@@ -96,7 +96,7 @@ describe("handleQueryError", () => {
   it("toasts a generic message for a non-Api (network) error", () => {
     handleQueryError(new TypeError("Failed to fetch"), query);
     expect(emit).toHaveBeenCalledWith(
-      "Something went wrong — please try again.",
+      "Something went wrong. Please try again.",
       "error",
       6000,
     );

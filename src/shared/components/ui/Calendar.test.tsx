@@ -199,7 +199,10 @@ describe("DatePicker", () => {
       { wrapper: TestProviders },
     );
     fireEvent.click(screen.getByRole("button", { name: /choose date/i }));
-    fireEvent.click(screen.getByRole("button", { name: /today/i }));
+    // Exact name, not /today/i: the grid cell for the 13th is also named
+    // "…, today" (its aria-label marks the current date), so a loose matcher
+    // hits two buttons.
+    fireEvent.click(screen.getByRole("button", { name: "Today" }));
     expect(onChange).toHaveBeenCalledWith("2026-03-13");
     vi.useRealTimers();
   });

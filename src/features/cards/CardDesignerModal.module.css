@@ -1,24 +1,79 @@
-/* Card designer modal — a live preview beside a compact settings form,
-   mirroring EditCommunityModal's plain-vertical-form pattern (FormField
-   carries its own rhythm; the non-FormField blocks below match its 16px
-   bottom margin so the whole column reads as one rhythm). */
+/* Card designer modal — a live preview beside the settings form, mirroring
+   EditCommunityModal's plain-vertical-form pattern (FormField carries its own
+   rhythm; the non-FormField blocks below match its 16px bottom margin so the
+   whole column reads as one rhythm). */
+
+/* Designing a card is a visual job, so this dialog takes 80% of the viewport
+   instead of <Modal>'s 520px default — the preview is the point, and at the
+   default width it renders barely bigger than a postage stamp.
+   Doubled class so the override beats `.modal`/`.modalWide` on specificity
+   rather than on stylesheet order, which CSS Modules does not guarantee.
+   Desktop only: below 720px the shared modal is already a full-width bottom
+   sheet (see Modal.module.css), which is wider than 80% anyway. */
+@media (min-width: 720px) {
+  .dialog.dialog {
+    width: 80vw;
+    max-width: 80vw;
+  }
+}
 
 .body {
   display: grid;
   gap: var(--gap-lg);
-  grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+  /* The preview takes whatever the form doesn't need, so the extra width goes
+     to the card face (it is aspect-ratio + container-query driven, so it
+     scales up cleanly) rather than stretching the controls across the dialog. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
   align-items: start;
+}
+
+.preview {
+  position: sticky;
+  top: 0;
+  /* Ceiling on the card face: it is 1.59:1, so past this the preview grows
+     taller than the dialog body and the whole form starts scrolling. */
+  max-width: 720px;
+  justify-self: center;
+  width: 100%;
 }
 
 @media (max-width: 640px) {
   .body {
     grid-template-columns: minmax(0, 1fr);
   }
+  /* Stacked, the preview sits above the form. Pinning it there would hold a
+     third of the sheet hostage for the whole scroll, so on mobile it scrolls
+     away like any other block. */
+  .preview {
+    position: static;
+  }
 }
 
-.preview {
-  position: sticky;
-  top: 0;
+/* Carries its own `data-theme`, so the card is previewed in either theme
+   without touching the member's own setting. The padded surface stands in for
+   the page the card will actually sit on in that theme. */
+.previewCard {
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+  color: var(--ink);
+}
+
+.previewFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+  margin-top: 12px;
+}
+
+.previewCaption {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
 }
 
 .fields {
@@ -26,55 +81,192 @@
   flex-direction: column;
 }
 
-.fieldset {
-  border: none;
-  padding: 0;
+/* A labelled block that is not a FormField (the skin picker, the crest).
+   Matches FormField's own 16px bottom margin so the column reads as one
+   rhythm. */
+.group {
   margin: 0 0 16px;
 }
 
-.legend {
+.groupLabel {
   font-size: 11.5px;
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--ink-60);
   margin-bottom: 10px;
-  padding: 0;
 }
 
-.skins {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gap-sm);
+.groupHelper {
+  margin: -4px 0 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
 }
 
-.skinOption {
-  display: flex;
+.counter {
+  font-size: 12px;
+  color: var(--ink-40);
+  font-variant-numeric: tabular-nums;
+}
+
+.warning {
+  display: inline-flex;
   align-items: center;
+  gap: 6px;
+  color: var(--accent-ink);
+}
+
+/* The colour / flag / photo switch sits directly under the section label. */
+.modes {
+  margin-bottom: 12px;
+}
+
+/* ── Flag picker ─────────────────────────────────────────────────────────── */
+/* Denser than the skin chips: thirteen flags, and each one is recognisable
+   from its stripes alone, so the swatch can be smaller than a whole card. */
+.flags {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
   gap: var(--gap-xs);
-  cursor: pointer;
-  font-size: 14.5px;
-  color: var(--ink);
 }
 
-.skinOption input {
-  width: 18px;
-  height: 18px;
+/* CR80 again, so a flag is previewed at the proportions it will actually be
+   cropped to on the card. */
+.flagFace {
+  display: block;
+  aspect-ratio: 85.6 / 53.98;
+  border-radius: var(--radius-tag);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.photoSlot {
+  max-width: 220px;
+}
+
+/* ── Skin picker ─────────────────────────────────────────────────────────── */
+/* Five miniature cards rather than five radio dots: a skin is a decision
+   about how an object looks, and the chosen accent has to be visible ON it. */
+/* Sized so all five fit one row inside the 420px form column: a 4 + 1 wrap
+   reads as a fifth option that got left behind. */
+.skins {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(62px, 1fr));
+  gap: var(--gap-xs);
+}
+
+.skinChip,
+.flagChip {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 7px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color 0.16s var(--ease),
+    box-shadow 0.16s var(--ease);
+}
+
+@media (hover: hover) {
+  .skinChip:hover,
+  .flagChip:hover {
+    border-color: rgba(var(--line-rgb), 0.28);
+  }
+}
+
+.skinChipOn {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+/* The chip's card face: the real skin surface, at CR80 proportions so it
+   reads as the same object as the preview. */
+.chipFace {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  aspect-ratio: 85.6 / 53.98;
+  padding: 8px;
+  border-radius: var(--radius-tag);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* Fixed colours, matching the real card face exactly — see the long note in
+   MembershipCardFace.module.css on why these must not follow the theme. */
+.chipPlum { background: var(--plum); }
+.chipCream { background: rgb(var(--cream-rgb)); }
+.chipJade { background: var(--jade); }
+.chipCoral { background: var(--accent); }
+.chipInk { background: var(--ink-surface); }
+
+/* Same role as the real card's accent bar, so an accent that vanishes into
+   its skin visibly vanishes here too. */
+.chipBar {
+  width: 2px;
+  align-self: stretch;
+  max-height: 18px;
+  border-radius: var(--radius-tag);
+  background: var(--card-accent, transparent);
   flex: 0 0 auto;
-  accent-color: var(--plum);
-  cursor: pointer;
 }
 
-.swatch {
-  width: 20px;
-  height: 20px;
+.chipLines {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Stand-ins for the community name and the member word, in the skin's own
+   foreground colour. */
+.chipLineWide,
+.chipLineThin {
+  height: 3px;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(var(--line-rgb), 0.18);
-  flex: 0 0 auto;
+  background: currentColor;
 }
 
-.swatch[data-skin="plum"] { background: var(--plum); }
-.swatch[data-skin="cream"] { background: var(--cream); }
-.swatch[data-skin="jade"] { background: var(--jade); }
-.swatch[data-skin="coral"] { background: var(--accent); }
-.swatch[data-skin="ink"] { background: var(--ink); }
+.chipPlum,
+.chipJade,
+.chipCoral,
+.chipInk {
+  color: rgb(var(--cream-rgb));
+}
+
+.chipCream {
+  color: var(--plum);
+}
+
+.chipLineWide {
+  width: 74%;
+  opacity: 0.85;
+}
+
+.chipLineThin {
+  width: 46%;
+  opacity: 0.5;
+}
+
+/* The crest slot is a small square emblem, so it keeps a small square
+   footprint rather than stretching across the form column. */
+.crestSlot {
+  max-width: 150px;
+}
+
+.chipLabel {
+  font-size: 13px;
+  color: var(--ink);
+  text-align: center;
+  /* base.css sets `overflow-wrap: anywhere` app-wide (the mobile
+     horizontal-overflow fix), which breaks "Transgender" into "Transgen /
+     der" in a chip this narrow. A flag's name is a proper noun; it wraps
+     between words or not at all. */
+  overflow-wrap: normal;
+  hyphens: auto;
+}

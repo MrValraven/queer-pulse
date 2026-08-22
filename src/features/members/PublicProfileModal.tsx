@@ -4,7 +4,10 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { usePublicProfile } from "../../app/providers/usePublicProfile";
+import {
+  usePublicProfile,
+  usePublicProfileEligibility,
+} from "../../app/providers/usePublicProfile";
 import { EligibilityTracker } from "./EligibilityTracker";
 import styles from "./PublicProfileModal.module.css";
 
@@ -15,8 +18,11 @@ import styles from "./PublicProfileModal.module.css";
  */
 export function PublicProfileModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
-  const { enabled, toggle, saving, eligibility, eligibilityStatus, retryEligibility } =
-    usePublicProfile();
+  const { enabled, toggle, saving } = usePublicProfile();
+  // Separate hook on purpose: reading eligibility is what turns the signals
+  // fetch on, so it follows this modal's lifetime.
+  const { eligibility, eligibilityStatus, retryEligibility } =
+    usePublicProfileEligibility();
   const { showToast } = useToast();
 
   // The preference persists but nothing reads it yet: there's no unauthenticated

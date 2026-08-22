@@ -69,7 +69,6 @@ export function SelectionToolbar({ scopeRef }: SelectionToolbarProps) {
   const [linkRange, setLinkRange] = useState<Range | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const toolbarRef = useRef<HTMLDivElement | null>(null);
-  const toolRefs = useRef<(HTMLButtonElement | null)[]>([]);
   // The selection the toolbar is currently offering tools for. Cloned because
   // the live Range is invalidated the moment focus moves (Tab to a button, or
   // the link address field taking focus).
@@ -132,7 +131,13 @@ export function SelectionToolbar({ scopeRef }: SelectionToolbarProps) {
   useEffect(() => {
     if (linkRange) return;
     if (!toolbarRef.current?.contains(document.activeElement)) return;
-    toolRefs.current[activeIndex]?.focus({ preventScroll: true });
+    // Read off the container rather than a parallel array of per-button refs:
+    // in this branch every button inside the toolbar IS a tool, in render
+    // order, and a ref callback that writes into such an array reads as a
+    // render-phase ref access to the React compiler.
+    const toolButtons =
+      toolbarRef.current.querySelectorAll<HTMLButtonElement>("button");
+    toolButtons[activeIndex]?.focus({ preventScroll: true });
   }, [activeIndex, linkRange]);
 
   if (!position) return null;
@@ -214,14 +219,16 @@ export function SelectionToolbar({ scopeRef }: SelectionToolbarProps) {
           onCancel={() => setLinkRange(null)}
         />
       ) : (
+        // Each `tool.run` closes over `selectionRangeRef`, which the compiler
+        // reads as "a ref passed to a function that may run during render".
+        // They only ever run from `onClick`, and the cloned Range they read is
+        // exactly what a click needs once focus has left the contentEditable.
+        // eslint-disable-next-line react-hooks/refs -- run only from onClick
         tools.map((tool, index) => (
           <Button
             key={tool.key}
             variant="ghost-dark"
             size="sm"
-            ref={(element) => {
-              toolRefs.current[index] = element;
-            }}
             type="button"
             tabIndex={index === activeIndex ? 0 : -1}
             onClick={tool.run}

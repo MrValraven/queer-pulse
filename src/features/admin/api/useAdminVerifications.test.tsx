@@ -80,13 +80,23 @@ async function loadLive() {
   // provider would hold a different I18nContext instance than the freshly
   // imported hooks resolve, so useTranslation/useFormat wouldn't find it.
   const { I18nProvider } = await import("../../../app/providers/I18nProvider");
+  // Dynamically imported for the same reason: a statically-imported
+  // ToastProvider would carry its own copy of the i18n module and throw
+  // "useTranslation must be used within an I18nProvider" from inside itself.
+  const { ToastProvider } = await import(
+    "../../../shared/components/feedback/ToastProvider"
+  );
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
+  // ToastProvider too: the bulk-decide hook reports its outcome through
+  // `useToast`, which throws outside a provider.
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>
       <I18nProvider>
-        <DemoModeProvider>{children}</DemoModeProvider>
+        <ToastProvider>
+          <DemoModeProvider>{children}</DemoModeProvider>
+        </ToastProvider>
       </I18nProvider>
     </QueryClientProvider>
   );

@@ -126,11 +126,17 @@ export function NewMessageModal({
   // (accepted connections) can still be reached — picking one opens the
   // message-request composer instead of an existing thread. Forward mode never
   // offers this (a forward always targets an existing thread or group).
+  // `selfSlug` is read out BEFORE the memo rather than inside it: reading
+  // `user` in the body while depending on `user?.profile.slug` makes the
+  // compiler infer a broader dependency than the one written, and it then
+  // skips optimizing the whole component rather than change how often the
+  // value recomputes.
+  const selfSlug = user?.profile.slug;
   const excludeSlugs = useMemo(() => {
     const slugs = new Set(candidates.map((c) => c.slug).filter(Boolean) as string[]);
-    if (user?.profile.slug) slugs.add(user.profile.slug);
+    if (selfSlug) slugs.add(selfSlug);
     return slugs;
-  }, [candidates, user?.profile.slug]);
+  }, [candidates, selfSlug]);
   const strangerSearch = useStrangerMemberSearch(
     isForward ? "" : query,
     excludeSlugs,

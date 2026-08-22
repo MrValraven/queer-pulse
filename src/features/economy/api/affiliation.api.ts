@@ -1,4 +1,8 @@
-import { apiGet, apiPost, apiDelete } from "../../../shared/api/client";
+import {
+  apiGetNullable,
+  apiPost,
+  apiDelete,
+} from "../../../shared/api/client";
 
 // ── Employer affiliation ─────────────────────────────────────────────────────
 // Which company the current member is authorised to post jobs for. A member has
@@ -16,7 +20,7 @@ export interface EmployerAffiliationDTO {
 
 /** GET /me/affiliation — the viewer's employer affiliation, or null if none. */
 export const getAffiliation = () =>
-  apiGet<EmployerAffiliationDTO | null>("/me/affiliation");
+  apiGetNullable<EmployerAffiliationDTO>("/me/affiliation");
 
 /** POST /me/affiliation — request affiliation with a company. */
 export const postAffiliation = (body: { companySlug: string; role: string }) =>

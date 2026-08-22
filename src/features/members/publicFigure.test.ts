@@ -105,8 +105,16 @@ describe("evaluatePublicEligibility", () => {
   });
 
   it("zeroes the active bonus when dormant for 90+ days", () => {
-    const active = evaluatePublicEligibility(baseSignals({ lastActiveDaysAgo: 10 }));
-    const dormant = evaluatePublicEligibility(baseSignals({ lastActiveDaysAgo: 120 }));
+    // Deliberately quiet signals: the participation family is capped at
+    // CAP.participation, and the default fixture already scores past that cap
+    // without the bonus, which hides the very difference this asserts.
+    const quiet = { eventsAttended: 1, communityPosts: 1, tenureDays: 100 };
+    const active = evaluatePublicEligibility(
+      baseSignals({ ...quiet, lastActiveDaysAgo: 10 }),
+    );
+    const dormant = evaluatePublicEligibility(
+      baseSignals({ ...quiet, lastActiveDaysAgo: 120 }),
+    );
     const activePts = active.score.families.find((f) => f.key === "participation")!.points;
     const dormantPts = dormant.score.families.find((f) => f.key === "participation")!.points;
     expect(activePts - dormantPts).toBe(6);

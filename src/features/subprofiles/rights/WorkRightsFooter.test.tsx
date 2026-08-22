@@ -17,8 +17,14 @@ describe("WorkRightsFooter", () => {
       </TestProviders>,
     );
 
-    expect(await screen.findByText(/2025/)).toBeInTheDocument();
-    expect(await screen.findByText(/Tiago/)).toBeInTheDocument();
-    expect(await screen.findByText(/All rights reserved/i)).toBeInTheDocument();
+    // One assertion on the whole line: BOTH paragraphs carry the year (the
+    // provenance line renders the same date), so a bare /2025/ matcher is
+    // ambiguous by construction.
+    expect(
+      await screen.findByText("© 2025 Tiago. All rights reserved."),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(/First published on QueerPulse/),
+    ).toBeInTheDocument();
   });
 });

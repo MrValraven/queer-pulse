@@ -1,5 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import {
   afterAll,
@@ -185,6 +185,36 @@ function registerSessionHandlers() {
         policyVersion: "3.3",
       }),
     ),
+    // AnnouncementBanner renders inside BOTH PageShell and AppShell, so
+    // `usePlatformStatus()` fires on every route, signed in or not.
+    http.get(`${API_V1}/platform-status`, () =>
+      HttpResponse.json({
+        signInOpen: true,
+        inviteRequestsOpen: true,
+        registrationOpen: true,
+        announcement: null,
+      }),
+    ),
+    // PublicProfileProvider sits app-wide in DataProviders and fetches the
+    // eligibility signals for any signed-in live session, on every route —
+    // not only where the badge/panel that reads them renders.
+    http.get(`${API_V1}/me/public-eligibility`, () =>
+      HttpResponse.json({
+        verified: false,
+        tenureDays: 0,
+        publishedPieces: [],
+        hostedOpenEvents: [],
+        workshopsTaught: 0,
+        publishedSubprofiles: 0,
+        vouchCount: 0,
+        endorsementCount: 0,
+        connectionCount: 0,
+        eventsAttended: 0,
+        communityPosts: 0,
+        lastActiveDaysAgo: 0,
+        standingOk: true,
+      }),
+    ),
   );
 }
 
@@ -208,6 +238,8 @@ const SESSION_REQUEST_BUDGET = [
   "/v1/auth/me",
   "/v1/consent/me",
   "/v1/me/bootstrap",
+  // AnnouncementBanner (in both PageShell and AppShell) → usePlatformStatus().
+  "/v1/platform-status",
   // The nav's bell (`useUnreadCount`) and DM (`useUnreadMessages`) badges used
   // to render inside the page's own Navbar/AppShell and so fired here. They now
   // live in the persistent App-level `AppChrome` (the PWA-nav refactor), which
@@ -318,6 +350,17 @@ async function renderRouteLive(path: string) {
     </TestProviders>,
   );
   await screen.findByRole("main", undefined, { timeout: 10000 });
+  // Then wait for the request stream to go quiet. A DEMAND-GATED query (one a
+  // consumer's effect enables, e.g. `usePublicProfileEligibility()`) starts a
+  // render after mount, so snapshotting the moment `main` exists would miss it
+  // and the budget would under-assert exactly the kind of fetch it exists to
+  // catch. Settled = two consecutive checks with no new request.
+  let previousCount = -1;
+  await waitFor(() => {
+    const settled = seen.length === previousCount;
+    previousCount = seen.length;
+    expect(settled).toBe(true);
+  });
   return [...new Set(seen)].sort();
 }
 
@@ -481,7 +524,13 @@ describe("request budget (live mode)", () => {
       // OBSERVED (see file header). Beyond the shared session + app-wide +
       // PageShell chrome layers, ProfilePage's own self-view render tree pulls
       // in these route-specific reads, each traced to its component:
-      //   - PublicProfileControl → usePublicProfile() → GET /me/public-profile
+      //   - ProfileHero → PublicProfileBadge (isSelf) →
+      //     usePublicProfileEligibility() → GET /me/public-eligibility. The
+      //     badge reads eligibility only, so it no longer subscribes to
+      //     GET /me/public-profile: the stored preference is fetched when the
+      //     modal that shows it opens.
+      //   - SubprofileShowcase → SubprofileAffiliations → useEndorsers() →
+      //     GET /subprofiles/{id}/endorsements for the rendered persona.
       //   - ProfileHero/HeroVouchRow → useVouch() → useGivenVouches() →
       //     GET /me/vouches/given
       //   - ProfileSubprofilesSection → useProfileSubprofiles(selfSlug) →
@@ -503,17 +552,25 @@ describe("request budget (live mode)", () => {
           ...SESSION_REQUEST_BUDGET,
           ...APP_WIDE_REQUEST_BUDGET,
           "/v1/communities",
+          // ProfileNetworkSection → useProfileNetwork(slug) →
+          // useConnectionsList("all") → GET /connections?tab=all&page=1.
+          "/v1/connections",
+          // ProfileHero → PublicProfileBadge (isSelf) →
+          // usePublicProfileEligibility(), the ONLY thing that turns this
+          // fetch on. Its absence from every other route's budget is the
+          // assertion that the provider no longer fetches app-wide.
+          "/v1/me/public-eligibility",
           "/v1/connections/accepted",
           `/v1/directory/by-member/${SLUG}`,
           "/v1/listings/mine",
           "/v1/me/communities",
-          "/v1/me/public-profile",
           "/v1/me/recognition",
           "/v1/me/vouches/given",
           `/v1/members/${SLUG}/vouchers`,
           "/v1/platform/staff",
           `/v1/profiles/${SLUG}/subprofiles`,
           "/v1/subprofiles/mine",
+          "/v1/subprofiles/sp-tiago-draft/endorsements",
         ].sort(),
       );
     },

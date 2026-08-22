@@ -7,9 +7,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
  * socket.io-client), scoped to one behaviour: a `PLATFORM_LOCKED` exception
  * must turn off reconnection so a lockdown doesn't trigger a reconnect storm
  * (see the comment above `socket.on("exception", …)` in realtime.ts). A
- * generic exception (e.g. an expired access token) must leave reconnection
- * untouched, since that path relies on the client reconnecting with a
- * freshly-refreshed cookie.
+ * A generic exception (e.g. an expired access token) takes the opposite path:
+ * it PAUSES reconnection only while `refreshSession()` is in flight, so the
+ * next attempt carries the new cookie instead of racing the dead one, then
+ * turns it back on. The distinction that matters is permanence — a lockdown
+ * stays off, an auth blip comes back.
  */
 
 const state = vi.hoisted(() => ({ demoMode: false, loggedIn: true }));
@@ -17,6 +19,7 @@ const state = vi.hoisted(() => ({ demoMode: false, loggedIn: true }));
 const socket = vi.hoisted(() => ({
   on: vi.fn(),
   disconnect: vi.fn(),
+  connect: vi.fn(),
   io: { reconnection: vi.fn() },
 }));
 
@@ -37,6 +40,15 @@ vi.mock("../../app/providers/DemoModeProvider", () => ({
 
 vi.mock("../../app/providers/authContext", () => ({
   useAuth: () => ({ loggedIn: state.loggedIn }),
+}));
+
+// The generic-exception path refreshes the session before reconnecting. Mock
+// it so the test never reaches the network and can drive both outcomes.
+const refreshSessionMock = vi.hoisted(() => vi.fn(() => Promise.resolve(true)));
+
+vi.mock("./client", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("./client")>()),
+  refreshSession: refreshSessionMock,
 }));
 
 type RealtimeModule = typeof import("./realtime");
@@ -85,7 +97,10 @@ beforeEach(() => {
   ioMock.mockReturnValue(socket);
   socket.on.mockClear();
   socket.disconnect.mockClear();
+  socket.connect.mockClear();
   socket.io.reconnection.mockClear();
+  refreshSessionMock.mockClear();
+  refreshSessionMock.mockResolvedValue(true);
   vi.resetModules();
 });
 
@@ -98,11 +113,34 @@ describe("platform-lockdown exception handling", () => {
     expect(socket.io.reconnection).toHaveBeenCalledWith(false);
   });
 
-  it("leaves reconnection untouched for a generic exception", async () => {
+  it("pauses reconnection only for the refresh on a generic exception, then restores it", async () => {
     const mod = await loadRealtime();
     await mount(mod);
     const handler = exceptionHandler();
     handler({ status: "error", message: "Unauthorized" });
-    expect(socket.io.reconnection).not.toHaveBeenCalled();
+    await settle();
+
+    expect(refreshSessionMock).toHaveBeenCalledTimes(1);
+    // Off while the refresh is in flight, back on once it lands: the reconnect
+    // must carry the fresh cookie, not race the dead one.
+    expect(socket.io.reconnection.mock.calls.map(([on]) => on)).toEqual([
+      false,
+      true,
+    ]);
+    expect(socket.connect).toHaveBeenCalled();
+  });
+
+  it("stays disconnected when the refresh genuinely fails", async () => {
+    refreshSessionMock.mockResolvedValue(false);
+    const mod = await loadRealtime();
+    await mount(mod);
+    const handler = exceptionHandler();
+    handler({ status: "error", message: "Unauthorized" });
+    await settle();
+
+    // No `reconnection(true)`: a dead session must not cost a JWT verify per
+    // second per idle tab. The next HTTP 401 drives the auth reconcile.
+    expect(socket.io.reconnection.mock.calls.map(([on]) => on)).toEqual([false]);
+    expect(socket.connect).not.toHaveBeenCalled();
   });
 });

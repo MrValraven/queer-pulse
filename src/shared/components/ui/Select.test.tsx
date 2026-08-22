@@ -140,7 +140,10 @@ describe("Select", () => {
     const onChange = vi.fn();
     renderWithProviders(<MultiHarness onChange={onChange} />);
 
-    await user.click(screen.getByRole("button", { name: "Pick fruit" }));
+    // The trigger is named by its LABEL, not by the placeholder it happens to
+    // be showing: `aria-label` overrides the text content for the accessible
+    // name, so the control keeps one stable name as its value changes.
+    await user.click(screen.getByRole("button", { name: "Fruit" }));
     const listbox = screen.getByRole("listbox");
     await user.click(within(listbox).getByRole("option", { name: "Apple" }));
     await user.click(within(listbox).getByRole("option", { name: "Cherry" }));

@@ -184,10 +184,20 @@ const LOCALE_WEEK_START: Record<string, number> = {
   "pt-PT": 1,
 };
 
-/** The first day of the week for `locale`: 0 = Sunday .. 6 = Saturday. Prefers
- *  the runtime's `Intl.Locale` week info (spec range 1=Mon..7=Sun, normalized
- *  here), falls back to a small locale table, then defaults to Monday. */
+/** The first day of the week for `locale`: 0 = Sunday .. 6 = Saturday.
+ *
+ *  The table above wins over the runtime's `Intl.Locale` week info, because the
+ *  runtime maximizes a bare language tag through CLDR likely-subtags: `"pt"`
+ *  resolves to pt-Latn-BR, whose week starts on SUNDAY, so the calendar handed
+ *  a European-Portuguese member a Brazilian week. `Intl` is still the fallback
+ *  for any locale the app has not spelled out, normalized from the spec's
+ *  1=Mon..7=Sun onto 0=Sun..6=Sat; failing that, Monday. */
 export function firstDayOfWeek(locale: string): number {
+  const localeWeekStart = LOCALE_WEEK_START[locale];
+  if (localeWeekStart !== undefined) return localeWeekStart;
+  const language = locale.split("-")[0] ?? locale;
+  const languageWeekStart = LOCALE_WEEK_START[language];
+  if (languageWeekStart !== undefined) return languageWeekStart;
   try {
     const localeWithWeekInfo = new Intl.Locale(locale) as Intl.Locale & {
       weekInfo?: { firstDay: number };
@@ -200,11 +210,6 @@ export function firstDayOfWeek(locale: string): number {
   } catch {
     // Unsupported locale tag or no weekInfo support: fall through.
   }
-  const localeWeekStart = LOCALE_WEEK_START[locale];
-  if (localeWeekStart !== undefined) return localeWeekStart;
-  const language = locale.split("-")[0] ?? locale;
-  const languageWeekStart = LOCALE_WEEK_START[language];
-  if (languageWeekStart !== undefined) return languageWeekStart;
   return 1;
 }
 

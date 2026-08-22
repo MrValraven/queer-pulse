@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "../../../shared/api/client";
+import { apiGetNullable, apiPost } from "../../../shared/api/client";
 
 // ── Backend DTOs ───────────────────────────────────────────────────────────
 // Mirrors `queerpulse-backend/src/magazine/writer-application-response.ts`.
@@ -29,4 +29,4 @@ export const createWriterApplication = (dto: CreateWriterApplicationInput) =>
 
 /** GET /magazine/writer-applications/mine — the caller's latest application, or null. */
 export const getMyWriterApplication = () =>
-  apiGet<WriterApplicationDTO | null>("/magazine/writer-applications/mine");
+  apiGetNullable<WriterApplicationDTO>("/magazine/writer-applications/mine");

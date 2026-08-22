@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { AgeAttestation } from "./AgeAttestation";
 import { RequestInviteForm } from "./RequestInviteForm";
@@ -64,11 +64,48 @@ describe("AgeAttestation control", () => {
       </TestProviders>,
     );
     // The "under 18" escape hatch is injected into the helper copy once the
-    // lazy namespace resolves.
-    fireEvent.click(await screen.findByRole("button"));
+    // lazy namespace resolves. Queried by name: the same copy also carries the
+    // "Here's why" eligibility trigger, which is a second role="button".
+    fireEvent.click(await screen.findByRole("button", { name: "Not 18 yet?" }));
     expect(onUnder18).toHaveBeenCalledTimes(1);
   });
 });
+
+/**
+ * The consent checkbox is read-only by design: only reading the community
+ * guidelines to the end ticks it (see `RequestInviteForm`'s `agreeRow` note).
+ * That gate flips on an IntersectionObserver sentinel, and the global test stub
+ * never fires, so this one reports the sentinel visible the moment it is
+ * observed — what a real browser does when the clauses are short enough not to
+ * scroll, which the modal already treats as "read".
+ */
+class ImmediateIntersectionObserver {
+  private readonly callback: IntersectionObserverCallback;
+  constructor(callback: IntersectionObserverCallback) {
+    this.callback = callback;
+  }
+  observe(target: Element): void {
+    this.callback(
+      [{ isIntersecting: true, target } as IntersectionObserverEntry],
+      this as unknown as IntersectionObserver,
+    );
+  }
+  unobserve(): void {}
+  disconnect(): void {}
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
+}
+
+/** Open the guidelines sheet and confirm, which is the only way to consent. */
+async function readTheGuidelines() {
+  fireEvent.click(
+    await screen.findByRole("button", { name: "community guidelines" }),
+  );
+  fireEvent.click(
+    await screen.findByRole("button", { name: "I've read it, done" }),
+  );
+}
 
 /** `first` is an owned-by-parent prop, so a tiny stateful harness stands in for
  *  RequestInvitePage. */
@@ -78,6 +115,15 @@ function RequestInviteHarness() {
 }
 
 describe("RequestInviteForm age gate", () => {
+  const RealIntersectionObserver = window.IntersectionObserver;
+  beforeEach(() => {
+    window.IntersectionObserver =
+      ImmediateIntersectionObserver as unknown as typeof IntersectionObserver;
+  });
+  afterEach(() => {
+    window.IntersectionObserver = RealIntersectionObserver;
+  });
+
   it("keeps submit gated until the 18+ box is ticked, even with every other field filled", async () => {
     const { container } = render(
       <TestProviders>
@@ -101,7 +147,12 @@ describe("RequestInviteForm age gate", () => {
     fireEvent.change(first, { target: { value: "Alex" } });
     fireEvent.change(email, { target: { value: "alex@example.com" } });
     fireEvent.change(why, { target: { value: "I want to find community." } });
-    fireEvent.click(agree);
+    // Consent is not clickable: reading the guidelines to the end is what
+    // ticks it. (A direct click is `preventDefault`ed in the browser; jsdom
+    // leaves the DOM property toggled because the controlled value never
+    // changes and React doesn't re-render, so that half isn't asserted here.)
+    await readTheGuidelines();
+    await waitFor(() => expect(agree).toBeChecked());
 
     // Everything but the age attestation → still blocked.
     expect(submit).toHaveAttribute("aria-disabled", "true");

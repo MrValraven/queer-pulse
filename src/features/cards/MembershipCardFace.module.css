@@ -1,29 +1,298 @@
+/* ── The card shell ───────────────────────────────────────────────────────── */
 /* CR80 proportions (85.6 x 53.98 mm) so the digital card and any later
-   printed one are the same object. */
-.card {
+   printed one are the same object.
+
+   The shell owns the card's BOX and nothing else: its size, the 3D camera the
+   turn is seen through, and the query container every face measures itself
+   against. It deliberately carries no radius, no overflow and no background —
+   `overflow: hidden` here would flatten the 3D context and the card would
+   turn as a flat rectangle instead of a card, so the clipping lives on each
+   face instead.
+
+   `container-type: size` (not `inline-size`) because the back face needs to
+   size the QR against the card's HEIGHT. It also pins the card to CR80: with
+   size containment the contents can no longer stretch the box taller than the
+   aspect ratio at narrow widths, which is what a card should do. */
+.shell {
+  position: relative;
+  /* Explicit, because `container-type: size` means the contents no longer
+     report a width for the box to shrink-wrap: in any centering or
+     shrink-to-fit context (DiscreetGate's `justify-items: center`) an `auto`
+     width would resolve to zero and take the aspect-ratio height with it. */
+  width: 100%;
   aspect-ratio: 85.6 / 53.98;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: var(--gap-sm);
-  padding: var(--card-pad-lg);
-  border-radius: var(--radius-card);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  container-type: inline-size;
+  container-type: size;
+  perspective: 1400px;
+
+  /* Where the pointer-tracked highlight sits, and how lit it is. Both are
+     rewritten on the node by MembershipCardFace's rAF-coalesced pointer
+     handler; these are the resting values, and the only ones that ever apply
+     under reduced motion. */
+  --gloss-x: 26%;
+  --gloss-y: 4%;
+  --gloss-lit: 0;
 }
 
-.skinPlum { background: var(--plum); color: var(--cream); }
-.skinCream { background: var(--cream); color: var(--plum); }
-.skinJade { background: var(--jade); color: var(--cream); }
-.skinCoral { background: var(--accent); color: var(--cream); }
-.skinInk { background: var(--ink); color: var(--cream); }
+.flipper {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 620ms cubic-bezier(0.2, 0.72, 0.18, 1);
+}
 
-.head { display: flex; align-items: center; gap: var(--gap-xs); }
+.flipper[data-flipped="true"] {
+  transform: rotateY(180deg);
+}
+
+/* Reduced motion still turns the card over — the two sides are the content,
+   so refusing to swap them would withhold the code. It just swaps instantly
+   rather than rotating. */
+.flipper[data-reduced="true"] {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flipper {
+    transition: none;
+  }
+}
+
+/* ── A face ───────────────────────────────────────────────────────────────── */
+.face {
+  position: absolute;
+  inset: 0;
+  /* Named, because the back face has to subtract it from the card's height to
+     size the code (see `.backQrSlot`). `cqw` is the shell's width, so the
+     padding tracks the card rather than a breakpoint. */
+  --face-pad: clamp(14px, 7cqw, 30px);
+  padding: var(--face-pad);
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  /* Clips the ground and the laminate to the card's rounded corners. */
+  overflow: hidden;
+  /* Establishes the stacking order the ground, scrim and gloss rely on, so
+     the card's own text always sits between them. */
+  isolation: isolate;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* A grid rather than a flex column, so the portrait can occupy the right half
+   across both of the top rows while the name block keeps the left. Without a
+   portrait the second track collapses to zero and the layout is exactly the
+   two stacked blocks it was before. */
+.faceFront {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--gap-sm);
+}
+
+/* The holder's face. Portrait 3:4 at passport proportions, sized off the
+   card's HEIGHT so it scales with the object rather than with a breakpoint,
+   and top-aligned with the community name beside it.
+
+   It gets a light hairline and a drop shadow because it can land on a flag,
+   an uploaded photo, or a flat skin, and without an edge a dark photo on the
+   Ink skin has no boundary at all. The gloss layer paints over it, which is
+   correct: a laminate covers the photo too. */
+.portrait {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: start;
+  height: 62cqh;
+  width: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: var(--radius-tag);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+}
+
+/* Designer only. Reads as an empty photo slot with a monogram in it rather
+   than as a photo, so an owner previewing a photo card sees the composition
+   without mistaking the stand-in for a member's actual face. */
+.portraitStandIn {
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.14);
+  border-style: dashed;
+  font-family: var(--serif);
+  font-size: clamp(0.9rem, 5cqh, 1.8rem);
+  letter-spacing: 0.04em;
+  opacity: 0.72;
+}
+
+.faceBack {
+  transform: rotateY(180deg);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(10px, 4cqw, 22px);
+  align-items: stretch;
+}
+
+/* Every colour in a skin is FIXED: a card is the same physical-looking object
+   in light and dark, and its skin/ink pairing is curated precisely so it can
+   never fail contrast (see cardSkins.ts). `--cream` and `--ink` both INVERT
+   with the theme, so using them here quietly turned four of the five skins
+   into near-black text on a near-black ground for anyone reading their card
+   in dark mode, and flipped the Ink skin's ground to near-white. The tokens
+   below are the non-inverting ones: `--cream-rgb` is published by the token
+   file for exactly this ("cream-on-plum stays light in dark mode"), --plum /
+   --jade / --accent never flip, and --ink-surface is --ink's fixed
+   counterpart. `CardQr` already paints its plate this way, for the same
+   reason. Only the hairline stays theme-aware, since it separates the card
+   from whatever page is behind it. */
+.skinPlum { background: var(--plum); color: rgb(var(--cream-rgb)); }
+.skinCream { background: rgb(var(--cream-rgb)); color: var(--plum); }
+.skinJade { background: var(--jade); color: rgb(var(--cream-rgb)); }
+.skinCoral { background: var(--accent); color: rgb(var(--cream-rgb)); }
+.skinInk { background: var(--ink-surface); color: rgb(var(--cream-rgb)); }
+
+/* ── The ground: a community's flag or uploaded photo ─────────────────────── */
+/* FRONT ONLY. The back is always the flat skin — a ground there would sit
+   between a scanner and the code and under six lines of small type (see
+   CardBackFace). A card carrying an arbitrary image can no longer inherit the
+   contrast guarantee the five flat skins were built around (see cardSkins.ts),
+   so the ground comes with a scrim that is NOT optional. The scrim is heavy
+   where the card's text sits (top and bottom) and light through the middle,
+   so the flag or photo still reads as itself while every line on top of it
+   stays legible. The text switches to fixed light ink for the same reason. */
+.faceFront.hasGround::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  /* The shorthand, so a preset can carry per-layer position/size (see
+     cardBackgrounds.data.ts); an uploaded photo builds its own
+     `center / cover no-repeat` on the way in. */
+  background: var(--card-ground);
+}
+
+.faceFront.hasGround::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.62) 0%,
+    rgba(0, 0, 0, 0.14) 30%,
+    rgba(0, 0, 0, 0.14) 64%,
+    rgba(0, 0, 0, 0.68) 100%
+  );
+}
+
+/* Overrides whichever skin class is also on the element: with a ground, the
+   ink is always the fixed light one, on top of the scrim. */
+.faceFront.hasGround.hasGround {
+  color: rgb(var(--cream-rgb));
+}
+
+.faceFront > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── The laminate ─────────────────────────────────────────────────────────── */
+/* What makes the front read as a pressed plastic card rather than a
+   rectangle of colour: a lip around the edge, one fixed specular band, and a
+   highlight that follows the pointer. It sits ABOVE the card's own text (z 2),
+   because a real laminate covers the print too, and it is inert to the
+   pointer so the flip button underneath it stays reachable.
+
+   All of it is white at low alpha, blended normally. `screen` or
+   `plus-lighter` would be the obvious choice for a specular layer, but the
+   Cream skin is already near-white and either blend mode blows it out to a
+   flat white card. */
+.gloss {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    116deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.09) 41%,
+    rgba(255, 255, 255, 0.2) 46%,
+    rgba(255, 255, 255, 0.07) 51%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  box-shadow:
+    /* the top lip catching the light, and the bottom edge in its own shade */
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.24),
+    /* a hairline bevel all the way round */ inset 0 0 0 1px
+      rgba(255, 255, 255, 0.08),
+    /* and a soft settle at the bottom, so the Cream skin reads as glossy
+       rather than as flat paper */ inset 0 -20px 26px -24px rgba(0, 0, 0, 0.4);
+}
+
+.glossSheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    58% 88% at var(--gloss-x) var(--gloss-y),
+    rgba(255, 255, 255, 0.32) 0%,
+    rgba(255, 255, 255, 0.1) 36%,
+    rgba(255, 255, 255, 0) 66%
+  );
+  /* Fades in under the pointer and back out when it leaves. The POSITION is
+     never transitioned: it is repainted every frame, so easing it would make
+     the highlight lag the finger. */
+  opacity: var(--gloss-lit, 0);
+  transition: opacity 240ms var(--ease);
+}
+
+/* The pointer handler never sets `--gloss-lit` under reduced motion, so this
+   only has to cover the OS-level preference reaching CSS before React does. */
+@media (prefers-reduced-motion: reduce) {
+  .glossSheen {
+    opacity: 0;
+    transition: none;
+  }
+}
+
+/* ── The flip control ─────────────────────────────────────────────────────── */
+/* Doubled class so these beat Button's own `.icon`/`.iconDark` on specificity
+   rather than on stylesheet order, which CSS Modules does not guarantee.
+   It sits outside the flipper, so it cannot inherit either face's ink and
+   carries its own plate: a frosted plum disc reads on the four dark skins,
+   on Cream, and on any flag or photo underneath it. */
+.flipButton.flipButton {
+  position: absolute;
+  z-index: 3;
+  right: clamp(6px, 2.5cqw, 14px);
+  bottom: clamp(6px, 2.5cqw, 14px);
+  background: rgba(var(--plum-rgb), 0.5);
+  color: rgb(var(--cream-rgb));
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(7px) saturate(1.4);
+  -webkit-backdrop-filter: blur(7px) saturate(1.4);
+}
+
+@media (hover: hover) {
+  .flipButton.flipButton:hover:not(:disabled) {
+    background: rgba(var(--plum-rgb), 0.72);
+    color: rgb(var(--cream-rgb));
+  }
+}
+
+/* ── Front face contents ──────────────────────────────────────────────────── */
+.head {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+}
 /* No radius token sits between --radius-tag (7px) and --radius-badge (14px);
    the crest is a small square accent, so the smaller of the two reads best. */
 .crest { border-radius: var(--radius-tag); object-fit: cover; }
 /* The programme's chosen accent (`--card-accent`, set inline in
-   MembershipCardFace.tsx) used to tint `.cardName` and `.meta dt` text via a
+   MembershipCardFace.tsx) used to tint `.cardName` and the meta labels via a
    color-mix against currentColor. That let the accent gate legibility: on
    several skin x accent pairs the mix pushed body text below AA (measured as
    low as 1.24:1 on some pairs; see the card-contrast audit). An accent must
@@ -45,40 +314,166 @@
   margin: 0;
 }
 
-.qrSlot {
+.foot {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+}
+/* Room for the flip control in the bottom-right corner, so a long holder
+   name runs out of space before it runs underneath the button. */
+.holder {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  margin: 0;
+  padding-right: 44px;
+}
+
+/* ── Back face contents ───────────────────────────────────────────────────── */
+/* The code is square and sized against the card itself, never against its
+   own grid track: `auto` + `aspect-ratio` would ask the column how wide it is
+   in order to answer how tall, which is circular and resolves to nothing.
+   `100cqh` is the shell's height, so the first term is "as tall as the card
+   allows". The second caps it on wide cards and, more importantly, keeps it
+   from eating the detail column on the narrow ones the /cards grid produces. */
+.backQrSlot {
+  --qr-size: min(calc(100cqh - 2 * var(--face-pad)), 42cqw);
   display: grid;
   place-items: center;
-  min-height: 120px;
+  width: var(--qr-size);
+  height: var(--qr-size);
+  align-self: center;
+  min-width: 0;
 }
 
 /* CardQr paints its own light plate and dark modules explicitly (see
    CardQr.tsx), so the symbol keeps the dark-on-light polarity a scanner
-   needs regardless of which skin sits behind it. This class only frames the
-   SVG within the card. */
-.qr { border-radius: var(--radius-tag); }
+   needs regardless of which skin sits behind it. Its `size` prop only sets
+   the SVG's attributes; the real sizing is here, against the card. */
+.qr {
+  border-radius: var(--radius-tag);
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+}
+
+/* The designer's stand-in QR: present enough to hold the composition,
+   quiet enough that it never reads as a working code. */
+.qrPlaceholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0.55;
+  filter: saturate(0);
+}
 
 .qrNotice {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--gap-xs);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
   opacity: 0.85;
   text-align: center;
   margin: 0;
 }
 
-.foot { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--gap-sm); }
-.holder { font-family: var(--serif); font-size: 0.95rem; margin: 0; }
-.meta { display: flex; gap: var(--gap-sm); margin: 0; }
-.meta dt {
-  font-size: 0.65rem;
+.backDetail {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(5px, 1.6cqh, 10px);
+  min-width: 0;
+}
+
+.backHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+/* Wraps to a second line rather than ellipsing: this column is narrow, most
+   community names are longer than it, and "Lisboa Queer Co…" tells a reader
+   less than the same name over two lines. The card has the vertical room. */
+.backCommunity {
+  font-family: var(--serif);
+  font-size: clamp(0.82rem, 3.4cqw, 1.05rem);
+  line-height: 1.22;
+  margin: 0;
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+/* Deliberately quiet. It is a fact about the card, not a badge to be read
+   across a room, and the status a verifier trusts is the one the scan
+   returns — never the word printed on the object. */
+.backStatus {
+  flex-shrink: 0;
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  opacity: 0.72;
+}
+
+/* Label over value, in as many columns as the detail column can hold: two on
+   a comfortable card, one on the narrowest. `auto-fit` decides that against
+   the real width, so there is no breakpoint to keep in sync with the QR. */
+.backMeta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
+  gap: clamp(2px, 0.9cqh, 6px) var(--gap-xs);
+  margin: 0;
+  min-width: 0;
+}
+
+.backMeta > div {
+  min-width: 0;
+}
+
+.backMeta dt {
+  font-size: clamp(0.5rem, 1.9cqw, 0.62rem);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  opacity: 0.7;
+  opacity: 0.62;
+  white-space: nowrap;
 }
-.meta dd { font-size: 0.8rem; margin: 0; }
 
-@container (max-width: 280px) {
-  .qrSlot { min-height: 96px; }
-  .meta { gap: var(--gap-xs); }
+.backMeta dd {
+  font-size: clamp(0.62rem, 2.4cqw, 0.78rem);
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.backScan {
+  margin: auto 0 0;
+  /* Clear of the flip control, which overlaps this column's bottom corner. */
+  padding-right: 46px;
+  font-size: clamp(0.5rem, 1.9cqw, 0.62rem);
+  line-height: 1.35;
+  opacity: 0.6;
+  overflow-wrap: anywhere;
+}
+
+/* The narrowest cards the grid produces (see MyCardsPage). The code keeps its
+   full height; the details give up the line that is least load-bearing, since
+   a scanner does not need to be told where the scan goes. */
+@container (max-width: 300px) {
+  .backScan {
+    display: none;
+  }
+  .backDetail {
+    gap: 4px;
+  }
 }

@@ -33,4 +33,7 @@
   display: grid;
   gap: var(--gap-sm);
   justify-items: center;
+  /* The card holds its own CR80 height, so any slack in the row would
+     otherwise be absorbed by the Hide button below it. */
+  align-content: start;
 }

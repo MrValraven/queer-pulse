@@ -9,8 +9,13 @@ import {
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDeleteMyCard, useMyCards } from "./api/useMyCards";
+import {
+  useDeleteMyCard,
+  useMyCards,
+  useUpdateMyCard,
+} from "./api/useMyCards";
 import type { MyCardDTO } from "./api/cards.api";
+import { CardPhotoConsent } from "./CardPhotoConsent";
 import { CardStatusNotice } from "./CardStatusNotice";
 import { DiscreetGate } from "./DiscreetGate";
 import { MembershipCardFace } from "./MembershipCardFace";
@@ -34,6 +39,7 @@ export function MyCardsPage() {
   const [cardPendingRemoval, setCardPendingRemoval] =
     useState<MyCardDTO | null>(null);
   const deleteCard = useDeleteMyCard();
+  const updateCard = useUpdateMyCard();
 
   const confirmRemoval = () => {
     if (!cardPendingRemoval || deleteCard.isPending) return;
@@ -76,6 +82,24 @@ export function MyCardsPage() {
                   <MembershipCardFace card={card} isActive={revealedCardId === card.id} />
                 </DiscreetGate>
                 <CardStatusNotice status={card.status} />
+                {/* Only where the issuing community actually runs photo
+                    cards. A community that does not has nothing here for a
+                    member to decide. */}
+                {card.program.allowsMemberPhoto && (
+                  <CardPhotoConsent
+                    card={card}
+                    isPending={updateCard.isPending}
+                    onChange={(isPhotoHidden) =>
+                      updateCard.mutate(
+                        { cardId: card.id, isPhotoHidden },
+                        {
+                          onError: () =>
+                            showToast(t("common:toast.saveFailed"), "error"),
+                        },
+                      )
+                    }
+                  />
+                )}
                 {/* A suspension is by nature temporary: a paused programme
                     resolves every holder's card to "suspended" and can come
                     back at any moment (see card-status.ts), so offering

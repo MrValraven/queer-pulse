@@ -52,14 +52,28 @@ describe("StudioTakedownModal", () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it("dismisses on a backdrop click but not on an inside click", async () => {
+  it("dismisses on a backdrop press-and-release but not on an inside click", async () => {
     const { onClose } = renderModal();
     const dialog = await screen.findByRole("dialog");
+    const scrim = dialog.parentElement!;
     // Clicking inside the dialog must not close it.
+    fireEvent.pointerDown(dialog);
     fireEvent.click(dialog);
     expect(onClose).not.toHaveBeenCalled();
-    // Clicking the backdrop (the dialog's overlay parent) closes it.
-    fireEvent.click(dialog.parentElement!);
+    // The scrim closes on a press that both STARTS and ends on it
+    // (`useScrimDismiss`), so a text-selection drag that happens to release
+    // over the scrim doesn't dismiss the dialog under the member.
+    fireEvent.pointerDown(scrim);
+    fireEvent.click(scrim);
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("ignores a release on the scrim that began inside the dialog", async () => {
+    const { onClose } = renderModal();
+    const dialog = await screen.findByRole("dialog");
+    // Press inside (selecting text), release outside: not a dismiss.
+    fireEvent.pointerDown(dialog);
+    fireEvent.click(dialog.parentElement!);
+    expect(onClose).not.toHaveBeenCalled();
   });
 });

@@ -1,15 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { TestProviders } from "../../test/TestProviders";
 import { SimulationsHome } from "./SimulationsHome";
 import { SIM_GROUPS } from "./simulations.data";
 
 describe("SimulationsHome", () => {
   it("links each flow card to its /simulations/:id player", async () => {
     render(
-      <MemoryRouter>
+      <TestProviders>
         <SimulationsHome />
-      </MemoryRouter>,
+      </TestProviders>,
     );
     const firstGroup = SIM_GROUPS[0];
     if (!firstGroup) throw new Error("expected at least one group");
@@ -25,9 +25,9 @@ describe("SimulationsHome", () => {
 
   it("filters flows by query and shows a no-results message", async () => {
     render(
-      <MemoryRouter>
+      <TestProviders>
         <SimulationsHome />
-      </MemoryRouter>,
+      </TestProviders>,
     );
     const firstGroup = SIM_GROUPS[0];
     if (!firstGroup) throw new Error("expected a group");

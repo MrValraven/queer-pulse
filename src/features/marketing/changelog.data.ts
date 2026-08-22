@@ -90,6 +90,44 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "card-member-photos",
+        category: "feature",
+        date: "22 Aug 2026",
+        ...entryKeys("card-member-photos"),
+        tag: {
+          labelKey: "marketing:changelog.tag.myCards",
+          to: routes.myCards,
+        },
+      },
+      {
+        id: "card-two-sides",
+        category: "feature",
+        date: "22 Aug 2026",
+        ...entryKeys("card-two-sides"),
+        tag: {
+          labelKey: "marketing:changelog.tag.myCards",
+          to: routes.myCards,
+        },
+      },
+      {
+        id: "cohost-invite-copy",
+        category: "fix",
+        date: "22 Aug 2026",
+        ...entryKeys("cohost-invite-copy"),
+      },
+      {
+        id: "card-backgrounds",
+        category: "feature",
+        date: "22 Aug 2026",
+        ...entryKeys("card-backgrounds"),
+      },
+      {
+        id: "card-designer",
+        category: "improvement",
+        date: "22 Aug 2026",
+        ...entryKeys("card-designer"),
+      },
+      {
         id: "membership-cards",
         category: "feature",
         date: "22 Aug 2026",

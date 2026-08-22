@@ -103,9 +103,12 @@ beforeEach(() => {
 
 describe("PublicProfileProvider", () => {
   it("demo mode: eligibilityStatus is ready synchronously, no fetch involved", async () => {
-    const { usePublicProfile, wrapper } = await loadDemoPublicProfile();
+    const { usePublicProfileEligibility, wrapper } =
+      await loadDemoPublicProfile();
 
-    const { result } = renderHook(() => usePublicProfile(), { wrapper });
+    const { result } = renderHook(() => usePublicProfileEligibility(), {
+      wrapper,
+    });
 
     expect(result.current.eligibilityStatus).toBe("ready");
     expect(result.current.eligibility.eligible).toBe(true);
@@ -115,11 +118,12 @@ describe("PublicProfileProvider", () => {
     const getPublicEligibilitySignals = vi.fn(() =>
       Promise.resolve(SIGNALS_DTO),
     );
-    const { usePublicProfile, wrapper } = await loadLivePublicProfile(
-      getPublicEligibilitySignals,
-    );
+    const { usePublicProfileEligibility, wrapper } =
+      await loadLivePublicProfile(getPublicEligibilitySignals);
 
-    const { result } = renderHook(() => usePublicProfile(), { wrapper });
+    const { result } = renderHook(() => usePublicProfileEligibility(), {
+      wrapper,
+    });
 
     expect(result.current.eligibilityStatus).toBe("loading");
     expect(result.current.eligibility.eligible).toBe(false);
@@ -131,15 +135,37 @@ describe("PublicProfileProvider", () => {
     expect(getPublicEligibilitySignals).toHaveBeenCalled();
   });
 
+  it("live mode: fetches NOTHING until a consumer actually reads eligibility", async () => {
+    const getPublicEligibilitySignals = vi.fn(() =>
+      Promise.resolve(SIGNALS_DTO),
+    );
+    const { usePublicProfile, usePublicProfileEligibility, wrapper } =
+      await loadLivePublicProfile(getPublicEligibilitySignals);
+
+    // The preference-only consumer: mounted app-wide on every route.
+    const preferenceOnly = renderHook(() => usePublicProfile(), { wrapper });
+    await waitFor(() => expect(preferenceOnly.result.current).toBeTruthy());
+    expect(getPublicEligibilitySignals).not.toHaveBeenCalled();
+
+    // A reader mounts (the hero badge, or the modal it opens) and the signals
+    // are fetched for the first time.
+    const reader = renderHook(() => usePublicProfileEligibility(), { wrapper });
+    await waitFor(() =>
+      expect(reader.result.current.eligibilityStatus).toBe("ready"),
+    );
+    expect(getPublicEligibilitySignals).toHaveBeenCalledTimes(1);
+  });
+
   it("live mode: eligibilityStatus becomes error when the fetch rejects, eligibility stays locked", async () => {
     const getPublicEligibilitySignals = vi.fn(() =>
       Promise.reject(new Error("network down")),
     );
-    const { usePublicProfile, wrapper } = await loadLivePublicProfile(
-      getPublicEligibilitySignals,
-    );
+    const { usePublicProfileEligibility, wrapper } =
+      await loadLivePublicProfile(getPublicEligibilitySignals);
 
-    const { result } = renderHook(() => usePublicProfile(), { wrapper });
+    const { result } = renderHook(() => usePublicProfileEligibility(), {
+      wrapper,
+    });
 
     expect(result.current.eligibilityStatus).toBe("loading");
 

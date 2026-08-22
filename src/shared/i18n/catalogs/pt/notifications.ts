@@ -95,6 +95,12 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> convidou-te para um convívio.",
   "type.event_invite.meta": "Convite para convívio",
 
+  "type.event_cohost_invite.text":
+    "Tens um convite para coanfitriar um convívio.",
+  "type.event_cohost_invite.textNamed":
+    "<profile>{name}</profile> convidou-te para coanfitriar um convívio.",
+  "type.event_cohost_invite.meta": "Convite para coanfitriar",
+
   "type.event_reminder.text":
     "Está a aproximar-se um convívio em que vais estar.",
   "type.event_reminder.meta": "Lembrete de convívio",

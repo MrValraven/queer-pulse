@@ -380,7 +380,12 @@ export function LegalPage() {
                       ctaLabel={t(
                         "resources:legal.lawyers.requestConsultationCta",
                       )}
-                      onCta={() => navigate(routes.contact)}
+                      // `navigate` returns a promise in react-router v7 and
+                      // `onCta` is a void callback; nothing awaits the
+                      // transition, so discard it explicitly.
+                      onCta={() => {
+                        void navigate(routes.contact);
+                      }}
                       animation="fade"
                       delay={Math.min(index, 8) * 60}
                     />

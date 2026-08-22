@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import { TestProviders } from "../../test/TestProviders";
 import { SimulationPlayer } from "./SimulationPlayer";
 import { SIM_GROUPS } from "./simulations.data";
 
@@ -11,22 +12,24 @@ if (!firstFlow) throw new Error("expected at least one flow");
 
 function renderAt(path: string) {
   return render(
-    <MemoryRouter initialEntries={[path]}>
+    // TestProviders, not a bare MemoryRouter: the player reads `useTranslation`,
+    // which throws outside an I18nProvider.
+    <TestProviders initialEntries={[path]}>
       <Routes>
         <Route path="/simulations/:id" element={<SimulationPlayer />} />
       </Routes>
-    </MemoryRouter>,
+    </TestProviders>,
   );
 }
 
 function renderWithGallery(path: string) {
   return render(
-    <MemoryRouter initialEntries={[path]}>
+    <TestProviders initialEntries={[path]}>
       <Routes>
         <Route path="/simulations/:id" element={<SimulationPlayer />} />
         <Route path="/simulations" element={<div>gallery</div>} />
       </Routes>
-    </MemoryRouter>,
+    </TestProviders>,
   );
 }
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Button, FormField, Modal, Select } from "../../shared/components/ui";
+import { Button, ConfirmDialog, Modal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   useCardProgram,
@@ -8,15 +9,9 @@ import {
   useUpsertCardProgram,
 } from "./api/useCardProgram";
 import type { CardSkin } from "./api/cards.api";
-import { MembershipCardFace } from "./MembershipCardFace";
-import {
-  ACCENT_OPTIONS,
-  CARD_SKIN_OPTIONS,
-  VALIDITY_OPTIONS,
-  previewCard,
-  selectValueToValidity,
-  validityToSelectValue,
-} from "./cardDesigner.data";
+import { CardDesignerFields } from "./CardDesignerFields";
+import { CardDesignerPreview } from "./CardDesignerPreview";
+import { useCardDesignerDraft } from "./useCardDesignerDraft";
 import styles from "./CardDesignerModal.module.css";
 
 export function CardDesignerModal({
@@ -30,20 +25,28 @@ export function CardDesignerModal({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { name: viewerName, photo: viewerPhoto } = useAccountIdentity();
   const { program } = useCardProgram(slug);
   const upsert = useUpsertCardProgram(slug);
   const issueAll = useIssueAllCards(slug);
+  const { draft, set, isDirty } = useCardDesignerDraft(program);
+  const [isConfirmingDiscard, setIsConfirmingDiscard] = useState(false);
 
-  const [skin, setSkin] = useState<CardSkin>(program?.skin ?? "plum");
-  const [accentToken, setAccentToken] = useState(
-    program?.accentToken ?? "accent",
-  );
-  const [cardName, setCardName] = useState(program?.cardName ?? "");
-  const [validityMonths, setValidityMonths] = useState<number | null>(
-    program?.validityMonths ?? null,
-  );
-
+  // A programme that does not exist yet has nobody holding a card, so its
+  // first save is also the moment the roster gets one — there is nothing to
+  // surprise anyone with. Editing an EXISTING programme only saves the
+  // design; issuing stays a deliberate, separately-confirmed act in
+  // `ModToolsCardSection`, because a bulk issue touches real members.
+  const isFirstSave = !program;
   const isSaving = upsert.isPending || issueAll.isPending;
+
+  const requestClose = () => {
+    if (isDirty && !isSaving) {
+      setIsConfirmingDiscard(true);
+      return;
+    }
+    onClose();
+  };
 
   const save = async () => {
     try {
@@ -55,28 +58,46 @@ export function CardDesignerModal({
       const isEnabled = program?.isEnabled ?? true;
       await upsert.mutateAsync({
         isEnabled,
-        skin,
-        accentToken,
-        cardName: cardName.trim() || t("cards:designer.defaultCardName"),
-        validityMonths,
+        skin: draft.skin,
+        accentToken: draft.accentToken,
+        cardName: draft.cardName.trim() || t("cards:designer.defaultCardName"),
+        validityMonths: draft.validityMonths,
+        // Only sent when the owner actually touched the crest: the backend
+        // treats an absent field as "leave it alone" and an explicit null as
+        // "clear it", so sending it unconditionally would wipe a crest set
+        // from anywhere else.
+        ...(draft.crestKey !== draft.savedCrestKey
+          ? { crestMediaKey: draft.crestKey || null }
+          : {}),
+        // The ground, on the same absent-vs-null contract. The backend clears
+        // whichever of the two is not written, so a card always has exactly
+        // one ground.
+        ...(draft.backgroundPreset !== (program?.backgroundPreset ?? null)
+          ? { backgroundPreset: draft.backgroundPreset }
+          : {}),
+        ...(draft.backgroundKey !== draft.savedBackgroundKey
+          ? { backgroundMediaKey: draft.backgroundKey || null }
+          : {}),
         // Phase 1 has no profile badge to gate (spec §J is Phase 3); the DTO
         // still requires the field, so this keeps sending the value the
         // backend already stores rather than exposing a control for a
         // feature that does not exist yet.
-        allowsPublicBadge: true,
+        allowsPublicBadge: program?.allowsPublicBadge ?? true,
+        allowsMemberPhoto: draft.allowsMemberPhoto,
       });
-      // Re-issuing to the whole roster only makes sense for a live
-      // programme. A paused one has no active holders to push a reissue to,
-      // and doing it anyway would be the exact silent mass-reissue this
-      // guard exists to prevent.
-      if (isEnabled) {
+
+      // First save on a live programme: hand the roster its cards, since
+      // that is what starting a card programme means.
+      if (isFirstSave && isEnabled) {
         const result = await issueAll.mutateAsync();
         showToast(
           t("cards:designer.saved", { count: result.issued }),
           "success",
         );
-      } else {
+      } else if (!isEnabled) {
         showToast(t("cards:designer.savedPaused"), "success");
+      } else {
+        showToast(t("cards:designer.savedDesign"), "success");
       }
       onClose();
     } catch {
@@ -89,133 +110,102 @@ export function CardDesignerModal({
   };
 
   return (
-    <Modal
-      title={t("cards:designer.ariaLabel")}
-      onClose={onClose}
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose} disabled={isSaving}>
-            {t("communities:edit.cancel")}
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => void save()}
-            disabled={isSaving}
-          >
-            {isSaving ? t("communities:edit.saving") : t("cards:designer.save")}
-          </Button>
-        </>
-      }
-    >
-      <div className={styles.body}>
-        <div className={styles.preview}>
-          <MembershipCardFace
-            card={previewCard(
-              communityName,
-              cardName || t("cards:designer.defaultCardName"),
-              skin,
-              accentToken,
-            )}
-            isActive={false}
+    <>
+      <Modal
+        title={t("cards:designer.ariaLabel")}
+        onClose={requestClose}
+        className={styles.dialog}
+        footer={
+          <>
+            <Button variant="ghost" onClick={requestClose} disabled={isSaving}>
+              {t("communities:edit.cancel")}
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => void save()}
+              disabled={isSaving}
+            >
+              {isSaving
+                ? t("communities:edit.saving")
+                : isFirstSave
+                  ? t("cards:designer.save")
+                  : t("cards:designer.saveDesign")}
+            </Button>
+          </>
+        }
+      >
+        <div className={styles.body}>
+          <CardDesignerPreview
+            communityName={communityName}
+            cardName={draft.cardName || t("cards:designer.defaultCardName")}
+            skin={draft.skin}
+            accentToken={draft.accentToken}
+            // Cleared, freshly picked, or as saved — in that order. Falling
+            // straight back to the saved crest would keep drawing a crest the
+            // owner has just removed.
+            crestUrl={
+              draft.crestKey === ""
+                ? null
+                : (draft.crestPreviewUrl ?? program?.crestUrl ?? null)
+            }
+            backgroundPreset={draft.backgroundPreset}
+            // Same order as the crest above: cleared, freshly picked, or as
+            // saved.
+            backgroundUrl={
+              draft.backgroundKey === ""
+                ? null
+                : (draft.backgroundPreviewUrl ?? program?.backgroundUrl ?? null)
+            }
+            validityMonths={draft.validityMonths}
+            serialPrefix={program?.serialPrefix}
+            holderName={viewerName}
+            allowsMemberPhoto={draft.allowsMemberPhoto}
+            // The owner's own avatar, so turning photos on previews a real
+            // face rather than a placeholder the members will never see.
+            holderAvatarUrl={viewerPhoto ?? null}
+          />
+
+          <CardDesignerFields
+            cardName={draft.cardName}
+            onCardNameChange={(value) => set({ cardName: value })}
+            skin={draft.skin}
+            onSkinChange={(value: CardSkin) => set({ skin: value })}
+            accentToken={draft.accentToken}
+            onAccentChange={(value) => set({ accentToken: value })}
+            validityMonths={draft.validityMonths}
+            onValidityChange={(value) => set({ validityMonths: value })}
+            crestKey={draft.crestKey}
+            onCrestChange={(key) => set({ crestKey: key })}
+            onCrestPreviewChange={(url) => set({ crestPreviewUrl: url })}
+            backgroundPreset={draft.backgroundPreset}
+            onBackgroundPresetChange={(preset) =>
+              set({ backgroundPreset: preset })
+            }
+            backgroundKey={draft.backgroundKey}
+            onBackgroundChange={(key) => set({ backgroundKey: key })}
+            onBackgroundPreviewChange={(url) =>
+              set({ backgroundPreviewUrl: url })
+            }
+            allowsMemberPhoto={draft.allowsMemberPhoto}
+            onAllowsMemberPhotoChange={(allows) =>
+              set({ allowsMemberPhoto: allows })
+            }
           />
         </div>
+      </Modal>
 
-        <CardDesignerFields
-          cardName={cardName}
-          onCardNameChange={setCardName}
-          skin={skin}
-          onSkinChange={setSkin}
-          accentToken={accentToken}
-          onAccentChange={setAccentToken}
-          validityMonths={validityMonths}
-          onValidityChange={setValidityMonths}
-        />
-      </div>
-    </Modal>
-  );
-}
-
-/** The form controls, split out of `CardDesignerModal` to keep each
- *  component under the repo's 200-line limit. */
-function CardDesignerFields({
-  cardName,
-  onCardNameChange,
-  skin,
-  onSkinChange,
-  accentToken,
-  onAccentChange,
-  validityMonths,
-  onValidityChange,
-}: {
-  cardName: string;
-  onCardNameChange: (value: string) => void;
-  skin: CardSkin;
-  onSkinChange: (value: CardSkin) => void;
-  accentToken: string;
-  onAccentChange: (value: string) => void;
-  validityMonths: number | null;
-  onValidityChange: (value: number | null) => void;
-}) {
-  const { t } = useTranslation();
-
-  return (
-    <div className={styles.fields}>
-      <FormField label={t("cards:designer.cardNameLabel")}>
-        <input
-          type="text"
-          value={cardName}
-          maxLength={32}
-          onChange={(event) => onCardNameChange(event.target.value)}
-          placeholder={t("cards:designer.cardNamePlaceholder")}
-        />
-      </FormField>
-
-      <fieldset className={styles.fieldset}>
-        <legend className={styles.legend}>
-          {t("cards:designer.skinLabel")}
-        </legend>
-        <div className={styles.skins}>
-          {CARD_SKIN_OPTIONS.map((option) => (
-            <label key={option.value} className={styles.skinOption}>
-              <input
-                type="radio"
-                name="card-skin"
-                value={option.value}
-                checked={skin === option.value}
-                onChange={() => onSkinChange(option.value)}
-              />
-              <span
-                className={styles.swatch}
-                data-skin={option.value}
-                aria-hidden="true"
-              />
-              <span>{t(option.labelKey)}</span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
-
-      <FormField label={t("cards:designer.accentLabel")}>
-        <Select
-          value={accentToken}
-          onChange={(value) => onAccentChange(value ?? "accent")}
-          options={ACCENT_OPTIONS.map((option) => ({
-            value: option.value,
-            label: t(option.labelKey),
-          }))}
-        />
-      </FormField>
-
-      <FormField label={t("cards:designer.validityLabel")}>
-        <Select
-          value={validityToSelectValue(validityMonths)}
-          onChange={(value) => onValidityChange(selectValueToValidity(value))}
-          options={VALIDITY_OPTIONS.map((option) => ({
-            value: validityToSelectValue(option.value),
-            label: t(option.labelKey),
-          }))}
-        />
-      </FormField>
-    </div>
+      {/* Escape, the backdrop and the X all reach `requestClose` first, so an
+          in-progress design can never be thrown away by a stray click. */}
+      <ConfirmDialog
+        open={isConfirmingDiscard}
+        onClose={() => setIsConfirmingDiscard(false)}
+        onConfirm={onClose}
+        tone="destructive"
+        title={t("cards:designer.discard.title")}
+        description={t("cards:designer.discard.body")}
+        confirmLabel={t("cards:designer.discard.confirm")}
+        cancelLabel={t("cards:designer.discard.cancel")}
+      />
+    </>
   );
 }

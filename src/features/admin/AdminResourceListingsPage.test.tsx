@@ -94,7 +94,7 @@ describe("AdminResourceListingsPage", () => {
 
     expect(
       await screen.findByText(
-        "No listings yet — create the first one, or check the suggestions queue for ideas.",
+        "No listings yet. Create the first one, or check the suggestions queue for ideas.",
       ),
     ).toBeInTheDocument();
   });

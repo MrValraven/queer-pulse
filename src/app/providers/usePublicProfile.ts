@@ -18,6 +18,13 @@ export interface PublicProfileContextValue {
   /** Refetch the live eligibility signals after an error. No-op in demo mode. */
   retryEligibility: () => void;
   /**
+   * Register a mounted reader of `eligibility`, returning the release. Until at
+   * least one is registered the provider does not fetch the signals at all —
+   * see its doc comment. Reached through `usePublicProfileEligibility()`, never
+   * called directly.
+   */
+  requestEligibility: () => () => void;
+  /**
    * Adopt the stored preference. Idempotent per live session: only the FIRST
    * call lands. Hydration is now driven by whichever consumer's query resolves,
    * and consumers mount and unmount as the member navigates — without this
@@ -30,8 +37,18 @@ export interface PublicProfileContextValue {
 export const PublicProfileContext =
   createContext<PublicProfileContextValue | null>(null);
 
-/** The public shape — unchanged from before this provider was scoped. */
-export type PublicProfileValue = Omit<PublicProfileContextValue, "hydrate">;
+/**
+ * What `usePublicProfile()` returns: the preference and its writes.
+ *
+ * The eligibility trio is deliberately NOT here. Reading it has to go through
+ * `usePublicProfileEligibility()` below, which is what turns the fetch on — a
+ * consumer that could read `eligibility` off this hook would silently get the
+ * neutral locked placeholder forever, and the type system is what stops that.
+ */
+export type PublicProfileValue = Omit<
+  PublicProfileContextValue,
+  "hydrate" | "eligibility" | "eligibilityStatus" | "retryEligibility" | "requestEligibility"
+>;
 
 function usePublicProfileContext(): PublicProfileContextValue {
   const ctx = useContext(PublicProfileContext);
@@ -52,7 +69,14 @@ function usePublicProfileContext(): PublicProfileContextValue {
  * rather than being routed through this hook.
  */
 export function usePublicProfile(): PublicProfileValue {
-  const { hydrate, ...rest } = usePublicProfileContext();
+  const {
+    hydrate,
+    eligibility: _eligibility,
+    eligibilityStatus: _eligibilityStatus,
+    retryEligibility: _retryEligibility,
+    requestEligibility: _requestEligibility,
+    ...rest
+  } = usePublicProfileContext();
   const { data } = usePublicProfileVisibility();
 
   useEffect(() => {
@@ -60,4 +84,25 @@ export function usePublicProfile(): PublicProfileValue {
   }, [data, hydrate]);
 
   return rest;
+}
+
+/**
+ * The member's eligibility to go public, and the signals fetch that backs it.
+ *
+ * Calling this REGISTERS DEMAND: the provider keeps
+ * `GET /me/public-eligibility` disabled until at least one consumer is mounted,
+ * so the request follows the badge and the modal around instead of firing on
+ * every route for every signed-in member. Demo mode scores from a fixture and
+ * never fetches, so the registration is harmless there.
+ */
+export function usePublicProfileEligibility(): Pick<
+  PublicProfileContextValue,
+  "eligibility" | "eligibilityStatus" | "retryEligibility"
+> {
+  const { eligibility, eligibilityStatus, retryEligibility, requestEligibility } =
+    usePublicProfileContext();
+
+  useEffect(() => requestEligibility(), [requestEligibility]);
+
+  return { eligibility, eligibilityStatus, retryEligibility };
 }

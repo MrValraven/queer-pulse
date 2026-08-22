@@ -2,11 +2,13 @@ import { useState } from "react";
 import { FiCreditCard } from "react-icons/fi";
 import { Button, EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCardProgram, useUpsertCardProgram } from "../cards/api/useCardProgram";
 import { MembershipCardFace } from "../cards/MembershipCardFace";
 import { CardDesignerModal } from "../cards/CardDesignerModal";
 import { CardHoldersPanel } from "../cards/CardHoldersPanel";
+import { CardIssueAction } from "../cards/CardIssueAction";
 import { previewCard } from "../cards/cardDesigner.data";
 import type { CommunityRole } from "./membership.types";
 import detail from "./CommunityDetailPage.module.css";
@@ -33,6 +35,7 @@ export function ModToolsCardSection({
   role: CommunityRole | null;
 }) {
   const { t } = useTranslation();
+  const { photo: viewerPhoto } = useAccountIdentity();
   const { showToast } = useToast();
   const isStaff = role === "owner" || role === "mod";
   const { program, isLoading } = useCardProgram(slug);
@@ -93,8 +96,21 @@ export function ModToolsCardSection({
                   program.cardName,
                   program.skin,
                   program.accentToken,
+                  {
+                    crestUrl: program.crestUrl,
+                    backgroundPreset: program.backgroundPreset,
+                    backgroundUrl: program.backgroundUrl,
+                    validityMonths: program.validityMonths,
+                    serialPrefix: program.serialPrefix,
+                    // Matches the designer's own preview: the viewing mod's
+                    // face stands in, so a programme with photos on previews
+                    // as a photo card rather than as an empty slot.
+                    allowsMemberPhoto: program.allowsMemberPhoto,
+                    holderAvatarUrl: viewerPhoto ?? null,
+                  },
                 )}
                 isActive={false}
+                isPreview
               />
             </div>
             <Button
@@ -104,6 +120,11 @@ export function ModToolsCardSection({
             >
               {t("cards:modTools.edit")}
             </Button>
+            {/* Issuing is its own act, never a side effect of saving the
+                design — see CardIssueAction. Only offered while the
+                programme is live: a paused programme has no working card to
+                hand anyone. */}
+            {isEnabled && <CardIssueAction slug={slug} />}
             <Button
               variant="ghost"
               size="sm"

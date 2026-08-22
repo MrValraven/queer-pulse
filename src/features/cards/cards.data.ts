@@ -1,3 +1,4 @@
+import { currentUser } from "../members/data/members";
 import type {
   CardProgramDTO,
   IssuerCardDTO,
@@ -9,11 +10,17 @@ export const DEMO_CARD_PROGRAM: CardProgramDTO = {
   skin: "plum",
   accentToken: "accent",
   crestUrl: null,
+  backgroundPreset: null,
+  backgroundUrl: null,
   cardName: "Sócie",
   validityMonths: 12,
   allowsPrint: false,
   allowsWallet: false,
   allowsPublicBadge: true,
+  // On, so the demo shows what a photo card actually looks like. The second
+  // demo card below leaves it off, so both compositions are reachable
+  // without touching a setting.
+  allowsMemberPhoto: true,
   serialPrefix: "LQC",
 };
 
@@ -28,6 +35,11 @@ export const DEMO_MY_CARDS: MyCardDTO[] = [
     communitySlug: "lisboa-queer-collective",
     role: "member",
     holderName: "Tiago Costa",
+    // Already resolved: in live mode the backend only sends this when the
+    // programme allows photos and the member has not hidden theirs, so the
+    // fixture matches that contract rather than the raw profile avatar.
+    holderAvatarUrl: currentUser.photo ?? null,
+    isPhotoHidden: false,
     program: DEMO_CARD_PROGRAM,
   },
   {
@@ -40,7 +52,14 @@ export const DEMO_MY_CARDS: MyCardDTO[] = [
     communitySlug: "azores-queer",
     role: "mod",
     holderName: "Tiago Costa",
-    program: { ...DEMO_CARD_PROGRAM, skin: "jade", serialPrefix: "AZO" },
+    holderAvatarUrl: null,
+    isPhotoHidden: false,
+    program: {
+      ...DEMO_CARD_PROGRAM,
+      skin: "jade",
+      serialPrefix: "AZO",
+      allowsMemberPhoto: false,
+    },
   },
 ];
 

@@ -101,6 +101,9 @@ const NOOP_PUBLIC_PROFILE_CONTEXT: PublicProfileContextValue = {
   eligibility: NOOP_ELIGIBILITY,
   eligibilityStatus: "ready",
   retryEligibility: () => {},
+  // No-op demand registration: an override supplies eligibility directly, so
+  // nothing has to be fetched for it.
+  requestEligibility: () => () => {},
   hydrate: () => {},
 };
 

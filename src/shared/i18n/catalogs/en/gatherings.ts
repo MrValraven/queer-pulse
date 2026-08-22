@@ -280,6 +280,44 @@ export const gatherings: Catalog = {
 
   // CoHostInvitePage
   "cohostInvite.back": "Notifications",
+  // Co-host invite options. The ids are validated backend-side
+  // (`cohost-invite-options.ts`); the copy is frontend-owned and lives here,
+  // rendered both in the host's composer Select and on the invitee's page.
+  "cohostInvite.role.greeter.label": "Greeter",
+  "cohostInvite.role.greeter.description":
+    "Welcome people at the door and help anyone arriving alone find their footing.",
+  "cohostInvite.role.room_lead.label": "Room lead",
+  "cohostInvite.role.room_lead.description":
+    "Keep an eye on the space itself: setup, flow, and packing down at the end.",
+  "cohostInvite.role.comoderator.label": "Co-moderator",
+  "cohostInvite.role.comoderator.description":
+    "Hold the room's boundaries with the host, and step in if something needs addressing.",
+  "cohostInvite.role.page_editor.label": "Page editor",
+  "cohostInvite.role.page_editor.description":
+    "Keep the gathering's page accurate: details, photos, and the answers people ask for.",
+  "cohostInvite.commitment.light.label": "Just the day of",
+  "cohostInvite.commitment.light.description":
+    "A hand on the day itself, with nothing to do beforehand.",
+  "cohostInvite.commitment.half_event.label": "Half the gathering",
+  "cohostInvite.commitment.half_event.description":
+    "Around for a good chunk of it, with the rest covered by someone else.",
+  "cohostInvite.commitment.full_event.label": "The whole gathering",
+  "cohostInvite.commitment.full_event.description":
+    "There from setup to packing down.",
+  "cohostInvite.commitment.ongoing.label": "Ongoing",
+  "cohostInvite.commitment.ongoing.description":
+    "This one and the ones after it, as a regular co-host.",
+  // Empty states for the two ways this page can open without a live invite:
+  // the link is dead (deleted, or the gathering went), and the invite was
+  // already answered on another device or in an earlier session.
+  "cohostInvite.notFoundTitle": "This invite isn't here anymore",
+  "cohostInvite.notFoundDescription":
+    "It may have been withdrawn, or the gathering it belonged to has gone. Nothing you did.",
+  "cohostInvite.alreadyRespondedTitle": "You've already answered this invite",
+  "cohostInvite.alreadyAcceptedDescription":
+    "You're co-hosting with {host}. Their host tools are open to you.",
+  "cohostInvite.alreadyDeclinedDescription":
+    "You declined this one. {host} can always invite you to the next.",
   "cohostInvite.eyebrow": "Co-host invitation",
   "cohostInvite.title": "{host} wants you to <em>co-host</em> with her.",
   "cohostInvite.readThroughHint":
