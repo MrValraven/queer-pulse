@@ -1,5 +1,11 @@
 import { useMemo, type ReactNode } from "react";
 import QRCode from "qrcode";
+import {
+  MARK_INK_RATIO,
+  MARK_OPTICAL_NUDGE_RATIO,
+  markModulesFor,
+  SERIF_CAP_HEIGHT_RATIO,
+} from "./qrCentreMark";
 
 /**
  * ISO/IEC 18004 specifies four clear modules on every side. It is part of the
@@ -21,17 +27,6 @@ const QUIET_ZONE_MODULES = 4;
  * floor. See `cardPrintQr.test.ts`, which asserts exactly that.
  */
 const ERROR_CORRECTION_LEVEL = "Q";
-
-/**
- * The mark's width, as a fraction of the symbol's. At 0.2 it occludes about 4%
- * of the symbol's area, comfortably inside Q's budget even allowing for
- * Reed-Solomon interleaving, which concentrates a contiguous blot into a few
- * codewords rather than spreading it evenly.
- */
-const MARK_WIDTH_RATIO = 0.2;
-
-/** The glyph's height inside its plate, leaving the plate a visible edge. */
-const MARK_GLYPH_RATIO = 0.74;
 
 export interface QrCodeProps {
   /** What a scanner resolves. */
@@ -123,7 +118,9 @@ export function QrCode({
   }
 
   const centre = total / 2;
-  const markSize = moduleCount * MARK_WIDTH_RATIO;
+  const markSize = markModulesFor(moduleCount);
+  const inkHeight = markSize * MARK_INK_RATIO;
+  const opticalNudge = markSize * MARK_OPTICAL_NUDGE_RATIO;
 
   return (
     <svg
@@ -134,8 +131,8 @@ export function QrCode({
       height={size}
       viewBox={`0 0 ${total} ${total}`}
     >
-      {/* The modules are the only part that wants hard pixel edges. The plate
-          and the glyph are curves, and would look chewed under crispEdges. */}
+      {/* The modules and the plate want hard pixel edges. The glyph is curves,
+          and would look chewed under crispEdges. */}
       <g shapeRendering="crispEdges">
         {hasLightPlate && (
           <rect x={0} y={0} width={total} height={total} fill={lightFill} />
@@ -151,18 +148,27 @@ export function QrCode({
           y={centre - markSize / 2}
           width={markSize}
           height={markSize}
+          shapeRendering="crispEdges"
           fill={lightFill}
         />
         <text
           x={centre}
           y={centre}
+          // The optical nudge rides on dx/dy rather than on x/y, so the
+          // anchor stays honestly at the symbol's centre and the adjustment
+          // stays legible as an adjustment.
+          dx={-opticalNudge}
+          // Half a cap height below the plate's middle, on the alphabetic
+          // baseline. `dominantBaseline="central"` would centre the em box
+          // instead, which sits the letter high: the box reserves descender
+          // room a Q's bowl does not fill.
+          dy={inkHeight / 2 - opticalNudge}
           textAnchor="middle"
-          dominantBaseline="central"
           fill={darkFill}
           style={{
             fontFamily: "var(--serif)",
             fontWeight: 600,
-            fontSize: `${markSize * MARK_GLYPH_RATIO}px`,
+            fontSize: `${inkHeight / SERIF_CAP_HEIGHT_RATIO}px`,
           }}
         >
           Q

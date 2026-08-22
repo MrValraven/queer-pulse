@@ -1,6 +1,11 @@
 import { useEffect, useRef } from "react";
 import QRCode from "qrcode";
 import { Button, Modal } from "../../shared/components/ui";
+import {
+  MARK_INK_RATIO,
+  MARK_OPTICAL_NUDGE_RATIO,
+  markModulesFor,
+} from "../../shared/components/ui/qrCentreMark";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { toAbsoluteUrl } from "../../shared/seo";
@@ -17,18 +22,16 @@ const ERROR_CORRECTION_LEVEL = "Q";
 /** Quiet-zone modules the encoder draws around the symbol. */
 const QUIET_ZONE_MODULES = 1;
 
-/** The mark's width, as a fraction of the symbol's — about 4% of its area. */
-const MARK_WIDTH_RATIO = 0.2;
-
-/** The glyph's height inside its plate, leaving the plate a visible edge. */
-const MARK_GLYPH_RATIO = 0.74;
-
 const CANVAS_SIZE = 232;
 
 /** QR contrast needs a real light/dark pair; tokens don't apply inside the
  *  generated bitmap itself. --plum on white. */
 const DARK_FILL = "#2D1B3D";
 const LIGHT_FILL = "#FFFFFF";
+
+/** Arbitrary; text metrics scale linearly, so this only needs to be large
+ *  enough that rounding in the returned metrics does not matter. */
+const PROBE_FONT_SIZE = 100;
 
 const FALLBACK_SERIF = '"Fraunces", Georgia, serif';
 
@@ -128,8 +131,8 @@ export function ProfileQrModal({
       <div className={styles.qrbox}>
         <canvas
           ref={canvasRef}
-          width={232}
-          height={232}
+          width={CANVAS_SIZE}
+          height={CANVAS_SIZE}
           className={styles.canvas}
         />
         <div className={styles.who}>
@@ -165,23 +168,72 @@ function drawCentreMark(canvas: HTMLCanvasElement, url: string) {
   }
 
   // Read the module pitch off the canvas the encoder actually sized, rather
-  // than assuming CANVAS_SIZE: `toCanvas` rounds its width up to a whole
-  // number of modules.
+  // than assuming CANVAS_SIZE: `toCanvas` rounds its width to a whole number
+  // of pixels, and the pitch is rarely a whole number of them (232px over 35
+  // modules is 6.63 each).
   const modulePixels = canvas.width / (moduleCount + QUIET_ZONE_MODULES * 2);
-  const markSize = Math.round(moduleCount * MARK_WIDTH_RATIO * modulePixels);
-  const centre = canvas.width / 2;
-  const origin = Math.round(centre - markSize / 2);
+  const markModules = markModulesFor(moduleCount);
+
+  // Both edges are CEILED, which is the exact inverse of how the encoder
+  // assigns a pixel to a module: it paints pixel p in module
+  // `floor((p - margin) / pitch)`, so a module's last pixel is the one below
+  // the next boundary's ceiling. Rounding instead leaves a one-pixel sliver of
+  // the border module alive on whichever side happened to round down — a
+  // lopsided edge that reads as the mark being off centre.
+  const edge = (module: number) =>
+    Math.ceil((QUIET_ZONE_MODULES + module) * modulePixels);
+  const near = edge((moduleCount - markModules) / 2);
+  const far = edge((moduleCount + markModules) / 2);
+  const centre = (near + far) / 2;
 
   context.fillStyle = LIGHT_FILL;
-  context.fillRect(origin, origin, markSize, markSize);
+  context.fillRect(near, near, far - near, far - near);
 
   const serif =
     getComputedStyle(document.documentElement)
       .getPropertyValue("--serif")
       .trim() || FALLBACK_SERIF;
+  context.textAlign = "left";
+  context.textBaseline = "alphabetic";
+
+  // Size by MEASURED ink rather than by font size. A font size buys a
+  // different amount of visible letter in every face, so asking for the cap
+  // height the mark wants, and solving for the size that delivers it, is what
+  // keeps the Q filling its plate whether Fraunces loaded or Georgia stood in.
+  // Text metrics scale linearly with the size, so one probe gives the ratios.
+  const targetInk = (far - near) * MARK_INK_RATIO;
+  context.font = `600 ${PROBE_FONT_SIZE}px ${serif}`;
+  const probeBowl = context.measureText("O");
+  const probeGlyph = context.measureText("Q");
+  const probeInkWidth =
+    probeGlyph.actualBoundingBoxRight + probeGlyph.actualBoundingBoxLeft;
+  const fontSize = Math.min(
+    (targetInk * PROBE_FONT_SIZE) / probeBowl.actualBoundingBoxAscent,
+    // A Q is a touch wider than it is tall in most serifs. Held to the same
+    // target so a wide face spills into the margin rather than over the code.
+    (targetInk * PROBE_FONT_SIZE) / probeInkWidth,
+  );
+  context.font = `600 ${fontSize}px ${serif}`;
+
+  // Centre the INK, not the type. `textAlign: "center"` centres the advance
+  // width, which includes side bearings that need not be equal.
+  const opticalNudge = (far - near) * MARK_OPTICAL_NUDGE_RATIO;
+  const glyph = context.measureText("Q");
+  const x =
+    centre -
+    (glyph.actualBoundingBoxRight - glyph.actualBoundingBoxLeft) / 2 -
+    opticalNudge;
+
+  // Vertically the reference is an O rather than the Q itself: the Q's tail
+  // drops below the baseline, and centring ink that includes it would push the
+  // bowl up. Type sets a Q's bowl on the same line as an O and lets the tail
+  // overhang, so that is what gets centred here.
+  const bowl = context.measureText("O");
+  const y =
+    centre +
+    (bowl.actualBoundingBoxAscent - bowl.actualBoundingBoxDescent) / 2 -
+    opticalNudge;
+
   context.fillStyle = DARK_FILL;
-  context.font = `600 ${markSize * MARK_GLYPH_RATIO}px ${serif}`;
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  context.fillText("Q", centre, centre);
+  context.fillText("Q", x, y);
 }
