@@ -452,13 +452,15 @@
   opacity: 0.72;
 }
 
-/* Label over value, in as many columns as the detail column can hold: two on
-   a comfortable card, one on the narrowest. `auto-fit` decides that against
-   the real width, so there is no breakpoint to keep in sync with the QR. */
+/* One field per row, label over value, down a single column. The detail
+   column beside the code is narrow, so packing several fields across it put
+   three labels and their values into the width of one and truncated the
+   longest of them. A card is read as a list of facts, one line at a time,
+   and the back has the vertical room to give each of them its own row. */
 .backMeta {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
-  gap: clamp(2px, 0.9cqh, 6px) var(--gap-xs);
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(4px, 1.5cqh, 9px);
   margin: 0;
   min-width: 0;
 }
@@ -473,15 +475,18 @@
   letter-spacing: 0.06em;
   opacity: 0.62;
   white-space: nowrap;
+  margin-bottom: 1px;
 }
 
+/* Each value now has the whole detail column to itself, so a long one wraps
+   onto a second line rather than ellipsing. "Valid until" is the field this
+   was losing: a truncated expiry is worse than no expiry printed at all. */
 .backMeta dd {
   font-size: clamp(0.62rem, 2.4cqw, 0.78rem);
   margin: 0;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
   font-variant-numeric: tabular-nums;
 }
 
@@ -504,5 +509,11 @@
   }
   .backDetail {
     gap: 4px;
+  }
+  /* Four rows of two lines each is the tallest this face gets; on the
+     smallest card in the grid it has to give the rows back some of that
+     room, since the code keeps its full height. */
+  .backMeta {
+    gap: 3px;
   }
 }

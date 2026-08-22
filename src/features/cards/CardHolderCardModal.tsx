@@ -57,6 +57,7 @@ export function CardHolderCardModal({
   return (
     <Modal
       wide
+      className={styles.dialog}
       title={holder.holderName}
       sub={holder.serial}
       onClose={onClose}

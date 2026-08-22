@@ -85,7 +85,13 @@
    Matches FormField's own 16px bottom margin so the column reads as one
    rhythm. */
 .group {
-  margin: 0 0 16px;
+  /* Each of these is a labelled block of its own, so it needs more air above
+     it than the helper line of the field before it. */
+  margin: 28px 0 16px;
+}
+
+.group:first-child {
+  margin-top: 0;
 }
 
 .groupLabel {

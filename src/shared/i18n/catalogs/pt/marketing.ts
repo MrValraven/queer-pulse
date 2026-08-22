@@ -30,8 +30,7 @@ export const marketing: Catalog = {
     "A QueerPulse começou como uma frustração que tínhamos de resolver. Todas as plataformas onde tentámos construir comunidade estavam desenhadas para prender a nossa atenção e otimizadas para tempo de ecrã, indiferentes a se nos encontrávamos mesmo.",
   "about.why.p2":
     "Por isso, um pequeno grupo (profissionais, organizadores, artistas) decidiu construir a alternativa: uma rede pensada para a confiança, onde o objetivo é a ligação.",
-  "about.why.p3":
-    "Cresce mais devagar assim. Isso é o desenho.",
+  "about.why.p3": "Cresce mais devagar assim. Isso é o desenho.",
   "about.difference.eyebrow": "A diferença",
   "about.difference.title": "O que <em>não estamos a construir.</em>",
   "about.contrast.them.label": "Em todo o lado",
@@ -481,7 +480,8 @@ export const marketing: Catalog = {
   "guidelines.clause02.li3":
     "Dá espaço para alguém formular algo de forma desajeitada.",
   "guidelines.clause02.li4": "Presume que podes estar sem contexto.",
-  "guidelines.clause02.li5": "Discorda do argumento, e trata a pessoa com respeito.",
+  "guidelines.clause02.li5":
+    "Discorda do argumento, e trata a pessoa com respeito.",
   "guidelines.clause02.p2":
     "A boa-fé não é infinita. Comportamento mau repetido deixa de merecer o benefício da dúvida.",
   "guidelines.clause03.titlePre": "Ocupa o ",
@@ -714,8 +714,7 @@ export const marketing: Catalog = {
     "Todas as menções e reportagens anteriores, num só lugar.",
   "pressKit.modal.dialogAriaLabel": "Descarregar material",
   "pressKit.modal.closeAriaLabel": "Fechar",
-  "pressKit.modal.success.title":
-    "Descarregado. <em>Está tudo pronto.</em>",
+  "pressKit.modal.success.title": "Descarregado. <em>Está tudo pronto.</em>",
   "pressKit.modal.success.body":
     "O ficheiro <b>{filename}</b> já deve estar na tua pasta de transferências.",
   "pressKit.modal.closeCta": "Fechar",
@@ -740,8 +739,7 @@ export const marketing: Catalog = {
   "pressKit.readme.responseTime": "Respondemos em 48 horas.",
   "pressKit.readme.prototypeNote":
     "Este é um descarregável de protótipo. O ficheiro de produção corresponderá exatamente à página web.",
-  "pressKit.readme.boilerHeading":
-    "QUEERPULSE: TEXTO INSTITUCIONAL APROVADO",
+  "pressKit.readme.boilerHeading": "QUEERPULSE: TEXTO INSTITUCIONAL APROVADO",
   "pressKit.readme.boilerCleared":
     "Ambos os tamanhos estão autorizados para citação direta, sem necessidade de aprovação adicional.",
   "pressKit.preview.readme.title": "Leia-me + licença",
@@ -1774,6 +1772,11 @@ export const marketing: Catalog = {
   "changelog.tag.vouch": "Apadrinhar alguém",
   "changelog.tag.culture": "Visitar a Cultura",
   "changelog.tag.myCards": "Ver os teus cartões",
+
+  "changelog.entries.profile-back-to-origin.title":
+    "A saída de um perfil leva-te de volta a onde estavas",
+  "changelog.entries.profile-back-to-origin.body":
+    'Os perfis abrem-se a partir de todo o lado: da lista de pessoas de uma comunidade, de um tópico do fórum, de um convívio, de uma pesquisa, do cabeçalho de uma conversa. O link por cima de cada perfil dizia sempre "Voltar à sala" e deixava-te sempre no diretório de pessoas, que para a maioria era uma página onde nunca tinha estado, e ainda te fazia perder o sítio onde ias na lista. Agora volta à página de onde vieste mesmo, diz qual é, e deixa-te no ponto exato da lista de onde saíste. Quem chega diretamente de um link partilhado, de um recarregamento ou de uma notificação continua a receber o diretório, porque nesse caso não há mais nada para onde voltar.',
 
   "changelog.entries.card-holder-open-card.title":
     "Abrir o cartão de uma pessoa a partir da lista",

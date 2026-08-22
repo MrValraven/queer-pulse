@@ -1726,6 +1726,11 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visit Culture",
   "changelog.tag.myCards": "See your cards",
 
+  "changelog.entries.profile-back-to-origin.title":
+    "The way out of a profile goes back where you were",
+  "changelog.entries.profile-back-to-origin.body":
+    'Profiles are opened from everywhere: a community\'s member list, a forum thread, a gathering, a search, the header of a chat. The link above every profile always said "Back to the room" and always dropped you in the members directory, which for most people was a page they had never been on, and it cost them the scroll position they left behind. It now returns to the page you actually came from, says where that is, and lands you at the exact spot in the list you tapped from. Arriving straight from a shared link, a refresh or a notification still offers the directory, because in that case there is nowhere else to go back to.',
+
   "changelog.entries.card-holder-open-card.title":
     "Open a member's card from the holder list",
   "changelog.entries.card-holder-open-card.body":
@@ -4352,8 +4357,7 @@ export const marketing: Catalog = {
   "volunteerDetail.backCta": "All volunteer opportunities",
   "volunteerDetail.meta.title":
     "{role} with {org}: volunteer through QueerPulse",
-  "volunteerDetail.meta.loadingTitle":
-    "Loading a volunteer role · QueerPulse",
+  "volunteerDetail.meta.loadingTitle": "Loading a volunteer role · QueerPulse",
   "volunteerDetail.error.alreadySignedUp":
     "You've already signed up for this role.",
   "volunteerDetail.error.full":

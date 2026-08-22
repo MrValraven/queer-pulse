@@ -6,11 +6,11 @@
 .layout {
   display: grid;
   gap: var(--gap-lg);
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   align-items: start;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 719.98px) {
   .layout {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -98,4 +98,17 @@
   display: flex;
   gap: var(--gap-xs);
   margin-left: auto;
+}
+
+/* A membership card is an object you look at, and at the shared `wide` width
+   (680px) the card column resolves to about 360px: legible, but smaller than
+   the thing in a member's hand. This dialog opts out and takes most of the
+   viewport instead, capped so the card never outgrows a large desktop.
+   Doubled class for specificity: `.modalWide` is one class too, and the two
+   stylesheets' injection order is not something to bet a layout on. */
+@media (min-width: 720px) {
+  .dialog.dialog {
+    max-width: min(80vw, 1080px);
+    max-height: min(90svh, 840px);
+  }
 }

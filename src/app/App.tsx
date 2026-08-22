@@ -10,6 +10,7 @@ import { AppFooter } from "../shared/components/layout/AppFooter";
 import { RouteTransition } from "../shared/components/layout/RouteTransition";
 import { SwipeBackShell } from "../shared/components/layout/SwipeBackShell";
 import { NavDirectionProvider } from "./providers/NavDirectionProvider";
+import { NavHistoryProvider } from "./providers/NavHistoryProvider";
 import { AccessibilityProvider } from "./providers/AccessibilityProvider";
 import { DisplayModeProvider } from "./providers/DisplayModeProvider";
 import { NavModeProvider } from "./providers/NavModeProvider";
@@ -192,33 +193,39 @@ export function App() {
                   provider is in DataProviders. Rendered outside it, AppChrome
                   throws "must be used within DeletedConversationsProvider". */}
               <AppChrome />
-              {/* Nav-direction classification (push/pop/tab-switch/replace) for
-                  RouteTransition below; needs react-router context (inside
-                  BrowserRouter) but not member/session state, so it only needs
-                  to wrap the routed content, not AppChrome. */}
-              <NavDirectionProvider>
-                {/* Offline fallback: in live mode a dead network swaps the routed
+              {/* Tracks a short tail of visited entries so a page can offer a
+                  way back to where the visitor actually came from (the
+                  member-profile back link). Router context only, like
+                  NavDirectionProvider below, so it wraps the routed content. */}
+              <NavHistoryProvider>
+                {/* Nav-direction classification (push/pop/tab-switch/replace)
+                    for RouteTransition below; needs react-router context
+                    (inside BrowserRouter) but not member/session state, so it
+                    only needs to wrap the routed content, not AppChrome. */}
+                <NavDirectionProvider>
+                  {/* Offline fallback: in live mode a dead network swaps the routed
                     UI for the branded OfflinePage (paired with the SW navigation
                     catch handler). No-op in demo mode, which needs no network. */}
-                <OfflineGate>
-                  {/* Edge-swipe-to-go-back (mobile only; inert/unwrapped on
+                  <OfflineGate>
+                    {/* Edge-swipe-to-go-back (mobile only; inert/unwrapped on
                       desktop) wraps the transition so a committed swipe's
                       navigate(-1) plays the same pop animation as the Back
                       button. Inside OfflineGate so the offline fallback isn't
                       draggable; around RouteTransition so it tracks the whole
                       content plane, not just its animated inner div. */}
-                  <SwipeBackShell>
-                    {/* Animates only the routed content (transform/opacity) on
+                    <SwipeBackShell>
+                      {/* Animates only the routed content (transform/opacity) on
                         navigation; chrome (AppChrome, above) stays fixed. */}
-                    <RouteTransition>
-                      <AppRoutes />
-                    </RouteTransition>
-                  </SwipeBackShell>
-                </OfflineGate>
-                <Suspense fallback={null}>
-                  <CommandPalette />
-                </Suspense>
-              </NavDirectionProvider>
+                      <RouteTransition>
+                        <AppRoutes />
+                      </RouteTransition>
+                    </SwipeBackShell>
+                  </OfflineGate>
+                  <Suspense fallback={null}>
+                    <CommandPalette />
+                  </Suspense>
+                </NavDirectionProvider>
+              </NavHistoryProvider>
               {/* The Footer is in-flow, so — unlike the fixed Navbar/BottomTabBar
                   in AppChrome above — it is rendered AFTER the routed content so
                   it lands at the bottom of the page, not the top. Kept inside

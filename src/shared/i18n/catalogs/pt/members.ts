@@ -108,6 +108,25 @@ export const members: Catalog = {
     "Algo correu mal ao obter o teu perfil. Verifica a tua ligação e tenta novamente.",
   "profile.loadError.retryAction": "Tentar novamente",
   "profile.backToRoom": "Voltar à sala",
+  // Rótulos do link de regresso para as outras páginas de onde um perfil pode
+  // ser aberto (ver profileBackTarget.ts); "generic" cobre o que não tem mapa.
+  "profile.backTo.generic": "Voltar",
+  "profile.backTo.home": "Voltar à página inicial",
+  "profile.backTo.communities": "Voltar às comunidades",
+  "profile.backTo.community": "Voltar à comunidade",
+  "profile.backTo.forum": "Voltar ao fórum",
+  "profile.backTo.thread": "Voltar à conversa",
+  "profile.backTo.gatherings": "Voltar aos convívios",
+  "profile.backTo.gathering": "Voltar ao convívio",
+  "profile.backTo.events": "Voltar aos eventos",
+  "profile.backTo.event": "Voltar ao evento",
+  "profile.backTo.feed": "Voltar ao feed",
+  "profile.backTo.messages": "Voltar às mensagens",
+  "profile.backTo.search": "Voltar à pesquisa",
+  "profile.backTo.directory": "Voltar ao diretório",
+  "profile.backTo.connections": "Voltar às tuas ligações",
+  "profile.backTo.calendar": "Voltar ao calendário",
+  "profile.backTo.changemakers": "Voltar aos Changemakers",
   "profile.previewBanner":
     "Estás a pré-visualizar o teu perfil como <strong>visitante</strong>.",
   "profile.exitPreview": "Sair da pré-visualização",
@@ -115,8 +134,7 @@ export const members: Catalog = {
   // ── Cabeçalho do perfil (ProfileSections) ──────────────────────────────────
   "profile.hero.verifiedBadge": "Pessoa verificada",
   "profile.hero.viewPhotoAria": "Ver foto de {name}",
-  "profile.hero.curatorLink":
-    "Curadoria do Cinema: ver perfil de programação",
+  "profile.hero.curatorLink": "Curadoria do Cinema: ver perfil de programação",
   "profile.hero.memberSince": "Nesta comunidade desde {since}",
   "profile.hero.location": "{hood}, Lisboa",
   "profile.hero.editCta": "Editar perfil",
@@ -149,16 +167,18 @@ export const members: Catalog = {
 
   // ── Modal "Dizer olá" (ProfileHelloModal) ───────────────────────────────────
   "profile.hello.title": "Dizer olá a {first}",
-  "profile.hello.intro": "Escolhe o que te trouxe até aqui, ou começa já a escrever.",
+  "profile.hello.intro":
+    "Escolhe o que te trouxe até aqui, ou começa já a escrever.",
   "profile.hello.reasonsLabel": "O que te trouxe até aqui",
   "profile.hello.draftTemplate":
-    "Olá {first}, vi isto no teu perfil, \"{reason}\", e quis dizer olá. ",
+    'Olá {first}, vi isto no teu perfil, "{reason}", e quis dizer olá. ',
   "profile.hello.draftLabel": "A tua mensagem",
   "profile.hello.draftPlaceholder": "Diz o que tens em mente.",
   "profile.hello.cancel": "Cancelar",
   "profile.hello.send": "Enviar",
   "profile.hello.sentToast": "Enviado. {first} costuma responder em breve.",
-  "profile.hello.errorToast": "Não foi possível abrir a mensagem. Tenta novamente.",
+  "profile.hello.errorToast":
+    "Não foi possível abrir a mensagem. Tenta novamente.",
 
   // ── Barra lateral do perfil (ProfileRail, Task 3) ───────────────────────────
   "profile.railLabel": "Resumo do perfil de {name}",
@@ -185,7 +205,8 @@ export const members: Catalog = {
     "Um guia rápido sobre o que vais ver no perfil de alguém.",
   "profile.trust.verifiedDescription":
     "A identidade desta pessoa foi confirmada pela QueerPulse.",
-  "profile.trust.staffDescription": "Esta pessoa faz parte da equipa QueerPulse.",
+  "profile.trust.staffDescription":
+    "Esta pessoa faz parte da equipa QueerPulse.",
   "profile.trust.vouchesTerm": "Votos de confiança",
   "profile.trust.vouchesDescription":
     "Outros membros que deram, pessoalmente, um voto de confiança à entrada desta pessoa na comunidade.",
@@ -354,8 +375,7 @@ export const members: Catalog = {
   // ── À procura de (LookingForEditor) ─────────────────────────────────────────
   "profileEdit.lookingFor.heading": "O que procuras aqui?",
   "profileEdit.lookingFor.helper": "Seleciona as que quiseres.",
-  "profileEdit.lookingFor.toggleLabel":
-    "Mostrar no meu perfil o que procuro",
+  "profileEdit.lookingFor.toggleLabel": "Mostrar no meu perfil o que procuro",
 
   // ── Barra de edição (ProfileEditBar) ────────────────────────────────────────
   "profileEdit.bar.unsaved":
@@ -422,8 +442,10 @@ export const members: Catalog = {
   "hero.vouch.youOnly": "tu",
   "hero.vouch.anonymous": "Anónimo",
   "hero.vouch.by": "Quem te deu um voto de confiança: <b>{names}</b>.",
-  "hero.vouch.onlyNumberMatters": "Um rosto conhecido deu-lhes um voto de confiança.",
-  "hero.vouch.onlyNumberMattersSelf": "Um rosto conhecido deu-te um voto de confiança.",
+  "hero.vouch.onlyNumberMatters":
+    "Um rosto conhecido deu-lhes um voto de confiança.",
+  "hero.vouch.onlyNumberMattersSelf":
+    "Um rosto conhecido deu-te um voto de confiança.",
   "hero.vouch.emptySelf":
     "Ainda sem votos de confiança. Vão aparecer aqui à medida que quem te conhece juntar o nome. É o único número que importa.",
   "hero.vouch.emptyOther":
@@ -480,7 +502,8 @@ export const members: Catalog = {
   "publicProfile.bottomCta.title": "Queres <em>ver tudo?</em>",
   "publicProfile.bottomCta.body":
     "A QueerPulse funciona por convite. {firstName} pode dar-te um voto de confiança se já se conheceram pessoalmente. Ou pede um convite diretamente a nós.",
-  "publicProfile.bottomCta.vouchCta": "Pedir a {firstName} um voto de confiança",
+  "publicProfile.bottomCta.vouchCta":
+    "Pedir a {firstName} um voto de confiança",
 
   // ── Secções de perfil público (PublicProfileSections) ──────────────────────
   "publicProfile.preview.ownerLabel":
@@ -495,7 +518,8 @@ export const members: Catalog = {
   "publicProfile.head.eyebrow": "Perfil público · @{slug}",
   "publicProfile.head.location": "<b>{hood}</b>, Lisboa",
   "publicProfile.head.memberSince": "Nesta comunidade desde <b>{since}</b>",
-  "publicProfile.head.vouchedFor": "<b>Com voto de confiança</b> de {count} pessoas",
+  "publicProfile.head.vouchedFor":
+    "<b>Com voto de confiança</b> de {count} pessoas",
   "publicProfile.head.requestInviteCta": "Pedir um convite para ligar",
   "publicProfile.head.ctaNote":
     "O perfil completo de {firstName}, publicações e acesso a mensagens diretas abrem assim que te tornares parte da comunidade.",
@@ -545,8 +569,7 @@ export const members: Catalog = {
     "Os perfis públicos abrem depois dos teus primeiros 90 dias aqui.",
   "publicProfile.eligibility.tenure.remaining_one": "falta {count} dia",
   "publicProfile.eligibility.tenure.remaining_other": "faltam {count} dias",
-  "publicProfile.eligibility.family.contribution.label":
-    "Contribuição pública",
+  "publicProfile.eligibility.family.contribution.label": "Contribuição pública",
   "publicProfile.eligibility.family.contribution.hint":
     "Publicar textos, organizar eventos abertos e oficinas",
   "publicProfile.eligibility.family.trust.label": "Confiança da comunidade",
@@ -583,7 +606,8 @@ export const members: Catalog = {
   // ── Pré-visualização do perfil público em modo real: ainda nada publicado ───
   //    (`GET /public/profiles/:slug` responde 404 até a pessoa ligar o perfil
   //    público, por isso este é o estado normal e nunca um erro).
-  "publicProfile.previewOff.title": "O teu perfil público ainda não está ligado",
+  "publicProfile.previewOff.title":
+    "O teu perfil público ainda não está ligado",
   "publicProfile.previewOff.description":
     "Se o ligares, quem está fora da QueerPulse vê o teu nome, pronomes, frase de apresentação, biografia, os links e trabalhos que escolheste mostrar e a tua atividade pública recente. Mais nada sai da área de pessoas.",
   "publicProfile.previewOff.cta": "Abrir definições de perfil",
@@ -830,14 +854,16 @@ export const members: Catalog = {
   "commandPalette.ariaLabel": "Pesquisar na QueerPulse",
   "commandPalette.escKey": "esc",
   "commandPalette.placeholder": "Pesquisar pessoas, convívios, comunidades…",
-  "commandPalette.signInBody": "Inicia sessão para pesquisar em toda a QueerPulse.",
+  "commandPalette.signInBody":
+    "Inicia sessão para pesquisar em toda a QueerPulse.",
   "commandPalette.noMatches": "Sem resultados. Tenta outra palavra.",
   "commandPalette.seeAllResults":
     "Ver todos os resultados para “<b>{query}</b>”",
   "commandPalette.openFullSearch": "Abrir pesquisa completa",
 
   // ── Página de aval para convite (VouchPage) ─────────────────────────────────
-  "vouch.page.toast": "O teu voto de confiança para {name} já está a caminho do conselho.",
+  "vouch.page.toast":
+    "O teu voto de confiança para {name} já está a caminho do conselho.",
   "vouch.page.success.title": "Isso é <em>um verdadeiro acolhimento.</em>",
   "vouch.page.success.body":
     "O teu voto de confiança para {name} já chegou ao conselho da comunidade. Vão saber que já havia alguém a torcer por esta pessoa antes mesmo de ela entrar.",
@@ -850,7 +876,8 @@ export const members: Catalog = {
     "Como conheces {name}, e o que deve saber o conselho?",
   "vouch.page.submitCta": "Enviar o meu voto de confiança",
   "vouch.page.skipCta": "Agora não",
-  "vouch.page.emptyLive.title": "Os convites para dar um voto de confiança chegam por link",
+  "vouch.page.emptyLive.title":
+    "Os convites para dar um voto de confiança chegam por link",
   "vouch.page.emptyLive.description":
     "Quando alguém te pedir um voto de confiança, recebes um link pessoal que abre o pedido aqui mesmo. De momento não há ninguém à espera do teu voto de confiança.",
   "vouch.page.emptyLive.cta": "Ver membros",
@@ -885,7 +912,8 @@ export const members: Catalog = {
   // ── Modal de dar um voto de confiança (VouchMemberModal, VouchMemberModalParts) ──
   "vouch.modal.ariaLabel": "Dar voto de confiança a {first}",
   "vouch.modal.close": "Fechar",
-  "vouch.modal.success.title": "Aí está <em>{first}</em>, com voto de confiança.",
+  "vouch.modal.success.title":
+    "Aí está <em>{first}</em>, com voto de confiança.",
   "vouch.modal.success.body":
     "A tua cara acabou de entrar no círculo de votos de confiança de <b>{first}</b>. É assim que a confiança circula aqui. Pessoa a pessoa, nome a nome.",
   "vouch.modal.success.doneCta": "Concluído",
@@ -907,7 +935,8 @@ export const members: Catalog = {
   "vouch.modal.form.sending": "A enviar o teu voto de confiança…",
   "vouch.modal.form.anonymousLabel":
     "Dar voto de confiança anonimamente. O teu nome fica oculto de outros membros",
-  "vouch.modal.error": "Não conseguimos guardar o teu voto de confiança. Tenta novamente.",
+  "vouch.modal.error":
+    "Não conseguimos guardar o teu voto de confiança. Tenta novamente.",
 
   // ── Vocabulário de separadores/ordenação/estado dos rascunhos (drafts.data.tsx) ──
   "drafts.tabs.all": "Tudo",
@@ -1136,7 +1165,8 @@ export const members: Catalog = {
   "places.quickEditCta": "Edição rápida",
   "places.editCta": "Editor completo",
   "places.deleteCta": "Eliminar",
-  "places.deleteConfirm": "Eliminar <b>{name}</b> definitivamente? Não pode ser anulado.",
+  "places.deleteConfirm":
+    "Eliminar <b>{name}</b> definitivamente? Não pode ser anulado.",
   "places.deleteCancel": "Manter",
   "places.deleteYes": "Eliminar anúncio",
   "places.deleted": "Anúncio eliminado.",
@@ -1153,14 +1183,15 @@ export const members: Catalog = {
   "places.quickEdit.blurbHelper": "Mostrada por baixo do nome do teu anúncio.",
   "places.quickEdit.hoursNoteLabel": "Nota sobre o horário",
   "places.quickEdit.hoursNoteHelper":
-    "Uma linha curta mostrada por baixo do teu horário, por exemplo \"Fechado em feriados.\"",
+    'Uma linha curta mostrada por baixo do teu horário, por exemplo "Fechado em feriados."',
   "places.quickEdit.websiteLabel": "Site",
   "places.quickEdit.phoneLabel": "Telefone",
   "places.quickEdit.cancel": "Cancelar",
   "places.quickEdit.save": "Guardar alterações",
   "places.quickEdit.saving": "A guardar…",
   "places.quickEdit.savedToast": "Anúncio atualizado.",
-  "places.quickEdit.errorToast": "Não foi possível guardar as alterações. Tenta novamente.",
+  "places.quickEdit.errorToast":
+    "Não foi possível guardar as alterações. Tenta novamente.",
   "places.quickEdit.moreLink":
     "Precisas de alterar categorias, morada ou fotos? <a>Abrir o editor completo.</a>",
 
@@ -1189,7 +1220,8 @@ export const members: Catalog = {
 
   // ── Detalhe de XP ("o que rendeu XP") ───────────────────────────────────────
   "badges.xpBreakdown.heading": "O que <em>rendeu</em> XP",
-  "badges.xpBreakdown.sub": "Todas as fontes de XP, ganhas ou ainda por ganhar.",
+  "badges.xpBreakdown.sub":
+    "Todas as fontes de XP, ganhas ou ainda por ganhar.",
   "badges.xpBreakdown.progress": "{units} de {cap}",
   "badges.xpBreakdown.amount": "+{xp} XP",
   "badges.xpBreakdown.perUnitAmount": "+{xp} XP cada",
@@ -1208,15 +1240,18 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.posts": "Publicações na comunidade",
   "badges.xpBreakdown.sources.postsDesc": "Publicares numa comunidade.",
   "badges.xpBreakdown.sources.endorsements": "Endossos recebidos",
-  "badges.xpBreakdown.sources.endorsementsDesc": "Seres endossade por outro membro.",
+  "badges.xpBreakdown.sources.endorsementsDesc":
+    "Seres endossade por outro membro.",
   "badges.xpBreakdown.sources.workshops": "Workshops que deste",
   "badges.xpBreakdown.sources.workshopsDesc": "Dares um workshop.",
   "badges.xpBreakdown.sources.tenure": "Dias na QueerPulse",
-  "badges.xpBreakdown.sources.tenureDesc": "Fazeres parte da QueerPulse, dia a dia.",
+  "badges.xpBreakdown.sources.tenureDesc":
+    "Fazeres parte da QueerPulse, dia a dia.",
   "badges.xpBreakdown.sources.verified": "Verificado",
   "badges.xpBreakdown.sources.verifiedDesc": "Verificares a tua conta.",
   "badges.xpBreakdown.sources.gettingStarted": "Passos dos primeiros dias",
-  "badges.xpBreakdown.sources.gettingStartedDesc": "Concluíres um passo dos primeiros dias.",
+  "badges.xpBreakdown.sources.gettingStartedDesc":
+    "Concluíres um passo dos primeiros dias.",
   "badges.xpBreakdown.sources.badges": "Bónus de emblemas",
   "badges.xpBreakdown.sources.badgesDesc": "Os emblemas que já ganhaste.",
   "badges.xpBreakdown.sources.other": "Outro",
@@ -1382,7 +1417,8 @@ export const members: Catalog = {
   "badges.earn.body":
     "São +{xp} XP, e são teus quer decidas mostrá-los ou não.",
   "badges.earn.putInCase": "Guardar no espólio",
-  "badges.earn.footnote": "Nível {level} · {name} · privado até dizeres o contrário",
+  "badges.earn.footnote":
+    "Nível {level} · {name} · privado até dizeres o contrário",
   "badges.caseCard.title": "O teu espólio",
   "badges.caseCard.subtitle": "QueerPulse · Lisboa",
   "badges.caseCard.emptyDesc": "Um espólio vazio. Volta daqui a um mês.",
@@ -1491,8 +1527,7 @@ export const members: Catalog = {
   "profile.whoSeesWhat.hiddenFrom.remove": "Remover",
   "profile.whoSeesWhat.hiddenFrom.removeAria": "Remover {name}",
   "profile.whoSeesWhat.hiddenFrom.pickerTitle": "Esconder o teu perfil de",
-  "profile.whoSeesWhat.hiddenFrom.pickerSearchPlaceholder":
-    "Procurar por nome",
+  "profile.whoSeesWhat.hiddenFrom.pickerSearchPlaceholder": "Procurar por nome",
   "profile.whoSeesWhat.hiddenFrom.pickerNoResults":
     "Ninguém com esse nome. Experimenta escrever de outra forma.",
   "profile.whoSeesWhat.hiddenFrom.pickerLoadMore": "Mostrar mais pessoas",
@@ -1590,8 +1625,7 @@ export const members: Catalog = {
     "Algo correu mal. Tenta novamente.",
 
   "profile.accountData.dsar.article.access": "Acesso (Art. 15.º)",
-  "profile.accountData.dsar.article.rectification":
-    "Retificação (Art. 16.º)",
+  "profile.accountData.dsar.article.rectification": "Retificação (Art. 16.º)",
   "profile.accountData.dsar.article.erasure": "Apagamento (Art. 17.º)",
   "profile.accountData.dsar.article.objection": "Oposição (Art. 21.º)",
   "profile.accountData.dsar.title": "Pedir outra coisa",

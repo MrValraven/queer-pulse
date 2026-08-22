@@ -26,8 +26,7 @@ export const members: Catalog = {
   // ── Upload pipeline error messages (api/uploadProcessing.ts, api/useUploadImage.ts) ──
   "upload.error.unsupportedType":
     "That image type isn't supported. Use a JPEG, PNG, WebP or GIF.",
-  "upload.error.tooLarge":
-    "That image is too large. Keep it under {maxLabel}.",
+  "upload.error.tooLarge": "That image is too large. Keep it under {maxLabel}.",
   "upload.error.decodeFailed":
     "We couldn't read that image. Try a different file.",
   "upload.error.tooSmall":
@@ -52,8 +51,7 @@ export const members: Catalog = {
   "avatar.picker.yourPhotos": "Your photos",
   "avatar.picker.empty":
     "No uploads yet. Upload one from your device or use your Google photo.",
-  "avatar.picker.loadError":
-    "We couldn't load your photos. Please try again.",
+  "avatar.picker.loadError": "We couldn't load your photos. Please try again.",
   "avatar.picker.inUse": "In use",
   "avatar.picker.useThis": "Use this photo",
   "avatar.picker.delete": "Delete photo",
@@ -106,6 +104,25 @@ export const members: Catalog = {
     "Something went wrong fetching your profile. Check your connection and try again.",
   "profile.loadError.retryAction": "Try again",
   "profile.backToRoom": "Back to the room",
+  // Back-link labels for every other page a profile can be opened from (see
+  // profileBackTarget.ts); "generic" covers anything unmapped.
+  "profile.backTo.generic": "Back",
+  "profile.backTo.home": "Back to the homepage",
+  "profile.backTo.communities": "Back to communities",
+  "profile.backTo.community": "Back to the community",
+  "profile.backTo.forum": "Back to the forum",
+  "profile.backTo.thread": "Back to the conversation",
+  "profile.backTo.gatherings": "Back to gatherings",
+  "profile.backTo.gathering": "Back to the gathering",
+  "profile.backTo.events": "Back to events",
+  "profile.backTo.event": "Back to the event",
+  "profile.backTo.feed": "Back to the feed",
+  "profile.backTo.messages": "Back to messages",
+  "profile.backTo.search": "Back to search",
+  "profile.backTo.directory": "Back to the directory",
+  "profile.backTo.connections": "Back to your connections",
+  "profile.backTo.calendar": "Back to the calendar",
+  "profile.backTo.changemakers": "Back to changemakers",
   "profile.previewBanner":
     "You're previewing your profile as a <strong>visitor</strong>.",
   "profile.exitPreview": "Exit preview",
@@ -149,7 +166,7 @@ export const members: Catalog = {
   "profile.hello.intro": "Pick what drew you in, or just start typing.",
   "profile.hello.reasonsLabel": "What drew you in",
   "profile.hello.draftTemplate":
-    "Hi {first}, I saw you're open to \"{reason}\" and wanted to say hello. ",
+    'Hi {first}, I saw you\'re open to "{reason}" and wanted to say hello. ',
   "profile.hello.draftLabel": "Your message",
   "profile.hello.draftPlaceholder": "Say what's on your mind.",
   "profile.hello.cancel": "Cancel",
@@ -378,8 +395,7 @@ export const members: Catalog = {
   "profileEdit.work.add": "Add work",
 
   // ── Board editor (BoardEditor) ──────────────────────────────────────────────
-  "profileEdit.board.subtitle":
-    "What you're asking for and offering right now",
+  "profileEdit.board.subtitle": "What you're asking for and offering right now",
   "profileEdit.board.add": "Add to the board",
   "profileEdit.board.kindLabel": "Looking or offering",
   "profileEdit.board.titlePlaceholder": "e.g. A studio to borrow",
@@ -1009,7 +1025,8 @@ export const members: Catalog = {
   "collections.recentSaves.unfiledCount": "+ {count} unfiled",
   "collections.recentSaves.addCta": "+ Add to collection",
   "collections.toast.created": "Collection created",
-  "collections.toast.createError": "Couldn't create that collection. Try again.",
+  "collections.toast.createError":
+    "Couldn't create that collection. Try again.",
   "collections.toast.addError":
     "Couldn't add that to your collection. Try again.",
   "collections.toast.removed": "Removed from collection",
@@ -1122,7 +1139,8 @@ export const members: Catalog = {
   "places.quickEditCta": "Quick edit",
   "places.editCta": "Full editor",
   "places.deleteCta": "Delete",
-  "places.deleteConfirm": "Delete <b>{name}</b> for good? This can't be undone.",
+  "places.deleteConfirm":
+    "Delete <b>{name}</b> for good? This can't be undone.",
   "places.deleteCancel": "Keep it",
   "places.deleteYes": "Delete listing",
   "places.deleted": "Listing deleted.",
@@ -1139,7 +1157,7 @@ export const members: Catalog = {
   "places.quickEdit.blurbHelper": "Shown under your listing's name.",
   "places.quickEdit.hoursNoteLabel": "Hours note",
   "places.quickEdit.hoursNoteHelper":
-    "A short line shown under your opening hours, for example \"Closed public holidays.\"",
+    'A short line shown under your opening hours, for example "Closed public holidays."',
   "places.quickEdit.websiteLabel": "Website",
   "places.quickEdit.phoneLabel": "Phone",
   "places.quickEdit.cancel": "Cancel",
@@ -1182,7 +1200,8 @@ export const members: Catalog = {
   "badges.xpBreakdown.amount": "+{xp} XP",
   "badges.xpBreakdown.perUnitAmount": "+{xp} XP each",
   "badges.xpBreakdown.sources.profile": "Profile complete",
-  "badges.xpBreakdown.sources.profileDesc": "A photo and a bio on your profile.",
+  "badges.xpBreakdown.sources.profileDesc":
+    "A photo and a bio on your profile.",
   "badges.xpBreakdown.sources.communities": "Communities joined",
   "badges.xpBreakdown.sources.communitiesDesc": "Joining a community.",
   "badges.xpBreakdown.sources.personas": "Personas published",
@@ -1190,23 +1209,28 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.vouches": "Vouches given",
   "badges.xpBreakdown.sources.vouchesDesc": "Vouching for someone else.",
   "badges.xpBreakdown.sources.connections": "Connections made",
-  "badges.xpBreakdown.sources.connectionsDesc": "Connecting with another member.",
+  "badges.xpBreakdown.sources.connectionsDesc":
+    "Connecting with another member.",
   "badges.xpBreakdown.sources.events": "Gatherings attended",
   "badges.xpBreakdown.sources.eventsDesc": "Attending a gathering.",
   "badges.xpBreakdown.sources.posts": "Community posts",
   "badges.xpBreakdown.sources.postsDesc": "Posting in a community.",
   "badges.xpBreakdown.sources.endorsements": "Endorsements received",
-  "badges.xpBreakdown.sources.endorsementsDesc": "Being endorsed by another member.",
+  "badges.xpBreakdown.sources.endorsementsDesc":
+    "Being endorsed by another member.",
   "badges.xpBreakdown.sources.workshops": "Workshops taught",
   "badges.xpBreakdown.sources.workshopsDesc": "Hosting a workshop.",
   "badges.xpBreakdown.sources.tenure": "Days on QueerPulse",
-  "badges.xpBreakdown.sources.tenureDesc": "Being part of QueerPulse, one day at a time.",
+  "badges.xpBreakdown.sources.tenureDesc":
+    "Being part of QueerPulse, one day at a time.",
   "badges.xpBreakdown.sources.verified": "Verified",
   "badges.xpBreakdown.sources.verifiedDesc": "Verifying your account.",
   "badges.xpBreakdown.sources.gettingStarted": "Getting-started steps",
-  "badges.xpBreakdown.sources.gettingStartedDesc": "Finishing a Getting Started step.",
+  "badges.xpBreakdown.sources.gettingStartedDesc":
+    "Finishing a Getting Started step.",
   "badges.xpBreakdown.sources.badges": "Badge bonuses",
-  "badges.xpBreakdown.sources.badgesDesc": "The badges you've earned along the way.",
+  "badges.xpBreakdown.sources.badgesDesc":
+    "The badges you've earned along the way.",
   "badges.xpBreakdown.sources.other": "Other",
   "badges.xpBreakdown.sources.otherDesc": "Other activity on QueerPulse.",
 
@@ -1329,7 +1353,8 @@ export const members: Catalog = {
   "badges.ledger.heading": "Where the <em>points</em> came from",
   "badges.ledger.subWithCount":
     "{count} events. Your level is derived from this list, never stored.",
-  "badges.ledger.subEmpty": "Your level is derived from this list, never stored.",
+  "badges.ledger.subEmpty":
+    "Your level is derived from this list, never stored.",
   "badges.ledger.sparkXp": "{xp} XP",
   "badges.ledger.sparkAriaLabel": "XP over time, ending at {xp} XP",
   "badges.ledger.colDate": "Date",
@@ -1360,14 +1385,17 @@ export const members: Catalog = {
     "When points are taken back, the row and the reason stay in the list.",
   "badges.ledger.footnoteCount":
     "{badges} badges · {levels} levels · one ledger you can audit.",
-  "badges.ledger.footnoteContact": "Something look wrong? Ask the community team.",
+  "badges.ledger.footnoteContact":
+    "Something look wrong? Ask the community team.",
 
   // ── Badges v2: earn moment + case card ───────────────────────────────────
   "badges.earn.kickerBadge": "Badge earned",
   "badges.earn.kickerGiven": "Given to you",
-  "badges.earn.body": "That's +{xp} XP, and it's yours whether or not you ever show it.",
+  "badges.earn.body":
+    "That's +{xp} XP, and it's yours whether or not you ever show it.",
   "badges.earn.putInCase": "Put it in the case",
-  "badges.earn.footnote": "Level {level} · {name} · private until you say otherwise",
+  "badges.earn.footnote":
+    "Level {level} · {name} · private until you say otherwise",
   "badges.caseCard.title": "Your case",
   "badges.caseCard.subtitle": "QueerPulse · Lisbon",
   "badges.caseCard.emptyDesc": "An empty case. Come back in a month.",
@@ -1585,8 +1613,7 @@ export const members: Catalog = {
   "profile.accountData.dsar.pastHint":
     "We answer every request by email. This list is for your records, it won't change status on its own.",
   "profile.accountData.dsar.pastLoading": "Loading your requests…",
-  "profile.accountData.dsar.pastError":
-    "We couldn't load your past requests.",
+  "profile.accountData.dsar.pastError": "We couldn't load your past requests.",
   "profile.accountData.dsar.pastEmpty": "You haven't filed a request yet.",
   "profile.accountData.dsar.pastRowDueBy": "Reply by {date}",
   "profile.accountData.dsar.toast.submitted":

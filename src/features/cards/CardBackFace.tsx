@@ -96,9 +96,10 @@ export function CardBackFace({
           </span>
         </header>
 
-        {/* Each pair wrapped, so the label can sit over its value and the
-            whole set can reflow from two columns to one on a narrow card
-            without a label ever being separated from what it names. */}
+        {/* Each pair wrapped, so the label sits over its value and the set
+            reads straight down as one field per row. Packed across the
+            column they crowded each other and the longest value truncated,
+            which on a credential is the line you least want cut. */}
         <dl className={styles.backMeta}>
           <div>
             <dt>{t("cards:face.serial")}</dt>
