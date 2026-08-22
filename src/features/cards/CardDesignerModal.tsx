@@ -84,6 +84,7 @@ export function CardDesignerModal({
         // feature that does not exist yet.
         allowsPublicBadge: program?.allowsPublicBadge ?? true,
         allowsMemberPhoto: draft.allowsMemberPhoto,
+        photoStyle: draft.photoStyle,
       });
 
       // First save on a live programme: hand the roster its cards, since
@@ -160,6 +161,7 @@ export function CardDesignerModal({
             serialPrefix={program?.serialPrefix}
             holderName={viewerName}
             allowsMemberPhoto={draft.allowsMemberPhoto}
+            photoStyle={draft.photoStyle}
             // The owner's own avatar, so turning photos on previews a real
             // face rather than a placeholder the members will never see.
             holderAvatarUrl={viewerPhoto ?? null}
@@ -190,6 +192,8 @@ export function CardDesignerModal({
             onAllowsMemberPhotoChange={(allows) =>
               set({ allowsMemberPhoto: allows })
             }
+            photoStyle={draft.photoStyle}
+            onPhotoStyleChange={(style) => set({ photoStyle: style })}
           />
         </div>
       </Modal>

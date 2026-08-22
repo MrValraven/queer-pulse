@@ -106,6 +106,7 @@ export function ModToolsCardSection({
                     // face stands in, so a programme with photos on previews
                     // as a photo card rather than as an empty slot.
                     allowsMemberPhoto: program.allowsMemberPhoto,
+                    photoStyle: program.photoStyle,
                     holderAvatarUrl: viewerPhoto ?? null,
                   },
                 )}
@@ -113,28 +114,32 @@ export function ModToolsCardSection({
                 isPreview
               />
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsDesignerOpen(true)}
-            >
-              {t("cards:modTools.edit")}
-            </Button>
-            {/* Issuing is its own act, never a side effect of saving the
-                design — see CardIssueAction. Only offered while the
-                programme is live: a paused programme has no working card to
-                hand anyone. */}
-            {isEnabled && <CardIssueAction slug={slug} />}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={togglePause}
-              disabled={upsert.isPending}
-            >
-              {isEnabled
-                ? t("cards:modTools.pause")
-                : t("cards:modTools.resume")}
-            </Button>
+            <div className={styles.actions}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsDesignerOpen(true)}
+              >
+                {t("cards:modTools.edit")}
+              </Button>
+              {/* Issuing is its own act, never a side effect of saving the
+                  design (see CardIssueAction). Only offered while the
+                  programme is live: a paused programme has no working card to
+                  hand anyone. */}
+              {isEnabled && <CardIssueAction slug={slug} />}
+              <div className={styles.programmeAction}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={togglePause}
+                  disabled={upsert.isPending}
+                >
+                  {isEnabled
+                    ? t("cards:modTools.pause")
+                    : t("cards:modTools.resume")}
+                </Button>
+              </div>
+            </div>
           </div>
           {!isEnabled && (
             <p className={styles.pausedNotice}>
@@ -142,7 +147,14 @@ export function ModToolsCardSection({
             </p>
           )}
           <div className={styles.holders}>
-            <CardHoldersPanel slug={slug} />
+            {/* The programme is handed down rather than re-fetched: the panel
+                draws each holder's real card from it, and both surfaces must
+                be looking at the same design. */}
+            <CardHoldersPanel
+              slug={slug}
+              communityName={communityName}
+              program={program}
+            />
           </div>
         </>
       ) : (

@@ -9,6 +9,10 @@ import {
 
 export type CardSkin = "plum" | "cream" | "jade" | "coral" | "ink";
 
+/** How a photo card prints the faces it carries. Mirrors the backend's
+ *  closed list (`CARD_PHOTO_STYLES` in `community-card.entity.ts`). */
+export type CardPhotoStyle = "color" | "mono";
+
 /** The status a verifier sees: the card's own state combined with the
  *  issuing community's freeze/archive state and the expiry clock. */
 export type EffectiveCardStatus =
@@ -33,6 +37,8 @@ export interface CardProgramDTO {
   allowsPublicBadge: boolean;
   /** Whether this programme's cards carry the holder's photo at all. */
   allowsMemberPhoto: boolean;
+  /** How those photos are printed: in colour, or desaturated. */
+  photoStyle: CardPhotoStyle;
   serialPrefix: string;
 }
 
@@ -68,7 +74,18 @@ export interface IssuerCardDTO {
   revokedReason: string | null;
   holderSlug: string;
   holderName: string;
+  /** The holder's PROFILE picture, for the roster row. */
   avatarUrl: string | null;
+  /** The holder's role in the issuing community, as printed on the card. */
+  role: string;
+  /**
+   * The face the card actually prints, or null. The backend applies the same
+   * two switches it applies to `MyCardDTO.holderAvatarUrl` (the programme's
+   * photo setting and the holder's own veto), so a non-null value is already
+   * permission to draw it and a null one means the card carries no photo.
+   * Never substitute `avatarUrl` for it: they answer different questions.
+   */
+  cardPhotoUrl: string | null;
 }
 
 export interface CardVerificationDTO {
@@ -99,6 +116,8 @@ export interface UpsertCardProgramBody {
   allowsPublicBadge: boolean;
   /** Absent leaves the stored setting alone, like the crest and the ground. */
   allowsMemberPhoto?: boolean;
+  /** Same absent-leaves-it-alone contract as the switch above. */
+  photoStyle?: CardPhotoStyle;
 }
 
 export const getMyCards = () => apiGet<MyCardDTO[]>("/me/cards");

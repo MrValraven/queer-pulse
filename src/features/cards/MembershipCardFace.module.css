@@ -92,10 +92,15 @@
    card's HEIGHT so it scales with the object rather than with a breakpoint,
    and top-aligned with the community name beside it.
 
-   It gets a light hairline and a drop shadow because it can land on a flag,
-   an uploaded photo, or a flat skin, and without an edge a dark photo on the
-   Ink skin has no boundary at all. The gloss layer paints over it, which is
-   correct: a laminate covers the photo too. */
+   It is edged on BOTH values rather than on one, because it can land on a
+   flag, an uploaded photo, or a flat skin and there is no single colour that
+   separates it from all of them: a white hairline vanishes into a pale
+   photograph and a dark one vanishes into the Ink skin. The two rings sit one
+   pixel apart, so whichever of them contrasts carries the edge and the other
+   is simply not seen. The wider, softer ring past them is the well: it darkens
+   the few pixels of ground the photo sits on, so a busy illustration stops
+   competing with the face at its edge. The gloss layer paints over all of it,
+   which is correct: a laminate covers the photo too. */
 .portrait {
   grid-column: 2;
   grid-row: 1 / span 2;
@@ -105,8 +110,22 @@
   aspect-ratio: 3 / 4;
   object-fit: cover;
   border-radius: var(--radius-tag);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  /* Rings rather than an `outline`, so every layer follows the radius, and in
+     one property so they stack in a known order: edge, well, lift. */
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.42),
+    0 0 0 4px rgba(0, 0, 0, 0.16),
+    0 6px 20px -4px rgba(0, 0, 0, 0.5);
+}
+
+/* The programme's `photoStyle: "mono"`. Plain desaturation, never a tint
+   toward the community's accent: pushing members' faces into a brand colour
+   is a different act from printing them in black and white, and this setting
+   is made by an owner on behalf of other people. The slight contrast lift
+   recovers the separation grayscale costs a low-contrast photograph. */
+.portraitMono {
+  filter: grayscale(1) contrast(1.06);
 }
 
 /* Designer only. Reads as an empty photo slot with a monogram in it rather
@@ -289,8 +308,18 @@
   gap: var(--gap-xs);
 }
 /* No radius token sits between --radius-tag (7px) and --radius-badge (14px);
-   the crest is a small square accent, so the smaller of the two reads best. */
-.crest { border-radius: var(--radius-tag); object-fit: cover; }
+   the crest is a small square accent, so the smaller of the two reads best.
+   Same two-value edge as the portrait, at a smaller scale: a crest is usually
+   a flat logo on a transparent ground, so it has even less of its own edge to
+   sit on than a photograph does. */
+.crest {
+  border-radius: var(--radius-tag);
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.38),
+    0 2px 8px -2px rgba(0, 0, 0, 0.45);
+}
 /* The programme's chosen accent (`--card-accent`, set inline in
    MembershipCardFace.tsx) used to tint `.cardName` and the meta labels via a
    color-mix against currentColor. That let the accent gate legibility: on

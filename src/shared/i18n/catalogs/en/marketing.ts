@@ -1726,6 +1726,16 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visit Culture",
   "changelog.tag.myCards": "See your cards",
 
+  "changelog.entries.card-holder-open-card.title":
+    "Open a member's card from the holder list",
+  "changelog.entries.card-holder-open-card.body":
+    "A community's card holder list showed a name, a card number and two buttons, so the one thing an owner or moderator actually wanted to check, the card itself, was the one thing they could not look at. Any row now opens, showing that member's real card at full size: the community's design, the dates it carries, the role it prints and the photo it does or does not show. The code on the back is the exception, and it says so: it is minted for the person holding the card, so only they can produce a working one. Pausing, revoking and reinstating are right there on the open card too, so checking a card and acting on it are no longer separate trips.",
+
+  "changelog.entries.card-photo-legibility.title":
+    "Photos that stay readable on any card",
+  "changelog.entries.card-photo-legibility.body":
+    "A member's photo and a community's crest used to sit straight on top of whatever the card was wearing, so a pale photo on a pale flag lost its edges and a busy illustration behind it competed with the face. Both now carry a two-tone edge and a soft shadow that darkens the few pixels of card they sit on, which holds up on a flag, on an uploaded picture and on a flat colour alike. Communities that print photos can also choose to print them in black and white, and the designer says plainly that this is a choice being made about other people's pictures.",
+
   "changelog.entries.card-member-photos.title":
     "Photo membership cards, with the last word left to the member",
   "changelog.entries.card-member-photos.body":

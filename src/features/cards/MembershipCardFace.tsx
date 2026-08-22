@@ -45,6 +45,7 @@ export function MembershipCardFace({
   card,
   isActive,
   isPreview = false,
+  isIssuerView = false,
 }: {
   card: MyCardDTO;
   isActive: boolean;
@@ -56,6 +57,15 @@ export function MembershipCardFace({
    * is designing is the composition a member gets.
    */
   isPreview?: boolean;
+  /**
+   * Someone other than the holder — an owner or mod reading the roster — is
+   * looking at a REAL card. Every printed detail is the card's own, but the
+   * code is not: it is minted from `/me/cards`, which by definition only the
+   * holder can call. So this suppresses the mint entirely and the back says
+   * plainly that only the holder can show the code, rather than leaving an
+   * empty slot or, worse, drawing the preview's decoy symbol on a live card.
+   */
+  isIssuerView?: boolean;
 }) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
@@ -78,7 +88,7 @@ export function MembershipCardFace({
 
   const canProve = card.status === "active";
   const { token, isMinting, error } = useCardToken(card.id, {
-    isActive: isActive && canProve && !isPreview && isFlipped,
+    isActive: isActive && canProve && !isPreview && !isIssuerView && isFlipped,
   });
 
   const shellRef = useRef<HTMLDivElement | null>(null);
@@ -175,9 +185,13 @@ export function MembershipCardFace({
           className={[styles.face, styles.faceBack, skinClass]
             .filter(Boolean)
             .join(" ")}
-          aria-label={t("cards:face.backAriaLabel", {
-            community: card.communityName,
-          })}
+          // "your card" is wrong when a mod is reading someone else's.
+          aria-label={t(
+            isIssuerView
+              ? "cards:face.backAriaLabelIssuer"
+              : "cards:face.backAriaLabel",
+            { community: card.communityName },
+          )}
           aria-hidden={!isFlipped}
           inert={!isFlipped}
         >
@@ -187,6 +201,7 @@ export function MembershipCardFace({
             isMinting={isMinting}
             hasError={error}
             isPreview={isPreview}
+            isIssuerView={isIssuerView}
           />
         </article>
       </div>

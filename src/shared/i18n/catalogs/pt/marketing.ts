@@ -1775,6 +1775,16 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visitar a Cultura",
   "changelog.tag.myCards": "Ver os teus cartões",
 
+  "changelog.entries.card-holder-open-card.title":
+    "Abrir o cartão de uma pessoa a partir da lista",
+  "changelog.entries.card-holder-open-card.body":
+    "A lista de quem tem cartão numa comunidade mostrava um nome, um número e dois botões, por isso a única coisa que quem gere a comunidade queria mesmo ver, o cartão, era a única que não conseguia abrir. Agora qualquer linha abre e mostra o cartão real dessa pessoa em tamanho inteiro: o desenho da comunidade, as datas que carrega, o papel que imprime e a fotografia que mostra ou não mostra. O código no verso é a exceção, e diz isso mesmo: é gerado para quem tem o cartão, por isso só essa pessoa consegue produzir um que funcione. Suspender, revogar e reativar estão ali no cartão aberto, por isso ver um cartão e agir sobre ele deixaram de ser duas viagens.",
+
+  "changelog.entries.card-photo-legibility.title":
+    "Fotografias que se leem bem em qualquer cartão",
+  "changelog.entries.card-photo-legibility.body":
+    "A fotografia de uma pessoa e o emblema de uma comunidade ficavam pousados diretamente sobre aquilo que o cartão tivesse vestido, por isso uma fotografia clara sobre uma bandeira clara perdia os contornos e uma ilustração cheia de coisas por trás competia com a cara. Ambos passam a ter um contorno de dois tons e uma sombra suave que escurece os poucos pixéis de cartão onde assentam, o que resulta tanto numa bandeira como numa imagem carregada ou numa cor lisa. As comunidades que põem fotografia podem também escolher imprimi-la a preto e branco, e o editor diz com todas as letras que esta é uma escolha sobre as imagens de outras pessoas.",
+
   "changelog.entries.card-member-photos.title":
     "Cartões de sócie com fotografia, e a última palavra fica com a pessoa",
   "changelog.entries.card-member-photos.body":

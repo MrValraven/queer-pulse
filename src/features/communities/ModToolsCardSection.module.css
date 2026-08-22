@@ -1,16 +1,51 @@
 /* The mod-tools membership-card section: a live preview of the community's
-   current card design beside its "Edit card" CTA. */
+   current card design beside the actions that govern it. */
 
 .existing {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--gap-lg);
   flex-wrap: wrap;
 }
 
+/* The card takes at least half the row and grows into whatever the action
+   column leaves over. It scales by container queries, so a wider slot is a
+   bigger card rather than a stretched one. */
 .previewSlot {
-  width: 280px;
+  flex: 1 1 calc(50% - var(--gap-lg));
+  min-width: min(100%, 260px);
   max-width: 100%;
+}
+
+/* The actions read as one column beside the card, top-aligned with it, at a
+   single shared width. As a wide row they drifted apart, and each one read
+   like an unrelated control. */
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--gap-xs);
+  flex: 0 0 232px;
+  max-width: 100%;
+}
+
+/* Pausing governs the whole programme rather than this one card, so it sits
+   below a hairline instead of reading as a third everyday action. */
+.programmeAction {
+  display: flex;
+  margin-top: var(--gap-xs);
+  padding-top: var(--gap-sm);
+  border-top: 1px solid var(--line);
+}
+
+.programmeAction > * {
+  flex: 1;
+}
+
+@media (--sm) {
+  .actions {
+    flex-basis: 100%;
+  }
 }
 
 .holders {

@@ -1,0 +1,101 @@
+/* CardHolderCardModal: one holder's card at full size, for its issuer.
+   Tokens only: gap-*, radius-*, text-*, and the real colour set. */
+
+/* The card leads and the facts sit beside it, so the object is what a mod
+   reads first. Below the modal's own narrow point they stack, card first. */
+.layout {
+  display: grid;
+  gap: var(--gap-lg);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+@media (max-width: 720px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.cardSlot {
+  display: grid;
+  gap: var(--gap-sm);
+  /* The face is `container-type: size`, so it needs a real width to resolve
+     its own aspect ratio against (see MembershipCardFace.module.css). A grid
+     track gives it one; `min-width: 0` keeps it from forcing the column
+     wider than the modal. */
+  min-width: 0;
+}
+
+.caption {
+  margin: 0;
+  font-size: var(--text-label);
+  color: var(--ink-60);
+}
+
+.detail {
+  display: grid;
+  gap: var(--gap-grid);
+  justify-items: start;
+  min-width: 0;
+}
+
+.meta {
+  display: grid;
+  gap: var(--gap-sm);
+  margin: 0;
+  width: 100%;
+}
+
+.meta dt {
+  font-size: var(--text-label);
+  color: var(--ink-60);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.meta dd {
+  margin: 2px 0 0;
+  font-size: var(--text-body-sm);
+  color: var(--ink);
+}
+
+.reason {
+  width: 100%;
+  border-left: 2px solid rgba(var(--line-rgb), 0.18);
+  padding-left: var(--gap-sm);
+}
+
+.reasonLabel {
+  margin: 0;
+  font-size: var(--text-label);
+  color: var(--ink-60);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.reasonBody {
+  margin: 4px 0 0;
+  font-size: var(--text-body-sm);
+  color: var(--ink);
+  /* An issuer's own note, so it can be any length and any language. */
+  overflow-wrap: anywhere;
+}
+
+.profileLink {
+  font-size: var(--text-body-sm);
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.profileLink:hover {
+  text-decoration: underline;
+}
+
+/* The status actions share the modal's footer with Close, but sit at the far
+   end of it: leaving the card and changing it are different intentions, and
+   Revoke should not be the button next to the one that just closes. */
+.footerActions {
+  display: flex;
+  gap: var(--gap-xs);
+  margin-left: auto;
+}

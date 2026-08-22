@@ -40,12 +40,15 @@ export function CardBackFace({
   isMinting,
   hasError,
   isPreview,
+  isIssuerView = false,
 }: {
   card: MyCardDTO;
   token: string | null;
   isMinting: boolean;
   hasError: boolean;
   isPreview: boolean;
+  /** An owner or mod reading a member's real card. See `MembershipCardFace`. */
+  isIssuerView?: boolean;
 }) {
   const { t } = useTranslation();
   const format = useFormat();
@@ -61,6 +64,12 @@ export function CardBackFace({
           </span>
         ) : !canProve ? (
           <p className={styles.qrNotice}>{t(`cards:qrNotice.${card.status}`)}</p>
+        ) : isIssuerView ? (
+          /* Deliberately a sentence rather than the preview's decoy symbol:
+             this IS a live card, and drawing a code on it that no scanner
+             would accept would teach a mod the card is broken. Why the code
+             is absent is a fact about who is holding the phone. */
+          <p className={styles.qrNotice}>{t("cards:qrNotice.holderOnly")}</p>
         ) : hasError ? (
           <p className={styles.qrNotice}>
             <FiWifiOff aria-hidden="true" /> {t("cards:qrNotice.offline")}
@@ -119,7 +128,7 @@ export function CardBackFace({
         {/* Only shown when there is a code to scan: telling someone where to
             verify a card that currently has no symbol on it is an instruction
             they cannot follow. */}
-        {canProve && (
+        {canProve && !isIssuerView && (
           <p className={styles.backScan}>
             {t("cards:face.scanToVerify", {
               host: `${window.location.host}/cards`,

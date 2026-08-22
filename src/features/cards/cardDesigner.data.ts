@@ -1,4 +1,4 @@
-import type { CardSkin, MyCardDTO } from "./api/cards.api";
+import type { CardPhotoStyle, CardSkin, MyCardDTO } from "./api/cards.api";
 
 export interface CardSkinOption {
   value: CardSkin;
@@ -28,6 +28,20 @@ export const ACCENT_OPTIONS: CardAccentOption[] = [
   { value: "plum", labelKey: "cards:accent.plum" },
   { value: "jade", labelKey: "cards:accent.jade" },
   { value: "ink", labelKey: "cards:accent.ink" },
+];
+
+export interface CardPhotoStyleOption {
+  value: CardPhotoStyle;
+  /** Catalog key: `cards:photoStyle.<value>`. */
+  labelKey: string;
+}
+
+/** Two, deliberately. A third ("tinted toward the accent") would put members'
+ *  faces into a community's brand colour, which is a decision about other
+ *  people's likenesses rather than a styling choice. */
+export const PHOTO_STYLE_OPTIONS: CardPhotoStyleOption[] = [
+  { value: "color", labelKey: "cards:photoStyle.color" },
+  { value: "mono", labelKey: "cards:photoStyle.mono" },
 ];
 
 export interface CardValidityOption {
@@ -117,6 +131,8 @@ export function previewCard(
     serialPrefix?: string;
     /** Whether the programme being designed puts photos on its cards. */
     allowsMemberPhoto?: boolean;
+    /** How it prints them. Only ever visible when the switch above is on. */
+    photoStyle?: CardPhotoStyle;
     /** The face to draw when it does. The designer passes the viewing
      *  owner's own avatar, so the preview is a real card rather than a
      *  grey box. */
@@ -155,6 +171,7 @@ export function previewCard(
       allowsWallet: false,
       allowsPublicBadge: true,
       allowsMemberPhoto: extras.allowsMemberPhoto ?? false,
+      photoStyle: extras.photoStyle ?? "color",
       serialPrefix: extras.serialPrefix ?? "ABC",
     },
   };

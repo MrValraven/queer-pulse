@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { CardProgramDTO, CardSkin } from "./api/cards.api";
+import type {
+  CardPhotoStyle,
+  CardProgramDTO,
+  CardSkin,
+} from "./api/cards.api";
 
 export interface CardDesignerDraft {
   skin: CardSkin;
@@ -26,6 +30,10 @@ export interface CardDesignerDraft {
   backgroundPreviewUrl: string | null;
   /** Whether these cards carry the holder's photo. */
   allowsMemberPhoto: boolean;
+  /** How those photos are printed. Kept in the draft even while photos are
+   *  off, so switching them back on restores the style the owner chose
+   *  rather than silently resetting it to colour. */
+  photoStyle: CardPhotoStyle;
 }
 
 function draftFrom(program: CardProgramDTO | null): CardDesignerDraft {
@@ -44,6 +52,7 @@ function draftFrom(program: CardProgramDTO | null): CardDesignerDraft {
     savedBackgroundKey,
     backgroundPreviewUrl: null,
     allowsMemberPhoto: program?.allowsMemberPhoto ?? false,
+    photoStyle: program?.photoStyle ?? "color",
   };
 }
 
@@ -56,7 +65,8 @@ function isSameDraft(a: CardDesignerDraft, b: CardDesignerDraft): boolean {
     a.crestKey === b.crestKey &&
     a.backgroundPreset === b.backgroundPreset &&
     a.backgroundKey === b.backgroundKey &&
-    a.allowsMemberPhoto === b.allowsMemberPhoto
+    a.allowsMemberPhoto === b.allowsMemberPhoto &&
+    a.photoStyle === b.photoStyle
   );
 }
 

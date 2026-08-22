@@ -3,10 +3,11 @@ import { CheckLine, FormField, Select } from "../../shared/components/ui";
 import { ImageUploadField } from "../subprofiles/ImageUploadField";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import type { CardSkin } from "./api/cards.api";
+import type { CardPhotoStyle, CardSkin } from "./api/cards.api";
 import { CardBackgroundPicker } from "./CardBackgroundPicker";
 import {
   ACCENT_OPTIONS,
+  PHOTO_STYLE_OPTIONS,
   VALIDITY_OPTIONS,
   expiryPreviewDate,
   isAccentInvisibleOnSkin,
@@ -40,6 +41,9 @@ export interface CardDesignerFieldsProps {
   /** Whether these cards carry the holder's photo. */
   allowsMemberPhoto: boolean;
   onAllowsMemberPhotoChange: (allows: boolean) => void;
+  /** How those photos are printed. */
+  photoStyle: CardPhotoStyle;
+  onPhotoStyleChange: (style: CardPhotoStyle) => void;
 }
 
 /** The form controls, split out of `CardDesignerModal` to keep each
@@ -63,6 +67,8 @@ export function CardDesignerFields({
   onBackgroundPreviewChange,
   allowsMemberPhoto,
   onAllowsMemberPhotoChange,
+  photoStyle,
+  onPhotoStyleChange,
 }: CardDesignerFieldsProps) {
   const { t } = useTranslation();
   const format = useFormat();
@@ -138,6 +144,27 @@ export function CardDesignerFields({
           title={t("cards:designer.memberPhotoCheck")}
           sub={t("cards:designer.memberPhotoHelper")}
         />
+        {/* Only while photos are on: it is the follow-up to that decision,
+            and offering it beside a switch that is off would describe a card
+            nobody is designing. The draft remembers the choice regardless, so
+            switching photos off and on again does not reset it. */}
+        {allowsMemberPhoto ? (
+          <FormField
+            label={t("cards:designer.photoStyleLabel")}
+            helper={t("cards:designer.photoStyleHelper")}
+          >
+            <Select
+              value={photoStyle}
+              onChange={(value) =>
+                onPhotoStyleChange((value as CardPhotoStyle | null) ?? "color")
+              }
+              options={PHOTO_STYLE_OPTIONS.map((option) => ({
+                value: option.value,
+                label: t(option.labelKey),
+              }))}
+            />
+          </FormField>
+        ) : null}
       </div>
 
       <div className={styles.group}>

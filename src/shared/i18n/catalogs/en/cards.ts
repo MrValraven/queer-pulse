@@ -37,6 +37,7 @@ export const cards: Catalog = {
   "face.neverExpires": "No expiry",
   "face.role": "Role",
   "face.backAriaLabel": "Back of your {community} membership card",
+  "face.backAriaLabelIssuer": "Back of this {community} membership card",
   "face.flipToBack": "Turn the card over to show the code",
   "face.flipToFront": "Turn the card back to the front",
   "face.scanToVerify": "Scan to verify at {host}",
@@ -46,6 +47,7 @@ export const cards: Catalog = {
   "qrNotice.expired": "This card has expired",
   "qrNotice.suspended": "This card is paused",
   "qrNotice.revoked": "This card is no longer valid",
+  "qrNotice.holderOnly": "Only the holder can show this card's code",
 
   "status.expired":
     "This card expired. Ask the community to issue you a new one.",
@@ -107,6 +109,11 @@ export const cards: Catalog = {
   "designer.memberPhotoCheck": "Put each member's photo on their card",
   "designer.memberPhotoHelper":
     "The photo comes from the member's own profile and sits beside your community's name. Anyone can turn theirs off on their own card.",
+  "designer.photoStyleLabel": "How photos are printed",
+  "designer.photoStyleHelper":
+    "This applies to every member's photo on this card, so it is your choice about their pictures rather than theirs.",
+  "photoStyle.color": "In colour",
+  "photoStyle.mono": "Black and white",
   "designer.crestLabel": "Crest",
   "designer.crestHelper":
     "A small square logo, shown in the top corner of the card. Optional.",
@@ -167,6 +174,13 @@ export const cards: Catalog = {
   "holders.toast.suspended": "{name}'s card is paused.",
   "holders.toast.revoked": "{name}'s card is revoked.",
   "holders.toast.active": "{name}'s card is active again.",
+  "holders.viewCardAria": "Open {name}'s card",
+  "holders.card.caption":
+    "The card as its holder sees it. Turn it over for the details.",
+  "holders.card.issued": "Issued",
+  "holders.card.changedOn": "Status changed",
+  "holders.card.viewProfile": "View profile",
+  "holders.card.close": "Close",
 
   "modTools.title": "Members card",
   "modTools.empty":

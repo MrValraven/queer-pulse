@@ -21,6 +21,7 @@ export const DEMO_CARD_PROGRAM: CardProgramDTO = {
   // demo card below leaves it off, so both compositions are reachable
   // without touching a setting.
   allowsMemberPhoto: true,
+  photoStyle: "color",
   serialPrefix: "LQC",
 };
 
@@ -74,7 +75,11 @@ export const DEMO_CARD_HOLDERS: IssuerCardDTO[] = [
     revokedReason: null,
     holderSlug: "tiago",
     holderName: "Tiago Costa",
-    avatarUrl: null,
+    avatarUrl: currentUser.photo ?? null,
+    role: "member",
+    // Already gated, matching the live contract: this programme allows
+    // photos and this holder has not vetoed theirs, so the card prints one.
+    cardPhotoUrl: currentUser.photo ?? null,
   },
   {
     id: "demo-card-3",
@@ -87,5 +92,9 @@ export const DEMO_CARD_HOLDERS: IssuerCardDTO[] = [
     holderSlug: "rita",
     holderName: "Rita Valente",
     avatarUrl: null,
+    role: "mod",
+    // Null on purpose: the second demo holder's card carries no photo, so
+    // the issuer's view of it shows the empty slot a real card would.
+    cardPhotoUrl: null,
   },
 ];

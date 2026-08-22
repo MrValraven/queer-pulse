@@ -2006,6 +2006,13 @@
   top: calc(100% + 4px);
   right: 0;
   min-width: 160px;
+  /* The containing block is the trigger wrapper, which in the conversation
+     topbar (`.safetyMenuWrap`) is only as wide as the ⋯ button. Shrink-to-fit
+     then resolves to MIN-content, breaking "Block Christina" over two lines.
+     `max-content` sizes the popover to its longest label instead, capped so a
+     long name can still wrap rather than overhang the viewport. */
+  width: max-content;
+  max-width: min(280px, calc(100vw - 32px));
   padding: 6px;
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 12px;

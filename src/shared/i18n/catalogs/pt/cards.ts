@@ -37,6 +37,7 @@ export const cards: Catalog = {
   "face.neverExpires": "Sem validade",
   "face.role": "Papel",
   "face.backAriaLabel": "Verso do teu cartão de sócio de {community}",
+  "face.backAriaLabelIssuer": "Verso deste cartão de sócio de {community}",
   "face.flipToBack": "Virar o cartão para mostrar o código",
   "face.flipToFront": "Virar o cartão para a frente",
   "face.scanToVerify": "Lê o código para verificar em {host}",
@@ -47,6 +48,7 @@ export const cards: Catalog = {
   "qrNotice.expired": "Este cartão expirou",
   "qrNotice.suspended": "Este cartão está suspenso",
   "qrNotice.revoked": "Este cartão já não é válido",
+  "qrNotice.holderOnly": "Só quem tem o cartão consegue mostrar o código",
 
   "status.expired": "Este cartão expirou. Pede um novo à comunidade.",
   "status.suspended": "Este cartão está suspenso. A comunidade pode explicar-te.",
@@ -105,6 +107,11 @@ export const cards: Catalog = {
   "designer.memberPhotoCheck": "Pôr a fotografia de cada sócie no cartão",
   "designer.memberPhotoHelper":
     "A fotografia vem do perfil da própria pessoa e fica ao lado do nome da comunidade. Qualquer pessoa pode desligar a sua no seu cartão.",
+  "designer.photoStyleLabel": "Como as fotografias são impressas",
+  "designer.photoStyleHelper":
+    "Isto aplica-se à fotografia de todas as pessoas neste cartão, por isso é uma escolha sua sobre as imagens delas.",
+  "photoStyle.color": "A cores",
+  "photoStyle.mono": "A preto e branco",
   "designer.crestLabel": "Emblema",
   "designer.crestHelper":
     "Um logótipo quadrado pequeno, mostrado no canto superior do cartão. Opcional.",
@@ -167,6 +174,13 @@ export const cards: Catalog = {
   "holders.toast.suspended": "O cartão de {name} está suspenso.",
   "holders.toast.revoked": "O cartão de {name} está revogado.",
   "holders.toast.active": "O cartão de {name} está ativo outra vez.",
+  "holders.viewCardAria": "Abrir o cartão de {name}",
+  "holders.card.caption":
+    "O cartão tal como quem o tem o vê. Vira-o para veres os detalhes.",
+  "holders.card.issued": "Emitido",
+  "holders.card.changedOn": "Estado alterado",
+  "holders.card.viewProfile": "Ver perfil",
+  "holders.card.close": "Fechar",
 
   "modTools.title": "Cartão de sócio",
   "modTools.empty":

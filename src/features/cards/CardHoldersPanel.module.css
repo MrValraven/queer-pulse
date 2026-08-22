@@ -49,6 +49,39 @@
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   background: var(--cream);
+  /* Anchors the stretched overlay button below. The row itself stays plain,
+     non-interactive markup so its action buttons remain valid content. */
+  position: relative;
+}
+
+/* Opens the card. Transparent and stretched over the whole row, so the row
+   reads as one target wherever it is pressed. Being positioned, it paints
+   over the row's in-flow content (avatar, name, serial, status) and takes
+   their clicks too; only `.actions`, which lifts itself above it, keeps its
+   own. Its accessible name comes from `aria-label`, which is why it carries
+   no visible content of its own. */
+.rowOpen {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: inherit;
+  cursor: pointer;
+}
+
+.row:has(.rowOpen:hover),
+.row:has(.rowOpen:focus-visible) {
+  border-color: rgba(var(--line-rgb), 0.22);
+  background: var(--paper);
+}
+
+/* The row's own focus ring, since the overlay itself is invisible: without
+   this a keyboard user tabbing onto it would see nothing move. */
+.row:has(.rowOpen:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .identity {
@@ -89,6 +122,10 @@
   display: flex;
   gap: var(--gap-xs);
   flex-shrink: 0;
+  /* Above the overlay, so Pause and Revoke get their own clicks rather than
+     opening the card. */
+  position: relative;
+  z-index: 1;
 }
 
 @media (max-width: 560px) {

@@ -64,7 +64,15 @@ export function CardFrontFace({
 
       {portraitSrc ? (
         <img
-          className={styles.portrait}
+          className={[
+            styles.portrait,
+            // The programme's choice, applied to a real face only: the
+            // designer's monogram stand-in has no colour to take away, and
+            // desaturating it would suggest the setting does less than it does.
+            card.program.photoStyle === "mono" ? styles.portraitMono : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
           src={portraitSrc}
           /* Empty on purpose: the holder's name is printed directly below it,
              so announcing the photo would repeat what the card already says.

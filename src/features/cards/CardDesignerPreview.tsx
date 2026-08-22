@@ -2,7 +2,7 @@ import { useState } from "react";
 import { SegmentedControl } from "../../shared/components/ui";
 import { useTheme, type Theme } from "../../app/providers/themeContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { CardSkin } from "./api/cards.api";
+import type { CardPhotoStyle, CardSkin } from "./api/cards.api";
 import { MembershipCardFace } from "./MembershipCardFace";
 import { previewCard } from "./cardDesigner.data";
 import styles from "./CardDesignerModal.module.css";
@@ -29,6 +29,7 @@ export function CardDesignerPreview({
   serialPrefix,
   holderName,
   allowsMemberPhoto,
+  photoStyle,
   holderAvatarUrl,
 }: {
   communityName: string;
@@ -42,6 +43,7 @@ export function CardDesignerPreview({
   serialPrefix: string | undefined;
   holderName: string;
   allowsMemberPhoto: boolean;
+  photoStyle: CardPhotoStyle;
   holderAvatarUrl: string | null;
 }) {
   const { t } = useTranslation();
@@ -68,6 +70,7 @@ export function CardDesignerPreview({
             validityMonths,
             serialPrefix,
             allowsMemberPhoto,
+            photoStyle,
             holderAvatarUrl,
           })}
           isActive={false}
